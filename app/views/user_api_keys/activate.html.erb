@@ -1,0 +1,19 @@
+<div class='authorize-api-key'>
+  <h1><%= t("user_api_key.device.title") %></h1>
+
+  <% if @invalid_code %>
+    <p class="error-message"><%= t("user_api_key.device.invalid_code") %></p>
+  <% elsif @expired_code %>
+    <p class="error-message"><%= t("user_api_key.device.expired_code") %></p>
+  <% end %>
+
+  <%= form_tag(path("/user-api-key/activate"), class: "authorize-api-key__code-form", autocomplete: "off") do %>
+    <%= render "device_code_input", field_id: "user-api-key-device-code", field_name: "code", hint_id: "user-api-key-device-code-hint" %>
+
+    <div class='authorize-api-key__buttons'>
+      <%= submit_tag t("user_api_key.device.continue"), class: "btn btn-primary", data: { user_api_key_code_submit: true } %>
+    </div>
+  <% end %>
+</div>
+
+<%= render "device_code_input_script" %>

@@ -38,6 +38,7 @@ RSpec.describe UserApiKeysController do
       head "/user-api-key/new"
       expect(response.status).to eq(200)
       expect(response.headers["Auth-Api-Version"]).to eq("4")
+      expect(response.headers["Auth-Api-Device-Code"]).to eq("true")
     end
 
     it "rejects a non-RSA public key with 400 even when not logged in" do
@@ -216,6 +217,33 @@ RSpec.describe UserApiKeysController do
       expect(UserApiKey.with_key(parsed["key"]).first.user_id).to eq(user.id)
     end
 
+    it "creates keys with a requested expiry" do
+      freeze_time
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key.json",
+           params: args.except(:auth_redirect).merge(expires_in_seconds: 1.day.to_i)
+      expect(response.status).to eq(200)
+
+      encrypted = Base64.decode64(response.parsed_body["payload"])
+      parsed = JSON.parse(decrypt_payload(encrypted))
+      key = UserApiKey.with_key(parsed["key"]).first
+      expect(key.expires_at).to eq_time(1.day.from_now)
+      expect(parsed["expires_at"]).to eq(key.expires_at.iso8601)
+    end
+
+    it "rejects requested expiry greater than the configured maximum" do
+      SiteSetting.max_user_api_key_expiry_days = 1
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+
+      post "/user-api-key.json",
+           params: args.except(:auth_redirect).merge(expires_in_seconds: 2.days.to_i)
+      expect(response.status).to eq(400)
+    end
+
     it "renders show template with application_name when no auth_redirect provided" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       user = Fabricate(:user, trust_level: TrustLevel[0])
@@ -320,6 +348,498 @@ RSpec.describe UserApiKeysController do
       it "rejects scopes not allowed by client" do
         post "/user-api-key.json", params: args.merge(scopes: "write")
         expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "device authorization flow" do
+    let(:device_args) { args.except(:auth_redirect).merge(padding: "oaep") }
+
+    def create_pending_device_request(params = {})
+      post "/user-api-key/device.json", params: device_args.merge(params), as: :json
+      response.parsed_body
+    end
+
+    def approval_token_for(user_code, user)
+      sign_in(user)
+      post "/user-api-key/activate", params: { code: user_code }
+      Nokogiri::HTML5.fragment(response.body).at_css("input[name='approval_token']")["value"]
+    end
+
+    def authorize_device_request(body, user: Fabricate(:user, refresh_auto_groups: true))
+      approval_token = approval_token_for(body["user_code"], user)
+      post "/user-api-key/device/authorize", params: { approval_token: approval_token }
+      user
+    end
+
+    it "creates a pending request" do
+      freeze_time
+
+      body = create_pending_device_request(expires_in_seconds: 1.day.to_i)
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-store")
+      expect(response.headers["Pragma"]).to eq("no-cache")
+      expect(response.headers["Expires"]).to eq("0")
+      expect(body["device_code"]).to be_present
+      expect(body["user_code"]).to match(/\A[A-Z2-9]{4}-[A-Z2-9]{4}\z/)
+      expect(body["verification_uri"]).to end_with("/user-api-key/activate")
+      expect(body["verification_uri_with_request"]).to include("/user-api-key/activate?request=")
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      expect(request_token).to match(/\A[-_A-Za-z0-9]{8}\z/)
+      expect(body).not_to have_key("verification_uri_complete")
+      expect(body["expires_in"]).to eq(10.minutes.to_i)
+      expect(body["interval"]).to eq(5)
+
+      grant = JSON.parse(Discourse.redis.get("user_api_key:device:#{body["device_code"]}"))
+      expect(grant["status"]).to eq("pending")
+      expect(grant["expires_in_seconds"]).to eq(1.day.to_i)
+    end
+
+    it "rejects device requests without a JSON content type" do
+      post "/user-api-key/device.json", params: device_args
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects device polls without a JSON content type" do
+      body = create_pending_device_request
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects invalid scopes" do
+      create_pending_device_request(scopes: "admin")
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects invalid public keys" do
+      create_pending_device_request(public_key: "not a key")
+      expect(response.status).to eq(400)
+    end
+
+    it "rejects invalid requested expiries" do
+      SiteSetting.max_user_api_key_expiry_days = 1
+
+      create_pending_device_request(expires_in_seconds: 2.days.to_i)
+      expect(response.status).to eq(400)
+    end
+
+    it "rejects oversized payloads before creating a pending request" do
+      request_keys_before = Discourse.redis.keys("user_api_key:device:request:*")
+      user_code_keys_before = Discourse.redis.keys("user_api_key:device:code:*")
+
+      create_pending_device_request(nonce: "x" * 150)
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include("Payload too large for OAEP")
+      expect(Discourse.redis.keys("user_api_key:device:request:*")).to match_array(
+        request_keys_before,
+      )
+      expect(Discourse.redis.keys("user_api_key:device:code:*")).to match_array(
+        user_code_keys_before,
+      )
+    end
+
+    it "rejects oversized PKCS#1 payloads before creating a pending request" do
+      create_pending_device_request(padding: nil, nonce: "x" * 180)
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include("Payload too large for PKCS#1")
+    end
+
+    it "allows unregistered clients" do
+      body = create_pending_device_request
+
+      expect(response.status).to eq(200)
+      grant = JSON.parse(Discourse.redis.get("user_api_key:device:#{body["device_code"]}"))
+      expect(grant["unregistered_client"]).to eq(true)
+    end
+
+    it "uses registered client metadata and warns when public key is request-supplied" do
+      Fabricate(
+        :user_api_key_client,
+        client_id: args[:client_id],
+        application_name: "Stored Client Name",
+        public_key: nil,
+      )
+
+      body = create_pending_device_request(application_name: "Spoofed Client Name")
+
+      expect(response.status).to eq(200)
+      grant = JSON.parse(Discourse.redis.get("user_api_key:device:#{body["device_code"]}"))
+      expect(grant["application_name"]).to eq("Stored Client Name")
+      expect(grant["unregistered_client"]).to eq(true)
+    end
+
+    it "rejects one-time password scope in the device flow" do
+      create_pending_device_request(scopes: "one_time_password")
+
+      expect(response.status).to eq(400)
+    end
+
+    it "redirects anonymous activation requests to login without preserving codes from URLs" do
+      body = create_pending_device_request
+
+      get "/user-api-key/activate", params: { code: body["user_code"] }
+
+      expect(response).to redirect_to("/login")
+      expect(response.cookies["destination_url"]).to eq("/user-api-key/activate")
+    end
+
+    it "preserves request tokens when redirecting anonymous activation requests to login" do
+      body = create_pending_device_request
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+
+      get "/user-api-key/activate", params: { request: request_token }
+
+      expect(response).to redirect_to("/login")
+      expect(response.cookies["destination_url"]).to eq(
+        "/user-api-key/activate?request=#{CGI.escape(request_token)}",
+      )
+    end
+
+    it "renders the code entry page" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/activate"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.device.enter_code"))
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      inputs = html.css("input[data-code-character]")
+      expect(inputs.size).to eq(8)
+      expect(html.css(".authorize-api-key__code-separator").text).to eq("-")
+      expect(inputs.first["data-1p-ignore"]).to eq("true")
+      expect(inputs.first["data-lpignore"]).to eq("true")
+      expect(inputs.first["data-bwignore"]).to eq("true")
+      expect(inputs.first["autocomplete"]).to eq("off")
+      expect(response.body).to include("addEventListener(\"paste\"")
+    end
+
+    it "does not accept codes from query strings" do
+      body = create_pending_device_request
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/activate", params: { code: body["user_code"] }
+
+      expect(response).to redirect_to("/user-api-key/activate")
+    end
+
+    it "shows the authorization page for a request token before code entry" do
+      freeze_time
+      body = create_pending_device_request(scopes: "read,write", expires_in_seconds: 1.day.to_i)
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+
+      get "/user-api-key/activate", params: { request: request_token }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(args[:application_name])
+      expect(response.body).to include(I18n.t("user_api_key.scopes.read"))
+      expect(response.body).to include(I18n.t("user_api_key.scopes.write"))
+      expect(response.body).to include(I18n.t("user_api_key.write_scope_warning"))
+      expect(response.body).to include(I18n.t("user_api_key.device.enter_code"))
+      expect(response.body).to include('name="request"')
+      expect(response.body).not_to include('name="approval_token"')
+      expect(response.body).not_to include(I18n.t("user_api_key.deny"))
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      expect(html.css("input[data-code-character]").size).to eq(8)
+
+      grant = JSON.parse(Discourse.redis.get("user_api_key:device:#{body["device_code"]}"))
+      expect(grant["authorizing_user_id"]).to be_blank
+    end
+
+    it "does not allow another user to reuse a request token after authorization" do
+      body = create_pending_device_request
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      first_user = Fabricate(:user, refresh_auto_groups: true)
+      second_user = Fabricate(:user, refresh_auto_groups: true)
+
+      sign_in(first_user)
+      get "/user-api-key/activate", params: { request: request_token }
+      expect(response.status).to eq(200)
+      post "/user-api-key/device/authorize",
+           params: {
+             request: request_token,
+             code: body["user_code"].delete("-"),
+           }
+      expect(response.body).to include(I18n.t("user_api_key.device.complete"))
+
+      sign_in(second_user)
+      post "/user-api-key/device/authorize",
+           params: {
+             request: request_token,
+             code: body["user_code"].delete("-"),
+           }
+      expect(response.body).not_to include(I18n.t("user_api_key.device.complete"))
+    end
+
+    it "shows the authorization page for a manually submitted valid code" do
+      freeze_time
+      body = create_pending_device_request(scopes: "read,write", expires_in_seconds: 1.day.to_i)
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key/activate", params: { code: body["user_code"].delete("-") }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(args[:application_name])
+      expect(response.body).to include(I18n.t("user_api_key.scopes.read"))
+      expect(response.body).to include(I18n.t("user_api_key.scopes.write"))
+      expect(response.body).to include(I18n.t("user_api_key.write_scope_warning"))
+      expiry_notice =
+        I18n.t(
+          "user_api_key.device.expiry_notice",
+          application_name: args[:application_name],
+          expires_at: I18n.l(1.day.from_now, format: :long),
+        )
+      expect(response.body).to include(CGI.escapeHTML(expiry_notice))
+      expect(response.body).to include(I18n.t("user_api_key.device.unregistered_app_warning"))
+      expect(response.body).to include('name="approval_token"')
+      expect(response.body).not_to include('name="device_code"')
+    end
+
+    it "warns when no expiry is requested" do
+      body = create_pending_device_request
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key/activate", params: { code: body["user_code"] }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.device.no_expiry_warning"))
+    end
+
+    it "does not consume a manual user code for users who cannot authorize keys" do
+      body = create_pending_device_request
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+
+      post "/user-api-key/activate", params: { code: body["user_code"] }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.no_trust_level"))
+      expect(Discourse.redis.get("user_api_key:device:code:#{body["user_code"]}")).to eq(
+        body["device_code"],
+      )
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    end
+
+    it "does not allow an approval token to be reused by another user" do
+      body = create_pending_device_request
+      first_user = Fabricate(:user, refresh_auto_groups: true)
+      second_user = Fabricate(:user, refresh_auto_groups: true)
+      approval_token = approval_token_for(body["user_code"], first_user)
+      sign_in(second_user)
+
+      post "/user-api-key/device/authorize", params: { approval_token: approval_token }
+
+      expect(response.body).to include(I18n.t("user_api_key.device.expired_code"))
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+      expect(response.parsed_body["status"]).to eq("authorization_pending")
+    end
+
+    it "shows a safe error for invalid codes" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key/activate", params: { code: "BAD-CODE" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.device.invalid_code"))
+      expect(response.body).not_to include(args[:application_name])
+    end
+
+    it "returns authorization_pending while waiting for authorization" do
+      body = create_pending_device_request
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["status"]).to eq("authorization_pending")
+    end
+
+    it "authorizes a pending request with a request token and typed code" do
+      freeze_time
+      body = create_pending_device_request(scopes: "read,write", expires_in_seconds: 1.day.to_i)
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+      get "/user-api-key/activate", params: { request: request_token }
+
+      post "/user-api-key/device/authorize",
+           params: {
+             request: request_token,
+             code: body["user_code"].delete("-"),
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.device.complete"))
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+
+      expect(response.parsed_body["status"]).to eq("authorized")
+      encrypted = Base64.decode64(response.parsed_body["payload"])
+      parsed = JSON.parse(decrypt_payload(encrypted, padding: "oaep"))
+      key = UserApiKey.with_key(parsed["key"]).first
+
+      expect(parsed["nonce"]).to eq(args[:nonce])
+      expect(parsed["api"]).to eq(4)
+      expect(parsed["expires_at"]).to eq(1.day.from_now.iso8601)
+      expect(key.user_id).to eq(user.id)
+      expect(key.expires_at).to eq_time(1.day.from_now)
+      expect(key.scopes.map(&:name).sort).to eq(%w[read write])
+    end
+
+    it "keeps request context and does not authorize when request token code is wrong" do
+      body = create_pending_device_request
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+      get "/user-api-key/activate", params: { request: request_token }
+
+      post "/user-api-key/device/authorize", params: { request: request_token, code: "BADCODE1" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.device.invalid_code"))
+      expect(response.body).to include(args[:application_name])
+      expect(response.body).to include('name="request"')
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+      expect(response.parsed_body["status"]).to eq("authorization_pending")
+    end
+
+    it "authorizes a pending request and returns an encrypted payload when polled" do
+      freeze_time
+      body = create_pending_device_request(scopes: "read,write", expires_in_seconds: 1.day.to_i)
+      user = authorize_device_request(body)
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("user_api_key.device.complete"))
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+
+      expect(response.parsed_body["status"]).to eq("authorized")
+      encrypted = Base64.decode64(response.parsed_body["payload"])
+      parsed = JSON.parse(decrypt_payload(encrypted, padding: "oaep"))
+      key = UserApiKey.with_key(parsed["key"]).first
+
+      expect(parsed["nonce"]).to eq(args[:nonce])
+      expect(parsed["api"]).to eq(4)
+      expect(parsed["expires_at"]).to eq(1.day.from_now.iso8601)
+      expect(key.user_id).to eq(user.id)
+      expect(key.expires_at).to eq_time(1.day.from_now)
+      expect(key.scopes.map(&:name).sort).to eq(%w[read write])
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+      expect(response.parsed_body["status"]).to eq("expired_token")
+    end
+
+    it "returns access_denied when a pending request is denied" do
+      body = create_pending_device_request
+      user = Fabricate(:user, refresh_auto_groups: true)
+      approval_token = approval_token_for(body["user_code"], user)
+
+      post "/user-api-key/device/deny", params: { approval_token: approval_token }
+      expect(response.body).to include(I18n.t("user_api_key.device.denied"))
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+      expect(response.parsed_body["status"]).to eq("access_denied")
+    end
+
+    it "does not report denied for an invalid approval token" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key/device/deny", params: { approval_token: SecureRandom.hex(32) }
+
+      expect(response.body).to include(I18n.t("user_api_key.device.expired_code"))
+      expect(response.body).not_to include(I18n.t("user_api_key.device.denied"))
+    end
+
+    it "does not allow request-token denial without an approval token" do
+      body = create_pending_device_request
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+      get "/user-api-key/activate", params: { request: request_token }
+
+      post "/user-api-key/device/deny", params: { request: request_token }
+      expect(response.body).to include(I18n.t("user_api_key.device.expired_code"))
+
+      post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
+      expect(response.parsed_body["status"]).to eq("authorization_pending")
+    end
+
+    it "returns expired_token for expired or missing requests" do
+      post "/user-api-key/device/poll.json",
+           params: {
+             device_code: SecureRandom.hex(32),
+           },
+           as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["status"]).to eq("expired_token")
+    end
+
+    it "enforces registered client scope restrictions" do
+      Fabricate(
+        :user_api_key_client,
+        client_id: args[:client_id],
+        application_name: args[:application_name],
+        public_key: public_key,
+        scopes: "read",
+      )
+
+      create_pending_device_request(scopes: "write")
+
+      expect(response.status).to eq(403)
+    end
+
+    context "with rate limiting enabled" do
+      before { RateLimiter.enable }
+      after { RateLimiter.disable }
+
+      it "rate limits device request creation" do
+        UserApiKeysController::DEVICE_REQUESTS_PER_MINUTE.times do |i|
+          create_pending_device_request(client_id: "device-client-#{i}")
+          expect(response.status).to eq(200)
+        end
+
+        create_pending_device_request(client_id: "device-client-limited")
+        expect(response.status).to eq(429)
+      end
+
+      it "rate limits invalid code entry" do
+        user = Fabricate(:user, refresh_auto_groups: true)
+        sign_in(user)
+
+        UserApiKeysController::DEVICE_ACTIVATION_ATTEMPTS_PER_MINUTE.times do |i|
+          post "/user-api-key/activate", params: { code: "BADCODE#{i}" }
+          expect(response.status).to eq(200)
+        end
+
+        post "/user-api-key/activate", params: { code: "LIMITED1" }
+        expect(response.status).to eq(429)
+      end
+
+      it "rate limits request token lookup" do
+        sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+        UserApiKeysController::DEVICE_REQUEST_TOKEN_LOOKUPS_PER_MINUTE.times do |i|
+          get "/user-api-key/activate", params: { request: "A00000#{format("%02d", i)}" }
+          expect(response.status).to eq(200)
+        end
+
+        get "/user-api-key/activate", params: { request: "LIMITED1" }
+        expect(response.status).to eq(429)
       end
     end
   end

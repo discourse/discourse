@@ -27,6 +27,12 @@
   </div>
   <% end %>
 
+  <% if @expires_at %>
+  <div class='authorize-api-key__expiry alert alert-info'>
+    <p><%= t("user_api_key.expiry_notice", application_name: @application_name, expires_at: l(@expires_at, format: :long)) %></p>
+  </div>
+  <% end %>
+
   <% if @redirect_uri %>
   <div class='authorize-api-key__redirect'>
     <p class="authorize-api-key__redirect-url">
@@ -46,6 +52,7 @@
     <%= hidden_field_tag 'public_key', @public_key %>
     <%= hidden_field_tag 'scopes', @scopes %>
     <%= hidden_field_tag('padding', @padding) if @padding %>
+    <%= hidden_field_tag('expires_in_seconds', @expires_in_seconds) if @expires_in_seconds %>
     <div class='authorize-api-key__buttons'>
       <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-primary' %>
       <a href="/" class='btn btn-default'><%= t('user_api_key.deny') %></a>

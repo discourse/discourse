@@ -3,18 +3,41 @@
 class UserApiKeysController < ApplicationController
   layout "no_ember"
 
-  requires_login only: %i[create create_otp revoke undo_revoke]
+  requires_login only: %i[
+                   create
+                   create_otp
+                   revoke
+                   undo_revoke
+                   authorize_device_request
+                   deny_device_request
+                 ]
   skip_before_action :redirect_to_login_if_required,
                      :redirect_to_profile_if_required,
-                     only: %i[new otp]
+                     only: %i[new otp activate create_device_request poll_device_request]
   skip_before_action :check_xhr, :preload_json
+  skip_before_action :verify_authenticity_token, only: %i[create_device_request poll_device_request]
+  before_action :set_device_auth_no_store,
+                only: %i[
+                  create_device_request
+                  poll_device_request
+                  activate
+                  authorize_device_request
+                  deny_device_request
+                ]
 
   AUTH_API_VERSION = 4
   ALLOWED_PADDING_MODES = %w[pkcs1 oaep].freeze
+  DEVICE_AUTH_TTL = 10.minutes
+  DEVICE_REQUESTS_PER_MINUTE = 20
+  DEVICE_POLLS_PER_MINUTE = 60
+  DEVICE_ACTIVATION_ATTEMPTS_PER_MINUTE = 10
+  DEVICE_ACTIVATION_ATTEMPTS_PER_HOUR = 30
+  DEVICE_REQUEST_TOKEN_LOOKUPS_PER_MINUTE = 30
+  DEVICE_REQUEST_TOKEN_LOOKUPS_PER_HOUR = 120
 
   def new
     if request.head?
-      head :ok, auth_api_version: AUTH_API_VERSION
+      head :ok, auth_api_version: AUTH_API_VERSION, auth_api_device_code: "true"
       return
     end
 
@@ -23,6 +46,7 @@ class UserApiKeysController < ApplicationController
     require_client_params
     validate_params
     validate_auth_redirect
+    @expires_in_seconds = parse_expires_in_seconds!
 
     unless current_user
       cookies[:destination_url] = request.fullpath
@@ -68,6 +92,7 @@ class UserApiKeysController < ApplicationController
     @localized_scopes = params[:scopes].split(",").map { |s| I18n.t("user_api_key.scopes.#{s}") }
     @scopes = params[:scopes]
     @padding = params[:padding]
+    @expires_at = requested_expires_at(@expires_in_seconds)
   rescue Discourse::InvalidAccess
     @generic_error = true
   end
@@ -82,6 +107,7 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless meets_tl?
 
     scopes = params[:scopes].split(",")
+    expires_at = requested_expires_at(parse_expires_in_seconds!)
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
     @client.application_name = params[:application_name] if params[:application_name].present?
@@ -94,20 +120,29 @@ class UserApiKeysController < ApplicationController
       @client.keys.create!(
         user_id: current_user.id,
         push_url: params[:push_url],
+        expires_at: expires_at,
         scopes: scopes.map { |name| UserApiKeyScope.new(name: name) },
       )
 
     # we keep the payload short so it encrypts easily with public key
     # it is often restricted to 128 chars
-    @payload = {
-      key: key.key,
-      nonce: params[:nonce],
-      push: key.has_push?,
-      api: AUTH_API_VERSION,
-    }.to_json
+    payload = { key: key.key, nonce: params[:nonce], push: key.has_push?, api: AUTH_API_VERSION }
+    payload[:expires_at] = key.expires_at.iso8601 if key.expires_at
+    @payload = payload.to_json
 
-    validate_payload_size_for_oaep!(@payload, parsed_public_key)
-    @payload = Base64.encode64(rsa_encrypt(parsed_public_key, @payload))
+    UserApiKey::DeviceAuth::Crypto.validate_payload_size!(
+      @payload,
+      parsed_public_key,
+      padding: params[:padding],
+    )
+    @payload =
+      Base64.encode64(
+        UserApiKey::DeviceAuth::Crypto.encrypt!(
+          parsed_public_key,
+          @payload,
+          padding: params[:padding],
+        ),
+      )
 
     if scopes.include?("one_time_password")
       # encrypt one_time_password separately to bypass 128 chars encryption limit
@@ -133,6 +168,176 @@ class UserApiKeysController < ApplicationController
         end
       end
     end
+  end
+
+  def create_device_request
+    ensure_json_request!
+    rate_limit_device_request_creation
+    require_params
+    find_client
+    require_client_params
+    validate_params
+
+    UserApiKey::DeviceAuth::CreateRequest.call(service_params) do
+      on_success do |device_request:|
+        verification_uri = UrlHelper.absolute_without_cdn(path("/user-api-key/activate"))
+
+        render json: {
+                 device_code: device_request[:device_code],
+                 user_code: device_request[:user_code],
+                 verification_uri: verification_uri,
+                 verification_uri_with_request:
+                   "#{verification_uri}?request=#{CGI.escape(device_request[:request_token])}",
+                 expires_in: UserApiKey::DeviceAuth::DEVICE_AUTH_TTL.to_i,
+                 interval: UserApiKey::DeviceAuth::DEVICE_AUTH_INTERVAL,
+               }
+      end
+      on_failed_contract { raise Discourse::InvalidParameters.new(:base) }
+      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+        raise exception
+      end
+    end
+  end
+
+  def activate
+    unless current_user
+      request_token = params[:request].to_s
+      destination =
+        if UserApiKey::DeviceAuth.valid_request_token?(request_token)
+          "#{path("/user-api-key/activate")}?request=#{CGI.escape(request_token)}"
+        else
+          path("/user-api-key/activate")
+        end
+
+      redirect_anonymous_to_login(destination)
+      return
+    end
+
+    if request.get?
+      if params[:code].present?
+        redirect_to path("/user-api-key/activate")
+        return
+      end
+
+      if params[:request].present?
+        rate_limit_device_request_token_lookup(params[:request])
+        grant = UserApiKey::DeviceAuth::Store.load_by_request_token(params[:request])
+
+        if grant.blank? || grant["status"] != "pending" ||
+             UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, current_user)
+          @expired_code = true
+          render :activate
+          return
+        end
+
+        assign_device_grant_presenter(grant)
+        @request_token = params[:request]
+        @no_trust_level = true unless meets_tl?
+        render :device_authorize
+        return
+      end
+
+      render :activate
+      return
+    end
+
+    rate_limit_device_activation_attempt
+
+    user_code = UserApiKey::DeviceAuth.normalize_user_code(params[:code])
+    grant = user_code.present? ? UserApiKey::DeviceAuth::Store.load_by_user_code(user_code) : nil
+
+    if grant.blank?
+      @invalid_code = true
+      render :activate
+      return
+    end
+
+    if grant["status"] != "pending"
+      @expired_code = true
+      render :activate
+      return
+    end
+
+    assign_device_grant_presenter(grant)
+
+    unless meets_tl?
+      @no_trust_level = true
+      render :device_authorize
+      return
+    end
+
+    UserApiKey::DeviceAuth::Store.delete_user_code(user_code)
+    @approval_token = approval_token_store.create!(grant["device_code"])
+    render :device_authorize
+  end
+
+  def authorize_device_request
+    raise Discourse::InvalidAccess unless meets_tl?
+
+    device_code = device_code_for_authorize_request
+
+    if device_code.blank?
+      if @request_token.present? && @device_auth&.application_name.present?
+        @invalid_code = true
+        render :device_authorize
+      else
+        @expired_code = true
+        render :activate
+      end
+      return
+    end
+
+    UserApiKey::DeviceAuth::Authorize.call(
+      service_params.deep_merge(params: { device_code: device_code, user_id: current_user.id }),
+    ) do
+      on_success do
+        approval_token_store.delete!(params[:approval_token]) if params[:approval_token].present?
+        @denied = false
+        render :device_complete
+      end
+      on_model_not_found(:user) { raise Discourse::InvalidAccess }
+      on_failed_step(:authorize_grant) do
+        @expired_code = true
+        render :activate
+      end
+      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+        raise exception
+      end
+    end
+  end
+
+  def deny_device_request
+    device_code = device_code_for_deny_request
+    if device_code.present?
+      UserApiKey::DeviceAuth::Deny.call(
+        service_params.deep_merge(params: { device_code: device_code }),
+      ) do
+        on_success do
+          approval_token_store.delete!(params[:approval_token]) if params[:approval_token].present?
+          @denied = true
+          render :device_complete
+        end
+        on_failed_step(:deny_grant) do
+          @expired_code = true
+          render :activate
+        end
+      end
+    else
+      @expired_code = true
+      render :activate
+    end
+  end
+
+  def poll_device_request
+    ensure_json_request!
+    rate_limit_device_poll
+
+    device_code = params.require(:device_code)
+    rate_limit_device_poll_for_code(device_code)
+
+    UserApiKey::DeviceAuth::Poll.call(
+      service_params.deep_merge(params: { device_code: device_code }),
+    ) { on_success { |poll_response:| render json: poll_response } }
   end
 
   def otp
@@ -256,9 +461,11 @@ class UserApiKeysController < ApplicationController
   end
 
   def parsed_public_key
-    @parsed_public_key ||= OpenSSL::PKey::RSA.new(public_key_str)
-  rescue OpenSSL::PKey::RSAError
-    raise Discourse::InvalidParameters.new(:public_key)
+    @parsed_public_key ||= parse_public_key!(public_key_str)
+  end
+
+  def parse_public_key!(value)
+    UserApiKey::DeviceAuth::Crypto.parse_public_key!(value)
   end
 
   def meets_tl?
@@ -273,30 +480,161 @@ class UserApiKeysController < ApplicationController
     otp = SecureRandom.hex
     Discourse.redis.setex "otp_#{otp}", 10.minutes, username
 
-    Base64.encode64(rsa_encrypt(public_key, otp))
+    Base64.encode64(
+      UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, otp, padding: params[:padding]),
+    )
   end
 
-  def rsa_encrypt(public_key, data)
-    # OAEP padding is recommended for new applications and required for FIPS 140-3 compliance.
-    # PKCS1 padding is kept as default for backwards compatibility with existing clients.
-    padding_mode = params[:padding] == "oaep" ? "oaep" : "pkcs1"
-    public_key.encrypt(data, { "rsa_padding_mode" => padding_mode })
+  def parse_expires_in_seconds!
+    UserApiKey::DeviceAuth.parse_expires_in_seconds!(params[:expires_in_seconds])
   end
 
-  def validate_payload_size_for_oaep!(payload, public_key)
-    return unless params[:padding] == "oaep"
+  def requested_expires_at(expires_in_seconds)
+    UserApiKey::DeviceAuth.requested_expires_at(expires_in_seconds)
+  end
 
-    # RSA-OAEP max payload = key_size_bytes - 2*hash_size_bytes - 2
-    # OpenSSL uses SHA-1 (20 bytes) by default for OAEP
-    key_size_bytes = public_key.n.num_bytes
-    max_payload_size = key_size_bytes - 2 * 20 - 2
+  def ensure_json_request!
+    raise Discourse::InvalidAccess unless request.format.json? && request.content_mime_type&.json?
+  end
 
-    if payload.bytesize > max_payload_size
-      raise Discourse::InvalidParameters.new(
-              "Payload too large for OAEP encryption with this key size. " \
-                "Maximum: #{max_payload_size} bytes, got: #{payload.bytesize} bytes. " \
-                "Try using a shorter nonce or a larger RSA key (minimum 2048-bit recommended).",
-            )
+  def set_device_auth_no_store
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    response.headers["Referrer-Policy"] = "same-origin"
+  end
+
+  def redirect_anonymous_to_login(destination_url = request.fullpath)
+    cookies[:destination_url] = destination_url
+
+    if SiteSetting.enable_discourse_connect?
+      redirect_to path("/session/sso")
+    else
+      redirect_to path("/login")
     end
+  end
+
+  def approval_token_store
+    @approval_token_store ||=
+      UserApiKey::DeviceAuth::ApprovalTokenStore.new(session: session, user: current_user)
+  end
+
+  def assign_device_grant_presenter(grant)
+    @device_auth = UserApiKey::DeviceAuth::GrantPresenter.new(grant)
+  end
+
+  def device_code_for_authorize_request
+    if params[:request].present?
+      rate_limit_device_request_token_lookup(params[:request])
+      grant = UserApiKey::DeviceAuth::Store.load_by_request_token(params[:request])
+      return if grant.blank? || grant["status"] != "pending"
+      return if UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, current_user)
+
+      assign_device_grant_presenter(grant)
+      @request_token = params[:request]
+      @no_trust_level = true unless meets_tl?
+
+      rate_limit_device_activation_attempt
+
+      user_code = UserApiKey::DeviceAuth.normalize_user_code(params[:code])
+      return if user_code.blank?
+
+      code_device_code =
+        Discourse.redis.get(UserApiKey::DeviceAuth::Store.device_user_code_key(user_code))
+      return if code_device_code.blank? || code_device_code != grant["device_code"]
+      return if !UserApiKey::DeviceAuth.bind_loaded_grant_to_user!(grant, current_user)
+
+      grant["device_code"]
+    else
+      approval_token = params.require(:approval_token)
+      approval_token_store.device_code_for(approval_token)
+    end
+  end
+
+  def device_code_for_deny_request
+    if params[:request].present?
+      nil
+    else
+      approval_token = params.require(:approval_token)
+      approval_token_store.device_code_for(approval_token)
+    end
+  end
+
+  def rate_limit_device_request_creation
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-requests-#{request.remote_ip}",
+      DEVICE_REQUESTS_PER_MINUTE,
+      1.minute,
+    ).performed!
+  end
+
+  def rate_limit_device_poll
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-poll-ip-#{request.remote_ip}",
+      DEVICE_POLLS_PER_MINUTE,
+      1.minute,
+    ).performed!
+  end
+
+  def rate_limit_device_poll_for_code(device_code)
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-poll-code-#{ApiKey.hash_key(device_code)}",
+      DEVICE_POLLS_PER_MINUTE,
+      1.minute,
+    ).performed!
+  end
+
+  def rate_limit_device_request_token_lookup(request_token)
+    token_key =
+      (
+        if UserApiKey::DeviceAuth.valid_request_token?(request_token)
+          ApiKey.hash_key(request_token)
+        else
+          "invalid"
+        end
+      )
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-request-token-ip-#{request.remote_ip}",
+      DEVICE_REQUEST_TOKEN_LOOKUPS_PER_HOUR,
+      1.hour,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-request-token-user-#{current_user.id}",
+      DEVICE_REQUEST_TOKEN_LOOKUPS_PER_MINUTE,
+      1.minute,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-request-token-#{token_key}",
+      DEVICE_REQUEST_TOKEN_LOOKUPS_PER_MINUTE,
+      1.minute,
+    ).performed!
+  end
+
+  def rate_limit_device_activation_attempt
+    normalized_code = UserApiKey::DeviceAuth.normalize_user_code(params[:code]) || "invalid"
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-activate-ip-#{request.remote_ip}",
+      DEVICE_ACTIVATION_ATTEMPTS_PER_HOUR,
+      1.hour,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-activate-user-#{current_user.id}",
+      DEVICE_ACTIVATION_ATTEMPTS_PER_MINUTE,
+      1.minute,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "user-api-key-device-activate-code-#{ApiKey.hash_key(normalized_code)}",
+      DEVICE_ACTIVATION_ATTEMPTS_PER_MINUTE,
+      1.minute,
+    ).performed!
   end
 end

@@ -1879,6 +1879,12 @@ Discourse::Application.routes.draw do
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
+    post "/user-api-key/device" => "user_api_keys#create_device_request"
+    post "/user-api-key/device/poll" => "user_api_keys#poll_device_request"
+    get "/user-api-key/activate" => "user_api_keys#activate"
+    post "/user-api-key/activate" => "user_api_keys#activate"
+    post "/user-api-key/device/authorize" => "user_api_keys#authorize_device_request"
+    post "/user-api-key/device/deny" => "user_api_keys#deny_device_request"
     post "/user-api-key/revoke" => "user_api_keys#revoke"
     post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
     get "/user-api-key/otp" => "user_api_keys#otp"

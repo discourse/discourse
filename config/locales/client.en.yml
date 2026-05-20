@@ -1841,6 +1841,9 @@ en:
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
       api_last_used_at: "Last used at:"
+      api_expires_at: "Expires:"
+      api_expired_at: "Expired:"
+      api_expires_never: "never"
       api_show_permissions:
         one: "Permissions granted (%{count})"
         other: "Permissions granted (%{count})"

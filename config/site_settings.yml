@@ -4213,6 +4213,10 @@ user_api:
     default: 0
     max: 36500
     hidden: true
+  max_user_api_key_expiry_days:
+    default: 365
+    max: 36500
+    hidden: true
   unused_registered_user_api_key_clients_days:
     default: 30
     max: 36500

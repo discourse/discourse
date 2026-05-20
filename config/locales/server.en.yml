@@ -1283,6 +1283,7 @@ en:
     logged_in_as: "Logged in as"
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
+    expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
     write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     copy_key: "Copy Key"
@@ -1304,6 +1305,22 @@ en:
       one_time_password: "Create a one-time login token"
       bookmarks_calendar: "Read bookmark reminders"
       user_status: "Read and update user status"
+    device:
+      title: "Authorize an application"
+      enter_code: "Enter the code displayed in your application."
+      enter_full_code: "Enter the complete code to authorize this application."
+      code: "Code"
+      code_character: "Code character %{position}"
+      continue: "Continue"
+      invalid_code: "Sorry, that code is invalid. Check the code and try again."
+      expired_code: "Sorry, that code has expired or has already been used. Request a new code from the application and try again."
+      authorize_title: 'Authorize "%{application_name}"'
+      expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
+      no_expiry_warning: "This key will not expire automatically. Only authorize this if you fully trust the application."
+      unregistered_app_warning: "This application is not registered or verified by this site. Only continue if you fully trust the source of the code."
+      complete: "Authorization complete"
+      denied: "Authorization denied"
+      return_to_cli: "You can now return to your terminal or application."
     invalid_public_key: "Sorry, the public key is invalid."
     invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
     invalid_token: "Missing, invalid or expired token."
@@ -2758,6 +2775,7 @@ en:
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
     revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
+    max_user_api_key_expiry_days: "Maximum expiry, in days, that clients can request for user API keys"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."

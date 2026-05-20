@@ -1,0 +1,75 @@
+<div class='authorize-api-key'>
+  <h1><%= t("user_api_key.device.authorize_title", application_name: @device_auth.application_name) %></h1>
+
+  <% if @invalid_code %>
+    <p class="error-message"><%= t("user_api_key.device.invalid_code") %></p>
+  <% elsif @expired_code %>
+    <p class="error-message"><%= t("user_api_key.device.expired_code") %></p>
+  <% end %>
+
+  <% if @no_trust_level %>
+    <p class="error-message"><%= t("user_api_key.no_trust_level") %></p>
+  <% else %>
+    <div class="authorize-api-key__user">
+      <span class="authorize-api-key__user-label"><%= t("user_api_key.logged_in_as") %></span>
+      <img class="avatar" src="<%= current_user.avatar_template.gsub("{size}", "24") %>" width="24" height="24" alt="">
+      <span class="authorize-api-key__username"><%= current_user.username %></span>
+    </div>
+
+    <div class="authorize-api-key__permissions">
+      <p class="authorize-api-key__permissions-header"><%= t("user_api_key.permissions_header", application_name: @device_auth.application_name) %></p>
+      <ul class='authorize-api-key__scopes'>
+        <%- @device_auth.localized_scopes.each do |scope| %>
+          <li><%= scope %></li>
+        <%- end %>
+      </ul>
+    </div>
+
+    <% if @device_auth.write_scope? %>
+      <div class='authorize-api-key__write-warning alert alert-warning'>
+        <p><%= t("user_api_key.write_scope_warning") %></p>
+      </div>
+    <% end %>
+
+    <% if @device_auth.unregistered_client? %>
+      <div class='authorize-api-key__unregistered-warning alert alert-warning'>
+        <p><%= t("user_api_key.device.unregistered_app_warning") %></p>
+      </div>
+    <% end %>
+
+    <% if @device_auth.expires_at %>
+      <div class='authorize-api-key__expiry alert alert-info'>
+        <p><%= t("user_api_key.device.expiry_notice", application_name: @device_auth.application_name, expires_at: l(@device_auth.expires_at, format: :long)) %></p>
+      </div>
+    <% else %>
+      <div class='authorize-api-key__expiry-warning alert alert-warning'>
+        <p><%= t("user_api_key.device.no_expiry_warning") %></p>
+      </div>
+    <% end %>
+
+    <% if @request_token.present? %>
+      <%= form_tag(path("/user-api-key/device/authorize"), class: "authorize-api-key__code-form", autocomplete: "off") do %>
+        <%= hidden_field_tag "request", @request_token %>
+        <%= render "device_code_input", field_id: "user-api-key-device-request-code", field_name: "code", hint_id: "user-api-key-device-request-code-hint" %>
+
+        <div class='authorize-api-key__buttons'>
+          <%= submit_tag t("user_api_key.authorize"), class: "btn btn-primary", data: { user_api_key_code_submit: true } %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class='authorize-api-key__buttons'>
+        <%= form_tag(path("/user-api-key/device/authorize")) do %>
+          <%= hidden_field_tag "approval_token", @approval_token %>
+          <%= submit_tag t("user_api_key.authorize"), class: "btn btn-primary" %>
+        <% end %>
+
+        <%= form_tag(path("/user-api-key/device/deny")) do %>
+          <%= hidden_field_tag "approval_token", @approval_token %>
+          <%= submit_tag t("user_api_key.deny"), class: "btn btn-default" %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<%= render "device_code_input_script" if @request_token.present? %>
