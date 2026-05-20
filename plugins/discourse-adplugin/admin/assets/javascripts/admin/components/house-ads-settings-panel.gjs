@@ -34,6 +34,12 @@ const HouseAdsSettingsPanel = <template>
         @allAds={{@houseAds}}
         @adSettings={{@adSettings}}
       />
+      <HouseAdsListSetting
+        @name="nested_roots_between"
+        @value={{@adSettings.nested_roots_between}}
+        @allAds={{@houseAds}}
+        @adSettings={{@adSettings}}
+      />
 
       <DButton
         @label="admin.adplugin.house_ads.more_settings"
