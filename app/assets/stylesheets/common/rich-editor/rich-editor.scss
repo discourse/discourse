@@ -58,7 +58,7 @@
       vertical-align: bottom;
 
       img {
-        max-width: 500px;
+        max-width: 350px;
 
         @include viewport.until(sm) {
           max-width: 100%;
