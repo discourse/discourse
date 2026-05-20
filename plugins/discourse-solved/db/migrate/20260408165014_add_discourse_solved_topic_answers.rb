@@ -145,9 +145,9 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
       DROP TRIGGER IF EXISTS solved_trigger_old_answer_deletes_to_new
         ON discourse_solved_solved_topics;
       DROP TRIGGER IF EXISTS solved_trigger_new_answers_to_old
-        ON discourse_solved_solved_topics;
+        ON discourse_solved_topic_answers;
       DROP TRIGGER IF EXISTS solved_trigger_new_answer_deletes_to_old
-        ON discourse_solved_solved_topics;
+        ON discourse_solved_topic_answers;
       DROP FUNCTION IF EXISTS solved_sync_old_answers_to_new();
       DROP FUNCTION IF EXISTS solved_sync_old_answer_deletes_to_new();
       DROP FUNCTION IF EXISTS solved_sync_new_answers_to_old();
