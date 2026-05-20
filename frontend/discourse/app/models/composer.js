@@ -525,8 +525,12 @@ export default class Composer extends RestModel {
     );
   }
 
-  @computed("canEditTopicFeaturedLink")
+  @computed("canEditTopicFeaturedLink", "category")
   get titlePlaceholder() {
+    const custom = this.customizationFor("titlePlaceholder");
+    if (custom) {
+      return custom;
+    }
     return this.canEditTopicFeaturedLink
       ? "composer.title_or_link_placeholder"
       : "composer.title_placeholder";

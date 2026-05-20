@@ -445,6 +445,16 @@ en:
         location_placeholder: "Add location or URL"
         max_attendees_placeholder: "Set max attendees"
         description_placeholder: "Add event description"
+        event_title_placeholder: "Event name"
+        create_event_button: "Create event"
+        action_title: "Create a new event"
+      composer_actions:
+        create_event:
+          label: "Create event"
+          desc: "Create a new event in this category"
+        create_topic:
+          label: "Create topic"
+          desc: "Create a regular topic instead of an event"
 
       builder_modal:
         custom_fields:

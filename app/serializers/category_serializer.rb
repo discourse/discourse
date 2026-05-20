@@ -43,7 +43,6 @@ class CategorySerializer < SiteCategorySerializer
              :style_type,
              :emoji,
              :icon,
-             :category_types,
              :category_type_settings,
              :available_category_types
 
@@ -156,11 +155,6 @@ class CategorySerializer < SiteCategorySerializer
 
   def description
     category_description
-  end
-
-  def category_types
-    return {} if !SiteSetting.enable_simplified_category_creation
-    object.category_types
   end
 
   def category_type_settings

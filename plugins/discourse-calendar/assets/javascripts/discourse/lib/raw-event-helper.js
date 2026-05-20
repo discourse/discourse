@@ -152,3 +152,9 @@ export function camelCase(input) {
 export function removeEvent(raw) {
   return raw.replace(/\[event (.*?)\](.*?)\[\/event\]/s, "");
 }
+
+export function buildEventSkeleton(currentUser) {
+  const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
+  const start = moment.tz(timezone).format("YYYY-MM-DD HH:mm");
+  return `[event start="${start}" status="public" timezone="${timezone}"]\n[/event]`;
+}
