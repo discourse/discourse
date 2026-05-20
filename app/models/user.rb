@@ -75,6 +75,7 @@ class User < ActiveRecord::Base
           foreign_key: :master_user_id,
           class_name: "AnonymousUser",
           dependent: :destroy
+  has_many :anonymous_user_shadows, foreign_key: :master_user_id, class_name: "AnonymousUser"
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
   has_one :user_password, class_name: "UserPassword", dependent: :destroy, autosave: true
@@ -131,6 +132,7 @@ class User < ActiveRecord::Base
 
   has_one :master_user, through: :anonymous_user_master
   has_one :shadow_user, through: :anonymous_user_shadow, source: :user
+  has_many :anonymous_shadow_users, through: :anonymous_user_shadows, source: :user
 
   has_one :profile_background_upload, through: :user_profile
   has_one :card_background_upload, through: :user_profile
@@ -204,6 +206,8 @@ class User < ActiveRecord::Base
 
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
+  after_commit :deactivate_anonymous_shadow_users!, on: :update, if: :deactivated?
+  after_commit :suspend_anonymous_shadow_users!, on: :update, if: :newly_suspended?
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -1740,6 +1744,11 @@ class User < ActiveRecord::Base
     DiscourseEvent.trigger(:user_logged_out, self)
   end
 
+  def log_out!
+    PushNotificationPusher.clear_subscriptions(self)
+    logged_out
+  end
+
   def logged_in
     DiscourseEvent.trigger(:user_logged_in, self)
 
@@ -2224,6 +2233,41 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def deactivate_anonymous_shadow_users!
+    update_anonymous_shadow_users!(active: false)
+  end
+
+  def suspend_anonymous_shadow_users!
+    update_anonymous_shadow_users!(
+      suspended_at: self[:suspended_at] || Time.zone.now,
+      suspended_till: self[:suspended_till],
+    )
+  end
+
+  def deactivated?
+    saved_change_to_active? && !active?
+  end
+
+  def newly_suspended?
+    (saved_change_to_suspended_till? || saved_change_to_suspended_at?) && suspended?
+  end
+
+  def update_anonymous_shadow_users!(attributes)
+    anonymous_user_shadows
+      .includes(:user)
+      .find_each do |anonymous_user_shadow|
+        shadow = anonymous_user_shadow.user
+
+        User.transaction do
+          shadow.update!(attributes)
+          anonymous_user_shadow.update!(active: false)
+          shadow.user_auth_tokens.destroy_all
+        end
+
+        shadow.log_out!
+      end
+  end
 
   def main_user_record
     (anonymous? && master_user) ? master_user : self
