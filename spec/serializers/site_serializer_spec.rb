@@ -42,13 +42,13 @@ RSpec.describe SiteSerializer do
     Site.reset_preloaded_category_custom_fields
   end
 
-  it "exposes required_tag_groups as min_count-only entries without name-bearing tag fields" do
-    tag = Fabricate(:tag)
-    tag_group = Fabricate(:tag_group)
-    required_tag_group = Fabricate(:tag_group)
+  it "exposes required_tag_groups as min_count-only entries and does not leak tag-group names" do
+    attached_tag = Fabricate(:tag, name: "category-allowed-tag")
+    attached_tag_group = Fabricate(:tag_group, name: "category-allowed-group")
+    required_tag_group = Fabricate(:tag_group, name: "category-required-group")
 
-    category.tags << tag
-    category.tag_groups << tag_group
+    category.tags << attached_tag
+    category.tag_groups << attached_tag_group
     category.update!(
       category_required_tag_groups: [
         CategoryRequiredTagGroup.new(tag_group: required_tag_group, min_count: 1),
@@ -57,9 +57,11 @@ RSpec.describe SiteSerializer do
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     serialized_category = serialized[:categories].find { |c| c[:id] == category.id }
+    payload_json = serialized_category.to_json
 
-    expect(serialized_category).not_to have_key(:allowed_tags)
-    expect(serialized_category).not_to have_key(:allowed_tag_groups)
+    expect(payload_json).not_to include(attached_tag.name)
+    expect(payload_json).not_to include(attached_tag_group.name)
+    expect(payload_json).not_to include(required_tag_group.name)
     expect(serialized_category[:required_tag_groups]).to eq([{ min_count: 1 }])
   end
 

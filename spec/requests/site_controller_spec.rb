@@ -80,22 +80,21 @@ RSpec.describe SiteController do
     fab!(:admin)
     fab!(:user)
     fab!(:category)
-    fab!(:tag)
-    fab!(:public_tag_group, :tag_group)
-    fab!(:hidden_tag) { Fabricate(:tag, name: "leaked-tag") }
+    fab!(:attached_tag) { Fabricate(:tag, name: "category-allowed-tag") }
+    fab!(:attached_tag_group) { Fabricate(:tag_group, name: "category-allowed-group") }
 
-    fab!(:staff_tag_group) do
-      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    fab!(:staff_only_required_tag_group) do
+      Fabricate(:tag_group, name: "staff-only-required-group", permissions: { "staff" => 1 })
     end
 
     before do
       SiteSetting.tagging_enabled = true
 
-      category.tags << tag
-      category.tag_groups << public_tag_group
+      category.tags << attached_tag
+      category.tag_groups << attached_tag_group
       category.update!(
         category_required_tag_groups: [
-          CategoryRequiredTagGroup.new(tag_group: staff_tag_group, min_count: 1),
+          CategoryRequiredTagGroup.new(tag_group: staff_only_required_tag_group, min_count: 1),
         ],
       )
     end
@@ -105,38 +104,28 @@ RSpec.describe SiteController do
       Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
     end
 
-    def serialized_category
+    def category_payload
       get "/site.json"
       expect(response.status).to eq(200)
       response.parsed_body["categories"].find { |c| c["id"] == category.id }
     end
 
-    it "omits name-bearing tag fields from category payloads for anonymous users" do
-      payload = serialized_category
+    it "does not leak tag or tag-group names through the cached payload" do
+      { anonymous: nil, regular_user: user, admin: admin }.each do |label, signed_in_user|
+        sign_in(signed_in_user) if signed_in_user
+        payload = category_payload
+        payload_json = payload.to_json
 
-      expect(payload).not_to have_key("allowed_tags")
-      expect(payload).not_to have_key("allowed_tag_groups")
-      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
+        aggregate_failures(label.to_s) do
+          expect(payload_json).not_to include(attached_tag.name)
+          expect(payload_json).not_to include(attached_tag_group.name)
+          expect(payload_json).not_to include(staff_only_required_tag_group.name)
+          expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+        end
 
-    it "omits name-bearing tag fields from category payloads for regular users" do
-      sign_in(user)
-
-      payload = serialized_category
-
-      expect(payload).not_to have_key("allowed_tags")
-      expect(payload).not_to have_key("allowed_tag_groups")
-      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "omits name-bearing tag fields from category payloads for admins" do
-      sign_in(admin)
-
-      payload = serialized_category
-
-      expect(payload).not_to have_key("allowed_tags")
-      expect(payload).not_to have_key("allowed_tag_groups")
-      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+        Site.clear_cache
+        Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
+      end
     end
   end
 

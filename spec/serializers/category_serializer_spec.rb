@@ -346,20 +346,20 @@ RSpec.describe CategorySerializer do
       )
     end
 
-    it "omits name-bearing fields and returns min_count-only required_tag_groups for a regular user" do
-      json = described_class.new(category, scope: user.guardian, root: false).as_json
+    it "does not leak any tag or tag-group names to a non-editor" do
+      { anonymous: Guardian.new, regular_user: user.guardian }.each do |label, scope|
+        json = described_class.new(category, scope: scope, root: false).as_json
+        payload_json = json.to_json
 
-      expect(json).not_to have_key(:allowed_tags)
-      expect(json).not_to have_key(:allowed_tag_groups)
-      expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
-    end
-
-    it "omits name-bearing fields and returns min_count-only required_tag_groups for an anonymous viewer" do
-      json = described_class.new(category, scope: Guardian.new, root: false).as_json
-
-      expect(json).not_to have_key(:allowed_tags)
-      expect(json).not_to have_key(:allowed_tag_groups)
-      expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
+        aggregate_failures(label.to_s) do
+          expect(payload_json).not_to include(visible_tag.name)
+          expect(payload_json).not_to include(hidden_tag.name)
+          expect(payload_json).not_to include(visible_tag_group.name)
+          expect(payload_json).not_to include(admin_only_tag_group.name)
+          expect(payload_json).not_to include(required_admin_only_tag_group.name)
+          expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
+        end
+      end
     end
 
     it "includes restricted tag and tag-group names for an admin" do
@@ -382,7 +382,11 @@ RSpec.describe CategorySerializer do
       SiteSetting.moderators_manage_categories = true
 
       json = described_class.new(category, scope: moderator.guardian, root: false).as_json
+      payload_json = json.to_json
 
+      expect(payload_json).not_to include(hidden_tag.name)
+      expect(payload_json).not_to include(admin_only_tag_group.name)
+      expect(payload_json).not_to include(required_admin_only_tag_group.name)
       expect(json[:allowed_tags]).to contain_exactly(
         { id: visible_tag.id, name: visible_tag.name, slug: visible_tag.slug },
       )
@@ -390,14 +394,15 @@ RSpec.describe CategorySerializer do
       expect(json[:required_tag_groups]).to eq([])
     end
 
-    it "omits all tag-related fields when tagging is disabled" do
+    it "does not leak tag or tag-group names when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
       json = described_class.new(category, scope: admin.guardian, root: false).as_json
+      payload_json = json.to_json
 
-      expect(json).not_to have_key(:allowed_tags)
-      expect(json).not_to have_key(:allowed_tag_groups)
-      expect(json).not_to have_key(:required_tag_groups)
+      expect(payload_json).not_to include(visible_tag.name)
+      expect(payload_json).not_to include(visible_tag_group.name)
+      expect(payload_json).not_to include(required_admin_only_tag_group.name)
     end
   end
 

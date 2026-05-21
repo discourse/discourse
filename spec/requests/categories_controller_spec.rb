@@ -712,6 +712,46 @@ RSpec.describe CategoriesController do
         expect(response.status).to eq(200)
       end
     end
+
+    context "when a category has a staff-only required tag group" do
+      fab!(:tagged_category) { Fabricate(:category, name: "TaggedCategory") }
+
+      fab!(:staff_only_required_tag_group) do
+        Fabricate(:tag_group, name: "staff-only-required-group", permissions: { "staff" => 1 })
+      end
+
+      before do
+        SiteSetting.tagging_enabled = true
+        tagged_category.update!(
+          category_required_tag_groups: [
+            CategoryRequiredTagGroup.new(tag_group: staff_only_required_tag_group, min_count: 1),
+          ],
+        )
+      end
+
+      it "does not leak the staff-only tag-group name to a regular user" do
+        sign_in(user)
+
+        get "/c/#{tagged_category.id}/show.json"
+        expect(response.status).to eq(200)
+
+        payload = response.parsed_body["category"]
+        expect(payload.to_json).not_to include(staff_only_required_tag_group.name)
+        expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+      end
+
+      it "exposes the staff-only tag-group name to an admin" do
+        sign_in(admin)
+
+        get "/c/#{tagged_category.id}/show.json"
+        expect(response.status).to eq(200)
+
+        payload = response.parsed_body["category"]
+        expect(payload["required_tag_groups"]).to eq(
+          [{ "name" => staff_only_required_tag_group.name, "min_count" => 1 }],
+        )
+      end
+    end
   end
 
   describe "#find_by_slug" do
@@ -1395,6 +1435,76 @@ RSpec.describe CategoriesController do
         expect(category.name).to eq(original_name)
       end
     end
+
+    context "when a moderator updates a category that has admin-only tag associations" do
+      fab!(:moderator)
+      fab!(:tagged_category) { Fabricate(:category, name: "TaggedCategory") }
+      fab!(:attached_tag) { Fabricate(:tag, name: "category-allowed-tag") }
+      fab!(:attached_tag_group) { Fabricate(:tag_group, name: "category-allowed-group") }
+      fab!(:admin_only_attached_tag) { Fabricate(:tag, name: "admin-only-attached-tag") }
+
+      fab!(:admin_only_attached_tag_group) do
+        Fabricate(
+          :tag_group,
+          name: "admin-only-attached-group",
+          permissions: {
+            "admins" => 1,
+          },
+          tag_names: [admin_only_attached_tag.name],
+        )
+      end
+
+      fab!(:staff_only_required_tag_group) do
+        Fabricate(:tag_group, name: "staff-only-required-group", permissions: { "staff" => 1 })
+      end
+
+      fab!(:admin_only_required_tag_group) do
+        Fabricate(:tag_group, name: "admin-only-required-group", permissions: { "admins" => 1 })
+      end
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.moderators_manage_categories = true
+
+        tagged_category.tags << attached_tag
+        tagged_category.tags << admin_only_attached_tag
+        tagged_category.tag_groups << attached_tag_group
+        tagged_category.tag_groups << admin_only_attached_tag_group
+        tagged_category.update!(
+          category_required_tag_groups: [
+            CategoryRequiredTagGroup.new(tag_group: staff_only_required_tag_group, min_count: 1),
+            CategoryRequiredTagGroup.new(tag_group: admin_only_required_tag_group, min_count: 2),
+          ],
+        )
+
+        sign_in(moderator)
+      end
+
+      it "preserves the admin-only tag and tag-group associations the moderator can't see" do
+        put "/categories/#{tagged_category.id}.json",
+            params: {
+              name: tagged_category.name,
+              color: "abcdef",
+              text_color: "ffffff",
+              allowed_tags: [attached_tag.name],
+              allowed_tag_groups: [attached_tag_group.name],
+              required_tag_groups: [{ name: staff_only_required_tag_group.name, min_count: 1 }],
+            }
+
+        expect(response.status).to eq(200)
+
+        tagged_category.reload
+        expect(tagged_category.tags).to contain_exactly(attached_tag, admin_only_attached_tag)
+        expect(tagged_category.tag_groups).to contain_exactly(
+          attached_tag_group,
+          admin_only_attached_tag_group,
+        )
+        expect(tagged_category.category_required_tag_groups.map(&:tag_group)).to contain_exactly(
+          staff_only_required_tag_group,
+          admin_only_required_tag_group,
+        )
+      end
+    end
   end
 
   describe "#update_slug" do
@@ -1776,6 +1886,112 @@ RSpec.describe CategoriesController do
         expect(category["subcategory_count"]).to eq(nil)
       end
     end
+
+    context "when a category has hidden tag metadata configured" do
+      fab!(:tagged_category) { Fabricate(:category, name: "TaggedCategory") }
+      fab!(:attached_tag) { Fabricate(:tag, name: "category-allowed-tag") }
+      fab!(:attached_tag_group) { Fabricate(:tag_group, name: "category-allowed-group") }
+      fab!(:admin_only_attached_tag) { Fabricate(:tag, name: "admin-only-attached-tag") }
+
+      fab!(:staff_only_required_tag_group) do
+        Fabricate(:tag_group, name: "staff-only-required-group", permissions: { "staff" => 1 })
+      end
+
+      fab!(:admin_only_attached_tag_group) do
+        Fabricate(
+          :tag_group,
+          name: "admin-only-attached-group",
+          permissions: {
+            "admins" => 1,
+          },
+          tag_names: [admin_only_attached_tag.name],
+        )
+      end
+
+      fab!(:admin_only_required_tag_group) do
+        Fabricate(:tag_group, name: "admin-only-required-group", permissions: { "admins" => 1 })
+      end
+
+      before do
+        SiteSetting.tagging_enabled = true
+
+        tagged_category.tags << attached_tag
+        tagged_category.tags << admin_only_attached_tag
+        tagged_category.tag_groups << attached_tag_group
+        tagged_category.tag_groups << admin_only_attached_tag_group
+        tagged_category.update!(
+          category_required_tag_groups: [
+            CategoryRequiredTagGroup.new(tag_group: staff_only_required_tag_group, min_count: 1),
+            CategoryRequiredTagGroup.new(tag_group: admin_only_required_tag_group, min_count: 2),
+          ],
+        )
+      end
+
+      def tagged_payload
+        response.parsed_body["categories"].find { |c| c["id"] == tagged_category.id }
+      end
+
+      it "does not leak any tag or tag-group names to an anonymous viewer" do
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
+            }
+
+        payload_json = tagged_payload.to_json
+        expect(payload_json).not_to include(attached_tag.name)
+        expect(payload_json).not_to include(attached_tag_group.name)
+        expect(payload_json).not_to include(staff_only_required_tag_group.name)
+        expect(tagged_payload["required_tag_groups"]).to eq(
+          [{ "min_count" => 1 }, { "min_count" => 2 }],
+        )
+      end
+
+      it "returns all tag and tag-group names to an admin with include_permissions" do
+        sign_in(admin)
+
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
+              include_permissions: true,
+            }
+
+        expect(tagged_payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to(
+          contain_exactly(attached_tag.name, admin_only_attached_tag.name),
+        )
+        expect(tagged_payload["allowed_tag_groups"]).to contain_exactly(
+          attached_tag_group.name,
+          admin_only_attached_tag_group.name,
+        )
+        expect(tagged_payload["required_tag_groups"]).to contain_exactly(
+          { "name" => staff_only_required_tag_group.name, "min_count" => 1 },
+          { "name" => admin_only_required_tag_group.name, "min_count" => 2 },
+        )
+      end
+
+      it "filters admin-only tag and tag-group names for a moderator with include_permissions" do
+        moderator = Fabricate(:moderator)
+        SiteSetting.moderators_manage_categories = true
+        sign_in(moderator)
+
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
+              include_permissions: true,
+            }
+
+        payload_json = tagged_payload.to_json
+        expect(payload_json).not_to include(admin_only_attached_tag.name)
+        expect(payload_json).not_to include(admin_only_attached_tag_group.name)
+        expect(payload_json).not_to include(admin_only_required_tag_group.name)
+        expect(tagged_payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to(
+          contain_exactly(attached_tag.name),
+        )
+        expect(tagged_payload["allowed_tag_groups"]).to contain_exactly(attached_tag_group.name)
+        expect(tagged_payload["required_tag_groups"]).to eq(
+          [{ "name" => staff_only_required_tag_group.name, "min_count" => 1 }],
+        )
+      end
+    end
   end
 
   describe "#search" do
@@ -2074,6 +2290,34 @@ RSpec.describe CategoriesController do
         )
       end
     end
+
+    context "when a category has a staff-only required tag group" do
+      fab!(:tagged_category) { Fabricate(:category, name: "TaggedCategory") }
+
+      fab!(:staff_only_required_tag_group) do
+        Fabricate(:tag_group, name: "staff-only-required-group", permissions: { "staff" => 1 })
+      end
+
+      before do
+        SiteSetting.tagging_enabled = true
+        tagged_category.update!(
+          category_required_tag_groups: [
+            CategoryRequiredTagGroup.new(tag_group: staff_only_required_tag_group, min_count: 1),
+          ],
+        )
+        SearchIndexer.index(tagged_category, force: true)
+      end
+
+      it "does not leak the staff-only tag-group name to an anonymous viewer" do
+        post "/categories/search.json", params: { term: "TaggedCategory" }
+
+        tagged_payload =
+          response.parsed_body["categories"].find { |c| c["id"] == tagged_category.id }
+
+        expect(tagged_payload.to_json).not_to include(staff_only_required_tag_group.name)
+        expect(tagged_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
+      end
+    end
   end
 
   describe "#hierarchical_search" do
@@ -2142,213 +2386,31 @@ RSpec.describe CategoriesController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
     end
-  end
 
-  describe "hidden tag metadata exposure" do
-    fab!(:tagged_category) { Fabricate(:category, name: "Tagged") }
-    fab!(:tag)
-    fab!(:public_tag_group, :tag_group)
-    fab!(:hidden_tag) { Fabricate(:tag, name: "leaked-tag") }
+    context "when a category has a staff-only required tag group" do
+      fab!(:tagged_category) { Fabricate(:category, name: "TaggedCategory") }
 
-    fab!(:staff_tag_group) do
-      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
-    end
-
-    before do
-      SiteSetting.tagging_enabled = true
-      SearchIndexer.enable
-
-      tagged_category.tags << tag
-      tagged_category.tag_groups << public_tag_group
-      tagged_category.update!(
-        category_required_tag_groups: [
-          CategoryRequiredTagGroup.new(tag_group: staff_tag_group, min_count: 1),
-        ],
-      )
-      SearchIndexer.index(tagged_category, force: true)
-    end
-
-    after do
-      Site.clear_cache
-      Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
-    end
-
-    def serialized_payload
-      response.parsed_body["categories"].find { |c| c["id"] == tagged_category.id }
-    end
-
-    it "omits name-bearing tag fields on /categories/find.json for an anonymous viewer" do
-      get "/categories/find.json",
-          params: {
-            slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
-          }
-
-      expect(serialized_payload).not_to have_key("allowed_tags")
-      expect(serialized_payload).not_to have_key("allowed_tag_groups")
-      expect(serialized_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "omits name-bearing tag fields on /categories/find.json for a regular user" do
-      sign_in(user)
-
-      get "/categories/find.json",
-          params: {
-            slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
-          }
-
-      expect(serialized_payload).not_to have_key("allowed_tags")
-      expect(serialized_payload).not_to have_key("allowed_tag_groups")
-      expect(serialized_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "exposes name-bearing tag fields on /categories/find.json for an admin with include_permissions" do
-      sign_in(admin)
-
-      get "/categories/find.json",
-          params: {
-            slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
-            include_permissions: true,
-          }
-
-      expect(serialized_payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to(
-        contain_exactly(tag.name),
-      )
-      expect(serialized_payload["allowed_tag_groups"]).to contain_exactly(public_tag_group.name)
-      expect(serialized_payload["required_tag_groups"]).to eq(
-        [{ "name" => staff_tag_group.name, "min_count" => 1 }],
-      )
-    end
-
-    it "omits name-bearing tag fields on /categories/search.json for an anonymous viewer" do
-      post "/categories/search.json", params: { term: "Tagged" }
-
-      expect(serialized_payload).not_to have_key("allowed_tags")
-      expect(serialized_payload).not_to have_key("allowed_tag_groups")
-      expect(serialized_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "omits name-bearing tag fields on /categories/search.json for a regular user" do
-      sign_in(user)
-
-      post "/categories/search.json", params: { term: "Tagged" }
-
-      expect(serialized_payload).not_to have_key("allowed_tags")
-      expect(serialized_payload).not_to have_key("allowed_tag_groups")
-      expect(serialized_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "omits name-bearing tag fields on /categories/hierarchical_search.json for a regular user" do
-      sign_in(user)
-
-      get "/categories/hierarchical_search.json", params: { term: "Tagged" }
-
-      expect(serialized_payload).not_to have_key("allowed_tags")
-      expect(serialized_payload).not_to have_key("allowed_tag_groups")
-      expect(serialized_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "omits name-bearing tag fields on /c/:id/show.json for a regular user" do
-      sign_in(user)
-
-      get "/c/#{tagged_category.id}/show.json"
-      expect(response.status).to eq(200)
-
-      payload = response.parsed_body["category"]
-
-      expect(payload).not_to have_key("allowed_tags")
-      expect(payload).not_to have_key("allowed_tag_groups")
-      expect(payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
-    end
-
-    it "exposes name-bearing tag fields on /c/:id/show.json for an admin" do
-      sign_in(admin)
-
-      get "/c/#{tagged_category.id}/show.json"
-      expect(response.status).to eq(200)
-
-      payload = response.parsed_body["category"]
-
-      expect(payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to contain_exactly(
-        tag.name,
-      )
-      expect(payload["allowed_tag_groups"]).to contain_exactly(public_tag_group.name)
-      expect(payload["required_tag_groups"]).to eq(
-        [{ "name" => staff_tag_group.name, "min_count" => 1 }],
-      )
-    end
-
-    context "for a moderator with moderators_manage_categories" do
-      fab!(:moderator)
-      fab!(:admin_only_tag) { Fabricate(:tag, name: "admin-only-tag") }
-
-      fab!(:admin_only_tag_group) do
-        Fabricate(
-          :tag_group,
-          name: "admin-only-group",
-          permissions: {
-            "admins" => 1,
-          },
-          tag_names: [admin_only_tag.name],
-        )
-      end
-
-      fab!(:required_admin_only_tag_group) do
-        Fabricate(:tag_group, name: "required-admin-group", permissions: { "admins" => 1 })
+      fab!(:staff_only_required_tag_group) do
+        Fabricate(:tag_group, name: "staff-only-required-group", permissions: { "staff" => 1 })
       end
 
       before do
-        SiteSetting.moderators_manage_categories = true
-
-        tagged_category.tags << admin_only_tag
-        tagged_category.tag_groups << admin_only_tag_group
+        SiteSetting.tagging_enabled = true
         tagged_category.update!(
           category_required_tag_groups: [
-            CategoryRequiredTagGroup.new(tag_group: staff_tag_group, min_count: 1),
-            CategoryRequiredTagGroup.new(tag_group: required_admin_only_tag_group, min_count: 2),
+            CategoryRequiredTagGroup.new(tag_group: staff_only_required_tag_group, min_count: 1),
           ],
         )
-
-        sign_in(moderator)
       end
 
-      it "filters admin-only tag and tag-group names from /categories/find.json with include_permissions" do
-        get "/categories/find.json",
-            params: {
-              slug_path_with_id: "#{tagged_category.slug}/#{tagged_category.id}",
-              include_permissions: true,
-            }
+      it "does not leak the staff-only tag-group name to a regular user" do
+        get "/categories/hierarchical_search.json", params: { term: "TaggedCategory" }
 
-        expect(serialized_payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to(
-          contain_exactly(tag.name),
-        )
-        expect(serialized_payload["allowed_tag_groups"]).to contain_exactly(public_tag_group.name)
-        expect(serialized_payload["required_tag_groups"]).to eq(
-          [{ "name" => staff_tag_group.name, "min_count" => 1 }],
-        )
-      end
+        tagged_payload =
+          response.parsed_body["categories"].find { |c| c["id"] == tagged_category.id }
 
-      it "preserves hidden tag, tag-group, and required-tag-group associations when the moderator round-trips visible-only params" do
-        put "/categories/#{tagged_category.id}.json",
-            params: {
-              name: tagged_category.name,
-              color: "abcdef",
-              text_color: "ffffff",
-              allowed_tags: [tag.name],
-              allowed_tag_groups: [public_tag_group.name],
-              required_tag_groups: [{ name: staff_tag_group.name, min_count: 1 }],
-            }
-
-        expect(response.status).to eq(200)
-
-        tagged_category.reload
-        expect(tagged_category.tags.pluck(:name)).to contain_exactly(tag.name, admin_only_tag.name)
-        expect(tagged_category.tag_groups.pluck(:name)).to contain_exactly(
-          public_tag_group.name,
-          admin_only_tag_group.name,
-        )
-        expect(
-          tagged_category.category_required_tag_groups.map { |crtg| crtg.tag_group.name },
-        ).to contain_exactly(staff_tag_group.name, required_admin_only_tag_group.name)
+        expect(tagged_payload.to_json).not_to include(staff_only_required_tag_group.name)
+        expect(tagged_payload["required_tag_groups"]).to eq([{ "min_count" => 1 }])
       end
     end
   end
