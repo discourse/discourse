@@ -202,13 +202,6 @@ export default class InlineEditController extends Component {
     }
     this.#editingRendererEl?.classList.remove("--editing");
     this.#editingRendererEl = null;
-    // Belt + suspenders: in case the renderer span was replaced (block
-    // re-rendered during edit) and our cached ref is stale, sweep any
-    // leftover `--editing` classes on inline-rich-text spans across the
-    // document. Cheap query; runs once per edit-session end.
-    document
-      .querySelectorAll(".ve-inline-rich-text.--editing")
-      .forEach((el) => el.classList.remove("--editing"));
   }
 
   <template>
