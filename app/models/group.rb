@@ -464,17 +464,10 @@ class Group < ActiveRecord::Base
     end
 
     result = guardian.filter_allowed_categories(result)
-    result = filter_hidden_posts_for_guardian(result, guardian)
+    result = guardian.filter_hidden_posts(result)
     result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
     result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
     result.order("posts.created_at desc")
-  end
-
-  def filter_hidden_posts_for_guardian(result, guardian)
-    return result if guardian.can_see_all_hidden_posts?
-    return result.where(posts: { hidden: false }) if guardian.anonymous?
-
-    result.where("posts.hidden = false OR posts.user_id = ?", guardian.user.id)
   end
 
   def self.trust_group_ids

@@ -95,8 +95,7 @@ module NestedReplies
       post_types << Post.types[:whisper] if @guardian.user&.whisperer?
 
       scope = @topic.posts.where(post_type: post_types).where.not(action_code: [nil, ""])
-      scope = scope.where(hidden: false) unless @guardian.can_see_all_hidden_posts?
-      scope.exists?
+      @guardian.filter_hidden_posts(scope, category: @topic.category).exists?
     end
   end
 end

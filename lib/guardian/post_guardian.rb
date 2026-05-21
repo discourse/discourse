@@ -326,12 +326,28 @@ module PostGuardian
     post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_see_all_hidden_posts?
+  def filter_hidden_posts(records, category: nil, category_id_column: "topics.category_id")
+    return records if can_see_all_hidden_posts?(category)
+    return records.where(posts: { hidden: false }) if anonymous?
+
+    conditions = ["posts.hidden = false", "posts.user_id = :user_id"]
+    params = { user_id: user.id }
+
+    if category.nil? && category_group_moderation_allowed?
+      conditions << "#{category_id_column} IN (:moderated_category_ids)"
+      params[:moderated_category_ids] = category_group_moderator_scope.select(:id)
+    end
+
+    records.where(conditions.join(" OR "), params)
+  end
+
+  def can_see_all_hidden_posts?(category = nil)
     hidden_post_visible_groups = SiteSetting.hidden_post_visible_groups_map
 
     return true if hidden_post_visible_groups.include?(Group::AUTO_GROUPS[:everyone])
     return false if anonymous?
     return true if is_staff?
+    return true if is_category_group_moderator?(category)
 
     @user.in_any_groups?(hidden_post_visible_groups)
   end
