@@ -250,23 +250,9 @@ class PostDestroyer
     @post.publish_change_to_clients!(permanent? ? :destroyed : :deleted) if @post.topic
     if @topic && @post.post_number == 1
       TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @topic)
-    elsif @topic && @post.post_number > 1 && Topic.exists?(id: @topic.id)
-      publish_topic_tracking_state_after_reply_deletion
+    elsif @topic && @post.post_number > 1
+      TopicTrackingState.publish_unread_recovered(@topic)
     end
-  end
-
-  def publish_topic_tracking_state_after_reply_deletion
-    TopicUser
-      .tracking(@topic.id)
-      .includes(:user)
-      .find_each do |topic_user|
-        TopicTrackingState.publish_read(
-          @topic.id,
-          topic_user.last_read_post_number,
-          topic_user.user,
-          topic_user.notification_level,
-        )
-      end
   end
 
   def permanent?

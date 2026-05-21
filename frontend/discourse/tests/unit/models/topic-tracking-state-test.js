@@ -87,13 +87,6 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 7,
         deleted: true,
-        last_read_post_number: null,
-        tags: ["random"],
-        created_in_new_period: true,
-      },
-      {
-        topic_id: 8,
-        deleted: true,
         last_read_post_number: 1,
         highest_post_number: 7,
         category_id: 7,
