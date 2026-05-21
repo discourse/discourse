@@ -92,6 +92,10 @@ task "site_settings:find_dead" => :environment do
   end
 end
 
+# TODO(gabriel): This was added as a fix for a bug in `type: object` settings.
+# Some settings were storing the upload URLs instead of upload IDs.
+# This rake task can be removed by May 2027
+# Remove `spec/tasks/site_settings_spec.rb` too.
 desc "Normalize upload URLs in objects site/theme settings to upload IDs"
 task "site_settings:normalize_object_uploads" => :environment do
   dry_run = ENV["DRY_RUN"] == "1"

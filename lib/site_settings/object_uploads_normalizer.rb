@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO(gabriel): This was added as a fix for a bug in `type: object` settings.
+# This is only used by a rake task. This class can be removed by May 2027
+
 module SiteSettings
   class ObjectUploadsNormalizer
     def initialize(dry_run: false, output: $stdout)

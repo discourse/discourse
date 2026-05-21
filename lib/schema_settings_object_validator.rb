@@ -28,6 +28,8 @@ class SchemaSettingsObjectValidator
 
     def upload_ids(schema:, objects:)
       property_values_of_type(schema:, objects:, type: "upload").filter_map do |value|
+        # TODO(gabriel): this if branch was to deal wit ha legacy logic bug where some upload fields were stored as URLs instead of IDs.
+        # This can be removed by May 2027.
         if value.is_a?(Integer)
           value
         elsif value.is_a?(String) && value.present?
