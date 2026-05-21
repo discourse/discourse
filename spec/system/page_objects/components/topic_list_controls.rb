@@ -15,14 +15,22 @@ module PageObjects
       end
 
       def has_unread?(count:)
-        text =
-          if count == 0
-            I18n.t("js.filters.unread.title")
-          else
-            I18n.t("js.filters.unread.title_with_count", count: count)
-          end
-
-        has_css?(".nav-item_unread", exact_text: text)
+        if count == 0
+          # The Unread tab is auto-hidden (`hidden` class) when the count is 0
+          # and the tab isn't active, so we accept either no visible badge or
+          # an explicitly empty one.
+          has_no_css?(".nav-item_unread:not(.hidden)") ||
+            has_css?(
+              ".nav-item_unread",
+              exact_text: I18n.t("js.filters.unread.title"),
+              visible: :all,
+            )
+        else
+          has_css?(
+            ".nav-item_unread",
+            exact_text: I18n.t("js.filters.unread.title_with_count", count: count),
+          )
+        end
       end
 
       def dismiss_unread(untrack: false)
