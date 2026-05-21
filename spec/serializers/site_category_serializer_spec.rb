@@ -26,23 +26,45 @@ RSpec.describe SiteCategorySerializer do
 
   after { Site.clear_cache }
 
-  it "omits name-bearing tag fields and limits required_tag_groups to min_count for every scope" do
-    [nil, Guardian.new, Guardian.new(user), Guardian.new(admin)].each do |scope|
-      json = described_class.new(category, scope: scope, root: false).as_json
+  def serialize(scope)
+    described_class.new(category, scope: scope, root: false).as_json
+  end
 
-      aggregate_failures "scope: #{scope.inspect}" do
-        expect(json).not_to have_key(:allowed_tags)
-        expect(json).not_to have_key(:allowed_tag_groups)
-        expect(json[:required_tag_groups]).to eq([{ min_count: 1 }])
-      end
-    end
+  it "omits name-bearing tag fields and limits required_tag_groups to min_count without a scope" do
+    json = serialize(nil)
+
+    expect(json).not_to have_key(:allowed_tags)
+    expect(json).not_to have_key(:allowed_tag_groups)
+    expect(json[:required_tag_groups]).to eq([{ min_count: 1 }])
+  end
+
+  it "omits name-bearing tag fields and limits required_tag_groups to min_count for an anonymous viewer" do
+    json = serialize(Guardian.new)
+
+    expect(json).not_to have_key(:allowed_tags)
+    expect(json).not_to have_key(:allowed_tag_groups)
+    expect(json[:required_tag_groups]).to eq([{ min_count: 1 }])
+  end
+
+  it "omits name-bearing tag fields and limits required_tag_groups to min_count for a regular user" do
+    json = serialize(Guardian.new(user))
+
+    expect(json).not_to have_key(:allowed_tags)
+    expect(json).not_to have_key(:allowed_tag_groups)
+    expect(json[:required_tag_groups]).to eq([{ min_count: 1 }])
+  end
+
+  it "omits name-bearing tag fields and limits required_tag_groups to min_count for an admin" do
+    json = serialize(Guardian.new(admin))
+
+    expect(json).not_to have_key(:allowed_tags)
+    expect(json).not_to have_key(:allowed_tag_groups)
+    expect(json[:required_tag_groups]).to eq([{ min_count: 1 }])
   end
 
   it "omits required_tag_groups when tagging is disabled" do
     SiteSetting.tagging_enabled = false
 
-    json = described_class.new(category, scope: Guardian.new, root: false).as_json
-
-    expect(json).not_to have_key(:required_tag_groups)
+    expect(serialize(Guardian.new)).not_to have_key(:required_tag_groups)
   end
 end

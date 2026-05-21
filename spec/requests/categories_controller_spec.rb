@@ -2210,7 +2210,9 @@ RSpec.describe CategoriesController do
             include_permissions: true,
           }
 
-      expect(serialized_payload["allowed_tags"].map { |t| t["name"] }).to contain_exactly(tag.name)
+      expect(serialized_payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to(
+        contain_exactly(tag.name),
+      )
       expect(serialized_payload["allowed_tag_groups"]).to contain_exactly(public_tag_group.name)
       expect(serialized_payload["required_tag_groups"]).to eq(
         [{ "name" => staff_tag_group.name, "min_count" => 1 }],
@@ -2266,7 +2268,9 @@ RSpec.describe CategoriesController do
 
       payload = response.parsed_body["category"]
 
-      expect(payload["allowed_tags"].map { |t| t["name"] }).to contain_exactly(tag.name)
+      expect(payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to contain_exactly(
+        tag.name,
+      )
       expect(payload["allowed_tag_groups"]).to contain_exactly(public_tag_group.name)
       expect(payload["required_tag_groups"]).to eq(
         [{ "name" => staff_tag_group.name, "min_count" => 1 }],
@@ -2314,8 +2318,8 @@ RSpec.describe CategoriesController do
               include_permissions: true,
             }
 
-        expect(serialized_payload["allowed_tags"].map { |t| t["name"] }).to contain_exactly(
-          tag.name,
+        expect(serialized_payload["allowed_tags"].map { |tag_hash| tag_hash["name"] }).to(
+          contain_exactly(tag.name),
         )
         expect(serialized_payload["allowed_tag_groups"]).to contain_exactly(public_tag_group.name)
         expect(serialized_payload["required_tag_groups"]).to eq(

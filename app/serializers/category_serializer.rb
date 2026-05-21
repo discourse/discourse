@@ -182,7 +182,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_allowed_tags?
-    SiteSetting.tagging_enabled && scope && scope.can_edit?(object)
+    SiteSetting.tagging_enabled && scope&.can_edit?(object)
   end
 
   def allowed_tags
@@ -194,7 +194,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_allowed_tag_groups?
-    SiteSetting.tagging_enabled && scope && scope.can_edit?(object)
+    SiteSetting.tagging_enabled && scope&.can_edit?(object)
   end
 
   def allowed_tag_groups
