@@ -117,7 +117,7 @@ describe "Post event" do
       preview = composer.preview
       expect(preview).to have_css(".composer-event-node")
 
-      preview.find(".composer-event__all-day-switch .d-toggle-switch__checkbox").click
+      preview.find(".composer-event__all-day-switch").click
       find(".d-editor-input").click
 
       expect(composer).to have_value(/start="2024-06-01"/)
@@ -138,7 +138,7 @@ describe "Post event" do
         MD
 
         preview = composer.preview
-        expect(preview).to have_css(".composer-event__month", text: "Sep")
+        expect(preview).to have_css(".composer-event__month", text: "SEP")
         expect(preview).to have_css(".composer-event__day", text: "7")
       end
     end
