@@ -912,6 +912,12 @@ importers:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.5.0-570ad470'
 
+  plugins/discourse-visual-editor:
+    devDependencies:
+      '@phosphor-icons/core':
+        specifier: ^2.1.1
+        version: 2.1.1
+
   plugins/discourse-zendesk-plugin:
     dependencies:
       discourse:
@@ -2768,6 +2774,9 @@ packages:
 
   '@oxc-project/types@0.130.0':
     resolution: {integrity: sha512-ibD2usx9JRu7f5pu2tMKMI4cpA4NgXJQoYRP4pQ7Pxmn1l6k/53qWtQWZayhYy3X4QZkt90Ot+mJEaeXouio6Q==}
+
+  '@phosphor-icons/core@2.1.1':
+    resolution: {integrity: sha512-v4ARvrip4qBCImOE5rmPUylOEK4iiED9ZyKjcvzuezqMaiRASCHKcRIuvvxL/twvLpkfnEODCOJp5dM4eZilxQ==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -10922,6 +10931,8 @@ snapshots:
   '@oxc-project/types@0.129.0': {}
 
   '@oxc-project/types@0.130.0': {}
+
+  '@phosphor-icons/core@2.1.1': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true

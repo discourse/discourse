@@ -211,11 +211,13 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           ui: {
             control: "radio-group",
             label: i18n("visual_editor.inspector.layout.placement.align_self"),
+            // Stack mode is a flex column, so `align-self` acts on the
+            // horizontal (cross) axis: left / center / right / stretch.
             optionIcons: {
-              start: "up-long",
-              center: "align-center",
-              end: "down-long",
-              stretch: "arrows-up-down",
+              start: "ve-align-left",
+              center: "ve-align-center-horizontal",
+              end: "ve-align-right",
+              stretch: "ve-arrows-horizontal",
             },
           },
         },
@@ -252,11 +254,13 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           ui: {
             control: "radio-group",
             label: i18n("visual_editor.inspector.layout.placement.align_self"),
+            // Row mode is a flex row, so `align-self` acts on the
+            // vertical (cross) axis: top / center / bottom / stretch.
             optionIcons: {
-              start: "up-long",
-              center: "align-center",
-              end: "down-long",
-              stretch: "arrows-up-down",
+              start: "ve-align-top",
+              center: "ve-align-center-vertical",
+              end: "ve-align-bottom",
+              stretch: "ve-arrows-vertical",
             },
           },
         },
