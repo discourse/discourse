@@ -31,8 +31,8 @@ class UserApiKey::DeviceAuth::UserActivation
   end
 
   def create_approval_token!(grant)
-    UserApiKey::DeviceAuth::CodeRegistry.delete_user_code(grant["user_code"])
-    @approval_tokens.create!(grant["device_code"])
+    UserApiKey::DeviceAuth::CodeRegistry.delete_user_code(grant.user_code)
+    @approval_tokens.create!(grant.device_code)
   end
 
   def resolve_authorize_device_code(request_token:, user_code:, approval_token:)
@@ -65,14 +65,17 @@ class UserApiKey::DeviceAuth::UserActivation
       return Result.new(status: :invalid_code, grant: grant, request_token: request_token)
     end
 
-    unless UserApiKey::DeviceAuth::GrantAuthorization.bind_to_user!(grant, user)
-      return expired_result
-    end
+    return expired_result if !grant.bind_to_user!(user)
+
+    UserApiKey::DeviceAuth::GrantStore.save!(
+      grant,
+      ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
+    )
 
     Result.new(
       status: :success,
       grant: grant,
-      device_code: grant["device_code"],
+      device_code: grant.device_code,
       request_token: request_token,
     )
   end
@@ -85,8 +88,7 @@ class UserApiKey::DeviceAuth::UserActivation
   end
 
   def unavailable_for_user?(grant)
-    grant.blank? || grant["status"] != "pending" ||
-      UserApiKey::DeviceAuth::GrantAuthorization.bound_to_another_user?(grant, user)
+    grant.blank? || !grant.pending? || grant.bound_to_another_user?(user)
   end
 
   def expired_result

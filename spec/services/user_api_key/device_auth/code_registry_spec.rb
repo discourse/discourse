@@ -3,12 +3,12 @@
 RSpec.describe UserApiKey::DeviceAuth::CodeRegistry do
   let(:device_code) { SecureRandom.hex(32) }
   let(:grant) do
-    {
-      "status" => "pending",
-      "device_code" => device_code,
-      "user_code" => "ABCD-2345",
-      "request_token" => "abcdefgh",
-    }
+    UserApiKey::DeviceAuth::Grant.new(
+      status: :pending,
+      device_code: device_code,
+      user_code: "ABCD-2345",
+      request_token: "abcdefgh",
+    )
   end
 
   after { clear_user_api_key_device_auth_redis! }

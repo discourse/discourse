@@ -17,14 +17,14 @@ class UserApiKey::DeviceAuth::GrantStore
     serialized = Discourse.redis.get(grant_key(device_code))
     return if serialized.blank?
 
-    grant = JSON.parse(serialized)
-    grant if grant["device_code"] == device_code
-  rescue JSON::ParserError
+    grant = UserApiKey::DeviceAuth::Grant.from_json(serialized)
+    grant if grant&.device_code == device_code
+  rescue JSON::ParserError, ArgumentError, TypeError
     nil
   end
 
   def self.save!(grant, ttl:)
-    Discourse.redis.setex(grant_key(grant["device_code"]), ttl.to_i, grant.to_json)
+    Discourse.redis.setex(grant_key(grant.device_code), ttl.to_i, grant.to_json)
   end
 
   def self.delete(device_code)

@@ -63,8 +63,7 @@ class UserApiKey::DeviceAuth::CreateRequest
   def reserve_codes(device_request:, grant:)
     codes = UserApiKey::DeviceAuth::CodeRegistry.reserve_for(device_request[:device_code])
 
-    grant["user_code"] = codes.user_code
-    grant["request_token"] = codes.request_token
+    grant.assign_codes!(user_code: codes.user_code, request_token: codes.request_token)
     device_request[:user_code] = codes.user_code
     device_request[:request_token] = codes.request_token
   end

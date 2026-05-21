@@ -34,17 +34,11 @@ RSpec.describe UserApiKey::DeviceAuth::CreateRequest do
         UserApiKey::DeviceAuth::DEVICE_REQUEST_TOKEN_REGEX,
       )
 
-      grant =
-        JSON.parse(
-          Discourse.redis.get(
-            UserApiKey::DeviceAuth::GrantStore.grant_key(device_request[:device_code]),
-          ),
-        )
-      expect(grant).to include(
-        "status" => "pending",
-        "application_name" => "Device Client",
-        "unregistered_client" => true,
-      )
+      grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+
+      expect(grant).to be_pending
+      expect(grant.application_name).to eq("Device Client")
+      expect(grant).to be_unregistered_client
     end
 
     context "with missing required parameters" do
@@ -93,16 +87,11 @@ RSpec.describe UserApiKey::DeviceAuth::CreateRequest do
 
       it "uses trusted metadata from the registered client" do
         device_request = result[:device_request]
-        grant =
-          JSON.parse(
-            Discourse.redis.get(
-              UserApiKey::DeviceAuth::GrantStore.grant_key(device_request[:device_code]),
-            ),
-          )
+        grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
 
-        expect(grant["application_name"]).to eq("Stored Client Name")
-        expect(grant["public_key"]).to eq(public_key)
-        expect(grant["unregistered_client"]).to eq(false)
+        expect(grant.application_name).to eq("Stored Client Name")
+        expect(grant.public_key).to eq(public_key)
+        expect(grant).not_to be_unregistered_client
       end
     end
   end

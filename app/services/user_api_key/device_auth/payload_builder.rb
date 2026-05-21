@@ -8,30 +8,32 @@ class UserApiKey::DeviceAuth::PayloadBuilder
     payload = payload_json(grant, key_value: DEVICE_KEY_PLACEHOLDER, push: false)
     UserApiKey::DeviceAuth::Crypto.validate_payload_size!(
       payload,
-      UserApiKey::DeviceAuth::Crypto.parse_public_key!(grant["public_key"]),
-      padding: grant["padding"],
+      UserApiKey::DeviceAuth::Crypto.parse_public_key!(grant.public_key),
+      padding: grant.padding,
     )
   end
 
   def self.encrypted_payload!(grant, key)
-    public_key = UserApiKey::DeviceAuth::Crypto.parse_public_key!(grant["public_key"])
+    public_key = UserApiKey::DeviceAuth::Crypto.parse_public_key!(grant.public_key)
     payload = payload_json(grant, key_value: key.key, push: key.has_push?)
 
     UserApiKey::DeviceAuth::Crypto.validate_payload_size!(
       payload,
       public_key,
-      padding: grant["padding"],
+      padding: grant.padding,
     )
     Base64.encode64(
-      UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, payload, padding: grant["padding"]),
+      UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, payload, padding: grant.padding),
     )
   end
 
   def self.payload_json(grant, key_value:, push:)
-    payload = { key: key_value, nonce: grant["nonce"], push: push, api: AUTH_API_VERSION }
-    payload[:expires_at] = UserApiKey::DeviceAuth::Expiry.requested_expires_at(
-      grant["expires_in_seconds"],
-    ).iso8601 if grant["expires_in_seconds"].present?
+    payload = { key: key_value, nonce: grant.nonce, push: push, api: AUTH_API_VERSION }
+    if grant.expires_in_seconds.present?
+      payload[:expires_at] = UserApiKey::DeviceAuth::Expiry.requested_expires_at(
+        grant.expires_in_seconds,
+      ).iso8601
+    end
     payload.to_json
   end
 end

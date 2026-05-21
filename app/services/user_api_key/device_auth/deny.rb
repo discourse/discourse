@@ -19,16 +19,15 @@ class UserApiKey::DeviceAuth::Deny
     UserApiKey::DeviceAuth::GrantStore.with_lock!(params.device_code) do
       grant = UserApiKey::DeviceAuth::GrantStore.load(params.device_code)
 
-      if grant.present? && grant["status"] == "pending"
-        grant["status"] = "denied"
-        grant["denied_at"] = Time.zone.now.iso8601
+      if grant&.pending?
+        grant.deny!
         UserApiKey::DeviceAuth::GrantStore.save!(
           grant,
           ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(params.device_code),
         )
         UserApiKey::DeviceAuth::CodeRegistry.delete_indexes_for(grant)
         denied = true
-      elsif grant.present? && grant["status"] == "denied"
+      elsif grant&.denied?
         denied = true
       end
     end

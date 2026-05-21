@@ -63,12 +63,12 @@ class UserApiKey::DeviceAuth::CodeRegistry
     return false if normalized_code.blank?
 
     device_code = Discourse.redis.get(user_code_key(normalized_code))
-    device_code.present? && device_code == grant["device_code"]
+    device_code.present? && device_code == grant.device_code
   end
 
   def self.delete_indexes_for(grant)
-    delete_user_code(grant["user_code"]) if grant["user_code"].present?
-    delete_request_token(grant["request_token"]) if grant["request_token"].present?
+    delete_user_code(grant.user_code) if grant.user_code.present?
+    delete_request_token(grant.request_token) if grant.request_token.present?
   end
 
   def self.delete_user_code(user_code)

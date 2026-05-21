@@ -8,19 +8,19 @@ class UserApiKey::DeviceAuth::GrantPresenter
   end
 
   def device_code
-    grant["device_code"]
+    grant.device_code
   end
 
   def user_code
-    grant["user_code"]
+    grant.user_code
   end
 
   def application_name
-    grant["application_name"]
+    grant.application_name
   end
 
   def client_id
-    grant["client_id"]
+    grant.client_id
   end
 
   def localized_scopes
@@ -28,7 +28,7 @@ class UserApiKey::DeviceAuth::GrantPresenter
   end
 
   def scopes
-    Array(grant["scopes"])
+    grant.scopes
   end
 
   def scopes_csv
@@ -40,15 +40,15 @@ class UserApiKey::DeviceAuth::GrantPresenter
   end
 
   def push_url
-    grant["push_url"]
+    grant.push_url
   end
 
   def padding
-    grant["padding"]
+    grant.padding
   end
 
   def expires_in_seconds
-    grant["expires_in_seconds"]
+    grant.expires_in_seconds
   end
 
   def expires_at
@@ -56,6 +56,6 @@ class UserApiKey::DeviceAuth::GrantPresenter
   end
 
   def unregistered_client?
-    !!grant["unregistered_client"]
+    grant.unregistered_client?
   end
 end

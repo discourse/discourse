@@ -26,15 +26,13 @@ class UserApiKey::DeviceAuth::Authorize
   def authorize_grant(params:, user:)
     UserApiKey::DeviceAuth::GrantStore.with_lock!(params.device_code) do
       grant = UserApiKey::DeviceAuth::GrantStore.load(params.device_code)
-      fail!("grant_not_found") if grant.blank? || grant["status"] != "pending"
-      if UserApiKey::DeviceAuth::GrantAuthorization.bound_to_another_user?(grant, user)
-        fail!("grant_not_found")
-      end
+      fail!("grant_not_found") if grant.blank? || !grant.pending?
+      fail!("grant_not_found") if grant.bound_to_another_user?(user)
 
       key = UserApiKey::DeviceAuth::KeyCreator.create!(grant, user)
-      grant["status"] = "authorized"
-      grant["payload"] = UserApiKey::DeviceAuth::PayloadBuilder.encrypted_payload!(grant, key)
-      grant["authorized_at"] = Time.zone.now.iso8601
+      grant.authorize!(
+        payload: UserApiKey::DeviceAuth::PayloadBuilder.encrypted_payload!(grant, key),
+      )
 
       UserApiKey::DeviceAuth::GrantStore.save!(
         grant,

@@ -4,21 +4,22 @@ RSpec.describe UserApiKey::DeviceAuth::GrantPresenter do
   subject(:presenter) { described_class.new(grant) }
 
   let(:grant) do
-    {
-      "device_code" => SecureRandom.hex(32),
-      "user_code" => "ABCD-2345",
-      "application_name" => "Device Client",
-      "client_id" => "device-client",
-      "scopes" => %w[read write],
-      "push_url" => "https://example.com/push",
-      "padding" => "oaep",
-      "expires_in_seconds" => 1.day.to_i,
-      "unregistered_client" => true,
-    }
+    UserApiKey::DeviceAuth::Grant.new(
+      status: :pending,
+      device_code: SecureRandom.hex(32),
+      user_code: "ABCD-2345",
+      application_name: "Device Client",
+      client_id: "device-client",
+      scopes: %w[read write],
+      push_url: "https://example.com/push",
+      padding: "oaep",
+      expires_in_seconds: 1.day.to_i,
+      unregistered_client: true,
+    )
   end
 
   it "exposes grant fields used by the authorization view" do
-    expect(presenter.device_code).to eq(grant["device_code"])
+    expect(presenter.device_code).to eq(grant.device_code)
     expect(presenter.user_code).to eq("ABCD-2345")
     expect(presenter.application_name).to eq("Device Client")
     expect(presenter.client_id).to eq("device-client")
@@ -48,7 +49,7 @@ RSpec.describe UserApiKey::DeviceAuth::GrantPresenter do
   end
 
   context "without an expiry" do
-    before { grant["expires_in_seconds"] = nil }
+    before { grant.expires_in_seconds = nil }
 
     it "returns nil" do
       expect(presenter.expires_at).to be_nil
@@ -56,7 +57,7 @@ RSpec.describe UserApiKey::DeviceAuth::GrantPresenter do
   end
 
   context "without scopes" do
-    before { grant.delete("scopes") }
+    before { grant.scopes = nil }
 
     it "handles missing scopes" do
       expect(presenter.scopes).to eq([])

@@ -32,14 +32,10 @@ RSpec.describe UserApiKey::DeviceAuth::Authorize do
     it "authorizes the grant and creates a user API key" do
       expect { result }.to change { UserApiKey.where(user: user).count }.by(1)
 
-      grant =
-        JSON.parse(
-          Discourse.redis.get(
-            UserApiKey::DeviceAuth::GrantStore.grant_key(device_request[:device_code]),
-          ),
-        )
-      expect(grant["status"]).to eq("authorized")
-      expect(grant["payload"]).to be_present
+      grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+
+      expect(grant).to be_authorized
+      expect(grant.payload).to be_present
     end
 
     context "when the user does not exist" do
@@ -59,7 +55,11 @@ RSpec.describe UserApiKey::DeviceAuth::Authorize do
 
       before do
         grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
-        UserApiKey::DeviceAuth::GrantAuthorization.bind_to_user!(grant, other_user)
+        grant.bind_to_user!(other_user)
+        UserApiKey::DeviceAuth::GrantStore.save!(
+          grant,
+          ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
+        )
       end
 
       it { is_expected.to fail_a_step(:authorize_grant) }

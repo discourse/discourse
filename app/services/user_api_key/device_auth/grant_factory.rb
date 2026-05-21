@@ -2,8 +2,8 @@
 
 class UserApiKey::DeviceAuth::GrantFactory
   def self.build(params, client, scopes, expires_in_seconds, device_code)
-    {
-      status: "pending",
+    UserApiKey::DeviceAuth::Grant.new(
+      status: :pending,
       device_code: device_code,
       application_name:
         if client.present?
@@ -20,6 +20,6 @@ class UserApiKey::DeviceAuth::GrantFactory
       expires_in_seconds: expires_in_seconds,
       unregistered_client: client.blank? || client.public_key.blank?,
       created_at: Time.zone.now.iso8601,
-    }.stringify_keys
+    )
   end
 end

@@ -2,7 +2,7 @@
 
 RSpec.describe UserApiKey::DeviceAuth::GrantStore do
   let(:device_code) { SecureRandom.hex(32) }
-  let(:grant) { { "status" => "pending", "device_code" => device_code } }
+  let(:grant) { UserApiKey::DeviceAuth::Grant.new(status: :pending, device_code: device_code) }
 
   after { clear_user_api_key_device_auth_redis! }
 
@@ -15,6 +15,85 @@ RSpec.describe UserApiKey::DeviceAuth::GrantStore do
 
     it "ignores malformed device codes" do
       expect(described_class.load("invalid")).to be_nil
+    end
+
+    it "loads serialized grant JSON with string keys" do
+      Discourse.redis.setex(
+        described_class.grant_key(device_code),
+        1.minute,
+        {
+          "status" => "pending",
+          "device_code" => device_code,
+          "user_code" => "ABCD-2345",
+          "request_token" => "abcdefgh",
+          "authorizing_user_id" => 12,
+          "authorizing_username" => "authorizer",
+          "authorizing_at" => Time.zone.now.iso8601,
+        }.to_json,
+      )
+
+      loaded_grant = described_class.load(device_code)
+
+      expect(loaded_grant).to be_pending
+      expect(loaded_grant.device_code).to eq(device_code)
+      expect(loaded_grant.user_code).to eq("ABCD-2345")
+      expect(loaded_grant.request_token).to eq("abcdefgh")
+      expect(loaded_grant.authorizing_user_id).to eq(12)
+    end
+
+    it "loads authorized and denied serialized grants" do
+      authorized_device_code = SecureRandom.hex(32)
+      denied_device_code = SecureRandom.hex(32)
+      Discourse.redis.setex(
+        described_class.grant_key(authorized_device_code),
+        1.minute,
+        {
+          "status" => "authorized",
+          "device_code" => authorized_device_code,
+          "payload" => "encrypted-payload",
+          "authorized_at" => Time.zone.now.iso8601,
+        }.to_json,
+      )
+      Discourse.redis.setex(
+        described_class.grant_key(denied_device_code),
+        1.minute,
+        {
+          "status" => "denied",
+          "device_code" => denied_device_code,
+          "denied_at" => Time.zone.now.iso8601,
+        }.to_json,
+      )
+
+      expect(described_class.load(authorized_device_code)).to be_authorized
+      expect(described_class.load(authorized_device_code).payload).to eq("encrypted-payload")
+      expect(described_class.load(denied_device_code)).to be_denied
+    end
+
+    it "rejects invalid serialized grants" do
+      described_class.save!(grant, ttl: 1.minute)
+      Discourse.redis.setex(described_class.grant_key(device_code), 1.minute, [].to_json)
+
+      expect(described_class.load(device_code)).to be_nil
+    end
+
+    it "rejects serialized grants with unknown fields" do
+      Discourse.redis.setex(
+        described_class.grant_key(device_code),
+        1.minute,
+        { status: "pending", device_code: device_code, unexpected: "value" }.to_json,
+      )
+
+      expect(described_class.load(device_code)).to be_nil
+    end
+
+    it "rejects grants with mismatched device codes" do
+      Discourse.redis.setex(
+        described_class.grant_key(device_code),
+        1.minute,
+        { status: "pending", device_code: SecureRandom.hex(32) }.to_json,
+      )
+
+      expect(described_class.load(device_code)).to be_nil
     end
   end
 

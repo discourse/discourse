@@ -29,13 +29,9 @@ RSpec.describe UserApiKey::DeviceAuth::Deny do
     it "marks the grant as denied" do
       result
 
-      grant =
-        JSON.parse(
-          Discourse.redis.get(
-            UserApiKey::DeviceAuth::GrantStore.grant_key(device_request[:device_code]),
-          ),
-        )
-      expect(grant["status"]).to eq("denied")
+      grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+
+      expect(grant).to be_denied
     end
 
     context "when the grant does not exist" do
