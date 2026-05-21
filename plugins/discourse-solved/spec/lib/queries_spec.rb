@@ -81,16 +81,14 @@ describe DiscourseSolved::Queries do
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: post1.id }, guardian: admin.guardian)
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: post2.id }, guardian: admin.guardian)
 
-        expect(described_class.solved_count(user.id)).to eq(1)
+        expect(described_class.solved_count(user.id)).to eq(2)
 
         topic2 = Fabricate(:topic)
         Fabricate(:post, topic: topic2)
         post3 = Fabricate(:post, topic: topic2, user: user)
-        post4 = Fabricate(:post, topic: topic2, user: user)
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: post3.id }, guardian: admin.guardian)
-        DiscourseSolved::AcceptAnswer.call!(params: { post_id: post4.id }, guardian: admin.guardian)
 
-        expect(described_class.solved_count(user.id)).to eq(2)
+        expect(described_class.solved_count(user.id)).to eq(3)
       end
     end
   end

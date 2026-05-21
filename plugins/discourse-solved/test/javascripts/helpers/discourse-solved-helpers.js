@@ -263,7 +263,6 @@ export function topicWithNoAnswer(currentUserId) {
     draft: null,
     draft_key: "topic_100",
     draft_sequence: 0,
-    accepted_answers: [],
     details: {
       created_by: {
         id: currentUserId,

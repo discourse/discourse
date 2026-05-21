@@ -8,7 +8,6 @@ module DiscourseSolved
         .joins(:topic)
         .where(posts: { user_id: user_id, deleted_at: nil })
         .where(topics: { archetype: Archetype.default, deleted_at: nil })
-        .distinct
         .count
     end
   end

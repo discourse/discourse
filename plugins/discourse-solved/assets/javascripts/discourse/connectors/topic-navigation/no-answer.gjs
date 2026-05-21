@@ -44,7 +44,7 @@ export default class NoAnswer extends Component {
       // - topic is old
       // - topic has at least one reply from another user that can be accepted
       if (
-        !topic.accepted_answer &&
+        !topic.accepted_answers?.length &&
         currentUser &&
         topic.user_id === currentUser.id &&
         moment() - moment(topic.created_at) > MAX_DURATION_WITH_NO_ANSWER &&
