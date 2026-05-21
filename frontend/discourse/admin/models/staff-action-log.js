@@ -1,6 +1,7 @@
 import { computed } from "@ember/object";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
@@ -65,7 +66,7 @@ export default class StaffActionLog extends RestModel {
       : null;
 
     const reviewableLink = this.reviewable_id
-      ? `<a href="/review/${this.reviewable_id}">${this.reviewable_id}</a>`
+      ? `<a href="${getURL(`/review/${this.reviewable_id}`)}">${this.reviewable_id}</a>`
       : null;
 
     let lines = [
