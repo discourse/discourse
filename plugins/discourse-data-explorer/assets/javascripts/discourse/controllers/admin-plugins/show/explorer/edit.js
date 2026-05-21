@@ -8,8 +8,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
+import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { chartability } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
@@ -18,6 +20,9 @@ const viewStore = new KeyValueStore("discourse_data_explorer_");
 export default class PluginsExplorerController extends Controller {
   @service modal;
   @service appEvents;
+  @service siteSettings;
+  @service messageBus;
+  @service toasts;
 
   @tracked params;
   @tracked editingName = false;
@@ -27,12 +32,18 @@ export default class PluginsExplorerController extends Controller {
   @tracked dirty = false;
   @tracked isCachedResult = false;
   @tracked view = "table";
+  @tracked mode = "manual";
+  @tracked aiPrompt = "";
+  @tracked aiGenerating = false;
+  @tracked lastGeneratedPrompt = null;
 
   queryParams = ["params"];
   order = null;
   form = null;
   shouldAutoRun = false;
   _pristine = null;
+  _teardownAiGeneration = null;
+  _aiGenerationToken = 0;
 
   constructor() {
     super(...arguments);
@@ -122,18 +133,37 @@ export default class PluginsExplorerController extends Controller {
     return this.dirty ? "explorer.saverun" : "explorer.run";
   }
 
+  get aiQueriesEnabled() {
+    return this.siteSettings.data_explorer_ai_queries_enabled;
+  }
+
+  get regenerateDisabled() {
+    const trimmed = this.aiPrompt.trim();
+    return (
+      this.aiGenerating || !trimmed || trimmed === this.lastGeneratedPrompt
+    );
+  }
+
   get viewItems() {
-    return [
+    const items = [
       { value: "chart", icon: "signal" },
       { value: "table", icon: "table" },
     ];
+    if (this.mode === "ai") {
+      items.push({ value: "sql", icon: "code" });
+    }
+    return items;
   }
 
   initView() {
     const queryId = this.model?.id;
     const stored = queryId ? viewStore.get(`view_${queryId}`) : null;
-    if (stored === "chart" || stored === "table") {
+    const validViews =
+      this.mode === "ai" ? ["chart", "table", "sql"] : ["chart", "table"];
+    if (validViews.includes(stored)) {
       this.view = stored;
+    } else if (this.mode === "ai" && !this.hasResults) {
+      this.view = "sql";
     } else {
       this.view = chartability(this.results).chartable ? "chart" : "table";
     }
@@ -146,6 +176,101 @@ export default class PluginsExplorerController extends Controller {
     if (queryId) {
       viewStore.set({ key: `view_${queryId}`, value });
     }
+  }
+
+  @action
+  setMode(value) {
+    this.mode = value;
+    if (value !== "ai") {
+      this._teardownAi();
+      this.aiPrompt = "";
+      this.lastGeneratedPrompt = null;
+    }
+  }
+
+  @action
+  updateAiPrompt(event) {
+    this.aiPrompt = event.target.value;
+  }
+
+  @action
+  async regenerate() {
+    if (this.regenerateDisabled) {
+      return;
+    }
+
+    this._teardownAi();
+    this.aiGenerating = true;
+    const token = this._aiGenerationToken;
+
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-data-explorer/queries/generate.json",
+        {
+          type: "POST",
+          data: {
+            ai_description: this.aiPrompt.trim(),
+            existing_sql: this.model.sql || undefined,
+          },
+        }
+      );
+
+      if (token !== this._aiGenerationToken) {
+        return;
+      }
+
+      this._teardownAiGeneration = subscribeToAiGeneration({
+        messageBus: this.messageBus,
+        generationId: response.generation_id,
+        onComplete: (data) => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.model.set("sql", data.sql);
+          this.recomputeDirty();
+          this.lastGeneratedPrompt = this.aiPrompt.trim();
+          this.aiGenerating = false;
+          if (this.view === "chart" || this.view === "table") {
+            this.run();
+          } else {
+            this.setView("sql");
+          }
+        },
+        onError: (data) => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: {
+              message: data.error || i18n("explorer.ai.generation_error"),
+            },
+          });
+        },
+        onTimeout: () => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: { message: i18n("explorer.ai.generation_timeout") },
+          });
+        },
+      });
+    } catch (error) {
+      if (token !== this._aiGenerationToken) {
+        return;
+      }
+      this.aiGenerating = false;
+      popupAjaxError(error);
+    }
+  }
+
+  _teardownAi() {
+    this._aiGenerationToken++;
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
+    this.aiGenerating = false;
   }
 
   @action
@@ -375,7 +500,15 @@ export default class PluginsExplorerController extends Controller {
           return;
         }
         this.showResults = true;
-        this.initView();
+        // After a successful run, jump out of the SQL view so the user sees
+        // the results they just asked for.
+        if (this.view === "sql") {
+          this.setView(
+            chartability(this.results).chartable ? "chart" : "table"
+          );
+        } else {
+          this.initView();
+        }
       })
       .catch((err) => {
         this.showResults = false;

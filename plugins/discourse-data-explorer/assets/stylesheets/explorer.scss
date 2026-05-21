@@ -417,7 +417,8 @@ table.group-reports {
   margin-bottom: 2em;
 }
 
-.query-new__top-bar {
+.query-new__top-bar,
+.query-edit__top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -426,6 +427,36 @@ table.group-reports {
 
   .back-button {
     margin: 0;
+  }
+}
+
+.query-ai-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 1em 0;
+
+  &__label {
+    font-weight: 700;
+  }
+
+  &__input {
+    width: 100%;
+    min-height: 4em;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+  }
+
+  &__generating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 }
 

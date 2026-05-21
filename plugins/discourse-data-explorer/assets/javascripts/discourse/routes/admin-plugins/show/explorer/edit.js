@@ -1,7 +1,10 @@
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
+  @service siteSettings;
+
   queryParams = {
     autoRun: {
       as: "run",
@@ -54,9 +57,16 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   }
 
   setupController(controller, model, transition) {
+    controller._teardownAi();
+
     const cachedResult = model.model.cached_result;
     const shouldAutoRun = !!transition.to.queryParams.run;
     const showCachedResult = !!cachedResult && !shouldAutoRun;
+    const defaultMode =
+      this.siteSettings.data_explorer_ai_queries_enabled &&
+      !model.model.is_default
+        ? "ai"
+        : "manual";
 
     controller.setProperties({
       ...model,
@@ -64,8 +74,17 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       showResults: showCachedResult,
       isCachedResult: showCachedResult,
       shouldAutoRun,
+      mode: defaultMode,
+      aiPrompt: "",
+      lastGeneratedPrompt: null,
     });
     controller.snapshotPristine();
     controller.initView();
+  }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller._teardownAi();
+    }
   }
 }

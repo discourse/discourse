@@ -35,6 +35,8 @@ en:
         description_title: "Generate with AI"
         description_hint: "Describe what you want in plain language. We'll generate the SQL, name, and description for you."
         description_placeholder: "e.g. Show me signups across time"
+        regenerate_placeholder: "e.g. Update the query to limit to 50 results"
+        prompt_label: "Prompt"
         generate: "Generate"
         regenerate: "Re-generate"
         generating: "Generating query with AI..."

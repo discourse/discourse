@@ -12,6 +12,25 @@ RSpec.describe "Data explorer query runner" do
     sign_in admin
   end
 
+  context "with the mode switch in the header" do
+    fab!(:query) { Fabricate(:query, name: "Query", sql: "SELECT 1", user: admin) }
+
+    it "hides the switch when AI queries are disabled" do
+      SiteSetting.data_explorer_ai_queries_enabled = false
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+      expect(page).to have_no_css(".query-mode-switch")
+    end
+
+    it "shows the switch defaulted to AI and toggles to manual" do
+      SiteSetting.data_explorer_ai_queries_enabled = true
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+      expect(page).to have_css(".query-mode-switch input[value='ai']:checked", visible: :all)
+
+      find(".query-mode-switch .d-segmented-control__label", text: "Write SQL").click
+      expect(page).to have_css(".query-mode-switch input[value='manual']:checked", visible: :all)
+    end
+  end
+
   context "when navigating between queries" do
     fab!(:query_a) do
       Fabricate(:query, name: "Query A", sql: "SELECT * FROM users LIMIT 1", user: admin)
