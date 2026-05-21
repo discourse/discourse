@@ -3,24 +3,24 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiFeaturesList from "./ai-features-list";
 
 const ALL = "all";
-const CONFIGURED = "configured";
-const UNCONFIGURED = "unconfigured";
+const ENABLED = "enabled";
+const NOT_ENABLED = "not enabled";
 
 export default class AiFeatures extends Component {
   @service adminPluginNavManager;
 
   @tracked filterValue = "";
-  @tracked selectedFeatureGroup = CONFIGURED;
+  @tracked selectedFeatureGroup = ENABLED;
 
   constructor() {
     super(...arguments);
@@ -31,7 +31,7 @@ export default class AiFeatures extends Component {
         (f) => f.module_enabled === true
       ).length;
       if (configuredCount === 0) {
-        this.selectedFeatureGroup = UNCONFIGURED;
+        this.selectedFeatureGroup = NOT_ENABLED;
       }
     }
   }
@@ -40,12 +40,12 @@ export default class AiFeatures extends Component {
     return [
       { value: ALL, label: i18n("discourse_ai.features.filters.all") },
       {
-        value: CONFIGURED,
-        label: i18n("discourse_ai.features.nav.configured"),
+        value: ENABLED,
+        label: i18n("discourse_ai.features.nav.enabled"),
       },
       {
-        value: UNCONFIGURED,
-        label: i18n("discourse_ai.features.nav.unconfigured"),
+        value: NOT_ENABLED,
+        label: i18n("discourse_ai.features.nav.not_enabled"),
       },
     ];
   }
@@ -57,9 +57,9 @@ export default class AiFeatures extends Component {
 
     let features = this.args.features;
 
-    if (this.selectedFeatureGroup === CONFIGURED) {
+    if (this.selectedFeatureGroup === ENABLED) {
       features = features.filter((feature) => feature.module_enabled === true);
-    } else if (this.selectedFeatureGroup === UNCONFIGURED) {
+    } else if (this.selectedFeatureGroup === NOT_ENABLED) {
       features = features.filter((feature) => feature.module_enabled === false);
     }
 
@@ -164,7 +164,7 @@ export default class AiFeatures extends Component {
   @action
   resetAndFocus() {
     this.filterValue = "";
-    this.selectedFeatureGroup = CONFIGURED;
+    this.selectedFeatureGroup = ENABLED;
     document.querySelector(".admin-filter__input").focus();
   }
 
@@ -194,7 +194,7 @@ export default class AiFeatures extends Component {
           {{/each}}
         </DSelect>
 
-        <FilterInput
+        <DFilterInput
           placeholder={{i18n "discourse_ai.features.filters.text"}}
           @filterAction={{this.onFilterChange}}
           @value={{this.filterValue}}

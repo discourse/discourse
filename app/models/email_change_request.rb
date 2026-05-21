@@ -22,11 +22,11 @@ class EmailChangeRequest < ActiveRecord::Base
   end
 
   def requested_by_admin?
-    self.requested_by&.admin? && !self.requested_by_self?
+    requested_by&.admin? && !requested_by_self?
   end
 
   def requested_by_self?
-    self.requested_by_user_id == self.user_id
+    requested_by_user_id == user_id
   end
 end
 
@@ -35,15 +35,15 @@ end
 # Table name: email_change_requests
 #
 #  id                   :integer          not null, primary key
-#  user_id              :integer          not null
-#  old_email            :string
-#  new_email            :string           not null
-#  old_email_token_id   :integer
-#  new_email_token_id   :integer
 #  change_state         :integer          not null
+#  new_email            :string           not null
+#  old_email            :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  new_email_token_id   :integer
+#  old_email_token_id   :integer
 #  requested_by_user_id :integer
+#  user_id              :integer          not null
 #
 # Indexes
 #

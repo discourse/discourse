@@ -5,11 +5,6 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_math: "Discourse Matematik"
   js:
     discourse_math:
       edit_math: "Matematiği düzenle"

@@ -324,9 +324,6 @@ sk:
         ongoing_event_reminder: "Udalosť prebieha"
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automaticky nastavila vašu účasť a pozvala vás na stránku %{eventName}."
-      event_description:
-        show_more: "Zobraziť viac"
-        show_less: "Zobraziť menej"
       edit_reason: "Udalosť aktualizovaná"
       edit_reason_closed: "Udalosť je uzavretá"
       edit_reason_opened: "Udalosť otvorená"

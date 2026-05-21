@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class StartPostingOption extends Component {
@@ -25,7 +25,7 @@ export default class StartPostingOption extends Component {
   <template>
     <button
       type="button"
-      class={{concatClass "start-posting-options-modal__card" this.name}}
+      class={{dConcatClass "start-posting-options-modal__card" this.name}}
       disabled={{this.disableAction}}
       {{on "click" this.onSelect}}
     >

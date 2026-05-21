@@ -36,8 +36,6 @@ pl_PL:
       topic_search_placeholder: "Szukaj tematów według tytułu lub treści"
       sidebar_name_filter_placeholder: "Imię/Nazwa użytkownika"
       assigned: "Przypisany"
-      group_no_assignments_title: "Brak przypisań"
-      group_no_assignments_body: "Obecnie nie ma aktywnych przypisań dla tej grupy."
       group_everyone: "Wszyscy"
       assigned_to: "Przypisany do"
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"

@@ -32,8 +32,6 @@ pt_BR:
         cta: "Faça sua primeira tabela de classificação"
         none: "Nenhuma tabela de classificação foi criada ainda."
         confirm_destroy: "Tem certeza de que deseja excluir essa tabela de classificação?"
-        section:
-          groups: "Grupos"
         date:
           range: "Intervalo de datas De / Até"
           from: "Data de início"
@@ -48,9 +46,6 @@ pt_BR:
         default_period: "Período padrão"
         default_period_help: "Defina o período de tempo padrão a ser exibido para este placar."
         period_filter_disabled: "Desativar filtro de período"
-        weight:
-          post_created: "Postagem criada"
-          solution: "Solução"
         period:
           all_time: "Desde o início"
           yearly: "Todo ano"

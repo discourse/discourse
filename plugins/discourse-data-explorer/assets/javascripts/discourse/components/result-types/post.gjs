@@ -1,7 +1,7 @@
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import avatar from "discourse/helpers/avatar";
 import getURL from "discourse/lib/get-url";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 const Post = <template>
   {{#if @ctx.post}}
@@ -12,7 +12,7 @@ const Post = <template>
     >
       <div class="title">
         <div class="quote-controls">
-          {{! template-lint-disable no-invalid-link-text }}
+          {{! eslint-disable ember/template-no-invalid-link-text }}
           <a
             href={{getURL
               (concat
@@ -31,7 +31,7 @@ const Post = <template>
             (concat "/t/" @ctx.post.topic_id "/" @ctx.post.post_number)
           }}
         >
-          {{avatar @ctx.post imageSize="tiny"}}{{@ctx.post.username}}:
+          {{dAvatar @ctx.post imageSize="tiny"}}{{@ctx.post.username}}:
         </a>
       </div>
 

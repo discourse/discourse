@@ -32,8 +32,6 @@ es:
         cta: "Crea la primera tabla de clasificación"
         none: "Todavía no hay ninguna tabla de clasificación."
         confirm_destroy: "¿Estás seguro de que quieres eliminar esta tabla de clasificación?"
-        section:
-          groups: "Grupos"
         date:
           range: "Fecha de inicio/fin"
           from: "Desde la fecha"
@@ -48,9 +46,6 @@ es:
         default_period: "Período predeterminado"
         default_period_help: "Establece el período de tiempo predeterminado que se mostrará en esta tabla de clasificación."
         period_filter_disabled: "Desactivar el filtro de periodo de tiempo"
-        weight:
-          post_created: "Publicación creada"
-          solution: "Solución"
         period:
           all_time: "Siempre"
           yearly: "Anualmente"

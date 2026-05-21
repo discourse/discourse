@@ -1851,7 +1851,7 @@ RSpec.describe DiscourseTagging do
         Tag.new(name: "math=fun").save(validate: false)
         expect(
           described_class.tags_for_saving(%w[math=fun fun*2@gmail.com], guardian).try(:sort),
-        ).to eq(%w[math=fun fun2gmailcom].sort)
+        ).to eq(%w[math=fun fun2gmail.com].sort)
       end
     end
 
@@ -1865,6 +1865,11 @@ RSpec.describe DiscourseTagging do
 
       it "removes zero-width spaces" do
         expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
+      end
+
+      it "allows periods in the middle of tag names" do
+        expect(DiscourseTagging.clean_tag("node.js")).to eq("node.js")
+        expect(DiscourseTagging.clean_tag(".node.js.")).to eq("node.js")
       end
 
       it "removes multiple consecutive dashes" do

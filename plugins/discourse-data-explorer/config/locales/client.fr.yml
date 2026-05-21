@@ -6,10 +6,6 @@
 
 fr:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Explorateur de données"
     errors:
       explorer:
         no_semicolons: "Supprimez les points-virgules de la requête."
@@ -23,9 +19,6 @@ fr:
       create: "Créer"
       create_placeholder: "Nom de la requête…"
       description_placeholder: "Saisissez une description ici"
-      ai:
-        generate: "Générer"
-        optional: "facultatif"
       import:
         label: "Importer"
         unparseable_json: "Fichier JSON non analysable."

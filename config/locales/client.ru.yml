@@ -325,6 +325,7 @@ ru:
       comma: ", "
       last_item: "и"
     action_codes:
+      topic_created: "Эта тема создана %{when}"
       public_topic: "Сделал(а) тему публичной %{when}"
       open_topic: "Преобразовал(а) это в тему %{when}"
       private_topic: "Сделал(а) тему личным сообщением %{when}"
@@ -397,6 +398,7 @@ ru:
     broken_transformer_alert: "Произошла ошибка. Ваш сайт может работать некорректно."
     broken_block_alert: "Обнаружена ошибка конфигурации блока. Подробности см. в консоли браузера."
     broken_block_factory_alert: "Не удалось загрузить блок. Некоторые элементы пользовательского интерфейса могут отображаться некорректно."
+    on_before_category_types_change_error: "Произошла ошибка при изменении типов категорий. Для получения дополнительной информации проверьте консоль браузера."
     critical_deprecation:
       notice: "<b>[Уведомление администратора]</b> %{source} содержит код, который необходимо обновить. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>узнать больше</em></a>)"
@@ -408,6 +410,8 @@ ru:
       block_debug:
         visual_overlay: "Визуальное наложение"
         ghost_blocks: "Призрачные блоки"
+      plugin_outlet_debug:
+        find_on_github: "Найти на GitHub"
       toggle_safe_mode: "Переключить безопасный режим"
       toggle_verbose_localization: "Включить/выключить подробный режим локализации"
       toggle_mobile_view: "Переключить мобильный режим"
@@ -512,6 +516,8 @@ ru:
     admin_onboarding_banner:
       launch_in_easy_steps: "Запуск в %{step_count} простых шагах"
       congrats_onboarding_complete: "Поздравляем с завершением процесса адаптации!"
+      select_theme:
+        enabled: "Включено"
       invite_collaborators:
         title: "Пригласить соавторов"
         description: "Первые участники помогают оживить ваше сообщество."
@@ -539,11 +545,6 @@ ru:
           what_is_your_favorite_food:
             title: "Какое ваше любимое блюдо?"
             body: "Поделитесь своими любимыми блюдами с сообществом! Я начну: я обожаю пиццу, особенно с большим количеством сыра и пепперони."
-      spread_the_word:
-        title: "Расскажите всем!"
-        description: "Поделитесь ссылкой со всеми в вашей сети."
-        action: "Копировать ссылку"
-        copied_to_clipboard: "Ссылка скопирована в буфер обмена!"
     about:
       edit: "Отредактировать эту страницу"
       simple_title: "О форуме"
@@ -653,6 +654,7 @@ ru:
           other: "Создано %{count} года назад"
     bookmarked:
       title: "Закладки"
+      delete_bookmarks: "Удалить все закладки"
       help:
         bookmark: "Добавить тему в закладки"
         edit_bookmark: "Изменить закладку для сообщения в этой теме"
@@ -672,6 +674,8 @@ ru:
       edit: "Изменить закладку"
       not_bookmarked: "добавить сообщение в закладки"
       topic_bookmark: "Тема"
+      post_bookmark: "Cообщение #%{post_number}"
+      jump_to_post: "Перейти к сообщению %{post_number}"
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили это сообщение в закладки с напоминанием %{date}: «%{name}»"
       created_with_reminder_generic: "Добавлено в закладки с напоминанием %{date}: «%{name}»"
@@ -754,6 +758,11 @@ ru:
       allow_access: "Разрешить доступ"
       continue_as_guest: "Продолжить как Гость"
       be_first_to_reply: "Будь первым, кто ответит!"
+      replying_to: "Ответ на %{username}"
+      editing_post: "Редактирование поста"
+      reply_placeholder: "Напишите ответ..."
+      signin_flow:
+        cancel: "Нет"
     topic_count_all:
       one: "Посмотреть %{count} новую тему"
       few: "Посмотреть %{count} новые темы"
@@ -1645,7 +1654,6 @@ ru:
         normal_option: "Уведомлять"
         normal_option_title: "Вы будете уведомлены, если этот пользователь ответит вам, процитирует или упомянет вас."
       notification_schedule:
-        title: "Расписание уведомлений"
         label: "Включить расписание уведомлений"
         tip: "Вне указанных здесь часов уведомления приостанавливаются."
         midnight: "Полночь"
@@ -1689,13 +1697,8 @@ ru:
       notifications: "Уведомления"
       statistics: "Статистика"
       desktop_notifications:
-        label: "Мгновенные уведомления"
         not_supported: "Уведомления этим браузером не поддерживаются."
-        perm_default: "Включить уведомления"
-        perm_denied_btn: "Доступ запрещён"
         perm_denied_expl: "Вы запретили уведомления в браузере. Разрешите уведомления в настройках браузера."
-        disable: "Отключить уведомления"
-        enable: "Включить уведомления"
         each_browser_note: "Примечание: этот параметр необходимо изменить в каждом используемом браузере. Если приостановить уведомления в меню пользователя, они будут отключены независимо от этого параметра."
         consent_prompt: "Вы хотите получать уведомления в реальном времени, когда пользователи отвечают на ваши сообщения?"
       dismiss: "Пометить прочитанными"
@@ -3088,6 +3091,12 @@ ru:
       default: Пользовательские эмодзи
     filter_input:
       clear: "Очистить фильтр"
+    d_icon_grid_picker:
+      select_icon: "Выбрать иконки"
+      search_placeholder: "Искать иконки..."
+      no_results: "Иконки не найдены"
+      favorites: "Избранное"
+      selected_icon: "Выбранная иконка: %{iconName}"
     shared_drafts:
       title: "Общие черновики"
       notice: "Эта тема видна только тем, кто может публиковать общие черновики."
@@ -3125,6 +3134,9 @@ ru:
         translation: "Перевод"
         no_translation_yet: "Начните вводить текст, чтобы увидеть предварительный просмотр перевода..."
         placeholder: "Введите перевод публикации здесь..."
+      change_reply_to:
+        hint: "Прокрутите ленту, чтобы найти сообщение, на которое вы хотите ответить."
+        current_selection: "Ответить на сообщение #%{post_number} от пользователя @%{username}"
       group_mentioned_limit:
         one: "<b>Внимание!</b> Вы упомянули <a href='%{group_link}'>%{group}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на %{count} пользователя. Никто не получит уведомление."
         few: "<b>Внимание!</b> Вы упомянули <a href='%{group_link}'>%{group}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на %{count} пользователей. Никто не получит уведомление."
@@ -3657,11 +3669,15 @@ ru:
           placeholder: максимум
           aria_label: Фильтр по максимальному количеству просмотров
     hamburger_menu: "Меню навигации"
+    header_panel: "Шапка"
     new_item: "новый"
     go_back: "вернуться"
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
     current_user: "перейти на вашу страницу пользователя"
     view_all: "Просмотреть все %{tab}"
+    permanently_delete:
+      title: "Вы абсолютно уверены?"
+      confirm_instruction: "Пожалуйста, введите ниже <b>%{phrase}</b> для подтверждения:"
     user_menu:
       generic_no_items: "Нет элементов в списке."
       sr_menu_tabs: "Вкладки меню пользователя"
@@ -3786,30 +3802,16 @@ ru:
         archive_topics: "Архив тем"
         move_messages_to_inbox: "Переместить во входящие"
         archive_messages: "Переместить в архив"
+        convert_to_public_topic: "Сделать темы общедоступными"
+        convert_to_private_message: "Сделать личные сообщения"
         notification_level: "Уведомления об обновлении"
         change_notification_level: "Изменить уровень уведомлений"
         choose_new_category: "Выберите новую категорию для этих тем:"
-        selected_sole_category:
-          one: "Вы выбрали <b>%{count}</b> тему из этой категории:"
-          few: "Вы выбрали <b>%{count}</b> темы из этой категории:"
-          many: "Вы выбрали <b>%{count}</b> тем из этой категории:"
-          other: "Вы выбрали <b>%{count}</b> темы из этой категории:"
         selected_count:
           one: "Выбрано %{count}"
           few: "Выбрано %{count}"
           many: "Выбрано %{count}"
           other: "Выбрано %{count}"
-        change_tags: "Заменить теги"
-        append_tags: "Добавить теги"
-        choose_new_tags: "Выберите новые теги для этих тем:"
-        choose_append_tags: "Добавить теги"
-        changed_tags: "Теги этих тем изменены."
-        remove_tags: "Удалить теги"
-        confirm_remove_tags:
-          one: "Все теги будут удалены из этой темы. Продолжить?"
-          few: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
-          many: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
-          other: "Все теги будут удалены из этих <b>%{count}</b> тем. Продолжить?"
         progress:
           one: "Выполнено: <strong>%{count}</strong> тема"
           few: "Выполнено: <strong>%{count}</strong> темы"
@@ -3861,15 +3863,13 @@ ru:
         description: "Темы, не указанные в списке, скрыты, но к ним по-прежнему можно получить доступ по прямой ссылке. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Узнать больше</a>"
       relist_topics:
         name: "Показать повторно"
-      remove_tags:
-        name: "Удалить теги"
-        description: "Удалите все теги из выбранных тем."
-      append_tags:
-        name: "Добавить теги"
-        description: "Добавьте следующие теги к выбранным темам:"
-      replace_tags:
-        name: "Заменить теги"
-        description: "Замените все существующие теги для выбранных тем следующими:"
+      manage_tags:
+        add:
+          title: "Добавить теги"
+        remove:
+          title: "Удалить теги"
+        replace:
+          title: "Заменить теги"
       delete_topics:
         name: "Удалить"
         description: "Удалить выбранные темы безвозвратно. Это действие необратимо."
@@ -3888,6 +3888,10 @@ ru:
       update_notifications:
         name: "Обновить уведомления"
         description: "Измените свой персональный уровень уведомлений для выбранных тем следующим образом:"
+      pin_topics:
+        name: "Закрепить"
+      unpin_topics:
+        name: "Открепить"
     nested_replies:
       sort:
         label: "Сортировать по"
@@ -3906,7 +3910,10 @@ ru:
       collapse: "Свернуть"
       no_replies: "Ответов пока нет."
       deleted_post_placeholder: "[удалённые]"
+      ignored_post_placeholder: "[игнорировать]"
       pinned_reply: "Закреплена"
+      pin_reply: "Закрепить вверху"
+      unpin_reply: "Открепить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4967,7 +4974,7 @@ ru:
           high: "Высокий"
           very_high: "Очень высокий"
       sort_options:
-        default: "по умолчанию"
+        default: "Домашнюю страницу"
         likes: "Количество лайков"
         views: "Количество просмотров"
         posts: "Количество сообщений"
@@ -5305,109 +5312,63 @@ ru:
       title: "Сочетания клавиш"
       short_title: "Сочетания клавиш"
       search_ctrl_f_tip: "Для поиска по всему форуму нажмите <kbd>/</kbd>"
+      description_header: "Описание"
+      key_header: "Ключ"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Быстрый переход"
-        home: "%{shortcut} Главная"
-        latest: "%{shortcut} Последние"
-        new: "%{shortcut} Новые"
-        unread: "%{shortcut} Непрочитанные"
-        categories: "%{shortcut} Категории"
-        top: "%{shortcut} Обсуждаемые"
-        bookmarks: "%{shortcut} Закладки"
-        profile: "%{shortcut} Профиль"
-        messages: "%{shortcut} Сообщения"
-        drafts: "%{shortcut} Черновики"
-        next: "%{shortcut} Следующая тема"
-        previous: "%{shortcut} Предыдущая тема"
+        home: "Главная"
+        latest: "Последние"
+        new: "Новое"
+        unread: "Непрочитанные"
+        unseen: "Непросмотренные"
+        categories: "Категории"
+        top: "Обсуждаемые"
+        bookmarks: "Закладки"
+        profile: "Профиль"
+        messages: "Сообщений"
+        drafts: "Черновики"
       navigation:
         title: "Навигация"
-        jump: "%{shortcut} Перейти к сообщению #"
-        back: "%{shortcut} Назад"
-        up_down: "%{shortcut} Переместить выделение &uarr; &darr;"
-        open: "%{shortcut} Открыть выделенную тему"
-        open_new_window: "%{shortcut} Открыть выбранную тему в новой вкладке/окне"
-        next_prev: "%{shortcut} Следующий (предыдущий) раздел"
-        go_to_unread_post: "%{shortcut} Перейти к первому непрочитанному сообщению"
+        back: "Назад"
+        up_down: "Переместить выделение &uarr; &darr;"
       application:
         title: "Форум"
-        create: "%{shortcut} Создать новую тему или личное сообщение"
-        notifications: "%{shortcut} Открыть уведомления"
-        hamburger_menu: "%{shortcut} Открыть меню навигации"
-        user_profile_menu: "%{shortcut} Открыть меню профиля"
-        show_incoming_updated_topics: "%{shortcut} Показать обновлённые темы"
-        search: "%{shortcut} Поиск"
-        filter_sidebar: "%{shortcut} Боковая панель фильтров"
-        help: "%{shortcut} Показать эту справку"
-        toggle_bulk_select: "%{shortcut} Переключить массовый выбор"
-        dismiss: "%{shortcut} Закрыть выбранные темы"
-        x: "%{shortcut} Переключить выбор (в режиме массового выбора)"
-        log_out: "%{shortcut} Выйти"
+        search: "Искать"
+        log_out: "Выйти"
       composing:
         title: "Редактирование"
-        return: "%{shortcut} Вернуться в редактор"
-        minimize: "%{shortcut} Свернуть редактор"
-        create_or_reply: "%{shortcut} Создать тему или опубликовать ответ"
-        fullscreen: "%{shortcut} Полноэкранный редактор"
-        insert_current_time: "%{shortcut} Вставить текущее время"
-        bold: "%{shortcut} Жирный"
-        italic: "%{shortcut} Курсив"
-        link: "%{shortcut} Вставить ссылку"
-        preformatted: "%{shortcut} Предварительно отформатированный текст"
-        paragraph: "%{shortcut} Абзац"
-        heading_1: "%{shortcut} Заголовок 1"
-        heading_2: "%{shortcut} Заголовок 2"
-        heading_3: "%{shortcut} Заголовок 3"
-        heading_4: "%{shortcut} Заголовок 4"
-        toggle_direction: "%{shortcut} Переключить направление текста"
-        ordered_list: "%{shortcut} Упорядоченный список"
-        unordered_list: "%{shortcut} Неупорядоченный список"
-        blockquote: "%{shortcut} Цитата"
+        link: "Вставить ссылку"
+        preformatted: "Текст «как есть» (без применения форматирования)"
+        paragraph: "Абзац"
+        blockquote: "Впишите сюда текст цитаты"
       bookmarks:
         title: "Создание закладки"
-        enter: "%{shortcut} Сохранить и закрыть"
-        later_today: "%{shortcut} Сегодня, но позже"
-        later_this_week: "%{shortcut} Позже на этой неделе"
-        tomorrow: "%{shortcut} Завтра"
-        next_week: "%{shortcut} Через неделю"
-        next_month: "%{shortcut} В следующем месяце"
-        next_business_week: "%{shortcut} На следующей рабочей неделе"
-        next_business_day: "%{shortcut} На следующий рабочий день"
-        custom: "%{shortcut} Установить дату и время напоминания"
-        none: "%{shortcut} Не настраивать напоминание"
-        delete: "%{shortcut} Удалить закладку"
+        enter: "Сохранить и закрыть"
+        later_today: "Сегодня, но позже"
+        later_this_week: "Позже на этой неделе"
+        tomorrow: "Завтра"
+        next_week: "На следующей неделе"
+        next_month: "В следующем месяце"
+        next_business_day: "На следующий рабочий день"
+        custom: "Установить дату и время"
+        none: "Нет напоминания"
+        delete: "Удалить закладку"
       actions:
         title: "Действия"
-        bookmark_topic: "%{shortcut} Добавить / удалить из закладок"
-        pin_unpin_topic: "%{shortcut} Закрепить / открепить тему"
-        share_topic: "%{shortcut} Поделиться темой"
-        share_post: "%{shortcut} Поделиться сообщением"
-        reply_as_new_topic: "%{shortcut} Ответить в новой связанной теме"
-        reply_topic: "%{shortcut} Ответить в теме"
-        reply_post: "%{shortcut} Ответить на сообщение"
-        quote_post: "%{shortcut} Процитировать сообщение"
-        like: "%{shortcut} Поставить лайк сообщению"
-        flag: "%{shortcut} Пожаловаться на сообщение"
-        bookmark: "%{shortcut} Добавить сообщение в закладки"
-        edit: "%{shortcut} Редактировать сообщение"
-        delete: "%{shortcut} Удалить сообщение"
-        mark_muted: "%{shortcut} Отключить уведомления в теме"
-        mark_regular: "%{shortcut} Включить уведомления в теме (по умолчанию)"
-        mark_tracking: "%{shortcut} Следить за темой"
-        mark_watching: "%{shortcut} Наблюдать за темой"
-        print: "%{shortcut} Распечатать тему"
-        defer: "%{shortcut} Пометить тему как непрочитанную"
-        topic_admin_actions: "%{shortcut} Открыть в теме меню действий администратора"
-        archive_private_message: "%{shortcut} Переключатель для архивации личных сообщений"
+        reply_as_new_topic: "Ответить в новой связанной теме"
+        reply_topic: "Ответить на тему"
+        flag: "Пометить публикацию"
+        edit: "Редактировать пост"
+        delete: "Удалить публикацию"
+        mark_tracking: "Отслеживать тему"
+        mark_watching: "Наблюдать за темой"
+        defer: "Пометить тему как непрочитанную"
       search_menu:
         title: "Меню результатов поиска"
-        prev_next: "%{shortcut} Перемещение по результатам поиска"
-        insert_url: "%{shortcut} Вставить ссылку на найденное сообщение в окно открытого редактора"
-        full_page_search: "%{shortcut} Запустить поиск по всей странице"
       admin:
         title: "Администрирование"
-        search_prev_next: "%{shortcut} Перемещение по результатам поиска"
-        search_open: "%{shortcut} Открыть поиск для интерфейса администратора"
-        search_full_page: "%{shortcut} Открыть страницу поиска в панели администратора"
     badges:
       earned_n_times:
         one: "Заработал(а) эту награду %{count} раз"
@@ -5549,7 +5510,10 @@ ru:
         synonyms_subtitle: "При использовании следующих тегов они будут заменены на %{name}"
         save: "Сохранить тег"
         delete: "Удалить тег"
+        synonyms_hint: "При использовании указанных выше тегов они будут заменены на %{baseTagName}."
+        add_synonyms_confirm: "Везде, где сейчас используется %{synonymNames} , будет заменено на %{tagName} . Вы уверены, что хотите внести это изменение?"
       localization:
+        hint: "Добавьте локализацию, чтобы отображать разные названия тегов для пользователей на разных языках."
         locale: "Локаль"
         name: "Название"
         description: "Описание"
@@ -6153,6 +6117,8 @@ ru:
         permanent_no_group_selection: "Неприменимо, постоянные изменения касаются всех групп."
         no_changes: "В настоящее время никаких изменений в ближайшее время не планируется."
         preview: "Предпросмотр"
+        default_warning: "Значение по умолчанию для этой настройки изменилось с %{oldDefaultValue} на %{newDefaultValue} в связи с предстоящим изменением <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'></a>."
+        default_warning_short: "Значение по умолчанию для этой настройки изменилось, подробнее об этом читайте на странице <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>предстоящих изменений</a>."
         enabled_for_options:
           no_one: "Никто"
           everyone: "Все"
@@ -6671,6 +6637,18 @@ ru:
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
         custom_date_range: Свой диапазон дат
+        sections:
+          reports:
+            title: "отчетов"
+          traffic:
+            title: "Посещаемость сайта"
+        configure:
+          button: "Настроить"
+        period:
+          last_7_days: "За последние 7 дней"
+          last_30_days: "За последние 30 дней"
+          last_3_months: "За последние 3 месяцев"
+          custom: "Другое"
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
           percent_change_tooltip: "Изменение %{percent}."
@@ -7972,6 +7950,7 @@ ru:
         topic_id: "ID темы"
         post_id: "ID сообщения"
         category_id: "ID категории"
+        reviewable_id: "Очередь проверки"
         delete: "Удалить"
         edit: "Изменить"
         save: "Сохранить"
@@ -8598,7 +8577,6 @@ ru:
           other: "Не удается удалить все сообщения: у пользователя более %{count} сообщения. (Параметр «delete_all_posts_max».)"
         delete_confirm_title: "Действительно удалить пользователя? Это действие безвозвратно!"
         delete_confirm: "Как правило, предпочтительнее анонимизировать пользователей, а не удалять их, чтобы избежать удаления контента из существующих обсуждений."
-        delete_and_block: "Удалить пользователя и заблокировать его адрес электронной почты и IP-адрес"
         delete_dont_block: "Удалить пользователя"
         deleting_user: "Удаление пользователя…"
         deleted: "Пользователь удалён."

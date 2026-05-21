@@ -9,8 +9,6 @@
 
 enabled_site_setting :data_explorer_enabled
 
-register_site_setting_area("ai-features/data_explorer") if defined?(DiscourseAi)
-
 register_asset "stylesheets/explorer.scss"
 
 register_svg_icon "angle-down"
@@ -68,6 +66,8 @@ after_initialize do
   ) { DiscourseDataExplorer::Query.for_group(object).exists? }
 
   register_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
+
+  register_admin_dashboard_report_source(DiscourseDataExplorer::AdminDashboardReportProvider)
 
   add_api_key_scope(
     :data_explorer,
@@ -133,11 +133,9 @@ after_initialize do
               { skip_empty:, users_from_group:, attach_csv:, render_url_columns: true },
             )
             .each do |pm|
-              begin
-                utils.send_pm(pm, automation_id: automation.id)
-              rescue ActiveRecord::RecordNotSaved => e
-                Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
-              end
+              utils.send_pm(pm, automation_id: automation.id)
+            rescue ActiveRecord::RecordNotSaved => e
+              Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
             end
         end
       end
@@ -202,17 +200,12 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
 
-    DiscoursePluginRegistry.register_external_ai_feature(
-      {
-        module_name: :data_explorer,
-        feature: :query_generation,
-        agent_klass: DiscourseDataExplorer::AiQueryGenerator,
-        enabled_by_setting: "data_explorer_ai_queries_enabled",
-      },
-      self,
+    DiscourseAi.register_feature(
+      module_name: :data_explorer,
+      feature: :query_generation,
+      agent_klass: DiscourseDataExplorer::AiQueryGenerator,
+      enabled_by_setting: "data_explorer_ai_queries_enabled",
+      plugin: self,
     )
-
-    SiteSetting.areas[:data_explorer_ai_queries_enabled] ||= "ai-features/data_explorer"
-    SiteSetting.areas[:data_explorer_query_generation_agent] ||= "ai-features/data_explorer"
   end
 end

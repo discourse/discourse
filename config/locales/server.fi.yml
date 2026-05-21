@@ -370,7 +370,6 @@ fi:
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
     not_found_template_link: |
       <p>Tätä kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voa enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
-    existing_user_cannot_redeem: "Tätä kutsua ei voi lunastaa. Pyydä kutsujaasi lähettämään sinulle uusi kutsu."
     existing_user_already_redemeed: "Olet jo lunastanut tämän kutsulinkin."
     user_exists: "Henkilöä <b>%{email}</b> ei tarvitse kutsua, hänellä on jo tili!"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
@@ -604,6 +603,7 @@ fi:
       admins: "ylläpitäjät"
       moderators: "valvojat"
       staff: "henkilökunta"
+      anonymous: "anonyymeja"
       trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"
@@ -1453,6 +1453,8 @@ fi:
       xaxis: "Päivä"
       yaxis: "Kirjautuneiden selainten sivukatselut"
       description: "Oikeita selaimia käyttävien kirjautuneiden vierailijoiden sivukatseluiden määrä."
+    page_view_embed_reqs:
+      xaxis: "Päivä"
     http_background_reqs:
       title: "Tausta"
       xaxis: "Päivä"
@@ -1514,7 +1516,7 @@ fi:
         os: Käyttöjärjestelmä
         login_time: Kirjautumisaika
       description: "Tiedot uusista kirjautumisista, jotka poikkesivat epäilyttävällä tavalla aiemmista kirjautumisista."
-    staff_logins:
+    admin_logins:
       title: "Ylläpitäjien kirjautumiset"
       labels:
         user: Käyttäjä
@@ -1703,7 +1705,6 @@ fi:
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
-    email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN:n, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot ja muut riippuvuudet varmistaaksesi, että ne ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
@@ -1862,7 +1863,6 @@ fi:
     google_oauth2_client_secret: "Google-sovelluksesi asiakkaan salatunnus."
     google_oauth2_prompt: "Valinnainen välilyönneillä eroteltu lista merkkijonoarvoja, jotka määräävät pyytääkö todennuspalvelin käyttäjältä uudelleentunnistautumista ja suostumusta. Ks. käyvät arvot: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>"
     google_oauth2_hd: "Valinnainen Google Appsin isännöity verkkotunnus, johon kirjautuminen on rajoitettu. Katso lisätietoja osoitteesta <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "Hae käyttäjien Google-ryhmät isännöidyllä verkkotunnuksella todennuksen yhteydessä. Haettuja Google-ryhmiä voidaan käyttää automaattisen Discourse-ryhmän jäsenyyden myöntämiseen (katso ryhmäasetukset). Lisätietoja on osoitteessa https://meta.discourse.org/t/226850."
     google_oauth2_hd_groups_service_account_admin_email: "Sähköpostiosoite, joka kuuluu Google Workspacen järjestelmänvalvojan tilille. Käytetään palvelutilin tunnistetietojen kanssa ryhmän tietojen hakemiseen."
     google_oauth2_hd_groups_service_account_json: "Palvelutilin JSON-muotoiset avaintiedot. Käytetään ryhmän tietojen hakemiseen."
     google_oauth2_verbose_logging: "Kirjaa runsaat Google OAuth2 -diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1892,7 +1892,6 @@ fi:
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys. TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu, kun ladattuja tiedostoja poistetaan."
     s3_disable_cleanup: "Estä vanhojen varmuuskopioiden poistaminen S3:sta, kun varmuuskopioita on enemmän kuin suurin sallittu määrä."
     s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säiliöissä; poista tämän asetuksen valinta vain, jos aiot määrittää käyttöoikeuskäytäntöjä määritetyille s3_upload_bucket- ja s3_backup_bucket-säiliöille."
-    enable_direct_s3_uploads: "Mahdollistaa suorat moniosaiset lataukset Amazon S3:een. Lisätietoja on osoitteessa https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."
     backup_location: "Sijainti, johon varmuuskopiot tallennetaan. TÄRKEÄÄ: S3 edelyttää, että kelvolliset S3-tunnistetiedot syötetään tiedostoasetuksissa. Kun muutat tämän S3:ksi Localista, sinun täytyy suorittaa rake-tehtävä \"s3:ensure_cors_rules\"."
@@ -2141,7 +2140,6 @@ fi:
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Salli käyttäjien julkaista uusia aiheita sähköpostitse. Kun asetustus on käytössä, voidaan ryhmille ja kategorioille määrittää vastaanottoon käytettävät sähköpostiosoitteet."
     email_in_allowed_groups: "Ryhmät, jotka voivat julkaista uusia ketjuja sähköpostitse. Ylläpitäjät ja valvojat voivat aina julkaista uusia ketjuja sähköpostitse."
-    email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Valitsee tietyn sähköpostin ylätunnisteen, jota käytetään roskapostin tunnistamiseen. Tämä vaihtoehto voi olla X-Spam-Flag, X-Spam-Status tai X-SES-Spam-Verdict, ja sähköposti merkitään roskapostiksi ylätunnisteen arvon perusteella. Jos valittu asetus on esimerkiksi X-Spam-Flag, sähköposti, jonka ylätunnisteen arvo on KYLLÄ, luokitellaan roskapostiksi."
     enable_smtp: "Ota SMTP käyttöön ryhmäviestien ilmoitusten lähettämisessä."
     email_prefix: "Sähköpostin aiheessa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
@@ -2384,7 +2382,6 @@ fi:
     welcome_banner_image: "Aseta kuva näytettäväksi tervetulobannerin taustalla."
     welcome_banner_location: "Määrittää, missä kohdassa sivua tervetulobanneri näkyy."
     welcome_banner_page_visibility: "Määrittää, millä sivuilla tervetulobanneri näkyy."
-    splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
     navigation_menu: "Määritä sivupalkki tai yläpalkin avattava valikko sivustosi päänavigointivalikoksi. Sivupalkki on suositeltu."
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
@@ -3239,7 +3236,6 @@ fi:
         Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Kokeile lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Sähköposti hylätty – osoite ei sallittu"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma -- estetty sähköpostiosoite"
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -3404,7 +3400,6 @@ fi:
         Sinulla ei ole oikeuksia vastata ketjuun. Jos uskot, että tämä johtuu virheestä, [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Sähköposti hylätty – vastaus yhteenvetoon"
-      subject_template: "%{email_prefix} Sähköpostiongelma – vastaus yhteenvetoon"
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -3530,7 +3525,6 @@ fi:
       text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
-      subject_template: "Olet kuukauden tulokas!"
       text_body_template: |
         Onneksi olkoon, olet ansainnut **Kuukauden tulokas -palkinnon kuussa %{month_year}** :trophy:
 
@@ -3848,6 +3842,7 @@ fi:
     account_exists:
       title: "Tili on jo olemassa"
       subject_template: "[%{email_prefix}] TIli on jo olemassa"
+      subject_template_improved: "Tili on jo olemassa"
       text_body_template: |
         Yritit luoda tilin sivustolle %{site_name} tai yritit muuttaa tilin sähköpostiosoitteeksi %{email}. Sähköpostiosoitteella %{email} on kuitenkin jo tili olemassa.
 
@@ -3859,6 +3854,7 @@ fi:
     account_second_factor_disabled:
       title: "Kaksivaiheinen tunnistus poistettu käytöstä"
       subject_template: "[%{email_prefix}] Kaksivaiheinen tunnistus poistettu käytöstä"
+      subject_template_improved: "Kaksivaiheinen tunnistus poistettu käytöstä"
     digest:
       why: "%{site_link} – lyhyt yhteenveto %{since} lähtien"
       since_last_visit: "Viime vierailusi jälkeen"
@@ -3872,6 +3868,7 @@ fi:
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
       subject_template: "[%{email_prefix}] Yhteenveto"
+      subject_template_improved: "Yhteenveto"
       unsubscribe: "Tämä yhteenveto lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
       your_email_settings: "sähköpostiasetuksiasi"
       click_here: "klikkaa tätä"
@@ -3891,6 +3888,7 @@ fi:
       title: "Kirjaudu linkin avulla"
       preview: "Kirjaudu linkin avulla."
       subject_template: "%{email_prefix} Kirjautuminen linkin avulla"
+      subject_template_improved: "Kirjaudu linkin avulla"
       text_body_template: |
         Tässä linkki, jolla voit kirjautua sivustolle [%{site_name}](%{base_url}).
 
@@ -3900,7 +3898,6 @@ fi:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Aseta salasana"
-      subject_template: "[%{email_prefix}] Aseta salasana"
       text_body_template: |
         Joku haluaa lisätä salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden (Google, Facebook jne.) tileillä, jotka ovat tämän saman sähköpostiosoitteen alaisia.
 
@@ -3911,6 +3908,7 @@ fi:
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
+      subject_template_improved: "Kirjautuminen"
       text_body_template: |
         Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
 
@@ -3920,7 +3918,6 @@ fi:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
-      subject_template: "[%{email_prefix}] Uusi tilisi"
       text_body_template: |
         Sinulle luotiin tili sivustolle %{site_name}
 
@@ -4029,7 +4026,6 @@ fi:
         Jos linkkiä ei voi klikata, kokeile kopioida ja liittää se verkkoselaimesi osoitekenttään.
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
-      subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
       text_body_template: |
         Hei,
 

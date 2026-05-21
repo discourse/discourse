@@ -5,7 +5,7 @@ class NestedTopicsController < ApplicationController
 
   before_action :ensure_nested_replies_enabled
   before_action :find_topic_with_topic_view, only: %i[show children context]
-  before_action :find_topic, only: %i[pin toggle]
+  before_action :find_topic, only: %i[pin toggle activity]
   before_action :ensure_not_pm
   after_action :track_visit, only: %i[show context]
 
@@ -82,6 +82,51 @@ class NestedTopicsController < ApplicationController
       on_failed_policy(:within_pin_limit) { raise Discourse::InvalidParameters.new(:post_id) }
       on_failure { raise Discourse::InvalidParameters }
     end
+  end
+
+  # GET /n/:slug/:topic_id/activity
+  def activity
+    post_types = [Post.types[:small_action]]
+    post_types << Post.types[:whisper] if guardian.user&.whisperer?
+
+    posts =
+      @topic
+        .posts
+        .where(post_type: post_types)
+        .where.not(action_code: [nil, ""])
+        .includes(:user)
+        .order(:created_at)
+
+    Post.preload_custom_fields(posts, %w[action_code_who action_code_path])
+
+    creator = @topic.user
+    actions = [
+      {
+        action_code: "topic_created",
+        created_at: @topic.created_at,
+        username: creator&.username,
+        avatar_template: creator&.avatar_template,
+      },
+    ]
+
+    actions.concat(
+      posts
+        .select { |post| guardian.can_see_post?(post) }
+        .map do |post|
+          {
+            id: post.id,
+            action_code: post.action_code,
+            action_code_who: post.custom_fields["action_code_who"],
+            action_code_path: post.custom_fields["action_code_path"],
+            created_at: post.created_at,
+            username: post.user&.username,
+            avatar_template: post.user&.avatar_template,
+            cooked: post.cooked,
+          }
+        end,
+    )
+
+    render json: { small_actions: actions }
   end
 
   # PUT /n/:slug/:topic_id/toggle
@@ -178,9 +223,35 @@ class NestedTopicsController < ApplicationController
     user_id = current_user&.id
     ip = request.remote_ip
 
-    TopicsController.defer_track_visit(topic_id, user_id) if should_track_visit?
+    if should_track_visit?
+      TopicsController.defer_track_visit(topic_id, user_id)
+      self.class.defer_mark_caught_up(topic_id, user_id) if @topic.nested_view?
+    end
 
     TopicsController.defer_topic_view(topic_id, ip, user_id)
+  end
+
+  # Screen-tracking only advances last_read for posts the viewport renders,
+  # so collapsed/hidden replies leave a nested topic stuck unread in the
+  # sidebar. Treat the visit itself as catching up.
+  def self.defer_mark_caught_up(topic_id, user_id)
+    Scheduler::Defer.later "Nested Topic Catch Up" do
+      user = User.find_by(id: user_id)
+      topic = Topic.find_by(id: topic_id)
+      next if user.blank? || topic.blank?
+      next unless topic.nested_view?
+
+      highest =
+        if user.whisperer?
+          [topic.highest_staff_post_number.to_i, topic.highest_post_number.to_i].max
+        else
+          topic.highest_post_number.to_i
+        end
+      next if highest < 1
+
+      TopicUser.update_last_read(user, topic_id, highest, 0, 0)
+      Notification.mark_posts_read(user, topic_id, (1..highest).to_a)
+    end
   end
 
   def should_track_visit?

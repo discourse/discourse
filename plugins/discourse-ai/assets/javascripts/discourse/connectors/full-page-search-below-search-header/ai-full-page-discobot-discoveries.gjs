@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-tooltip";
@@ -56,7 +56,7 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
     {{#if this.shouldShow}}
       {{bodyClass "has-discoveries"}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "ai-search-discoveries__discoveries-wrapper"
           (if this.discobotDiscoveries.showDiscoveryTitle "--has-content")
         }}
@@ -66,7 +66,7 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
             class="ai-search-discoveries__discoveries-title full-page-discoveries"
           >
             <span>
-              {{icon "discobot"}}
+              {{dIcon "discobot"}}
               {{i18n "discourse_ai.discobot_discoveries.main_title"}}
             </span>
             <AiSearchDiscoveriesTooltip />

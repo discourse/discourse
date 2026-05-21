@@ -567,4 +567,32 @@ RSpec.describe SiteSerializer do
       expect(serialized_groups.find { |g| g["name"] == group.name }["automatic"]).to eq(false)
     end
   end
+
+  describe "#admin_config_login_routes" do
+    fab!(:admin)
+    fab!(:user)
+
+    before { DiscoursePluginRegistry.admin_config_login_routes << "plugin_login_route" }
+
+    after { DiscoursePluginRegistry.admin_config_login_routes.delete("plugin_login_route") }
+
+    it "is included for admin users" do
+      admin_guardian = Guardian.new(admin)
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:admin_config_login_routes]).to include("plugin_login_route")
+    end
+
+    it "is not included for anonymous users" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized).not_to have_key(:admin_config_login_routes)
+    end
+
+    it "is not included for non-admin users" do
+      user_guardian = Guardian.new(user)
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized).not_to have_key(:admin_config_login_routes)
+    end
+  end
 end

@@ -9,3 +9,10 @@ lv:
     currently_away:
       labels:
         username: Lietotājvārds
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Diena"
+        week: "Nedēļas"
+        month: "Mēneša"
+        year: "Gada"

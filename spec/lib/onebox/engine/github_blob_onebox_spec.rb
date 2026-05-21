@@ -32,7 +32,9 @@ RSpec.describe Onebox::Engine::GithubBlobOnebox do
     it "does not include blob contents if it is binary" do
       # stub_request if the response must be binary (ASCII-8BIT)
       uri_mock = mock("object")
-      uri_mock.stubs(:open).returns(File.open("#{Rails.root}/spec/fixtures/pdf/small.pdf", "rb"))
+      uri_mock.stubs(:open).returns(
+        File.open("#{Rails.root.join("spec/fixtures/pdf/small.pdf")}", "rb"),
+      )
       URI.stubs(:parse).with(link).returns(uri)
       URI
         .stubs(:parse)

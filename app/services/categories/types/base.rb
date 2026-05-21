@@ -10,7 +10,7 @@ module Categories
           "general_category_settings" => {
             "type" => "object",
             "additionalProperties" => {
-              "$ref" => "#/$defs/field_config",
+              "$ref" => "#/$defs/general_field_config",
             },
           },
           "site_settings" => {
@@ -30,6 +30,27 @@ module Categories
           },
         },
         "$defs" => {
+          "general_field_config" => {
+            "type" => "object",
+            "required" => %w[default type],
+            "additionalProperties" => false,
+            "properties" => {
+              "default" => true,
+              "type" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "required" => {
+                "type" => "boolean",
+              },
+              "show_on_create" => {
+                "type" => "boolean",
+              },
+              "show_on_edit" => {
+                "type" => "boolean",
+              },
+            },
+          },
           "field_config" => {
             "type" => "object",
             "required" => %w[default type label],
@@ -50,6 +71,12 @@ module Categories
               },
               "description" => {
                 "type" => "string",
+              },
+              "choices" => {
+                "type" => "array",
+              },
+              "required" => {
+                "type" => "boolean",
               },
               "show_on_create" => {
                 "type" => "boolean",
@@ -98,10 +125,31 @@ module Categories
         end
 
         # Configure any category-specific settings or custom fields that are
-        # specific to this category type.
+        # specific to this category type, including whatever setting or custom
+        # field values make this category type unique.
         #
         # This SHOULD be overridden by category types.
         def configure_category(category, guardian:, configuration_values: {})
+          raise NotImplementedError
+        end
+
+        # Reverse whatever configure_category does to mark this category as
+        # a specific type. E.g. if there is a custom field that is set to true,
+        # unconfigure_category should set it to false.
+        #
+        # This SHOULD be overridden by category types.
+        def unconfigure_category(category, guardian:)
+          raise NotImplementedError
+        end
+
+        # Returns the current per-category +category_settings+ values for
+        # the given category. Used by the serializer to preload the edit
+        # form with stored values instead of schema defaults.
+        #
+        # This SHOULD be overridden by category types that declare
+        # +category_settings+.
+        def read_category_settings(category)
+          {}
         end
 
         # Returns a hash describing the configuration schema for this category type.
@@ -165,6 +213,18 @@ module Categories
           {}
         end
 
+        # Convenience method to get the setting/custom field names (keys)
+        # for a given schema type.
+        #
+        # Valid values for the +schema_type+ parameter are:
+        # - :general_category_settings
+        # - :site_settings
+        # - :category_custom_fields
+        # - :category_settings
+        def configuration_schema_keys(schema_type)
+          (configuration_schema[schema_type]&.keys || []).map(&:to_sym)
+        end
+
         # Validates the hash returned by +configuration_schema+ using JSONSchemer.
         # Raises +ArgumentError+ with a descriptive message if invalid.
         # Also validates that any site_settings keys are real SiteSettings (a
@@ -219,8 +279,11 @@ module Categories
         #
         # This SHOULD NOT be overridden by category types.
         def configure_custom_fields(category, guardian:, configuration_values: {})
+          if configuration_values.is_a?(Hash)
+            configuration_values = configuration_values.symbolize_keys
+          end
           configuration_schema[:category_custom_fields]&.each do |field_name, config|
-            value = configuration_values.fetch(field_name.to_s, config[:default])
+            value = configuration_values.fetch(field_name.to_sym, config[:default])
             category.custom_fields[field_name.to_s] = value.to_s
           end
 
@@ -234,12 +297,15 @@ module Categories
         #
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
+          if configuration_values.is_a?(Hash)
+            configuration_values = configuration_values.symbolize_keys
+          end
           category_type_settings =
             configuration_schema[:site_settings]&.map do |setting_name, config|
               default_value = config.is_a?(Hash) ? config[:default] : config
               {
                 setting_name: setting_name.to_s,
-                value: configuration_values.fetch(setting_name.to_s, default_value),
+                value: configuration_values.fetch(setting_name.to_sym, default_value),
               }
             end
 
@@ -271,6 +337,7 @@ module Categories
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
             available: available?,
+            visible: visible?,
             configuration_schema: resolved_configuration_schema,
           }.merge(additional_metadata)
         end
@@ -303,9 +370,13 @@ module Categories
             if target_value.is_a?(Hash)
               default = target_value[:default]
               custom_label = target_value[:label]
+              custom_type = target_value[:type]
+              custom_choices = target_value[:choices]
             else
               default = target_value
               custom_label = nil
+              custom_type = nil
+              custom_choices = nil
             end
 
             meta = SiteSetting.setting_metadata_hash(setting_name)
@@ -314,8 +385,9 @@ module Categories
               key: setting_name.to_s,
               default:,
               current: SiteSetting.public_send(setting_name),
-              type: meta[:type],
+              type: custom_type || meta[:type],
               label: custom_label || meta[:humanized_name],
+              choices: custom_choices || meta[:choices],
               description: meta[:description],
               required: false,
               show_on_create: true,
@@ -334,6 +406,7 @@ module Categories
               type: config[:type].to_s,
               label: config[:label],
               subtype: config[:subtype]&.to_s,
+              choices: config[:choices],
               description: config[:description],
               required: config[:required],
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
@@ -349,6 +422,7 @@ module Categories
               subtype: config[:subtype]&.to_s,
               label: config[:label],
               description: config[:description],
+              choices: config[:choices],
               required: config[:required],
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
               show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],

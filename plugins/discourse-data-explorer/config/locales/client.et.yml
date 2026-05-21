@@ -6,19 +6,12 @@
 
 et:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Andmete eksportija"
     explorer:
       default_query: "Vaikimisi"
       or: "või"
       title: "Andmete eksportija"
       create: "Loo"
       create_placeholder: "Päringu nimi..."
-      ai:
-        generate: "Genereeri"
-        optional: "valikuline"
       import:
         label: "Impordi"
       help:

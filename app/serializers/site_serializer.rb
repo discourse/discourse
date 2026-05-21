@@ -164,7 +164,7 @@ class SiteSerializer < ApplicationSerializer
             flags,
             each_serializer: FlagSerializer,
             target: :post_action,
-            used_flag_ids: self.used_flag_ids(flags.map(&:id)),
+            used_flag_ids: used_flag_ids(flags.map(&:id)),
           ).as_json
         end
       end
@@ -190,7 +190,7 @@ class SiteSerializer < ApplicationSerializer
             flags,
             each_serializer: FlagSerializer,
             target: :topic_flag,
-            used_flag_ids: self.used_flag_ids(flags.map(&:id)),
+            used_flag_ids: used_flag_ids(flags.map(&:id)),
           ).as_json
         end
       end
@@ -432,7 +432,7 @@ class SiteSerializer < ApplicationSerializer
     DiscoursePluginRegistry.admin_config_login_routes
   end
 
-  def include_admin_config_routes?
+  def include_admin_config_login_routes?
     scope.is_admin?
   end
 

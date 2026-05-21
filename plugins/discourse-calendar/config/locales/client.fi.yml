@@ -325,9 +325,6 @@ fi:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} on asettanut osallistumisesi automaattisesti ja kutsunut sinut tapahtumaan %{eventName}"
         an_event: "tapahtuma"
-      event_description:
-        show_more: "Näytä lisää"
-        show_less: "Näytä vähemmän"
       edit_reason: "Tapahtuma päivitetty"
       edit_reason_closed: "Tapahtuma suljettu"
       edit_reason_opened: "Tapahtuma avattu"

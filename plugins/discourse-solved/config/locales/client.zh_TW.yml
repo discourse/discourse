@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "接受的解決方案"
   js:
     notifications:
       alt:

@@ -388,6 +388,7 @@ pt:
       admins: "administradores"
       moderators: "moderadores"
       staff: "pessoal"
+      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
@@ -902,6 +903,8 @@ pt:
       xaxis: "Dia"
     page_view_logged_in_browser_reqs:
       xaxis: "Dia"
+    page_view_embed_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"
@@ -946,7 +949,7 @@ pt:
       labels:
         user: Utilizador
         location: Localização
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizador
         location: Localização
@@ -1777,11 +1780,14 @@ pt:
       popular_topics: "Tópicos Populares"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
+      subject_template_improved: "Resumo"
       click_here: "clique aqui"
     forgot_password:
       title: "Esqueci a palavra-passe"
     set_password:
       title: "Definir Palavra-passe"
+    admin_login:
+      subject_template_improved: "Login"
     notify_old_email:
       text_body_template: |2
 

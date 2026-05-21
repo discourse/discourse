@@ -212,6 +212,9 @@ fi:
         other_type: "%{username} mainitsi kohteen %{identifier} henkilökohtaisessa chatissa"
       new_chat_message: '%{username} lähetti viestin kanavalla "%{channel}"'
       new_direct_chat_message: "%{username} lähetti viestin henkilökohtaisessa chatissa"
+    actions:
+      chat_reply:
+        title: Vastaa
   discourse_automation:
     scriptables:
       send_chat_message:

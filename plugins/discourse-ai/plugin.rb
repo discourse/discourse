@@ -38,6 +38,7 @@ register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
+register_asset "stylesheets/modules/ai-bot-conversations/docked-composer.scss"
 
 register_asset "stylesheets/modules/embeddings/common/semantic-related-topics.scss"
 register_asset "stylesheets/modules/embeddings/common/semantic-search.scss"
@@ -102,7 +103,7 @@ after_initialize do
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
-  register_seedfu_fixtures(Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "agents"))
+  register_seedfu_fixtures(Rails.root.join("plugins/discourse-ai/db/fixtures/agents"))
 
   [
     DiscourseAi::Embeddings::EntryPoint.new,
@@ -130,12 +131,20 @@ after_initialize do
     end
   end
 
-  require_relative "spec/support/embeddings_generation_stubs" if Rails.env.test?
+  if Rails.env.test?
+    require_relative "spec/support/embeddings_generation_stubs"
+    require_relative "spec/support/fake_external_agent"
+  end
 
   reloadable_patch do |plugin|
     Guardian.prepend DiscourseAi::GuardianExtensions
     Topic.prepend DiscourseAi::TopicExtensions
     Post.prepend DiscourseAi::PostExtensions
+  end
+
+  # AI bots reply via `skip_guardian: true`, so the reachability warning is misleading.
+  register_modifier(:composer_mention_user_reason) do |reason, user|
+    DiscourseAi::AiBot::EntryPoint.all_bot_ids.include?(user.id) ? nil : reason
   end
 
   register_modifier(:post_should_secure_uploads?) do |_, _, topic|

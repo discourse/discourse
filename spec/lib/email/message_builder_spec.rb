@@ -585,6 +585,8 @@ RSpec.describe Email::MessageBuilder do
         )
       end
 
+      after { I18n.reload! }
+
       it "can use subject override" do
         override =
           TranslationOverride.upsert!(

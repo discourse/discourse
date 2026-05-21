@@ -153,6 +153,55 @@ describe Jobs::LocalizeThemeTranslations do
       job.execute(theme_id: theme.id, source_locale: "fr")
     end
 
+    it "invalidates the baked theme JS so new locales reach the browser" do
+      theme.theme_fields.where(target_id: Theme.targets[:translations]).each(&:ensure_baked!)
+      baked_before =
+        theme
+          .theme_fields
+          .where(target_id: Theme.targets[:translations])
+          .pluck(:value_baked)
+          .compact
+      expect(baked_before).not_to be_empty
+
+      translator = mock
+      translator.stubs(:translate).returns("translated")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+      Theme.any_instance.expects(:remove_from_cache!).at_least_once
+
+      job.execute(theme_id: theme.id, source_locale: "fr")
+
+      expect(
+        theme.theme_fields.where(target_id: Theme.targets[:translations]).pluck(:value_baked),
+      ).to all(be_nil)
+    end
+
+    it "still invalidates the baked theme JS when updating an existing override" do
+      ThemeTranslationOverride.create!(
+        theme_id: theme.id,
+        locale: "es",
+        translation_key: "greeting",
+        value: "stale",
+      )
+      theme.theme_fields.where(target_id: Theme.targets[:translations]).each(&:ensure_baked!)
+
+      translator = mock
+      translator.stubs(:translate).returns("translated")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr")
+
+      expect(
+        theme.theme_fields.where(target_id: Theme.targets[:translations]).pluck(:value_baked),
+      ).to all(be_nil)
+      expect(
+        ThemeTranslationOverride.find_by(
+          theme_id: theme.id,
+          locale: "es",
+          translation_key: "greeting",
+        ).value,
+      ).to eq("translated")
+    end
+
     it "excludes only the effective source locale from target locales per key" do
       theme.set_field(target: :translations, name: "en", value: <<~YAML)
         en:

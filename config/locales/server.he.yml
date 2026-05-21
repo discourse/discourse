@@ -426,7 +426,6 @@ he:
       <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
     not_found_template_link: |
       <p>לא ניתן עוד לממש את ההזמנה הזאת שנשלחה אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
-    existing_user_cannot_redeem: "לא ניתן לממש הזמנה זו. נא לבקש ממי שהזמין אותך לשלוח לך הזמנה חדשה."
     existing_user_already_redemeed: "כבר מימשת את קישור ההזמנה הזה."
     user_exists: "אין צורך להזמין את <b>%{email}</b>, יש כבר חשבון עם הכתובת הזאת!"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
@@ -696,6 +695,7 @@ he:
       admins: "מנהלים"
       moderators: "מפקחים"
       staff: "סגל"
+      anonymous: "אלמוני"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1614,6 +1614,8 @@ he:
       xaxis: "יום"
       yaxis: "צפיות דרך דפדפנים של משתמשים שנכנסו למערכת"
       description: "כמות צפיות בעמודים של משתמשים שנכנסו למערכת עם דפדפנים אמיתיים."
+    page_view_embed_reqs:
+      xaxis: "יום"
     http_background_reqs:
       title: "רקע"
       xaxis: "יום"
@@ -1675,7 +1677,7 @@ he:
         os: מערכת הפעלה
         login_time: מועד כניסה
       description: "פרטים על כניסות חדשות ושונות באופן מהותי מכניסות קודמות."
-    staff_logins:
+    admin_logins:
       title: "כניסות מנהלים"
       labels:
         user: משתמש
@@ -1872,7 +1874,6 @@ he:
     x_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימת כותרות דוא״ל בהתאמה אישית"
-    email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי (2FA) לפני שיוכלו לגשת לממשק המשתמש של Discourse. ההגדרה הזאת לא משפיעה על ה־API או על אימות ‚DiscourseConnect provider’. אם ההגדרה enforce_second_factor_on_external_auth (אכיפת אימות דו־שלבי על אימות חיצוני) פעילה, משתמשים לא יוכלו להיכנס דרך ספקי אימות חיצוניים לאחר הגדרת אימות דו־שלבי."
     enforce_second_factor_on_external_auth: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי (2FA) באופן גורף. כשהאפשרות הזאת פעילה היא תמנע ממשתמשים להיכנס עם שיטות אימות חיצוניות כגון רשתות חברתיות אם מופעל אימות דו־שלבי מהצד שלהן. כשהאפשרות מושבתת משתמשים יצטרכו לאמת את האימות הדו־שלבי שלהם רק בעת כניסה עם שם משתמש וסיסמה. כדאי לקרוא על ההגדרה ‚enforce_second_factor’ (אכיפת אימות דו־שלבי)."
@@ -2040,7 +2041,6 @@ he:
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
-    google_oauth2_hd_groups: "למשוך את קבוצות ה־Google של משתמשים בשם התחום המתארח עם האימות. ניתן להשתמש בקבוצות Google שנמשכו כדי להעניק חברות אוטומטית בקבוצות של Discourse (ניתן להציץ בהגדרות הקבוצה). למידע נוסף ניתן לעיין ב־https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "כתובת דוא״ל ששייכת לחשבון ניהול ב־Google Workspace. יתבצע בה שימוש עם פרטי הגישה של חשבון השירות כדי למשוך פרטי קבוצות."
     google_oauth2_hd_groups_service_account_json: "פרטי מפתח בתצורת JSON עבור חשבון השירות. ישמש כדי למשוך פרטי קבוצות."
     google_oauth2_verbose_logging: "תיעוד ניתוח מורחב בנושא Google OAuth2 אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
@@ -2070,7 +2070,6 @@ he:
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
     s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
     s3_use_acls: "AWS ממליצה לא להשתמש ב־ACLs (רשימות בקרת גישה) על דליים (Buckets) של S3, יש לבטל את הסימון באפשרות זו רק אם יש כוונה להגדיר מדיניות הרשאות על `s3_upload_bucket` (דלי העלאה ל־S3) ו־`s3_backup_bucket` (דלי S3 לגיבוי) שהוגדרו."
-    enable_direct_s3_uploads: "מאפשר העלאות ישירות רבות חלקים ל־S3 מבית Amazon, לפרטים: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
     backup_location: "מקום אחסון הגיבויים. חשוב: S3 דורש מילוי פרטי גישה תקפים ל־S3 בהגדרות הקבצים. בעת שינוי ההגדרה הזאת מ־S3 למקומי, יש להריץ את משימת ה־rake‏ `s3:ensure_cors_rules`."
@@ -2323,7 +2322,6 @@ he:
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: "לאפשר למשתמשים לפרסם נושאים חדשים דרך דוא״ל. לאחר הפעלת ההגדרה הזאת, יתאפשר לך להגדיר כתובות דוא״ל נכנסות לקבוצות ולקטגוריות."
     email_in_allowed_groups: "קבוצות שמורשות ליצור נושאים חדשים דרך דוא״ל. מנהלים ומפקחים תמיד יכולים ליצור נושאים דרך דוא״ל."
-    email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
     email_in_spam_header: "בוחר את כותרת הדוא\"ל הספציפית לשימוש לזיהוי דואר זבל. אפשרות זו יכולה להיות X-Spam-Flag, X-Spam-Status או X-SES-Spam-Verdict, והאימייל מתויג כדואר זבל על סמך ערך הכותרת. לדוגמה, אם ההגדרה שנבחרה היא X-Spam-Flag, הודעת דואר אלקטרוני עם ערך כותרת זה מוגדר ל-YES תסווג כדואר זבל."
     enable_smtp: "להפעיל SMTP לשליחת התראות על הודעות קבוצתיות."
     email_prefix: "ה[תווית] שתשמש כנושא של הודעות דוא״ל. אם לא יוגדר, ברירת המחדל תכוון ל‚כותרת’ אם לא יוגדר אחרת."
@@ -2573,7 +2571,6 @@ he:
     welcome_banner_image: "הגדרת תמונה להצגת ברקע כרזת קבלת הפנים."
     welcome_banner_location: "הגדרת המקום בעמוד בו תופיע כרזת קבלת הפנים."
     welcome_banner_page_visibility: "קביעת העמודים שבהם תופיע כרזת קבלת הפנים."
-    splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     navigation_menu: "ציין את סרגל הצד או הכותרת הנפתחת כתפריט הניווט הראשי של האתר שלך. סרגל צד מומלץ."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
@@ -3497,7 +3494,6 @@ he:
         התגובה שלך נשלחה מכתובת דוא״ל שנחסמה. אם לדעתך מדובר בטעות, מוטב לשלוח מכתובת דוא״ל אחרת או [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "דחיית דוא״ל עקב כתובת אסורה"
-      subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3662,7 +3658,6 @@ he:
         אין לך הרשאות להגיב לנושא הזה. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "דחיית דוא״ל תגובה לתקציר"
-      subject_template: "[%{email_prefix}] תקלת דוא״ל -- תגובה לתקציר"
       text_body_template: |
         מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברו.
 
@@ -3790,7 +3785,6 @@ he:
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
     new_user_of_the_month:
       title: "אתם המשתמשים החדשים של החודש!"
-      subject_template: "אתם המשתמשים החדשים של החודש!"
       text_body_template: |
         ברכותינו, זכית בפרס **המשתמש החדש לחודש %{month_year}**. :trophy:
 
@@ -4101,6 +4095,7 @@ he:
     account_exists:
       title: "החשבון כבר קיים"
       subject_template: "[%{email_prefix}] החשבון כבר קיים"
+      subject_template_improved: "החשבון כבר קיים"
       text_body_template: |
         הרגע ניסית ליצור חשבון אצל %{site_name}, או שניסית לשנות כתובת דוא״ל של חשבון לכדי %{email}. למרות שכבר יש חשבון עם הכתובת %{email}.
 
@@ -4112,6 +4107,7 @@ he:
     account_second_factor_disabled:
       title: "אימות דו־שלבי מושבת"
       subject_template: "[%{email_prefix}] אימות דו־שלבי מושבת"
+      subject_template_improved: "אימות דו־שלבי מושבת"
     digest:
       why: "תקציר של %{site_link} מאז %{since}"
       since_last_visit: "מאז הביקור האחרון"
@@ -4125,6 +4121,7 @@ he:
       popular_posts: "פוסטים נפוצים"
       more_new: "חדש בשבילך"
       subject_template: "[%{email_prefix}] סיכום"
+      subject_template_improved: "תקציר"
       unsubscribe: "סיכום זה נשלח ממערכת %{site_link} כאשר לא נרשמת פעילות במשך זה מה. ניתן לשנות את %{email_preferences_link} או %{unsubscribe_link} כדי לבטל את המינוי. "
       your_email_settings: "הגדרות הדוא״ל שלך"
       click_here: "ללחוץ כאן"
@@ -4144,6 +4141,7 @@ he:
       title: "כניסה דרך קישור"
       preview: "כניסה דרך קישור."
       subject_template: "[%{email_prefix}] כניסה דרך קישור"
+      subject_template_improved: "כניסה דרך קישור"
       text_body_template: |
         להלן קישור הכניסה שלך אל [%{site_name}](%{base_url}).
 
@@ -4153,7 +4151,6 @@ he:
         ‎%{base_url}/session/email-login/%{email_token}‎
     set_password:
       title: "קביעת סיסמה"
-      subject_template: "[%{email_prefix}] קביעת סיסמה"
       text_body_template: |
         מישהו ביקש להוסיף סיסמה לחשבון שלך ב־[%{site_name}](%{base_url}). לחלופין, אפשר להיכנס דרך כל שירות מקוון נתמך (Google, פייסבוק, וכד׳) שמקושר עם כתובת דוא״ל זו.
 
@@ -4164,6 +4161,7 @@ he:
     admin_login:
       title: "כניסת הנהלה"
       subject_template: "[%{email_prefix}] כניסה"
+      subject_template_improved: "כניסה"
       text_body_template: |
         התקבלה בקשה להיכנס לחשבון שלך אצל [%{site_name}](%{base_url}).
 
@@ -4173,7 +4171,6 @@ he:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
-      subject_template: "[%{email_prefix}] החשבון החדש שלך"
       text_body_template: |
         חשבון חדש נוצר עבורך באתר %{site_name}
 
@@ -4286,7 +4283,6 @@ he:
         אם הקישור שלהלן אינו זמין ללחיצה, מוטב לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן שלך.
     suspicious_login:
       title: "התראת כניסה חדשה"
-      subject_template: "[%{site_name}] כניסה חדשה מ%{location}"
       text_body_template: |
         שלום,
 

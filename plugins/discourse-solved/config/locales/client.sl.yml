@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sl:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Sprejete rešitve"
   js:
     notifications:
       alt:

@@ -88,6 +88,8 @@ module SvgSprite
         discourse-bookmark-clock
         discourse-chevron-collapse
         discourse-chevron-expand
+        discourse-circle-minus
+        discourse-circle-plus
         discourse-compress
         discourse-dnd
         discourse-emojis
@@ -183,6 +185,7 @@ module SvgSprite
         gift
         globe
         grip-lines
+        grip-vertical
         hand-point-right
         handshake-angle
         hashtag
@@ -214,8 +217,6 @@ module SvgSprite
         minus
         mobile-screen-button
         moon
-        nested-circle-minus
-        nested-circle-plus
         nested-thread
         paintbrush
         palette
@@ -319,7 +320,7 @@ module SvgSprite
   end
 
   def self.core_svgs_files
-    @svg_files ||= Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
+    @svg_files ||= Dir.glob("#{Rails.root.join("vendor/assets/svg-icons/**/*.svg")}")
   end
 
   def self.core_svgs
@@ -377,16 +378,11 @@ module SvgSprite
 
           theme_sprites
             .map do |(_theme_id, upload_id, sprite)|
-              begin
-                [
-                  _theme_id,
-                  symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false),
-                ]
-              rescue => e
-                Rails.logger.warn(
-                  "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
-                )
-              end
+              [_theme_id, symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false)]
+            rescue => e
+              Rails.logger.warn(
+                "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
+              )
             end
             .compact
             .to_h

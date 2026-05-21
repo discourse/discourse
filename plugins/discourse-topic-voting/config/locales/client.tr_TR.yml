@@ -17,9 +17,6 @@ tr_TR:
     topic_voting:
       category_type_ideas:
         title: "Fikirler"
-        not_ideas_type: "Dikkat! Bu kategoride oylama özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinden ilgili ayarlara ulaşabilirsiniz."
-        remove_ideas_type: "Fikir türünü kaldır"
-        confirm_remove_ideas_type: "Bu kategoriden oylama özelliğini kaldırmak istediğinizden emin misiniz? Mevcut oylar korunacak, ancak üyeler yeni oy kullanamayacak."
       notification_label:
         vote_released: "Oy iade edildi"
       title: "Konu oylaması"

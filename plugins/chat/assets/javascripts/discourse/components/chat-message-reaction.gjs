@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {
@@ -74,7 +74,7 @@ export default class ChatMessageReaction extends Component {
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
         tabindex={{if @interactive "0" "-1"}}
-        class={{concatClass
+        class={{dConcatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
         }}

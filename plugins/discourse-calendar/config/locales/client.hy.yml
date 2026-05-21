@@ -29,9 +29,6 @@ hy:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "Ցույց տալ ավելին"
-        show_less: "Ցույց տալ ավելի քիչ"
       created_by: "Ստեղծել է՝"
       bulk_invite: "Զանգվածային Հրավեր"
       bulk_invite_modal:

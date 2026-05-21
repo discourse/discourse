@@ -340,9 +340,6 @@ ar:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{eventName}"
         an_event: "حدث"
-      event_description:
-        show_more: "عرض المزيد"
-        show_less: "عرض أقل"
       edit_reason: "تم تحديث الحدث"
       edit_reason_closed: "تم إغلاق الحدث"
       edit_reason_opened: "تم فتح الحدث"

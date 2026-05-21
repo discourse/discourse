@@ -51,21 +51,14 @@ describe TopicsController do
       )
     end
 
-    it "includes post_voting comments for crawler view" do
-      skip "temporarily disable crawler view test while the perf issues are being worked on"
-
-      get "/t/#{topic.slug}/#{topic.id}.html"
+    it "includes post_voting comments in crawler view" do
+      get "/t/#{topic.slug}/#{topic.id}", env: { "HTTP_USER_AGENT" => "Googlebot" }
 
       expect(response.status).to eq(200)
-
-      crawler_html = response.body
-
-      expect(crawler_html).to match(
-        %r{<span class="post-voting-comments__comment-cooked" itemprop="comment"><p>this is a comment!</p></span>},
+      expect(response.body).to match(
+        %r{<span class="post-voting-comments__comment-cooked" itemprop="text"><p>this is a comment!</p></span>},
       )
-      expect(crawler_html).to match(
-        %r{<span class="post-voting-answer-count__value" itemprop="answerCount">3</span>},
-      )
+      expect(response.body).to match(%r{<span class="post-voting-answer-count__value">3</span>})
     end
   end
 end

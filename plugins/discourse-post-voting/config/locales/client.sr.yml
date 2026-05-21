@@ -6,8 +6,6 @@
 
 sr:
   js:
-    vote:
-      toggle_voters: "Prikaži ko je glasao"
     post_voting:
       post:
         post_voting_comment:

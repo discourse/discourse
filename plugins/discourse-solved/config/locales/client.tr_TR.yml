@@ -10,6 +10,11 @@ tr_TR:
       site_settings:
         categories:
           discourse_solved: "Discourse Çözüldü"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Kabul edilen çözümler"
   js:
     notifications:
       alt:
@@ -71,9 +76,6 @@ tr_TR:
           description: "Bu konudaki her yeni yanıt ve konunun çözüldüğü zaman size bildirim gönderilecektir. Bu konu için yeni yanıtların sayısı gösterilecektir."
       category_type_support:
         title: "Destek"
-        not_support_type: "Dikkat! Bu kategoride gönderileri çözüm olarak işaretleme özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinde ilgili ayarları bulabilirsiniz."
-        remove_support_type: "Destek türünü kaldır"
-        confirm_remove_support_type: "Bu kategorideki gönderileri çözüm olarak işaretleme özelliğini kaldırmak istediğinizden emin misiniz? Bu özelliği daha sonra Ayarlar sekmesinden yeniden etkinleştirebilirsiniz."
     topic_statuses:
       solved:
         help: "Bu konunun bir çözümü var"

@@ -132,6 +132,85 @@ describe Middleware::CrawlerHooks do
       expect(response).to eq(["PK\x03\x04binarydata".b])
     end
 
+    it "does not parse direct upload requests served with an HTML content type" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+
+      response_body = ["<div>" * 500]
+      def response_body.body
+        join("")
+      end
+
+      middleware =
+        Middleware::CrawlerHooks.new(
+          lambda do |_|
+            [
+              200,
+              {
+                "Content-Type" => "text/html; charset=utf-8",
+                "X-Discourse-Crawler-View" => "true",
+              },
+              response_body,
+            ]
+          end,
+        )
+
+      status, headers, response =
+        middleware.call(
+          env(
+            :path => "https://discourse.site/uploads/short-url/abc.zip",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+          ),
+        )
+
+      expect(status).to eq(200)
+      expect(headers["Content-Type"]).to include("text/html")
+      expect(response).to eq(response_body)
+    end
+
+    it "does not parse direct upload requests served from a base path" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      Discourse.stubs(:base_path).returns("/forum")
+
+      response_body = ["<div>" * 500]
+      def response_body.body
+        join("")
+      end
+
+      middleware =
+        Middleware::CrawlerHooks.new(
+          lambda do |_|
+            [
+              200,
+              {
+                "Content-Type" => "text/html; charset=utf-8",
+                "X-Discourse-Crawler-View" => "true",
+              },
+              response_body,
+            ]
+          end,
+        )
+
+      status, headers, response =
+        middleware.call(
+          env(
+            :path => "https://discourse.site/forum/uploads/short-url/abc.zip",
+            :params => {
+              Discourse::LOCALE_PARAM => "fr",
+            },
+            "HTTP_USER_AGENT" => crawler_user_agent,
+          ),
+        )
+
+      expect(status).to eq(200)
+      expect(headers["Content-Type"]).to include("text/html")
+      expect(response).to eq(response_body)
+    end
+
     it "does not modify responses for non-200 status codes" do
       status, headers, response =
         error_middleware.call(env("HTTP_USER_AGENT" => crawler_user_agent))

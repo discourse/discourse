@@ -34,8 +34,19 @@ module("Unit | Service | tag-utils", function (hooks) {
       "has-spaces"
     );
     assert.strictEqual(
-      this.tagUtils.createContentFromInput("special!@#chars"),
+      this.tagUtils.createContentFromInput("special!@chars"),
       "specialchars"
+    );
+  });
+
+  test("createContentFromInput allows periods in the middle of tag names", function (assert) {
+    assert.strictEqual(
+      this.tagUtils.createContentFromInput("node.js"),
+      "node.js"
+    );
+    assert.strictEqual(
+      this.tagUtils.createContentFromInput(".node.js."),
+      "node.js"
     );
   });
 });

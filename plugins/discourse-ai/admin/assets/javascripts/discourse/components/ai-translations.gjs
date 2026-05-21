@@ -7,16 +7,16 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Chart from "discourse/admin/components/chart";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AiTranslations extends Component {
@@ -518,7 +518,7 @@ export default class AiTranslations extends Component {
 
       {{#if this.creditLimitReached}}
         <div class="alert alert-warning ai-translations__credit-warning">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           <span>{{this.creditLimitWarningMessage}}</span>
         </div>
       {{/if}}
@@ -630,7 +630,7 @@ export default class AiTranslations extends Component {
       </div>
 
       {{#if this.enabled}}
-        <ConditionalLoadingSpinner @condition={{this.loadingProgress}}>
+        <DConditionalLoadingSpinner @condition={{this.loadingProgress}}>
           {{#if this.data}}
             <AdminConfigAreaCard class="ai-translations__charts">
               <:header>
@@ -656,7 +656,7 @@ export default class AiTranslations extends Component {
               </:content>
             </AdminConfigAreaCard>
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       {{/if}}
 
     </div>

@@ -5,13 +5,7 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  category_types:
-    ideas:
-      name: "Pomysły"
-      title: "pomysły"
-      description: "Miejsce, w którym członkowie mogą zgłaszać pomysły i głosować na te, które najbardziej im odpowiadają."
   site_settings:
-    enable_ideas_category_type_setup: "Włącza opcję typu kategorii „Pomysły” podczas konfiguracji tworzenia kategorii. Uwaga: aby ta opcja zadziałała, opcja „Włącz uproszczone tworzenie kategorii” musi być włączona."
     topic_voting_enabled: 'Pozwolić użytkownikom głosować na tematy?'
     topic_voting_enable_vote_limits: 'Ogranicz liczbę głosów na użytkownika na podstawie poziomu zaufania'
     topic_voting_tl0_vote_limit: 'Ile głosów mogą oddać użytkownicy TL0?'
@@ -23,25 +17,6 @@ pl_PL:
     topic_voting_show_votes_on_profile: 'Czy głosy mają być widoczne w aktywności w proflu użytkownika?'
     topic_voting_alert_votes_left: 'Ostrzeż użytkownika, jesli pozostało mu tyle głosów'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Pokaż, kto głosował"
-      show_votes_on_profile:
-        label: "Pokaż głosy na profilu"
-      enable_vote_limits:
-        label: "Ogranicz głosy członków"
-      tl0_vote_limit:
-        label: "Ograniczenie głosów TL0"
-      tl1_vote_limit:
-        label: "Ograniczenie głosów TL1"
-      tl2_vote_limit:
-        label: "Ograniczenie głosów TL2"
-      tl3_vote_limit:
-        label: "Ograniczenie głosów TL3"
-      tl4_vote_limit:
-        label: "Ograniczenie głosów TL4"
-      alert_votes_left:
-        label: "Powiadomienie o pozostałych głosach"
     votes_moved:
       one: "Głos został przeniesiony."
       few: "%{count} głosy zostały przeniesione."

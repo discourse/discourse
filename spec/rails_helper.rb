@@ -29,7 +29,7 @@ CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127
 
 class RspecErrorTracker
   def self.exceptions
-    @exceptions ||= {}
+    @exceptions ||= []
   end
 
   def self.clear_exceptions
@@ -37,7 +37,7 @@ class RspecErrorTracker
   end
 
   def self.report_exception(path, exception)
-    exceptions[path] = exception
+    exceptions << [path, exception]
   end
 
   def initialize(app, config = {})
@@ -45,16 +45,24 @@ class RspecErrorTracker
   end
 
   def call(env)
-    begin
-      @app.call(env)
+    @app.call(env)
 
-      # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-      # and also Mocha::ExpectationError inherit from Exception instead of StandardError
-      # they do not get captured by the rescue => e shorthand :(
-    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-      RspecErrorTracker.report_exception(env["PATH_INFO"], e)
-      raise e
-    end
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+  rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
+    RspecErrorTracker.report_exception(env["PATH_INFO"], e)
+    raise e
+  end
+end
+
+# Some errors are caught by `Discourse.warn_exception` and don't reach
+# `RspecErrorTracker`, for example errors in hijacked responses.
+module RspecWarnExceptionCapture
+  def warn_exception(e, message: "", env: nil)
+    path = env&.[]("PATH_INFO") || "(no request path)"
+    RspecErrorTracker.report_exception(path, e)
+    super
   end
 end
 
@@ -91,7 +99,9 @@ class PlaywrightLogger
 end
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
+Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
@@ -172,6 +182,11 @@ module TestSetup
     Sidekiq::Worker.clear_all
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+
+    # Database is rolled back between specs, but I18n override cache doesn't.
+    # Flush it if there were any TranslationOverrides created.
+    overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
+    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
 
     RspecErrorTracker.clear_exceptions
 
@@ -256,6 +271,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
+  config.include ThemeScreenshotMarker, type: :system
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
@@ -395,7 +411,7 @@ RSpec.configure do |config|
 
       test_i = ENV["TEST_ENV_NUMBER"].to_i
 
-      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
+      data_dir = "#{Rails.root.join("tmp/test_data_#{test_i}/minio")}"
       FileUtils.rm_rf(data_dir)
       FileUtils.mkdir_p(data_dir)
       minio_runner_config.minio_data_directory = data_dir
@@ -599,9 +615,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
+          wait_for_ember_boot
           wait_for_client_settled(method_name)
           result
         end
+      end
+
+      private
+
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
+        session = @driver.send(:session)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
@@ -754,7 +781,7 @@ RSpec.configure do |config|
       class << self
         def using_session_with_localhost_resolution(name, &block)
           attempts = 0
-          self._using_session(name, &block)
+          _using_session(name, &block)
         rescue Socket::ResolutionError
           puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
           attempts += 1
@@ -1029,10 +1056,13 @@ RSpec.configure do |config|
 
     expect(deprecation_error).to be_nil, deprecation_error
 
+    expected_deprecations = RSpec.current_example.metadata[:expected_js_deprecations] || []
+
     $playwright_logger&.logs&.each do |log|
       next if log[:level] != "count"
       deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
       next if deprecation_id.nil?
+      next if expected_deprecations.include?(deprecation_id)
 
       deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
@@ -1173,7 +1203,11 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
+def file_from_fixtures(
+  filename,
+  directory = "images",
+  root_path = "#{Rails.root.join("spec/fixtures")}"
+)
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
@@ -1217,7 +1251,7 @@ def plugin_from_fixtures(plugin_name)
   tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
 
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
-  FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
+  FileUtils.cp_r("#{Rails.root.join("spec/fixtures/plugins/#{plugin_name}")}", tmp_plugins_dir)
 
   Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
@@ -1238,7 +1272,7 @@ def has_trigger?(trigger_name)
 end
 
 def stub_deprecated_settings!(override:)
-  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+  SiteSetting.load_settings("#{Rails.root.join("spec/fixtures/site_settings/deprecated_test.yml")}")
 
   stub_const(
     SiteSettings::DeprecatedSettings,
@@ -1325,6 +1359,13 @@ def apply_base_chrome_args(args = [])
     base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
     base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
   end
+
+  resolver_rules = ["MAP test.localhost:80 127.0.0.1:#{Capybara.server_port}"]
+  if ENV["CI"]
+    # Bypass the OS resolver for localhost lookups inside the browser.
+    resolver_rules.push("MAP localhost [::1]", "MAP *.localhost [::1]")
+  end
+  base_args << "--host-resolver-rules=#{resolver_rules.join(",")}"
 
   # A file that contains just a list of paths like so:
   #

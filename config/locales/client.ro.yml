@@ -442,10 +442,10 @@ ro:
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Activate"
       start_posting:
         back: "Înapoi"
-      spread_the_word:
-        action: "Copiază legătură"
     about:
       edit: "Editează această pagină"
       simple_title: "Despre"
@@ -573,6 +573,9 @@ ro:
           one: "încă %{count} ciornă"
           few: "încă %{count} ciorne"
           other: "încă %{count} de ciorne"
+    embed_mode:
+      signin_flow:
+        cancel: "Anulează"
     topic_count_all:
       one: "Vezi un subiect nou"
       few: "Vezi %{count} subiecte noi"
@@ -1310,7 +1313,6 @@ ro:
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
-        title: "Programul de notificări"
         label: "Activează programul de notificări personalizat"
         none: "Nimeni"
         monday: "Luni"
@@ -1346,13 +1348,8 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
-        label: "Notificări live"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
-        perm_default: "Activează notificări"
-        perm_denied_btn: "Notificări blocate"
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
-        disable: "Dezactivează notificări"
-        enable: "Activează notificările"
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
       dismiss: "Respinge"
       dismiss_notifications: "Respinge tot"
@@ -2514,6 +2511,7 @@ ro:
         max_views:
           placeholder: maxim
     hamburger_menu: "Meniu de navigare"
+    header_panel: "Antet"
     new_item: "nou"
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"
@@ -2545,12 +2543,6 @@ ro:
         actions: "Acțiuni multiple"
         move_messages_to_inbox: "Mută în „Primite”"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
-        selected_sole_category:
-          one: "Ai selectat <b>%{count}</b> subiect din categoria:"
-          few: "Ai selectat <b>%{count}</b> subiecte din categoria:"
-          other: "Ai selectat <b>%{count}</b> de subiecte din categoria:"
-        choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
-        changed_tags: "Etichetele pentru aceste subiecte au fost schimbate."
         notify: "Notifică utilizatorii despre această modificare"
         performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
         completed: "Operațiunile în masă s-au finalizat cu succes!"
@@ -2581,10 +2573,6 @@ ro:
         name: "Arhivă"
       move_messages_to_inbox:
         name: "Mută în Primite"
-      remove_tags:
-        name: "Înlătură etichete"
-      replace_tags:
-        name: "Înlocuiește etichete"
       delete_topics:
         name: "Șterge"
       convert_to_private_message:
@@ -2609,6 +2597,7 @@ ro:
       collapse: "Colaps"
       no_replies: "Nici un răspuns încă."
       deleted_post_placeholder: "[șters]"
+      ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Fixat"
     topic:
       filter_to:
@@ -3247,7 +3236,7 @@ ro:
           low: "Scăzut"
           high: "Ridicată"
       sort_options:
-        default: "implicit"
+        default: "Implicit"
         likes: "Aprecieri"
         views: "Vizualizări"
         posts: "Postări"
@@ -3493,87 +3482,54 @@ ro:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Scurtături de tastatură"
       search_ctrl_f_tip: "Pentru a căuta pe întregul forum, apasă pe <kbd>/</kbd>"
+      description_header: "Descriere"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Sari la"
-        home: "%{shortcut} Acasă"
-        latest: "%{shortcut} Cele mai recente"
-        new: "%{shortcut} Noi"
-        unread: "%{shortcut} Necitite"
-        categories: "%{shortcut} Categorii"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Semne de carte"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Mesaje"
+        home: "Acasă"
+        latest: "Ultimele"
+        new: "Nou"
+        unread: "Necitite"
+        unseen: "Nevăzute"
+        categories: "Categorii"
+        top: "Top"
+        bookmarks: "Semne de carte"
+        profile: "Profil"
+        messages: "Mesaje"
+        drafts: "Ciorne"
       navigation:
         title: "Navigare"
-        jump: "%{shortcut} Mergi la postarea #"
-        back: "%{shortcut} Înapoi"
-        up_down: "%{shortcut} Mută selecția &uarr; &darr;"
-        open: "%{shortcut} Deschide subiectul selectat"
-        next_prev: "%{shortcut} Secțiunea următoare/anterioară"
+        back: "Înapoi"
+        up_down: "Mută selecția &uarr; &darr;"
       application:
         title: "Aplicație"
-        create: "%{shortcut} Creează un subiect nou sau un mesaj personal"
-        notifications: "%{shortcut} Deschide notificări"
-        hamburger_menu: "%{shortcut} Deschide meniul de navigare"
-        user_profile_menu: "%{shortcut} Deschide meniu utilizator"
-        show_incoming_updated_topics: "%{shortcut} Arată subiectele actualizate"
-        filter_sidebar: "%{shortcut} Filtru bară laterală"
-        help: "%{shortcut} Deschide ajutor tastatură"
-        toggle_bulk_select: "%{shortcut} Comută selectare în bloc"
-        x: "%{shortcut} Comută selecție (în modul selectare în bloc)"
-        log_out: "%{shortcut} Ieșire"
+        search: "Caută"
+        log_out: "Ieșire"
       composing:
-        minimize: "%{shortcut} Minimizează compozitorul"
-        create_or_reply: "%{shortcut} Creează subiect sau răspuns la postare"
-        bold: "%{shortcut} Aldin"
-        italic: "%{shortcut} Cursiv"
-        link: "%{shortcut} Inserează legătură"
-        preformatted: "%{shortcut} Text pre-formatat"
-        paragraph: "%{shortcut} Paragraf"
-        heading_1: "%{shortcut} Titlu 1"
-        heading_2: "%{shortcut} Titlu 2"
-        heading_3: "%{shortcut} Titlu 3"
-        heading_4: "%{shortcut} Titlu 4"
-        toggle_direction: "%{shortcut} Comută direcție text"
-        ordered_list: "%{shortcut} Listă ordonată"
-        unordered_list: "%{shortcut} Listă neordonată"
-        blockquote: "%{shortcut} Citat"
+        link: "Inserează legătură"
+        preformatted: "Text preformatat"
+        paragraph: "Paragraf"
+        blockquote: "Bloc citat"
       bookmarks:
         title: "Semne de carte"
-        enter: "%{shortcut} Salvează și închide"
-        later_today: "%{shortcut} Mai târziu astăzi"
-        later_this_week: "%{shortcut} Mai târziu în această săptămână"
-        tomorrow: "%{shortcut} Mâine"
-        next_week: "%{shortcut} Săptămâna viitoare"
-        next_month: "%{shortcut} Luna viitoare"
-        delete: "%{shortcut} Șterge marcajul de carte"
+        enter: "Salvează și închide"
+        later_today: "Mai târziu astăzi"
+        later_this_week: "Mai târziu săptămâna asta"
+        tomorrow: "Mâine"
+        next_week: "Săptămâna viitoare"
+        next_month: "Luna viitoare"
+        next_business_day: "Următoarea zi lucrătoare"
+        custom: "Data și ora personalizată"
+        delete: "Șterge semn de carte"
       actions:
         title: "Acțiuni"
-        bookmark_topic: "%{shortcut} Comută semnul de carte pentru subiect"
-        pin_unpin_topic: "%{shortcut} Fixează/Desprinde subiect"
-        share_topic: "%{shortcut} Distribuie subiect"
-        share_post: "%{shortcut} distribuie postare"
-        reply_as_new_topic: "%{shortcut} Răspunde ca subiect link-uit"
-        reply_topic: "%{shortcut} Răspunde la subiect"
-        reply_post: "%{shortcut} Răspunde la postare"
-        quote_post: "%{shortcut} Citează postare"
-        like: "%{shortcut} Apreciază postare"
-        flag: "%{shortcut} Semnalează articol"
-        bookmark: "%{shortcut} Marchează postare cu semn de carte"
-        edit: "%{shortcut} Editează postare"
-        delete: "%{shortcut} Șterge postare"
-        mark_muted: "%{shortcut} Setează subiect pe silențios"
-        mark_tracking: "%{shortcut} Urmărește subiect"
-        mark_watching: "%{shortcut} Urmărește activ subiect"
-        print: "%{shortcut} Tipărire subiect"
-        defer: "%{shortcut} Marchează subiect ca necitit"
-      search_menu:
-        full_page_search: "%{shortcut} Lansează căutarea pe întreaga pagină"
+        reply_as_new_topic: "Răspunde cu link către subiect"
+        reply_topic: "Răspunde la subiect"
+        mark_watching: "Urmărește subiect"
+        defer: "Marchează subiect ca necitit"
       admin:
         title: "Administrator"
-        search_prev_next: "%{shortcut} Mută selecția în sus și în jos"
-        search_open: "%{shortcut} Deschide căutarea pentru interfața de administrare"
     badges:
       earned_n_times:
         one: "A primit acest ecuson o dată"
@@ -4281,6 +4237,15 @@ ro:
         reports_tab: "Rapoarte"
         report_filter_any: "oricare"
         disabled: Dezactivat
+        sections:
+          reports:
+            title: "Rapoarte"
+          traffic:
+            title: "Trafic site"
+        period:
+          last_7_days: "Ultimele 7 zile"
+          last_30_days: "Ultimele 30 de zile"
+          custom: "Personalizat"
         reports:
           percent_change_tooltip_previous_value:
             yesterday:
@@ -5038,6 +5003,7 @@ ro:
         topic_id: "ID Subiect"
         post_id: "ID Mesaj"
         category_id: "ID categorie"
+        reviewable_id: "Revizuire"
         delete: "Șterge"
         edit: "Editează"
         save: "Salvează"
@@ -5358,7 +5324,6 @@ ro:
           few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
           other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)"
         delete_confirm_title: "Sigur vrei să ștergi acest utilizator? Acest lucru este permanent!"
-        delete_and_block: "Șterge utilizator și blochează adresa de email și IP"
         delete_dont_block: "Șterge utilizator"
         deleted: "Utilizatorul a fost șters."
         delete_failed: "A apărut o eroare la ștergerea utilizatorului. Asigură-te că toate postările sunt șterse înainte de a încerca ștergerea utilizatorului."

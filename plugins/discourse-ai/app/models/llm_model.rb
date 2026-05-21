@@ -10,8 +10,8 @@ class LlmModel < ActiveRecord::Base
   BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
-    "md" => "markdown",
-    "markdown" => "markdown",
+    "markdown" => "md",
+    "md" => "md",
     "htm" => "html",
     "text" => "txt",
   }.freeze
@@ -361,7 +361,7 @@ class LlmModel < ActiveRecord::Base
             trust_level: TrustLevel[4],
           )
         new_user.save!(validate: false)
-        self.update!(user: new_user)
+        update!(user: new_user)
       else
         user.active = true
         user.save!(validate: false)
@@ -381,7 +381,7 @@ class LlmModel < ActiveRecord::Base
       user.update!(active: false) if user.active
     else
       user.destroy!
-      self.update!(user: nil)
+      update!(user: nil)
     end
   end
 
@@ -389,11 +389,7 @@ class LlmModel < ActiveRecord::Base
     tokenizer.constantize
   end
 
-  def allowed_attachment_types
-    (self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES).map(&:downcase)
-  end
-
-  def allowed_attachment_types=(value)
+  def self.normalize_attachment_types(value)
     normalized =
       Array(value)
         .map { |v| v.to_s.downcase.strip }
@@ -401,7 +397,17 @@ class LlmModel < ActiveRecord::Base
         .reject(&:blank?)
         .uniq
     normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
-    self[:allowed_attachment_types] = normalized
+    normalized
+  end
+
+  def allowed_attachment_types
+    self.class.normalize_attachment_types(
+      self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES,
+    )
+  end
+
+  def allowed_attachment_types=(value)
+    self[:allowed_attachment_types] = self.class.normalize_attachment_types(value)
   end
 
   def lookup_custom_param(key)

@@ -7,7 +7,6 @@ import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -17,6 +16,7 @@ import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
 import { userPath } from "discourse/lib/url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { autoTrackedArray } from "../lib/tracked-tools";
 
@@ -24,6 +24,10 @@ let _messagesCache = {};
 
 export function resetComposerMessagesCache() {
   _messagesCache = {};
+}
+
+function containsEducationMessage(messages) {
+  return messages?.content?.some((msg) => msg.id === "education");
 }
 
 @tagName("")
@@ -112,9 +116,12 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    for (const msg of this.queuedForTyping) {
+    const queuedMessages = [...this.queuedForTyping];
+    this.queuedForTyping.length = 0;
+
+    for (const msg of queuedMessages) {
       if (this.composer.whisper && msg.hide_if_whisper) {
-        return;
+        continue;
       }
 
       this.popup(msg);
@@ -281,7 +288,10 @@ export default class ComposerMessages extends Component {
     const cacheKey = `${args.composer_action}${args.topic_id}${args.post_id}`;
 
     let messages;
-    if (_messagesCache.cacheKey === cacheKey) {
+    if (
+      _messagesCache.cacheKey === cacheKey &&
+      !containsEducationMessage(_messagesCache.messages)
+    ) {
       messages = _messagesCache.messages;
     } else {
       messages = await this.composer.store.find("composer-message", args);
@@ -289,7 +299,11 @@ export default class ComposerMessages extends Component {
         return;
       }
 
-      _messagesCache = { messages, cacheKey };
+      if (containsEducationMessage(messages)) {
+        _messagesCache = {};
+      } else {
+        _messagesCache = { messages, cacheKey };
+      }
     }
 
     // Checking composer messages on replies can give us a list of links to check for
@@ -358,7 +372,10 @@ export default class ComposerMessages extends Component {
 
   <template>
     <div
-      class={{concatClass "composer-popup-container" (if this.hidden "hidden")}}
+      class={{dConcatClass
+        "composer-popup-container"
+        (if this.hidden "hidden")
+      }}
       ...attributes
     >
       {{#each this.messages as |message|}}

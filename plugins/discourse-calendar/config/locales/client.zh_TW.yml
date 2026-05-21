@@ -29,9 +29,6 @@ zh_TW:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-      event_description:
-        show_more: "顯示更多"
-        show_less: "顯示更少"
       show_all: "顯示全部"
       add_to_calendar: "新增至行事曆"
       created_by: "創建者"

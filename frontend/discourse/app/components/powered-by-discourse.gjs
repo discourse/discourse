@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { modifier as modifierFn } from "ember-modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PoweredByDiscourse extends Component {
@@ -12,7 +12,7 @@ export default class PoweredByDiscourse extends Component {
   });
 
   <template>
-    {{! template-lint-disable link-rel-noopener }}
+    {{! eslint-disable ember/template-link-rel-noopener }}
     <a
       class="powered-by-discourse"
       href="https://discourse.org/powered-by"
@@ -21,7 +21,7 @@ export default class PoweredByDiscourse extends Component {
     >
       <span class="powered-by-discourse__content">
         <span class="powered-by-discourse__logo">
-          {{icon "fab-discourse"}}
+          {{dIcon "fab-discourse"}}
         </span>
         <span>{{i18n "powered_by_discourse"}}</span>
       </span>

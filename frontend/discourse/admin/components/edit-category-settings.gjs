@@ -6,9 +6,6 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import {
@@ -19,6 +16,9 @@ import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategorySettings extends buildCategoryPanel(
@@ -439,7 +439,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
             {{i18n "category.default_slow_mode"}}
           </label>
           <div class="category-default-slow-mode-seconds">
-            <RelativeTimePicker
+            <DRelativeTimePicker
               @id="category-default-slow-mode"
               @durationMinutes={{this.category.defaultSlowModeMinutes}}
               @onChange={{this.onDefaultSlowModeDurationChange}}
@@ -454,7 +454,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
             {{i18n "topic.auto_close.label"}}
           </label>
           <div class="category-topic-auto-close-hours">
-            <RelativeTimePicker
+            <DRelativeTimePicker
               @id="topic-auto-close"
               @durationHours={{this.category.auto_close_hours}}
               @hiddenIntervals={{this.hiddenRelativeIntervals}}
@@ -613,7 +613,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
         <label for="read-only-message">{{i18n
             "category.read_only_banner"
           }}</label>
-        <TextField
+        <DTextField
           @valueProperty="value"
           @id="read-only-message"
           @value={{this.category.read_only_banner}}
@@ -628,7 +628,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       {{#if this.emailInEnabled}}
         <section class="field category-email-in">
           <label for="category-email-in">
-            {{icon "envelope"}}
+            {{dIcon "envelope"}}
             {{i18n "category.email_in"}}
           </label>
           <input

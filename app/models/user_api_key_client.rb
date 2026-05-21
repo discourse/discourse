@@ -25,12 +25,12 @@ end
 # Table name: user_api_key_clients
 #
 #  id               :bigint           not null, primary key
-#  client_id        :string           not null
 #  application_name :string           not null
-#  public_key       :string
 #  auth_redirect    :string
+#  public_key       :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  client_id        :string           not null
 #
 # Indexes
 #

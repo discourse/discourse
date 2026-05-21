@@ -16,9 +16,6 @@ pt:
     topic_voting_show_votes_on_profile: 'Permitir aos utilizadores ver os seus votos na lista de actividade?'
     topic_voting_alert_votes_left: 'Alertar o utilizador quando faltarem estes votos'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Mostrar quem votou"
     votes_moved:
       one: "Foi movido um voto."
       other: "Foram movidos %{count}votos."

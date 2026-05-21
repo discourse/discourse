@@ -30,6 +30,23 @@ RSpec.describe User do
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+    end
+
+    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+    end
+
+    it "returns true for the 'anonymous' auto group for anonymous users" do
+      expect(
+        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+      ).to eq(true)
+    end
+
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
       group.add(user)
@@ -43,6 +60,44 @@ RSpec.describe User do
       expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+    end
+
+    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+    end
+
+    context "with granular_anonymous_and_logged_in_groups_permissions enabled" do
+      before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
+
+      it "stops returning true for the 'everyone' auto group" do
+        expect(user.in_any_groups?([Group::AUTO_GROUPS[:everyone]])).to eq(false)
+      end
+
+      it "still returns true for the 'logged_in_users' auto group" do
+        expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+      end
+
+      it "still returns true when the user is explicitly in a custom group" do
+        group.add(user)
+        user.reload
+        expect(user.in_any_groups?([group.id])).to eq(true)
+      end
+
+      it "still returns true for system user against staff/TL auto groups" do
+        GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+        Discourse.system_user.reload
+        expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+        expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(
+          true,
+        )
+      end
     end
   end
 
@@ -648,6 +703,50 @@ RSpec.describe User do
 
       user.deactivate(admin)
       expect(reviewable.reload.rejected?).to eq(true)
+    end
+  end
+
+  describe "anonymous shadow users" do
+    fab!(:admin)
+    fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+    before do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+    end
+
+    it "deactivates and logs out anonymous shadow users when deactivated", :aggregate_failures do
+      shadow_user = AnonymousShadowCreator.get(master_user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{shadow_user.id}") { master_user.deactivate(admin) }
+
+      expect(shadow_user.reload[:active]).to eq(false)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
+    end
+
+    it "suspends and logs out anonymous shadow users when suspended", :aggregate_failures do
+      freeze_time
+      shadow_user = AnonymousShadowCreator.get(master_user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{shadow_user.id}") do
+          master_user.update!(suspended_at: Time.zone.now, suspended_till: 1.day.from_now)
+        end
+
+      expect(shadow_user.reload[:suspended_till]).to be_within_one_second_of(1.day.from_now)
+      expect(shadow_user[:suspended_at]).to be_within_one_second_of(Time.zone.now)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
     end
   end
 
@@ -1470,6 +1569,44 @@ RSpec.describe User do
           expect(user.user_visits.count).to eq(2)
         end
       end
+    end
+  end
+
+  describe "#create_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a UserVisit and increments days_visited" do
+      expect { user.create_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1).and change { user.user_stat.reload.days_visited }.by(1)
+    end
+
+    it "does not increment days_visited when the insert raises" do
+      user.create_visit_record!(date)
+
+      expect {
+        expect { user.create_visit_record!(date) }.to raise_error(ActiveRecord::RecordNotUnique)
+      }.not_to change { user.user_stat.reload.days_visited }
+    end
+  end
+
+  describe "#update_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a visit when none exists for the date" do
+      expect { user.update_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1)
+    end
+
+    it "is a no-op when a visit already exists for the date" do
+      user.update_visit_record!(date)
+
+      expect { user.update_visit_record!(date) }.not_to change {
+        user.user_visits.where(visited_at: date).count
+      }
     end
   end
 
@@ -2953,8 +3090,6 @@ RSpec.describe User do
         user.update!(title: customized_badge_name)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
-
-      after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
     end
   end
 

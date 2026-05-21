@@ -17,10 +17,12 @@ RSpec.describe "Topic voting" do
   fab!(:post2) { Fabricate(:post, topic: topic2) }
 
   let(:category_page) { PageObjects::Pages::Category.new }
+  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:user_page) { PageObjects::Pages::User.new }
   let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -31,12 +33,13 @@ RSpec.describe "Topic voting" do
     category_page.visit(category1)
     expect(category_page).to have_no_css(category_page.votes)
 
-    # enable voting in category
-    category_page.visit_settings(category1)
-    form.field("custom_fields.enable_topic_voting").toggle
-    category_page.save_settings
+    category_page.visit_general(category1)
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.expand
+    category_type_selector.option(".category-type-selector__result.--category-type-ideas").click
+    banner.click_save
 
-    expect(Category.can_vote?(category1.id)).to eq(true)
+    try_until_success { expect(Category.can_vote?(category1.id)).to eq(true) }
 
     # make a vote
     category_page.visit(category1)

@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 de:
+  category_types:
+    events:
+      name: "Ereignisse"
+      title: "ereignisse"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Feed mit Kalenderereignissen lesen"
@@ -66,7 +70,14 @@ de:
     event_participation_buttons: "Liste der Schaltflächen für die Teilnahme am Ereignis, die Benutzer verwenden können."
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
     calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
+    enable_events_category_type_setup: "Aktiviert die Option „Kategorietyp Ereignisse“ bei der Einrichtung der Kategorieerstellung. Beachte, dass die Option „enable simplified category creation“ aktiviert sein muss, damit diese Einstellung wirksam wird."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Tag"
+        week: "Woche"
+        month: "Monat"
+        year: "Jahr"
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Alle Ereignisse"
       my_events_feed_name: "%{site_title} - Meine Ereignisse"

@@ -50,6 +50,7 @@ en:
         description: "Automatically tag topics using AI"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
+    enable_ai_bot_starred_conversations: "Allow users to star AI bot conversations and show them in a Starred sidebar section."
     ai_default_llm_model: "The default LLM model to use for all AI features"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
     ai_toxicity_enabled: "Enable the toxicity module."
@@ -126,6 +127,7 @@ en:
     ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
     ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+    ai_bot_enable_docked_composer: "Enable the docked chat-style composer for AI bot conversations instead of the standard floating composer."
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"
@@ -883,6 +885,7 @@ en:
         disable_modules_first: "You must disable these modules first: %{settings}"
         set_llm_first: "Set %{setting} first"
         model_unreachable: "We couldn't get a response from this model. Check your settings first."
+        empty_response: "The model returned an empty response."
         invalid_seeded_model: "You can't use this model with this feature"
         invalid_agent_response_format: "The selected agent must have a response format with a boolean field names \"spam\""
         must_select_model: "You must select a LLM first"

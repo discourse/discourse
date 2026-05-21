@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export const ORDER_BY_ACTIVITY_FILTER = "activity";
@@ -75,7 +75,7 @@ export default class PostVotingAnswerHeader extends Component {
         <li>
           <a
             href={{this.votesUrl}}
-            class={{concatClass
+            class={{dConcatClass
               "--votes"
               (unless this.sortedByActivity "active")
             }}
@@ -88,7 +88,7 @@ export default class PostVotingAnswerHeader extends Component {
         <li>
           <a
             href={{this.activityUrl}}
-            class={{concatClass
+            class={{dConcatClass
               "--activity"
               (if this.sortedByActivity "active")
             }}

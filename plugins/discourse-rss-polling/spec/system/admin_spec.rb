@@ -31,7 +31,7 @@ RSpec.describe "Rss Polling - admin" do
 
     expect(DiscourseRssPolling::RssFeed.last).to have_attributes(
       url:,
-      author: current_user.username,
+      user_id: current_user.id,
       category_filter: "updates",
       category_id: category_1.id,
       tags: tag_1.name,

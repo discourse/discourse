@@ -3,9 +3,9 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Category from "discourse/models/category";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 import BooleanThree from "./param-input/boolean-three";
 import CategoryIdInput from "./param-input/category-id-input";
@@ -48,6 +48,8 @@ export const ERRORS = {
   INVALID_DATE: (date) => i18n("explorer.form.errors.invalid_date", { date }),
   INVALID_TIME: (time) => i18n("explorer.form.errors.invalid_time", { time }),
 };
+
+const DATE_FORMATS = ["YYYY-MM-DD", "D MMM YYYY", "D MMMM YYYY"];
 
 function digitalizeCategoryId(value) {
   value = String(value || "");
@@ -248,17 +250,17 @@ export default class ParamInputForm extends Component {
         }
         return value;
       case "date":
-        const m = value && moment(value, "YYYY-MM-DD", true);
-        if (m?.isValid()) {
-          return m.format("YYYY-MM-DD");
-        } else {
-          return this.formatMoment(
-            info,
-            value,
-            "YYYY-MM-DD",
-            ERRORS.INVALID_DATE
-          );
+        if (!value) {
+          return null;
         }
+
+        const date = moment(value, DATE_FORMATS, true);
+        if (date.isValid()) {
+          return date.format("YYYY-MM-DD");
+        }
+
+        this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
+        return null;
       case "time":
         return this.formatMoment(
           info,
@@ -485,7 +487,7 @@ export default class ParamInputForm extends Component {
                   @field={{field}}
                   @info={{info}}
                 />
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @condition={{info.loading}}
                   @size="small"
                 />

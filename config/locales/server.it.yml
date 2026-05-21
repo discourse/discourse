@@ -370,7 +370,6 @@ it:
       <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
-    existing_user_cannot_redeem: "Questo invito non può essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito."
     existing_user_already_redemeed: "Hai già riscattato questo link di invito."
     user_exists: "Non c'è bisogno di invitare <b>%{email}</b>: ha già un account!"
     invite_exists: "Hai già invitato <b>%{email}</b>."
@@ -604,6 +603,7 @@ it:
       admins: "amministratori"
       moderators: "moderatori"
       staff: "staff"
+      anonymous: "anonimo"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1453,6 +1453,8 @@ it:
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina con autenticazione"
       description: "Numero di visualizzazioni pagina da visitatori autenticati che usano browser reali."
+    page_view_embed_reqs:
+      xaxis: "Giorno"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -1514,7 +1516,7 @@ it:
         os: Sistema Operativo
         login_time: Ora di Accesso
       description: "Dettagli suoi nuovi accessi che differiscono in modo sospetto da precedenti accessi."
-    staff_logins:
+    admin_logins:
       title: "Accessi Amministratore"
       labels:
         user: Utente
@@ -1697,7 +1699,6 @@ it:
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
     x_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
-    email_subject: "Formato oggetto personalizzabile per email standard. Vedi <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornisce maggiori dettagli agli utenti sul perché non possono accedere a un argomento specifico. Nota: questo metodo è meno sicuro perché gli utenti sapranno se un URL si collega a un argomento valido."
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti gli accessi ai social ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
@@ -1856,7 +1857,6 @@ it:
     google_oauth2_client_secret: "Segreto client della tua applicazione Google."
     google_oauth2_prompt: "Un elenco facoltativo di valori stringa delimitati da spazi che specifica se il server di autorizzazione richiede all'utente la riautenticazione e il consenso. Vedi <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> per i possibili valori."
     google_oauth2_hd: "Un dominio facoltativo ospitato su Google Apps dal quale sarà consentito l'accesso in via esclusiva. Vedi <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> per maggiori dettagli."
-    google_oauth2_hd_groups: "Recupera i gruppi Google di utenti sul dominio ospitato durante l'autenticazione. I gruppi Google recuperati possono essere utilizzati per garantire a tali utenti l'appartenenza automatica al gruppo Discourse (vedi le impostazioni del gruppo). Per altre informazioni consulta https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Un indirizzo email appartenente a un account di amministratore di Google Workspace. Verrà utilizzato con le credenziali dell'account di servizio per recuperare le informazioni sul gruppo."
     google_oauth2_hd_groups_service_account_json: "Informazioni sulla chiave in formato JSON per l'account di servizio. Verrà utilizzato per recuperare le informazioni del gruppo."
     google_oauth2_verbose_logging: "Registra la diagnostica dettagliata Google OAuth2 su <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1886,7 +1886,6 @@ it:
     s3_configure_tombstone_policy: "Abilita la cancellazione automatica per i caricamenti cestinati. IMPORTANTE: se disabilitato, nessuno spazio verrà recuperato dopo aver eliminato i caricamenti."
     s3_disable_cleanup: "Impedisci la rimozione dei vecchi backup da S3 quando ci sono più backup del massimo consentito."
     s3_use_acls: "AWS consiglia di non usare ACL sui bucket S3; deseleziona questa opzione solo se intendi configurare criteri di autorizzazione sui bucket `s3_upload_bucket` e `s3_backup_bucket` configurati."
-    enable_direct_s3_uploads: "Consente caricamenti multipart diretti su Amazon S3. Per ulteriori dettagli: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469"
     backup_time_of_day: "Ora del giorno in UTC in cui eseguire il backup."
     backup_with_uploads: "Includi i caricamenti nei backup programmati. Se l'opzione è disabilitata verrà eseguito il backup del solo database."
     backup_location: "Posizione in cui vengono archiviati i backup. IMPORTANTE: S3 richiede l'inserimento di credenziali S3 valide nelle impostazioni File. Se passi da Locale a S3, dovrai eseguire il rake task `s3:ensure_cors_rules`."
@@ -2136,7 +2135,6 @@ it:
     log_mail_processing_failures: "Registra tutti gli errori di elaborazione della posta elettronica in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Consenti agli utenti di pubblicare nuovi argomenti via email. Dopo aver abilitato questa impostazione, sarai in grado di configurare gli indirizzi email in entrata per gruppi e categorie."
     email_in_allowed_groups: "Gruppi a cui è consentito pubblicare nuovi argomenti via email. Ad amministratori e moderatori è sempre consentito pubblicare nuovi argomenti via email."
-    email_in_authserv_id: "L'identificatore del servizio che esegue i controlli di autenticazione sulle e-mail in arrivo. Consulta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> per istruzioni su come configurare questa opzione."
     email_in_spam_header: "Selezione l'intestazione di email da utilizzare per individuare lo spam. L'opzione può essere X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict. L'email verrà contrassegnata come spam in base al valore della sua intestazione. Per esempio, se l'impostazione selezionata è X-Spam-Flag, un'email con intestazione impostata sul valore YES verrà classificata come spam."
     enable_smtp: "Abilita SMTP per l'invio di notifiche per i messaggi di gruppo."
     email_prefix: "[Etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
@@ -2379,7 +2377,6 @@ it:
     enable_welcome_banner: "Visualizza un banner nelle pagine principali dell'elenco degli argomenti per dare il benvenuto ai membri e consentire loro di cercare nei contenuti del sito"
     welcome_banner_location: "Determina dove nella pagina apparirà il banner di benvenuto."
     welcome_banner_page_visibility: "Determina in quali pagine apparirà il banner di benvenuto."
-    splash_screen: "Visualizza una schermata di caricamento temporanea durante il caricamento delle risorse del sito"
     navigation_menu: "Definisci la collocazione del menu di navigazione principale del tuo sito: barra laterale o elenco a discesa nell'intestazione. È consigliata l'opzione con barra laterale."
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
@@ -3157,7 +3154,6 @@ it:
         La tua risposta è stata inviata da un indirizzo email bloccato. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Email Rifiuta Email Non Consentita"
-      subject_template: "[%{email_prefix}] Problema email -- Email Bloccata"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
@@ -3310,7 +3306,6 @@ it:
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nNon hai le autorizzazioni per rispondere all'argomento. Se ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_reject_reply_to_digest:
       title: "Email di risposta a un messaggio di riepilogo rifiutata"
-      subject_template: "[%{email_prefix}] Problema e-mail - Risposta a un messaggio di riepilogo"
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
     email_reject_too_many_recipients:
       title: "Rifiuto di e-mail con troppi destinatari"
@@ -3413,7 +3408,6 @@ it:
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
-      subject_template: "Sei il Nuovo Utente del Mese!"
       text_body_template: |
         Congratulazioni, ti sei meritato il premio come **Nuovo Utente del Mese per %{month_year}**. :trophy:
 
@@ -3731,6 +3725,7 @@ it:
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
+      subject_template_improved: "L'account esiste già"
       text_body_template: |
         Hai appena cercato di creare un account su %{site_name}, o hai tentato di cambiare l'email di un account su %{email}. Tuttavia, un account esiste già per %{email}.
 
@@ -3742,6 +3737,7 @@ it:
     account_second_factor_disabled:
       title: "Autenticazione a due fattori disabilitata"
       subject_template: "[%{email_prefix}] Autenticazione a due fattori disabilitata"
+      subject_template_improved: "Autenticazione a due fattori disabilitata"
     digest:
       why: "Un breve riepilogo di %{site_link} da %{since}"
       since_last_visit: "Dalla tua ultima visita"
@@ -3755,6 +3751,7 @@ it:
       popular_posts: "Messaggi popolari"
       more_new: "Nuovo per te"
       subject_template: "[%{email_prefix}] Riepilogo"
+      subject_template_improved: "Riepilogo"
       unsubscribe: "Questo riepilogo ti viene inviato da %{site_link} quando sei assente da un po'. Modifica %{email_preferences_link}, o %{unsubscribe_link} per annullare l'iscrizione."
       your_email_settings: "le tue impostazioni email"
       click_here: "clicca qui"
@@ -3774,10 +3771,10 @@ it:
       title: "Accedi tramite collegamento"
       preview: "Accedi tramite collegamento."
       subject_template: "[%{email_prefix}] Accedi tramite collegamento"
+      subject_template_improved: "Accedi tramite collegamento"
       text_body_template: "Ecco il collegamento per accedere a [%{site_name}](%{base_url}). \n\nSe non hai richiesto questo collegamento, puoi tranquillamente ignorare questa email. \n\nClicca sul seguente collegamento per accedere:\n %{base_url}/session/email-login/%{email_token}\n"
     set_password:
       title: "Imposta Password"
-      subject_template: "[%{email_prefix}] Imposta Password"
       text_body_template: |
         Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi accedere usando uno dei servizi online supportati (Google, Facebook, ecc) associato con questo indirizzo email validato.
 
@@ -3788,6 +3785,7 @@ it:
     admin_login:
       title: "Accesso Amministratore"
       subject_template: "[%{email_prefix}] Accesso"
+      subject_template_improved: "Accesso"
       text_body_template: |
         Qualcuno ha richiesto di accedere con il tuo account su [%{site_name}](%{base_url}).
 
@@ -3797,7 +3795,6 @@ it:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account Creato"
-      subject_template: "[%{email_prefix}] Il Tuo Nuovo Account"
       text_body_template: |
         E' stato creato un nuovo account per te su %{site_name}
 
@@ -3902,7 +3899,6 @@ it:
       text_body_template: "Benvenuto in %{site_name}! \n\nQuesto è un promemoria per l'attivazione del tuo account. \n\nFai clic sul seguente link per confermare e attivare il tuo nuovo account:\n %{base_url}/u/activate-account/%{email_token} \n\nSe il link qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser web.\n"
     suspicious_login:
       title: "Nuovo avviso di accesso"
-      subject_template: "[%{site_name}] Nuovo accesso da %{location}"
       text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Eri tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, va benissimo! Non c'è nient'altro da fare. \n\nSe non eri tu, ti preghiamo di [controllare le tue sessioni esistenti](%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
     post_approved:
       title: "Il tuo messaggio è stato approvato"

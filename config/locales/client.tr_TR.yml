@@ -269,6 +269,7 @@ tr_TR:
       comma: ", "
       last_item: "ve"
     action_codes:
+      topic_created: "Bu konuyu %{when} tarihinde oluşturdu"
       public_topic: "Bu konuyu herkese açık yaptı, %{when}"
       open_topic: "Bunu bir konuya dönüştürdü, %{when}"
       private_topic: "Bu konuyu kişisel mesaj yaptı, %{when}"
@@ -341,6 +342,7 @@ tr_TR:
     broken_transformer_alert: "Bir hata oluştu. Siteniz düzgün çalışmayabilir."
     broken_block_alert: "Bir blok yapılandırma hatası algılandı. Ayrıntılar için tarayıcı konsolunu kontrol edin."
     broken_block_factory_alert: "Bir blok yüklenemedi. Bazı kullanıcı arayüzü öğeleri doğru görüntülenmeyebilir."
+    on_before_category_types_change_error: "Kategori türlerini değiştirirken bir hata oluştu. Daha fazla bilgi için tarayıcı konsolunu kontrol edin."
     critical_deprecation:
       notice: "<b>[Yönetici Duyurusu]</b> %{source}, güncellenmesi gereken kod içeriyor. (kimlik:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>daha fazla bilgi edinin</em></a>)"
@@ -452,6 +454,8 @@ tr_TR:
     admin_onboarding_banner:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
+      select_theme:
+        enabled: "Etkin mi"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
@@ -479,11 +483,6 @@ tr_TR:
           what_is_your_favorite_food:
             title: "En sevdiğin yemek nedir?"
             body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
-      spread_the_word:
-        title: "Haberi yayalım!"
-        description: "Ağınızdaki herkesle bir bağlantı paylaşın"
-        action: "Bağlantıyı kopyala"
-        copied_to_clipboard: "Bağlantı panoya kopyalandı!"
     about:
       edit: "Bu sayfayı düzenle"
       simple_title: "Hakkında"
@@ -672,7 +671,10 @@ tr_TR:
       continue_as_guest: "Misafir olarak devam et"
       be_first_to_reply: "İlk yanıtı siz verin!"
       replying_to: "%{username}'e yanıt veriliyor"
+      editing_post: "Gönderi düzenleniyor"
       reply_placeholder: "Yanıt yaz..."
+      signin_flow:
+        cancel: "İptal et"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -1518,7 +1520,6 @@ tr_TR:
         normal_option: "Normal"
         normal_option_title: "Bu kullanıcı size yanıt verirse, sizi alıntılarsa veya sizden bahsederse bildirim alırsınız."
       notification_schedule:
-        title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
         tip: "Bu saatler dışında bildirimleriniz duraklatılacak."
         midnight: "Gece yarısı"
@@ -1562,13 +1563,8 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "İstatistikler"
       desktop_notifications:
-        label: "Canlı Bildirimler"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
-        perm_default: "Bildirimleri Aç"
-        perm_denied_btn: "İzin Reddedildi"
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
-        disable: "Bildirimleri Devre Dışı Bırak"
-        enable: "Bildirimleri Etkinleştir"
         each_browser_note: "Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır."
         consent_prompt: "Gönderilerinize yanıt verildiğinde canlı bildirim almak ister misiniz?"
       dismiss: "Kapat"
@@ -2911,6 +2907,15 @@ tr_TR:
         no_translation_yet: "Çevirinin önizlemesini görmek için yazmaya başlayın..."
         placeholder: "Gönderinin çevirisini buraya girin..."
         show_raw_markdown: "Ham verileri göster"
+      change_reply_to:
+        title: "Yanıt hedefini değiştir"
+        hint: "Zaman çizelgesini kaydırarak yanıt vermek istediğiniz gönderiyi bulun."
+        current_selection: "Seçilen: @%{username} tarafından yazılan #%{post_number} numaralı gönderi"
+        invalid_target: "Düzenlediğiniz gönderiden daha eski bir gönderi seçin."
+        submit: "Yanıt hedefini belirle"
+        open: "Bu yorumun yanıtlandığı gönderiyi değiştir"
+        open_from_menu: "Başka bir gönderiye yanıt ver"
+        remove: "Yanıt hedefini kaldır"
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
         other: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
@@ -3408,6 +3413,7 @@ tr_TR:
           placeholder: en fazla
           aria_label: en fazla görüntülemeye göre filtrele
     hamburger_menu: "Navigasyon menüsü"
+    header_panel: "Üst bilgi"
     new_item: "yeni"
     go_back: "geri dön"
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
@@ -3480,6 +3486,8 @@ tr_TR:
         relist_topics: "Konuları yeniden listele"
         pin_topics: "Bu konuları öne çıkarın"
         unpin_topics: "Konuların Sabitlemesini Kaldır"
+        enable_nested_replies: "İç içe geçmiş yanıtları etkinleştir"
+        disable_nested_replies: "İç içe geçmiş yanıtları devre dışı bırak"
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
         delete: "Konuları sil"
@@ -3531,27 +3539,19 @@ tr_TR:
         notification_level: "Bildirimleri güncelle"
         change_notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni kategoriyi seç:"
-        selected_sole_category:
-          one: "Kategoriden <b>%{count}</b> konu seçtiniz:"
-          other: "Kategoriden <b>%{count}</b> konu seçtiniz:"
         selected_count:
           one: "%{count} tane seçildi"
           other: "%{count} tane seçildi"
-        change_tags: "Etiketleri değiştir"
-        append_tags: "Etiket ekle"
-        choose_new_tags: "Bu konular için yeni etiketler seçin:"
-        choose_append_tags: "Etiket ekle"
-        changed_tags: "Bu konuların etiketleri değiştirildi."
-        remove_tags: "Etiketleri kaldır"
-        confirm_remove_tags:
-          one: "Bu konudan tüm etiketler kaldırılacak. Emin misiniz?"
-          other: "%{count} konudan tüm etiketler kaldırılacak. Emin misiniz?"
+        manage_tags: "Etiketleri yönet"
         confirm_unpin_topics:
           one: "%{count} konuyu sabitlemekten vazgeç"
           other: "%{count} konuyu sabitlemekten vazgeç"
         confirm_update_topics:
           one: "%{count} konuyu güncelle"
           other: "%{count} konuyu güncelle"
+        confirm_apply_to_topics:
+          one: "%{count} konuya uygula"
+          other: "%{count} konuya uygula"
         confirm_close_topics:
           one: "%{count} konuyu kapat"
           other: "%{count} konuyu kapat"
@@ -3629,15 +3629,21 @@ tr_TR:
         description: "Listelenmemiş konular konu listesinde görünmez, ancak doğrudan bağlantı yoluyla erişilebilir. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Daha fazla bilgi edinin</a>"
       relist_topics:
         name: "Yeniden listele"
-      remove_tags:
-        name: "Etiketleri kaldır"
-        description: "Seçili konulardaki tüm etiketleri kaldır."
-      append_tags:
-        name: "Etiket ekle"
-        description: "Seçilen konulara aşağıdaki etiketleri ekleyin:"
-      replace_tags:
-        name: "Etiketleri Değiştir"
-        description: "Seçilen konulardaki mevcut tüm etiketleri aşağıdakilerle değiştirin:"
+      manage_tags:
+        name: "Etiketleri yönet"
+        add:
+          title: "Etiket ekle"
+          description: "Seçilen tüm konulara eklendi"
+        remove:
+          title: "Etiketleri kaldır"
+          all_toggle: "Tüm etiketleri kaldır"
+          all_warning: "<strong>Seçilen konulardan mevcut tüm etiketler</strong> kaldırılacaktır. Bu işlem geri alınamaz."
+        replace:
+          title: "Etiketleri değiştir"
+          description: "Bir etiketi başka bir etiketle değiştirir"
+          add_replacement: "Değiştirme ekle"
+          remove_replacement: "Değiştirmeyi kaldır"
+          from_placeholder: "Değiştirilecek etiket"
       delete_topics:
         name: "Sil"
         description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."
@@ -3663,6 +3669,10 @@ tr_TR:
       unpin_topics:
         name: "Sabitlemeyi kaldır"
         description: "Bir kategoriye veya genel olarak sabitlenmiş olan tüm seçili konuların sabitlemesini kaldır"
+      enable_nested_replies:
+        name: "İç içe geçmiş yanıtları etkinleştir"
+      disable_nested_replies:
+        name: "İç içe geçmiş yanıtları devre dışı bırak"
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"
@@ -3690,6 +3700,7 @@ tr_TR:
         default_nested_view: "Bu kategorideki başlıklar için varsayılan olarak iç içe geçmiş görünümü kullan"
       no_replies: "Henüz yanıt yok."
       deleted_post_placeholder: "[silindi]"
+      ignored_post_placeholder: "[yok Sayıldı]"
       op_badge: "OP"
       pinned_reply: "Sabitlendi"
       pin_reply: "En üste sabitle"
@@ -4707,7 +4718,7 @@ tr_TR:
           high: "Yüksek"
           very_high: "Çok yüksek"
       sort_options:
-        default: "varsayılan"
+        default: "Varsayılan"
         likes: "Beğeniler"
         op_likes: "Orijinal gönderi beğenileri"
         views: "Görüntülemeler"
@@ -5014,110 +5025,63 @@ tr_TR:
       title: "Klavye Kısayolları"
       short_title: "Kısayollar"
       search_ctrl_f_tip: "Bu forumun tamamında arama yapmak için <kbd>/</kbd>tuşlarına basın"
+      description_header: "Açıklama"
+      key_header: "Anahtar"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Şuraya Atla:"
-        home: "%{shortcut} Ana Sayfa"
-        latest: "%{shortcut} En Son"
-        new: "%{shortcut} Yeni"
-        unread: "%{shortcut} Okunmamış"
-        unseen: "%{shortcut} Görünmez"
-        categories: "%{shortcut} Kategoriler"
-        top: "%{shortcut} En Üst"
-        bookmarks: "%{shortcut} Yer imleri"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Mesajlar"
-        drafts: "%{shortcut} Taslaklar"
-        next: "%{shortcut} Sonraki Konu"
-        previous: "%{shortcut} Önceki Konu"
+        home: "Ana Sayfa"
+        latest: "En son"
+        new: "Yeni"
+        unread: "Okunmadı"
+        unseen: "Görülmedi"
+        categories: "Kategoriler"
+        top: "En iyi"
+        bookmarks: "Yer imleri"
+        profile: "Profil"
+        messages: "İletiler"
+        drafts: "Taslaklar"
       navigation:
         title: "Navigasyon"
-        jump: "%{shortcut} #. gönderiye git"
-        back: "%{shortcut} Geri"
-        up_down: "%{shortcut} Seçileni taşı &uarr; &darr;"
-        open: "%{shortcut} Seçili konuyu aç"
-        open_new_window: "%{shortcut} Seçilen konuyu yeni sekmede/pencerede aç"
-        next_prev: "%{shortcut} Önceki/Sonraki bölüm"
-        go_to_unread_post: "%{shortcut} Okunmamış ilk gönderiye git"
+        back: "Geri"
+        up_down: "Seçileni taşı &uarr; &darr;"
       application:
         title: "Uygulama"
-        create: "%{shortcut} Yeni bir konu veya kişisel mesaj oluşturun"
-        notifications: "%{shortcut} Bildirimleri aç"
-        hamburger_menu: "%{shortcut} Navigasyon menüsünü aç"
-        user_profile_menu: "%{shortcut} Kullanıcı menüsünü aç"
-        show_incoming_updated_topics: "%{shortcut} Güncellenen konuları göster"
-        search: "%{shortcut} Ara"
-        filter_sidebar: "%{shortcut} Filtre kenar çubuğu"
-        help: "%{shortcut} Klavye yardım sayfasını aç"
-        toggle_bulk_select: "%{shortcut} Toplu seçimi değiştir"
-        dismiss: "%{shortcut} Seçilen konuları kapat"
-        x: "%{shortcut} Seçimi değiştir (toplu seçim modunda)"
-        log_out: "%{shortcut} Çıkış Yap"
+        search: "Ara"
+        log_out: "Çıkış"
       composing:
         title: "Beste yapma"
-        return: "%{shortcut} Besteciye dön"
-        minimize: "%{shortcut} Besteciyi küçült"
-        create_or_reply: "%{shortcut} Konu oluştur veya yanıt paylaş"
-        fullscreen: "%{shortcut} Tam ekran besteci"
-        insert_current_time: "%{shortcut} Mevcut saati girin"
-        bold: "%{shortcut} Kalın"
-        italic: "%{shortcut} İtalik"
-        link: "%{shortcut} Bağlantı ekle"
-        preformatted: "%{shortcut} Önceden biçimlendirilmiş metin"
-        paragraph: "%{shortcut} Paragraf"
-        heading_1: "%{shortcut} Başlık 1"
-        heading_2: "%{shortcut} Başlık 2"
-        heading_3: "%{shortcut} Başlık 3"
-        heading_4: "%{shortcut} Başlık 4"
-        toggle_direction: "%{shortcut} Metin yönünü değiştir"
-        ordered_list: "%{shortcut} Sıralı liste"
-        unordered_list: "%{shortcut} Sıralanmamış liste"
-        blockquote: "%{shortcut} Blok alıntı"
+        link: "Bağlantı ekle"
+        preformatted: "Önceden biçimlendirilmiş metin"
+        paragraph: "Paragraf"
+        blockquote: "Blok alıntı"
       bookmarks:
         title: "Yer İmi Ekleme"
-        enter: "%{shortcut} Kaydet ve kapat"
-        later_today: "%{shortcut} Bugün ilerleyen saatlerde"
-        later_this_week: "%{shortcut} Bu hafta ilerleyen günlerde"
-        tomorrow: "%{shortcut} Yarın"
-        next_week: "%{shortcut} Gelecek hafta"
-        next_month: "%{shortcut} Gelecek ay"
-        next_business_week: "%{shortcut} Gelecek haftanın başlangıcı"
-        next_business_day: "%{shortcut} Sonraki iş günü"
-        custom: "%{shortcut} Özel tarih ve saat"
-        none: "%{shortcut} Anımsatıcı yok"
-        delete: "%{shortcut} Yer imini sil"
+        enter: "Kaydet ve kapat"
+        later_today: "Bugün ilerleyen saatlerde"
+        later_this_week: "Bu hafta içinde"
+        tomorrow: "Yarın"
+        next_week: "Gelecek hafta"
+        next_month: "Gelecek ay"
+        next_business_day: "Bir sonraki iş günü"
+        custom: "Özel tarih ve saat"
+        none: "Anımsatıcı yok"
+        delete: "Yer imini sil"
       actions:
         title: "Eylemler"
-        bookmark_topic: "%{shortcut} Konu yer imini aç/kapat"
-        pin_unpin_topic: "%{shortcut} Konuyu sabitle/sabitlemesini kaldır"
-        share_topic: "%{shortcut} Konuyu paylaş"
-        share_post: "%{shortcut} Gönderiyi paylaş"
-        reply_as_new_topic: "%{shortcut} Bağlantılı konu olarak yanıtla"
-        reply_topic: "%{shortcut} Konuyu yanıtla"
-        reply_post: "%{shortcut} Gönderiyi yanıtla"
-        quote_post: "%{shortcut} Gönderiyi alıntıla"
-        like: "%{shortcut} Gönderiyi beğen"
-        flag: "%{shortcut} Gönderiye bayrak ekle"
-        bookmark: "%{shortcut} Gönderiyi işaretle"
-        edit: "%{shortcut} Gönderiyi düzenle"
-        delete: "%{shortcut} Gönderiyi sil"
-        mark_muted: "%{shortcut} Konuyu sessize al"
-        mark_regular: "%{shortcut} Normal (varsayılan) konu"
-        mark_tracking: "%{shortcut} Konuyu takip et"
-        mark_watching: "%{shortcut} Konuyu izle"
-        print: "%{shortcut} Konuyu yazdır"
-        defer: "%{shortcut} Konuyu okunmamış olarak işaretle"
-        topic_admin_actions: "%{shortcut} Açık konu yönetici işlemleri"
-        archive_private_message: "%{shortcut} Kişisel mesajı arşivle seçeneğini aç/kapat"
+        reply_as_new_topic: "Bağlantılı konu olarak yanıtlayın"
+        reply_topic: "Konuyu yanıtla"
+        flag: "Gönderiye bayrak ekle"
+        edit: "Yazıyı düzenle"
+        delete: "Gönderiyi sil"
+        mark_tracking: "Konuyu takip et"
+        mark_watching: "Konuyu izle"
+        defer: "Konuyu okunmamış olarak işaretle"
       search_menu:
         title: "Arama Menüsü"
-        prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
-        insert_url: "%{shortcut} Seçimi açık besteciye ekle"
-        full_page_search: "%{shortcut} Tam sayfa aramayı başlatır"
       admin:
         title: "Yönetici"
-        search_prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
-        search_open: "%{shortcut} Yönetici arayüzü için aramayı aç"
-        search_full_page: "%{shortcut} Tam sayfa yönetici aramasını aç"
     badges:
       earned_n_times:
         one: "Bu rozeti %{count} kez kazandı"
@@ -6379,6 +6343,20 @@ tr_TR:
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
         custom_date_range: Özel tarih aralığı
+        sections:
+          reports:
+            title: "Rapor"
+          traffic:
+            title: "Site trafiği"
+          engagement:
+            title: "Taahhüt"
+        configure:
+          button: "Yapılandır"
+        period:
+          last_7_days: "Son 7 gün"
+          last_30_days: "Son 30 gün"
+          last_3_months: "Son 3 ay"
+          custom: "Özel"
         reports:
           trend_title: "%{percent} değişiklik. Şu anda %{current}, önceki periyotta %{prev} idi."
           percent_change_tooltip: "%{percent} değişiklik."
@@ -7656,6 +7634,7 @@ tr_TR:
         topic_id: "Konu Kimliği"
         post_id: "Gönderi Kimliği"
         category_id: "Kategori Kimliği"
+        reviewable_id: "İncele"
         delete: "Sil"
         edit: "Düzenle"
         save: "Kaydet"
@@ -8254,7 +8233,6 @@ tr_TR:
           other: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
         delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem kalıcıdır!"
         delete_confirm: "Mevcut tartışmalardan içeriğin kaldırılmasını önlemek için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
-        delete_and_block: "Kullanıcıyı silin ve e-posta adresini ve IP adresini engelleyin"
         delete_dont_block: "Kullanıcı sil"
         deleting_user: "Kullanıcı siliniyor…"
         deleted: "Kullanıcı silindi."

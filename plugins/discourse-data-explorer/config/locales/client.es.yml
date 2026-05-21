@@ -6,12 +6,6 @@
 
 es:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Explorador de datos"
-          description: "Generación de consultas mediante IA para el explorador de datos"
-          query_generation: "Generación de consultas"
     errors:
       explorer:
         no_semicolons: "Eliminar los punto y coma de la consulta."
@@ -28,15 +22,6 @@ es:
       create: "Crear"
       create_placeholder: "Nombre de la consulta..."
       description_placeholder: "Escribe una descripción aquí"
-      ai:
-        description_title: "Generar con IA"
-        description_hint: "Describe lo que quieres en lenguaje sencillo. Generaremos el SQL, el nombre y la descripción por ti."
-        description_placeholder: "Por ejemplo, muéstrame los registros a lo largo del tiempo."
-        generate: "Generar clave de API"
-        generating: "Generando consulta con IA..."
-        generation_timeout: "Se ha agotado el tiempo de generación de la consulta de IA. Puedes escribir el SQL manualmente."
-        generation_error: "Se ha producido un error al generar la consulta."
-        optional: "opcional"
       import:
         label: "Importar"
         unparseable_json: "Archivo JSON no analizable."
@@ -73,7 +58,6 @@ es:
       show_graph: "Gráfico"
       others_dirty: "Una consulta tiene cambios no guardados que se perderán si sales."
       run_time: "Consulta completada en %{value} ms."
-      cached_result_notice: "Mostrando resultados en caché de %{relative_time}."
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."

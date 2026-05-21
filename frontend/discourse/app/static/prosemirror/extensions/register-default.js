@@ -27,6 +27,7 @@ import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
+import uploadPlaceholder from "./upload-placeholder";
 import wrap from "./wrap";
 
 /**
@@ -63,6 +64,7 @@ const defaultExtensions = [
   overrideDragGhost,
   hardBreak,
   grid,
+  uploadPlaceholder,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

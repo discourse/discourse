@@ -4,7 +4,7 @@ RSpec.describe CurrentUserSerializer do
   fab!(:user)
   subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
 
-  let(:guardian) { Guardian.new(user) }
+  let(:guardian) { user.guardian }
 
   context "when SSO is not enabled" do
     it "should not include the external_id field" do
@@ -82,7 +82,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#second_factor_enabled" do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { user.guardian }
     let(:json) { serializer.as_json }
 
     it "is false by default" do
@@ -127,7 +127,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#can_ignore_users" do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
 
     context "when user is a regular one" do
@@ -148,7 +148,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#can_review" do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
 
     context "when user is a regular one" do
@@ -183,7 +183,7 @@ RSpec.describe CurrentUserSerializer do
   describe "#status" do
     fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
-    let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
+    let(:serializer) { described_class.new(user, scope: user.guardian, root: false) }
 
     it "adds user status when enabled" do
       SiteSetting.enable_user_status = true
@@ -206,7 +206,7 @@ RSpec.describe CurrentUserSerializer do
       SiteSetting.enable_user_status = true
 
       user.user_status.ends_at = 1.minute.ago
-      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
+      serializer = described_class.new(user, scope: user.guardian, root: false)
       json = serializer.as_json
 
       expect(json.keys).not_to include :status
@@ -298,11 +298,11 @@ RSpec.describe CurrentUserSerializer do
         Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)
 
       # warmup
-      described_class.new(user, scope: Guardian.new(user), root: false).as_json
+      described_class.new(user, scope: user.guardian, root: false).as_json
 
       initial_count =
         track_sql_queries do
-          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+          serialized = described_class.new(user, scope: user.guardian, root: false).as_json
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
@@ -316,7 +316,7 @@ RSpec.describe CurrentUserSerializer do
 
       final_count =
         track_sql_queries do
-          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+          serialized = described_class.new(user, scope: user.guardian, root: false).as_json
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
@@ -481,6 +481,71 @@ RSpec.describe CurrentUserSerializer do
         SiteSetting.nested_replies_toggle_mode_groups = Group::AUTO_GROUPS[:staff].to_s
         expect(serializer.as_json[:can_toggle_nested_mode]).to eq(false)
       end
+    end
+  end
+
+  describe "#has_new_upcoming_changes" do
+    def serialize_for(user)
+      described_class.new(user, scope: user.guardian, root: false).as_json
+    end
+
+    it "is false for an admin created during the new-site window, regardless of `added` events" do
+      Discourse.stubs(:site_creation_date).returns(10.minutes.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "some_setting",
+        created_at: 5.minutes.ago,
+      )
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "future_setting",
+        created_at: 1.minute.from_now,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+    end
+
+    it "ignores `added` events that predate the user when no last_visited is set" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "old_setting",
+        created_at: 1.year.ago,
+      )
+      admin = Fabricate(:admin)
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+    end
+
+    it "shows `added` events created after the user when no last_visited is set" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "fresh_setting",
+        created_at: 1.minute.from_now,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
+    end
+
+    it "honors last_visited_upcoming_changes_at when set" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      admin.custom_fields["last_visited_upcoming_changes_at"] = 1.hour.ago.iso8601
+      admin.save_custom_fields
+
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "before_visit",
+        created_at: 2.hours.ago,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "after_visit",
+        created_at: 1.minute.ago,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
     end
   end
 end

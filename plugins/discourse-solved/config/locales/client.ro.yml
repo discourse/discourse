@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ro:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluții acceptate"
   js:
     notifications:
       alt:

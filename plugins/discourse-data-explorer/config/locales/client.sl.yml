@@ -6,10 +6,6 @@
 
 sl:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Raziskovalec podatkov"
     errors:
       explorer:
         no_semicolons: "Odstranite podpičja iz poizvedbe."
@@ -23,9 +19,6 @@ sl:
       create: "Ustvari"
       create_placeholder: "Ime poizvedbe..."
       description_placeholder: "Vnesite opis tukaj"
-      ai:
-        generate: "Ustvari"
-        optional: "neobvezno"
       import:
         label: "Uvozi"
       help:

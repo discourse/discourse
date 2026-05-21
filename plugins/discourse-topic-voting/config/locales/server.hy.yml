@@ -15,7 +15,3 @@ hy:
     topic_voting_show_who_voted: 'Թույլատրել օգտատերերին տեսնել, թե ով է քվեարկել:'
     topic_voting_show_votes_on_profile: 'Թույլատրե՞լ օգտատերերին տեսնել իրեց քվեները ակտիվության լրահոսում:'
     topic_voting_alert_votes_left: 'Զգուշացնել օգտատիրոջը, երբ մնացել է այսքան հատ քվե'
-  topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Ցուցադրել քվեարկողներին"

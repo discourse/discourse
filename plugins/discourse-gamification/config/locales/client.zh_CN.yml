@@ -32,8 +32,6 @@ zh_CN:
         cta: "制作您的第一个排行榜"
         none: "尚未创建排行榜。"
         confirm_destroy: "确定要删除此排行榜吗？"
-        section:
-          groups: "群组"
         date:
           range: "开始/结束日期范围"
           from: "起始日期"
@@ -48,9 +46,6 @@ zh_CN:
         default_period: "默认时间段"
         default_period_help: "设置要为此排行榜显示的默认时间段。"
         period_filter_disabled: "禁用时间段筛选器"
-        weight:
-          post_created: "帖子已创建"
-          solution: "解决方案"
         period:
           all_time: "所有时间"
           yearly: "每年"

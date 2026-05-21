@@ -23,7 +23,7 @@ module SiteSettingExtension
   def default_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
-    if val != self.default_locale
+    if val != default_locale
       add_override!(:default_locale, val)
       refresh!
       Discourse.request_refresh!
@@ -161,6 +161,10 @@ module SiteSettingExtension
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
   #     learn_more_url: ""
+  #     allow_enabled_for: (optional) array restricting which "Enabled for" dropdown
+  #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
+  #       is always present. If `everyone` is included it must be the only value.
+  #       Omit to allow all options (the default permissive behavior).
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -317,26 +321,24 @@ module SiteSettingExtension
   end
 
   def theme_site_settings_json_uncached(theme_id)
-    begin
-      # There are a few legit scenarios where the current
-      # theme ID may be blank, such as safe mode. In this
-      # case it will be better to return default site setting
-      # values rather than to cause random/undefined behaviour
-      # in the UI.
-      if theme_id.blank?
-        MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
-      else
-        MultiJson.dump(theme_site_settings[theme_id])
-      end
-    rescue => err
-      # If something goes wrong here we really need to be aware of it in tests.
-      raise err if Rails.env.test?
-
-      Rails.logger.error(
-        "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
-      )
-      nil
+    # There are a few legit scenarios where the current
+    # theme ID may be blank, such as safe mode. In this
+    # case it will be better to return default site setting
+    # values rather than to cause random/undefined behaviour
+    # in the UI.
+    if theme_id.blank?
+      MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
+    else
+      MultiJson.dump(theme_site_settings[theme_id])
     end
+  rescue => err
+    # If something goes wrong here we really need to be aware of it in tests.
+    raise err if Rails.env.test?
+
+    Rails.logger.error(
+      "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
+    )
+    nil
   end
 
   def all_settings(
@@ -360,7 +362,7 @@ module SiteSettingExtension
       description: description(:default_locale),
       type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
-      value: self.default_locale,
+      value: default_locale,
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?,
     }
@@ -375,7 +377,8 @@ module SiteSettingExtension
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
-        plugins[setting_name] && !Discourse.plugins_by_name[plugins[setting_name]].configurable?
+        plugin_name = plugins[setting_name]
+        plugin_name && !Discourse.plugins_by_name[plugin_name].configurable?
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
@@ -674,12 +677,10 @@ module SiteSettingExtension
   end
 
   def process_message(message)
-    begin
-      MessageBus.on_connect.call(message.site_id)
-      refresh!
-    ensure
-      MessageBus.on_disconnect.call(message.site_id)
-    end
+    MessageBus.on_connect.call(message.site_id)
+    refresh!
+  ensure
+    MessageBus.on_disconnect.call(message.site_id)
   end
 
   def process_id
@@ -868,8 +869,7 @@ module SiteSettingExtension
       name: name,
       # default_locale is a special case, it is not themeable and we define
       # a custom getter for it, so we can just use the normal getter
-      value:
-        name.to_s == "default_locale" ? self.public_send(name) : self.public_send(name, scoped_to),
+      value: name.to_s == "default_locale" ? public_send(name) : public_send(name, scoped_to),
       scoped_to: scoped_to,
     )
   end
@@ -909,9 +909,9 @@ module SiteSettingExtension
 
       value = filter_value(name, value)
       if options
-        self.public_send("#{name}=", value, options)
+        public_send("#{name}=", value, options)
       else
-        self.public_send("#{name}=", value)
+        public_send("#{name}=", value)
       end
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -957,10 +957,10 @@ module SiteSettingExtension
                   "#{name} requires a theme_id because it is themeable",
                 )
         else
-          self.public_send(name, scoped_to)
+          public_send(name, scoped_to)
         end
       else
-        self.public_send(name)
+        public_send(name)
       end
     else
       raise Discourse::InvalidParameters.new(
@@ -1128,9 +1128,31 @@ module SiteSettingExtension
     # Any group_list or category_list setting will have a getter defined with _map
     # on the end, e.g. personal_message_enabled_groups_map, to avoid having to
     # manually split and convert to integer for these settings.
-    if %i[group_list category_list].include?(type_supervisor.get_type(name))
+    #
+    # For group_list settings, while the granular_anonymous_and_logged_in_groups_permissions
+    # upcoming change is enabled, stored `0` (the `:everyone` pseudogroup) is swapped to
+    # `5` (the `:logged_in_users` pseudogroup) at read time. This preserves admins' intent
+    # ("allow everyone logged in") without mutating the stored value, so disabling the
+    # flag is a perfect revert. When the change graduates to stable, a data migration will
+    # rewrite stored values and this swap can be removed.
+    setting_type = type_supervisor.get_type(name)
+    if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
-        self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        public_send(clean_name).to_s.split("|").map(&:to_i)
+      end
+    elsif setting_type == :group_list
+      define_singleton_method("#{clean_name}_map") do
+        ids = public_send(clean_name).to_s.split("|").map(&:to_i)
+        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+             ids.include?(Group::AUTO_GROUPS[:everyone])
+          ids =
+            ids
+              .map do |id|
+                id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id
+              end
+              .uniq
+        end
+        ids
       end
     end
 
@@ -1151,13 +1173,13 @@ module SiteSettingExtension
 
       if %w[simple compact].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
-          self.public_send(clean_name, scoped_to).to_s.split("|")
+          public_send(clean_name, scoped_to).to_s.split("|")
         end
       end
     end
 
     define_singleton_method "#{clean_name}?" do |scoped_to = nil|
-      self.public_send(clean_name, scoped_to)
+      public_send(clean_name, scoped_to)
     end
 
     define_singleton_method "#{clean_name}=" do |val|
@@ -1266,11 +1288,14 @@ module SiteSettingExtension
       if opts[:upcoming_change]
         upcoming_change_metadata[name] ||= {}
         impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
+        allow_enabled_for = opts[:upcoming_change][:allow_enabled_for]
+        allow_enabled_for = Array(allow_enabled_for).map(&:to_sym) if allow_enabled_for
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact),
+          **opts[:upcoming_change].except(:impact, :allow_enabled_for),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
+          allow_enabled_for: allow_enabled_for,
         )
       end
 
@@ -1331,9 +1356,10 @@ module SiteSettingExtension
   def default_uploads
     @default_uploads ||= {}
 
-    @default_uploads[provider.current_site] ||= begin
-      Upload.where("id < ?", Upload::SEEDED_ID_THRESHOLD).pluck(:id, :url).to_h
-    end
+    @default_uploads[provider.current_site] ||= Upload
+      .where("id < ?", Upload::SEEDED_ID_THRESHOLD)
+      .pluck(:id, :url)
+      .to_h
   end
 
   def uploads

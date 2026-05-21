@@ -20,8 +20,13 @@ class GroupShowSerializer < BasicGroupSerializer
 
   has_one :smtp_updated_by, embed: :object, serializer: BasicUserSerializer
 
-  admin_attributes :automatic_membership_email_domains,
-                   :smtp_server,
+  attributes :automatic_membership_email_domains
+
+  def include_automatic_membership_email_domains?
+    scope.can_admin_group?(object)
+  end
+
+  admin_attributes :smtp_server,
                    :smtp_port,
                    :smtp_ssl_mode,
                    :smtp_enabled,

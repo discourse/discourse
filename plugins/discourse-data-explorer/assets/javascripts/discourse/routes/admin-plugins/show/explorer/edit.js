@@ -63,8 +63,9 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       results: showCachedResult ? cachedResult : null,
       showResults: showCachedResult,
       isCachedResult: showCachedResult,
-      dirty: false,
       shouldAutoRun,
     });
+    controller.snapshotPristine();
+    controller.initView();
   }
 }

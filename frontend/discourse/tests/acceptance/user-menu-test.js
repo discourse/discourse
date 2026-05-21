@@ -10,7 +10,6 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -24,6 +23,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 acceptance("User menu", function (needs) {

@@ -345,7 +345,6 @@ ja:
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
     not_found_template_link: |
       <p>この <a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
-    existing_user_cannot_redeem: "この招待は引き換えられません。あなたを招待した人に、新しい招待を送るよう依頼してください。"
     existing_user_already_redemeed: "この招待リンクはすでに引き換え済みです。"
     user_exists: "<b>%{email}</b> を招待する必要はありません。すでにアカウントを持っています！"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
@@ -561,6 +560,7 @@ ja:
       admins: "管理者"
       moderators: "モデレーター"
       staff: "スタッフ"
+      anonymous: "匿名ユーザー"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1390,6 +1390,8 @@ ja:
       xaxis: "日"
       yaxis: "ログイン中のブラウザのページビュー"
       description: "実際のブラウザを使用したログイン中の訪問者によるページビュー数。"
+    page_view_embed_reqs:
+      xaxis: "日"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -1451,7 +1453,7 @@ ja:
         os: オペレーティングシステム
         login_time: ログイン時間
       description: "以前のログインとは異なる疑いのある新しいログインの詳細。"
-    staff_logins:
+    admin_logins:
       title: "管理者ログイン"
       labels:
         user: ユーザー
@@ -1648,7 +1650,6 @@ ja:
     x_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダーのリスト"
-    email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a> をご覧ください"
     detailed_404: "特定のトピックにアクセスできない詳細な理由をユーザーに提供します。注意: URL が有効なトピックにリンクしているかどうかがユーザーにわかるため、安全性が低くなります。"
     enforce_second_factor: "ユーザーに Discourse UI にアクセスする前に二要素認証 (2FA) を有効にするように要求します。この設定は API または 'DiscourseConnect プロバイダー' 認証に影響しません。enforce_second_factor_on_external_auth が有効である場合、ユーザーは 2FA をセットアップした後、外部認証プロバイダーを使用してログインできなくなります。"
     enforce_second_factor_on_external_auth: "ユーザーに常に二要素認証 (2FA) を使用するように要求します。これを有効にすると、2FA が有効である場合に、ソーシャルログインなどの外部認証方法でログインできなくなります。無効にすると、ユーザー名とパスワードでログインする際に 2FA のみを確認する必要があります。`enforce_second_factor` 設定も参照してください。"
@@ -1817,7 +1818,6 @@ ja:
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアントシークレット"
     google_oauth2_prompt: "認証サーバーがユーザーに再認証と同意を促すかどうかを指定する文字列のスペース区切りリスト (オプション)。使用できる値については、<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> をご覧ください。"
     google_oauth2_hd: "サインインが制限される Google Apps Hosted ドメイン (オプション)。詳細については、<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> をご覧ください。"
-    google_oauth2_hd_groups: "認証時に、ホストされたドメイン上のユーザーの Google グループを取得します。取得された Google グループを使って、Discourse の自動グループメンバーシップを付与することができます (グループ設定を参照)。詳細については、https://meta.discourse.org/t/226850 をご覧ください。"
     google_oauth2_hd_groups_service_account_admin_email: "Google Workspace 管理者アカウントに属するメールアドレス。グループ情報を取得するために、サービスアカウントの資格情報とともに使用されます。"
     google_oauth2_hd_groups_service_account_json: "サービスアカウントの JSON 形式のキー情報。グループ情報の取得に使用されます。"
     google_oauth2_verbose_logging: "詳細な Google OAuth2 関連診断を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
@@ -1847,7 +1847,6 @@ ja:
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
     s3_disable_cleanup: "最大許容数を超えるバックアップが存在する場合、S3 の古いバックアップの削除を防止する。"
     s3_use_acls: "AWS では、S3 バケットで ACL を使用しないことを推奨しています。構成済みの `s3_upload_bucket` および `s3_backup_bucket` で権限ポリシーを構成する場合にのみ、このオプションをオフにしてください。"
-    enable_direct_s3_uploads: "Amazon S3 への直接のマルチ―パートアップロードを許可します。詳細については、https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 をご覧ください。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
     backup_location: "バックアップが保存される場所。重要: S3 にはファイル設定で有効な S3 資格情報が入力されている必要があります。これをローカルから S3 に変更するには、`s3:ensure_cors_rules` rake タスクを実行する必要があります。"
@@ -2103,7 +2102,6 @@ ja:
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
     email_in_allowed_groups: "メールで新規トピックを投稿できるグループ。管理者とモデレーターはいつでもメールで新規トピックを投稿できます。"
-    email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑投稿を識別するために使用するを特定のメールヘッダーを選択します。このオプションは X-Spam-Flag、X-Spam-Status、または X-SES-Spam-Verdict のいずれかで、このヘッダー値が YES に設定されたメールは迷惑投稿として分類されます。"
     enable_smtp: "グループメッセージの通知を送信するための SMTP を有効にする。"
     email_prefix: "メールの件名に使用される [label]。空白の場合、'title' がデフォルトで使用されます。"
@@ -2355,7 +2353,6 @@ ja:
     welcome_banner_location: "ウェルカムバナーが表示されるページ内の場所を決定します。"
     welcome_banner_page_visibility: "ウェルカムバナーが表示されるページを決定します。"
     welcome_banner_text_color: "上記の「ウェルカムバナーの画像」設定を構成した場合、この設定を使用してバナーを読み取りやすいテキストの色に変更してください。空白のままにするか、画像をアップロードしなかった場合は、アクティブなテーマによって色が設定されます。"
-    splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
     navigation_menu: "サイトのメインナビゲーションメニューとして、サイドバーかヘッダーのドロップダウンを指定します。推奨はサイドバーです。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
@@ -3216,7 +3213,6 @@ ja:
         あなたの返信はブロックされているメールアドレスから送信されています。別のメールアドレスから送信するか、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_not_allowed_email:
       title: "メールの拒否 - 許可されていないメール"
-      subject_template: "[%{email_prefix}] メールの問題 -- メールがブロックされています"
       text_body_template: |
         %{destination} へのメールメッセージ (件名:「%{former_title}」) は送信されませんでした。
 
@@ -3381,7 +3377,6 @@ ja:
         トピックに返信する権限がありません。これがエラーと思われる場合は、[スタッフメンバーにお問い合わせ](%{base_url}/about)ください。
     email_reject_reply_to_digest:
       title: "メールの拒否 - 要約への返信"
-      subject_template: "[%{email_prefix}] メールの問題 -- 要約への返信"
       text_body_template: |
         %{destination} へのメールメッセージ (件名: 「%{former_title}」) は送信されませんでした。
 
@@ -3526,7 +3521,6 @@ ja:
       text_body_template: "`download_remote_images_threshold` のディスク空き容量制限に達したため、`download_remote_images_to_local` 設定は無効になりました。"
     new_user_of_the_month:
       title: "あなたは今月の新規ユーザーです！"
-      subject_template: "あなたは今月の新規ユーザーです！"
       text_body_template: |
         おめでとうございます。**%{month_year}の「今月の新規ユーザー」アワード**を獲得しました。:trophy:
 
@@ -3852,6 +3846,7 @@ ja:
     account_exists:
       title: "アカウントはすでに存在します"
       subject_template: "[%{email_prefix}] アカウントはすでに存在します"
+      subject_template_improved: "アカウントはすでに存在します"
       text_body_template: |
         %{site_name} にアカウントを作成しようとしたか、アカウントのメールを %{email} に変更しようとしましたが、%{email} のアカウントはすでに存在します。
 
@@ -3863,6 +3858,7 @@ ja:
     account_second_factor_disabled:
       title: "二要素認証が無効です"
       subject_template: "[%{email_prefix}] 二要素認証が無効です"
+      subject_template_improved: "二要素認証が無効です"
       text_body_template: |
         %{site_name} のアカウントの二要素認証が無効になったため、パスワードのみでログインできるようになりました。今後、追加の認証コードは不要です。
 
@@ -3882,6 +3878,7 @@ ja:
       popular_posts: "人気の投稿"
       more_new: "あなたへの新着情報"
       subject_template: "[%{email_prefix}] 要約"
+      subject_template_improved: "要約"
       unsubscribe: "この要約は、しばらくアクセスがなかった場合に %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} で購読を解除できます。"
       your_email_settings: "メール設定"
       click_here: "こちらをクリック"
@@ -3902,6 +3899,7 @@ ja:
       title: "リンク経由のログイン"
       preview: "リンク経由のログイン."
       subject_template: "[%{email_prefix}] リンク経由のログイン"
+      subject_template_improved: "リンク経由のログイン"
       text_body_template: |
         これは、[%{site_name}](%{base_url}) にログインするためのリンクです。
 
@@ -3912,7 +3910,6 @@ ja:
     set_password:
       title: "パスワードを設定"
       preview: "アカウントのパスワードを設定してください。"
-      subject_template: "[%{email_prefix}] パスワードを設定してください"
       text_body_template: |
         誰かが [%{site_name}](%{base_url}) のあなたのアカウントにパスワードを追加するよう依頼しました。または、この検証済みのメールアドレスに関連付けられている対応のオンラインサービス (Google、Facebook など) を使用してログインすることもできます。
 
@@ -3924,6 +3921,7 @@ ja:
       title: "管理者ログイン"
       preview: "管理者ログインがリクエストされました。"
       subject_template: "[%{email_prefix}] ログイン"
+      subject_template_improved: "ログイン"
       text_body_template: |
         誰かが [%{site_name}](%{base_url}) のアカウントにログインしようとしています。
 
@@ -3934,7 +3932,6 @@ ja:
     account_created:
       title: "アカウントが作成されました"
       preview: "あなたの新しいアカウントが作成されました。"
-      subject_template: "[%{email_prefix}] 新しいアカウント"
       text_body_template: |
         あなたの新規アカウントが %{site_name} で作成されました
 
@@ -4037,7 +4034,6 @@ ja:
     suspicious_login:
       title: "新しいログインのアラート"
       preview: "デバイスを認証してください。"
-      subject_template: "[%{site_name}] %{location} からの新しいログイン"
       text_body_template: |
         こんにちは
 
