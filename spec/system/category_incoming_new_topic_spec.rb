@@ -19,13 +19,11 @@ RSpec.describe "Category incoming new topic notifications" do
     )
   end
 
-  it "opens the stale New count after a new topic is spam-deleted" do
+  it "clears the New count after a new topic is spam-deleted" do
     sign_in(admin)
 
     category_page.visit(category)
-
     expect(topic_list).to have_topic(existing_topic)
-
     new_post = create_post(category: category, user: author)
 
     try_until_success(reason: "relies on MessageBus updates") do
@@ -36,6 +34,35 @@ RSpec.describe "Category incoming new topic notifications" do
 
     category_page.click_new
 
-    expect(topic_list_controls).to have_new(count: 0)
+    try_until_success(reason: "relies on MessageBus updates") do
+      expect(topic_list_controls).to have_new(count: 0)
+    end
+  end
+
+  it "clears the Unread count after a reply post in a watched topic is spam-deleted" do
+    Jobs.run_immediately!
+
+    TopicUser.change(
+      admin.id,
+      existing_topic.id,
+      notification_level: TopicUser.notification_levels[:watching],
+    )
+
+    sign_in(admin)
+
+    category_page.visit(category)
+    expect(topic_list).to have_topic(existing_topic)
+
+    reply = create_post(category: category, user: author, topic: existing_topic)
+
+    try_until_success(reason: "relies on MessageBus updates") do
+      expect(topic_list_controls).to have_unread(count: 1)
+    end
+
+    PostActionCreator.spam(moderator, reply).reviewable.perform(moderator, :delete_and_agree)
+
+    try_until_success(reason: "relies on MessageBus updates") do
+      expect(topic_list_controls).to have_unread(count: 0)
+    end
   end
 end
