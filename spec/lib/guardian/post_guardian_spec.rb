@@ -1156,6 +1156,77 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#filter_hidden_posts" do
+    before { SiteSetting.hidden_post_visible_groups = "" }
+
+    it "returns only visible posts for anonymous users" do
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new.filter_hidden_posts(records)).to contain_exactly(post)
+    end
+
+    it "returns visible posts and the user's hidden posts for regular users" do
+      own_hidden_post = Fabricate(:post, topic: topic, user: user, hidden: true)
+      records = Post.where(id: [post.id, hidden_post.id, own_hidden_post.id])
+
+      expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(
+        post,
+        own_hidden_post,
+      )
+    end
+
+    it "returns hidden posts for staff users" do
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new(moderator).filter_hidden_posts(records)).to contain_exactly(
+        post,
+        hidden_post,
+      )
+    end
+
+    it "returns hidden posts for members of hidden_post_visible_groups" do
+      SiteSetting.hidden_post_visible_groups = group.id.to_s
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(post, hidden_post)
+    end
+
+    it "returns hidden posts for everyone when configured" do
+      SiteSetting.hidden_post_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new.filter_hidden_posts(records)).to contain_exactly(post, hidden_post)
+    end
+
+    it "returns hidden posts from moderated categories for category group moderators" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      unmoderated_visible_post = Fabricate(:post)
+      unmoderated_hidden_post =
+        Fabricate(:post, topic: unmoderated_visible_post.topic, hidden: true)
+      records =
+        Post.joins(:topic).where(
+          id: [post.id, hidden_post.id, unmoderated_visible_post.id, unmoderated_hidden_post.id],
+        )
+
+      expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(
+        post,
+        hidden_post,
+        unmoderated_visible_post,
+      )
+    end
+
+    it "returns hidden posts in the category for category group moderators" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(
+        Guardian.new(user).filter_hidden_posts(records, category: category),
+      ).to contain_exactly(post, hidden_post)
+    end
+  end
+
   describe "#can_see_hidden_post?" do
     context "when the hidden_post_visible_groups contains everyone" do
       before { SiteSetting.hidden_post_visible_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
