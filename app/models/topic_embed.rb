@@ -229,7 +229,7 @@ class TopicEmbed < ActiveRecord::Base
       .each do |node|
         url_param = tags[node.name]
         src = node[url_param]
-        unless (src.nil? || src.empty?)
+        unless src.nil? || src.empty?
           begin
             # convert URL to absolute form
             node[url_param] = URI.join(url, UrlHelper.normalized_encode(src)).to_s
@@ -374,15 +374,15 @@ end
 # Table name: topic_embeds
 #
 #  id                  :integer          not null, primary key
-#  topic_id            :integer          not null
-#  post_id             :integer          not null
-#  embed_url           :string(1000)     not null
 #  content_sha1        :string(40)
+#  deleted_at          :datetime
+#  embed_content_cache :text
+#  embed_url           :string(1000)     not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  deleted_at          :datetime
 #  deleted_by_id       :integer
-#  embed_content_cache :text
+#  post_id             :integer          not null
+#  topic_id            :integer          not null
 #
 # Indexes
 #

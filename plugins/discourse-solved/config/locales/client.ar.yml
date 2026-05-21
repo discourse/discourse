@@ -15,6 +15,7 @@ ar:
           kpi:
             accepted_solutions:
               label: "الحلول المقبولة"
+              tooltip: "عدد الموضوعات التي تم تمييز أحد منشوراتها كحلٍ للمشكلة خلال هذه الفترة."
   js:
     notifications:
       alt:

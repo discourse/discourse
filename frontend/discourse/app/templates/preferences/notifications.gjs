@@ -57,6 +57,21 @@ export default <template>
     </div>
   {{/unless}}
 
+  {{#if @controller.model.admin}}
+    <div class="control-group upcoming-changes">
+      <label class="control-label">{{i18n
+          "user.upcoming_changes.title"
+        }}</label>
+
+      <PreferenceCheckbox
+        @labelKey="user.upcoming_changes.enable_available_notifications"
+        @checked={{@controller.model.user_option.enable_upcoming_change_available_notifications}}
+        data-setting-name="user-enable-upcoming-change-available-notifications"
+        class="pref-enable-upcoming-change-available-notifications"
+      />
+    </div>
+  {{/if}}
+
   <UserNotificationSchedule @model={{@controller.model}} />
 
   <span>

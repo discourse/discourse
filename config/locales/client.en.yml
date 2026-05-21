@@ -508,6 +508,17 @@ en:
     admin_onboarding_banner:
       launch_in_easy_steps: "Launch in %{step_count} easy steps"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      select_theme:
+        title: "Customize your site"
+        description: "Choose a starting theme for your community"
+        action: "Select theme"
+        modal_title: "Choose a theme"
+        use_theme: "Use this theme"
+        enabled: "Enabled"
+        theme_set: "%{theme} is now your default theme"
+        browse_all: "Manage themes"
+        show_light_screenshot: "Show light screenshot"
+        show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
         title: "Invite Collaborators"
         description: "Early members help bring your community to life"
@@ -535,12 +546,6 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
-
-      spread_the_word:
-        title: "Spread the Word!"
-        description: "Share a link with everyone in your network"
-        action: "Copy link"
-        copied_to_clipboard: "Link copied to clipboard!"
 
     about:
       edit: "Edit this page"
@@ -738,6 +743,16 @@ en:
       replying_to: "Replying to %{username}"
       editing_post: "Editing post"
       reply_placeholder: "Write a reply..."
+      signin_flow:
+        share_session_title: "Sign in to %{site_name}"
+        share_session_message: "To continue, %{site_name} needs permission to use your existing session inside this page. Click below to allow access."
+        signin_required_title: "Sign in to %{site_name}"
+        signin_required_message: "We didn't find an existing %{site_name} session. Open a new tab to sign in or sign up, then return here to continue."
+        open_signin_tab: "Open sign-in tab"
+        waiting_title: "Waiting for sign-in"
+        waiting_message: "Finish signing in in the new tab. This page will update automatically once you're done."
+        cancel: "Cancel"
+        sign_in_to_reply: "Sign in to reply"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -1602,6 +1617,7 @@ en:
           in_specific_groups: "The user is in the specific groups required for this change"
           enabled_for_everyone: "This change is enabled for all members"
           enabled_for_no_one: "This change is disabled for all members"
+        enable_available_notifications: "Notify me when an upcoming change becomes available for preview"
 
       user_notifications:
         filters:
@@ -1625,7 +1641,7 @@ en:
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       notification_schedule:
-        title: "Notification Schedule"
+        title: "Notification schedule"
         label: "Enable custom notification schedule"
         tip: "Outside of these hours your notifications will be paused."
         midnight: "Midnight"
@@ -1669,13 +1685,13 @@ en:
       notifications: "Notifications"
       statistics: "Stats"
       desktop_notifications:
-        label: "Live Notifications"
+        label: "Live notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
-        perm_default: "Turn On Notifications"
-        perm_denied_btn: "Permission Denied"
+        perm_default: "Turn on notifications"
+        perm_denied_btn: "Permission denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
-        disable: "Disable Notifications"
-        enable: "Enable Notifications"
+        disable: "Disable notifications"
+        enable: "Enable notifications"
         each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
@@ -2414,8 +2430,10 @@ en:
           hide_advanced: "Hide Advanced Options"
 
           description: "Description"
+          description_help: "A note to help you identify this invite."
 
           restrict: "Restrict to"
+          restrict_help: "Enter an email or email domain to limit who can accept this invite."
           restrict_email: "Restrict to email"
           restrict_domain: "Restrict to domain"
           email_or_domain_placeholder: "name@example.com or example.com"
@@ -2427,6 +2445,7 @@ en:
           expires_at: "Expire at"
           expires_after: "Expire after"
           custom_message: "Custom message"
+          custom_message_help: "Included in the invitation email."
           custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"
@@ -3690,6 +3709,7 @@ en:
           aria_label: filter by maximum views
 
     hamburger_menu: "Navigation menu"
+    header_panel: "Header"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -3763,6 +3783,8 @@ en:
         relist_topics: "Relist topics"
         pin_topics: "Feature these topics"
         unpin_topics: "Un-pin topics"
+        enable_nested_replies: "Enable nested replies"
+        disable_nested_replies: "Disable nested replies"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete topics"
@@ -3821,6 +3843,12 @@ en:
         confirm_unpin_topics:
           one: "Un-pin %{count} topic"
           other: "Un-pin %{count} topics"
+        confirm_enable_nested_replies:
+          one: "Enable nested replies on %{count} topic"
+          other: "Enable nested replies on %{count} topics"
+        confirm_disable_nested_replies:
+          one: "Disable nested replies on %{count} topic"
+          other: "Disable nested replies on %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
@@ -3950,6 +3978,12 @@ en:
       unpin_topics:
         name: "Un-pin"
         description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
+      enable_nested_replies:
+        name: "Enable nested replies"
+        description: "Switch the selected topics to nested view. Replies will be displayed as threads."
+      disable_nested_replies:
+        name: "Disable nested replies"
+        description: "Switch the selected topics back to flat view."
 
     nested_replies:
       nested_view: "Nested view"
@@ -4000,6 +4034,7 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
+      create_shared_draft: "New Shared Draft"
       create_long: "Create a new topic"
       create_group: "New topic and drafts"
       open_draft: "Open Draft"
@@ -4663,6 +4698,7 @@ en:
       few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
 
       controls:
+        menu_label: "Post actions"
         reply: "begin composing a reply to this post"
         like_action: "Like"
         like: "like this post"
@@ -5411,110 +5447,119 @@ en:
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
       search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
+      description_header: "Description"
+      key_header: "Key"
+      search_aliases:
+        shift: "shift"
+        alt: "alt option"
+        meta: "meta cmd command win windows super"
+        ctrl: "ctrl control"
+        enter: "enter return"
+        esc: "esc escape"
       jump_to:
         title: "Jump To"
-        home: "%{shortcut} Home"
-        latest: "%{shortcut} Latest"
-        new: "%{shortcut} New"
-        unread: "%{shortcut} Unread"
-        unseen: "%{shortcut} Unseen"
-        categories: "%{shortcut} Categories"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Bookmarks"
-        profile: "%{shortcut} Profile"
-        messages: "%{shortcut} Messages"
-        drafts: "%{shortcut} Drafts"
-        next: "%{shortcut} Next Topic"
-        previous: "%{shortcut} Previous Topic"
+        home: "Home"
+        latest: "Latest"
+        new: "New"
+        unread: "Unread"
+        unseen: "Unseen"
+        categories: "Categories"
+        top: "Top"
+        bookmarks: "Bookmarks"
+        profile: "Profile"
+        messages: "Messages"
+        drafts: "Drafts"
+        next: "Next Topic"
+        previous: "Previous Topic"
       navigation:
         title: "Navigation"
-        jump: "%{shortcut} Go to post #"
-        back: "%{shortcut} Back"
-        up_down: "%{shortcut} Move selection &uarr; &darr;"
-        open: "%{shortcut} Open selected topic"
-        open_new_window: "%{shortcut} Open selected topic in new tab/window"
-        next_prev: "%{shortcut} Next/previous section"
-        go_to_unread_post: "%{shortcut} Go to the first unread post"
+        jump: "Go to post #"
+        back: "Back"
+        up_down: "Move selection &uarr; &darr;"
+        open: "Open selected topic"
+        open_new_window: "Open selected topic in new tab/window"
+        next_prev: "Next/previous section"
+        go_to_unread_post: "Go to the first unread post"
       application:
         title: "Application"
-        create: "%{shortcut} Create a new topic or personal message"
-        notifications: "%{shortcut} Open notifications"
-        hamburger_menu: "%{shortcut} Open navigation menu"
-        user_profile_menu: "%{shortcut} Open user menu"
-        show_incoming_updated_topics: "%{shortcut} Show updated topics"
-        search: "%{shortcut} Search"
-        filter_sidebar: "%{shortcut} Filter sidebar"
-        help: "%{shortcut} Open keyboard help"
-        toggle_bulk_select: "%{shortcut} Toggle bulk select"
-        dismiss: "%{shortcut} Dismiss selected topics"
-        x: "%{shortcut} Toggle selection (in bulk select mode)"
-        log_out: "%{shortcut} Log Out"
+        create: "Create a new topic or personal message"
+        notifications: "Open notifications"
+        hamburger_menu: "Open navigation menu"
+        user_profile_menu: "Open user menu"
+        show_incoming_updated_topics: "Show updated topics"
+        search: "Search"
+        filter_sidebar: "Filter sidebar"
+        help: "Open keyboard help"
+        toggle_bulk_select: "Toggle bulk select"
+        dismiss: "Dismiss selected topics"
+        x: "Toggle selection (in bulk select mode)"
+        log_out: "Log Out"
       composing:
         title: "Composing"
-        return: "%{shortcut} Return to composer"
-        minimize: "%{shortcut} Minimize composer"
-        create_or_reply: "%{shortcut} Create topic or post reply"
-        fullscreen: "%{shortcut} Fullscreen composer"
-        insert_current_time: "%{shortcut} Insert current time"
-        bold: "%{shortcut} Bold"
-        italic: "%{shortcut} Italic"
-        link: "%{shortcut} Insert link"
-        preformatted: "%{shortcut} Preformatted text"
-        paragraph: "%{shortcut} Paragraph"
-        heading_1: "%{shortcut} Heading 1"
-        heading_2: "%{shortcut} Heading 2"
-        heading_3: "%{shortcut} Heading 3"
-        heading_4: "%{shortcut} Heading 4"
-        toggle_direction: "%{shortcut} Toggle text direction"
-        ordered_list: "%{shortcut} Ordered list"
-        unordered_list: "%{shortcut} Unordered list"
-        blockquote: "%{shortcut} Blockquote"
+        return: "Return to composer"
+        minimize: "Minimize composer"
+        create_or_reply: "Create topic or post reply"
+        fullscreen: "Fullscreen composer"
+        insert_current_time: "Insert current time"
+        bold: "Bold"
+        italic: "Italic"
+        link: "Insert link"
+        preformatted: "Preformatted text"
+        paragraph: "Paragraph"
+        heading_1: "Heading 1"
+        heading_2: "Heading 2"
+        heading_3: "Heading 3"
+        heading_4: "Heading 4"
+        toggle_direction: "Toggle text direction"
+        ordered_list: "Ordered list"
+        unordered_list: "Unordered list"
+        blockquote: "Blockquote"
       bookmarks:
         title: "Bookmarking"
-        enter: "%{shortcut} Save and close"
-        later_today: "%{shortcut} Later today"
-        later_this_week: "%{shortcut} Later this week"
-        tomorrow: "%{shortcut} Tomorrow"
-        next_week: "%{shortcut} Next week"
-        next_month: "%{shortcut} Next month"
-        next_business_week: "%{shortcut} Start of next week"
-        next_business_day: "%{shortcut} Next business day"
-        custom: "%{shortcut} Custom date and time"
-        none: "%{shortcut} No reminder"
-        delete: "%{shortcut} Delete bookmark"
+        enter: "Save and close"
+        later_today: "Later today"
+        later_this_week: "Later this week"
+        tomorrow: "Tomorrow"
+        next_week: "Next week"
+        next_month: "Next month"
+        next_business_week: "Start of next week"
+        next_business_day: "Next business day"
+        custom: "Custom date and time"
+        none: "No reminder"
+        delete: "Delete bookmark"
       actions:
         title: "Actions"
-        bookmark_topic: "%{shortcut} Toggle bookmark topic"
-        pin_unpin_topic: "%{shortcut} Pin/Unpin topic"
-        share_topic: "%{shortcut} Share topic"
-        share_post: "%{shortcut} Share post"
-        reply_as_new_topic: "%{shortcut} Reply as linked topic"
-        reply_topic: "%{shortcut} Reply to topic"
-        reply_post: "%{shortcut} Reply to post"
-        quote_post: "%{shortcut} Quote post"
-        like: "%{shortcut} Like post"
-        flag: "%{shortcut} Flag post"
-        bookmark: "%{shortcut} Bookmark post"
-        edit: "%{shortcut} Edit post"
-        delete: "%{shortcut} Delete post"
-        mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Normal (default) topic"
-        mark_tracking: "%{shortcut} Track topic"
-        mark_watching: "%{shortcut} Watch topic"
-        print: "%{shortcut} Print topic"
-        defer: "%{shortcut} Mark topic as unread"
-        topic_admin_actions: "%{shortcut} Open topic admin actions"
-        archive_private_message: "%{shortcut} Toggle archive personal message"
+        bookmark_topic: "Toggle bookmark topic"
+        pin_unpin_topic: "Pin/Unpin topic"
+        share_topic: "Share topic"
+        share_post: "Share post"
+        reply_as_new_topic: "Reply as linked topic"
+        reply_topic: "Reply to topic"
+        reply_post: "Reply to post"
+        quote_post: "Quote post"
+        like: "Like post"
+        flag: "Flag post"
+        bookmark: "Bookmark post"
+        edit: "Edit post"
+        delete: "Delete post"
+        mark_muted: "Mute topic"
+        mark_regular: "Normal (default) topic"
+        mark_tracking: "Track topic"
+        mark_watching: "Watch topic"
+        print: "Print topic"
+        defer: "Mark topic as unread"
+        topic_admin_actions: "Open topic admin actions"
+        archive_private_message: "Toggle archive personal message"
       search_menu:
         title: "Search Menu"
-        prev_next: "%{shortcut} Move selection up and down"
-        insert_url: "%{shortcut} Insert selection into open composer"
-        full_page_search: "%{shortcut} Launches full page search"
+        prev_next: "Move selection up and down"
+        insert_url: "Insert selection into open composer"
+        full_page_search: "Launches full page search"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Move selection up and down"
-        search_open: "%{shortcut} Open search for the admin interface"
-        search_full_page: "%{shortcut} Open full page admin search"
+        search_prev_next: "Move selection up and down"
+        search_open: "Open search for the admin interface"
+        search_full_page: "Open full page admin search"
 
     badges:
       earned_n_times:
@@ -6225,6 +6270,8 @@ en:
         group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
+        chart:
+          total: "Total: %{count}"
 
       config_sections:
         account:
@@ -6825,6 +6872,7 @@ en:
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
+        loading: "Loading dashboard…"
 
         sections:
           highlights:
@@ -6835,6 +6883,17 @@ en:
             title: "Site traffic"
           engagement:
             title: "Engagement"
+
+        configure:
+          button: "Configure"
+          tooltip: "Configure how this dashboard appears for everyone on this site."
+          menu_title: "Configure dashboard"
+          reorder_up: "Move %{label} up"
+          reorder_down: "Move %{label} down"
+          drag_handle: "Drag to reorder %{label}"
+          toggle_visibility: "Show %{label} on dashboard"
+          empty_state_admin: "No sections to show. Open Configure to enable one."
+          empty_state_moderator: "No sections enabled. Ask an admin to enable one."
 
         highlights:
           fetch_error: "Couldn't load highlights. Try refreshing the page."
@@ -6854,6 +6913,40 @@ en:
             last_3_months: "vs last 3 months"
             previous_period: "vs previous period"
 
+        site_traffic:
+          fetch_error: "Couldn't load site traffic. Try refreshing the page."
+          headline:
+            last_7_days:
+              one: "%{formatted_count} pageview in the last 7 days"
+              other: "%{formatted_count} pageviews in the last 7 days"
+            last_30_days:
+              one: "%{formatted_count} pageview in the last 30 days"
+              other: "%{formatted_count} pageviews in the last 30 days"
+            last_3_months:
+              one: "%{formatted_count} pageview in the last 3 months"
+              other: "%{formatted_count} pageviews in the last 3 months"
+            selected_period:
+              one: "%{formatted_count} pageview in the selected period"
+              other: "%{formatted_count} pageviews in the selected period"
+          trend:
+            up: "up %{percent}"
+            down: "down %{percent}"
+          comparison_tooltip:
+            previous_7_days: "Compared with the previous 7 days (%{start} – %{end})"
+            previous_30_days: "Compared with the previous 30 days (%{start} – %{end})"
+            previous_3_months: "Compared with the previous 3 months (%{start} – %{end})"
+            previous_days:
+              one: "Compared with the previous day (%{start} – %{end})"
+              other: "Compared with the previous %{count} days (%{start} – %{end})"
+          kpi:
+            logged_in_share:
+              label: "Logged-in share"
+              tooltip: "The share of pageviews from logged-in members."
+          series:
+            logged_in: "Logged in"
+            anonymous: "Anonymous"
+            embedded: "Embedded pageviews"
+            crawlers: "Crawlers"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"

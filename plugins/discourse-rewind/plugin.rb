@@ -39,7 +39,7 @@ after_initialize do
   UserOption.ignored_columns += %i[discourse_rewind_disabled]
 
   add_to_class(:user, :discourse_rewind_and_profile_public?) do
-    self.user_option.discourse_rewind_share_publicly && !self.user_option.hide_profile
+    user_option.discourse_rewind_share_publicly && !user_option.hide_profile
   end
 
   # add_to_serializer(:current_user) / add_to_serializer(:current_user_option)

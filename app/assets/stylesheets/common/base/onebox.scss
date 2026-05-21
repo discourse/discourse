@@ -592,6 +592,10 @@ pre.onebox code ol.lines li.selected {
     line-height: calc((13 + 4) / 13);
     box-sizing: border-box;
 
+    @include viewport.until(sm) {
+      max-height: 50vh;
+    }
+
     .show-more {
       font-family: var(--font-family);
 

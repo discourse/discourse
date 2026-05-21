@@ -211,6 +211,16 @@ export default class BulkTopicActions extends Component {
       case "unpin":
         this.forEachPerformed({ type: "unpin" }, (t) => t.set("pinned", false));
         break;
+      case "enable-nested-replies":
+        this.forEachPerformed({ type: "enable_nested_view" }, (t) =>
+          t.set("is_nested_view", true)
+        );
+        break;
+      case "disable-nested-replies":
+        this.forEachPerformed({ type: "disable_nested_view" }, (t) =>
+          t.set("is_nested_view", false)
+        );
+        break;
       case "pin":
         this.performAndRefresh({ type: "pin", ...opts });
         break;

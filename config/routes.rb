@@ -14,10 +14,7 @@ Discourse::Application.routes.draw do
   scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     relative_url_root =
       (
-        if (
-             defined?(Rails.configuration.relative_url_root) &&
-               Rails.configuration.relative_url_root
-           )
+        if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
           Rails.configuration.relative_url_root + "/"
         else
           "/"
@@ -333,10 +330,13 @@ Discourse::Application.routes.draw do
       get "version_check" => "versions#show"
 
       get "dashboard" => "dashboard#index"
+      put "dashboard/configuration" => "dashboard#update_configuration",
+          :constraints => AdminConstraint.new
       get "dashboard/general" => "dashboard#general"
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
+      post "dashboard/reports/bulk" => "dashboard#bulk_reports"
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"

@@ -80,7 +80,7 @@ class ThemesInstallTask
   end
 
   def add_component_to_all_themes
-    return if (!@options.fetch(:add_to_all_themes, false) || !@theme.component)
+    return if !@options.fetch(:add_to_all_themes, false) || !@theme.component
 
     Theme
       .where(component: false)

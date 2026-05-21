@@ -20,6 +20,7 @@ import {
   logSearchLinkClick,
   reciprocallyRankedList,
   searchContextDescription,
+  searchTermScopesToPMs,
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
@@ -305,11 +306,7 @@ export default class FullPageSearchController extends Controller {
 
   @computed("q")
   get isPMOnly() {
-    // Check if search is filtered to private messages only
-    return (
-      this.q &&
-      /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(this.q)
-    );
+    return searchTermScopesToPMs(this.q);
   }
 
   @computed("resultCount", "noSortQ")

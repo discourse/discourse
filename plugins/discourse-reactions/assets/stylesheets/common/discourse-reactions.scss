@@ -286,6 +286,15 @@ html.discourse-reactions-no-select {
     display: grid;
     gap: 0.25em;
 
+    .emoji-picker-trigger {
+      gap: 0;
+
+      .d-icon {
+        width: 1.25em;
+        height: 1.25em;
+      }
+    }
+
     @for $i from 1 through 8 {
       &.col-#{$i} {
         grid-template-columns: repeat($i, 1fr);
@@ -299,7 +308,7 @@ html.discourse-reactions-no-select {
     margin: 0.25em !important;
     border: 1px solid transparent !important;
     cursor: not-allowed;
-    border-radius: 8px;
+    border-radius: var(--d-border-radius);
 
     .emoji {
       pointer-events: none;
@@ -324,7 +333,8 @@ html.discourse-reactions-no-select {
     }
 
     &.is-used {
-      border-color: var(--tertiary-low) !important;
+      border-color: var(--d-selected) !important;
+      background-color: var(--d-selected);
     }
   }
 }

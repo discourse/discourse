@@ -60,6 +60,7 @@ module DiscoursePostEvent
       DiscoursePostEvent::UpdateInvitee.call(
         params: {
           status: params.dig(:invitee, :status),
+          recurring: params.dig(:invitee, :recurring) || false,
           event_id: params[:event_id],
           invitee_id: params[:invitee_id],
         },
@@ -86,6 +87,7 @@ module DiscoursePostEvent
       DiscoursePostEvent::CreateInvitee.call(
         params: {
           status: params[:invitee][:status],
+          recurring: params[:invitee][:recurring] || false,
           user_id: params[:invitee][:user_id],
           event_id: params[:event_id],
         },

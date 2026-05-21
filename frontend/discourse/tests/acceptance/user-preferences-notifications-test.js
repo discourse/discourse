@@ -150,3 +150,26 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
     assert.deepEqual(options, expected, "options are correct");
   });
 });
+
+acceptance("User Notifications - Upcoming Changes - Admin", function (needs) {
+  needs.user({ admin: true });
+
+  test("Shows the upcoming changes preference", async function (assert) {
+    await visit("/u/eviltrout/preferences/notifications");
+
+    assert.dom(".control-group.upcoming-changes").exists();
+  });
+});
+
+acceptance(
+  "User Notifications - Upcoming Changes - Regular User",
+  function (needs) {
+    needs.user();
+
+    test("Does not show the upcoming changes preference", async function (assert) {
+      await visit("/u/charlie/preferences/notifications");
+
+      assert.dom(".control-group.upcoming-changes").doesNotExist();
+    });
+  }
+);

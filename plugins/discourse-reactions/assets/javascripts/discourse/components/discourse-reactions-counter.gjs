@@ -276,7 +276,7 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     {{#if this.useNewMenu}}
       <div
         id={{this.elementId}}

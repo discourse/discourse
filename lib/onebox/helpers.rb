@@ -169,7 +169,7 @@ module Onebox
       scale = 1024
 
       ndx = 1
-      return "#{(size)} #{conv[ndx - 1]}" if (size < 2 * (scale**ndx))
+      return "#{size} #{conv[ndx - 1]}" if (size < 2 * (scale**ndx))
       size = size.to_f
       [2, 3, 4, 5, 6, 7].each do |i|
         return "#{"%.2f" % (size / (scale**(i - 1)))} #{conv[i - 1]}" if (size < 2 * (scale**i))
@@ -212,11 +212,9 @@ module Onebox
     end
 
     def self.get_absolute_image_url(src, url)
-      begin
-        URI.parse(url).merge(src).to_s
-      rescue ArgumentError, URI::BadURIError, URI::InvalidURIError
-        src
-      end
+      URI.parse(url).merge(src).to_s
+    rescue ArgumentError, URI::BadURIError, URI::InvalidURIError
+      src
     end
 
     def self.user_agent

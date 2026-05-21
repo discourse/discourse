@@ -79,7 +79,7 @@ class AssetProcessor
   end
 
   def self.with_file_lock(&block)
-    lock_path = "#{Rails.root}/#{LOCK_FILE}"
+    lock_path = "#{Rails.root.join("#{LOCK_FILE}")}"
     FileUtils.mkdir_p(File.dirname(lock_path))
     File.open(lock_path, File::CREAT | File::RDWR) do |lock_file|
       lock_file.flock(File::LOCK_EX)

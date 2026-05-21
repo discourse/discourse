@@ -234,7 +234,7 @@ class AiAgent < ActiveRecord::Base
 
     instance_attributes = {}
     attributes.each do |attr|
-      value = self.read_attribute(attr)
+      value = self[attr]
       instance_attributes[attr] = value
     end
 
@@ -293,7 +293,7 @@ class AiAgent < ActiveRecord::Base
     )
     instance_attributes[:mcp_server_ids] = enabled_mcp_servers.map(&:id)
 
-    agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[self.id]
+    agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[id]
     if agent_class
       return(
         # we need a new copy so we don't leak information
@@ -310,7 +310,7 @@ class AiAgent < ActiveRecord::Base
       )
     end
 
-    ai_agent_id = self.id
+    ai_agent_id = id
 
     Class.new(DiscourseAi::Agents::Agent) do
       instance_attributes.each { |key, value| define_singleton_method(key) { value } }

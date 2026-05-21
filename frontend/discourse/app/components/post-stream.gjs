@@ -349,6 +349,7 @@ export default class PostStream extends Component {
               (concat "post_" post.post_number)
               as |PostComponent cloakingData keyboardSelected postId|
             }}
+              {{! eslint-disable ember/template-no-duplicate-id }}
               <PostComponent
                 id={{postId}}
                 class={{dConcatClass
@@ -357,7 +358,6 @@ export default class PostStream extends Component {
                 }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
-                {{! template-lint-disable no-duplicate-id }}
                 @elementId={{postId}}
                 @post={{post}}
                 @prevPost={{previousPost}}

@@ -147,6 +147,17 @@ describe "glimmer topic list" do
     Fabricate(:post, topic: visited_topic)
 
     visit(visited_topic.url)
+    expect(page).to have_css("#post_1")
+
+    # Visit registration in screen tracking is async. Wait for it before navigating away.
+    visited_check_js = <<~JS
+      (() => {
+        const tracking = Discourse.lookup("service:topic-tracking-state");
+        const state = tracking.findState(#{visited_topic.id});
+        return state && state.last_read_post_number >= state.highest_post_number;
+      })()
+    JS
+    wait_for(timeout: 5) { page.evaluate_script(visited_check_js) }
 
     # Clicking the logo is "safer" than visiting /latest so the client-side
     # app can update the visited status of the topic

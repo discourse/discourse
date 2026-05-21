@@ -76,6 +76,7 @@ export default class DFloatBody extends Component {
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
+      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
         class={{dConcatClass
           @mainClass

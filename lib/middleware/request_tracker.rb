@@ -405,11 +405,9 @@ class Middleware::RequestTracker
       limiters.each(&:rollback!)
 
       env["DISCOURSE_ASSET_RATE_LIMITERS"].each do |limiter|
-        begin
-          limiter.performed!
-        rescue RateLimiter::LimitExceeded
-          # skip
-        end
+        limiter.performed!
+      rescue RateLimiter::LimitExceeded
+        # skip
       end
     end
 
@@ -421,14 +419,12 @@ class Middleware::RequestTracker
 
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
-      begin
-        unless Discourse.pg_readonly_mode?
-          self.class.log_request(data)
-          instrument_browser_page_view(env, request, data)
-        end
-      rescue ActiveRecord::ReadOnlyError
-        # Just noop if ActiveRecord is preventing writes
+      unless Discourse.pg_readonly_mode?
+        self.class.log_request(data)
+        instrument_browser_page_view(env, request, data)
       end
+    rescue ActiveRecord::ReadOnlyError
+      # Just noop if ActiveRecord is preventing writes
     end
   end
 
@@ -723,6 +719,7 @@ class Middleware::RequestTracker
         url: payload[:url],
         ip_address: payload[:ip_address],
         country_code: payload[:country_code],
+        asn: payload[:asn],
         referrer: payload[:referrer],
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
@@ -749,11 +746,13 @@ class Middleware::RequestTracker
   private_class_method :trigger_beacon_browser_pageview_event
 
   def self.build_browser_pageview_event_payload(data)
+    ip_info = DiscourseIpInfo.get(data[:request_remote_ip])
     {
       user_id: data[:current_user_id],
       url: data[:tracking_url],
       ip_address: data[:request_remote_ip],
-      country_code: DiscourseIpInfo.get(data[:request_remote_ip])[:country_code],
+      country_code: ip_info[:country_code],
+      asn: ip_info[:asn],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],

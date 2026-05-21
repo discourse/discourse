@@ -22,6 +22,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service currentUser;
   @service dialog;
   @service documentTitle;
+  @service embedAuthFlow;
   @service historyStore;
   @service loadingSlider;
   @service modal;
@@ -179,7 +180,11 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showLogin(props = {}) {
     if (EmbedMode.enabled) {
-      window.open(getURL("/login"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "login" });
+      } else {
+        window.open(getURL("/login"), "_blank");
+      }
       return;
     }
 
@@ -195,7 +200,11 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showCreateAccount(props = {}) {
     if (EmbedMode.enabled) {
-      window.open(getURL("/signup"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "signup" });
+      } else {
+        window.open(getURL("/signup"), "_blank");
+      }
       return;
     }
 

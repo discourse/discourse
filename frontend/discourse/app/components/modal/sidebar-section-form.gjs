@@ -570,6 +570,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <label>{{i18n
                     "sidebar.sections.custom.links.icon.label"
                   }}</label>
@@ -580,6 +581,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <label>{{i18n
                     "sidebar.sections.custom.links.name.label"
                   }}</label>
@@ -590,6 +592,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <label>{{i18n
                     "sidebar.sections.custom.links.value.label"
                   }}</label>

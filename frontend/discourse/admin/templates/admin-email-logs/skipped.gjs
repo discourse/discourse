@@ -54,7 +54,11 @@ export default <template>
           <a href="mailto:{{emailLog.to_address}}">{{emailLog.to_address}}</a>
         </td>
         <td>{{emailLog.email_type}}</td>
-        <td>{{emailLog.skipped_reason}}</td>
+        <td>
+          <div class="overflow-ellipsis" title={{emailLog.skipped_reason}}>
+            {{emailLog.skipped_reason}}
+          </div>
+        </td>
       </tr>
     </:default>
   </EmailLogsList>

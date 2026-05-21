@@ -42,7 +42,7 @@ export default class TopicTitle extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       {{on "keydown" this.keyDown}}
       {{dObserveIntersection this.handleIntersectionChange}}

@@ -7,6 +7,7 @@
 el:
   site_settings:
     discourse_reactions_enabled: "Ενεργοποιήστε το πρόσθετο discourse-reactions."
+    enable_new_post_reply_count_position: "Μετακινήστε τη σύνοψη αντιδράσεων ανάρτησης πριν από τον αριθμό απαντήσεων στα στοιχεία ελέγχου ανάρτησης."
   badges:
     first_reaction:
       name: Πρώτη Αντίδραση

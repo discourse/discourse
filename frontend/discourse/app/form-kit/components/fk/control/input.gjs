@@ -108,7 +108,7 @@ export default class FKControlInput extends FKBaseControl {
         id={{@field.id}}
         name={{@field.name}}
         aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
+        aria-describedby={{@field.describedBy}}
         placeholder={{@field.placeholder}}
         ...attributes
         {{on "focus" this.handleFocus}}

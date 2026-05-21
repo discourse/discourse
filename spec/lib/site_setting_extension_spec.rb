@@ -414,7 +414,7 @@ RSpec.describe SiteSettingExtension do
   describe "enum setting" do
     class TestEnumClass
       def self.valid_value?(v)
-        self.values.include?(v)
+        values.include?(v)
       end
 
       def self.values
@@ -1659,7 +1659,7 @@ RSpec.describe SiteSettingExtension do
 
     it "publishes the right MessageBus message when a theme site setting is updated" do
       settings_tss_instance_1 = new_settings(provider_local)
-      settings_tss_instance_1.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+      settings_tss_instance_1.load_settings(Rails.root.join("config/site_settings.yml").to_s)
       settings_tss_instance_1.refresh!
 
       expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)

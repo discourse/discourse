@@ -425,12 +425,14 @@ export default class ChatComposer extends Component {
     }
 
     const selected = this.composer.textarea.getSelected("", { lineVal: true });
-    const linkText = selected?.value;
+    const hasSelection = !!selected && selected.start !== selected.end;
     this.modal.show(UpsertHyperlink, {
       model: {
-        linkText,
+        hasSelection,
         toolbarEvent: {
+          selected,
           addText: (text) => this.composer.textarea.addText(selected, text),
+          applyLink: (url) => this.composer.textarea.applyLink(url),
         },
       },
     });
@@ -722,8 +724,8 @@ export default class ChatComposer extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
 
     <div class="chat-composer__wrapper">
       {{#if this.shouldRenderMessageDetails}}

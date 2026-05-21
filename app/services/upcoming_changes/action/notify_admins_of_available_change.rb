@@ -16,7 +16,9 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
   option :all_admins
 
   def call
-    notify_admins
+    eligible_admins = find_eligible_admins
+    return if eligible_admins.empty?
+    notify_admins(eligible_admins:)
     create_event
     log_action
     true
@@ -24,11 +26,21 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
 
   private
 
-  def notify_admins
+  def find_eligible_admins
+    eligible_admin_ids =
+      UserOption
+        .where(user_id: all_admins.map(&:id))
+        .where(enable_upcoming_change_available_notifications: true)
+        .pluck(:user_id)
+        .to_set
+    all_admins.select { |admin| eligible_admin_ids.include?(admin.id) }
+  end
+
+  def notify_admins(eligible_admins:)
     existing_notifications =
       Notification.where(
         notification_type: Notification.types[:upcoming_change_available],
-        user_id: all_admins.map(&:id),
+        user_id: eligible_admins.map(&:id),
         read: false,
       )
     existing_notification_rows = existing_notifications.to_a
@@ -36,7 +48,7 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
     merge_with_existing = existing_notification_rows.present?
 
     bulk_notification_new_records =
-      all_admins.map do |admin|
+      eligible_admins.map do |admin|
         {
           user_id: admin.id,
           notification_type: Notification.types[:upcoming_change_available],

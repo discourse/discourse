@@ -147,11 +147,9 @@ module I18n
 
       val =
         @cache.getset(k) do
-          begin
-            translate_no_cache(key, locale: locale, raise: true).freeze
-          rescue I18n::MissingTranslationData
-            MissingTranslation
-          end
+          translate_no_cache(key, locale: locale, raise: true).freeze
+        rescue I18n::MissingTranslationData
+          MissingTranslation
         end
 
       if val != MissingTranslation

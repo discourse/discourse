@@ -178,7 +178,7 @@ describe DiscoursePostEvent::EventParser do
 
       events = parser.extract_events(post_event)
       expect(events[0][:"foo-bar"]).to eq("1")
-      expect(events[0][:"bar"]).to eq("2")
+      expect(events[0][:bar]).to eq("2")
     end
 
     it "doesn’t parse not allowed custom fields" do
@@ -188,7 +188,7 @@ describe DiscoursePostEvent::EventParser do
       TXT
 
       events = parser.extract_events(post_event)
-      expect(events[0][:"baz"]).to eq(nil)
+      expect(events[0][:baz]).to eq(nil)
     end
   end
 end

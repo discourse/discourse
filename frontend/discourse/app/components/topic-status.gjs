@@ -31,11 +31,18 @@ export default class TopicStatus extends Component {
     {{~! no whitespace ~}}
     <this.wrapperElement class="topic-statuses">
       {{~#if @topic.bookmarked~}}
-        <a
-          href={{@topic.url}}
-          title={{i18n "topic_statuses.bookmarked.help"}}
-          class="topic-status --bookmarked"
-        >{{dIcon "bookmark"}}</a>
+        {{~#if this.canAct~}}
+          <a
+            href={{@topic.url}}
+            title={{i18n "topic_statuses.bookmarked.help"}}
+            class="topic-status --bookmarked"
+          >{{dIcon "bookmark"}}</a>
+        {{~else~}}
+          <span
+            title={{i18n "topic_statuses.bookmarked.help"}}
+            class="topic-status --bookmarked"
+          >{{dIcon "bookmark"}}</span>
+        {{~/if~}}
       {{~/if~}}
 
       {{~#if (and @topic.closed @topic.archived)~}}
