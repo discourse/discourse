@@ -49,7 +49,7 @@ describe "Composer - Create event action" do
   it "does not enter event mode for non-events categories" do
     visit("/new-topic?category_id=#{regular_category.id}")
 
-    expect(composer).not_to have_value(/\A\[event /)
+    expect(composer).to have_value("")
     expect(composer.button_label.text).to eq(I18n.t("js.composer.create_topic"))
   end
 
@@ -64,6 +64,6 @@ describe "Composer - Create event action" do
     composer.select_action(I18n.t("js.discourse_post_event.composer_actions.create_topic.label"))
 
     expect(composer.button_label.text).to eq(I18n.t("js.composer.create_topic"))
-    expect(composer).not_to have_value(/\A\[event /)
+    expect(composer).to have_value("")
   end
 end
