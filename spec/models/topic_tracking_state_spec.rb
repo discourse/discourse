@@ -352,7 +352,7 @@ RSpec.describe TopicTrackingState do
     end
   end
 
-  describe ".publish_unread_recovered" do
+  describe ".publish_unread_correction" do
     let(:other_user) { Fabricate(:user) }
 
     before { Fabricate(:topic_user_tracking, topic: topic, user: other_user) }
@@ -367,7 +367,7 @@ RSpec.describe TopicTrackingState do
 
       message =
         MessageBus
-          .track_publish("/unread") { TopicTrackingState.publish_unread_recovered(topic) }
+          .track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
           .first
 
       data = message.data
@@ -388,7 +388,7 @@ RSpec.describe TopicTrackingState do
 
       message =
         MessageBus
-          .track_publish("/unread") { TopicTrackingState.publish_unread_recovered(topic) }
+          .track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
           .first
 
       expect(message.data["payload"]["tags"]).to contain_exactly({ "id" => tag.id })
@@ -397,7 +397,7 @@ RSpec.describe TopicTrackingState do
     it "does not publish for private message topics" do
       messages =
         MessageBus.track_publish do
-          TopicTrackingState.publish_unread_recovered(private_message_topic)
+          TopicTrackingState.publish_unread_correction(private_message_topic)
         end
 
       expect(messages).to eq([])
@@ -407,7 +407,7 @@ RSpec.describe TopicTrackingState do
       TopicUser.where(topic: topic).destroy_all
 
       messages =
-        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread_recovered(topic) }
+        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
 
       expect(messages).to eq([])
     end
@@ -418,14 +418,14 @@ RSpec.describe TopicTrackingState do
       topic.update!(category: category)
 
       messages =
-        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread_recovered(topic) }
+        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
       expect(messages).to eq([])
 
       group.add(other_user)
 
       message =
         MessageBus
-          .track_publish("/unread") { TopicTrackingState.publish_unread_recovered(topic) }
+          .track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
           .first
       expect(message.user_ids).to contain_exactly(other_user.id)
     end

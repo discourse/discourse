@@ -251,7 +251,7 @@ class PostDestroyer
     if @topic && @post.post_number == 1
       TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @topic)
     elsif @topic && @post.post_number > 1
-      TopicTrackingState.publish_unread_recovered(@topic)
+      TopicTrackingState.publish_unread_correction(@topic)
     end
   end
 

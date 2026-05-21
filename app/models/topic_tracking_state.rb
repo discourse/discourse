@@ -177,7 +177,7 @@ class TopicTrackingState
     MessageBus.publish(RECOVER_MESSAGE_BUS_CHANNEL, message.as_json, group_ids: group_ids)
   end
 
-  def self.publish_unread_recovered(topic)
+  def self.publish_unread_correction(topic)
     return unless topic.regular?
 
     scope = TopicUser.tracking(topic.id)
