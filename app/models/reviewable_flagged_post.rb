@@ -242,6 +242,7 @@ class ReviewableFlaggedPost < Reviewable
     # Undo hide/silence if applicable
     if post&.hidden?
       notify_poster(performed_by)
+      post.acting_user = performed_by
       post.unhide!
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
