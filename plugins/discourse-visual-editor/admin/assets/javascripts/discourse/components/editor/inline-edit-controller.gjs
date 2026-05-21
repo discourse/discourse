@@ -11,49 +11,66 @@ import {
   toDoc,
   toStorage,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/inline-rich-text";
-import InlineEditToolbar from "./inline-edit-toolbar";
 
 /**
- * Mounts a ProseMirror editor over the currently-edited inline text region.
+ * Mounts a ProseMirror editor over the currently-edited inline text region
+ * and exposes its commands to the block-toolbar.
  *
  * Watches `visualEditor.editingBlockKey` + `editingArgName`. When set, it
  * locates the matching renderer span via a DOM query against the canvas
  * (`[data-ve-block-key="..."] [data-ve-inline-edit-arg="..."]`), reads the
- * schema variant off `data-ve-inline-edit-schema`, and mounts an editor
- * into the span via `{{in-element}}`. Per-keystroke changes stream through
- * `visualEditor.applyInlineEditChange` (no undo push); Escape and outside
- * clicks call `visualEditor.stopEditing()`, which records exactly one
- * `{ kind: "args" }` undo entry on commit.
+ * schema variant off `data-ve-inline-edit-schema`, and mounts a constrained
+ * PM editor into the span via `{{in-element insertBefore=null}}`. PM is the
+ * source of truth during the session — `args.text` is written once at
+ * commit time, not per keystroke.
  *
- * The block components and the renderer never see this code — they emit
- * data-attrs and render normally. All editing UX lives here.
+ * The bold / italic / link UI lives in `block-toolbar.gjs` (shared with the
+ * block move/duplicate/delete buttons). The block-toolbar reaches this
+ * controller via `visualEditor.inlineEditor` and calls its public methods
+ * (`toggleMark`, `enterLinkMode`, etc.); a tracked `_pmStateVersion`
+ * counter bumps on every PM transaction so the toolbar's `markState`
+ * getter (which depends on PM state) re-evaluates reactively.
  *
  * ProseMirror modules are lazy-loaded the first time the user enters an
- * edit session (matching the composer's `loadRichEditor` pattern), so the
- * PM bundle doesn't ship with the admin page unless the author actually
- * starts editing inline text.
+ * edit session — see `discourse/lib/load-inline-rich-editor`.
  */
 export default class InlineEditController extends Component {
   @service visualEditor;
 
   /**
-   * Floating-toolbar state. `null` when the toolbar should be hidden
-   * (no selection, empty selection, or `plain` schema with no marks).
-   * The toolbar component reads `{view, left, top, isStrongActive, ...}`
-   * straight out. Updated in `dispatchTransaction` after every PM
-   * state change, plus on initial mount.
-   *
-   * `@tracked` so the template re-renders when the user selects text
-   * or toggles a mark. Template-facing (read directly via `this.toolbarState`),
-   * so unprefixed per the public-template convention in CLAUDE.local.md.
-   *
-   * @type {import("./inline-edit-toolbar").InlineEditToolbarState | null}
+   * Inline link-edit mode — when `true`, the block-toolbar swaps its
+   * inline-format buttons for a URL input + Apply / Remove / Cancel.
+   * Template-facing (the block-toolbar reads it through
+   * `visualEditor.inlineEditor.linkEditMode`).
    */
-  @tracked toolbarState = null;
-
+  @tracked linkEditMode = false;
+  /** Live value of the URL input while in link-edit mode. */
+  @tracked linkEditUrl = "";
   #view = null;
+  #pm = null;
   #handleOutsideClick = null;
   #editingRendererEl = null;
+  #savedLinkRange = null;
+  /**
+   * Tracked counter bumped on every PM transaction. Read by
+   * `markState` / `selectionEmpty` getters to participate in Glimmer's
+   * autotracking — PM state itself isn't tracked, so without this bump
+   * the toolbar's active-mark buttons would never re-render.
+   *
+   * Underscored because nothing in a template binds to it directly;
+   * consumers read the getters that depend on it.
+   */
+  @tracked _pmStateVersion = 0;
+
+  constructor() {
+    super(...arguments);
+    this.visualEditor.registerInlineEditor(this);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.visualEditor.unregisterInlineEditor(this);
+  }
 
   /**
    * The renderer span the editor should mount into, looked up off the
@@ -87,6 +104,41 @@ export default class InlineEditController extends Component {
     return raw && raw in SCHEMAS ? raw : "plain";
   }
 
+  /**
+   * Public API consumed by `block-toolbar.gjs`. Returns the
+   * active-mark flags for the current PM selection, or `null` when the
+   * inline-format buttons should be hidden (no view, empty selection,
+   * or schema that doesn't allow marks).
+   *
+   * `@cached` + reading `_pmStateVersion` makes this reactive to PM
+   * transactions without making PM's state itself tracked.
+   *
+   * @returns {{strong: boolean, em: boolean, link: boolean} | null}
+   */
+  @cached
+  get markState() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this._pmStateVersion;
+    const view = this.#view;
+    if (!view) {
+      return null;
+    }
+    const variant = SCHEMAS[this.schemaName];
+    if (!variant?.allowsMarks) {
+      return null;
+    }
+    const { empty } = view.state.selection;
+    if (empty) {
+      return null;
+    }
+    const { schema } = view.state;
+    return {
+      strong: hasMark(view.state, schema.marks.strong),
+      em: hasMark(view.state, schema.marks.em),
+      link: hasMark(view.state, schema.marks.link),
+    };
+  }
+
   @action
   async mountEditor(container) {
     const rendererEl = this.activeRendererEl;
@@ -97,12 +149,11 @@ export default class InlineEditController extends Component {
 
     const pm = await loadInlineRichEditor();
 
-    // The session could have already ended (Escape / outside click) between
-    // the click and the PM bundle resolving. If so, bail without mounting.
     if (this.activeRendererEl !== rendererEl) {
       return;
     }
 
+    this.#pm = pm;
     rendererEl.classList.add("--editing");
 
     const variant = SCHEMAS[this.schemaName];
@@ -143,26 +194,18 @@ export default class InlineEditController extends Component {
       state: pm.EditorState.create({ schema, doc, plugins }),
       attributes: { class: "ve-inline-editor" },
       dispatchTransaction: (tr) => {
-        // ProseMirror is the visible source of truth for the duration of
-        // the session — we DO NOT write back to `args` per keystroke.
-        // The commit callback registered below pulls the final doc once,
-        // on session end. Per-keystroke writes exposed the system to
-        // spurious "PM emptied its doc during teardown" transactions
-        // that clobbered `args.text` with `""`.
         const view = this.#view;
         if (!view) {
           return;
         }
         view.updateState(view.state.apply(tr));
-        this.#refreshToolbarState();
+        // Bump tracked counter so consumers reading PM-derived getters
+        // (`markState`) re-evaluate. PM's state isn't itself tracked by
+        // Glimmer; this is the bridge.
+        this._pmStateVersion++;
       },
     });
 
-    // Hand the service a way to pull the final doc when it decides to
-    // end the session (Escape, outside-click, selectBlock onto another
-    // block, etc.). The service invokes this BEFORE clearing
-    // `editingLocated`, so `applyInlineEditChange` still resolves the
-    // right entry.
     this.visualEditor.registerInlineEditCommit(() => {
       const finalView = this.#view;
       if (!finalView) {
@@ -181,24 +224,18 @@ export default class InlineEditController extends Component {
     );
     this.#view.dispatch(this.#view.state.tr.setSelection(allRange));
     this.#view.focus();
-    this.#refreshToolbarState();
 
     this.#handleOutsideClick = (event) => {
       if (!this.#view || this.#view.dom.contains(event.target)) {
         return;
       }
-      // The bubble toolbar is portaled at canvas level (outside view.dom),
-      // so a click on its buttons would otherwise look like an outside
-      // click and exit the session. Treat any click inside the toolbar
-      // as inside the editor.
-      if (event.target.closest?.(".ve-inline-edit-toolbar")) {
+      // The block-toolbar (which now hosts the inline-format buttons) sits
+      // outside view.dom but is functionally part of the editor. Treat
+      // clicks inside any block-toolbar as inside the editor so the
+      // session doesn't exit when applying a mark.
+      if (event.target.closest?.(".visual-editor-block-toolbar")) {
         return;
       }
-      // Defer one frame so a click on a sibling `[data-ve-inline-edit-arg]`
-      // (which dispatches its own `startEditingArg` via the canvas's
-      // delegated click handler) wins the race against this stopEditing.
-      // After the frame, if the editing target is still this renderer,
-      // the user really did click outside — commit and exit.
       const myEl = this.#editingRendererEl;
       requestAnimationFrame(() => {
         if (this.activeRendererEl === myEl) {
@@ -211,8 +248,6 @@ export default class InlineEditController extends Component {
 
   @action
   unmountEditor() {
-    // Drop the commit hook first so any in-flight stopEditing call doesn't
-    // re-enter into a stale view.
     this.visualEditor.registerInlineEditCommit(null);
 
     const view = this.#view;
@@ -226,55 +261,138 @@ export default class InlineEditController extends Component {
     }
     this.#editingRendererEl?.classList.remove("--editing");
     this.#editingRendererEl = null;
-    this.toolbarState = null;
+    this.#savedLinkRange = null;
+    this.linkEditMode = false;
+    this.linkEditUrl = "";
+    // Force a re-evaluation of `markState` so the toolbar hides cleanly.
+    this._pmStateVersion++;
   }
 
   /**
-   * Recomputes the toolbar's position and active-mark flags from the
-   * current PM selection. Called after every dispatched transaction and
-   * once after the initial mount. Hides the toolbar (sets state to
-   * `null`) when:
-   *   - PM isn't mounted
-   *   - the selection is empty (nothing to format)
-   *   - the schema doesn't allow marks (the `plain` variant)
+   * Toggles `strong` or `em` over the current PM selection. Called by
+   * the block-toolbar's inline-format buttons (via
+   * `visualEditor.inlineEditor.toggleMark`).
+   *
+   * Explicitly re-sets the selection on the transaction so PM re-renders
+   * the DOM selection highlight after dispatch — without this, focus
+   * loss from clicking a button outside PM can leave the user with no
+   * visible selection even though the model selection survived.
+   *
+   * @param {"strong" | "em"} markName
    */
-  #refreshToolbarState() {
+  @action
+  toggleMark(markName) {
     const view = this.#view;
     if (!view) {
-      this.toolbarState = null;
       return;
     }
-    const variant = SCHEMAS[this.schemaName];
-    if (!variant?.allowsMarks) {
-      this.toolbarState = null;
+    const markType = view.state.schema.marks[markName];
+    if (!markType) {
       return;
     }
-    const { from, to, empty } = view.state.selection;
-    if (empty) {
-      this.toolbarState = null;
+    const { from, to } = view.state.selection;
+    if (from === to) {
       return;
     }
-    const { schema } = view.state;
-    const fromCoords = view.coordsAtPos(from);
-    const toCoords = view.coordsAtPos(to);
-    this.toolbarState = {
-      view,
-      left: (fromCoords.left + toCoords.left) / 2,
-      top: fromCoords.top,
-      isStrongActive: hasMark(view.state, schema.marks.strong),
-      isEmActive: hasMark(view.state, schema.marks.em),
-      isLinkActive: hasMark(view.state, schema.marks.link),
-    };
+    const tr = view.state.tr;
+    if (view.state.doc.rangeHasMark(from, to, markType)) {
+      tr.removeMark(from, to, markType);
+    } else {
+      tr.addMark(from, to, markType.create());
+    }
+    tr.setSelection(this.#pm.TextSelection.create(tr.doc, from, to));
+    view.dispatch(tr);
+    view.focus();
+  }
+
+  /**
+   * Transitions the toolbar into link-edit mode (URL input visible) for
+   * the current non-empty PM selection. The selection range is captured
+   * so the eventual Apply / Remove uses the correct positions even after
+   * focus moves to the URL input.
+   */
+  @action
+  enterLinkMode() {
+    const view = this.#view;
+    if (!view) {
+      return;
+    }
+    const { from, to } = view.state.selection;
+    if (from === to) {
+      return;
+    }
+    this.#savedLinkRange = { from, to };
+    this.linkEditUrl =
+      existingLinkHref(view.state, view.state.schema.marks.link) ?? "";
+    this.linkEditMode = true;
+  }
+
+  /**
+   * Applies (or replaces) the link mark using the URL currently in
+   * `linkEditUrl`. An empty URL falls through to a mark removal so an
+   * author can clear a link by emptying the field and pressing Enter.
+   */
+  @action
+  applyLink() {
+    const view = this.#view;
+    const range = this.#savedLinkRange;
+    if (!view || !range) {
+      this.#exitLinkMode();
+      return;
+    }
+    const markType = view.state.schema.marks.link;
+    const tr = view.state.tr;
+    tr.removeMark(range.from, range.to, markType);
+    const trimmed = this.linkEditUrl.trim();
+    if (trimmed) {
+      tr.addMark(range.from, range.to, markType.create({ href: trimmed }));
+    }
+    tr.setSelection(
+      this.#pm.TextSelection.create(tr.doc, range.from, range.to)
+    );
+    view.dispatch(tr);
+    view.focus();
+    this.#exitLinkMode();
+  }
+
+  @action
+  removeLink() {
+    const view = this.#view;
+    const range = this.#savedLinkRange;
+    if (!view || !range) {
+      this.#exitLinkMode();
+      return;
+    }
+    const markType = view.state.schema.marks.link;
+    const tr = view.state.tr.removeMark(range.from, range.to, markType);
+    tr.setSelection(
+      this.#pm.TextSelection.create(tr.doc, range.from, range.to)
+    );
+    view.dispatch(tr);
+    view.focus();
+    this.#exitLinkMode();
+  }
+
+  @action
+  cancelLink() {
+    this.#view?.focus();
+    this.#exitLinkMode();
+  }
+
+  #exitLinkMode() {
+    this.linkEditMode = false;
+    this.linkEditUrl = "";
+    this.#savedLinkRange = null;
   }
 
   <template>
     {{! insertBefore=null keeps the renderer's existing __content span
         intact instead of wiping it. The default in-element behavior
-        replaces the destination's children — fine for a fresh mount, but
-        it leaves the renderer span permanently empty once the portal
-        unmounts, since Glimmer doesn't restore what it cleared. We need
-        the rendered text to be there both during the edit (hidden by the
-        --editing class) AND after the editor goes away. }}
+        replaces the destination's children — fine for a fresh mount,
+        but it leaves the renderer span permanently empty once the
+        portal unmounts, since Glimmer doesn't restore what it cleared.
+        We need the rendered text to be there both during the edit
+        (hidden by the --editing class) AND after the editor goes away. }}
     {{#if this.activeRendererEl}}
       {{#in-element this.activeRendererEl insertBefore=null}}
         <span
@@ -284,18 +402,12 @@ export default class InlineEditController extends Component {
         ></span>
       {{/in-element}}
     {{/if}}
-    {{#if this.toolbarState}}
-      <InlineEditToolbar @state={{this.toolbarState}} />
-    {{/if}}
   </template>
 }
 
 /**
  * Returns `true` when the current selection has the given mark applied
- * (or, for empty selections, when `storedMarks` carries it). Inlined here
- * rather than imported from `discourse/static/prosemirror/lib/plugin-utils`
- * because that path lives in a lazy chunk plugin code can't statically
- * import.
+ * (or, for empty selections, when `storedMarks` carries it).
  *
  * @param {import("prosemirror-state").EditorState} state
  * @param {import("prosemirror-model").MarkType | undefined} markType
@@ -310,6 +422,26 @@ function hasMark(state, markType) {
     return !!markType.isInSet(state.storedMarks || $from.marks());
   }
   return state.doc.rangeHasMark(from, to, markType);
+}
+
+/**
+ * Walks the current selection and returns the first link mark's `href`,
+ * or `null` when no link mark touches the range. Used to prefill the
+ * URL input when entering link-edit mode over an already-linked range.
+ */
+function existingLinkHref(state, markType) {
+  if (!markType) {
+    return null;
+  }
+  const { from, to } = state.selection;
+  let href = null;
+  state.doc.nodesBetween(from, to, (node) => {
+    const mark = node.marks.find((m) => m.type === markType);
+    if (mark && href === null) {
+      href = mark.attrs?.href ?? null;
+    }
+  });
+  return href;
 }
 
 /**

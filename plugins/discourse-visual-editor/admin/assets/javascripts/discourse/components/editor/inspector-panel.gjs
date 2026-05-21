@@ -2,9 +2,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -147,16 +147,12 @@ export default class InspectorPanel extends Component {
             </p>
           {{/if}}
           <div class="visual-editor-inspector-warning__actions">
-            <button
-              type="button"
-              class="btn btn-danger"
-              {{on "click" this.removeSelectedBlock}}
-            >
-              {{dIcon "trash-can"}}
-              <span>{{i18n
-                  "visual_editor.inspector.remove_block_action"
-                }}</span>
-            </button>
+            <DButton
+              class="btn-danger"
+              @icon="trash-can"
+              @label="visual_editor.inspector.remove_block_action"
+              @action={{this.removeSelectedBlock}}
+            />
           </div>
         </div>
       {{/if}}
@@ -177,36 +173,30 @@ export default class InspectorPanel extends Component {
       <InspectorMetadataSection />
 
       <div class="visual-editor-inspector__tabs" role="tablist">
-        <button
-          type="button"
+        <DButton
           class={{dConcatClass
-            "visual-editor-inspector__tab"
+            "btn-flat visual-editor-inspector__tab"
             (if (this.isTabActive "args") "--active")
           }}
-          {{on "click" (fn this.setTab "args")}}
-        >
-          {{i18n "visual_editor.inspector.tab_args"}}
-        </button>
-        <button
-          type="button"
+          @label="visual_editor.inspector.tab_args"
+          @action={{fn this.setTab "args"}}
+        />
+        <DButton
           class={{dConcatClass
-            "visual-editor-inspector__tab"
+            "btn-flat visual-editor-inspector__tab"
             (if (this.isTabActive "conditions") "--active")
           }}
-          {{on "click" (fn this.setTab "conditions")}}
-        >
-          {{i18n "visual_editor.inspector.tab_conditions"}}
-        </button>
-        <button
-          type="button"
+          @label="visual_editor.inspector.tab_conditions"
+          @action={{fn this.setTab "conditions"}}
+        />
+        <DButton
           class={{dConcatClass
-            "visual-editor-inspector__tab"
+            "btn-flat visual-editor-inspector__tab"
             (if (this.isTabActive "raw") "--active")
           }}
-          {{on "click" (fn this.setTab "raw")}}
-        >
-          {{i18n "visual_editor.inspector.tab_raw"}}
-        </button>
+          @label="visual_editor.inspector.tab_raw"
+          @action={{fn this.setTab "raw"}}
+        />
       </div>
 
       <div class="visual-editor-inspector__body">
@@ -225,24 +215,21 @@ export default class InspectorPanel extends Component {
           {{/if}}
         {{else if (this.isTabActive "conditions")}}
           <div class="visual-editor-inspector__conditions-header">
-            <button
-              type="button"
-              class="visual-editor-inspector__detach-btn"
-              title={{i18n "visual_editor.inspector.conditions.detach_panel"}}
-              {{on "click" this.toggleDetachConditions}}
-            >
-              {{#if this.visualEditor.conditionsDetached}}
-                {{dIcon "down-left-and-up-right-to-center"}}
-                <span>{{i18n
-                    "visual_editor.inspector.conditions.redock_panel"
-                  }}</span>
-              {{else}}
-                {{dIcon "up-right-and-down-left-from-center"}}
-                <span>{{i18n
-                    "visual_editor.inspector.conditions.detach_panel"
-                  }}</span>
-              {{/if}}
-            </button>
+            <DButton
+              class="btn-flat visual-editor-inspector__detach-btn"
+              @icon={{if
+                this.visualEditor.conditionsDetached
+                "down-left-and-up-right-to-center"
+                "up-right-and-down-left-from-center"
+              }}
+              @label={{if
+                this.visualEditor.conditionsDetached
+                "visual_editor.inspector.conditions.redock_panel"
+                "visual_editor.inspector.conditions.detach_panel"
+              }}
+              @title="visual_editor.inspector.conditions.detach_panel"
+              @action={{this.toggleDetachConditions}}
+            />
           </div>
           {{#if this.visualEditor.conditionsDetached}}
             <p class="visual-editor-inspector__conditions-stub">

@@ -2,9 +2,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
+import DButton from "discourse/ui-kit/d-button";
 
 /**
  * Floating contextual toolbar shown above the currently-selected block.
@@ -14,12 +14,24 @@ import { i18n } from "discourse-i18n";
  * affordances added in later sub-phases (wrap, convert, edit JSON).
  *
  * Mounted only when the chrome is selected. Positioning is via CSS
- * (`top: -32px; left: 0` against the chrome) — anchoring via
+ * (`top: -34px; left: 0` against the chrome) — anchoring via
  * JavaScript would require popper/floating-ui, and our toolbar is
  * always relative to its host chrome anyway.
  *
- * Click handlers stop propagation so they don't bubble up to the
- * chrome's selection handler.
+ * Inline-format buttons (bold / italic / link) appear in this same
+ * toolbar when the user has entered an inline-edit session on the
+ * block AND has a non-empty text selection inside it. The controller
+ * (`InlineEditController`) registers itself with the service as
+ * `inlineEditor`; we read its `markState` (a tracked-on-PM-transactions
+ * getter) and call its commands. Co-locating the inline formatters
+ * with the block actions avoids the focus / scroll-tracking problems
+ * a separately-floating bubble menu had.
+ *
+ * Inline-format buttons use `@preventFocus={{true}}` on `DButton` so
+ * the mousedown's default focus shift is suppressed — ProseMirror
+ * keeps focus and the selection highlight stays visible while the
+ * mark applies. The block-action buttons (move/duplicate/delete) don't
+ * need this because they have no PM selection to preserve.
  */
 export default class BlockToolbar extends Component {
   @service visualEditor;
@@ -38,10 +50,6 @@ export default class BlockToolbar extends Component {
    * `"never"` — i.e. the layout could actually collapse at narrow
    * widths, so an override has something to override.
    *
-   * Reads the live entry's `args.mode` / `args.autoCollapse` rather
-   * than the curry snapshot so the button hides instantly when the
-   * author flips `autoCollapse` to `"never"` from the inspector.
-   *
    * @returns {boolean}
    */
   get canForceExpand() {
@@ -59,7 +67,6 @@ export default class BlockToolbar extends Component {
 
   /**
    * Mirrors the editor service's force-expand state for this block.
-   * Drives the button's pressed/unpressed visual state.
    *
    * @returns {boolean}
    */
@@ -67,111 +74,258 @@ export default class BlockToolbar extends Component {
     return this.visualEditor.isForceExpanded(this.args.blockKey);
   }
 
+  /**
+   * The active inline-edit controller, or `null` when no inline
+   * session is open.
+   */
+  get inlineEditor() {
+    return this.visualEditor.inlineEditor;
+  }
+
+  /**
+   * Whether the inline-format buttons should be visible. Requires:
+   *   - an active inline-edit session on THIS block,
+   *   - a non-empty PM selection that the schema marks can apply to.
+   *
+   * @returns {boolean}
+   */
+  get showInlineFormat() {
+    return (
+      !!this.inlineEditor &&
+      this.visualEditor.editingBlockKey === this.args.blockKey &&
+      this.inlineEditor.markState !== null
+    );
+  }
+
+  get markState() {
+    return this.inlineEditor?.markState;
+  }
+
+  get linkEditMode() {
+    return !!this.inlineEditor?.linkEditMode;
+  }
+
   @action
-  toggleForceExpand(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  toggleForceExpand() {
     this.visualEditor.toggleForceExpand(this.args.blockKey);
   }
 
   @action
-  moveUp(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  moveUp() {
     this.visualEditor.moveBlockUp(this.args.blockKey);
   }
 
   @action
-  moveDown(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  moveDown() {
     this.visualEditor.moveBlockDown(this.args.blockKey);
   }
 
   @action
-  duplicate(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  duplicate() {
     this.visualEditor.duplicateBlock(this.args.blockKey);
   }
 
   @action
-  remove(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  remove() {
     this.visualEditor.removeBlock(this.args.blockKey);
+  }
+
+  @action
+  toggleBold() {
+    this.inlineEditor?.toggleMark("strong");
+  }
+
+  @action
+  toggleItalic() {
+    this.inlineEditor?.toggleMark("em");
+  }
+
+  @action
+  startLinkEdit() {
+    this.inlineEditor?.enterLinkMode();
+  }
+
+  @action
+  applyLink() {
+    this.inlineEditor?.applyLink();
+  }
+
+  @action
+  removeLink() {
+    this.inlineEditor?.removeLink();
+  }
+
+  @action
+  cancelLink() {
+    this.inlineEditor?.cancelLink();
+  }
+
+  @action
+  onLinkUrlInput(event) {
+    if (this.inlineEditor) {
+      this.inlineEditor.linkEditUrl = event.target.value;
+    }
+  }
+
+  @action
+  onLinkUrlKeydown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.applyLink();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      this.cancelLink();
+    }
+  }
+
+  @action
+  focusLinkInput(element) {
+    element.focus();
+    element.select();
   }
 
   <template>
     <div class="visual-editor-block-toolbar" role="toolbar">
-      <button
-        type="button"
-        class="btn btn-flat visual-editor-block-toolbar__btn"
-        title={{i18n "visual_editor.canvas.toolbar.move_up"}}
-        aria-label={{i18n "visual_editor.canvas.toolbar.move_up"}}
-        disabled={{if this.canMoveUp false true}}
-        {{on "click" this.moveUp}}
-      >
-        {{dIcon "arrow-up"}}
-      </button>
-      <button
-        type="button"
-        class="btn btn-flat visual-editor-block-toolbar__btn"
-        title={{i18n "visual_editor.canvas.toolbar.move_down"}}
-        aria-label={{i18n "visual_editor.canvas.toolbar.move_down"}}
-        disabled={{if this.canMoveDown false true}}
-        {{on "click" this.moveDown}}
-      >
-        {{dIcon "arrow-down"}}
-      </button>
-      <button
-        type="button"
-        class="btn btn-flat visual-editor-block-toolbar__btn"
-        title={{i18n "visual_editor.canvas.toolbar.duplicate"}}
-        aria-label={{i18n "visual_editor.canvas.toolbar.duplicate"}}
-        {{on "click" this.duplicate}}
-      >
-        {{dIcon "copy"}}
-      </button>
-      {{#if this.canForceExpand}}
-        <button
-          type="button"
-          class={{if
-            this.isForceExpanded
-            "btn btn-flat visual-editor-block-toolbar__btn --active"
-            "btn btn-flat visual-editor-block-toolbar__btn"
-          }}
-          title={{if
-            this.isForceExpanded
-            (i18n "visual_editor.canvas.toolbar.collapse_for_preview")
-            (i18n "visual_editor.canvas.toolbar.expand_for_editing")
-          }}
-          aria-label={{if
-            this.isForceExpanded
-            (i18n "visual_editor.canvas.toolbar.collapse_for_preview")
-            (i18n "visual_editor.canvas.toolbar.expand_for_editing")
-          }}
-          aria-pressed={{if this.isForceExpanded "true" "false"}}
-          {{on "click" this.toggleForceExpand}}
-        >
-          {{dIcon
-            (if
+      {{#if this.linkEditMode}}
+        <input
+          type="url"
+          class="visual-editor-block-toolbar__url-input"
+          placeholder="https://..."
+          value={{this.inlineEditor.linkEditUrl}}
+          {{didInsert this.focusLinkInput}}
+          {{on "input" this.onLinkUrlInput}}
+          {{on "keydown" this.onLinkUrlKeydown}}
+        />
+        <DButton
+          class="btn-flat visual-editor-block-toolbar__btn"
+          @icon="check"
+          @title="visual_editor.canvas.toolbar.link_apply"
+          @ariaLabel="visual_editor.canvas.toolbar.link_apply"
+          @action={{this.applyLink}}
+          @preventFocus={{true}}
+        />
+        {{#if this.markState.link}}
+          <DButton
+            class="btn-flat visual-editor-block-toolbar__btn"
+            @icon="link-slash"
+            @title="visual_editor.canvas.toolbar.link_remove"
+            @ariaLabel="visual_editor.canvas.toolbar.link_remove"
+            @action={{this.removeLink}}
+            @preventFocus={{true}}
+          />
+        {{/if}}
+        <DButton
+          class="btn-flat visual-editor-block-toolbar__btn"
+          @icon="xmark"
+          @title="visual_editor.canvas.toolbar.link_cancel"
+          @ariaLabel="visual_editor.canvas.toolbar.link_cancel"
+          @action={{this.cancelLink}}
+          @preventFocus={{true}}
+        />
+      {{else}}
+        <DButton
+          class="btn-flat visual-editor-block-toolbar__btn"
+          @icon="arrow-up"
+          @title="visual_editor.canvas.toolbar.move_up"
+          @ariaLabel="visual_editor.canvas.toolbar.move_up"
+          @disabled={{if this.canMoveUp false true}}
+          @action={{this.moveUp}}
+        />
+        <DButton
+          class="btn-flat visual-editor-block-toolbar__btn"
+          @icon="arrow-down"
+          @title="visual_editor.canvas.toolbar.move_down"
+          @ariaLabel="visual_editor.canvas.toolbar.move_down"
+          @disabled={{if this.canMoveDown false true}}
+          @action={{this.moveDown}}
+        />
+        <DButton
+          class="btn-flat visual-editor-block-toolbar__btn"
+          @icon="copy"
+          @title="visual_editor.canvas.toolbar.duplicate"
+          @ariaLabel="visual_editor.canvas.toolbar.duplicate"
+          @action={{this.duplicate}}
+        />
+        {{#if this.canForceExpand}}
+          <DButton
+            class={{if
+              this.isForceExpanded
+              "btn-flat visual-editor-block-toolbar__btn --active"
+              "btn-flat visual-editor-block-toolbar__btn"
+            }}
+            @icon={{if
               this.isForceExpanded
               "down-left-and-up-right-to-center"
               "up-right-and-down-left-from-center"
-            )
-          }}
-        </button>
+            }}
+            @title={{if
+              this.isForceExpanded
+              "visual_editor.canvas.toolbar.collapse_for_preview"
+              "visual_editor.canvas.toolbar.expand_for_editing"
+            }}
+            @ariaLabel={{if
+              this.isForceExpanded
+              "visual_editor.canvas.toolbar.collapse_for_preview"
+              "visual_editor.canvas.toolbar.expand_for_editing"
+            }}
+            @ariaPressed={{this.isForceExpanded}}
+            @action={{this.toggleForceExpand}}
+          />
+        {{/if}}
+        {{#if this.showInlineFormat}}
+          <span
+            class="visual-editor-block-toolbar__separator"
+            aria-hidden="true"
+          ></span>
+          <DButton
+            class={{if
+              this.markState.strong
+              "btn-flat visual-editor-block-toolbar__btn --active"
+              "btn-flat visual-editor-block-toolbar__btn"
+            }}
+            @icon="bold"
+            @title="visual_editor.canvas.toolbar.bold"
+            @ariaLabel="visual_editor.canvas.toolbar.bold"
+            @ariaPressed={{this.markState.strong}}
+            @action={{this.toggleBold}}
+            @preventFocus={{true}}
+          />
+          <DButton
+            class={{if
+              this.markState.em
+              "btn-flat visual-editor-block-toolbar__btn --active"
+              "btn-flat visual-editor-block-toolbar__btn"
+            }}
+            @icon="italic"
+            @title="visual_editor.canvas.toolbar.italic"
+            @ariaLabel="visual_editor.canvas.toolbar.italic"
+            @ariaPressed={{this.markState.em}}
+            @action={{this.toggleItalic}}
+            @preventFocus={{true}}
+          />
+          <DButton
+            class={{if
+              this.markState.link
+              "btn-flat visual-editor-block-toolbar__btn --active"
+              "btn-flat visual-editor-block-toolbar__btn"
+            }}
+            @icon="link"
+            @title="visual_editor.canvas.toolbar.link"
+            @ariaLabel="visual_editor.canvas.toolbar.link"
+            @ariaPressed={{this.markState.link}}
+            @action={{this.startLinkEdit}}
+            @preventFocus={{true}}
+          />
+        {{/if}}
+        <span class="toolbar-separator" aria-hidden="true"></span>
+        <DButton
+          class="btn-flat visual-editor-block-toolbar__btn visual-editor-block-toolbar__btn--danger"
+          @icon="trash-can"
+          @title="visual_editor.canvas.toolbar.delete"
+          @ariaLabel="visual_editor.canvas.toolbar.delete"
+          @action={{this.remove}}
+        />
       {{/if}}
-      <button
-        type="button"
-        class="btn btn-flat visual-editor-block-toolbar__btn visual-editor-block-toolbar__btn--danger"
-        title={{i18n "visual_editor.canvas.toolbar.delete"}}
-        aria-label={{i18n "visual_editor.canvas.toolbar.delete"}}
-        {{on "click" this.remove}}
-      >
-        {{dIcon "trash-can"}}
-      </button>
     </div>
   </template>
 }

@@ -473,7 +473,7 @@ body.visual-editor-active {
     z-index: 1100;
     display: inline-flex;
     align-items: center;
-    gap: 1px;
+    gap: 2px;
     padding: 2px;
     background: var(--secondary);
     border: 1px solid var(--primary-low);
@@ -481,22 +481,45 @@ body.visual-editor-active {
     box-shadow: var(--shadow-card);
     pointer-events: auto;
 
+    /* Sizing comes from `<DButton @icon=...>` (auto-applied
+       `btn btn-icon no-text` classes). `btn-flat` keeps the resting
+       background transparent so the buttons sit cleanly on the
+       toolbar's secondary background. Active state mirrors the
+       composer toolbar (`.toolbar__button.--active` in
+       `common/d-editor.scss`) via the `--d-selected` token so the
+       two toolbars highlight the same way. */
+
     &__btn {
-      padding: 4px 6px;
-      min-width: 28px;
       color: var(--primary);
+      transition:
+        background-color 120ms ease,
+        color 120ms ease;
 
-      &[disabled] {
-        opacity: 0.4;
-        cursor: not-allowed;
+      &.--active {
+        background: var(--d-selected);
+        color: var(--d-selected-text-color);
+
+        .d-icon {
+          color: var(--d-selected-text-color);
+        }
       }
 
-      &--danger:hover:not([disabled]) {
-        color: var(--danger);
-      }
+      /* Danger modifier — flat at rest (matches the rest of the
+         toolbar), tips into the danger palette only on hover/focus so
+         the destructive action signals intent without dominating the
+         row visually. Same approach `.btn-flat.close` takes in
+         `common/components/buttons.scss`. */
 
-      .d-icon {
-        font-size: 0.85rem;
+      &--danger {
+        &:hover:not([disabled]),
+        &:focus-visible:not([disabled]) {
+          background: var(--danger-low);
+          color: var(--danger);
+
+          .d-icon {
+            color: var(--danger);
+          }
+        }
       }
     }
   }
@@ -2066,16 +2089,6 @@ body.visual-editor-active
 .visual-editor-block-chrome-wrapper.--force-expanded
   .visual-editor-block-chrome__resize-handle {
   display: block;
-}
-
-/* Toolbar toggle "pressed" state — the expand-for-editing button keeps
-   its filled appearance while the layout is force-expanded so the
-   author can see at a glance which layouts they've manually overridden
-   in the current session. */
-
-.visual-editor-block-toolbar__btn.--active {
-  background: var(--primary-low);
-  color: var(--primary);
 }
 
 /* Resize handle — rendered on the chrome of a selected block whose
@@ -3674,57 +3687,40 @@ body.visual-editor-active {
   font-style: italic;
 }
 
-/* Inline-edit bubble toolbar — floats above the active selection
-   inside a `richInline` editor. Position is computed in the controller
-   via PM's `coordsAtPos` and applied as an inline style. `position: fixed`
-   keeps the toolbar pinned to the selection regardless of canvas
-   scroll. Buttons use `mousedown` (not `click`) so the controller can
-   `preventDefault` and keep the editor focused — `tabindex="-1"` also
-   stops the button from being a keyboard focus target. */
+/* Inline-format additions to the block-toolbar — bold / italic / link
+   buttons appear in the same chrome strip as the move / duplicate /
+   delete buttons when the user has a non-empty PM selection inside a
+   `richInline` arg. See block-toolbar.gjs.
 
-.ve-inline-edit-toolbar {
-  position: fixed;
-  z-index: 1100;
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 3px;
-  background: var(--secondary);
+   The block-toolbar's existing `__btn.--active` rule handles the
+   pressed state for bold/italic/link buttons. */
+
+.visual-editor-block-toolbar__url-input {
+  width: 220px;
+  height: 24px;
+  padding: 0 6px;
   border: 1px solid var(--primary-low);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  border-radius: 3px;
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  background: var(--secondary);
+  margin: 0 2px;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
 
-  /* Offset above the top of the selection. The toolbar's own height
-     plus a small gap; translate keeps the center-of-button anchor
-     aligned with the `left` coord (which is the selection midpoint). */
-  transform: translate(-50%, calc(-100% - 8px));
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 3px;
-    color: var(--primary);
-    cursor: pointer;
-    font-size: var(--font-down-1);
-
-    &:hover {
-      background: var(--primary-low);
-    }
-
-    &.--active {
-      background: var(--tertiary-low);
-      color: var(--tertiary);
-    }
-
-    .d-icon {
-      width: 14px;
-      height: 14px;
-    }
+  &:focus {
+    outline: none;
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 2px var(--tertiary-low);
   }
+}
+
+body.visual-editor-active
+  *:not(
+    :has(.visual-editor-outlet-boundary),
+    .visual-editor-outlet-boundary,
+    .visual-editor-outlet-boundary *
+  ) {
+  opacity: 0.85;
 }

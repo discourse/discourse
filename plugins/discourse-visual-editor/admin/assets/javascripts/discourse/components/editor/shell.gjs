@@ -2,10 +2,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
@@ -220,61 +220,48 @@ export default class EditorShell extends Component {
           <div class="toolbar-right">
             <SimulationControls />
             {{#if this.visualEditor.hasValidationWarnings}}
-              <button
-                type="button"
+              <DButton
                 class={{dConcatClass
-                  "btn btn-flat visual-editor-btn-warnings"
+                  "btn-flat visual-editor-btn-warnings"
                   (if this.warningsPanelOpen "--open")
                 }}
-                title={{i18n "visual_editor.chrome.warnings_button_title"}}
-                {{on "click" this.toggleWarningsPanel}}
-              >
-                {{dIcon "triangle-exclamation"}}
-                <span>{{this.visualEditor.validationWarnings.length}}</span>
-              </button>
+                @icon="triangle-exclamation"
+                @translatedLabel={{this.visualEditor.validationWarnings.length}}
+                @title="visual_editor.chrome.warnings_button_title"
+                @action={{this.toggleWarningsPanel}}
+              />
             {{/if}}
-            <button
-              type="button"
-              class="btn btn-default visual-editor-btn-undo"
-              title={{i18n "visual_editor.chrome.undo"}}
-              disabled={{if this.visualEditor.canUndo false true}}
-              {{on "click" this.undo}}
-            >
-              {{dIcon "arrow-rotate-left"}}
-            </button>
-            <button
-              type="button"
-              class="btn btn-default visual-editor-btn-redo"
-              title={{i18n "visual_editor.chrome.redo"}}
-              disabled={{if this.visualEditor.canRedo false true}}
-              {{on "click" this.redo}}
-            >
-              {{dIcon "arrow-rotate-right"}}
-            </button>
-            <button
-              type="button"
-              class="btn btn-default visual-editor-btn-reset"
-              disabled={{if this.visualEditor.isDirty false true}}
-              {{on "click" this.reset}}
-            >
-              <span>{{i18n "visual_editor.chrome.reset"}}</span>
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary visual-editor-btn-save"
-              disabled={{if this.canSave false true}}
-              {{on "click" this.save}}
-            >
-              <span>{{i18n "visual_editor.chrome.save"}}</span>
-            </button>
-            <button
-              type="button"
-              class="btn btn-default"
-              {{on "click" this.exit}}
-            >
-              {{dIcon "xmark"}}
-              <span>{{i18n "visual_editor.chrome.exit"}}</span>
-            </button>
+            <DButton
+              class="visual-editor-btn-undo"
+              @icon="arrow-rotate-left"
+              @title="visual_editor.chrome.undo"
+              @disabled={{if this.visualEditor.canUndo false true}}
+              @action={{this.undo}}
+            />
+            <DButton
+              class="visual-editor-btn-redo"
+              @icon="arrow-rotate-right"
+              @title="visual_editor.chrome.redo"
+              @disabled={{if this.visualEditor.canRedo false true}}
+              @action={{this.redo}}
+            />
+            <DButton
+              class="visual-editor-btn-reset"
+              @label="visual_editor.chrome.reset"
+              @disabled={{if this.visualEditor.isDirty false true}}
+              @action={{this.reset}}
+            />
+            <DButton
+              class="btn-primary visual-editor-btn-save"
+              @label="visual_editor.chrome.save"
+              @disabled={{if this.canSave false true}}
+              @action={{this.save}}
+            />
+            <DButton
+              @icon="xmark"
+              @label="visual_editor.chrome.exit"
+              @action={{this.exit}}
+            />
           </div>
         </div>
 
@@ -286,14 +273,12 @@ export default class EditorShell extends Component {
             <span class="visual-editor-save-error__message">
               {{this.saveErrorMessage}}
             </span>
-            <button
-              type="button"
-              class="btn btn-flat visual-editor-save-error__dismiss"
-              aria-label={{i18n "visual_editor.chrome.dismiss_error"}}
-              {{on "click" this.dismissSaveError}}
-            >
-              {{dIcon "xmark"}}
-            </button>
+            <DButton
+              class="btn-flat visual-editor-save-error__dismiss"
+              @icon="xmark"
+              @ariaLabel="visual_editor.chrome.dismiss_error"
+              @action={{this.dismissSaveError}}
+            />
           </div>
         {{/if}}
 
@@ -326,48 +311,38 @@ export default class EditorShell extends Component {
         >
           <div class="panel-header panel-header--tabs">
             {{#unless this.leftCollapsed}}
-              <button
-                type="button"
+              <DButton
                 class={{dConcatClass
-                  "panel-tab"
+                  "btn-flat panel-tab"
                   (if (this.isLeftPanelTabActive "palette") "--active")
                 }}
-                {{on "click" (fn this.setLeftPanelTab "palette")}}
-              >
-                {{i18n "visual_editor.chrome.tab_palette"}}
-              </button>
-              <button
-                type="button"
+                @label="visual_editor.chrome.tab_palette"
+                @action={{fn this.setLeftPanelTab "palette"}}
+              />
+              <DButton
                 class={{dConcatClass
-                  "panel-tab"
+                  "btn-flat panel-tab"
                   (if (this.isLeftPanelTabActive "outline") "--active")
                 }}
-                {{on "click" (fn this.setLeftPanelTab "outline")}}
-              >
-                {{i18n "visual_editor.chrome.tab_outline"}}
-              </button>
+                @label="visual_editor.chrome.tab_outline"
+                @action={{fn this.setLeftPanelTab "outline"}}
+              />
             {{/unless}}
-            <button
-              type="button"
-              class="panel-collapse-toggle"
-              title={{i18n
-                (if
-                  this.leftCollapsed
-                  "visual_editor.chrome.expand_panel"
-                  "visual_editor.chrome.collapse_panel"
-                )
+            <DButton
+              class="btn-flat panel-collapse-toggle"
+              @icon={{if this.leftCollapsed "chevron-right" "chevron-left"}}
+              @title={{if
+                this.leftCollapsed
+                "visual_editor.chrome.expand_panel"
+                "visual_editor.chrome.collapse_panel"
               }}
-              aria-label={{i18n
-                (if
-                  this.leftCollapsed
-                  "visual_editor.chrome.expand_panel"
-                  "visual_editor.chrome.collapse_panel"
-                )
+              @ariaLabel={{if
+                this.leftCollapsed
+                "visual_editor.chrome.expand_panel"
+                "visual_editor.chrome.collapse_panel"
               }}
-              {{on "click" this.toggleLeftCollapsed}}
-            >
-              {{dIcon (if this.leftCollapsed "chevron-right" "chevron-left")}}
-            </button>
+              @action={{this.toggleLeftCollapsed}}
+            />
           </div>
           {{#unless this.leftCollapsed}}
             <div class="panel-body">
@@ -392,27 +367,21 @@ export default class EditorShell extends Component {
           }}
         >
           <div class="panel-header">
-            <button
-              type="button"
-              class="panel-collapse-toggle"
-              title={{i18n
-                (if
-                  this.rightCollapsed
-                  "visual_editor.chrome.expand_panel"
-                  "visual_editor.chrome.collapse_panel"
-                )
+            <DButton
+              class="btn-flat panel-collapse-toggle"
+              @icon={{if this.rightCollapsed "chevron-left" "chevron-right"}}
+              @title={{if
+                this.rightCollapsed
+                "visual_editor.chrome.expand_panel"
+                "visual_editor.chrome.collapse_panel"
               }}
-              aria-label={{i18n
-                (if
-                  this.rightCollapsed
-                  "visual_editor.chrome.expand_panel"
-                  "visual_editor.chrome.collapse_panel"
-                )
+              @ariaLabel={{if
+                this.rightCollapsed
+                "visual_editor.chrome.expand_panel"
+                "visual_editor.chrome.collapse_panel"
               }}
-              {{on "click" this.toggleRightCollapsed}}
-            >
-              {{dIcon (if this.rightCollapsed "chevron-left" "chevron-right")}}
-            </button>
+              @action={{this.toggleRightCollapsed}}
+            />
             {{#unless this.rightCollapsed}}
               <span>{{i18n "visual_editor.chrome.panel_inspector"}}</span>
             {{/unless}}

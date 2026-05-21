@@ -272,6 +272,23 @@ export default class VisualEditorService extends Service {
   #inlineEditCommitFn = null;
 
   /**
+   * Reference to the active `InlineEditController` instance — the
+   * component that owns the ProseMirror view and exposes
+   * `toggleMark` / `enterLinkMode` / `applyLink` / `removeLink` /
+   * `cancelLink` to consumers.
+   *
+   * Set in the controller's constructor via `registerInlineEditor` and
+   * cleared on `willDestroy`. The block-toolbar reads it through the
+   * `inlineEditor` getter to render the inline-format buttons.
+   *
+   * `@tracked` so consumers (block-toolbar) re-render when the editor
+   * becomes available or goes away.
+   *
+   * @type {object | null}
+   */
+  @tracked _inlineEditor = null;
+
+  /**
    * Sticky mirror of `activeDropPreview` captured at the moment of
    * the drop's `drop` event. The visible preview is cleared at
    * dragleave / drop start (so the overlay disappears immediately on
@@ -1922,6 +1939,43 @@ export default class VisualEditorService extends Service {
    */
   registerInlineEditCommit(fn) {
     this.#inlineEditCommitFn = fn;
+  }
+
+  /**
+   * Called by `InlineEditController` from its constructor to expose the
+   * controller (and its `toggleMark` / `enterLinkMode` / `applyLink` /
+   * `removeLink` / `cancelLink` methods) to the block-toolbar, which
+   * renders the inline-format buttons in the same chrome as the
+   * move / duplicate / delete buttons.
+   *
+   * @param {object} controller
+   */
+  registerInlineEditor(controller) {
+    this._inlineEditor = controller;
+  }
+
+  /**
+   * Inverse of `registerInlineEditor`. Called from the controller's
+   * `willDestroy`. Guarded by reference equality so a stray
+   * unregister from a previous controller can't clobber a newer one.
+   *
+   * @param {object} controller
+   */
+  unregisterInlineEditor(controller) {
+    if (this._inlineEditor === controller) {
+      this._inlineEditor = null;
+    }
+  }
+
+  /**
+   * Public read-side of the registration. The block-toolbar consults
+   * this to decide whether to show the inline-format buttons and to
+   * call their commands.
+   *
+   * @returns {object | null}
+   */
+  get inlineEditor() {
+    return this._inlineEditor;
   }
 
   /**

@@ -146,7 +146,6 @@ en:
             row_section: "Row item"
             align_self: "Align self"
             flex_grow: "Grow"
-            order: "Order"
         cta_banner:
           title: "Title"
           content: "Content"
@@ -353,6 +352,12 @@ en:
           delete: "Delete"
           expand_for_editing: "Expand for editing"
           collapse_for_preview: "Collapse to preview narrow layout"
+          bold: "Bold"
+          italic: "Italic"
+          link: "Link"
+          link_apply: "Apply link"
+          link_remove: "Remove link"
+          link_cancel: "Cancel"
       theme_admin:
         open_button: "Visual Editor"
         open_button_title: "Open the visual editor for this theme"
