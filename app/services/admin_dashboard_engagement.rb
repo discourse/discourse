@@ -9,23 +9,29 @@ class AdminDashboardEngagement
     new_signups: "signups",
   }.freeze
 
-  def self.build(start_date:, end_date:)
-    new(start_date: start_date, end_date: end_date).build
+  def self.build(start_date:, end_date:, current_user: nil)
+    new(start_date: start_date, end_date: end_date, current_user: current_user).build
   end
 
-  def initialize(start_date:, end_date:)
+  def initialize(start_date:, end_date:, current_user: nil)
     @start_date = parse_date(start_date) || DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
     @end_date = parse_date(end_date)&.end_of_day || Time.zone.now.end_of_day
+    @current_user = current_user
   end
 
   def build
     kpis = build_kpis
-    { kpis: kpis, headline: build_headline(kpis), trust_level_pipeline: build_trust_level_pipeline }
+    {
+      kpis: kpis,
+      headline: build_headline(kpis),
+      trust_level_pipeline: build_trust_level_pipeline,
+      posters: build_posters,
+    }
   end
 
   private
 
-  attr_reader :start_date, :end_date
+  attr_reader :start_date, :end_date, :current_user
 
   def parse_date(value)
     return nil if value.blank?
@@ -155,5 +161,19 @@ class AdminDashboardEngagement
       trend: report_prev_period(report),
       total_members: report.is_a?(Hash) ? report[:total] : report.total,
     }
+  end
+
+  def build_posters
+    args = { start_date: start_date, end_date: end_date, current_user: current_user }
+
+    report = Report.find_cached("posters_by_member_type", args)
+    if report.nil?
+      report = Report.find("posters_by_member_type", args)
+      Report.cache(report) if report && report.error.blank?
+    end
+
+    return nil if report.nil? || report_error?(report)
+
+    { rows: report_data(report), total: report.is_a?(Hash) ? report[:total] : report.total }
   end
 end

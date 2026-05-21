@@ -344,6 +344,109 @@ h1 {
   }
 }
 
+.db-whos-posting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  .db-section__row-block-header {
+    align-items: flex-start;
+  }
+
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+  }
+
+  &__subcategories {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+    cursor: pointer;
+  }
+
+  &__bar {
+    display: flex;
+    width: 100%;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--primary-low);
+  }
+
+  &__segment {
+    display: block;
+    height: 100%;
+
+    &.--new-members {
+      background: var(--tertiary);
+    }
+
+    &.--returning {
+      background: var(--tertiary-medium);
+    }
+
+    &.--staff {
+      background: var(--primary-medium);
+    }
+  }
+
+  &__legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+
+    &.--new-members {
+      background: var(--tertiary);
+    }
+
+    &.--returning {
+      background: var(--tertiary-medium);
+    }
+
+    &.--staff {
+      background: var(--primary-medium);
+    }
+  }
+
+  &__legend-label {
+    flex: 1 1 auto;
+    color: var(--primary);
+  }
+
+  &__legend-share {
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+    margin: 0;
+  }
+}
+
 .db-tl-pipeline {
   display: flex;
   flex-direction: column;

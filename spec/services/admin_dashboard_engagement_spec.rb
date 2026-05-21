@@ -72,6 +72,62 @@ describe AdminDashboardEngagement do
       Report.define_singleton_method(:find, &original)
     end
 
+    describe "posters" do
+      it "includes the posters block with rows and total" do
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        posters = result[:posters]
+
+        expect(posters[:rows].map { |r| r[:type] }).to eq(%i[new_members returning staff])
+        expect(posters).to have_key(:total)
+      end
+
+      it "honours category visibility when current_user is a moderator" do
+        moderator = Fabricate(:moderator)
+        returning_poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        topic = Fabricate(:topic, category: private_cat)
+        Fabricate(
+          :post,
+          user: returning_poster,
+          topic: topic,
+          created_at: Time.zone.local(2026, 4, 10),
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        expect(result[:posters][:total]).to eq(0)
+      end
+
+      it "lets an admin see posts in restricted categories" do
+        admin = Fabricate(:admin)
+        returning_poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        topic = Fabricate(:topic, category: private_cat)
+        Fabricate(
+          :post,
+          user: returning_poster,
+          topic: topic,
+          created_at: Time.zone.local(2026, 4, 10),
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: admin,
+          )
+
+        expect(result[:posters][:total]).to eq(1)
+      end
+    end
+
     describe "trust_level_pipeline" do
       it "includes per-TL rows, a trend object, and total_members" do
         Fabricate(:user, trust_level: TrustLevel[1])
