@@ -128,7 +128,8 @@ describe "User preferences | Profile" do
     end
 
     it "redirects back to the original destination after filling required fields" do
-      visit("/hot")
+      category = Fabricate(:category)
+      visit("/new-topic?category_id=#{category.id}")
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
 
@@ -136,7 +137,7 @@ describe "User preferences | Profile" do
       find(".user-field-updated-terms input").check
       find(".save-button .btn-primary").click
 
-      expect(page).to have_current_path("/hot")
+      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
     end
   end
 end
