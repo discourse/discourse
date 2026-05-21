@@ -35,7 +35,7 @@ RSpec.describe UserApiKey::DeviceAuth::Authorize do
       grant =
         JSON.parse(
           Discourse.redis.get(
-            UserApiKey::DeviceAuth::Store.device_grant_key(device_request[:device_code]),
+            UserApiKey::DeviceAuth::GrantStore.grant_key(device_request[:device_code]),
           ),
         )
       expect(grant["status"]).to eq("authorized")
@@ -58,8 +58,8 @@ RSpec.describe UserApiKey::DeviceAuth::Authorize do
       let!(:other_user) { Fabricate(:user) }
 
       before do
-        grant = UserApiKey::DeviceAuth::Store.load_by_device_code(device_request[:device_code])
-        UserApiKey::DeviceAuth.bind_loaded_grant_to_user!(grant, other_user)
+        grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+        UserApiKey::DeviceAuth::GrantAuthorization.bind_to_user!(grant, other_user)
       end
 
       it { is_expected.to fail_a_step(:authorize_grant) }

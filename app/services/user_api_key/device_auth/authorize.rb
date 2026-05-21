@@ -24,21 +24,23 @@ class UserApiKey::DeviceAuth::Authorize
   end
 
   def authorize_grant(params:, user:)
-    UserApiKey::DeviceAuth::Store.with_grant_lock!(params.device_code) do
-      grant = UserApiKey::DeviceAuth::Store.load_by_device_code(params.device_code)
+    UserApiKey::DeviceAuth::GrantStore.with_lock!(params.device_code) do
+      grant = UserApiKey::DeviceAuth::GrantStore.load(params.device_code)
       fail!("grant_not_found") if grant.blank? || grant["status"] != "pending"
-      fail!("grant_not_found") if UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, user)
+      if UserApiKey::DeviceAuth::GrantAuthorization.bound_to_another_user?(grant, user)
+        fail!("grant_not_found")
+      end
 
+      key = UserApiKey::DeviceAuth::KeyCreator.create!(grant, user)
       grant["status"] = "authorized"
-      grant["payload"] = UserApiKey::DeviceAuth.create_user_api_key_payload_from_grant!(grant, user)
+      grant["payload"] = UserApiKey::DeviceAuth::PayloadBuilder.encrypted_payload!(grant, key)
       grant["authorized_at"] = Time.zone.now.iso8601
 
-      UserApiKey::DeviceAuth::Store.save!(
-        params.device_code,
+      UserApiKey::DeviceAuth::GrantStore.save!(
         grant,
-        ttl: UserApiKey::DeviceAuth::Store.authorized_payload_ttl(params.device_code),
+        ttl: UserApiKey::DeviceAuth::GrantStore.authorized_payload_ttl(params.device_code),
       )
-      UserApiKey::DeviceAuth::Store.delete_indexes(grant)
+      UserApiKey::DeviceAuth::CodeRegistry.delete_indexes_for(grant)
       context[:grant] = grant
     end
   end

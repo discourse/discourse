@@ -168,7 +168,7 @@ class UserApiKeysController < ApplicationController
     unless current_user
       request_token = params[:request].to_s
       destination =
-        if UserApiKey::DeviceAuth.valid_request_token?(request_token)
+        if UserApiKey::DeviceAuth::CodeRegistry.valid_request_token?(request_token)
           "#{path("/user-api-key/activate")}?request=#{CGI.escape(request_token)}"
         else
           path("/user-api-key/activate")
@@ -190,31 +190,29 @@ class UserApiKeysController < ApplicationController
 
     rate_limit_device_activation_attempt
 
-    user_code = UserApiKey::DeviceAuth.normalize_user_code(params[:code])
-    grant = user_code.present? ? UserApiKey::DeviceAuth::Store.load_by_user_code(user_code) : nil
+    result = device_user_activation.find_manual_code(params[:code])
 
-    if grant.blank?
+    if result.status == :invalid_code
       render_device_activation({ state: "enter_code", invalid_code: true })
       return
     end
 
-    if grant["status"] != "pending"
+    if result.status == :expired_code
       render_device_activation({ state: "enter_code", expired_code: true })
       return
     end
 
-    assign_device_grant_presenter(grant)
+    assign_device_grant_presenter(result.grant)
 
     unless meets_tl?
       render_device_activation(device_authorization_model(state: "authorize", no_trust_level: true))
       return
     end
 
-    UserApiKey::DeviceAuth::Store.delete_user_code(user_code)
     render_device_activation(
       device_authorization_model(
         state: "authorize",
-        approval_token: approval_token_store.create!(grant["device_code"]),
+        approval_token: device_user_activation.create_approval_token!(result.grant),
       ),
     )
   end
@@ -243,7 +241,9 @@ class UserApiKeysController < ApplicationController
       service_params.deep_merge(params: { device_code: device_code, user_id: current_user.id }),
     ) do
       on_success do
-        approval_token_store.delete!(params[:approval_token]) if params[:approval_token].present?
+        if params[:approval_token].present?
+          device_user_activation.delete_approval_token(params[:approval_token])
+        end
         render_device_activation({ state: "complete", denied: false })
       end
       on_model_not_found(:user) { raise Discourse::InvalidAccess }
@@ -263,7 +263,9 @@ class UserApiKeysController < ApplicationController
         service_params.deep_merge(params: { device_code: device_code }),
       ) do
         on_success do
-          approval_token_store.delete!(params[:approval_token]) if params[:approval_token].present?
+          if params[:approval_token].present?
+            device_user_activation.delete_approval_token(params[:approval_token])
+          end
           render_device_activation({ state: "complete", denied: true })
         end
         on_failed_step(:deny_grant) do
@@ -441,14 +443,11 @@ class UserApiKeysController < ApplicationController
     return { state: "enter_code" } if params[:request].blank?
 
     rate_limit_device_request_token_lookup(params[:request])
-    grant = UserApiKey::DeviceAuth::Store.load_by_request_token(params[:request])
+    result = device_user_activation.preview_request_token(params[:request])
 
-    if grant.blank? || grant["status"] != "pending" ||
-         UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, current_user)
-      return { state: "enter_code", expired_code: true }
-    end
+    return { state: "enter_code", expired_code: true } if result.status != :success
 
-    assign_device_grant_presenter(grant)
+    assign_device_grant_presenter(result.grant)
     device_authorization_model(
       state: "authorize",
       request_token: params[:request],
@@ -598,11 +597,11 @@ class UserApiKeysController < ApplicationController
   end
 
   def parse_expires_in_seconds!
-    UserApiKey::DeviceAuth.parse_expires_in_seconds!(params[:expires_in_seconds])
+    UserApiKey::DeviceAuth::Expiry.parse_seconds!(params[:expires_in_seconds])
   end
 
   def requested_expires_at(expires_in_seconds)
-    UserApiKey::DeviceAuth.requested_expires_at(expires_in_seconds)
+    UserApiKey::DeviceAuth::Expiry.requested_expires_at(expires_in_seconds)
   end
 
   def ensure_json_request!
@@ -626,9 +625,9 @@ class UserApiKeysController < ApplicationController
     end
   end
 
-  def approval_token_store
-    @approval_token_store ||=
-      UserApiKey::DeviceAuth::ApprovalTokenStore.new(session: session, user: current_user)
+  def device_user_activation
+    @device_user_activation ||=
+      UserApiKey::DeviceAuth::UserActivation.new(session: session, user: current_user)
   end
 
   def assign_device_grant_presenter(grant)
@@ -638,38 +637,45 @@ class UserApiKeysController < ApplicationController
   def device_code_for_authorize_request
     if params[:request].present?
       rate_limit_device_request_token_lookup(params[:request])
-      grant = UserApiKey::DeviceAuth::Store.load_by_request_token(params[:request])
-      return if grant.blank? || grant["status"] != "pending"
-      return if UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, current_user)
+      preview = device_user_activation.preview_request_token(params[:request])
+      return if preview.status != :success
 
-      assign_device_grant_presenter(grant)
+      assign_device_grant_presenter(preview.grant)
       @request_token = params[:request]
-      @no_trust_level = true unless meets_tl?
 
       rate_limit_device_activation_attempt
+      result =
+        device_user_activation.resolve_authorize_device_code(
+          request_token: params[:request],
+          user_code: params[:code],
+          approval_token: nil,
+        )
+      assign_device_grant_presenter(result.grant) if result.grant.present?
 
-      user_code = UserApiKey::DeviceAuth.normalize_user_code(params[:code])
-      return if user_code.blank?
-
-      code_device_code =
-        Discourse.redis.get(UserApiKey::DeviceAuth::Store.device_user_code_key(user_code))
-      return if code_device_code.blank? || code_device_code != grant["device_code"]
-      return if !UserApiKey::DeviceAuth.bind_loaded_grant_to_user!(grant, current_user)
-
-      grant["device_code"]
-    else
-      approval_token = params.require(:approval_token)
-      approval_token_store.device_code_for(approval_token)
+      return result.device_code if result.status == :success
+      return
     end
+
+    approval_token = params.require(:approval_token)
+    result =
+      device_user_activation.resolve_authorize_device_code(
+        request_token: nil,
+        user_code: nil,
+        approval_token: approval_token,
+      )
+    result.device_code if result.status == :success
   end
 
   def device_code_for_deny_request
-    if params[:request].present?
-      nil
-    else
-      approval_token = params.require(:approval_token)
-      approval_token_store.device_code_for(approval_token)
-    end
+    return if params[:request].present?
+
+    approval_token = params.require(:approval_token)
+    result =
+      device_user_activation.resolve_deny_device_code(
+        request_token: nil,
+        approval_token: approval_token,
+      )
+    result.device_code if result.status == :success
   end
 
   def rate_limit_device_request_creation
@@ -702,7 +708,7 @@ class UserApiKeysController < ApplicationController
   def rate_limit_device_request_token_lookup(request_token)
     token_key =
       (
-        if UserApiKey::DeviceAuth.valid_request_token?(request_token)
+        if UserApiKey::DeviceAuth::CodeRegistry.valid_request_token?(request_token)
           ApiKey.hash_key(request_token)
         else
           "invalid"
@@ -729,7 +735,8 @@ class UserApiKeysController < ApplicationController
   end
 
   def rate_limit_device_activation_attempt
-    normalized_code = UserApiKey::DeviceAuth.normalize_user_code(params[:code]) || "invalid"
+    normalized_code =
+      UserApiKey::DeviceAuth::CodeRegistry.normalize_user_code(params[:code]) || "invalid"
     RateLimiter.new(
       nil,
       "user-api-key-device-activate-ip-#{request.remote_ip}",

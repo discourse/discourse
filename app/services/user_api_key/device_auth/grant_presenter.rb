@@ -52,7 +52,7 @@ class UserApiKey::DeviceAuth::GrantPresenter
   end
 
   def expires_at
-    UserApiKey::DeviceAuth.requested_expires_at(expires_in_seconds)
+    UserApiKey::DeviceAuth::Expiry.requested_expires_at(expires_in_seconds)
   end
 
   def unregistered_client?

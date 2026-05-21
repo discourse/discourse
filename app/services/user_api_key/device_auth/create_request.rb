@@ -35,61 +35,42 @@ class UserApiKey::DeviceAuth::CreateRequest
   end
 
   def validate_request(params:, client:)
-    UserApiKey::DeviceAuth.validate_request!(params.attributes.symbolize_keys, client)
+    UserApiKey::DeviceAuth::RequestValidator.validate!(params.attributes.symbolize_keys, client)
   end
 
   def build_grant(params:, client:)
     request_params = params.attributes.symbolize_keys
     scopes = request_params[:scopes].split(",")
     expires_in_seconds =
-      UserApiKey::DeviceAuth.parse_expires_in_seconds!(request_params[:expires_in_seconds])
+      UserApiKey::DeviceAuth::Expiry.parse_seconds!(request_params[:expires_in_seconds])
     device_code = SecureRandom.hex(32)
 
     context[:device_request] = { device_code: device_code }
-    context[:grant] = UserApiKey::DeviceAuth.build_grant(
+    context[:grant] = UserApiKey::DeviceAuth::GrantFactory.build(
       request_params,
       client,
       scopes,
       expires_in_seconds,
       device_code,
     )
-    UserApiKey::DeviceAuth.validate_payload_size!(context[:grant])
+    UserApiKey::DeviceAuth::PayloadBuilder.validate_size!(context[:grant])
   end
 
   def validate_grant_size(grant:)
-    UserApiKey::DeviceAuth.validate_grant_size!(grant)
+    UserApiKey::DeviceAuth::KeyCreator.validate_grant_size!(grant)
   end
 
   def reserve_codes(device_request:, grant:)
-    request_token = nil
-    user_code = nil
+    codes = UserApiKey::DeviceAuth::CodeRegistry.reserve_for(device_request[:device_code])
 
-    begin
-      request_token =
-        UserApiKey::DeviceAuth::Store.reserve_request_token!(device_request[:device_code])
-      user_code = UserApiKey::DeviceAuth::Store.reserve_user_code!(device_request[:device_code])
-
-      grant["user_code"] = user_code
-      grant["request_token"] = request_token
-      device_request[:user_code] = user_code
-      device_request[:request_token] = request_token
-    rescue StandardError
-      if request_token.present?
-        Discourse.redis.del(UserApiKey::DeviceAuth::Store.device_request_key(request_token))
-      end
-      if user_code.present?
-        Discourse.redis.del(UserApiKey::DeviceAuth::Store.device_user_code_key(user_code))
-      end
-      raise
-    end
+    grant["user_code"] = codes.user_code
+    grant["request_token"] = codes.request_token
+    device_request[:user_code] = codes.user_code
+    device_request[:request_token] = codes.request_token
   end
 
   def store_grant(device_request:, grant:)
-    UserApiKey::DeviceAuth.validate_grant_size!(grant)
-    UserApiKey::DeviceAuth::Store.save!(
-      device_request[:device_code],
-      grant,
-      ttl: UserApiKey::DeviceAuth::DEVICE_AUTH_TTL,
-    )
+    UserApiKey::DeviceAuth::KeyCreator.validate_grant_size!(grant)
+    UserApiKey::DeviceAuth::GrantStore.save!(grant, ttl: UserApiKey::DeviceAuth::DEVICE_AUTH_TTL)
   end
 end

@@ -2,7 +2,7 @@
 
 module UserApiKeyDeviceAuthSpecHelpers
   def clear_user_api_key_device_auth_redis!
-    UserApiKey::DeviceAuth::Store.clear!
+    UserApiKey::DeviceAuth.clear!
   end
 
   def create_user_api_key_device_auth_request!(params:, client: nil)

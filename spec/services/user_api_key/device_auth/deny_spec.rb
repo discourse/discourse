@@ -32,7 +32,7 @@ RSpec.describe UserApiKey::DeviceAuth::Deny do
       grant =
         JSON.parse(
           Discourse.redis.get(
-            UserApiKey::DeviceAuth::Store.device_grant_key(device_request[:device_code]),
+            UserApiKey::DeviceAuth::GrantStore.grant_key(device_request[:device_code]),
           ),
         )
       expect(grant["status"]).to eq("denied")
