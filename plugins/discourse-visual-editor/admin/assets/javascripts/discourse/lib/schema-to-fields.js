@@ -68,6 +68,11 @@ function pickControl(argDef) {
       return "number";
     case "any":
       return "code";
+    case "richInline":
+      // Inline rich text is edited on the canvas via the InlineEditController.
+      // The inspector field shows a read-only summary so authors can see
+      // the current content without having a parallel edit surface here.
+      return "rich-inline";
     case "array":
       // For Phase 2 we only auto-map string arrays to a tag-chooser. Other
       // shapes fall through to a plain text input until we add bespoke
@@ -134,6 +139,7 @@ export function schemaToFields(schema) {
       required: argDef.required === true,
       default: argDef.default,
       options: Array.isArray(argDef.enum) ? [...argDef.enum] : null,
+      optionIcons: ui.optionIcons ?? null,
       conditional: ui.conditional ?? null,
       schema: argDef,
     });
@@ -203,6 +209,43 @@ export function groupFields(fields) {
     group,
     fields: list,
   }));
+}
+
+/**
+ * Builds a FormKit `@validation` rule string from an inspector field's
+ * schema constraints. Returns `undefined` when nothing in the schema
+ * maps to a rule, so callers can omit the prop entirely. The rule
+ * syntax is FormKit's pipe-joined form parsed by `ValidationParser`
+ * (`frontend/discourse/app/form-kit/lib/validation-parser.js`):
+ *
+ *   - `required` — emitted when `field.required === true`.
+ *   - `length:<min>,<max>` — emitted only when BOTH `minLength` and
+ *     `maxLength` are declared on the arg schema; FormKit's `length`
+ *     rule expects both bounds.
+ *   - `between:<min>,<max>` — emitted only when BOTH `min` and `max`
+ *     are declared on a numeric arg.
+ *
+ * We deliberately don't fake the missing bound (no synthetic
+ * `Number.MAX_SAFE_INTEGER`): a one-sided constraint is rarer than
+ * "the schema author forgot the other side", and a fake bound would
+ * silently accept overlong inputs while looking like validation.
+ *
+ * @param {InspectorField} field
+ * @returns {string|undefined}
+ */
+export function buildValidationRule(field) {
+  const rules = [];
+  if (field.required) {
+    rules.push("required");
+  }
+  const schema = field.schema ?? {};
+  if (schema.minLength != null && schema.maxLength != null) {
+    rules.push(`length:${schema.minLength},${schema.maxLength}`);
+  }
+  if (schema.min != null && schema.max != null) {
+    rules.push(`between:${schema.min},${schema.max}`);
+  }
+  return rules.length ? rules.join("|") : undefined;
 }
 
 /**

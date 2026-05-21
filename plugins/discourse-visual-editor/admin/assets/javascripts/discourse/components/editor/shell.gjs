@@ -15,6 +15,7 @@ const VE_DRAG_TYPES = ["ve-block", "ve-palette-block"];
 import BlockBreadcrumb from "./block-breadcrumb";
 import ConditionsFloatingPanel from "./conditions-floating-panel";
 import DropPreview from "./drop-preview";
+import InlineEditController from "./inline-edit-controller";
 import InspectorPanel from "./inspector-panel";
 import OutletJumpSelect from "./outlet-jump-select";
 import OutlinePanel from "./outline-panel";
@@ -206,6 +207,10 @@ export default class EditorShell extends Component {
         {{didInsert this.setupBodyClasses}}
         {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
       >
+        {{! Mounts a ProseMirror editor over whichever inline-edit region is
+            active. Rendered as a no-DOM controller — its only visible output
+            is the editor it portals into the renderer's span. }}
+        <InlineEditController />
         <div class="visual-editor-toolbar">
           <div class="toolbar-left">
             {{dIcon "wand-magic-sparkles"}}

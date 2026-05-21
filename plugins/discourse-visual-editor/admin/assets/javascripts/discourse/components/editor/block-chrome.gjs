@@ -611,6 +611,13 @@ export default class BlockChrome extends Component {
    * Captures the click only when editor is active. Stops propagation so the
    * host page's own click handlers (links, buttons inside the block) don't
    * fire while the user is editing.
+   *
+   * Click model:
+   *   - Block not selected → first click selects it.
+   *   - Block already selected, click landed on an `[data-ve-inline-edit-arg]`
+   *     region → start editing that arg (the "click again to edit" gesture).
+   *   - Block already selected, click landed elsewhere on the chrome → no-op
+   *     (re-selecting the already-selected block is a no-op).
    */
   @action
   onClick(event) {
@@ -619,6 +626,16 @@ export default class BlockChrome extends Component {
     }
     event.preventDefault();
     event.stopPropagation();
+
+    const argEl = event.target.closest?.("[data-ve-inline-edit-arg]");
+    if (argEl && this.visualEditor.selectedBlockKey === this.args.blockKey) {
+      this.visualEditor.startEditingArg(
+        this.args.blockKey,
+        argEl.dataset.veInlineEditArg
+      );
+      return;
+    }
+
     this.visualEditor.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,

@@ -3332,3 +3332,86 @@ body.visual-editor-active {
     }
   }
 }
+
+/* Inline rich text — editor-only affordances.
+   The renderer span itself is shared with the live site (see
+   `visual-editor.scss`); this section adds the placeholder for empty
+   content, the focus ring while the block is selected, and the content
+   hide while ProseMirror is mounted via {{in-element}}. */
+
+.ve-inline-rich-text {
+  /* Block is selected — re-enable pointer events on the renderer so the
+     "click-on-text → edit" gesture can read which region got clicked.
+     The chrome's outer rule
+     (`.visual-editor-block-chrome > *:not(...) { pointer-events: none }`)
+     forces every first click to hit the chrome wrapper itself, so
+     selection fires reliably anywhere on the block. Once selected, we
+     want `event.target` on the next click to land inside the
+     `[data-ve-inline-edit-arg]` region so `event.target.closest(...)`
+     can resolve it. Also show a text cursor so the affordance is
+     discoverable. */
+
+  .visual-editor-block-chrome.--selected & {
+    pointer-events: auto;
+    cursor: text;
+  }
+}
+
+.ve-inline-rich-text__content[data-ve-placeholder]:empty::before {
+  content: attr(data-ve-placeholder);
+  color: var(--primary-medium);
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Active edit — ProseMirror is mounted inside the outer span as a
+   sibling of `__content`. Hide the rendered content so the user sees
+   only the editor; constrain the editor's outline so it doesn't shift
+   the heading/paragraph layout. */
+
+.ve-inline-rich-text.--editing > .ve-inline-rich-text__content {
+  display: none;
+}
+
+.ve-inline-rich-text.--editing > .ProseMirror {
+  display: inline;
+  outline: none;
+  cursor: text;
+
+  /* Subtle focus ring that follows the editor's bounding box without
+     resizing the surrounding heading or paragraph. */
+  box-shadow: 0 0 0 2px var(--tertiary-low);
+  border-radius: 2px;
+  padding: 0 2px;
+  margin: 0 -2px;
+}
+
+/* Inspector form — read-only summary for `rich-inline` args. The actual
+   editor lives on the canvas; this gives authors a flat view of what
+   they've typed (with marks rendered as inline markdown) without an
+   editing surface here. */
+
+.visual-editor-inspector-rich-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.visual-editor-inspector-rich-inline__summary {
+  font-family: monospace;
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: 3px;
+  padding: 0.3rem 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.visual-editor-inspector-rich-inline__hint {
+  font-size: var(--font-down-2);
+  color: var(--primary-medium);
+  font-style: italic;
+}

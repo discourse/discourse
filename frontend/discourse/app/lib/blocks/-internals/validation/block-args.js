@@ -46,6 +46,7 @@ export const VALID_UI_CONTROLS = Object.freeze([
   "image-upload",
   "url",
   "rich-text",
+  "rich-inline",
   "code",
   "category-select",
   "tag-select",
@@ -65,6 +66,7 @@ const VALID_UI_PROPERTIES = Object.freeze([
   "group",
   "hidden",
   "conditional",
+  "optionIcons",
 ]);
 
 /**
@@ -160,6 +162,42 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
 
   if (uiDef.conditional !== undefined) {
     validateUIConditional(uiDef.conditional, argName, blockName, argLabel);
+  }
+
+  if (uiDef.optionIcons !== undefined) {
+    validateUIOptionIcons(uiDef.optionIcons, argName, blockName, argLabel);
+  }
+}
+
+/**
+ * Validates `ui.optionIcons` — an optional `{ [enumValue]: iconName }`
+ * map that lets a radio-group / select control render an icon in
+ * place of each enum value's text label. Both keys and values must be
+ * strings; the renderer skips any key that's missing from the icon
+ * registry at render time.
+ *
+ * Decorator-time validation catches typos and bad shapes early. We
+ * intentionally don't cross-check the keys against the arg's `enum` —
+ * the schema validator may not have access to the enum list at this
+ * point in the validation sequence, and a stray key just no-ops at
+ * render time.
+ */
+function validateUIOptionIcons(optionIcons, argName, blockName, argLabel) {
+  if (
+    optionIcons === null ||
+    typeof optionIcons !== "object" ||
+    Array.isArray(optionIcons)
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.optionIcons" value. Must be an object mapping enum values to icon names.`
+    );
+  }
+  for (const [key, value] of Object.entries(optionIcons)) {
+    if (typeof value !== "string" || value.length === 0) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.optionIcons.${key}". Must be a non-empty string (icon name).`
+      );
+    }
   }
 }
 

@@ -15,6 +15,7 @@ import {
   BlockError,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
+import { isInlineDoc } from "discourse/lib/blocks/-internals/validation/inline-doc";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import RestModel from "discourse/models/rest";
 
@@ -74,6 +75,7 @@ export const VALID_ARG_TYPES = Object.freeze([
   "boolean",
   "array",
   "object",
+  "richInline",
   "any",
 ]);
 
@@ -918,6 +920,19 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
       }
       break;
     }
+
+    case "richInline":
+      if (typeof value === "string") {
+        break;
+      }
+      if (isInlineDoc(value)) {
+        break;
+      }
+      return argValidationError(
+        argName,
+        `must be a string or inline-rich-text doc.`,
+        options
+      );
 
     case "any":
       // Any value is valid, no type checking needed

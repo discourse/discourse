@@ -17,6 +17,7 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
+import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 // Absolute addon path: `grid-math` is in the universal bundle (its
 // `parsePlacement` is called by the live-page `ve-layout.gjs`); this
@@ -88,6 +89,27 @@ export default class VisualEditorService extends Service {
   @tracked selectedBlockKey = null;
 
   /**
+   * Inline-text-edit session state. `editingBlockKey` + `editingArgName`
+   * identify the specific `(block, arg)` whose ProseMirror editor is
+   * mounted on the canvas. Reading these from the canvas chrome lets it
+   * find the right renderer span and mount the editor in place; reading
+   * them from the canvas's Cmd+Z handler lets it defer to PM's internal
+   * undo while a session is in flight.
+   *
+   * Mutations stream through `applyInlineEditChange` (per keystroke, no
+   * undo push). On `stopEditing({ commit: true })` a single
+   * `{ kind: "args" }` undo entry is recorded capturing the whole session.
+   * On `stopEditing({ commit: false })` the pre-edit value is restored
+   * with no undo entry pushed.
+   *
+   * @type {string|null}
+   */
+  @tracked editingBlockKey = null;
+
+  /** @type {string|null} */
+  @tracked editingArgName = null;
+
+  /**
    * The id of the theme this editor session is bound to. Set on `enter()`
    * — explicit `themeId` argument takes precedence; otherwise we fall back
    * to whichever user-selectable theme is marked default on the site. The
@@ -101,7 +123,6 @@ export default class VisualEditorService extends Service {
    * @type {number|null}
    */
   @tracked activeThemeId = null;
-
   /**
    * Snapshot of the selected block populated by either the canvas chrome
    * (on click) or the outline panel (on row click). The shape is a loose
@@ -115,7 +136,6 @@ export default class VisualEditorService extends Service {
    * are visible without us re-assigning `selectedBlockData`.
    */
   @tracked selectedBlockData = null;
-
   /**
    * Monotonically increasing counter bumped on every structural mutation.
    * Consumers (the outline panel, future condition evaluators) read it to
@@ -219,6 +239,38 @@ export default class VisualEditorService extends Service {
    * @type {{x: number, y: number, width: number, height: number}|null}
    */
   @tracked conditionsPanelRect = null;
+  /**
+   * Snapshot of the arg's pre-edit value, captured at `startEditingArg`
+   * time. Used to build the `prev` Map for the undo entry on commit, and
+   * to restore the original value on revert. `null` when no edit is in
+   * flight.
+   *
+   * @type {*}
+   */
+  #editingPrevValue = null;
+
+  /**
+   * Cached entry + outlet for the editing session so `applyInlineEditChange`
+   * doesn't pay the `_findEntryAndOutlet` cost on every keystroke. Cleared
+   * by `stopEditing`.
+   *
+   * @type {{entry: Object, outletName: string}|null}
+   */
+  #editingLocated = null;
+
+  /**
+   * Callback the inline-edit controller registers via
+   * `registerInlineEditCommit`. Invoked from `stopEditing({ commit: true })`
+   * BEFORE the editing state is cleared, so the controller can pull the
+   * final doc out of its ProseMirror view and hand it back through
+   * `applyInlineEditChange`. Decouples the service (which only knows
+   * about service state) from the controller (which owns the editor DOM)
+   * without making the service directly aware of PM.
+   *
+   * @type {(() => void) | null}
+   */
+  #inlineEditCommitFn = null;
+
   /**
    * Sticky mirror of `activeDropPreview` captured at the moment of
    * the drop's `drop` event. The visible preview is cleared at
@@ -541,6 +593,13 @@ export default class VisualEditorService extends Service {
     document.addEventListener("mousedown", this._onCanvasMouseDown);
     document.addEventListener("mouseup", this._onCanvasMouseUp);
     this._materializeAllDrafts();
+
+    // Warm the inline-rich-text editor bundle in the background so the
+    // first click-to-edit doesn't pay a load-the-PM-chunk latency hit.
+    // Webpack dedupes dynamic-import promises by module id, so the
+    // controller's later `loadInlineRichEditor()` resolves from cache
+    // even if the user enters edit mode before this preload finishes.
+    loadInlineRichEditor();
   }
 
   /**
@@ -691,6 +750,30 @@ export default class VisualEditorService extends Service {
     document.removeEventListener("mousedown", this._onCanvasMouseDown);
     document.removeEventListener("mouseup", this._onCanvasMouseUp);
     this._selectionMousedownTarget = null;
+  }
+
+  /**
+   * Returns the current value of the arg under inline edit, falling back
+   * to the block's schema default when `entry.args` doesn't carry an
+   * explicit value. Without this fallback, the editor would seed with
+   * `undefined` for any block that relies on `default:` to render its
+   * placeholder text — mirrors the same lookup
+   * `createBlockArgsWithReactiveGetters` uses to compute the block's
+   * displayed `@arg` value (`decorator.js:462-464`).
+   *
+   * @returns {*}
+   */
+  get editingArgValue() {
+    if (!this.#editingLocated || !this.editingArgName) {
+      return undefined;
+    }
+    const { entry } = this.#editingLocated;
+    const live = entry.args?.[this.editingArgName];
+    if (live !== undefined) {
+      return live;
+    }
+    const schema = this._metadataFor(entry)?.args;
+    return schema?.[this.editingArgName]?.default;
   }
 
   /** @returns {boolean} */
@@ -1481,6 +1564,12 @@ export default class VisualEditorService extends Service {
     if (this._pendingArgs.size > 0) {
       this._flushPendingArgs();
     }
+    // Switching selection to a different block commits any in-flight
+    // inline-edit session. Re-selecting the same block leaves it alone —
+    // that case is the second-click-to-edit gesture.
+    if (this.editingBlockKey && this.editingBlockKey !== (data?.key ?? null)) {
+      this.stopEditing({ commit: true });
+    }
     this.selectedBlockKey = data?.key ?? null;
 
     if (!data) {
@@ -1738,6 +1827,156 @@ export default class VisualEditorService extends Service {
     this._redoStack.length = 0;
 
     return true;
+  }
+
+  /**
+   * Begins an inline-text edit session for `(blockKey, argName)`. Captures
+   * the arg's current value as the pre-edit snapshot so a single
+   * `{ kind: "args" }` undo entry can be pushed at the end of the session.
+   * Implicitly commits + ends any other session in flight.
+   *
+   * The canvas chrome calls this from its click handler when the user
+   * clicks a `[data-ve-inline-edit-arg]` region of a selected block. Per
+   * keystroke mutations after this point go through `applyInlineEditChange`,
+   * which bypasses the undo stack — PM's internal undo handles in-session
+   * granularity until `stopEditing` flushes a single entry on commit.
+   *
+   * @param {string} blockKey
+   * @param {string} argName
+   * @returns {Promise<boolean>} `true` if the session opened.
+   */
+  @action
+  async startEditingArg(blockKey, argName) {
+    if (!blockKey || !argName) {
+      return false;
+    }
+    if (this.editingBlockKey === blockKey && this.editingArgName === argName) {
+      return true;
+    }
+    if (this.editingBlockKey) {
+      this.stopEditing({ commit: true });
+    }
+    const located = await this._findEntryAndOutlet(blockKey);
+    if (!located) {
+      return false;
+    }
+    this.#editingLocated = located;
+    this.#editingPrevValue = located.entry.args?.[argName];
+    this.editingBlockKey = blockKey;
+    this.editingArgName = argName;
+    return true;
+  }
+
+  /**
+   * Writes the final value of an inline-text edit session into
+   * `entry.args[editingArgName]`. Invoked exactly once per session, via the
+   * commit callback registered by the controller (see
+   * `registerInlineEditCommit`) — `stopEditing({ commit: true })` calls
+   * the callback, which reads ProseMirror's final doc and forwards it
+   * here. We deliberately do NOT write per keystroke: ProseMirror is the
+   * visible source of truth during the session, and per-keystroke writes
+   * exposed the system to spurious "PM emptied its doc during teardown"
+   * transactions that clobbered `args.text` with `""`.
+   *
+   * Keeps the existing dirty-tracking honest: registers the entry's
+   * outlet in `_editedOutlets` so persistence knows what to save, and
+   * captures the initial-snapshot so `resetAll` rolls back the right
+   * pre-edit state.
+   *
+   * @param {*} value - The new value (string for plain edits, doc-JSON
+   *   for marked edits) produced by `toStorage(doc.toJSON())`.
+   */
+  applyInlineEditChange(value) {
+    const located = this.#editingLocated;
+    const argName = this.editingArgName;
+    if (!located || !argName) {
+      return;
+    }
+    const { entry, outletName } = located;
+    this._editedOutlets.add(outletName);
+    const prevMap = new Map([[argName, entry.args?.[argName]]]);
+    this._captureInitialSnapshot(entry, prevMap);
+    // Empty edits (`""`, null, undefined) DELETE the key rather than write
+    // an explicit empty string. The block decorator's reactive getter
+    // (`createBlockArgsWithReactiveGetters` at `decorator.js:462-464`)
+    // only falls back to the schema `default` when the key is missing;
+    // writing `""` would lock out the default and leave the canvas
+    // visually empty even though the renderer's placeholder is set.
+    if (value == null || value === "") {
+      delete entry.args[argName];
+    } else {
+      entry.args[argName] = value;
+    }
+    clearValidatorStamps(entry);
+  }
+
+  /**
+   * The inline-edit controller calls this in `mountEditor` to register a
+   * commit callback (and again with `null` in `unmountEditor` to clear).
+   * The callback is invoked by `stopEditing({ commit: true })` just before
+   * the editing state is cleared, giving the controller a chance to pull
+   * the current ProseMirror doc and write it through
+   * `applyInlineEditChange`.
+   *
+   * @param {(() => void) | null} fn
+   */
+  registerInlineEditCommit(fn) {
+    this.#inlineEditCommitFn = fn;
+  }
+
+  /**
+   * Ends the inline-text edit session. On `commit: true`, pushes a single
+   * `{ kind: "args" }` undo entry capturing the pre-edit value as `prev`
+   * and the current value as `next` — but only when the value actually
+   * changed; a no-op edit doesn't pollute the undo stack. On
+   * `commit: false`, restores the pre-edit value without pushing an entry
+   * (used by Escape-to-cancel paths).
+   *
+   * The keystroke stream went straight through `applyInlineEditChange`
+   * during the session; this only records the session boundary.
+   *
+   * @param {{commit?: boolean}} [options]
+   */
+  @action
+  stopEditing({ commit = true } = {}) {
+    const located = this.#editingLocated;
+    const argName = this.editingArgName;
+    if (!located || !argName) {
+      this.editingBlockKey = null;
+      this.editingArgName = null;
+      return;
+    }
+
+    // Pull the final value out of ProseMirror BEFORE clearing state, so
+    // the controller's commit callback (which calls
+    // `applyInlineEditChange`) writes to a session whose location is
+    // still resolved.
+    if (commit && this.#inlineEditCommitFn) {
+      this.#inlineEditCommitFn();
+    }
+
+    const { entry } = located;
+    const prevValue = this.#editingPrevValue;
+    const nextValue = entry.args?.[argName];
+
+    if (commit) {
+      if (!Object.is(prevValue, nextValue)) {
+        this._undoStack.push({
+          kind: "args",
+          entry,
+          prev: new Map([[argName, prevValue]]),
+          next: new Map([[argName, nextValue]]),
+        });
+        this._redoStack.length = 0;
+      }
+    } else {
+      this._writeArgs(entry, new Map([[argName, prevValue]]));
+    }
+
+    this.#editingLocated = null;
+    this.#editingPrevValue = null;
+    this.editingBlockKey = null;
+    this.editingArgName = null;
   }
 
   /**

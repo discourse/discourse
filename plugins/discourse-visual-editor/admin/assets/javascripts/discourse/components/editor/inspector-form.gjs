@@ -1,10 +1,12 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { eq } from "discourse/truth-helpers";
+import { toFlatMarkdown } from "discourse/plugins/discourse-visual-editor/discourse/lib/inline-rich-text";
 import {
   groupFields,
   inferSchemaFromValues,
@@ -35,6 +37,11 @@ const FORM_KIT_TYPE_BY_CONTROL = {
   emoji: "emoji",
   "image-upload": "image",
   "rich-text": "composer",
+  // `rich-inline` is read-only in the inspector — editing happens on the
+  // canvas via the InlineEditController. The fallback FormKit type
+  // (`input-text`) is unused because the template renders a bespoke
+  // read-only branch instead.
+  "rich-inline": "input-text",
   code: "code",
   "tag-chooser": "tag-chooser",
   // Entity pickers don't have FormKit controls yet; fall back to text for now.
@@ -201,6 +208,17 @@ export default class InspectorForm extends Component {
                       and the upload-type tag). "composer" is the generic
                       catch-all type used elsewhere for free-form image uploads. }}
                   <formField.Control @type="composer" />
+                {{else if (eq field.control "rich-inline")}}
+                  {{! Read-only summary — authors edit this arg on the canvas.
+                      Flattens any marks to inline markdown so what they see
+                      here matches what they typed. }}
+                  <div class="visual-editor-inspector-rich-inline">
+                    <span
+                      class="visual-editor-inspector-rich-inline__summary"
+                    >{{toFlatMarkdown (get this.values field.name)}}</span>
+                    <span class="visual-editor-inspector-rich-inline__hint">Edit
+                      on the canvas</span>
+                  </div>
                 {{else}}
                   <formField.Control placeholder={{field.placeholder}} />
                 {{/if}}

@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
 
 const VALID_ALIGNMENTS = ["left", "center", "right"];
 
@@ -11,9 +12,9 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
   description: "A simple paragraph of text.",
   args: {
     text: {
-      type: "string",
+      type: "richInline",
       default: "Add your text here.",
-      ui: { control: "textarea", label: "Text" },
+      ui: { control: "rich-inline", label: "Text" },
     },
     align: {
       type: "string",
@@ -33,6 +34,13 @@ export default class VEParagraph extends Component {
   }
 
   <template>
-    <p class={{this.className}}>{{@text}}</p>
+    <p class={{this.className}}>
+      <InlineRichTextRenderer
+        @arg="text"
+        @schema="paragraph"
+        @value={{@text}}
+        @placeholder="Add your text here."
+      />
+    </p>
   </template>
 }
