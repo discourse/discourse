@@ -68,6 +68,8 @@ en:
         tab_args: "Args"
         tab_conditions: "Conditions"
         tab_raw: "Raw JSON"
+        validation:
+          banner_title: "This outlet has validation issues:"
         metadata:
           section_title: "Metadata"
           id_label: "Block ID"

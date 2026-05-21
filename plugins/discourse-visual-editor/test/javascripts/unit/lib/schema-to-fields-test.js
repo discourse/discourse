@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import {
+  buildValidationRule,
   groupFields,
   isFieldVisible,
   schemaToFields,
@@ -189,5 +190,59 @@ module("Unit | Discourse Visual Editor | isFieldVisible", function () {
     assert.false(isFieldVisible(field, { label: null }));
     assert.false(isFieldVisible(field, { label: false }));
     assert.false(isFieldVisible(field, {}));
+  });
+});
+
+module("Unit | Discourse Visual Editor | buildValidationRule", function () {
+  test("returns undefined when no constraints apply", function (assert) {
+    const [field] = schemaToFields({ title: { type: "string" } });
+    assert.strictEqual(buildValidationRule(field), undefined);
+  });
+
+  test("emits `required` when the schema declares required: true", function (assert) {
+    const [field] = schemaToFields({
+      title: { type: "string", required: true },
+    });
+    assert.strictEqual(buildValidationRule(field), "required");
+  });
+
+  test("emits `length:min,max` only when both bounds are declared", function (assert) {
+    const [withBoth] = schemaToFields({
+      title: { type: "string", minLength: 1, maxLength: 50 },
+    });
+    assert.strictEqual(buildValidationRule(withBoth), "length:1,50");
+
+    const [onlyMin] = schemaToFields({
+      title: { type: "string", minLength: 1 },
+    });
+    assert.strictEqual(
+      buildValidationRule(onlyMin),
+      undefined,
+      "no fake max — schema didn't declare one"
+    );
+  });
+
+  test("emits `between:min,max` only when both bounds are declared", function (assert) {
+    const [withBoth] = schemaToFields({
+      gap: { type: "number", min: 0, max: 4 },
+    });
+    assert.strictEqual(buildValidationRule(withBoth), "between:0,4");
+
+    const [onlyMin] = schemaToFields({
+      gap: { type: "number", min: 0 },
+    });
+    assert.strictEqual(buildValidationRule(onlyMin), undefined);
+  });
+
+  test("combines multiple rules pipe-joined", function (assert) {
+    const [field] = schemaToFields({
+      title: {
+        type: "string",
+        required: true,
+        minLength: 1,
+        maxLength: 50,
+      },
+    });
+    assert.strictEqual(buildValidationRule(field), "required|length:1,50");
   });
 });

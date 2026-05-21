@@ -1,55 +1,19 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { eq } from "discourse/truth-helpers";
-import { toFlatMarkdown } from "discourse/plugins/discourse-visual-editor/discourse/lib/inline-rich-text";
 import {
+  buildValidationRule,
   groupFields,
   inferSchemaFromValues,
   isFieldVisible,
   schemaToFields,
 } from "../../lib/schema-to-fields";
-
-/**
- * Maps our `ui.control` names to a `<form.Field @type="...">` value FormKit
- * accepts. The `input-*` prefix forwards to FKControlInput with the matching
- * HTML input type. Anything FormKit doesn't have a dedicated control for
- * (icon picker, image upload, entity pickers) falls back to `input-text` for
- * Phase 2 — we'll wire the bespoke pickers when we build them in later phases.
- *
- * Source of truth for the supported control set is FormKit's
- * `resolveFieldControl` (`frontend/discourse/app/form-kit/lib/field-control.js`).
- */
-const FORM_KIT_TYPE_BY_CONTROL = {
-  text: "input-text",
-  number: "input-number",
-  url: "input-url",
-  textarea: "textarea",
-  toggle: "toggle",
-  select: "select",
-  "radio-group": "radio-group",
-  color: "color",
-  icon: "icon",
-  emoji: "emoji",
-  "image-upload": "image",
-  "rich-text": "composer",
-  // `rich-inline` is read-only in the inspector — editing happens on the
-  // canvas via the InlineEditController. The fallback FormKit type
-  // (`input-text`) is unused because the template renders a bespoke
-  // read-only branch instead.
-  "rich-inline": "input-text",
-  code: "code",
-  "tag-chooser": "tag-chooser",
-  // Entity pickers don't have FormKit controls yet; fall back to text for now.
-  "category-select": "input-text",
-  "tag-select": "input-text",
-  "user-select": "input-text",
-  "group-select": "input-text",
-};
+import InspectorField from "./inspector-field";
+import InspectorValidationBanner from "./inspector-validation-banner";
 
 /**
  * Phase 2 inspector form. Reads the selected block's args schema (with `ui`
@@ -140,9 +104,18 @@ export default class InspectorForm extends Component {
     return fields.filter((field) => isFieldVisible(field, this.values));
   }
 
+  /**
+   * Builds the FormKit `@validation` rule string for a field from the
+   * schema's `required` / `min` / `max` / `minLength` / `maxLength`
+   * declarations. Returning `undefined` lets us omit the prop when the
+   * schema declares no constraints — keeps Form's tree shallow.
+   *
+   * @param {import("../../lib/schema-to-fields").InspectorField} field
+   * @returns {string|undefined}
+   */
   @action
-  fieldType(control) {
-    return FORM_KIT_TYPE_BY_CONTROL[control] ?? "input-text";
+  validationRuleFor(field) {
+    return buildValidationRule(field);
   }
 
   /**
@@ -171,6 +144,7 @@ export default class InspectorForm extends Component {
   }
 
   <template>
+    <InspectorValidationBanner />
     {{#if this.fieldGroups.length}}
       <Form
         @data={{this.values}}
@@ -178,53 +152,40 @@ export default class InspectorForm extends Component {
         as |form|
       >
         {{#each this.fieldGroups as |group|}}
-          <form.Section @title={{group.group}}>
-            {{#each (this.visibleFields group.fields) as |field|}}
-              <form.Field
-                @name={{field.name}}
-                @title={{field.title}}
-                @description={{field.helpText}}
-                @type={{this.fieldType field.control}}
-                @onSet={{this.onFieldSet}}
-                as |formField|
-              >
-                {{#if (eq field.control "select")}}
-                  <formField.Control as |select|>
-                    {{#each field.options as |option|}}
-                      <select.Option
-                        @value={{option}}
-                      >{{option}}</select.Option>
-                    {{/each}}
-                  </formField.Control>
-                {{else if (eq field.control "radio-group")}}
-                  <formField.Control as |radio|>
-                    {{#each field.options as |option|}}
-                      <radio.Radio @value={{option}}>{{option}}</radio.Radio>
-                    {{/each}}
-                  </formField.Control>
-                {{else if (eq field.control "image-upload")}}
-                  {{! FKControlImage forwards @type to UppyImageUploader, which
-                      requires a non-empty value (used as the MessageBus channel
-                      and the upload-type tag). "composer" is the generic
-                      catch-all type used elsewhere for free-form image uploads. }}
-                  <formField.Control @type="composer" />
-                {{else if (eq field.control "rich-inline")}}
-                  {{! Read-only summary — authors edit this arg on the canvas.
-                      Flattens any marks to inline markdown so what they see
-                      here matches what they typed. }}
-                  <div class="visual-editor-inspector-rich-inline">
-                    <span
-                      class="visual-editor-inspector-rich-inline__summary"
-                    >{{toFlatMarkdown (get this.values field.name)}}</span>
-                    <span class="visual-editor-inspector-rich-inline__hint">Edit
-                      on the canvas</span>
-                  </div>
-                {{else}}
-                  <formField.Control placeholder={{field.placeholder}} />
-                {{/if}}
-              </form.Field>
-            {{/each}}
-          </form.Section>
+          {{#if (eq group.group "Advanced")}}
+            {{! Native <details> for the magic "Advanced" group:
+                collapsed by default, no JS state, accessible. Block
+                authors opt in by setting `ui.group: "Advanced"` on
+                rarely-touched args. Matches the disclosure pattern
+                in `inspector-layout-form.gjs` (Advanced Templates). }}
+            {{! template-lint-disable no-nested-interactive }}
+            <details class="visual-editor-inspector-form__advanced">
+              <summary>{{group.group}}</summary>
+              <div class="visual-editor-inspector-form__advanced-body">
+                {{#each (this.visibleFields group.fields) as |field|}}
+                  <InspectorField
+                    @form={{form}}
+                    @field={{field}}
+                    @values={{this.values}}
+                    @validationRuleFor={{this.validationRuleFor}}
+                    @onFieldSet={{this.onFieldSet}}
+                  />
+                {{/each}}
+              </div>
+            </details>
+          {{else}}
+            <form.Section @title={{group.group}}>
+              {{#each (this.visibleFields group.fields) as |field|}}
+                <InspectorField
+                  @form={{form}}
+                  @field={{field}}
+                  @values={{this.values}}
+                  @validationRuleFor={{this.validationRuleFor}}
+                  @onFieldSet={{this.onFieldSet}}
+                />
+              {{/each}}
+            </form.Section>
+          {{/if}}
         {{/each}}
       </Form>
     {{/if}}

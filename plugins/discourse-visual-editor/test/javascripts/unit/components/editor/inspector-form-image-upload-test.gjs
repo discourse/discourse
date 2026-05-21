@@ -14,6 +14,25 @@ class StubVisualEditorService extends Service {
     return this._blockData;
   }
 
+  // InspectorValidationBanner reads these; the form mounts the banner
+  // unconditionally above the sections, so the stub has to cover them
+  // even when we're not exercising validation in a given test.
+  get validationWarnings() {
+    return [];
+  }
+
+  get selectedBlockKey() {
+    return null;
+  }
+
+  get structuralVersion() {
+    return 0;
+  }
+
+  _findEntryAndOutletSync() {
+    return null;
+  }
+
   updateSelectedArg() {}
 }
 
@@ -84,6 +103,81 @@ module(
           /\/uploads\/cat\.png$/,
           "the preview href resolves to the uploaded URL, not [object Object]"
         );
+    });
+
+    test('wraps an "Advanced" group in <details> while leaving other groups flat', async function (assert) {
+      stubVisualEditor(this.owner, {
+        metadata: {
+          args: {
+            title: {
+              type: "string",
+              ui: { label: "Title" },
+            },
+            cookieKey: {
+              type: "string",
+              ui: { label: "Cookie key", group: "Advanced" },
+            },
+          },
+        },
+        argsSnapshot: {},
+      });
+
+      await render(<template><InspectorForm /></template>);
+
+      assert
+        .dom("details.visual-editor-inspector-form__advanced")
+        .exists("the Advanced group renders as <details>")
+        .doesNotHaveAttribute(
+          "open",
+          "collapsed by default — no browser-state pre-opening"
+        );
+      assert
+        .dom("details.visual-editor-inspector-form__advanced summary")
+        .hasText("Advanced");
+      assert
+        .dom(".form-kit__section")
+        .exists("the non-Advanced group still renders as a FormKit section");
+    });
+
+    test("renders a CategoryChooser (not a text input) for category-select args", async function (assert) {
+      stubVisualEditor(this.owner, {
+        metadata: {
+          args: {
+            categoryId: {
+              type: "number",
+              ui: { control: "category-select", label: "Category" },
+            },
+          },
+        },
+        argsSnapshot: {},
+      });
+
+      await render(<template><InspectorForm /></template>);
+
+      assert
+        .dom(".category-chooser")
+        .exists("CategoryChooser mounted for a single-category arg");
+      assert
+        .dom('.form-kit__field input[type="text"]')
+        .doesNotExist("no plain text fallback");
+    });
+
+    test("renders a MiniTagChooser for tag-select args", async function (assert) {
+      stubVisualEditor(this.owner, {
+        metadata: {
+          args: {
+            tag: {
+              type: "string",
+              ui: { control: "tag-select", label: "Tag" },
+            },
+          },
+        },
+        argsSnapshot: {},
+      });
+
+      await render(<template><InspectorForm /></template>);
+
+      assert.dom(".mini-tag-chooser").exists();
     });
   }
 );

@@ -821,9 +821,9 @@ body.visual-editor-active {
 
 .visual-editor-panel {
   background: var(--secondary);
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
   &.--left {
     grid-column: 1;
@@ -899,7 +899,16 @@ body.visual-editor-active {
     }
   }
 
+  /* `.panel-body` is the panel's scroll surface. The outer
+     `.visual-editor-panel` is `overflow: hidden` + column flex (header
+     + body), so the header stays pinned and content scrolls inside the
+     body. Without `flex: 1 1 auto` the body collapses to its content
+     height and tall args forms push the tabs out of view. */
+
   .panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
     padding: 0.75rem 1rem;
   }
 
@@ -1421,6 +1430,255 @@ body.visual-editor-active {
 .visual-editor-inspector__body {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+/* Inspector form polish: tighter section gap (FormKit's 1.5rem default
+   reads as "sections disconnected" inside a narrow panel), explicit
+   max-width on fields and their inputs so long values (URLs, image
+   filenames, multi-id strings) don't overflow horizontally, and a
+   small inter-form gap on the container-args block so its sub-forms
+   visually breathe. */
+
+.visual-editor-inspector-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  /* FormKit's default "large input" width is 325px (see
+     `app/assets/stylesheets/common/form-kit/_variables.scss`). The
+     textarea control hard-codes `min-width: var(--form-kit-large-input)`
+     in `_control-textarea.scss`, which overflows the narrow inspector
+     side-panel horizontally regardless of any `max-width: 100%` we set
+     downstream. Override the variable inside the inspector context so
+     every FormKit control respects the panel's actual width. */
+
+  --form-kit-large-input: 100%;
+
+  .form-kit__section {
+    gap: 0.75rem;
+  }
+
+  /* Tighter section header: thin divider above the title rather than
+     FormKit's default underline, so the section reads as "the rule
+     introduces what's below" rather than the title floating in space
+     above a slim hairline. */
+
+  .form-kit__section-header {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-top: 1px solid var(--primary-low);
+    border-bottom: 0;
+  }
+
+  /* First section in the inspector form: no top rule, no top margin —
+     it's already the first thing under the metadata block / banner. */
+
+  > .form-kit__section:first-child .form-kit__section-header,
+  > * + .form-kit__section:first-of-type .form-kit__section-header {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  /* Hide FormKit's "(optional)" marker. Inside the inspector almost
+     every arg is optional — the marker becomes noise on every label.
+     Required fields still surface via the FormKit indicator (driven
+     by `@validation="required"`). */
+
+  .form-kit__container-optional {
+    display: none;
+  }
+
+  /* Segmented radio-group control. Renders short enums (alignment,
+     heading level, layout mode, etc.) as a single bordered row of
+     toggle buttons — the Gutenberg pattern — instead of FormKit's
+     default vertical stack of "○ label" rows. Options with an
+     `ui.optionIcons` entry render the matching FontAwesome icon
+     in place of the value text; everything else falls back to the
+     enum value as a button label. */
+
+  .form-kit__control-radio-group {
+    display: inline-flex;
+    flex-flow: row wrap;
+    gap: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    max-width: 100%;
+
+    /* Each radio entry becomes a button-styled cell. Stack horizontally,
+       lose the per-radio padding/margin FormKit applies by default. */
+
+    .form-kit__field-radio {
+      flex: 1 0 auto;
+      margin: 0;
+      padding: 0;
+      border-right: 1px solid var(--primary-low);
+
+      &:last-child {
+        border-right: 0;
+      }
+    }
+
+    /* The label is the visible "button". The actual radio input is
+       hidden in-DOM but stays focusable for keyboard users. */
+
+    .form-kit__control-radio-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.4rem 0.6rem;
+      margin: 0;
+      cursor: pointer;
+      color: var(--primary-medium);
+      font-weight: 500;
+      text-transform: capitalize;
+      user-select: none;
+      transition:
+        background 80ms ease-out,
+        color 80ms ease-out;
+
+      &:hover {
+        background: var(--primary-very-low);
+        color: var(--primary);
+      }
+
+      &:has(input:checked) {
+        background: var(--tertiary-low);
+        color: var(--tertiary);
+      }
+
+      &:has(input:focus-visible) {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+    }
+
+    .form-kit__control-radio {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* When an option renders an icon, hide the textual value next to
+       it (the icon plus its title attribute carry the meaning). */
+
+    .form-kit__control-radio-label.--icon-only .form-kit__control-radio-title {
+      display: none;
+    }
+
+    .form-kit__control-radio-label .d-icon {
+      font-size: var(--font-up-1);
+    }
+  }
+
+  .form-kit__field {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Collapsible "Advanced" group rendered with native <details> so
+     state is browser-managed and the disclosure is accessible by
+     default. Hide the native marker, render our own chevron via
+     ::before so the visual matches the disclosure pattern in
+     `inspector-layout-form.gjs` (Advanced Templates). */
+
+  &__advanced {
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--primary-low);
+    padding-top: 0.5rem;
+
+    > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      font-weight: 600;
+      color: var(--primary-medium);
+      user-select: none;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        content: "▸";
+        display: inline-block;
+        width: 1em;
+        margin-right: 0.25rem;
+        font-size: 0.85em;
+        transition: transform 120ms ease;
+      }
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    &[open] > summary::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  &__advanced-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+  }
+}
+
+.visual-editor-inspector-container-args > * + * {
+  margin-top: 1rem;
+}
+
+/* Validation banner rendered at the top of the inspector form when the
+   selected block's outlet has validation warnings. Uses the danger
+   palette so it stands out — these are problems the user needs to fix,
+   not just informational. Matches Discourse's general alert visual
+   language (red border + tint + warning icon). */
+
+.visual-editor-inspector-validation-banner {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  background: rgb(220 53 69 / 0.06);
+  color: var(--primary);
+  font-size: var(--font-down-1);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 600;
+    color: var(--danger);
+    margin-bottom: 0.25rem;
+  }
+
+  &__list {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style: disc;
+
+    li + li {
+      margin-top: 0.125rem;
+    }
+  }
 }
 
 /* Transparent slot wrappers (Phase 7s). The chrome's transparent
@@ -3139,7 +3397,7 @@ body.visual-editor-active {
    metadata (currently the block `id`). Sits above the tab strip. */
 
 .visual-editor-inspector-metadata {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   border: 1px solid var(--primary-low);
   border-radius: 4px;
   background: var(--primary-very-low);

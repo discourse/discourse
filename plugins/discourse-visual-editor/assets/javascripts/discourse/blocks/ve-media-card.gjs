@@ -87,6 +87,7 @@ import { i18n } from "discourse-i18n";
       default: "",
       ui: {
         control: "color",
+        group: "Advanced",
         label: i18n("visual_editor.inspector.media_card.background_color"),
         helpText: i18n(
           "visual_editor.inspector.media_card.background_color_help"
@@ -98,6 +99,7 @@ import { i18n } from "discourse-i18n";
       default: "",
       ui: {
         control: "url",
+        group: "Advanced",
         label: i18n("visual_editor.inspector.media_card.image_url"),
         helpText: i18n("visual_editor.inspector.media_card.image_url_help"),
       },

@@ -5,24 +5,8 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
-import { eq } from "discourse/truth-helpers";
 import { isFieldVisible, schemaToFields } from "../../lib/schema-to-fields";
-
-/**
- * Maps `ui.control` to a FormKit `<form.Field @type>`. Kept in sync with
- * the parallel map in `InspectorForm` — the placement form supports the
- * same control set since both run schema fields through the same FormKit
- * pipeline.
- */
-const FORM_KIT_TYPE_BY_CONTROL = {
-  text: "input-text",
-  number: "input-number",
-  url: "input-url",
-  textarea: "textarea",
-  toggle: "toggle",
-  select: "select",
-  "radio-group": "radio-group",
-};
+import InspectorField from "./inspector-field";
 
 /**
  * Inspector form for the selected entry's `containerArgs` — placement
@@ -92,11 +76,6 @@ export default class InspectorContainerArgsForm extends Component {
   }
 
   @action
-  fieldType(control) {
-    return FORM_KIT_TYPE_BY_CONTROL[control] ?? "input-text";
-  }
-
-  @action
   async onFieldSet(namespace, value, ctx) {
     await ctx.set(ctx.name, value);
     this.visualEditor.updateSelectedContainerArg(namespace, ctx.name, value);
@@ -111,30 +90,12 @@ export default class InspectorContainerArgsForm extends Component {
       >
         <form.Section @title={{section.label}}>
           {{#each section.fields as |field|}}
-            <form.Field
-              @name={{field.name}}
-              @title={{field.title}}
-              @description={{field.helpText}}
-              @type={{this.fieldType field.control}}
-              @onSet={{fn this.onFieldSet section.namespace}}
-              as |formField|
-            >
-              {{#if (eq field.control "select")}}
-                <formField.Control as |select|>
-                  {{#each field.options as |option|}}
-                    <select.Option @value={{option}}>{{option}}</select.Option>
-                  {{/each}}
-                </formField.Control>
-              {{else if (eq field.control "radio-group")}}
-                <formField.Control as |radio|>
-                  {{#each field.options as |option|}}
-                    <radio.Radio @value={{option}}>{{option}}</radio.Radio>
-                  {{/each}}
-                </formField.Control>
-              {{else}}
-                <formField.Control placeholder={{field.placeholder}} />
-              {{/if}}
-            </form.Field>
+            <InspectorField
+              @form={{form}}
+              @field={{field}}
+              @values={{section.values}}
+              @onFieldSet={{fn this.onFieldSet section.namespace}}
+            />
           {{/each}}
         </form.Section>
       </Form>

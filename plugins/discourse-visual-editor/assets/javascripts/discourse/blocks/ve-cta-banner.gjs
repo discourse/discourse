@@ -69,6 +69,8 @@ const COOKIE_PREFIX = "discourse-visual-editor-cta-dismissed";
       ui: {
         label: i18n("visual_editor.inspector.cta_banner.cookie_key"),
         helpText: i18n("visual_editor.inspector.cta_banner.cookie_key_help"),
+        group: "Advanced",
+        conditional: { arg: "dismissable", equals: true },
       },
     },
   },

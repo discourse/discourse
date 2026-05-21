@@ -29,13 +29,21 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
       default: 2,
       integer: true,
       enum: VALID_LEVELS,
-      ui: { label: "Level" },
+      ui: { control: "radio-group", label: "Level" },
     },
     align: {
       type: "string",
       default: "left",
       enum: VALID_ALIGNMENTS,
-      ui: { label: "Alignment" },
+      ui: {
+        control: "radio-group",
+        label: "Alignment",
+        optionIcons: {
+          left: "align-left",
+          center: "align-center",
+          right: "align-right",
+        },
+      },
     },
   },
   previewArgs: { text: "Section heading", level: 2, align: "left" },

@@ -22,7 +22,7 @@ const VALID_COUNTS = [2, 3, 4];
       default: 2,
       integer: true,
       enum: VALID_COUNTS,
-      ui: { label: "Columns" },
+      ui: { control: "radio-group", label: "Columns" },
     },
     gap: {
       type: "number",

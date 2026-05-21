@@ -36,7 +36,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       type: "string",
       default: "stack",
       enum: VALID_MODES,
-      ui: { label: "Mode" },
+      ui: { control: "radio-group", label: "Mode" },
     },
     gap: {
       type: "number",
@@ -49,7 +49,16 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       type: "string",
       default: "stretch",
       enum: VALID_ALIGNS,
-      ui: { label: "Alignment" },
+      ui: {
+        control: "radio-group",
+        label: "Alignment",
+        optionIcons: {
+          start: "up-long",
+          center: "align-center",
+          end: "down-long",
+          stretch: "arrows-up-down",
+        },
+      },
     },
     // Grid args. Ignored by stack / row modes.
     columns: {
@@ -72,6 +81,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       type: "string",
       default: "",
       ui: {
+        group: "Advanced",
         label: "Column template",
         placeholder: "e.g. 1fr 2fr 1fr (overrides Columns)",
       },
@@ -80,6 +90,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       type: "string",
       default: "",
       ui: {
+        group: "Advanced",
         label: "Row template",
         placeholder: "e.g. auto 1fr (overrides Rows)",
       },
@@ -93,6 +104,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       type: "string",
       default: "minmax(80px, auto)",
       ui: {
+        group: "Advanced",
         label: "Row height",
         placeholder: "minmax(80px, auto), minmax(0, 1fr), auto, 120px",
       },
@@ -115,6 +127,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       default: "default",
       enum: ["never", "compact", "default"],
       ui: {
+        control: "radio-group",
         label: i18n("visual_editor.inspector.layout.auto_collapse_label"),
       },
     },
@@ -154,7 +167,14 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "stretch",
           enum: VALID_ALIGNS,
           ui: {
+            control: "radio-group",
             label: i18n("visual_editor.inspector.layout.placement.grid_align"),
+            optionIcons: {
+              start: "up-long",
+              center: "align-center",
+              end: "down-long",
+              stretch: "arrows-up-down",
+            },
           },
         },
         justify: {
@@ -162,9 +182,16 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "stretch",
           enum: VALID_ALIGNS,
           ui: {
+            control: "radio-group",
             label: i18n(
               "visual_editor.inspector.layout.placement.grid_justify"
             ),
+            optionIcons: {
+              start: "align-left",
+              center: "align-center",
+              end: "align-right",
+              stretch: "arrows-left-right",
+            },
           },
         },
       },
@@ -182,7 +209,14 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "auto",
           enum: VALID_ALIGN_SELF,
           ui: {
+            control: "radio-group",
             label: i18n("visual_editor.inspector.layout.placement.align_self"),
+            optionIcons: {
+              start: "up-long",
+              center: "align-center",
+              end: "down-long",
+              stretch: "arrows-up-down",
+            },
           },
         },
         flexGrow: {
@@ -216,7 +250,14 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           default: "auto",
           enum: VALID_ALIGN_SELF,
           ui: {
+            control: "radio-group",
             label: i18n("visual_editor.inspector.layout.placement.align_self"),
+            optionIcons: {
+              start: "up-long",
+              center: "align-center",
+              end: "down-long",
+              stretch: "arrows-up-down",
+            },
           },
         },
         flexGrow: {

@@ -15,7 +15,7 @@ const VALID_TONES = ["info", "success", "warning", "danger"];
       type: "string",
       default: "info",
       enum: VALID_TONES,
-      ui: { label: "Tone" },
+      ui: { control: "radio-group", label: "Tone" },
     },
     icon: {
       type: "string",

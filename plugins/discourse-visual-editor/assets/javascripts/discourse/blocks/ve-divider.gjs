@@ -15,7 +15,7 @@ const VALID_STYLES = ["solid", "dashed", "dotted"];
       type: "string",
       default: "solid",
       enum: VALID_STYLES,
-      ui: { label: "Style" },
+      ui: { control: "radio-group", label: "Style" },
     },
     color: {
       type: "string",

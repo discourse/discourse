@@ -10,18 +10,27 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
   description: "Placeholder grid of badges (static for now).",
   args: {
     badgeIds: {
-      type: "array",
-      itemType: "number",
-      default: [],
-      ui: { label: "Badge IDs" },
+      type: "string",
+      default: "",
+      ui: {
+        label: "Badge IDs",
+        helpText: "Comma-separated badge IDs (e.g. 1, 3, 7).",
+      },
     },
   },
-  previewArgs: { badgeIds: [] },
+  previewArgs: { badgeIds: "" },
 })
 export default class VEBadgesGrid extends Component {
   get tiles() {
-    const ids = this.args.badgeIds?.length ? this.args.badgeIds : [1, 2, 3, 4];
-    return ids;
+    const raw = this.args.badgeIds;
+    if (typeof raw !== "string" || !raw.trim()) {
+      return [1, 2, 3, 4];
+    }
+    const ids = raw
+      .split(/[,|]/)
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => Number.isInteger(n) && n > 0);
+    return ids.length ? ids : [1, 2, 3, 4];
   }
 
   <template>

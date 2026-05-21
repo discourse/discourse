@@ -19,13 +19,13 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
     href: {
       type: "string",
       default: "/",
-      ui: { label: "Link URL" },
+      ui: { control: "url", label: "Link URL" },
     },
     variant: {
       type: "string",
       default: "default",
       enum: VALID_VARIANTS,
-      ui: { label: "Style" },
+      ui: { control: "radio-group", label: "Style" },
     },
     icon: {
       type: "string",
