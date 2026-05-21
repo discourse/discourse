@@ -52,18 +52,16 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.dom(".badge-category").hasText("testing");
 
-    await click(".category-show-advanced-tabs-toggle");
-
-    await click(".edit-category-topic-template a");
+    await visit("/new-category/topic-template");
     assert
       .dom(".edit-category-tab-topic-template.active")
       .exists("it can switch to the topic template tab");
 
-    await click(".edit-category-tags a");
+    await visit("/new-category/tags");
     await click("button.add-required-tag-group");
 
     const tagSelector = selectKit(
-      ".required-tag-group-row .select-kit.tag-group-chooser"
+      ".form-kit__collection .form-kit__row .select-kit.tag-group-chooser"
     );
     await tagSelector.expand();
     await tagSelector.selectRowByValue("TagGroup1");
@@ -76,10 +74,12 @@ acceptance("Category New", function (needs) {
       "it transitions to the category edit route"
     );
 
-    await click(".edit-category-tags a");
+    await visit("/c/testing/edit/tags");
 
     assert
-      .dom(".required-tag-group-row .select-kit-header[data-value='TagGroup1']")
+      .dom(
+        ".form-kit__collection .form-kit__row .select-kit-header[data-value='TagGroup1']"
+      )
       .exists("shows saved required tag group");
 
     assert.dom(".d-page-header__title").hasText(
@@ -88,12 +88,12 @@ acceptance("Category New", function (needs) {
       })
     );
 
-    await click(".edit-category-security a");
+    await visit("/c/testing/edit/security");
     assert
       .dom(".permission-row button.reply-toggle")
       .exists("it can switch to the security tab");
 
-    await click(".edit-category-settings a");
+    await visit("/c/testing/edit/settings");
     assert
       .dom("#category-search-priority")
       .exists("it can switch to the settings tab");

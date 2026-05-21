@@ -3,6 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -36,9 +37,7 @@ acceptance("Category Edit", function (needs) {
       .dom(".edit-category-tab-general .badge-category__name")
       .hasText("testing");
 
-    await click(".category-show-advanced-tabs-toggle");
-
-    await click(".edit-category-topic-template a");
+    await visit("/c/bug/edit/topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
 
     await click(".admin-changes-banner .btn-primary");
@@ -72,34 +71,34 @@ acceptance("Category Edit", function (needs) {
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    assert.dom(".minimum-required-tags").exists();
+    assert.dom("#category-minimum-tags").exists();
 
-    assert.dom(".required-tag-groups").exists();
-    assert.dom(".required-tag-group-row").doesNotExist();
-
-    await click(".add-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection").doesNotExist();
 
     await click(".add-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 2 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
+
+    await click(".add-required-tag-group");
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 2 });
 
     await click(".delete-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     const tagGroupChooser = selectKit(
-      ".required-tag-group-row .tag-group-chooser"
+      ".form-kit__collection .form-kit__row .tag-group-chooser"
     );
     await tagGroupChooser.expand();
     await tagGroupChooser.selectRowByValue("TagGroup1");
 
     await click(".admin-changes-banner .btn-primary");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     await click(".delete-required-tag-group");
-    assert.dom(".required-tag-group-row").doesNotExist();
+    assert.dom(".form-kit__collection").doesNotExist();
 
-    await click(".admin-changes-banner .btn-primary");
-    assert.dom(".required-tag-group-row").doesNotExist();
+    assert
+      .dom(".admin-changes-banner")
+      .exists("save banner stays visible when collection is emptied");
   });
 
   test("Editing allowed tags and tag groups", async function (assert) {
@@ -184,7 +183,9 @@ acceptance("Category Edit", function (needs) {
 
   test("Error Saving", async function (assert) {
     await visit("/c/bug/edit/settings");
-    await fillIn(".email-in", "duplicate@example.com");
+
+    // eslint-disable-next-line ember/require-valid-css-selector-in-test-helpers -- FormKit fillIn(value), not Ember fillIn(selector)
+    await formKit().field("email_in").fillIn("duplicate@example.com");
     await click(".admin-changes-banner .btn-primary");
 
     assert.dom(".dialog-body").hasText(
@@ -227,16 +228,16 @@ acceptance("Category Edit", function (needs) {
   });
 
   test("Subcategory list settings", async function (assert) {
-    await visit("/c/bug/edit/settings");
+    await visit("/c/bug/edit/images");
 
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .doesNotExist("subcategory list style isn't visible by default");
 
-    await click(".show-subcategory-list-field input[type=checkbox]");
+    await formKit().field("show_subcategory_list").toggle();
 
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .exists(
         "subcategory list style is shown if show subcategory list is checked"
       );
@@ -249,13 +250,13 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(3);
 
-    await visit("/c/bug/edit/settings");
+    await visit("/c/bug/edit/images");
 
     assert
-      .dom(".show-subcategory-list-field")
+      .dom("[data-name='show_subcategory_list']")
       .doesNotExist("show subcategory list isn't visible for child categories");
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .doesNotExist(
         "subcategory list style isn't visible for child categories"
       );
