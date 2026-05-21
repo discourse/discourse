@@ -24,6 +24,14 @@ const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 const aliases = [
   { find: "pretty-text", replacement: "pretty-text/addon" },
   {
+    find: "ember-buffered-proxy/helpers",
+    replacement: "ember-buffered-proxy/addon/helpers",
+  },
+  {
+    find: "ember-buffered-proxy/mixin",
+    replacement: "ember-buffered-proxy/addon/mixin",
+  },
+  {
     find: "ember-buffered-proxy/proxy",
     replacement: "ember-buffered-proxy/addon/proxy",
   },

@@ -137,7 +137,11 @@ loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
 loaderShim("pretty-text/inline-oneboxer", () =>
   importSync("pretty-text/inline-oneboxer")
 );
+loaderShim("pretty-text/mentions", () => importSync("pretty-text/mentions"));
 loaderShim("pretty-text/oneboxer", () => importSync("pretty-text/oneboxer"));
+loaderShim("pretty-text/oneboxer-cache", () =>
+  importSync("pretty-text/oneboxer-cache")
+);
 loaderShim("pretty-text/pretty-text", () =>
   importSync("pretty-text/pretty-text")
 );
@@ -157,6 +161,15 @@ loaderShim("@ember-decorators/object", () =>
 loaderShim("discourse/lib/transformer/registry", () =>
   importSync("discourse/lib/registry/transformers")
 );
+loaderShim("discourse/modifiers/did-insert", () =>
+  importSync("@ember/render-modifiers/modifiers/did-insert")
+);
+loaderShim("discourse/modifiers/did-update", () =>
+  importSync("@ember/render-modifiers/modifiers/did-update")
+);
+loaderShim("discourse/modifiers/will-destroy", () =>
+  importSync("@ember/render-modifiers/modifiers/will-destroy")
+);
 loaderShim("ember-this-fallback/deprecations-helper", () =>
   importSync("./lib/ember-this-fallback/deprecations-helper")
 );
@@ -168,6 +181,12 @@ loaderShim("ember-this-fallback/this-fallback-helper", () =>
 );
 loaderShim("ember-this-fallback/try-lookup-helper", () =>
   importSync("./lib/ember-this-fallback/try-lookup-helper")
+);
+loaderShim("ember-buffered-proxy/helpers", () =>
+  importSync("ember-buffered-proxy/helpers")
+);
+loaderShim("ember-buffered-proxy/mixin", () =>
+  importSync("ember-buffered-proxy/mixin")
 );
 loaderShim("ember-buffered-proxy/proxy", () =>
   importSync("ember-buffered-proxy/proxy")

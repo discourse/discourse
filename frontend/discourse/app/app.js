@@ -72,6 +72,10 @@ import selectKitCompatModules from "discourse/select-kit/compat-modules";
 
 defineModules("discourse/select-kit", selectKitCompatModules);
 
+import truthHelpersCompatModules from "discourse/truth-helpers/compat-modules";
+
+defineModules("discourse/truth-helpers", truthHelpersCompatModules);
+
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
