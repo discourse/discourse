@@ -94,3 +94,60 @@ acceptance("Post", function (needs) {
       .doesNotExist("doesn’t allow to toggle the reaction");
   });
 });
+
+acceptance("Post - hidden reactions", function (needs) {
+  needs.user();
+
+  needs.settings({
+    discourse_reactions_enabled: true,
+    discourse_reactions_enabled_reactions: "otter|open_mouth",
+    discourse_reactions_reaction_for_like: "heart",
+    discourse_reactions_like_icon: "heart",
+    enable_new_post_reactions_menu: true,
+  });
+
+  needs.pretender((server, helper) => {
+    const topic = structuredClone(ReactionsTopics["/t/374.json"]);
+    topic.post_stream.posts[0].hidden = true;
+    topic.post_stream.posts[0].cooked_hidden = true;
+    topic.post_stream.posts[0].can_see_hidden_post = false;
+
+    server.get("/t/374.json", () => helper.response(topic));
+  });
+
+  test("does not show the reactions counter for hidden posts", async function (assert) {
+    await visit("/t/topic_with_reactions_and_likes/374");
+
+    assert
+      .dom("#post_1 .discourse-reactions-counter")
+      .doesNotExist("hides the counter to prevent opening the reactions list");
+  });
+});
+
+acceptance("Post - hidden reactions with hidden-post access", function (needs) {
+  needs.user();
+
+  needs.settings({
+    discourse_reactions_enabled: true,
+    discourse_reactions_enabled_reactions: "otter|open_mouth",
+    discourse_reactions_reaction_for_like: "heart",
+    discourse_reactions_like_icon: "heart",
+    enable_new_post_reactions_menu: true,
+  });
+
+  needs.pretender((server, helper) => {
+    const topic = structuredClone(ReactionsTopics["/t/374.json"]);
+    topic.post_stream.posts[0].hidden = true;
+    topic.post_stream.posts[0].can_see_hidden_post = true;
+
+    server.get("/t/374.json", () => helper.response(topic));
+  });
+
+  test("shows the reactions counter for hidden posts", async function (assert) {
+    await visit("/t/topic_with_reactions_and_likes/374");
+
+    assert
+      .dom("#post_1 .discourse-reactions-counter .reactions-counter")
+      .hasText("209", "allows the reactions list to be opened");
+  });
+});

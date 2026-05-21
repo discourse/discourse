@@ -13,6 +13,10 @@ export default class ReactionsActionSummary extends Component {
       return false;
     }
 
+    if (args.post.hidden && !args.post.can_see_hidden_post) {
+      return false;
+    }
+
     const siteSettings = owner?.lookup("service:site-settings");
     if (siteSettings?.enable_new_post_reactions_menu) {
       return true;
