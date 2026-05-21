@@ -28,7 +28,8 @@ RSpec.describe UserApiKeysController do
   end
 
   def extract_payload_from_redirect(response, key: "payload")
-    uri = URI.parse(response.redirect_url)
+    redirect_url = response.redirect_url || response.parsed_body["redirect_url"]
+    uri = URI.parse(redirect_url)
     payload = uri.query.split("#{key}=")[1]
     Base64.decode64(CGI.unescape(payload))
   end
@@ -41,11 +42,12 @@ RSpec.describe UserApiKeysController do
       expect(response.headers["Auth-Api-Device-Code"]).to eq("true")
     end
 
-    it "rejects a non-RSA public key with 400 even when not logged in" do
+    it "renders an error for a non-RSA public key even when not logged in" do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       ec_key = OpenSSL::PKey::EC.generate("prime256v1")
-      get "/user-api-key/new", params: args.merge(public_key: ec_key.to_pem)
-      expect(response.status).to eq(400)
+      get "/user-api-key/new.json", params: args.merge(public_key: ec_key.to_pem)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["state"]).to eq("generic_error")
     end
 
     describe "as a normal user" do
@@ -56,12 +58,12 @@ RSpec.describe UserApiKeysController do
         SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       end
 
-      it "includes padding parameter in the form only when provided" do
-        get "/user-api-key/new", params: args
-        expect(response.body).not_to include('name="padding"')
+      it "includes padding parameter in the model only when provided" do
+        get "/user-api-key/new.json", params: args
+        expect(response.parsed_body["padding"]).to be_nil
 
-        get "/user-api-key/new", params: args.merge(padding: "oaep")
-        expect(response.body).to include('name="padding"', 'value="oaep"')
+        get "/user-api-key/new.json", params: args.merge(padding: "oaep")
+        expect(response.parsed_body["padding"]).to eq("oaep")
       end
 
       it "rejects invalid padding parameter" do
@@ -69,55 +71,55 @@ RSpec.describe UserApiKeysController do
         expect(response.status).to eq(400)
       end
 
-      it "rejects a non-RSA public key with 400" do
+      it "renders an error for a non-RSA public key" do
         ec_key = OpenSSL::PKey::EC.generate("prime256v1")
-        get "/user-api-key/new", params: args.merge(public_key: ec_key.to_pem)
-        expect(response.status).to eq(400)
+        get "/user-api-key/new.json", params: args.merge(public_key: ec_key.to_pem)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["state"]).to eq("generic_error")
       end
 
       it "shows write scope warning when write scope is requested" do
-        get "/user-api-key/new", params: args.merge(scopes: "write")
-        expect(response.body).to include(I18n.t("user_api_key.write_scope_warning"))
+        get "/user-api-key/new.json", params: args.merge(scopes: "write")
+        expect(response.parsed_body["write_scope"]).to eq(true)
       end
 
       it "does not show write scope warning for read-only scopes" do
-        get "/user-api-key/new", params: args
-        expect(response.body).not_to include(I18n.t("user_api_key.write_scope_warning"))
+        get "/user-api-key/new.json", params: args
+        expect(response.parsed_body["write_scope"]).to eq(false)
       end
 
       it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
         SiteSetting.allowed_user_api_auth_redirects = "discourse://auth_redirect"
 
-        get "/user-api-key/new", params: args.merge(auth_redirect: "discourse://auth_redirect")
-        expect(response.body).not_to include(I18n.t("user_api_key.redirect_warning"))
+        get "/user-api-key/new.json", params: args.merge(auth_redirect: "discourse://auth_redirect")
+        expect(response.parsed_body["redirect_uri"]).to be_nil
       end
 
       it "shows redirect warning when auth_redirect is not discourse://auth_redirect" do
-        get "/user-api-key/new", params: args
-        expect(response.body).to include(I18n.t("user_api_key.redirect_warning"))
+        get "/user-api-key/new.json", params: args
+        expect(response.parsed_body["redirect_uri"]).to eq("over.the")
       end
 
       it "shows redirect URI without trailing colon for custom scheme URLs" do
         SiteSetting.allowed_user_api_auth_redirects = "myapp://callback"
 
-        get "/user-api-key/new", params: args.merge(auth_redirect: "myapp://callback")
-        expect(response.body).to include("<strong>callback</strong>")
-        expect(response.body).not_to include("<strong>callback:</strong>")
+        get "/user-api-key/new.json", params: args.merge(auth_redirect: "myapp://callback")
+        expect(response.parsed_body["redirect_uri"]).to eq("callback")
       end
 
       it "rejects auth_redirect to a disallowed domain" do
-        get "/user-api-key/new", params: args.merge(auth_redirect: "https://evil.com/steal")
-        expect(response.body).to include(I18n.t("user_api_key.generic_error"))
-        expect(response.body).not_to include("evil.com")
+        get "/user-api-key/new.json", params: args.merge(auth_redirect: "https://evil.com/steal")
+        expect(response.parsed_body["state"]).to eq("generic_error")
+        expect(response.parsed_body["redirect_uri"]).to be_nil
       end
 
       it "allows auth_redirect when it matches allowed_user_api_auth_redirects" do
         SiteSetting.allowed_user_api_auth_redirects = "https://good.com/callback"
 
-        get "/user-api-key/new", params: args.merge(auth_redirect: "https://good.com/callback")
+        get "/user-api-key/new.json", params: args.merge(auth_redirect: "https://good.com/callback")
         expect(response.status).to eq(200)
-        expect(response.body).to include("good.com")
-        expect(response.body).not_to include(I18n.t("user_api_key.generic_error"))
+        expect(response.parsed_body["redirect_uri"]).to eq("good.com")
+        expect(response.parsed_body["state"]).to eq("ready")
       end
     end
   end
@@ -140,7 +142,7 @@ RSpec.describe UserApiKeysController do
       sign_in(Fabricate(:user, trust_level: TrustLevel[1], moderator: true))
 
       post "/user-api-key.json", params: args
-      expect(response.status).to eq(302)
+      expect(response.status).to eq(200)
     end
 
     it "does not create token unless TL requirement is met" do
@@ -170,7 +172,7 @@ RSpec.describe UserApiKeysController do
 
       post "/user-api-key.json",
            params: args.merge(scopes: "push,read", push_url: "https://push.it/here")
-      expect(response.status).to eq(302)
+      expect(response.status).to eq(200)
 
       parsed = JSON.parse(decrypt_payload(extract_payload_from_redirect(response)))
       expect(parsed["push"]).to eq(false)
@@ -190,7 +192,7 @@ RSpec.describe UserApiKeysController do
                scopes: "push,notifications,message_bus,session_info,one_time_password",
                push_url: "https://push.it/here",
              )
-      expect(response.status).to eq(302)
+      expect(response.status).to eq(200)
 
       parsed = JSON.parse(decrypt_payload(extract_payload_from_redirect(response)))
       expect(parsed["nonce"]).to eq(args[:nonce])
@@ -290,7 +292,7 @@ RSpec.describe UserApiKeysController do
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
       post "/user-api-key.json", params: args.merge(auth_redirect: args[:auth_redirect] + "/foo")
-      expect(response.status).to eq(302)
+      expect(response.status).to eq(200)
     end
 
     it "rejects wildcard auth_redirect matches outside the candidate host" do
@@ -310,7 +312,7 @@ RSpec.describe UserApiKeysController do
       sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
       post "/user-api-key.json", params: args.merge(auth_redirect: args[:auth_redirect] + "/?p=1")
-      expect(response.redirect_url).to include("?p=1")
+      expect(response.parsed_body["redirect_url"]).to include("?p=1")
     end
 
     context "with a registered client" do
@@ -342,7 +344,7 @@ RSpec.describe UserApiKeysController do
 
       it "does not require application_name or public_key params" do
         post "/user-api-key.json", params: args.except(:application_name, :public_key)
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(200)
       end
 
       it "rejects scopes not allowed by client" do
@@ -362,13 +364,13 @@ RSpec.describe UserApiKeysController do
 
     def approval_token_for(user_code, user)
       sign_in(user)
-      post "/user-api-key/activate", params: { code: user_code }
-      Nokogiri::HTML5.fragment(response.body).at_css("input[name='approval_token']")["value"]
+      post "/user-api-key/activate.json", params: { code: user_code }
+      response.parsed_body["approval_token"]
     end
 
     def authorize_device_request(body, user: Fabricate(:user, refresh_auto_groups: true))
       approval_token = approval_token_for(body["user_code"], user)
-      post "/user-api-key/device/authorize", params: { approval_token: approval_token }
+      post "/user-api-key/device/authorize.json", params: { approval_token: approval_token }
       user
     end
 
@@ -503,23 +505,13 @@ RSpec.describe UserApiKeysController do
       )
     end
 
-    it "renders the code entry page" do
+    it "returns the code entry page model" do
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
-      get "/user-api-key/activate"
+      get "/user-api-key/activate.json"
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.device.enter_code"))
-
-      html = Nokogiri::HTML5.fragment(response.body)
-      inputs = html.css("input[data-code-character]")
-      expect(inputs.size).to eq(8)
-      expect(html.css(".authorize-api-key__code-separator").text).to eq("-")
-      expect(inputs.first["data-1p-ignore"]).to eq("true")
-      expect(inputs.first["data-lpignore"]).to eq("true")
-      expect(inputs.first["data-bwignore"]).to eq("true")
-      expect(inputs.first["autocomplete"]).to eq("off")
-      expect(response.body).to include("addEventListener(\"paste\"")
+      expect(response.parsed_body["state"]).to eq("enter_code")
     end
 
     it "does not accept codes from query strings" do
@@ -539,20 +531,21 @@ RSpec.describe UserApiKeysController do
       user = Fabricate(:user, refresh_auto_groups: true)
       sign_in(user)
 
-      get "/user-api-key/activate", params: { request: request_token }
+      get "/user-api-key/activate.json", params: { request: request_token }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(args[:application_name])
-      expect(response.body).to include(I18n.t("user_api_key.scopes.read"))
-      expect(response.body).to include(I18n.t("user_api_key.scopes.write"))
-      expect(response.body).to include(I18n.t("user_api_key.write_scope_warning"))
-      expect(response.body).to include(I18n.t("user_api_key.device.enter_code"))
-      expect(response.body).to include('name="request"')
-      expect(response.body).not_to include('name="approval_token"')
-      expect(response.body).not_to include(I18n.t("user_api_key.deny"))
-
-      html = Nokogiri::HTML5.fragment(response.body)
-      expect(html.css("input[data-code-character]").size).to eq(8)
+      expect(response.parsed_body["state"]).to eq("authorize")
+      expect(response.parsed_body["request_token"]).to eq(request_token)
+      expect(response.parsed_body["user_code"]).to be_blank
+      expect(response.parsed_body["approval_token"]).to be_blank
+      expect(response.parsed_body.dig("device_auth", "application_name")).to eq(
+        args[:application_name],
+      )
+      expect(response.parsed_body.dig("device_auth", "localized_scopes")).to contain_exactly(
+        I18n.t("user_api_key.scopes.read"),
+        I18n.t("user_api_key.scopes.write"),
+      )
+      expect(response.parsed_body.dig("device_auth", "write_scope")).to eq(true)
 
       grant = JSON.parse(Discourse.redis.get("user_api_key:device:#{body["device_code"]}"))
       expect(grant["authorizing_user_id"]).to be_blank
@@ -568,20 +561,20 @@ RSpec.describe UserApiKeysController do
       sign_in(first_user)
       get "/user-api-key/activate", params: { request: request_token }
       expect(response.status).to eq(200)
-      post "/user-api-key/device/authorize",
+      post "/user-api-key/device/authorize.json",
            params: {
              request: request_token,
              code: body["user_code"].delete("-"),
            }
-      expect(response.body).to include(I18n.t("user_api_key.device.complete"))
+      expect(response.parsed_body["state"]).to eq("complete")
 
       sign_in(second_user)
-      post "/user-api-key/device/authorize",
+      post "/user-api-key/device/authorize.json",
            params: {
              request: request_token,
              code: body["user_code"].delete("-"),
            }
-      expect(response.body).not_to include(I18n.t("user_api_key.device.complete"))
+      expect(response.parsed_body["state"]).not_to eq("complete")
     end
 
     it "shows the authorization page for a manually submitted valid code" do
@@ -589,33 +582,31 @@ RSpec.describe UserApiKeysController do
       body = create_pending_device_request(scopes: "read,write", expires_in_seconds: 1.day.to_i)
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
-      post "/user-api-key/activate", params: { code: body["user_code"].delete("-") }
+      post "/user-api-key/activate.json", params: { code: body["user_code"].delete("-") }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(args[:application_name])
-      expect(response.body).to include(I18n.t("user_api_key.scopes.read"))
-      expect(response.body).to include(I18n.t("user_api_key.scopes.write"))
-      expect(response.body).to include(I18n.t("user_api_key.write_scope_warning"))
-      expiry_notice =
-        I18n.t(
-          "user_api_key.device.expiry_notice",
-          application_name: args[:application_name],
-          expires_at: I18n.l(1.day.from_now, format: :long),
-        )
-      expect(response.body).to include(CGI.escapeHTML(expiry_notice))
-      expect(response.body).to include(I18n.t("user_api_key.device.unregistered_app_warning"))
-      expect(response.body).to include('name="approval_token"')
-      expect(response.body).not_to include('name="device_code"')
+      expect(response.parsed_body["state"]).to eq("authorize")
+      expect(response.parsed_body["approval_token"]).to be_present
+      expect(response.parsed_body.dig("device_auth", "application_name")).to eq(
+        args[:application_name],
+      )
+      expect(response.parsed_body.dig("device_auth", "localized_scopes")).to contain_exactly(
+        I18n.t("user_api_key.scopes.read"),
+        I18n.t("user_api_key.scopes.write"),
+      )
+      expect(response.parsed_body.dig("device_auth", "write_scope")).to eq(true)
+      expect(response.parsed_body.dig("device_auth", "unregistered_client")).to eq(true)
+      expect(response.parsed_body.dig("device_auth", "expires_at")).to eq(1.day.from_now.iso8601)
     end
 
     it "warns when no expiry is requested" do
       body = create_pending_device_request
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
-      post "/user-api-key/activate", params: { code: body["user_code"] }
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.device.no_expiry_warning"))
+      expect(response.parsed_body.dig("device_auth", "expires_at")).to be_nil
     end
 
     it "does not consume a manual user code for users who cannot authorize keys" do
@@ -623,10 +614,10 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
-      post "/user-api-key/activate", params: { code: body["user_code"] }
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.no_trust_level"))
+      expect(response.parsed_body["no_trust_level"]).to eq(true)
       expect(Discourse.redis.get("user_api_key:device:code:#{body["user_code"]}")).to eq(
         body["device_code"],
       )
@@ -640,9 +631,9 @@ RSpec.describe UserApiKeysController do
       approval_token = approval_token_for(body["user_code"], first_user)
       sign_in(second_user)
 
-      post "/user-api-key/device/authorize", params: { approval_token: approval_token }
+      post "/user-api-key/device/authorize.json", params: { approval_token: approval_token }
 
-      expect(response.body).to include(I18n.t("user_api_key.device.expired_code"))
+      expect(response.parsed_body["expired_code"]).to eq(true)
       post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
       expect(response.parsed_body["status"]).to eq("authorization_pending")
     end
@@ -650,11 +641,11 @@ RSpec.describe UserApiKeysController do
     it "shows a safe error for invalid codes" do
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
-      post "/user-api-key/activate", params: { code: "BAD-CODE" }
+      post "/user-api-key/activate.json", params: { code: "BAD-CODE" }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.device.invalid_code"))
-      expect(response.body).not_to include(args[:application_name])
+      expect(response.parsed_body["invalid_code"]).to eq(true)
+      expect(response.parsed_body["device_auth"]).to be_blank
     end
 
     it "returns authorization_pending while waiting for authorization" do
@@ -675,14 +666,14 @@ RSpec.describe UserApiKeysController do
       sign_in(user)
       get "/user-api-key/activate", params: { request: request_token }
 
-      post "/user-api-key/device/authorize",
+      post "/user-api-key/device/authorize.json",
            params: {
              request: request_token,
              code: body["user_code"].delete("-"),
            }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.device.complete"))
+      expect(response.parsed_body["state"]).to eq("complete")
 
       post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
 
@@ -706,12 +697,19 @@ RSpec.describe UserApiKeysController do
       sign_in(Fabricate(:user, refresh_auto_groups: true))
       get "/user-api-key/activate", params: { request: request_token }
 
-      post "/user-api-key/device/authorize", params: { request: request_token, code: "BADCODE1" }
+      post "/user-api-key/device/authorize.json",
+           params: {
+             request: request_token,
+             code: "BADCODE1",
+           }
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.device.invalid_code"))
-      expect(response.body).to include(args[:application_name])
-      expect(response.body).to include('name="request"')
+      expect(response.parsed_body["invalid_code"]).to eq(true)
+      expect(response.parsed_body.dig("device_auth", "application_name")).to eq(
+        args[:application_name],
+      )
+      expect(response.parsed_body["request_token"]).to eq(request_token)
+      expect(response.parsed_body["user_code"]).to be_blank
 
       post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
       expect(response.parsed_body["status"]).to eq("authorization_pending")
@@ -723,7 +721,7 @@ RSpec.describe UserApiKeysController do
       user = authorize_device_request(body)
 
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("user_api_key.device.complete"))
+      expect(response.parsed_body["state"]).to eq("complete")
 
       post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
 
@@ -748,8 +746,8 @@ RSpec.describe UserApiKeysController do
       user = Fabricate(:user, refresh_auto_groups: true)
       approval_token = approval_token_for(body["user_code"], user)
 
-      post "/user-api-key/device/deny", params: { approval_token: approval_token }
-      expect(response.body).to include(I18n.t("user_api_key.device.denied"))
+      post "/user-api-key/device/deny.json", params: { approval_token: approval_token }
+      expect(response.parsed_body["denied"]).to eq(true)
 
       post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
       expect(response.parsed_body["status"]).to eq("access_denied")
@@ -758,10 +756,10 @@ RSpec.describe UserApiKeysController do
     it "does not report denied for an invalid approval token" do
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
-      post "/user-api-key/device/deny", params: { approval_token: SecureRandom.hex(32) }
+      post "/user-api-key/device/deny.json", params: { approval_token: SecureRandom.hex(32) }
 
-      expect(response.body).to include(I18n.t("user_api_key.device.expired_code"))
-      expect(response.body).not_to include(I18n.t("user_api_key.device.denied"))
+      expect(response.parsed_body["expired_code"]).to eq(true)
+      expect(response.parsed_body["denied"]).not_to eq(true)
     end
 
     it "does not allow request-token denial without an approval token" do
@@ -771,8 +769,8 @@ RSpec.describe UserApiKeysController do
       sign_in(Fabricate(:user, refresh_auto_groups: true))
       get "/user-api-key/activate", params: { request: request_token }
 
-      post "/user-api-key/device/deny", params: { request: request_token }
-      expect(response.body).to include(I18n.t("user_api_key.device.expired_code"))
+      post "/user-api-key/device/deny.json", params: { request: request_token }
+      expect(response.parsed_body["expired_code"]).to eq(true)
 
       post "/user-api-key/device/poll.json", params: { device_code: body["device_code"] }, as: :json
       expect(response.parsed_body["status"]).to eq("authorization_pending")
@@ -892,15 +890,15 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#otp" do
-    it "includes padding parameter in the form only when provided" do
+    it "includes padding parameter in the model only when provided" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
       sign_in(Fabricate(:user, refresh_auto_groups: true))
 
-      get "/user-api-key/otp", params: otp_args
-      expect(response.body).not_to include('name="padding"')
+      get "/user-api-key/otp.json", params: otp_args
+      expect(response.parsed_body["padding"]).to be_nil
 
-      get "/user-api-key/otp", params: otp_args.merge(padding: "oaep")
-      expect(response.body).to include('name="padding"', 'value="oaep"')
+      get "/user-api-key/otp.json", params: otp_args.merge(padding: "oaep")
+      expect(response.parsed_body["padding"]).to eq("oaep")
     end
 
     it "rejects invalid padding parameter" do

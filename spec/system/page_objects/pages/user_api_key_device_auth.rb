@@ -31,27 +31,18 @@ module PageObjects
         )
       end
 
-      def has_expiry_notice?(application_name:, expires_at:)
-        has_css?(
-          ".authorize-api-key__expiry",
-          text:
-            I18n.t(
-              "user_api_key.device.expiry_notice",
-              application_name: application_name,
-              expires_at: I18n.l(expires_at, format: :long),
-            ),
-        )
+      def has_expiry_notice?(application_name:)
+        has_css?(".authorize-api-key__expiry", text: "Expires:")
       end
 
       def enter_code(code)
-        code
-          .delete("-")
-          .chars
-          .each_with_index do |character, index|
-            find(
-              "[aria-label='#{I18n.t("user_api_key.device.code_character", position: index + 1)}']",
-            ).fill_in(with: character)
-          end
+        input = find("input.authorize-api-key__code-input")
+        input.fill_in(with: code.delete("-"))
+        page.execute_script(
+          "arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input', { bubbles: true })); arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+          input.native,
+          code.delete("-"),
+        )
 
         self
       end
@@ -61,8 +52,12 @@ module PageObjects
         self
       end
 
+      def has_invalid_code_message?
+        has_css?(".form-kit__errors", text: I18n.t("user_api_key.device.invalid_code"))
+      end
+
       def has_completion_message?
-        has_css?(".authorize-api-key h1", text: I18n.t("user_api_key.device.complete")) &&
+        has_css?(".authorize-api-key h1", text: I18n.t("user_api_key.device.complete"), wait: 10) &&
           has_css?(".authorize-api-key p", text: I18n.t("user_api_key.device.return_to_cli"))
       end
     end

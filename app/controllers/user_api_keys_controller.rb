@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserApiKeysController < ApplicationController
-  layout "no_ember"
-
   requires_login only: %i[
                    create
                    create_otp
@@ -18,6 +16,10 @@ class UserApiKeysController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i[create_device_request poll_device_request]
   before_action :set_device_auth_no_store,
                 only: %i[
+                  new
+                  otp
+                  create
+                  create_otp
                   create_device_request
                   poll_device_request
                   activate
@@ -41,60 +43,16 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    require_params
-    find_client
-    require_client_params
-    validate_params
-    validate_auth_redirect
-    @expires_in_seconds = parse_expires_in_seconds!
+    json = user_api_key_authorization_model
+    return if performed?
 
-    unless current_user
-      cookies[:destination_url] = request.fullpath
-
-      if SiteSetting.enable_discourse_connect?
-        redirect_to path("/session/sso")
-      else
-        redirect_to path("/login")
-      end
-      return
-    end
-
-    unless meets_tl?
-      @no_trust_level = true
-      return
-    end
-
-    @application_name = params[:application_name] || @client&.application_name
-    @public_key = params[:public_key] || @client&.public_key
-    @nonce = params[:nonce]
-    @client_id = params[:client_id]
-    @auth_redirect = params[:auth_redirect]
-    @redirect_uri =
-      if @auth_redirect.present?
-        begin
-          if @auth_redirect == "discourse://auth_redirect"
-            nil
-          else
-            uri = URI.parse(@auth_redirect)
-            if uri.port.nil? || [80, 443].include?(uri.port)
-              uri.host
-            else
-              uri.host + ":" + uri.port.to_s
-            end
-          end
-        rescue StandardError
-          nil
-        end
-      else
-        nil
-      end
-    @push_url = params[:push_url]
-    @localized_scopes = params[:scopes].split(",").map { |s| I18n.t("user_api_key.scopes.#{s}") }
-    @scopes = params[:scopes]
-    @padding = params[:padding]
-    @expires_at = requested_expires_at(@expires_in_seconds)
+    render_user_api_key_authorization(json)
   rescue Discourse::InvalidAccess
-    @generic_error = true
+    render_user_api_key_authorization({ state: "generic_error" })
+  rescue Discourse::InvalidParameters => exception
+    raise if exception.message == "padding"
+
+    render_user_api_key_authorization({ state: "generic_error" })
   end
 
   def create
@@ -149,24 +107,31 @@ class UserApiKeysController < ApplicationController
       otp_payload = one_time_password(parsed_public_key, current_user.username)
     end
 
-    if params[:auth_redirect]
-      uri = URI.parse(params[:auth_redirect])
-      query_attributes = [uri.query, "payload=#{CGI.escape(@payload)}"]
-      if scopes.include?("one_time_password")
-        query_attributes << "oneTimePassword=#{CGI.escape(otp_payload)}"
-      end
-      uri.query = query_attributes.compact.join("&")
+    response_json =
+      if params[:auth_redirect]
+        uri = URI.parse(params[:auth_redirect])
+        query_attributes = [uri.query, "payload=#{CGI.escape(@payload)}"]
+        if scopes.include?("one_time_password")
+          query_attributes << "oneTimePassword=#{CGI.escape(otp_payload)}"
+        end
+        uri.query = query_attributes.compact.join("&")
 
-      redirect_to(uri.to_s, allow_other_host: true)
-    else
-      respond_to do |format|
-        format.html { render :show }
-        format.json do
-          instructions =
-            I18n.t("user_api_key.instructions", application_name: @client.application_name)
-          render json: { payload: @payload, instructions: instructions }
+        { redirect_url: uri.to_s }
+      else
+        instructions =
+          I18n.t("user_api_key.instructions", application_name: @client.application_name)
+        { payload: @payload, instructions: instructions }
+      end
+
+    respond_to do |format|
+      format.html do
+        if response_json[:redirect_url]
+          redirect_to(response_json[:redirect_url], allow_other_host: true)
+        else
+          render_user_api_key_result(response_json)
         end
       end
+      format.json { render json: response_json }
     end
   end
 
@@ -219,25 +184,7 @@ class UserApiKeysController < ApplicationController
         return
       end
 
-      if params[:request].present?
-        rate_limit_device_request_token_lookup(params[:request])
-        grant = UserApiKey::DeviceAuth::Store.load_by_request_token(params[:request])
-
-        if grant.blank? || grant["status"] != "pending" ||
-             UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, current_user)
-          @expired_code = true
-          render :activate
-          return
-        end
-
-        assign_device_grant_presenter(grant)
-        @request_token = params[:request]
-        @no_trust_level = true unless meets_tl?
-        render :device_authorize
-        return
-      end
-
-      render :activate
+      render_device_activation(device_activation_model)
       return
     end
 
@@ -247,28 +194,29 @@ class UserApiKeysController < ApplicationController
     grant = user_code.present? ? UserApiKey::DeviceAuth::Store.load_by_user_code(user_code) : nil
 
     if grant.blank?
-      @invalid_code = true
-      render :activate
+      render_device_activation({ state: "enter_code", invalid_code: true })
       return
     end
 
     if grant["status"] != "pending"
-      @expired_code = true
-      render :activate
+      render_device_activation({ state: "enter_code", expired_code: true })
       return
     end
 
     assign_device_grant_presenter(grant)
 
     unless meets_tl?
-      @no_trust_level = true
-      render :device_authorize
+      render_device_activation(device_authorization_model(state: "authorize", no_trust_level: true))
       return
     end
 
     UserApiKey::DeviceAuth::Store.delete_user_code(user_code)
-    @approval_token = approval_token_store.create!(grant["device_code"])
-    render :device_authorize
+    render_device_activation(
+      device_authorization_model(
+        state: "authorize",
+        approval_token: approval_token_store.create!(grant["device_code"]),
+      ),
+    )
   end
 
   def authorize_device_request
@@ -278,11 +226,15 @@ class UserApiKeysController < ApplicationController
 
     if device_code.blank?
       if @request_token.present? && @device_auth&.application_name.present?
-        @invalid_code = true
-        render :device_authorize
+        render_device_activation(
+          device_authorization_model(
+            state: "authorize",
+            request_token: @request_token,
+            invalid_code: true,
+          ),
+        )
       else
-        @expired_code = true
-        render :activate
+        render_device_activation({ state: "enter_code", expired_code: true })
       end
       return
     end
@@ -292,13 +244,11 @@ class UserApiKeysController < ApplicationController
     ) do
       on_success do
         approval_token_store.delete!(params[:approval_token]) if params[:approval_token].present?
-        @denied = false
-        render :device_complete
+        render_device_activation({ state: "complete", denied: false })
       end
       on_model_not_found(:user) { raise Discourse::InvalidAccess }
       on_failed_step(:authorize_grant) do
-        @expired_code = true
-        render :activate
+        render_device_activation({ state: "enter_code", expired_code: true })
       end
       on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
         raise exception
@@ -314,17 +264,14 @@ class UserApiKeysController < ApplicationController
       ) do
         on_success do
           approval_token_store.delete!(params[:approval_token]) if params[:approval_token].present?
-          @denied = true
-          render :device_complete
+          render_device_activation({ state: "complete", denied: true })
         end
         on_failed_step(:deny_grant) do
-          @expired_code = true
-          render :activate
+          render_device_activation({ state: "enter_code", expired_code: true })
         end
       end
     else
-      @expired_code = true
-      render :activate
+      render_device_activation({ state: "enter_code", expired_code: true })
     end
   end
 
@@ -357,10 +304,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    @application_name = params[:application_name]
-    @public_key = params[:public_key]
-    @auth_redirect = params[:auth_redirect]
-    @padding = params[:padding]
+    render_user_api_key_otp(user_api_key_otp_model)
   end
 
   def create_otp
@@ -372,9 +316,12 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless meets_tl?
 
     otp_payload = one_time_password(parsed_public_key, current_user.username)
-
     redirect_path = "#{params[:auth_redirect]}?oneTimePassword=#{CGI.escape(otp_payload)}"
-    redirect_to(redirect_path, allow_other_host: true)
+
+    respond_to do |format|
+      format.html { redirect_to(redirect_path, allow_other_host: true) }
+      format.json { render json: { redirect_url: redirect_path } }
+    end
   end
 
   def revoke
@@ -393,6 +340,171 @@ class UserApiKeysController < ApplicationController
   def undo_revoke
     find_key.update_columns(revoked_at: nil)
     render json: success_json
+  end
+
+  def render_user_api_key_authorization(json)
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_api_key_authorization", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+      format.json { render json: json }
+    end
+  end
+
+  def render_user_api_key_result(json)
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_api_key_result", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+      format.json { render json: json }
+    end
+  end
+
+  def render_user_api_key_otp(json)
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_api_key_otp", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+      format.json { render json: json }
+    end
+  end
+
+  def render_device_activation(json)
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_api_key_device_activation", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+      format.json { render json: json }
+    end
+  end
+
+  def user_api_key_authorization_model
+    require_params
+    find_client
+    require_client_params
+    validate_params
+    validate_auth_redirect
+    expires_in_seconds = parse_expires_in_seconds!
+
+    unless current_user
+      redirect_anonymous_to_login
+      return
+    end
+
+    application_name = params[:application_name] || @client&.application_name
+    scopes = params[:scopes]
+    expires_at = requested_expires_at(expires_in_seconds)
+
+    if !meets_tl?
+      return(
+        {
+          state: "no_trust_level",
+          application_name: application_name,
+          current_user: current_user_json,
+        }
+      )
+    end
+
+    {
+      state: "ready",
+      application_name: application_name,
+      public_key: params[:public_key] || @client&.public_key,
+      nonce: params[:nonce],
+      client_id: params[:client_id],
+      auth_redirect: params[:auth_redirect],
+      redirect_uri: redirect_uri_for(params[:auth_redirect]),
+      push_url: params[:push_url],
+      localized_scopes: localized_scopes(scopes),
+      scopes: scopes,
+      write_scope: scopes.split(",").include?("write"),
+      padding: params[:padding],
+      expires_in_seconds: expires_in_seconds,
+      expires_at: expires_at&.iso8601,
+      current_user: current_user_json,
+    }
+  end
+
+  def user_api_key_otp_model
+    {
+      application_name: params[:application_name],
+      public_key: params[:public_key],
+      auth_redirect: params[:auth_redirect],
+      padding: params[:padding],
+    }
+  end
+
+  def device_activation_model
+    return { state: "enter_code" } if params[:request].blank?
+
+    rate_limit_device_request_token_lookup(params[:request])
+    grant = UserApiKey::DeviceAuth::Store.load_by_request_token(params[:request])
+
+    if grant.blank? || grant["status"] != "pending" ||
+         UserApiKey::DeviceAuth.grant_bound_to_another_user?(grant, current_user)
+      return { state: "enter_code", expired_code: true }
+    end
+
+    assign_device_grant_presenter(grant)
+    device_authorization_model(
+      state: "authorize",
+      request_token: params[:request],
+      no_trust_level: !meets_tl?,
+    )
+  end
+
+  def device_authorization_model(
+    state:,
+    request_token: nil,
+    approval_token: nil,
+    no_trust_level: false,
+    invalid_code: false
+  )
+    {
+      state: state,
+      request_token: request_token,
+      approval_token: approval_token,
+      no_trust_level: no_trust_level,
+      invalid_code: invalid_code,
+      device_auth: device_auth_json,
+      current_user: current_user_json,
+    }
+  end
+
+  def device_auth_json
+    {
+      application_name: @device_auth.application_name,
+      localized_scopes: @device_auth.localized_scopes,
+      write_scope: @device_auth.write_scope?,
+      unregistered_client: @device_auth.unregistered_client?,
+      expires_at: @device_auth.expires_at&.iso8601,
+    }
+  end
+
+  def current_user_json
+    return if current_user.blank?
+
+    { username: current_user.username, avatar_template: current_user.avatar_template }
+  end
+
+  def redirect_uri_for(auth_redirect)
+    return if auth_redirect.blank? || auth_redirect == "discourse://auth_redirect"
+
+    uri = URI.parse(auth_redirect)
+    if uri.port.nil? || [80, 443].include?(uri.port)
+      uri.host
+    else
+      "#{uri.host}:#{uri.port}"
+    end
+  rescue StandardError
+    nil
+  end
+
+  def localized_scopes(scopes)
+    scopes.split(",").map { |scope| I18n.t("user_api_key.scopes.#{scope}") }
   end
 
   def find_key

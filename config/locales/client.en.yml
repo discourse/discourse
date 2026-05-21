@@ -1,5 +1,34 @@
 en:
   js:
+    user_api_key:
+      title: 'Authorize "%{application_name}"'
+      authorize: "Authorize"
+      deny: "Cancel"
+      logged_in_as: "Logged in as"
+      permissions_header: 'This will allow "%{application_name}" to:'
+      redirect_warning: "Authorizing will redirect you to"
+      expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
+      write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
+      copy_key: "Copy key"
+      copied: "Copied!"
+      otp_description: 'Would you like to allow "%{application_name}" to access this site?'
+      no_trust_level: "Sorry, you do not have the required trust level to access the user API"
+      generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
+      device:
+        title: "Authorize an application"
+        enter_code: "Enter the code displayed in your application."
+        code: "Code"
+        enter_full_code: "Enter the complete code to authorize this application."
+        continue: "Continue"
+        invalid_code: "Sorry, that code is invalid. Check the code and try again."
+        expired_code: "Sorry, that code has expired or has already been used. Request a new code from the application and try again."
+        authorize_title: 'Authorize "%{application_name}"'
+        expiry_notice: "Expires: %{expires_at}"
+        no_expiry_warning: "This key will not expire automatically. Only authorize this if you fully trust the application."
+        unregistered_app_warning: "This application is not registered or verified by this site. Only continue if you fully trust the source of the code."
+        complete: "Authorization complete"
+        denied: "Authorization denied"
+        return_to_cli: "You can now return to your terminal or application."
     blocks:
       ghost:
         # Section titles

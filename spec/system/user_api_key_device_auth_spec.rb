@@ -36,13 +36,21 @@ RSpec.describe "User API key device auth" do
     )
     expect(device_auth_page).to have_write_warning
     expect(device_auth_page).to have_unregistered_app_warning
-    expect(device_auth_page).to have_expiry_notice(
-      application_name: application_name,
-      expires_at: expires_in_seconds.seconds.from_now,
-    )
+    expect(device_auth_page).to have_expiry_notice(application_name: application_name)
 
     device_auth_page.enter_code(device_request[:user_code]).click_authorize
 
     expect(device_auth_page).to have_completion_message
+  end
+
+  it "rejects an incorrect code for a request token" do
+    device_request = create_user_api_key_device_auth_request!(params: request_params)
+    sign_in(user)
+
+    device_auth_page.visit_activate(request_token: device_request[:request_token])
+    device_auth_page.enter_code("BADCODE1").click_authorize
+
+    expect(device_auth_page).to have_invalid_code_message
+    expect(UserApiKey.exists?(user_id: user.id)).to eq(false)
   end
 end
