@@ -629,4 +629,42 @@ acceptance(`Composer Actions - plugin registration`, function (needs) {
       "the callback receives the composer model"
     );
   });
+
+  test("a throwing condition logs an error once and hides the item", async function (assert) {
+    registerComposerAction({
+      id: "broken_action",
+      label: "composer.composer_actions.create_topic.label",
+      condition: () => {
+        throw new Error("boom");
+      },
+      action: () => {},
+    });
+
+    const errorStub = sinon.stub(console, "error");
+    try {
+      const composerActions = selectKit(".composer-actions");
+
+      await visit("/t/internationalization-localization/280");
+      await click("article#post_3 button.reply");
+      await composerActions.expand();
+      await composerActions.collapse();
+      await composerActions.expand();
+      await composerActions.collapse();
+      await composerActions.expand();
+
+      assert
+        .dom(`.composer-actions .select-kit-row[data-value="broken_action"]`)
+        .doesNotExist("broken action is hidden");
+      const calls = errorStub
+        .getCalls()
+        .filter((c) => String(c.args[0]).includes("broken_action"));
+      assert.strictEqual(
+        calls.length,
+        1,
+        "console.error fired exactly once across multiple dropdown opens"
+      );
+    } finally {
+      errorStub.restore();
+    }
+  });
 });

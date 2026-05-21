@@ -53,6 +53,9 @@ acceptance("Create event composer action", function (needs) {
       .dom(".save-or-cancel button.create")
       .hasText(i18n("discourse_post_event.composer.create_event_button"));
     assert
+      .dom(".save-or-cancel button.create .d-icon-calendar-day")
+      .exists("submit button shows the calendar icon in event mode");
+    assert
       .dom("#reply-title")
       .hasAttribute(
         "placeholder",
@@ -200,6 +203,33 @@ acceptance("Create event composer action", function (needs) {
     assert
       .dom(".save-or-cancel button.create")
       .hasText(i18n("discourse_post_event.composer.create_event_button"));
+  });
+
+  test("pasting an event block into a topic-mode reply enters event mode", async function (assert) {
+    markCategoryAsEvents(2);
+
+    await visit("/");
+    await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+
+    await fillIn(".d-editor-input", "");
+    assert
+      .dom(".save-or-cancel button.create")
+      .hasText(i18n("composer.create_topic"), "starts in topic mode");
+
+    await fillIn(
+      ".d-editor-input",
+      '[event start="2026-06-15 10:00" status="public" timezone="UTC"]\n[/event]'
+    );
+
+    assert
+      .dom(".save-or-cancel button.create")
+      .hasText(
+        i18n("discourse_post_event.composer.create_event_button"),
+        "auto-enters event mode"
+      );
   });
 
   test("an edited event block is preserved on category switch", async function (assert) {

@@ -32,7 +32,7 @@ describe "Composer - Create event action" do
     )
   end
 
-  it "creates a topic with an event post when submitted" do
+  it "creates a topic with a parsed public event post when submitted" do
     visit("/new-topic?category_id=#{events_category.id}")
     composer.fill_title("Team offsite kickoff")
     composer.create
@@ -40,13 +40,30 @@ describe "Composer - Create event action" do
     expect(page).to have_current_path(%r{/t/team-offsite-kickoff/})
     topic = Topic.find_by(title: "Team offsite kickoff")
     expect(topic).to be_present
-    expect(DiscoursePostEvent::Event.exists?(id: topic.first_post.id)).to be(true)
+    event = DiscoursePostEvent::Event.find_by(id: topic.first_post.id)
+    expect(event).to be_present
+    expect(event.status).to eq(DiscoursePostEvent::Event.statuses[:public])
+    expect(event.starts_at).to be_present
   end
 
   it "does not enter event mode for non-events categories" do
     visit("/new-topic?category_id=#{regular_category.id}")
 
-    expect(composer).to have_no_value(/\A\[event /)
+    expect(composer).not_to have_value(/\A\[event /)
     expect(composer.button_label.text).to eq(I18n.t("js.composer.create_topic"))
+  end
+
+  it "lets the user switch back to a regular topic via the dropdown" do
+    visit("/new-topic?category_id=#{events_category.id}")
+
+    expect(composer.button_label.text).to eq(
+      I18n.t("js.discourse_post_event.composer.create_event_button"),
+    )
+
+    composer.open_composer_actions
+    composer.select_action(I18n.t("js.discourse_post_event.composer_actions.create_topic.label"))
+
+    expect(composer.button_label.text).to eq(I18n.t("js.composer.create_topic"))
+    expect(composer).not_to have_value(/\A\[event /)
   end
 end
