@@ -1377,6 +1377,16 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    activity_by_category:
+      title: "Activity by category"
+      description: "Topics, posts, and member participation per category in the selected period. Share is each category's percentage of total activity across the listed categories; Vs Prior is the change in share compared with the previous period of equal length."
+      labels:
+        category: "Category"
+        topics: "Topics"
+        posts: "Posts"
+        page_views: "Page views"
+        share: "Share"
+        vs_prior: "Vs Prior"
     posters_by_member_type:
       title: "Who's posting?"
       description: "Posts authored in the selected period, bucketed by member type. \"New members\" signed up during the period, \"Returning\" signed up before it, and \"Staff\" are admins or moderators."

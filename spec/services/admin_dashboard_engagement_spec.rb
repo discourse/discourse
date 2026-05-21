@@ -128,6 +128,50 @@ describe AdminDashboardEngagement do
       end
     end
 
+    describe "activity_by_category" do
+      it "includes the activity_by_category block with rows and total" do
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        activity = result[:activity_by_category]
+
+        expect(activity).to have_key(:rows)
+        expect(activity).to have_key(:total)
+      end
+
+      it "honours category visibility when current_user is a moderator" do
+        moderator = Fabricate(:moderator)
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        Fabricate(:topic, category: private_cat, created_at: Time.zone.local(2026, 4, 10))
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
+        expect(ids).not_to include(private_cat.id)
+      end
+
+      it "lets an admin see restricted categories" do
+        admin = Fabricate(:admin)
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        Fabricate(:topic, category: private_cat, created_at: Time.zone.local(2026, 4, 10))
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: admin,
+          )
+
+        ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
+        expect(ids).to include(private_cat.id)
+      end
+    end
+
     describe "trust_level_pipeline" do
       it "includes per-TL rows, a trend object, and total_members" do
         Fabricate(:user, trust_level: TrustLevel[1])

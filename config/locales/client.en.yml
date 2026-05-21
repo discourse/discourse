@@ -6884,6 +6884,16 @@ en:
           engagement:
             title: "Engagement"
             fetch_error: "Couldn't load engagement. Try refreshing the page."
+            activity_by_category:
+              title: "Activity by category"
+              description: "Topics, posts, and member participation per category."
+              category: "Category"
+              topics: "Topics"
+              posts: "Posts"
+              page_views: "Page views"
+              share: "Share"
+              vs_prior: "Vs Prior"
+              empty: "No activity in the selected period."
             whos_posting:
               title: "Who's posting?"
               all_categories: "All categories"
@@ -6892,8 +6902,6 @@ en:
               returning: "Returning"
               staff: "Staff"
               empty: "No posts in the selected period."
-            activity_by_category:
-              title: "Activity by category"
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
