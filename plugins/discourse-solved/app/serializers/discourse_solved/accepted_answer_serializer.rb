@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DiscourseSolved::AcceptedAnswerSerializer < PostExcerptAccordionItemSerializer
+class DiscourseSolved::AcceptedAnswerSerializer < PostAccordionItemSerializer
   attributes :accepter_name, :accepter_username
 
   def name

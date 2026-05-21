@@ -15,12 +15,12 @@ describe "Solved" do
 
   UNACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-unaccepted"
   ACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-accepted"
-  ACCEPTED_ANSWER_SELECTOR = ".accepted-answers .d-post-excerpt-accordion-item"
-  ACCEPTED_ANSWER_CONTENT_SELECTOR = ".d-post-excerpt-accordion-item__content"
-  SOLVER_SELECTOR = ".d-post-excerpt-accordion-item__metadata .user-link"
-  ACCEPTER_SELECTOR = ".d-post-excerpt-accordion-item__metadata .accepter-link"
-  QUOTE_TOGGLE_SELECTOR = ".d-post-excerpt-accordion-item__toggle"
-  QUOTE_JUMP_SELECTOR = ".d-post-excerpt-accordion-item__jump"
+  ACCEPTED_ANSWER_SELECTOR = ".accepted-answers .d-post-accordion-item"
+  ACCEPTED_ANSWER_CONTENT_SELECTOR = ".d-post-accordion-item__content"
+  SOLVER_SELECTOR = ".d-post-accordion-item__metadata .user-link"
+  ACCEPTER_SELECTOR = ".d-post-accordion-item__metadata .accepter-link"
+  QUOTE_TOGGLE_SELECTOR = ".d-post-accordion-item__toggle"
+  QUOTE_JUMP_SELECTOR = ".d-post-accordion-item__jump"
 
   before do
     SiteSetting.solved_enabled = true
@@ -81,7 +81,7 @@ describe "Solved" do
 
         within("#{ACCEPTED_ANSWER_SELECTOR}[data-post='2']") do
           expect(page).not_to have_css(QUOTE_TOGGLE_SELECTOR)
-          expect(page).not_to have_css(".d-post-excerpt-accordion-item__body")
+          expect(page).not_to have_css(".d-post-accordion-item__body")
           expect(page).to have_css(QUOTE_JUMP_SELECTOR)
           find(QUOTE_JUMP_SELECTOR).click
         end
@@ -98,7 +98,7 @@ describe "Solved" do
         expect(page).to have_css(
           "#{ACCEPTED_ANSWER_SELECTOR}[data-post='2'][data-overflowing='true']",
         )
-        expect(page).to have_css(".d-post-excerpt-accordion-item__body")
+        expect(page).to have_css(".d-post-accordion-item__body")
       end
     end
 
@@ -112,7 +112,7 @@ describe "Solved" do
         expect(page).to have_css(
           "#{ACCEPTED_ANSWER_SELECTOR}[data-post='2'][data-overflowing='false']",
         )
-        expect(page).to have_css(".d-post-excerpt-accordion-item__body")
+        expect(page).to have_css(".d-post-accordion-item__body")
       end
     end
   end

@@ -1,5 +1,13 @@
-.d-post-excerpt-accordion {
+.d-post-accordion {
   background: var(--secondary);
+
+  * {
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__layout {
+    border-radius: var(--d-border-radius-large);
+  }
 
   &__header {
     display: flex;
@@ -12,28 +20,43 @@
     border-top-right-radius: var(--d-border-radius-large);
     border-color: var(--primary-low);
     border-style: solid;
-    border-width: 1px;
+    border-width: 1px 1px 0 1px;
+    overflow: hidden;
   }
 
-  * {
-    font-size: var(--font-down-1-rem);
+  &__items {
+    display: flex;
+    flex-direction: column;
+    border-bottom-left-radius: var(--d-border-radius-large);
+    border-bottom-right-radius: var(--d-border-radius-large);
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: var(--primary-low);
+    overflow: hidden;
+  }
+
+  &__item {
+    border-width: 1px 0 0 0;
+    border-color: var(--primary-low);
+    border-style: solid;
   }
 }
 
-.d-post-excerpt-accordion-item {
-  border-color: var(--primary-low);
-  border-style: solid;
-  border-width: 0 1px 1px 1px;
-  overflow: hidden;
-
+.d-post-accordion-item {
   &__header {
     display: flex;
     align-items: center;
     gap: var(--space-1);
     padding: var(--space-2) var(--space-3) var(--space-2) var(--space-3);
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--primary-low-mid);
     background: var(--primary-very-low);
+  }
+
+  &__body {
+    border-width: 1px 0 0 0;
+    border-color: var(--primary-low);
+    border-style: solid;
   }
 
   &__metadata {
@@ -94,15 +117,13 @@
 
   &__content {
     position: relative;
+    border-left: 0;
     background: var(--secondary);
-    border-color: var(--primary-low);
-    border-style: solid;
-    border-width: 1px 0 0 0;
     padding: var(--space-2) var(--space-3) 0 var(--space-3);
     margin: 0;
     max-height: calc(
-      var(--excerpt-max-lines, 6) * var(--cooked-line-height) * 1em
-    ); // excerpt-max-lines set in post-excerpt-accordion-item.gjs
+      var(--max-lines-displayed, 6) * var(--cooked-line-height) * 1em
+    ); // max-lines-displayed set in post-accordion-item.gjs
     overflow: hidden;
 
     .cooked {

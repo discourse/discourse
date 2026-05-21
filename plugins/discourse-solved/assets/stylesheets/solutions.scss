@@ -113,7 +113,7 @@ $solved-color: var(--success);
   margin-left: var(--topic-body-width-padding);
   margin-bottom: 0.5em;
 
-  & .d-post-excerpt-accordion {
+  & .d-post-accordion {
     &__header {
       color: var(--secondary);
       background-color: $solved-color;
@@ -132,12 +132,6 @@ $solved-color: var(--success);
 
   &__solution-count {
     font-size: var(--font-down-1);
-  }
-
-  .d-post-excerpt-accordion-item {
-    &__metadata {
-      color: var(--primary-low-mid);
-    }
   }
 }
 
