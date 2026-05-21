@@ -301,6 +301,21 @@ jobs:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
 
+      - name: Probe playwright cache in image
+        if: matrix.build_type == 'system'
+        run: |
+          echo "=== /home/discourse/.cache/ms-playwright ==="
+          ls -la /home/discourse/.cache/ms-playwright/ 2>&1 || echo "(not present)"
+          echo "=== /root/.cache/ms-playwright ==="
+          ls -la /root/.cache/ms-playwright/ 2>&1 || echo "(not present)"
+          echo "=== /github/home/.cache/ms-playwright ==="
+          ls -la /github/home/.cache/ms-playwright/ 2>&1 || echo "(not present)"
+          echo "=== HOME and whoami ==="
+          echo "HOME=$HOME"
+          whoami
+          echo "=== expected chromium version (from node_modules) ==="
+          cat node_modules/playwright-core/browsers.json 2>/dev/null | head -30 || echo "(no playwright-core/browsers.json)"
+
       - name: Install playwright
         if: matrix.build_type == 'system'
         run: pnpm playwright install --with-deps --no-shell chromium
