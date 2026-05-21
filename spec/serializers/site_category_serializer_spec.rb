@@ -47,7 +47,7 @@ RSpec.describe SiteCategorySerializer do
   end
 
   it "omits name-bearing tag fields and limits required_tag_groups to min_count for a regular user" do
-    json = serialize(Guardian.new(user))
+    json = serialize(user.guardian)
 
     expect(json).not_to have_key(:allowed_tags)
     expect(json).not_to have_key(:allowed_tag_groups)
@@ -55,7 +55,7 @@ RSpec.describe SiteCategorySerializer do
   end
 
   it "omits name-bearing tag fields and limits required_tag_groups to min_count for an admin" do
-    json = serialize(Guardian.new(admin))
+    json = serialize(admin.guardian)
 
     expect(json).not_to have_key(:allowed_tags)
     expect(json).not_to have_key(:allowed_tag_groups)

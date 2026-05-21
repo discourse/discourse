@@ -347,7 +347,7 @@ RSpec.describe CategorySerializer do
     end
 
     it "omits name-bearing fields and returns min_count-only required_tag_groups for a regular user" do
-      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+      json = described_class.new(category, scope: user.guardian, root: false).as_json
 
       expect(json).not_to have_key(:allowed_tags)
       expect(json).not_to have_key(:allowed_tag_groups)
@@ -363,7 +363,7 @@ RSpec.describe CategorySerializer do
     end
 
     it "includes restricted tag and tag-group names for an admin" do
-      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
 
       expect(json[:allowed_tags]).to contain_exactly(
         { id: visible_tag.id, name: visible_tag.name, slug: visible_tag.slug },
@@ -381,7 +381,7 @@ RSpec.describe CategorySerializer do
     it "filters admin-only tag and tag-group names for a moderator who can edit the category" do
       SiteSetting.moderators_manage_categories = true
 
-      json = described_class.new(category, scope: Guardian.new(moderator), root: false).as_json
+      json = described_class.new(category, scope: moderator.guardian, root: false).as_json
 
       expect(json[:allowed_tags]).to contain_exactly(
         { id: visible_tag.id, name: visible_tag.name, slug: visible_tag.slug },
@@ -393,7 +393,7 @@ RSpec.describe CategorySerializer do
     it "omits all tag-related fields when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
-      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
 
       expect(json).not_to have_key(:allowed_tags)
       expect(json).not_to have_key(:allowed_tag_groups)
