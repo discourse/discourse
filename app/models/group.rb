@@ -429,7 +429,6 @@ class Group < ActiveRecord::Base
   end
 
   def posts_for(guardian, opts = nil)
-    opts ||= {}
     result =
       Post
         .joins(:topic, user: :groups, topic: :category)
@@ -440,19 +439,10 @@ class Group < ActiveRecord::Base
         .where("topics.visible")
         .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
-    if opts[:category_id].present?
-      result = result.where("topics.category_id = ?", opts[:category_id].to_i)
-    end
-
-    result = guardian.filter_allowed_categories(result)
-    result = filter_hidden_posts_for_guardian(result, guardian)
-    result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
-    result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
-    result.order("posts.created_at desc")
+    filter_posts_for_guardian(result, guardian, opts)
   end
 
   def mentioned_posts_for(guardian, opts = nil)
-    opts ||= {}
     result =
       Post
         .joins(:group_mentions)
@@ -462,6 +452,12 @@ class Group < ActiveRecord::Base
         .where("topics.visible")
         .where(post_type: Post.types[:regular])
         .where("group_mentions.group_id = ?", id)
+
+    filter_posts_for_guardian(result, guardian, opts)
+  end
+
+  def filter_posts_for_guardian(result, guardian, opts = nil)
+    opts ||= {}
 
     if opts[:category_id].present?
       result = result.where("topics.category_id = ?", opts[:category_id].to_i)
@@ -475,14 +471,10 @@ class Group < ActiveRecord::Base
   end
 
   def filter_hidden_posts_for_guardian(result, guardian)
-    return result if SiteSetting.hidden_post_visible_groups_map.include?(AUTO_GROUPS[:everyone])
-    return result if guardian.is_staff?
+    return result if guardian.can_see_all_hidden_posts?
+    return result.where(posts: { hidden: false }) if guardian.anonymous?
 
-    user = guardian.user
-    return result.where(posts: { hidden: false }) if user.blank?
-    return result if user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
-
-    result.where("posts.hidden = false OR posts.user_id = ?", user.id)
+    result.where("posts.hidden = false OR posts.user_id = ?", guardian.user.id)
   end
 
   def self.trust_group_ids

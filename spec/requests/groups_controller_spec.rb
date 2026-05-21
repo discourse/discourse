@@ -602,35 +602,20 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
-    it "does not return hidden posts from group activity endpoints" do
-      visible_post = Fabricate(:post, user: user, raw: "visible group activity post")
-      hidden_post =
-        Fabricate(
-          :post,
-          user: user,
-          raw: "private hidden group activity post should not leak",
-          hidden: true,
-        )
+    it "returns only visible mentions for another user" do
+      visible_post = Fabricate(:post, user: user, raw: "visible group mention")
+      hidden_post = Fabricate(:post, user: user, raw: "private hidden group mention", hidden: true)
       GroupMention.create!(post: visible_post, group: group)
       GroupMention.create!(post: hidden_post, group: group)
 
       sign_in(user2)
-
-      get "/groups/#{group.name}/posts.json"
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
-        visible_post.id,
-      )
-      expect(response.body).not_to include("private hidden group activity post should not leak")
-
       get "/groups/#{group.name}/mentions.json"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
         visible_post.id,
       )
-      expect(response.body).not_to include("private hidden group activity post should not leak")
+      expect(response.body).not_to include(hidden_post.raw)
     end
 
     it "supports pagination using before (date)" do
@@ -707,6 +692,20 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+    end
+
+    it "returns only visible posts for another user" do
+      visible_post = Fabricate(:post, user: user, raw: "visible group post")
+      hidden_post = Fabricate(:post, user: user, raw: "private hidden group post", hidden: true)
+
+      sign_in(user2)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        visible_post.id,
+      )
+      expect(response.body).not_to include(hidden_post.raw)
     end
 
     it "does not include names when names are disabled" do
