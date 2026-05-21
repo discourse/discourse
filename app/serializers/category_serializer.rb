@@ -182,7 +182,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_allowed_tags?
-    SiteSetting.tagging_enabled && scope&.can_edit?(object)
+    can_edit_tags?
   end
 
   def allowed_tags
@@ -194,7 +194,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_allowed_tag_groups?
-    SiteSetting.tagging_enabled && scope&.can_edit?(object)
+    can_edit_tags?
   end
 
   def allowed_tag_groups
@@ -215,5 +215,11 @@ class CategorySerializer < SiteCategorySerializer
     required
       .select { |crtg| visible_ids.include?(crtg.tag_group_id) }
       .map { |crtg| { name: crtg.tag_group&.name, min_count: crtg.min_count } }
+  end
+
+  private
+
+  def can_edit_tags?
+    SiteSetting.tagging_enabled && scope&.can_edit?(object)
   end
 end
