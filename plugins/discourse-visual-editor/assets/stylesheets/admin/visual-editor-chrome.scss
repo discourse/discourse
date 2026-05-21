@@ -3673,3 +3673,58 @@ body.visual-editor-active {
   color: var(--primary-medium);
   font-style: italic;
 }
+
+/* Inline-edit bubble toolbar — floats above the active selection
+   inside a `richInline` editor. Position is computed in the controller
+   via PM's `coordsAtPos` and applied as an inline style. `position: fixed`
+   keeps the toolbar pinned to the selection regardless of canvas
+   scroll. Buttons use `mousedown` (not `click`) so the controller can
+   `preventDefault` and keep the editor focused — `tabindex="-1"` also
+   stops the button from being a keyboard focus target. */
+
+.ve-inline-edit-toolbar {
+  position: fixed;
+  z-index: 1100;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+
+  /* Offset above the top of the selection. The toolbar's own height
+     plus a small gap; translate keeps the center-of-button anchor
+     aligned with the `left` coord (which is the selection midpoint). */
+  transform: translate(-50%, calc(-100% - 8px));
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: var(--font-down-1);
+
+    &:hover {
+      background: var(--primary-low);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+    }
+
+    .d-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

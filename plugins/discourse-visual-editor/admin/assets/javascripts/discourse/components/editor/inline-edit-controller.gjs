@@ -1,6 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -11,6 +11,7 @@ import {
   toDoc,
   toStorage,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/inline-rich-text";
+import InlineEditToolbar from "./inline-edit-toolbar";
 
 /**
  * Mounts a ProseMirror editor over the currently-edited inline text region.
@@ -34,6 +35,21 @@ import {
  */
 export default class InlineEditController extends Component {
   @service visualEditor;
+
+  /**
+   * Floating-toolbar state. `null` when the toolbar should be hidden
+   * (no selection, empty selection, or `plain` schema with no marks).
+   * The toolbar component reads `{view, left, top, isStrongActive, ...}`
+   * straight out. Updated in `dispatchTransaction` after every PM
+   * state change, plus on initial mount.
+   *
+   * `@tracked` so the template re-renders when the user selects text
+   * or toggles a mark. Template-facing (read directly via `this.toolbarState`),
+   * so unprefixed per the public-template convention in CLAUDE.local.md.
+   *
+   * @type {import("./inline-edit-toolbar").InlineEditToolbarState | null}
+   */
+  @tracked toolbarState = null;
 
   #view = null;
   #handleOutsideClick = null;
@@ -138,6 +154,7 @@ export default class InlineEditController extends Component {
           return;
         }
         view.updateState(view.state.apply(tr));
+        this.#refreshToolbarState();
       },
     });
 
@@ -155,9 +172,8 @@ export default class InlineEditController extends Component {
       this.visualEditor.applyInlineEditChange(toStorage(docJson));
     });
 
-    // Select all on entry — "start typing to replace" affordance matching
-    // Figma/Sketch text-layer editing. Selecting the entire doc is bounded
-    // by 0..doc.content.size so it's safe even for an empty placeholder.
+    // Select all on entry — "start typing to replace" affordance for the
+    // most common edit case (replacing existing text).
     const allRange = pm.TextSelection.create(
       this.#view.state.doc,
       0,
@@ -165,9 +181,17 @@ export default class InlineEditController extends Component {
     );
     this.#view.dispatch(this.#view.state.tr.setSelection(allRange));
     this.#view.focus();
+    this.#refreshToolbarState();
 
     this.#handleOutsideClick = (event) => {
       if (!this.#view || this.#view.dom.contains(event.target)) {
+        return;
+      }
+      // The bubble toolbar is portaled at canvas level (outside view.dom),
+      // so a click on its buttons would otherwise look like an outside
+      // click and exit the session. Treat any click inside the toolbar
+      // as inside the editor.
+      if (event.target.closest?.(".ve-inline-edit-toolbar")) {
         return;
       }
       // Defer one frame so a click on a sibling `[data-ve-inline-edit-arg]`
@@ -202,6 +226,45 @@ export default class InlineEditController extends Component {
     }
     this.#editingRendererEl?.classList.remove("--editing");
     this.#editingRendererEl = null;
+    this.toolbarState = null;
+  }
+
+  /**
+   * Recomputes the toolbar's position and active-mark flags from the
+   * current PM selection. Called after every dispatched transaction and
+   * once after the initial mount. Hides the toolbar (sets state to
+   * `null`) when:
+   *   - PM isn't mounted
+   *   - the selection is empty (nothing to format)
+   *   - the schema doesn't allow marks (the `plain` variant)
+   */
+  #refreshToolbarState() {
+    const view = this.#view;
+    if (!view) {
+      this.toolbarState = null;
+      return;
+    }
+    const variant = SCHEMAS[this.schemaName];
+    if (!variant?.allowsMarks) {
+      this.toolbarState = null;
+      return;
+    }
+    const { from, to, empty } = view.state.selection;
+    if (empty) {
+      this.toolbarState = null;
+      return;
+    }
+    const { schema } = view.state;
+    const fromCoords = view.coordsAtPos(from);
+    const toCoords = view.coordsAtPos(to);
+    this.toolbarState = {
+      view,
+      left: (fromCoords.left + toCoords.left) / 2,
+      top: fromCoords.top,
+      isStrongActive: hasMark(view.state, schema.marks.strong),
+      isEmActive: hasMark(view.state, schema.marks.em),
+      isLinkActive: hasMark(view.state, schema.marks.link),
+    };
   }
 
   <template>
@@ -221,7 +284,32 @@ export default class InlineEditController extends Component {
         ></span>
       {{/in-element}}
     {{/if}}
+    {{#if this.toolbarState}}
+      <InlineEditToolbar @state={{this.toolbarState}} />
+    {{/if}}
   </template>
+}
+
+/**
+ * Returns `true` when the current selection has the given mark applied
+ * (or, for empty selections, when `storedMarks` carries it). Inlined here
+ * rather than imported from `discourse/static/prosemirror/lib/plugin-utils`
+ * because that path lives in a lazy chunk plugin code can't statically
+ * import.
+ *
+ * @param {import("prosemirror-state").EditorState} state
+ * @param {import("prosemirror-model").MarkType | undefined} markType
+ * @returns {boolean}
+ */
+function hasMark(state, markType) {
+  if (!markType) {
+    return false;
+  }
+  const { from, $from, to, empty } = state.selection;
+  if (empty) {
+    return !!markType.isInSet(state.storedMarks || $from.marks());
+  }
+  return state.doc.rangeHasMark(from, to, markType);
 }
 
 /**
