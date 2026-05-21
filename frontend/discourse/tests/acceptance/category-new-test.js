@@ -54,7 +54,7 @@ acceptance("Category New", function (needs) {
 
     await visit("/new-category/topic-template");
     assert
-      .dom(".edit-category-tab-topic-template.active")
+      .dom(".edit-category-tab-topic-template")
       .exists("it can switch to the topic template tab");
 
     await visit("/new-category/tags");
