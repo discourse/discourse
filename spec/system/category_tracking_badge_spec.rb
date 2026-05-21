@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Category incoming new topic notifications" do
+RSpec.describe "Category tracking badge" do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
@@ -39,30 +39,33 @@ RSpec.describe "Category incoming new topic notifications" do
     end
   end
 
-  it "clears the Unread count after a reply post in a watched topic is spam-deleted" do
-    Jobs.run_immediately!
-
-    TopicUser.change(
-      admin.id,
-      existing_topic.id,
-      notification_level: TopicUser.notification_levels[:watching],
-    )
-
-    sign_in(admin)
-
-    category_page.visit(category)
-    expect(topic_list).to have_topic(existing_topic)
-
-    reply = create_post(category: category, user: author, topic: existing_topic)
-
-    try_until_success(reason: "relies on MessageBus updates") do
-      expect(topic_list_controls).to have_unread(count: 1)
+  context "when a reply post in a watched topic is spam-deleted" do
+    before do
+      Jobs.run_immediately!
+      TopicUser.change(
+        admin.id,
+        existing_topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
     end
 
-    PostActionCreator.spam(moderator, reply).reviewable.perform(moderator, :delete_and_agree)
+    it "clears the Unread count" do
+      sign_in(admin)
 
-    try_until_success(reason: "relies on MessageBus updates") do
-      expect(topic_list_controls).to have_unread(count: 0)
+      category_page.visit(category)
+      expect(topic_list).to have_topic(existing_topic)
+
+      reply = create_post(category: category, user: author, topic: existing_topic)
+
+      try_until_success(reason: "relies on MessageBus updates") do
+        expect(topic_list_controls).to have_unread(count: 1)
+      end
+
+      PostActionCreator.spam(moderator, reply).reviewable.perform(moderator, :delete_and_agree)
+
+      try_until_success(reason: "relies on MessageBus updates") do
+        expect(topic_list_controls).to have_no_unread
+      end
     end
   end
 end
