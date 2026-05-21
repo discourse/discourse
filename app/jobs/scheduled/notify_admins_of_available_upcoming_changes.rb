@@ -28,6 +28,7 @@ module Jobs
     def execute(args)
       return if !UpcomingChanges.should_notify_admins?
       return if eligible_admins.empty?
+      return if upcoming_changes_to_notify.empty?
 
       existing_notifications =
         Notification.where(
@@ -39,8 +40,6 @@ module Jobs
         existing_notifications.to_a.index_by(&:user_id).transform_values(&:data)
       new_notification_data_by_user = {}
 
-      merge_with_existing = existing_notifications.present?
-      bulk_notification_new_records = []
       bulk_notified_event_new_records = []
 
       now = Time.zone.now
@@ -82,22 +81,25 @@ module Jobs
         }
       end
 
-      bulk_notification_new_records =
-        new_notification_data_by_user
-          .merge(existing_notification_data_by_user)
-          .map do |admin_id, notification_data|
-            {
-              user_id: admin_id,
-              notification_type: Notification.types[:upcoming_change_available],
-              data: notification_data,
-            }
-          end
-
       UpcomingChangeEvent.transaction do
-        existing_notifications.delete_all if merge_with_existing
+        existing_notifications.presence&.delete_all
         Notification::Action::BulkCreate.call(
-          records: bulk_notification_new_records,
-          skip_send_email: merge_with_existing,
+          records:
+            new_notification_data_by_user
+              .merge(existing_notification_data_by_user)
+              .map do |admin_id, notification_data|
+                {
+                  user_id: admin_id,
+                  notification_type: Notification.types[:upcoming_change_available],
+                  data: notification_data,
+                }
+              end,
+          # NOTE: There isn't an email notification for this notification type,
+          # but we will keep this skip param here just as a precaution. If we
+          # do decide to add one, we should split this into two separate calls,
+          # one for the existing notifications and one for the new notifications,
+          # the former of which should have skip_send_email set to true.
+          skip_send_email: true,
         )
         UpcomingChangeEvent.insert_all(bulk_notified_event_new_records)
 
@@ -138,6 +140,7 @@ module Jobs
             FROM upcoming_change_events
             WHERE event_type = :added
               AND created_at >= :since
+              AND upcoming_change_name IN (:upcoming_changes_meeting_notify_status)
 
             UNION
 
@@ -153,6 +156,7 @@ module Jobs
             ) latest_status
             WHERE latest_status.new_value = :promotion_status_minus_one
               AND latest_status.created_at >= :since
+              AND latest_status.upcoming_change_name IN (:upcoming_changes_meeting_notify_status)
           ) eligible
           WHERE NOT EXISTS (
             SELECT 1
@@ -171,6 +175,13 @@ module Jobs
           promotion_status_minus_one:
             UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status).to_s,
           since: 1.week.ago,
+          upcoming_changes_meeting_notify_status:
+            SiteSetting.upcoming_change_site_settings.filter do |upcoming_change_name|
+              UpcomingChanges.meets_or_exceeds_status?(
+                upcoming_change_name,
+                UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status),
+              )
+            end,
         )
     end
 

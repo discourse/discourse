@@ -8,7 +8,7 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
       {
         test_upcoming_change: {
           impact: "feature,all_members",
-          status: :beta,
+          status: test_upcoming_change_status,
           impact_type: "feature",
           impact_role: "all_members",
         },
@@ -31,6 +31,7 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
     UpcomingChanges.stubs(:should_notify_admins?).returns(true)
   end
 
+  let(:test_upcoming_change_status) { :beta }
   fab!(:admin_1, :admin)
   fab!(:admin_2, :admin)
 
@@ -149,6 +150,30 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
     expect { result }.to change {
       UpcomingChangeEvent.where(event_type: :admins_notified_available_change).count
     }.by(2)
+  end
+
+  context "when there are no upcoming changes to notify" do
+    before { UpcomingChangeEvent.delete_all }
+
+    it "sends no notifications" do
+      expect { result }.not_to change { Notification.count }
+    end
+
+    context "when there are existing unread notifications" do
+      fab!(:notification) do
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:upcoming_change_available],
+          user: admin_1,
+        )
+      end
+
+      it "does not delete the existing notifications" do
+        old_notification_id = notification.id
+        result
+        expect(Notification.find_by(id: old_notification_id)).to be_present
+      end
+    end
   end
 
   context "when admins should not be notified" do
@@ -300,6 +325,42 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
       expect { result }.not_to change {
         UpcomingChangeEvent.where(event_type: :admins_notified_available_change).count
       }
+    end
+  end
+
+  context "when there is an added event for an upcoming change that no longer exists" do
+    before do
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: :old_deleted_upcoming_change,
+        created_at: 1.day.ago,
+      )
+    end
+
+    it "does not create a notification for that change" do
+      result
+      expect(
+        Notification
+          .where(notification_type: Notification.types[:upcoming_change_available])
+          .to_a
+          .map { |notification| JSON.parse(notification.data)["upcoming_change_names"] || [] }
+          .flatten,
+      ).not_to include("old_deleted_upcoming_change")
+    end
+  end
+
+  context "when an upcoming change is added but hasn't reached the promotion status - 1" do
+    let(:test_upcoming_change_status) { :experimental }
+
+    it "does not create a notification for that change" do
+      result
+      expect(
+        Notification
+          .where(notification_type: Notification.types[:upcoming_change_available])
+          .to_a
+          .map { |notification| JSON.parse(notification.data)["upcoming_change_names"] || [] }
+          .flatten,
+      ).not_to include("test_upcoming_change")
     end
   end
 end

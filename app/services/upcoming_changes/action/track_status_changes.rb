@@ -57,7 +57,7 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
       end
     end
 
-    Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
+    UpcomingChanges.clear_caches!
     DiscourseUpdates.clear_latest_new_feature_created_at_cache
 
     status_changes
