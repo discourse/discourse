@@ -1217,7 +1217,7 @@ module SiteSettingExtension
   #
   # @example
   #   {
-  #     enable_mobile_theme: true,
+  #     enable_badges: true,
   #     topics_per_period_in_top_page: 50,
   #     title: "My awesome forum"
   #   }

@@ -409,7 +409,6 @@ en:
         since: "(since %{version})"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
-      toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
@@ -470,8 +469,6 @@ en:
     tos: "Terms of Service"
     rules: "Rules"
     conduct: "Code of Conduct"
-    mobile_view: "Mobile View"
-    desktop_view: "Desktop View"
     now: "just now"
     read_more: "read more"
     more: "More"
