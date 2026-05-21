@@ -6884,6 +6884,21 @@ en:
           engagement:
             title: "Engagement"
 
+        reports_section:
+          add: "Add report"
+          remove: "Remove report"
+          no_data: "No data to display"
+          modal:
+            title: "Manage reports"
+            search_placeholder: "Search reports"
+            counter: "%{count} / %{max} reports"
+            enabled_heading: "Enabled"
+            all_heading: "All reports"
+            apply: "Apply"
+            toggle: "Toggle report"
+            move_up: "Move up"
+            move_down: "Move down"
+
         configure:
           button: "Configure"
           tooltip: "Configure how this dashboard appears for everyone on this site."

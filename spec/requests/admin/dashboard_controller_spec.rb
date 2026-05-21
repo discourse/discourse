@@ -308,7 +308,8 @@ RSpec.describe Admin::DashboardController do
           get "/admin/dashboard.json"
 
           expect(response.status).to eq(200)
-          expect(reports_data).to eq("items" => [])
+          expect(reports_data["items"]).to eq([])
+          expect(reports_data).to have_key("show_labels")
         end
 
         it "serializes configured rows resolved via the registered providers" do
@@ -786,7 +787,7 @@ RSpec.describe Admin::DashboardController do
     end
   end
 
-  describe "POST /admin/dashboard/reports/bulk" do
+  describe "#bulk_reports" do
     before { SiteSetting.dashboard_improvements = true }
 
     let(:fake_provider) do
@@ -913,6 +914,310 @@ RSpec.describe Admin::DashboardController do
 
       it "rejects requests with a non-array items field" do
         post "/admin/dashboard/reports/bulk.json", params: { items: "not_an_array" }
+        expect(response.status).to eq(400)
+      end
+    end
+  end
+
+  describe "#available_reports" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      AdminDashboardReport.delete_all
+    end
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "a_fake_source"
+        def self.label = "Fake"
+
+        def self.universe
+          %w[a b c].map do |id|
+            AdminDashboard::Reports::ResolvedReport.new(
+              source: source_name,
+              identifier: id,
+              title: "Fakey #{id}",
+              description: "Desc #{id}",
+              label: label,
+              url: "/fake/#{id}",
+            )
+          end
+        end
+
+        def self.list_all(search: nil, offset: 0, limit: nil)
+          items = universe
+          items = items.select { |r| r.title.downcase.include?(search.downcase) } if search.present?
+          sliced = limit ? items[offset, limit] : items[offset..]
+          Array(sliced)
+        end
+
+        def self.resolve_many(identifiers, guardian:)
+          universe
+            .select { |r| identifiers.map(&:to_s).include?(r.identifier) }
+            .index_by(&:identifier)
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        get "/admin/dashboard/reports/available.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a moderator" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        sign_in(Fabricate(:moderator))
+      end
+
+      it "denies access" do
+        get "/admin/dashboard/reports/available.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "returns 404 when dashboard_improvements is off" do
+        SiteSetting.dashboard_improvements = false
+        get "/admin/dashboard/reports/available.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns enabled, all, and providers" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "b", position: 0)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Fakey" }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["providers"].map { |p| p["source"] }).to include("a_fake_source")
+        expect(body["providers"].find { |p| p["source"] == "a_fake_source" }["label"]).to eq("Fake")
+
+        expect(body["enabled"].map { |i| i["identifier"] }).to eq(["b"])
+        expect(body["enabled"].first["label"]).to eq("Fake")
+
+        fake_all = body["available"].select { |i| i["source"] == "a_fake_source" }
+        expect(fake_all.map { |i| i["identifier"] }).to contain_exactly("a", "b", "c")
+      end
+
+      it "includes already-enabled identifiers in the all list" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "a", position: 0)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "b", position: 1)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Fakey" }
+        body = response.parsed_body
+        fake_all = body["available"].select { |i| i["source"] == "a_fake_source" }
+        expect(fake_all.map { |i| i["identifier"] }).to contain_exactly("a", "b", "c")
+      end
+
+      context "with pagination" do
+        let(:wide_provider) do
+          Class.new(AdminDashboard::Reports::SourceProvider) do
+            def self.source_name = "a_wide_source"
+            def self.label = "Wide"
+
+            def self.list_all(search: nil, offset: 0, limit: nil)
+              items =
+                (1..40).map do |i|
+                  AdminDashboard::Reports::ResolvedReport.new(
+                    source: source_name,
+                    identifier: "row_#{i}",
+                    title: "Wideprefix Row #{i}",
+                    description: nil,
+                    label: label,
+                    url: nil,
+                  )
+                end
+              if search.present?
+                items = items.select { |r| r.title.downcase.include?(search.downcase) }
+              end
+              sliced = limit ? items[offset, limit] : items[offset..]
+              Array(sliced)
+            end
+
+            def self.resolve_many(_identifiers, guardian:)
+              {}
+            end
+          end
+        end
+
+        after do
+          DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+            entry[:value] == wide_provider
+          end
+        end
+
+        it "returns 30 items and reports has_more=true with a cursor when more exist" do
+          DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+          get "/admin/dashboard/reports/available.json", params: { search: "Wideprefix" }
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          wide = body["available"].select { |i| i["source"] == "a_wide_source" }
+          expect(wide.size).to eq(AdminDashboard::Reports::Listing::PAGE_SIZE)
+          expect(wide.first["identifier"]).to eq("row_1")
+          expect(body["has_more"]).to eq(true)
+          expect(body["cursor"]).to eq("a_wide_source:30")
+        end
+
+        it "returns the next batch when the cursor from a previous response is sent back" do
+          DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+          get "/admin/dashboard/reports/available.json",
+              params: {
+                search: "Wideprefix",
+                cursor: "a_wide_source:30",
+              }
+          body = response.parsed_body
+          wide = body["available"].select { |i| i["source"] == "a_wide_source" }
+
+          expect(wide.map { |i| i["identifier"] }).to eq((31..40).map { |n| "row_#{n}" })
+          expect(body["has_more"]).to eq(false)
+          expect(body["cursor"]).to be_nil
+        end
+
+        it "ignores a cursor whose source is not registered" do
+          DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+          get "/admin/dashboard/reports/available.json", params: { cursor: "ghost_source:0" }
+
+          expect(response.parsed_body["available"]).to be_empty
+          expect(response.parsed_body["has_more"]).to eq(false)
+          expect(response.parsed_body["cursor"]).to be_nil
+        end
+
+        it "crosses provider boundaries via cursor instead of asking each provider at the same offset" do
+          DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+          DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+          get "/admin/dashboard/reports/available.json", params: { cursor: "a_fake_source:0" }
+          body = response.parsed_body
+          sources = body["available"].map { |i| i["source"] }
+
+          expect(sources.first(3)).to eq(%w[a_fake_source a_fake_source a_fake_source])
+          expect(sources.last).to eq("a_wide_source")
+          expect(body["has_more"]).to eq(true)
+          expect(body["cursor"]).to start_with("a_wide_source:")
+        end
+
+        it "filters by the search param" do
+          DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+          get "/admin/dashboard/reports/available.json", params: { search: "Fakey a" }
+          body = response.parsed_body
+          fake_all = body["available"].select { |i| i["source"] == "a_fake_source" }
+          expect(fake_all.map { |i| i["identifier"] }).to eq(["a"])
+        end
+      end
+    end
+  end
+
+  describe "#update_reports_section" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      AdminDashboardReport.delete_all
+    end
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "fake_source"
+        def self.label = "Fake"
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a moderator" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        sign_in(Fabricate(:moderator))
+      end
+
+      it "denies access" do
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "returns 404 when dashboard_improvements is off" do
+        SiteSetting.dashboard_improvements = false
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+
+      it "replaces the current layout with the supplied items in order" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "fake_source", identifier: "old", position: 0)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                { source: "fake_source", identifier: "new_a" },
+                { source: "fake_source", identifier: "new_b" },
+              ],
+            }
+
+        expect(response.status).to eq(204)
+        rows = AdminDashboardReport.order(:position).pluck(:identifier, :position)
+        expect(rows).to eq([["new_a", 0], ["new_b", 1]])
+      end
+
+      it "accepts an empty layout (removes everything)" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "fake_source", identifier: "y", position: 0)
+
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.count).to eq(0)
+      end
+
+      it "rejects more than VISIBLE_CAP items" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        items =
+          (AdminDashboardReport::VISIBLE_CAP + 1).times.map do |i|
+            { source: "fake_source", identifier: "id#{i}" }
+          end
+        put "/admin/dashboard/reports/layout.json", params: { items: items }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects items missing source or identifier" do
+        put "/admin/dashboard/reports/layout.json", params: { items: [{ source: "fake_source" }] }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects a non-array items field" do
+        put "/admin/dashboard/reports/layout.json", params: { items: "not_an_array" }
         expect(response.status).to eq(400)
       end
     end

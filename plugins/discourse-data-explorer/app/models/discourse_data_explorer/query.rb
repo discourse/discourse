@@ -51,6 +51,25 @@ module DiscourseDataExplorer
       QueryFinder.find(id)
     end
 
+    def self.unpersisted_defaults(search: nil)
+      persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
+      query_text = search&.downcase
+
+      Queries.default.filter_map do |_, attributes|
+        next if persisted_ids.include?(attributes["id"])
+
+        if query_text
+          name_match = attributes["name"]&.downcase&.include?(query_text)
+          desc_match = attributes["description"]&.downcase&.include?(query_text)
+          next unless name_match || desc_match
+        end
+
+        record = new(attributes.slice("id", "sql", "name", "description"))
+        record.user_id = Discourse::SYSTEM_USER_ID.to_s
+        record
+      end
+    end
+
     private
 
     # for `Query.unscoped.find`

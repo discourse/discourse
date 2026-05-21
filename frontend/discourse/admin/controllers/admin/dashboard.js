@@ -94,6 +94,7 @@ export default class AdminDashboardController extends Controller {
     await this.fetchSections();
   }
 
+  @action
   async fetchSections() {
     const id = ++this._sectionsLoadId;
     const period = this.safePeriod;

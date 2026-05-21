@@ -17,6 +17,7 @@ export default <template>
       @setCustomDateRange={{@controller.setCustomDateRange}}
       @loadedSections={{@controller.loadedSections}}
       @updateConfiguration={{@controller.updateConfiguration}}
+      @refreshSections={{@controller.fetchSections}}
       @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
     />

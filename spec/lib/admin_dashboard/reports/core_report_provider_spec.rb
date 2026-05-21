@@ -10,6 +10,12 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
     end
   end
 
+  describe ".label" do
+    it "returns the localized provider label" do
+      expect(described_class.label).to eq(I18n.t("dashboard.reports_section.providers.core_report"))
+    end
+  end
+
   describe ".resolve_many" do
     it "returns ResolvedReports for known built-in report identifiers" do
       result = described_class.resolve_many(%w[signups], guardian: guardian)
@@ -20,6 +26,7 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
       expect(resolved.source).to eq("core_report")
       expect(resolved.identifier).to eq("signups")
       expect(resolved.title).to be_present
+      expect(resolved.label).to eq(described_class.label)
     end
 
     it "omits identifiers that don't correspond to a built-in report" do
@@ -38,9 +45,9 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
     end
   end
 
-  describe ".available_for" do
+  describe ".list_all" do
     it "includes built-in reports" do
-      reports = described_class.available_for(guardian)
+      reports = described_class.list_all
       identifiers = reports.map(&:identifier)
 
       expect(identifiers).to include("signups")
@@ -48,14 +55,23 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
     end
 
     it "filters by name/description when search is given" do
-      filtered = described_class.available_for(guardian, search: "signup")
+      filtered = described_class.list_all(search: "signup")
       identifiers = filtered.map(&:identifier)
 
       expect(identifiers).to include("signups")
     end
 
     it "returns no results when search matches nothing" do
-      expect(described_class.available_for(guardian, search: "zzzz_no_match_zzzz")).to be_empty
+      expect(described_class.list_all(search: "zzzz_no_match_zzzz")).to be_empty
+    end
+
+    it "respects offset and limit" do
+      first_two = described_class.list_all(offset: 0, limit: 2)
+      next_two = described_class.list_all(offset: 2, limit: 2)
+
+      expect(first_two.size).to eq(2)
+      expect(next_two.size).to eq(2)
+      expect(first_two.map(&:identifier)).not_to include(*next_two.map(&:identifier))
     end
   end
 

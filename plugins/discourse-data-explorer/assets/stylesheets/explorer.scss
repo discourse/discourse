@@ -1,5 +1,61 @@
 @use "lib/viewport";
 
+.de-dashboard-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  min-height: 0;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  &__table {
+    overflow: auto;
+    font-size: var(--font-down-2);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}
+
+.de-manage-reports-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) 1.5rem;
+  border-top: 1px solid var(--primary-low);
+  text-decoration: none;
+  color: inherit;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__title {
+    color: var(--tertiary);
+    font-weight: bold;
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__chevron {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+  }
+}
+
 table.group-reports {
   width: 100%;
   table-layout: fixed;

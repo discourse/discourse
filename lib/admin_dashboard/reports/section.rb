@@ -3,16 +3,20 @@
 module AdminDashboard
   module Reports
     class Section
-      def self.build(guardian:)
-        new(guardian: guardian).build
+      def self.build(guardian:, search: nil)
+        new(guardian: guardian, search: search).build
       end
 
-      def initialize(guardian:)
+      def initialize(guardian:, search: nil)
         @guardian = guardian
+        @search = search.presence
       end
 
       def build
-        { items: visible_items.map { |_row, resolved| serialize(resolved) } }
+        items = visible_items.map { |_row, resolved| serialize(resolved) }
+        items = filter_by_search(items) if @search
+
+        { items: items, show_labels: AdminDashboard::Reports::Registry.providers.length > 1 }
       end
 
       private
@@ -44,12 +48,15 @@ module AdminDashboard
       end
 
       def serialize(resolved)
-        {
-          source: resolved.source,
-          identifier: resolved.identifier,
-          title: resolved.title,
-          description: resolved.description,
-        }
+        resolved.to_h
+      end
+
+      def filter_by_search(items)
+        query = @search.downcase
+        items.select do |item|
+          item[:title].to_s.downcase.include?(query) ||
+            item[:description].to_s.downcase.include?(query)
+        end
       end
     end
   end

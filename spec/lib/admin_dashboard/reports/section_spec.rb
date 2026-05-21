@@ -8,6 +8,8 @@ RSpec.describe AdminDashboard::Reports::Section do
     Class.new(AdminDashboard::Reports::SourceProvider) do
       def self.source_name = "fake"
 
+      def self.label = "Fake"
+
       def self.resolve_many(identifiers, guardian:)
         identifiers
           .reject { |id| id.to_s.start_with?("missing_") }
@@ -17,6 +19,8 @@ RSpec.describe AdminDashboard::Reports::Section do
               identifier: id.to_s,
               title: "Title for #{id}",
               description: "Desc for #{id}",
+              label: label,
+              url: "/fake/#{id}",
             )
           end
       end
@@ -37,7 +41,21 @@ RSpec.describe AdminDashboard::Reports::Section do
   end
 
   it "returns an empty items list when there are no rows" do
-    expect(described_class.build(guardian: guardian)).to eq(items: [])
+    result = described_class.build(guardian: guardian)
+    expect(result[:items]).to eq([])
+  end
+
+  describe ":show_labels" do
+    it "is true when more than one provider is registered" do
+      expect(described_class.build(guardian: guardian)[:show_labels]).to eq(true)
+    end
+
+    it "is false when only one provider is registered" do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+      expect(described_class.build(guardian: guardian)[:show_labels]).to eq(false)
+    end
   end
 
   it "returns items in position order, ignoring insertion order" do
@@ -49,7 +67,7 @@ RSpec.describe AdminDashboard::Reports::Section do
     expect(result[:items].map { |i| i[:identifier] }).to eq(%w[b a c])
   end
 
-  it "serializes source / identifier / title / description from the resolved metadata" do
+  it "serializes the resolved metadata along with a composite key" do
     AdminDashboardReport.create!(source: "fake", identifier: "x", position: 0)
 
     item = described_class.build(guardian: guardian)[:items].first
@@ -58,6 +76,9 @@ RSpec.describe AdminDashboard::Reports::Section do
       identifier: "x",
       title: "Title for x",
       description: "Desc for x",
+      label: "Fake",
+      url: "/fake/x",
+      key: "fake:x",
     )
   end
 

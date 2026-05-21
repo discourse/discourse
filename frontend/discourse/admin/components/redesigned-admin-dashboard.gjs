@@ -135,8 +135,10 @@ export default class RedesignedAdminDashboard extends Component {
               />
             {{else if (eq section.id "reports")}}
               <DashboardReports
+                @data={{section.data}}
                 @startDate={{@loadedSections.startDate}}
                 @endDate={{@loadedSections.endDate}}
+                @refreshSections={{@refreshSections}}
               />
             {{else if (eq section.id "traffic")}}
               <DashboardTraffic
