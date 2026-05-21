@@ -1,0 +1,125 @@
+# frozen_string_literal: true
+
+RSpec.describe AdminDashboard::Reports::CoreReportProvider do
+  fab!(:admin)
+  let(:guardian) { Guardian.new(admin) }
+
+  describe ".source_name" do
+    it "returns 'core_report'" do
+      expect(described_class.source_name).to eq("core_report")
+    end
+  end
+
+  describe ".resolve_many" do
+    it "returns ResolvedReports for known built-in report identifiers" do
+      result = described_class.resolve_many(%w[signups], guardian: guardian)
+
+      expect(result.keys).to eq(%w[signups])
+      resolved = result["signups"]
+      expect(resolved).to be_a(AdminDashboard::Reports::ResolvedReport)
+      expect(resolved.source).to eq("core_report")
+      expect(resolved.identifier).to eq("signups")
+      expect(resolved.title).to be_present
+    end
+
+    it "omits identifiers that don't correspond to a built-in report" do
+      result = described_class.resolve_many(%w[totally_made_up], guardian: guardian)
+      expect(result).to be_empty
+    end
+
+    it "handles mixed valid and invalid identifiers" do
+      result = described_class.resolve_many(%w[signups fake_one], guardian: guardian)
+      expect(result.keys).to eq(%w[signups])
+    end
+
+    it "accepts symbol identifiers" do
+      result = described_class.resolve_many([:signups], guardian: guardian)
+      expect(result.keys).to eq(%w[signups])
+    end
+  end
+
+  describe ".available_for" do
+    it "includes built-in reports" do
+      reports = described_class.available_for(guardian)
+      identifiers = reports.map(&:identifier)
+
+      expect(identifiers).to include("signups")
+      reports.each { |r| expect(r).to be_a(AdminDashboard::Reports::ResolvedReport) }
+    end
+
+    it "filters by name/description when search is given" do
+      filtered = described_class.available_for(guardian, search: "signup")
+      identifiers = filtered.map(&:identifier)
+
+      expect(identifiers).to include("signups")
+    end
+
+    it "returns no results when search matches nothing" do
+      expect(described_class.available_for(guardian, search: "zzzz_no_match_zzzz")).to be_empty
+    end
+  end
+
+  describe ".fetch_many" do
+    it "returns report payloads keyed by identifier" do
+      result = described_class.fetch_many(%w[signups], guardian: guardian, filters: {})
+
+      expect(result.keys).to eq(%w[signups])
+      payload = result["signups"]
+      expect(payload).to be_present
+      expect(payload[:type]).to eq("signups")
+    end
+
+    it "skips identifiers that don't correspond to a built-in report" do
+      result = described_class.fetch_many(%w[fake_one], guardian: guardian)
+      expect(result).to be_empty
+    end
+
+    it "scopes report data to the provided date range" do
+      Discourse.cache.clear
+      freeze_time(Time.utc(2026, 2, 15)) do
+        Fabricate(:user, created_at: Time.utc(2026, 1, 5))
+        Fabricate(:user, created_at: Time.utc(2026, 1, 5))
+        Fabricate(:user, created_at: Time.utc(2026, 1, 25))
+        Fabricate(:user, created_at: Time.utc(2026, 2, 10))
+
+        in_range =
+          described_class.fetch_many(
+            %w[signups],
+            guardian: guardian,
+            filters: {
+              start_date: "2026-01-01",
+              end_date: "2026-01-31",
+            },
+          )
+
+        out_of_range =
+          described_class.fetch_many(
+            %w[signups],
+            guardian: guardian,
+            filters: {
+              start_date: "2026-03-01",
+              end_date: "2026-03-31",
+            },
+          )
+
+        in_range_points = in_range["signups"][:data].map { |point| [point[:x].to_date, point[:y]] }
+        expect(in_range_points).to contain_exactly(
+          [Date.new(2026, 1, 5), 2],
+          [Date.new(2026, 1, 25), 1],
+        )
+
+        expect(out_of_range["signups"][:data]).to be_empty
+      end
+    end
+  end
+
+  describe "registration" do
+    it "is registered as a core provider on boot" do
+      expect(AdminDashboard::Reports::Registry::CORE_PROVIDERS).to include(described_class)
+    end
+
+    it "is discoverable via Registry.provider_for" do
+      expect(AdminDashboard::Reports::Registry.provider_for("core_report")).to eq(described_class)
+    end
+  end
+end

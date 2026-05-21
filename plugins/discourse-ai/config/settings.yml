@@ -370,6 +370,7 @@ discourse_ai:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403327"
   ai_discover_enabled:
     default: false
     client: true

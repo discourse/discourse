@@ -552,6 +552,7 @@ export default class DEditor extends Component {
         this.textManipulation.applyHeading(selected, level, exampleKey),
       formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
+      applyLink: (url) => this.textManipulation.applyLink(url),
       getText: () => this.value,
       toggleDirection: () => this.textManipulation.toggleDirection(),
       replaceText: (oldVal, newVal, opts) =>
@@ -565,16 +566,13 @@ export default class DEditor extends Component {
       return;
     }
 
-    let linkText = "";
     this._lastSel = toolbarEvent.selected;
-
-    if (this._lastSel) {
-      linkText = this._lastSel.value;
-    }
+    const hasSelection =
+      !!this._lastSel && this._lastSel.start !== this._lastSel.end;
 
     this.modal.show(UpsertHyperlink, {
       model: {
-        linkText,
+        hasSelection,
         toolbarEvent,
       },
     });

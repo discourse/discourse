@@ -36,7 +36,7 @@ Note: For Status, "stable" and "permanent" are available via "Other". For Audien
 **After Batch 1:** Gather any remaining information before continuing:
 - If the flag name was not provided in the original message, ask for it
 - If the user selected "I'll provide the path later" for Image, ask for the image path
-- Ask if they have a Learn More URL to link to (optional)
+- Ask if they have a Learn More URL to link to
 
 ### 1. Add Site Setting
 
@@ -52,6 +52,7 @@ enable_your_feature_name:
   upcoming_change:
     status: "<status from question>"
     impact: "<type>,<audience>"
+    learn_more_url: "<URL from question>"
 ```
 
 **Status options:** `conceptual`, `experimental`, `alpha`, `beta`, `stable`, `permanent`
@@ -61,7 +62,7 @@ enable_your_feature_name:
 - Type: `feature` or `other`
 - Audience: `admin`, `moderators`, `staff`, `all_members`, `developers`
 
-**Optional:** Add `learn_more_url: "https://..."` for documentation link.
+**Learn more URL:** Add `learn_more_url: "https://..."` for documentation link. This should generally be a Discourse Meta URL in the format https://meta.discourse.org/t/-/999999 . If the user pastes a topic URL with a slug, remove the slug and replace with a `-` as shown.
 
 **Optional:** Add `allow_enabled_for:` to restrict which "Enabled for" dropdown options the admin can choose. Accepts any subset of `everyone`, `staff`, `specific_groups`. "No one" is always available. If `everyone` is included it must be the only value. Omit the key to allow all options (the default).
 

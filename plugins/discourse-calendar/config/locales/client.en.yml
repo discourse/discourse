@@ -327,6 +327,7 @@ en:
       search: "Search..."
       group_availability: "%{group} availability"
     discourse_post_event:
+      new_event: "New Event"
       notifications:
         before_event_reminder: "An event is about to start"
         after_event_reminder: "An event has ended"

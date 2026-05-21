@@ -1334,6 +1334,34 @@ class Plugin::Instance
   end
 
   ##
+  # Register a class that implements [AdminDashboard::Reports::SourceProvider],
+  # exposing a kind of report (built-in, Data Explorer query, etc.) for the
+  # customisable Reports section on the new admin dashboard. The class must
+  # inherit from AdminDashboard::Reports::SourceProvider and declare a unique
+  # `.source_name`; see the base class for the full contract.
+  def register_admin_dashboard_report_source(provider_class)
+    if !provider_class.is_a?(Class) || !(provider_class < ::AdminDashboard::Reports::SourceProvider)
+      raise ArgumentError,
+            "register_admin_dashboard_report_source expects a subclass of " \
+              "AdminDashboard::Reports::SourceProvider, got #{provider_class.inspect}"
+    end
+
+    existing =
+      ::AdminDashboard::Reports::Registry.providers.find do |klass|
+        klass.source_name.to_s == provider_class.source_name.to_s
+      end
+
+    return if existing == provider_class
+
+    if existing
+      raise ArgumentError,
+            "Source #{provider_class.source_name.inspect} is already registered by #{existing}"
+    end
+
+    DiscoursePluginRegistry.register_admin_dashboard_report_source(provider_class, self)
+  end
+
+  ##
   # Register an object that inherits from [Summarization::Base], which provides a way
   # to summarize content. Staff can select which strategy to use
   # through the `summarization_strategy` setting.

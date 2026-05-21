@@ -401,6 +401,11 @@ export default class NestedController extends Controller {
       this,
       this.#onPostUnregistered
     );
+    this.appEvents.on(
+      "nested-replies:scroll-restored",
+      this,
+      this.#onScrollRestored
+    );
     this.#postEventsSubscribed = true;
 
     // Register the OP post directly since it's not rendered by NestedPost
@@ -430,6 +435,11 @@ export default class NestedController extends Controller {
         this,
         this.#onPostUnregistered
       );
+      this.appEvents.off(
+        "nested-replies:scroll-restored",
+        this,
+        this.#onScrollRestored
+      );
       this.#postEventsSubscribed = false;
     }
     if (this.#messageBusChannel) {
@@ -449,6 +459,10 @@ export default class NestedController extends Controller {
     if (post?.post_number != null) {
       this.postRegistry.delete(post.post_number);
     }
+  }
+
+  #onScrollRestored() {
+    this.scrollAnchor = null;
   }
 
   @bind
