@@ -748,7 +748,7 @@ export default class TextareaTextManipulation {
   @bind
   emojiSelected(code) {
     let selected = this.getSelected();
-    const captures = selected.pre.match(/\B:(\w*)$/);
+    const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
     if (isEmpty(captures)) {
       if (selected.pre.match(/\S$/)) {
