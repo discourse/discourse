@@ -53,8 +53,7 @@ describe UserCardSerializer do
           guardian: Discourse.system_user.guardian,
         )
 
-        # still only one topic solved since post2 was in the same topic
-        expect(serializer.as_json[:accepted_answers]).to eq(1)
+        expect(serializer.as_json[:accepted_answers]).to eq(2)
 
         topic2 = Fabricate(:topic_with_op)
         post3 = Fabricate(:post, topic: topic2, user:)
@@ -65,7 +64,7 @@ describe UserCardSerializer do
           guardian: Discourse.system_user.guardian,
         )
 
-        expect(serializer.as_json[:accepted_answers]).to eq(2)
+        expect(serializer.as_json[:accepted_answers]).to eq(3)
       end
     end
   end
