@@ -129,6 +129,8 @@ class Admin::DashboardController < Admin::StaffController
       AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
     when "traffic"
       AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
+    when "engagement"
+      AdminDashboardEngagement.build(start_date: params[:start_date], end_date: params[:end_date])
     when "reports"
       AdminDashboard::Reports::Section.build(guardian: guardian)
     end

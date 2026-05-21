@@ -289,12 +289,12 @@ RSpec.describe Admin::DashboardController do
         expect(ids).not_to include("traffic", "engagement")
       end
 
-      it "leaves data null for sections without a builder yet" do
+      it "includes built engagement data when the section is enabled" do
         SiteSetting.admin_dashboard_sections = "highlights|engagement"
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
-        expect(engagement["data"]).to be_nil
+        expect(engagement["data"]).to include("kpis", "headline")
       end
 
       describe "reports section data" do
