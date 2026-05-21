@@ -218,15 +218,26 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 }
 
 const EVENT_BBCODE_REGEX = /\[event (.*?)\](.*?)\[\/event\]/s;
+const EVENT_BLOCK_REGEX = /\[event\b([^\]]*)\](.*?)\[\/event\]/s;
+const ATTR_REGEX = /([-\w]+)=(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/g;
+
+function dashedToCamel(key) {
+  return key.replace(/-([a-zA-Z0-9])/g, (_, c) => c.toUpperCase());
+}
 
 export function parseEventBlock(raw) {
-  const match = raw?.match(EVENT_BBCODE_REGEX);
+  if (!raw) {
+    return null;
+  }
+  const match = raw.match(EVENT_BLOCK_REGEX);
   if (!match) {
     return null;
   }
   const attrs = {};
-  for (const [, key, value] of match[1].matchAll(/(\w+)="([^"]*)"/g)) {
-    attrs[key] = value;
+  for (const m of match[1].matchAll(ATTR_REGEX)) {
+    const [, key, dq, sq, unq] = m;
+    const value = dq ?? sq ?? unq ?? "";
+    attrs[dashedToCamel(key)] = value;
   }
   const description = (match[2] || "").replace(/^\n/, "").replace(/\n$/, "");
   return { full: match[0], attrs, description };

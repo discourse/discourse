@@ -105,6 +105,43 @@ describe "Post event" do
       )
       expect(composer).to have_value(/\[event /)
     end
+
+    it "preserves a multi-day end date when toggling all-day on" do
+      visit("/new-topic")
+      composer.fill_title("Multi-day all-day toggle")
+      composer.fill_content <<~MD
+        [event start='2024-06-01 10:00' end='2024-06-03 12:00' timezone='UTC' status='public']
+        [/event]
+      MD
+
+      preview = composer.preview
+      expect(preview).to have_css(".composer-event-node")
+
+      preview.find(".composer-event__all-day-switch .d-toggle-switch__checkbox").click
+      find(".d-editor-input").click
+
+      expect(composer).to have_value(/start="2024-06-01"/)
+      expect(composer).to have_value(/end="2024-06-03"/)
+    end
+
+    context "when showLocalTime is set and the event crosses midnight relative to the viewer",
+            timezone: "Australia/Brisbane" do
+      it "renders the preview badge in the event timezone, not the viewer's" do
+        # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
+        # so without showLocalTime the viewer would see "Sep 8" in the badge.
+        # With showLocalTime, the preview must stay anchored to the event timezone.
+        visit("/new-topic")
+        composer.fill_title("Local time preview test")
+        composer.fill_content <<~MD
+          [event start='2025-09-07 22:30' timezone='Europe/Paris' showLocalTime='true' status='public']
+          [/event]
+        MD
+
+        preview = composer.preview
+        expect(preview).to have_css(".composer-event__month", text: "Sep")
+        expect(preview).to have_css(".composer-event__day", text: "7")
+      end
+    end
   end
 
   context "with max attendees" do

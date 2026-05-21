@@ -132,6 +132,52 @@ module("Unit | Lib | raw-event-helper", function () {
     assert.strictEqual(parseEventBlock(null), null);
   });
 
+  test("parseEventBlock accepts single-quoted attr values", function (assert) {
+    const parsed = parseEventBlock(
+      "[event start='2222-02-22 14:22' timezone='Australia/Sydney']\n[/event]"
+    );
+    assert.deepEqual(parsed.attrs, {
+      start: "2222-02-22 14:22",
+      timezone: "Australia/Sydney",
+    });
+  });
+
+  test("parseEventBlock accepts unquoted attr values", function (assert) {
+    const parsed = parseEventBlock(
+      "[event start=2024-06-15 status=public timezone=Europe/Paris]\n[/event]"
+    );
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15",
+      status: "public",
+      timezone: "Europe/Paris",
+    });
+  });
+
+  test("parseEventBlock normalizes dashed keys to camelCase", function (assert) {
+    const parsed = parseEventBlock(
+      '[event start="2024-06-15 10:00" max-attendees="5" recurrence-until="2024-07-15" show-local-time="true"]\n[/event]'
+    );
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15 10:00",
+      maxAttendees: "5",
+      recurrenceUntil: "2024-07-15",
+      showLocalTime: "true",
+    });
+  });
+
+  test("parseEventBlock accepts mixed quote forms in one tag", function (assert) {
+    const parsed = parseEventBlock(
+      `[event start="2024-06-15 10:00" status=public timezone='Europe/Paris' max-attendees=10]\nfine\n[/event]`
+    );
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15 10:00",
+      status: "public",
+      timezone: "Europe/Paris",
+      maxAttendees: "10",
+    });
+    assert.strictEqual(parsed.description, "fine");
+  });
+
   test("parseReminders converts comma-separated BBCode into reminder objects", function (assert) {
     assert.deepEqual(parseReminders(""), []);
     assert.deepEqual(parseReminders(null), []);

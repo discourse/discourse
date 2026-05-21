@@ -6,13 +6,17 @@ import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
 }
 
 function uses12HourTime() {
+  const format = i18n("dates.time", { defaultValue: "" });
+  if (format) {
+    return /[aA]/.test(format.replace(/\[[^\]]*\]/g, ""));
+  }
   return I18n.currentLocale()?.startsWith("en");
 }
 

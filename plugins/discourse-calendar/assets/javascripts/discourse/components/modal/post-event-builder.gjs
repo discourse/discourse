@@ -513,13 +513,22 @@ export default class PostEventBuilder extends Component {
     this.allDay = allDay;
     this.event.allDay = allDay;
     if (allDay) {
-      const snapped = (this.startsAt ?? moment.tz(this.event.timezone || "UTC"))
-        .clone()
-        .startOf("day");
+      const tz = this.event.timezone || "UTC";
+      const snapped = (this.startsAt ?? moment.tz(tz)).clone().startOf("day");
       this.startsAt = snapped;
       this.event.startsAt = snapped;
-      this.endsAt = snapped.clone();
-      this.event.endsAt = snapped.clone();
+
+      const existingEnd = this.endsAt;
+      let newEnd = null;
+      if (existingEnd) {
+        const startDate = snapped.format("YYYY-MM-DD");
+        const endDate = existingEnd.format("YYYY-MM-DD");
+        if (endDate !== startDate) {
+          newEnd = existingEnd.clone().startOf("day");
+        }
+      }
+      this.endsAt = newEnd;
+      this.event.endsAt = newEnd;
     } else if (this.startsAt) {
       const tz = this.event.timezone || "UTC";
       const nowTime = moment.tz(tz);

@@ -140,7 +140,8 @@
       border-top: 1px solid var(--primary-low);
     }
 
-    > .d-icon {
+    > .d-icon,
+    > .composer-event__reminder-icon {
       color: var(--primary-high);
       margin: 0 auto;
       padding: 0;
@@ -149,6 +150,10 @@
 
   .composer-event__reminder {
     grid-template-columns: 3em auto auto 1fr;
+
+    .composer-event__reminder-icon .d-icon {
+      color: var(--primary-high);
+    }
 
     .composer-event__reminder-value {
       width: 4em;

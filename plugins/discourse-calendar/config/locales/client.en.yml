@@ -466,6 +466,8 @@ en:
               other: "weeks"
           before: "%{unit} before"
           after: "%{unit} after"
+          notification_title: "Notify attendees"
+          bump_topic_title: "Auto-bump topic"
           remove: "Remove reminder"
 
       builder_modal:
@@ -501,7 +503,7 @@ en:
           label: "Reminders"
           types:
             bump_topic: "auto-bump topic"
-            notification: "notify participants"
+            notification: "notify attendees"
           units:
             minutes: "minutes"
             hours: "hours"

@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import DButton from "discourse/ui-kit/d-button";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -128,11 +129,21 @@ export default class CompactEventEditor extends Component {
   }
 
   get displayTime() {
-    return this.startsAt?.clone().tz(this.userTimezone) ?? null;
+    if (!this.startsAt) {
+      return null;
+    }
+    return this.showLocalTime
+      ? this.startsAt.clone()
+      : this.startsAt.clone().tz(this.userTimezone);
   }
 
   get displayEndTime() {
-    return this.endsAt?.clone().tz(this.userTimezone) ?? null;
+    if (!this.endsAt) {
+      return null;
+    }
+    return this.showLocalTime
+      ? this.endsAt.clone()
+      : this.endsAt.clone().tz(this.userTimezone);
   }
 
   get hasEndDate() {
@@ -376,11 +387,19 @@ export default class CompactEventEditor extends Component {
     const oldConfig = this.#configSnapshot();
 
     if (newAllDay) {
-      const date = (this.startsAt || moment.tz(this.timezone)).format(
+      const startDate = (this.startsAt || moment.tz(this.timezone)).format(
         "YYYY-MM-DD"
       );
-      this.startsAt = moment.tz(date, this.timezone);
-      this.endsAt = moment.tz(date, this.timezone);
+      const existingEnd = this.endsAt;
+      this.startsAt = moment.tz(startDate, this.timezone);
+
+      if (existingEnd) {
+        const endDate = existingEnd.format("YYYY-MM-DD");
+        this.endsAt =
+          endDate === startDate ? null : moment.tz(endDate, this.timezone);
+      } else {
+        this.endsAt = null;
+      }
     } else if (this.startsAt) {
       const nowTime = moment.tz(this.timezone);
       const newStart = this.startsAt
@@ -472,14 +491,19 @@ export default class CompactEventEditor extends Component {
     }
   }
 
-  get notificationReminders() {
-    return (this.reminders || [])
-      .map((reminder, index) =>
-        reminder.type === "notification"
-          ? { reminder, index, label: this.#unitLabel(reminder) }
-          : null
-      )
-      .filter(Boolean);
+  get visibleReminders() {
+    return (this.reminders || []).map((reminder, index) => {
+      const isBump = reminder.type === "bumpTopic";
+      return {
+        reminder,
+        index,
+        label: this.#unitLabel(reminder),
+        icon: isBump ? "arrows-up-to-line" : "bell",
+        iconTitle: isBump
+          ? "discourse_post_event.composer.reminder.bump_topic_title"
+          : "discourse_post_event.composer.reminder.notification_title",
+      };
+    });
   }
 
   #unitLabel(reminder) {
@@ -501,10 +525,7 @@ export default class CompactEventEditor extends Component {
     if (!Number.isFinite(parsed) || parsed <= 0) {
       return;
     }
-    if (
-      !this.reminders[index] ||
-      this.reminders[index].type !== "notification"
-    ) {
+    if (!this.reminders[index]) {
       return;
     }
     this.reminders = this.reminders.map((r, i) =>
@@ -515,10 +536,7 @@ export default class CompactEventEditor extends Component {
 
   @action
   removeReminder(index) {
-    if (
-      !this.reminders[index] ||
-      this.reminders[index].type !== "notification"
-    ) {
+    if (!this.reminders[index]) {
       return;
     }
     this.reminders = this.reminders.filter((_, i) => i !== index);
@@ -794,9 +812,12 @@ export default class CompactEventEditor extends Component {
       {{/if}}
     </section>
 
-    {{#each this.notificationReminders as |entry|}}
+    {{#each this.visibleReminders as |entry|}}
       <section class="composer-event__reminder">
-        {{dIcon "bell"}}
+        <DTooltip class="composer-event__reminder-icon">
+          <:trigger>{{dIcon entry.icon}}</:trigger>
+          <:content>{{i18n entry.iconTitle}}</:content>
+        </DTooltip>
         <input
           type="number"
           inputmode="numeric"
