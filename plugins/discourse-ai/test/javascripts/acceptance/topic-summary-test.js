@@ -21,7 +21,7 @@ acceptance("Topic - Summary", function (needs) {
       return helper.response(json);
     });
 
-    server.get("/discourse-ai/summarization/t/1", () => {
+    server.post("/discourse-ai/summarization/t/1", () => {
       return helper.response({
         ai_topic_summary: {
           summarized_text: "This a",
@@ -49,10 +49,6 @@ acceptance("Topic - Summary", function (needs) {
     await visit("/t/-/1");
 
     const partialSummary = "This a";
-    await publishToMessageBus("/discourse-ai/summaries/topic/1", {
-      done: false,
-      ai_topic_summary: { summarized_text: partialSummary },
-    });
 
     await click(".ai-summarization-button");
 
@@ -85,13 +81,8 @@ acceptance("Topic - Summary", function (needs) {
   test("clicking summary links", async function (assert) {
     await visit("/t/-/1");
 
-    const partialSummary = "In this post,";
-    await publishToMessageBus("/discourse-ai/summaries/topic/1", {
-      done: false,
-      ai_topic_summary: { summarized_text: partialSummary },
-    });
-
     await click(".ai-summarization-button");
+
     const finalSummaryCooked =
       "In this post,  <a href='/t/-/1/1'>bianca</a> said some stuff.";
     const finalSummaryResult = "In this post, bianca said some stuff.";
