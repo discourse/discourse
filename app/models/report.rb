@@ -122,6 +122,7 @@ class Report
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
+  include Reports::TrustLevelPipeline
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies

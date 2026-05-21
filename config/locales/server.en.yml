@@ -1377,6 +1377,22 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    trust_level_pipeline:
+      title: "Trust level pipeline"
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Trust level"
+        count: "Members"
+        share: "Share"
+        moves_in: "Moves in"
+        moves_out: "Moves out"
+      levels:
+        "0": "New"
+        "1": "Basic"
+        "2": "Member"
+        "3": "Regular"
+        "4": "Leader"
     trust_level_growth:
       title: "Trust Level growth"
       xaxis:
