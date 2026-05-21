@@ -4,6 +4,9 @@ import Topic from "discourse/models/topic";
 
 export default class TopicSidebarService extends Service {
   @tracked selectedTopicId = null;
+  @tracked topic = null;
+
+  #closeHandler = null;
 
   selectTopic(topicId) {
     this.selectedTopicId = topicId;
@@ -14,5 +17,15 @@ export default class TopicSidebarService extends Service {
   clearSelectedTopic() {
     this.selectedTopicId = null;
     this.topic = null;
+    this.#closeHandler?.();
+  }
+
+  registerCloseHandler(handler) {
+    this.#closeHandler = handler;
+    return () => {
+      if (this.#closeHandler === handler) {
+        this.#closeHandler = null;
+      }
+    };
   }
 }
