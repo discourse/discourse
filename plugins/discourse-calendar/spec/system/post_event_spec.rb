@@ -117,7 +117,7 @@ describe "Post event" do
       preview = composer.preview
       expect(preview).to have_css(".composer-event-node")
 
-      preview.find(".composer-event__all-day-switch").click
+      preview.find(".composer-event__all-day-toggle .d-toggle-switch__label").click
       find(".d-editor-input").click
 
       expect(composer).to have_value(/start="2024-06-01"/)
