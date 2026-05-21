@@ -36,6 +36,6 @@ RSpec.describe "Category incoming new topic notifications" do
 
     category_page.click_new
 
-    expect(topic_list).to have_topic(new_post.topic)
+    expect(topic_list_controls).to have_new(count: 0)
   end
 end
