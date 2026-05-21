@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require_relative "support/nginx_harness"
 
 RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/DescribeClass
   let(:harness) { Nginx::Support::NginxHarness.new }
