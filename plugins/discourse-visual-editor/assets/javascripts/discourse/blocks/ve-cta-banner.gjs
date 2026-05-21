@@ -3,10 +3,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { block } from "discourse/blocks";
+import booleanString from "discourse/helpers/boolean-string";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
 
 const COOKIE_PREFIX = "discourse-visual-editor-cta-dismissed";
 
@@ -26,17 +28,16 @@ const COOKIE_PREFIX = "discourse-visual-editor-cta-dismissed";
     "A banner with title, body text, optional CTA button, and optional dismiss.",
   args: {
     title: {
-      type: "string",
-      default: "Welcome",
+      type: "richInline",
       ui: {
+        control: "rich-inline",
         label: i18n("visual_editor.inspector.cta_banner.title"),
       },
     },
     content: {
-      type: "string",
-      default: "Tell readers what they can do here, and why.",
+      type: "richInline",
       ui: {
-        control: "textarea",
+        control: "rich-inline",
         label: i18n("visual_editor.inspector.cta_banner.content"),
       },
     },
@@ -73,12 +74,6 @@ const COOKIE_PREFIX = "discourse-visual-editor-cta-dismissed";
         conditional: { arg: "dismissable", equals: true },
       },
     },
-  },
-  previewArgs: {
-    title: "Welcome",
-    content: "Tell readers what they can do here, and why.",
-    linkLabel: "Get started",
-    linkHref: "/categories",
   },
 })
 export default class VECTABanner extends Component {
@@ -120,12 +115,38 @@ export default class VECTABanner extends Component {
     {{#if this.shouldShow}}
       <div class="ve-cta-banner">
         <div class="ve-cta-banner__content">
-          {{#if @title}}
-            <h3 class="ve-cta-banner__title">{{@title}}</h3>
-          {{/if}}
-          {{#if @content}}
-            <p class="ve-cta-banner__text">{{@content}}</p>
-          {{/if}}
+          <InlineRichTextRenderer
+            @arg="title"
+            @schema="heading"
+            @value={{@title}}
+            @placeholder={{i18n "visual_editor.placeholders.cta_banner_title"}}
+            as |R|
+          >
+            <h3
+              class="ve-cta-banner__title
+                {{if R.isEmpty 've-cta-banner__title--empty'}}"
+              aria-hidden={{booleanString R.isEmpty}}
+            >
+              <R.Content />
+            </h3>
+          </InlineRichTextRenderer>
+          <InlineRichTextRenderer
+            @arg="content"
+            @schema="paragraph"
+            @value={{@content}}
+            @placeholder={{i18n
+              "visual_editor.placeholders.cta_banner_content"
+            }}
+            as |R|
+          >
+            <p
+              class="ve-cta-banner__text
+                {{if R.isEmpty 've-cta-banner__text--empty'}}"
+              aria-hidden={{booleanString R.isEmpty}}
+            >
+              <R.Content />
+            </p>
+          </InlineRichTextRenderer>
         </div>
 
         {{#if this.hasActions}}

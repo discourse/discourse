@@ -3604,6 +3604,14 @@ body.visual-editor-active {
   }
 }
 
+.ve-inline-editor {
+  &.ProseMirror {
+    padding: 0;
+    margin: 0;
+    outline: none;
+  }
+}
+
 /* Inline rich text — editor-only affordances.
    The renderer span itself is shared with the live site (see
    `visual-editor.scss`); this section adds the placeholder for empty
@@ -3620,20 +3628,49 @@ body.visual-editor-active {
      want `event.target` on the next click to land inside the
      `[data-ve-inline-edit-arg]` region so `event.target.closest(...)`
      can resolve it. Also show a text cursor so the affordance is
-     discoverable. */
+     discoverable.
+
+     The inner `__content` span and its placeholder `::before` get
+     explicit `pointer-events: auto` too — browsers vary on whether a
+     descendant of a `pointer-events: none` parent picks up the default
+     `auto` (the inheritance interaction is ambiguous in the spec).
+     Without these, clicks on the empty placeholder text fall through
+     to the chrome wrapper and the edit gesture can't resolve which
+     field was clicked. */
 
   .visual-editor-block-chrome.--selected & {
     pointer-events: auto;
     cursor: text;
+
+    .ve-inline-rich-text__content,
+    .ve-inline-rich-text__content::before {
+      pointer-events: auto;
+    }
   }
 }
 
-.ve-inline-rich-text__content[data-ve-placeholder]:empty::before {
+/* Placeholder text for empty fields, shown only on the canvas. Triggered
+   by the renderer's explicit `--empty` modifier (set in JS from
+   `runs.length === 0`), not by the `:empty` CSS pseudo — Glimmer's
+   comment / whitespace text nodes inside the content span would
+   defeat `:empty`. */
+
+.ve-inline-rich-text.--empty
+  > .ve-inline-rich-text__content[data-ve-placeholder]::before {
   content: attr(data-ve-placeholder);
   color: var(--primary-medium);
   opacity: 0.55;
-  pointer-events: none;
   user-select: none;
+
+  /* No `pointer-events: none` here — without it, clicks on the
+     placeholder text fall through the empty element chain (the
+     `__content` span has no real content, just the pseudo's rendered
+     text) and the chrome wrapper ends up as the click target instead
+     of the renderer span. With `pointer-events: auto` (the default),
+     the click hits `__content`, bubbles to `.ve-inline-rich-text`, and
+     `block-chrome.onClick`'s `closest("[data-ve-inline-edit-arg]")`
+     finds the renderer span as expected. `user-select: none` still
+     keeps the placeholder text from being draggable / text-selectable. */
 }
 
 /* Active edit — ProseMirror is mounted inside the outer span as a
@@ -3656,6 +3693,21 @@ body.visual-editor-active {
   border-radius: 2px;
   padding: 0 2px;
   margin: 0 -2px;
+}
+
+/* Reveal empty inline-text wrappers on the canvas when their block is
+   selected, so authors can click the placeholder to start editing a
+   field that the block author hid via a `--empty` BEM modifier on the
+   wrapper (see e.g. `ve-cta-banner__title--empty` in `_cta-banner.scss`).
+   The `:has(> .ve-inline-rich-text.--empty)` selector finds any element
+   whose direct child is an empty renderer — works for `<h3>`, `<h4>`,
+   `<p>`, `<a>`, custom blocks. The second selector covers the renderer's
+   own outer span in case something hid it directly. `display: revert`
+   falls back to the wrapper's user-agent default. */
+
+.visual-editor-block-chrome.--selected :has(> .ve-inline-rich-text.--empty),
+.visual-editor-block-chrome.--selected .ve-inline-rich-text.--empty {
+  display: revert;
 }
 
 /* Inspector form — read-only summary for `rich-inline` args. The actual

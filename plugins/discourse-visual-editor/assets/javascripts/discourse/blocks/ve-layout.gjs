@@ -132,7 +132,6 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       },
     },
   },
-  previewArgs: { mode: "stack", gap: 1, align: "stretch" },
   // One namespace per mode. Direct children carry mode-specific placement
   // hints under `containerArgs.<mode>` — e.g. a grid child sets
   // `containerArgs.grid = {column, row, align, justify}` so CSS Grid can
@@ -202,7 +201,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
     },
     stack: {
       type: "object",
-      default: { alignSelf: "auto", flexGrow: 0, order: 0 },
+      default: { alignSelf: "auto", flexGrow: 0 },
       properties: {
         alignSelf: {
           type: "string",
@@ -229,14 +228,6 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             label: i18n("visual_editor.inspector.layout.placement.flex_grow"),
           },
         },
-        order: {
-          type: "number",
-          default: 0,
-          integer: true,
-          ui: {
-            label: i18n("visual_editor.inspector.layout.placement.order"),
-          },
-        },
       },
       ui: {
         label: i18n("visual_editor.inspector.layout.placement.stack_section"),
@@ -245,7 +236,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
     },
     row: {
       type: "object",
-      default: { alignSelf: "auto", flexGrow: 0, order: 0 },
+      default: { alignSelf: "auto", flexGrow: 0 },
       properties: {
         alignSelf: {
           type: "string",
@@ -270,14 +261,6 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
           min: 0,
           ui: {
             label: i18n("visual_editor.inspector.layout.placement.flex_grow"),
-          },
-        },
-        order: {
-          type: "number",
-          default: 0,
-          integer: true,
-          ui: {
-            label: i18n("visual_editor.inspector.layout.placement.order"),
           },
         },
       },

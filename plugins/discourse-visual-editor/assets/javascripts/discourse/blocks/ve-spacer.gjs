@@ -17,7 +17,6 @@ import { block } from "discourse/blocks";
       ui: { label: "Size (rem)" },
     },
   },
-  previewArgs: { size: 1 },
 })
 export default class VESpacer extends Component {
   get style() {

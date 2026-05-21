@@ -18,7 +18,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
       },
     },
   },
-  previewArgs: { badgeIds: "" },
 })
 export default class VEBadgesGrid extends Component {
   get tiles() {

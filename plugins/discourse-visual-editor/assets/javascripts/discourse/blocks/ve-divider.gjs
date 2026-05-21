@@ -23,7 +23,6 @@ const VALID_STYLES = ["solid", "dashed", "dotted"];
       ui: { control: "color", label: "Color" },
     },
   },
-  previewArgs: { style: "solid" },
 })
 export default class VEDivider extends Component {
   get hrStyle() {

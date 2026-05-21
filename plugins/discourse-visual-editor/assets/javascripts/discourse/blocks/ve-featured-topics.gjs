@@ -83,7 +83,6 @@ import {
       },
     },
   },
-  previewArgs: { title: "Hot topics", filter: "hot", count: 5 },
 })
 export default class VEFeaturedTopics extends Component {
   @service store;

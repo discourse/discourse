@@ -19,7 +19,7 @@ import { i18n } from "discourse-i18n";
  * `+` button itself is always rendered.
  *
  * Args:
- *   - `@palette` — `Array<{name, displayName, icon, previewArgs}>`
+ *   - `@palette` — `Array<{name, displayName, icon}>`
  *     the parent already filters / sorts for palette display.
  *   - `@isOpen` — true when this placeholder's popover should show.
  *   - `@onOpen` — called when the `+` button is clicked.

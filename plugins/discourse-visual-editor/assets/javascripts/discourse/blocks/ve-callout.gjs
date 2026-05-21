@@ -1,7 +1,10 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import booleanString from "discourse/helpers/boolean-string";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
 
 const VALID_TONES = ["info", "success", "warning", "danger"];
 
@@ -23,15 +26,9 @@ const VALID_TONES = ["info", "success", "warning", "danger"];
       ui: { control: "icon", label: "Icon" },
     },
     body: {
-      type: "string",
-      default: "Important information for the reader.",
-      ui: { control: "textarea", label: "Body" },
+      type: "richInline",
+      ui: { control: "rich-inline", label: "Body" },
     },
-  },
-  previewArgs: {
-    tone: "info",
-    icon: "circle-info",
-    body: "Important information for the reader.",
   },
 })
 export default class VECallout extends Component {
@@ -42,7 +39,17 @@ export default class VECallout extends Component {
   <template>
     <div class={{this.calloutClass}}>
       <span class="ve-callout__icon">{{dIcon @icon}}</span>
-      <span class="ve-callout__body">{{@body}}</span>
+      <InlineRichTextRenderer
+        @arg="body"
+        @schema="paragraph"
+        @value={{@body}}
+        @placeholder={{i18n "visual_editor.placeholders.callout_body"}}
+        as |R|
+      >
+        <span class="ve-callout__body" aria-hidden={{booleanString R.isEmpty}}>
+          <R.Content />
+        </span>
+      </InlineRichTextRenderer>
     </div>
   </template>
 }

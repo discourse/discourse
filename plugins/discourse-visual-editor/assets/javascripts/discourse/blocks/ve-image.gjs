@@ -59,7 +59,6 @@ import { i18n } from "discourse-i18n";
       },
     },
   },
-  previewArgs: { alt: "" },
 })
 export default class VEImage extends Component {
   <template>

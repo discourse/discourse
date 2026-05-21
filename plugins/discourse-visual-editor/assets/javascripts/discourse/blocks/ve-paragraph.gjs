@@ -1,6 +1,8 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import booleanString from "discourse/helpers/boolean-string";
+import { i18n } from "discourse-i18n";
 import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
 
 const VALID_ALIGNMENTS = ["left", "center", "right"];
@@ -13,7 +15,6 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
   args: {
     text: {
       type: "richInline",
-      default: "Add your text here.",
       ui: { control: "rich-inline", label: "Text" },
     },
     align: {
@@ -31,10 +32,6 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
       },
     },
   },
-  previewArgs: {
-    text: "A short paragraph of body text for the section.",
-    align: "left",
-  },
 })
 export default class VEParagraph extends Component {
   get className() {
@@ -42,13 +39,19 @@ export default class VEParagraph extends Component {
   }
 
   <template>
-    <p class={{this.className}}>
-      <InlineRichTextRenderer
-        @arg="text"
-        @schema="paragraph"
-        @value={{@text}}
-        @placeholder="Add your text here."
-      />
-    </p>
+    <InlineRichTextRenderer
+      @arg="text"
+      @schema="paragraph"
+      @value={{@text}}
+      @placeholder={{i18n "visual_editor.placeholders.paragraph_text"}}
+      as |R|
+    >
+      <p
+        class="{{this.className}} {{if R.isEmpty 've-paragraph--empty'}}"
+        aria-hidden={{booleanString R.isEmpty}}
+      >
+        <R.Content />
+      </p>
+    </InlineRichTextRenderer>
   </template>
 }

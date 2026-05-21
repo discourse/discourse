@@ -356,7 +356,6 @@ export default class GridOverlay extends Component {
           icon: display.icon,
           category: display.category ?? "Misc",
           paletteHidden: display.paletteHidden === true,
-          previewArgs: display.previewArgs ?? {},
         };
       })
       .filter((row) => !row.paletteHidden)
@@ -1483,7 +1482,6 @@ export default class GridOverlay extends Component {
     this.visualEditor.insertBlockAtCell({
       gridKey: this.args.gridKey,
       blockName: blockEntry.name,
-      defaultArgs: { ...blockEntry.previewArgs },
       column: cell.column,
       row: cell.row,
     });

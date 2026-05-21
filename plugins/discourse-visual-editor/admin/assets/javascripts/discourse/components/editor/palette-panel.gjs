@@ -28,7 +28,6 @@ const NAMESPACE_LABEL_KEYS = {
  * @property {string} displayName
  * @property {string} icon
  * @property {string} category
- * @property {Object} previewArgs
  * @property {string} description
  * @property {string} namespaceType
  */
@@ -83,7 +82,6 @@ export default class PalettePanel extends Component {
           displayName: display.displayName,
           icon: display.icon,
           category: display.category,
-          previewArgs: display.previewArgs,
           description: metadata?.description ?? "",
           namespaceType: metadata?.namespaceType ?? "core",
           paletteHidden: display.paletteHidden === true,

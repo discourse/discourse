@@ -560,7 +560,6 @@ export default class BlockChrome extends Component {
           displayName: display.displayName,
           icon: display.icon,
           paletteHidden: display.paletteHidden === true,
-          previewArgs: display.previewArgs ?? {},
         };
       })
       .filter((row) => !row.paletteHidden)
@@ -582,7 +581,6 @@ export default class BlockChrome extends Component {
     this.visualEditor.fillSlot({
       slotKey: this.args.blockKey,
       blockName: blockEntry.name,
-      defaultArgs: blockEntry.previewArgs,
     });
     this.pickingSlot = false;
   }

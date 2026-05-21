@@ -359,6 +359,17 @@ en:
           link_apply: "Apply link"
           link_remove: "Remove link"
           link_cancel: "Cancel"
+      placeholders:
+        heading_text: "Section heading"
+        paragraph_text: "Add your text here."
+        callout_body: "Important information for the reader"
+        cta_banner_title: "Welcome"
+        cta_banner_content: "Tell readers what they can do here, and why."
+        media_card_name: "Name"
+        media_card_role: "Role"
+        media_card_badge_label: "Featured"
+        media_card_title: "A short headline describing this card"
+        media_card_cta_label: "Learn more"
       theme_admin:
         open_button: "Visual Editor"
         open_button_title: "Open the visual editor for this theme"

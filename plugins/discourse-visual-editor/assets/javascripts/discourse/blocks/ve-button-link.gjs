@@ -33,7 +33,6 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
       ui: { control: "icon", label: "Icon" },
     },
   },
-  previewArgs: { label: "Learn more", href: "/", variant: "default" },
 })
 export default class VEButtonLink extends Component {
   get btnClass() {

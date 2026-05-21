@@ -90,4 +90,26 @@
       text-decoration: underline;
     }
   }
+
+  /* Empty inline-text wrappers — block-author opt-in via the renderer's
+     yielded `R.isEmpty` (see block template). The chrome's generic
+     reveal in `visual-editor-chrome.scss` re-shows wrappers whose
+     direct child is the empty renderer span (title, cta). The badge
+     wraps the renderer one extra level deep via `__badge-label`, so
+     the generic reveal can't see it — reveal it explicitly below. The
+     badge's empty state is a compound condition (icon AND label both
+     empty) computed in Glimmer, not via a CSS `:has()` rule, so the
+     live render path stays cheap. */
+
+  &__title--empty,
+  &__cta--empty,
+  &__badge--empty {
+    display: none;
+  }
+
+  &__badge--empty {
+    .visual-editor-block-chrome.--selected & {
+      display: revert;
+    }
+  }
 }

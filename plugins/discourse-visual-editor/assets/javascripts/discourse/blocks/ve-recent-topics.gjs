@@ -95,7 +95,6 @@ import {
       },
     },
   },
-  previewArgs: { count: 5, filter: "latest" },
 })
 export default class VERecentTopics extends Component {
   @service store;

@@ -2826,7 +2826,9 @@ export default class VisualEditorService extends Service {
         return false;
       }
       // Mint a fresh entry. Spread the defaults so future mutations don't
-      // bleed back into the palette's `previewArgs` object.
+      // bleed back into the caller's object. Args left missing here get
+      // filled in from the block's schema `default:` values via
+      // `applyArgDefaults` at render time.
       const fresh = { block: blockName, args: { ...defaultArgs } };
       // Annotate with `containerArgs.grid` defaults when the destination
       // parent is a `ve:layout` in grid mode — that's the placement

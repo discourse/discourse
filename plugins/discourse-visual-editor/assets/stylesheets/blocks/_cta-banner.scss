@@ -65,4 +65,14 @@
       position: static;
     }
   }
+
+  /* Empty inline-text wrappers — block-author opt-in via the renderer's
+     yielded `R.isEmpty` (see block template). The chrome's `--selected`
+     reveal rule in `visual-editor-chrome.scss` re-shows them on the
+     canvas so placeholders are clickable. */
+
+  &__title--empty,
+  &__text--empty {
+    display: none;
+  }
 }

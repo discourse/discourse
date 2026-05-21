@@ -58,11 +58,6 @@ import CategoryCard from "../components/blocks/category-card";
       },
     },
   },
-  previewArgs: {
-    showLogo: true,
-    showIcon: true,
-    showDescription: true,
-  },
 })
 export default class VECategoryBanner extends Component {
   @service router;

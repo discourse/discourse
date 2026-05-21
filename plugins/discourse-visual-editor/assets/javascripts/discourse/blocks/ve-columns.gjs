@@ -32,7 +32,6 @@ const VALID_COUNTS = [2, 3, 4];
       ui: { label: "Gap (rem)" },
     },
   },
-  previewArgs: { count: 2, gap: 1 },
 })
 export default class VEColumns extends Component {
   get gridStyle() {

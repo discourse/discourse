@@ -187,6 +187,14 @@ export default class InlineEditController extends Component {
                 this.visualEditor.stopEditing({ commit: true });
                 return true;
               },
+        // Tab walks between rich-inline fields on the same block in DOM
+        // order. The service's `startEditingArg` implicitly commits the
+        // current session, so chaining Tabs across fields produces one
+        // undo entry per visited field. At the first / last field the
+        // command returns false so the browser's default Tab handling
+        // kicks in and focus leaves the editor naturally.
+        Tab: this.#tabToSiblingArg(1),
+        "Shift-Tab": this.#tabToSiblingArg(-1),
       }),
     ];
 
@@ -383,6 +391,46 @@ export default class InlineEditController extends Component {
     this.linkEditMode = false;
     this.linkEditUrl = "";
     this.#savedLinkRange = null;
+  }
+
+  /**
+   * Builds a PM keymap command that moves the inline edit session to the
+   * next (`direction = 1`) or previous (`direction = -1`) rich-inline
+   * arg span inside the same block, in DOM order. Returns a synchronous
+   * boolean — `true` when the command consumed the keystroke, `false`
+   * when there's no neighbour and the browser's default Tab handling
+   * should run.
+   */
+  #tabToSiblingArg(direction) {
+    return () => {
+      const view = this.#view;
+      if (!view) {
+        return false;
+      }
+      const blockEl = view.dom.closest("[data-ve-block-key]");
+      if (!blockEl) {
+        return false;
+      }
+      const argEls = Array.from(
+        blockEl.querySelectorAll("[data-ve-inline-edit-arg]")
+      );
+      const currentArg = this.visualEditor.editingArgName;
+      const i = argEls.findIndex(
+        (el) => el.dataset.veInlineEditArg === currentArg
+      );
+      if (i === -1) {
+        return false;
+      }
+      const next = argEls[i + direction];
+      if (!next) {
+        return false;
+      }
+      this.visualEditor.startEditingArg(
+        blockEl.dataset.veBlockKey,
+        next.dataset.veInlineEditArg
+      );
+      return true;
+    };
   }
 
   <template>

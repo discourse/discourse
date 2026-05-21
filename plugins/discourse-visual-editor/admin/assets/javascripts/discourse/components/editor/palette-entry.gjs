@@ -37,7 +37,7 @@ export default class PaletteEntry extends Component {
       title={{@entry.description}}
       {{dDragAndDropSource
         type="ve-palette-block"
-        data=(hash blockName=@entry.name defaultArgs=@entry.previewArgs)
+        data=(hash blockName=@entry.name)
         onDragStart=this.handleDragStart
         onDrop=this.visualEditor.endDrag
       }}

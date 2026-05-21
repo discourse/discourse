@@ -60,12 +60,6 @@ import CategoryCard from "../components/blocks/category-card";
       },
     },
   },
-  previewArgs: {
-    categories: "",
-    description: false,
-    allCategoriesLink: true,
-    allCategoriesLabel: "All categories",
-  },
 })
 export default class VEFeaturedCategories extends Component {
   @cached
