@@ -569,6 +569,11 @@ RSpec.describe TagsController do
       expect(response.body).not_to include("ActionView::Template::Error")
     end
 
+    it "returns 404 for missing numeric /tag/:tag_id routes" do
+      get "/tag/9999999"
+      expect(response.status).to eq(404)
+    end
+
     it "redirects slug routes for numeric tag names to the canonical slug/id URL" do
       numeric_tag_name = (Tag.maximum(:id).to_i + 10_000).to_s
       numeric_tag = Fabricate(:tag, name: numeric_tag_name)

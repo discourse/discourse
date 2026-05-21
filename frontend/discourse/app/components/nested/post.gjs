@@ -52,6 +52,11 @@ export default class NestedPost extends Component {
     }
     const rect = element.getBoundingClientRect();
     window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+
+    // Defer the event to avoid backtracking re-render errors during the render phase
+    Promise.resolve().then(() => {
+      this.appEvents.trigger("nested-replies:scroll-restored");
+    });
   });
 
   @tracked _childWasCreated = false;
@@ -489,7 +494,10 @@ export default class NestedPost extends Component {
               </div>
             </div>
           {{else}}
-            {{#let (lazyHash post=@post) as |postOutletArgs|}}
+            {{#let
+              (lazyHash post=@post nestedReplyView=true)
+              as |postOutletArgs|
+            }}
               <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
                 <article
                   class="nested-post__article boxed"

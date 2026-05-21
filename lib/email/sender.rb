@@ -301,7 +301,7 @@ module Email
           email_log.smtp_transaction_response = message_response.message&.chomp
         end
       rescue *SMTP_CLIENT_ERRORS => e
-        return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
+        return skip(SkippedEmailLog.reason_types[:custom], custom_reason: smtp_error_message(e))
       rescue Net::SMTPError => e
         response = e.try(:response)
         response = " response: #{response.try(:string) || response}" if response
@@ -503,6 +503,14 @@ module Email
 
       attributes[:custom_reason] = custom_reason if custom_reason
       SkippedEmailLog.create!(attributes)
+    end
+
+    def smtp_error_message(error)
+      response = error.try(:response)
+      return error.message if response.blank?
+
+      response_string = response.respond_to?(:string) ? response.string : response.to_s
+      response_string.presence || error.message
     end
 
     def merge_json_x_header(name, value)

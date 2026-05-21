@@ -159,7 +159,7 @@ export default class Nested extends Component {
       {{/if}}
 
       <div class="nested-view__roots">
-        {{#each @rootNodes key="post.id" as |node|}}
+        {{#each @rootNodes key="post.id" as |node index|}}
           <NestedPost
             @post={{node.post}}
             @children={{node.children}}
@@ -192,6 +192,10 @@ export default class Nested extends Component {
             @cloakAbove={{this.cloakAbove}}
             @cloakBelow={{this.cloakBelow}}
             @collapseFromDepth={{if @collapseReplies 0}}
+          />
+          <PluginOutlet
+            @name="nested-roots-between"
+            @outletArgs={{lazyHash topic=@topic index=index}}
           />
         {{else}}
           <div class="nested-view__empty">
