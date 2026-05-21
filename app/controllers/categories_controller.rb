@@ -231,8 +231,6 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_edit!(@category)
 
     json_result(@category, serializer: CategorySerializer) do |cat|
-      preserve_hidden_tag_associations!
-
       old_category_params = category_params.dup
 
       cat.move_to(category_params[:position].to_i) if category_params[:position]
@@ -542,50 +540,6 @@ class CategoriesController < ApplicationController
   end
 
   private
-
-  # Re-injects tag, tag-group, and required-tag-group associations that the
-  # editor isn't permitted to see into `category_params` so that an editor
-  # round-tripping the filtered serializer payload doesn't silently drop them
-  # via `Category#allowed_tags=`, `tag_groups=`, or `required_tag_groups=`,
-  # which all treat their input as a full replacement.
-  def preserve_hidden_tag_associations!
-    return if guardian.is_admin?
-    return if !SiteSetting.tagging_enabled
-
-    hidden_tag_names = guardian.hidden_tag_names
-    visible_tag_group_ids = TagGroup.visible(guardian).pluck(:id)
-
-    if category_params.key?(:allowed_tags) && hidden_tag_names.any?
-      hidden_attached = @category.tags.where(name: hidden_tag_names).pluck(:name)
-      if hidden_attached.any?
-        category_params[:allowed_tags] = Array(category_params[:allowed_tags]) | hidden_attached
-      end
-    end
-
-    if category_params.key?(:allowed_tag_groups)
-      hidden_attached = @category.tag_groups.where.not(id: visible_tag_group_ids).pluck(:name)
-      if hidden_attached.any?
-        category_params[:allowed_tag_groups] = Array(category_params[:allowed_tag_groups]) |
-          hidden_attached
-      end
-    end
-
-    if category_params.key?(:required_tag_groups)
-      hidden_required =
-        @category
-          .category_required_tag_groups
-          .where.not(tag_group_id: visible_tag_group_ids)
-          .includes(:tag_group)
-          .filter_map do |crtg|
-            name = crtg.tag_group&.name
-            { "name" => name, "min_count" => crtg.min_count } if name.present?
-          end
-      if hidden_required.any?
-        category_params[:required_tag_groups] = Array(category_params[:required_tag_groups]) +
-          hidden_required
-      end
-    end
-  end
 
   def merge_pending_custom_fields!(category, pending_custom_fields)
     pending_custom_fields&.each do |key, value|
