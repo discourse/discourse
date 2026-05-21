@@ -232,6 +232,37 @@ acceptance("Create event composer action", function (needs) {
       );
   });
 
+  test("switching to an events category with existing content does not auto-enter event mode", async function (assert) {
+    markCategoryAsEvents(2);
+
+    await visit("/");
+    await click("#create-topic");
+
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(1);
+    await fillIn(".d-editor-input", "draft I started in a regular category");
+
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "draft I started in a regular category",
+        "existing reply is left untouched"
+      );
+    assert
+      .dom(".save-or-cancel button.create")
+      .hasText(i18n("composer.create_topic"), "stays in topic mode");
+
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    assert
+      .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+      .exists("Create event is still offered as an explicit opt-in");
+  });
+
   test("an edited event block is preserved on category switch", async function (assert) {
     markCategoryAsEvents(2);
 
@@ -253,3 +284,54 @@ acceptance("Create event composer action", function (needs) {
       .hasValue(edited, "user-edited content survives the switch");
   });
 });
+
+acceptance(
+  "Create event composer action — user without create-event permission",
+  function (needs) {
+    needs.user({ can_create_discourse_post_event: false });
+    needs.settings({
+      calendar_enabled: true,
+      discourse_post_event_enabled: true,
+      discourse_post_event_allowed_on_groups: "",
+      discourse_post_event_allowed_custom_fields: "",
+    });
+
+    needs.hooks.afterEach(function () {
+      _mutatedCategoryIds.forEach((id) => {
+        const category = Site.current().categories.find((c) => c.id === id);
+        if (category) {
+          category.categoryTypes = {};
+        }
+      });
+      _mutatedCategoryIds.clear();
+    });
+
+    test("events-type category stays in regular topic mode", async function (assert) {
+      markCategoryAsEvents(2);
+
+      await visit("/");
+      await click("#create-topic");
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(2);
+
+      assert
+        .dom(".d-editor-input")
+        .hasNoValue("event skeleton is not inserted");
+      assert
+        .dom(".save-or-cancel button.create")
+        .hasText(i18n("composer.create_topic"));
+
+      const composerActions = selectKit(".composer-actions");
+      await composerActions.expand();
+      assert
+        .dom(`.composer-actions .select-kit-row[data-value="create_event"]`)
+        .doesNotExist("Create event option is not offered");
+      assert
+        .dom(
+          `.composer-actions .select-kit-row[data-value="create_regular_topic"]`
+        )
+        .doesNotExist();
+    });
+  }
+);

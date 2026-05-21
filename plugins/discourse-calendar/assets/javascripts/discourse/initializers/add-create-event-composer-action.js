@@ -13,7 +13,9 @@ const EVENT_ICON = "calendar-day";
 
 function eligible(composer) {
   return (
-    composer?.action === CREATE_TOPIC && composer?.category?.isType?.("events")
+    composer?.action === CREATE_TOPIC &&
+    composer?.user?.can_create_discourse_post_event &&
+    composer?.category?.isType?.("events")
   );
 }
 
@@ -22,10 +24,9 @@ function enterEventMode(composer) {
     return;
   }
   composer.set("creatingEvent", true);
-  // `actionTitle`, `saveLabel`, `saveIcon`, `iconForComposerAction` are all
-  // @computed on `model.category` and don't re-fire when only `creatingEvent`
-  // changes. Nudge dependents so the heading, submit-button label/icon, and
-  // composer-actions dropdown icon pick up the customizations.
+  // `actionTitle`, `saveLabel`, `saveIcon` are @computed on `model.category`
+  // and don't re-fire when only `creatingEvent` changes. Nudge dependents
+  // so the heading and submit-button label/icon pick up the customizations.
   composer.notifyPropertyChange("category");
 
   if (EVENT_OPEN_TAG.test(composer.reply || "")) {
@@ -45,6 +46,21 @@ function enterEventMode(composer) {
   // "untouched" on exit. Any edit (attribute change, surrounding text)
   // makes this comparison fail and changes are preserved.
   composer._insertedEventReply = composer.reply;
+}
+
+// Guards auto-enter so a restored draft (or other in-flight content) without
+// an [event] block is left alone — the user can opt in via the dropdown.
+function maybeAutoEnterEventMode(composer) {
+  if (composer.creatingEvent || !eligible(composer)) {
+    return;
+  }
+  const reply = (composer.reply || "").trim();
+  const template = (composer.category?.topic_template || "").trim();
+  const hasEventTag = EVENT_OPEN_TAG.test(composer.reply || "");
+  if (!hasEventTag && reply && reply !== template) {
+    return;
+  }
+  enterEventMode(composer);
 }
 
 function exitEventMode(composer) {
@@ -89,9 +105,7 @@ function initializeCreateEventComposerAction(api) {
             exitEventMode(this);
           }
           super.applyTopicTemplate(oldCategoryId, categoryId);
-          if (eligible(this)) {
-            enterEventMode(this);
-          }
+          maybeAutoEnterEventMode(this);
         }
 
         _maybeToggleEventMode() {
