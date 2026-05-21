@@ -30,9 +30,10 @@ RSpec.describe "Category tracking badge" do
       expect(topic_list_controls).to have_new(count: 1)
     end
 
-    PostActionCreator.spam(moderator, new_post).reviewable.perform(moderator, :delete_and_agree)
-
     category_page.click_new
+    expect(topic_list).to have_topic(new_post.topic)
+
+    PostActionCreator.spam(moderator, new_post).reviewable.perform(moderator, :delete_and_agree)
 
     try_until_success(reason: "relies on MessageBus updates") do
       expect(topic_list_controls).to have_new(count: 0)
