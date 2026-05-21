@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -80,9 +81,7 @@ export default class ConditionRule extends Component {
   }
 
   @action
-  toggleExpanded(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  toggleExpanded() {
     this._expanded = !this._expanded;
   }
 
@@ -101,9 +100,7 @@ export default class ConditionRule extends Component {
   }
 
   @action
-  remove(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  remove() {
     this.args.onRemove();
   }
 
@@ -122,11 +119,10 @@ export default class ConditionRule extends Component {
         (if this._expanded "--expanded")
       }}
     >
-      <button
-        type="button"
+      <DButton
         class="visual-editor-condition-rule__header"
-        aria-expanded={{this._expanded}}
-        {{on "click" this.toggleExpanded}}
+        @ariaExpanded={{this._expanded}}
+        @action={{this.toggleExpanded}}
       >
         <span class="visual-editor-condition-rule__chevron">
           {{dIcon "chevron-right"}}
@@ -144,21 +140,19 @@ export default class ConditionRule extends Component {
         <span class="visual-editor-condition-rule__summary">
           {{this.summary}}
         </span>
-      </button>
+      </DButton>
 
       {{! template-lint-disable no-nested-interactive }}
       {{! The remove button sits inside the row but outside the header
         disclosure button. It's a sibling at the DOM level (the header
         button doesn't wrap it), so it's not a nested-interactive even
         though the linter can't tell with this layout. }}
-      <button
-        type="button"
+      <DButton
         class="visual-editor-condition-rule__remove"
-        title={{i18n "visual_editor.inspector.conditions.remove_condition"}}
-        {{on "click" this.remove}}
-      >
-        {{dIcon "xmark"}}
-      </button>
+        @icon="xmark"
+        @title="visual_editor.inspector.conditions.remove_condition"
+        @action={{this.remove}}
+      />
 
       {{#if this._expanded}}
         <div class="visual-editor-condition-rule__body">

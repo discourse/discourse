@@ -2,11 +2,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { iconForConditionType } from "../../lib/condition-icons";
 import {
@@ -128,9 +127,7 @@ export default class ConditionGroup extends Component {
   }
 
   @action
-  togglePicker(event) {
-    event.preventDefault();
-    event.stopPropagation();
+  togglePicker() {
     this._picking = !this._picking;
   }
 
@@ -140,9 +137,7 @@ export default class ConditionGroup extends Component {
   }
 
   @action
-  pickType(typeId, event) {
-    event.preventDefault();
-    event.stopPropagation();
+  pickType(typeId) {
     this._picking = false;
     this.args.onInsertLeaf(this.args.path, typeId);
   }
@@ -187,53 +182,42 @@ export default class ConditionGroup extends Component {
           role="radiogroup"
           aria-label={{i18n "visual_editor.inspector.conditions.group_label"}}
         >
-          <button
-            type="button"
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-group__combinator-chip"
               (if (eq this.combinator "and") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.combinator "and"}}
-            {{on "click" (fn this.setCombinator "and")}}
-          >
-            {{i18n "visual_editor.inspector.conditions.combinator_all_of"}}
-          </button>
-          <button
-            type="button"
+            @ariaPressed={{eq this.combinator "and"}}
+            @label="visual_editor.inspector.conditions.combinator_all_of"
+            @action={{fn this.setCombinator "and"}}
+          />
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-group__combinator-chip"
               (if (eq this.combinator "or") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.combinator "or"}}
-            {{on "click" (fn this.setCombinator "or")}}
-          >
-            {{i18n "visual_editor.inspector.conditions.combinator_any_of"}}
-          </button>
-          <button
-            type="button"
+            @ariaPressed={{eq this.combinator "or"}}
+            @label="visual_editor.inspector.conditions.combinator_any_of"
+            @action={{fn this.setCombinator "or"}}
+          />
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-group__combinator-chip"
               (if (eq this.combinator "not") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.combinator "not"}}
-            {{on "click" (fn this.setCombinator "not")}}
-          >
-            {{i18n "visual_editor.inspector.conditions.combinator_none_of"}}
-          </button>
+            @ariaPressed={{eq this.combinator "not"}}
+            @label="visual_editor.inspector.conditions.combinator_none_of"
+            @action={{fn this.setCombinator "not"}}
+          />
         </div>
 
         {{#unless @isRoot}}
-          <button
-            type="button"
+          <DButton
             class="visual-editor-condition-group__remove"
-            title={{i18n "visual_editor.inspector.conditions.remove_group"}}
-            {{on "click" this.removeSelf}}
-          >
-            {{dIcon "xmark"}}
-          </button>
+            @icon="xmark"
+            @title="visual_editor.inspector.conditions.remove_group"
+            @action={{this.removeSelf}}
+          />
         {{/unless}}
       </div>
 
@@ -273,46 +257,36 @@ export default class ConditionGroup extends Component {
 
         <div class="visual-editor-condition-group__add">
           <div class="visual-editor-condition-group__add-actions">
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-group__add-rule"
                 (if this._picking "--active")
               }}
-              aria-expanded={{this._picking}}
-              {{on "click" this.togglePicker}}
-            >
-              {{dIcon "plus"}}
-              <span>{{i18n
-                  "visual_editor.inspector.conditions.add_rule"
-                }}</span>
-            </button>
+              @ariaExpanded={{this._picking}}
+              @icon="plus"
+              @label="visual_editor.inspector.conditions.add_rule"
+              @action={{this.togglePicker}}
+            />
 
-            <button
-              type="button"
+            <DButton
               class="visual-editor-condition-group__add-group"
-              {{on "click" this.addGroup}}
-            >
-              {{dIcon "object-group"}}
-              <span>{{i18n
-                  "visual_editor.inspector.conditions.add_group"
-                }}</span>
-            </button>
+              @icon="object-group"
+              @label="visual_editor.inspector.conditions.add_group"
+              @action={{this.addGroup}}
+            />
           </div>
 
           {{#if this._picking}}
             <div class="visual-editor-condition-group__type-grid" role="menu">
               {{#each @conditionTypes as |typeMeta|}}
-                <button
-                  type="button"
+                <DButton
                   class="visual-editor-condition-group__type-chip"
                   role="menuitem"
-                  title={{typeMeta.description}}
-                  {{on "click" (fn this.pickType typeMeta.type)}}
-                >
-                  {{dIcon (this.iconFor typeMeta.type)}}
-                  <span>{{typeMeta.displayName}}</span>
-                </button>
+                  @icon={{this.iconFor typeMeta.type}}
+                  @translatedLabel={{typeMeta.displayName}}
+                  @translatedTitle={{typeMeta.description}}
+                  @action={{fn this.pickType typeMeta.type}}
+                />
               {{/each}}
             </div>
           {{/if}}

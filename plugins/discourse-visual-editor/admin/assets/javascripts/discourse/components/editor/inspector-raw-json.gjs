@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -129,30 +130,24 @@ export default class InspectorRawJson extends Component {
       {{/if}}
 
       <div class="visual-editor-inspector-raw-json__actions">
-        <button
-          type="button"
-          class="btn btn-primary btn-small"
-          disabled={{if this.isDirty false true}}
-          {{on "click" this.apply}}
-        >
-          {{i18n "visual_editor.inspector.raw_json.apply"}}
-        </button>
-        <button
-          type="button"
-          class="btn btn-flat btn-small"
-          disabled={{if this.isDirty false true}}
-          {{on "click" this.reset}}
-        >
-          {{i18n "visual_editor.inspector.raw_json.reset"}}
-        </button>
-        <button
-          type="button"
-          class="btn btn-flat btn-small"
-          {{on "click" this.copy}}
-        >
-          {{dIcon "copy"}}
-          <span>{{i18n "visual_editor.inspector.raw_json.copy"}}</span>
-        </button>
+        <DButton
+          class="btn-primary btn-small"
+          @label="visual_editor.inspector.raw_json.apply"
+          @disabled={{if this.isDirty false true}}
+          @action={{this.apply}}
+        />
+        <DButton
+          class="btn-flat btn-small"
+          @label="visual_editor.inspector.raw_json.reset"
+          @disabled={{if this.isDirty false true}}
+          @action={{this.reset}}
+        />
+        <DButton
+          class="btn-flat btn-small"
+          @icon="copy"
+          @label="visual_editor.inspector.raw_json.copy"
+          @action={{this.copy}}
+        />
       </div>
     </div>
   </template>

@@ -5,6 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -121,48 +122,33 @@ export default class OutletArgConditionEditor extends Component {
           class="visual-editor-condition-editor__segmented"
           role="radiogroup"
         >
-          <button
-            type="button"
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-editor__segment"
               (if (eq this.currentOperator "equals") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.currentOperator "equals"}}
-            {{on "click" (fn this.setOperator "equals")}}
-          >
-            {{i18n
-              "visual_editor.inspector.conditions.outlet_arg_editor.operator_equals"
-            }}
-          </button>
-          <button
-            type="button"
+            @ariaPressed={{eq this.currentOperator "equals"}}
+            @label="visual_editor.inspector.conditions.outlet_arg_editor.operator_equals"
+            @action={{fn this.setOperator "equals"}}
+          />
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-editor__segment"
               (if (eq this.currentOperator "exists") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.currentOperator "exists"}}
-            {{on "click" (fn this.setOperator "exists")}}
-          >
-            {{i18n
-              "visual_editor.inspector.conditions.outlet_arg_editor.operator_exists"
-            }}
-          </button>
-          <button
-            type="button"
+            @ariaPressed={{eq this.currentOperator "exists"}}
+            @label="visual_editor.inspector.conditions.outlet_arg_editor.operator_exists"
+            @action={{fn this.setOperator "exists"}}
+          />
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-editor__segment"
               (if (eq this.currentOperator "missing") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.currentOperator "missing"}}
-            {{on "click" (fn this.setOperator "missing")}}
-          >
-            {{i18n
-              "visual_editor.inspector.conditions.outlet_arg_editor.operator_missing"
-            }}
-          </button>
+            @ariaPressed={{eq this.currentOperator "missing"}}
+            @label="visual_editor.inspector.conditions.outlet_arg_editor.operator_missing"
+            @action={{fn this.setOperator "missing"}}
+          />
         </div>
       </div>
 

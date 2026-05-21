@@ -1,7 +1,6 @@
 // @ts-check
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -28,39 +27,33 @@ import { i18n } from "discourse-i18n";
  *   - `@onPick` — called with the picked block entry from `@palette`.
  */
 const EmptyCellPlaceholder = <template>
-  <button
-    type="button"
+  <DButton
     class="visual-editor-grid-cell__plus"
-    title={{i18n "visual_editor.canvas.grid_overlay.add_at_cell"}}
-    {{on "click" @onOpen}}
-  >
-    {{dIcon "plus"}}
-  </button>
+    @icon="plus"
+    @title="visual_editor.canvas.grid_overlay.add_at_cell"
+    @action={{@onOpen}}
+  />
   {{#if @isOpen}}
     <div class="visual-editor-grid-cell__picker">
       <div class="visual-editor-grid-cell__picker-header">
         <span>{{i18n "visual_editor.canvas.grid_overlay.pick_block"}}</span>
-        <button
-          type="button"
+        <DButton
           class="visual-editor-grid-cell__picker-close"
-          title={{i18n "visual_editor.canvas.grid_overlay.cancel"}}
-          {{on "click" @onClose}}
-        >
-          {{dIcon "xmark"}}
-        </button>
+          @icon="xmark"
+          @title="visual_editor.canvas.grid_overlay.cancel"
+          @action={{@onClose}}
+        />
       </div>
       <div class="visual-editor-grid-cell__picker-grid" role="menu">
         {{#each @palette as |blockEntry|}}
-          <button
-            type="button"
+          <DButton
             class="visual-editor-grid-cell__picker-chip"
             role="menuitem"
-            title={{blockEntry.displayName}}
-            {{on "click" (fn @onPick blockEntry)}}
-          >
-            {{dIcon blockEntry.icon}}
-            <span>{{blockEntry.displayName}}</span>
-          </button>
+            @icon={{blockEntry.icon}}
+            @translatedLabel={{blockEntry.displayName}}
+            @translatedTitle={{blockEntry.displayName}}
+            @action={{fn @onPick blockEntry}}
+          />
         {{/each}}
       </div>
     </div>

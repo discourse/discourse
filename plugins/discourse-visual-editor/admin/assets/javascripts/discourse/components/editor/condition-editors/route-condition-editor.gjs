@@ -5,6 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { VALID_PAGE_TYPES } from "discourse/lib/blocks/-internals/matching/page-definitions";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -103,8 +104,7 @@ export default class RouteConditionEditor extends Component {
   }
 
   @action
-  toggleAdvanced(event) {
-    event.preventDefault();
+  toggleAdvanced() {
     this._advancedOpen = !this._advancedOpen;
   }
 
@@ -156,17 +156,15 @@ export default class RouteConditionEditor extends Component {
         </span>
         <div class="visual-editor-condition-editor__chip-grid" role="group">
           {{#each this.pageTypes as |page|}}
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-editor__chip"
                 (if (this.isPageSelected page.id) "--active")
               }}
-              aria-pressed={{this.isPageSelected page.id}}
-              {{on "click" (fn this.togglePage page.id)}}
-            >
-              <span>{{page.label}}</span>
-            </button>
+              @ariaPressed={{this.isPageSelected page.id}}
+              @translatedLabel={{page.label}}
+              @action={{fn this.togglePage page.id}}
+            />
           {{/each}}
         </div>
       </div>
@@ -188,18 +186,16 @@ export default class RouteConditionEditor extends Component {
         </span>
       </div>
 
-      <button
-        type="button"
+      <DButton
         class="visual-editor-condition-editor__advanced-toggle"
-        aria-expanded={{this._advancedOpen}}
-        {{on "click" this.toggleAdvanced}}
-      >
-        {{if
+        @ariaExpanded={{this._advancedOpen}}
+        @label={{if
           this._advancedOpen
-          (i18n "visual_editor.inspector.conditions.advanced_hide")
-          (i18n "visual_editor.inspector.conditions.advanced_show")
+          "visual_editor.inspector.conditions.advanced_hide"
+          "visual_editor.inspector.conditions.advanced_show"
         }}
-      </button>
+        @action={{this.toggleAdvanced}}
+      />
 
       {{#if this._advancedOpen}}
         <div class="visual-editor-condition-editor__field">

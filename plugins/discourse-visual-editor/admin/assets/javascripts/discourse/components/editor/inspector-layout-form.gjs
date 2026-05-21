@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -308,24 +309,22 @@ export default class InspectorLayoutForm extends Component {
         </span>
         <div class="visual-editor-layout-form__segmented" role="radiogroup">
           {{#each MODES as |modeOption|}}
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-layout-form__segment"
                 (if (eq this.mode modeOption.id) "--active")
               }}
-              role="radio"
-              aria-checked={{eq this.mode modeOption.id}}
-              title={{i18n
+              @ariaPressed={{eq this.mode modeOption.id}}
+              @icon={{modeOption.icon}}
+              @label={{concat
+                "visual_editor.inspector.layout."
+                modeOption.labelKey
+              }}
+              @translatedTitle={{i18n
                 (concat "visual_editor.inspector.layout." modeOption.labelKey)
               }}
-              {{on "click" (fn this.setMode modeOption.id)}}
-            >
-              {{dIcon modeOption.icon}}
-              <span>{{i18n
-                  (concat "visual_editor.inspector.layout." modeOption.labelKey)
-                }}</span>
-            </button>
+              @action={{fn this.setMode modeOption.id}}
+            />
           {{/each}}
         </div>
       </div>
@@ -342,23 +341,21 @@ export default class InspectorLayoutForm extends Component {
           </span>
           <div class="visual-editor-layout-form__segmented" role="radiogroup">
             {{#each AUTO_COLLAPSE_OPTIONS as |option|}}
-              <button
-                type="button"
+              <DButton
                 class={{dConcatClass
                   "visual-editor-layout-form__segment"
                   (if (eq this.autoCollapse option.id) "--active")
                 }}
-                role="radio"
-                aria-checked={{eq this.autoCollapse option.id}}
-                title={{i18n
+                @ariaPressed={{eq this.autoCollapse option.id}}
+                @label={{concat
+                  "visual_editor.inspector.layout."
+                  option.labelKey
+                }}
+                @translatedTitle={{i18n
                   (concat "visual_editor.inspector.layout." option.labelKey)
                 }}
-                {{on "click" (fn this.setAutoCollapse option.id)}}
-              >
-                <span>{{i18n
-                    (concat "visual_editor.inspector.layout." option.labelKey)
-                  }}</span>
-              </button>
+                @action={{fn this.setAutoCollapse option.id}}
+              />
             {{/each}}
           </div>
           <p class="visual-editor-layout-form__hint">
@@ -399,13 +396,11 @@ export default class InspectorLayoutForm extends Component {
                   "visual_editor.inspector.layout.out_of_bounds_warning"
                   count=this.outOfBoundsSlots.length
                 }}</p>
-              <button
-                type="button"
-                class="btn btn-small btn-danger"
-                {{on "click" this.fixOutOfBoundsSlots}}
-              >
-                {{i18n "visual_editor.inspector.layout.out_of_bounds_fix"}}
-              </button>
+              <DButton
+                class="btn-small btn-danger"
+                @label="visual_editor.inspector.layout.out_of_bounds_fix"
+                @action={{this.fixOutOfBoundsSlots}}
+              />
             </div>
           </div>
         {{/if}}
@@ -436,18 +431,15 @@ export default class InspectorLayoutForm extends Component {
         </span>
         <div class="visual-editor-layout-form__segmented" role="radiogroup">
           {{#each ALIGNMENTS as |value|}}
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-layout-form__segment"
                 (if (eq this.align value) "--active")
               }}
-              role="radio"
-              aria-checked={{eq this.align value}}
-              {{on "click" (fn this.setAlign value)}}
-            >
-              {{i18n (concat "visual_editor.inspector.layout.align_" value)}}
-            </button>
+              @ariaPressed={{eq this.align value}}
+              @label={{concat "visual_editor.inspector.layout.align_" value}}
+              @action={{fn this.setAlign value}}
+            />
           {{/each}}
         </div>
       </div>
@@ -459,14 +451,13 @@ export default class InspectorLayoutForm extends Component {
           </span>
           <div class="visual-editor-layout-form__templates">
             {{#each this.gridTemplates as |template|}}
-              <button
-                type="button"
+              <DButton
                 class={{dConcatClass
                   "visual-editor-layout-form__template-chip"
                   (unless (this.canApplyTemplate template) "--disabled")
                 }}
-                disabled={{unless (this.canApplyTemplate template) "disabled"}}
-                title={{if
+                @disabled={{unless (this.canApplyTemplate template) true}}
+                @translatedTitle={{if
                   (this.canApplyTemplate template)
                   (i18n
                     (concat
@@ -476,7 +467,7 @@ export default class InspectorLayoutForm extends Component {
                   )
                   (i18n "visual_editor.inspector.layout.template_cant_fit")
                 }}
-                {{on "click" (fn this.applyTemplate template)}}
+                @action={{fn this.applyTemplate template}}
               >
                 <span class="visual-editor-layout-form__template-preview">
                   <TemplatePreview @template={{template}} />
@@ -487,7 +478,7 @@ export default class InspectorLayoutForm extends Component {
                       template.i18nKey
                     )
                   }}</span>
-              </button>
+              </DButton>
             {{/each}}
           </div>
         </div>
@@ -512,14 +503,12 @@ export default class InspectorLayoutForm extends Component {
                 {{on "input" this.setColumnTemplate}}
               />
               {{#if this.columnTemplate}}
-                <button
-                  type="button"
-                  class="btn btn-flat btn-small"
-                  title={{i18n "visual_editor.inspector.layout.template_clear"}}
-                  {{on "click" this.clearColumnTemplate}}
-                >
-                  {{dIcon "rotate-left"}}
-                </button>
+                <DButton
+                  class="btn-flat btn-small"
+                  @icon="rotate-left"
+                  @title="visual_editor.inspector.layout.template_clear"
+                  @action={{this.clearColumnTemplate}}
+                />
               {{/if}}
             </div>
           </div>
@@ -535,14 +524,12 @@ export default class InspectorLayoutForm extends Component {
                 {{on "input" this.setRowTemplate}}
               />
               {{#if this.rowTemplate}}
-                <button
-                  type="button"
-                  class="btn btn-flat btn-small"
-                  title={{i18n "visual_editor.inspector.layout.template_clear"}}
-                  {{on "click" this.clearRowTemplate}}
-                >
-                  {{dIcon "rotate-left"}}
-                </button>
+                <DButton
+                  class="btn-flat btn-small"
+                  @icon="rotate-left"
+                  @title="visual_editor.inspector.layout.template_clear"
+                  @action={{this.clearRowTemplate}}
+                />
               {{/if}}
             </div>
           </div>
@@ -579,25 +566,21 @@ class Stepper extends Component {
     <div class="visual-editor-layout-form__stepper">
       <span class="visual-editor-layout-form__legend">{{@label}}</span>
       <div class="visual-editor-layout-form__stepper-controls">
-        <button
-          type="button"
+        <DButton
           class="visual-editor-layout-form__stepper-btn"
-          disabled={{if this.canDecrement undefined "disabled"}}
-          {{on "click" this.decrement}}
-        >
-          {{dIcon "chevron-left"}}
-        </button>
+          @icon="chevron-left"
+          @disabled={{unless this.canDecrement true}}
+          @action={{this.decrement}}
+        />
         <span class="visual-editor-layout-form__stepper-value">
           {{@value}}
         </span>
-        <button
-          type="button"
+        <DButton
           class="visual-editor-layout-form__stepper-btn"
-          disabled={{if this.canIncrement undefined "disabled"}}
-          {{on "click" this.increment}}
-        >
-          {{dIcon "chevron-right"}}
-        </button>
+          @icon="chevron-right"
+          @disabled={{unless this.canIncrement true}}
+          @action={{this.increment}}
+        />
       </div>
     </div>
   </template>

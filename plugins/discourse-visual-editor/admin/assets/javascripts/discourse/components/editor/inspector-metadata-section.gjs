@@ -5,8 +5,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -66,15 +66,13 @@ export default class InspectorMetadataSection extends Component {
         (if this.expanded "--expanded")
       }}
     >
-      <button
-        type="button"
+      <DButton
         class="visual-editor-inspector-metadata__summary"
-        aria-expanded={{this.expanded}}
-        {{on "click" this.toggle}}
-      >
-        {{dIcon (if this.expanded "chevron-down" "chevron-right")}}
-        <span>{{i18n "visual_editor.inspector.metadata.section_title"}}</span>
-      </button>
+        @ariaExpanded={{this.expanded}}
+        @icon={{if this.expanded "chevron-down" "chevron-right"}}
+        @label="visual_editor.inspector.metadata.section_title"
+        @action={{this.toggle}}
+      />
 
       {{#if this.expanded}}
         <div class="visual-editor-inspector-metadata__body">

@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -123,46 +124,33 @@ export default class UserConditionEditor extends Component {
           class="visual-editor-condition-editor__segmented"
           role="radiogroup"
         >
-          <button
-            type="button"
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-editor__segment"
               (if (eq this.loginMode "any") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.loginMode "any"}}
-            {{on "click" (fn this.setLoginMode "any")}}
-          >
-            {{i18n "visual_editor.inspector.conditions.user_editor.login_any"}}
-          </button>
-          <button
-            type="button"
+            @ariaPressed={{eq this.loginMode "any"}}
+            @label="visual_editor.inspector.conditions.user_editor.login_any"
+            @action={{fn this.setLoginMode "any"}}
+          />
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-editor__segment"
               (if (eq this.loginMode "logged-in") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.loginMode "logged-in"}}
-            {{on "click" (fn this.setLoginMode "logged-in")}}
-          >
-            {{i18n
-              "visual_editor.inspector.conditions.user_editor.login_logged_in"
-            }}
-          </button>
-          <button
-            type="button"
+            @ariaPressed={{eq this.loginMode "logged-in"}}
+            @label="visual_editor.inspector.conditions.user_editor.login_logged_in"
+            @action={{fn this.setLoginMode "logged-in"}}
+          />
+          <DButton
             class={{dConcatClass
               "visual-editor-condition-editor__segment"
               (if (eq this.loginMode "anonymous") "--active")
             }}
-            role="radio"
-            aria-checked={{eq this.loginMode "anonymous"}}
-            {{on "click" (fn this.setLoginMode "anonymous")}}
-          >
-            {{i18n
-              "visual_editor.inspector.conditions.user_editor.login_anonymous"
-            }}
-          </button>
+            @ariaPressed={{eq this.loginMode "anonymous"}}
+            @label="visual_editor.inspector.conditions.user_editor.login_anonymous"
+            @action={{fn this.setLoginMode "anonymous"}}
+          />
         </div>
       </div>
 

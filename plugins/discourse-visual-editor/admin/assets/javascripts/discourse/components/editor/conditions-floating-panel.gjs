@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ConditionsTree from "./conditions-tree";
@@ -174,14 +175,12 @@ export default class ConditionsFloatingPanel extends Component {
               }}</span>
           </span>
           <div class="visual-editor-conditions-floating__actions">
-            <button
-              type="button"
+            <DButton
               class="visual-editor-conditions-floating__btn"
-              title={{i18n "visual_editor.inspector.conditions.redock_panel"}}
-              {{on "click" this.redock}}
-            >
-              {{dIcon "down-left-and-up-right-to-center"}}
-            </button>
+              @icon="down-left-and-up-right-to-center"
+              @title="visual_editor.inspector.conditions.redock_panel"
+              @action={{this.redock}}
+            />
           </div>
         </div>
 

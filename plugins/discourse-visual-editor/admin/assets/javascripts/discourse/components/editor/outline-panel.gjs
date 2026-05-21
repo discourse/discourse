@@ -9,6 +9,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
@@ -180,13 +181,13 @@ export default class OutlinePanel extends Component {
   /**
    * Toggles the collapse state for a container row. No-op for leaves.
    *
+   * DButton stops propagation of its own click, so the surrounding
+   * row's selection handler does not also fire.
+   *
    * @param {Object} row
-   * @param {Event} event - Click event; we stop propagation so the
-   *   surrounding row's selection click doesn't also fire.
    */
   @action
-  toggleCollapse(row, event) {
-    event.stopPropagation();
+  toggleCollapse(row) {
     if (!row.hasChildren) {
       return;
     }
@@ -479,26 +480,22 @@ export default class OutlinePanel extends Component {
       }}
     >
       <div class="visual-editor-outline__view-switch" role="tablist">
-        <button
-          type="button"
+        <DButton
           class={{dConcatClass
             "visual-editor-outline__view-tab"
             (if (this.isViewMode "tree") "--active")
           }}
-          {{on "click" (fn this.setViewMode "tree")}}
-        >
-          {{i18n "visual_editor.outline.view_tree"}}
-        </button>
-        <button
-          type="button"
+          @label="visual_editor.outline.view_tree"
+          @action={{fn this.setViewMode "tree"}}
+        />
+        <DButton
           class={{dConcatClass
             "visual-editor-outline__view-tab"
             (if (this.isViewMode "outlets") "--active")
           }}
-          {{on "click" (fn this.setViewMode "outlets")}}
-        >
-          {{i18n "visual_editor.outline.view_outlets"}}
-        </button>
+          @label="visual_editor.outline.view_outlets"
+          @action={{fn this.setViewMode "outlets"}}
+        />
       </div>
 
       {{#if (this.isViewMode "tree")}}
@@ -515,49 +512,41 @@ export default class OutlinePanel extends Component {
               {{on "input" this.onQueryInput}}
             />
             {{#if this.query}}
-              <button
-                type="button"
+              <DButton
                 class="visual-editor-outline__search-clear"
-                aria-label={{i18n "visual_editor.outline.filter.clear"}}
-                {{on "click" this.clearQuery}}
-              >
-                {{dIcon "xmark"}}
-              </button>
+                @icon="xmark"
+                @ariaLabel="visual_editor.outline.filter.clear"
+                @action={{this.clearQuery}}
+              />
             {{/if}}
           </div>
           <div class="visual-editor-outline__chips" role="tablist">
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-outline__chip"
                 (if (this.isStatusFilter "all") "--active")
               }}
-              {{on "click" (fn this.setStatusFilter "all")}}
-            >
-              {{i18n "visual_editor.outline.filter.chip_all"}}
-            </button>
-            <button
-              type="button"
+              @label="visual_editor.outline.filter.chip_all"
+              @action={{fn this.setStatusFilter "all"}}
+            />
+            <DButton
               class={{dConcatClass
                 "visual-editor-outline__chip"
                 (if (this.isStatusFilter "errors") "--active")
               }}
-              {{on "click" (fn this.setStatusFilter "errors")}}
-            >
-              {{dIcon "triangle-exclamation"}}
-              {{i18n "visual_editor.outline.filter.chip_errors"}}
-            </button>
-            <button
-              type="button"
+              @icon="triangle-exclamation"
+              @label="visual_editor.outline.filter.chip_errors"
+              @action={{fn this.setStatusFilter "errors"}}
+            />
+            <DButton
               class={{dConcatClass
                 "visual-editor-outline__chip"
                 (if (this.isStatusFilter "conditions") "--active")
               }}
-              {{on "click" (fn this.setStatusFilter "conditions")}}
-            >
-              {{dIcon "filter"}}
-              {{i18n "visual_editor.outline.filter.chip_conditions"}}
-            </button>
+              @icon="filter"
+              @label="visual_editor.outline.filter.chip_conditions"
+              @action={{fn this.setStatusFilter "conditions"}}
+            />
           </div>
         </div>
       {{/if}}
@@ -566,11 +555,10 @@ export default class OutlinePanel extends Component {
         {{#if this.outletsWithMetadata.length}}
           <div class="visual-editor-outline__outlets">
             {{#each this.outletsWithMetadata as |entry|}}
-              <button
-                type="button"
+              <DButton
                 class="visual-editor-outline__outlet-row"
-                title={{entry.description}}
-                {{on "click" (fn this.jumpToOutlet entry.name)}}
+                @translatedTitle={{entry.description}}
+                @action={{fn this.jumpToOutlet entry.name}}
               >
                 <span class="visual-editor-outline__outlet-name">
                   {{dIcon "cubes"}}
@@ -584,7 +572,7 @@ export default class OutlinePanel extends Component {
                     count=entry.blockCount
                   }}
                 </span>
-              </button>
+              </DButton>
             {{/each}}
           </div>
         {{else}}
@@ -593,15 +581,14 @@ export default class OutlinePanel extends Component {
       {{else if this.decoratedGroups.length}}
         {{#each this.decoratedGroups as |group|}}
           <div class="outline-outlet">
-            <button
-              type="button"
+            <DButton
               class="outline-outlet__label"
-              aria-expanded={{if
+              @ariaExpanded={{if
                 (this.isOutletCollapsed group.outletName)
-                "false"
-                "true"
+                false
+                true
               }}
-              {{on "click" (fn this.toggleOutlet group.outletName)}}
+              @action={{fn this.toggleOutlet group.outletName}}
             >
               {{dIcon
                 (if
@@ -612,7 +599,7 @@ export default class OutlinePanel extends Component {
               }}
               {{dIcon "cubes"}}
               <span>{{group.outletName}}</span>
-            </button>
+            </DButton>
             {{#unless (this.isOutletCollapsed group.outletName)}}
               {{#each group.rows as |row|}}
                 <div
@@ -651,26 +638,20 @@ export default class OutlinePanel extends Component {
                     logically distinct even though they nest. }}
                   {{#if row.hasChildren}}
                     {{! template-lint-disable no-nested-interactive }}
-                    <button
-                      type="button"
+                    <DButton
                       class="outline-block__toggle"
-                      aria-label={{i18n
-                        (if
-                          (this.isRowCollapsed row.blockKey)
-                          "visual_editor.outline.expand_row"
-                          "visual_editor.outline.collapse_row"
-                        )
+                      @icon={{if
+                        (this.isRowCollapsed row.blockKey)
+                        "chevron-right"
+                        "chevron-down"
                       }}
-                      {{on "click" (fn this.toggleCollapse row)}}
-                    >
-                      {{dIcon
-                        (if
-                          (this.isRowCollapsed row.blockKey)
-                          "chevron-right"
-                          "chevron-down"
-                        )
+                      @ariaLabel={{if
+                        (this.isRowCollapsed row.blockKey)
+                        "visual_editor.outline.expand_row"
+                        "visual_editor.outline.collapse_row"
                       }}
-                    </button>
+                      @action={{fn this.toggleCollapse row}}
+                    />
                   {{else}}
                     <span class="outline-block__leaf">{{dIcon "cube"}}</span>
                   {{/if}}

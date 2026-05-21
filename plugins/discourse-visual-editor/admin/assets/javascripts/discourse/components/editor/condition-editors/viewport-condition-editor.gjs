@@ -1,11 +1,10 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -125,22 +124,18 @@ export default class ViewportConditionEditor extends Component {
         </span>
         <div class="visual-editor-condition-editor__viewport-chips">
           {{#each RANGES as |range|}}
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-editor__viewport-chip"
                 (if (eq this.currentRange range.id) "--active")
               }}
-              {{on "click" (fn this.pickRange range.id)}}
-            >
-              {{dIcon range.icon}}
-              <span>{{i18n
-                  (concat
-                    "visual_editor.inspector.conditions.viewport_editor."
-                    range.label
-                  )
-                }}</span>
-            </button>
+              @icon={{range.icon}}
+              @label={{concat
+                "visual_editor.inspector.conditions.viewport_editor."
+                range.label
+              }}
+              @action={{fn this.pickRange range.id}}
+            />
           {{/each}}
         </div>
       </div>
@@ -156,23 +151,18 @@ export default class ViewportConditionEditor extends Component {
           role="radiogroup"
         >
           {{#each TOUCH_MODES as |mode|}}
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-editor__segment"
                 (if (eq this.touchMode mode.id) "--active")
               }}
-              role="radio"
-              aria-checked={{eq this.touchMode mode.id}}
-              {{on "click" (fn this.setTouch mode.id)}}
-            >
-              {{i18n
-                (concat
-                  "visual_editor.inspector.conditions.viewport_editor."
-                  mode.label
-                )
+              @ariaPressed={{eq this.touchMode mode.id}}
+              @label={{concat
+                "visual_editor.inspector.conditions.viewport_editor."
+                mode.label
               }}
-            </button>
+              @action={{fn this.setTouch mode.id}}
+            />
           {{/each}}
         </div>
       </div>

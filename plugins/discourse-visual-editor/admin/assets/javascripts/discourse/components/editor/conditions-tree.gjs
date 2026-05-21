@@ -2,10 +2,9 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import { iconForConditionType } from "../../lib/condition-icons";
 import { classifyNode } from "../../lib/condition-tree";
@@ -230,16 +229,14 @@ export default class ConditionsTree extends Component {
           </p>
           <div class="visual-editor-conditions-tree__seed-grid" role="menu">
             {{#each this.conditionTypes as |typeMeta|}}
-              <button
-                type="button"
+              <DButton
                 class="visual-editor-conditions-tree__seed-chip"
                 role="menuitem"
-                title={{typeMeta.description}}
-                {{on "click" (fn this.seedFromEmpty typeMeta.type)}}
-              >
-                {{dIcon (this.iconFor typeMeta.type)}}
-                <span>{{typeMeta.displayName}}</span>
-              </button>
+                @icon={{this.iconFor typeMeta.type}}
+                @translatedLabel={{typeMeta.displayName}}
+                @translatedTitle={{typeMeta.description}}
+                @action={{fn this.seedFromEmpty typeMeta.type}}
+              />
             {{/each}}
           </div>
         </div>
@@ -274,14 +271,12 @@ export default class ConditionsTree extends Component {
 
       {{#unless this.isEmpty}}
         <div class="visual-editor-conditions-tree__footer">
-          <button
-            type="button"
-            class="btn btn-flat btn-small visual-editor-conditions-tree__clear"
-            {{on "click" this.clearAll}}
-          >
-            {{dIcon "trash-can"}}
-            <span>{{i18n "visual_editor.inspector.conditions.clear_all"}}</span>
-          </button>
+          <DButton
+            class="btn-flat btn-small visual-editor-conditions-tree__clear"
+            @icon="trash-can"
+            @label="visual_editor.inspector.conditions.clear_all"
+            @action={{this.clearAll}}
+          />
         </div>
       {{/unless}}
     </div>

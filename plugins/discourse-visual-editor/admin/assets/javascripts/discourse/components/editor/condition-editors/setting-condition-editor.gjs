@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -167,23 +168,18 @@ export default class SettingConditionEditor extends Component {
           role="radiogroup"
         >
           {{#each OPERATORS as |op|}}
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-editor__segment"
                 (if (eq this.currentOperator op) "--active")
               }}
-              role="radio"
-              aria-checked={{eq this.currentOperator op}}
-              {{on "click" (fn this.setOperator op)}}
-            >
-              {{i18n
-                (concat
-                  "visual_editor.inspector.conditions.setting_editor.operator_"
-                  op
-                )
+              @ariaPressed={{eq this.currentOperator op}}
+              @label={{concat
+                "visual_editor.inspector.conditions.setting_editor.operator_"
+                op
               }}
-            </button>
+              @action={{fn this.setOperator op}}
+            />
           {{/each}}
         </div>
       </div>
@@ -199,34 +195,24 @@ export default class SettingConditionEditor extends Component {
             class="visual-editor-condition-editor__segmented"
             role="radiogroup"
           >
-            <button
-              type="button"
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-editor__segment"
                 (if this.enabledValue "--active")
               }}
-              role="radio"
-              aria-checked={{this.enabledValue}}
-              {{on "click" (fn this.setEnabled true)}}
-            >
-              {{i18n
-                "visual_editor.inspector.conditions.setting_editor.value_enabled"
-              }}
-            </button>
-            <button
-              type="button"
+              @ariaPressed={{this.enabledValue}}
+              @label="visual_editor.inspector.conditions.setting_editor.value_enabled"
+              @action={{fn this.setEnabled true}}
+            />
+            <DButton
               class={{dConcatClass
                 "visual-editor-condition-editor__segment"
                 (if (eq this.enabledValue false) "--active")
               }}
-              role="radio"
-              aria-checked={{eq this.enabledValue false}}
-              {{on "click" (fn this.setEnabled false)}}
-            >
-              {{i18n
-                "visual_editor.inspector.conditions.setting_editor.value_disabled"
-              }}
-            </button>
+              @ariaPressed={{eq this.enabledValue false}}
+              @label="visual_editor.inspector.conditions.setting_editor.value_disabled"
+              @action={{fn this.setEnabled false}}
+            />
           </div>
         </div>
       {{else if (eq this.currentOperator "equals")}}
