@@ -3718,9 +3718,24 @@ body.visual-editor-active {
 
 body.visual-editor-active
   *:not(
-    :has(.visual-editor-outlet-boundary),
+    :has(.visual-editor-outlet-boundary) > *,
     .visual-editor-outlet-boundary,
-    .visual-editor-outlet-boundary *
+    .visual-editor-outlet-boundary *,
+    :has(.visual-editor-shell) > *,
+    .visual-editor-shell,
+    .visual-editor-shell *
   ) {
-  opacity: 0.85;
+  transition: opacity 120ms ease;
+}
+
+body.visual-editor-active--dim-non-editable
+  *:not(
+    :has(.visual-editor-outlet-boundary) > *,
+    .visual-editor-outlet-boundary,
+    .visual-editor-outlet-boundary *,
+    :has(.visual-editor-shell) > *,
+    .visual-editor-shell,
+    .visual-editor-shell *
+  ) {
+  opacity: 0.75;
 }

@@ -17,6 +17,7 @@ en:
           one: "%{count} block has structural issues and won't render until you fix it. Save anyway?"
           other: "%{count} blocks have structural issues and won't render until you fix them. Save anyway?"
         warnings_button_title: "Show validation warnings"
+        dim_non_editable_title: "Dim non-editable regions"
         warnings_panel_title:
           one: "%{count} block has issues"
           other: "%{count} blocks have issues"

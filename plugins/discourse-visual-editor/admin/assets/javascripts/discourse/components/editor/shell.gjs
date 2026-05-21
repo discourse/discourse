@@ -46,6 +46,7 @@ export default class EditorShell extends Component {
   @tracked leftPanelTab = "palette";
   @tracked leftCollapsed = readBoolStorage("ve.leftCollapsed");
   @tracked rightCollapsed = readBoolStorage("ve.rightCollapsed");
+  @tracked dimNonEditable = readBoolStorage("ve.dimNonEditable", true);
 
   isLeftPanelTabActive = (tab) => this.leftPanelTab === tab;
 
@@ -65,6 +66,13 @@ export default class EditorShell extends Component {
   toggleRightCollapsed() {
     this.rightCollapsed = !this.rightCollapsed;
     writeBoolStorage("ve.rightCollapsed", this.rightCollapsed);
+    this._syncBodyClasses();
+  }
+
+  @action
+  toggleDimNonEditable() {
+    this.dimNonEditable = !this.dimNonEditable;
+    writeBoolStorage("ve.dimNonEditable", this.dimNonEditable);
     this._syncBodyClasses();
   }
 
@@ -88,6 +96,10 @@ export default class EditorShell extends Component {
     document.body.classList.toggle(
       "visual-editor-active--right-collapsed",
       this.rightCollapsed
+    );
+    document.body.classList.toggle(
+      "visual-editor-active--dim-non-editable",
+      this.dimNonEditable
     );
   }
 
@@ -219,6 +231,15 @@ export default class EditorShell extends Component {
           </div>
           <div class="toolbar-right">
             <SimulationControls />
+            <DButton
+              class={{dConcatClass
+                "btn-flat visual-editor-btn-dim"
+                (if this.dimNonEditable "--active")
+              }}
+              @icon="circle-half-stroke"
+              @title="visual_editor.chrome.dim_non_editable_title"
+              @action={{this.toggleDimNonEditable}}
+            />
             {{#if this.visualEditor.hasValidationWarnings}}
               <DButton
                 class={{dConcatClass
@@ -409,11 +430,15 @@ export default class EditorShell extends Component {
  * @param {string} key
  * @returns {boolean}
  */
-function readBoolStorage(key) {
+function readBoolStorage(key, defaultValue = false) {
   try {
-    return localStorage.getItem(key) === "true";
+    const v = localStorage.getItem(key);
+    if (v === null) {
+      return defaultValue;
+    }
+    return v === "true";
   } catch {
-    return false;
+    return defaultValue;
   }
 }
 
