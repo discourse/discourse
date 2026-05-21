@@ -108,4 +108,25 @@ describe "Reactions | Post reactions" do
       expect(reactions_button).to have_no_emoji_picker_emoji("middle_finger")
     end
   end
+
+  context "when hovering over a reaction whose value contains a URL-reserved character" do
+    fab!(:other_user, :user)
+
+    before do
+      DiscourseReactions::ReactionManager.new(
+        reaction_value: "+1",
+        user: other_user,
+        post: post_2,
+      ).toggle!
+    end
+
+    it "loads the reaction users in the hover popup" do
+      visit post_2.url
+      expect(reactions_list).to have_reaction("+1")
+
+      reactions_list.hover_over_reaction("+1")
+
+      expect(reactions_list).to have_users_for_reaction("+1", [other_user.username])
+    end
+  end
 end
