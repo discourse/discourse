@@ -15,14 +15,14 @@ describe "Composer - ProseMirror - Quotes" do
     expect(composer).to have_value(markdown + "\n\nThis is a test")
   end
 
-  # TODO: Failing often https://github.com/discourse/discourse/actions/runs/16891573420/job/47852388890
-  xit "lifts the first paragraph out of the quote with Backspace" do
+  it "lifts the first paragraph out of the quote with Backspace" do
     open_composer
 
     composer.type_content("[quote]Text")
     expect(rich).to have_css("aside.quote blockquote p", text: "Text")
 
     composer.send_keys(SystemHelpers::LINE_START_KEY)
+    wait_for_timeout # wait for the caret move
     composer.send_keys(:backspace)
 
     expect(rich).to have_no_css("aside.quote")

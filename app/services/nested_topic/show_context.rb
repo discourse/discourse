@@ -30,6 +30,7 @@ class NestedTopic::ShowContext
   step :expand_reply_trees
   step :prepare_posts
   step :serialize_context
+  step :attach_suggested_and_related
 
   private
 
@@ -55,10 +56,12 @@ class NestedTopic::ShowContext
   end
 
   def fetch_target_post(params:, topic_view:, loader:)
-    post = topic_view.topic.posts.find_by(post_number: params.target_post_number)
-    return if post.nil?
-    return if loader.visible_post_types.exclude?(post.post_type)
-    post
+    # apply_visibility unscopes deleted_at and filters by visible_post_types,
+    # matching the rest of the tree-loading code. Without this, a link to a
+    # since-soft-deleted post (e.g. a stale last_read_post_number from
+    # suggested topics) would 404 even though the deleted_post_placeholder
+    # path in the serializer is designed to render it.
+    loader.apply_visibility(topic_view.topic.posts).find_by(post_number: params.target_post_number)
   end
 
   def should_walk_ancestors(params:, target_post:)
@@ -155,5 +158,12 @@ class NestedTopic::ShowContext
         serializer.serialize_tree(target_post, children_map, reply_counts, descendant_counts),
       message_bus_last_id: topic_view.message_bus_last_id,
     }
+  end
+
+  # Context view has no pagination, so this always runs — parallel to the
+  # final page in NestedTopic::ListRoots, where the same step is gated on
+  # has_more_roots=false.
+  def attach_suggested_and_related(serializer:, response:)
+    response.merge!(serializer.serialize_suggested_and_related)
   end
 end

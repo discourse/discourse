@@ -403,6 +403,7 @@ ko:
       admins: "관리자"
       moderators: "운영자"
       staff: "운영진"
+      anonymous: "익명"
       trust_level_0: "회원등급 0"
       trust_level_1: "회원등급 1"
       trust_level_2: "회원등급 2"
@@ -1103,6 +1104,8 @@ ko:
       xaxis: "일"
     page_view_logged_in_browser_reqs:
       xaxis: "일"
+    page_view_embed_reqs:
+      xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
       xaxis: "일"
@@ -1160,13 +1163,13 @@ ko:
         os: 운영체제
         login_time: 로그인 시간
       description: "이전 로그인과 다른 의심스러운 새 로그인의 상세 정보입니다."
-    staff_logins:
+    admin_logins:
       title: "관리자 로그인"
       labels:
         user: 사용자
         location: 위치
-        login_at: 로그인 시간
-      description: "위치가 있는 관리자 로그인 시간 목록입니다."
+        login_at: 에 로그인
+      description: "위치가있는 관리자 로그인 시간 목록"
     top_uploads:
       title: "주요 업로드"
       labels:
@@ -1292,7 +1295,6 @@ ko:
     favicon: "사이트의 즐겨찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>을 참조하세요. CDN에서 올바르게 작동하려면 png여야 합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
     opengraph_image: "페이지에 다른 적절한 이미지가 없을 때 사용되는 디폴트 오픈그래프 이미지입니다. 비워두면 large_icon이 사용됩니다"
     notification_email: "from: 이메일 주소는 모든 필수 시스템 이메일을 전송하는 데 사용됩니다. 여기에 지정된 도메인은 SPF, DKIM이 있어야 하며, 리버스 PTR 레코드가 제대로 설정되어 있어야 메일이 도착할 수 있습니다."
-    email_subject: "표준 이메일에 대한 사용자 정의 가능한 주제 형식. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323을</a> 참조 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>하십시오.</a>"
     detailed_404: "특정 주제에 액세스할 수 없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고: URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     force_https: "사이트가 HTTPS만을 사용하도록 강제합니다. 경고: HTTPS가 완벽히 구성되어 제대로 작동하는 것을 확인하기 전까지는 이 옵션을 활성화하지 마세요. CDN, 소셜 로그인, 외부 로고 / 종속성이 HTTPS와 호환하는지 확인하셨나요?"
     summary_score_threshold: "'이 주제 요약'에 포함되기 위한 게시물의 최소 점수"
@@ -1606,7 +1608,6 @@ ko:
     pop3_polling_password: "이메일을 가져올 POP3 계정의 비밀번호"
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
-    email_in_authserv_id: "수신 이메일에 대한 인증 확인을 수행하는 서비스의 식별자입니다. 이를 환경설정하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>을 참조하세요."
     enable_smtp: "그룹 메시지에 대한 알림을 보내기 위해 SMTP를 활성화합니다."
     email_prefix: "이메일 제목에 사용할 [라벨]입니다. 설정하지 않으면 기본적으로 '제목'이 됩니다."
     email_site_title: "사이트에서 이메일의 발신자로 사용되는 사이트 제목입니다. 설정하지 않으면 기본적으로 '제목'이 됩니다. '제목'에 이메일 발신자 스트링에 허용되지 않는 문자가 포함된 경우 이 설정을 사용하세요."
@@ -2349,7 +2350,6 @@ ko:
         차단된 이메일 주소를 사용하여 보낸 답장입니다. 다른 이메일 주소로 보내거나 [운영진에게 문의하세요](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "이메일 거부, 허용되지 않는 이메일"
-      subject_template: "[%{email_prefix}] 이메일 문제 -- 차단된 이메일"
       text_body_template: |
         %{destination}(제목: %{former_title})에 보낸 이메일 메시지가 거부되었습니다.
 
@@ -2507,7 +2507,6 @@ ko:
         주제에 댓글을 달 권한이 없습니다. 오류라고 생각되면 [운영진에게 문의하세요](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "이메일 거부, 요약에 답장"
-      subject_template: "[%{email_prefix}] 이메일 문제 -- 요약에 답장"
       text_body_template: |
         %{destination}(제목: %{former_title})에 보낸 이메일 메시지가 거부되었습니다.
 
@@ -2623,7 +2622,6 @@ ko:
       text_body_template: "`download_remote_images_threshold` 디스크 용량 한도에 도달하여 `download_remote_images_to_local` 설정이 비활성화되었습니다."
     new_user_of_the_month:
       title: "이달의 신규 사용자로 선정되었습니다!"
-      subject_template: "이달의 신규 사용자로 선정되었습니다!"
       text_body_template: |
         축하합니다. **%{month_year}의 신규 사용자** 로 선정되었습니다. :trophy:
 
@@ -2930,6 +2928,7 @@ ko:
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
+      subject_template_improved: "계정이 이미 존재합니다"
       text_body_template: |
         %{site_name}에서 계정을 만들려고 했거나 계정의 이메일을 %{email} 이메일로 변경하려고 시도했으나 %{email}의 계정이 이미 존재합니다.
 
@@ -2941,6 +2940,7 @@ ko:
     account_second_factor_disabled:
       title: "2단계 인증 비활성화됨"
       subject_template: "[%{email_prefix}] 2단계 인증 비활성화됨"
+      subject_template_improved: "2단계 인증 사용 안 함"
     digest:
       since_last_visit: "마지막 방문 이후"
       new_topics: "새 주제"
@@ -2953,6 +2953,7 @@ ko:
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
       subject_template: "[%{email_prefix}] 요약"
+      subject_template_improved: "요약"
       unsubscribe: "이 요약은 한동안 방문하지 않은 경우 %{site_link}에서 전송됩니다. %{email_preferences_link}에서 변경하거나 %{unsubscribe_link}에서 구독 해제할 수 있습니다."
       your_email_settings: "이메일 설정"
       click_here: "여기를 클릭"
@@ -2971,6 +2972,7 @@ ko:
       title: "링크를 통해 로그인"
       preview: "링크를 통해 로그인."
       subject_template: "[%{email_prefix}] 링크를 통해 로그인"
+      subject_template_improved: "링크를 통해 로그인"
       text_body_template: |
         다음은 [%{site_name}](%{base_url})에 로그인할 수 있는 링크입니다.
 
@@ -2980,7 +2982,6 @@ ko:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "비밀번호 설정"
-      subject_template: "[%{email_prefix}] 비밀번호 설정"
       text_body_template: |
         누군가가 [%{site_name}](%{base_url}) 계정에 비밀번호를 추가하도록 요청했습니다. 대안으로 검증된 이 이메일 주소와 연결된 지원되는 온라인 서비스(Google, Facebook 등)를 사용하여 로그인할 수 있습니다.
 
@@ -2991,6 +2992,7 @@ ko:
     admin_login:
       title: "관리자 로그인"
       subject_template: "[%{email_prefix}] 로그인"
+      subject_template_improved: "로그인"
       text_body_template: |
         누군가가 [%{site_name}](%{base_url}) 계정에 로그인하도록 요청했습니다.
 
@@ -3000,7 +3002,6 @@ ko:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "계정 생성됨"
-      subject_template: "[%{email_prefix}] 새 계정"
       text_body_template: |
         %{site_name}에서 새 계정이 생성되었습니다.
 
@@ -3110,7 +3111,6 @@ ko:
         위 링크를 클릭할 수 없으면 웹 브라우저의 주소 표시줄에 복사하여 붙여 넣으세요.
     suspicious_login:
       title: "새 로그인 알림"
-      subject_template: "[%{site_name}] %{location}에서 새 로그인 발생"
     post_approved:
       title: "게시물 승인됨"
       subject_template: "[%{site_name}] 게시물이 승인되었습니다"

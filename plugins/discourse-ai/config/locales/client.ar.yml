@@ -385,6 +385,8 @@ ar:
         description: "تمكين الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
         supported_locales_description: "يتيح هذا الإعداد أيضًا للزوار المساهمة بترجمة المنشورات."
+        translatable_categories: "الفئات القابلة للترجمة"
+        translatable_categories_description: "سيتم ترجمة المحتوى الموجود في الفئات المحددة فقط. يجب إضافة الفئات الفرعية بشكل منفصل."
         admin_actions:
           translation_settings: "إعدادات الترجمة"
           localization_settings: "إعدادات التوطين"
@@ -428,6 +430,9 @@ ar:
         theme_translations:
           translate:
             label: "ترجم"
+            title: "ترجمة إلى جميع اللغات المدعومة باستخدام اللغة المحددة كلغة مصدر"
+            queued: "وضع مهمة الترجمة في قائمة الانتظار"
+            failed: "فشل في وضع الترجمة في قائمة الانتظار"
         translations_menu:
           translate:
             label: "ترجمة المنشور"
@@ -584,9 +589,9 @@ ar:
         max_turn_tokens_help: "الحد الأقصى لإجمالي الرموز (المدخلات + المخرجات) المستهلكة عبر جميع استدعاءات نموذج اللغة الكبير (LLM) خلال رد واحد من الروبوت. عند تحديد هذا الخيار، يتم استبدال حدود الإكمال/الأدوات الثابتة بميزانية من الرموز، ما يتيح سلوكًا أكثر اعتمادًا على الوكيل. اتركه فارغًا لاستخدام الحدود الافتراضية."
         compression_threshold: "حدّ الضغط"
         compression_threshold_help: "النسبة المئوية لاستخدام السياق (من 20 إلى 99) التي يبدأ عندها الضغط التلقائي. تؤدي القيم الأقل إلى بدء الضغط في وقت أبكر، ما يحافظ على مساحة أكبر."
-        vision_enabled: تفعيل الرؤية
-        vision_enabled_help: إذا تم تفعيل هذا الخيار، سيحاول الذكاء الاصطناعي فهم الصور التي ينشرها المستخدمون في الموضوع، بناءً على النموذج المُستخدَم لدعم الرية. هذه الميزة مدعومة في أحدث النماذج من Anthropic وGoogle وOpenAI.
-        vision_max_pixels: الحجم المدعوم للصور
+        vision_enabled: تضمين تحميل الصور
+        vision_enabled_help: إذا كان مفعّلًا، يمكن لهذا الوكيل تضمين الصور من المنشورات والدردشات عندما يدعم النموذج المحدد إدخال الصور.
+        vision_max_pixels: الحد الأقصى لحجم الصورة
         vision_max_pixel_sizes:
           low: جودة منخفضة - الأرخص (256 × 256)
           medium: جودة متوسطة (512 × 512)
@@ -826,6 +831,17 @@ ar:
         oauth_client_id: "معرّف عميل OAuth"
         oauth_client_secret: "سر عميل OAuth"
         oauth_scopes: "مجالات OAuth"
+        oauth_authorization_params: "معلمات مصادقة OAuth"
+        oauth_authorization_params_help: "تم دمج كائن JSON اختياري في طلب المصادقة. استخدم null لإزالة معلمة افتراضية."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "معلمات رمز OAuth"
+        oauth_token_params_help: "تم دمج كائن JSON اختياري في طلبات الرمز. استخدم null لإزالة معلمة افتراضية."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "يتطلب رمز تحديث"
+        oauth_require_refresh_token_help: "فشل اتصال OAuth إذا لم يُرجع مقدِّم الخدمة رمز التحديث."
+        oauth_json_object_required: "يجب أن يكون %{field} كائن JSON."
+        oauth_show_advanced_options: "إظهار الخيارات المتقدمة"
+        oauth_hide_advanced_options: "إخفاء الخيارات المتقدمة"
         oauth_connection: "اتصال OAuth"
         oauth_status: "حالة OAuth"
         oauth_statuses:
@@ -899,9 +915,9 @@ ar:
         max_output_tokens: "الحد الأقصى لعدد الرموز في المخرجات"
         url: "عنوان URL لخدمة استضافة النموذج"
         api_key: "مفتاح API لخدمة استضافة النموذج"
-        vision_enabled: "تفعيل الرؤية"
-        allowed_attachment_types: "المرفقات المسموح بها"
-        attachment_types_placeholder: "حدد الامتدادات (مثل pdf أو txt أو docx) أو اكتبها"
+        vision_enabled: "يدعم إدخال الصور"
+        allowed_attachment_types: "مرفقات المستندات المسموح بها"
+        attachment_types_placeholder: "حدد الامتدادات (مثل: pdf وtxt وcsv وdocx وxlsx) أو اكتبها"
         ai_bot_user: "مستخدم روبوت الذكاء الاصطناعي"
         cost_input: "تكلفة الإدخال"
         cost_cached_input: "تكلفة الإدخال المخزنة مؤقتًا"
@@ -959,17 +975,17 @@ ar:
           anthropic-claude-opus-4-7: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-sonnet-4-6: "التوازن الأمثل بين السرعة والتكلفة"
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
-          google-gemini-3-pro: "النموذج الأكثر ذكاءً لدى Google"
+          google-gemini-3-1-pro: "النموذج الأكثر ذكاءً لدى Google"
           google-gemini-3-flash: "سريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
+          open_ai-gpt-5-5: "أقوى نموذج من OpenAI مع سياق موسّع"
           open_ai-gpt-5-4: "النموذج الرائد لدى OpenAI، وهو مناسب جدًا لحل المشكلات عبر نطاقات متعددة"
-          open_ai-gpt-5-4-mini: "يوفر توازنًا بين الذكاء والسرعة والتكلفة"
-          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
-          open_router-deepseek-deepseek-v3-2: "أحدث نموذج عالي الأداء من DeepSeek"
-          open_router-moonshotai-kimi-k2-5: "نموذج Moonshot متعدد الوسائط القادر على الرؤية"
-          open_router-x-ai-grok-4-fast: "النموذج الرائد لشركة xAI بتقنية الرؤية"
-          open_router-minimax-minimax-m2-7: "نموذج MiniMax متعدد الوسائط مع سياق كبير"
-          open_router-z-ai-glm-5-1: "نموذج Z-AI متعدد الوسائط بتقنية الرؤية"
-          open_router-arcee-ai-trinity-large-preview-free: "نموذج مجاني مفتوح المصدر من شركة Arcee AI"
+          open_ai-gpt-5-4-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
+          open_router-moonshotai-kimi-k2-6: "نموذج Moonshot متعدد الوسائط القادر على الرؤية"
+          open_router-deepseek-deepseek-v4-flash: "أحدث نموذج عالي الأداء من DeepSeek مع سياق يصل إلى 1 مليون رمز"
+          open_router-minimax-minimax-m2-7: "نموذج MiniMax مع سياق كبير"
+          open_router-x-ai-grok-4-1-fast: "نموذج xAI السريع متعدد الوسائط مع سياق كبير جدًا"
+          open_router-z-ai-glm-5-1: "نموذج Z-AI الذي يركز على الاستدلال"
+          open_router-qwen-qwen3-6-plus: "نموذج Qwen متعدد الوسائط مع سياق بطول 1 مليون رمز"
         preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
         configured:
           title: "تم تكوين نماذج اللغة الكبيرة (LLM)"
@@ -993,8 +1009,8 @@ ar:
           max_output_tokens: "أقصى عدد من الرموز التي يمكن للنموذج توليدها في طلب واحد"
           display_name: "الاسم المستخدم للإشارة إلى هذا النموذج في واجهة موقعك."
           name: "نُدرج هذا في استدعاء API لتحديد النموذج الذي سنستخدمه"
-          vision_enabled: "إذا تم تفعيله، سيحاول الذكاء الاصطناعي فهم الصور. إنه يعتمد على النموذج المُستخدَم لدعم الرؤية. هذه الميزة مدعومة بأحدث النماذج من Anthropic وGoogle وOpenAI."
-          allowed_attachment_types: "\"اختر أنواع المرفقات التي يتم إرسالها إلى النموذج. اترك الحقل فارغًا إذا كنت لا تريد إرسال أي مرفقات. يتم التحكم بالصور عبر الرؤية."
+          vision_enabled: "مدى قدرة هذا النموذج أو مقدِّم الخدمة على استقبال الصور وفهمها."
+          allowed_attachment_types: "اختر أنواع مرفقات المستندات التي يمكن تحويلها أو إعادة توجيهها. اترك هذا الحقل فارغًا لمنع إرفاق المستندات. تتم إدارة الصور بشكل منفصل."
           cost_input: "تكلفة الإدخال لكل مليون رمز لهذا النموذج"
           cost_cached_input: "تكلفة الإدخالات المخزنة مؤقتًا لكل مليون رمز لهذا النموذج (عند القراءة من ذاكرة التخزين المؤقت للمطالبة)"
           cost_cache_write: "تكلفة كتابة البيانات في التخزين المؤقت لكل مليون رمز لهذا النموذج (عند الكتابة إلى ذاكرة التخزين المؤقت للمطالبة)"
@@ -1211,6 +1227,12 @@ ar:
           title: "عرض تفاعل الذكاء الاصطناعي"
           copy_request: "طلب النسخة"
           copy_response: "رد النسخة"
+          this_turn: "هذا التفاعل:"
+          whole_conversation: "المحادثة:"
+          tokens_summary: "%{request_tokens} مدخلات ← %{response_tokens} مخرجات"
+          cache_both: "(ذاكرة تخزين مؤقت: %{read} قراءة، %{write} كتابة)"
+          cache_read_only: "(ذاكرة تخزين مؤقت: %{read} قراءة)"
+          cache_write_only: "(ذاكرة تخزين مؤقت: %{write} كتابة)"
           request: "طلب"
           response: "الرد"
           next_log: "التالي"
@@ -1263,11 +1285,17 @@ ar:
             many: "يجب أن يبلغ طول الرسالة %{count} حرفًا أو أكثر"
             other: "يجب أن يبلغ طول الرسالة %{count} حرف أو أكثر"
           messages_sidebar_title: "المحادثات"
+          starred: "مميز بنجمة"
           today: "اليوم"
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"
           upload_files: "تحميل الملفات"
           uploads_in_progress: "يتعذر الإرسال بينما عمليات التحميل قيد التنفيذ"
+          show_toolbar: "إظهار شريط أدوات التنسيق"
+          hide_toolbar: "إخفاء شريط أدوات التنسيق"
+          scroll_to_bottom: "الانتقال إلى أسفل الصفحة"
+          streaming_below: "محتوى جديد بالأسفل"
+          editing_post: "تعديل المنشور"
       sentiments:
         dashboard:
           title: "المشاعر"

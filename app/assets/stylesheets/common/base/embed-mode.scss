@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for the full Ember app when rendered in embed mode (iframe)
 // Activated when ?embed_mode=true is in the URL
 body.embed-mode {
@@ -17,6 +19,8 @@ body.embed-mode {
   .suggested-topics,
   .more-topics__container,
   #topic-title,
+  .nested-view__header,
+  .nested-view__topic-map,
   .topic-above-footer-buttons-outlet.presence,
   .above-main-container-outlet,
   .topic-footer-main-buttons__actions .toggle-admin-menu,
@@ -39,8 +43,9 @@ body.embed-mode {
     max-width: 100%;
   }
 
-  // Hide the standard composer in embed mode — the docked composer replaces it
-  #reply-control {
+  // Hide the standard composer in embed mode — the docked composer replaces it.
+  // Allow it to show when editing a post (composer-action-edit class).
+  #reply-control:not(.composer-action-edit) {
     display: none !important;
   }
 
@@ -103,6 +108,25 @@ body.embed-mode {
     }
   }
 
+  // prevent horizontal overflow
+  .topic-meta-data {
+    @include viewport.until(sm) {
+      .post-infos {
+        position: relative;
+        overflow: hidden;
+        padding-right: 6px;
+      }
+
+      .read-state {
+        right: 1px;
+
+        svg {
+          right: 0;
+        }
+      }
+    }
+  }
+
   // Hide the docked timeline sidebar (fullscreen timeline still works)
   .timeline-container:not(.timeline-fullscreen) {
     display: none !important;
@@ -143,7 +167,8 @@ body.embed-mode {
 
   // Hide OP
   // Use visibility hidden to prevent issues with jumpy behavior
-  .post-stream .topic-post.topic-owner:first-child {
+  .post-stream .topic-post.topic-owner:first-child,
+  .nested-view__op {
     opacity: 0;
     height: 0;
     visibility: hidden;
@@ -151,20 +176,37 @@ body.embed-mode {
     pointer-events: none;
   }
 
+  // Drop the nested-view's outer framing so it sits flush in the iframe
+  .nested-view {
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+  }
+
   .embed-mode-composer {
     position: sticky;
     bottom: 0;
-    z-index: 50;
+    z-index: z("composer", "content");
     background: var(--secondary);
     padding-inline: 0.5em;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -2.5em;
+      height: 2.5em;
+      background: linear-gradient(to bottom, transparent, var(--secondary));
+      pointer-events: none;
+    }
 
     .docked-composer {
       --docked-composer-input-min-height: 10em;
       margin-top: 0;
 
       &::before {
-        left: -0.5em;
-        right: -0.5em;
+        display: none;
       }
     }
 
@@ -195,5 +237,36 @@ body.embed-mode {
     &__replying-to-dismiss {
       padding: 0.25em;
     }
+
+    &__editing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.35em 0.75em;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      border-top: 1px solid var(--primary-low);
+    }
+
+    &__editing-text {
+      display: flex;
+      align-items: center;
+      gap: 0.35em;
+    }
+
+    &__editing-dismiss {
+      padding: 0.25em;
+    }
+  }
+}
+
+.embed-auth-flow-modal {
+  &__waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 1em 0;
+    text-align: center;
   }
 }

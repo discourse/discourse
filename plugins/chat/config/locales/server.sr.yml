@@ -17,6 +17,10 @@ sr:
         single_user: "%{username}"
     mention_warning:
       dismiss: "odbaci"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: Odgovori
   unsubscribe:
     chat_summary:
       never: Nikad

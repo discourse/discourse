@@ -29,15 +29,17 @@ module DiscourseSubscriptions
       end
 
       case event[:type]
-      when "checkout.session.completed"
+      when "checkout.session.completed", "checkout.session.async_payment_succeeded"
         checkout_session = event[:data][:object]
 
-        if SiteSetting.discourse_subscriptions_enable_verbose_logging
-          Rails.logger.warn("checkout.session.completed data: #{checkout_session}")
-        end
-        email = checkout_session[:customer_email]
-
         return head :ok if checkout_session[:status] != "complete"
+        return head :ok if checkout_session[:payment_status] != "paid"
+
+        if SiteSetting.discourse_subscriptions_enable_verbose_logging
+          Rails.logger.warn("#{event[:type]} data: #{checkout_session}")
+        end
+
+        email = checkout_session[:customer_email]
         return render_json_error "email not found" if !email
 
         if checkout_session[:customer].nil?

@@ -6,16 +6,16 @@ import { tagName } from "@ember-decorators/component";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import categoryLink, {
-  categoryBadgeHTML,
-} from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dCategoryLink, {
+  categoryBadgeHTML,
+} from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
 @tagName("")
 export default class CategoriesBoxes extends Component {
@@ -38,7 +38,7 @@ export default class CategoriesBoxes extends Component {
 
   <template>
     <section
-      class={{concatClass
+      class={{dConcatClass
         "category-boxes"
         (if this.anyLogos "with-logos" "no-logos")
         (if this.hasSubcategories "with-subcategories")
@@ -84,8 +84,8 @@ export default class CategoriesBoxes extends Component {
 
                 {{#unless c.isMuted}}
                   <div class="description">
-                    <DecoratedHtml
-                      @html={{dirSpan c.description_excerpt htmlSafe="true"}}
+                    <DDecoratedHtml
+                      @html={{dDirSpan c.description_excerpt htmlSafe="true"}}
                     />
                   </div>
 
@@ -118,7 +118,7 @@ export default class CategoriesBoxes extends Component {
                                     <CategoryTitleBefore
                                       @category={{subsubcategory}}
                                     />
-                                    {{categoryLink
+                                    {{dCategoryLink
                                       subsubcategory
                                       hideParent="true"
                                     }}
@@ -139,7 +139,7 @@ export default class CategoriesBoxes extends Component {
                               <CategoryLogo @category={{sc}} />
                             </span>
                           {{/if}}
-                          {{categoryLink sc hideParent="true"}}
+                          {{dCategoryLink sc hideParent="true"}}
                         </a>
                       {{/each}}
                     </div>

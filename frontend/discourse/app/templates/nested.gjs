@@ -29,6 +29,17 @@ export default <template>
       @recoverPost={{@controller.recoverPost}}
       @showFlags={{@controller.showFlags}}
       @showHistory={{@controller.showHistory}}
+      @changeNotice={{@controller.changeNotice}}
+      @changePostOwner={{@controller.changePostOwner}}
+      @grantBadge={{@controller.grantBadge}}
+      @lockPost={{@controller.lockPost}}
+      @unlockPost={{@controller.unlockPost}}
+      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
+      @rebakePost={{@controller.rebakePost}}
+      @showPagePublish={{@controller.showPagePublish}}
+      @togglePostType={{@controller.togglePostType}}
+      @toggleWiki={{@controller.toggleWiki}}
+      @unhidePost={{@controller.unhidePost}}
       @editingTopic={{@controller.editingTopic}}
       @startEditingTopic={{@controller.startEditingTopic}}
       @cancelEditingTopic={{@controller.cancelEditingTopic}}
@@ -42,6 +53,8 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @showActivityLog={{@controller.showActivityLog}}
+      @collapseReplies={{@controller.collapseReplies}}
     />
   {{else}}
     <Nested
@@ -59,6 +72,17 @@ export default <template>
       @recoverPost={{@controller.recoverPost}}
       @showFlags={{@controller.showFlags}}
       @showHistory={{@controller.showHistory}}
+      @changeNotice={{@controller.changeNotice}}
+      @changePostOwner={{@controller.changePostOwner}}
+      @grantBadge={{@controller.grantBadge}}
+      @lockPost={{@controller.lockPost}}
+      @unlockPost={{@controller.unlockPost}}
+      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
+      @rebakePost={{@controller.rebakePost}}
+      @showPagePublish={{@controller.showPagePublish}}
+      @togglePostType={{@controller.togglePostType}}
+      @toggleWiki={{@controller.toggleWiki}}
+      @unhidePost={{@controller.unhidePost}}
       @postNumber={{@controller.postNumber}}
       @pinnedPostIds={{@controller.pinnedPostIds}}
       @newRootPostCount={{@controller.newRootPostIds.length}}
@@ -76,6 +100,8 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @showActivityLog={{@controller.showActivityLog}}
+      @collapseReplies={{@controller.collapseReplies}}
     />
   {{/if}}
 </template>

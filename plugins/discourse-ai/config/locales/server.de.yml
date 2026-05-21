@@ -135,10 +135,13 @@ de:
     ai_discord_search_agent: "Der Agent, der für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
+    ai_translation_target_categories: "Es werden nur Inhalte aus den ausgewählten Kategorien übersetzt. Unterkategorien müssen separat hinzugefügt werden. Lass das Feld leer, um die Übersetzung von Themen in Kategorien zu deaktivieren."
+    ai_translation_personal_messages: "Legt fest, welche persönlichen Nachrichten übersetzt werden. „none“ deaktiviert die Übersetzung von privaten Nachrichten. „group“ übersetzt nur private Gruppennachrichten. „all“ übersetzt alle privaten Nachrichten."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
+    ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
     ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
@@ -313,10 +316,16 @@ de:
         oauth_token_exchange_failed: "Der OAuth-Token-Austausch ist mit dem Status %{status} fehlgeschlagen."
         oauth_https_required: "OAuth erfordert, dass deine Website über HTTPS bereitgestellt wird."
         oauth_callback_failed: "OAuth-Verbindung fehlgeschlagen: %{message}"
+        oauth_refresh_token_required: "Der OAuth-Autorisierungsserver hat kein Aktualisierungstoken zurückgegeben. Passe die erweiterten OAuth-Optionen an und stelle die Verbindung zu diesem MCP-Server erneut her."
         oauth_client_metadata_public_https_required: "Die Registrierung von Client-Metadatendokumenten erfordert eine öffentliche HTTPS-Website-URL. Aktuelle Client-Metadaten-URL: %{url}"
         oauth_registration_endpoint_missing: "Der OAuth-Autorisierungsserver bietet keinen Registrierungsendpunkt an."
+        oauth_manual_client_registration_required: "Der OAuth-Autorisierungsserver %{issuer} unterstützt keine dynamische Client-Registrierung. Stelle diesen MCP-Server auf manuelle Client-Anmeldedaten um und gib eine registrierte OAuth-Client-ID an."
+        oauth_client_secret_required: "Der OAuth-Autorisierungsserver %{issuer} erfordert eine Client-Authentifizierung über den Token-Endpunkt (%{methods}). Konfiguriere manuelle Client-Anmeldedaten mit einem Client-Secret."
+        oauth_token_endpoint_auth_method_unsupported: "Der OAuth-Autorisierungsserver %{issuer} gibt nur nicht unterstützte Methoden zur Client-Authentifizierung am Token-Endpunkt an (%{methods}). Dieser MCP-Server unterstützt derzeit: none, client_secret_basic und client_secret_post."
         oauth_client_registration_failed: "Die dynamische Client-Registrierung ist mit dem Status „%{status}“ fehlgeschlagen."
         oauth_client_registration_failed_no_id: "Die dynamische Client-Registrierung war erfolgreich, aber es wurde keine „client_id“ zurückgegeben."
+      oauth_authorization_params_invalid: "Die OAuth-Autorisierungsparameter müssen ein JSON-Objekt sein."
+      oauth_token_params_invalid: "Die Parameter des OAuth-Tokens müssen ein JSON-Objekt sein."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
@@ -887,10 +896,8 @@ de:
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
-      agent_not_found: "Der angegebene Agent existiert nicht. Überprüfe die Parameter agent_name oder agent_id (bisher: agent_name oder agent_id)."
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
-      agent_disabled: "Der angegebene Agent ist deaktiviert. Überprüfe die Parameter agent_name oder agent_id (bisher: agent_name oder agent_id)."
       no_default_llm: Der Agent muss ein default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.

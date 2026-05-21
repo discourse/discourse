@@ -19,7 +19,6 @@ RSpec.describe "Nested view category default" do
 
   before do
     SiteSetting.nested_replies_enabled = true
-    SiteSetting.enable_simplified_category_creation = false
     nested_category.category_setting.update!(nested_replies_default: true)
     Fabricate(:nested_topic, topic: topic)
   end
@@ -32,15 +31,8 @@ RSpec.describe "Nested view category default" do
 
       category_page.visit_settings(unchecked_category)
 
-      expect(page).to have_css(
-        ".enable-nested-replies-default input[type='checkbox']:not(:checked)",
-        visible: :all,
-      )
-
-      find(".enable-nested-replies-default label.checkbox-label").click
+      form.field("category_setting.nested_replies_default").toggle
       category_page.save_settings
-
-      expect(page).to have_current_path(%r{/c/#{unchecked_category.slug}})
 
       unchecked_category.reload
       expect(unchecked_category.nested_replies_default).to eq(true)
@@ -49,32 +41,7 @@ RSpec.describe "Nested view category default" do
     it "shows checkbox as checked when category has nested default enabled" do
       category_page.visit_settings(nested_category)
 
-      expect(page).to have_css(
-        ".enable-nested-replies-default input[type='checkbox']:checked",
-        visible: :all,
-      )
-    end
-
-    context "with simplified category creation" do
-      before { SiteSetting.enable_simplified_category_creation = true }
-
-      it "allows admin to enable nested view default for a category" do
-        unchecked_category = Fabricate(:category, name: "Unchecked Category")
-
-        category_page.visit_settings(unchecked_category)
-
-        form.field("category_setting.nested_replies_default").toggle
-        category_page.save_settings
-
-        unchecked_category.reload
-        expect(unchecked_category.nested_replies_default).to eq(true)
-      end
-
-      it "shows checkbox as checked when category has nested default enabled" do
-        category_page.visit_settings(nested_category)
-
-        expect(form.field("category_setting.nested_replies_default")).to be_checked
-      end
+      expect(form.field("category_setting.nested_replies_default")).to be_checked
     end
   end
 

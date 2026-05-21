@@ -213,8 +213,5 @@
 .hidden-upload-field {
   visibility: hidden;
   position: absolute;
-
-  .admin-backups-upload & {
-    width: 100%;
-  }
+  max-width: 100%;
 }

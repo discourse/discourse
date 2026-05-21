@@ -6,12 +6,6 @@
 
 ru:
   js:
-    discourse_ai:
-      features:
-        data_explorer:
-          name: "Проводник данных"
-          description: "Генерация запросов на основе ИИ для Data Explorer"
-          query_generation: "Генерация запросов"
     errors:
       explorer:
         no_semicolons: "Удалите точку с запятой из запроса."
@@ -28,15 +22,6 @@ ru:
       create: "Создать"
       create_placeholder: "Имя запроса..."
       description_placeholder: "Введите описание"
-      ai:
-        description_title: "Генерация с помощью ИИ"
-        description_hint: "Опишите свои потребности простым языком. Мы сгенерируем для вас SQL-запрос, название и описание."
-        description_placeholder: "Например, показать мне количество регистраций за определенный период времени."
-        generate: "Сгенерировать"
-        generating: "Генерация запросов с помощью ИИ..."
-        generation_timeout: "Истекло время ожидания генерации запроса ИИ. Вы можете написать SQL-запрос вручную."
-        generation_error: "При формировании запроса произошла ошибка."
-        optional: "необязательно"
       import:
         label: "Импорт"
         unparseable_json: "Невозможно распарсить JSON-файл."

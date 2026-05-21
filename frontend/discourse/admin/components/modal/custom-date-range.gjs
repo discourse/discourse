@@ -2,9 +2,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
+import DButton from "discourse/ui-kit/d-button";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class CustomDateRange extends Component {
@@ -30,7 +30,7 @@ export default class CustomDateRange extends Component {
       @closeModal={{@closeModal}}
     >
       <:body>
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{this.startDate}}
           @to={{this.endDate}}
           @onChange={{this.onChangeDateRange}}

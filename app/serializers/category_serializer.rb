@@ -43,7 +43,9 @@ class CategorySerializer < SiteCategorySerializer
              :style_type,
              :emoji,
              :icon,
-             :category_types
+             :category_types,
+             :category_type_settings,
+             :available_category_types
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
   has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
@@ -159,5 +161,21 @@ class CategorySerializer < SiteCategorySerializer
   def category_types
     return {} if !SiteSetting.enable_simplified_category_creation
     object.category_types
+  end
+
+  def category_type_settings
+    return {} if !SiteSetting.enable_simplified_category_creation
+    Categories::TypeRegistry
+      .all
+      .values
+      .reduce({}) do |result, type_klass|
+        next result unless type_klass.category_matches?(object)
+        result.merge(type_klass.read_category_settings(object))
+      end
+  end
+
+  def available_category_types
+    return [] if !SiteSetting.enable_simplified_category_creation
+    Categories::TypeRegistry.list(only_visible: true)
   end
 end

@@ -241,7 +241,7 @@ class ::Assigner
 
     @target.assignment.update!(note: note, status: status)
     queue_notification(@target.assignment) if should_notify
-    publish_assignment(@target.assignment, assign_to, note, status)
+    @target.assignment.publish_topic_assignment
 
     # email is skipped, for now
 
@@ -326,7 +326,7 @@ class ::Assigner
     # This assignment should never be notified
     SilencedAssignment.create!(assignment_id: assignment.id) if !should_notify
 
-    publish_assignment(assignment, assign_to, note, status)
+    assignment.publish_topic_assignment
 
     if assignment.assigned_to_user?
       if !assign_to.user_option.do_nothing_when_assigned?
@@ -520,24 +520,6 @@ class ::Assigner
       post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
       action_code: action_code,
       custom_fields: custom_fields,
-    )
-  end
-
-  def publish_assignment(assignment, assign_to, note, status)
-    serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
-    MessageBus.publish(
-      "/staff/topic-assignment",
-      {
-        type: "assigned",
-        topic_id: topic.id,
-        post_id: post_target? && @target.id,
-        post_number: post_target? && @target.post_number,
-        assigned_type: assignment.assigned_to_type,
-        assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json,
-        assignment_note: note,
-        assignment_status: status,
-      },
-      user_ids: allowed_user_ids,
     )
   end
 

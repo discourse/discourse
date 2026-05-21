@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { and, or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -84,12 +84,12 @@ export default class ChatThreadHeader extends Component {
           {{#if this.showThreadUnreadIndicator}}
             <ChatThreadHeaderUnreadIndicator @channel={{this.channel}} />
           {{/if}}
-          {{icon "chevron-left"}}
+          {{dIcon "chevron-left"}}
         </navbar.BackButton>
       {{/if}}
 
       <navbar.Title
-        @title={{replaceEmoji this.headerTitle}}
+        @title={{dReplaceEmoji this.headerTitle}}
         {{on "click" (or this.openThreadTitleModal noop)}}
         role={{if this.openThreadTitleModal "button"}}
         class={{if this.openThreadTitleModal "clickable"}}

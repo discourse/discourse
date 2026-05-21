@@ -88,32 +88,22 @@ describe "Post event" do
   end
 
   context "with max attendees" do
-    # FIXME: flaky because `post_event_page.going` sometimes runs before
-    # the post component re-renders
-    xit "updates the going button label from Full after toggling" do
-      title = "My test meetup event"
+    it "updates the going button label from Full after toggling" do
+      going = I18n.t("js.discourse_post_event.models.invitee.status.going")
+      full = I18n.t("js.discourse_post_event.models.event.full")
       raw = "[event status='public' start='2222-02-22 14:22' max-attendees='1']\n[/event]"
-      post = PostCreator.create(admin, title:, raw:)
+      post = PostCreator.create(admin, title: "My test meetup event", raw:)
 
       visit(post.topic.url)
 
-      # First click: join the event; since max is 1, it reaches capacity and shows Full
+      # Wait for the component to settle before clicking
+      expect(page).to have_css(".going-button", text: going)
       post_event_page.going
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
+      expect(page).to have_css(".going-button", text: full)
 
-      # Second click: leave the event; label should no longer be Full
       post_event_page.going
-      expect(page).to have_no_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.invitee.status.going"),
-      )
+      expect(page).to have_css(".going-button", text: going)
+      expect(page).to have_no_css(".going-button", text: full)
     end
   end
 
@@ -175,12 +165,10 @@ describe "Post event" do
     expect(page).to have_css(".event-info .name", text: "<script>alert(1);</script>")
   end
 
-  # FIXME: flaky because `post_event_page.going`/`open_more_menu`
-  # sometimes run before the post component re-renders
-  xit "can create, close, and open an event" do
+  it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
+    tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]
@@ -192,8 +180,11 @@ describe "Post event" do
 
     post_event_page.close
     post_event_page.open
-    post_event_page.going.open_more_menu
-    find(".show-all-participants").click
+
+    try_until_success { post_event_page.going }.open_more_menu do
+      locator(".show-all-participants").click
+    end
+
     find(".d-modal input.filter").fill_in(with: user.username)
     find(".d-modal .add-invitee").click
 
@@ -204,9 +195,7 @@ describe "Post event" do
     expect(event.invitees.count).to eq(2)
   end
 
-  # FIXME: flaky because `post_event_page.open_more_menu` sometimes runs
-  # before the post component re-renders
-  xit "does not show participants button when event is standalone" do
+  it "does not show participants button when event is standalone" do
     title = "My standalone event"
     raw = "[event name='standalone-event' status='standalone' start='2222-02-22 00:00']\n[/event]"
     post = PostCreator.create(admin, title:, raw:)
@@ -217,9 +206,7 @@ describe "Post event" do
     expect(page).to have_no_css(".show-all-participants")
   end
 
-  # FIXME: flaky because `post_event_page.open_more_menu` sometimes runs
-  # before the post component re-renders
-  xit "does not show 'send pm' button to the user who created the event" do
+  it "does not show 'send pm' button to the user who created the event" do
     title = "My test meetup event"
     raw = "[event name='cool-event' status='public' start='2222-02-22 00:00']\n[/event]"
     post = PostCreator.create(admin, title:, raw:)
@@ -228,6 +215,58 @@ describe "Post event" do
     post_event_page.going.open_more_menu
 
     expect(page).to have_no_css(".send-pm-to-creator")
+  end
+
+  context "with the Going button" do
+    fab!(:rsvp_user, :user)
+
+    before { sign_in(rsvp_user) }
+
+    it "creates a recurring going invitee when picking 'this event and all following events'" do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going_all_following
+
+      expect(post_event_page).to have_going_status
+      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(invitee.recurring).to eq(true)
+    end
+
+    it "creates a non-recurring going invitee when picking 'this event'" do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going_this_event
+
+      expect(post_event_page).to have_going_status
+      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(invitee.recurring).to eq(false)
+    end
+
+    it "renders without a dropdown on non-recurring events" do
+      raw = "[event status='public' start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title: "My one-off meetup event", raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_going_button
+      expect(post_event_page).to have_no_going_menu
+    end
+
+    it "opens the menu when tapping the whole going button on mobile", mobile: true do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going
+
+      expect(page).to have_css(".discourse-post-event-going-menu-content")
+    end
   end
 
   it "shows '-' for expired recurring events instead of dates" do

@@ -5,13 +5,7 @@
 # https://translate.discourse.org/
 
 uk:
-  category_types:
-    ideas:
-      name: "Ідеї"
-      title: "ідеї"
-      description: "Де учасники можуть пропонувати ідеї та голосувати за ті, які їм найбільше подобаються."
   site_settings:
-    enable_ideas_category_type_setup: "Вмикає опцію типу категорії «Ідеї» під час налаштування створення категорії. Зверніть увагу, що для цього має бути ввімкнено опцію «увімкнути спрощене створення категорій»."
     topic_voting_enabled: 'Дозволити користувачам голосувати за темами?'
     topic_voting_enable_vote_limits: 'Обмежити кількість голосів на користувача залежно від рівня довіри'
     topic_voting_tl0_vote_limit: 'Скільки активних голосів дозволено користувачам TL0?'
@@ -23,25 +17,6 @@ uk:
     topic_voting_show_votes_on_profile: 'Дозволити користувачам бачити свої голоси у стрічці активності?'
     topic_voting_alert_votes_left: 'Попередити користувача, коли залишилося стільки голосів'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Покажіть, хто проголосував"
-      show_votes_on_profile:
-        label: "Показувати голоси в профілі"
-      enable_vote_limits:
-        label: "Обмеження голосів учасників"
-      tl0_vote_limit:
-        label: "Ліміт голосів TL0"
-      tl1_vote_limit:
-        label: "Ліміт голосів TL1"
-      tl2_vote_limit:
-        label: "Ліміт голосів TL2"
-      tl3_vote_limit:
-        label: "Ліміт голосів TL3"
-      tl4_vote_limit:
-        label: "Ліміт голосів TL4"
-      alert_votes_left:
-        label: "Сповіщення про залишок голосів"
     votes_moved:
       one: "Голосування переміщено."
       few: "%{count} голосів переміщено."

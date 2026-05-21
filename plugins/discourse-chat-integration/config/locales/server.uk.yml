@@ -78,10 +78,6 @@ uk:
       added_and_removed: "Додано %{added} і видалено %{removed}"
       added: "Додано %{added}"
       removed: "Видалено %{removed}"
-    errors:
-      provider_already_enabled: "Постачальника '%{name}' вже ввімкнено"
-      provider_not_found: "Постачальника '%{name}' не знайдено"
-      setting_update_failed: "Не вдалося оновити налаштування: %{errors}"
     provider:
       slack:
         status:

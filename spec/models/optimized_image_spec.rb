@@ -12,7 +12,7 @@ RSpec.describe OptimizedImage do
 
       begin
         OptimizedImage.crop(
-          "#{Rails.root}/spec/fixtures/images/logo.png",
+          "#{Rails.root.join("spec/fixtures/images/logo.png")}",
           tmp_path,
           desired_width,
           desired_height,
@@ -37,7 +37,7 @@ RSpec.describe OptimizedImage do
 
       begin
         OptimizedImage.crop(
-          "#{Rails.root}/spec/fixtures/images/logo.png", # 244x66px
+          "#{Rails.root.join("spec/fixtures/images/logo.png")}", # 244x66px
           tmp_path,
           desired_width,
           desired_height,
@@ -59,7 +59,7 @@ RSpec.describe OptimizedImage do
 
       begin
         OptimizedImage.crop(
-          "#{Rails.root}/spec/fixtures/images/logo.png", # 244x66px
+          "#{Rails.root.join("spec/fixtures/images/logo.png")}", # 244x66px
           tmp_path,
           desired_width,
           desired_height,
@@ -75,7 +75,7 @@ RSpec.describe OptimizedImage do
     end
 
     describe ".resize_instructions" do
-      let(:image) { "#{Rails.root}/spec/fixtures/images/logo.png" }
+      let(:image) { "#{Rails.root.join("spec/fixtures/images/logo.png")}" }
 
       it "doesn't return any color options by default" do
         instructions = described_class.resize_instructions(image, image, "50x50")
@@ -93,7 +93,7 @@ RSpec.describe OptimizedImage do
         original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }
 
         begin
-          FileUtils.cp "#{Rails.root}/spec/fixtures/images/logo.png", original_path
+          FileUtils.cp "#{Rails.root.join("spec/fixtures/images/logo.png")}", original_path
 
           # we use "filename" to get the correct extension here, it is more important
           # then any other param
@@ -111,7 +111,7 @@ RSpec.describe OptimizedImage do
       end
 
       it "should work correctly" do
-        file = File.open("#{Rails.root}/spec/fixtures/images/resized.png")
+        file = File.open("#{Rails.root.join("spec/fixtures/images/resized.png")}")
         upload = UploadCreator.new(file, "test.bin").create_for(-1)
 
         expect(upload.filesize).to eq(199)
@@ -148,7 +148,7 @@ RSpec.describe OptimizedImage do
           begin
             expect do
               OptimizedImage.resize(
-                "#{Rails.root}/spec/fixtures/images/svg.png",
+                "#{Rails.root.join("spec/fixtures/images/svg.png")}",
                 tmp_path,
                 5,
                 5,
@@ -168,7 +168,7 @@ RSpec.describe OptimizedImage do
 
         begin
           OptimizedImage.downsize(
-            "#{Rails.root}/spec/fixtures/images/logo.png",
+            "#{Rails.root.join("spec/fixtures/images/logo.png")}",
             tmp_path,
             "100x100\>",
           )

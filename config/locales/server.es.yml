@@ -377,7 +377,6 @@ es:
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
     not_found_template_link: |
       <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
-    existing_user_cannot_redeem: "Esta invitación no se puede canjear. Pide a la persona que te invitó que te envíe una nueva invitación."
     existing_user_already_redemeed: "Ya has canjeado este enlace de invitación."
     user_exists: "No hace falta que invites a <b>%{email}</b>, ¡ya tienen una cuenta!"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
@@ -614,6 +613,7 @@ es:
       admins: "administradores"
       moderators: "moderadores"
       staff: "personal"
+      anonymous: "anónimas"
       trust_level_0: "nivel_de_confianza_0"
       trust_level_1: "nivel_de_confianza_1"
       trust_level_2: "nivel_de_confianza_2"
@@ -1489,6 +1489,8 @@ es:
       xaxis: "Día"
       yaxis: "Páginas vistas del navegador conectado"
       description: "Número de páginas vistas por visitantes registrados que utilizan navegadores reales."
+    page_view_embed_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -1550,7 +1552,7 @@ es:
         os: Sistema operativo
         login_time: Fecha y hora de inicio de sesión
       description: "Detalles de nuevos inicios de sesión marcados como sospechosos."
-    staff_logins:
+    admin_logins:
       title: "Inicios de sesión de administradores"
       labels:
         user: Usuario
@@ -1750,7 +1752,6 @@ es:
     x_summary_large_image: "«Imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg."
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de encabezados de correo electrónico personalizados"
-    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
     enforce_second_factor: "Requiere que los usuarios activen la autenticación de dos factores (2FA) antes de que puedan acceder a la interfaz de usuario de Discourse. Este ajuste no afecta a la autenticación de la API o del «DiscourseConnect provider». Si enforce_second_factor_on_external_auth está activado, los usuarios no podrán iniciar sesión con proveedores de autenticación externos después de configurar la autenticación de dos factores."
     enforce_second_factor_on_external_auth: "Requiere que los usuarios utilicen la autenticación de dos factores (2FA) en todo momento. Si está activada, impedirá que los usuarios inicien sesión con métodos de autenticación externos, como inicios de sesión de redes sociales, si tienen activada la autenticación de dos factores. Si está desactivada, los usuarios solo tendrán que confirmar su autenticación de doble factor cuando inicien sesión con un nombre de usuario y una contraseña. Consulta también el ajuste «enforece_second_factor»."
@@ -1921,7 +1922,6 @@ es:
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."
     google_oauth2_prompt: "Una lista opcional delimitada por valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para los valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limitará el inicio de sesión. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para más detalles."
-    google_oauth2_hd_groups: "Recupera los grupos de Google de los usuarios en el dominio alojado al autenticarse. Los grupos de Google recuperados pueden utilizarse para conceder la pertenencia automática a grupos de Discourse (consulta los ajustes de grupos). Para más información, consulta https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Una dirección de correo electrónico perteneciente a una cuenta de administrador de Google Workspace. Se utilizará con las credenciales de la cuenta de servicio para obtener la información del grupo."
     google_oauth2_hd_groups_service_account_json: "Información clave con formato JSON para la cuenta de servicio. Se utilizará para obtener la información del grupo."
     google_oauth2_verbose_logging: "Registra diagnósticos detallados relacionados con Google OAuth2 en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1951,7 +1951,6 @@ es:
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Evite la eliminación de copias de seguridad antiguas de S3 cuando hay más copias de seguridad que el máximo permitido."
     s3_use_acls: "AWS recomienda no usar ACL en los buckets S3; desmarca esta opción si quieres configurar políticas de permisos en los «s3_upload_bucket» y «s3_backup_bucket» configurados."
-    enable_direct_s3_uploads: "Permite la carga directa multiparte a Amazon S3, consulta https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 para más detalles."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está desactivada, tan solo se ejecutará una copia de seguridad de la base de datos."
     backup_location: "Ubicación donde se almacenan las copias de seguridad. IMPORTANTE: S3 requiere credenciales S3 válidas introducidas en los ajustes de Archivos. Cuando cambies esto a S3 desde Local, debes ejecutar la tarea de rake «s3:ensure_cors_rules»."
@@ -2211,7 +2210,6 @@ es:
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de correo electrónico en <a href='%{base_path}/logs' target='_blank'>/registros</a>"
     email_in: "Permitir a los usuarios enviar nuevos temas por correo electrónico. Tras activar esta opción, podrás configurar las direcciones de correo electrónico entrantes para grupos y categorías."
     email_in_allowed_groups: "Grupos que pueden enviar nuevos temas por correo electrónico. Los administradores y moderadores siempre pueden enviar nuevos temas por correo electrónico."
-    email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "Selecciona el encabezado de correo electrónico específico que se utilizará para identificar el correo no deseado. Esta opción puede ser X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict, y el correo electrónico se etiqueta como correo no deseado en función del valor del encabezado. Por ejemplo, si la opción elegida es X-Spam-Flag, un correo electrónico con este valor de encabezado establecido en SÍ se clasificaría como correo no deseado."
     enable_smtp: "Activar SMTP para enviar notificaciones de mensajes de grupo."
     email_prefix: "La [label] utilizada en el asunto de los correos electrónicos. Si no está configurado, será por defecto el 'título'."
@@ -2472,7 +2470,6 @@ es:
     welcome_banner_location: "Determina en qué parte de la página aparecerá el banner de bienvenida."
     welcome_banner_page_visibility: "Determina en qué páginas aparecerá el banner de bienvenida."
     welcome_banner_text_color: "Una vez configurada la opción «Welcome banner image», utiliza este ajuste para cambiar el color del texto del banner y garantizar su legibilidad. Si se deja en blanco o no se ha subido ninguna imagen, el tema activo controlará el color."
-    splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
     splash_screen_image: "Una imagen SVG para mostrar en la pantalla de bienvenida mientras se carga el sitio. Los SVG animados solo deben usar animaciones de transformación u opacidad CSS. Usa nombres únicos para las clases CSS y los fotogramas clave. Puedes usar var(--primary), var(--secondary) y var(--tertiary) para hacer referencia a los colores del tema."
     navigation_menu: "Especifica la barra lateral o el encabezado desplegable como menú de navegación principal de tu sitio. Se recomienda la barra lateral."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
@@ -2483,7 +2480,6 @@ es:
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
     enable_auto_grid_images: "Recubre automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el editor."
     enable_new_checkbox_style: "Activa el estilo rediseñado de las casillas de verificación de FormKit."
-    impersonate_without_logout: "Permitir que los administradores suplanten la identidad de un usuario sin tener que cerrar sesión en su cuenta de administrador."
     experimental_impersonation_time_limit_minutes: "¿Cuánto tiempo debe transcurrir antes de que finalice automáticamente una sesión de suplantación de identidad?"
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
@@ -2509,7 +2505,6 @@ es:
     floating_dismiss_topics_on_mobile: "Muestra un botón flotante «Descartar...» en el móvil para la lista de temas para facilitar el acceso y liberar espacio en la parte superior de la lista de temas"
     rename_faq_to_guidelines: "Este cambio cambia el nombre de la página Preguntas frecuentes a Directrices. La página de Preguntas frecuentes seguirá estando disponible en /faq. El ajuste «faq url» funciona como antes."
     enable_simplified_category_creation: "Permite un flujo de creación de categorías simplificado, con menos opciones y una interfaz más limpia."
-    enable_custom_splash_screen: "Permite personalizar la pantalla de carga con tu propia imagen SVG. Sube una imagen a través de la opción «splash screen image». Advertencia: Esto puede afectar negativamente a las puntuaciones LCP y a la indexación de Google."
     modernize_foundation_theme: "Este cambio introduce modificaciones de diseño en el tema Fundación de Discourse."
     reporting_improvements: "Mejoras en la navegación, el diseño y la usabilidad de los informes de administración de Discourse."
     errors:
@@ -3454,7 +3449,6 @@ es:
         Tu respuesta se envió desde una dirección de correo electrónico bloqueada. Trata de enviar la respuesta desde otra dirección de correo electrónico o [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Correo electrónico rechazado. Correo electrónico no permitido"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico -- Correo bloqueado"
       text_body_template: |
         Lo sentimos, pero tu mensaje a %{destination} (con el título%{former_title}) no funcionó.
 
@@ -3619,7 +3613,6 @@ es:
         Tu cuenta no tiene los permisos para responder al tema. Si crees que esto es un error, [contacta con un miembro del equipo](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "Correo electrónico de rechazo por respuesta al resumen"
-      subject_template: "[%{email_prefix}] Problema de correo electrónico — Responder al resumen"
       text_body_template: |
         Lo sentimos, pero tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no ha funcionado.
 
@@ -3765,7 +3758,6 @@ es:
       text_body_template: "La opción «download_remote_images_to_local» ha sido desactivada porque se ha llegado al límite de espacio en disco configurado en «download_remote_images_threshold»."
     new_user_of_the_month:
       title: "¡Eres el usuario nuevo del mes!"
-      subject_template: "¡Eres el usuario nuevo del mes!"
       text_body_template: |
         ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de %{month_year}**. :trophy:
 
@@ -4095,6 +4087,7 @@ es:
     account_exists:
       title: "Cuenta ya existente"
       subject_template: "[%{email_prefix}] La cuenta ya existe"
+      subject_template_improved: "Cuenta ya existente"
       text_body_template: |
         Intentaste crear una cuenta en %{site_name} o intentaste cambiar el correo electrónico de una cuenta a %{email}. Sin embargo, ya existe una cuenta con la dirección de correo %{email}.
 
@@ -4106,6 +4099,7 @@ es:
     account_second_factor_disabled:
       title: "Autenticación de dos factores desactivada"
       subject_template: "[%{email_prefix}] Autenticación de dos factores desactivada"
+      subject_template_improved: "Autenticación de dos factores desactivada"
       text_body_template: |
         La autenticación de dos factores se ha desactivado en tu cuenta de %{site_name}. Ahora podrás iniciar sesión tan solo con tu contraseña, ya no hace falta que introduzcas tu código de autenticación.
 
@@ -4125,6 +4119,7 @@ es:
       popular_posts: "Publicaciones populares"
       more_new: "Nuevo para ti"
       subject_template: "[%{email_prefix}] Resumen"
+      subject_template_improved: "Resumen"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando no te hemos visto durante cierto tiempo. Cambia %{email_preferences_link} o %{unsubscribe_link} para cancelar tu suscripción."
       your_email_settings: "tus configuraciones de correo electrónico"
       click_here: "haz clic aquí"
@@ -4145,6 +4140,7 @@ es:
       title: "Iniciar sesión con un enlace"
       preview: "Iniciar sesión con un enlace."
       subject_template: "[%{email_prefix}] Iniciar sesión con un enlace"
+      subject_template_improved: "Iniciar sesión con un enlace"
       text_body_template: |
         Aquí tienes tu enlace para iniciar sesión en [%{site_name}](%{base_url}).
 
@@ -4155,7 +4151,6 @@ es:
     set_password:
       title: "Establecer contraseña"
       preview: "Establece la contraseña de la cuenta."
-      subject_template: "[%{email_prefix}] Establecer contraseña"
       text_body_template: |
         Alguien ha solicitado añadir una contraseña a tu cuenta en [%{site_name}](%{base_url}). Alternativamente, puedes iniciar sesión usando cualquier servicio online soportado (como Google, Facebook, etc) que esté asociado con esta dirección de correo electrónico validada.
 
@@ -4167,6 +4162,7 @@ es:
       title: "Inicio de sesión de administrador"
       preview: "Inicio de sesión de administrador solicitado."
       subject_template: "[%{email_prefix}] Inicio de sesión"
+      subject_template_improved: "Inicio de sesión"
       text_body_template: |
         Alguien ha solicitado iniciar sesión en tu cuenta de [%{site_name}](%{base_url}).
 
@@ -4177,7 +4173,6 @@ es:
     account_created:
       title: "Cuenta creada"
       preview: "Se ha creado una nueva cuenta para ti."
-      subject_template: "[%{email_prefix}] Tu nueva cuenta"
       text_body_template: |
         Has creado una nueva cuenta en %{site_name}
 
@@ -4289,7 +4284,6 @@ es:
     suspicious_login:
       title: "Alerta de nuevo inicio de sesión"
       preview: "Verifica tu dispositivo."
-      subject_template: "[%{site_name}] Alerta de nuevo inicio de sesión desde %{location}"
       text_body_template: |
         Hola,
 

@@ -6,16 +6,16 @@ import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
-import Avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { eq, gt, not } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
 import {
@@ -37,6 +37,7 @@ export default class AiLlmEditorForm extends Component {
   @tracked testResult = null;
   @tracked testError = null;
   @tracked testValidationErrors = null;
+  @tracked testFailedMode = null;
 
   @cached
   get formData() {
@@ -139,9 +140,15 @@ export default class AiLlmEditorForm extends Component {
   get testErrorMessage() {
     if (this.testValidationErrors?.length > 0) {
       return i18n("discourse_ai.llms.tests.invalid_config");
-    } else {
-      return i18n("discourse_ai.llms.tests.failure", { error: this.testError });
     }
+
+    if (this.testFailedMode) {
+      return i18n(`discourse_ai.llms.tests.failure_${this.testFailedMode}`, {
+        error: this.testError,
+      });
+    }
+
+    return i18n("discourse_ai.llms.tests.failure", { error: this.testError });
   }
 
   get displayTestResult() {
@@ -257,9 +264,11 @@ export default class AiLlmEditorForm extends Component {
       if (this.testResult) {
         this.testError = null;
         this.testValidationErrors = null;
+        this.testFailedMode = null;
       } else {
         this.testError = configTestResult.error;
         this.testValidationErrors = configTestResult.validation_errors;
+        this.testFailedMode = configTestResult.failed_mode;
       }
     } catch (e) {
       popupAjaxError(e);
@@ -560,7 +569,7 @@ export default class AiLlmEditorForm extends Component {
               href={{@model.user.path}}
               data-user-card={{@model.user.username}}
             >
-              {{Avatar @model.user.avatar_template "small"}}
+              {{dBoundAvatarTemplate @model.user.avatar_template "small"}}
             </a>
             <LinkTo @route="adminUser" @model={{this.adminUser}}>
               {{@model.user.username}}
@@ -703,18 +712,18 @@ export default class AiLlmEditorForm extends Component {
 
       {{#if this.displayTestResult}}
         <form.Container @format="full">
-          <ConditionalLoadingSpinner
+          <DConditionalLoadingSpinner
             @size="small"
             @condition={{this.testRunning}}
           >
             {{#if this.testResult}}
               <div class="ai-llm-editor-tests__success">
-                {{icon "check"}}
+                {{dIcon "check"}}
                 {{i18n "discourse_ai.llms.tests.success"}}
               </div>
             {{else}}
               <div class="ai-llm-editor-tests__failure">
-                {{icon "xmark"}}
+                {{dIcon "xmark"}}
                 {{this.testErrorMessage}}
                 <ul>
                   {{#each this.testValidationErrors as |error|}}
@@ -723,7 +732,7 @@ export default class AiLlmEditorForm extends Component {
                 </ul>
               </div>
             {{/if}}
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         </form.Container>
       {{/if}}
     </Form>

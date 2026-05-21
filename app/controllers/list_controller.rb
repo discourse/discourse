@@ -116,11 +116,11 @@ class ListController < ApplicationController
 
     define_method("category_#{filter}") do
       canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-      self.public_send(filter, category: @category.id)
+      public_send(filter, category: @category.id)
     end
 
     define_method("category_none_#{filter}") do
-      self.public_send(filter, category: @category.id, no_subcategories: true)
+      public_send(filter, category: @category.id, no_subcategories: true)
     end
   end
 
@@ -148,7 +148,7 @@ class ListController < ApplicationController
     view_method = @category.default_view
     view_method = "latest" if %w[hot latest top].exclude?(view_method)
 
-    self.public_send(view_method, category: @category.id)
+    public_send(view_method, category: @category.id)
   end
 
   def topics_by
@@ -196,9 +196,13 @@ class ListController < ApplicationController
       )
 
     case action
-    when :private_messages_unread, :private_messages_new, :private_messages_group_new,
-         :private_messages_group_unread
+    when :private_messages_unread, :private_messages_new
       raise Discourse::NotFound if target_user.id != current_user.id
+    when :private_messages_group_new, :private_messages_group_unread
+      raise Discourse::NotFound if target_user.id != current_user.id
+      group = Group.find_by("LOWER(name) = ?", params[:group_name].downcase)
+      raise Discourse::NotFound if !group
+      raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
     when :private_messages_tag
       raise Discourse::NotFound if target_user.id != current_user.id
       raise Discourse::NotFound if !guardian.can_tag_pms?
@@ -340,12 +344,10 @@ class ListController < ApplicationController
       respond_with_list(list)
     end
 
-    define_method("category_top_#{period}") do
-      self.public_send("top_#{period}", category: @category.id)
-    end
+    define_method("category_top_#{period}") { public_send("top_#{period}", category: @category.id) }
 
     define_method("category_none_top_#{period}") do
-      self.public_send("top_#{period}", category: @category.id, no_subcategories: true)
+      public_send("top_#{period}", category: @category.id, no_subcategories: true)
     end
 
     # rss feed

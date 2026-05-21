@@ -325,9 +325,6 @@ nl:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} heeft automatisch je aanwezigheid ingesteld en je uitgenodigd voor %{eventName}"
         an_event: "een evenement"
-      event_description:
-        show_more: "Meer weergeven"
-        show_less: "Minder weergeven"
       edit_reason: "Evenement bijgewerkt"
       edit_reason_closed: "Evenement gesloten"
       edit_reason_opened: "Evenement geopend"

@@ -225,6 +225,19 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
 
+      context "when current user is silenced" do
+        before { UserSilencer.new(current_user).silence }
+
+        it "returns a 422" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(422)
+        end
+      end
+
       context "when message belongs to a different channel" do
         fab!(:other_channel, :category_channel)
         fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
@@ -239,6 +252,50 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           # wrong channel and returns a non-404 status, leaking its existence
           expect(response.status).to eq(404)
         end
+      end
+    end
+  end
+
+  describe "#restore" do
+    context "when the user no longer has access to a private category channel" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group:) }
+      fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: private_channel, user: current_user) }
+
+      before do
+        group.add(current_user)
+        private_channel.add(current_user)
+        message.trash!(current_user)
+        GroupUser.where(group: group, user: current_user).destroy_all
+      end
+
+      it "does not restore their own deleted message" do
+        put "/chat/api/channels/#{private_channel.id}/messages/#{message.id}/restore"
+
+        expect(response.status).to eq(403)
+        expect(message.reload).to be_trashed
+      end
+    end
+
+    context "when the user is no longer a member of a direct message channel" do
+      fab!(:other_user, :user)
+      fab!(:third_user, :user)
+      fab!(:dm_channel) do
+        Fabricate(:direct_message_channel, users: [current_user, other_user, third_user])
+      end
+      fab!(:message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
+
+      before do
+        message.trash!(current_user)
+        dm_channel.chatable.direct_message_users.find_by!(user: current_user).destroy!
+      end
+
+      it "does not restore their own deleted message" do
+        put "/chat/api/channels/#{dm_channel.id}/messages/#{message.id}/restore"
+
+        expect(response.status).to eq(403)
+        expect(message.reload).to be_trashed
       end
     end
   end

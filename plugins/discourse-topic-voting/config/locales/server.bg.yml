@@ -16,9 +16,6 @@ bg:
     topic_voting_show_votes_on_profile: 'Позволяване на потребителите да виждат своите гласове в потока на активността си?'
     topic_voting_alert_votes_left: 'Уведомете потребителя, когато останат толкова гласове'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Покажи кой е гласувал"
     votes_moved:
       one: "Един глас беше преместен."
       other: "%{count} гласа бяха преместени."

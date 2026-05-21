@@ -351,6 +351,56 @@ RSpec.describe SiteSetting do
       expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
     end
 
+    it "stores object upload fields as upload IDs when set with upload URLs" do
+      old_provider = SiteSetting.provider
+      SiteSetting.provider = provider
+      SiteSetting.refresh!
+
+      begin
+        SiteSetting.ui_cards_setting =
+          JSON.generate([{ "title" => "Build a community", "image" => upload.url }])
+
+        setting = provider.find("ui_cards_setting")
+        expect(JSON.parse(setting.value)).to eq(
+          [{ "title" => "Build a community", "image" => upload.id }],
+        )
+      ensure
+        SiteSetting.provider = old_provider
+        SiteSetting.refresh!
+      end
+    end
+
+    it "hydrates object upload fields in client settings" do
+      settings = new_settings(SiteSettings::LocalProcessProvider.new)
+      settings.setting(
+        :ui_cards_setting,
+        "[]",
+        type: :objects,
+        client: true,
+        schema: {
+          name: "card",
+          identifier: "title",
+          properties: {
+            title: {
+              type: "string",
+              required: true,
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        },
+      )
+
+      settings.ui_cards_setting =
+        JSON.generate([{ "title" => "Build a community", "image" => upload.url }])
+
+      client_settings = JSON.parse(settings.client_settings_json_uncached)
+      expect(JSON.parse(client_settings["ui_cards_setting"])).to eq(
+        [{ "title" => "Build a community", "image" => upload.url }],
+      )
+    end
+
     it "removes upload references when uploads are removed from objects" do
       # First save with two uploads
       objects_value =

@@ -226,6 +226,9 @@ en:
     discourse_ai:
       title: "AI"
 
+      bot_chats:
+        tab_label: "Bot chats"
+
       default_llm:
         title: "Default LLM model"
         description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
@@ -265,8 +268,8 @@ en:
             ui_settings: "UI Settings"
             integrations: "Integrations"
         nav:
-          configured: "Configured"
-          unconfigured: "Unconfigured"
+          enabled: "Enabled"
+          not_enabled: "Not enabled"
         filters:
           all: "All"
           text: "Search features, agents, LLMs, or groups..."
@@ -556,9 +559,9 @@ en:
         max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty for default limits."
         compression_threshold: "Compression Threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
-        vision_enabled: Vision enabled
-        vision_enabled_help: If enabled, the AI will attempt to understand images users post in the topic, depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI.
-        vision_max_pixels: Supported image size
+        vision_enabled: Include image uploads
+        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model supports image input.
+        vision_max_pixels: Maximum image size
         vision_max_pixel_sizes:
           low: Low quality - cheapest (256x256)
           medium: Medium quality (512x512)
@@ -864,9 +867,9 @@ en:
         max_output_tokens: "Max output tokens"
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
-        vision_enabled: "Vision enabled"
-        allowed_attachment_types: "Allowed attachments"
-        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, docx)"
+        vision_enabled: "Supports image input"
+        allowed_attachment_types: "Allowed document attachments"
+        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "AI bot User"
         cost_input: "Input cost"
         cost_cached_input: "Cached input cost"
@@ -922,17 +925,17 @@ en:
           anthropic-claude-opus-4-7: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
-          google-gemini-3-pro: "Google's most intelligent model"
+          google-gemini-3-1-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
+          open_ai-gpt-5-5: "OpenAI's most capable model with extended context"
           open_ai-gpt-5-4: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-4-mini: "Provides a balance between intelligence, speed, and cost"
-          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model"
-          open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
-          open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
-          open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-7: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-5-1: "Z-AI's multimodal model with vision"
-          open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
+          open_ai-gpt-5-4-nano: "Fastest, most cost-effective GPT-5 model"
+          open_router-moonshotai-kimi-k2-6: "Moonshot's multimodal model with vision capabilities"
+          open_router-deepseek-deepseek-v4-flash: "DeepSeek's latest high-performance model with 1M context"
+          open_router-minimax-minimax-m2-7: "MiniMax's model with large context"
+          open_router-x-ai-grok-4-1-fast: "xAI's fast multimodal model with very large context"
+          open_router-z-ai-glm-5-1: "Z-AI's reasoning-focused model"
+          open_router-qwen-qwen3-6-plus: "Qwen's multimodal model with 1M context"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -954,14 +957,16 @@ en:
           success: "Success!"
           invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
+          failure_non_streaming: "Non-streaming request failed: %{error}"
+          failure_streaming: "Streaming request failed: %{error}"
 
         hints:
           max_prompt_tokens: "The maximum number of tokens the model can process in a single request"
           max_output_tokens: "The maximum number of tokens the model can generate in a single request"
           display_name: "The name used to reference this model across your site's interface."
           name: "We include this in the API call to specify which model we'll use"
-          vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
-          allowed_attachment_types: "Choose which attachment types are forwarded to the model. Leave blank to disallow attachments. Images are controlled via vision."
+          vision_enabled: "Whether this model/provider can receive and understand images."
+          allowed_attachment_types: "Choose which document attachment types can be converted or forwarded. Leave blank to disallow document attachments. Images are controlled separately."
           cost_input: "The input cost per 1M tokens for this model"
           cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
           cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"
@@ -1239,11 +1244,20 @@ en:
             one: "Message must be %{count} character or longer"
             other: "Message must be %{count} characters or longer"
           messages_sidebar_title: "Conversations"
+          starred: "Starred"
+          star_conversation: "Star conversation"
+          unstar_conversation: "Unstar conversation"
+          open_conversation_menu: "Open conversation menu"
           today: "Today"
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
           upload_files: "Upload files"
           uploads_in_progress: "Cannot submit while uploads are in progress"
+          show_toolbar: "Show formatting toolbar"
+          hide_toolbar: "Hide formatting toolbar"
+          scroll_to_bottom: "Scroll to bottom"
+          streaming_below: "New content below"
+          editing_post: "Editing post"
       sentiments:
         dashboard:
           title: "Sentiment"

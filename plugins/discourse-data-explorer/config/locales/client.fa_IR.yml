@@ -10,9 +10,6 @@ fa_IR:
       default_query: "پیش‌فرض"
       or: "یا"
       create: "ایجاد"
-      ai:
-        generate: "تولید کردن"
-        optional: "اختیاری"
       import:
         label: "ورود داده‌ها"
       help:

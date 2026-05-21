@@ -35,7 +35,6 @@ tr_TR:
       already_voted: "Her soru için yalnızca bir kez oy kullanabilirsiniz."
       user_over_limit: "Güven seviyenize uygun oy sayısını aşamazsınız."
       one_vote_per_post: "Her gönderi için yalnızca bir kez oy kullanabilirsiniz."
-      toggle_voters: "Oy verenleri göster"
     last_answer_lowercase: son yanıt
     answer_lowercase:
       one: yanıt
@@ -57,8 +56,6 @@ tr_TR:
           edit: "düzenle"
           cancel: "iptal et"
           add: "Yorum ekle"
-          actions:
-            delete: "Yorumu sil"
           show:
             one: '%{count} yorum daha göster'
             other: '%{count} yorum daha göster'

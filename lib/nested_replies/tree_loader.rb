@@ -33,7 +33,7 @@ module NestedReplies
     end
 
     def op_post
-      @op_post ||= load_posts_for_tree(topic.posts.where(post_number: 1)).first
+      @op_post ||= load_posts_for_tree(apply_visibility(topic.posts.where(post_number: 1))).first
     end
 
     def root_posts_scope(sort)
@@ -85,6 +85,13 @@ module NestedReplies
     def apply_visibility(scope)
       scope = scope.unscope(where: :deleted_at)
       scope = scope.where(post_type: visible_post_types)
+      if guardian.user&.whisperer?
+        scope =
+          scope.where(
+            "post_type != :whisper OR action_code IS NULL OR action_code = ''",
+            whisper: Post.types[:whisper],
+          )
+      end
       scope
     end
 

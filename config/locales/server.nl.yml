@@ -370,7 +370,6 @@ nl:
       <p>Zo niet, dan kun je je <a href="%{base_url}/password-reset">Wachtwoord herstellen</a>.</p>
     not_found_template_link: |
       <p>Deze uitnodiging voor <a href="%{base_url}">%{site_name}</a> kan niet meer worden verzilverd. Vraag de persoon die je heeft uitgenodigd om je een nieuwe uitnodiging te sturen.</p>
-    existing_user_cannot_redeem: "Deze uitnodiging kan niet worden verzilverd. Vraag de persoon die je heeft uitgenodigd je een nieuwe uitnodiging te sturen."
     existing_user_already_redemeed: "Je hebt deze uitnodigingslink al verzilverd."
     user_exists: "Het is niet nodig om <b>%{email}</b>uit te nodigen, deze heeft al een account!"
     invite_exists: "Je hebt <b>%{email}</b> al uitgenodigd."
@@ -604,6 +603,7 @@ nl:
       admins: "beheerders"
       moderators: "moderators"
       staff: "medewerkers"
+      anonymous: "anoniem"
       trust_level_0: "vertrouwensniveau_0"
       trust_level_1: "vertrouwensniveau_1"
       trust_level_2: "vertrouwensniveau_2"
@@ -1453,6 +1453,8 @@ nl:
       xaxis: "Dag"
       yaxis: "Paginaweergaven door aangemelde browsers"
       description: "Aantal paginaweergaven door aangemelde bezoekers die echte browsers gebruiken."
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -1514,7 +1516,7 @@ nl:
         os: Besturingssysteem
         login_time: Tijd van aanmelding
       description: "Details over nieuwe aanmeldingen die op een verdachte manier afwijken t.o.v. eerdere aanmeldingen."
-    staff_logins:
+    admin_logins:
       title: "Beheerdersaanmeldingen"
       labels:
         user: Gebruiker
@@ -1697,7 +1699,6 @@ nl:
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
-    email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     force_https: "Dwing gebruik van alleen HTTPS af voor je website. WAARSCHUWING: schakel dit NIET in voordat je hebt geverifieerd dat HTTPS volledig is geconfigureerd en echt overal werkt! Heb je ook je CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze allemaal compatibel met HTTPS zijn?"
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
@@ -1856,7 +1857,6 @@ nl:
     google_oauth2_client_secret: "Client-geheim van je Google-toepassing."
     google_oauth2_prompt: "Een optionele door spaties gescheiden lijst van tekenreekswaarden die bepaalt of de autorisatieserver de gebruiker opnieuw om verificatie en instemming vraagt. Zie <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> voor de mogelijke waarden."
     google_oauth2_hd: "Een optioneel door Google Apps gehost domein waartoe de aanmelding wordt beperkt. Zie <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> voor meer informatie."
-    google_oauth2_hd_groups: "Haal de Google-groepen van gebruikers op het gehoste domein op bij verificatie. Opgehaalde Google-groepen kunnen worden gebruikt om automatisch Discourse-groepslidmaatschappen te verlenen (zie groepsinstellingen). Voor meer informatie zie https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Een e-mailadres behorende bij een Google Workspace-beheerdersaccount. Wordt gebruikt met de aanmeldgegevens van het serviceaccount om groepsinformatie op te halen."
     google_oauth2_hd_groups_service_account_json: "Sleutelinformatie in JSON-indeling voor het serviceaccount. Wordt gebruikt om groepsgegevens op te halen."
     google_oauth2_verbose_logging: "Log uitgebreide Google OAuth2-gerelateerde diagnostiek naar <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1886,7 +1886,6 @@ nl:
     s3_configure_tombstone_policy: "Automatisch verwijderingsbeleid voor tombstone-uploads inschakelen. BELANGRIJK: wanneer uitgeschakeld, wordt geen ruimte vrijgemaakt na het verwijderen van uploads."
     s3_disable_cleanup: "Verwijderen van oude back-ups van S3 voorkomen als er meer back-ups zijn dan maximaal toegestaan."
     s3_use_acls: "AWS raadt aan om geen ACL's te gebruiken op S3-buckets. Schakel deze optie alleen uit als je machtigingsbeleid wilt configureren op de geconfigureerde 's3_upload_bucket' en 's3_backup_bucket'."
-    enable_direct_s3_uploads: "Maakt directe meerdelige uploads naar Amazon S3 mogelijk, zie https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 voor meer informatie."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."
     backup_location: "Locatie waar back-ups worden opgeslagen. BELANGRIJK: S3 vereist geldige S3-aanmeldgegevens in Bestandsinstellingen. Als je dit wijzigt van Lokaal naar S3, moet je de raketaak 's3:ensure_cors_rules' uitvoeren."
@@ -2136,7 +2135,6 @@ nl:
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Sta gebruikers toe om nieuwe topics te plaatsen via e-mail. Na het inschakelen van deze instelling kun je inkomende e-mailadressen configureren voor groepen en categorieën."
     email_in_allowed_groups: "Groepen die nieuwe topics mogen plaatsen via e-mail. Beheerders en moderators kunnen altijd nieuwe topics plaatsen via e-mail."
-    email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "Selecteert de specifieke e-mailheader die moet worden gebruikt voor het identificeren van spam. Deze optie kan X-Spam-Flag, X-Spam-Status of X-SES-Spam-Verdict zijn. De e-mail wordt als spam geclassificeerd op basis van de waarde van de header. Als de gekozen instelling bijvoorbeeld X-Spam-Flag is, wordt een e-mail waarvoor deze headerwaarde is ingesteld op JA als spam geclassificeerd."
     enable_smtp: "SMTP inschakelen voor het sturen van meldingen voor groepsberichten."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'titel' gebruikt."
@@ -2380,7 +2378,6 @@ nl:
     welcome_banner_image: "Stel een afbeelding in die op de achtergrond van de welkomstbanner wordt weergegeven."
     welcome_banner_location: "Bepaalt waar op de pagina de welkomstbanner wordt weergegeven."
     welcome_banner_page_visibility: "Bepaalt op welke pagina's de welkomstbanner wordt weergegeven."
-    splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
     navigation_menu: "Geef een vervolgkeuzelijst voor de zijbalk of koptekst op als het hoofdnavigatiemenu voor je site. Zijbalk wordt aanbevolen."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
@@ -3234,7 +3231,6 @@ nl:
         Je antwoord is verzonden vanaf een geblokkeerd e-mailadres. Probeer te verzenden vanaf een ander e-mailadres, of [neem contact op met een medewerker](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail geweigerd e-mailadres niet toegestaan"
-      subject_template: "[%{email_prefix}] E-mailprobleem -- geblokkeerd e-mailadres"
       text_body_template: |
         Sorry, je e-mailbericht aan %{destination} (getiteld %{former_title}) werkte niet.
 
@@ -3399,7 +3395,6 @@ nl:
         Je hebt geen toestemming om te antwoorden op het topic. Als je denkt dat dit een fout is, [neem dan contact op met een medewerker](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail geweigerd antwoord op samenvatting"
-      subject_template: "[%{email_prefix}] E-mailprobleem -- antwoord op samenvatting"
       text_body_template: |
         Sorry, je e-mailbericht aan %{destination} (getiteld %{former_title}) werkte niet.
 
@@ -3525,7 +3520,6 @@ nl:
       text_body_template: "De instelling 'download_remote_images_to_local' is uitgeschakeld omdat de schijfruimtelimiet van 'download_remote_images_threshold' is bereikt."
     new_user_of_the_month:
       title: "Je bent een nieuwe gebruiker van de maand!"
-      subject_template: "Je bent een nieuwe gebruiker van de maand!"
       text_body_template: |
         Gefeliciteerd, je hebt de de prijs **Nieuwe gebruiker van de maand voor %{month_year}** verdiend. :trophy:
 
@@ -3843,6 +3837,7 @@ nl:
     account_exists:
       title: "Account bestaat al"
       subject_template: "[%{email_prefix}] Account bestaat al"
+      subject_template_improved: "Account bestaat al"
       text_body_template: |
         Je hebt geprobeerd een account te maken op %{site_name}, of je hebt geprobeerd het e-mailadres van een account te wijzigen naar %{email}. Er bestaat echter al een account voor %{email}.
 
@@ -3854,6 +3849,7 @@ nl:
     account_second_factor_disabled:
       title: "Tweeledige verificatie uitgeschakeld"
       subject_template: "[%{email_prefix}] Tweeledige verificatie uitgeschakeld"
+      subject_template_improved: "Tweeledige verificatie uitgeschakeld"
     digest:
       why: "Een kort overzicht van %{site_link} sinds %{since}"
       since_last_visit: "Sinds je laatste bezoek"
@@ -3867,6 +3863,7 @@ nl:
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
       subject_template: "[%{email_prefix}] Samenvatting"
+      subject_template_improved: "Samenvatting"
       unsubscribe: "Deze samenvatting wordt verzonden van %{site_link} als we je een tijdje niet hebben gezien. Wijzig %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       your_email_settings: "uw e-mailinstellingen"
       click_here: "klik hier"
@@ -3886,6 +3883,7 @@ nl:
       title: "Aanmelden via link"
       preview: "Aanmelden via link."
       subject_template: "[%{email_prefix}] Aanmelden via link"
+      subject_template_improved: "Aanmelden via link"
       text_body_template: |
         Dit is je link om je aan te melden bij [%{site_name}](%{base_url}).
 
@@ -3895,7 +3893,6 @@ nl:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Wachtwoord instellen"
-      subject_template: "[%{email_prefix}] Wachtwoord instellen"
       text_body_template: |
         Iemand heeft gevraagd een wachtwoord toe te voegen aan je account op [%{site_name}](%{base_url}). Je kunt je ook aanmelden met elke ondersteunde online service (Google, Facebook, enz.) die aan dit gevalideerde e-mailadres is gekoppeld.
 
@@ -3906,6 +3903,7 @@ nl:
     admin_login:
       title: "Beheerdersaanmelding"
       subject_template: "[%{email_prefix}] Aanmelding"
+      subject_template_improved: "Aanmelden"
       text_body_template: |
         Iemand heeft gevraagd om aanmelding op je account op [%{site_name}](%{base_url}).
 
@@ -3915,7 +3913,6 @@ nl:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account gemaakt"
-      subject_template: "[%{email_prefix}] Je nieuwe account"
       text_body_template: |
         Er is een nieuw account voor je gemaakt op %{site_name}
 
@@ -4030,7 +4027,6 @@ nl:
         Als je niet op de bovenstaande link kunt klikken, kopieer en plak deze dan in de adresbalk van je webbrowser.
     suspicious_login:
       title: "Waarschuwing voor nieuwe aanmelding"
-      subject_template: "[%{site_name}] Nieuwe aanmelding vanaf %{location}"
       text_body_template: |
         Hallo,
 

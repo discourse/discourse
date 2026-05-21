@@ -23,6 +23,7 @@ module DiscourseTopicVoting
         step :refresh_vote_count
       end
 
+      step :enqueue_backfill_badges
       step :enqueue_topic_upvote_webhook
 
       private
@@ -53,6 +54,10 @@ module DiscourseTopicVoting
 
       def refresh_vote_count(topic:)
         topic.update_vote_count
+      end
+
+      def enqueue_backfill_badges(topic:)
+        Jobs.enqueue(Jobs::DiscourseTopicVoting::BackfillBadges, topic_id: topic.id)
       end
 
       def enqueue_topic_upvote_webhook(guardian:, topic:)

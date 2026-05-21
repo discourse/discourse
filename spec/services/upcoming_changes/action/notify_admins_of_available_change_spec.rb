@@ -187,6 +187,67 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
       end
     end
 
+    context "when an admin has disabled upcoming change available notifications" do
+      before { admin_2.user_option.update!(enable_upcoming_change_available_notifications: false) }
+
+      it "only creates a notification for admins who have the preference enabled" do
+        expect { result }.to change {
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_available],
+          ).count
+        }.by(1)
+
+        expect(
+          Notification.exists?(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_1.id,
+          ),
+        ).to eq(true)
+        expect(
+          Notification.exists?(
+            notification_type: Notification.types[:upcoming_change_available],
+            user_id: admin_2.id,
+          ),
+        ).to eq(false)
+      end
+
+      context "when no admins have the preference enabled" do
+        before do
+          admin_1.user_option.update!(enable_upcoming_change_available_notifications: false)
+        end
+
+        it "does not create any notifications" do
+          expect { result }.not_to change {
+            Notification.where(
+              notification_type: Notification.types[:upcoming_change_available],
+            ).count
+          }
+        end
+
+        it "does not create an admins_notified_available_change event" do
+          expect { result }.not_to change {
+            UpcomingChangeEvent.where(
+              event_type: :admins_notified_available_change,
+              upcoming_change_name: :test_upcoming_change,
+            ).count
+          }
+        end
+
+        it "does not log a staff action" do
+          expect { result }.not_to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_available],
+              subject: "test_upcoming_change",
+            ).count
+          }
+        end
+
+        it "returns nil" do
+          expect(result).to be_nil
+        end
+      end
+    end
+
     context "when there is an existing notification with the old data format" do
       before do
         Fabricate(

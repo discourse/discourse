@@ -38,6 +38,9 @@ nb_NO:
     popup:
       chat_mention:
         direct: '%{username} nevnte deg i "%{channel}"'
+    actions:
+      chat_reply:
+        title: Svar
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

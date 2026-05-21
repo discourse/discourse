@@ -8,8 +8,6 @@ lt:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
-    vote:
-      toggle_voters: "Rodyti, kas balsavo"
     post_voting:
       post:
         post_voting_comment:

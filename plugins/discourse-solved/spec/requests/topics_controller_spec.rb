@@ -192,6 +192,22 @@ RSpec.describe TopicsController do
       expect(suggested_urls).to include(p3.full_url)
     end
 
+    it "does not leak microdata from ineligible posts into the Question scope" do
+      ineligible =
+        Fabricate(:post, topic:, user: Fabricate(:user), post_type: Post.types[:moderator_action])
+      Fabricate(:solved_topic, topic:, answer_post: p2)
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      question = doc.at_css('[itemtype*="Question"]')
+      ineligible_node = doc.at_css("#post_#{ineligible.post_number}")
+
+      expect(ineligible_node).to be_present
+      expect(question.xpath('./*[@itemprop="datePublished"]').size).to eq(1)
+      expect(ineligible_node.css("[itemprop]")).to be_empty
+    end
+
     it "does not modify schema for topics without solved enabled" do
       SiteSetting.allow_solved_on_all_topics = false
 

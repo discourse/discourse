@@ -97,7 +97,7 @@ module SiteIconManager
 
     define_singleton_method("#{name}_url") do
       get_set_cache("#{name}_url") do
-        icon = self.public_send(name)
+        icon = public_send(name)
         icon ? full_cdn_url(icon.url) : ""
       end
     end
@@ -115,6 +115,7 @@ module SiteIconManager
   private
 
   def self.get_set_cache(key, &block)
+    return block.call if @disabled
     @cache.defer_get_set(key, &block)
   end
 

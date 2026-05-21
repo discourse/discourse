@@ -89,6 +89,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :use_crawler_layout?
 
+  def include_splash_screen?
+    !Rails.env.test?
+  end
+  helper_method :include_splash_screen?
+
   def perform_refresh_session
     refresh_session(current_user) unless @readonly_mode
   end
@@ -299,8 +304,8 @@ class ApplicationController < ActionController::Base
     opts ||= {}
 
     show_json_errors =
-      (request.format && request.format.json?) || (request.xhr?) ||
-        ((params[:external_id] || "").to_s.ends_with?(".json"))
+      (request.format && request.format.json?) || request.xhr? ||
+        (params[:external_id] || "").to_s.ends_with?(".json")
 
     if type == :not_found && opts[:check_permalinks]
       url = opts[:original_path] || request.fullpath
@@ -484,7 +489,7 @@ class ApplicationController < ActionController::Base
   def guardian
     # sometimes we log on a user in the middle of a request so we should throw
     # away the cached guardian instance when we do that
-    if (@guardian&.user).blank? && current_user.present?
+    if @guardian&.user.blank? && current_user.present?
       @guardian = Guardian.new(current_user, request)
     end
     @guardian ||= Guardian.new(current_user, request)
@@ -843,10 +848,8 @@ class ApplicationController < ActionController::Base
 
   def should_enforce_2fa?
     enforcing_2fa =
-      (
-        (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
-          SiteSetting.enforce_second_factor == "all"
-      )
+      (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
+        SiteSetting.enforce_second_factor == "all"
     !disqualified_from_2fa_enforcement && enforcing_2fa &&
       !current_user.has_any_second_factor_methods_enabled?
   end
@@ -959,7 +962,7 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header_to_non_canonical
-    canonical = (@canonical_url || @default_canonical)
+    canonical = @canonical_url || @default_canonical
     if canonical.present? && canonical != request.url &&
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"

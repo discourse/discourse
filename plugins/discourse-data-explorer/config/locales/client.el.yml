@@ -11,9 +11,6 @@ el:
       or: "ή"
       create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
-      ai:
-        generate: "Δημιουργία"
-        optional: "προαιρετικό"
       import:
         label: "Εισαγωγή"
       help:

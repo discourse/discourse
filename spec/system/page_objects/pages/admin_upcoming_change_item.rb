@@ -73,6 +73,10 @@ module PageObjects
         )
       end
 
+      def enabled_for_options
+        enabled_for_dropdown.select_element.all("option").map { |o| o["value"] }
+      end
+
       def group_selector
         PageObjects::Components::GroupSelector.new(change_item_selector(@setting_name))
       end

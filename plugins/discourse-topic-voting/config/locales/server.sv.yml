@@ -16,9 +16,6 @@ sv:
     topic_voting_show_votes_on_profile: 'Ska användare tillåtas se sina röstningar i aktivitetsflödet?'
     topic_voting_alert_votes_left: 'Uppmärksamma användaren när antalet röster kvar är'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Visa vem som röstat"
     votes_moved:
       one: "En röst har flyttats."
       other: "%{count} röster har flyttats."

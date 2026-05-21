@@ -204,17 +204,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
         )
       end
 
-      after do
-        TranslationOverride.revert!(
-          SiteSetting.default_locale,
-          "discourse_ai.ai_bot.agents.general.name",
-        )
-        TranslationOverride.revert!(
-          SiteSetting.default_locale,
-          "discourse_ai.ai_bot.agents.general.description",
-        )
-      end
-
       it "returns localized agent names and descriptions" do
         get "/admin/plugins/discourse-ai/ai-agents.json"
 
@@ -1142,7 +1131,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       header_lines, _, payload_lines = lines.chunk { |l| l == "" }.map(&:last)
 
-      preamble = (<<~PREAMBLE).strip
+      preamble = <<~PREAMBLE.strip
         HTTP/1.1 200 OK
         Content-Type: text/plain; charset=utf-8
         Transfer-Encoding: chunked

@@ -32,7 +32,7 @@ RSpec.describe UpcomingChanges do
 
     # There is a fixture image at spec/fixtures/images/upcoming_changes/enable_upload_debug_mode.png,
     # but normally upcoming change images are at Rails.public_path + /images/upcoming_changes/
-    Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
+    Rails.stubs(:public_path).returns(Rails.root.join("spec/fixtures").to_s)
   end
 
   describe ".image_exists?" do
@@ -77,14 +77,10 @@ RSpec.describe UpcomingChanges do
         result = described_class.image_data(setting_name, include_file_path: true)
 
         expect(result[:file_path]).to eq(
-          File.join(
-            Rails.root,
-            "spec",
-            "fixtures",
-            "images",
-            "upcoming_changes",
-            "#{setting_name}.png",
-          ),
+          Rails
+            .root
+            .join("spec", "fixtures", "images", "upcoming_changes", "#{setting_name}.png")
+            .to_s,
         )
       end
     end
@@ -392,6 +388,15 @@ RSpec.describe UpcomingChanges do
       UpcomingChanges.clear_caches!
     end
 
+    context "when the change is not registered" do
+      it "raises ArgumentError" do
+        expect { described_class.enabled?(:not_an_upcoming_change) }.to raise_error(
+          ArgumentError,
+          /Unknown upcoming change/,
+        )
+      end
+    end
+
     context "when the setting has no row in the database (admin has not saved it)" do
       before { SiteSetting.remove_override!(setting_name) }
 
@@ -471,6 +476,77 @@ RSpec.describe UpcomingChanges do
         SiteSetting.enable_upload_debug_mode = false
 
         expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+    end
+  end
+
+  describe ".enabled_for_with_groups" do
+    let(:setting_name) { :enable_upload_debug_mode }
+    let(:groups_hash) { { Group::AUTO_GROUPS[:staff] => "staff" } }
+
+    def mock_allow(allow)
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: allow,
+          },
+        },
+      )
+    end
+
+    context "when the setting is disabled" do
+      it "returns no_one" do
+        result = described_class.enabled_for_with_groups(setting_name, false, groups_hash)
+        expect(result[:enabled_for]).to eq("no_one")
+      end
+    end
+
+    context "when the setting is enabled with no admin-configured groups" do
+      context "when allow_enabled_for is omitted" do
+        it "returns everyone" do
+          result = described_class.enabled_for_with_groups(setting_name, true, groups_hash)
+          expect(result[:enabled_for]).to eq("everyone")
+        end
+      end
+
+      context "when allow_enabled_for is [everyone]" do
+        before { mock_allow([:everyone]) }
+
+        it "returns everyone" do
+          result = described_class.enabled_for_with_groups(setting_name, true, groups_hash)
+          expect(result[:enabled_for]).to eq("everyone")
+        end
+      end
+
+      context "when allow_enabled_for is [staff, specific_groups]" do
+        before { mock_allow(%i[staff specific_groups]) }
+
+        it "returns the staff group name as the broadest allowed display target" do
+          result = described_class.enabled_for_with_groups(setting_name, true, groups_hash)
+          expect(result[:enabled_for]).to eq("staff")
+        end
+      end
+
+      context "when allow_enabled_for is [staff]" do
+        before { mock_allow([:staff]) }
+
+        it "returns the staff group name" do
+          result = described_class.enabled_for_with_groups(setting_name, true, groups_hash)
+          expect(result[:enabled_for]).to eq("staff")
+        end
+      end
+
+      context "when allow_enabled_for is [specific_groups]" do
+        before { mock_allow([:specific_groups]) }
+
+        it "returns groups" do
+          result = described_class.enabled_for_with_groups(setting_name, true, groups_hash)
+          expect(result[:enabled_for]).to eq("groups")
+        end
       end
     end
   end
@@ -579,6 +655,14 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".clear_caches!" do
+    it "clears the latest new feature created_at cache" do
+      Discourse.redis.set("latest_new_feature_created_at", Time.zone.now.iso8601)
+      described_class.clear_caches!
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
+    end
+  end
+
   describe ".enabled_for_user?" do
     context "for logged-in user" do
       fab!(:user)
@@ -670,6 +754,58 @@ RSpec.describe UpcomingChanges do
           .map { |s| s[:setting] }
       expect(settings).not_to include(:conceptual_setting)
       expect(settings).to include(:enable_upload_debug_mode)
+    end
+  end
+
+  describe "conditional display" do
+    it "returns true when the conditional display method is undefined for an upcoming change" do
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        true,
+      )
+    end
+
+    context "when the conditional display method is defined for an upcoming change" do
+      context "when the conditional display method returns true" do
+        before do
+          UpcomingChanges::ConditionalDisplay.define_singleton_method(
+            :should_display_enable_upload_debug_mode?,
+          ) { true }
+        end
+
+        after do
+          UpcomingChanges::ConditionalDisplay.singleton_class.send(
+            :remove_method,
+            :should_display_enable_upload_debug_mode?,
+          )
+        end
+
+        it "returns true" do
+          expect(
+            UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
+          ).to eq(true)
+        end
+      end
+
+      context "when the conditional display method returns false" do
+        before do
+          UpcomingChanges::ConditionalDisplay.define_singleton_method(
+            :should_display_enable_upload_debug_mode?,
+          ) { false }
+        end
+
+        after do
+          UpcomingChanges::ConditionalDisplay.singleton_class.send(
+            :remove_method,
+            :should_display_enable_upload_debug_mode?,
+          )
+        end
+
+        it "returns false" do
+          expect(
+            UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
+          ).to eq(false)
+        end
+      end
     end
   end
 end

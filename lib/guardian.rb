@@ -13,6 +13,7 @@ require "guardian/sidebar_guardian"
 require "guardian/staff_action_log_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
+require "guardian/upload_guardian"
 require "guardian/user_guardian"
 require "guardian/localization_guardian"
 
@@ -32,6 +33,7 @@ class Guardian
   include StaffActionLogGuardian
   include TagGuardian
   include TopicGuardian
+  include UploadGuardian
   include UserGuardian
 
   class AnonymousUser
@@ -100,7 +102,7 @@ class Guardian
     end
 
     def in_any_groups?(group_ids)
-      false
+      group_ids.include?(Group::AUTO_GROUPS[:anonymous])
     end
   end
 
@@ -488,14 +490,14 @@ class Guardian
   def can_export_entity?(entity, entity_id = nil, args = nil)
     return false if anonymous?
     return true if is_admin?
-    return can_see_emails? if entity == "screened_email"
+    return can_see_emails? && can_see_ip? if entity == "screened_email"
     return can_see_ip? if entity == "screened_ip"
 
     if is_moderator? && (entity != "user_archive" || entity_id.nil?)
       if entity == "report"
         report_name = args&.[](:name) || args&.[]("name")
         return true if report_name.blank?
-        return !Report.hidden?(report_name, admin: false)
+        return !Report.hidden?(report_name, guardian: self)
       end
       return %w[staff_action screened_url report user_archive].include?(entity)
     end

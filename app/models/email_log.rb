@@ -37,8 +37,8 @@ class EmailLog < ActiveRecord::Base
     SQL
 
   before_save do
-    if self.bounce_error_code.present?
-      match = SMTP_ERROR_CODE_REGEXP.match(self.bounce_error_code)
+    if bounce_error_code.present?
+      match = SMTP_ERROR_CODE_REGEXP.match(bounce_error_code)
       self.bounce_error_code = match.present? ? match[0] : nil
     end
   end
@@ -49,7 +49,7 @@ class EmailLog < ActiveRecord::Base
   end
 
   def topic
-    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
+    @topic ||= topic_id.present? ? Topic.find_by(id: topic_id) : post&.topic
   end
 
   def self.unique_email_per_post(post, user)
@@ -82,11 +82,11 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.for(reply_key)
-    self.find_by(reply_key: reply_key)
+    find_by(reply_key: reply_key)
   end
 
   def self.last_sent_email_address
-    self.where(email_type: "signup").order(created_at: :desc).limit(1).pluck(:to_address).first
+    where(email_type: "signup").order(created_at: :desc).limit(1).pluck(:to_address).first
   end
 
   def bounce_key
@@ -94,26 +94,26 @@ class EmailLog < ActiveRecord::Base
   end
 
   def cc_users
-    return [] if !self.cc_user_ids
-    @cc_users ||= User.where(id: self.cc_user_ids)
+    return [] if !cc_user_ids
+    @cc_users ||= User.where(id: cc_user_ids)
   end
 
   def cc_addresses_split
-    @cc_addresses_split ||= self.cc_addresses&.split(";") || []
+    @cc_addresses_split ||= cc_addresses&.split(";") || []
   end
 
   def as_mail_message
-    return if self.raw.blank?
-    @mail_message ||= Mail.new(self.raw)
+    return if raw.blank?
+    @mail_message ||= Mail.new(raw)
   end
 
   def raw_headers
-    return if self.raw.blank?
+    return if raw.blank?
     as_mail_message.header.raw_source
   end
 
   def raw_body
-    return if self.raw.blank?
+    return if raw.blank?
     as_mail_message.body
   end
 end
@@ -123,23 +123,23 @@ end
 # Table name: email_logs
 #
 #  id                        :integer          not null, primary key
-#  to_address                :string           not null
-#  email_type                :string           not null
-#  user_id                   :integer
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  post_id                   :integer
+#  bcc_addresses             :text
+#  bounce_error_code         :string
 #  bounce_key                :uuid
 #  bounced                   :boolean          default(FALSE), not null
-#  message_id                :string
-#  smtp_group_id             :integer
 #  cc_addresses              :text
 #  cc_user_ids               :integer          is an Array
+#  email_type                :string           not null
 #  raw                       :text
-#  topic_id                  :integer
-#  bounce_error_code         :string
 #  smtp_transaction_response :string(500)
-#  bcc_addresses             :text
+#  to_address                :string           not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  message_id                :string
+#  post_id                   :integer
+#  smtp_group_id             :integer
+#  topic_id                  :integer
+#  user_id                   :integer
 #
 # Indexes
 #

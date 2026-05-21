@@ -19,8 +19,6 @@ ro:
         react_with: "Reacționează la această postare cu: %{reaction}"
         cant_remove_reaction: "Nu-ți mai poți elimina reacția."
         remove_reaction: "Elimină această reacție %{reaction}"
-      users_popup:
-        all: "Toate"
       main_reaction:
         add: "Apreciază această postare"
         remove: "Elimină această apreciere"

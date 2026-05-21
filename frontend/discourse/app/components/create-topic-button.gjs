@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class CreateTopicButton extends Component {
   @service router;
@@ -19,23 +19,37 @@ export default class CreateTopicButton extends Component {
     return this.args.btnTypeClass || "btn-default";
   }
 
+  get transformerContext() {
+    return {
+      disabled: this.args.disabled,
+      canCreateTopic: this.args.canCreateTopic,
+      category: this.router.currentRoute?.attributes?.category,
+      tag: this.router.currentRoute?.attributes?.tag,
+    };
+  }
+
   get btnClasses() {
     const additionalClasses = applyValueTransformer(
       "create-topic-button-class",
       [],
-      {
-        disabled: this.args.disabled,
-        canCreateTopic: this.args.canCreateTopic,
-        category: this.router.currentRoute?.attributes?.category,
-        tag: this.router.currentRoute?.attributes?.tag,
-      }
+      this.transformerContext
     );
 
-    return concatClass(
+    return dConcatClass(
       this.args.btnClass,
       this.btnTypeClass,
       ...additionalClasses
     );
+  }
+
+  get draftMenuClasses() {
+    const additionalClasses = applyValueTransformer(
+      "create-topic-button-draft-menu-class",
+      [],
+      this.transformerContext
+    );
+
+    return dConcatClass(this.btnTypeClass, ...additionalClasses);
   }
 
   <template>
@@ -43,9 +57,10 @@ export default class CreateTopicButton extends Component {
       <TopicDraftsDropdown
         @action={{@action}}
         @label={{this.label}}
+        @icon={{@icon}}
         @btnId={{this.btnId}}
         @btnClasses={{this.btnClasses}}
-        @btnTypeClass={{this.btnTypeClass}}
+        @draftMenuClasses={{this.draftMenuClasses}}
         @showDrafts={{@showDrafts}}
         ...attributes
       />

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sv:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Godkända lösningar"
   js:
     notifications:
       alt:

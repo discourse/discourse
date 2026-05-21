@@ -35,7 +35,6 @@ hu:
       already_voted: "Kérdésenként csak egyszer lehet szavazni."
       user_over_limit: "Nem lépheted túl a bizalmi szintedhez tartozó szavazatok számát."
       one_vote_per_post: "Minden bejegyzésre csak egyszer lehet szavazni."
-      toggle_voters: "Szavazók megjelenítése"
     last_answer_lowercase: utolsó válasz
     answer_lowercase:
       one: válasz
@@ -57,8 +56,6 @@ hu:
           edit: "szerkesztés"
           cancel: "mégse"
           add: "Hozzászólás írása"
-          actions:
-            delete: "Hozzászólás törlése"
           show:
             one: Mutass %{count} további hozzászólást
             other: Mutass %{count} további hozzászólást

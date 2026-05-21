@@ -340,9 +340,6 @@ zh_CN:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} 已自动设置您的出席并邀请您加入“%{eventName}”"
         an_event: "一项活动"
-      event_description:
-        show_more: "展开"
-        show_less: "收起"
       edit_reason: "活动已更新"
       edit_reason_closed: "活动已关闭"
       edit_reason_opened: "活动已开放"

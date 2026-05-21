@@ -206,7 +206,7 @@ class Search
       return Time.zone.now.beginning_of_week(str.downcase.to_sym)
     end
 
-    if idx = (Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase))
+    if idx = Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase)
       delta = Time.zone.now.month - idx
       delta += 12 if delta < 0
       Time.zone.now.beginning_of_month.months_ago(delta)
@@ -323,7 +323,7 @@ class Search
   end
 
   def self.execute(term, opts = nil)
-    self.new(term, opts).execute
+    new(term, opts).execute
   end
 
   # Query a term
@@ -677,7 +677,7 @@ class Search
       # try a possible tag match
       tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
       tag_id = target_tag_id || tag_id
-      if (tag_id)
+      if tag_id
         posts.where(<<~SQL, tag_id)
           topics.id IN (
             SELECT DISTINCT(tt.topic_id)
@@ -952,14 +952,15 @@ class Search
       )
     else
       tags = resolve_tag_synonyms(match.split(","))
+      tag_ids = Tag.where_name(tags).pluck(:id)
+      return positive ? posts.none : posts if tag_ids.empty?
 
       posts.where(
-        "topics.id #{modifier} IN (
-        SELECT DISTINCT(tt.topic_id)
-        FROM topic_tags tt, tags
-        WHERE tt.tag_id = tags.id AND lower(tags.name) IN (?)
+        "#{modifier} EXISTS (
+        SELECT 1 FROM topic_tags tt
+        WHERE tt.topic_id = topics.id AND tt.tag_id IN (?)
       )",
-        tags,
+        tag_ids,
       )
     end
   end
@@ -1476,7 +1477,7 @@ class Search
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
-    "'#{self.escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
+    "'#{escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
   end
 
   def self.escape_string(term)

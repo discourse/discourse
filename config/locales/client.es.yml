@@ -452,6 +452,8 @@ es:
     admin_onboarding_banner:
       launch_in_easy_steps: "Empieza en %{step_count} sencillos pasos"
       congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
+      select_theme:
+        enabled: "Activado"
       invite_collaborators:
         title: "Invitar colaboradores"
         description: "Los primeros miembros ayudan a dar vida a tu comunidad"
@@ -479,11 +481,6 @@ es:
           what_is_your_favorite_food:
             title: "¿Cuál es vuestra comida favorita?"
             body: "¡Compartid vuestra comida favorita con la comunidad! Empiezo yo: me encanta la pizza, sobre todo con extra de queso y pepperoni."
-      spread_the_word:
-        title: "¡Haz correr la voz!"
-        description: "Comparte un enlace con todos los miembros de tu red"
-        action: "Copiar enlace"
-        copied_to_clipboard: "¡Enlace copiado en el portapapeles!"
     about:
       edit: "Editar esta página"
       simple_title: "Acerca de"
@@ -671,6 +668,9 @@ es:
       allow_access: "Permitir acceso"
       continue_as_guest: "Continuar sin iniciar sesión"
       be_first_to_reply: "¡Sé la primera persona en responder!"
+      editing_post: "Editando publicación"
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -1516,7 +1516,6 @@ es:
         normal_option: "Normal"
         normal_option_title: "Se te notificará si este usuario te responde, cita o menciona."
       notification_schedule:
-        title: "Horario de notificaciones"
         label: "Activar horario personalizado de notificaciones"
         tip: "Fuera de este horario, tus notificaciones se pondrán en pausa."
         midnight: "Medianoche"
@@ -1560,13 +1559,8 @@ es:
       notifications: "Notificaciones"
       statistics: "Estadísticas"
       desktop_notifications:
-        label: "Notificaciones en vivo"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
-        perm_default: "Activar notificaciones"
-        perm_denied_btn: "Permiso denegado"
         perm_denied_expl: "Has denegado el permiso para las notificaciones. Configura tu navegador para permitir notificaciones. "
-        disable: "Desactivar notificaciones"
-        enable: "Activar notificaciones"
         each_browser_note: "Nota: Hay que cambiar esta configuración en cada navegador que utilices. Todas las notificaciones se desactivarán si pausas las notificaciones desde el menú de usuario, independientemente de este ajuste."
         consent_prompt: "¿Quieres recibir notificaciones en tiempo real cuando alguien responda a tus mensajes?"
       dismiss: "Descartar"
@@ -3400,6 +3394,7 @@ es:
           placeholder: máximo
           aria_label: filtrar por número máximo de visitas
     hamburger_menu: "Menú de navegación"
+    header_panel: "Encabezado"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
@@ -3516,21 +3511,9 @@ es:
         notification_level: "Actualizar notificaciones"
         change_notification_level: "Cambiar nivel de notificación"
         choose_new_category: "Elige la nueva categoría de los temas:"
-        selected_sole_category:
-          one: "Has seleccionado <b>%{count}</b> tema de la categoría:"
-          other: "Has seleccionado <b>%{count}</b> temas de la categoría:"
         selected_count:
           one: "%{count} seleccionado"
           other: "%{count} seleccionados"
-        change_tags: "Reemplazar etiquetas"
-        append_tags: "Añadir etiquetas"
-        choose_new_tags: "Elige etiquetas nuevas para estos temas:"
-        choose_append_tags: "Añadir etiquetas"
-        changed_tags: "Se han cambiado las etiquetas de esos temas."
-        remove_tags: "Eliminar etiquetas"
-        confirm_remove_tags:
-          one: "Todas las etiquetas se eliminarán de este tema. ¿Estás seguro/a?"
-          other: "Todas las etiquetas se eliminarán de <b>%{count}</b> temas. ¿Estás seguro/a?"
         confirm_unpin_topics:
           one: "Desanclar %{count} tema"
           other: "Desanclar %{count} temas"
@@ -3614,15 +3597,13 @@ es:
         description: "Los temas no listados están ocultos en la lista de temas, pero aún se puede acceder a ellos mediante un enlace directo. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Más información</a>."
       relist_topics:
         name: "Volver a publicar"
-      remove_tags:
-        name: "Eliminar etiquetas"
-        description: "Elimina todas las etiquetas de los temas seleccionados."
-      append_tags:
-        name: "Añadir etiquetas"
-        description: "Añade las siguientes etiquetas a los temas seleccionados:"
-      replace_tags:
-        name: "Remplazar etiquetas"
-        description: "Sustituye todas las etiquetas existentes en los temas seleccionados por lo siguiente:"
+      manage_tags:
+        add:
+          title: "Añadir etiquetas"
+        remove:
+          title: "Eliminar etiquetas"
+        replace:
+          title: "Reemplazar etiquetas"
       delete_topics:
         name: "Eliminar"
         description: "Elimina permanentemente los temas seleccionados. Esta acción no se puede deshacer."
@@ -3660,6 +3641,7 @@ es:
       collapse: "Contraer"
       no_replies: "No hay respuestas aún."
       deleted_post_placeholder: "[eliminado]"
+      ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Anclado"
     topic:
       filter_to:
@@ -4652,7 +4634,7 @@ es:
           high: "Alta"
           very_high: "Muy alta"
       sort_options:
-        default: "por defecto"
+        default: "Por defecto"
         likes: "Me gusta"
         op_likes: "Me gusta en la primera publicación"
         views: "Vistas"
@@ -4959,110 +4941,63 @@ es:
       title: "Atajos de teclado"
       short_title: "Atajos"
       search_ctrl_f_tip: "Para buscar en todo este foro, pulsa <kbd>/</kbd>"
+      description_header: "Descripción"
+      key_header: "Clave"
+      search_aliases:
+        shift: "mayús"
       jump_to:
         title: "Saltar a"
-        home: "%{shortcut} Inicio"
-        latest: "%{shortcut} Recientes"
-        new: "%{shortcut} Nuevos"
-        unread: "%{shortcut} Sin leer"
-        unseen: "%{shortcut} Sin ver"
-        categories: "%{shortcut} Categorías"
-        top: "%{shortcut} Destacado"
-        bookmarks: "%{shortcut} Marcadores"
-        profile: "%{shortcut} Perfil"
-        messages: "%{shortcut} Mensajes"
-        drafts: "%{shortcut} Borradores"
-        next: "%{shortcut} Tema siguiente"
-        previous: "%{shortcut} Tema anterior"
+        home: "Inicio"
+        latest: "Recientes"
+        new: "Nuevo"
+        unread: "Sin leer"
+        unseen: "No vistos"
+        categories: "Categorías"
+        top: "Destacados"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
+        messages: "Mensajes"
+        drafts: "Borradores"
       navigation:
         title: "Navegación"
-        jump: "%{shortcut} Ir a la publicación #"
-        back: "%{shortcut} Volver"
-        up_down: "%{shortcut} Desplazar selección &uarr; &darr;"
-        open: "%{shortcut} Abrir tema seleccionado"
-        open_new_window: "%{shortcut} Abrir el tema seleccionado en una nueva pestaña/ventana"
-        next_prev: "%{shortcut} Sección siguiente/anterior"
-        go_to_unread_post: "%{shortcut} Ir a la primera publicación sin leer"
+        back: "Atrás"
+        up_down: "Desplazar selección &uarr; &darr;"
       application:
         title: "Aplicación"
-        create: "%{shortcut} Crear un nuevo tema o mensaje personal"
-        notifications: "%{shortcut} Abrir notificaciones"
-        hamburger_menu: "%{shortcut} Abrir menú de navegación"
-        user_profile_menu: "%{shortcut} Abrir menú de usuario"
-        show_incoming_updated_topics: "%{shortcut} Mostrar temas actualizados"
-        search: "%{shortcut} Buscar"
-        filter_sidebar: "%{shortcut} Barra lateral de filtro"
-        help: "%{shortcut} Abrir guía de atajos de teclado"
-        toggle_bulk_select: "%{shortcut} Activar selección en bloque"
-        dismiss: "%{shortcut} Descartar temas seleccionados"
-        x: "%{shortcut} Alternar selección (en modo de selección en bloque)"
-        log_out: "%{shortcut} Cerrar sesión"
+        search: "Buscar"
+        log_out: "Cerrar sesión"
       composing:
         title: "Redactando"
-        return: "%{shortcut} Regresar al editor"
-        minimize: "%{shortcut} Minimizar compositor"
-        create_or_reply: "%{shortcut} Crear tema o publicar respuesta"
-        fullscreen: "%{shortcut} Edición en pantalla completa"
-        insert_current_time: "%{shortcut} Insertar hora actual"
-        bold: "%{shortcut} Negrita"
-        italic: "%{shortcut} Cursiva"
-        link: "%{shortcut} Insertar enlace"
-        preformatted: "%{shortcut} Texto con formato previo"
-        paragraph: "%{shortcut} Párrafo"
-        heading_1: "%{shortcut} Encabezado 1"
-        heading_2: "%{shortcut} Encabezado 2"
-        heading_3: "%{shortcut} Encabezado 3"
-        heading_4: "%{shortcut} Encabezado 4"
-        toggle_direction: "%{shortcut} Cambiar dirección del texto"
-        ordered_list: "%{shortcut} Lista ordenada"
-        unordered_list: "%{shortcut} Lista no ordenada"
-        blockquote: "%{shortcut} Cita en bloque"
+        link: "Insertar enlace"
+        preformatted: "Texto preformateado"
+        paragraph: "Párrafo"
+        blockquote: "Cita"
       bookmarks:
         title: "Marcadores"
-        enter: "%{shortcut} Guardar y cerrar"
-        later_today: "%{shortcut} Más tarde durante el día de hoy"
-        later_this_week: "%{shortcut} Esta semana"
-        tomorrow: "%{shortcut} Mañana"
-        next_week: "%{shortcut} La semana que viene"
-        next_month: "%{shortcut} El mes que viene"
-        next_business_week: "%{shortcut} Principio de la semana que viene"
-        next_business_day: "%{shortcut} Siguiente día hábil"
-        custom: "%{shortcut} Fecha y hora personalizadas"
-        none: "%{shortcut} Sin recordatorio"
-        delete: "%{shortcut} Borrar marcador"
+        enter: "Guardar y cerrar"
+        later_today: "Más tarde durante el día de hoy"
+        later_this_week: "Esta misma semana"
+        tomorrow: "Mañana"
+        next_week: "La próxima semana"
+        next_month: "El próximo mes"
+        next_business_day: "Siguiente día hábil"
+        custom: "Fecha y hora personalizadas"
+        none: "Sin recordatorio"
+        delete: "Eliminar el marcador"
       actions:
         title: "Acciones"
-        bookmark_topic: "%{shortcut} Guardar/quitar el tema de marcadores"
-        pin_unpin_topic: "%{shortcut} Anclar/desanclar tema"
-        share_topic: "%{shortcut} Compartir tema"
-        share_post: "%{shortcut} Compartir publicación"
-        reply_as_new_topic: "%{shortcut} Responder como un tema enlazado"
-        reply_topic: "%{shortcut} Responder al tema"
-        reply_post: "%{shortcut} Responder a la publicación"
-        quote_post: "%{shortcut} Citar publicación"
-        like: "%{shortcut} Me gusta la publicación"
-        flag: "%{shortcut} Reportar publicación"
-        bookmark: "%{shortcut} Guardar publicación en marcadores"
-        edit: "%{shortcut} Editar publicación"
-        delete: "%{shortcut} Eliminar publicación"
-        mark_muted: "%{shortcut} Silenciar tema"
-        mark_regular: "%{shortcut} Tema normal (por defecto)"
-        mark_tracking: "%{shortcut} Seguir tema"
-        mark_watching: "%{shortcut} Vigilar tema"
-        print: "%{shortcut} Imprimir tema"
-        defer: "%{shortcut} Marcar tema como no leído"
-        topic_admin_actions: "%{shortcut} Abrir acciones de administrador del tema"
-        archive_private_message: "%{shortcut} Activar el archivo de mensajes personales"
+        reply_as_new_topic: "Responder como tema enlazado"
+        reply_topic: "Responder al tema"
+        flag: "Denunciar publicación"
+        edit: "Editar publicación"
+        delete: "Eliminar publicación"
+        mark_tracking: "Seguir tema"
+        mark_watching: "Ver tema"
+        defer: "Marcar tema como no leído"
       search_menu:
         title: "Menú de búsqueda"
-        prev_next: "%{shortcut} Mover selección arriba y abajo"
-        insert_url: "%{shortcut} Insertar selección dentro del editor abierto"
-        full_page_search: "%{shortcut} Lanza la página de búsqueda"
       admin:
         title: "Administrador"
-        search_prev_next: "%{shortcut} Mover selección arriba y abajo"
-        search_open: "%{shortcut} Abrir búsqueda de la interfaz de administración"
-        search_full_page: "%{shortcut} Abrir búsqueda de administración en pantalla completa"
     badges:
       earned_n_times:
         one: "Medalla ganada %{count} vez"
@@ -6314,6 +6249,20 @@ es:
         too_many_requests: Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo.
         not_found_error: Lo sentimos, este informe no existe
         custom_date_range: Rango de fechas personalizado
+        sections:
+          reports:
+            title: "Informes"
+          traffic:
+            title: "Tráfico del sitio"
+          engagement:
+            title: "Interacción"
+        configure:
+          button: "Configurar"
+        period:
+          last_7_days: "Últimos 7 días"
+          last_30_days: "Últimos 30 días"
+          last_3_months: "Últimos 3 meses"
+          custom: "Personalizado"
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el período previo."
           percent_change_tooltip: "%{percent} de cambio."
@@ -7589,6 +7538,7 @@ es:
         topic_id: "ID del tema"
         post_id: "ID de la publicación"
         category_id: "ID de la categoría"
+        reviewable_id: "Revisión"
         delete: "Eliminar"
         edit: "Editar"
         save: "Guardar"
@@ -8187,7 +8137,6 @@ es:
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
         delete_confirm_title: "¿Seguro que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_confirm: "Normalmente, es mejor anonimizar usuarios en vez de eliminarlos. Así, evitas eliminar contenido de temas existentes."
-        delete_and_block: "Eliminar usuario, bloquear su correo electrónico y dirección IP"
         delete_dont_block: "Eliminar usuario"
         deleting_user: "Eliminando usuario…"
         deleted: "El usuario se eliminó"

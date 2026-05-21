@@ -8,12 +8,12 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { and, eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
@@ -168,7 +168,7 @@ export default class ChatChannelRow extends Component {
     <LinkTo
       @route="chat.channel"
       @models={{@channel.routeModels}}
-      class={{concatClass
+      class={{dConcatClass
         "chat-channel-row"
         (if @channel.focused "focused")
         (if @channel.currentUserMembership.muted "muted")
@@ -183,7 +183,7 @@ export default class ChatChannelRow extends Component {
       {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
     >
       <div
-        class={{concatClass
+        class={{dConcatClass
           "chat-channel-row__content"
           (if @channel.isCategoryChannel "is-category" "is-dm")
           (if this.shouldReset "-animate-reset")
@@ -201,7 +201,7 @@ export default class ChatChannelRow extends Component {
           <ChatChannelMetadata @channel={{@channel}} />
           {{#if this.shouldRenderLastMessage}}
             <div class="chat-channel__last-message">
-              {{replaceEmoji (trustHTML @channel.lastMessage.excerpt)}}
+              {{dReplaceEmoji (trustHTML @channel.lastMessage.excerpt)}}
             </div>
           {{/if}}
         </div>
@@ -227,12 +227,12 @@ export default class ChatChannelRow extends Component {
 
       {{#if this.showRemoveButton}}
         <div
-          class={{concatClass
+          class={{dConcatClass
             "chat-channel-row__action-btn"
             (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
           }}
         >
-          {{icon "circle-xmark"}}
+          {{dIcon "circle-xmark"}}
         </div>
       {{/if}}
     </LinkTo>

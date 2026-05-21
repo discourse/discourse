@@ -20,7 +20,6 @@ zh_TW:
       already_voted: "每個問題只能投票一次。"
       user_over_limit: "您不能投超過您的信任等級的投票數。"
       one_vote_per_post: "您只能替每個貼文投票一次。"
-      toggle_voters: "顯示投票人"
     last_answer_lowercase: 最後一個答案
     answer_lowercase:
       other: 回答

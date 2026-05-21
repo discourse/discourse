@@ -343,11 +343,6 @@ uk:
         other: "У вас %{count} непрочитані обговорення"
       scroll_to_bottom: "Прокрутити вниз"
       scroll_to_new_messages: "Переглянути нові повідомлення"
-      new_messages:
-        one: "%{count} нове повідомлення"
-        few: "%{count} нових повідомлення"
-        many: "%{count} нових повідомлень"
-        other: "%{count} нових повідомлень"
       sound:
         title: "Звук сповіщення у чаті"
       sounds:

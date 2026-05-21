@@ -141,6 +141,7 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
+      anonymous: "anonimno"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
       admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"
@@ -362,7 +363,7 @@ sr:
       labels:
         user: Korisnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Korisnik
         location: Lokacija
@@ -461,10 +462,13 @@ sr:
     digest:
       liked_received: "Primljeno Lajkova"
       new_users: "Novi Korisnici"
+      subject_template_improved: "Rezime"
     forgot_password:
       title: "Zaboravio Šifru"
     set_password:
       title: "Postavi Šifru"
+    admin_login:
+      subject_template_improved: "Prijava"
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"

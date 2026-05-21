@@ -56,7 +56,9 @@
   }
 
   &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider::before {
-    left: calc(var(--toggle-switch-width) - 22px);
+    left: calc(
+      var(--toggle-switch-width) - var(--toggle-switch-height) * 0.875
+    );
   }
 
   &__checkbox[disabled] + .d-toggle-switch__checkbox-slider {

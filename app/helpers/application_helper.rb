@@ -71,6 +71,12 @@ module ApplicationHelper
     ContentSecurityPolicy.nonce_placeholder(response.headers)
   end
 
+  def track_view_session_id_placeholder
+    response.headers[
+      ::Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER
+    ] ||= "[[track_view_session_id_placeholder_#{SecureRandom.hex}]]"
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != "/" && current_user
       sk = "shared_session_key"
@@ -392,7 +398,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url = (opts[:x_summary_large_image].presence || opts[:image])
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -429,12 +435,16 @@ module ApplicationHelper
 
   def discourse_pageview_tracking_meta_tags
     if !SiteSetting.trigger_browser_pageview_events &&
-         !SiteSetting.use_beacon_for_browser_page_views
+         !SiteSetting.use_beacon_for_browser_page_views &&
+         !SiteSetting.persist_browser_pageview_events
       return ""
     end
 
     tags = +""
-    tags << tag.meta(name: "discourse-track-view-session-id", content: SecureRandom.base64(32))
+    tags << tag.meta(
+      name: "discourse-track-view-session-id",
+      content: track_view_session_id_placeholder,
+    )
     if SiteSetting.use_beacon_for_browser_page_views
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
     end
@@ -447,32 +457,28 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      begin
-        if mobile_view?
-          if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-            SiteSetting.site_mobile_logo_dark_url
-          elsif SiteSetting.site_mobile_logo_url.present?
-            SiteSetting.site_mobile_logo_url
-          end
+      if mobile_view?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
+      else
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
         else
-          if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-            SiteSetting.site_logo_dark_url
-          else
-            SiteSetting.site_logo_url
-          end
+          SiteSetting.site_logo_url
         end
       end
   end
 
   def application_logo_dark_url
     @application_logo_dark_url ||=
-      begin
-        if dark_scheme_id != -1
-          if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-            SiteSetting.site_mobile_logo_dark_url
-          elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
-            SiteSetting.site_logo_dark_url
-          end
+      if dark_scheme_id != -1
+        if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
         end
       end
   end
@@ -528,17 +534,8 @@ module ApplicationHelper
     end
   end
 
-  def include_splash_screen?
-    # A bit basic for now but will be expanded later
-    SiteSetting.splash_screen
-  end
-
   def custom_splash_screen_enabled?
-    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
-
-    @custom_splash_screen_enabled =
-      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
-        SiteSetting.splash_screen_image.is_a?(Upload)
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
   end
 
   def splash_screen_image_animated?
@@ -583,12 +580,10 @@ module ApplicationHelper
       Discourse
         .cache
         .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          begin
-            upload.content.presence
-          rescue StandardError => e
-            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-            nil
-          end
+          upload.content.presence
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
         end
   end
 
@@ -664,14 +659,12 @@ module ApplicationHelper
   end
 
   def topic_featured_link_domain(link)
-    begin
-      uri = UrlHelper.encode_and_parse(link)
-      uri = URI.parse("http://#{uri}") if uri.scheme.nil?
-      host = uri.host.downcase
-      host.start_with?("www.") ? host[4..-1] : host
-    rescue StandardError
-      ""
-    end
+    uri = UrlHelper.encode_and_parse(link)
+    uri = URI.parse("http://#{uri}") if uri.scheme.nil?
+    host = uri.host.downcase
+    host.start_with?("www.") ? host[4..-1] : host
+  rescue StandardError
+    ""
   end
 
   def theme_id
@@ -779,6 +772,10 @@ module ApplicationHelper
     (itemprop.present? && itemprop != "comment") || hash[:data].present?
   end
 
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
+  end
+
   def crawler_post_schema_skip?(post, topic)
     DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
   end
@@ -844,11 +841,7 @@ module ApplicationHelper
 
     name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
 
-    manager.stylesheet_link_tag(
-      name,
-      opts[:media] || "all",
-      self.method(:add_resource_preload_list),
-    )
+    manager.stylesheet_link_tag(name, opts[:media] || "all", method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -945,7 +938,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "light" if cookie.present?
 
-    !!(current_user&.user_option&.light_mode_forced?)
+    !!current_user&.user_option&.light_mode_forced?
   end
 
   def forced_dark_mode?
@@ -954,7 +947,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "dark" if cookie.present?
 
-    !!(current_user&.user_option&.dark_mode_forced?)
+    !!current_user&.user_option&.dark_mode_forced?
   end
 
   def light_color_hex_for_name(name)

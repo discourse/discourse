@@ -18,8 +18,6 @@ hr:
           desc: "Tema će biti kreirana s objavama za koje se može glasati."
         remove_as_post_voting:
           desc: "Tema će biti kreirana u uobičajenom formatu."
-    vote:
-      toggle_voters: "Pokažite tko je glasao"
     answer_lowercase:
       one: odgovor
       few: odgovora

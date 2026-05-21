@@ -185,6 +185,7 @@ bs_BA:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      anonymous: "anoniman"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -562,6 +563,8 @@ bs_BA:
       xaxis: "Day"
     page_view_logged_in_browser_reqs:
       xaxis: "Day"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       xaxis: "Day"
     http_2xx_reqs:
@@ -593,7 +596,7 @@ bs_BA:
       labels:
         user: User
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Lokacija
@@ -895,6 +898,7 @@ bs_BA:
       liked_received: "Likes Received"
       new_users: "Users"
       join_the_discussion: "Pročitaj Više"
+      subject_template_improved: "Sažetak"
       click_here: "klikni ovdje"
     email_login:
       text_body_template: |
@@ -906,6 +910,8 @@ bs_BA:
         %{base_url}/session/e-mail-login/%{email_token}
     set_password:
       title: "Postavi šifru"
+    admin_login:
+      subject_template_improved: "Login"
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
     post_approved:

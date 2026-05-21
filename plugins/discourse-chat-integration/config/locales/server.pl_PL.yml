@@ -78,10 +78,6 @@ pl_PL:
       added_and_removed: "Dodano %{added} i usunięto %{removed}"
       added: "Dodano %{added}"
       removed: "Usunięto %{removed}"
-    errors:
-      provider_already_enabled: "Dostawca „%{name}” jest już włączony"
-      provider_not_found: "Nie znaleziono dostawcy '%{name}'"
-      setting_update_failed: "Nie udało się zaktualizować ustawień: %{errors}"
     provider:
       slack:
         status:

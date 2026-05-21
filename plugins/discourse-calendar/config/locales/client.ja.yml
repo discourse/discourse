@@ -329,9 +329,6 @@ ja:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} はあなたの出席を自動的に設定して %{eventName} に招待しました"
         an_event: "イベント"
-      event_description:
-        show_more: "もっと表示"
-        show_less: "表示を減らす"
       edit_reason: "イベントが更新されました"
       edit_reason_closed: "イベント終了"
       edit_reason_opened: "イベント開始"

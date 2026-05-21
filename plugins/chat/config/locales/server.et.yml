@@ -27,6 +27,9 @@ et:
     popup:
       chat_mention:
         direct: '%{username} mainis Sind teemas "%{channel}"'
+    actions:
+      chat_reply:
+        title: Vasta
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

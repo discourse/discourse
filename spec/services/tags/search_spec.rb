@@ -248,5 +248,29 @@ RSpec.describe(Tags::Search) do
         expect(result[:required_tag_group][:min_count]).to eq(1)
       end
     end
+
+    context "with content localization enabled" do
+      fab!(:strategy_tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+      fab!(:strategy_ja_localization) do
+        Fabricate(:tag_localization, tag: strategy_tag, locale: "ja", name: "戦略")
+      end
+
+      let(:params) { { q: "戦" } }
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "en|ja"
+      end
+
+      it "matches tags by their localized name in the current locale" do
+        I18n.with_locale(:ja) do
+          expect(result[:tags].map { |t| t[:name] }).to contain_exactly("戦略")
+        end
+      end
+
+      it "does not match localizations from other locales" do
+        I18n.with_locale(:en) { expect(result[:tags].map { |t| t[:name] }).to be_empty }
+      end
+    end
   end
 end

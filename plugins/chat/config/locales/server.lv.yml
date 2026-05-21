@@ -20,6 +20,9 @@ lv:
     popup:
       chat_mention:
         direct: '%{username} pieminēja jūs "%{channel}"'
+    actions:
+      chat_reply:
+        title: Atbilde
   unsubscribe:
     chat_summary:
       never: Nekad

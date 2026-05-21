@@ -340,9 +340,6 @@ es:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} ha establecido automáticamente tu asistencia y te ha invitado a %{eventName}"
         an_event: "un evento"
-      event_description:
-        show_more: "Mostrar más"
-        show_less: "Mostrar menos"
       edit_reason: "Evento actualizado"
       edit_reason_closed: "Evento cerrado"
       edit_reason_opened: "Evento abierto"
