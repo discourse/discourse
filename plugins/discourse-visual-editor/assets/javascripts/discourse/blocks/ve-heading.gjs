@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { block } from "discourse/blocks";
-import booleanString from "discourse/helpers/boolean-string";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -75,7 +74,6 @@ export default class VEHeading extends Component {
     >
       <this.headingTag
         class={{concat this.className (if R.isEmpty " ve-heading--empty")}}
-        aria-hidden={{booleanString R.isEmpty}}
       >
         {{#if @icon}}{{dIcon @icon}}{{/if}}<R.Content />
       </this.headingTag>

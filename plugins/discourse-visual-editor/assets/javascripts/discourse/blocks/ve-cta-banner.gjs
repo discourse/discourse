@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { block } from "discourse/blocks";
-import booleanString from "discourse/helpers/boolean-string";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
@@ -125,7 +124,6 @@ export default class VECTABanner extends Component {
             <h3
               class="ve-cta-banner__title
                 {{if R.isEmpty 've-cta-banner__title--empty'}}"
-              aria-hidden={{booleanString R.isEmpty}}
             >
               <R.Content />
             </h3>
@@ -142,7 +140,6 @@ export default class VECTABanner extends Component {
             <p
               class="ve-cta-banner__text
                 {{if R.isEmpty 've-cta-banner__text--empty'}}"
-              aria-hidden={{booleanString R.isEmpty}}
             >
               <R.Content />
             </p>

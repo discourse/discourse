@@ -87,7 +87,8 @@ export default class InlineRichTextRenderer extends Component {
  */
 const InlineRichTextContent = <template>
   {{! Inner content wrapper exists so the editor chrome can hide rendered
-      text via CSS (`.--editing > .ve-inline-rich-text__content`) without
+      text via CSS while ProseMirror is mounted (admin chrome rule keys
+      off the presence of a `.ve-inline-editor-mount` child) without
       touching the outer span — the outer span is the portal target the
       controller mounts ProseMirror into. }}
   <span

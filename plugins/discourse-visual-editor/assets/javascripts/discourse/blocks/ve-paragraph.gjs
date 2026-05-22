@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import booleanString from "discourse/helpers/boolean-string";
 import { i18n } from "discourse-i18n";
 import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
 
@@ -46,10 +45,7 @@ export default class VEParagraph extends Component {
       @placeholder={{i18n "visual_editor.placeholders.paragraph_text"}}
       as |R|
     >
-      <p
-        class="{{this.className}} {{if R.isEmpty 've-paragraph--empty'}}"
-        aria-hidden={{booleanString R.isEmpty}}
-      >
+      <p class="{{this.className}} {{if R.isEmpty 've-paragraph--empty'}}">
         <R.Content />
       </p>
     </InlineRichTextRenderer>

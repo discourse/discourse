@@ -629,7 +629,8 @@ export default class BlockChrome extends Component {
     if (argEl && this.visualEditor.selectedBlockKey === this.args.blockKey) {
       this.visualEditor.startEditingArg(
         this.args.blockKey,
-        argEl.dataset.veInlineEditArg
+        argEl.dataset.veInlineEditArg,
+        { coords: { x: event.clientX, y: event.clientY } }
       );
       return;
     }

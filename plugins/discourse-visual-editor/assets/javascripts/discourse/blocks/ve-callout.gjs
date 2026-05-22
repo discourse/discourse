@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import booleanString from "discourse/helpers/boolean-string";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
@@ -46,7 +45,7 @@ export default class VECallout extends Component {
         @placeholder={{i18n "visual_editor.placeholders.callout_body"}}
         as |R|
       >
-        <span class="ve-callout__body" aria-hidden={{booleanString R.isEmpty}}>
+        <span class="ve-callout__body">
           <R.Content />
         </span>
       </InlineRichTextRenderer>

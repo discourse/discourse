@@ -3675,24 +3675,16 @@ body.visual-editor-active {
 
 /* Active edit — ProseMirror is mounted inside the outer span as a
    sibling of `__content`. Hide the rendered content so the user sees
-   only the editor; constrain the editor's outline so it doesn't shift
-   the heading/paragraph layout. */
+   only the editor. The presence of the `ve-inline-editor-mount` child
+   (which Glimmer's `{{#in-element}}` mounts and unmounts in lockstep
+   with the edit session) IS the editing state — no JS-side class
+   toggle is needed, the cascade reacts to Glimmer's lifecycle
+   directly. Lives in admin chrome SCSS so the live-site render path
+   never evaluates the `:has()` (no mount spans exist there). */
 
-.ve-inline-rich-text.--editing > .ve-inline-rich-text__content {
+.ve-inline-rich-text:has(.ve-inline-editor-mount)
+  > .ve-inline-rich-text__content {
   display: none;
-}
-
-.ve-inline-rich-text.--editing > .ProseMirror {
-  display: inline;
-  outline: none;
-  cursor: text;
-
-  /* Subtle focus ring that follows the editor's bounding box without
-     resizing the surrounding heading or paragraph. */
-  box-shadow: 0 0 0 2px var(--tertiary-low);
-  border-radius: 2px;
-  padding: 0 2px;
-  margin: 0 -2px;
 }
 
 /* Reveal empty inline-text wrappers on the canvas when their block is

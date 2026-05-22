@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import booleanString from "discourse/helpers/boolean-string";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
@@ -160,10 +159,7 @@ export default class VEMediaCard extends Component {
             @placeholder={{i18n "visual_editor.placeholders.media_card_name"}}
             as |R|
           >
-            <span
-              class="ve-media-card__name"
-              aria-hidden={{booleanString R.isEmpty}}
-            >
+            <span class="ve-media-card__name">
               <R.Content />
             </span>
           </InlineRichTextRenderer>
@@ -174,10 +170,7 @@ export default class VEMediaCard extends Component {
             @placeholder={{i18n "visual_editor.placeholders.media_card_role"}}
             as |R|
           >
-            <span
-              class="ve-media-card__role"
-              aria-hidden={{booleanString R.isEmpty}}
-            >
+            <span class="ve-media-card__role">
               <R.Content />
             </span>
           </InlineRichTextRenderer>
@@ -206,10 +199,7 @@ export default class VEMediaCard extends Component {
             }}
             as |R|
           >
-            <span
-              class="ve-media-card__badge-label"
-              aria-hidden={{booleanString R.isEmpty}}
-            >
+            <span class="ve-media-card__badge-label">
               <R.Content />
             </span>
           </InlineRichTextRenderer>
@@ -225,7 +215,6 @@ export default class VEMediaCard extends Component {
           <h4
             class="ve-media-card__title
               {{if R.isEmpty 've-media-card__title--empty'}}"
-            aria-hidden={{booleanString R.isEmpty}}
           >
             <R.Content />
           </h4>
@@ -248,7 +237,6 @@ export default class VEMediaCard extends Component {
             class="ve-media-card__cta
               {{if R.isEmpty 've-media-card__cta--empty'}}"
             href={{@ctaHref}}
-            aria-hidden={{booleanString R.isEmpty}}
           >
             <R.Content />
           </a>

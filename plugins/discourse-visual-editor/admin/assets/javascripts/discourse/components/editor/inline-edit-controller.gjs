@@ -49,22 +49,7 @@ export default class InlineEditController extends Component {
   #view = null;
   #pm = null;
   #handleOutsideClick = null;
-  #editingRendererEl = null;
   #savedLinkRange = null;
-  /**
-   * Maps each PM mount span to the renderer element it was inserted into,
-   * captured at `didInsert` time when the element is guaranteed to be
-   * attached. Glimmer's `{{#in-element}}` recreates the inner element on
-   * target change rather than moving it, so by the time `willDestroy`
-   * fires on the old mount span its `parentElement` is already `null`.
-   * Looking up the captured parent here keeps each unmount paired with
-   * its own renderer — essential during Enter-split's mount→mount→
-   * unmount→unmount lifecycle order, where reading a shared
-   * `#editingRendererEl` field race-conditions with the new mount.
-   *
-   * @type {WeakMap<HTMLElement, HTMLElement>}
-   */
-  #mountRendererMap = new WeakMap();
   /**
    * Tracked counter bumped on every PM transaction. Read by
    * `markState` / `selectionEmpty` getters to participate in Glimmer's
@@ -159,11 +144,6 @@ export default class InlineEditController extends Component {
     if (!rendererEl) {
       return;
     }
-    this.#editingRendererEl = rendererEl;
-    // Pair this specific mount span with its renderer so the matching
-    // `unmountEditor` call can remove `--editing` from the correct
-    // element even after the mount span has been detached from the DOM.
-    this.#mountRendererMap.set(container, rendererEl);
 
     const pm = await loadInlineRichEditor();
 
@@ -172,7 +152,6 @@ export default class InlineEditController extends Component {
     }
 
     this.#pm = pm;
-    rendererEl.classList.add("--editing");
 
     const variant = SCHEMAS[this.schemaName];
     const schema = pm.createSchema(variant.extensions, false);
@@ -258,12 +237,24 @@ export default class InlineEditController extends Component {
     // typing to replace" affordance for fresh edit sessions. `"start"`
     // and `"end"` are used by structural transitions (Enter-split,
     // Backspace-merge in later phases) where select-all would be
-    // wrong. The service drives the hint and resets it to `"selectAll"`
-    // on consumption.
+    // wrong. A `{ coords }` hint comes from the click-to-edit gesture
+    // and places the cursor at the click point via PM's
+    // `posAtCoords` — when that returns null (click landed outside any
+    // text node, e.g. past end-of-line whitespace), we fall back to
+    // end-of-doc which is more natural than selecting all when the
+    // user's intent was to position the cursor. The service drives
+    // the hint and resets it to `"selectAll"` on consumption.
     const initialDoc = this.#view.state.doc;
     const hint = this.visualEditor.consumeInitialSelectionHint();
     let range;
-    if (hint === "start") {
+    if (hint && typeof hint === "object" && hint.coords) {
+      const coordResult = this.#view.posAtCoords({
+        left: hint.coords.x,
+        top: hint.coords.y,
+      });
+      const pos = coordResult ? coordResult.pos : initialDoc.content.size;
+      range = pm.TextSelection.create(initialDoc, pos, pos);
+    } else if (hint === "start") {
       range = pm.TextSelection.create(initialDoc, 0, 0);
     } else if (hint === "end") {
       const end = initialDoc.content.size;
@@ -285,9 +276,11 @@ export default class InlineEditController extends Component {
       if (event.target.closest?.(".visual-editor-block-toolbar")) {
         return;
       }
-      const myEl = this.#editingRendererEl;
+      // Bail out if the edit session has already ended (e.g. a sibling
+      // click handler called `stopEditing` first). `activeRendererEl`
+      // returns `null` when there's no active session.
       requestAnimationFrame(() => {
-        if (this.activeRendererEl === myEl) {
+        if (this.activeRendererEl) {
           this.visualEditor.stopEditing({ commit: true });
         }
       });
@@ -296,7 +289,7 @@ export default class InlineEditController extends Component {
   }
 
   @action
-  unmountEditor(mountSpan) {
+  unmountEditor() {
     this.visualEditor.registerInlineEditCommit(null);
 
     const view = this.#view;
@@ -308,16 +301,6 @@ export default class InlineEditController extends Component {
       document.removeEventListener("mousedown", this.#handleOutsideClick, true);
       this.#handleOutsideClick = null;
     }
-    // Look up the renderer this specific mount span was attached to.
-    // `mountSpan.parentElement` is `null` here because Glimmer detaches
-    // the element before firing `willDestroy`. The mount→renderer map
-    // captured the parent at mount time when it was still attached.
-    const rendererEl = mountSpan ? this.#mountRendererMap.get(mountSpan) : null;
-    rendererEl?.classList.remove("--editing");
-    if (mountSpan) {
-      this.#mountRendererMap.delete(mountSpan);
-    }
-    this.#editingRendererEl = null;
     this.#savedLinkRange = null;
     this.linkEditMode = false;
     this.linkEditUrl = "";
@@ -514,7 +497,9 @@ export default class InlineEditController extends Component {
         but it leaves the renderer span permanently empty once the
         portal unmounts, since Glimmer doesn't restore what it cleared.
         We need the rendered text to be there both during the edit
-        (hidden by the --editing class) AND after the editor goes away. }}
+        (hidden by CSS rule that targets renderers containing a
+        `.ve-inline-editor-mount` sibling) AND after the editor goes
+        away. }}
     {{#if this.activeRendererEl}}
       {{#in-element this.activeRendererEl insertBefore=null}}
         <span

@@ -276,10 +276,13 @@ export default class VisualEditorService extends Service {
    * fresh edit sessions. `"start"` / `"end"` are used by structural
    * transitions (Enter-split places the cursor at the start of the new
    * sibling; Backspace-merge will place it at the join point) where
-   * select-all would be wrong. Consumed exactly once via
+   * select-all would be wrong. A `{ coords: { x, y } }` object is used
+   * by the click-to-edit gesture so the cursor lands where the user
+   * clicked (`mountEditor` resolves the screen coords via PM's
+   * `posAtCoords`). Consumed exactly once via
    * `consumeInitialSelectionHint`.
    *
-   * @type {"start"|"end"|"selectAll"}
+   * @type {"start"|"end"|"selectAll"|{coords:{x:number,y:number}}}
    */
   #editingInitialSelection = "selectAll";
 
@@ -1885,10 +1888,16 @@ export default class VisualEditorService extends Service {
    *
    * @param {string} blockKey
    * @param {string} argName
+   * @param {object} [options]
+   * @param {{x:number,y:number}} [options.coords] Screen-space click
+   *   coordinates. When present, the next `mountEditor` will place the
+   *   cursor at the doc position that resolves from these coords (PM's
+   *   `posAtCoords`) instead of selecting all. Used by the click-to-edit
+   *   gesture so the cursor lands where the user clicked.
    * @returns {Promise<boolean>} `true` if the session opened.
    */
   @action
-  async startEditingArg(blockKey, argName) {
+  async startEditingArg(blockKey, argName, options = {}) {
     if (!blockKey || !argName) {
       return false;
     }
@@ -1905,6 +1914,9 @@ export default class VisualEditorService extends Service {
     this.#editingLocated = located;
     this.#editingPrevValue = located.entry.args?.[argName];
     this.#editingBlockName = located.entry.block ?? null;
+    if (options.coords) {
+      this.#editingInitialSelection = { coords: options.coords };
+    }
     this.editingBlockKey = blockKey;
     this.editingArgName = argName;
     return true;
@@ -1928,7 +1940,7 @@ export default class VisualEditorService extends Service {
    * calls this exactly once when setting up the editor's initial
    * selection.
    *
-   * @returns {"start"|"end"|"selectAll"}
+   * @returns {"start"|"end"|"selectAll"|{coords:{x:number,y:number}}}
    */
   consumeInitialSelectionHint() {
     const hint = this.#editingInitialSelection;
