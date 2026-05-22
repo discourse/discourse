@@ -876,7 +876,6 @@ export default class ComposerService extends Service {
     event.preventDefault();
     DiscourseURL.routeTo(this.get("model.createdPost.url"));
     this.close();
-    _clearComposerActionsSnapshotsNew();
   }
 
   @action
@@ -1400,7 +1399,6 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
-            _clearComposerActionsSnapshotsNew();
             return result;
           });
         }
@@ -1439,7 +1437,6 @@ export default class ComposerService extends Service {
         }
 
         this.close();
-        _clearComposerActionsSnapshotsNew();
 
         this.currentUser.set("any_posts", true);
 
@@ -1510,7 +1507,6 @@ export default class ComposerService extends Service {
 
       this.set("model.loading", false);
       this.close();
-      _clearComposerActionsSnapshotsNew();
       this.toasts.success({
         duration: "short",
         data: {
@@ -1881,7 +1877,6 @@ export default class ComposerService extends Service {
                 .then(() => {
                   this.model.clearState();
                   this.close();
-                  _clearComposerActionsSnapshotsNew();
                 })
                 .finally(() => {
                   this.appEvents.trigger("composer:cancelled");
@@ -1897,7 +1892,6 @@ export default class ComposerService extends Service {
           .then(() => {
             this.model.clearState();
             this.close();
-            _clearComposerActionsSnapshotsNew();
           })
           .finally(() => {
             this.appEvents.trigger("composer:cancelled");
@@ -1917,7 +1911,6 @@ export default class ComposerService extends Service {
       this._saveDraft(true);
       this.model.clearState();
       this.close();
-      _clearComposerActionsSnapshotsNew();
       this.appEvents.trigger("composer:cancelled");
       this.skipAutoSave = false;
       return true;
@@ -2084,6 +2077,8 @@ export default class ComposerService extends Service {
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
+
+    _clearComposerActionsSnapshotsNew();
   }
 
   @computed("model.action")
