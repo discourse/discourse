@@ -3609,7 +3609,18 @@ body.wireframe-active {
   &.ProseMirror {
     padding: 0;
     margin: 0;
-    outline: none;
+
+    /* Replaces the browser's default contenteditable focus ring. PM is
+       only mounted when the field is actively being edited, so any time
+       this rule applies the user IS editing — no extra gating needed.
+       Lives here (not on `.wf-inline-rich-text`) because the renderer
+       span is `display: inline` and once a block-level PM div mounts
+       inside it, the outer span's outline draws around line fragments
+       rather than the editor area. Outlining PM's own block-level div
+       hugs the editor cleanly. */
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
@@ -3646,6 +3657,21 @@ body.wireframe-active {
     .wf-inline-rich-text__content,
     .wf-inline-rich-text__content::before {
       pointer-events: auto;
+    }
+
+    /* Hover affordance — dashed outline hints that the region is
+       click-to-edit. Suppressed while PM is mounted so it doesn't
+       double up with the active-edit ring (drawn on the PM editor
+       div itself via `.wf-inline-editor.ProseMirror` above — the
+       renderer span is `display: inline` and outlines on inline
+       parents of a block PM editor render around line fragments,
+       not the editor area). `outline` (not `border`) keeps the ring
+       outside the box so adjacent text doesn't shift on first paint. */
+
+    &:hover:not(:has(.wf-inline-editor-mount)) {
+      outline: 1px dashed var(--tertiary);
+      outline-offset: 2px;
+      border-radius: 2px;
     }
   }
 }
