@@ -1896,6 +1896,12 @@ export default class VisualEditorService extends Service {
    *   cursor at the doc position that resolves from these coords (PM's
    *   `posAtCoords`) instead of selecting all. Used by the click-to-edit
    *   gesture so the cursor lands where the user clicked.
+   * @param {"start"|"end"|"selectAll"|{pos:number}} [options.initialSelection]
+   *   Direct override for the next `mountEditor`'s initial selection.
+   *   Used by cross-block arrow nav (`"end"` when landing in the prev
+   *   block from a left/up; `"start"` when landing in the next block
+   *   from a right/down). Mutually exclusive with `coords` — pass one
+   *   or the other.
    * @returns {Promise<boolean>} `true` if the session opened.
    */
   @action
@@ -1918,6 +1924,8 @@ export default class VisualEditorService extends Service {
     this.#editingBlockName = located.entry.block ?? null;
     if (options.coords) {
       this.#editingInitialSelection = { coords: options.coords };
+    } else if (options.initialSelection !== undefined) {
+      this.#editingInitialSelection = options.initialSelection;
     }
     this.editingBlockKey = blockKey;
     this.editingArgName = argName;
@@ -2116,6 +2124,22 @@ export default class VisualEditorService extends Service {
    * @returns {{key: string, block: string|null, value: *}|null}
    */
   getInlineEditPrevSiblingInfo() {
+    return this.#getInlineEditSiblingInfo(-1);
+  }
+
+  /**
+   * Returns the next sibling of the currently-editing entry, or `null`
+   * if it's the last sibling. Mirror of `getInlineEditPrevSiblingInfo`;
+   * used by cross-block arrow nav to decide whether ArrowRight at end /
+   * ArrowDown on the bottom line should walk to the next sibling.
+   *
+   * @returns {{key: string, block: string|null, value: *}|null}
+   */
+  getInlineEditNextSiblingInfo() {
+    return this.#getInlineEditSiblingInfo(1);
+  }
+
+  #getInlineEditSiblingInfo(direction) {
     const blockKey = this.editingBlockKey;
     if (!blockKey) {
       return null;
@@ -2129,14 +2153,17 @@ export default class VisualEditorService extends Service {
       return null;
     }
     const sibs = findEntrySiblings(layout, blockKey);
-    if (!sibs || sibs.index <= 0) {
+    if (!sibs) {
       return null;
     }
-    const prev = sibs.siblings[sibs.index - 1];
+    const target = sibs.siblings[sibs.index + direction];
+    if (!target) {
+      return null;
+    }
     return {
-      key: entryKey(prev),
-      block: prev.block ?? null,
-      value: prev.args?.[this.editingArgName],
+      key: entryKey(target),
+      block: target.block ?? null,
+      value: target.args?.[this.editingArgName],
     };
   }
 

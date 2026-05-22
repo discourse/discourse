@@ -208,6 +208,19 @@ export default class InlineEditController extends Component {
           this.visualEditor.editingBlockName === "ve:paragraph"
             ? this.#mergeWithPrevAtStart()
             : undefined,
+        // Cross-block arrow nav between sibling `ve:paragraph` blocks.
+        // Left at pos 0 / Up on the first visual line → end of prev.
+        // Right at end / Down on the last visual line → start of next.
+        // All four return false (and PM's default arrow handling
+        // takes over) when the cursor isn't at the edge or the
+        // adjacent sibling isn't a `ve:paragraph`.
+        ...(this.schemaName === "paragraph" &&
+          this.visualEditor.editingBlockName === "ve:paragraph" && {
+            ArrowLeft: this.#walkToSibling("prev", "horizontal"),
+            ArrowRight: this.#walkToSibling("next", "horizontal"),
+            ArrowUp: this.#walkToSibling("prev", "vertical"),
+            ArrowDown: this.#walkToSibling("next", "vertical"),
+          }),
         // Tab walks between rich-inline fields on the same block in DOM
         // order. The service's `startEditingArg` implicitly commits the
         // current session, so chaining Tabs across fields produces one
@@ -547,6 +560,60 @@ export default class InlineEditController extends Component {
         mergedDoc: mergedDoc.toJSON(),
         joinPos,
       });
+    };
+  }
+
+  /**
+   * Builds a PM keymap command that walks the inline edit session to a
+   * sibling `ve:paragraph` block. `direction` picks prev / next;
+   * `axis` controls the at-edge check:
+   *
+   *   - `"horizontal"` — fires when the cursor is at the absolute
+   *     start (prev) / end (next) of the doc. Wired to ArrowLeft /
+   *     ArrowRight.
+   *   - `"vertical"`   — fires when the cursor sits on the first
+   *     (prev) / last (next) visual line, detected via PM's
+   *     `view.endOfTextblock("up"|"down")`. Wired to ArrowUp /
+   *     ArrowDown.
+   *
+   * Returns `false` (PM's default arrow handling takes over) when the
+   * selection isn't a collapsed cursor at the relevant edge, no
+   * sibling exists, or the sibling isn't a `ve:paragraph`. On a
+   * successful walk, `startEditingArg` commits the current session
+   * (one undo entry), opens a session on the sibling with an `"end"`
+   * (prev) / `"start"` (next) initial-selection hint, and the cursor
+   * lands at the matching edge of the sibling's doc.
+   */
+  #walkToSibling(direction, axis) {
+    return () => {
+      const view = this.#view;
+      if (!view) {
+        return false;
+      }
+      const { doc, selection } = view.state;
+      if (!selection.empty) {
+        return false;
+      }
+      const atEdge =
+        axis === "horizontal"
+          ? direction === "prev"
+            ? selection.from === 0
+            : selection.from === doc.content.size
+          : view.endOfTextblock(direction === "prev" ? "up" : "down");
+      if (!atEdge) {
+        return false;
+      }
+      const sibling =
+        direction === "prev"
+          ? this.visualEditor.getInlineEditPrevSiblingInfo()
+          : this.visualEditor.getInlineEditNextSiblingInfo();
+      if (!sibling || sibling.block !== "ve:paragraph") {
+        return false;
+      }
+      this.visualEditor.startEditingArg(sibling.key, "text", {
+        initialSelection: direction === "prev" ? "end" : "start",
+      });
+      return true;
     };
   }
 
