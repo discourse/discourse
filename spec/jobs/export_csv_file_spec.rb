@@ -264,6 +264,46 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
     end
 
+    it "exports suspicious login IP details when allowed" do
+      DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(location: "Earth")
+      user.user_auth_token_logs.create!(
+        action: "suspicious",
+        client_ip: "1.1.1.1",
+        user_agent: "Mozilla/5.0",
+        created_at: "2010-01-01 12:00:00 UTC",
+      )
+      exporter.extra["name"] = "suspicious_logins"
+
+      report = export_report
+
+      expect(report.second[0, 3]).to eq([user.username, "1.1.1.1", "Earth"])
+    end
+
+    context "when the current user cannot view IPs" do
+      fab!(:moderator_without_ip_access, :moderator)
+
+      let(:user) { moderator_without_ip_access }
+
+      it "redacts suspicious login IP address while retaining location" do
+        SiteSetting.moderators_view_ips = false
+        DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+
+        moderator_without_ip_access.user_auth_token_logs.create!(
+          action: "suspicious",
+          client_ip: "1.1.1.1",
+          user_agent: "Mozilla/5.0",
+          created_at: "2010-01-01 12:00:00 UTC",
+        )
+        exporter.extra["name"] = "suspicious_logins"
+
+        report = export_report
+
+        expect(report.second[0]).to eq(moderator_without_ip_access.username)
+        expect(report.second[1]).to eq("")
+        expect(report.second[2]).to eq("Earth")
+      end
+    end
+
     it "works with topic reports" do
       freeze_time DateTime.parse("2010-01-01 6:00")
 

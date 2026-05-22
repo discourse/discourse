@@ -2140,11 +2140,11 @@ RSpec.describe Report do
         end
       end
 
-      it "returns true for IP reports when IP viewing is disabled" do
+      it "returns false for IP reports when IP viewing is disabled" do
         SiteSetting.moderators_view_ips = false
 
         Report::IP_ADDRESS_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
         end
       end
 
