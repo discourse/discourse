@@ -99,7 +99,7 @@ export default class InlineEditController extends Component {
    */
   get schemaName() {
     const el = this.activeRendererEl;
-    const raw = el?.dataset?.veInlineEditSchema;
+    const raw = el?.dataset?.wfInlineEditSchema;
     return raw && raw in SCHEMAS ? raw : "plain";
   }
 
