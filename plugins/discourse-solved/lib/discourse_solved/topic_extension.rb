@@ -5,6 +5,7 @@ module DiscourseSolved::TopicExtension
 
   prepended do
     has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy
+    has_many :topic_answers, through: :solved, class_name: "DiscourseSolved::TopicAnswer"
     has_many :shared_issues,
              class_name: "DiscourseSolved::SharedIssue",
              foreign_key: :topic_id,

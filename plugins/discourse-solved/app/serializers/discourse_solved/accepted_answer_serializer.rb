@@ -3,24 +3,32 @@
 class DiscourseSolved::AcceptedAnswerSerializer < PostExcerptAccordionItemSerializer
   attributes :accepter_name, :accepter_username
 
+  def answer_user
+    @answer_user ||= object.user || Discourse.system_user
+  end
+
+  def accepter_user
+    @accepter_user ||= @options[:accepter] || object.topic&.user || Discourse.system_user
+  end
+
   def name
-    object.user&.name || Discourse.system_user.name
+    answer_user.name
   end
 
   def username
-    object.user&.username || Discourse.system_user.username
+    answer_user.username
   end
 
   def avatar_template
-    object.user&.avatar_template || Discourse.system_user.avatar_template
+    answer_user.avatar_template
   end
 
   def accepter_name
-    @options[:accepter]&.name || object.topic&.user&.name || Discourse.system_user.name
+    accepter_user.name
   end
 
   def accepter_username
-    @options[:accepter]&.username || object.topic&.user&.username || Discourse.system_user.username
+    accepter_user.username
   end
 
   def include_accepter_name?
