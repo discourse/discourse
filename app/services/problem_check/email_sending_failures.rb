@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProblemCheck::EmailDeliveryFailures < ProblemCheck
+class ProblemCheck::EmailSendingFailures < ProblemCheck
   self.priority = "low"
   self.perform_every = 1.hour
 
@@ -10,14 +10,14 @@ class ProblemCheck::EmailDeliveryFailures < ProblemCheck
     # De-duplicate with ProblemCheck::FailingEmails so we only show one
     # admin alert for the same SMTP incident when retry jobs are already failing.
     return no_problem if failing_email_job_count > 0
-    return no_problem if failed_delivery_count == 0
+    return no_problem if failed_send_count == 0
 
     problem
   end
 
   private
 
-  def failed_delivery_count
+  def failed_send_count
     @failed_delivery_count ||=
       SkippedEmailLog
         .where(reason_type: SkippedEmailLog.reason_types[:custom])
@@ -30,6 +30,6 @@ class ProblemCheck::EmailDeliveryFailures < ProblemCheck
   end
 
   def translation_data
-    { count: failed_delivery_count }
+    { count: failed_send_count }
   end
 end

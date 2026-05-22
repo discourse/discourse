@@ -67,7 +67,7 @@ class ProblemCheck
   #
   CORE_PROBLEM_CHECKS = [
     ProblemCheck::BadFaviconUrl,
-    ProblemCheck::EmailDeliveryFailures,
+    ProblemCheck::EmailSendingFailures,
     ProblemCheck::EmailPollingErroredRecently,
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
