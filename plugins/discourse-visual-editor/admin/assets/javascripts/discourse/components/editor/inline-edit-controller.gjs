@@ -85,8 +85,8 @@ export default class InlineEditController extends Component {
     if (!editingBlockKey || !editingArgName) {
       return null;
     }
-    const blockSelector = `[data-ve-block-key="${cssEscape(editingBlockKey)}"]`;
-    const argSelector = `[data-ve-inline-edit-arg="${cssEscape(editingArgName)}"]`;
+    const blockSelector = `[data-ve-block-key="${CSS.escape(editingBlockKey)}"]`;
+    const argSelector = `[data-ve-inline-edit-arg="${CSS.escape(editingArgName)}"]`;
     return document.querySelector(`${blockSelector} ${argSelector}`);
   }
 
@@ -174,25 +174,7 @@ export default class InlineEditController extends Component {
           this.visualEditor.stopEditing({ commit: true });
           return true;
         },
-        // Enter behavior depends on schema + block type:
-        //   - paragraph schema + `ve:paragraph` block → split the
-        //     block at the cursor (Phase 3.1) — the current entry keeps
-        //     the "before" doc, a new sibling holds the "after" doc.
-        //   - paragraph schema + other block (callout body, banner
-        //     content, …) → existing `hard_break` behaviour (splitting
-        //     a callout into two callouts makes no semantic sense).
-        //   - heading / plain → commit and exit.
-        // Shift+Enter keeps `hard_break` in any paragraph-schema editor
-        // so authors can still soft-wrap inside a paragraph.
-        Enter:
-          this.schemaName === "paragraph"
-            ? this.visualEditor.editingBlockName === "ve:paragraph"
-              ? this.#splitParagraphAtCursor()
-              : insertHardBreak(schema)
-            : () => {
-                this.visualEditor.stopEditing({ commit: true });
-                return true;
-              },
+        Enter: this.#enterCommand(schema),
         "Shift-Enter":
           this.schemaName === "paragraph" && variant.allowsHardBreak
             ? insertHardBreak(schema)
@@ -204,7 +186,6 @@ export default class InlineEditController extends Component {
         // default delete-a-char behavior). Other schemas / blocks
         // get no special handling; Backspace stays a plain delete.
         Backspace:
-          this.schemaName === "paragraph" &&
           this.visualEditor.editingBlockName === "ve:paragraph"
             ? this.#mergeWithPrevAtStart()
             : undefined,
@@ -214,13 +195,12 @@ export default class InlineEditController extends Component {
         // All four return false (and PM's default arrow handling
         // takes over) when the cursor isn't at the edge or the
         // adjacent sibling isn't a `ve:paragraph`.
-        ...(this.schemaName === "paragraph" &&
-          this.visualEditor.editingBlockName === "ve:paragraph" && {
-            ArrowLeft: this.#walkToSibling("prev", "horizontal"),
-            ArrowRight: this.#walkToSibling("next", "horizontal"),
-            ArrowUp: this.#walkToSibling("prev", "vertical"),
-            ArrowDown: this.#walkToSibling("next", "vertical"),
-          }),
+        ...(this.visualEditor.editingBlockName === "ve:paragraph" && {
+          ArrowLeft: this.#walkToSibling("prev", "horizontal"),
+          ArrowRight: this.#walkToSibling("next", "horizontal"),
+          ArrowUp: this.#walkToSibling("prev", "vertical"),
+          ArrowDown: this.#walkToSibling("next", "vertical"),
+        }),
         // Tab walks between rich-inline fields on the same block in DOM
         // order. The service's `startEditingArg` implicitly commits the
         // current session, so chaining Tabs across fields produces one
@@ -498,6 +478,37 @@ export default class InlineEditController extends Component {
   }
 
   /**
+   * Picks the Enter handler for the active session based on schema +
+   * block type:
+   *   - paragraph schema + `ve:paragraph` block → split the block at
+   *     the cursor (Phase 3.1). The current entry keeps the "before"
+   *     doc; a new sibling holds the "after" doc.
+   *   - paragraph schema + other block (callout body, banner content,
+   *     media-card title, …) → insert a `hard_break`. Splitting a
+   *     callout / banner / card into two of itself has no semantic
+   *     meaning, so the per-block soft-wrap stays.
+   *   - heading / plain → commit and exit.
+   *
+   * Shift+Enter keeps the existing `hard_break` path in any paragraph-
+   * schema editor (handled separately at the keymap site), so authors
+   * can still soft-wrap inside a paragraph block.
+   *
+   * @param {import("prosemirror-model").Schema} schema
+   */
+  #enterCommand(schema) {
+    if (this.schemaName !== "paragraph") {
+      return () => {
+        this.visualEditor.stopEditing({ commit: true });
+        return true;
+      };
+    }
+    if (this.visualEditor.editingBlockName === "ve:paragraph") {
+      return this.#splitParagraphAtCursor();
+    }
+    return insertHardBreak(schema);
+  }
+
+  /**
    * Builds a PM keymap command for paragraph-block Enter: slices the
    * current PM doc at the cursor into a `before` doc-JSON and an
    * `after` doc-JSON, then hands them to the service's
@@ -694,17 +705,4 @@ function insertHardBreak(schema) {
     }
     return true;
   };
-}
-
-/**
- * Block keys contain colons (`ve:heading:abc`) and other CSS-meaningful
- * characters that would break a raw attribute selector. `CSS.escape` is
- * available in every supported browser; the fallback is a defensive
- * regex for older environments.
- */
-function cssEscape(value) {
-  if (typeof CSS !== "undefined" && typeof CSS.escape === "function") {
-    return CSS.escape(value);
-  }
-  return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
 }

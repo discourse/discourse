@@ -2078,48 +2078,21 @@ export default class VisualEditorService extends Service {
       return false;
     }
 
-    // Defer the edit-session transition until Glimmer has rendered the
-    // new chrome into the DOM. The controller's `activeRendererEl`
-    // getter does `document.querySelector(…)` to find the renderer
-    // span; if we flip `editingBlockKey` synchronously the controller
-    // re-renders before the canvas has mounted the new block-chrome,
-    // and the lookup returns `null` — PM never re-mounts.
-    //
-    // We use `next` (defers past `afterRender`) plus a short rAF poll
-    // because the canvas's block-chrome mount can land later than the
-    // standard render phase. The poll bails after a few frames so a
-    // genuinely-missing element doesn't spin forever.
-    const transitionWhenReady = (attempts = 0) => {
-      const blockSelector = `[data-ve-block-key="${newKey
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')}"]`;
-      const found = document.querySelector(blockSelector);
-      if (found || attempts > 10) {
-        this.#editingLocated = this._findEntryAndOutletSync(newKey);
-        this.#editingPrevValue = this.#editingLocated?.entry?.args?.text;
-        this.#editingBlockName = "ve:paragraph";
-        this.#editingInitialSelection = "start";
-        this.editingBlockKey = newKey;
-        // The new block becomes the selected block so the chrome's
-        // `--selected` reveal rule unhides the empty `<p>` wrapper.
-        this._restoreSelection(newKey);
-        return;
-      }
-      requestAnimationFrame(() => transitionWhenReady(attempts + 1));
-    };
-    nextRunloop(this, transitionWhenReady);
+    this.#transitionEditingSessionTo(newKey, { initialSelection: "start" });
     return true;
   }
 
   /**
-   * Returns the previous sibling of the currently-editing entry when it
-   * also exists in the same outlet — or `null` if there's no active
-   * session, the current entry is the first sibling, or the lookup fails.
-   * The PM keymap reads this from the Backspace-at-start handler to
-   * decide whether a merge is possible AND to reconstruct the prev's PM
-   * doc (via `toDoc(prevValue)`) for concat. Filtering by block type is
-   * intentionally left to the caller — different keymap branches may
-   * want different "is this a merge candidate?" rules.
+   * Returns the previous sibling of the currently-editing entry within
+   * the same outlet — `{ key, block, value }` — or `null` if no session
+   * is active, the current entry is the first sibling, or the lookup
+   * fails. `value` is the sibling's stored value for the active arg
+   * (string or doc-JSON); callers decide what to do with it.
+   *
+   * Filtering by block type is intentionally left to the caller — the
+   * Backspace-merge handler bails when `block !== "ve:paragraph"`; the
+   * arrow-walk handler does the same. A future cross-block-type handler
+   * might accept other blocks.
    *
    * @returns {{key: string, block: string|null, value: *}|null}
    */
@@ -2245,30 +2218,52 @@ export default class VisualEditorService extends Service {
       return false;
     }
 
-    // Same deferred-transition dance as `splitInlineEditAt`. The prev
-    // block-chrome already exists in the DOM (it was rendered before
-    // the merge), but the structural republish triggers a re-render
-    // pass; flipping `editingBlockKey` synchronously can race the
-    // `activeRendererEl` lookup. `nextRunloop` + rAF poll keeps things
-    // robust regardless of when Glimmer settles.
+    this.#transitionEditingSessionTo(prevKey, {
+      initialSelection: { pos: joinPos },
+    });
+    return true;
+  }
+
+  /**
+   * Moves the active edit session to a different block once Glimmer has
+   * rendered the target block's chrome into the DOM. Used by structural
+   * ops (`splitInlineEditAt`, `mergeInlineEditWithPrev`) that publish a
+   * new layout and immediately want PM to remount on a different entry.
+   *
+   * Flipping `editingBlockKey` synchronously would race the controller's
+   * `activeRendererEl` lookup (it queries `[data-ve-block-key=...]`
+   * which doesn't exist until the canvas mounts the new block-chrome).
+   * Defer past `afterRender` via `nextRunloop`, then rAF-poll for the
+   * element — the canvas's chrome mount can land later than the
+   * standard render phase. Bails after a fixed attempt count so a
+   * genuinely-missing element doesn't spin forever.
+   *
+   * Once the element is found (or the poll gives up), all session-
+   * scoped state is reset to the new entry and `_restoreSelection`
+   * runs so the chrome's `--selected` reveal rule unhides the empty
+   * placeholder for the destination block.
+   *
+   * @param {string} key
+   * @param {{initialSelection: "start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}} options
+   */
+  #transitionEditingSessionTo(key, { initialSelection }) {
     const transitionWhenReady = (attempts = 0) => {
-      const blockSelector = `[data-ve-block-key="${prevKey
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')}"]`;
-      const found = document.querySelector(blockSelector);
+      const found = document.querySelector(
+        `[data-ve-block-key="${CSS.escape(key)}"]`
+      );
       if (found || attempts > 10) {
-        this.#editingLocated = this._findEntryAndOutletSync(prevKey);
-        this.#editingPrevValue = this.#editingLocated?.entry?.args?.text;
-        this.#editingBlockName = "ve:paragraph";
-        this.#editingInitialSelection = { pos: joinPos };
-        this.editingBlockKey = prevKey;
-        this._restoreSelection(prevKey);
+        this.#editingLocated = this._findEntryAndOutletSync(key);
+        this.#editingPrevValue =
+          this.#editingLocated?.entry?.args?.[this.editingArgName];
+        this.#editingBlockName = this.#editingLocated?.entry?.block ?? null;
+        this.#editingInitialSelection = initialSelection;
+        this.editingBlockKey = key;
+        this._restoreSelection(key);
         return;
       }
       requestAnimationFrame(() => transitionWhenReady(attempts + 1));
     };
     nextRunloop(this, transitionWhenReady);
-    return true;
   }
 
   /**
