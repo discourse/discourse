@@ -9,9 +9,19 @@ nl:
     blocks:
       ghost:
         status: "Status"
+        conditions: "Voorwaarden"
+        arguments: "Argumenten"
+        container_args: "Containerargumenten"
         in_location: "in"
         hidden: "verborgen"
+        not_registered: "niet geregistreerd"
+        no_visible_children: "geen zichtbare onderliggende"
         failed: "mislukt"
+      ghost_reasons:
+        optional_missing_hint: "Dit optionele blok wordt niet gerenderd omdat het niet is geregistreerd."
+        no_visible_children_hint: "Dit containerblok wordt niet weergegeven omdat geen van de onderliggende zichtbaar is."
+        condition_failed_hint: "Dit blok wordt niet gerenderd omdat niet aan de voorwaarden is voldaan."
+        head_hidden_tail_hint: "Dit blok wordt niet gerenderd omdat er eerst een ander blok is gerenderd in de container `head`."
     carousel:
       go_to_slide: "Ga naar dia %{index}"
       previous: "Vorige dia"
@@ -296,8 +306,14 @@ nl:
     topic_admin_menu: "topicacties"
     skip_to_main_content: "Overslaan naar hoofdinhoud"
     skip_links_label: "Navigatielinks overslaan"
+    skip_to_post: "Overslaan tot bericht %{post_number}"
+    skip_to_where_you_left_off: "Overslaan tot waar je gebleven was (bericht %{post_number})"
+    skip_to_where_you_left_off_last: "Overslaan tot waar je gebleven was (laatste antwoord, bericht %{post_number})"
+    skip_to_last_reply: "Overslaan tot laatste bericht"
+    skip_to_top: "Overslaan tot boven"
     skip_user_nav: "Overslaan naar profielcontent"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
+    emails_are_disabled_no_smtp: "Alle uitgaande e-mail is uitgeschakeld omdat er geen SMTP-server is geconfigureerd. Er kan geen enkele e-mail worden verzonden."
     emails_are_disabled_non_staff: "Uitgaande e-mail is uitgeschakeld voor niet-medewerkers."
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, <span>vernieuw</span> om alles soepel te laten werken."
@@ -311,6 +327,9 @@ nl:
         logged_in_members: "Welkom terug, %{preferred_display_name}!"
         anonymous_members: "Welkom bij %{site_name}!"
       search_placeholder: "Zoeken"
+    impersonation:
+      notice: "Je imiteert %{username}"
+      stop: "Imiteren stoppen"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je site werkt mogelijk niet omdat een thema/onderdeel fouten bevat. Zie de browserconsole voor meer informatie."
@@ -320,12 +339,23 @@ nl:
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     broken_transformer_alert: "Er is een fout opgetreden. Je site werkt mogelijk niet goed."
+    broken_block_alert: "Er is een blokconfiguratiefout gedetecteerd. Controleer de browserconsole voor meer informatie."
+    broken_block_factory_alert: "Het laden van een blok is mislukt. Sommige UI-elementen worden mogelijk niet correct weergegeven."
     critical_deprecation:
       notice: "<b>[Beheerdersmededeling]</b> %{source} bevat code die moet worden bijgewerkt. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>Meer informatie</em></a>)"
       theme_source: "Thema <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plug-in '%{name}'"
       unknown_source: "Een van je thema's of plug-ins"
+    dev_tools:
+      toggle_plugin_outlet_debug: "Debug outlet plug-in in-/uitschakelen"
+      toggle_block_debug: "Debug blok in-/uitschakelen"
+      block_debug:
+        outlet_boundaries: "Outletgrenzen"
+        visual_overlay: "Visuele overlay"
+        ghost_blocks: "Spookblokken"
+        condition_debugging: "Debuggen voorwaarde"
+      toggle_upcoming_changes_debug: "Debug aankomende wijzigingen in-/uitschakelen"
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -419,9 +449,9 @@ nl:
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
       invite_collaborators:
         description: "Vroege leden helpen je community tot leven te brengen"
-        action: "Uitnodiging aanmaken"
+        action: "Uitnodiging maken"
       start_posting:
-        title: "Begin met posten"
+        title: "Begin met plaatsen"
         description: "Geef mensen iets om samen over te praten"
         back: "Terug"
         icebreakers:
@@ -430,7 +460,7 @@ nl:
             body: "Hoi allemaal! Ik heb veel zin om deze nieuwe community te starten. Laten we om te beginnen een leuk weetje over onszelf delen. Ik begin: ik ben dol op wandelen en nieuwe paden ontdekken! Wat is iets interessants over jou?"
           coolest_thing_you_have_seen_today:
             title: "Wat is het gaafste dat je vandaag hebt gezien?"
-            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een random act of kindness. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
+            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een en spontaan gebaar van vriendelijkheid. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
           introduce_yourself:
             title: "Stel jezelf voor"
             body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
@@ -1710,6 +1740,7 @@ nl:
         verify_identity: "Verifieer je identiteit om verder te gaan."
         title: "Wachtwoord herstellen"
         remove: "Wachtwoord verwijderen"
+        remove_disabled: "Het account heeft minstens één andere aanmeldmethode nodig (bijvoorbeeld een toegangssleutel of een gekoppeld extern account) voordat het wachtwoord wordt verwijderd."
         remove_detail: "Je account is niet langer toegankelijk met een wachtwoord, tenzij je het opnieuw instelt."
       second_factor_backup:
         title: "Back-upcodes voor tweeledige verificatie"
@@ -1795,7 +1826,7 @@ nl:
           default: "Hoofdtoegangssleutel"
         save: "Opslaan"
         title: "Toegangssleutels"
-        short_description: "Toegangssleutels zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
+        short_description: "Toegangssleutels zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijvoorbeeld touch, faceID) of via een apparaatpincode/-wachtwoord."
         added_date: "%{date} toegevoegd"
         last_used_date: "Laatst gebruikt %{date}"
         never_used: "Nooit gebruikt"
@@ -2926,6 +2957,7 @@ nl:
       onebox_toolbar:
         copy: "Link kopiëren"
         link_copied: "Link gekopieerd!"
+      unsupported_token: "De rich text-editor ondersteunt niet alle functies die in dit bericht worden gebruikt, schakel over naar de Markdown-editor."
     notifications:
       tooltip:
         regular:
@@ -3329,7 +3361,7 @@ nl:
           unread: "Niets ongelezen gelaten... indrukwekkend!"
           new_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
-          generic: "Niets om te zien hier...kom snel terug!"
+          generic: "Niets te zien hier...kom snel terug!"
     topic_bulk_actions:
       dismiss:
         name: "Sluiten"
@@ -3372,13 +3404,18 @@ nl:
       load_more_children:
         one: "Nog %{count} antwoord"
         other: "Nog %{count} antwoorden"
+      load_more_children_generic: "Meer antwoorden"
+      continue_thread: "Doorgaan met deze thread"
       collapsed_replies:
         one: "%{count} antwoord"
         other: "%{count} antwoorden"
       collapse: "Samenvouwen"
+      collapse_parent: "Bovenliggende thread samenvouwen"
       no_replies: "Nog geen antwoorden."
       deleted_post_placeholder: "[verwijderd]"
       pinned_reply: "Vastgemaakt"
+      context:
+        banner: "Je bekijkt een enkele thread van dit topic."
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4151,7 +4188,7 @@ nl:
         delete: "Verwijderen"
         add: "Vereiste taggroep toevoegen"
         placeholder: "Selecteer taggroep…"
-        tag_group: "Tag-groep"
+        tag_group: "Taggroep"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       create_long: "Nieuwe categorie maken"
       type_settings_schema:
@@ -4161,7 +4198,7 @@ nl:
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
       validations:
-        emoji_required: "Kies een emoji."
+        emoji_required: "Selecteer een emoji."
         icon_required: "Selecteer een pictogram."
       description: "Beschrijving"
       logo_description: "Aanbevolen beeldverhouding 1:1 met een minimale bestandsgrootte van 200 pixels. Als dit leeg wordt gelaten, wordt er geen afbeelding weergegeven."
@@ -5319,7 +5356,7 @@ nl:
           status_experimental: "Experimenteel"
           impact_role_admins: "Beheerders"
           impact_role_moderators: "Moderators"
-          impact_role_staff: "Medewerker"
+          impact_role_staff: "Medewerkers"
       config:
         about:
           title: "Over je site"
@@ -5359,7 +5396,7 @@ nl:
               title: "Discourse ID"
         discourse_id:
           title: "Discourse ID"
-          learn_more: "Meer info"
+          learn_more: "Meer informatie"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"

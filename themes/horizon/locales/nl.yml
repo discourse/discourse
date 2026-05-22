@@ -6,8 +6,10 @@
 
 nl:
   solved: "Opgelost"
+  unsolved: "Onopgelost"
   posted: "geplaatst"
   by_username: "van @%{username}"
+  replied: "beantwoord"
   vote_count:
     one: "%{count} stem"
     other: "%{count} stemmen"
@@ -19,3 +21,6 @@ nl:
     other: "%{count} antwoorden"
   theme_metadata:
     description: "Een eenvoudig, mooi thema dat de out-of-the-box ervaring voor Discourse-sites verbetert."
+    settings:
+      topic_card_high_context:
+        description: "Toont, indien ingeschakeld, extra context op topickaarten, inclusief tags, uittreksels, opgelossingsstatus, toegewezen gebruikers en aantal stemmen (experimenteel)"

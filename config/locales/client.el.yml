@@ -325,7 +325,7 @@ el:
       header:
         new_members: "Καλώς ήρθες, %{preferred_display_name}!"
         logged_in_members: "Καλώς ήρθες πίσω, %{preferred_display_name}!"
-        anonymous_members: "Καλώς ήλθατε στην %{site_name}!"
+        anonymous_members: "Καλώς ήλθατε στο %{site_name}!"
       search_placeholder: "Αναζήτηση"
     impersonation:
       notice: "Παριστάνεις τον χρήστη %{username}"
