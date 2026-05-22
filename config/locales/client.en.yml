@@ -8870,6 +8870,7 @@ en:
         post_edits_count: "Post Edits"
         upcoming_changes:
           title: "User upcoming changes"
+          view_modal: "View enabled changes"
           description: "To modify groups or to enable or disable upcoming changes, please visit the <a href='%{basePath}/admin/config/upcoming-changes'>upcoming changes config page</a>."
           filter_placeholder: "Filter upcoming changes by name or description"
           filter_no_results: "No upcoming changes found"
