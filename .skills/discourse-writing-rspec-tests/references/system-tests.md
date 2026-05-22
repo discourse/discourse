@@ -77,15 +77,20 @@ end
 
 ## Writing `it` Block Descriptions
 
-Describe the **user interaction and expected experience**, not implementation details. System tests verify what users see and do, so descriptions should read like user stories.
+System tests exercise the product from the user's seat. Descriptions should read as **what the user does, sees, or experiences when interacting with the system** — never as what the system internally does in response.
+
+A good check: if you removed the `it`, the description should still sound like a sentence a user (or a PM writing acceptance criteria) would say. Phrases like "displays...", "updates...", "sets...", "renders...", "calls...", "persists..." are the system's voice — rewrite them from the user's side.
 
 ```rb
-# Good - describes user experience
-it "allows a user to filter categories in the sidebar"
-it "displays an error when submitting an empty title"
-it "navigates to the topic after clicking a search result"
+# Good - user-perspective: what the user does or sees
+it "lets the user filter categories in the sidebar"
+it "shows the user an error when they submit an empty title"
+it "takes the user to the topic after they click a search result"
+it "keeps the user's tag filter visible after they switch categories"
 
-# Bad - describes implementation details
+# Bad - system-perspective: what the system does internally
+it "displays an error when title is blank"
+it "navigates to the topic on search result click"
 it "preserves the tag filter in the URL when switching categories"
 it "updates the model count after deletion"
 it "sets the correct query param on filter change"
@@ -113,6 +118,52 @@ end
 | `puts` | Debug server-side code (Ruby) |
 | `console.log` | Debug client-side code (JavaScript) |
 | `pause_test` | Pause to view visual state (use with `SELENIUM_HEADLESS=0`) |
+
+## Debugging Failed System Tests
+
+**When a system test fails, diagnose before fixing.** Guessing at fixes without understanding the failure burns retries and lands the wrong patch.
+
+If you changed frontend code (`.js` / `.hbs` / `.gjs` / `.gts`) and the behavior suggests your changes aren't being picked up, the asset build is stale. Run `bin/ember-cli --build` to rebuild, then re-run the test. This is only needed when `bin/ember-cli` isn't already running in the background.
+
+For runtime visibility, add `puts "DEBUG: …"` in Ruby (controllers, models, services, jobs) or `console.log("DEBUG: …")` in JavaScript (components, services, routes). Place logs at the entry point of the code path, around conditional branches, and at the line where the failure occurs. Re-run with documentation format so the output reads cleanly:
+
+```sh
+bin/rspec spec/system/some_spec.rb:LINE --format documentation
+```
+
+Read the debug output and ask: what values are actually present versus expected? Is the code path reached at all? Is there a timing issue? Is the test data set up correctly? Once you understand the root cause, make a targeted fix and **remove every `DEBUG:` log line** before finalizing.
+
+Common failure patterns:
+
+| Symptom | Likely cause | Debug approach |
+|---|---|---|
+| Element not found | Selector wrong, element not rendered, timing | `console.log` in the component, double-check the selector in the test |
+| Unexpected content | Wrong data, rendering issue | `puts` in the controller/serializer to check data flow |
+| JS changes not reflected | Assets not rebuilt | Run `bin/ember-cli --build` |
+| Flaky pass/fail | Timing issue | Add waits, check for async operations |
+| 404/500 in test | Route or controller issue | `puts` in the route handler, check server logs |
+
+## Test Selectors in Templates
+
+Discourse's Ember app ships [`ember-test-selectors`](https://github.com/mainmatter/ember-test-selectors), which **strips every `data-test-*` attribute from production builds** at compile time. They're free to add in `.gjs` / `.hbs` templates: tests and dev builds see them, end users never do.
+
+Reach for `data-test-*` when no stable, semantic selector exists — the element has no meaningful class, no ARIA role, no text content you'd want to assert on, or the existing classes are tied to styling and could change. Don't sprinkle them on elements that already have a good selector; prefer asserting against user-visible structure when one exists.
+
+```hbs
+{{! Good - opaque element needs a test hook }}
+<div data-test-empty-state-title>{{@title}}</div>
+<div data-test-empty-state-body>{{@body}}</div>
+```
+
+Page objects then reference them like any other selector:
+
+```rb
+def has_title?(text)
+  has_css?("[data-test-empty-state-title]", text: text)
+end
+```
+
+Because the addon strips these in production, never use `data-test-*` for styling, JS behavior, or anything outside tests — those will disappear when users load the site.
 
 ## Page Objects
 
@@ -165,6 +216,56 @@ end
 # In test - multiple assertions for one element
 expect(sidebar).to have_category_name(category)
 expect(sidebar).to have_category_link(category)
+```
+
+## Assertors Must Use Capybara Matchers
+
+**Page object assertors (`has_*?` / `have_no_*?` methods) must use Capybara's matchers (`has_css?`, `has_text?`, `has_selector?`, `has_field?`, `has_no_css?`, etc.). Never fetch a reference with `find` / `all` and then apply an equality matcher to it.**
+
+Capybara matchers re-query the DOM on every retry up to `Capybara.default_max_wait_time`. Patterns that capture an element first and assert against it after bypass that re-query — the reference goes stale the moment the DOM updates (a re-render, an async response, an animation finishing) and the test flakes with `Selenium::WebDriver::Error::StaleElementReferenceError` or a value mismatch that disappears on rerun.
+
+```rb
+# Good - has_css? re-queries until it matches or times out
+def has_username?(user)
+  has_css?(".user-card .username", text: user.username)
+end
+
+def has_avatar_for?(user)
+  has_css?(".user-card img.avatar[src='#{user.avatar_url}']")
+end
+```
+
+```rb
+# Bad - reference fetched once, equality applied after the fact
+def has_username?(user)
+  find(".user-card .username").text == user.username
+end
+
+# Bad - same problem with RSpec equality matchers on a fetched node
+def has_avatar_for?(user)
+  expect(find(".user-card img.avatar")[:src]).to eq(user.avatar_url)
+end
+
+# Bad - storing the node for later assertion
+let(:username_el) { find(".user-card .username") }
+
+it "shows the username" do
+  expect(username_el.text).to eq(user.username) # stale the moment the card re-renders
+end
+```
+
+The same rule applies to negative assertions. Use `has_no_css?` (or `expect(...).to have_no_css(...)` / `expect(...).not_to have_css(...)`, which RSpec routes through the matcher's waiting form). Never assert on the boolean negation of a positive predicate — `expect(!page.has_css?(...))` returns immediately and does not wait for the element to disappear.
+
+```rb
+# Good - waits for the element to be gone
+def has_no_spinner?
+  has_no_css?(".loading-spinner")
+end
+
+# Bad - returns false the moment the spinner exists, no waiting
+def has_no_spinner?
+  !has_css?(".loading-spinner")
+end
 ```
 
 ## Composing Page Objects
