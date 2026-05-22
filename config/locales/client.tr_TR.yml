@@ -3676,8 +3676,6 @@ tr_TR:
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"
-      view_as_nested: "İç içe geçmiş olarak görüntüle"
-      view_as_flat: "Düz olarak görüntüle"
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"

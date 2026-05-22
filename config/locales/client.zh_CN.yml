@@ -3471,8 +3471,6 @@ zh_CN:
     nested_replies:
       nested_view: "嵌套视图"
       flat_view: "平面视图"
-      view_as_nested: "以嵌套方式查看"
-      view_as_flat: "以平面方式查看"
       sort:
         label: "排序依据"
         top: "热门"

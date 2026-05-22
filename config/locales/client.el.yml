@@ -3624,8 +3624,6 @@ el:
     nested_replies:
       nested_view: "Ένθετη προβολή"
       flat_view: "Επίπεδη προβολή"
-      view_as_nested: "Προβολή ως ένθετες"
-      view_as_flat: "Προβολή ως επίπεδες"
       sort:
         label: "Ταξινόμηση κατά"
         top: "Κορυφαία"
