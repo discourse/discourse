@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 nl:
+  discourse_rewind:
+    reports_not_cached: "Er zijn nog geen rapporten gegenereerd. Vernieuw de pagina."

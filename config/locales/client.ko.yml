@@ -3998,6 +3998,26 @@ ko:
         sections:
           reports:
             title: "보고서"
+          engagement:
+            activity_by_category:
+              category: "카테고리"
+              topics: "글"
+              posts: "글"
+              share: "공유하기"
+            whos_posting:
+              all_categories: "모든 카테고리"
+              staff: "스태프"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "신규"
+                "1": "초보회원"
+                "2": "회원"
+                "3": "일반"
+                "4": "지도자"
+        site_traffic:
+          series:
+            anonymous: "익명"
+            crawlers: "겉옷"
         period:
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"

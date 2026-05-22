@@ -91,8 +91,7 @@ pt:
           name: "Robô"
           description: "Um robô de conversação pode responder a perguntas e assistir os utilizadores nas mensagens pessoais, fórum e na conversação"
         nav:
-          configured: "Configurada"
-          unconfigured: "Não configurada"
+          enabled: "Ativado"
         filters:
           all: "Todos"
           reset: "Repor"

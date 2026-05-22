@@ -45,6 +45,7 @@ el:
       confirm_solved_removal_confirm: "Επιβεβαίωση"
       confirm_solved_removal_cancel: "Άκυρο"
       shared_issue:
+        label_zero: "Κι εγώ"
         label:
           one: "Κι εγώ (%{count})"
           other: "Κι εγώ (%{count})"

@@ -6350,8 +6350,29 @@ tr_TR:
             title: "Site trafiği"
           engagement:
             title: "Taahhüt"
+            activity_by_category:
+              category: "Kategori"
+              topics: "Konular"
+              posts: "Gönderi"
+              share: "Paylaş"
+            whos_posting:
+              all_categories: "Tüm kategoriler"
+              staff: "Personel"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Yeni"
+                "1": "Temel"
+                "2": "Üye"
+                "3": "Normal"
+                "4": "Lider"
+              trend:
+                stable: "stabil"
         configure:
           button: "Yapılandır"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
+            crawlers: "Gezginler"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

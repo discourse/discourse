@@ -331,6 +331,8 @@ nl:
         yesterday: Gisteren
       search_view:
         filter_placeholder: Zoeken in berichten
+        message_result_label: "Chatbericht van %{username}: %{preview} %{threadInfo}"
+        in_thread: "in thread %{title}"
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen

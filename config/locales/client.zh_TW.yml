@@ -5006,6 +5006,26 @@ zh_TW:
         sections:
           reports:
             title: "報告"
+          engagement:
+            activity_by_category:
+              category: "分類"
+              topics: "話題"
+              posts: "新發表的貼文"
+              share: "分享"
+            whos_posting:
+              all_categories: "所有分類"
+              staff: "管理員"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新使用者"
+                "1": "初級使用者"
+                "2": "成員"
+                "3": "活躍使用者"
+                "4": "資深"
+        site_traffic:
+          series:
+            anonymous: "匿名"
+            crawlers: "爬蟲"
         period:
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"

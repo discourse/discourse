@@ -10,6 +10,9 @@ bs_BA:
       default_query: "Uobičajen"
       or: "ili"
       create: "napravi"
+      ai:
+        generate: "Generate"
+        optional: "opcionalno"
       help:
         label: "Pomoć"
       schema:
@@ -18,8 +21,6 @@ bs_BA:
         bool:
           yes: "Da"
           no: "Ne"
-      export: "Izvoz"
-      edit: "Izmijeni"
       delete: "Delete"
       query_groups: "Grupa"
       query_description: "Opis"

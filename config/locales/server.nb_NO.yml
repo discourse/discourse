@@ -680,6 +680,28 @@ nb_NO:
       title: "Nye Bidragsytere"
       xaxis: "Dag"
       yaxis: "Antall nye bidragsytere"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Emner"
+        posts: "Innlegg"
+        share: "Del"
+    posters_by_member_type:
+      labels:
+        count: "Innlegg"
+        share: "Del"
+      types:
+        staff: "Stab"
+    trust_level_pipeline:
+      labels:
+        count: "Medlemmer"
+        share: "Del"
+      levels:
+        "0": "Ny"
+        "1": "Basic"
+        "2": "Medlem"
+        "3": "Aktivt medlem"
+        "4": "Leder"
     trust_level_growth:
       yaxis: "Dag"
     consolidated_page_views:
@@ -697,6 +719,8 @@ nb_NO:
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonym"
       yaxis: "Dag"
     dau_by_mau:
       xaxis: "Dag"
@@ -790,6 +814,12 @@ nb_NO:
         user: "Bruker"
         num_clicks: "Klikk"
         num_topics: "Emner"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøk"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besøk"
     top_traffic_sources:
       title: "Topp trafikk-kilder"
       xaxis: "Domene"

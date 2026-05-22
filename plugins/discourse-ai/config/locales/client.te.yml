@@ -45,6 +45,8 @@ te:
         expand_list:
           one: "(మరో %{count})"
           other: "(మరో %{count})"
+        nav:
+          enabled: "ప్రారంభించబడింది"
         filters:
           all: "అన్నీ"
           reset: "రీసెట్ చేయండి"

@@ -58,6 +58,8 @@ ug:
           one: "(%{count} تېخىمۇ كۆپ)"
           other: "(%{count} تېخىمۇ كۆپ)"
         collapse_list: "(ئازراق كۆرسەت)"
+        nav:
+          enabled: "قوزغىتىلدى"
         filters:
           all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"

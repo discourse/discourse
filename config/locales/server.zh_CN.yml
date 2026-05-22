@@ -1195,6 +1195,30 @@ zh_CN:
       xaxis: "天"
       yaxis: "新贡献者数量"
       description: "此期间首次发帖的用户数。"
+    activity_by_category:
+      labels:
+        category: "类别"
+        topics: "话题"
+        posts: "帖子"
+        share: "分享"
+    posters_by_member_type:
+      labels:
+        count: "帖子"
+        share: "分享"
+      types:
+        staff: "管理人员"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "信任级别"
+        count: "成员"
+        share: "分享"
+      levels:
+        "0": "新"
+        "1": "基本用户"
+        "2": "成员"
+        "3": "常规"
+        "4": "领导者"
     trust_level_growth:
       title: "信任级别提升"
       xaxis:
@@ -1240,9 +1264,8 @@ zh_CN:
     site_traffic:
       title: "网站流量"
       xaxis:
-        page_view_anon_browser: "页面浏览量（匿名用户）"
-        page_view_logged_in_browser: "页面浏览量（登录用户）"
-        page_view_crawler: "已知抓取工具"
+        page_view_anon_browser: "匿名"
+        page_view_crawler: "抓取工具"
         page_view_embed: "嵌入式页面浏览量"
         page_view_other: "其他流量"
       yaxis: "天"
@@ -1360,6 +1383,12 @@ zh_CN:
         num_clicks: "点击数"
         num_topics: "话题"
       description: "用户按他们分享的链接的点击次数列出。"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "访问天数"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "访问天数"
     top_traffic_sources:
       title: "热门流量来源"
       xaxis: "网域"
@@ -1755,7 +1784,7 @@ zh_CN:
     moderators_change_post_ownership: "允许版主更改帖子所有权"
     change_post_ownership_allowed_groups: "允许这些群组中的用户更改帖子所有权"
     cors_origins: "允许跨源请求（CORS）。每个来源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
-    use_admin_ip_allowlist: "只有使用“屏蔽的 IP 列表”（管理 > 日志 > 屏蔽的 IP）中的 IP 地址时，管理员才能登录。"
+    use_admin_ip_allowlist: "管理员只有在 <a href='%{base_path}/admin/logs/screened_ip_addresses'>筛选 IP 列表</a> 中定义的 IP 地址上才能登录。"
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
@@ -1891,7 +1920,7 @@ zh_CN:
     s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；仅当打算在配置的 `s3_upload_bucket`和 `s3_backup_bucket` 上配置权限策略时才取消选中此选项。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
-    backup_location: "存储备份的位置。重要信息：S3 要求在“文件”设置中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
+    backup_location: "存储备份的位置。重要：S3 要求在<a href='%{base_path}/admin/site_settings/category/files'>文件设置</a>中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
     backup_gzip_compression_level_for_uploads: "用于压缩上传的 Gzip 压缩级别。"
     include_thumbnails_in_backups: "在备份中包含生成的缩略图。禁用此项将使备份更小，但需要在恢复后重新发布所有帖子。"
     active_user_rate_limit_secs: "更新 'last_seen_at' 字段的频率，以为秒单位"
@@ -2082,7 +2111,6 @@ zh_CN:
     fast_typing_threshold: "用户在第一次发帖时必须输入的最短时间。如果未达到阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
-    auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用“禁言关注词”。"
     moderator_guide_topic: "概述您如何管理您的社区的话题。链接将在审核队列中显示，供版主和管理员使用。"
     reviewable_claiming: "可审核的内容是否需要先声明然后再对其采取行动？"
     reviewable_default_topics: "默认显示按话题分组的可审核内容"

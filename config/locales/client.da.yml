@@ -4609,6 +4609,26 @@ da:
             title: "Rapporter"
           traffic:
             title: "Webstedstrafik"
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Emner"
+              posts: "Indlæg"
+              share: "Del"
+            whos_posting:
+              all_categories: "Alle kategorier"
+              staff: "Personale"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nye"
+                "1": "Basis"
+                "2": "Bruger"
+                "3": "Almindelig"
+                "4": "Leder"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Crawlere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"

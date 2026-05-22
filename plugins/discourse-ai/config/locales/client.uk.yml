@@ -269,8 +269,7 @@ uk:
             ui_settings: "Налаштування інтерфейсу"
             integrations: "Інтеграції"
         nav:
-          configured: "Налаштовано"
-          unconfigured: "Не налаштовано"
+          enabled: "Включено"
         filters:
           all: "Всі"
           text: "Функції пошуку, агенти, LLM або групи..."

@@ -4578,6 +4578,26 @@ sv:
         sections:
           reports:
             title: "Rapporter"
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Ämnen"
+              posts: "Inlägg"
+              share: "Dela"
+            whos_posting:
+              all_categories: "Alla kategorier"
+              staff: "Personal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nya"
+                "1": "Grundläggande"
+                "2": "Medlem"
+                "3": "Vanlig"
+                "4": "Ledare"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Sökrobotar"
         period:
           last_7_days: "Senaste 7 dagarna"
           last_30_days: "Senaste 30 dagarna"

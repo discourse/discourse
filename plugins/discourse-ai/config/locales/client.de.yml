@@ -263,8 +263,7 @@ de:
             ui_settings: "Oberflächen-Einstellungen"
             integrations: "Integrationen"
         nav:
-          configured: "Konfiguriert"
-          unconfigured: "Nicht konfiguriert"
+          enabled: "Aktiviert"
         filters:
           all: "Gesamt"
           text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"

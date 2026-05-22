@@ -63,6 +63,7 @@ nl:
     ai_helper_automatic_chat_thread_title: "Stel automatisch de titel van chatthreads in op basis van de threadinhoud."
     ai_helper_enabled_features: "Selecteer de functies die je wilt inschakelen in de AI-helper."
     post_ai_helper_allowed_groups: "Gebruikersgroepen die toegang hebben tot AI-helperfuncties in berichten"
+    ai_helper_chat_thread_title_agent: "De agent die wordt gebruikt voor het genereren van chatthreadtitels."
     ai_embeddings_selected_model: "Gebruik het geselecteerde model voor het genereren van insluitingen."
     ai_embeddings_generate_for_pms: "Genereer insluitingen voor persoonlijke berichten."
     ai_embeddings_semantic_related_topics_enabled: "Gebruik semantisch zoeken voor gerelateerde topics."
@@ -209,14 +210,30 @@ nl:
           name: "Wisselkoers"
         stock_quote:
           name: "Aandelenkoers (AlphaVantage)"
+        image_generation_category:
+          name: "Afbeelding genereren..."
         image_generation_custom:
           name: "Aangepast"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Vanaf blanco beginnen..."
       name:
         characters: "mag alleen cijfers, letters en onderstrepingstekens bevatten"
+    mcp_servers:
+      errors:
+        oauth_refresh_token_missing: "Het OAuth-vernieuwingstoken ontbreekt. Maak opnieuw verbinding met deze MCP-server."
+        oauth_token_exchange_failed: "De OAuth-tokenuitwisseling is mislukt met status %{status}."
+        oauth_refresh_token_required: "De OAuth-autorisatieserver heeft geen vernieuwingstoken geretourneerd. Pas de geavanceerde OAuth-opties aan en maak opnieuw verbinding met deze MCP-server."
+        oauth_client_secret_required: "De OAuth-autorisatieserver %{issuer} vereist clientauthenticatie (%{methods}) van tokeneindpunten. Configureer handmatige cliëntaanmeldgegevens met een cliëntgeheim."
+        oauth_token_endpoint_auth_method_unsupported: "De OAuth autorisatieserver %{issuer} adverteert alleen niet-ondersteunde clientauthenticatiemethoden (%{methods}) voor tokeneindpunten. Deze MCP-server ondersteunt momenteel none, client_secret_basic en client_secret_post."
+      oauth_token_params_invalid: "OAuth-tokenparameters moeten een JSON-object zijn."
     ai_helper:
       errors:
         completion_request_failed: "Er is iets misgegaan bij het geven van suggesties. Probeer het opnieuw."
@@ -256,7 +273,7 @@ nl:
         default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
         cannot_have_duplicate_tools: "Mag geen dubbele tools hebben"
         github_helper:
-          name: "GitHub Helper"
+          name: "GitHub-helper"
           description: "AI-bot gespecialiseerd in het assisteren bij GitHub-gerelateerde taken en vragen"
         general:
           name: Forumhelper
@@ -286,7 +303,7 @@ nl:
           name: "DALL-E 3"
           description: "AI-bot gespecialiseerd in het genereren van afbeeldingen met DALL-E 3"
         discourse_helper:
-          name: "Discourse Helper"
+          name: "Discourse-helper"
           description: "AI-bot gespecialiseerd in het helpen bij Discourse-gerelateerde taken"
         web_artifact_creator:
           name: "Webartefactmaker"
@@ -340,6 +357,9 @@ nl:
           name: "Contentmaker"
         report_runner:
           name: "Rapportenuitvoerder"
+        chat_thread_titler:
+          name: "Chatthreadtitelaar"
+          description: "Standaard agent die automatisch chatthreadtitels genereert"
       topic_not_found: "Samenvatting niet beschikbaar, topic niet gevonden!"
       summarizing: "Topic samenvatten"
       searching: "Zoeken naar: '%{query}'"
@@ -587,6 +607,8 @@ nl:
       no_user_specified: De gebruikersnaam of de parameter user_unique_id is vereist. Geef deze op.
       user_not_found: De opgegeven gebruiker bestaat niet. Controleer de gebruikersnaamparameter.
       user_not_allowed: De gebruiker mag niet deelnemen aan het topic.
+      invalid_stream_resume_token: Het resume_token is ongeldig of verlopen.
+      no_pending_tool_calls: Er zijn geen openstaande toolaanroepen voor dit hervattingstoken.
       prompt_message_length: Het bericht %{idx} is langer dan de limiet van 1000 tekens.
       custom_tool_exists:
         one: "Aangepaste tool met de naam %{names} bestaat al."

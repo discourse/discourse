@@ -6642,8 +6642,31 @@ ru:
             title: "отчетов"
           traffic:
             title: "Посещаемость сайта"
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Новые темы"
+              posts: "Записи"
+              share: "Поделиться"
+            whos_posting:
+              all_categories: "Все разделы"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новое"
+                "1": "Обычный пользователь"
+                "2": "Участник"
+                "3": "Активный пользователь"
+                "4": "Лидер"
+              trend:
+                stable: "стабильный"
         configure:
           button: "Настроить"
+        site_traffic:
+          series:
+            anonymous: "Анонимные просмотры"
+            embedded: "Встроенные просмотры страниц"
+            crawlers: "Поисковые роботы"
         period:
           last_7_days: "За последние 7 дней"
           last_30_days: "За последние 30 дней"
