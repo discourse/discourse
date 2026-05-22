@@ -30,7 +30,7 @@ module UpcomingChanges
     # Sites already running the discourse-gifs theme component will have their
     # configuration migrated separately so they don't need to opt in via the upcoming change.
     def self.should_display_enable_gifs?
-      !Theme.discourse_gifs_component_installed?
+      !DiscourseGifs.component_installed?
     end
   end
 

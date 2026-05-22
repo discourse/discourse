@@ -7,34 +7,24 @@ import { service } from "@ember/service";
 import GifsResult from "discourse/components/gifs/result";
 import MiniMasonry from "discourse/lib/mini-masonry";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 
 export default class GifsResultList extends Component {
   @service site;
 
-  observer;
   masonry;
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.observer?.disconnect();
+    this.masonry?.destroy();
+  }
+
+  get loadMoreEnabled() {
+    return this.args.content?.length > 0 && (this.args.canLoadMore ?? true);
   }
 
   @action
   setup() {
-    this.observer = new IntersectionObserver(() => {
-      const scroller = document.querySelector(".gifs-modal__content");
-      if (scroller?.scrollTop > 0 && this.args.content?.length > 0) {
-        this.args.loadMore?.();
-      }
-    });
-
-    const target = document.querySelector(
-      ".gifs-modal__box .loading-container"
-    );
-    if (target) {
-      this.observer.observe(target);
-    }
-
     this.masonry = new MiniMasonry({
       container: ".gifs-result-list",
       baseWidth: this.site.mobileView ? 145 : 200,
@@ -58,8 +48,17 @@ export default class GifsResultList extends Component {
       {{#each @content key="preview" as |result|}}
         <GifsResult @gif={{result}} @pick={{@pick}} />
       {{/each}}
-
-      <DConditionalLoadingSpinner @condition={{@loading}} />
     </div>
+
+    {{#if @loadMore}}
+      <DLoadMore
+        @action={{@loadMore}}
+        @root=".gifs-modal__content"
+        @isLoading={{@loading}}
+        @enabled={{this.loadMoreEnabled}}
+      />
+    {{/if}}
+
+    <DConditionalLoadingSpinner @condition={{@loading}} />
   </template>
 }

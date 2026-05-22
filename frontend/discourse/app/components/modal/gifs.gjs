@@ -4,7 +4,6 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import GifsResultList from "discourse/components/gifs/result-list";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
@@ -28,11 +27,13 @@ export default class GifsModal extends Component {
   @tracked loadingCategories = false;
   @tracked offset = 0;
   @tracked query = "";
+  @tracked hasMore = true;
   @autoTrackedArray currentGifs = [];
 
-  onModalInsert = modifier(() => {
+  constructor() {
+    super(...arguments);
     this.fetchCategories();
-  });
+  }
 
   get showingCategories() {
     return this.query.length < MIN_QUERY_LENGTH && this.categories.length > 0;
@@ -53,9 +54,10 @@ export default class GifsModal extends Component {
 
   @action
   async loadMore() {
-    if (!this.loading) {
-      await this.search(false);
+    if (this.loading || !this.hasMore) {
+      return;
     }
+    await this.search(false);
   }
 
   @action
@@ -141,15 +143,22 @@ export default class GifsModal extends Component {
     if (clearResults) {
       this.currentGifs = [];
       this.offset = 0;
+      this.hasMore = true;
     }
 
     const meetsLengthRequirement =
       skipLengthCheck || this.query.length >= MIN_QUERY_LENGTH;
+
+    if (!meetsLengthRequirement) {
+      return;
+    }
+
     const limitReached =
       this.siteSettings.klipy_limit_infinite_search_results &&
       this.currentGifs.length >= this.siteSettings.klipy_max_results_limit;
 
-    if (!meetsLengthRequirement || limitReached) {
+    if (limitReached) {
+      this.hasMore = false;
       return;
     }
 
@@ -187,7 +196,11 @@ export default class GifsModal extends Component {
         };
       });
 
-      this.offset = data.next === "" ? 0 : data.next;
+      if (data.next === "" || data.next == null) {
+        this.hasMore = false;
+      } else {
+        this.offset = data.next;
+      }
       addUniqueValuesToArray(this.currentGifs, images);
     } catch (error) {
       this.dialog.alert({ message: error.message ?? error });
@@ -267,7 +280,6 @@ export default class GifsModal extends Component {
 
   <template>
     <DModal
-      {{this.onModalInsert}}
       @title={{i18n "gifs.modal_title"}}
       @closeModal={{@closeModal}}
       id="gifs-modal"
@@ -296,6 +308,7 @@ export default class GifsModal extends Component {
                 @pick={{this.pick}}
                 @loading={{this.loading}}
                 @loadMore={{this.loadMore}}
+                @canLoadMore={{this.hasMore}}
               />
             </div>
           </div>

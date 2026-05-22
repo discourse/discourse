@@ -109,25 +109,29 @@ class ChatSetupInit {
           label: "gifs.composer_title",
           icon: "gif",
           position: "dropdown",
-          async action(context) {
+          action(context) {
             const modal = owner.lookup("service:modal");
             const currentUser = owner.lookup("service:current-user");
             const draft = this.draft;
+            const isThread = context === "thread";
+            const draftHolder = isThread ? draft.thread : draft.channel;
 
-            await modal.show(GifsModal, {
+            modal.show(GifsModal, {
               model: {
-                customPickHandler: (message) => {
-                  api.sendChatMessage(draft.channel.id, {
-                    message,
-                    threadId: context === "thread" ? draft.thread?.id : null,
-                    inReplyToId:
-                      context === "channel" ? draft.inReplyTo?.id : null,
-                  });
+                customPickHandler: async (message) => {
+                  try {
+                    await api.sendChatMessage(draft.channel.id, {
+                      message,
+                      threadId: isThread ? draft.thread?.id : null,
+                      inReplyToId: !isThread ? draft.inReplyTo?.id : null,
+                    });
+                  } catch {
+                    return;
+                  }
+                  draftHolder?.resetDraft?.(currentUser);
                 },
               },
             });
-
-            draft.channel.resetDraft(currentUser);
           },
         });
       }

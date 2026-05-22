@@ -24,14 +24,18 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
   end
 
   def run_migration(theme, enable_gifs: false)
-    expect { migrate_discourse_gifs_component(theme, enable_gifs: enable_gifs) }.to output.to_stdout
+    expect {
+      DiscourseGifsMigration.migrate_component(theme, enable_gifs: enable_gifs)
+    }.to output.to_stdout
   end
 
-  describe "#find_component_in_db" do
+  describe ".find_component_in_db" do
     it "returns the component when a single discourse-gifs install exists" do
       result = nil
 
-      expect { result = find_component_in_db("default") }.to output(/✓ Found/).to_stdout
+      expect { result = DiscourseGifsMigration.find_component_in_db("default") }.to output(
+        /✓ Found/,
+      ).to_stdout
       expect(result).to eq(component)
     end
 
@@ -39,7 +43,9 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       remote_theme.update!(remote_url: "https://github.com/discourse/discourse-gifs.git")
 
       result = nil
-      expect { result = find_component_in_db("default") }.to output(/✓ Found/).to_stdout
+      expect { result = DiscourseGifsMigration.find_component_in_db("default") }.to output(
+        /✓ Found/,
+      ).to_stdout
       expect(result).to eq(component)
     end
 
@@ -49,7 +55,7 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       Fabricate(:theme, component: true, remote_theme: duplicate_remote)
 
       result = nil
-      expect { result = find_component_in_db("default") }.to output(
+      expect { result = DiscourseGifsMigration.find_component_in_db("default") }.to output(
         /Multiple \(2\) discourse-gifs components found/,
       ).to_stdout
       expect(result).to be_nil
@@ -59,12 +65,14 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       component.destroy
 
       result = nil
-      expect { result = find_component_in_db("default") }.to output(/Not found/).to_stdout
+      expect { result = DiscourseGifsMigration.find_component_in_db("default") }.to output(
+        /Not found/,
+      ).to_stdout
       expect(result).to be_nil
     end
   end
 
-  describe "#migrate_discourse_gifs_component" do
+  describe ".migrate_component" do
     context "when the TC was configured for Giphy" do
       it "maps Giphy file format directly into klipy_file_detail" do
         add_overrides(component, api_provider: "giphy", giphy_file_format: "gif")
