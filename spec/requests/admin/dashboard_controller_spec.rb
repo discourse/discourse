@@ -257,6 +257,24 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_nil
       end
 
+      it "is returned when version=alt and dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+
+        get "/admin/dashboard.json", params: { version: "alt" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_present
+        expect(response.parsed_body["configuration"]).to be_present
+      end
+
+      it "is omitted when version=alt and dashboard_improvements is enabled" do
+        get "/admin/dashboard.json", params: { version: "alt" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
+      end
+
       it "falls back to default dates when date params are malformed" do
         get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
 
