@@ -443,20 +443,12 @@ export default class ComposerActions extends Component {
     });
   }
 
-  get canToggleWhisper() {
-    return this.composer.canToggleWhisper;
-  }
-
-  get canToggleNoBump() {
-    return this.composer.canToggleNoBump;
-  }
-
-  get canUnlistTopic() {
-    return this.composer.canUnlistTopic;
-  }
-
   get hasToggles() {
-    return this.canToggleWhisper || this.canToggleNoBump || this.canUnlistTopic;
+    return (
+      this.composer.canToggleWhisper ||
+      this.composer.canToggleNoBump ||
+      this.composer.canUnlistTopic
+    );
   }
 
   get hasMenuContent() {
@@ -704,7 +696,7 @@ export default class ComposerActions extends Component {
 
               {{#if this.hasToggles}}
                 <div class="composer-actions-toggles">
-                  {{#if this.canToggleWhisper}}
+                  {{#if this.composer.canToggleWhisper}}
                     <dropdown.item>
                       <DButton
                         class="composer-toggle-item composer-toggle-whisper --with-description"
@@ -726,7 +718,7 @@ export default class ComposerActions extends Component {
                     </dropdown.item>
                   {{/if}}
 
-                  {{#if this.canToggleNoBump}}
+                  {{#if this.composer.canToggleNoBump}}
                     <dropdown.item>
                       <DButton
                         class="composer-toggle-item composer-toggle-no-bump --with-description"
@@ -748,7 +740,7 @@ export default class ComposerActions extends Component {
                     </dropdown.item>
                   {{/if}}
 
-                  {{#if this.canUnlistTopic}}
+                  {{#if this.composer.canUnlistTopic}}
                     <dropdown.item>
                       <DButton
                         class="composer-toggle-item composer-toggle-unlisted --with-description"
@@ -801,7 +793,7 @@ export default class ComposerActions extends Component {
         </span>
       {{/if}}
 
-      {{#if this.canToggleWhisper}}
+      {{#if this.composer.canToggleWhisper}}
         <DButton
           @action={{this.toggleWhisper}}
           @icon={{if this.composerModel.whisper "far-eye-slash" "far-eye"}}
