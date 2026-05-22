@@ -72,6 +72,27 @@ describe AdminDashboardEngagement do
       Report.define_singleton_method(:find, &original)
     end
 
+    describe "trust_level_pipeline" do
+      it "includes per-TL rows, a trend object, and total_members" do
+        Fabricate(:user, trust_level: TrustLevel[1])
+        Fabricate(:user, trust_level: TrustLevel[2])
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        pipeline = result[:trust_level_pipeline]
+
+        expect(pipeline[:rows].length).to eq(5)
+        expect(pipeline[:rows].first).to include(
+          :trust_level,
+          :count,
+          :share,
+          :moves_in,
+          :moves_out,
+        )
+        expect(pipeline[:trend]).to include(:direction, :net)
+        expect(pipeline[:total_members]).to be >= 2
+      end
+    end
+
     describe "headline" do
       def stub_kpis(signups:, dau: 0, engaged: 0)
         described_class

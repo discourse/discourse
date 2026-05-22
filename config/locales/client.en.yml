@@ -6884,6 +6884,33 @@ en:
           engagement:
             title: "Engagement"
             fetch_error: "Couldn't load engagement. Try refreshing the page."
+            whos_posting:
+              title: "Who's posting?"
+            activity_by_category:
+              title: "Activity by category"
+            trust_level_pipeline:
+              title: "Trust level pipeline"
+              trust_levels:
+                "0": "New"
+                "1": "Basic"
+                "2": "Member"
+                "3": "Regular"
+                "4": "Leader"
+              trend:
+                climbing:
+                  one: "+%{count} climbing"
+                  other: "+%{count} climbing"
+                dropping:
+                  one: "-%{count} dropping"
+                  other: "-%{count} dropping"
+                stable: "stable"
+              moves_in_aria:
+                one: "%{count} member moved up"
+                other: "%{count} members moved up"
+              moves_out_aria:
+                one: "%{count} member moved down"
+                other: "%{count} members moved down"
+              stable_aria: "no movement"
             headline:
               healthy_growth:
                 title: "Members are forming a habit of coming back."

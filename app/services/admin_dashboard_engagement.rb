@@ -20,7 +20,7 @@ class AdminDashboardEngagement
 
   def build
     kpis = build_kpis
-    { kpis: kpis, headline: build_headline(kpis) }
+    { kpis: kpis, headline: build_headline(kpis), trust_level_pipeline: build_trust_level_pipeline }
   end
 
   private
@@ -137,5 +137,23 @@ class AdminDashboardEngagement
   def sign_of(value)
     return 0 if value.nil? || value.zero?
     value.positive? ? 1 : -1
+  end
+
+  def build_trust_level_pipeline
+    args = { start_date: start_date, end_date: end_date }
+
+    report = Report.find_cached("trust_level_pipeline", args)
+    if report.nil?
+      report = Report.find("trust_level_pipeline", args)
+      Report.cache(report) if report && report.error.blank?
+    end
+
+    return nil if report.nil? || report_error?(report)
+
+    {
+      rows: report_data(report),
+      trend: report_prev_period(report),
+      total_members: report.is_a?(Hash) ? report[:total] : report.total,
+    }
   end
 end
