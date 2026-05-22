@@ -631,6 +631,28 @@ be:
       xaxis: "Дзень"
       yaxis: "Колькасць новых удзельнікаў"
       description: "Колькасць карыстальнікаў, якія зрабілі свой першы пост на працягу гэтага перыяду."
+    activity_by_category:
+      labels:
+        category: "Катэгорыя"
+        topics: "тэмы"
+        posts: "Допісы"
+        share: "Абагуліць"
+    posters_by_member_type:
+      labels:
+        count: "Допісы"
+        share: "Абагуліць"
+      types:
+        staff: "Персанал"
+    trust_level_pipeline:
+      labels:
+        count: "Члены"
+        share: "Абагуліць"
+      levels:
+        "0": "Новы"
+        "1": "асноўнай"
+        "2": "Член"
+        "3": "рэгулярнае"
+        "4": "лідэр"
     trust_level_growth:
       yaxis: "Дзень"
     consolidated_page_views:
@@ -653,6 +675,9 @@ be:
     consolidated_page_views_browser_detection:
       yaxis: "дзень"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "ананімны"
+        page_view_crawler: "Краўлеры пошукавых сістэм"
       yaxis: "дзень"
     dau_by_mau:
       xaxis: "дзень"
@@ -755,6 +780,12 @@ be:
         num_clicks: "пстрычкі"
         num_topics: "тэмы"
       description: "Карыстальнікі, пералічаныя па колькасці клікаў па спасылках, яны падзяліліся."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "наведванне"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "наведванне"
     top_traffic_sources:
       title: "Галоўныя крыніцы трафіку"
       xaxis: "дамен"

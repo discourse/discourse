@@ -340,6 +340,9 @@ ru:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} автоматически определил(-а) ваше присутствие и пригласил(-а) вас на мероприятие «%{eventName}»"
         an_event: "событие"
+      event_description:
+        show_more: "Развернуть"
+        show_less: "Свернуть"
       edit_reason: "Мероприятие обновлено"
       edit_reason_closed: "Мероприятие закрыто"
       edit_reason_opened: "Мероприятие открыто"
@@ -410,10 +413,10 @@ ru:
       models:
         invitee:
           no_users: "Пользователи не найдены"
+          leave_event: "Покинуть мероприятие"
           status:
             unknown: "Не интересует"
             going: "Участвую"
-            not_going: "Не участвую"
             interested: "Интересно"
             going_count:
               one: "%{count} участвует"
@@ -528,6 +531,8 @@ ru:
         status:
           label: "Статус"
         delete_confirmation_message: "Удалить это событие?"
+        image:
+          label: "Изображение события"
       invite_user_or_group:
         title: "Уведомить пользователей или группы"
         invite: "Отправить"

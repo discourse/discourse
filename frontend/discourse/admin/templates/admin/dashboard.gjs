@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <AdminCommandCenter />
 
-  {{#if @controller.siteSettings.dashboard_improvements}}
+  {{#if @controller.showRedesign}}
     <RedesignedAdminDashboard
       @requestedPeriod={{@controller.safePeriod}}
       @requestedStartDate={{@controller.startDate}}

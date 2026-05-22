@@ -7569,6 +7569,23 @@ ar:
             title: "حركة زيارات الموقع"
           engagement:
             title: "التفاعل"
+            activity_by_category:
+              category: "الفئة"
+              topics: "الموضوعات"
+              posts: "المنشورات"
+              share: "مشاركة"
+            whos_posting:
+              all_categories: "كل الفئات"
+              staff: "فريق العمل"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "جديدة"
+                "1": "أولي"
+                "2": "عضو"
+                "3": "منتظمة"
+                "4": "قائد"
+              trend:
+                stable: "مستقر"
         configure:
           button: "التهيئة"
         highlights:
@@ -7588,6 +7605,11 @@ ar:
             last_30_days: "مقارنةً بآخر 30 يومًا"
             last_3_months: "مقارنةً بآخر 3 أشهر"
             previous_period: "مقارنةً بالفترة السابقة"
+        site_traffic:
+          series:
+            anonymous: "مجهول"
+            embedded: "مشاهدات مضمّنة داخل الصفحة"
+            crawlers: "متتبعات ارتباطات الويب"
         period:
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"

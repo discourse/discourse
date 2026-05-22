@@ -6133,6 +6133,27 @@ hu:
             title: "Látogatottság"
           engagement:
             title: "Elköteleződés"
+            activity_by_category:
+              category: "Kategória"
+              topics: "Témák"
+              posts: "Bejegyzések"
+              share: "Megosztás"
+            whos_posting:
+              all_categories: "Minden kategória"
+              staff: "Stáb"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Új"
+                "1": "Alapvető"
+                "2": "Tag"
+                "3": "Átlagos"
+                "4": "Vezető"
+              trend:
+                stable: "stabil"
+        site_traffic:
+          series:
+            anonymous: "Névtelen"
+            crawlers: "Keresőrobotok"
         period:
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"

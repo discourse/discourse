@@ -6256,8 +6256,29 @@ es:
             title: "Tráfico del sitio"
           engagement:
             title: "Interacción"
+            activity_by_category:
+              category: "Categoría"
+              topics: "Temas"
+              posts: "Publicaciones"
+              share: "Compartir"
+            whos_posting:
+              all_categories: "Todas las categorías"
+              staff: "Personal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nuevo"
+                "1": "Básico"
+                "2": "Miembro"
+                "3": "Habitual"
+                "4": "Líder"
+              trend:
+                stable: "estable"
         configure:
           button: "Configurar"
+        site_traffic:
+          series:
+            anonymous: "Anónimas"
+            crawlers: "Rastreadores"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"

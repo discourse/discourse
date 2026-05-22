@@ -3608,6 +3608,26 @@ gl:
         sections:
           reports:
             title: "Informes"
+          engagement:
+            activity_by_category:
+              category: "Categoría"
+              topics: "Temas"
+              posts: "Publicacións"
+              share: "Compartir"
+            whos_posting:
+              all_categories: "Todas as categorías"
+              staff: "Equipo"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Normal"
+                "4": "Líder"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
+            crawlers: "Rastrexadores"
         period:
           custom: "Personalizado"
         reports:

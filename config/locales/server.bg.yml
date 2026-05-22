@@ -526,6 +526,28 @@ bg:
       xaxis: "Ден"
     new_contributors:
       xaxis: "Ден"
+    activity_by_category:
+      labels:
+        category: "Категория"
+        topics: "Теми"
+        posts: "Публикации"
+        share: "Споделяне"
+    posters_by_member_type:
+      labels:
+        count: "Публикации"
+        share: "Споделяне"
+      types:
+        staff: "Персонал"
+    trust_level_pipeline:
+      labels:
+        count: "Членове"
+        share: "Споделяне"
+      levels:
+        "0": "Нов"
+        "1": "Основно "
+        "2": "Член"
+        "3": "Редовен"
+        "4": "лидер "
     trust_level_growth:
       yaxis: "Ден"
     consolidated_page_views:
@@ -541,6 +563,8 @@ bg:
     consolidated_page_views_browser_detection:
       yaxis: "Ден"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Анонимен"
       yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
@@ -623,6 +647,12 @@ bg:
         user: "Потребител"
         num_clicks: "Кликвания"
         num_topics: "Теми"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещения "
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Посещения "
     top_traffic_sources:
       title: "Топ източници на трафик "
       xaxis: "Домейн"

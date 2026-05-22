@@ -3277,6 +3277,26 @@ ca:
         sections:
           reports:
             title: "Reports"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Temes"
+              posts: "Publicacions"
+              share: "Comparteix"
+            whos_posting:
+              all_categories: "Totes les categories"
+              staff: "Equip responsable"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nou"
+                "1": "Bàsic"
+                "2": "Membre"
+                "3": "Habitual"
+                "4": "Líder"
+        site_traffic:
+          series:
+            anonymous: "Anònim"
+            crawlers: "Rastrejadors"
         period:
           last_7_days: "Els darrers 7 dies"
           last_30_days: "Els darrers 30 dies"

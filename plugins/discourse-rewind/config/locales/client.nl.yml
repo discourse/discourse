@@ -14,6 +14,8 @@ nl:
       reports:
         reading_time:
           title: Leestijd
+        ai_usage:
+          total_tokens: Totaal aantal tokens
         assignments:
           title: Toewijzingen
           total_assigned_others: "Toegewezen aan %{username}"

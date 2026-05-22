@@ -4242,6 +4242,26 @@ ro:
             title: "Rapoarte"
           traffic:
             title: "Trafic site"
+          engagement:
+            activity_by_category:
+              category: "Categorie"
+              topics: "Discuții"
+              posts: "Articole"
+              share: "Partajează"
+            whos_posting:
+              all_categories: "Toate categoriile"
+              staff: "Echipa"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nou"
+                "1": "De bază"
+                "2": "Membru"
+                "3": "Utilizator frecvent"
+                "4": "Lider"
+        site_traffic:
+          series:
+            anonymous: "Anonimi"
+            crawlers: "Crawlere"
         period:
           last_7_days: "Ultimele 7 zile"
           last_30_days: "Ultimele 30 de zile"

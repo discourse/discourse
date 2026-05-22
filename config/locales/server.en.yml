@@ -3470,7 +3470,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3486,7 +3486,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -5711,6 +5711,7 @@ en:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'

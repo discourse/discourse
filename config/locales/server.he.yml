@@ -1390,6 +1390,30 @@ he:
       xaxis: "יום"
       yaxis: "מספר תורמים חדשים."
       description: "מספר המשתמשים שכתבו את הפוסט הראשון שלהם במהלך התקופה הזו."
+    activity_by_category:
+      labels:
+        category: "קטגוריה"
+        topics: "נושאים"
+        posts: "פרסומים"
+        share: "שיתוף"
+    posters_by_member_type:
+      labels:
+        count: "פרסומים"
+        share: "שיתוף"
+      types:
+        staff: "סגל"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "דרגת אמון"
+        count: "חברים"
+        share: "שיתוף"
+      levels:
+        "0": "חדשות"
+        "1": "בסיסיים"
+        "2": "חברים"
+        "3": "רגילה"
+        "4": "מובילים"
     trust_level_growth:
       title: "עלייה בדרגת האמון"
       xaxis:
@@ -1435,9 +1459,8 @@ he:
     site_traffic:
       title: "תעבורת האתר"
       xaxis:
-        page_view_anon_browser: "צפיות עמודים (אלמוניות)"
-        page_view_logged_in_browser: "צפיות בעמודים (מחוברים לחשבון)"
-        page_view_crawler: "סורקים ידועים"
+        page_view_anon_browser: "אלמוני"
+        page_view_crawler: "סורקי אינטרנט"
         page_view_other: "תעבורה אחרת"
       yaxis: "יום"
       description: "תצוגות דף עבור משתמשים מחוברים, משתמשים אלמוניים, וסורקים אוטומטיים (crawlers) ותעבורה מסוגים נוספים."
@@ -1552,6 +1575,12 @@ he:
         num_clicks: "לחיצות"
         num_topics: "נושאים"
       description: "משתמשים מסודרים לפי מספר לחיצות על קישורים שהם שיתפו."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "ביקורים"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "ביקורים"
     top_traffic_sources:
       title: "מקורות התעבורה הטובים ביותר"
       xaxis: "שם מתחם"
@@ -1940,7 +1969,6 @@ he:
     moderators_manage_groups: "לאפשר למפקחים ליצור ולנהל קבוצות"
     moderators_change_post_ownership: "לאפשר למפקחים לשנות בעלות על פוסטים"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
-    use_admin_ip_allowlist: "מנהלים יכולים להיכנס רק אם הכתובת שלהם מופיעה ברשימת כתובות ה־IP המפוקחות (ניהול > יומנים > כתובות IP מפוקחות)."
     blocked_ip_blocks: "רשימת מקטעי כתובות IP פרטיות ש־Discourse לא אמור לסרוק"
     allowed_internal_hosts: "רשימת מארחים פנימיים ש־Discourse יכול לסרוק לטובת תיבת תחימה ומטרות אחרות."
     allowed_onebox_iframes: "רשימה של שמות תחום ל־src של iframe שמותר להשתמש בהטמעות לתיבות תחימה. `*` יאפשר את כל מנועי תיבות התחימה כבררת מחדל."
@@ -2072,7 +2100,6 @@ he:
     s3_use_acls: "AWS ממליצה לא להשתמש ב־ACLs (רשימות בקרת גישה) על דליים (Buckets) של S3, יש לבטל את הסימון באפשרות זו רק אם יש כוונה להגדיר מדיניות הרשאות על `s3_upload_bucket` (דלי העלאה ל־S3) ו־`s3_backup_bucket` (דלי S3 לגיבוי) שהוגדרו."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
-    backup_location: "מקום אחסון הגיבויים. חשוב: S3 דורש מילוי פרטי גישה תקפים ל־S3 בהגדרות הקבצים. בעת שינוי ההגדרה הזאת מ־S3 למקומי, יש להריץ את משימת ה־rake‏ `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "רמת דחיסת Gzip המשמשת לדחיסת העלאות."
     include_thumbnails_in_backups: "לכלול בגיבוי תמונות ממוזערות שנוצרו. השבתת הגדרה זו יקטין את הגיבויים אך ידרוש להכין מחדש את כל הפוסטים לאחר שחזור."
     active_user_rate_limit_secs: "כל כמה זמן אנחנו מעדכנים את השדה 'last_seen_at', בשניות"
@@ -2256,7 +2283,6 @@ he:
     auto_respond_to_flag_actions: "הפעלת תגובה אוטומטית עם הסרת דגל."
     auto_silence_fast_typers_on_first_post: "להשתיק אוטומטית משתמשים שאינם עונים ל־`fast typing threshold` (סף הקלדה מהירה)"
     auto_silence_fast_typers_max_trust_level: "דרגת האמון המרבית להשתקה אוטומטית של קלדנים נמרצים"
-    auto_silence_first_post_regex: "ביטוי רגולרי שאינו מתחשב ברשיות (הבדל בין אותיות קטנות לגדולות) יגרום לכך שהפוסט הראשון שמפרסם משתמש יושתק ויועבר לתור לאישור. למשל: raging|a[bc]a, תגרום לכך שכל הפוסטים שמכילים את המילים raging או aba או aca יושתקו תחילה ובעברית: מתקפה|א[במ]א - מכילים את המילים מתקפה, אבא או אמא. תקף על הפוסט הראשון בלבד. השימוש בזה הופסק: נא להשתמש בהשתקת מילים מושגחות במקום."
     moderator_guide_topic: "הנושא שמתאר איך הקהילה מנוהלת. הקישור יהיה זמין בתור הסקירה לשימוש המפקחים והמנהלים."
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
     reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"

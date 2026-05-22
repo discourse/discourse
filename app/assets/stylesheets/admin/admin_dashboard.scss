@@ -9,7 +9,12 @@
 .db-toolbar {
   display: flex;
   align-items: center;
+  padding: var(--space-3) 0;
   margin-bottom: var(--space-8);
+  position: sticky;
+  top: var(--header-offset, 60px);
+  z-index: 1;
+  background: var(--d-content-background, var(--secondary));
 
   &__actions {
     display: flex;

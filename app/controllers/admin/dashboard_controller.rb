@@ -6,7 +6,7 @@ class Admin::DashboardController < Admin::StaffController
   before_action :ensure_dashboard_improvements_enabled, only: %i[bulk_reports]
 
   def index
-    if SiteSetting.dashboard_improvements
+    if dashboard_improvements?
       visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
       data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
       if current_user.admin?
@@ -145,6 +145,14 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def ensure_dashboard_improvements_enabled
-    raise Discourse::NotFound if !SiteSetting.dashboard_improvements
+    raise Discourse::NotFound if !dashboard_improvements?
+  end
+
+  def dashboard_improvements?
+    if params[:version] == "alt"
+      !SiteSetting.dashboard_improvements
+    else
+      SiteSetting.dashboard_improvements
+    end
   end
 end

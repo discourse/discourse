@@ -70,6 +70,7 @@ uk:
       confirm_solved_removal_confirm: "Підтвердити"
       confirm_solved_removal_cancel: "Скасувати"
       shared_issue:
+        label_zero: "Я теж"
         label:
           one: "Я теж (%{count})"
           few: "Я теж (%{count})"

@@ -307,6 +307,28 @@ sr:
     flags_status:
       labels:
         flag: Tip
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Teme"
+        posts: "Poruka"
+        share: "Podeli"
+    posters_by_member_type:
+      labels:
+        count: "Poruka"
+        share: "Podeli"
+      types:
+        staff: "Osoblje"
+    trust_level_pipeline:
+      labels:
+        count: "Članovi"
+        share: "Podeli"
+      levels:
+        "0": "Novo"
+        "1": "Osnovno"
+        "2": "Član"
+        "3": "Stalni član"
+        "4": "Vođa"
     consolidated_page_views:
       labels:
         post: Post
@@ -315,6 +337,9 @@ sr:
     consolidated_api_requests:
       xaxis:
         api: "API"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonimno"
     topics:
       title: "Teme"
     posts:
@@ -343,6 +368,12 @@ sr:
       labels:
         user: "Korisnik"
         num_topics: "Teme"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Poseta"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Poseta"
     top_traffic_sources:
       xaxis: "Domen"
       num_topics: "Teme"

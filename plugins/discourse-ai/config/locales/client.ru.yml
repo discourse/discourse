@@ -260,8 +260,7 @@ ru:
             ui_settings: "Настройки пользовательского интерфейса"
             integrations: "Интеграции"
         nav:
-          configured: "Настроено"
-          unconfigured: "Не настроено"
+          enabled: "Включено"
         filters:
           all: "Все"
           text: "Поиск по функциям, агентам, ИИ или группам..."

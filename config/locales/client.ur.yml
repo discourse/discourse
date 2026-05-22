@@ -5789,6 +5789,26 @@ ur:
         sections:
           reports:
             title: "گزارشات"
+          engagement:
+            activity_by_category:
+              category: "زُمرَہ"
+              topics: "موضوعات"
+              posts: "دھاگے"
+              share: "اشتراک"
+            whos_posting:
+              all_categories: "تمام زُمرَہ جات"
+              staff: "عملہ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "نیا"
+                "1": "بنیادی"
+                "2": "ممبر"
+                "3": "رَیگولر"
+                "4": "لِیڈر"
+        site_traffic:
+          series:
+            anonymous: "گمنام"
+            crawlers: "کرالرز"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"

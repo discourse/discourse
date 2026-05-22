@@ -33,10 +33,10 @@ describe TopicsController do
       )
     end
 
-    it "does not error for topic views without any posts" do
+    it "redirects an over-range page to the last valid page" do
       get "/t/#{topic.id}.json?page=2"
 
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
     end
 
     it "orders posts by date of creation when 'activity' filter is provided" do

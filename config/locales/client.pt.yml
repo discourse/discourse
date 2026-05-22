@@ -4790,6 +4790,25 @@ pt:
         sections:
           reports:
             title: "Relatórios"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Mensagens"
+              share: "Partilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Pessoal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Habitual"
+                "4": "Líder"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
         period:
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"

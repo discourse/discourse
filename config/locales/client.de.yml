@@ -6327,8 +6327,29 @@ de:
             title: "Website-Traffic"
           engagement:
             title: "Aktivität & Wachstum"
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Themen"
+              posts: "Beiträge"
+              share: "Teilen"
+            whos_posting:
+              all_categories: "Alle Kategorien"
+              staff: "Team"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Neue"
+                "1": "Anwärter"
+                "2": "Mitglied"
+                "3": "Regulär"
+                "4": "Anführer"
+              trend:
+                stable: "stabil"
         configure:
           button: "Konfigurieren"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Crawler"
         period:
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"

@@ -2470,6 +2470,53 @@ RSpec.describe TopicsController do
 
               expect(response.status).to eq(200)
             end
+
+            it "returns canonical tags in the response when synonyms are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              Fabricate(:tag, name: "aapl", target_tag: canonical)
+              Fabricate(:tag, name: "appl", target_tag: canonical)
+
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: %w[aapl appl apple-inc] }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+              expect(topic.reload.tags.pluck(:name)).to contain_exactly("apple-inc")
+            end
+
+            it "does not include tags in the response when tags were not part of the update" do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    title: "This is a new title for the topic",
+                  }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body).not_to have_key("tags")
+            end
+
+            it "does not create a revision when only synonyms of existing tags are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+              appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+              topic.tags << canonical
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json",
+                    params: {
+                      tags: [
+                        { id: aapl.id, name: "aapl" },
+                        { id: appl.id, name: "appl" },
+                        { id: canonical.id, name: "apple-inc" },
+                      ],
+                    }
+              end.not_to change { topic.reload.first_post.revisions.count }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+            end
           end
 
           it "returns success when updating with empty tags on a topic with no tags" do
@@ -2516,6 +2563,29 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
             expect(topic.reload.tags.pluck(:name)).to contain_exactly("brand-new")
+          end
+
+          it "returns canonical tags and skips revision when only synonyms are submitted" do
+            canonical = Fabricate(:tag, name: "apple-inc")
+            aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+            appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+            topic.tags << canonical
+
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: [
+                      { id: aapl.id, name: "aapl" },
+                      { id: appl.id, name: "appl" },
+                      { id: canonical.id, name: "apple-inc" },
+                    ],
+                  }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+              "apple-inc",
+            )
           end
 
           it "does not remove tag if no params is given" do
@@ -3068,29 +3138,34 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    it "return 404 for an invalid page" do
+    it "redirects an over-range page to the last valid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
     end
 
-    it "handles pagination correctly with deleted posts" do
+    it "redirects over-range pages to the last multi-page page" do
       topic_with_posts = Fabricate(:topic)
-
-      24.times do |i|
-        Fabricate(:post, topic: topic_with_posts, deleted_at: i.even? ? DateTime.now : nil)
-      end
-
+      Fabricate.times(25, :post, topic: topic_with_posts)
       Topic.reset_highest(topic_with_posts.id)
-      topic_with_posts.reload
 
-      expect(topic_with_posts.posts_count).to eq(12)
-      expect(topic_with_posts.highest_post_number).to eq(24)
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}", params: { page: 5 }
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2")
+    end
 
-      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 1 }
-      expect(response.status).to eq(200)
+    it "uses viewer-visible post count when deciding the last valid page (whispers)" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(20, :post, topic: topic_with_posts)
+      Fabricate(:post, topic: topic_with_posts, post_type: Post.types[:whisper])
+      Topic.reset_highest(topic_with_posts.id)
 
       get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json")
+
+      sign_in(admin)
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
+      expect(response.status).to eq(200)
     end
 
     it "can find a topic given a slug in the id param" do
@@ -3781,7 +3856,7 @@ RSpec.describe TopicsController do
         expect(extract_post_stream).to eq(@post_ids[3..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 3 }
-        expect(response.status).to eq(404)
+        expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json?page=2")
 
         TopicView.stubs(:chunk_size).returns(4)
 
@@ -3790,7 +3865,7 @@ RSpec.describe TopicsController do
         expect(extract_post_stream).to eq(@post_ids[0..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-        expect(response.status).to eq(404)
+        expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
       end
     end
 

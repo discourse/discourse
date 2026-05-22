@@ -263,8 +263,7 @@ es:
             ui_settings: "Ajustes de interfaz de usuario"
             integrations: "Integraciones"
         nav:
-          configured: "Configurado"
-          unconfigured: "Sin configurar"
+          enabled: "Activado"
         filters:
           all: "Todo"
           text: "Buscar características, agentes, LLM o grupos..."

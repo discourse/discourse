@@ -48,6 +48,8 @@ sv:
           one: "(ytterligare %{count})"
           other: "(ytterligare %{count})"
         collapse_list: "(visa mindre)"
+        nav:
+          enabled: "Aktiverad"
         filters:
           all: "Alla"
           reset: "Återställ"
