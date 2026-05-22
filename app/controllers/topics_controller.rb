@@ -169,8 +169,18 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page]
-    if page < 0 || page > 1 && (page - 1) * @topic_view.chunk_size >= @topic_view.topic.posts_count
-      raise Discourse::NotFound
+    raise Discourse::NotFound if page < 0
+
+    if page > 1
+      visible_posts_count = @topic_view.filtered_posts.count
+      chunk_size = @topic_view.chunk_size
+      if (page - 1) * chunk_size >= visible_posts_count
+        last_page = visible_posts_count > 0 ? ((visible_posts_count - 1) / chunk_size) + 1 : 1
+        url = @topic_view.topic.relative_url
+        url += ".json" if request.format.json?
+        url += "?page=#{last_page}" if last_page > 1
+        return redirect_to url, status: :moved_permanently
+      end
     end
 
     discourse_expires_in 1.minute
