@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin editing objects type", :hard_reset do
+RSpec.describe "Admin editing objects type" do
   let(:admin_objects_setting_editor_page) { PageObjects::Pages::AdminObjectsSettingEditor.new }
 
   fab!(:admin)

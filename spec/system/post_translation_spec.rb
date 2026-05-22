@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post translations", :hard_reset do
+describe "Post translations" do
   POST_LANGUAGE_SWITCHER_SELECTOR = ".d-editor-button-bar .post-language-selector-trigger"
 
   fab!(:admin)
