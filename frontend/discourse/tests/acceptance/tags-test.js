@@ -517,6 +517,20 @@ acceptance("Tag info", function (needs) {
     assert.dom(".tag-info").doesNotExist("panel is gone outside tag routes");
   });
 
+  test("tag info panel is hidden on a tag+category route", async function (assert) {
+    await visit("/tag/planters/12");
+    await click("#show-tag-info");
+    assert.dom(".tag-info").exists();
+
+    await visit("/tags/c/feature/2/planters/12");
+    assert
+      .dom("#show-tag-info")
+      .doesNotExist("info button is hidden on tag+category route");
+    assert
+      .dom(".tag-info")
+      .doesNotExist("panel is hidden on tag+category route");
+  });
+
   test("can filter tags page by category", async function (assert) {
     await visit("/tag/planters/12");
 

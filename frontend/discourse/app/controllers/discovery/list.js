@@ -64,6 +64,7 @@ export default class DiscoveryListController extends Controller {
   queryParams = Object.keys(queryParams);
   bulkSelectHelper = new BulkSelectHelper(this);
   #loadedTagId = null;
+  #tagInfoFetchToken = 0;
 
   constructor() {
     super(...arguments);
@@ -223,14 +224,21 @@ export default class DiscoveryListController extends Controller {
     this.model.list.updateNewListSubsetParam(subset);
   }
 
+  #resetTagInfo() {
+    this.tagInfo = null;
+    this.#loadedTagId = null;
+    this.#tagInfoFetchToken++;
+    this.loadingTagInfo = false;
+  }
+
   async #fetchTagInfo(tagKey) {
+    const token = ++this.#tagInfoFetchToken;
     this.loadingTagInfo = true;
     try {
       const result = await this.store.find("tag-info", tagKey);
 
-      // discard if a newer tag became current while this fetch was in flight
-      const currentTagKey = this.model.tag?.id || this.model.tag?.name;
-      if (currentTagKey !== tagKey) {
+      // discard if a newer fetch superseded this one
+      if (token !== this.#tagInfoFetchToken) {
         return;
       }
 
@@ -240,10 +248,15 @@ export default class DiscoveryListController extends Controller {
       this.tagInfo = result;
       this.#loadedTagId = tagKey;
     } catch (e) {
+      if (token !== this.#tagInfoFetchToken) {
+        return;
+      }
       popupAjaxError(e);
       throw e;
     } finally {
-      this.loadingTagInfo = false;
+      if (token === this.#tagInfoFetchToken) {
+        this.loadingTagInfo = false;
+      }
     }
   }
 
@@ -278,33 +291,40 @@ export default class DiscoveryListController extends Controller {
 
     if (this.showTagInfo) {
       this.#fetchTagInfo(tagId).catch(() => {
-        this.tagInfo = null;
-        this.#loadedTagId = null;
+        this.#resetTagInfo();
         this.showTagInfo = false;
       });
     } else {
-      this.tagInfo = null;
-      this.#loadedTagId = null;
+      this.#resetTagInfo();
     }
+  }
+
+  get canShowTagInfo() {
+    const { tag, category, additionalTags } = this.model;
+    return tag && tag.name !== "none" && !additionalTags && !category;
   }
 
   @action
   syncTagInfo() {
-    const tagKey = this.model.tag?.id || this.model.tag?.name;
+    if (!this.canShowTagInfo) {
+      this.showTagInfo = false;
+      this.#resetTagInfo();
+      return;
+    }
 
-    if (!this.model.tag || this.#loadedTagId === tagKey) {
+    const tagKey = this.model.tag.id || this.model.tag.name;
+
+    if (this.#loadedTagId === tagKey) {
       return;
     }
 
     if (this.showTagInfo) {
       this.#fetchTagInfo(tagKey).catch(() => {
-        this.tagInfo = null;
-        this.#loadedTagId = null;
+        this.#resetTagInfo();
         this.showTagInfo = false;
       });
     } else {
-      this.tagInfo = null;
-      this.#loadedTagId = null;
+      this.#resetTagInfo();
     }
   }
 

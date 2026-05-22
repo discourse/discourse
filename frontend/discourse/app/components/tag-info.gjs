@@ -36,7 +36,8 @@ function nothingToShow(tagInfo) {
   return (
     isEmpty(tagInfo?.tag_group_names) &&
     isEmpty(tagInfo?.categories) &&
-    isEmpty(tagInfo?.synonyms)
+    isEmpty(tagInfo?.synonyms) &&
+    !tagInfo?.category_restricted
   );
 }
 
@@ -60,15 +61,13 @@ const TagInfo = <template>
         {{/if}}
         {{#if @tagInfo.categories}}
           <span>{{trustHTML (categoriesInfo @tagInfo)}}</span>
+        {{else if @tagInfo.category_restricted}}
+          <span>{{i18n "tagging.category_restricted"}}</span>
         {{/if}}
         {{#if (nothingToShow @tagInfo)}}
-          {{#if @tagInfo.category_restricted}}
-            {{i18n "tagging.category_restricted"}}
-          {{else}}
-            {{trustHTML (i18n "tagging.default_info")}}
-            {{#if @currentUser.staff}}
-              {{trustHTML (i18n "tagging.staff_info" basePath=(dBasePath))}}
-            {{/if}}
+          {{trustHTML (i18n "tagging.default_info")}}
+          {{#if @currentUser.staff}}
+            {{trustHTML (i18n "tagging.staff_info" basePath=(dBasePath))}}
           {{/if}}
         {{/if}}
       </p>
