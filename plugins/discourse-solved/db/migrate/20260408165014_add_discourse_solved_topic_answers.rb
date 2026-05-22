@@ -5,7 +5,7 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
       t.bigint :solved_topic_id, null: false
       t.bigint :answer_post_id, null: false
       t.bigint :accepter_user_id, null: false
-      t.timestamps null: false
+      t.timestamps
     end
 
     add_index :discourse_solved_topic_answers, :solved_topic_id
