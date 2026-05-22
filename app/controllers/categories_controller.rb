@@ -138,7 +138,7 @@ class CategoriesController < ApplicationController
         end
 
     render json: {
-             types: Categories::TypeRegistry.list(only_visible: true),
+             types: Categories::TypeRegistry.list(only_visible: true, guardian:),
              counts: counts_by_type,
            }
   end
@@ -180,43 +180,45 @@ class CategoriesController < ApplicationController
         return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
-    if @category.save
-      @category.move_to(position.to_i) if position
+    configure_error = nil
 
-      if category_type.present? &&
-           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        type_class = Categories::TypeRegistry.get(category_type.to_sym)
-        allowed_setting_keys = type_class&.configuration_schema_keys(:category_settings) || []
-        type_settings = params[:category_type_settings]&.slice(*allowed_setting_keys)&.permit!
+    Category.transaction do
+      if @category.save
+        @category.move_to(position.to_i) if position
 
-        Categories::Configure.call(
-          guardian:,
-          params: {
-            category_id: @category.id,
-            category_type:,
-            site_setting_configuration_values: params[:category_type_site_settings],
-            category_configuration_values: [
-              category_params[:custom_fields],
-              type_settings,
-            ].compact.reduce(:merge),
-          },
-        ) do |result|
-          on_failed_policy(:type_is_available) do
-            return(
-              render json: {
-                       errors: [
-                         I18n.t(
-                           "category_types.not_available",
-                           type_name: category_type.capitalize,
-                         ),
-                       ],
-                     },
-                     status: :unprocessable_entity
-            )
+        if category_type.present? &&
+             UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+          type_class = Categories::TypeRegistry.get(category_type.to_sym)
+          allowed_setting_keys = type_class&.configuration_schema_keys(:category_settings) || []
+          type_settings = params[:category_type_settings]&.slice(*allowed_setting_keys)&.permit!
+
+          Categories::Configure.call(
+            guardian:,
+            params: {
+              category_id: @category.id,
+              category_type:,
+              site_setting_configuration_values: params[:category_type_site_settings],
+              category_configuration_values: [
+                category_params[:custom_fields],
+                type_settings,
+              ].compact.reduce(:merge),
+            },
+          ) do
+            on_failed_policy(:type_is_available) do
+              configure_error =
+                I18n.t("category_types.not_available", type_name: category_type.capitalize)
+              raise ActiveRecord::Rollback
+            end
           end
         end
       end
+    end
 
+    if configure_error
+      return render json: { errors: [configure_error] }, status: :unprocessable_entity
+    end
+
+    if @category.persisted?
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
       end
@@ -623,7 +625,7 @@ class CategoriesController < ApplicationController
             category_id: category.id,
             category_type:,
           },
-        ) do |result|
+        ) do
           on_failed_policy(:type_is_available) do
             return(
               render json: {
