@@ -168,6 +168,7 @@ class UserHistory < ActiveRecord::Base
         change_site_setting_groups: 123,
         upcoming_change_available: 124,
         notified_about_composer_education: 125,
+        recover_post: 126,
       )
   end
 
@@ -222,6 +223,7 @@ class UserHistory < ActiveRecord::Base
       post_edit
       topic_published
       recover_topic
+      recover_post
       post_approved
       create_badge
       change_badge
@@ -346,6 +348,7 @@ class UserHistory < ActiveRecord::Base
       :post_staff_note_destroy,
       :delete_post,
       :delete_post_permanently,
+      :recover_post,
       :permanently_delete_post_revisions,
       # topics
       :topic_published,
