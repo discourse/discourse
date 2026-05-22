@@ -1,7 +1,12 @@
-import { render, settled, waitFor } from "@ember/test-helpers";
+import { render, settled, waitFor, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostUsersMenu from "discourse/components/post/menu/post-users-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 
 function makeUsers(count) {
   return Array.from({ length: count }, (_, i) => ({
@@ -24,6 +29,15 @@ function deferredFetch(response) {
 
 module("Integration | Component | post/menu/post-users-menu", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    enableLoadMoreObserver();
+    this.observations = stubIntersectionObserver();
+  });
+
+  hooks.afterEach(function () {
+    disableLoadMoreObserver();
+  });
 
   test("renders skeleton rows while the initial fetch is pending", async function (assert) {
     const { fetchUsers, resolve } = deferredFetch({
@@ -86,6 +100,54 @@ module("Integration | Component | post/menu/post-users-menu", function (hooks) {
 
     resolve();
     await renderPromise;
+    await settled();
+  });
+
+  test("does not fall back to skeleton rows when load more starts with every known user loaded", async function (assert) {
+    let fetchCallCount = 0;
+    let resolveSecondFetch;
+    const secondFetchPromise = new Promise((resolve) => {
+      resolveSecondFetch = resolve;
+    });
+    const fetchUsers = () => {
+      fetchCallCount++;
+
+      if (fetchCallCount === 1) {
+        return Promise.resolve({
+          users: makeUsers(30),
+          canLoadMore: true,
+        });
+      }
+
+      return secondFetchPromise;
+    };
+
+    await render(
+      <template>
+        <PostUsersMenu
+          @fetchUsers={{fetchUsers}}
+          @titleText="Likes"
+          @totalUsers={{30}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".post-users-popup__item:not(.post-users-popup__skeleton-item)")
+      .exists({ count: 30 }, "renders the initially loaded full page");
+
+    const triggerPromise =
+      this.observations[this.observations.length - 1]?.trigger();
+    await waitUntil(() => fetchCallCount === 2);
+
+    assert
+      .dom(".post-users-popup__skeleton-item")
+      .doesNotExist(
+        "does not render fallback skeleton rows when totalUsers has already been reached"
+      );
+
+    resolveSecondFetch({ users: [], canLoadMore: false });
+    await triggerPromise;
     await settled();
   });
 
