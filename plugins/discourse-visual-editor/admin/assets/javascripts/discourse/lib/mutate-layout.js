@@ -578,14 +578,16 @@ function cloneEntryForDraft(entry) {
   // draft's — keeping them would surface stale error chrome on entries
   // whose data we then sanitise via `stripNullish` below.
   clearValidatorStamps(clone);
-  if (entry.args) {
-    // Spread runs the `trackedObject` proxy's getters, materialising the
-    // current values into a fresh plain object that will be re-wrapped at
-    // publish time. Also strips null/undefined values: the editor's
-    // contract is "cleared field = key omitted", so any null persisted by
-    // an older version of the write path self-heals here.
-    clone.args = stripNullish({ ...entry.args });
-  }
+  // Always materialise `args` on the draft, even when the source entry had
+  // no args object (e.g. `serializeEntryForSave` omits it when every key is
+  // empty, so a reloaded layout brings back `{ block }` only). The editor's
+  // live-edit write path (`applyInlineEditChange` &c.) writes directly into
+  // `entry.args` and relies on `assignStableKeys` having wrapped it in a
+  // `trackedObject` for reactivity. Spread also runs the source proxy's
+  // getters so we materialise current values, and `stripNullish` enforces
+  // the "cleared field = key omitted" contract — older versions of the
+  // write path could persist `null`, this self-heals on draft entry.
+  clone.args = stripNullish({ ...(entry.args ?? {}) });
   if (entry.containerArgs) {
     clone.containerArgs = cloneContainerArgs(entry.containerArgs);
   }

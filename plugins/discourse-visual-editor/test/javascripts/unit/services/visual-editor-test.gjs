@@ -592,6 +592,55 @@ module(
       });
     });
 
+    module("applyInlineEditChange — entry without args", function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        // Layout entry intentionally has no `args` field — mirrors what
+        // `serializeEntryForSave` produces for a block whose schema args
+        // are all empty (e.g. a freshly-dropped media card the user
+        // hasn't filled in). On reload that entry comes back as
+        // `{ block: ... }` with no args object.
+        this.layout = await _renderBlocks(
+          "homepage-blocks",
+          [{ block: TestTile }],
+          getOwner(this)
+        );
+        this.editor.siteSettings.visual_editor_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:visual-editor");
+        this.editor.enter();
+      });
+
+      test("writes the value when the entry started without an args object", async function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
+
+        const opened = await this.editor.startEditingArg(key, "title");
+        assert.true(opened);
+
+        this.editor.applyInlineEditChange("Typed");
+
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.strictEqual(after[0].args?.title, "Typed");
+      });
+
+      test("committing an empty value is a no-op when the entry has no args", async function (assert) {
+        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
+
+        const opened = await this.editor.startEditingArg(key, "title");
+        assert.true(opened);
+
+        this.editor.applyInlineEditChange("");
+
+        const after = this.editor.readResolvedLayout("homepage-blocks");
+        assert.false(
+          "title" in (after[0].args ?? {}),
+          "no key written for an empty commit"
+        );
+      });
+    });
+
     module("clipboard (copy / cut / paste)", function (innerHooks) {
       innerHooks.beforeEach(async function () {
         withTestBlockRegistration(() => registerBlock(TestTile));
