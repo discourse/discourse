@@ -110,10 +110,16 @@ $solved-color: var(--success);
 }
 
 .accepted-answers {
-  margin-left: var(--topic-body-width-padding);
-  margin-bottom: 0.5em;
-
   & .d-post-accordion {
+    &__layout {
+      padding-bottom: var(--space-4);
+
+      @include viewport.from(sm) {
+        padding: var(--space-1) var(--topic-body-width-padding) var(--space-4)
+          var(--topic-body-width-padding);
+      }
+    }
+
     &__header {
       color: var(--secondary);
       background-color: $solved-color;
