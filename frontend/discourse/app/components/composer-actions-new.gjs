@@ -444,10 +444,7 @@ export default class ComposerActions extends Component {
   }
 
   get canToggleWhisper() {
-    return (
-      this.composer.canWhisper &&
-      this.composerModel?.post?.post_type !== this.site.post_types?.whisper
-    );
+    return this.composer.canToggleWhisper;
   }
 
   get canToggleNoBump() {

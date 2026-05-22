@@ -436,11 +436,6 @@ export default class ComposerService extends Service {
     return this.model?.editingPost && !this.model?.topic?.canEditTags;
   }
 
-  @computed("canWhisper", "replyingToWhisper")
-  get showWhisperToggle() {
-    return this.canWhisper && !this.replyingToWhisper;
-  }
-
   @computed("model.post")
   get replyingToWhisper() {
     return (
@@ -506,6 +501,14 @@ export default class ComposerService extends Service {
   @computed("whisperer", "model.action")
   get canWhisper() {
     return this.whisperer && this.model?.action === Composer.REPLY;
+  }
+
+  @computed("canWhisper", "model.post.post_type", "site.post_types.whisper")
+  get canToggleWhisper() {
+    return (
+      this.canWhisper &&
+      this.model?.post?.post_type !== this.site.post_types?.whisper
+    );
   }
 
   _setupPopupMenuOption(option) {
