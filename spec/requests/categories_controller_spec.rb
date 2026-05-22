@@ -1354,7 +1354,10 @@ RSpec.describe CategoriesController do
 
           before do
             SiteSetting.enable_simplified_category_creation = true
-            Categories::TypeRegistry.register(test_type_class)
+            Categories::TypeRegistry.register(
+              test_type_class,
+              plugin_identifier: "discourse-test-plugin",
+            )
           end
 
           after { Categories::TypeRegistry.reset! }
@@ -1367,7 +1370,11 @@ RSpec.describe CategoriesController do
 
             expect(response.status).to eq(422)
             expect(response.parsed_body["errors"]).to include(
-              I18n.t("category_types.not_available", type_name: "Test_plugin_type"),
+              I18n.t(
+                "category_types.requires_plugin",
+                type_name: "Test plugin type",
+                plugin_name: "Test Plugin",
+              ),
             )
           end
 

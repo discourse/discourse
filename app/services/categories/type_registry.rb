@@ -42,6 +42,10 @@ module Categories
         types.key?(id.to_sym)
       end
 
+      def owner(id)
+        owners[id.to_sym]
+      end
+
       def reset!
         @types = nil
         @owners = nil

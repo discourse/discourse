@@ -205,8 +205,7 @@ class CategoriesController < ApplicationController
             },
           ) do
             on_failed_policy(:type_is_available) do
-              configure_error =
-                I18n.t("category_types.not_available", type_name: category_type.capitalize)
+              configure_error = category_type_unavailable_error(category_type)
               raise ActiveRecord::Rollback
             end
           end
@@ -559,6 +558,18 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def category_type_unavailable_error(category_type)
+    type_id = category_type.to_sym
+    type_class = Categories::TypeRegistry.get(type_id)
+
+    if type_class&.enables_plugin?
+      plugin_name = Categories::TypeRegistry.owner(type_id)&.sub(/^discourse-/, "")&.titleize
+      I18n.t("category_types.requires_plugin", type_name: category_type.to_s.humanize, plugin_name:)
+    else
+      I18n.t("category_types.not_available", type_name: category_type.to_s.humanize)
+    end
+  end
+
   def manage_category_types(category, pending_custom_fields)
     # NOTE: The code in this block is pretty similar to what we are doing in
     # configure_site_settings in Categories::Types::Base, however here we
@@ -628,9 +639,7 @@ class CategoriesController < ApplicationController
         ) do
           on_failed_policy(:type_is_available) do
             render json: {
-                     errors: [
-                       I18n.t("category_types.not_available", type_name: category_type.capitalize),
-                     ],
+                     errors: [category_type_unavailable_error(category_type)],
                    },
                    status: :unprocessable_entity
             return false

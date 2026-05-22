@@ -339,7 +339,7 @@ module Categories
         # Used when serializing the category configuration schema to the client.
         def metadata(guardian: nil)
           name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
-          {
+          result = {
             id: type_id,
             name: name,
             title: I18n.t("category_types.#{type_id}.title", default: name),
@@ -348,7 +348,12 @@ module Categories
             available: available?(guardian),
             visible: visible?,
             configuration_schema: resolved_configuration_schema,
-          }.merge(additional_metadata)
+          }
+          if enables_plugin?
+            plugin_name = Categories::TypeRegistry.owner(type_id)
+            result[:required_plugin] = plugin_name&.sub(/^discourse-/, "")&.titleize
+          end
+          result.merge(additional_metadata)
         end
 
         private
