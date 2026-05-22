@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action, get } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -29,6 +28,7 @@ import DTextField from "discourse/ui-kit/d-text-field";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 // Separate snapshots for new component validation
@@ -476,14 +476,6 @@ export default class ComposerActions extends Component {
   }
 
   @action
-  handleEditReasonClick() {
-    this.composer.displayEditReason();
-    schedule("afterRender", () => {
-      document.getElementById("edit-reason")?.focus();
-    });
-  }
-
-  @action
   async onSelectAction(actionId) {
     await this.dmenuApi?.close({ focusTrigger: true });
 
@@ -777,11 +769,12 @@ export default class ComposerActions extends Component {
             @id="edit-reason"
             @maxlength="255"
             @placeholderKey="composer.edit_reason_placeholder"
+            {{dAutoFocus}}
           />
         </span>
       {{else if this.composer.canEdit}}
         <DButton
-          @action={{this.handleEditReasonClick}}
+          @action={{this.composer.displayEditReason}}
           @icon={{data.icon}}
           @label="composer.describe_your_edit"
           class="composer-actions-trigger composer-actions-trigger--static btn-flat btn-icon-text"
