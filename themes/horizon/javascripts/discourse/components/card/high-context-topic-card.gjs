@@ -11,7 +11,7 @@ import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
-import { or } from "discourse/truth-helpers";
+import { and, or } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -102,6 +102,27 @@ export default class HighContextTopicCard extends Component {
   }
 
   get lastPoster() {
+    // When the topic was bumped > 1 day after the last actual post, the
+    // bump came from an edit or wiki conversion rather than a reply.
+    // Returning null hides the "X replied {time}" line in the template,
+    // matching how TopicActivityColumn handles the same case.
+    const bumpedLastPostedDaysDiff = moment
+      .duration(
+        moment(this.args.topic.bumped_at).diff(
+          moment(this.args.topic.last_posted_at)
+        )
+      )
+      .asDays();
+
+    if (
+      moment(this.args.topic.bumped_at).isAfter(
+        this.args.topic.last_posted_at
+      ) &&
+      bumpedLastPostedDaysDiff > 1
+    ) {
+      return null;
+    }
+
     return {
       user: this.args.topic.lastPosterUser,
       username: this.args.topic.last_poster_username,
@@ -211,7 +232,7 @@ export default class HighContextTopicCard extends Component {
 
       {{#if (or this.hasReplies this.hasAssigned)}}
         <div class="hc-topic-card__context">
-          {{#if this.hasReplies}}
+          {{#if (and this.hasReplies this.lastPoster)}}
             <div class="hc-topic-card__last-reply">
               {{dAvatar this.lastPoster.user imageSize="tiny"}}
               <span
@@ -219,7 +240,7 @@ export default class HighContextTopicCard extends Component {
               >{{this.lastPoster.username}}</span>
               <span>{{i18n (themePrefix "replied")}}</span>
               <span class="hc-topic-card__time">
-                {{dFormatDate @topic.bumpedAt leaveAgo="true"}}
+                {{dFormatDate @topic.last_posted_at leaveAgo="true"}}
               </span>
             </div>
           {{/if}}
