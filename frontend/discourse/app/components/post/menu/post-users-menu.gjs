@@ -66,9 +66,7 @@ export default class PostUsersMenu extends Component {
 
     const remaining = this.args.totalUsers - this.users.length;
     const count =
-      Number.isFinite(remaining) && remaining > 0
-        ? Math.min(remaining, PAGE_SIZE)
-        : FALLBACK_SKELETON_ROWS;
+      remaining > 0 ? Math.min(remaining, PAGE_SIZE) : FALLBACK_SKELETON_ROWS;
     return Array.from({ length: count });
   }
 
