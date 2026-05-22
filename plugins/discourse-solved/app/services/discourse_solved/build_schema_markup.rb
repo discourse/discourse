@@ -35,10 +35,10 @@ class DiscourseSolved::BuildSchemaMarkup
     accepted_answers.present? || suggested_answers.present?
   end
 
-  def fetch_accepted_answers(topic:, guardian:)
-    topic.topic_answers.filter_map do |ta|
+  def fetch_accepted_answers(topic:)
+    topic.solved&.topic_answers&.filter_map do |ta|
       post = ta.post
-      next unless post.present? && guardian.can_see_post?(post)
+      next unless post.present? && Guardian.new.can_see_post?(post)
       post if post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
     end
   end

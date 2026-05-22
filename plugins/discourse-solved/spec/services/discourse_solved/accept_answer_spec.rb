@@ -90,9 +90,9 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
 
         it "replaces the accepted answer" do
-          expect { result }.to change { topic.reload.topic_answers.first.post }.from(post_1).to(
-            post,
-          )
+          expect { result }.to change { topic.reload.solved.topic_answers.first.post }.from(
+            post_1,
+          ).to(post)
         end
 
         it "revokes the previous answer's solved credit" do
@@ -108,9 +108,9 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
           end
 
           it "does not replace the accepted answer" do
-            expect { result }.not_to change { topic.reload.topic_answers[0].post }
-            expect(topic.topic_answers[0].post).to eq(post_1)
-            expect(topic.topic_answers[1].post).to eq(post)
+            expect { result }.not_to change { topic.reload.solved.topic_answers[0].post }
+            expect(topic.solved.topic_answers[0].post).to eq(post_1)
+            expect(topic.solved.topic_answers[1].post).to eq(post)
           end
 
           it "does not revoke the previous answer's solved credit" do
@@ -142,7 +142,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
           end
 
           it "revokes all existing topic answers and user actions" do
-            expect { result }.to change { topic.reload.topic_answers.count }.from(2).to(
+            expect { result }.to change { topic.reload.solved.topic_answers.count }.from(2).to(
               1,
             ).and change {
                     UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count

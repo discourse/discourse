@@ -18,7 +18,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, post_ids, destination_topic_id: destination_topic.id)
 
       expect(topic.reload.solved).to be_nil
-      expect(destination_topic.reload.topic_answers.first.answer_post_id).to eq(reply.id)
+      expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "transfers the solution to a new topic" do
@@ -26,7 +26,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
         topic.move_posts(admin, [reply.id], title: "This is a new topic for the moved post")
 
       expect(topic.reload.solved).to be_nil
-      expect(new_topic.reload.topic_answers.first.answer_post_id).to eq(reply.id)
+      expect(new_topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "does not transfer the solution when destination topic does not allow solved" do
@@ -44,7 +44,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, post_ids, destination_topic_id: destination_topic.id)
 
       expect(topic.reload.solved).to be_nil
-      expect(destination_topic.reload.topic_answers.first.answer_post_id).not_to eq(reply.id)
+      expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).not_to eq(reply.id)
     end
 
     it "moving multiple answers to a single topic only keeps the first accepted" do
@@ -54,6 +54,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, [reply.id, another_reply.id], destination_topic_id: target_topic.id)
 
       expect(topic.reload.solved).to be_nil
+
       expect(target_topic.reload.topic_answers.count).to eq(1)
       expect(target_topic.topic_answers.first.answer_post_id).to eq(reply.id)
       expect(target_topic.posts[1..2].map(&:id).sort).to eq([reply.id, another_reply.id])
@@ -67,8 +68,8 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
         Fabricate(:topic_answer, solved_topic: solved, post: another_reply)
         topic.move_posts(admin, [reply.id], destination_topic_id: destination_topic.id)
 
-        expect(topic.reload.topic_answers.first.answer_post_id).to eq(another_reply.id)
-        expect(destination_topic.reload.topic_answers.first.answer_post_id).to eq(reply.id)
+        expect(topic.reload.solved.topic_answers.first.answer_post_id).to eq(another_reply.id)
+        expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
       end
 
       it "transfers one of many solutions to a new topic" do
@@ -76,8 +77,8 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
         new_topic =
           topic.move_posts(admin, [reply.id], title: "This is a new topic for the moved post")
 
-        expect(topic.reload.topic_answers.first.answer_post_id).to eq(another_reply.id)
-        expect(new_topic.reload.topic_answers.first.answer_post_id).to eq(reply.id)
+        expect(topic.reload.solved.topic_answers.first.answer_post_id).to eq(another_reply.id)
+        expect(new_topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
       end
 
       it "does transfer the solution when the destination topic already has a solution" do
@@ -90,10 +91,10 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
         topic.move_posts(admin, [reply.id], destination_topic_id: destination_topic.id)
 
         expect(topic.reload.solved).to be_nil
-        expect(destination_topic.reload.topic_answers[0].answer_post_id).to eq(
+        expect(destination_topic.reload.solved.topic_answers[0].answer_post_id).to eq(
           destination_topic.first_post.id,
         )
-        expect(destination_topic.reload.topic_answers[1].answer_post_id).to eq(reply.id)
+        expect(destination_topic.reload.solved.topic_answers[1].answer_post_id).to eq(reply.id)
       end
     end
   end
@@ -117,7 +118,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, [another_reply.id], destination_topic_id: destination_topic.id)
 
       expect(solved.reload.topic_id).to eq(topic.id)
-      expect(destination_topic.reload.topic_answers.first.answer_post_id).to eq(
+      expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).to eq(
         destination_topic.first_post.id,
       )
     end

@@ -41,7 +41,7 @@ class DiscourseSolved::UnacceptAnswer
   end
 
   def fetch_topic_answer(topic:, post:)
-    topic.topic_answers.find_by(answer_post_id: post.id)
+    topic.solved&.topic_answers&.find_by(answer_post_id: post.id)
   end
 
   def can_unaccept_answer(guardian:, topic:, post:)

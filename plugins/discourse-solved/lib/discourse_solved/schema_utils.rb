@@ -49,7 +49,8 @@ module DiscourseSolved
       return nil unless qa_page_schema?(topic)
       return { data: { qa_question: true } } if post.is_first_post?
       return {} unless eligible_answer?(post)
-      if accepted_answer_visible?(topic) && topic.topic_answers.exists?(answer_post_id: post.id)
+      if accepted_answer_visible?(topic) &&
+           topic.solved.topic_answers.exists?(answer_post_id: post.id)
         { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
       else
         { itemprop: "suggestedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
