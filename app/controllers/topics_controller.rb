@@ -472,7 +472,9 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
-    if Tag.include_tags? && changes.has_key?(:tags)
+    tags_submitted = Tag.include_tags? && changes.has_key?(:tags)
+
+    if tags_submitted
       if changes[:tags].present?
         incoming = changes[:tags]
 
@@ -482,13 +484,9 @@ class TopicsController < ApplicationController
             since: "2026.01",
             drop_from: "2026.07",
           )
-          changes.delete(:tags) if incoming.sort == topic.tags.map(&:name).sort
-        else
-          has_new = incoming.any? { |t| t[:id].blank? }
-          if !has_new && incoming.filter_map { |t| t[:id]&.to_i }.sort == topic.tags.pluck(:id).sort
-            changes.delete(:tags)
-          end
         end
+
+        changes.delete(:tags) if PostRevisor.tag_change_noop?(topic, incoming)
 
         # resolve to name strings before passing to PostRevisor
         changes[:tags] = resolve_tag_names(topic) if changes.has_key?(:tags)
@@ -513,7 +511,13 @@ class TopicsController < ApplicationController
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    if !success
+      render_json_error(topic)
+    elsif tags_submitted
+      render_topic_with_tags(topic)
+    else
+      render_serialized(topic, BasicTopicSerializer)
+    end
   end
 
   def update_tags
@@ -535,11 +539,16 @@ class TopicsController < ApplicationController
       )
     end
 
-    revisor = PostRevisor.new(topic.first_post, topic)
-    revised = revisor.revise!(current_user, { tags: }, validate_post: false)
+    unless PostRevisor.tag_change_noop?(topic, tags)
+      PostRevisor.new(topic.first_post, topic).revise!(
+        current_user,
+        { tags: },
+        validate_post: false,
+      )
+    end
 
-    if revised || topic.errors.blank?
-      render_serialized(topic, BasicTopicSerializer)
+    if topic.errors.blank?
+      render_topic_with_tags(topic)
     else
       render_json_error(topic)
     end
@@ -1341,6 +1350,14 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def render_topic_with_tags(topic)
+    payload = serialize_data(topic, BasicTopicSerializer)
+    payload[:tags] = topic
+      .visible_tags(guardian)
+      .map { |t| { id: t.id, name: t.name, slug: t.slug_for_url } }
+    render_json_dump(payload)
+  end
 
   def resolve_tag_names(topic)
     @resolved_tag_names ||=
