@@ -1800,9 +1800,9 @@ en:
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
-      email_delivery_failures:
-        one: "Email delivery has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
-        other: "Email delivery has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+      email_sending_failures:
+        one: "Email sending has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+        other: "Email sending has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -4140,6 +4140,15 @@ en:
 
     email_bounced: |
       The message to %{email} bounced.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
+
+    email_sending_failed: |
+      Sending the message to %{email} failed.
 
       ### Details
 
