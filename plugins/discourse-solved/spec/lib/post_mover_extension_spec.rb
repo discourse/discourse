@@ -54,17 +54,10 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, [reply.id, another_reply.id], destination_topic_id: target_topic.id)
 
       expect(topic.reload.solved).to be_nil
-<<<<<<< HEAD
 
       expect(target_topic.reload.topic_answers.count).to eq(1)
       expect(target_topic.topic_answers.first.answer_post_id).to eq(reply.id)
       expect(target_topic.posts[1..2].map(&:id).sort).to eq([reply.id, another_reply.id])
-=======
-      expect(target_topic.reload.topic_answers.count).to eq(1)
-      expect(target_topic.topic_answers.first.answer_post_id).to eq(reply.id)
-      expect(target_topic.posts[1].id).to eq(reply.id)
-      expect(target_topic.posts[2].id).to eq(another_reply.id)
->>>>>>> 089f98b1062 (Add shortcut for topic_answers on topic model, always returning an ActiveRecord association)
       expect(DiscourseSolved::TopicAnswer.find_by(answer_post_id: another_reply.id)).to be_nil
     end
 
