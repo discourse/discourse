@@ -131,6 +131,7 @@ class Report
   include Reports::TrustLevelGrowth
   include Reports::TrustLevelPipeline
   include Reports::PostersByMemberType
+  include Reports::ActivityByCategory
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies

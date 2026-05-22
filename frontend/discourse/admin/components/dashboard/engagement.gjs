@@ -1,3 +1,4 @@
+import ActivityByCategory from "discourse/admin/components/dashboard/engagement/activity-by-category";
 import EngagementHeadline from "discourse/admin/components/dashboard/engagement/headline";
 import TrustLevelPipeline from "discourse/admin/components/dashboard/engagement/trust-level-pipeline";
 import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-posting";
@@ -41,17 +42,17 @@ import { i18n } from "discourse-i18n";
               />
             </div>
           </div>
-          <div class="db-section__row">
-            <div class="db-section__row-block">
-              <div class="db-section__row-block-header">
-                <h3 class="db-section__row-block-title">
-                  {{i18n
-                    "admin.dashboard.sections.engagement.activity_by_category.title"
-                  }}
-                </h3>
+          {{#if @engagement.activity_by_category}}
+            <div class="db-section__row">
+              <div class="db-section__row-block">
+                <ActivityByCategory
+                  @activity={{@engagement.activity_by_category}}
+                  @startDate={{@startDate}}
+                  @endDate={{@endDate}}
+                />
               </div>
             </div>
-          </div>
+          {{/if}}
         </div>
       {{/if}}
     </DashboardSection>

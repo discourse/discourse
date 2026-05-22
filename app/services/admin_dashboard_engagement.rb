@@ -26,6 +26,7 @@ class AdminDashboardEngagement
       headline: build_headline(kpis),
       trust_level_pipeline: build_trust_level_pipeline,
       posters: build_posters,
+      activity_by_category: build_activity_by_category,
     }
   end
 
@@ -169,6 +170,20 @@ class AdminDashboardEngagement
     report = Report.find_cached("posters_by_member_type", args)
     if report.nil?
       report = Report.find("posters_by_member_type", args)
+      Report.cache(report) if report && report.error.blank?
+    end
+
+    return nil if report.nil? || report_error?(report)
+
+    { rows: report_data(report), total: report.is_a?(Hash) ? report[:total] : report.total }
+  end
+
+  def build_activity_by_category
+    args = { start_date: start_date, end_date: end_date, current_user: current_user }
+
+    report = Report.find_cached("activity_by_category", args)
+    if report.nil?
+      report = Report.find("activity_by_category", args)
       Report.cache(report) if report && report.error.blank?
     end
 
