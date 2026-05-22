@@ -23,10 +23,9 @@ RSpec.describe TopicStatusUpdater do
 
     expect(post.topic.posts.count).to eq(2)
 
-    # Small action posts don't bump highest_post_number, so pretend_read
-    # is a no-op and last_read stays at the last real post.
+    # PostCreator advances caught-up users past the routine small_action.
     tu = TopicUser.find_by(user_id: user.id)
-    expect(tu.last_read_post_number).to eq(1)
+    expect(tu.last_read_post_number).to eq(2)
   end
 
   it "respects topics_unread_when_closed preference for private messages" do
@@ -65,21 +64,38 @@ RSpec.describe TopicStatusUpdater do
     expect(tu_wants_read.last_read_post_number).to eq(1)
   end
 
-  it "does not advance last_read_post_number when closing a regular topic" do
+  it "advances caught-up users past a routine small_action when closing a regular topic" do
     post = create_post
     user_tracking = Fabricate(:user)
+    user_behind = Fabricate(:user)
+    reply = create_post(topic: post.topic, user: post.user)
 
-    TopicUser.update_last_read(user_tracking, post.topic.id, 1, 1, 0)
-    PostTiming.create!(topic: post.topic, post_number: 1, user: user_tracking, msecs: 1000)
+    # user_tracking is caught up to the latest real post
+    TopicUser.update_last_read(
+      user_tracking,
+      post.topic.id,
+      reply.post_number,
+      reply.post_number,
+      0,
+    )
+    # user_behind is one post behind
+    TopicUser.update_last_read(user_behind, post.topic.id, 1, 1, 0)
 
     TopicStatusUpdater.new(post.topic, admin).update!("closed", true)
 
     post.topic.reload
-    expect(post.topic.highest_post_number).to eq(1)
-    expect(post.topic.highest_staff_post_number).to eq(2)
+    expect(post.topic.highest_post_number).to eq(reply.post_number)
+    expect(post.topic.highest_staff_post_number).to eq(reply.post_number + 1)
 
-    tu = TopicUser.find_by(user: user_tracking, topic: post.topic)
-    expect(tu.last_read_post_number).to eq(1)
+    # Caught-up user is advanced past the small_action so whisperers don't see
+    # a phantom unread.
+    expect(TopicUser.find_by(user: user_tracking, topic: post.topic).last_read_post_number).to eq(
+      reply.post_number + 1,
+    )
+
+    # User who was behind on a real post is NOT advanced — they have a
+    # legitimate unread to catch up on.
+    expect(TopicUser.find_by(user: user_behind, topic: post.topic).last_read_post_number).to eq(1)
   end
 
   it "adds an autoclosed message" do

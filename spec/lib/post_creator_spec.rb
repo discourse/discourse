@@ -1972,6 +1972,52 @@ RSpec.describe PostCreator do
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: topic.id)
       expect(topic_user.last_posted_at).to be_present
     end
+
+    describe "routine small action and last_read_post_number" do
+      fab!(:caught_up_user, :user)
+      fab!(:behind_user, :user)
+
+      it "advances caught-up users past a routine small_action so whisperers don't see a phantom unread" do
+        op = create_post
+        reply = create_post(topic: op.topic, user: op.user)
+        TopicUser.update_last_read(caught_up_user, op.topic.id, reply.post_number, 1, 0)
+        TopicUser.update_last_read(behind_user, op.topic.id, op.post_number, 1, 0)
+
+        PostCreator.create!(
+          Discourse.system_user,
+          topic_id: op.topic.id,
+          post_type: Post.types[:small_action],
+          action_code: "closed.enabled",
+          skip_validations: true,
+        )
+
+        expect(
+          TopicUser.find_by(user: caught_up_user, topic: op.topic).last_read_post_number,
+        ).to eq(reply.post_number + 1)
+        expect(TopicUser.find_by(user: behind_user, topic: op.topic).last_read_post_number).to eq(
+          op.post_number,
+        )
+      end
+
+      it "does not advance last_read for routine small_actions in PMs" do
+        pm =
+          create_post(
+            archetype: Archetype.private_message,
+            target_usernames: [caught_up_user.username],
+          ).topic
+        TopicUser.update_last_read(caught_up_user, pm.id, 1, 1, 0)
+
+        PostCreator.create!(
+          Discourse.system_user,
+          topic_id: pm.id,
+          post_type: Post.types[:small_action],
+          action_code: "closed.enabled",
+          skip_validations: true,
+        )
+
+        expect(TopicUser.find_by(user: caught_up_user, topic: pm).last_read_post_number).to eq(1)
+      end
+    end
   end
 
   describe "#create!" do

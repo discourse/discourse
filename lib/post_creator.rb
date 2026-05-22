@@ -532,6 +532,17 @@ class PostCreator
     end
 
     @topic.update_columns(attrs)
+
+    if @post.routine_small_action? && @post.post_number > 1 && !@topic.private_message?
+      # Routine small actions bump highest_staff_post_number without firing a
+      # MessageBus update, leaving caught-up whisperers with a phantom unread
+      # on next sync. Bumping last_read keeps server state consistent. PMs
+      # go through TopicStatusUpdater#update_read_state_for instead.
+      TopicUser.where(
+        topic_id: @post.topic_id,
+        last_read_post_number: @post.post_number - 1,
+      ).update_all(last_read_post_number: @post.post_number)
+    end
   end
 
   def update_topic_auto_close
