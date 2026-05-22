@@ -351,6 +351,19 @@ h1 {
   }
 }
 
+.db-engagement {
+  .db-engagement-headline {
+    .db-section__metrics {
+      gap: 0;
+
+      .db-kpi {
+        border: none;
+        padding-top: 0;
+      }
+    }
+  }
+}
+
 .db-kpi {
   position: relative;
   display: flex;

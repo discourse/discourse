@@ -1,0 +1,141 @@
+# frozen_string_literal: true
+
+class AdminDashboardEngagement
+  DEFAULT_RANGE_DAYS = 30
+
+  KPI_REPORTS = {
+    dau_mau: "dau_by_mau",
+    daily_engaged_users: "daily_engaged_users",
+    new_signups: "signups",
+  }.freeze
+
+  def self.build(start_date:, end_date:)
+    new(start_date: start_date, end_date: end_date).build
+  end
+
+  def initialize(start_date:, end_date:)
+    @start_date = parse_date(start_date) || DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
+    @end_date = parse_date(end_date)&.end_of_day || Time.zone.now.end_of_day
+  end
+
+  def build
+    kpis = build_kpis
+    { kpis: kpis, headline: build_headline(kpis) }
+  end
+
+  private
+
+  attr_reader :start_date, :end_date
+
+  def parse_date(value)
+    return nil if value.blank?
+    Time.zone.parse(value.to_s)&.beginning_of_day
+  rescue ArgumentError, TypeError
+    nil
+  end
+
+  def build_kpis
+    KPI_REPORTS.filter_map { |type, report| build_kpi(type, report) }
+  end
+
+  def build_kpi(type, report_name)
+    args = { start_date: start_date, end_date: end_date, facets: %i[prev_period] }
+
+    report = Report.find_cached(report_name, args)
+    if report.nil?
+      report = Report.find(report_name, args)
+      Report.cache(report) if report && report.error.blank?
+    end
+
+    return nil if report.nil? || report_error?(report) || report_data(report).nil?
+
+    current = period_value(type, report_data(report))
+    previous = report_prev_period(report)
+
+    {
+      type: type,
+      value: current,
+      previous_value: previous,
+      percent_change: compute_percent_change(current, previous),
+      report_type: report_name,
+      report_query: {
+        start_date: start_date.to_date.iso8601,
+        end_date: end_date.to_date.iso8601,
+      },
+    }
+  end
+
+  def report_error?(report_or_hash)
+    report_or_hash.is_a?(Hash) ? report_or_hash[:error].present? : report_or_hash.error.present?
+  end
+
+  def report_data(report_or_hash)
+    report_or_hash.is_a?(Hash) ? report_or_hash[:data] : report_or_hash.data
+  end
+
+  def report_prev_period(report_or_hash)
+    if report_or_hash.is_a?(Hash)
+      report_or_hash[:prev_period]
+    else
+      report_or_hash.prev_period
+    end
+  end
+
+  def period_value(type, data)
+    return nil if data.empty?
+
+    ys = data.map { |point| point[:y] }
+
+    if type == :dau_mau
+      (ys.sum(&:to_f) / ys.size).round(1)
+    else
+      ys.sum(&:to_i)
+    end
+  end
+
+  def compute_percent_change(current, previous)
+    return nil if previous.blank? || previous.zero? || current.blank?
+    ((current.to_f - previous) / previous * 100).round(2)
+  end
+
+  HEADLINE_KEYS = {
+    healthy_growth: "admin.dashboard.sections.engagement.headline.healthy_growth",
+    declining: "admin.dashboard.sections.engagement.headline.declining",
+    engaged_but_shrinking: "admin.dashboard.sections.engagement.headline.engaged_but_shrinking",
+    growing_but_distracted: "admin.dashboard.sections.engagement.headline.growing_but_distracted",
+    mixed: "admin.dashboard.sections.engagement.headline.mixed",
+    no_signal: "admin.dashboard.sections.engagement.headline.no_signal",
+  }.freeze
+
+  def build_headline(kpis)
+    stickiness = sign_of(kpi_change(kpis, :dau_mau))
+    signups = sign_of(kpi_change(kpis, :new_signups))
+    engaged = sign_of(kpi_change(kpis, :daily_engaged_users))
+
+    key =
+      if [stickiness, signups, engaged].all?(&:zero?)
+        :no_signal
+      elsif stickiness >= 0 && signups >= 0 && engaged >= 0
+        :healthy_growth
+      elsif stickiness <= 0 && signups <= 0 && engaged <= 0
+        :declining
+      elsif stickiness >= 0 && (signups < 0 || engaged < 0)
+        :engaged_but_shrinking
+      elsif stickiness < 0 && signups > 0
+        :growing_but_distracted
+      else
+        :mixed
+      end
+
+    { key: HEADLINE_KEYS[key] }
+  end
+
+  def kpi_change(kpis, type)
+    kpis.find { |k| k[:type] == type }&.dig(:percent_change)
+  end
+
+  def sign_of(value)
+    return 0 if value.nil? || value.zero?
+    value.positive? ? 1 : -1
+  end
+end

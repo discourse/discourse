@@ -6883,6 +6883,26 @@ en:
             title: "Site traffic"
           engagement:
             title: "Engagement"
+            fetch_error: "Couldn't load engagement. Try refreshing the page."
+            headline:
+              healthy_growth:
+                title: "Members are forming a habit of coming back."
+                summary: "Stickiness, daily engagement, and new sign-ups are all up this period."
+              declining:
+                title: "Members are coming back less often."
+                summary: "Stickiness, daily engagement, and new sign-ups are all down this period."
+              engaged_but_shrinking:
+                title: "Members are engaged, but the community is shrinking."
+                summary: "Stickiness is holding up, but daily engagement or new sign-ups have slipped."
+              growing_but_distracted:
+                title: "New members are signing up, but they're not sticking around."
+                summary: "Sign-ups are up, but stickiness has dropped this period."
+              mixed:
+                title: "Engagement trends are mixed this period."
+                summary: "Some metrics are up while others are down — open the tiles below for detail."
+              no_signal:
+                title: "Not enough activity yet to summarise engagement."
+                summary: "Pick a longer date range or come back once your community has more activity."
 
         configure:
           button: "Configure"
@@ -6907,6 +6927,9 @@ en:
             new_contributors:
               label: "New contributors"
               tooltip: "The number of members who made their first post in this period."
+            daily_engaged_users:
+              label: "Daily engaged"
+              tooltip: "The number of members who liked or posted in the community in the last day."
           comparison:
             last_7_days: "vs last 7 days"
             last_30_days: "vs last 30 days"
