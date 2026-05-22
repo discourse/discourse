@@ -117,6 +117,20 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
   const layoutMap = _getOutletLayouts();
   const mounted = mountedOutletNames();
 
+  // Sync prefix: touch every entry's soft-failure stamps before the
+  // first `await`, so the reads attach to the caller's tracking frame
+  // (typically a `@cached` getter wrapping the returned Promise in
+  // `TrackedAsyncData`). The entry shells are `trackedObject` proxies,
+  // so each touched key opens a per-key tag dep — when the validator
+  // stamps an entry or `clearValidatorStamps` clears one, the tag
+  // fires and the caller recomputes. Without this, the stamp reads in
+  // `walkEntries` below happen post-await and never subscribe.
+  for (const [, record] of layoutMap) {
+    if (record?.layout) {
+      touchStamps(record.layout);
+    }
+  }
+
   for (const outletName of outlets) {
     if (!blocksService.hasLayout(outletName)) {
       continue;
@@ -150,6 +164,25 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
     result.push({ outletName, rows });
   }
   return result;
+}
+
+/**
+ * Recursively reads each entry's `__failureType` / `__failureReason`
+ * fields. Side-effect-only: the reads exist purely to subscribe the
+ * surrounding tracking frame to the trackedObject-wrapped entries'
+ * per-key tags. Validator stamp writes / clears then propagate to
+ * the caller automatically.
+ *
+ * @param {Array<Object>} entries
+ */
+function touchStamps(entries) {
+  for (const entry of entries) {
+    void entry.__failureType;
+    void entry.__failureReason;
+    if (entry.children?.length) {
+      touchStamps(entry.children);
+    }
+  }
 }
 
 function walkEntries(entries, depth, path, rows, blocksService) {

@@ -353,14 +353,7 @@ export default class InlineEditState {
     } else {
       entry.args[argName] = value;
     }
-    const hadFailureStamp = !!entry.__failureReason;
     clearValidatorStamps(entry);
-    if (hadFailureStamp) {
-      // Mirror `_writeArgs` — stamp fields aren't tracked, so the
-      // banner / outline / per-block badge need this tag bump to see
-      // the clear and re-render.
-      this.service.validationVersion++;
-    }
   }
 
   /**

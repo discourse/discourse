@@ -5,10 +5,9 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { TrackedAsyncData } from "ember-async-data";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -43,7 +42,6 @@ export default class OutlinePanel extends Component {
   @service blocks;
   @service visualEditor;
 
-  @tracked outlets = [];
   /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
   @tracked viewMode = "tree";
   /**
@@ -86,41 +84,48 @@ export default class OutlinePanel extends Component {
    */
   #metaIndex = null;
 
-  @action
-  async refresh() {
-    this.outlets = await walkAllOutlets({
-      blocksService: this.blocks,
-      // Keep outlets the editor has touched even when their boundary
-      // div is briefly absent from the DOM. After a publish the
-      // `<BlockOutlet>` runs through `DAsyncContent`'s `:loading`
-      // block (which renders nothing) before settling on the new
-      // layout, so the mounted-outlet filter alone would flicker
-      // edited rows out of the outline on every structural change.
-      alwaysInclude: this.visualEditor._draftedOutlets,
-    });
-  }
-
   /**
-   * Re-walks the outlets whenever a structural mutation lands. Reads the
-   * service's monotonically-bumped `structuralVersion` so every move
-   * triggers a fresh walk — `_structurallyEditedOutlets.size` would only
-   * fire the first time an outlet is touched per session.
+   * Wraps the async outlet walk in `TrackedAsyncData` so the template
+   * can read `.value` without juggling a `@tracked outlets` field and
+   * a `didUpdate`-driven `refresh()`. Recomputes when:
    *
-   * The signal value itself is unused — the dependency is what matters.
+   *   - `isActive` flips (editor opens / closes)
+   *   - `structuralVersion` bumps (structural mutation lands; the layer
+   *     is republished and validation re-runs against the fresh entries)
+   *   - any entry's soft-failure stamp changes — `walkAllOutlets`'s sync
+   *     prefix touches `__failureType` / `__failureReason` on every
+   *     entry before its first `await`, so the per-key tag deps on the
+   *     trackedObject-wrapped entries attach to this getter's tracking
+   *     frame. `clearValidatorStamps` then propagates straight through.
+   *
+   * `alwaysInclude` keeps outlets the editor has touched in the walk
+   * even when their boundary div briefly leaves the DOM between
+   * publish and re-render (DAsyncContent's `:loading` block paints
+   * nothing in the gap).
    */
-  get structuralVersion() {
-    return this.visualEditor.structuralVersion;
+  @cached
+  get outletsData() {
+    void this.visualEditor.isActive;
+    void this.visualEditor.structuralVersion;
+    return new TrackedAsyncData(
+      walkAllOutlets({
+        blocksService: this.blocks,
+        alwaysInclude: this.visualEditor._draftedOutlets,
+      })
+    );
   }
 
   /**
-   * Companion to `structuralVersion` for in-place stamp clears — bumped
-   * by the service when an arg write removes an entry's soft-failure
-   * stamps. Without this dep the outline would keep rendering the
-   * "row in error" indicator after the author has fixed the offending
-   * value (stamps live on plain entry fields, not tracked).
+   * Resolved walk result (or an empty list while the first walk is
+   * still pending). Downstream getters key off this rather than the
+   * full `TrackedAsyncData` shape — they don't need the loading state.
+   *
+   * `TrackedAsyncData#value` throws unless `.isResolved` — guard
+   * explicitly so the first render (before the walk's promise has
+   * settled) returns `[]` instead of crashing.
    */
-  get validationVersion() {
-    return this.visualEditor.validationVersion;
+  get outlets() {
+    return this.outletsData.isResolved ? this.outletsData.value : [];
   }
 
   /**
@@ -481,16 +486,7 @@ export default class OutlinePanel extends Component {
   }
 
   <template>
-    <div
-      class="visual-editor-outline"
-      {{didInsert this.refresh}}
-      {{didUpdate
-        this.refresh
-        this.visualEditor.isActive
-        this.structuralVersion
-        this.validationVersion
-      }}
-    >
+    <div class="visual-editor-outline">
       <div class="visual-editor-outline__view-switch" role="tablist">
         <DButton
           class={{dConcatClass

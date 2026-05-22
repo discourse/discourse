@@ -127,22 +127,6 @@ export default class VisualEditorService extends Service {
    */
   @tracked structuralVersion = 0;
   /**
-   * Refresh signal for outline-panel only. The entry shell is wrapped
-   * in `trackedObject`, so the service's stamp-reading getters
-   * (`validationWarnings`, `selectedBlockFailure`) and the per-block
-   * ghost chrome pick up `clearValidatorStamps` writes automatically —
-   * each `entry.__failureReason` read opens a per-key tag the proxy
-   * fires on `delete`. The outline is the one consumer that doesn't:
-   * its `walkAllOutlets` runs inside an `@action refresh()`, not a
-   * Glimmer computation, so per-entry tag subscriptions never reach
-   * it. This counter is bumped on stamp clears and read by the
-   * outline's `didUpdate` modifier so the row indicator clears in
-   * lockstep with the rest of the UI.
-   *
-   * @type {number}
-   */
-  @tracked validationVersion = 0;
-  /**
    * Drag-and-drop session state. Set when the user grabs a block via
    * `editor-draggable`; cleared when the drag ends (success or cancel).
    *
@@ -2144,13 +2128,7 @@ export default class VisualEditorService extends Service {
         entry.args[argName] = value;
       }
     }
-    const hadFailureStamp = !!entry.__failureReason;
     clearValidatorStamps(entry);
-    if (hadFailureStamp) {
-      // Stamp fields aren't tracked; bump the validation tag so the
-      // banner / outline / per-block badge see the clear.
-      this.validationVersion++;
-    }
   }
 
   /**

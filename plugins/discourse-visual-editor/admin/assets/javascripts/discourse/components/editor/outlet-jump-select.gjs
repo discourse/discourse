@@ -1,11 +1,10 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { TrackedAsyncData } from "ember-async-data";
 import { i18n } from "discourse-i18n";
 import { walkAllOutlets } from "../../lib/walk-layout";
 
@@ -24,26 +23,35 @@ export default class OutletJumpSelect extends Component {
   @service blocks;
   @service visualEditor;
 
-  /** @type {Array<{name: string, displayName: string}>} */
-  @tracked _options = [];
-
-  get structuralVersion() {
-    return this.visualEditor.structuralVersion;
+  /**
+   * Async walk wrapped in `TrackedAsyncData` so the options list
+   * recomputes purely from tracked deps — no `didUpdate` / refresh
+   * round-trip. Re-runs on `structuralVersion` bumps and (via the
+   * sync stamp-touch prefix inside `walkAllOutlets`) on any per-entry
+   * soft-failure stamp change.
+   */
+  @cached
+  get walkData() {
+    void this.visualEditor.structuralVersion;
+    return new TrackedAsyncData(walkAllOutlets({ blocksService: this.blocks }));
   }
 
-  @action
-  async refresh() {
-    const walked = await walkAllOutlets({ blocksService: this.blocks });
+  /** @type {Array<{name: string, displayName: string}>} */
+  get options() {
+    // `TrackedAsyncData#value` throws unless `.isResolved` — guard
+    // so the first render returns an empty list while the underlying
+    // walk promise is still pending.
+    const walked = this.walkData.isResolved ? this.walkData.value : [];
     // walkAllOutlets already filters to outlets mounted on the current
-    // page; we further filter to outlets that have at least one block
+    // page; further filter to outlets that have at least one block
     // (a zero-block outlet shows only its boundary badge, and jumping
     // to it lands the user on an empty strip that reads as a no-op).
     // Empty outlets are reachable through the outline tab instead.
     const populated = new Set(
       walked.filter((g) => g.rows.length > 0).map((g) => g.outletName)
     );
-    const all = this.blocks.listOutletsWithMetadata();
-    this._options = all
+    return this.blocks
+      .listOutletsWithMetadata()
       .filter((entry) => populated.has(entry.name))
       .sort((a, b) => a.displayName.localeCompare(b.displayName));
   }
@@ -66,27 +74,21 @@ export default class OutletJumpSelect extends Component {
   }
 
   <template>
-    {{#if this._options.length}}
+    {{#if this.options.length}}
       <select
         class="visual-editor-outlet-jump"
         aria-label={{i18n "visual_editor.chrome.outlet_jump_label"}}
-        {{didInsert this.refresh}}
-        {{didUpdate this.refresh this.structuralVersion}}
         {{on "change" this.handleChange}}
       >
         <option value="">
           {{i18n "visual_editor.chrome.outlet_jump_placeholder"}}
         </option>
-        {{#each this._options as |entry|}}
+        {{#each this.options as |entry|}}
           <option value={{entry.name}}>{{entry.displayName}}</option>
         {{/each}}
       </select>
     {{else}}
-      <select
-        class="visual-editor-outlet-jump"
-        {{didInsert this.refresh}}
-        {{didUpdate this.refresh this.structuralVersion}}
-      ></select>
+      <select class="visual-editor-outlet-jump"></select>
     {{/if}}
   </template>
 }
