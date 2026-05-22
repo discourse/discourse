@@ -8298,6 +8298,7 @@ en:
             delete_topic: "delete topic"
             recover_topic: "un-delete topic"
             delete_post: "delete post"
+            recover_post: "un-delete post"
             impersonate: "impersonate"
             anonymize_user: "anonymize user"
             roll_up: "roll up IP blocks"
