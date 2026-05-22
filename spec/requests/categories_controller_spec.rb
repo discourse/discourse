@@ -1373,7 +1373,7 @@ RSpec.describe CategoriesController do
               I18n.t(
                 "category_types.requires_plugin",
                 type_name: "Test plugin type",
-                plugin_name: "Test plugin",
+                plugin_name: "Test",
               ),
             )
           end
