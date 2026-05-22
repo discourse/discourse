@@ -6,14 +6,14 @@ module DiscourseSolved
       return nil unless topic.topic_answers&.any?
 
       ActiveRecord::Associations::Preloader.new(
-        records: [solved],
+        records: [topic.solved],
         associations: {
           topic_answers: [{ post: :user }, :accepter],
         },
       ).call
 
       answers =
-        solved
+        topic
           .topic_answers
           .select { |ta| ta.post.present? }
           .sort_by { |ta| ta.post.created_at }
