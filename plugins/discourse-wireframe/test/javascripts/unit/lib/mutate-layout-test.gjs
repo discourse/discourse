@@ -682,6 +682,72 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
       const result = insertEntryAt(layout, "absent:0", newEntry, "after");
       assert.false(result.changed);
     });
+
+    test("clears validator soft-failure stamps from the target container when inserting inside", function (assert) {
+      // A previously-empty container was stamped by the permissive validator
+      // ("must have children"). Inserting a child must produce a new
+      // container shell without the stale stamp — the next republish's
+      // validator will re-stamp anything genuinely still wrong.
+      const layout = [
+        {
+          block: ContainerBlock,
+          __stableKey: 60,
+          __failureType: "structural-invalid",
+          __failureReason:
+            "Block component wf:mutate-test-container in layout home must have children",
+          __visible: false,
+        },
+      ];
+
+      const newEntry = { block: LeafBlock, __stableKey: 61 };
+      const { layout: next, changed } = insertEntryAt(
+        layout,
+        "wf:mutate-test-container:60",
+        newEntry,
+        "inside"
+      );
+
+      assert.true(changed);
+      assert.false("__failureType" in next[0]);
+      assert.false("__failureReason" in next[0]);
+      assert.false("__visible" in next[0]);
+      assert.strictEqual(next[0].children.length, 1);
+    });
+
+    test("clears validator stamps on ancestors when inserting deeper in the tree", function (assert) {
+      // Inserting into a nested container clones each ancestor via spread.
+      // Their stamps must be cleared too so the next validator pass starts
+      // from a clean slate.
+      const layout = [
+        {
+          block: ContainerBlock,
+          __stableKey: 70,
+          __failureType: "structural-invalid",
+          __failureReason: "stale ancestor stamp",
+          __visible: false,
+          children: [
+            {
+              block: ContainerBlock,
+              __stableKey: 71,
+              children: [{ block: LeafBlock, __stableKey: 72 }],
+            },
+          ],
+        },
+      ];
+
+      const newEntry = { block: LeafBlock, __stableKey: 73 };
+      const { layout: next, changed } = insertEntryAt(
+        layout,
+        "wf:mutate-test-leaf:72",
+        newEntry,
+        "before"
+      );
+
+      assert.true(changed);
+      assert.false("__failureType" in next[0]);
+      assert.false("__failureReason" in next[0]);
+      assert.false("__visible" in next[0]);
+    });
   });
 
   module("moveEntry", function () {

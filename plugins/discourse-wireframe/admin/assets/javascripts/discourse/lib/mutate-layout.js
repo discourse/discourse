@@ -79,13 +79,13 @@ export function replaceEntryArgs(layout, key, updater) {
         changed = true;
         subtreeChanged = true;
         const currentArgs = entry.args ?? {};
-        return { ...entry, args: { ...updater(currentArgs) } };
+        return cloneEntryShell(entry, { args: { ...updater(currentArgs) } });
       }
       if (entry.children?.length) {
         const newChildren = walk(entry.children);
         if (newChildren !== entry.children) {
           subtreeChanged = true;
-          return { ...entry, children: newChildren };
+          return cloneEntryShell(entry, { children: newChildren });
         }
       }
       return entry;
@@ -130,19 +130,18 @@ export function replaceEntryContainerArgs(layout, key, namespace, updater) {
         subtreeChanged = true;
         const currentContainerArgs = entry.containerArgs ?? {};
         const currentBag = currentContainerArgs[namespace] ?? {};
-        return {
-          ...entry,
+        return cloneEntryShell(entry, {
           containerArgs: {
             ...currentContainerArgs,
             [namespace]: { ...updater(currentBag) },
           },
-        };
+        });
       }
       if (entry.children?.length) {
         const newChildren = walk(entry.children);
         if (newChildren !== entry.children) {
           subtreeChanged = true;
-          return { ...entry, children: newChildren };
+          return cloneEntryShell(entry, { children: newChildren });
         }
       }
       return entry;
@@ -177,16 +176,13 @@ export function replaceEntryInPlace(layout, key, newEntry) {
       if (entryKey(entry) === key) {
         changed = true;
         subtreeChanged = true;
-        return {
-          ...newEntry,
-          __stableKey: entry.__stableKey,
-        };
+        return cloneEntryShell(newEntry, { __stableKey: entry.__stableKey });
       }
       if (entry.children?.length) {
         const newChildren = walk(entry.children);
         if (newChildren !== entry.children) {
           subtreeChanged = true;
-          return { ...entry, children: newChildren };
+          return cloneEntryShell(entry, { children: newChildren });
         }
       }
       return entry;
@@ -303,15 +299,16 @@ export function replaceEntryId(layout, key, nextId) {
         if (nextId == null || nextId === "") {
           // eslint-disable-next-line no-unused-vars
           const { id, ...rest } = entry;
+          clearValidatorStamps(rest);
           return rest;
         }
-        return { ...entry, id: nextId };
+        return cloneEntryShell(entry, { id: nextId });
       }
       if (entry.children?.length) {
         const newChildren = walk(entry.children);
         if (newChildren !== entry.children) {
           subtreeChanged = true;
-          return { ...entry, children: newChildren };
+          return cloneEntryShell(entry, { children: newChildren });
         }
       }
       return entry;
@@ -338,15 +335,16 @@ export function replaceEntryConditions(layout, key, newConditions) {
         if (newConditions == null) {
           // eslint-disable-next-line no-unused-vars
           const { conditions, ...rest } = entry;
+          clearValidatorStamps(rest);
           return rest;
         }
-        return { ...entry, conditions: newConditions };
+        return cloneEntryShell(entry, { conditions: newConditions });
       }
       if (entry.children?.length) {
         const newChildren = walk(entry.children);
         if (newChildren !== entry.children) {
           subtreeChanged = true;
-          return { ...entry, children: newChildren };
+          return cloneEntryShell(entry, { children: newChildren });
         }
       }
       return entry;
@@ -401,7 +399,7 @@ export function removeEntry(layout, key) {
         const newChildren = walk(entry.children);
         if (newChildren !== entry.children) {
           subtreeChanged = true;
-          result.push({ ...entry, children: newChildren });
+          result.push(cloneEntryShell(entry, { children: newChildren }));
           continue;
         }
       }
@@ -463,7 +461,7 @@ export function insertEntryAt(layout, targetKey, entry, position) {
           const nextChildren = candidate.children
             ? [entry, ...candidate.children]
             : [entry];
-          result.push({ ...candidate, children: nextChildren });
+          result.push(cloneEntryShell(candidate, { children: nextChildren }));
           subtreeChanged = true;
           continue;
         }
@@ -472,7 +470,7 @@ export function insertEntryAt(layout, targetKey, entry, position) {
         const newChildren = walk(candidate.children);
         if (newChildren !== candidate.children) {
           subtreeChanged = true;
-          result.push({ ...candidate, children: newChildren });
+          result.push(cloneEntryShell(candidate, { children: newChildren }));
           continue;
         }
       }
@@ -631,6 +629,26 @@ export function clearValidatorStamps(entry) {
 }
 
 /**
+ * Builds a fresh entry POJO from `entry` with `overrides` merged on top
+ * and the validator's soft-failure stamps cleared. Every mutation helper
+ * in this file that produces a new entry shell via spread goes through
+ * here so the next republish's validator starts from a clean slate —
+ * without this the previous pass's `__failureType` / `__failureReason`
+ * would survive on the new POJO (own-enumerable, copied by spread) and
+ * the outline / chrome would keep painting the old error after the
+ * underlying issue is fixed.
+ *
+ * @param {Object} entry
+ * @param {Object} overrides
+ * @returns {Object}
+ */
+function cloneEntryShell(entry, overrides) {
+  const clone = { ...entry, ...overrides };
+  clearValidatorStamps(clone);
+  return clone;
+}
+
+/**
  * Deep-clones an entry for paste-style insertion: structurally identical
  * to `cloneEntryForDraft`, but strips `__stableKey` recursively so the
  * pasted subtree gets fresh keys minted at publish time. Without this,
@@ -644,6 +662,11 @@ export function clearValidatorStamps(entry) {
 export function cloneEntryForPaste(entry) {
   const clone = { ...entry };
   delete clone.__stableKey;
+  // Drop source-layer validator stamps for the same reason
+  // `cloneEntryForDraft` does — pasting republishes the layout, the new
+  // validator pass is the source of truth, and stale stamps would paint
+  // an error on the pasted entry before validation re-runs.
+  clearValidatorStamps(clone);
   if (entry.args) {
     clone.args = { ...entry.args };
   }
