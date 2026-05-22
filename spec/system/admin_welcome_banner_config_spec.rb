@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Welcome Banner Config" do
+describe "Admin Welcome Banner Config", :hard_reset do
   fab!(:admin)
   let(:config_page) { PageObjects::Pages::AdminWelcomeBannerConfig.new }
 

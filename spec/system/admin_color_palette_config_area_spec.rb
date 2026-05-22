@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Color Palette Config Area Page" do
+describe "Admin Color Palette Config Area Page", :hard_reset do
   fab!(:admin)
   fab!(:color_scheme) { Fabricate(:color_scheme, user_selectable: false, name: "A Test Palette") }
   fab!(:color_scheme_2, :color_scheme)

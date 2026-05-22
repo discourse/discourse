@@ -1,0 +1,14 @@
+# Glob patterns of spec files the proposer is allowed to edit AND that the
+# loop iterates over. One pattern per line; `#` comments allowed.
+#
+# Start narrow (one directory at a time) and widen as you trust the loop.
+# Suggested order:
+#   1. spec/models/**/*_spec.rb         (fast, isolated)
+#   2. spec/services/**/*_spec.rb
+#   3. spec/jobs/**/*_spec.rb
+#   4. spec/requests/**/*_spec.rb       (medium)
+#   5. spec/system/**/*_spec.rb         (slow — browser tests)
+#
+# After core is clean, repeat for plugins/*/spec/**/*_spec.rb.
+
+spec/models/**/*_spec.rb

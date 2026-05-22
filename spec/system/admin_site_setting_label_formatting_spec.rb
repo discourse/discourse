@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Formatting" do
+describe "Admin Site Setting Formatting", :hard_reset do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   fab!(:admin)
 
