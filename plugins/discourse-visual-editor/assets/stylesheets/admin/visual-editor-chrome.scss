@@ -3767,7 +3767,17 @@ body.visual-editor-active
     .visual-editor-outlet-boundary *,
     :has(.visual-editor-shell) > *,
     .visual-editor-shell,
-    .visual-editor-shell *
+    .visual-editor-shell *,
+    #d-menu-portals,
+    #d-menu-portals *,
+    #d-tooltip-portals,
+    #d-tooltip-portals *,
+    .fk-d-toasts,
+    .fk-d-toasts *,
+    .modal-container,
+    .modal-container *,
+    #dialog-holder,
+    #dialog-holder *
   ) {
   transition: opacity 120ms ease;
 }
@@ -3779,7 +3789,17 @@ body.visual-editor-active--dim-non-editable
     .visual-editor-outlet-boundary *,
     :has(.visual-editor-shell) > *,
     .visual-editor-shell,
-    .visual-editor-shell *
+    .visual-editor-shell *,
+    #d-menu-portals,
+    #d-menu-portals *,
+    #d-tooltip-portals,
+    #d-tooltip-portals *,
+    .fk-d-toasts,
+    .fk-d-toasts *,
+    .modal-container,
+    .modal-container *,
+    #dialog-holder,
+    #dialog-holder *
   ) {
   opacity: 0.75;
 }
