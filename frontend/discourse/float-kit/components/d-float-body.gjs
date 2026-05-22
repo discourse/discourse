@@ -26,7 +26,7 @@ export default class DFloatBody extends Component {
     };
   });
 
-  trapPointerEvents = modifierFn((element) => {
+  trapInteractionPropagation = modifierFn((element) => {
     const handler = (event) => {
       event.stopPropagation();
     };
@@ -90,7 +90,7 @@ export default class DFloatBody extends Component {
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
-        {{this.trapPointerEvents}}
+        {{this.trapInteractionPropagation}}
         {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
         {{(if
           (and @instance.expanded this.supportsCloseOnClickOutside)
