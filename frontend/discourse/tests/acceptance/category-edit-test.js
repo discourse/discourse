@@ -48,9 +48,7 @@ acceptance("Category Edit", function (needs) {
     );
 
     await visit("/c/bug/edit/settings");
-    const searchPriorityChooser = selectKit("#category-search-priority");
-    await searchPriorityChooser.expand();
-    await searchPriorityChooser.selectRowByValue(1);
+    await formKit().field("search_priority").select(1);
 
     await click(".admin-changes-banner .btn-primary");
     assert.strictEqual(
@@ -104,14 +102,8 @@ acceptance("Category Edit", function (needs) {
   test("Editing allowed tags and tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    const allowedTagChooser = selectKit("#category-allowed-tags");
-    await allowedTagChooser.expand();
-    await allowedTagChooser.selectRowByName("monkey");
-
-    await allowedTagChooser.collapse();
-    const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
-    await allowedTagGroupChooser.expand();
-    await allowedTagGroupChooser.selectRowByValue("TagGroup1");
+    await formKit().field("allowed_tags").selectByName("monkey");
+    await formKit().control("#category-allowed-tag-groups").select("TagGroup1");
 
     await click(".admin-changes-banner .btn-primary");
 
@@ -119,11 +111,10 @@ acceptance("Category Edit", function (needs) {
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
-    await allowedTagChooser.expand();
-    await allowedTagChooser.deselectItemByName("monkey");
-
-    await allowedTagGroupChooser.expand();
-    await allowedTagGroupChooser.deselectItemByValue("TagGroup1");
+    await formKit().field("allowed_tags").deselectByName("monkey");
+    await formKit()
+      .control("#category-allowed-tag-groups")
+      .deselectByValue("TagGroup1");
 
     await click(".admin-changes-banner .btn-primary");
 

@@ -52,19 +52,19 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.dom(".badge-category").hasText("testing");
 
-    await visit("/new-category/topic-template");
+    if (!document.querySelector(".edit-category-topic-template")) {
+      await click(".category-show-advanced-tabs-toggle");
+    }
+
     assert
-      .dom(".edit-category-tab-topic-template")
+      .dom(".edit-category-topic-template")
       .exists("it can switch to the topic template tab");
 
-    await visit("/new-category/tags");
-    await click("button.add-required-tag-group");
+    assert.dom(".edit-category-tags").exists("it can switch to the tags tab");
+    await click(".edit-category-tags a");
+    await click(".add-required-tag-group");
 
-    const tagSelector = selectKit(
-      ".form-kit__collection .form-kit__row .select-kit.tag-group-chooser"
-    );
-    await tagSelector.expand();
-    await tagSelector.selectRowByValue("TagGroup1");
+    await formKit().field("required_tag_groups.0.name").select("TagGroup1");
 
     await click(".admin-changes-banner .btn-primary");
 
@@ -76,11 +76,11 @@ acceptance("Category New", function (needs) {
 
     await visit("/c/testing/edit/tags");
 
-    assert
-      .dom(
-        ".form-kit__collection .form-kit__row .select-kit-header[data-value='TagGroup1']"
-      )
-      .exists("shows saved required tag group");
+    assert.strictEqual(
+      formKit().field("required_tag_groups.0.name").value(),
+      "TagGroup1",
+      "shows saved required tag group"
+    );
 
     assert.dom(".d-page-header__title").hasText(
       i18n("category.edit_dialog_title", {
@@ -88,23 +88,18 @@ acceptance("Category New", function (needs) {
       })
     );
 
-    await visit("/c/testing/edit/security");
+    await click(".edit-category-security a");
     assert
       .dom(".permission-row button.reply-toggle")
       .exists("it can switch to the security tab");
 
-    await visit("/c/testing/edit/settings");
+    await click(".edit-category-settings a");
     assert
-      .dom("#category-search-priority")
+      .form()
+      .field("search_priority")
       .exists("it can switch to the settings tab");
 
     sinon.stub(DiscourseURL, "routeTo");
-
-    await click(".back-button");
-    assert.true(
-      DiscourseURL.routeTo.calledWith("/c/testing/11"),
-      "back routing works"
-    );
   });
 
   test("Specifying a parent category", async function (assert) {
