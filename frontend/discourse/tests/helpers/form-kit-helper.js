@@ -1,5 +1,6 @@
 import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 class Field {
   constructor(selector) {
@@ -12,6 +13,18 @@ class Field {
 
   get controlType() {
     return this.element.dataset.controlType;
+  }
+
+  get resolvedControlType() {
+    if (this.controlType !== "custom") {
+      return this.controlType;
+    }
+
+    if (this.element.querySelector(".form-kit__control-custom .multi-select")) {
+      return "multi-select";
+    }
+
+    throw new Error("Unknown custom control");
   }
 
   /**
@@ -175,7 +188,17 @@ class Field {
   }
 
   async select(value) {
-    switch (this.element.dataset.controlType) {
+    switch (this.resolvedControlType) {
+      case "multi-select": {
+        const multiSelect = this.element.querySelector(
+          ".form-kit__control-custom .multi-select"
+        );
+        const kit = selectKit(`#${multiSelect.id}`);
+        await kit.expand();
+        await kit.selectRowByValue(value);
+        await kit.collapse();
+        break;
+      }
       case "icon":
         await click(".d-icon-grid-picker-trigger");
         await waitFor(`[data-icon-id="${value}"]`);
