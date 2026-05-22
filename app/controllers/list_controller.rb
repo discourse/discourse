@@ -283,8 +283,10 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{@category.name} - #{SiteSetting.title}"
-    @link = filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}")
-    @atom_link = filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}.rss")
+    @link =
+      filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}", category: nil)
+    @atom_link =
+      filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}.rss", category: nil)
     @description =
       "#{I18n.t("topics_in_category", category: @category.name)} #{@category.description}"
     @topic_list = topic_query.list_new_in_category(@category)

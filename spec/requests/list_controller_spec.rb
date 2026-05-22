@@ -1036,6 +1036,29 @@ RSpec.describe ListController do
           expect(response.body).to include(untagged_topic.title)
           expect(response.body).not_to include(tagged_topic.title)
         end
+
+        it "does not advertise the route-derived category param in the self URL" do
+          get "/c/#{category.slug}/#{category.id}.rss?exclude_tag=excludeme"
+          expect(response.status).to eq(200)
+
+          doc = Nokogiri::XML::Document.parse(response.body)
+          atom_link =
+            URI.parse(
+              doc.at_xpath("/rss/channel/atom:link", { "atom" => "http://www.w3.org/2005/Atom" })[
+                "href"
+              ],
+            )
+          link = URI.parse(doc.at_xpath("/rss/channel/link").text)
+
+          expect(atom_link.path).to eq("/c/#{category.slug}/#{category.id}.rss")
+          expect(Rack::Utils.parse_nested_query(atom_link.query.to_s)).to eq(
+            "exclude_tag" => "excludeme",
+          )
+          expect(link.path).to eq("/c/#{category.slug}/#{category.id}")
+          expect(Rack::Utils.parse_nested_query(link.query.to_s)).to eq(
+            "exclude_tag" => "excludeme",
+          )
+        end
       end
 
       describe "category default views" do
