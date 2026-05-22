@@ -648,39 +648,6 @@ RSpec.configure do |config|
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
 
-    # capybara-playwright-driver's Browser#evaluate_async_script wraps its
-    # result with `evaluate_handle` + `wrap_node`. For a JSHandle return,
-    # wrap_node issues two more Playwright IPC round-trips (one to
-    # `arg.evaluate('obj => [typeof obj, Array.isArray(obj)]')`, then one
-    # to extract the value via `arg.json_value` or `arg.properties`).
-    # Plain `evaluate` resolves the Promise *and* serializes the value
-    # back to Ruby in a single round-trip, cutting per-call cost from
-    # 3 IPCs to 1. Discourse fires evaluate_async_script through every
-    # patched action (click, hover, send_keys, scroll_*, visit, ...) via
-    # `wait_for_client_settled`, so this cost multiplies across every
-    # interaction in every system spec. Every Discourse caller returns a
-    # serializable value (nil from `done()`, or a String from
-    # `done(error.message)` / clipboard reads) — no DOM elements — so
-    # plain `evaluate`'s serialization is equivalent in observable
-    # behaviour.
-    module CapybaraPlaywrightBrowserFastEvaluateAsyncPatch
-      def evaluate_async_script(script, *args)
-        assert_page_alive do
-          js = <<~JAVASCRIPT
-            function(_arguments){
-              let args = Array.prototype.slice.call(_arguments);
-              return new Promise((resolve, reject) => {
-                args.push(resolve);
-                (function(){ #{script} }).apply(this, args);
-              });
-            }
-          JAVASCRIPT
-          @playwright_page.capybara_current_frame.evaluate(js, arg: unwrap_node(args))
-        end
-      end
-    end
-    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserFastEvaluateAsyncPatch)
-
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
