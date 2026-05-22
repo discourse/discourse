@@ -142,7 +142,9 @@ $solved-color: var(--success);
 }
 
 .solved-shared-issue-row {
-  padding-left: var(--topic-body-width-padding);
+  @include viewport.from(sm) {
+    padding-left: var(--topic-body-width-padding);
+  }
 }
 
 .solved-shared-issue-row .post-action-menu__solved-shared-issue {
