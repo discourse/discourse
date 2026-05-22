@@ -6998,6 +6998,14 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+          top_countries:
+            title: "Top countries"
+            empty: "No country data for this period."
+            error: "Couldn't load top countries. Try refreshing the page."
+          top_referrers:
+            title: "Top referrers"
+            empty: "No referrer data for this period."
+            error: "Couldn't load top referrers. Try refreshing the page."
           series:
             logged_in: "Logged in"
             anonymous: "Anonymous"

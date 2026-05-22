@@ -38,10 +38,15 @@ class Report
 
   ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
+  BROWSER_PAGEVIEW_REPORTS = %w[
+    top_countries_by_browser_pageviews
+    top_referrers_by_browser_pageviews
+  ]
 
   def self.hidden?(type, guardian:)
     return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
     return true if !guardian.is_admin? && !guardian.can_see_ip? && IP_ADDRESS_REPORTS.include?(type)
+    return true if BROWSER_PAGEVIEW_REPORTS.include?(type)
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
@@ -109,9 +114,11 @@ class Report
   include Reports::SuspiciousLogins
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
+  include Reports::TopCountriesByBrowserPageviews
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
+  include Reports::TopReferrersByBrowserPageviews
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived

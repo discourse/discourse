@@ -1569,6 +1569,18 @@ en:
         num_clicks: "Clicks"
         num_topics: "Topics"
       description: "Users listed by number of clicks on links they have shared."
+    top_countries_by_browser_pageviews:
+      title: "Top countries"
+      description: "Countries driving the most browser pageviews to your forum in the selected period."
+      labels:
+        country_code: "Country code"
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      title: "Top referrers"
+      description: "External sites referring the most browser pageviews to your forum in the selected period."
+      labels:
+        normalized_referrer: "Referrer"
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"

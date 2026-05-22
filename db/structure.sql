@@ -1884,7 +1884,8 @@ CREATE TABLE public.browser_pageview_events (
     country_code character varying(2),
     created_at timestamp without time zone NOT NULL,
     asn integer,
-    score integer
+    score integer,
+    normalized_referrer character varying(2000)
 );
 
 
@@ -15889,6 +15890,20 @@ CREATE UNIQUE INDEX idx_bookmarks_user_polymorphic_unique ON public.bookmarks US
 
 
 --
+-- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events USING btree (created_at, country_code);
+
+
+--
+-- Name: idx_bpe_created_at_normalized_referrer; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_events USING btree (created_at, normalized_referrer);
+
+
+--
 -- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20923,6 +20938,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260522043337'),
+('20260520090937'),
 ('20260518104900'),
 ('20260518054805'),
 ('20260514055648'),
