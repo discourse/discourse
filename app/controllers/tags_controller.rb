@@ -561,7 +561,11 @@ class TagsController < ::ApplicationController
 
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
-    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name, :slug)
+    target_tags =
+      Tag
+        .visible(guardian)
+        .where(id: tags.filter_map(&:target_tag_id).uniq)
+        .select(:id, :name, :slug)
 
     tags
       .map do |t|

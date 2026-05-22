@@ -5711,6 +5711,7 @@ en:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
