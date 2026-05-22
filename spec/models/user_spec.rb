@@ -854,8 +854,9 @@ RSpec.describe User do
           user.update!(name: "Sam")
           expect(post.reload.baked_version).not_to be_nil
 
-          user.update!(uploaded_avatar_id: 100)
-          expect(post.reload.baked_version).to be_nil
+          expect_enqueued_with(job: :rebake_quoted_posts_for_user, args: { user_id: user.id }) do
+            user.update!(uploaded_avatar_id: 100)
+          end
         end
       end
     end
@@ -2036,6 +2037,27 @@ RSpec.describe User do
 
       expect_enqueued_with(job: :update_gravatar, args: { user_id: user.id }) do
         user.refresh_avatar
+      end
+    end
+
+    it "enqueues rebake job instead of blocking when avatar is updated" do
+      user = Fabricate(:user)
+      upload = Fabricate(:upload)
+
+      allow(Post).to receive(:rebake_all_quoted_posts)
+
+      expect_enqueued_with(job: :rebake_quoted_posts_for_user, args: { user_id: user.id }) do
+        user.update!(uploaded_avatar_id: upload.id)
+      end
+
+      expect(Post).not_to have_received(:rebake_all_quoted_posts)
+    end
+
+    it "does not enqueue rebake job when avatar is not changed" do
+      user = Fabricate(:user)
+
+      expect_not_enqueued_with(job: :rebake_quoted_posts_for_user) do
+        user.update!(name: "New Name")
       end
     end
   end
