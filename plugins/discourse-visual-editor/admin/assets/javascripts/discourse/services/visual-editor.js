@@ -53,6 +53,33 @@ import { mountedOutletNames } from "../lib/walk-layout";
 const FLUSH_DELAY_MS = 200;
 
 /**
+ * True when `prev` and `next` represent the same inline-edit value.
+ * Plain strings (the common unformatted case) compare with `Object.is`.
+ * Non-string values are doc-JSON — `toStorage(doc.toJSON())` returns a
+ * fresh object each commit, so reference equality always fails even
+ * when the content hasn't changed. Fall back to a deep-equal via
+ * `JSON.stringify`: doc-JSON is plain (no cycles, no functions) and
+ * PM serialises keys in a deterministic order for the same shape.
+ *
+ * Used by `stopEditing` to gate the undo push so pure navigation
+ * (e.g. arrow-walking through a bolded paragraph) doesn't pollute
+ * the stack with no-op entries.
+ *
+ * @param {*} prev
+ * @param {*} next
+ * @returns {boolean}
+ */
+function sameInlineEditValue(prev, next) {
+  if (Object.is(prev, next)) {
+    return true;
+  }
+  if (typeof prev === "string" || typeof next === "string") {
+    return false;
+  }
+  return JSON.stringify(prev) === JSON.stringify(next);
+}
+
+/**
  * Phase 1 + 2 + 3 editor service. Holds the editor's session state and
  * mediates the in-memory mutation pipeline.
  *
@@ -2353,7 +2380,7 @@ export default class VisualEditorService extends Service {
     const nextValue = entry.args?.[argName];
 
     if (commit) {
-      if (!Object.is(prevValue, nextValue)) {
+      if (!sameInlineEditValue(prevValue, nextValue)) {
         this._undoStack.push({
           kind: "args",
           entry,

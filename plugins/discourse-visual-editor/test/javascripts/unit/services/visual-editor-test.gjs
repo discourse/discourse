@@ -641,6 +641,78 @@ module(
       });
     });
 
+    module(
+      "stopEditing — undo gate for doc-JSON values",
+      function (innerHooks) {
+        innerHooks.beforeEach(async function () {
+          withTestBlockRegistration(() => registerBlock(TestTile));
+          this.layout = await _renderBlocks(
+            "homepage-blocks",
+            [{ block: TestTile, args: { title: "seed" } }],
+            getOwner(this)
+          );
+          this.editor.siteSettings.visual_editor_enabled = true;
+          logIn(getOwner(this));
+          this.editor = getOwner(this).lookup("service:visual-editor");
+          this.editor.enter();
+
+          // Swap in a doc-JSON value post-render to mimic marked inline
+          // text. The block validator declares `title` as a string, but
+          // it only runs at render time; direct mutation isn't re-checked,
+          // which is enough to exercise the undo-gating comparator.
+          const draft = this.editor.readResolvedLayout("homepage-blocks");
+          draft[0].args.title = {
+            type: "doc",
+            content: [
+              { type: "text", text: "hello", marks: [{ type: "strong" }] },
+            ],
+          };
+          this.key = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        });
+
+        test("committing an unchanged doc-JSON value doesn't push undo", async function (assert) {
+          const opened = await this.editor.startEditingArg(this.key, "title");
+          assert.true(opened);
+          assert.false(this.editor.canUndo, "no undo entry before commit");
+
+          // Fresh object reference, identical content — what
+          // `toStorage(doc.toJSON())` produces on every commit for marked
+          // text. `Object.is` returns false; only a deep-equal comparator
+          // recognizes the no-op.
+          this.editor.applyInlineEditChange({
+            type: "doc",
+            content: [
+              { type: "text", text: "hello", marks: [{ type: "strong" }] },
+            ],
+          });
+          this.editor.stopEditing({ commit: true });
+
+          assert.false(
+            this.editor.canUndo,
+            "no spurious undo entry for an unchanged doc-JSON commit"
+          );
+        });
+
+        test("committing a CHANGED doc-JSON value DOES push undo", async function (assert) {
+          const opened = await this.editor.startEditingArg(this.key, "title");
+          assert.true(opened);
+
+          this.editor.applyInlineEditChange({
+            type: "doc",
+            content: [
+              { type: "text", text: "world", marks: [{ type: "strong" }] },
+            ],
+          });
+          this.editor.stopEditing({ commit: true });
+
+          assert.true(
+            this.editor.canUndo,
+            "real content changes still push undo entries"
+          );
+        });
+      }
+    );
+
     module("clipboard (copy / cut / paste)", function (innerHooks) {
       innerHooks.beforeEach(async function () {
         withTestBlockRegistration(() => registerBlock(TestTile));
