@@ -105,6 +105,17 @@ module TurboTests
     protected
 
     def check_for_migrations
+      # CI sets this env var because `bin/rake parallel:migrate` runs in a
+      # prior step. Skipping the recheck lets `lib/turbo_tests.rb` avoid
+      # booting the full Rails app (~2.5 s of master critical path before
+      # workers can spawn). Local `bin/turbo_rspec` invocations leave the env
+      # var unset, so Rails is loaded lazily here and the "pending migrations"
+      # diagnostic still surfaces during local development.
+      return if ENV["DISCOURSE_TURBO_SKIP_MIGRATION_CHECK"] == "1"
+
+      require "rails"
+      require File.expand_path("../../../config/environment", __FILE__)
+
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
       ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError
