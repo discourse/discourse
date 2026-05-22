@@ -9,6 +9,7 @@ import { replaceIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension";
 import ChatHeaderIcon from "../components/chat/header/icon";
@@ -112,24 +113,15 @@ class ChatSetupInit {
           action(context) {
             const modal = owner.lookup("service:modal");
             const currentUser = owner.lookup("service:current-user");
-            const draft = this.draft;
-            const isThread = context === "thread";
-            const draftHolder = isThread ? draft.thread : draft.channel;
 
             modal.show(GifsModal, {
               model: {
-                customPickHandler: async (message) => {
-                  try {
-                    await api.sendChatMessage(draft.channel.id, {
-                      message,
-                      threadId: isThread ? draft.thread?.id : null,
-                      inReplyToId: !isThread ? draft.inReplyTo?.id : null,
-                    });
-                  } catch {
-                    return;
-                  }
-                  draftHolder?.resetDraft?.(currentUser);
-                },
+                customPickHandler: buildGifPickHandler({
+                  api,
+                  draft: this.draft,
+                  isThread: context === "thread",
+                  currentUser,
+                }),
               },
             });
           },
