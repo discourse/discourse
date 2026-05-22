@@ -53,9 +53,6 @@ export default class ComposerActions extends Component {
     this.ensureSnapshotsUpdated();
   }
 
-  willDestroy() {
-    super.willDestroy();
-  }
 
   get action() {
     return this.args.action;
