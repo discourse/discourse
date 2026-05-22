@@ -197,6 +197,17 @@ export default class InlineEditController extends Component {
           this.schemaName === "paragraph" && variant.allowsHardBreak
             ? insertHardBreak(schema)
             : undefined,
+        // Backspace at position 0 of a `ve:paragraph` block merges
+        // this paragraph into the previous sibling — but only when
+        // the prev is also a `ve:paragraph` (the helper checks this
+        // and returns false otherwise, so PM falls through to its
+        // default delete-a-char behavior). Other schemas / blocks
+        // get no special handling; Backspace stays a plain delete.
+        Backspace:
+          this.schemaName === "paragraph" &&
+          this.visualEditor.editingBlockName === "ve:paragraph"
+            ? this.#mergeWithPrevAtStart()
+            : undefined,
         // Tab walks between rich-inline fields on the same block in DOM
         // order. The service's `startEditingArg` implicitly commits the
         // current session, so chaining Tabs across fields produces one
@@ -235,16 +246,18 @@ export default class InlineEditController extends Component {
 
     // Initial selection. `"selectAll"` (the default) is the "start
     // typing to replace" affordance for fresh edit sessions. `"start"`
-    // and `"end"` are used by structural transitions (Enter-split,
-    // Backspace-merge in later phases) where select-all would be
-    // wrong. A `{ coords }` hint comes from the click-to-edit gesture
-    // and places the cursor at the click point via PM's
-    // `posAtCoords` — when that returns null (click landed outside any
-    // text node, e.g. past end-of-line whitespace), we fall back to
-    // end-of-doc which is more natural than selecting all when the
-    // user's intent was to position the cursor. The service drives
-    // the hint and resets it to `"selectAll"` on consumption.
+    // and `"end"` are used by structural transitions (Enter-split
+    // sets `"start"`). A `{ pos }` hint is used by Backspace-merge to
+    // place the cursor at the absolute join position. A `{ coords }`
+    // hint comes from the click-to-edit gesture and places the cursor
+    // at the click point via PM's `posAtCoords` — when that returns
+    // null (click landed outside any text node, e.g. past end-of-line
+    // whitespace), we fall back to end-of-doc which is more natural
+    // than selecting all when the user's intent was to position the
+    // cursor. The service drives the hint and resets it to `"selectAll"`
+    // on consumption.
     const initialDoc = this.#view.state.doc;
+    const end = initialDoc.content.size;
     const hint = this.visualEditor.consumeInitialSelectionHint();
     let range;
     if (hint && typeof hint === "object" && hint.coords) {
@@ -252,15 +265,21 @@ export default class InlineEditController extends Component {
         left: hint.coords.x,
         top: hint.coords.y,
       });
-      const pos = coordResult ? coordResult.pos : initialDoc.content.size;
+      const pos = coordResult ? coordResult.pos : end;
+      range = pm.TextSelection.create(initialDoc, pos, pos);
+    } else if (
+      hint &&
+      typeof hint === "object" &&
+      typeof hint.pos === "number"
+    ) {
+      const pos = Math.max(0, Math.min(end, hint.pos));
       range = pm.TextSelection.create(initialDoc, pos, pos);
     } else if (hint === "start") {
       range = pm.TextSelection.create(initialDoc, 0, 0);
     } else if (hint === "end") {
-      const end = initialDoc.content.size;
       range = pm.TextSelection.create(initialDoc, end, end);
     } else {
-      range = pm.TextSelection.create(initialDoc, 0, initialDoc.content.size);
+      range = pm.TextSelection.create(initialDoc, 0, end);
     }
     this.#view.dispatch(this.#view.state.tr.setSelection(range));
     this.#view.focus();
@@ -487,6 +506,47 @@ export default class InlineEditController extends Component {
       const beforeDoc = doc.cut(0, cursor).toJSON();
       const afterDoc = doc.cut(cursor, doc.content.size).toJSON();
       return this.visualEditor.splitInlineEditAt({ beforeDoc, afterDoc });
+    };
+  }
+
+  /**
+   * Builds a PM keymap command for paragraph-block Backspace at the
+   * start of the doc: merges the current paragraph into the previous
+   * sibling when both are `ve:paragraph` entries. Reconstructs the
+   * prev's PM doc from its stored value via the same schema, concats
+   * the current doc onto it, and hands the merged doc-JSON to the
+   * service along with `joinPos` — the doc position where the merge
+   * boundary sits (= prev's content size before the concat). The
+   * service swaps the active session over to the prev entry with
+   * a `{ pos: joinPos }` initial-selection hint so the cursor lands
+   * at the join.
+   *
+   * Returns `false` (PM falls through to its default Backspace, which
+   * deletes a char) when any of the merge preconditions are missing:
+   * selection isn't a collapsed cursor at position 0, no prev sibling
+   * in the same outlet, or the prev sibling isn't a `ve:paragraph`.
+   */
+  #mergeWithPrevAtStart() {
+    return () => {
+      const view = this.#view;
+      if (!view) {
+        return false;
+      }
+      const { doc, selection, schema } = view.state;
+      if (!selection.empty || selection.from !== 0) {
+        return false;
+      }
+      const prev = this.visualEditor.getInlineEditPrevSiblingInfo();
+      if (!prev || prev.block !== "ve:paragraph") {
+        return false;
+      }
+      const prevDoc = schema.nodeFromJSON(toDoc(prev.value));
+      const joinPos = prevDoc.content.size;
+      const mergedDoc = prevDoc.replace(joinPos, joinPos, doc.slice(0));
+      return this.visualEditor.mergeInlineEditWithPrev({
+        mergedDoc: mergedDoc.toJSON(),
+        joinPos,
+      });
     };
   }
 

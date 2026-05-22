@@ -275,14 +275,16 @@ export default class VisualEditorService extends Service {
    * default) preserves the "start typing to replace" affordance for
    * fresh edit sessions. `"start"` / `"end"` are used by structural
    * transitions (Enter-split places the cursor at the start of the new
-   * sibling; Backspace-merge will place it at the join point) where
-   * select-all would be wrong. A `{ coords: { x, y } }` object is used
-   * by the click-to-edit gesture so the cursor lands where the user
-   * clicked (`mountEditor` resolves the screen coords via PM's
-   * `posAtCoords`). Consumed exactly once via
+   * sibling). A `{ pos: number }` object places the cursor at an
+   * exact document position — used by Backspace-merge so the cursor
+   * lands at the join point (end of the original "before" content,
+   * before the merged-in "after" content). A `{ coords: { x, y } }`
+   * object is used by the click-to-edit gesture so the cursor lands
+   * where the user clicked (`mountEditor` resolves the screen coords
+   * via PM's `posAtCoords`). Consumed exactly once via
    * `consumeInitialSelectionHint`.
    *
-   * @type {"start"|"end"|"selectAll"|{coords:{x:number,y:number}}}
+   * @type {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
    */
   #editingInitialSelection = "selectAll";
 
@@ -1940,7 +1942,7 @@ export default class VisualEditorService extends Service {
    * calls this exactly once when setting up the editor's initial
    * selection.
    *
-   * @returns {"start"|"end"|"selectAll"|{coords:{x:number,y:number}}}
+   * @returns {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
    */
   consumeInitialSelectionHint() {
     const hint = this.#editingInitialSelection;
@@ -2093,6 +2095,147 @@ export default class VisualEditorService extends Service {
         // The new block becomes the selected block so the chrome's
         // `--selected` reveal rule unhides the empty `<p>` wrapper.
         this._restoreSelection(newKey);
+        return;
+      }
+      requestAnimationFrame(() => transitionWhenReady(attempts + 1));
+    };
+    nextRunloop(this, transitionWhenReady);
+    return true;
+  }
+
+  /**
+   * Returns the previous sibling of the currently-editing entry when it
+   * also exists in the same outlet — or `null` if there's no active
+   * session, the current entry is the first sibling, or the lookup fails.
+   * The PM keymap reads this from the Backspace-at-start handler to
+   * decide whether a merge is possible AND to reconstruct the prev's PM
+   * doc (via `toDoc(prevValue)`) for concat. Filtering by block type is
+   * intentionally left to the caller — different keymap branches may
+   * want different "is this a merge candidate?" rules.
+   *
+   * @returns {{key: string, block: string|null, value: *}|null}
+   */
+  getInlineEditPrevSiblingInfo() {
+    const blockKey = this.editingBlockKey;
+    if (!blockKey) {
+      return null;
+    }
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return null;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return null;
+    }
+    const sibs = findEntrySiblings(layout, blockKey);
+    if (!sibs || sibs.index <= 0) {
+      return null;
+    }
+    const prev = sibs.siblings[sibs.index - 1];
+    return {
+      key: entryKey(prev),
+      block: prev.block ?? null,
+      value: prev.args?.[this.editingArgName],
+    };
+  }
+
+  /**
+   * Merges the current `ve:paragraph` edit session into its previous
+   * sibling. The keymap rebuilds the prev's PM doc (via `toDoc(prevValue)`
+   * + `Node.fromJSON`), concats the current PM doc onto its end, and
+   * passes the merged doc-JSON here along with `joinPos` — the absolute
+   * doc position where the boundary between the original prev content
+   * and the merged-in current content sits. That position becomes the
+   * cursor's new home via the `{ pos }` initial-selection hint.
+   *
+   * The whole mutation rides one `_recordStructural` block so Cmd+Z
+   * restores both paragraphs atomically. The current entry is removed;
+   * the prev entry absorbs the merged value.
+   *
+   * No-ops (returns `false`) when there's no active session, the active
+   * arg isn't `text`, the editing entry isn't a `ve:paragraph` block,
+   * or no prev sibling exists. Cross-block-type merges (paragraph into
+   * heading, etc.) are explicitly out of scope here — the keymap
+   * filters those out before calling.
+   *
+   * @param {{mergedDoc: object, joinPos: number}} args
+   * @returns {boolean}
+   */
+  @action
+  mergeInlineEditWithPrev({ mergedDoc, joinPos }) {
+    const blockKey = this.editingBlockKey;
+    const argName = this.editingArgName;
+    if (!blockKey || argName !== "text") {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located || located.entry.block !== "ve:paragraph") {
+      return false;
+    }
+    const { outletName } = located;
+    const layout = this.readResolvedLayout(outletName);
+    if (!layout) {
+      return false;
+    }
+    const sibs = findEntrySiblings(layout, blockKey);
+    if (!sibs || sibs.index <= 0) {
+      return false;
+    }
+    const prevEntry = sibs.siblings[sibs.index - 1];
+    const prevKey = entryKey(prevEntry);
+
+    const result = this._recordStructural([outletName], () => {
+      // Write the merged value into the prev entry. Match
+      // `applyInlineEditChange`'s contract of deleting the key on
+      // empty so the schema default surfaces.
+      const livePrev = this._findEntryByKey(prevKey);
+      if (!livePrev) {
+        return false;
+      }
+      const mergedValue = toStorage(mergedDoc);
+      if (mergedValue === "" || mergedValue == null) {
+        delete livePrev.args.text;
+      } else {
+        livePrev.args.text = mergedValue;
+      }
+      clearValidatorStamps(livePrev);
+      this._editedOutlets.add(outletName);
+
+      // Remove the current entry from the layout.
+      const draft = this._ensureDraft(outletName);
+      if (!draft) {
+        return false;
+      }
+      const removal = removeEntry(draft, blockKey);
+      if (!removal.changed) {
+        return false;
+      }
+      this._publishStructuralChange(outletName, removal.layout);
+      return true;
+    });
+    if (!result) {
+      return false;
+    }
+
+    // Same deferred-transition dance as `splitInlineEditAt`. The prev
+    // block-chrome already exists in the DOM (it was rendered before
+    // the merge), but the structural republish triggers a re-render
+    // pass; flipping `editingBlockKey` synchronously can race the
+    // `activeRendererEl` lookup. `nextRunloop` + rAF poll keeps things
+    // robust regardless of when Glimmer settles.
+    const transitionWhenReady = (attempts = 0) => {
+      const blockSelector = `[data-ve-block-key="${prevKey
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')}"]`;
+      const found = document.querySelector(blockSelector);
+      if (found || attempts > 10) {
+        this.#editingLocated = this._findEntryAndOutletSync(prevKey);
+        this.#editingPrevValue = this.#editingLocated?.entry?.args?.text;
+        this.#editingBlockName = "ve:paragraph";
+        this.#editingInitialSelection = { pos: joinPos };
+        this.editingBlockKey = prevKey;
+        this._restoreSelection(prevKey);
         return;
       }
       requestAnimationFrame(() => transitionWhenReady(attempts + 1));
