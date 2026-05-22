@@ -912,7 +912,7 @@ importers:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.5.0-570ad470'
 
-  plugins/discourse-visual-editor:
+  plugins/discourse-wireframe:
     devDependencies:
       lucide-static:
         specifier: ^1.16.0

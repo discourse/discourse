@@ -1,0 +1,237 @@
+// @ts-check
+
+/**
+ * Preset grid layouts surfaced by the inspector's layout form.
+ *
+ * Each template optionally declares its shape as a
+ * `grid-template-areas`-style string: each line is a row, each
+ * whitespace-separated token names a cell, a dot (`.`) marks an
+ * explicitly-empty cell, and identical names across adjacent cells
+ * coalesce into one rectangle. Example:
+ *
+ *   hero hero hero
+ *   a    b    c
+ *
+ * `parseGridAreas` turns the string into `{columns, rows, slots}`
+ * where each slot is a `{column, row}` rect in CSS Grid line syntax.
+ * `resolveTemplateLayout` merges the parsed frame with the
+ * template's static `args` and returns the slot entries the service
+ * will write into the `wf:layout`'s `children` on apply.
+ *
+ * Frame-only templates (no `areas` — e.g. "12-column") set the grid
+ * dimensions only; they don't auto-place slots, and the inspector's
+ * apply path leaves existing children alone for them.
+ *
+ * `args` carries the non-positional config (mode, gap, alignment).
+ * Columns / rows for templates with areas come from the parsed
+ * shape, not `args`.
+ */
+
+export const GRID_TEMPLATES = Object.freeze([
+  {
+    id: "twelve-col",
+    i18nKey: "twelve_col",
+    args: {
+      mode: "grid",
+      columns: 12,
+      rows: 1,
+      gap: 1,
+      align: "stretch",
+      columnTemplate: "",
+      rowTemplate: "",
+    },
+  },
+  {
+    id: "hero-plus-three",
+    i18nKey: "hero_plus_three",
+    areas: `
+      hero hero hero
+      a    b    c
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "sidebar-main",
+    i18nKey: "sidebar_main",
+    areas: `
+      sidebar main main main
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "right-sidebar",
+    i18nKey: "right_sidebar",
+    areas: `
+      main main main sidebar
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "two-column",
+    i18nKey: "two_column",
+    areas: `
+      a b
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "three-tile",
+    i18nKey: "three_tile",
+    areas: `
+      a b c
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "card-row",
+    i18nKey: "card_row",
+    areas: `
+      a b c d
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "magazine",
+    i18nKey: "magazine",
+    areas: `
+      lead lead aside
+      lead lead aside
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "hero-plus-grid",
+    i18nKey: "hero_plus_grid",
+    areas: `
+      hero hero
+      a    b
+      c    d
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+  {
+    id: "stacked-sections",
+    i18nKey: "stacked_sections",
+    areas: `
+      a
+      b
+      c
+    `,
+    args: { mode: "grid", gap: 1, align: "stretch" },
+  },
+]);
+
+/**
+ * Looks up a template by id. Returns `null` for unknown ids so
+ * callers (the inspector's preset chips) can fail soft.
+ *
+ * @param {string} id
+ * @returns {Object|null}
+ */
+export function findGridTemplate(id) {
+  return GRID_TEMPLATES.find((t) => t.id === id) ?? null;
+}
+
+/**
+ * Parses a `grid-template-areas`-style string into the grid frame
+ * (column / row count) plus a list of slot rects. See the module
+ * comment for the shape it expects. Returns `null` for empty /
+ * unparseable input so callers can skip auto-placement.
+ *
+ * Names that span discontiguous cells in the source (`hero . hero`)
+ * still emit a single rect covering the bounding box — we don't
+ * reject non-rectangular shapes here because the templates in this
+ * file are author-controlled. Runtime author input goes through the
+ * validator instead.
+ *
+ * @param {string} areasString
+ * @returns {{columns: number, rows: number, slots: Array<{column: string, row: string}>}|null}
+ */
+export function parseGridAreas(areasString) {
+  if (typeof areasString !== "string") {
+    return null;
+  }
+  const lines = areasString
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (lines.length === 0) {
+    return null;
+  }
+  const grid = lines.map((line) => line.split(/\s+/));
+  const rows = grid.length;
+  const columns = Math.max(...grid.map((row) => row.length));
+
+  /** @type {Map<string, {minR: number, maxR: number, minC: number, maxC: number}>} */
+  const rects = new Map();
+  for (let r = 0; r < grid.length; r++) {
+    for (let c = 0; c < grid[r].length; c++) {
+      const name = grid[r][c];
+      if (!name || name === ".") {
+        continue;
+      }
+      if (!rects.has(name)) {
+        rects.set(name, { minR: r, maxR: r, minC: c, maxC: c });
+      } else {
+        const rect = rects.get(name);
+        rect.minR = Math.min(rect.minR, r);
+        rect.maxR = Math.max(rect.maxR, r);
+        rect.minC = Math.min(rect.minC, c);
+        rect.maxC = Math.max(rect.maxC, c);
+      }
+    }
+  }
+
+  // CSS grid lines are 1-indexed, end-line is exclusive. Single-cell
+  // rects collapse to a bare line number so the resulting strings
+  // round-trip identically with `formatTrack` (`"1"` vs `"1 / 2"`).
+  const slots = [];
+  for (const rect of rects.values()) {
+    const colStart = rect.minC + 1;
+    const colEnd = rect.maxC + 2;
+    const rowStart = rect.minR + 1;
+    const rowEnd = rect.maxR + 2;
+    slots.push({
+      column:
+        colEnd - colStart === 1 ? `${colStart}` : `${colStart} / ${colEnd}`,
+      row: rowEnd - rowStart === 1 ? `${rowStart}` : `${rowStart} / ${rowEnd}`,
+    });
+  }
+  return { columns, rows, slots };
+}
+
+/**
+ * Resolves a template's full layout payload — the frame args (mode,
+ * columns, rows, gap, align, ...) plus the slot entries to write
+ * into the parent layout's `children`. Frame-only templates return
+ * `slotEntries: []` so the service knows to leave children alone.
+ *
+ * @param {Object} template
+ * @returns {{args: Object, slotEntries: Array<Object>}}
+ */
+export function resolveTemplateLayout(template) {
+  const baseArgs = { ...(template.args ?? {}) };
+  const parsed = template.areas ? parseGridAreas(template.areas) : null;
+  if (!parsed) {
+    return { args: baseArgs, slotEntries: [] };
+  }
+  const args = {
+    ...baseArgs,
+    columns: parsed.columns,
+    rows: parsed.rows,
+    columnTemplate: baseArgs.columnTemplate ?? "",
+    rowTemplate: baseArgs.rowTemplate ?? "",
+  };
+  const slotEntries = parsed.slots.map((slot) => ({
+    block: "wf:slot",
+    containerArgs: {
+      grid: {
+        column: slot.column,
+        row: slot.row,
+        align: "stretch",
+        justify: "stretch",
+      },
+    },
+  }));
+  return { args, slotEntries };
+}
