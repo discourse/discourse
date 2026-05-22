@@ -85,15 +85,22 @@ module PageObjects
 
         yield
       ensure
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
+        begin
+          cdp_client&.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+        ensure
+          begin
+            cdp_client&.detach
+          rescue ::Playwright::Error
+          end
+        end
       end
     end
 
@@ -113,15 +120,22 @@ module PageObjects
 
         yield
       ensure
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
+        begin
+          cdp_client&.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+        ensure
+          begin
+            cdp_client&.detach
+          rescue ::Playwright::Error
+          end
+        end
       end
     end
 
@@ -141,15 +155,22 @@ module PageObjects
 
         yield
       ensure
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
+        begin
+          cdp_client&.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+        ensure
+          begin
+            cdp_client&.detach
+          rescue ::Playwright::Error
+          end
+        end
       end
     end
   end
