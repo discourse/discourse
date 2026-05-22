@@ -648,6 +648,24 @@ RSpec.configure do |config|
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
 
+    # In production, `PrettyText.protect` and `AssetProcessor.v8_call` call
+    # `v8.low_memory_notification` after every invocation to keep MiniRacer's
+    # V8 heap small for long-lived server processes. Each notification is a
+    # synchronous V8 GC sweep on the Ruby thread (`MiniRacer::Context#low_memory_notification`
+    # accounts for ~2.5% of wall time in a local stackprof of `about_page_spec.rb`).
+    # In a system-test worker (short-lived, ~10 min lifetime, plenty of CDCK RAM),
+    # the aggressive per-call GC adds wall time without a meaningful memory
+    # benefit — V8's own heap heuristics will reclaim memory under real
+    # pressure. Local validation across `about_page_spec.rb` (3 runs each:
+    # 27.12 → 24.99 s median, −7.9%) and `login_spec.rb` (59.07 → 55.85 s,
+    # −5.5%) showed consistent savings.
+    module MiniRacerSkipLowMemoryNotificationPatch
+      def low_memory_notification
+        # no-op in test environment
+      end
+    end
+    MiniRacer::Context.prepend(MiniRacerSkipLowMemoryNotificationPatch)
+
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
