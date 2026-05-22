@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module DiscourseVisualEditor
-  # Builds the Phosphor SVG sprite at `svg-icons/phosphor.svg` from the
-  # manifest at `svg-icons/phosphor-icons.txt`. Each manifest entry maps
+  # Builds the Lucide SVG sprite at `svg-icons/lucide.svg` from the
+  # manifest at `svg-icons/lucide-icons.txt`. Each manifest entry maps
   # to a single `<symbol id="ve-<name>">` element in the sprite.
   #
   # The manifest is the source of truth. The sprite is committed so that
-  # production never needs the `@phosphor-icons/core` source files.
-  module PhosphorSprite
+  # production never needs the `lucide-static` source files.
+  module LucideSprite
     PLUGIN_ROOT = File.expand_path("../..", __dir__)
-    MANIFEST_PATH = File.join(PLUGIN_ROOT, "svg-icons", "phosphor-icons.txt")
-    SPRITE_PATH = File.join(PLUGIN_ROOT, "svg-icons", "phosphor.svg")
-    SOURCE_DIR = File.join(PLUGIN_ROOT, "node_modules", "@phosphor-icons", "core", "assets", "fill")
+    MANIFEST_PATH = File.join(PLUGIN_ROOT, "svg-icons", "lucide-icons.txt")
+    SPRITE_PATH = File.join(PLUGIN_ROOT, "svg-icons", "lucide.svg")
+    SOURCE_DIR = File.join(PLUGIN_ROOT, "node_modules", "lucide-static", "icons")
     ICON_PREFIX = "ve-"
 
     class MissingSourceError < StandardError
@@ -45,7 +45,7 @@ module DiscourseVisualEditor
     def self.generate!
       unless File.directory?(SOURCE_DIR)
         raise MissingSourceError,
-              "Phosphor source SVGs not found at #{SOURCE_DIR}. " \
+              "Lucide source SVGs not found at #{SOURCE_DIR}. " \
                 "Run `pnpm install` from the repo root."
       end
 
@@ -62,26 +62,32 @@ module DiscourseVisualEditor
     end
 
     def self.symbol_for(name)
-      source_path = File.join(SOURCE_DIR, "#{name}-fill.svg")
+      source_path = File.join(SOURCE_DIR, "#{name}.svg")
       unless File.exist?(source_path)
         raise MissingIconError,
-              "Phosphor icon \"#{name}\" not found at #{source_path}. " \
-                "Check the name at https://phosphoricons.com/ (Fill variant)."
+              "Lucide icon \"#{name}\" not found at #{source_path}. " \
+                "Check the name at https://lucide.dev/icons/."
       end
 
-      # Phosphor Fill source files use viewBox="0 0 256 256" and rely on
-      # `fill="currentColor"` set on the wrapping <svg>. Rewriting the
-      # root element as a <symbol> with the same attributes preserves
-      # rendering; dropping width/height lets the consumer size the icon
-      # via CSS.
+      # Lucide source files use viewBox="0 0 24 24" with stroke-based
+      # rendering (fill="none", stroke="currentColor", stroke-width="2",
+      # round caps/joins). Hoisting those stroke attributes onto the
+      # <symbol> ensures the icon renders identically when referenced
+      # via <use>; dropping width/height lets the consumer size it via
+      # CSS, and stripping the leading license comment keeps the sprite
+      # tidy.
       File
         .read(source_path)
+        .sub(/\A<!--[^>]*-->\s*/, "")
         .sub(/\A<\?xml[^>]*\?>\s*/, "")
         .sub(
-          /<svg\b[^>]*>/,
-          %(<symbol id="#{ICON_PREFIX}#{name}" viewBox="0 0 256 256" fill="currentColor">),
+          /<svg\b[^>]*>/m,
+          %(<symbol id="#{ICON_PREFIX}#{name}" viewBox="0 0 24 24" fill="none" ) +
+            %(stroke="currentColor" stroke-width="2" stroke-linecap="round" ) +
+            %(stroke-linejoin="round">),
         )
         .sub(%r{</svg>\s*\z}, "</symbol>")
+        .gsub(/\s+/, " ")
         .strip
     end
   end

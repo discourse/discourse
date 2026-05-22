@@ -1,0 +1,22 @@
+# Lucide icons used by the visual editor.
+#
+# One name per line, using the canonical Lucide name. Find names at
+# https://lucide.dev/icons/.
+#
+# After editing this file, regenerate the sprite:
+#   bin/rake visual_editor:lucide_sprite
+#
+# In development, the sprite is also regenerated automatically at boot
+# whenever this file is newer than `lucide.svg` next to it.
+#
+# Each entry registers an icon at `ve-<name>` (the `ve-` prefix is added
+# automatically in plugin.rb).
+
+align-center-horizontal
+align-center-vertical
+align-end-horizontal
+align-end-vertical
+align-start-horizontal
+align-start-vertical
+move-horizontal
+move-vertical

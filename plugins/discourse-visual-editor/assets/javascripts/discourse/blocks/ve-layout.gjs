@@ -213,10 +213,10 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             // Stack mode is a flex column, so `align-self` acts on the
             // horizontal (cross) axis: left / center / right / stretch.
             optionIcons: {
-              start: "ve-align-left",
+              start: "ve-align-start-vertical",
               center: "ve-align-center-horizontal",
-              end: "ve-align-right",
-              stretch: "ve-arrows-horizontal",
+              end: "ve-align-end-vertical",
+              stretch: "ve-move-horizontal",
             },
           },
         },
@@ -248,10 +248,10 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             // Row mode is a flex row, so `align-self` acts on the
             // vertical (cross) axis: top / center / bottom / stretch.
             optionIcons: {
-              start: "ve-align-top",
+              start: "ve-align-start-horizontal",
               center: "ve-align-center-vertical",
-              end: "ve-align-bottom",
-              stretch: "ve-arrows-vertical",
+              end: "ve-align-end-horizontal",
+              stretch: "ve-move-vertical",
             },
           },
         },

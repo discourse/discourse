@@ -43,25 +43,25 @@ register_svg_icon "up-long"
 register_svg_icon "up-right-and-down-left-from-center"
 register_svg_icon "wand-magic-sparkles"
 
-require_relative "lib/discourse_visual_editor/phosphor_sprite"
+require_relative "lib/discourse_visual_editor/lucide_sprite"
 
-# Phosphor Fill icons. The manifest at svg-icons/phosphor-icons.txt is
-# the source of truth and the matching sprite lives next to it. In
+# Lucide icons. The manifest at svg-icons/lucide-icons.txt is the
+# source of truth and the matching sprite lives next to it. In
 # non-production environments the sprite is regenerated automatically
 # when the manifest has changed; on production builds the committed
 # sprite is used as-is. Each manifest entry is registered with a `ve-`
 # prefix so it can be referenced as `ve-<name>` from templates.
-if !Rails.env.production? && DiscourseVisualEditor::PhosphorSprite.stale?
+if !Rails.env.production? && DiscourseVisualEditor::LucideSprite.stale?
   begin
-    DiscourseVisualEditor::PhosphorSprite.generate!
-  rescue DiscourseVisualEditor::PhosphorSprite::MissingSourceError,
-         DiscourseVisualEditor::PhosphorSprite::MissingIconError => e
-    Rails.logger.warn("[discourse-visual-editor] Phosphor sprite regen skipped: #{e.message}")
+    DiscourseVisualEditor::LucideSprite.generate!
+  rescue DiscourseVisualEditor::LucideSprite::MissingSourceError,
+         DiscourseVisualEditor::LucideSprite::MissingIconError => e
+    Rails.logger.warn("[discourse-visual-editor] Lucide sprite regen skipped: #{e.message}")
   end
 end
 
-DiscourseVisualEditor::PhosphorSprite.manifest_names.each do |name|
-  register_svg_icon "#{DiscourseVisualEditor::PhosphorSprite::ICON_PREFIX}#{name}"
+DiscourseVisualEditor::LucideSprite.manifest_names.each do |name|
+  register_svg_icon "#{DiscourseVisualEditor::LucideSprite::ICON_PREFIX}#{name}"
 end
 
 module ::DiscourseVisualEditor
