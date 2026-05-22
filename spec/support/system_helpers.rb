@@ -63,6 +63,25 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
+  # Wipes the browser-side HTTP response cache. The soft-reset path in
+  # `spec/rails_helper.rb` keeps the BrowserContext + Page alive across
+  # examples and does not clear the HTTP cache (which would re-introduce
+  # asset re-fetch wall-clock that defeats the perf win). Tests whose
+  # behaviour depends on server-rendered content that varies based on
+  # SiteSetting / DB state mutated between examples (e.g. `default_locale`
+  # changes, theme stylesheet content) need to call this in `before` so
+  # the next `visit` re-fetches from the server rather than the cache.
+  def clear_browser_cache
+    page.driver.with_playwright_page do |pw_page|
+      cdp_client = pw_page.context.new_cdp_session(pw_page)
+      begin
+        cdp_client.send_message("Network.clearBrowserCache")
+      ensure
+        cdp_client.detach
+      end
+    end
+  end
+
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false

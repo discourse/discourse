@@ -648,6 +648,115 @@ RSpec.configure do |config|
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
 
+    module CapybaraPlaywrightDriverSoftResetPatch
+      def reset!
+        if callback_on_save_screenshot?
+          raw_screenshot = @browser&.raw_screenshot
+          callback_on_save_screenshot(raw_screenshot) if raw_screenshot
+        end
+
+        video_path = @browser&.video_path
+
+        soft_reset_succeeded = false
+        if @browser
+          begin
+            @browser.soft_reset_browser_state
+            soft_reset_succeeded = true
+          rescue StandardError
+          end
+        end
+
+        unless soft_reset_succeeded
+          @browser&.clear_browser_contexts
+          @browser = nil
+        end
+
+        callback_on_save_screenrecord(video_path) if video_path
+      end
+    end
+
+    module CapybaraPlaywrightBrowserSoftResetPatch
+      class SoftResetFallback < StandardError
+      end
+
+      def soft_reset_browser_state
+        raise SoftResetFallback if @callback_on_save_trace
+
+        primary = @playwright_page
+        raise SoftResetFallback if primary.nil? || primary.closed?
+
+        contexts = @playwright_browser.contexts
+        raise SoftResetFallback if contexts.empty?
+
+        primary_ctx = contexts.find { |ctx| ctx.pages.any? { |pg| pg.guid == primary.guid } }
+        raise SoftResetFallback if primary_ctx.nil?
+
+        origins = []
+        primary_ctx.pages.each do |pg|
+          page_url =
+            begin
+              pg.url
+            rescue ::Playwright::Error
+              nil
+            end
+          next if page_url.nil? || page_url.empty?
+          next if page_url == "about:blank" || page_url.start_with?("chrome:", "data:")
+
+          begin
+            uri = URI.parse(page_url)
+            next if uri.host.nil? || uri.scheme.nil?
+            port_segment = uri.port && uri.port != uri.default_port ? ":#{uri.port}" : ""
+            origins << "#{uri.scheme}://#{uri.host}#{port_segment}"
+          rescue URI::InvalidURIError
+          end
+        end
+
+        begin
+          cdp = primary_ctx.new_cdp_session(primary)
+          origins.uniq.each do |origin|
+            cdp.send_message(
+              "Storage.clearDataForOrigin",
+              params: {
+                origin: origin,
+                storageTypes: "all",
+              },
+            )
+          end
+          cdp.detach
+        rescue ::Playwright::Error
+        end
+
+        contexts.each do |ctx|
+          next if ctx.equal?(primary_ctx)
+          begin
+            ctx.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        primary_ctx.pages.each do |pg|
+          next if pg.guid == primary.guid
+          begin
+            pg.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        begin
+          primary_ctx.clear_permissions
+        rescue ::Playwright::Error
+        end
+
+        begin
+          primary_ctx.clear_cookies
+        rescue ::Playwright::Error
+        end
+      end
+    end
+
+    Capybara::Playwright::Driver.prepend(CapybaraPlaywrightDriverSoftResetPatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserSoftResetPatch)
+
     # In production, `PrettyText.protect` and `AssetProcessor.v8_call` call
     # `v8.low_memory_notification` after every invocation to keep MiniRacer's
     # V8 heap small for long-lived server processes. Each notification is a
