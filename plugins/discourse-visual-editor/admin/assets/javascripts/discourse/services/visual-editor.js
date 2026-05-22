@@ -7,6 +7,7 @@ import {
   trackedMap,
   trackedSet,
 } from "@ember/reactive/collections";
+import { next as nextRunloop } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
   _clearLayoutLayer,
@@ -27,6 +28,7 @@ import {
   parsePlacement,
   placementsOverlap,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
+import { toStorage } from "discourse/plugins/discourse-visual-editor/discourse/lib/inline-rich-text";
 import { resolveTemplateLayout } from "../lib/grid-templates";
 import {
   clearValidatorStamps,
@@ -257,6 +259,29 @@ export default class VisualEditorService extends Service {
    * @type {{entry: Object, outletName: string}|null}
    */
   #editingLocated = null;
+
+  /**
+   * Block name (`ve:paragraph`, `ve:heading`, …) of the entry currently
+   * being edited. Cached at session start so the PM keymap can branch on
+   * block type per keystroke without re-walking the layout. Cleared by
+   * `stopEditing`.
+   *
+   * @type {string|null}
+   */
+  #editingBlockName = null;
+
+  /**
+   * Selection hint for the next `mountEditor` call. `"selectAll"` (the
+   * default) preserves the "start typing to replace" affordance for
+   * fresh edit sessions. `"start"` / `"end"` are used by structural
+   * transitions (Enter-split places the cursor at the start of the new
+   * sibling; Backspace-merge will place it at the join point) where
+   * select-all would be wrong. Consumed exactly once via
+   * `consumeInitialSelectionHint`.
+   *
+   * @type {"start"|"end"|"selectAll"}
+   */
+  #editingInitialSelection = "selectAll";
 
   /**
    * Callback the inline-edit controller registers via
@@ -1879,9 +1904,36 @@ export default class VisualEditorService extends Service {
     }
     this.#editingLocated = located;
     this.#editingPrevValue = located.entry.args?.[argName];
+    this.#editingBlockName = located.entry.block ?? null;
     this.editingBlockKey = blockKey;
     this.editingArgName = argName;
     return true;
+  }
+
+  /**
+   * Block name (`ve:paragraph`, `ve:heading`, …) of the currently-editing
+   * entry, or `null` when no session is active. Read by the PM keymap to
+   * branch behaviour per block type (e.g. Enter splits a paragraph block
+   * but commits-and-exits in a heading).
+   *
+   * @returns {string|null}
+   */
+  get editingBlockName() {
+    return this.#editingBlockName;
+  }
+
+  /**
+   * Returns the pending initial-selection hint for the next mount and
+   * resets it to the default (`"selectAll"`). One-shot — `mountEditor`
+   * calls this exactly once when setting up the editor's initial
+   * selection.
+   *
+   * @returns {"start"|"end"|"selectAll"}
+   */
+  consumeInitialSelectionHint() {
+    const hint = this.#editingInitialSelection;
+    this.#editingInitialSelection = "selectAll";
+    return hint;
   }
 
   /**
@@ -1925,6 +1977,116 @@ export default class VisualEditorService extends Service {
       entry.args[argName] = value;
     }
     clearValidatorStamps(entry);
+  }
+
+  /**
+   * Splits the current `ve:paragraph` edit session into two sibling
+   * paragraph entries at the cursor. The current entry keeps the
+   * "before" doc; a freshly-minted sibling holds the "after" doc and
+   * becomes the new active edit target with the cursor at position 0.
+   *
+   * The PM keymap calls this with the cursor-split doc-JSON pair. The
+   * whole mutation rides one `_recordStructural` block so Cmd+Z reverts
+   * the split atomically — there's no intermediate `applyInlineEditChange`
+   * write, since we hand-write both docs directly in the recording
+   * window.
+   *
+   * No-ops (returns `false`) when there's no active session, the active
+   * arg isn't `text`, or the editing entry isn't a `ve:paragraph` block.
+   *
+   * @param {{beforeDoc: object, afterDoc: object}} args
+   * @returns {boolean}
+   */
+  @action
+  splitInlineEditAt({ beforeDoc, afterDoc }) {
+    const blockKey = this.editingBlockKey;
+    const argName = this.editingArgName;
+    if (!blockKey || argName !== "text") {
+      return false;
+    }
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located || located.entry.block !== "ve:paragraph") {
+      return false;
+    }
+    const { entry: currentEntry, outletName } = located;
+    const align = currentEntry.args?.align;
+    const afterValue = toStorage(afterDoc);
+    const afterArgs = {};
+    if (afterValue !== "" && afterValue != null) {
+      afterArgs.text = afterValue;
+    }
+    if (align !== undefined) {
+      afterArgs.align = align;
+    }
+    const newEntry = { block: "ve:paragraph", args: afterArgs };
+    let newKey = null;
+
+    const result = this._recordStructural([outletName], () => {
+      // Write the "before" doc back into the current entry. Direct
+      // mutation on the live entry is safe here — we're inside the
+      // structural-recording window, so the pre-state was already
+      // captured. Match `applyInlineEditChange`'s contract of deleting
+      // the key on empty so the schema default surfaces.
+      const beforeValue = toStorage(beforeDoc);
+      if (beforeValue === "" || beforeValue == null) {
+        delete currentEntry.args.text;
+      } else {
+        currentEntry.args.text = beforeValue;
+      }
+      clearValidatorStamps(currentEntry);
+      this._editedOutlets.add(outletName);
+
+      // Insert the new sibling immediately after the current entry.
+      const layout = this._ensureDraft(outletName);
+      if (!layout) {
+        return false;
+      }
+      const insertion = insertEntryAt(layout, blockKey, newEntry, "after");
+      if (!insertion.changed) {
+        return false;
+      }
+      this._publishStructuralChange(outletName, insertion.layout);
+
+      // `_publishStructuralChange` ran `assignStableKeys`, so the new
+      // entry now has its composite key.
+      newKey = entryKey(newEntry);
+      return !!newKey;
+    });
+    if (!result) {
+      return false;
+    }
+
+    // Defer the edit-session transition until Glimmer has rendered the
+    // new chrome into the DOM. The controller's `activeRendererEl`
+    // getter does `document.querySelector(…)` to find the renderer
+    // span; if we flip `editingBlockKey` synchronously the controller
+    // re-renders before the canvas has mounted the new block-chrome,
+    // and the lookup returns `null` — PM never re-mounts.
+    //
+    // We use `next` (defers past `afterRender`) plus a short rAF poll
+    // because the canvas's block-chrome mount can land later than the
+    // standard render phase. The poll bails after a few frames so a
+    // genuinely-missing element doesn't spin forever.
+    const transitionWhenReady = (attempts = 0) => {
+      const blockSelector = `[data-ve-block-key="${newKey
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')}"]`;
+      const found = document.querySelector(blockSelector);
+      if (found || attempts > 10) {
+        this.#editingLocated = this._findEntryAndOutletSync(newKey);
+        this.#editingPrevValue = this.#editingLocated?.entry?.args?.text;
+        this.#editingBlockName = "ve:paragraph";
+        this.#editingInitialSelection = "start";
+        this.editingBlockKey = newKey;
+        // The new block becomes the selected block so the chrome's
+        // `--selected` reveal rule unhides the empty `<p>` wrapper.
+        this._restoreSelection(newKey);
+        return;
+      }
+      requestAnimationFrame(() => transitionWhenReady(attempts + 1));
+    };
+    nextRunloop(this, transitionWhenReady);
+    return true;
   }
 
   /**
@@ -2029,6 +2191,8 @@ export default class VisualEditorService extends Service {
 
     this.#editingLocated = null;
     this.#editingPrevValue = null;
+    this.#editingBlockName = null;
+    this.#editingInitialSelection = "selectAll";
     this.editingBlockKey = null;
     this.editingArgName = null;
   }

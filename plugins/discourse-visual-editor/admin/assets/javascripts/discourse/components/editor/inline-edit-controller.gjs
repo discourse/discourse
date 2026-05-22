@@ -52,6 +52,20 @@ export default class InlineEditController extends Component {
   #editingRendererEl = null;
   #savedLinkRange = null;
   /**
+   * Maps each PM mount span to the renderer element it was inserted into,
+   * captured at `didInsert` time when the element is guaranteed to be
+   * attached. Glimmer's `{{#in-element}}` recreates the inner element on
+   * target change rather than moving it, so by the time `willDestroy`
+   * fires on the old mount span its `parentElement` is already `null`.
+   * Looking up the captured parent here keeps each unmount paired with
+   * its own renderer — essential during Enter-split's mount→mount→
+   * unmount→unmount lifecycle order, where reading a shared
+   * `#editingRendererEl` field race-conditions with the new mount.
+   *
+   * @type {WeakMap<HTMLElement, HTMLElement>}
+   */
+  #mountRendererMap = new WeakMap();
+  /**
    * Tracked counter bumped on every PM transaction. Read by
    * `markState` / `selectionEmpty` getters to participate in Glimmer's
    * autotracking — PM state itself isn't tracked, so without this bump
@@ -146,6 +160,10 @@ export default class InlineEditController extends Component {
       return;
     }
     this.#editingRendererEl = rendererEl;
+    // Pair this specific mount span with its renderer so the matching
+    // `unmountEditor` call can remove `--editing` from the correct
+    // element even after the mount span has been detached from the DOM.
+    this.#mountRendererMap.set(container, rendererEl);
 
     const pm = await loadInlineRichEditor();
 
@@ -177,16 +195,29 @@ export default class InlineEditController extends Component {
           this.visualEditor.stopEditing({ commit: true });
           return true;
         },
-        // In a paragraph schema Enter inserts a hard_break; everywhere else
-        // (heading, plain) Enter commits + exits. Phase 3 will change this
-        // for paragraph to split into a new sibling block instead.
+        // Enter behavior depends on schema + block type:
+        //   - paragraph schema + `ve:paragraph` block → split the
+        //     block at the cursor (Phase 3.1) — the current entry keeps
+        //     the "before" doc, a new sibling holds the "after" doc.
+        //   - paragraph schema + other block (callout body, banner
+        //     content, …) → existing `hard_break` behaviour (splitting
+        //     a callout into two callouts makes no semantic sense).
+        //   - heading / plain → commit and exit.
+        // Shift+Enter keeps `hard_break` in any paragraph-schema editor
+        // so authors can still soft-wrap inside a paragraph.
         Enter:
-          this.schemaName === "paragraph" && variant.allowsHardBreak
-            ? insertHardBreak(schema)
+          this.schemaName === "paragraph"
+            ? this.visualEditor.editingBlockName === "ve:paragraph"
+              ? this.#splitParagraphAtCursor()
+              : insertHardBreak(schema)
             : () => {
                 this.visualEditor.stopEditing({ commit: true });
                 return true;
               },
+        "Shift-Enter":
+          this.schemaName === "paragraph" && variant.allowsHardBreak
+            ? insertHardBreak(schema)
+            : undefined,
         // Tab walks between rich-inline fields on the same block in DOM
         // order. The service's `startEditingArg` implicitly commits the
         // current session, so chaining Tabs across fields produces one
@@ -223,14 +254,24 @@ export default class InlineEditController extends Component {
       this.visualEditor.applyInlineEditChange(toStorage(docJson));
     });
 
-    // Select all on entry — "start typing to replace" affordance for the
-    // most common edit case (replacing existing text).
-    const allRange = pm.TextSelection.create(
-      this.#view.state.doc,
-      0,
-      this.#view.state.doc.content.size
-    );
-    this.#view.dispatch(this.#view.state.tr.setSelection(allRange));
+    // Initial selection. `"selectAll"` (the default) is the "start
+    // typing to replace" affordance for fresh edit sessions. `"start"`
+    // and `"end"` are used by structural transitions (Enter-split,
+    // Backspace-merge in later phases) where select-all would be
+    // wrong. The service drives the hint and resets it to `"selectAll"`
+    // on consumption.
+    const initialDoc = this.#view.state.doc;
+    const hint = this.visualEditor.consumeInitialSelectionHint();
+    let range;
+    if (hint === "start") {
+      range = pm.TextSelection.create(initialDoc, 0, 0);
+    } else if (hint === "end") {
+      const end = initialDoc.content.size;
+      range = pm.TextSelection.create(initialDoc, end, end);
+    } else {
+      range = pm.TextSelection.create(initialDoc, 0, initialDoc.content.size);
+    }
+    this.#view.dispatch(this.#view.state.tr.setSelection(range));
     this.#view.focus();
 
     this.#handleOutsideClick = (event) => {
@@ -255,7 +296,7 @@ export default class InlineEditController extends Component {
   }
 
   @action
-  unmountEditor() {
+  unmountEditor(mountSpan) {
     this.visualEditor.registerInlineEditCommit(null);
 
     const view = this.#view;
@@ -267,7 +308,15 @@ export default class InlineEditController extends Component {
       document.removeEventListener("mousedown", this.#handleOutsideClick, true);
       this.#handleOutsideClick = null;
     }
-    this.#editingRendererEl?.classList.remove("--editing");
+    // Look up the renderer this specific mount span was attached to.
+    // `mountSpan.parentElement` is `null` here because Glimmer detaches
+    // the element before firing `willDestroy`. The mount→renderer map
+    // captured the parent at mount time when it was still attached.
+    const rendererEl = mountSpan ? this.#mountRendererMap.get(mountSpan) : null;
+    rendererEl?.classList.remove("--editing");
+    if (mountSpan) {
+      this.#mountRendererMap.delete(mountSpan);
+    }
     this.#editingRendererEl = null;
     this.#savedLinkRange = null;
     this.linkEditMode = false;
@@ -430,6 +479,31 @@ export default class InlineEditController extends Component {
         next.dataset.veInlineEditArg
       );
       return true;
+    };
+  }
+
+  /**
+   * Builds a PM keymap command for paragraph-block Enter: slices the
+   * current PM doc at the cursor into a `before` doc-JSON and an
+   * `after` doc-JSON, then hands them to the service's
+   * `splitInlineEditAt` action. PM's `Node.cut(from, to)` returns a
+   * doc-shaped node containing the slice — calling `toJSON()` on each
+   * gives the storage-ready doc-JSON the service writes back via
+   * `toStorage`. Returns `true` when the split fires (consumes the
+   * keystroke); `false` when the session state is wrong so PM falls
+   * through to the next command in the keymap.
+   */
+  #splitParagraphAtCursor() {
+    return () => {
+      const view = this.#view;
+      if (!view) {
+        return false;
+      }
+      const { doc, selection } = view.state;
+      const cursor = selection.from;
+      const beforeDoc = doc.cut(0, cursor).toJSON();
+      const afterDoc = doc.cut(cursor, doc.content.size).toJSON();
+      return this.visualEditor.splitInlineEditAt({ beforeDoc, afterDoc });
     };
   }
 
