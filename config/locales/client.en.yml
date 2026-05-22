@@ -3377,6 +3377,7 @@ en:
           desc: "Unlisted topics are only accessible by direct link"
         edit_post: "Editing post"
         no_actions_available: "No actions available"
+        unknown_user: "User"
 
       reload: "Reload"
       ignore: "Ignore"

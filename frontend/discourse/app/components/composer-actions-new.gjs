@@ -185,13 +185,14 @@ export default class ComposerActions extends Component {
   }
 
   _postDisplayName(post) {
+    const fallback = i18n("composer.composer_actions.unknown_user");
     if (!post) {
-      return "User";
+      return fallback;
     }
     if (post === this.post && this.replyOptions?.userLink?.anchor) {
       return this.replyOptions.userLink.anchor;
     }
-    return prioritizeNameFallback(post.name, post.username) || "User";
+    return prioritizeNameFallback(post.name, post.username) || fallback;
   }
 
   _computeAvailableActions() {
