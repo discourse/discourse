@@ -11,6 +11,7 @@ import DUserLink from "discourse/ui-kit/d-user-link";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const PAGE_SIZE = 30;
+const FALLBACK_SKELETON_ROWS = 3;
 
 const SkeletonRow = <template>
   <div
@@ -59,12 +60,16 @@ export default class PostUsersMenu extends Component {
   }
 
   get skeletonRows() {
-    if (!this.loading || !this.args.totalUsers) {
+    if (!this.loading) {
       return [];
     }
 
-    const count = Math.min(this.args.totalUsers - this.users.length, PAGE_SIZE);
-    return Array.from({ length: Math.max(count, 0) });
+    const remaining = this.args.totalUsers - this.users.length;
+    const count =
+      Number.isFinite(remaining) && remaining > 0
+        ? Math.min(remaining, PAGE_SIZE)
+        : FALLBACK_SKELETON_ROWS;
+    return Array.from({ length: count });
   }
 
   @action
