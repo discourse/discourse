@@ -60,6 +60,15 @@ RSpec.describe NestedTopic::ListRoots do
       end
     end
 
+    it "marks an exact full root page as the final page" do
+      stub_const(NestedReplies::TreeLoader, :ROOTS_PER_PAGE, 2) do
+        2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
+
+        expect(result[:response][:roots].length).to eq(2)
+        expect(result[:response][:has_more_roots]).to eq(false)
+      end
+    end
+
     context "when page is greater than 0" do
       let(:params) { { sort: "top", page: 1 } }
 
@@ -91,6 +100,73 @@ RSpec.describe NestedTopic::ListRoots do
       it "includes pinned_post_ids in the response" do
         response = result[:response]
         expect(response[:pinned_post_ids]).to include(pinned_post.id)
+      end
+    end
+
+    context "with root_summary" do
+      it "is included on every page so deep links can render the timeline" do
+        result =
+          described_class.call(
+            params: {
+              sort: "top",
+              page: 1,
+            },
+            guardian: user.guardian,
+            topic_view: topic_view,
+          )
+        expect(result[:response]).to have_key(:root_summary)
+      end
+
+      it "includes page_size so the client can compute target pages" do
+        summary = result[:response][:root_summary]
+        expect(summary[:page_size]).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
+      end
+
+      it "includes page_count" do
+        summary = result[:response][:root_summary]
+        expect(summary[:page_count]).to eq(0)
+      end
+
+      it "includes pinned_count so the client can offset position math" do
+        root_a = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [root_a.id])
+
+        summary = result[:response][:root_summary]
+        expect(summary[:pinned_count]).to eq(1)
+      end
+
+      it "reports pinned_count as 0 when nothing is pinned" do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        summary = result[:response][:root_summary]
+        expect(summary[:pinned_count]).to eq(0)
+      end
+    end
+
+    context "with a deleted pinned root" do
+      fab!(:deleted_pinned) do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1, deleted_at: Time.now)
+      end
+
+      before do
+        Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [deleted_pinned.id])
+      end
+
+      it "keeps the deleted pinned root in the normal sorted list instead of dropping it" do
+        ids = result[:response][:roots].map { |r| r[:id] }
+        expect(ids).to include(deleted_pinned.id)
+      end
+
+      it "does not count deleted pinned roots as pinned in root_summary" do
+        stub_const(NestedReplies::TreeLoader, :ROOTS_PER_PAGE, 2) do
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+
+          summary = result[:response][:root_summary]
+          expect(summary[:total]).to eq(3)
+          expect(summary[:pinned_count]).to eq(0)
+          expect(summary[:page_count]).to eq(2)
+        end
       end
     end
 

@@ -1,0 +1,70 @@
+.timeline-scrubber {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+
+  --timeline-scroller-height: 50px;
+  border-left: 1px solid var(--topic-timeline-border-color);
+  margin-left: 0.5em;
+
+  &__track {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__scroller {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--timeline-scroller-height);
+    margin-left: -0.22em;
+    display: flex;
+    align-items: center;
+    cursor: ns-resize;
+    will-change: top;
+    transition: top 0.05s linear;
+
+    // Travel = rail height minus pill height, so progress 0/1 don't overflow.
+    top: calc(
+      var(--scrubber-progress, 0) *
+        (100% - var(--timeline-scroller-height, 50px))
+    );
+  }
+
+  &--dragging &__scroller {
+    transition: none;
+  }
+
+  &__grip {
+    border-radius: 0.8em;
+    width: 0.35em;
+    height: 100%;
+    background-color: var(--topic-timeline-handle-color);
+    flex-shrink: 0;
+    z-index: 1;
+    outline: 1px solid transparent;
+    margin-left: 0.5px;
+  }
+
+  &__scroller-content {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+    padding-left: var(--space-4);
+    max-height: 3em;
+  }
+
+  .timeline-replies {
+    overflow: hidden;
+    overflow-wrap: break-word;
+    font-weight: bold;
+  }
+
+  .timeline-ago {
+    color: var(--primary-med-or-secondary-med);
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

@@ -46,6 +46,19 @@ module NestedReplies
       NestedReplies::Sort.apply(scope, sort)
     end
 
+    def promotable_pinned_post_ids(pinned_post_ids)
+      return [] if pinned_post_ids.blank?
+
+      # apply_visibility unscopes deleted_at, so re-filter after it.
+      apply_visibility(
+        topic
+          .posts
+          .where(id: pinned_post_ids)
+          .where("reply_to_post_number IS NULL OR reply_to_post_number = 1")
+          .where(post_number: 2..),
+      ).where(deleted_at: nil).pluck(:id)
+    end
+
     def promote_pinned_roots(roots, pinned_post_ids)
       return roots if pinned_post_ids.blank?
 
@@ -255,6 +268,31 @@ module NestedReplies
         .where(post_type: visible_post_types)
         .group(:reply_to_post_number)
         .count
+    end
+
+    # pinned_count lets the client offset its "position in total"
+    # calculation when firstLoadedPage > 0 — pages after 0 contain only
+    # unpinned roots, but those roots come after N_pinned in the total
+    # ordering.
+    def root_summary(sort, pinned_post_ids: nil)
+      scope = root_posts_scope(sort)
+      total = scope.count
+      unpinned_total =
+        if pinned_post_ids.present?
+          promotable_pinned_ids = promotable_pinned_post_ids(pinned_post_ids)
+          promotable_pinned_ids.present? ? scope.where.not(id: promotable_pinned_ids).count : total
+        else
+          total
+        end
+      page_count = total.zero? ? 0 : [1, (unpinned_total.to_f / ROOTS_PER_PAGE).ceil].max
+      pinned_count = total - unpinned_total
+
+      {
+        total: total,
+        page_size: ROOTS_PER_PAGE,
+        page_count: page_count,
+        pinned_count: pinned_count,
+      }
     end
 
     def total_descendant_counts(post_ids)

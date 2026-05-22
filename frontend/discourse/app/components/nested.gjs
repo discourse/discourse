@@ -76,74 +76,79 @@ export default class Nested extends Component {
         topicId=@topic.id
       }}
     >
-      <NestedHeader
-        @topic={{@topic}}
-        @editingTopic={{@editingTopic}}
-        @buffered={{@buffered}}
-        @showCategoryChooser={{@showCategoryChooser}}
-        @canEditTags={{@canEditTags}}
-        @minimumRequiredTags={{@minimumRequiredTags}}
-        @finishedEditingTopic={{@finishedEditingTopic}}
-        @cancelEditingTopic={{@cancelEditingTopic}}
-        @topicCategoryChanged={{@topicCategoryChanged}}
-        @topicTagsChanged={{@topicTagsChanged}}
-        @startEditingTopic={{@startEditingTopic}}
-      />
-
       <PluginOutlet
         @name="topic-above-post-stream"
         @connectorTagName="div"
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      <NestedOp
-        @post={{@opPost}}
-        @topic={{@topic}}
-        @editPost={{@editPost}}
-        @showHistory={{@showHistory}}
-        @replyToPost={{@replyToPost}}
-        @changeNotice={{@changeNotice}}
-        @changePostOwner={{@changePostOwner}}
-        @grantBadge={{@grantBadge}}
-        @lockPost={{@lockPost}}
-        @unlockPost={{@unlockPost}}
-        @permanentlyDeletePost={{@permanentlyDeletePost}}
-        @rebakePost={{@rebakePost}}
-        @showPagePublish={{@showPagePublish}}
-        @togglePostType={{@togglePostType}}
-        @toggleWiki={{@toggleWiki}}
-        @unhidePost={{@unhidePost}}
-        @showPostMenu={{true}}
-        @registerPost={{this.viewportTracker.registerPost}}
-      />
-
-      <div class="nested-view__topic-map topic-map">
-        <TopicMap
-          @model={{@topic}}
-          @topicDetails={{@topic.details}}
-          @showPMMap={{@topic.isPrivateMessage}}
+      {{! Site header docks the title once the in-page header is hidden. }}
+      {{#unless @firstLoadedPage}}
+        <NestedHeader
+          @topic={{@topic}}
+          @editingTopic={{@editingTopic}}
+          @buffered={{@buffered}}
+          @showCategoryChooser={{@showCategoryChooser}}
+          @canEditTags={{@canEditTags}}
+          @minimumRequiredTags={{@minimumRequiredTags}}
+          @finishedEditingTopic={{@finishedEditingTopic}}
+          @cancelEditingTopic={{@cancelEditingTopic}}
+          @topicCategoryChanged={{@topicCategoryChanged}}
+          @topicTagsChanged={{@topicTagsChanged}}
+          @startEditingTopic={{@startEditingTopic}}
         />
-      </div>
 
-      <div class="nested-view__controls">
-        <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        <div class="nested-view__controls-right">
-          {{#if @topic.has_activity_log}}
-            <DButton
-              class="btn-flat nested-view__activity-link"
-              @action={{@showActivityLog}}
-              @label="nested_replies.activity_log.link"
-            />
-          {{/if}}
-          {{#if this.currentUser.can_toggle_nested_mode}}
-            <DButton
-              class="btn-flat nested-view__flat-link"
-              @href={{this.flatViewUrl}}
-              @label="nested_replies.view_as_flat"
-            />
-          {{/if}}
+        <NestedOp
+          @post={{@opPost}}
+          @topic={{@topic}}
+          @editPost={{@editPost}}
+          @showHistory={{@showHistory}}
+          @replyToPost={{@replyToPost}}
+          @changeNotice={{@changeNotice}}
+          @changePostOwner={{@changePostOwner}}
+          @grantBadge={{@grantBadge}}
+          @lockPost={{@lockPost}}
+          @unlockPost={{@unlockPost}}
+          @permanentlyDeletePost={{@permanentlyDeletePost}}
+          @rebakePost={{@rebakePost}}
+          @showPagePublish={{@showPagePublish}}
+          @togglePostType={{@togglePostType}}
+          @toggleWiki={{@toggleWiki}}
+          @unhidePost={{@unhidePost}}
+          @showPostMenu={{true}}
+          @registerPost={{this.viewportTracker.registerPost}}
+        />
+
+        <div class="nested-view__topic-map topic-map">
+          <TopicMap
+            @model={{@topic}}
+            @topicDetails={{@topic.details}}
+            @showPMMap={{@topic.isPrivateMessage}}
+          />
         </div>
-      </div>
+      {{/unless}}
+
+      {{#unless @firstLoadedPage}}
+        <div class="nested-view__controls">
+          <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
+          <div class="nested-view__controls-right">
+            {{#if @topic.has_activity_log}}
+              <DButton
+                class="btn-flat nested-view__activity-link"
+                @action={{@showActivityLog}}
+                @label="nested_replies.activity_log.link"
+              />
+            {{/if}}
+            {{#if this.currentUser.can_toggle_nested_mode}}
+              <DButton
+                class="btn-flat nested-view__flat-link"
+                @href={{this.flatViewUrl}}
+                @label="nested_replies.view_as_flat"
+              />
+            {{/if}}
+          </div>
+        </div>
+      {{/unless}}
 
       {{#if (gt @newRootPostCount 0)}}
         <div class="nested-view__new-replies">
@@ -204,12 +209,17 @@ export default class Nested extends Component {
         {{/each}}
       </div>
 
-      <DConditionalLoadingSpinner @condition={{@loadingMore}} />
+      {{#if @loadingNextRoots}}
+        <DConditionalLoadingSpinner
+          class="nested-view__loading-next"
+          @condition={{true}}
+        />
+      {{/if}}
 
       <DLoadMore
         @action={{@loadMoreRoots}}
         @enabled={{@hasMoreRoots}}
-        @isLoading={{@loadingMore}}
+        @isLoading={{@loadingNextRoots}}
       />
 
       <PluginOutlet
