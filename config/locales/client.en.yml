@@ -6812,6 +6812,49 @@ en:
         check_for_updates: "Check for updates"
       dashboard:
         title: "Dashboard"
+        command_center:
+          eyebrow: "Admin command center"
+          title: "What do you want to do?"
+          subtitle: "Search admin, open a setting, or describe an action in plain language."
+          placeholder: 'Try "settings", "login required", or "suspend markvanlan"'
+          input_label: "Admin command"
+          search_results: "Search results"
+          no_search_results: 'No admin search results for "%{filter}" yet.'
+          ai_fallback: "Use AI to turn this into a structured admin action preview."
+          users:
+            title: "User quick actions"
+            suspended: "Suspended"
+            silenced: "Silenced"
+          actions:
+            activate: "Activate"
+            deactivate: "Deactivate"
+            delete: "Delete"
+            silence: "Silence"
+            suspend: "Suspend"
+            unsilence: "Unsilence"
+            unsuspend: "Unsuspend"
+          plan:
+            title: "Draft AI plan"
+            summary: "I’m going to %{action} user %{username}."
+            find_user: "Find the user account for %{username}."
+            review_action: "Open the admin user page and prepare the %{action} controls."
+            wait_for_confirmation: "Wait for an admin confirmation before changing anything."
+            preview_action: "Preview action"
+            open_user: "Find user"
+            continue: "Continue conversation"
+          conversation:
+            title: "Conversation preview"
+            assistant: "Assistant"
+            reply: "I can help gather context, confirm the account, and prepare the %{action} action for %{username}. This POC does not execute the change automatically."
+          review:
+            title: "Validated action preview"
+            summary: "Prepare a suspension for %{username} %{duration}."
+            trust_level: "Trust level"
+            posts: "Posts"
+            flags_received: "Flags received"
+            prior_penalties: "Prior penalties"
+            reason: "Draft reason: %{reason}"
+            open_suspend_modal: "Review suspension"
         last_updated: "Dashboard updated:"
         discourse_last_updated: "Discourse updated:"
         version: "Version"

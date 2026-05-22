@@ -103,6 +103,8 @@ Discourse::Application.routes.draw do
 
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
+      get "command-center/users" => "command_center#users"
+      post "command-center/preview" => "command_center#preview"
       get "search" => "search#index"
       get "schema/:setting_name" => "admin#index"
 

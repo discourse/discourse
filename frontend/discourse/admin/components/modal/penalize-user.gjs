@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -20,7 +19,9 @@ export default class PenalizeUser extends Component {
   @service dialog;
   @service siteSettings;
 
-  @tracked penalizeUntil = this.args.model.user.next_penalty;
+  @tracked
+  penalizeUntil =
+    this.args.model.penalizeUntil || this.args.model.user.next_penalty;
   @tracked confirmClose = false;
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
@@ -31,6 +32,9 @@ export default class PenalizeUser extends Component {
 
   constructor() {
     super(...arguments);
+    this.reason = this.args.model.reason;
+    this.message = this.args.model.message;
+
     if (this.postEdit && this.siteSettings.penalty_include_post_message) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }

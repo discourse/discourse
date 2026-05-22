@@ -1,4 +1,5 @@
 import { LinkTo } from "@ember/routing";
+import AdminCommandCenter from "discourse/admin/components/admin-command-center";
 import DashboardProblems from "discourse/admin/components/dashboard-problems";
 import RedesignedAdminDashboard from "discourse/admin/components/redesigned-admin-dashboard";
 import VersionChecks from "discourse/admin/components/version-checks";
@@ -8,6 +9,8 @@ import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
+  <AdminCommandCenter />
+
   {{#if @controller.siteSettings.dashboard_improvements}}
     <RedesignedAdminDashboard
       @requestedPeriod={{@controller.safePeriod}}
