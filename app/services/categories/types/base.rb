@@ -351,7 +351,10 @@ module Categories
           }
           if enables_plugin?
             plugin_name = Categories::TypeRegistry.owner(type_id)
-            result[:required_plugin] = plugin_name&.sub(/^discourse-/, "")&.titleize
+            result[:required_plugin] = plugin_name
+              &.sub(/^discourse-/, "")
+              &.sub(/-plugin$/, "")
+              &.titleize
           end
           result.merge(additional_metadata)
         end
