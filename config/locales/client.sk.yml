@@ -6032,8 +6032,28 @@ sk:
             title: "Hlásení"
           traffic:
             title: "Návštevnosť stránky"
+          engagement:
+            activity_by_category:
+              category: "Kategória"
+              topics: "Témy"
+              posts: "Príspevky"
+              share: "Zdieľať"
+            whos_posting:
+              all_categories: "Všetky kategórie"
+              staff: "Personál"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základné"
+                "2": "Člen"
+                "3": "Bežné"
+                "4": "Vodca"
         configure:
           button: "Konfigurovať"
+        site_traffic:
+          series:
+            anonymous: "Anonymný"
+            crawlers: "Crawlery"
         period:
           last_7_days: "Posledných 7 dní"
           last_30_days: "Posledných 30 dní"

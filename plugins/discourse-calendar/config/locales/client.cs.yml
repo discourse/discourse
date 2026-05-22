@@ -329,6 +329,9 @@ cs:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automaticky nastavil vaši účast a pozval vás na %{eventName}"
         an_event: "událost"
+      event_description:
+        show_more: "Zobrazit více"
+        show_less: "Zobrazit méně"
       edit_reason: "Událost aktualizována"
       edit_reason_closed: "Akce uzavřena"
       edit_reason_opened: "Událost otevřena"
@@ -399,10 +402,10 @@ cs:
       models:
         invitee:
           no_users: "Nebyli nalezeni žádní uživatelé"
+          leave_event: "Opustit událost"
           status:
             unknown: "Nemám zájem"
             going: "Zúčastním se"
-            not_going: "Nezúčastním se"
             interested: "Mám zájem"
             going_count:
               one: "%{count} se účastní"

@@ -235,8 +235,7 @@ pt_BR:
             ui_settings: "Configurações da interface do usuário"
             integrations: "Integrações"
         nav:
-          configured: "Configurado"
-          unconfigured: "Não configurado"
+          enabled: "Ativados"
         filters:
           all: "Tudo"
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."

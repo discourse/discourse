@@ -6048,8 +6048,30 @@ zh_CN:
             title: "网站流量"
           engagement:
             title: "参与度"
+            activity_by_category:
+              category: "类别"
+              topics: "话题"
+              posts: "帖子"
+              share: "分享"
+            whos_posting:
+              all_categories: "所有类别"
+              staff: "管理人员"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新"
+                "1": "基本用户"
+                "2": "成员"
+                "3": "常规"
+                "4": "领导者"
+              trend:
+                stable: "稳定"
         configure:
           button: "配置"
+        site_traffic:
+          series:
+            anonymous: "匿名"
+            embedded: "嵌入式页面浏览量"
+            crawlers: "抓取工具"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

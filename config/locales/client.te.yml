@@ -4536,6 +4536,26 @@ te:
         sections:
           reports:
             title: "నివేదికలు"
+          engagement:
+            activity_by_category:
+              category: "వర్గం"
+              topics: "విషయాలు"
+              posts: "పోస్ట్‌లు"
+              share: "షేర్ చేయండి"
+            whos_posting:
+              all_categories: "అన్ని వర్గాలు"
+              staff: "సిబ్బంది"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "కొత్త"
+                "1": "ప్రాథమిక"
+                "2": "సభ్యుడు"
+                "3": "రెగ్యులరు"
+                "4": "లీడరు"
+        site_traffic:
+          series:
+            anonymous: "అనామక"
+            crawlers: "క్రాలర్లు"
         period:
           last_3_months: "గత 3 నెలలు"
           custom: "అనురూప"

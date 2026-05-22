@@ -44,6 +44,8 @@ et:
         expand_list:
           one: "(veel %{count})"
           other: "(veel %{count})"
+        nav:
+          enabled: "Sisse lülitatud"
         filters:
           all: "Kõik"
           reset: "Nulli"

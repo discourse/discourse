@@ -3921,6 +3921,25 @@ sl:
         sections:
           reports:
             title: "Poročila"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Tem"
+              posts: "Prispevki"
+              share: "Deli"
+            whos_posting:
+              all_categories: "Vse kategorije"
+              staff: "Osebje"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novi"
+                "1": "Osnovni uporabnik"
+                "2": "Polnopraven član"
+                "3": "Običajne"
+                "4": "Vodja"
+        site_traffic:
+          series:
+            anonymous: "Anonimni"
         period:
           last_7_days: "Zadnjih 7 dni"
           last_30_days: "Zadnjih 30 dni"

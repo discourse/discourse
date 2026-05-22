@@ -6549,6 +6549,28 @@ cs:
             title: "Sestav"
           traffic:
             title: "Návštěvnost stránek"
+          engagement:
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Témata"
+              posts: "Příspěvky"
+              share: "Sdílet"
+            whos_posting:
+              all_categories: "Všechny kategorie"
+              staff: "Redakce"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základní"
+                "2": "Člen"
+                "3": "Stálý člen"
+                "4": "Leader"
+              trend:
+                stable: "stabilní"
+        site_traffic:
+          series:
+            anonymous: "Anonymní"
+            crawlers: "Vyhledávače"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"

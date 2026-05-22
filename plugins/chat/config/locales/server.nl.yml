@@ -245,6 +245,15 @@ nl:
         watched_thread:
           one: "[%{site_name}] Nieuw threadbericht in %{channel}"
           other: "[%{site_name}] Nieuwe threadberichten in %{channel}"
+        watched_thread_improved:
+          one: "Nieuw threadbericht in %{channel}"
+          other: "Nieuw threadberichten in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} ander kanaal"
+          other: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} andere kanalen"
+        watched_threads_improved:
+          one: "Nieuwe threadberichten in %{channel} en %{count} ander kanaal"
+          other: "Nieuwe threadberichten in %{channel} en %{count} andere kanalen"
         chat_dm_1:
           one: "[%{site_name}] Nieuw bericht van %{name}"
           other: "[%{site_name}] Nieuw berichten van %{name}"

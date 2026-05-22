@@ -5903,8 +5903,30 @@ ug:
             title: "دوكلات"
           traffic:
             title: "بېكەت ئېقىمى"
+          engagement:
+            activity_by_category:
+              category: "سەھىپە"
+              topics: "تېما"
+              posts: "يازما"
+              share: "ھەمبەھىر"
+            whos_posting:
+              all_categories: "ھەممە سەھىپە"
+              staff: "باشقۇرغۇچى خادىم"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "يېڭى"
+                "1": "ئاساسىي"
+                "2": "ئەزا"
+                "3": "ئادەتتىكى"
+                "4": "باشلىق"
+              trend:
+                stable: "مۇقىم"
         configure:
           button: "سەپلە"
+        site_traffic:
+          series:
+            anonymous: "نامسىز"
+            crawlers: "ئۆمىلىگۈچ"
         period:
           last_3_months: "ئۆتكەن 3 ئاي"
           custom: "ئىختىيارى"

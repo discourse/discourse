@@ -5690,8 +5690,30 @@ ja:
             title: "レポート"
           traffic:
             title: "サイトトラフィック"
+          engagement:
+            activity_by_category:
+              category: "カテゴリ"
+              topics: "トピック"
+              posts: "投稿"
+              share: "共有"
+            whos_posting:
+              all_categories: "すべてのカテゴリ"
+              staff: "スタッフ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新規"
+                "1": "ベーシック"
+                "2": "メンバー"
+                "3": "レギュラー"
+                "4": "リーダー"
+              trend:
+                stable: "安定"
         configure:
           button: "構成"
+        site_traffic:
+          series:
+            anonymous: "匿名ユーザー"
+            crawlers: "クローラー"
         period:
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"

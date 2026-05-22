@@ -4117,6 +4117,26 @@ sq:
         general_tab: "Karakteristika të përgjithshme"
         security_tab: "Siguria"
         report_filter_any: "ndonjë"
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Topics"
+              posts: "Postime"
+              share: "Shpërndaje"
+            whos_posting:
+              all_categories: "Të gjitha kategoritë"
+              staff: "Stafi"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "I Ri"
+                "1": "Anëtar i Thjeshtë"
+                "2": "Anëtar"
+                "3": "I zakonshëm"
+                "4": "Udhëheqës"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
         period:
           custom: "Grupet e krijuara"
         reports:

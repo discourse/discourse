@@ -2759,6 +2759,26 @@ sr:
         backups: "Sigurnosne kopije"
         general_tab: "Opšti"
         security_tab: "Sigurnost"
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Teme"
+              posts: "Poruka"
+              share: "Podeli"
+            whos_posting:
+              all_categories: "Sve kategorije"
+              staff: "Osoblje"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovno"
+                "2": "Član"
+                "3": "Stalni član"
+                "4": "Vođa"
+        site_traffic:
+          series:
+            anonymous: "Anonimno"
         period:
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"

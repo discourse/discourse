@@ -3597,6 +3597,26 @@ bg:
         security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Теми"
+              posts: "Публикации"
+              share: "Споделяне"
+            whos_posting:
+              all_categories: "Всички категории"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Нов"
+                "1": "Основно "
+                "2": "Член"
+                "3": "Редовен"
+                "4": "лидер "
+        site_traffic:
+          series:
+            anonymous: "Анонимен"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"

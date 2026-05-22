@@ -6443,6 +6443,24 @@ he:
             title: "דוחות"
           traffic:
             title: "תעבורת האתר"
+          engagement:
+            activity_by_category:
+              category: "קטגוריה"
+              topics: "נושאים"
+              posts: "פרסומים"
+              share: "שיתוף"
+            whos_posting:
+              all_categories: "כל הקטגוריות"
+              staff: "סגל"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "חדשות"
+                "1": "בסיסיים"
+                "2": "חברים"
+                "3": "רגילה"
+                "4": "מובילים"
+              trend:
+                stable: "יציב"
         configure:
           button: "הגדרה"
           tooltip: "הגדרת איך לוח המחוונים הזה מופיע לכל מבקרי האתר הזה."
@@ -6452,6 +6470,10 @@ he:
           drag_handle: "אפשר לגרור כדי לסדר את %{label} מחדש"
           toggle_visibility: "הצגת %{label} בלוח המחוונים"
           empty_state_admin: "אין סעיפים להצגה. יש לפתוח את ההגדרות כדי להפעיל אחד כזה."
+        site_traffic:
+          series:
+            anonymous: "אלמוני"
+            crawlers: "סורקי אינטרנט"
         period:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"

@@ -910,6 +910,30 @@ ko:
       xaxis: "일"
       yaxis: "새 기여자 수"
       description: "이 기간에 첫 게시물을 작성한 사용자 수입니다."
+    activity_by_category:
+      labels:
+        category: "카테고리"
+        topics: "글"
+        posts: "글"
+        share: "공유하기"
+    posters_by_member_type:
+      labels:
+        count: "글"
+        share: "공유하기"
+      types:
+        staff: "스태프"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "신뢰 레벨"
+        count: "회원"
+        share: "공유하기"
+      levels:
+        "0": "신규"
+        "1": "초보회원"
+        "2": "회원"
+        "3": "일반"
+        "4": "지도자"
     trust_level_growth:
       title: "신뢰 레벨 성장"
       xaxis:
@@ -940,6 +964,9 @@ ko:
     consolidated_page_views_browser_detection:
       yaxis: "일"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "익명"
+        page_view_crawler: "겉옷"
       yaxis: "일"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1050,6 +1077,12 @@ ko:
         num_clicks: "클릭 수"
         num_topics: "토픽"
       description: "사용자가 공유한 링크의 클릭 수로 사용자를 나열합니다."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "방문"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "방문"
     top_traffic_sources:
       title: "주요 트래픽 소스"
       xaxis: "도메인"
@@ -1345,7 +1378,6 @@ ko:
     enable_escaped_fragments: "웹 크롤러가 탐지되지 않으면 Google의 Ajax-Crawling API로 폴백하세요. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>를 참조하세요."
     moderators_change_post_ownership: "운영자가 게시물 소유자를 변경할 수 있도록 허용"
     cors_origins: "교차 출처 요청(Cross-Origin Resource Sharing, CORS)의 허용된 출처입니다. 각 출처는 반드시 http:// 나 https://를 포함해야 합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 설정해야 CORS를 활성화할 수 있습니다."
-    use_admin_ip_allowlist: "관리자는 스크린된 IP 목록(관리자 > 로그> 스크린된 IP)에 정의된 IP 주소에서만 로그인할 수 있습니다."
     blocked_ip_blocks: "Discourse에서 크롤링해서는 안 되는 개인 IP 차단 목록"
     allowed_internal_hosts: "onebox 및 기타 목적을 위해 Discourse에서 안전하게 크롤링할 수 있는 내부 호스트 목록"
     allowed_onebox_iframes: "Onebox 임베드를 통해 허용되는 iframe src 도메인 목록입니다. `*` 는 모든 디폴트 Onebox 엔진을 허용합니다."
