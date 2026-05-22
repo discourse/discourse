@@ -3,8 +3,7 @@
 module DiscourseSolved
   module AcceptedAnswersHelper
     def self.serialize(topic, guardian)
-      solved = topic.solved
-      return nil unless solved&.topic_answers&.any?
+      return nil unless topic.topic_answers&.any?
 
       ActiveRecord::Associations::Preloader.new(
         records: [solved],
@@ -13,7 +12,7 @@ module DiscourseSolved
         },
       ).call
 
-      valid_answers =
+      answers =
         solved
           .topic_answers
           .select { |ta| ta.post.present? }
@@ -27,7 +26,7 @@ module DiscourseSolved
             ).as_json
           end
 
-      valid_answers.presence
+      answers.presence
     end
   end
 end
