@@ -10,7 +10,10 @@ describe "Admin Color Palette Config Area Page" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:cdp) { PageObjects::CDP.new }
 
-  before { sign_in(admin) }
+  before do
+    sign_in(admin)
+    clear_browser_cache
+  end
 
   after do
     Stylesheet::Manager.rm_cache_folder
