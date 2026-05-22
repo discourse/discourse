@@ -46,7 +46,7 @@ class UserApiKey::DeviceAuth::CreateRequest
     device_code = SecureRandom.hex(32)
 
     context[:device_request] = { device_code: device_code }
-    context[:grant] = UserApiKey::DeviceAuth::GrantFactory.build(
+    context[:grant] = UserApiKey::DeviceAuth::Grant.build(
       request_params,
       client,
       scopes,

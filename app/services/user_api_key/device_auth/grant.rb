@@ -5,6 +5,29 @@ class UserApiKey::DeviceAuth::Grant
   AUTHORIZED_STATUS = "authorized"
   DENIED_STATUS = "denied"
   STATUSES = [PENDING_STATUS, AUTHORIZED_STATUS, DENIED_STATUS].freeze
+
+  def self.build(params, client, scopes, expires_in_seconds, device_code)
+    new(
+      status: :pending,
+      device_code: device_code,
+      application_name:
+        if client.present?
+          client.application_name.presence || params[:application_name]
+        else
+          params[:application_name]
+        end,
+      client_id: params[:client_id],
+      public_key: UserApiKey::DeviceAuth::RequestValidator.public_key_str(params, client),
+      nonce: params[:nonce],
+      scopes: scopes,
+      push_url: params[:push_url].presence,
+      padding: params[:padding].presence,
+      expires_in_seconds: expires_in_seconds,
+      unregistered_client: client.blank? || client.public_key.blank?,
+      created_at: Time.zone.now.iso8601,
+    )
+  end
+
   def self.from_json(json)
     data = JSON.parse(json)
     return if !data.is_a?(Hash)
@@ -93,6 +116,18 @@ class UserApiKey::DeviceAuth::Grant
 
   def scopes
     Array(@scopes)
+  end
+
+  def localized_scopes
+    scopes.map { |scope| I18n.t("user_api_key.scopes.#{scope}") }
+  end
+
+  def write_scope?
+    scopes.include?("write")
+  end
+
+  def expires_at
+    UserApiKey::DeviceAuth::Expiry.requested_expires_at(expires_in_seconds)
   end
 
   def unregistered_client?

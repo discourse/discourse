@@ -128,7 +128,8 @@ class UserApiKeysController < ApplicationController
         if response_json[:redirect_url]
           redirect_to(response_json[:redirect_url], allow_other_host: true)
         else
-          render_user_api_key_result(response_json)
+          store_preloaded("user_api_key_result", MultiJson.dump(response_json))
+          raise ApplicationController::RenderEmpty.new
         end
       end
       format.json { render json: response_json }
@@ -202,7 +203,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    assign_device_grant_presenter(result.grant)
+    @device_auth = result.grant
 
     unless meets_tl?
       render_device_activation(device_authorization_model(state: "authorize", no_trust_level: true))
@@ -257,23 +258,33 @@ class UserApiKeysController < ApplicationController
   end
 
   def deny_device_request
-    device_code = device_code_for_deny_request
-    if device_code.present?
-      UserApiKey::DeviceAuth::Deny.call(
-        service_params.deep_merge(params: { device_code: device_code }),
-      ) do
-        on_success do
-          if params[:approval_token].present?
-            device_user_activation.delete_approval_token(params[:approval_token])
-          end
-          render_device_activation({ state: "complete", denied: true })
-        end
-        on_failed_step(:deny_grant) do
-          render_device_activation({ state: "enter_code", expired_code: true })
-        end
-      end
-    else
+    if params[:request].present?
       render_device_activation({ state: "enter_code", expired_code: true })
+      return
+    end
+
+    approval_token = params.require(:approval_token)
+    result =
+      device_user_activation.resolve_deny_device_code(
+        request_token: nil,
+        approval_token: approval_token,
+      )
+
+    if result.status != :success
+      render_device_activation({ state: "enter_code", expired_code: true })
+      return
+    end
+
+    UserApiKey::DeviceAuth::Deny.call(
+      service_params.deep_merge(params: { device_code: result.device_code }),
+    ) do
+      on_success do
+        device_user_activation.delete_approval_token(approval_token)
+        render_device_activation({ state: "complete", denied: true })
+      end
+      on_failed_step(:deny_grant) do
+        render_device_activation({ state: "enter_code", expired_code: true })
+      end
     end
   end
 
@@ -306,7 +317,15 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    render_user_api_key_otp(user_api_key_otp_model)
+    json = user_api_key_otp_model
+
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_api_key_otp", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+      format.json { render json: json }
+    end
   end
 
   def create_otp
@@ -348,26 +367,6 @@ class UserApiKeysController < ApplicationController
     respond_to do |format|
       format.html do
         store_preloaded("user_api_key_authorization", MultiJson.dump(json))
-        raise ApplicationController::RenderEmpty.new
-      end
-      format.json { render json: json }
-    end
-  end
-
-  def render_user_api_key_result(json)
-    respond_to do |format|
-      format.html do
-        store_preloaded("user_api_key_result", MultiJson.dump(json))
-        raise ApplicationController::RenderEmpty.new
-      end
-      format.json { render json: json }
-    end
-  end
-
-  def render_user_api_key_otp(json)
-    respond_to do |format|
-      format.html do
-        store_preloaded("user_api_key_otp", MultiJson.dump(json))
         raise ApplicationController::RenderEmpty.new
       end
       format.json { render json: json }
@@ -447,7 +446,7 @@ class UserApiKeysController < ApplicationController
 
     return { state: "enter_code", expired_code: true } if result.status != :success
 
-    assign_device_grant_presenter(result.grant)
+    @device_auth = result.grant
     device_authorization_model(
       state: "authorize",
       request_token: params[:request],
@@ -630,17 +629,13 @@ class UserApiKeysController < ApplicationController
       UserApiKey::DeviceAuth::UserActivation.new(session: session, user: current_user)
   end
 
-  def assign_device_grant_presenter(grant)
-    @device_auth = UserApiKey::DeviceAuth::GrantPresenter.new(grant)
-  end
-
   def device_code_for_authorize_request
     if params[:request].present?
       rate_limit_device_request_token_lookup(params[:request])
       preview = device_user_activation.preview_request_token(params[:request])
       return if preview.status != :success
 
-      assign_device_grant_presenter(preview.grant)
+      @device_auth = preview.grant
       @request_token = params[:request]
 
       rate_limit_device_activation_attempt
@@ -650,7 +645,7 @@ class UserApiKeysController < ApplicationController
           user_code: params[:code],
           approval_token: nil,
         )
-      assign_device_grant_presenter(result.grant) if result.grant.present?
+      @device_auth = result.grant if result.grant.present?
 
       return result.device_code if result.status == :success
       return
@@ -661,18 +656,6 @@ class UserApiKeysController < ApplicationController
       device_user_activation.resolve_authorize_device_code(
         request_token: nil,
         user_code: nil,
-        approval_token: approval_token,
-      )
-    result.device_code if result.status == :success
-  end
-
-  def device_code_for_deny_request
-    return if params[:request].present?
-
-    approval_token = params.require(:approval_token)
-    result =
-      device_user_activation.resolve_deny_device_code(
-        request_token: nil,
         approval_token: approval_token,
       )
     result.device_code if result.status == :success
