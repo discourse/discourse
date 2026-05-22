@@ -142,46 +142,54 @@ export default class ComposerActions extends Component {
       iconName = "share";
     }
 
-    let labelText = this.composerModel?.customizationFor("actionTitle");
-    if (labelText) {
-      // plugin-provided label wins
-    } else if (currentAction === CREATE_TOPIC) {
-      labelText = i18n("composer.composer_actions.create_topic.label");
-    } else if (currentAction === PRIVATE_MESSAGE) {
-      labelText = i18n(
-        "composer.composer_actions.create_personal_message.label"
-      );
-    } else if (currentAction === CREATE_SHARED_DRAFT) {
-      labelText = i18n("composer.composer_actions.shared_draft.label");
-    } else if (currentAction === EDIT_SHARED_DRAFT) {
-      labelText = i18n("composer.edit_shared_draft");
-    } else if (currentAction === ADD_TRANSLATION) {
-      labelText = i18n("composer.translations.title");
-    } else if (currentAction === REPLY) {
+    const availableActions = this._computeAvailableActions();
+
+    return {
+      icon: iconName,
+      label: this._labelText(),
+      actions: availableActions,
+      hasActions: availableActions.length > 0,
+    };
+  }
+
+  _labelText() {
+    const pluginLabel = this.composerModel?.customizationFor("actionTitle");
+    if (pluginLabel) {
+      return pluginLabel;
+    }
+
+    const currentAction = this.action;
+    if (currentAction === CREATE_TOPIC) {
+      return i18n("composer.composer_actions.create_topic.label");
+    }
+    if (currentAction === PRIVATE_MESSAGE) {
+      return i18n("composer.composer_actions.create_personal_message.label");
+    }
+    if (currentAction === CREATE_SHARED_DRAFT) {
+      return i18n("composer.composer_actions.shared_draft.label");
+    }
+    if (currentAction === EDIT_SHARED_DRAFT) {
+      return i18n("composer.edit_shared_draft");
+    }
+    if (currentAction === ADD_TRANSLATION) {
+      return i18n("composer.translations.title");
+    }
+    if (currentAction === EDIT) {
+      return i18n("composer.composer_actions.edit_post");
+    }
+    if (currentAction === REPLY) {
       const isReplyingToPost =
         this.post &&
         this.replyOptions?.userAvatar &&
         this.replyOptions?.userLink;
 
       if (isReplyingToPost) {
-        labelText = this._postDisplayName(this.post);
-      } else {
-        labelText = i18n("composer.composer_actions.reply_to_topic.trigger");
+        return this._postDisplayName(this.post);
       }
-    } else if (currentAction === EDIT) {
-      labelText = i18n("composer.composer_actions.edit_post");
-    } else {
-      labelText = i18n("composer.composer_actions.create_topic.label");
+      return i18n("composer.composer_actions.reply_to_topic.trigger");
     }
 
-    const availableActions = this._computeAvailableActions();
-
-    return {
-      icon: iconName,
-      label: labelText,
-      actions: availableActions,
-      hasActions: availableActions.length > 0,
-    };
+    return i18n("composer.composer_actions.create_topic.label");
   }
 
   _postDisplayName(post) {
