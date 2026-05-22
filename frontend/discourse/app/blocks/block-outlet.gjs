@@ -140,6 +140,15 @@ let nextEntryKey = 0;
 const _trackedArgsCache = new WeakSet();
 
 /**
+ * Companion to `_trackedArgsCache` for the entry shell itself. Lets us
+ * recognise wrapped entries on re-entry into `assignStableKeys` (re-publish,
+ * draft clone) so we don't wrap-the-wrap.
+ *
+ * @type {WeakSet<Object>}
+ */
+const _trackedEntryCache = new WeakSet();
+
+/**
  * Recursively assigns stable keys to all block entries in a layout, and
  * wraps each entry's `args` in a `trackedObject` so editor-driven mutations
  * (e.g. `entry.args.title = "new"`) propagate reactively through the
@@ -162,7 +171,8 @@ const _trackedArgsCache = new WeakSet();
  *   entries (selection, DOM identity, render cache).
  */
 function assignStableKeys(entries, { skipExisting = false } = {}) {
-  for (const entry of entries) {
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i];
     if (!skipExisting || entry.__stableKey === undefined) {
       entry.__stableKey = nextEntryKey++;
     }
@@ -210,7 +220,26 @@ function assignStableKeys(entries, { skipExisting = false } = {}) {
       entry.__containerArgKeys = Object.keys(initialContainerArgs);
     }
 
-    if (entry.children?.length) {
+    // Wrap the entry shell itself so writes to its top-level fields
+    // (`__failureType`, `__failureReason`, `__visible`, `children`,
+    // `conditions`, …) participate in autotracking. The validator stamps
+    // soft-failure fields directly on the entry; clearing them via
+    // `clearValidatorStamps` would otherwise be invisible to Glimmer
+    // and the editor's banner / outline / per-block ghost chrome would
+    // keep showing a stale error after the author has fixed it.
+    //
+    // Unlike `args` / `containerArgs`, we don't snapshot an entry-level
+    // key list: no live consumer iterates the entry as a whole (the only
+    // `Object.keys(entry)` call sits in core's pre-registration validator
+    // path), so there's no collection-tag dep to defend against.
+    if (!_trackedEntryCache.has(entry)) {
+      const wrapped = trackedObject(entry);
+      _trackedEntryCache.add(wrapped);
+      entries[i] = wrapped;
+      if (wrapped.children?.length) {
+        assignStableKeys(wrapped.children, { skipExisting });
+      }
+    } else if (entry.children?.length) {
       assignStableKeys(entry.children, { skipExisting });
     }
   }

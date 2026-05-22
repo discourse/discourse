@@ -127,6 +127,22 @@ export default class VisualEditorService extends Service {
    */
   @tracked structuralVersion = 0;
   /**
+   * Refresh signal for outline-panel only. The entry shell is wrapped
+   * in `trackedObject`, so the service's stamp-reading getters
+   * (`validationWarnings`, `selectedBlockFailure`) and the per-block
+   * ghost chrome pick up `clearValidatorStamps` writes automatically —
+   * each `entry.__failureReason` read opens a per-key tag the proxy
+   * fires on `delete`. The outline is the one consumer that doesn't:
+   * its `walkAllOutlets` runs inside an `@action refresh()`, not a
+   * Glimmer computation, so per-entry tag subscriptions never reach
+   * it. This counter is bumped on stamp clears and read by the
+   * outline's `didUpdate` modifier so the row indicator clears in
+   * lockstep with the rest of the UI.
+   *
+   * @type {number}
+   */
+  @tracked validationVersion = 0;
+  /**
    * Drag-and-drop session state. Set when the user grabs a block via
    * `editor-draggable`; cleared when the drag ends (success or cancel).
    *
@@ -740,34 +756,66 @@ export default class VisualEditorService extends Service {
   }
 
   /**
-   * Validation warnings captured by `_setLayoutLayer({permissive: true})`
-   * across every outlet that the editor is currently drafting. Walks the
-   * resolved layer entries, harvests each entry's `validationWarnings`,
-   * and returns a flat list keyed by outlet for the toolbar / save-dialog
-   * UX.
+   * Validation warnings across every outlet the editor is currently
+   * drafting. Walks each outlet's resolved layout and harvests the
+   * per-entry `__failureReason` stamps the permissive validator leaves
+   * behind (paired 1:1 with the layer-level warnings — see
+   * `validation/layout.js`'s `markEntrySoftFailure` + `context.warnings`).
    *
-   * Reactivity: reads `structuralVersion` (bumped on every structural
-   * mutation) so a fresh draft publish causes the toolbar to re-evaluate.
-   * Validation itself is async (the layer entry's `validatedLayout` is a
-   * lazy Promise that resolves after `BlockOutlet` first reads it). On the
-   * very first render after a publish the warnings array may not yet be
-   * populated; the next `structuralVersion` tick or a subsequent re-read
-   * surfaces them. This is acceptable for a status indicator — the page
-   * doesn't crash either way.
+   * Reading the stamps rather than the layer record's frozen
+   * `validationWarnings` array is what lets the inspector banner clear
+   * the moment the author fixes a failing arg: in-place arg writes go
+   * through `_writeArgs`, which deletes the entry's stamps but doesn't
+   * touch the layer array. The two surfaces (per-block ghost chrome,
+   * outlet-wide banner) now agree on the live state.
+   *
+   * Reactivity: reads `structuralVersion` so structural republishes
+   * re-evaluate; entry stamp reads (on the trackedObject-wrapped entry)
+   * open their own deps so arg-edit stamp clears propagate too.
+   * Validation itself is async (`validatedLayout` is a lazy Promise
+   * resolved after `BlockOutlet` first reads it); on the very first
+   * render after a publish, stamps may not yet be populated and this
+   * getter returns an empty list until the next tick.
    *
    * @returns {Array<{outletName: string, message: string}>}
    */
   get validationWarnings() {
-    // Open the tracked dep so structural mutations re-run this getter.
+    // `structuralVersion` covers republishes (validation re-runs against
+    // the freshly-published layer). In-place stamp clears propagate via
+    // the per-entry `trackedObject` wrap — each `entry.__failureReason`
+    // read below opens a per-key dep that fires when `clearValidatorStamps`
+    // runs `delete entry.__failureReason`.
     void this.structuralVersion;
     const layoutMap = _getOutletLayouts();
     const warnings = [];
     for (const [outletName, record] of layoutMap) {
-      for (const w of record?.validationWarnings ?? []) {
-        warnings.push({ outletName, message: w.message });
+      if (!record?.layout) {
+        continue;
       }
+      this._collectStampedWarnings(record.layout, outletName, warnings);
     }
     return warnings;
+  }
+
+  /**
+   * Recursively walks `entries` and pushes one `{outletName, message}`
+   * warning for every entry carrying a `__failureReason` stamp. Reads
+   * `__failureReason` rather than the truthy stamp pair (`__failureType`
+   * is also set) because the message is what the UI surfaces.
+   *
+   * @param {Array<Object>} entries
+   * @param {string} outletName
+   * @param {Array<{outletName: string, message: string}>} warnings
+   */
+  _collectStampedWarnings(entries, outletName, warnings) {
+    for (const entry of entries) {
+      if (entry?.__failureReason) {
+        warnings.push({ outletName, message: entry.__failureReason });
+      }
+      if (entry?.children?.length) {
+        this._collectStampedWarnings(entry.children, outletName, warnings);
+      }
+    }
   }
 
   /** @returns {boolean} */
@@ -785,6 +833,9 @@ export default class VisualEditorService extends Service {
    * @returns {{failureType: string, failureReason: string}|null}
    */
   get selectedBlockFailure() {
+    // Republishes bump `structuralVersion`; in-place stamp clears
+    // propagate via the per-entry `trackedObject` wrap (the
+    // `entry.__failureType` read below opens a per-key dep).
     void this.structuralVersion;
     const key = this.selectedBlockKey;
     if (!key) {
@@ -2093,7 +2144,13 @@ export default class VisualEditorService extends Service {
         entry.args[argName] = value;
       }
     }
+    const hadFailureStamp = !!entry.__failureReason;
     clearValidatorStamps(entry);
+    if (hadFailureStamp) {
+      // Stamp fields aren't tracked; bump the validation tag so the
+      // banner / outline / per-block badge see the clear.
+      this.validationVersion++;
+    }
   }
 
   /**

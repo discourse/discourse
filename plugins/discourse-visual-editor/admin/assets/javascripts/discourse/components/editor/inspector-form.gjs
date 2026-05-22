@@ -16,6 +16,34 @@ import InspectorField from "./inspector-field";
 import InspectorValidationBanner from "./inspector-validation-banner";
 
 /**
+ * Coerces a control's raw input value back into the type its schema
+ * declared. HTML inputs (radio in particular) only carry strings, so
+ * a number+enum arg like a heading's `level` would otherwise reach the
+ * layout as a string and trip the args validator.
+ *
+ * Returns the value untouched when it's empty/null or when the schema
+ * doesn't declare a coerce-able type — the caller handles deletion
+ * semantics separately, and we don't want to manufacture `NaN` from a
+ * deliberately-empty value.
+ *
+ * @param {*} value
+ * @param {{type?: string, integer?: boolean}|undefined} argDef
+ * @returns {*}
+ */
+function coerceToSchemaType(value, argDef) {
+  if (!argDef || typeof value !== "string" || value === "") {
+    return value;
+  }
+  if (argDef.type === "number") {
+    return argDef.integer ? parseInt(value, 10) : parseFloat(value);
+  }
+  if (argDef.type === "boolean") {
+    return value === "true";
+  }
+  return value;
+}
+
+/**
  * Phase 2 inspector form. Reads the selected block's args schema (with `ui`
  * hints), maps it to FormKit fields via `schemaToFields`, and pushes value
  * changes back through `visualEditor.updateSelectedArg`.
@@ -136,11 +164,20 @@ export default class InspectorForm extends Component {
   async onFieldSet(value, ctx) {
     const argDef = this.schema?.[ctx.name];
     const isImageUpload = argDef?.ui?.control === "image-upload";
+    // Radio inputs hand their selected value back as a string (HTML
+    // `<input>` values can't be anything else). For args whose schema
+    // declares a non-string type, coerce the raw input back to that
+    // type before forwarding to the editor service — otherwise the
+    // validator rejects the layout ("Arg level must be a number, got
+    // string") and the canvas falls out of sync with the draft.
+    const coerced = coerceToSchemaType(value, argDef);
     const formValue =
-      isImageUpload && value && typeof value === "object" ? value.url : value;
+      isImageUpload && coerced && typeof coerced === "object"
+        ? coerced.url
+        : coerced;
 
     await ctx.set(ctx.name, formValue);
-    this.visualEditor.updateSelectedArg(ctx.name, value);
+    this.visualEditor.updateSelectedArg(ctx.name, coerced);
   }
 
   <template>

@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorForm from "discourse/plugins/discourse-visual-editor/discourse/components/editor/inspector-form";
@@ -8,6 +8,7 @@ class StubVisualEditorService extends Service {
   constructor(owner, blockData) {
     super(owner);
     this._blockData = blockData;
+    this.updateSelectedArgCalls = [];
   }
 
   get selectedBlockData() {
@@ -33,7 +34,9 @@ class StubVisualEditorService extends Service {
     return null;
   }
 
-  updateSelectedArg() {}
+  updateSelectedArg(name, value) {
+    this.updateSelectedArgCalls.push({ name, value });
+  }
 }
 
 function stubVisualEditor(owner, blockData) {
@@ -178,6 +181,41 @@ module(
       await render(<template><InspectorForm /></template>);
 
       assert.dom(".mini-tag-chooser").exists();
+    });
+
+    test("coerces radio-group values back to the schema's declared number type", async function (assert) {
+      // Radio inputs hand their selected value back as a string via the
+      // browser's change event (HTML inputs only store strings). For a
+      // number+enum arg like a heading's `level`, forwarding that string
+      // verbatim into the layout breaks the validator ("Arg level must
+      // be a number, got string") and corrupts the rendered block.
+      stubVisualEditor(this.owner, {
+        metadata: {
+          args: {
+            level: {
+              type: "number",
+              default: 2,
+              integer: true,
+              enum: [1, 2, 3, 4, 5, 6],
+              ui: { control: "radio-group", label: "Level" },
+            },
+          },
+        },
+        argsSnapshot: { level: 2 },
+      });
+
+      await render(<template><InspectorForm /></template>);
+
+      const stub = this.owner.lookup("service:visual-editor");
+      await click('input[type="radio"][value="3"]');
+
+      const lastCall = stub.updateSelectedArgCalls.at(-1);
+      assert.strictEqual(lastCall.name, "level");
+      assert.strictEqual(
+        lastCall.value,
+        3,
+        "value reaches the editor service as a number, not the input's string"
+      );
     });
   }
 );

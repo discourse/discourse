@@ -213,6 +213,36 @@ module(
         // Sanity: the entry's args mutation still landed.
         assert.strictEqual(entry.title, "Edited");
       });
+
+      test("validationWarnings drops the stale entry the moment its stamp clears", async function (assert) {
+        // Mirrors the failure trail core's permissive validator leaves
+        // behind: a per-entry `__failureReason` stamp PLUS an entry on
+        // the layer record's `validationWarnings` array. The editor's
+        // public getter must follow the stamp (the live truth) — not
+        // the layer array (frozen at validation time) — so the
+        // inspector banner clears as soon as the author edits the arg
+        // that was failing.
+        const located = this.editor._findEntryAndOutletSync(
+          this.editor.selectedBlockKey
+        );
+        located.entry.__failureType = "arg-invalid";
+        located.entry.__failureReason =
+          'Arg "title" must be a string, got number.';
+
+        assert.deepEqual(
+          this.editor.validationWarnings.map((w) => w.message),
+          ['Arg "title" must be a string, got number.'],
+          "the stamp surfaces as a warning"
+        );
+
+        await editArg(this.editor, "title", "Edited");
+
+        assert.deepEqual(
+          this.editor.validationWarnings,
+          [],
+          "fixing the arg drops the warning in lockstep with the stamp clear"
+        );
+      });
     });
 
     module("moveBlock", function (innerHooks) {

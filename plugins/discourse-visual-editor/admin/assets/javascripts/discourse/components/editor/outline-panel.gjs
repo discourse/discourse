@@ -113,6 +113,17 @@ export default class OutlinePanel extends Component {
   }
 
   /**
+   * Companion to `structuralVersion` for in-place stamp clears — bumped
+   * by the service when an arg write removes an entry's soft-failure
+   * stamps. Without this dep the outline would keep rendering the
+   * "row in error" indicator after the author has fixed the offending
+   * value (stamps live on plain entry fields, not tracked).
+   */
+  get validationVersion() {
+    return this.visualEditor.validationVersion;
+  }
+
+  /**
    * Decorated rows grouped by outlet. Joins the raw walker output with
    * derived per-row status (condition pass/fail, unknown-block) so the
    * template can render the right icon without computing anything inline.
@@ -477,6 +488,7 @@ export default class OutlinePanel extends Component {
         this.refresh
         this.visualEditor.isActive
         this.structuralVersion
+        this.validationVersion
       }}
     >
       <div class="visual-editor-outline__view-switch" role="tablist">
