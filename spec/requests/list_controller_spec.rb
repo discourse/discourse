@@ -718,6 +718,73 @@ RSpec.describe ListController do
       expect(response.body).to_not include("<item>")
     end
 
+    it "advertises sanitized filtered feed URLs in RSS metadata" do
+      TopTopic.create!(topic: topic, yearly_score: 1.0)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
+
+      get "/latest.rss",
+          params: {
+            exclude_tag: "excludeme",
+            api_key: api_key.key,
+            api_username: user.username_lower,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+
+      latest_doc = Nokogiri::XML::Document.parse(response.body)
+      latest_atom_link =
+        URI.parse(
+          latest_doc.at_xpath(
+            "/rss/channel/atom:link",
+            { "atom" => "http://www.w3.org/2005/Atom" },
+          )[
+            "href"
+          ],
+        )
+      latest_link = URI.parse(latest_doc.at_xpath("/rss/channel/link").text)
+
+      expect(latest_atom_link.path).to eq("/latest.rss")
+      expect(Rack::Utils.parse_nested_query(latest_atom_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+      )
+      expect(latest_link.path).to eq("/latest")
+      expect(Rack::Utils.parse_nested_query(latest_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+      )
+
+      get "/top.rss",
+          params: {
+            period: "yearly",
+            exclude_tag: "excludeme",
+            api_key: api_key.key,
+            api_username: user.username_lower,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+
+      top_doc = Nokogiri::XML::Document.parse(response.body)
+      top_atom_link =
+        URI.parse(
+          top_doc.at_xpath("/rss/channel/atom:link", { "atom" => "http://www.w3.org/2005/Atom" })[
+            "href"
+          ],
+        )
+      top_link = URI.parse(top_doc.at_xpath("/rss/channel/link").text)
+
+      expect(top_atom_link.path).to eq("/top.rss")
+      expect(Rack::Utils.parse_nested_query(top_atom_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+        "period" => "yearly",
+      )
+      expect(top_link.path).to eq("/top")
+      expect(Rack::Utils.parse_nested_query(top_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+        "period" => "yearly",
+      )
+    end
+
     it "renders links correctly with subfolder" do
       set_subfolder "/forum"
       _post = Fabricate(:post, topic: topic, user: user)
