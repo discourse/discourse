@@ -56,10 +56,22 @@ module TurboTests
       @error = false
     end
 
+    MULTISITE_FILE_PATTERNS = [%r{(?:\A|/)spec/multisite/}, /_multisite_spec\.rb\z/].freeze
+
     def run
       check_for_migrations
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
+
+      # The multisite subprocess loads every file in `@files`, then filters
+      # examples by `--tag type:multisite`. When the file list contains no
+      # spec that could plausibly carry that tag (e.g. `bin/turbo_rspec
+      # spec/system`), passing the full list makes it boot Rails and load
+      # hundreds of unrelated files only to run zero examples. Filter the
+      # list down to plausible multisite specs so the subprocess is either
+      # narrowly focused or — when nothing matches — skipped entirely by
+      # `start_subprocess`'s `tests.empty?` branch.
+      multisite_files = @files.select { |f| MULTISITE_FILE_PATTERNS.any? { |pat| f.match?(pat) } }
 
       group_opts = {}
       group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
@@ -73,7 +85,7 @@ module TurboTests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
-      start_multisite_subprocess(@files, **subprocess_opts)
+      start_multisite_subprocess(multisite_files, **subprocess_opts)
 
       tests_in_groups.each_with_index do |tests, process_id|
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)

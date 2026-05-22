@@ -78,7 +78,13 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+          # The turbo_rspec runner used to spawn a dedicated multisite subprocess
+          # alongside the regular workers; spec/system has zero multisite specs
+          # so that slot was wasted boot work. The runner now skips the multisite
+          # subprocess when no multisite files are passed, freeing capacity for
+          # one extra regular worker. Bump the formula by 1 to claim that slot
+          # (and the matching parallel DB created by `parallel:create`).
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 3))" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
