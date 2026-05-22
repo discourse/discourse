@@ -282,12 +282,6 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-          # Migrations are applied by the "Create and migrate database" +
-          # "Create and migrate parallel databases" steps above, so skipping
-          # the master-process migration recheck lets `lib/turbo_tests.rb`
-          # avoid booting the full Rails app (~2.5–3 s of master critical
-          # path before workers can spawn).
-          DISCOURSE_TURBO_SKIP_MIGRATION_CHECK: 1
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests

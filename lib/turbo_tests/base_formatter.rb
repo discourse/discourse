@@ -111,7 +111,7 @@ module TurboTests
       return nil unless example_file_path
 
       expanded_example_file_path = Pathname.new(example_file_path).expand_path
-      return nil unless expanded_example_file_path.to_s.start_with?(Dir.pwd)
+      return nil unless expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
 
       extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
       if extension_match
