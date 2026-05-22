@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Category Localizations" do
+describe "Category Localizations", :hard_reset do
   let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:admin)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Onboarding Banner" do
+describe "Admin Onboarding Banner", :hard_reset do
   fab!(:admin)
   # ensures there is at least one topic, otherwise the topic recent date check doesn't pass
   fab!(:topic)

@@ -648,6 +648,172 @@ RSpec.configure do |config|
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
 
+    # Soft-reset path on `Capybara.reset_session!`: keep the primary
+    # BrowserContext + Page alive across examples and only wipe per-origin
+    # storage (cookies / localStorage / sessionStorage / IndexedDB / SW /
+    # cache_storage via `Storage.clearDataForOrigin`), plus reset
+    # page-global CDP state that `cdp.rb` helpers leak between examples
+    # (network throttling + timezone override). Under the upstream
+    # hard-reset Chromium tears down the render thread + JS engine each
+    # example; eliminating that churn is the same class of CPU-work win
+    # iter-5's MiniRacer GC patch produced. Any unexpected error inside
+    # `soft_reset_browser_state` (or the `:trace` callback being set)
+    # falls through to the original `clear_browser_contexts` path.
+    module CapybaraPlaywrightDriverSoftResetPatch
+      def reset!
+        if callback_on_save_screenshot?
+          raw_screenshot = @browser&.raw_screenshot
+          callback_on_save_screenshot(raw_screenshot) if raw_screenshot
+        end
+
+        video_path = @browser&.video_path
+
+        # Per-example/per-file opt-out from the soft-reset. Examples (or
+        # whole describe groups) tagged `:hard_reset` fall through to the
+        # upstream `clear_browser_contexts` path. The soft-reset preserves
+        # the primary BrowserContext + Page between examples, which
+        # retains the browser-side HTTP cache (keyed by URL). Specs that
+        # mutate DB state which is then served by a URL whose digest
+        # doesn't change between examples (e.g. `Theme.find_default
+        # .color_scheme` updates served via `ColorScheme` stylesheet URLs,
+        # or `TranslationOverride`s embedded in server-rendered HTML)
+        # see stale cached content under soft-reset. Marking polluting
+        # spec files `:hard_reset` reverts only those files' worth of
+        # examples to the original behaviour while the rest of the
+        # ~1,800-example suite keeps the soft-reset perf win.
+        example = RSpec.current_example
+        if example && example.metadata[:hard_reset]
+          @browser&.clear_browser_contexts
+          @browser = nil
+          callback_on_save_screenrecord(video_path) if video_path
+          return
+        end
+
+        soft_reset_succeeded = false
+        if @browser
+          begin
+            @browser.soft_reset_browser_state
+            soft_reset_succeeded = true
+          rescue StandardError
+          end
+        end
+
+        unless soft_reset_succeeded
+          @browser&.clear_browser_contexts
+          @browser = nil
+        end
+
+        callback_on_save_screenrecord(video_path) if video_path
+      end
+    end
+
+    module CapybaraPlaywrightBrowserSoftResetPatch
+      class SoftResetFallback < StandardError
+      end
+
+      def soft_reset_browser_state
+        raise SoftResetFallback if @callback_on_save_trace
+
+        primary = @playwright_page
+        raise SoftResetFallback if primary.nil? || primary.closed?
+
+        contexts = @playwright_browser.contexts
+        raise SoftResetFallback if contexts.empty?
+
+        primary_ctx = contexts.find { |ctx| ctx.pages.any? { |pg| pg.guid == primary.guid } }
+        raise SoftResetFallback if primary_ctx.nil?
+
+        origins = []
+        primary_ctx.pages.each do |pg|
+          page_url =
+            begin
+              pg.url
+            rescue ::Playwright::Error
+              nil
+            end
+          next if page_url.nil? || page_url.empty?
+          next if page_url == "about:blank" || page_url.start_with?("chrome:", "data:")
+
+          begin
+            uri = URI.parse(page_url)
+            next if uri.host.nil? || uri.scheme.nil?
+            port_segment = uri.port && uri.port != uri.default_port ? ":#{uri.port}" : ""
+            origins << "#{uri.scheme}://#{uri.host}#{port_segment}"
+          rescue URI::InvalidURIError
+          end
+        end
+
+        begin
+          cdp = primary_ctx.new_cdp_session(primary)
+          origins.uniq.each do |origin|
+            cdp.send_message(
+              "Storage.clearDataForOrigin",
+              params: {
+                origin: origin,
+                storageTypes: "all",
+              },
+            )
+          end
+
+          # Reset page-global CDP state that the `cdp.rb` helpers
+          # (`with_network_disconnected` / `with_slow_download` /
+          # `with_slow_upload`) and `using_browser_timezone` may have
+          # mutated. Those helpers create their own CDP session and never
+          # detach it; under the hard-reset path the BrowserContext was
+          # destroyed between examples and the leak was masked. Sending
+          # these resets from this fresh session clears the leaked state
+          # without modifying the helpers themselves (iter-9 attempted to
+          # detach the leaked sessions in `cdp.rb` and the suite hit the
+          # 30-minute step timeout — see `state/runs/iter-0009/`).
+          cdp.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+          begin
+            cdp.send_message("Emulation.clearTimezoneOverride")
+          rescue ::Playwright::Error
+          end
+
+          cdp.detach
+        rescue ::Playwright::Error
+        end
+
+        contexts.each do |ctx|
+          next if ctx.equal?(primary_ctx)
+          begin
+            ctx.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        primary_ctx.pages.each do |pg|
+          next if pg.guid == primary.guid
+          begin
+            pg.close
+          rescue ::Playwright::Error
+          end
+        end
+
+        begin
+          primary_ctx.clear_permissions
+        rescue ::Playwright::Error
+        end
+
+        begin
+          primary_ctx.clear_cookies
+        rescue ::Playwright::Error
+        end
+      end
+    end
+
+    Capybara::Playwright::Driver.prepend(CapybaraPlaywrightDriverSoftResetPatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserSoftResetPatch)
+
     # In production, `PrettyText.protect` and `AssetProcessor.v8_call` call
     # `v8.low_memory_notification` after every invocation to keep MiniRacer's
     # V8 heap small for long-lived server processes. Each notification is a
