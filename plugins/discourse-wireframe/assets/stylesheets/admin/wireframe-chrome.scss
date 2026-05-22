@@ -1230,6 +1230,7 @@ body.wireframe-active {
     .outline-outlet__label {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       gap: 0.25rem;
       font-weight: 600;
       color: var(--wireframe-block-outlet-color);
