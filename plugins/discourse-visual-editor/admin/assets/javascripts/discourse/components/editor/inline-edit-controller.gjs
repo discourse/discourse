@@ -16,7 +16,7 @@ import {
  * Mounts a ProseMirror editor over the currently-edited inline text region
  * and exposes its commands to the block-toolbar.
  *
- * Watches `visualEditor.editingBlockKey` + `editingArgName`. When set, it
+ * Watches `visualEditor.inlineEdit.blockKey` + `argName`. When set, it
  * locates the matching renderer span via a DOM query against the canvas
  * (`[data-ve-block-key="..."] [data-ve-inline-edit-arg="..."]`), reads the
  * schema variant off `data-ve-inline-edit-schema`, and mounts a constrained
@@ -26,7 +26,7 @@ import {
  *
  * The bold / italic / link UI lives in `block-toolbar.gjs` (shared with the
  * block move/duplicate/delete buttons). The block-toolbar reaches this
- * controller via `visualEditor.inlineEditor` and calls its public methods
+ * controller via `visualEditor.inlineEdit.controller` and calls its methods
  * (`toggleMark`, `enterLinkMode`, etc.); a tracked `_pmStateVersion`
  * counter bumps on every PM transaction so the toolbar's `markState`
  * getter (which depends on PM state) re-evaluates reactively.
@@ -41,7 +41,7 @@ export default class InlineEditController extends Component {
    * Inline link-edit mode — when `true`, the block-toolbar swaps its
    * inline-format buttons for a URL input + Apply / Remove / Cancel.
    * Template-facing (the block-toolbar reads it through
-   * `visualEditor.inlineEditor.linkEditMode`).
+   * `visualEditor.inlineEdit.controller.linkEditMode`).
    */
   @tracked linkEditMode = false;
   /** Live value of the URL input while in link-edit mode. */
@@ -63,30 +63,30 @@ export default class InlineEditController extends Component {
 
   constructor() {
     super(...arguments);
-    this.visualEditor.registerInlineEditor(this);
+    this.visualEditor.inlineEdit.registerController(this);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.visualEditor.unregisterInlineEditor(this);
+    this.visualEditor.inlineEdit.unregisterController(this);
   }
 
   /**
    * The renderer span the editor should mount into, looked up off the
-   * service's `(editingBlockKey, editingArgName)`. Returns `null` when no
-   * session is active or when the renderer hasn't rendered yet (the canvas
-   * may be in the middle of swapping blocks).
+   * service's `inlineEdit.(blockKey, argName)`. Returns `null` when no
+   * session is active or when the renderer hasn't rendered yet (the
+   * canvas may be in the middle of swapping blocks).
    *
    * @returns {HTMLElement | null}
    */
   @cached
   get activeRendererEl() {
-    const { editingBlockKey, editingArgName } = this.visualEditor;
-    if (!editingBlockKey || !editingArgName) {
+    const { blockKey, argName } = this.visualEditor.inlineEdit;
+    if (!blockKey || !argName) {
       return null;
     }
-    const blockSelector = `[data-ve-block-key="${CSS.escape(editingBlockKey)}"]`;
-    const argSelector = `[data-ve-inline-edit-arg="${CSS.escape(editingArgName)}"]`;
+    const blockSelector = `[data-ve-block-key="${CSS.escape(blockKey)}"]`;
+    const argSelector = `[data-ve-inline-edit-arg="${CSS.escape(argName)}"]`;
     return document.querySelector(`${blockSelector} ${argSelector}`);
   }
 
@@ -107,7 +107,8 @@ export default class InlineEditController extends Component {
    * Public API consumed by `block-toolbar.gjs`. Returns the
    * active-mark flags for the current PM selection, or `null` when the
    * inline-format buttons should be hidden (no view, empty selection,
-   * or schema that doesn't allow marks).
+   * or schema that doesn't allow marks). Reached via
+   * `visualEditor.inlineEdit.controller.markState`.
    *
    * `@cached` + reading `_pmStateVersion` makes this reactive to PM
    * transactions without making PM's state itself tracked.
@@ -157,7 +158,7 @@ export default class InlineEditController extends Component {
     const schema = pm.createSchema(variant.extensions, false);
     const doc = pm.Node.fromJSON(
       schema,
-      toDoc(this.visualEditor.editingArgValue)
+      toDoc(this.visualEditor.inlineEdit.argValue)
     );
 
     const plugins = [
@@ -171,7 +172,7 @@ export default class InlineEditController extends Component {
           "Mod-i": pm.toggleMark(schema.marks.em),
         }),
         Escape: () => {
-          this.visualEditor.stopEditing({ commit: true });
+          this.visualEditor.inlineEdit.stop({ commit: true });
           return true;
         },
         Enter: this.#enterCommand(schema),
@@ -186,7 +187,7 @@ export default class InlineEditController extends Component {
         // default delete-a-char behavior). Other schemas / blocks
         // get no special handling; Backspace stays a plain delete.
         Backspace:
-          this.visualEditor.editingBlockName === "ve:paragraph"
+          this.visualEditor.inlineEdit.blockName === "ve:paragraph"
             ? this.#mergeWithPrevAtStart()
             : undefined,
         // Cross-block arrow nav between sibling `ve:paragraph` blocks.
@@ -195,14 +196,14 @@ export default class InlineEditController extends Component {
         // All four return false (and PM's default arrow handling
         // takes over) when the cursor isn't at the edge or the
         // adjacent sibling isn't a `ve:paragraph`.
-        ...(this.visualEditor.editingBlockName === "ve:paragraph" && {
+        ...(this.visualEditor.inlineEdit.blockName === "ve:paragraph" && {
           ArrowLeft: this.#walkToSibling("prev", "horizontal"),
           ArrowRight: this.#walkToSibling("next", "horizontal"),
           ArrowUp: this.#walkToSibling("prev", "vertical"),
           ArrowDown: this.#walkToSibling("next", "vertical"),
         }),
         // Tab walks between rich-inline fields on the same block in DOM
-        // order. The service's `startEditingArg` implicitly commits the
+        // order. The service's `inlineEdit.start` implicitly commits the
         // current session, so chaining Tabs across fields produces one
         // undo entry per visited field. At the first / last field the
         // command returns false so the browser's default Tab handling
@@ -228,13 +229,13 @@ export default class InlineEditController extends Component {
       },
     });
 
-    this.visualEditor.registerInlineEditCommit(() => {
+    this.visualEditor.inlineEdit.registerCommit(() => {
       const finalView = this.#view;
       if (!finalView) {
         return;
       }
       const docJson = finalView.state.doc.toJSON();
-      this.visualEditor.applyInlineEditChange(toStorage(docJson));
+      this.visualEditor.inlineEdit.applyChange(toStorage(docJson));
     });
 
     // Initial selection. `"selectAll"` (the default) is the "start
@@ -251,7 +252,7 @@ export default class InlineEditController extends Component {
     // on consumption.
     const initialDoc = this.#view.state.doc;
     const end = initialDoc.content.size;
-    const hint = this.visualEditor.consumeInitialSelectionHint();
+    const hint = this.visualEditor.inlineEdit.consumeInitialSelectionHint();
     let range;
     if (hint && typeof hint === "object" && hint.coords) {
       const coordResult = this.#view.posAtCoords({
@@ -289,11 +290,11 @@ export default class InlineEditController extends Component {
         return;
       }
       // Bail out if the edit session has already ended (e.g. a sibling
-      // click handler called `stopEditing` first). `activeRendererEl`
+      // click handler called `inlineEdit.stop` first). `activeRendererEl`
       // returns `null` when there's no active session.
       requestAnimationFrame(() => {
         if (this.activeRendererEl) {
-          this.visualEditor.stopEditing({ commit: true });
+          this.visualEditor.inlineEdit.stop({ commit: true });
         }
       });
     };
@@ -302,7 +303,7 @@ export default class InlineEditController extends Component {
 
   @action
   unmountEditor() {
-    this.visualEditor.registerInlineEditCommit(null);
+    this.visualEditor.inlineEdit.registerCommit(null);
 
     const view = this.#view;
     this.#view = null;
@@ -323,7 +324,7 @@ export default class InlineEditController extends Component {
   /**
    * Toggles `strong` or `em` over the current PM selection. Called by
    * the block-toolbar's inline-format buttons (via
-   * `visualEditor.inlineEditor.toggleMark`).
+   * `visualEditor.inlineEdit.controller.toggleMark`).
    *
    * Explicitly re-sets the selection on the transaction so PM re-renders
    * the DOM selection highlight after dispatch — without this, focus
@@ -458,7 +459,7 @@ export default class InlineEditController extends Component {
       const argEls = Array.from(
         blockEl.querySelectorAll("[data-ve-inline-edit-arg]")
       );
-      const currentArg = this.visualEditor.editingArgName;
+      const currentArg = this.visualEditor.inlineEdit.argName;
       const i = argEls.findIndex(
         (el) => el.dataset.veInlineEditArg === currentArg
       );
@@ -469,7 +470,7 @@ export default class InlineEditController extends Component {
       if (!next) {
         return false;
       }
-      this.visualEditor.startEditingArg(
+      this.visualEditor.inlineEdit.start(
         blockEl.dataset.veBlockKey,
         next.dataset.veInlineEditArg
       );
@@ -498,11 +499,11 @@ export default class InlineEditController extends Component {
   #enterCommand(schema) {
     if (this.schemaName !== "paragraph") {
       return () => {
-        this.visualEditor.stopEditing({ commit: true });
+        this.visualEditor.inlineEdit.stop({ commit: true });
         return true;
       };
     }
-    if (this.visualEditor.editingBlockName === "ve:paragraph") {
+    if (this.visualEditor.inlineEdit.blockName === "ve:paragraph") {
       return this.#splitParagraphAtCursor();
     }
     return insertHardBreak(schema);
@@ -511,13 +512,13 @@ export default class InlineEditController extends Component {
   /**
    * Builds a PM keymap command for paragraph-block Enter: slices the
    * current PM doc at the cursor into a `before` doc-JSON and an
-   * `after` doc-JSON, then hands them to the service's
-   * `splitInlineEditAt` action. PM's `Node.cut(from, to)` returns a
-   * doc-shaped node containing the slice — calling `toJSON()` on each
-   * gives the storage-ready doc-JSON the service writes back via
-   * `toStorage`. Returns `true` when the split fires (consumes the
-   * keystroke); `false` when the session state is wrong so PM falls
-   * through to the next command in the keymap.
+   * `after` doc-JSON, then hands them to the service's `inlineEdit.splitAt`
+   * action. PM's `Node.cut(from, to)` returns a doc-shaped node
+   * containing the slice — calling `toJSON()` on each gives the
+   * storage-ready doc-JSON the service writes back via `toStorage`.
+   * Returns `true` when the split fires (consumes the keystroke);
+   * `false` when the session state is wrong so PM falls through to the
+   * next command in the keymap.
    */
   #splitParagraphAtCursor() {
     return () => {
@@ -529,7 +530,7 @@ export default class InlineEditController extends Component {
       const cursor = selection.from;
       const beforeDoc = doc.cut(0, cursor).toJSON();
       const afterDoc = doc.cut(cursor, doc.content.size).toJSON();
-      return this.visualEditor.splitInlineEditAt({ beforeDoc, afterDoc });
+      return this.visualEditor.inlineEdit.splitAt({ beforeDoc, afterDoc });
     };
   }
 
@@ -560,14 +561,14 @@ export default class InlineEditController extends Component {
       if (!selection.empty || selection.from !== 0) {
         return false;
       }
-      const prev = this.visualEditor.getInlineEditPrevSiblingInfo();
+      const prev = this.visualEditor.inlineEdit.prevSiblingInfo();
       if (!prev || prev.block !== "ve:paragraph") {
         return false;
       }
       const prevDoc = schema.nodeFromJSON(toDoc(prev.value));
       const joinPos = prevDoc.content.size;
       const mergedDoc = prevDoc.replace(joinPos, joinPos, doc.slice(0));
-      return this.visualEditor.mergeInlineEditWithPrev({
+      return this.visualEditor.inlineEdit.mergeWithPrev({
         mergedDoc: mergedDoc.toJSON(),
         joinPos,
       });
@@ -590,7 +591,7 @@ export default class InlineEditController extends Component {
    * Returns `false` (PM's default arrow handling takes over) when the
    * selection isn't a collapsed cursor at the relevant edge, no
    * sibling exists, or the sibling isn't a `ve:paragraph`. On a
-   * successful walk, `startEditingArg` commits the current session
+   * successful walk, `inlineEdit.start` commits the current session
    * (one undo entry), opens a session on the sibling with an `"end"`
    * (prev) / `"start"` (next) initial-selection hint, and the cursor
    * lands at the matching edge of the sibling's doc.
@@ -616,12 +617,12 @@ export default class InlineEditController extends Component {
       }
       const sibling =
         direction === "prev"
-          ? this.visualEditor.getInlineEditPrevSiblingInfo()
-          : this.visualEditor.getInlineEditNextSiblingInfo();
+          ? this.visualEditor.inlineEdit.prevSiblingInfo()
+          : this.visualEditor.inlineEdit.nextSiblingInfo();
       if (!sibling || sibling.block !== "ve:paragraph") {
         return false;
       }
-      this.visualEditor.startEditingArg(sibling.key, "text", {
+      this.visualEditor.inlineEdit.start(sibling.key, "text", {
         initialSelection: direction === "prev" ? "end" : "start",
       });
       return true;

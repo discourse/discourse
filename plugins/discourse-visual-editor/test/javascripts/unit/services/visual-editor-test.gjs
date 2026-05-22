@@ -592,57 +592,60 @@ module(
       });
     });
 
-    module("applyInlineEditChange — entry without args", function (innerHooks) {
-      innerHooks.beforeEach(async function () {
-        withTestBlockRegistration(() => registerBlock(TestTile));
-        // Layout entry intentionally has no `args` field — mirrors what
-        // `serializeEntryForSave` produces for a block whose schema args
-        // are all empty (e.g. a freshly-dropped media card the user
-        // hasn't filled in). On reload that entry comes back as
-        // `{ block: ... }` with no args object.
-        this.layout = await _renderBlocks(
-          "homepage-blocks",
-          [{ block: TestTile }],
-          getOwner(this)
-        );
-        this.editor.siteSettings.visual_editor_enabled = true;
-        logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:visual-editor");
-        this.editor.enter();
-      });
+    module(
+      "inlineEdit.applyChange — entry without args",
+      function (innerHooks) {
+        innerHooks.beforeEach(async function () {
+          withTestBlockRegistration(() => registerBlock(TestTile));
+          // Layout entry intentionally has no `args` field — mirrors what
+          // `serializeEntryForSave` produces for a block whose schema args
+          // are all empty (e.g. a freshly-dropped media card the user
+          // hasn't filled in). On reload that entry comes back as
+          // `{ block: ... }` with no args object.
+          this.layout = await _renderBlocks(
+            "homepage-blocks",
+            [{ block: TestTile }],
+            getOwner(this)
+          );
+          this.editor.siteSettings.visual_editor_enabled = true;
+          logIn(getOwner(this));
+          this.editor = getOwner(this).lookup("service:visual-editor");
+          this.editor.enter();
+        });
 
-      test("writes the value when the entry started without an args object", async function (assert) {
-        const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        test("writes the value when the entry started without an args object", async function (assert) {
+          const draft = this.editor.readResolvedLayout("homepage-blocks");
+          const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
 
-        const opened = await this.editor.startEditingArg(key, "title");
-        assert.true(opened);
+          const opened = await this.editor.inlineEdit.start(key, "title");
+          assert.true(opened);
 
-        this.editor.applyInlineEditChange("Typed");
+          this.editor.inlineEdit.applyChange("Typed");
 
-        const after = this.editor.readResolvedLayout("homepage-blocks");
-        assert.strictEqual(after[0].args?.title, "Typed");
-      });
+          const after = this.editor.readResolvedLayout("homepage-blocks");
+          assert.strictEqual(after[0].args?.title, "Typed");
+        });
 
-      test("committing an empty value is a no-op when the entry has no args", async function (assert) {
-        const draft = this.editor.readResolvedLayout("homepage-blocks");
-        const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
+        test("committing an empty value is a no-op when the entry has no args", async function (assert) {
+          const draft = this.editor.readResolvedLayout("homepage-blocks");
+          const key = `ve:svc-test-tile:${draft[0].__stableKey}`;
 
-        const opened = await this.editor.startEditingArg(key, "title");
-        assert.true(opened);
+          const opened = await this.editor.inlineEdit.start(key, "title");
+          assert.true(opened);
 
-        this.editor.applyInlineEditChange("");
+          this.editor.inlineEdit.applyChange("");
 
-        const after = this.editor.readResolvedLayout("homepage-blocks");
-        assert.false(
-          "title" in (after[0].args ?? {}),
-          "no key written for an empty commit"
-        );
-      });
-    });
+          const after = this.editor.readResolvedLayout("homepage-blocks");
+          assert.false(
+            "title" in (after[0].args ?? {}),
+            "no key written for an empty commit"
+          );
+        });
+      }
+    );
 
     module(
-      "stopEditing — undo gate for doc-JSON values",
+      "inlineEdit.stop — undo gate for doc-JSON values",
       function (innerHooks) {
         innerHooks.beforeEach(async function () {
           withTestBlockRegistration(() => registerBlock(TestTile));
@@ -671,7 +674,7 @@ module(
         });
 
         test("committing an unchanged doc-JSON value doesn't push undo", async function (assert) {
-          const opened = await this.editor.startEditingArg(this.key, "title");
+          const opened = await this.editor.inlineEdit.start(this.key, "title");
           assert.true(opened);
           assert.false(this.editor.canUndo, "no undo entry before commit");
 
@@ -679,13 +682,13 @@ module(
           // `toStorage(doc.toJSON())` produces on every commit for marked
           // text. `Object.is` returns false; only a deep-equal comparator
           // recognizes the no-op.
-          this.editor.applyInlineEditChange({
+          this.editor.inlineEdit.applyChange({
             type: "doc",
             content: [
               { type: "text", text: "hello", marks: [{ type: "strong" }] },
             ],
           });
-          this.editor.stopEditing({ commit: true });
+          this.editor.inlineEdit.stop({ commit: true });
 
           assert.false(
             this.editor.canUndo,
@@ -694,16 +697,16 @@ module(
         });
 
         test("committing a CHANGED doc-JSON value DOES push undo", async function (assert) {
-          const opened = await this.editor.startEditingArg(this.key, "title");
+          const opened = await this.editor.inlineEdit.start(this.key, "title");
           assert.true(opened);
 
-          this.editor.applyInlineEditChange({
+          this.editor.inlineEdit.applyChange({
             type: "doc",
             content: [
               { type: "text", text: "world", marks: [{ type: "strong" }] },
             ],
           });
-          this.editor.stopEditing({ commit: true });
+          this.editor.inlineEdit.stop({ commit: true });
 
           assert.true(
             this.editor.canUndo,

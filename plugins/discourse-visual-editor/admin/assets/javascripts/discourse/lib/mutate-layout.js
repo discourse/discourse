@@ -581,7 +581,7 @@ function cloneEntryForDraft(entry) {
   // Always materialise `args` on the draft, even when the source entry had
   // no args object (e.g. `serializeEntryForSave` omits it when every key is
   // empty, so a reloaded layout brings back `{ block }` only). The editor's
-  // live-edit write path (`applyInlineEditChange` &c.) writes directly into
+  // live-edit write path (`inlineEdit.applyChange` &c.) writes directly into
   // `entry.args` and relies on `assignStableKeys` having wrapped it in a
   // `trackedObject` for reactivity. Spread also runs the source proxy's
   // getters so we materialise current values, and `stripNullish` enforces

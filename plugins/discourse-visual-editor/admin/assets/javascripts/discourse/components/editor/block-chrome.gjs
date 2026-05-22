@@ -627,7 +627,7 @@ export default class BlockChrome extends Component {
 
     const argEl = event.target.closest?.("[data-ve-inline-edit-arg]");
     if (argEl && this.visualEditor.selectedBlockKey === this.args.blockKey) {
-      this.visualEditor.startEditingArg(
+      this.visualEditor.inlineEdit.start(
         this.args.blockKey,
         argEl.dataset.veInlineEditArg,
         { coords: { x: event.clientX, y: event.clientY } }

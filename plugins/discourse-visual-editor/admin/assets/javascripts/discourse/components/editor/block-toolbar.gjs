@@ -22,7 +22,7 @@ import DButton from "discourse/ui-kit/d-button";
  * toolbar when the user has entered an inline-edit session on the
  * block AND has a non-empty text selection inside it. The controller
  * (`InlineEditController`) registers itself with the service as
- * `inlineEditor`; we read its `markState` (a tracked-on-PM-transactions
+ * `inlineEdit.controller`; we read its `markState` (a tracked-on-PM-transactions
  * getter) and call its commands. Co-locating the inline formatters
  * with the block actions avoids the focus / scroll-tracking problems
  * a separately-floating bubble menu had.
@@ -78,8 +78,8 @@ export default class BlockToolbar extends Component {
    * The active inline-edit controller, or `null` when no inline
    * session is open.
    */
-  get inlineEditor() {
-    return this.visualEditor.inlineEditor;
+  get inlineController() {
+    return this.visualEditor.inlineEdit.controller;
   }
 
   /**
@@ -91,18 +91,18 @@ export default class BlockToolbar extends Component {
    */
   get showInlineFormat() {
     return (
-      !!this.inlineEditor &&
-      this.visualEditor.editingBlockKey === this.args.blockKey &&
-      this.inlineEditor.markState !== null
+      !!this.inlineController &&
+      this.visualEditor.inlineEdit.blockKey === this.args.blockKey &&
+      this.inlineController.markState !== null
     );
   }
 
   get markState() {
-    return this.inlineEditor?.markState;
+    return this.inlineController?.markState;
   }
 
   get linkEditMode() {
-    return !!this.inlineEditor?.linkEditMode;
+    return !!this.inlineController?.linkEditMode;
   }
 
   @action
@@ -132,38 +132,38 @@ export default class BlockToolbar extends Component {
 
   @action
   toggleBold() {
-    this.inlineEditor?.toggleMark("strong");
+    this.inlineController?.toggleMark("strong");
   }
 
   @action
   toggleItalic() {
-    this.inlineEditor?.toggleMark("em");
+    this.inlineController?.toggleMark("em");
   }
 
   @action
   startLinkEdit() {
-    this.inlineEditor?.enterLinkMode();
+    this.inlineController?.enterLinkMode();
   }
 
   @action
   applyLink() {
-    this.inlineEditor?.applyLink();
+    this.inlineController?.applyLink();
   }
 
   @action
   removeLink() {
-    this.inlineEditor?.removeLink();
+    this.inlineController?.removeLink();
   }
 
   @action
   cancelLink() {
-    this.inlineEditor?.cancelLink();
+    this.inlineController?.cancelLink();
   }
 
   @action
   onLinkUrlInput(event) {
-    if (this.inlineEditor) {
-      this.inlineEditor.linkEditUrl = event.target.value;
+    if (this.inlineController) {
+      this.inlineController.linkEditUrl = event.target.value;
     }
   }
 
@@ -191,7 +191,7 @@ export default class BlockToolbar extends Component {
           type="url"
           class="visual-editor-block-toolbar__url-input"
           placeholder="https://..."
-          value={{this.inlineEditor.linkEditUrl}}
+          value={{this.inlineController.linkEditUrl}}
           {{didInsert this.focusLinkInput}}
           {{on "input" this.onLinkUrlInput}}
           {{on "keydown" this.onLinkUrlKeydown}}

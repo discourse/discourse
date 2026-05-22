@@ -7,7 +7,6 @@ import {
   trackedMap,
   trackedSet,
 } from "@ember/reactive/collections";
-import { next as nextRunloop } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
   _clearLayoutLayer,
@@ -28,8 +27,8 @@ import {
   parsePlacement,
   placementsOverlap,
 } from "discourse/plugins/discourse-visual-editor/discourse/lib/grid-math";
-import { toStorage } from "discourse/plugins/discourse-visual-editor/discourse/lib/inline-rich-text";
 import { resolveTemplateLayout } from "../lib/grid-templates";
+import InlineEditState from "../lib/inline-edit-state";
 import {
   clearValidatorStamps,
   cloneEntryForPaste,
@@ -51,33 +50,6 @@ import { inferSchemaFromValues } from "../lib/schema-to-fields";
 import { mountedOutletNames } from "../lib/walk-layout";
 
 const FLUSH_DELAY_MS = 200;
-
-/**
- * True when `prev` and `next` represent the same inline-edit value.
- * Plain strings (the common unformatted case) compare with `Object.is`.
- * Non-string values are doc-JSON — `toStorage(doc.toJSON())` returns a
- * fresh object each commit, so reference equality always fails even
- * when the content hasn't changed. Fall back to a deep-equal via
- * `JSON.stringify`: doc-JSON is plain (no cycles, no functions) and
- * PM serialises keys in a deterministic order for the same shape.
- *
- * Used by `stopEditing` to gate the undo push so pure navigation
- * (e.g. arrow-walking through a bolded paragraph) doesn't pollute
- * the stack with no-op entries.
- *
- * @param {*} prev
- * @param {*} next
- * @returns {boolean}
- */
-function sameInlineEditValue(prev, next) {
-  if (Object.is(prev, next)) {
-    return true;
-  }
-  if (typeof prev === "string" || typeof next === "string") {
-    return false;
-  }
-  return JSON.stringify(prev) === JSON.stringify(next);
-}
 
 /**
  * Phase 1 + 2 + 3 editor service. Holds the editor's session state and
@@ -116,27 +88,6 @@ export default class VisualEditorService extends Service {
 
   @tracked isActive = false;
   @tracked selectedBlockKey = null;
-
-  /**
-   * Inline-text-edit session state. `editingBlockKey` + `editingArgName`
-   * identify the specific `(block, arg)` whose ProseMirror editor is
-   * mounted on the canvas. Reading these from the canvas chrome lets it
-   * find the right renderer span and mount the editor in place; reading
-   * them from the canvas's Cmd+Z handler lets it defer to PM's internal
-   * undo while a session is in flight.
-   *
-   * Mutations stream through `applyInlineEditChange` (per keystroke, no
-   * undo push). On `stopEditing({ commit: true })` a single
-   * `{ kind: "args" }` undo entry is recorded capturing the whole session.
-   * On `stopEditing({ commit: false })` the pre-edit value is restored
-   * with no undo entry pushed.
-   *
-   * @type {string|null}
-   */
-  @tracked editingBlockKey = null;
-
-  /** @type {string|null} */
-  @tracked editingArgName = null;
 
   /**
    * The id of the theme this editor session is bound to. Set on `enter()`
@@ -268,82 +219,21 @@ export default class VisualEditorService extends Service {
    * @type {{x: number, y: number, width: number, height: number}|null}
    */
   @tracked conditionsPanelRect = null;
-  /**
-   * Snapshot of the arg's pre-edit value, captured at `startEditingArg`
-   * time. Used to build the `prev` Map for the undo entry on commit, and
-   * to restore the original value on revert. `null` when no edit is in
-   * flight.
-   *
-   * @type {*}
-   */
-  #editingPrevValue = null;
 
   /**
-   * Cached entry + outlet for the editing session so `applyInlineEditChange`
-   * doesn't pay the `_findEntryAndOutlet` cost on every keystroke. Cleared
-   * by `stopEditing`.
+   * Inline-text-edit session state. Holds the active `(blockKey, argName)`,
+   * the cached entry location, the pre-edit snapshot for undo, the
+   * registered controller, structural ops (split / merge), and sibling
+   * lookups consumed by the keymap.
    *
-   * @type {{entry: Object, outletName: string}|null}
+   * Lives as a separate object so the service file stays focused on
+   * layout / palette / clipboard / undo concerns. Service-owned utilities
+   * (layout lookup, draft management, structural recording, undo stack)
+   * are reached back through `this` via the constructor back-reference.
+   *
+   * @type {InlineEditState}
    */
-  #editingLocated = null;
-
-  /**
-   * Block name (`ve:paragraph`, `ve:heading`, …) of the entry currently
-   * being edited. Cached at session start so the PM keymap can branch on
-   * block type per keystroke without re-walking the layout. Cleared by
-   * `stopEditing`.
-   *
-   * @type {string|null}
-   */
-  #editingBlockName = null;
-
-  /**
-   * Selection hint for the next `mountEditor` call. `"selectAll"` (the
-   * default) preserves the "start typing to replace" affordance for
-   * fresh edit sessions. `"start"` / `"end"` are used by structural
-   * transitions (Enter-split places the cursor at the start of the new
-   * sibling). A `{ pos: number }` object places the cursor at an
-   * exact document position — used by Backspace-merge so the cursor
-   * lands at the join point (end of the original "before" content,
-   * before the merged-in "after" content). A `{ coords: { x, y } }`
-   * object is used by the click-to-edit gesture so the cursor lands
-   * where the user clicked (`mountEditor` resolves the screen coords
-   * via PM's `posAtCoords`). Consumed exactly once via
-   * `consumeInitialSelectionHint`.
-   *
-   * @type {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
-   */
-  #editingInitialSelection = "selectAll";
-
-  /**
-   * Callback the inline-edit controller registers via
-   * `registerInlineEditCommit`. Invoked from `stopEditing({ commit: true })`
-   * BEFORE the editing state is cleared, so the controller can pull the
-   * final doc out of its ProseMirror view and hand it back through
-   * `applyInlineEditChange`. Decouples the service (which only knows
-   * about service state) from the controller (which owns the editor DOM)
-   * without making the service directly aware of PM.
-   *
-   * @type {(() => void) | null}
-   */
-  #inlineEditCommitFn = null;
-
-  /**
-   * Reference to the active `InlineEditController` instance — the
-   * component that owns the ProseMirror view and exposes
-   * `toggleMark` / `enterLinkMode` / `applyLink` / `removeLink` /
-   * `cancelLink` to consumers.
-   *
-   * Set in the controller's constructor via `registerInlineEditor` and
-   * cleared on `willDestroy`. The block-toolbar reads it through the
-   * `inlineEditor` getter to render the inline-format buttons.
-   *
-   * `@tracked` so consumers (block-toolbar) re-render when the editor
-   * becomes available or goes away.
-   *
-   * @type {object | null}
-   */
-  @tracked _inlineEditor = null;
+  inlineEdit = new InlineEditState(this);
 
   /**
    * Sticky mirror of `activeDropPreview` captured at the moment of
@@ -824,30 +714,6 @@ export default class VisualEditorService extends Service {
     document.removeEventListener("mousedown", this._onCanvasMouseDown);
     document.removeEventListener("mouseup", this._onCanvasMouseUp);
     this._selectionMousedownTarget = null;
-  }
-
-  /**
-   * Returns the current value of the arg under inline edit, falling back
-   * to the block's schema default when `entry.args` doesn't carry an
-   * explicit value. Without this fallback, the editor would seed with
-   * `undefined` for any block that relies on `default:` to render its
-   * placeholder text — mirrors the same lookup
-   * `createBlockArgsWithReactiveGetters` uses to compute the block's
-   * displayed `@arg` value (`decorator.js:462-464`).
-   *
-   * @returns {*}
-   */
-  get editingArgValue() {
-    if (!this.#editingLocated || !this.editingArgName) {
-      return undefined;
-    }
-    const { entry } = this.#editingLocated;
-    const live = entry.args?.[this.editingArgName];
-    if (live !== undefined) {
-      return live;
-    }
-    const schema = this._metadataFor(entry)?.args;
-    return schema?.[this.editingArgName]?.default;
   }
 
   /** @returns {boolean} */
@@ -1641,8 +1507,11 @@ export default class VisualEditorService extends Service {
     // Switching selection to a different block commits any in-flight
     // inline-edit session. Re-selecting the same block leaves it alone —
     // that case is the second-click-to-edit gesture.
-    if (this.editingBlockKey && this.editingBlockKey !== (data?.key ?? null)) {
-      this.stopEditing({ commit: true });
+    if (
+      this.inlineEdit.blockKey &&
+      this.inlineEdit.blockKey !== (data?.key ?? null)
+    ) {
+      this.inlineEdit.stop({ commit: true });
     }
     this.selectedBlockKey = data?.key ?? null;
 
@@ -1903,503 +1772,11 @@ export default class VisualEditorService extends Service {
     return true;
   }
 
-  /**
-   * Begins an inline-text edit session for `(blockKey, argName)`. Captures
-   * the arg's current value as the pre-edit snapshot so a single
-   * `{ kind: "args" }` undo entry can be pushed at the end of the session.
-   * Implicitly commits + ends any other session in flight.
-   *
-   * The canvas chrome calls this from its click handler when the user
-   * clicks a `[data-ve-inline-edit-arg]` region of a selected block. Per
-   * keystroke mutations after this point go through `applyInlineEditChange`,
-   * which bypasses the undo stack — PM's internal undo handles in-session
-   * granularity until `stopEditing` flushes a single entry on commit.
-   *
-   * @param {string} blockKey
-   * @param {string} argName
-   * @param {object} [options]
-   * @param {{x:number,y:number}} [options.coords] Screen-space click
-   *   coordinates. When present, the next `mountEditor` will place the
-   *   cursor at the doc position that resolves from these coords (PM's
-   *   `posAtCoords`) instead of selecting all. Used by the click-to-edit
-   *   gesture so the cursor lands where the user clicked.
-   * @param {"start"|"end"|"selectAll"|{pos:number}} [options.initialSelection]
-   *   Direct override for the next `mountEditor`'s initial selection.
-   *   Used by cross-block arrow nav (`"end"` when landing in the prev
-   *   block from a left/up; `"start"` when landing in the next block
-   *   from a right/down). Mutually exclusive with `coords` — pass one
-   *   or the other.
-   * @returns {Promise<boolean>} `true` if the session opened.
-   */
-  @action
-  async startEditingArg(blockKey, argName, options = {}) {
-    if (!blockKey || !argName) {
-      return false;
-    }
-    if (this.editingBlockKey === blockKey && this.editingArgName === argName) {
-      return true;
-    }
-    if (this.editingBlockKey) {
-      this.stopEditing({ commit: true });
-    }
-    const located = await this._findEntryAndOutlet(blockKey);
-    if (!located) {
-      return false;
-    }
-    this.#editingLocated = located;
-    this.#editingPrevValue = located.entry.args?.[argName];
-    this.#editingBlockName = located.entry.block ?? null;
-    if (options.coords) {
-      this.#editingInitialSelection = { coords: options.coords };
-    } else if (options.initialSelection !== undefined) {
-      this.#editingInitialSelection = options.initialSelection;
-    }
-    this.editingBlockKey = blockKey;
-    this.editingArgName = argName;
-    return true;
-  }
-
-  /**
-   * Block name (`ve:paragraph`, `ve:heading`, …) of the currently-editing
-   * entry, or `null` when no session is active. Read by the PM keymap to
-   * branch behaviour per block type (e.g. Enter splits a paragraph block
-   * but commits-and-exits in a heading).
-   *
-   * @returns {string|null}
-   */
-  get editingBlockName() {
-    return this.#editingBlockName;
-  }
-
-  /**
-   * Returns the pending initial-selection hint for the next mount and
-   * resets it to the default (`"selectAll"`). One-shot — `mountEditor`
-   * calls this exactly once when setting up the editor's initial
-   * selection.
-   *
-   * @returns {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
-   */
-  consumeInitialSelectionHint() {
-    const hint = this.#editingInitialSelection;
-    this.#editingInitialSelection = "selectAll";
-    return hint;
-  }
-
-  /**
-   * Writes the final value of an inline-text edit session into
-   * `entry.args[editingArgName]`. Invoked exactly once per session, via the
-   * commit callback registered by the controller (see
-   * `registerInlineEditCommit`) — `stopEditing({ commit: true })` calls
-   * the callback, which reads ProseMirror's final doc and forwards it
-   * here. We deliberately do NOT write per keystroke: ProseMirror is the
-   * visible source of truth during the session, and per-keystroke writes
-   * exposed the system to spurious "PM emptied its doc during teardown"
-   * transactions that clobbered `args.text` with `""`.
-   *
-   * Keeps the existing dirty-tracking honest: registers the entry's
-   * outlet in `_editedOutlets` so persistence knows what to save, and
-   * captures the initial-snapshot so `resetAll` rolls back the right
-   * pre-edit state.
-   *
-   * @param {*} value - The new value (string for plain edits, doc-JSON
-   *   for marked edits) produced by `toStorage(doc.toJSON())`.
-   */
-  applyInlineEditChange(value) {
-    const located = this.#editingLocated;
-    const argName = this.editingArgName;
-    if (!located || !argName) {
-      return;
-    }
-    const { entry, outletName } = located;
-    this._editedOutlets.add(outletName);
-    const prevMap = new Map([[argName, entry.args?.[argName]]]);
-    this._captureInitialSnapshot(entry, prevMap);
-    // Empty edits (`""`, null, undefined) DELETE the key rather than write
-    // an explicit empty string. The block decorator's reactive getter
-    // (`createBlockArgsWithReactiveGetters` at `decorator.js:462-464`)
-    // only falls back to the schema `default` when the key is missing;
-    // writing `""` would lock out the default and leave the canvas
-    // visually empty even though the renderer's placeholder is set.
-    if (value == null || value === "") {
-      delete entry.args[argName];
-    } else {
-      entry.args[argName] = value;
-    }
-    clearValidatorStamps(entry);
-  }
-
-  /**
-   * Splits the current `ve:paragraph` edit session into two sibling
-   * paragraph entries at the cursor. The current entry keeps the
-   * "before" doc; a freshly-minted sibling holds the "after" doc and
-   * becomes the new active edit target with the cursor at position 0.
-   *
-   * The PM keymap calls this with the cursor-split doc-JSON pair. The
-   * whole mutation rides one `_recordStructural` block so Cmd+Z reverts
-   * the split atomically — there's no intermediate `applyInlineEditChange`
-   * write, since we hand-write both docs directly in the recording
-   * window.
-   *
-   * No-ops (returns `false`) when there's no active session, the active
-   * arg isn't `text`, or the editing entry isn't a `ve:paragraph` block.
-   *
-   * @param {{beforeDoc: object, afterDoc: object}} args
-   * @returns {boolean}
-   */
-  @action
-  splitInlineEditAt({ beforeDoc, afterDoc }) {
-    const blockKey = this.editingBlockKey;
-    const argName = this.editingArgName;
-    if (!blockKey || argName !== "text") {
-      return false;
-    }
-    const located = this._findEntryAndOutletSync(blockKey);
-    if (!located || located.entry.block !== "ve:paragraph") {
-      return false;
-    }
-    const { entry: currentEntry, outletName } = located;
-    const align = currentEntry.args?.align;
-    const afterValue = toStorage(afterDoc);
-    const afterArgs = {};
-    if (afterValue !== "" && afterValue != null) {
-      afterArgs.text = afterValue;
-    }
-    if (align !== undefined) {
-      afterArgs.align = align;
-    }
-    const newEntry = { block: "ve:paragraph", args: afterArgs };
-    let newKey = null;
-
-    const result = this._recordStructural([outletName], () => {
-      // Write the "before" doc back into the current entry. Direct
-      // mutation on the live entry is safe here — we're inside the
-      // structural-recording window, so the pre-state was already
-      // captured. Match `applyInlineEditChange`'s contract of deleting
-      // the key on empty so the schema default surfaces.
-      const beforeValue = toStorage(beforeDoc);
-      if (beforeValue === "" || beforeValue == null) {
-        delete currentEntry.args.text;
-      } else {
-        currentEntry.args.text = beforeValue;
-      }
-      clearValidatorStamps(currentEntry);
-      this._editedOutlets.add(outletName);
-
-      // Insert the new sibling immediately after the current entry.
-      const layout = this._ensureDraft(outletName);
-      if (!layout) {
-        return false;
-      }
-      const insertion = insertEntryAt(layout, blockKey, newEntry, "after");
-      if (!insertion.changed) {
-        return false;
-      }
-      this._publishStructuralChange(outletName, insertion.layout);
-
-      // `_publishStructuralChange` ran `assignStableKeys`, so the new
-      // entry now has its composite key.
-      newKey = entryKey(newEntry);
-      return !!newKey;
-    });
-    if (!result) {
-      return false;
-    }
-
-    this.#transitionEditingSessionTo(newKey, { initialSelection: "start" });
-    return true;
-  }
-
-  /**
-   * Returns the previous sibling of the currently-editing entry within
-   * the same outlet — `{ key, block, value }` — or `null` if no session
-   * is active, the current entry is the first sibling, or the lookup
-   * fails. `value` is the sibling's stored value for the active arg
-   * (string or doc-JSON); callers decide what to do with it.
-   *
-   * Filtering by block type is intentionally left to the caller — the
-   * Backspace-merge handler bails when `block !== "ve:paragraph"`; the
-   * arrow-walk handler does the same. A future cross-block-type handler
-   * might accept other blocks.
-   *
-   * @returns {{key: string, block: string|null, value: *}|null}
-   */
-  getInlineEditPrevSiblingInfo() {
-    return this.#getInlineEditSiblingInfo(-1);
-  }
-
-  /**
-   * Returns the next sibling of the currently-editing entry, or `null`
-   * if it's the last sibling. Mirror of `getInlineEditPrevSiblingInfo`;
-   * used by cross-block arrow nav to decide whether ArrowRight at end /
-   * ArrowDown on the bottom line should walk to the next sibling.
-   *
-   * @returns {{key: string, block: string|null, value: *}|null}
-   */
-  getInlineEditNextSiblingInfo() {
-    return this.#getInlineEditSiblingInfo(1);
-  }
-
-  #getInlineEditSiblingInfo(direction) {
-    const blockKey = this.editingBlockKey;
-    if (!blockKey) {
-      return null;
-    }
-    const located = this._findEntryAndOutletSync(blockKey);
-    if (!located) {
-      return null;
-    }
-    const layout = this.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return null;
-    }
-    const sibs = findEntrySiblings(layout, blockKey);
-    if (!sibs) {
-      return null;
-    }
-    const target = sibs.siblings[sibs.index + direction];
-    if (!target) {
-      return null;
-    }
-    return {
-      key: entryKey(target),
-      block: target.block ?? null,
-      value: target.args?.[this.editingArgName],
-    };
-  }
-
-  /**
-   * Merges the current `ve:paragraph` edit session into its previous
-   * sibling. The keymap rebuilds the prev's PM doc (via `toDoc(prevValue)`
-   * + `Node.fromJSON`), concats the current PM doc onto its end, and
-   * passes the merged doc-JSON here along with `joinPos` — the absolute
-   * doc position where the boundary between the original prev content
-   * and the merged-in current content sits. That position becomes the
-   * cursor's new home via the `{ pos }` initial-selection hint.
-   *
-   * The whole mutation rides one `_recordStructural` block so Cmd+Z
-   * restores both paragraphs atomically. The current entry is removed;
-   * the prev entry absorbs the merged value.
-   *
-   * No-ops (returns `false`) when there's no active session, the active
-   * arg isn't `text`, the editing entry isn't a `ve:paragraph` block,
-   * or no prev sibling exists. Cross-block-type merges (paragraph into
-   * heading, etc.) are explicitly out of scope here — the keymap
-   * filters those out before calling.
-   *
-   * @param {{mergedDoc: object, joinPos: number}} args
-   * @returns {boolean}
-   */
-  @action
-  mergeInlineEditWithPrev({ mergedDoc, joinPos }) {
-    const blockKey = this.editingBlockKey;
-    const argName = this.editingArgName;
-    if (!blockKey || argName !== "text") {
-      return false;
-    }
-    const located = this._findEntryAndOutletSync(blockKey);
-    if (!located || located.entry.block !== "ve:paragraph") {
-      return false;
-    }
-    const { outletName } = located;
-    const layout = this.readResolvedLayout(outletName);
-    if (!layout) {
-      return false;
-    }
-    const sibs = findEntrySiblings(layout, blockKey);
-    if (!sibs || sibs.index <= 0) {
-      return false;
-    }
-    const prevEntry = sibs.siblings[sibs.index - 1];
-    const prevKey = entryKey(prevEntry);
-
-    const result = this._recordStructural([outletName], () => {
-      // Write the merged value into the prev entry. Match
-      // `applyInlineEditChange`'s contract of deleting the key on
-      // empty so the schema default surfaces.
-      const livePrev = this._findEntryByKey(prevKey);
-      if (!livePrev) {
-        return false;
-      }
-      const mergedValue = toStorage(mergedDoc);
-      if (mergedValue === "" || mergedValue == null) {
-        delete livePrev.args.text;
-      } else {
-        livePrev.args.text = mergedValue;
-      }
-      clearValidatorStamps(livePrev);
-      this._editedOutlets.add(outletName);
-
-      // Remove the current entry from the layout.
-      const draft = this._ensureDraft(outletName);
-      if (!draft) {
-        return false;
-      }
-      const removal = removeEntry(draft, blockKey);
-      if (!removal.changed) {
-        return false;
-      }
-      this._publishStructuralChange(outletName, removal.layout);
-      return true;
-    });
-    if (!result) {
-      return false;
-    }
-
-    this.#transitionEditingSessionTo(prevKey, {
-      initialSelection: { pos: joinPos },
-    });
-    return true;
-  }
-
-  /**
-   * Moves the active edit session to a different block once Glimmer has
-   * rendered the target block's chrome into the DOM. Used by structural
-   * ops (`splitInlineEditAt`, `mergeInlineEditWithPrev`) that publish a
-   * new layout and immediately want PM to remount on a different entry.
-   *
-   * Flipping `editingBlockKey` synchronously would race the controller's
-   * `activeRendererEl` lookup (it queries `[data-ve-block-key=...]`
-   * which doesn't exist until the canvas mounts the new block-chrome).
-   * Defer past `afterRender` via `nextRunloop`, then rAF-poll for the
-   * element — the canvas's chrome mount can land later than the
-   * standard render phase. Bails after a fixed attempt count so a
-   * genuinely-missing element doesn't spin forever.
-   *
-   * Once the element is found (or the poll gives up), all session-
-   * scoped state is reset to the new entry and `_restoreSelection`
-   * runs so the chrome's `--selected` reveal rule unhides the empty
-   * placeholder for the destination block.
-   *
-   * @param {string} key
-   * @param {{initialSelection: "start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}} options
-   */
-  #transitionEditingSessionTo(key, { initialSelection }) {
-    const transitionWhenReady = (attempts = 0) => {
-      const found = document.querySelector(
-        `[data-ve-block-key="${CSS.escape(key)}"]`
-      );
-      if (found || attempts > 10) {
-        this.#editingLocated = this._findEntryAndOutletSync(key);
-        this.#editingPrevValue =
-          this.#editingLocated?.entry?.args?.[this.editingArgName];
-        this.#editingBlockName = this.#editingLocated?.entry?.block ?? null;
-        this.#editingInitialSelection = initialSelection;
-        this.editingBlockKey = key;
-        this._restoreSelection(key);
-        return;
-      }
-      requestAnimationFrame(() => transitionWhenReady(attempts + 1));
-    };
-    nextRunloop(this, transitionWhenReady);
-  }
-
-  /**
-   * The inline-edit controller calls this in `mountEditor` to register a
-   * commit callback (and again with `null` in `unmountEditor` to clear).
-   * The callback is invoked by `stopEditing({ commit: true })` just before
-   * the editing state is cleared, giving the controller a chance to pull
-   * the current ProseMirror doc and write it through
-   * `applyInlineEditChange`.
-   *
-   * @param {(() => void) | null} fn
-   */
-  registerInlineEditCommit(fn) {
-    this.#inlineEditCommitFn = fn;
-  }
-
-  /**
-   * Called by `InlineEditController` from its constructor to expose the
-   * controller (and its `toggleMark` / `enterLinkMode` / `applyLink` /
-   * `removeLink` / `cancelLink` methods) to the block-toolbar, which
-   * renders the inline-format buttons in the same chrome as the
-   * move / duplicate / delete buttons.
-   *
-   * @param {object} controller
-   */
-  registerInlineEditor(controller) {
-    this._inlineEditor = controller;
-  }
-
-  /**
-   * Inverse of `registerInlineEditor`. Called from the controller's
-   * `willDestroy`. Guarded by reference equality so a stray
-   * unregister from a previous controller can't clobber a newer one.
-   *
-   * @param {object} controller
-   */
-  unregisterInlineEditor(controller) {
-    if (this._inlineEditor === controller) {
-      this._inlineEditor = null;
-    }
-  }
-
-  /**
-   * Public read-side of the registration. The block-toolbar consults
-   * this to decide whether to show the inline-format buttons and to
-   * call their commands.
-   *
-   * @returns {object | null}
-   */
-  get inlineEditor() {
-    return this._inlineEditor;
-  }
-
-  /**
-   * Ends the inline-text edit session. On `commit: true`, pushes a single
-   * `{ kind: "args" }` undo entry capturing the pre-edit value as `prev`
-   * and the current value as `next` — but only when the value actually
-   * changed; a no-op edit doesn't pollute the undo stack. On
-   * `commit: false`, restores the pre-edit value without pushing an entry
-   * (used by Escape-to-cancel paths).
-   *
-   * The keystroke stream went straight through `applyInlineEditChange`
-   * during the session; this only records the session boundary.
-   *
-   * @param {{commit?: boolean}} [options]
-   */
-  @action
-  stopEditing({ commit = true } = {}) {
-    const located = this.#editingLocated;
-    const argName = this.editingArgName;
-    if (!located || !argName) {
-      this.editingBlockKey = null;
-      this.editingArgName = null;
-      return;
-    }
-
-    // Pull the final value out of ProseMirror BEFORE clearing state, so
-    // the controller's commit callback (which calls
-    // `applyInlineEditChange`) writes to a session whose location is
-    // still resolved.
-    if (commit && this.#inlineEditCommitFn) {
-      this.#inlineEditCommitFn();
-    }
-
-    const { entry } = located;
-    const prevValue = this.#editingPrevValue;
-    const nextValue = entry.args?.[argName];
-
-    if (commit) {
-      if (!sameInlineEditValue(prevValue, nextValue)) {
-        this._undoStack.push({
-          kind: "args",
-          entry,
-          prev: new Map([[argName, prevValue]]),
-          next: new Map([[argName, nextValue]]),
-        });
-        this._redoStack.length = 0;
-      }
-    } else {
-      this._writeArgs(entry, new Map([[argName, prevValue]]));
-    }
-
-    this.#editingLocated = null;
-    this.#editingPrevValue = null;
-    this.#editingBlockName = null;
-    this.#editingInitialSelection = "selectAll";
-    this.editingBlockKey = null;
-    this.editingArgName = null;
-  }
+  // Inline-text edit session state + operations live on `this.inlineEdit`
+  // (an `InlineEditState` instance — see `../lib/inline-edit-state.js`).
+  // The class accesses service-private helpers (`_recordStructural`,
+  // `_editedOutlets`, `_captureInitialSnapshot`, `_undoStack`, etc.) via
+  // the back-reference it captured at construction.
 
   /**
    * Reverts the most recent mutation. For `args` batches, writes the
