@@ -615,20 +615,75 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          wait_for_ember_boot
-          wait_for_client_settled(method_name)
+          wait_for_ember_boot_and_client_settled(method_name)
           result
         end
       end
 
       private
 
-      # `<discourse-assets>` is only present on Ember pages; `ember-application`
-      # is added to the root element (`#main`) once Ember mounts.
-      def wait_for_ember_boot
+      # Merged poll that combines the old `wait_for_ember_boot` (poll for
+      # `<discourse-assets>` then `#main.ember-application`) with
+      # `wait_for_client_settled` (await `window.clientSettled`) inside a
+      # single `evaluate_async_script` round-trip. The pre-merge sequence
+      # was 2-3 CDP round-trips per navigation (`has_no_css?`, optional
+      # `assert_selector`, `evaluate_async_script`). The merged version is
+      # one. Saves a Playwright IPC pair across every `visit` /
+      # `go_back` / `go_forward` / `refresh` / `resize_window_to` call.
+      def wait_for_ember_boot_and_client_settled(method_name)
         session = @driver.send(:session)
-        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
-        session.assert_selector("#main.ember-application", visible: :all)
+        timeout_ms = Capybara.default_max_wait_time * 1000
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_navigation_settled_script(session, timeout_ms)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_navigation_settled_script(session, timeout_ms)
+        end
+      end
+
+      # `<discourse-assets>` is only present on Ember pages;
+      # `ember-application` is added to the root element (`#main`) once
+      # Ember mounts. If `discourse-assets` is absent we're not on an
+      # Ember page, so just await `clientSettled` (if defined) and return.
+      def execute_navigation_settled_script(session, timeout_ms)
+        result = session.evaluate_async_script(<<~JS)
+            const done = arguments[0];
+            const deadline = Date.now() + #{timeout_ms};
+
+            const finishSettling = () => {
+              if (window.clientSettled) {
+                window.clientSettled(#{timeout_ms})
+                  .then(done)
+                  .catch((error) => { done(error.message) });
+              } else {
+                done();
+              }
+            };
+
+            if (!document.querySelector('discourse-assets')) {
+              finishSettling();
+              return;
+            }
+
+            const checkEmberMounted = () => {
+              if (document.querySelector('#main.ember-application')) {
+                finishSettling();
+                return;
+              }
+              if (Date.now() > deadline) {
+                done('wait_for_ember_boot: #main.ember-application did not appear within ' + #{timeout_ms} + 'ms');
+                return;
+              }
+              setTimeout(checkEmberMounted, 50);
+            };
+
+            checkEmberMounted();
+          JS
+
+        raise result if result.is_a? String
       end
     end
 
