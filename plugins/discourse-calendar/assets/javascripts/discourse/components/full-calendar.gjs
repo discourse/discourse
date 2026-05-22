@@ -100,6 +100,7 @@ export default class FullCalendar extends Component {
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
         calendarModule.List,
+        calendarModule.Interaction,
         calendarModule.MomentPlugin,
         calendarModule.MomentTimezonePlugin,
       ],
@@ -139,6 +140,9 @@ export default class FullCalendar extends Component {
             ),
           });
         }
+      },
+      dateClick: async (info) => {
+        await this.args.onDateClick?.(info);
       },
       eventClick: async ({ el, event, jsEvent }) => {
         const { postNumber, postUrl, postEvent } = event.extendedProps;

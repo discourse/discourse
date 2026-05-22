@@ -6,14 +6,30 @@ import moment from "moment";
 import { i18n } from "discourse-i18n";
 import { normalizeViewForRoute } from "../lib/calendar-view-helper";
 import formatEventForCalendar from "../lib/format-event-for-calendar";
+import openEventComposer from "../lib/open-event-composer";
 import FullCalendar from "./full-calendar";
 
 export default class UpcomingEventsCalendar extends Component {
+  @service composer;
   @service currentUser;
   @service router;
   @service capabilities;
   @service siteSettings;
   @service discoursePostEventService;
+
+  get canCreateEvent() {
+    return !!this.currentUser?.can_create_discourse_post_event;
+  }
+
+  @action
+  async onDateClick(info) {
+    await openEventComposer({
+      composer: this.composer,
+      currentUser: this.currentUser,
+      info,
+      category: null,
+    });
+  }
 
   get customButtons() {
     return {
@@ -141,6 +157,7 @@ export default class UpcomingEventsCalendar extends Component {
       <FullCalendar
         @initialDate={{@initialDate}}
         @onDatesChange={{this.onDatesChange}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @onLoadEvents={{this.loadEvents}}
         @initialView={{@initialView}}
         @customButtons={{this.customButtons}}

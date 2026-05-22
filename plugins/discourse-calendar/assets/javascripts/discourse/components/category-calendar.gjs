@@ -5,13 +5,32 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import formatEventForCalendar from "../lib/format-event-for-calendar";
+import openEventComposer from "../lib/open-event-composer";
 import FullCalendar from "./full-calendar";
 
 export default class CategoryCalendar extends Component {
+  @service composer;
   @service currentUser;
   @service router;
   @service siteSettings;
   @service discoursePostEventService;
+
+  get canCreateEvent() {
+    return (
+      !!this.currentUser?.can_create_discourse_post_event &&
+      !!this.category?.canCreateTopic
+    );
+  }
+
+  @action
+  async onDateClick(info) {
+    await openEventComposer({
+      composer: this.composer,
+      currentUser: this.currentUser,
+      info,
+      category: this.category,
+    });
+  }
 
   @bind
   async loadEvents(info) {
@@ -119,6 +138,7 @@ export default class CategoryCalendar extends Component {
     {{#if this.shouldRender}}
       <FullCalendar
         @onLoadEvents={{this.loadEvents}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @height="650px"
         @initialView={{this.categorySetting.defaultView}}
         @weekends={{this.renderWeekends}}
