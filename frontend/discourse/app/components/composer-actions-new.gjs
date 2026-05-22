@@ -776,7 +776,7 @@ export default class ComposerActions extends Component {
         <DButton
           @action={{this.composer.displayEditReason}}
           @icon={{data.icon}}
-          @label="composer.describe_your_edit"
+          @label="composer.edit_reason"
           class="composer-actions-trigger composer-actions-trigger--static btn-flat btn-icon-text"
         />
       {{else}}

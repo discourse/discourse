@@ -3313,8 +3313,7 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
-      edit_reason: "Add your reason for editing"
-      describe_your_edit: "Describe your edit"
+      edit_reason: "Why are you editing?"
       whisper_indicator:
         public: "Visible"
         whispering: "Whispering"
