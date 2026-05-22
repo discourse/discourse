@@ -245,7 +245,7 @@ class CategoriesController < ApplicationController
       # Handles adding or removing category types registered by plugins
       # based on the multi-type selector in the General tab for categories.
       if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        manage_category_types(cat, pending_custom_fields || {})
+        return nil unless manage_category_types(cat, pending_custom_fields || {})
         cat.reload
       end
 
@@ -627,21 +627,19 @@ class CategoriesController < ApplicationController
           },
         ) do
           on_failed_policy(:type_is_available) do
-            return(
-              render json: {
-                       errors: [
-                         I18n.t(
-                           "category_types.not_available",
-                           type_name: category_type.capitalize,
-                         ),
-                       ],
-                     },
-                     status: :unprocessable_entity
-            )
+            render json: {
+                     errors: [
+                       I18n.t("category_types.not_available", type_name: category_type.capitalize),
+                     ],
+                   },
+                   status: :unprocessable_entity
+            return false
           end
         end
       end
     end
+
+    true
   end
 
   def topics_per_page
