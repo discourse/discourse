@@ -18,22 +18,28 @@ const NOT_ENABLED = "not enabled";
 
 export default class AiFeatures extends Component {
   @service adminPluginNavManager;
+  @service store;
 
   @tracked filterValue = "";
   @tracked selectedFeatureGroup = ENABLED;
+  @tracked refreshedFeatures = null;
 
   constructor() {
     super(...arguments);
 
     // if there are features but none are configured, show unconfigured
-    if (this.args.features?.length > 0) {
-      const configuredCount = this.args.features.filter(
+    if (this.features?.length > 0) {
+      const configuredCount = this.features.filter(
         (f) => f.module_enabled === true
       ).length;
       if (configuredCount === 0) {
         this.selectedFeatureGroup = NOT_ENABLED;
       }
     }
+  }
+
+  get features() {
+    return this.refreshedFeatures ?? this.args.features;
   }
 
   get featureGroupOptions() {
@@ -51,11 +57,11 @@ export default class AiFeatures extends Component {
   }
 
   get filteredFeatures() {
-    if (!this.args.features || this.args.features.length === 0) {
+    if (!this.features || this.features.length === 0) {
       return [];
     }
 
-    let features = this.args.features;
+    let features = this.features;
 
     if (this.selectedFeatureGroup === ENABLED) {
       features = features.filter((feature) => feature.module_enabled === true);
@@ -168,6 +174,12 @@ export default class AiFeatures extends Component {
     document.querySelector(".admin-filter__input").focus();
   }
 
+  @action
+  async refreshFeatures() {
+    const features = await this.store.findAll("ai-feature");
+    this.refreshedFeatures = features.content;
+  }
+
   <template>
     <DBreadcrumbsItem
       @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-features"
@@ -203,7 +215,7 @@ export default class AiFeatures extends Component {
         />
       </div>
 
-      <AiDefaultLlmSelector />
+      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
 
       {{#if this.filteredFeatures.length}}
         <AiFeaturesList @modules={{this.filteredFeatures}} />
