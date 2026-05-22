@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Content Localization", :hard_reset do
+describe "Content Localization" do
   let(:toggle_localize_button_selector) { "button.btn-toggle-localized-content" }
   let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 

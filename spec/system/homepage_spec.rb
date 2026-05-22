@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Homepage", :hard_reset do
+describe "Homepage" do
   fab!(:admin)
   fab!(:user)
   fab!(:topics) { Fabricate.times(5, :post).map(&:topic) }

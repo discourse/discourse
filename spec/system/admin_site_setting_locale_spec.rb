@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Locales", :hard_reset do
+describe "Admin Site Setting Locales" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   fab!(:admin)
 
