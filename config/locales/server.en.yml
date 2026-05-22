@@ -1377,6 +1377,17 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    posters_by_member_type:
+      title: "Who's posting?"
+      description: "Posts authored in the selected period, bucketed by member type. \"New members\" signed up during the period, \"Returning\" signed up before it, and \"Staff\" are admins or moderators."
+      labels:
+        member_type: "Member type"
+        count: "Posts"
+        share: "Share"
+      types:
+        new_members: "New members"
+        returning: "Returning"
+        staff: "Staff"
     trust_level_pipeline:
       title: "Trust level pipeline"
       description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."

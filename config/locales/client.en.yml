@@ -6886,6 +6886,12 @@ en:
             fetch_error: "Couldn't load engagement. Try refreshing the page."
             whos_posting:
               title: "Who's posting?"
+              all_categories: "All categories"
+              include_subcategories: "Include subcategories"
+              new_members: "New members"
+              returning: "Returning"
+              staff: "Staff"
+              empty: "No posts in the selected period."
             activity_by_category:
               title: "Activity by category"
             trust_level_pipeline:

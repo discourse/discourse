@@ -123,6 +123,7 @@ class Report
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
   include Reports::TrustLevelPipeline
+  include Reports::PostersByMemberType
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
