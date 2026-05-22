@@ -7,9 +7,17 @@
 nl:
   admin_js:
     admin:
+      calendar: "Kalender en evenementen"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenement"
+          discourse_calendar: "Kalender en evenementen"
+      web_hooks:
+        calendar_event:
+          group_name: "Kalenderevenement"
+          calendar_event_created: "Kalenderevenement gemaakt"
+          calendar_event_updated: "Kalenderevenement bijgewerkt"
+          calendar_event_destroyed: "Kalenderevenement vernietigd"
   js:
     notifications:
       titles:
@@ -26,6 +34,11 @@ nl:
               label: Topic-ID
     discourse_calendar:
       invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
+      preferences:
+        all_events: "Discourse-kalender - Alle evenementen"
+        all_events_description: "Alle forumevenementen"
+        my_events: "Discourse-kalender - Mijn evenementen"
+        my_events_description: "Evenementen waar je naartoe gaat of in geïnteresseerd bent"
       on_holiday: "Op feestdag"
       disable_holiday: "Uitschakelen"
       enable_holiday: "Inschakelen"
@@ -34,6 +47,7 @@ nl:
         header_title: "Feestdag"
         pick_region_description: "Kies een regio om de feestdagen voor die regio te zien."
         disabled_holidays_description: "Uitgeschakelde feestdagen worden uitgesloten van de feestdagenkalender voor medewerkers."
+        header_description: "Kies een regio om de vakanties voor die regio te zien. Uitgeschakelde feestdagen worden uitgesloten van de vakantiekalender voor medewerkers."
       date: "Datum"
       add_to_calendar: "Toevoegen aan Google-agenda"
       toggle_timezone_offset_title: "Tijdzoneoffset schakelen"
@@ -42,6 +56,7 @@ nl:
         title: "Regio"
         none: "Geen"
         use_current_region: "Huidige regio gebruiken"
+        select_region: "Selecteer een regio..."
         names:
           ae: "Verenigde Arabische Emiraten"
           ar: "Argentinië"
@@ -350,6 +365,7 @@ nl:
       bulk_invite: "Bulkuitnodiging"
       close_event: "Evenement sluiten"
       open_event: "Evenement openen"
+      destroy_event: "Evenement vernietigen"
       invitees_modal:
         title_invited: "Evenementdeelname"
         title_participated: "Lijst van deelnemende gebruikers"
@@ -415,6 +431,7 @@ nl:
         event:
           expired: "Verlopen"
           closed: "Gesloten"
+          full: "Vol"
           status:
             standalone:
               title: "Losstaand"
@@ -425,6 +442,12 @@ nl:
             private:
               title: "Privé"
               description: "Alleen uitgenodigde gebruikers kunnen deelnemen aan een privé-evenement."
+      composer:
+        name_placeholder: "Evenement"
+        end_date_placeholder: "Einddatum instelllen"
+        location_placeholder: "Locatie of URL toevoegen"
+        max_attendees_placeholder: "Max. aantal deelnemers instellen"
+        description_placeholder: "Evenementbeschrijving toevoegen"
       builder_modal:
         custom_fields:
           label: "Aangepaste velden"
@@ -445,6 +468,9 @@ nl:
         timezone:
           label: Tijdzone
           remove_timezone: Geen tijdzone (UTC)
+        all_day:
+          label: "Evenement dat de hele dag duurt"
+          description: "Een evenement dat de hele dag duurt heeft geen specifieke tijden, alleen een datum. Het evenement duurt van de start van de dag tot het einde van de dag."
         reminders:
           label: "Herinneringen"
           types:
@@ -472,6 +498,9 @@ nl:
         minimal:
           label: "Minimaal evenement"
           checkbox_label: "Knoppen Gaan/Niet gaan en genodigdenstatus verbergen"
+        max_attendees:
+          label: "Maximaal aantal deelnemers"
+          placeholder: "Geen limiet"
         allow_chat:
           label: "Chatintegratie"
           checkbox_label: "Evenementspecifiek chatkanaal maken en beheren"
@@ -491,6 +520,9 @@ nl:
           label: "Uitgenodigde groepen"
         status:
           label: "Status"
+        delete_confirmation_message: "Dit evenement verwijderen?"
+        image:
+          label: "Evenementafbeelding"
       invite_user_or_group:
         title: "Gebruiker(s) of groep(en) informeren"
         invite: "Sturen"

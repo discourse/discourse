@@ -15,6 +15,18 @@ nl:
       menu_title: "Chatintegraties"
       settings: "Instellingen"
       more_providers: "Meer"
+      setup_provider_modal:
+        slack:
+          instructions: "Toegangstoken of uitgaande webhook-URL is vereist."
+          at_least_one_required: "Voer een toegangstoken of uitgaande webhook-URL in."
+          access_token:
+            title: "Toegangstoken"
+            description: "Het OAuth-toegangstoken van de Slack-bot"
+        telegram:
+          instructions: "Het toegangstoken wordt gevalideerd bij het opslaan."
+          access_token:
+            title: "Toegangstoken"
+            description: "Het Telegram-bottoegangstoken van BotFather"
       channels_title: "Kanalen"
       channels_with_errors: "De laatste keer dat berichten werden gestuurd, werkten sommige kanalen niet voor deze provider. Klik op de foutpictogrammen voor meer informatie."
       group_mention_template: "Vermeldingen van: @%{name}"
@@ -74,6 +86,8 @@ nl:
             identifier:
               title: Kanaal
           errors:
+            at_least_one_required: "Voer een toegangstoken of uitgaande webhook-URL in."
+            auth_error: "Het verstrekte verificatietoken is ongeldig"
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
         telegram:
           title: "Telegram"
@@ -85,6 +99,8 @@ nl:
               title: Chat-ID
               help: Een door de bot aan jou gegeven nummer, of een broadcastkanaal-ID in de vorm @kanaalnaam
           errors:
+            access_token_required: "Een bottoegangstoken is vereist."
+            webhook_setup_failed: "Kan de webhook niet registreren bij Telegram. Controleer het token en probeer het opnieuw."
             channel_not_found: "Het opgegeven kanaal bestaat niet op Telegram"
             forbidden: "De bot heeft geen toestemming om berichten in dit kanaal te plaatsen"
         discord:
@@ -95,6 +111,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Discord."
             webhook_url:
               title: Webhook-URL
+              help: De gemaakte webhook-URL in je Discord-server instellingen moet de indeling https://discord.com/api/webhooks/<webhook-id>/<webhook-token> hebben
         guilded:
           title: "Guilded"
           param:

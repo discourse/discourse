@@ -434,8 +434,8 @@ nl:
   delete_topic_failed: "Er is een fout opgetreden bij het verwijderen van dat topic. Neem contact op met de beheerder van de website."
   reading_time: "Leestijd"
   reading_time_minutes:
-    one: "%{count} min 🕑"
-    other: "%{count} min 🕑"
+    one: "%{count} min. 🕑"
+    other: "%{count} min. 🕑"
   likes: "Likes"
   likes_count:
     one: "%{count} ❤"
@@ -1756,6 +1756,7 @@ nl:
     ga_universal_domain_name: "Google Universal Analytics-domeinnaam, bijvoorbeeld: mijnsite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics-cross-domain-tracking inschakelen. Aan uitgaande links naar deze domein wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain Tracking-gids.</a>"
     gtm_container_id: "ID van Google Tag Manager-container, bijvoorbeeld GTM-ABCD12E. <br/>Opmerking: om GTM te gebruiken wanneer de Content Security Policy (CSP) is ingeschakeld, zie de documentatie over meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces gebruiken in Google Tag Manager-scripts</a>."
+    google_site_verification_token: Verificatietoken Google-zoekconsole. Wordt opgenomen als metatag in de HTML-kop.
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Moderators toestaan het eigendom van een bericht te wijzigen"
     cors_origins: "Toegestane domeinen voor cross-origin-verzoeken (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
@@ -2402,6 +2403,8 @@ nl:
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
+    nested_replies_max_depth: "Maximale visuele nestdiepte voor antwoorden in thread. Berichten die dieper zijn dan dit tonen een link 'Doorgaan met deze thread'."
+    nested_replies_cap_nesting_depth: "Beperk antwoordnesting op de maximale visuele diepte. Als dit is ingeschakeld, worden antwoorden op het diepste niveau opnieuw gelijkliggend in plaats van onderliggend."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_email: "Ongeldig e-mailadres."
@@ -4058,7 +4061,7 @@ nl:
     see_more: "Meer"
     search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
-    home: "Ga naar de startpagina"
+    home: "Naar de startpagina"
     placeholder: "Zoek topics op titel of trefwoorden…"
   offline:
     title: "Kan app niet laden"
