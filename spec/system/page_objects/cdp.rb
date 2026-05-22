@@ -85,22 +85,15 @@ module PageObjects
 
         yield
       ensure
-        begin
-          cdp_client&.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
-        ensure
-          begin
-            cdp_client&.detach
-          rescue ::Playwright::Error
-          end
-        end
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
       end
     end
 
@@ -120,22 +113,15 @@ module PageObjects
 
         yield
       ensure
-        begin
-          cdp_client&.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
-        ensure
-          begin
-            cdp_client&.detach
-          rescue ::Playwright::Error
-          end
-        end
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
       end
     end
 
@@ -155,22 +141,15 @@ module PageObjects
 
         yield
       ensure
-        begin
-          cdp_client&.send_message(
-            "Network.emulateNetworkConditions",
-            params: {
-              offline: false,
-              latency: 0,
-              downloadThroughput: -1,
-              uploadThroughput: -1,
-            },
-          )
-        ensure
-          begin
-            cdp_client&.detach
-          rescue ::Playwright::Error
-          end
-        end
+        cdp_client.send_message(
+          "Network.emulateNetworkConditions",
+          params: {
+            offline: false,
+            latency: 0,
+            downloadThroughput: -1,
+            uploadThroughput: -1,
+          },
+        )
       end
     end
   end
