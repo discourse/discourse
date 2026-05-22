@@ -249,7 +249,7 @@ after_initialize do
     scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
   add_to_serializer(:post, :accepted_answer) do
-    topic&.solved&.topic_answers&.any? { |topic_answer| topic_answer.answer_post_id == object.id }
+    topic&.topic_answers&.any? { |topic_answer| topic_answer.answer_post_id == object.id }
   end
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
@@ -312,7 +312,7 @@ after_initialize do
       options[:refresh_stream] = true
 
       if !new_allowed
-        topic.solved&.topic_answers&.each do |ta|
+        topic.topic_answers.each do |ta|
           DiscourseSolved::UnacceptAnswer.call(
             params: {
               post_id: ta.answer_post_id,

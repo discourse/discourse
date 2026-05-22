@@ -15,4 +15,8 @@ module DiscourseSolved::TopicExtension
     hours = category&.solved_auto_close_hours || 0
     hours.zero? ? SiteSetting.solved_topics_auto_close_hours : hours
   end
+
+  def topic_answers
+    solved&.topic_answers || DiscourseSolved::TopicAnswer.none
+  end
 end

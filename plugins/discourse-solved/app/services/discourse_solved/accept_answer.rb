@@ -51,11 +51,11 @@ class DiscourseSolved::AcceptAnswer
 
   def should_revoke_previous(topic:)
     topic.reload
-    !SiteSetting.solved_allow_multiple_solutions && topic.solved&.topic_answers&.any?
+    !SiteSetting.solved_allow_multiple_solutions && topic.topic_answers&.any?
   end
 
   def revoke_previous_accepted_answer(topic:)
-    topic_answers = topic.solved.topic_answers
+    topic_answers = topic.topic_answers
 
     if topic_answers.any?
       post_ids = topic_answers.pluck(:answer_post_id)
@@ -198,7 +198,7 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def answer_is_acceptable(topic:, post:)
-    !topic.solved&.topic_answers&.exists?(answer_post_id: post.id)
+    !topic.topic_answers.exists?(answer_post_id: post.id)
   end
 
   def find_or_create_solved_topic(topic:)
