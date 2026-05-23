@@ -17,5 +17,5 @@ exec bundle exec rspec \
   --require ./spec/nginx/spec_helper.rb \
   --color \
   --format documentation \
-  "$@" \
-  spec/nginx/
+  --default-path spec/nginx \
+  "$@"

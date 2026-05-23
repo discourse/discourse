@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "etc"
 require "fileutils"
 
 # Reads `config/nginx.sample.conf` and rewrites the handful of references
@@ -19,7 +20,7 @@ module Nginx
       WRAPPER_TEMPLATE = <<~CONF
         # Generated for tests — do not edit by hand.
         # Wraps nginx.sample.conf with the events+http blocks it omits.
-        worker_processes 1;
+        %<worker_user_directive>sworker_processes 1;
         daemon off;
         error_log %<error_log>s warn;
         pid %<pid_file>s;
@@ -71,6 +72,7 @@ module Nginx
             mime_types: system_mime_types,
             error_log: File.join(tmpdir, "error.log"),
             pid_file: File.join(tmpdir, "nginx.pid"),
+            worker_user_directive: worker_user_directive,
           )
         wrapper_path = File.join(tmpdir, "nginx.conf")
         File.write(wrapper_path, wrapper)
@@ -81,10 +83,24 @@ module Nginx
       # Used by tests to skip when running on a stock nginx without it.
       def self.module_available?(name)
         @module_cache ||= {}
-        @module_cache[name] ||= !`nginx -V 2>&1`.split.grep(/#{Regexp.escape(name)}/i).empty?
+        @module_cache.fetch(name) do
+          @module_cache[name] = nginx_build_flags.split.grep(/#{Regexp.escape(name)}/i).any?
+        end
+      end
+
+      def self.nginx_build_flags
+        @nginx_build_flags ||= `nginx -V 2>&1`
       end
 
       private
+
+      def worker_user_directive
+        return "" if Process.euid.nonzero?
+
+        user = Etc.getpwuid(Process.euid).name
+        group = Etc.getgrgid(Process.egid).name
+        "user #{user} #{group};\n"
+      end
 
       def rewrite_sample(source)
         source =
@@ -125,7 +141,7 @@ module Nginx
       def system_mime_types
         # nginx ships its own mime.types; locate it via `nginx -V`'s
         # configured --prefix or fall back to /etc/nginx/mime.types.
-        prefix = `nginx -V 2>&1`[/--prefix=(\S+)/, 1]
+        prefix = ConfigRenderer.nginx_build_flags[/--prefix=(\S+)/, 1]
         candidates = [
           prefix && File.join(prefix, "conf/mime.types"),
           "/etc/nginx/mime.types",

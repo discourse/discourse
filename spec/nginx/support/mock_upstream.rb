@@ -21,6 +21,22 @@ module Nginx
       ECHO_HEADER_PREFIX = "HTTP_"
       MOCK_HEADER_PREFIX = "HTTP_X_MOCK_"
       MOCK_RESPONSE_HEADER_PREFIX = "HTTP_X_MOCK_HEADER_"
+      ORIGINAL_HEADER_NAMES_ENV = "nginx.mock_upstream.original_header_names"
+      HEADER_WORDS = {
+        "CDN" => "CDN",
+        "DNT" => "DNT",
+        "ETAG" => "ETag",
+        "HTTP" => "HTTP",
+        "HTTPS" => "HTTPS",
+        "ID" => "ID",
+        "IP" => "IP",
+        "MD5" => "MD5",
+        "SSL" => "SSL",
+        "TLS" => "TLS",
+        "URI" => "URI",
+        "URL" => "URL",
+        "WWW" => "WWW",
+      }.freeze
 
       def call(env)
         status = mock_status(env)
@@ -46,19 +62,18 @@ module Nginx
       def merge_mock_headers!(headers, env)
         env.each do |key, value|
           next unless key.start_with?(MOCK_RESPONSE_HEADER_PREFIX)
-          header_name =
-            key.sub(MOCK_RESPONSE_HEADER_PREFIX, "").split("_").map(&:capitalize).join("-")
-          headers[header_name] = value
+          headers[header_name_from_env_key(key, MOCK_RESPONSE_HEADER_PREFIX)] = value
         end
       end
 
       def echo_payload(env)
         request_headers = {}
+        original_header_names = env[ORIGINAL_HEADER_NAMES_ENV] || {}
         env.each do |key, value|
           next unless key.start_with?(ECHO_HEADER_PREFIX)
           # Skip Mock-* control headers — they aren't part of what nginx forwarded
           next if key.start_with?(MOCK_HEADER_PREFIX)
-          name = key.sub(ECHO_HEADER_PREFIX, "").split("_").map(&:capitalize).join("-")
+          name = original_header_names[key] || header_name_from_env_key(key, ECHO_HEADER_PREFIX)
           request_headers[name] = value
         end
 
@@ -72,6 +87,14 @@ module Nginx
           headers: request_headers,
           body: body,
         }
+      end
+
+      def header_name_from_env_key(key, prefix)
+        key
+          .delete_prefix(prefix)
+          .split("_")
+          .map { |part| HEADER_WORDS.fetch(part, part.capitalize) }
+          .join("-")
       end
     end
   end

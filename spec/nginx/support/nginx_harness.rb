@@ -198,6 +198,7 @@ module Nginx
           "PATH_INFO" => webrick_req.path,
           "QUERY_STRING" => webrick_req.query_string || "",
           "rack.input" => StringIO.new(webrick_req.body || ""),
+          MockUpstream::ORIGINAL_HEADER_NAMES_ENV => original_header_names(webrick_req),
         }
         webrick_req.header.each do |name, values|
           # WEBrick gives header values as arrays; join with comma per RFC.
@@ -205,6 +206,15 @@ module Nginx
           env[rack_key] = Array(values).join(", ")
         end
         env
+      end
+
+      def original_header_names(webrick_req)
+        Array(webrick_req.raw_header).each_with_object({}) do |line, names|
+          next unless (raw_name = line[/\A([^:\s]+):/, 1])
+
+          rack_key = "HTTP_" + raw_name.upcase.tr("-", "_")
+          names[rack_key] ||= raw_name
+        end
       end
 
       def default_sample_path
