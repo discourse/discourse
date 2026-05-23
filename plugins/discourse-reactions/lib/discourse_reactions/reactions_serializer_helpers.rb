@@ -178,6 +178,9 @@ module DiscourseReactions::ReactionsSerializerHelpers
 
     return reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] } if likes.zero?
 
+    # Reactions using main_reaction_id normally only have a `PostAction` record.
+    # If main_reaction_id was changed, historical `ReactionUser` rows can also
+    # exist, so fold them into the like count instead of rendering them separately.
     reaction_likes, reactions =
       reactions.partition { |r| r[:id] == DiscourseReactions::Reaction.main_reaction_id }
 
