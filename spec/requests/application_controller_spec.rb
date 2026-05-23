@@ -784,6 +784,20 @@ RSpec.describe ApplicationController do
       expect(response.body).to include("d-splash")
     end
 
+    it "does not emit custom splash layout CSS when no custom splash image is configured" do
+      SiteSetting.splash_screen_image = ""
+      SiteSetting.splash_screen_image_dark = ""
+
+      get "/"
+
+      style = css_select("#d-splash style").to_s
+
+      expect(style).not_to include("single-custom-splash")
+      expect(style).not_to include("light-custom-splash")
+      expect(style).not_to include("dark-custom-splash")
+      expect(style).not_to include("splash-logo-container")
+    end
+
     context "with color schemes" do
       let!(:light_scheme) do
         ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])

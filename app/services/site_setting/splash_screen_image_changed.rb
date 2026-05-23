@@ -3,13 +3,25 @@
 class SiteSetting::SplashScreenImageChanged
   include Service::Base
 
-  params { attribute :upload_id, :integer }
+  class << self
+    attr_reader :site_setting_name
 
-  model :upload
-  model :svg
-  model :cleaned_svg
-  step :save_cleaned_svg_upload
-  step :clear_cache
+    private
+
+    def handles_site_setting(name)
+      @site_setting_name = name
+
+      params { attribute :upload_id, :integer }
+
+      model :upload
+      model :svg
+      model :cleaned_svg
+      step :save_cleaned_svg_upload
+      step :clear_cache
+    end
+  end
+
+  handles_site_setting :splash_screen_image
 
   private
 
@@ -83,6 +95,6 @@ class SiteSetting::SplashScreenImageChanged
   end
 
   def site_setting_name
-    :splash_screen_image
+    self.class.site_setting_name
   end
 end

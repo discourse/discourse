@@ -1,7 +1,6 @@
 <%
   light_custom_splash = splash_screen_image_available?(dark: false)
   dark_mode_custom_splash = splash_screen_image_available?(dark: true)
-  custom_splash = light_custom_splash || dark_mode_custom_splash
 
   light_splash_animated = light_custom_splash && splash_screen_image_animated?(dark: false)
   dark_mode_splash_animated = dark_mode_custom_splash && splash_screen_image_animated?(dark: true)
@@ -16,7 +15,11 @@
   current_splash_dark = dark_color_scheme? || forced_dark_mode?
   current_custom_splash = current_splash_dark ? dark_mode_custom_splash : light_custom_splash
   current_splash_animated = current_splash_dark ? dark_mode_splash_animated : light_splash_animated
-  rendered_custom_splash = single_scheme_splash ? current_custom_splash : custom_splash
+  render_single_custom_splash = single_scheme_splash && current_custom_splash
+  render_light_custom_splash = !single_scheme_splash && light_custom_splash
+  render_dark_mode_custom_splash = !single_scheme_splash && dark_mode_custom_splash
+  rendered_custom_splash =
+    render_single_custom_splash || render_light_custom_splash || render_dark_mode_custom_splash
 %>
 
 <section id="d-splash">
@@ -150,6 +153,7 @@
       background-size: cover;
     }
 
+    <%- if render_single_custom_splash %>
     #d-splash .preloader-image.single-custom-splash {
       width: 700px;
       display: flex;
@@ -177,67 +181,70 @@
         width: 300px;
       }
     }
+    <%- end %>
 
-    <%- unless single_scheme_splash %>
-      @media (prefers-color-scheme: light) {
-        #d-splash .preloader-image.light-custom-splash {
-          width: 700px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 1.5rem;
-          margin-top: var(--splash-image-offset, 0);
-        }
+    <%- if render_light_custom_splash %>
+    @media (prefers-color-scheme: light) {
+      #d-splash .preloader-image.light-custom-splash {
+        width: 700px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: var(--splash-image-offset, 0);
       }
+    }
 
-      @media (prefers-color-scheme: dark) {
-        #d-splash .preloader-image.dark-custom-splash {
-          width: 700px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 1.5rem;
-          margin-top: var(--splash-image-offset, 0);
-        }
+    @media (prefers-color-scheme: light) and (display-mode: standalone) {
+      #d-splash .preloader-image.light-custom-splash {
+        transform: translateY(-5dvh);
       }
+    }
 
-      @media (prefers-color-scheme: light) and (display-mode: standalone) {
-        #d-splash .preloader-image.light-custom-splash {
-          transform: translateY(-5dvh);
-        }
+    @media (prefers-color-scheme: light) and (width < 700px) {
+      #d-splash .preloader-image.light-custom-splash {
+        width: 320px;
       }
+    }
 
-      @media (prefers-color-scheme: dark) and (display-mode: standalone) {
-        #d-splash .preloader-image.dark-custom-splash {
-          transform: translateY(-5dvh);
-        }
+    @media (prefers-color-scheme: light) and (width < 325px) {
+      #d-splash .preloader-image.light-custom-splash {
+        width: 300px;
       }
+    }
+    <%- end %>
 
-      @media (prefers-color-scheme: light) and (width < 700px) {
-        #d-splash .preloader-image.light-custom-splash {
-          width: 320px;
-        }
+    <%- if render_dark_mode_custom_splash %>
+    @media (prefers-color-scheme: dark) {
+      #d-splash .preloader-image.dark-custom-splash {
+        width: 700px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: var(--splash-image-offset, 0);
       }
+    }
 
-      @media (prefers-color-scheme: dark) and (width < 700px) {
-        #d-splash .preloader-image.dark-custom-splash {
-          width: 320px;
-        }
+    @media (prefers-color-scheme: dark) and (display-mode: standalone) {
+      #d-splash .preloader-image.dark-custom-splash {
+        transform: translateY(-5dvh);
       }
+    }
 
-      @media (prefers-color-scheme: light) and (width < 325px) {
-        #d-splash .preloader-image.light-custom-splash {
-          width: 300px;
-        }
+    @media (prefers-color-scheme: dark) and (width < 700px) {
+      #d-splash .preloader-image.dark-custom-splash {
+        width: 320px;
       }
+    }
 
-      @media (prefers-color-scheme: dark) and (width < 325px) {
-        #d-splash .preloader-image.dark-custom-splash {
-          width: 300px;
-        }
+    @media (prefers-color-scheme: dark) and (width < 325px) {
+      #d-splash .preloader-image.dark-custom-splash {
+        width: 300px;
       }
+    }
     <%- end %>
 
     @keyframes d-splash-fade-in {
@@ -372,7 +379,7 @@
   </style>
 
   <div
-    class="preloader-image<%= " single-custom-splash" if single_scheme_splash && current_custom_splash %><%= " light-custom-splash" if !single_scheme_splash && light_custom_splash %><%= " dark-custom-splash" if !single_scheme_splash && dark_mode_custom_splash %>"
+    class="preloader-image<%= " single-custom-splash" if render_single_custom_splash %><%= " light-custom-splash" if render_light_custom_splash %><%= " dark-custom-splash" if render_dark_mode_custom_splash %>"
     elementtiming="discourse-splash-visible"
   >
     <%- if single_scheme_splash %>
