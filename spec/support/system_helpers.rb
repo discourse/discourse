@@ -55,52 +55,12 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    user.unstage! if user.staged?
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
 
-    token =
-      UserAuthToken.generate!(
-        user_id: user.id,
-        user_agent: "Mozilla/5.0",
-        path: "/",
-        client_ip: "127.0.0.1",
-        staff: user.staff?,
-      )
-
-    data = {
-      token: token.unhashed_auth_token,
-      user_id: user.id,
-      username: user.username,
-      trust_level: user.trust_level,
-      issued_at: Time.current.to_i,
-    }
-    jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
-    jar.encrypted[:_t] = { value: data }
-    cookie_value = CGI.escape(jar[:_t])
-
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.context.add_cookies(
-        [
-          {
-            name: "_t",
-            value: cookie_value,
-            domain: Capybara.server_host,
-            path: "/",
-            httpOnly: true,
-            sameSite: "Lax",
-          },
-        ],
-      )
-    end
-
-    # Match `Auth::DefaultCurrentUserProvider#log_on_user`'s
-    # `bootstrap_first_admin` side effect, which the real `become.json` visit
-    # would have triggered: when a singular admin signs in for the first
-    # time, they get auto-promoted to moderator. Tests that fabricate one
-    # admin and expect them to also be staff/moderator break without it.
-    if user.admin && !user.moderator && user.last_seen_at.nil? && user.is_singular_admin?
-      user.grant_moderation!
-      StaffActionLogger.new(Discourse.system_user).log_grant_moderation(user)
-    end
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
   def setup_system_test
