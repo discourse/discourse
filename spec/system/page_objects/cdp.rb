@@ -51,8 +51,10 @@ module PageObjects
     end
 
     def clipboard_has_text?(text, chomp: false, strict: true)
-      clipboard_text = chomp ? read_clipboard.chomp : read_clipboard
-      expect(clipboard_text).to strict ? eq(text) : include(text)
+      try_until_success do
+        clipboard_text = chomp ? read_clipboard.chomp : read_clipboard
+        expect(clipboard_text).to strict ? eq(text) : include(text)
+      end
     end
 
     def copy_paste(text, html: false, css_selector: nil)
