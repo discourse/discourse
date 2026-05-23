@@ -8,10 +8,11 @@
 # and asserts on what nginx forwards / serves.
 #
 # Run with:
-#   bundle exec rspec spec/nginx/
+#   spec/nginx/run.sh
 #
-# Skips itself if nginx isn't on PATH (e.g. local dev machines without
-# nginx installed). CI is expected to provide nginx.
+# Skips integration examples if nginx isn't on PATH (e.g. local dev machines
+# without nginx installed). Pure-Ruby support specs still run. CI is expected
+# to provide nginx.
 
 require "rspec"
 
@@ -22,6 +23,10 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
   config.expect_with(:rspec) { |c| c.syntax = :expect }
 
+  config.define_derived_metadata(file_path: %r{spec/nginx/(?!support/)}) do |meta|
+    meta[:nginx] = true
+  end
+
   nginx_available = ENV["DISABLE_NGINX_TESTS"].nil? && system("which nginx >/dev/null 2>&1")
 
   unless nginx_available
@@ -31,7 +36,5 @@ RSpec.configure do |config|
              "(set NGINX_TESTS_REQUIRED=1 to fail instead)"
     end
     config.filter_run_excluding(:nginx)
-    # Mark all examples in this directory as nginx specs by default
-    config.define_derived_metadata(file_path: %r{spec/nginx/}) { |meta| meta[:nginx] = true }
   end
 end
