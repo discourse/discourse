@@ -648,6 +648,45 @@ RSpec.configure do |config|
     end
     Playwright::Error.prepend(PlaywrightErrorPatch)
 
+    # `Playwright::ChannelOwners::BrowserContext#close` blocks on
+    # `@closed_promise.value!` until Chromium acknowledges that the context's
+    # render process has been fully torn down (~150-250 ms per close on a
+    # saturated 8/16-core CI runner per iter-8 measurements). At the end of
+    # every system-spec example, `Capybara::Playwright::Browser#clear_browser_contexts`
+    # closes every context on the cached `@playwright_browser`, paying that
+    # full wait synchronously. The next example creates a brand-new
+    # BrowserContext on the same long-lived `@playwright_browser`, so the old
+    # context's full teardown is not on the critical path — only the IPC
+    # round-trip telling Chromium to start tearing down is.
+    #
+    # This patch sends the 'close' message through Playwright's existing async
+    # transport path (which queues the message on the connection thread and
+    # returns a future) and skips the promise wait. Chromium tears down the
+    # old render process in parallel with the new context's setup.
+    #
+    # Behavioural contract: the context is still fully destroyed (it's not
+    # reused across examples — unlike the soft-reset family attempted in
+    # iter-8 through iter-26 of this loop, which kept the context alive and
+    # tried to wipe per-origin storage). Each example still gets a fresh
+    # BrowserContext, so cache/translation/colour-scheme leak failure modes
+    # the soft-reset family hit do not apply here.
+    #
+    # Tracing path: `Capybara::Playwright::Browser#clear_browser_contexts`
+    # calls `browser_context.tracing.stop(path: ...)` BEFORE this close, so
+    # traces are finalised regardless of whether close blocks.
+    module PlaywrightBrowserContextAsyncClosePatch
+      def close(reason: nil)
+        return if @close_was_called
+        @close_was_called = true
+        @close_reason = reason
+        @request.dispose(reason: reason)
+        inner_close
+        @channel.async_send_message_to_server("close", { reason: reason }.compact)
+        nil
+      end
+    end
+    Playwright::ChannelOwners::BrowserContext.prepend(PlaywrightBrowserContextAsyncClosePatch)
+
     # In production, `PrettyText.protect` and `AssetProcessor.v8_call` call
     # `v8.low_memory_notification` after every invocation to keep MiniRacer's
     # V8 heap small for long-lived server processes. Each notification is a
