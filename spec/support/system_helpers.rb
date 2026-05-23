@@ -55,12 +55,37 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    user.unstage! if user.staged?
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "Mozilla/5.0",
+        path: "/",
+        client_ip: "127.0.0.1",
+        staff: user.staff?,
+      )
+
+    cookie_value =
+      create_auth_cookie(
+        token: token.unhashed_auth_token,
+        user_id: user.id,
+        trust_level: user.trust_level,
+      )
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.add_cookies(
+        [
+          {
+            name: "_t",
+            value: cookie_value,
+            domain: Capybara.server_host,
+            path: "/",
+            httpOnly: true,
+          },
+        ],
+      )
+    end
   end
 
   def setup_system_test
