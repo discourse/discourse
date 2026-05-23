@@ -279,10 +279,10 @@ ko:
       pill: "추천"
       pm_title: "제안된 메시지"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "활성화"
       start_posting:
         back: "뒤로"
-      spread_the_word:
-        action: "링크 복사"
     about:
       edit: "이 페이지 수정"
       simple_title: "정보"
@@ -415,6 +415,9 @@ ko:
         view_all: "모든 초안 보기"
         other_drafts:
           other: "+%{count}개의 기타 초안"
+    embed_mode:
+      signin_flow:
+        cancel: "취소"
     topic_count_all:
       other: "%{count}개의 새로운 글 보기"
     topic_count_categories:
@@ -1070,7 +1073,6 @@ ko:
         normal_option: "일반"
         normal_option_title: "이 사용자가 나에게 댓글을 작성하거나, 인용하거나, 언급 하면 알림이 전송됩니다."
       notification_schedule:
-        title: "알림 일정"
         label: "사용자 지정 알림 일정 활성화"
         midnight: "자정"
         none: "없음"
@@ -1109,13 +1111,8 @@ ko:
       notifications: "알림"
       statistics: "통계"
       desktop_notifications:
-        label: "실시간 알림"
         not_supported: "이 브라우저에서는 알림이 지원되지 않습니다."
-        perm_default: "알림 켜기"
-        perm_denied_btn: "권한 거부됨"
         perm_denied_expl: "알림 권한을 거부한 상태입니다. 브라우저 설정에서 알림을 허용해 주세요."
-        disable: "알림 비활성화"
-        enable: "알림 활성화"
         consent_prompt: "내 게시물에 댓글이 달리면 실시간으로 알림을 받을까요?"
       dismiss: "해제"
       dismiss_notifications: "모두 해제"
@@ -2372,6 +2369,7 @@ ko:
         max_views:
           placeholder: 최대
           aria_label: 최대 조회수로 필터링
+    header_panel: "헤더"
     new_item: "새로운"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -3386,81 +3384,54 @@ ko:
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "키보드 단축키"
       short_title: "단축키"
+      description_header: "내용"
+      key_header: "키"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "이동"
-        home: "%{shortcut} 홈"
-        latest: "%{shortcut} 최신"
-        new: "%{shortcut} 새로운"
-        unread: "%{shortcut} 읽지 않음"
-        categories: "%{shortcut} 카테고리"
-        top: "%{shortcut} 주요 항목"
-        bookmarks: "%{shortcut} 북마크"
-        profile: "%{shortcut} 프로필"
-        messages: "%{shortcut} 메시지"
-        drafts: "%{shortcut} 초안"
-        next: "%{shortcut} 다음 주제"
-        previous: "%{shortcut} 이전 주제"
+        home: "홈"
+        latest: "최신"
+        new: "신규"
+        unread: "읽지 않음"
+        unseen: "읽지 않음"
+        categories: "카테고리"
+        top: "인기글"
+        bookmarks: "북마크들"
+        profile: "프로필"
+        messages: "메시지"
+        drafts: "임시저장"
       navigation:
         title: "탐색"
-        jump: "%{shortcut} 게시물로 이동 #"
-        back: "%{shortcut} 뒤로 가기"
-        up_down: "%{shortcut} 선택 이동 &uarr; &darr;"
-        open: "%{shortcut} 선택한 주제 열기"
-        next_prev: "%{shortcut} 이전/다음 섹션"
-        go_to_unread_post: "%{shortcut} 읽지 않은 첫 번째 게시물로 이동"
+        back: "뒤로"
+        up_down: "선택된 글 이동 &uarr; &darr;"
       application:
         title: "애플리케이션"
-        notifications: "%{shortcut} 알림 열기"
-        user_profile_menu: "%{shortcut} 사용자 메뉴 열기"
-        show_incoming_updated_topics: "%{shortcut} 업데이트된 주제 보기"
-        search: "%{shortcut} 검색"
-        help: "%{shortcut} 키보드 도움말 열기"
-        log_out: "%{shortcut} 로그아웃"
+        search: "검색"
+        log_out: "로그아웃"
       composing:
         title: "글쓰기"
-        return: "%{shortcut} 작성기로 돌아가기"
-        fullscreen: "%{shortcut} 작성기 전체화면"
+        preformatted: "코드"
+        blockquote: "인용구"
       bookmarks:
         title: "북마크"
-        enter: "%{shortcut} 저장 및 닫기"
-        later_today: "%{shortcut} 오늘 중"
-        later_this_week: "%{shortcut} 이번 주 중"
-        tomorrow: "%{shortcut} 내일"
-        next_week: "%{shortcut} 다음 주"
-        next_month: "%{shortcut} 다음 달"
-        next_business_week: "%{shortcut} 다음 주 시작일"
-        next_business_day: "%{shortcut} 다음 영업일"
-        custom: "%{shortcut} 사용자 지정 날짜 및 시간"
-        none: "%{shortcut} 미리 알림 안 함"
-        delete: "%{shortcut} 북마크 삭제"
+        later_today: "오늘 나중에"
+        later_this_week: "이번 주말"
+        tomorrow: "내일"
+        next_week: "다음 주"
+        next_month: "다음 달"
+        next_business_day: "다음 영업일"
+        custom: "사용자 지정 날짜 및 시간"
+        delete: "북마크 삭제"
       actions:
         title: "작업"
-        bookmark_topic: "%{shortcut} 북마크 주제 토글"
-        pin_unpin_topic: "%{shortcut} 주제 고정/고정 해제"
-        share_topic: "%{shortcut} 주제 공유"
-        share_post: "%{shortcut} 게시물 공유"
-        reply_as_new_topic: "%{shortcut} 연결된 주제로 댓글 달기"
-        reply_topic: "%{shortcut} 주제에 댓글 달기"
-        reply_post: "%{shortcut} 게시물에 댓글 달기"
-        quote_post: "%{shortcut} 게시물 인용"
-        like: "%{shortcut} 게시물에 좋아요 표시"
-        flag: "%{shortcut} 게시물 신고"
-        bookmark: "%{shortcut} 게시물 북마크"
-        edit: "%{shortcut} 게시물 편집"
-        delete: "%{shortcut} 게시물 삭제"
-        mark_muted: "%{shortcut} 주제 뮤트"
-        mark_tracking: "%{shortcut} 주제 추적"
-        mark_watching: "%{shortcut} 주제 구독"
-        print: "%{shortcut} 주제 인쇄"
-        topic_admin_actions: "%{shortcut} 주제 관리자 작업 열기"
+        reply_as_new_topic: "링크된 글에 댓글 작성"
+        reply_topic: "댓글 쓰기"
+        mark_tracking: "글 팔로우"
       search_menu:
         title: "검색 메뉴"
-        prev_next: "%{shortcut} 선택 항목 위아래로 이동"
-        insert_url: "%{shortcut} 열린 작성기에 선택 항목 삽입"
-        full_page_search: "%{shortcut} 전체 페이지 검색 시작"
       admin:
         title: "관리자"
-        search_prev_next: "%{shortcut} 선택을 위아래로 이동"
     badges:
       earned_n_times:
         other: "이 배지를 %{count}번 획득했습니다"
@@ -4027,6 +3998,26 @@ ko:
         sections:
           reports:
             title: "보고서"
+          engagement:
+            activity_by_category:
+              category: "카테고리"
+              topics: "글"
+              posts: "글"
+              share: "공유하기"
+            whos_posting:
+              all_categories: "모든 카테고리"
+              staff: "스태프"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "신규"
+                "1": "초보회원"
+                "2": "회원"
+                "3": "일반"
+                "4": "지도자"
+        site_traffic:
+          series:
+            anonymous: "익명"
+            crawlers: "겉옷"
         period:
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"

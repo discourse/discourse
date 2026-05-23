@@ -1,18 +1,20 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import moment from "moment";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import { isNumericColumn, looksLikeDate } from "../lib/chart-helpers";
+import { chartability, looksLikeDate } from "../lib/chart-helpers";
 import DataExplorerChart from "./data-explorer-chart";
+import QueryChartEmptyState from "./query-chart-empty-state";
 import QueryResultDownloadButtons from "./query-result-download-buttons";
 import QueryRowContent from "./query-row-content";
 import BadgeViewComponent from "./result-types/badge";
@@ -48,39 +50,46 @@ const VIEW_COMPONENTS = {
 export default class QueryResult extends Component {
   @service site;
 
-  @tracked showChart;
-  @tracked showTable;
+  @tracked internalView;
   @tracked tableExpanded = false;
   @tracked hasOverflow = false;
 
   constructor() {
     super(...arguments);
+    if (this.args.view) {
+      return;
+    }
     const queryId = this.args.query?.id;
-    if (queryId) {
-      this.showChart = store.get(`showChart_${queryId}`) !== "false";
-      this.showTable = store.get(`showTable_${queryId}`) !== "false";
+    const stored = queryId ? store.get(`view_${queryId}`) : null;
+    if (stored === "chart" || stored === "table") {
+      this.internalView = stored;
     } else {
-      this.showChart = true;
-      this.showTable = true;
+      this.internalView = chartability(this.args.content).chartable
+        ? "chart"
+        : "table";
+    }
+  }
+
+  get view() {
+    return this.args.view ?? this.internalView;
+  }
+
+  @action
+  setView(value) {
+    if (this.args.onSetView) {
+      this.args.onSetView(value);
+      return;
+    }
+    this.internalView = value;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      store.set({ key: `view_${queryId}`, value });
     }
   }
 
   @action
-  toggleChart() {
-    this.showChart = !this.showChart;
-    const queryId = this.args.query?.id;
-    if (queryId) {
-      store.set({ key: `showChart_${queryId}`, value: this.showChart });
-    }
-  }
-
-  @action
-  toggleTable() {
-    this.showTable = !this.showTable;
-    const queryId = this.args.query?.id;
-    if (queryId) {
-      store.set({ key: `showTable_${queryId}`, value: this.showTable });
-    }
+  viewTable() {
+    this.setView("table");
   }
 
   get showExpandButton() {
@@ -101,8 +110,48 @@ export default class QueryResult extends Component {
     this.tableExpanded = true;
   }
 
+  @cached
+  get chartability() {
+    return chartability(this.args.content);
+  }
+
+  get canShowChart() {
+    return this.chartability.chartable;
+  }
+
   get chartVisible() {
-    return this.canShowChart && this.showChart;
+    return this.view === "chart" && this.canShowChart;
+  }
+
+  get showChartEmptyState() {
+    return this.view === "chart" && !this.canShowChart;
+  }
+
+  get showTable() {
+    return this.view === "table";
+  }
+
+  get hasResults() {
+    return this.rows?.length > 0;
+  }
+
+  get numericColumnIndices() {
+    return this.chartability.numericIndices;
+  }
+
+  get ignoredColumnNames() {
+    return this.chartability.ignoredColumns;
+  }
+
+  get ignoredColumnsText() {
+    return this.ignoredColumnNames.join(", ");
+  }
+
+  get viewItems() {
+    return [
+      { value: "chart", icon: "signal" },
+      { value: "table", icon: "table" },
+    ];
   }
 
   get colRender() {
@@ -123,25 +172,6 @@ export default class QueryResult extends Component {
 
   get showDownloads() {
     return this.args.showDownloads !== false;
-  }
-
-  get numericColumnIndices() {
-    if (!this.rows?.length || !this.columns?.length) {
-      return [];
-    }
-    const indices = [];
-    for (let i = 1; i < this.columns.length; i++) {
-      if (this.colRender[i]) {
-        continue;
-      }
-      if (
-        typeof this.rows[0][i] === "number" ||
-        isNumericColumn(this.rows, i)
-      ) {
-        indices.push(i);
-      }
-    }
-    return indices;
   }
 
   get isMultiSeries() {
@@ -261,27 +291,6 @@ export default class QueryResult extends Component {
     return transformedRelTable(this.site.groups);
   }
 
-  get hasTextColumns() {
-    if (!this.rows?.length || !this.columns?.length) {
-      return false;
-    }
-    const numericSet = new Set(this.numericColumnIndices);
-    for (let i = 1; i < this.columns.length; i++) {
-      if (!this.colRender[i] && !numericSet.has(i)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  get canShowChart() {
-    return (
-      this.rows?.length > 0 &&
-      this.numericColumnIndices.length > 0 &&
-      !this.hasTextColumns
-    );
-  }
-
   get chartLabels() {
     const labelSelectors = {
       user: (user) => user.username,
@@ -348,15 +357,31 @@ export default class QueryResult extends Component {
   <template>
     <article>
       <div class="result-header">
-        <div class="result-info">
-          {{#if this.showDownloads}}
-            <QueryResultDownloadButtons
-              @query={{@query}}
-              @content={{@content}}
-              @group={{@group}}
-            />
-          {{/if}}
-        </div>
+        {{#unless @hideHeaderActions}}
+          <div class="result-header__top">
+            <div class="result-actions">
+              {{#if this.hasResults}}
+                <DSegmentedControl
+                  @name="query-result-view"
+                  @value={{this.view}}
+                  @items={{this.viewItems}}
+                  @onSelect={{this.setView}}
+                  @translatedLabel={{i18n "explorer.view.label"}}
+                  class="query-results-modes"
+                />
+              {{/if}}
+
+              {{#if this.showDownloads}}
+                <QueryResultDownloadButtons
+                  @query={{@query}}
+                  @content={{@content}}
+                  @group={{@group}}
+                  @includeQueryExport={{@includeQueryExport}}
+                />
+              {{/if}}
+            </div>
+          </div>
+        {{/unless}}
 
         <div class="result-meta">
           <div class="result-about">
@@ -381,24 +406,6 @@ export default class QueryResult extends Component {
       </div>
 
       <section>
-        {{#if this.canShowChart}}
-          <div class="query-results-modes">
-            <DButton
-              @action={{this.toggleChart}}
-              @icon="signal"
-              @translatedTitle={{i18n "explorer.show_graph"}}
-              class="btn-toggle-chart
-                {{if this.showChart 'btn-primary' 'btn-default'}}"
-            />
-            <DButton
-              @action={{this.toggleTable}}
-              @icon="table"
-              @translatedTitle={{i18n "explorer.show_table"}}
-              class="btn-toggle-table
-                {{if this.showTable 'btn-primary' 'btn-default'}}"
-            />
-          </div>
-        {{/if}}
 
         {{#if this.chartVisible}}
           <div class="query-results-chart">
@@ -408,7 +415,23 @@ export default class QueryResult extends Component {
               @chartType={{this.chartType}}
               @stacked={{this.isStacked}}
             />
+            {{#if this.ignoredColumnNames.length}}
+              <p class="query-results-chart__footnote">
+                {{i18n
+                  "explorer.chart_footnote.ignored"
+                  columns=this.ignoredColumnsText
+                }}
+              </p>
+            {{/if}}
           </div>
+        {{/if}}
+
+        {{#if this.showChartEmptyState}}
+          <QueryChartEmptyState
+            @reason={{this.chartability.reason}}
+            @ignoredColumns={{this.chartability.ignoredColumns}}
+            @onViewAsTable={{this.viewTable}}
+          />
         {{/if}}
 
         {{#if this.showTable}}

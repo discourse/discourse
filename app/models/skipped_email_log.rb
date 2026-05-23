@@ -50,14 +50,14 @@ class SkippedEmailLog < ActiveRecord::Base
 
   def reason
     if is_custom?
-      self.custom_reason
+      custom_reason
     else
-      type = self.reason_type
+      type = reason_type
 
       I18n.t(
         "skipped_email_log.#{SkippedEmailLog.reason_types[type]}",
-        user_id: self.user_id,
-        post_id: self.post_id,
+        user_id: user_id,
+        post_id: post_id,
       )
     end
   end
@@ -65,11 +65,11 @@ class SkippedEmailLog < ActiveRecord::Base
   private
 
   def is_custom?
-    self.reason_type == self.class.reason_types[:custom]
+    reason_type == self.class.reason_types[:custom]
   end
 
   def ensure_valid_reason_type
-    self.errors.add(:reason_type, :invalid) unless self.class.reason_types[self.reason_type]
+    errors.add(:reason_type, :invalid) unless self.class.reason_types[reason_type]
   end
 end
 

@@ -1018,6 +1018,30 @@ ur:
       xaxis: "دن"
       yaxis: "نئے شراکت داروں کی تعداد"
       description: "اِس عرصہ میں صارفین کی تعداد جنہوں نے اپنی پہلی پوسٹ شائع کی۔"
+    activity_by_category:
+      labels:
+        category: "زُمرَہ"
+        topics: "موضوعات"
+        posts: "دھاگے"
+        share: "اشتراک"
+    posters_by_member_type:
+      labels:
+        count: "دھاگے"
+        share: "اشتراک"
+      types:
+        staff: "عملہ"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "فعالیت کا درجہ"
+        count: "ممبران"
+        share: "اشتراک"
+      levels:
+        "0": "نیا"
+        "1": "بنیادی"
+        "2": "ممبر"
+        "3": "رَیگولر"
+        "4": "لِیڈر"
     trust_level_growth:
       title: "فعالیت کے درجہ میں اضافہ"
       xaxis:
@@ -1048,6 +1072,9 @@ ur:
     consolidated_page_views_browser_detection:
       yaxis: "دن"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "گمنام"
+        page_view_crawler: "کرالرز"
       yaxis: "دن"
     dau_by_mau:
       xaxis: "دن"
@@ -1158,6 +1185,12 @@ ur:
         num_clicks: "کلِکس"
         num_topics: "موضوعات"
       description: "اُن کے شیئر کردہ رابطوں پر کلکس کی تعداد کے حساب سے اراکین کی فہرست۔"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "زائرین کی تعداد"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "زائرین کی تعداد"
     top_traffic_sources:
       title: "ٹریفک کے ٹاپ ذرائع"
       xaxis: "ڈَومَین"
@@ -1421,7 +1454,6 @@ ur:
     favicon: "آپ کی ویب سائٹ کیلئے ایک فَیوِکان، <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a> دیکھیے۔ ایک CDN پر صحیح کام کرنے کیلئے اِس کا png ہونا ضروری ہے۔ 32x32 کے سائیز پر دوبارہ تبدیل کر دی جائے گی۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
     opengraph_image: "ڈِیفالٹ اَوپَن٘گراف تصویر، استعمال کی جاتی ہے جب صفحہ میں کوئی اور مناسب تصویر نہ ہو۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
     notification_email: "تمام ضروری سِسٹم ای میلز بھیجنے کیلئے استعمال ہونے والا from: ای میل ایڈریس۔ یہاں درج کردہ ڈومین کا SPF ،DKIM اور ریورس PTR ریکارڈ، ای میل کے پہنچنے کیلئے، صحیح طریقے سے مقرر ہونا لازمی ہے۔"
-    email_subject: "سٹینڈرڈ ای میلز کیلئے اپنی مرضی کا موضوع فارمَیٹ۔ دیکھیے <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "اراکین کو اس بارے میں مزید تفصیلات فراہم کرتا ہے کہ وہ کسی خاص موضوع تک کیوں رسائی حاصل نہیں کر سکتے۔ نوٹ: یہ کم محفوظ ہے کیونکہ اراکین کو معلوم ہو جائے گا کہ آیاURL کسی درست موضوع سے منسلک ہے۔"
     force_https: "صرف HTTPS استعمال کرنے کیلئے اپنی سائٹ کو مجبورکریں۔ انتباہ: جب تک آپ تصدیق نہ کر لیں کہ HTTPS مکمل طور پر سیٹ ہے اور ہر جگہ کام کر رہا ہے، اِس کو فعال نہ کریں! کیا آپ نے اپنا CDN، تمام سماجی لاگ ان، اور بیرونی لوگو / انحصارات کو چیک کر کے یہ یقینی بنا لیا ہے کہ وہ تمام HTTPS سے مطابقت رکھتے ہیں؟"
     summary_score_threshold: "'اِس ٹاپک کا خلاصہ کریں' میں شامل ہونے کیلئے ایک پوسٹ کا کم از کم سکور"
@@ -1460,7 +1492,6 @@ ur:
     enable_escaped_fragments: "اگر کسی وَیب کرالر کا پتہ نہ لگے تو گُوگل اَیجَیکس-کرالِنگ API کا استعمال کریں۔ دیکھیے <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "نگرانوں کو دھاگہ کی ملکیت تبدیل کرنے کی اجازت دیں۔"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"
-    use_admin_ip_allowlist: "ایڈمن صرف اُس صورت میں لاگ ان کرسکتے ہیں اگر وہ ایسے IP ایڈریس میں ہیں جو اسکرین کردہ آئی پیز کی فہرست (ایڈمن > لاگز > اسکرین کردہ آئی پیز) میں بیان کیا گیا ہو۔"
     blocked_ip_blocks: "نجی IP بلاکس کی فہرست جو ڈِسکَورس کی طرف سے کبھی کرال نہیں ہونی چاہئیں"
     allowed_internal_hosts: "اندرونی ہَوسٹس کی فہرست جو ڈِسکَورس محفوظ طریقے سے وَن باکس اور دیگر مقاصد کیلئے کرال کر سکتا ہے"
     allowed_crawler_user_agents: "وَیب کرالرز کے صارف ایجنٹوں جن کو سائٹ تک رسائی کی اجازت دی جانی چاہیئے۔ انتباہ! اِس ترتیب کو فعال کرنے سے وہ تمام کرالرز جو یہاں فہرست کردہ نہیں ہیں رد کر دہے جائیں گے!"

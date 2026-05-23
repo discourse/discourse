@@ -305,10 +305,10 @@ sl:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Vključeno"
       start_posting:
         back: "Nazaj"
-      spread_the_word:
-        copied_to_clipboard: "Povezava je bila kopirana v odložišče!"
     about:
       edit: "Uredi to stran"
       simple_title: "O nas"
@@ -399,6 +399,9 @@ sl:
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"
       new_topic: "Nov osnutek teme"
       new_private_message: "Nov osnutek osebnega sporočila"
+    embed_mode:
+      signin_flow:
+        cancel: "Prekliči"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -1075,7 +1078,6 @@ sl:
         normal_option: "Običajno"
         normal_option_title: "Obveščeni boste, če vam ta uporabnik odgovori, vas citira ali vas omeni."
       notification_schedule:
-        title: "Razpored obveščanja"
         label: "Omogočite razpored obveščanja po meri"
         midnight: "Opolnoči"
         none: "Brez"
@@ -1112,13 +1114,8 @@ sl:
       notifications: "Obvestila"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Obvestila v brskalniku"
         not_supported: "Oprostite, obvestila niso podprta v tem brskalniku."
-        perm_default: "Vklopi obvestila"
-        perm_denied_btn: "Dovoljenje zavrnjeno"
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
-        disable: "Onemogoči obvestila"
-        enable: "Omogoči obvestila"
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
@@ -2292,6 +2289,7 @@ sl:
           placeholder: najmanj
         max_views:
           placeholder: največ
+    header_panel: "Glava"
     new_item: "nov"
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"
@@ -3341,80 +3339,51 @@ sl:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Bližnjice na tipkovnici"
+      description_header: "Opis"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Skoči na"
-        home: "%{shortcut} Domov"
-        latest: "%{shortcut} Najnovejše"
-        new: "%{shortcut} Novo"
-        unread: "%{shortcut} Neprebrane"
-        categories: "%{shortcut} Kategorije"
-        top: "%{shortcut} Na vrh"
-        bookmarks: "%{shortcut} Zaznamki"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Zasebna sporočila"
-        drafts: "%{shortcut} Osnutki"
-        next: "%{shortcut} Nova tema"
-        previous: "%{shortcut} Prejšnja tema"
+        home: "Domov"
+        latest: "Najnovejše"
+        new: "Novi"
+        unread: "Neprebrane"
+        categories: "Kategorije"
+        top: "Najboljše"
+        bookmarks: "Zaznamki"
+        profile: "Profil"
+        messages: "Zasebna sporočila"
+        drafts: "Osnutki"
       navigation:
         title: "Navigacija"
-        jump: "%{shortcut} Pojdi na prispevek #"
-        back: "%{shortcut} Nazaj"
-        up_down: "%{shortcut} Prestavi izbiro &uarr; &darr;"
-        open: "%{shortcut} Odpri izbrano temo"
-        next_prev: "%{shortcut} Naslednja/predhodna sekcija"
-        go_to_unread_post: "%{shortcut} Na prvi neprebran prispevek"
+        back: "Nazaj"
+        up_down: "Prestavi izbiro &uarr; &darr;"
       application:
         title: "Aplikacija"
-        notifications: "%{shortcut} Odpri obvestila"
-        user_profile_menu: "%{shortcut} Odpri uporabniški meni"
-        show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"
-        search: "%{shortcut} Iskalnik"
-        help: "%{shortcut} Odpri bližnjice na tipkovnici"
-        log_out: "%{shortcut} Odjava"
+        search: "Išči"
+        log_out: "Odjava"
       composing:
         title: "Urejevalnik"
-        return: "%{shortcut} Vrni se v urejevalnik"
-        fullscreen: "%{shortcut} Celostranski urejevalnik"
+        preformatted: "Predoblikovano besedilo"
+        blockquote: "Citiraj"
       bookmarks:
         title: "Zaznamki"
-        enter: "%{shortcut} Shrani in zapri"
-        later_today: "%{shortcut} Kasneje danes"
-        later_this_week: "%{shortcut} Kasneje ta teden"
-        tomorrow: "%{shortcut} Jutri"
-        next_week: "%{shortcut} Naslednji teden"
-        next_month: "%{shortcut} Naslednji mesec"
-        next_business_week: "%{shortcut} V začetku naslednjega tedna"
-        next_business_day: "%{shortcut} Naslednji delovni dan"
-        custom: "%{shortcut} Datum in ura po meri"
-        none: "%{shortcut} Brez opomnika"
-        delete: "%{shortcut} Izbriši zaznamek"
+        later_today: "Kasneje danes"
+        later_this_week: "Kasneje v tednu"
+        tomorrow: "Jutri"
+        next_week: "Naslednji teden"
+        next_month: "Naslednji mesec"
+        next_business_day: "Naslednji delovni dan"
+        custom: "Izberi datum in čas"
+        delete: "Izbriši zaznamek"
       actions:
         title: "Akcije"
-        bookmark_topic: "%{shortcut}Dodaj/odstrani zaznamek na temi"
-        pin_unpin_topic: "%{shortcut} Pripni/odpni temo"
-        share_topic: "%{shortcut}Deli temo"
-        share_post: "%{shortcut} Deli prispevek"
-        reply_as_new_topic: "%{shortcut} Odgovori v novi povezani temi"
-        reply_topic: "%{shortcut} Odgovori v temo"
-        reply_post: "%{shortcut} Odgovori na prispevek"
-        quote_post: "%{shortcut} Citiraj prispevek"
-        like: "%{shortcut} Všečkaj prispevek"
-        flag: "%{shortcut} Prijavi prispevek"
-        bookmark: "%{shortcut} Dodaj zaznamek"
-        edit: "%{shortcut} Uredi prispevek"
-        delete: "%{shortcut} Zbriši prispevek"
-        mark_muted: "%{shortcut} Utišaj temo"
-        mark_tracking: "%{shortcut} Sledi temi"
-        mark_watching: "%{shortcut} Spremljaj temo"
-        print: "%{shortcut} Natisni temo"
-        topic_admin_actions: "%{shortcut} Odpri skrbniška dejanja teme"
+        reply_as_new_topic: "Odgovori v novi povezani temi"
+        reply_topic: "Odgovori v temi"
       search_menu:
         title: "Iskalni meni"
-        prev_next: "%{shortcut} Prestavi izbor gor in dol"
-        insert_url: "%{shortcut} Vstavi izbor v odprti urejevalnik"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Prestavi izbor gor in dol"
     badges:
       earned_n_times:
         one: "Prislužili to značko %{count} krat"
@@ -3952,6 +3921,25 @@ sl:
         sections:
           reports:
             title: "Poročila"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Tem"
+              posts: "Prispevki"
+              share: "Deli"
+            whos_posting:
+              all_categories: "Vse kategorije"
+              staff: "Osebje"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novi"
+                "1": "Osnovni uporabnik"
+                "2": "Polnopraven član"
+                "3": "Običajne"
+                "4": "Vodja"
+        site_traffic:
+          series:
+            anonymous: "Anonimni"
         period:
           last_7_days: "Zadnjih 7 dni"
           last_30_days: "Zadnjih 30 dni"

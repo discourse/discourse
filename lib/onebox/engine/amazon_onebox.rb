@@ -183,7 +183,7 @@ module Onebox
                   "//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]",
                 )
               else
-                (raw.at("#byline")&.inner_text&.strip || raw.at("#bylineInfo")&.inner_text&.strip)
+                raw.at("#byline")&.inner_text&.strip || raw.at("#bylineInfo")&.inner_text&.strip
               end
             )
           rating =

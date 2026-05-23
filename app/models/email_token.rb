@@ -18,7 +18,7 @@ class EmailToken < ActiveRecord::Base
         end
 
   after_initialize do
-    if self.token_hash.blank?
+    if token_hash.blank?
       @token ||= SecureRandom.hex
       self.token_hash = self.class.hash_token(@token)
     end
@@ -26,18 +26,16 @@ class EmailToken < ActiveRecord::Base
 
   after_create do
     EmailToken
-      .where(user_id: self.user_id)
-      .where(scope: [nil, self.scope])
-      .where.not(id: self.id)
+      .where(user_id: user_id)
+      .where(scope: [nil, scope])
+      .where.not(id: id)
       .update_all(expired: true)
   end
 
-  before_validation { self.email = self.email.downcase if self.email }
+  before_validation { self.email = email.downcase if email }
 
   before_save do
-    if self.scope.blank?
-      Discourse.deprecate("EmailToken#scope cannot be empty.", output_in_test: true)
-    end
+    Discourse.deprecate("EmailToken#scope cannot be empty.", output_in_test: true) if scope.blank?
   end
 
   def self.scopes

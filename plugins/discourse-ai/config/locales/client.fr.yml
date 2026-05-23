@@ -178,8 +178,7 @@ fr:
           name: "Robot"
           description: "Un chatbot qui peut répondre aux questions et aider les utilisateurs dans les messages privés, le forum et les discussions"
         nav:
-          configured: "Configuré"
-          unconfigured: "Non configuré"
+          enabled: "Activé"
         filters:
           all: "Tout"
           no_results: "Aucune fonctionnalité correspondant à vos filtres n'a été trouvée."

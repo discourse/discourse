@@ -246,7 +246,7 @@ export default class SectionLink extends Component {
               </span>
             {{/if}}
 
-            {{! template-lint-disable no-nested-interactive }}
+            {{! eslint-disable ember/template-no-nested-interactive }}
             {{#if @hoverValue}}
               <span class="sidebar-section-link-hover">
                 <button

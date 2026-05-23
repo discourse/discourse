@@ -378,7 +378,7 @@ export default class BookmarkList extends Component {
                     </a>
                   {{/if}}
 
-                  {{! template-lint-disable no-invalid-interactive }}
+                  {{! eslint-disable ember/template-no-invalid-interactive }}
                   {{#if bookmark.excerpt}}
                     <p
                       class="post-excerpt"

@@ -377,7 +377,6 @@ es:
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
     not_found_template_link: |
       <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
-    existing_user_cannot_redeem: "Esta invitación no se puede canjear. Pide a la persona que te invitó que te envíe una nueva invitación."
     existing_user_already_redemeed: "Ya has canjeado este enlace de invitación."
     user_exists: "No hace falta que invites a <b>%{email}</b>, ¡ya tienen una cuenta!"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
@@ -1264,6 +1263,30 @@ es:
       xaxis: "Día"
       yaxis: "Número de colaboradores nuevos"
       description: "Número de usuarios que han publicado su primera publicación durante este periodo."
+    activity_by_category:
+      labels:
+        category: "Categoría"
+        topics: "Temas"
+        posts: "Publicaciones"
+        share: "Compartir"
+    posters_by_member_type:
+      labels:
+        count: "Publicaciones"
+        share: "Compartir"
+      types:
+        staff: "Personal"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Nivel de confianza"
+        count: "Miembros"
+        share: "Compartir"
+      levels:
+        "0": "Nuevo"
+        "1": "Básico"
+        "2": "Miembro"
+        "3": "Habitual"
+        "4": "Líder"
     trust_level_growth:
       title: "Crecimiento de nivel de confianza"
       xaxis:
@@ -1309,9 +1332,8 @@ es:
     site_traffic:
       title: "Tráfico del sitio"
       xaxis:
-        page_view_anon_browser: "Páginas vistas (anónimo)"
-        page_view_logged_in_browser: "Páginas vistas (conectado)"
-        page_view_crawler: "Crawlers conocidos"
+        page_view_anon_browser: "Anónimas"
+        page_view_crawler: "Rastreadores"
         page_view_other: "Otro tráfico"
       yaxis: "Día"
       description: "Páginas vistas por usuarios registrados, usuarios anónimos, crawlers conocidos y otro tráfico."
@@ -1428,6 +1450,12 @@ es:
         num_clicks: "Clics"
         num_topics: "Temas"
       description: "Usuarios listados por número de clics en enlaces que han compartido."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visitas"
     top_traffic_sources:
       title: "Mayores fuentes de tráfico"
       xaxis: "Dominio"
@@ -1753,7 +1781,6 @@ es:
     x_summary_large_image: "«Imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg."
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de encabezados de correo electrónico personalizados"
-    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
     enforce_second_factor: "Requiere que los usuarios activen la autenticación de dos factores (2FA) antes de que puedan acceder a la interfaz de usuario de Discourse. Este ajuste no afecta a la autenticación de la API o del «DiscourseConnect provider». Si enforce_second_factor_on_external_auth está activado, los usuarios no podrán iniciar sesión con proveedores de autenticación externos después de configurar la autenticación de dos factores."
     enforce_second_factor_on_external_auth: "Requiere que los usuarios utilicen la autenticación de dos factores (2FA) en todo momento. Si está activada, impedirá que los usuarios inicien sesión con métodos de autenticación externos, como inicios de sesión de redes sociales, si tienen activada la autenticación de dos factores. Si está desactivada, los usuarios solo tendrán que confirmar su autenticación de doble factor cuando inicien sesión con un nombre de usuario y una contraseña. Consulta también el ajuste «enforece_second_factor»."
@@ -1821,7 +1848,6 @@ es:
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
     change_post_ownership_allowed_groups: "Permitir que los usuarios de estos grupos cambien la propiedad de las publicaciones"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
-    use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_onebox_iframes: "Una lista de dominios iframe src que se permiten a través de incrustaciones de Onebox. «*» permitirá todos los motores Onebox por defecto."
@@ -1924,7 +1950,6 @@ es:
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."
     google_oauth2_prompt: "Una lista opcional delimitada por valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para los valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limitará el inicio de sesión. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para más detalles."
-    google_oauth2_hd_groups: "Recupera los grupos de Google de los usuarios en el dominio alojado al autenticarse. Los grupos de Google recuperados pueden utilizarse para conceder la pertenencia automática a grupos de Discourse (consulta los ajustes de grupos). Para más información, consulta https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Una dirección de correo electrónico perteneciente a una cuenta de administrador de Google Workspace. Se utilizará con las credenciales de la cuenta de servicio para obtener la información del grupo."
     google_oauth2_hd_groups_service_account_json: "Información clave con formato JSON para la cuenta de servicio. Se utilizará para obtener la información del grupo."
     google_oauth2_verbose_logging: "Registra diagnósticos detallados relacionados con Google OAuth2 en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1954,10 +1979,8 @@ es:
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Evite la eliminación de copias de seguridad antiguas de S3 cuando hay más copias de seguridad que el máximo permitido."
     s3_use_acls: "AWS recomienda no usar ACL en los buckets S3; desmarca esta opción si quieres configurar políticas de permisos en los «s3_upload_bucket» y «s3_backup_bucket» configurados."
-    enable_direct_s3_uploads: "Permite la carga directa multiparte a Amazon S3, consulta https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 para más detalles."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está desactivada, tan solo se ejecutará una copia de seguridad de la base de datos."
-    backup_location: "Ubicación donde se almacenan las copias de seguridad. IMPORTANTE: S3 requiere credenciales S3 válidas introducidas en los ajustes de Archivos. Cuando cambies esto a S3 desde Local, debes ejecutar la tarea de rake «s3:ensure_cors_rules»."
     backup_gzip_compression_level_for_uploads: "Nivel de compresión Gzip utilizado para comprimir archivos subidos."
     include_thumbnails_in_backups: "Incluir miniaturas generadas en las copias de seguridad. Desactivar esto hará que las copias de seguridad sean más pequeñas, pero requiere el rebake de todas las publicaciones después de una restauración."
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo «last_seen_at», en segundos"
@@ -2146,7 +2169,6 @@ es:
     fast_typing_threshold: "Cantidad mínima de tiempo que un usuario debe escribir para su primera publicación. Si no se alcanza el umbral, la publicación entrará automáticamente en la cola de revisión. El mínimo es de 1 segundo, el estándar es de 3 segundos y el máximo es de 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silencia automáticamente a los usuarios que no alcancen el umbral de escritura rápida"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar a usuarios que escriban demasiado rápido en su primera publicación"
-    auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario. DEPRECIADO: Utiliza en su lugar Palabras Vigiladas para Silencio."
     moderator_guide_topic: "El tema que describe cómo moderas tu comunidad. El enlace será visible en la cola de revisión para moderadores y administradores."
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
@@ -2214,7 +2236,6 @@ es:
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de correo electrónico en <a href='%{base_path}/logs' target='_blank'>/registros</a>"
     email_in: "Permitir a los usuarios enviar nuevos temas por correo electrónico. Tras activar esta opción, podrás configurar las direcciones de correo electrónico entrantes para grupos y categorías."
     email_in_allowed_groups: "Grupos que pueden enviar nuevos temas por correo electrónico. Los administradores y moderadores siempre pueden enviar nuevos temas por correo electrónico."
-    email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     email_in_spam_header: "Selecciona el encabezado de correo electrónico específico que se utilizará para identificar el correo no deseado. Esta opción puede ser X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict, y el correo electrónico se etiqueta como correo no deseado en función del valor del encabezado. Por ejemplo, si la opción elegida es X-Spam-Flag, un correo electrónico con este valor de encabezado establecido en SÍ se clasificaría como correo no deseado."
     enable_smtp: "Activar SMTP para enviar notificaciones de mensajes de grupo."
     email_prefix: "La [label] utilizada en el asunto de los correos electrónicos. Si no está configurado, será por defecto el 'título'."

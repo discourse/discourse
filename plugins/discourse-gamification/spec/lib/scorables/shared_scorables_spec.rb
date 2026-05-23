@@ -263,7 +263,7 @@ RSpec.describe DiscourseGamification::FlagCreated do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :reviewable, created_by: current_user) do
-        after_create { self.update(status: 1) }
+        after_create { update(status: 1) }
       end
     end
 
@@ -309,7 +309,7 @@ RSpec.describe DiscourseGamification::UserInvited do
         },
       ).to_return(status: 200, body: "", headers: {})
       Fabricate.times(10, :invite, invited_by: current_user) do
-        after_create { self.update(redemption_count: 1) }
+        after_create { update(redemption_count: 1) }
       end
     end
 

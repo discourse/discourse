@@ -33,6 +33,7 @@ en:
     no_ads_for_tags: "Don't show ads on topic list and topic pages belonging to these tags."
     house_ads_after_nth_topic: 'If "Between topics" house ads are defined, show an ad after every N topic, where N is this value.'
     house_ads_after_nth_post: 'If "Between posts" house ads are defined, show an ad after every N posts, where N is this value.'
+    house_ads_after_nth_root: 'If "Between nested roots" house ads are defined, show an ad after every N root replies in the nested replies view, where N is this value.'
     house_ads_frequency: "If other ad networks are configured to show in an ad slot, how often should house ads be shown, as a percentage."
     ads_txt: "Contents of your ads.txt file. More details available at <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>this Google AdSense help page</a>."
     ad_plugin_routes_enabled: "Enable route targeting for house ads"

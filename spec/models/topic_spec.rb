@@ -3852,7 +3852,7 @@ RSpec.describe Topic do
       Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
 
       expect(topic.has_localization?(:zh_CN)).to eq(true)
-      expect(topic.has_localization?(:"zh_CN")).to eq(true)
+      expect(topic.has_localization?(:zh_CN)).to eq(true)
       expect(topic.has_localization?("zh-CN")).to eq(true)
 
       expect(topic.has_localization?("z")).to eq(false)

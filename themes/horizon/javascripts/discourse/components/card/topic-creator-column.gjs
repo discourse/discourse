@@ -11,7 +11,7 @@ export default class TopicCreatorColumn extends Component {
 
   <template>
     <div class={{this.topicCreator.class}}>
-      {{dAvatar this.topicCreator.user}}
+      {{dAvatar this.topicCreator.user imageSize="small"}}
     </div>
   </template>
 }

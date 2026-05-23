@@ -173,7 +173,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   it "can stream a response" do
-    body = (<<~STRING).strip
+    body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
 
@@ -707,7 +707,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   it "handles streaming with cache tokens" do
-    body = (<<~STRING).strip
+    body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "cache_creation_input_tokens": 100, "cache_read_input_tokens": 500, "output_tokens": 1}}}
 
@@ -744,7 +744,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   it "discounts cached tokens in the explicit usage tracker" do
-    body = (<<~STRING).strip
+    body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 1000, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 800, "output_tokens": 1}}}
 
@@ -972,7 +972,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   it "can stream a response with thinking blocks" do
-    body = (<<~STRING).strip
+    body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_01...", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25}}}
 
@@ -1481,7 +1481,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         },
       }
 
-      body = (<<~STRING).strip
+      body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
 
@@ -1594,7 +1594,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         },
       }
 
-      body = (<<~STRING).strip
+      body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
 
@@ -1942,7 +1942,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         },
       }
 
-      body = (<<~STRING).strip
+      body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_123", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
 

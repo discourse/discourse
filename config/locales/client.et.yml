@@ -251,6 +251,8 @@ et:
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Sisse lülitatud"
       start_posting:
         back: "Tagasi"
     about:
@@ -321,6 +323,9 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Kas oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uue teema mustand"
+    embed_mode:
+      signin_flow:
+        cancel: "Loobu"
     topic_count_all:
       one: "Vaata %{count} uut teemat"
       other: "Vaata %{count} uut teemat"
@@ -849,13 +854,8 @@ et:
       notifications: "Teavitused"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Reaalajas teavitused"
         not_supported: "See brauser ei toeta teavitusi. Kahju."
-        perm_default: "Lülita teavitused sisse"
-        perm_denied_btn: "Pole lubatud"
         perm_denied_expl: "Oled teavitused keelanud. Luba teavitused oma brauseri sätetes."
-        disable: "Keela teavitused"
-        enable: "Luba teavitused"
         consent_prompt: "Kas soovid reaalajas teavitusi, kui inimesed su postitustele vastavad?"
       dismiss: "Ignoreeri"
       dismiss_notifications: "Ignoreeri kõiki"
@@ -1655,6 +1655,7 @@ et:
           placeholder: miinimum
         max_views:
           placeholder: maksimum
+    header_panel: "Päis"
     new_item: "uus"
     go_back: "tagasi"
     not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
@@ -2475,50 +2476,43 @@ et:
       counter: "%curr% %total%-st"
     keyboard_shortcuts_help:
       title: "Klaviatuuri kiirvalikud"
+      description_header: "Kirjeldus"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Hüppa"
-        home: "%{shortcut} Avaleht"
-        latest: "%{shortcut} Viimased"
-        new: "%{shortcut} Uued"
-        unread: "%{shortcut} Lugemata"
-        categories: "%{shortcut} Kategooriad"
-        top: "%{shortcut} Parimad"
-        bookmarks: "%{shortcut} Järjehoidjad"
-        profile: "%{shortcut} Profiil"
-        messages: "%{shortcut} Sõnumid"
+        home: "Avaleht"
+        latest: "Värskeimad"
+        new: "Uus"
+        unread: "Lugemata"
+        categories: "Liigid"
+        top: "Juhtivad"
+        bookmarks: "Järjehoidjad"
+        profile: "Profiil"
+        messages: "Sõnumid"
+        drafts: "Mustandid"
       navigation:
         title: "Navigatsioon"
-        jump: "%{shortcut} Mine postitusse #"
-        back: "%{shortcut} Tagasi"
-        up_down: "%{shortcut} Liiguta valitut &uarr; &darr;"
-        open: "%{shortcut} Ava valitud teema"
-        next_prev: "%{shortcut} Järgmine/eelmine sektsioon"
+        back: "Tagasi"
+        up_down: "Liiguta valitut &uarr; &darr;"
       application:
         title: "Rakendus"
-        notifications: "%{shortcut} Ava teavitused"
-        user_profile_menu: "%{shortcut} Ava kasutajamenüü"
-        show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
-        help: "%{shortcut} Ava klaviatuuri abimenüü"
-        log_out: "%{shortcut} Logi välja"
+        search: "Otsi"
+        log_out: "Logi välja"
+      composing:
+        preformatted: "Eelvormindatud tekst"
+        blockquote: "Plokktsitaat"
+      bookmarks:
+        later_today: "Täna hiljem"
+        later_this_week: "Hiljem sel nädalal"
+        tomorrow: "Homme"
+        next_week: "Järgmisel nädalal"
+        next_month: "Järgmisel kuul"
+        next_business_day: "Järgmisel tööpäeval"
+        custom: "Vali kuupäev ja kellaaeg"
       actions:
         title: "Tegevused"
-        bookmark_topic: "%{shortcut} Lülita teema järjehoidja sisse/välja"
-        pin_unpin_topic: "%{shortcut} Kinnita/vabasta teema"
-        share_topic: "%{shortcut} Jaga teemat"
-        share_post: "%{shortcut} Jaga postitust"
-        reply_as_new_topic: "%{shortcut} Vasta viidates teemale"
-        reply_topic: "%{shortcut} Vasta teemale"
-        reply_post: "%{shortcut} Vasta postitusele"
-        quote_post: "%{shortcut} Tsiteeri postitust"
-        like: "%{shortcut} Märgi postitus meeldivaks"
-        flag: "%{shortcut} Tähista postitus"
-        bookmark: "%{shortcut} Pane postitusele järjehoidja"
-        edit: "%{shortcut} Muuda postitust"
-        delete: "%{shortcut} Kustuta postitus"
-        mark_muted: "%{shortcut} Vaigista teema"
-        mark_tracking: "%{shortcut} Jälgi teemat"
-        mark_watching: "%{shortcut} Vaatle teemat"
-        print: "%{shortcut} Prindi teema"
+        reply_topic: "Vasta teemale"
       admin:
         title: "Adminn"
     badges:
@@ -2914,6 +2908,26 @@ et:
         security_tab: "Turve"
         report_filter_any: "iga"
         disabled: Välja lülitatud
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategooriad"
+              topics: "Teemasid"
+              posts: "Postitust"
+              share: "Jaga"
+            whos_posting:
+              all_categories: "Kõik foorumid"
+              staff: "Meeskond"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uus"
+                "1": "Tavakasutaja"
+                "2": "Liige"
+                "3": "Püsiliige"
+                "4": "Vedaja"
+        site_traffic:
+          series:
+            anonymous: "Anonüümne"
         period:
           custom: "Individuaalne"
         reports:

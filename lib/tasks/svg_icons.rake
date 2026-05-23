@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 def vendor_svgs
-  "#{Rails.root}/vendor/assets/svg-icons"
+  "#{Rails.root.join("vendor/assets/svg-icons")}"
 end
 
 def library_src
-  "#{Rails.root}/node_modules"
+  "#{Rails.root.join("node_modules")}"
 end
 
 task "svgicons:update" do

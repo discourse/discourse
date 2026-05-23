@@ -370,7 +370,6 @@ fr:
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
     not_found_template_link: |
       <p>La date d'expiration de cette invitation à <a href="%{base_url}">%{site_name}</a> est dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
-    existing_user_cannot_redeem: "Cette invitation ne peut pas être utilisée. Demandez à la personne qui vous a invité(e) de vous envoyer une nouvelle invitation."
     existing_user_already_redemeed: "Vous avez déjà utilisé ce lien d'invitation."
     user_exists: "Inutile d'inviter <b>%{email}</b>, cette adresse est déjà associée à un compte !"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
@@ -1232,6 +1231,30 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
       description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période."
+    activity_by_category:
+      labels:
+        category: "Catégorie"
+        topics: "Sujets"
+        posts: "Publications"
+        share: "Partager"
+    posters_by_member_type:
+      labels:
+        count: "Publications"
+        share: "Partager"
+      types:
+        staff: "Responsable"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Niveau de confiance"
+        count: "Membres"
+        share: "Partager"
+      levels:
+        "0": "Nouveau"
+        "1": "Actif"
+        "2": "Membre"
+        "3": "Normal"
+        "4": "Meneur"
     trust_level_growth:
       title: "Progression du niveau de confiance"
       xaxis:
@@ -1275,9 +1298,8 @@ fr:
     site_traffic:
       title: "Trafic du site"
       xaxis:
-        page_view_anon_browser: "Pages vues (anonymes)"
-        page_view_logged_in_browser: "Pages vues (connectés)"
-        page_view_crawler: "Robots d'indexation connus"
+        page_view_anon_browser: "Anonymes"
+        page_view_crawler: "Robots d'indexation"
         page_view_other: "Autre trafic"
       yaxis: "Jour"
       description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et les autres trafics."
@@ -1392,6 +1414,12 @@ fr:
         num_clicks: "Clics"
         num_topics: "Sujets"
       description: "Utilisateurs par nombre de clics sur les liens qu'ils ont partagés."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visites"
     top_traffic_sources:
       title: "Meilleures sources de trafic"
       xaxis: "Domaine"
@@ -1706,7 +1734,6 @@ fr:
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée"
     x_summary_large_image: "Carte X « summary large image » (au moins 280 px de largeur et 150 px de hauteur, le format .svg n'est pas autorisé). Si ce champ est laissé vide, des métadonnées de carte classiques seront générées à partir de l'image opengraph_image, à condition que celle-ci ne soit pas elle-même au format .svg."
     notification_email: "L'adresse e-mail utilisée pour envoyer les e-mails systèmes essentiels et affichée dans le champ « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que l'e-mail arrive à destination."
-    email_subject: "Format du sujet personnalisable pour les e-mails normaux. Voir <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Donne plus d'informations aux utilisateurs concernant la raison pour laquelle ils ne peuvent pas accéder à ce sujet en particulier. Note : cela est moins sécurisé car les utilisateurs sauront si une URL pointe vers un sujet valide ou non."
     force_https: "Forcer votre site en HTTPS uniquement. ATTENTION : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions de réseaux sociaux et tous les logos/dépendances tiers sont eux aussi compatibles avec HTTPS ?"
     summary_score_threshold: "Le score minimal pour qu'un message soit inclus dans le résultat de « Résumer ce sujet »"
@@ -1768,7 +1795,6 @@ fr:
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Permettre aux modérateurs de modifier l'utilisateur propriétaire d'un message."
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. La variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée sur la valeur « true » pour activer CORS."
-    use_admin_ip_allowlist: "Les administrateurs ne peuvent se connecter que s'ils sont sur une adresse IP définie dans la liste des IP sous surveillance (Administration > Journaux > IP sous surveillance)."
     blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
     allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_onebox_iframes: "Liste de domaines dans l'attribut « src » des iframes qui sont autorisés dans les prévisualisations Onebox. Le caractère « * » autorise tous les moteurs Onebox par défaut."
@@ -1865,7 +1891,6 @@ fr:
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     google_oauth2_prompt: "Liste facultative de valeurs de chaînes de caractères délimitées par des espaces, qui spécifie si le serveur d'autorisation invite l'utilisateur à s'authentifier à nouveau et à donner son consentement. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> pour connaître les valeurs possibles."
     google_oauth2_hd: "Un domaine optionnel Google Apps Hosted auquel la connexion sera limitée. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> pour obtenir plus de détails."
-    google_oauth2_hd_groups: "Récupérez les groupes Google des utilisateurs sur le domaine hébergé lors de l'authentification. Les groupes Google récupérés peuvent être utilisés pour accorder automatiquement l'adhésion au groupe Discourse (voir les paramètres du groupe). Pour en savoir plus, consultez https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Une adresse e-mail appartenant à un compte administrateur Google Workspace. Elle sera utilisée avec les informations d'identification du compte de service pour récupérer les informations du groupe."
     google_oauth2_hd_groups_service_account_json: "Informations clés au format JSON pour le compte de service. Elles seront utilisées pour récupérer les informations du groupe."
     google_oauth2_verbose_logging: "Enregistrez les diagnostics détaillés liés à Google OAuth2 dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1895,10 +1920,8 @@ fr:
     s3_configure_tombstone_policy: "Activer la suppression automatique des fichiers non utilisés. IMPORTANT : en cas de désactivation, aucun espace disque ne sera récupéré après la suppression des fichiers."
     s3_disable_cleanup: "Empêcher la suppression des anciennes sauvegardes sur S3 lorsqu'il y a plus de sauvegardes que le maximum autorisé."
     s3_use_acls: "AWS recommande de ne pas utiliser de listes de contrôle d'accès sur les compartiments S3 ; ne décochez cette option que si vous avez l'intention de configurer des politiques d'autorisations sur les compartiments « s3_upload_bucket » et « s3_backup_bucket » configurés."
-    enable_direct_s3_uploads: "Permet le téléversement direct en plusieurs parties vers Amazon S3. Consultez https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 pour obtenir plus de détails."
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si cette option est désactivée, seule la base de données sera sauvegardée."
-    backup_location: "Emplacement où les sauvegardes sont stockées. IMPORTANT : S3 nécessite des informations d'identification S3 valides saisies dans les paramètres des fichiers. Lorsque vous passez de Local à S3, vous devez exécuter la tâche de rake « s3:ensure_cors_rules »."
     backup_gzip_compression_level_for_uploads: "Niveau de compression gzip utilisé pour compresser les envois."
     include_thumbnails_in_backups: "Inclure les vignettes générées dans les sauvegardes. Si vous désactivez cette option, les sauvegardes seront plus petites mais leur restauration nécessitera de régénérer tous les messages."
     active_user_rate_limit_secs: "À quelle fréquence mettre à jour le champ « last_seen_at », en secondes."
@@ -2081,7 +2104,6 @@ fr:
     auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
     auto_silence_fast_typers_on_first_post: "Mettre en sourdine automatiquement les utilisateurs qui n'ont pas respecté le « fast typing threshold »"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximal pour automatiquement mettre en sourdine les utilisateurs rédigeant des messages trop rapidement."
-    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise en sourdine du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra en sourdine les premiers messages contenant « rageux » ou « aba » ou « aca ». DÉPRÉCIÉ : utilisez la fonctionnalité « Mettre en sourdine » à la place."
     reviewable_claiming: "Les éléments à examiner doivent-ils être réservés avant de pouvoir être traités ?"
     reviewable_default_topics: "Par défaut, afficher les éléments à examiner en les regroupant par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
@@ -2145,7 +2167,6 @@ fr:
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Autoriser les utilisateurs à publier de nouveaux sujets par e-mail. Après avoir activé ce paramètre, vous pourrez configurer les adresses e-mail entrantes pour les groupes et les catégories."
     email_in_allowed_groups: "Groupes autorisés à publier de nouveaux sujets par e-mail. Les administrateurs et les modérateurs peuvent toujours publier de nouveaux sujets par e-mail."
-    email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     email_in_spam_header: "Sélectionne l'en-tête d'e-mail spécifique à utiliser pour identifier le courrier indésirable. Cette option peut être X-Spam-Flag, X-Spam-Status ou X-SES-Spam-Verdict, et l'e-mail est marqué comme spam en fonction de la valeur de l'en-tête. Par exemple, si le paramètre choisi est X-Spam-Flag, un e-mail dont la valeur d'en-tête est définie sur OUI sera classé comme courrier indésirable."
     enable_smtp: "Activer SMTP pour l'envoi de notifications concernant les messages de groupe."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des e-mails. Par défaut il prend la valeur de « title »."

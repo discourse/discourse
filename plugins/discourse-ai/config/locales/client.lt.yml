@@ -152,6 +152,8 @@ lt:
             access_control: "Prieigos kontrolė"
             ui_settings: "Vartotojo sąsajos nustatymai"
             integrations: "Integracijos"
+        nav:
+          enabled: "Galimas"
         filters:
           all: "Visi"
           reset: "Atstatyti"

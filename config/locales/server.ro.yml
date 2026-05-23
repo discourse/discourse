@@ -702,6 +702,29 @@ ro:
       xaxis: "Zi"
     new_contributors:
       xaxis: "Zi"
+    activity_by_category:
+      labels:
+        category: "Categorie"
+        topics: "Discuții"
+        posts: "Articole"
+        share: "Partajează"
+    posters_by_member_type:
+      labels:
+        count: "Articole"
+        share: "Partajează"
+      types:
+        staff: "Echipa"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membri"
+        share: "Partajează"
+      levels:
+        "0": "Nou"
+        "1": "De bază"
+        "2": "Membru"
+        "3": "Utilizator frecvent"
+        "4": "Lider"
     trust_level_growth:
       yaxis: "Zi"
     consolidated_page_views:
@@ -728,8 +751,8 @@ ro:
     site_traffic:
       title: "Trafic site"
       xaxis:
-        page_view_anon_browser: "Afișări de pagină (anonim)"
-        page_view_logged_in_browser: "Afișări de pagină (conectat)"
+        page_view_anon_browser: "Anonimi"
+        page_view_crawler: "Crawlere"
         page_view_other: "Alt trafic"
       yaxis: "Zi"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
@@ -815,6 +838,12 @@ ro:
         user: "Utilizator"
         num_clicks: "Click-uri"
         num_topics: "Discuții"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizite"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizite"
     top_traffic_sources:
       title: "Top surse de trafic"
       xaxis: "Domeniu"
@@ -995,7 +1024,6 @@ ro:
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
     onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită"
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
-    email_subject: "Format de subiect personalizabil pentru emailurile standard. Vezi <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
@@ -1021,7 +1049,6 @@ ro:
     moderators_manage_categories: "Permite moderatorilor să creeze și să gestioneze categorii"
     moderators_manage_groups: "Permite moderatorilor să creeze și să gestioneze grupuri"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
-    use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL sursă pentru iframe pe care Discourse le poate permite în siguranță în postări. * poate fi folosit pentru a potrivi orice număr de caractere diferite de /."
     post_menu: "Configurează vizibilitatea și ordinea elementelor implicite din meniul articolului. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
     post_menu_hidden_items: "Elementele de meniu care se ascund în mod implicit în meniul articolului, cu excepția cazului în care se face clic pe o elipsă de expansiune. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
@@ -1054,7 +1081,6 @@ ro:
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
     backup_frequency: "Specifică intervalul, în zile, la care sunt create copii de rezervă automate ale site-ului. Dacă este setat la 7, de exemplu, o copie de rezervă nouă va fi generată în fiecare săptămână. Setează 0 pentru a dezactiva."

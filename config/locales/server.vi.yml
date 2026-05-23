@@ -782,6 +782,29 @@ vi:
     new_contributors:
       xaxis: "Ngày"
       description: "Số lượng thành viên thực hiện tút đầu tiên của họ trong giai đoạn này."
+    activity_by_category:
+      labels:
+        category: "Danh mục"
+        topics: "Các chủ đề"
+        posts: "Số lượng tút"
+        share: "Chia sẻ"
+    posters_by_member_type:
+      labels:
+        count: "Số lượng tút"
+        share: "Chia sẻ"
+      types:
+        staff: "Nhân viên"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Thành viên kênh"
+        share: "Chia sẻ"
+      levels:
+        "0": "Chủ đề mới"
+        "1": "Cơ Bản"
+        "2": "Nâng Cao"
+        "3": "Tích Cực"
+        "4": "Nhà Lãnh Đạo"
     trust_level_growth:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Độ tin cậy của họ trong khoảng thời gian này."
@@ -806,6 +829,9 @@ vi:
     consolidated_page_views_browser_detection:
       yaxis: "Ngày"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Ẩn danh"
+        page_view_crawler: "Trình thu thập thông tin"
       yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
@@ -899,6 +925,12 @@ vi:
         num_clicks: "Clicks"
         num_topics: "Chủ đề"
       description: "Danh sách thành viên theo số lần nhấp vào liên kết họ đã chia sẻ."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
     top_traffic_sources:
       title: "Nguồn truy cập"
       xaxis: "Tên miền"
@@ -1090,7 +1122,6 @@ vi:
     ga_universal_auto_link_domains: "Bật tính năng theo dõi tên miền chéo của Google Universal Analytics. Các liên kết gửi đi tới các miền này sẽ có id ứng dụng khách được thêm vào chúng. Xem <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Hướng dẫn theo dõi tên miền chéo của Google.</a>"
     moderators_change_post_ownership: "Cho phép kiểm duyệt viên thay đổi quyền sở hữu tút"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
-    use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
     top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
@@ -1263,7 +1294,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."

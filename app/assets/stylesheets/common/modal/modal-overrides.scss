@@ -602,3 +602,11 @@
     }
   }
 }
+
+.d-modal.admin-user-upcoming-changes-modal {
+  .d-modal {
+    &__container {
+      max-width: calc(var(--modal-max-width) * 2);
+    }
+  }
+}

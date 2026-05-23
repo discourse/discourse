@@ -36,7 +36,7 @@ module DiscourseDataExplorer
 
     def cast_params(input_params, opts = {})
       result = {}.with_indifferent_access
-      self.params.each do |pobj|
+      params.each do |pobj|
         result[pobj.identifier] = pobj.cast_to_ruby(input_params[pobj.identifier], opts)
       end
       result

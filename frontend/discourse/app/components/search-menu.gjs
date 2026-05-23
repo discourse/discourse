@@ -22,6 +22,7 @@ import getURL from "discourse/lib/get-url";
 import {
   isValidSearchTerm,
   searchForTerm,
+  searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
@@ -123,11 +124,9 @@ export default class SearchMenu extends Component {
   }
 
   get isPMOnly() {
-    // Check if search is filtered to private messages only
-    const searchTerm = this.search.activeGlobalSearchTerm || "";
     return (
       this.inPMInboxContext ||
-      /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(searchTerm)
+      searchTermScopesToPMs(this.search.activeGlobalSearchTerm)
     );
   }
 
@@ -404,10 +403,10 @@ export default class SearchMenu extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class={{this.classNames}}
       {{didInsert this.setupEventListeners}}
-      {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
       <div class="search-input-wrapper">

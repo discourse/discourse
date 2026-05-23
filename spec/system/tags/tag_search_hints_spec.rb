@@ -32,9 +32,7 @@ describe "Tag search hints in composer" do
       tag_chooser.expand
       tag_chooser.search("ready-to-deploy")
 
-      expect(page).to have_css(
-        ".mini-tag-chooser .select-kit-row.disabled[data-name='ready-to-deploy']",
-      )
+      expect(tag_chooser).to have_disabled_row_name("ready-to-deploy")
     end
   end
 
@@ -55,7 +53,25 @@ describe "Tag search hints in composer" do
       tag_chooser.expand
       tag_chooser.search("sedan")
 
-      expect(page).to have_css(".mini-tag-chooser .select-kit-row.disabled[data-name='sedan']")
+      expect(tag_chooser).to have_disabled_row_name("sedan")
+    end
+  end
+
+  context "with a synonym tag" do
+    fab!(:apple_tag) { Fabricate(:tag, name: "apple-inc") }
+    fab!(:aapl_tag) { Fabricate(:tag, name: "aapl", target_tag: apple_tag) }
+
+    it "shows the synonym as selectable with a hint pointing to the target tag" do
+      sign_in(admin)
+      visit "/new-topic"
+      expect(composer).to be_opened
+
+      tag_chooser = PageObjects::Components::SelectKit.new(".composer-fields .mini-tag-chooser")
+      tag_chooser.expand
+      tag_chooser.search("aapl")
+
+      expect(tag_chooser).to have_no_disabled_row_name("aapl")
+      expect(tag_chooser).to have_row_synonym_hint("aapl", "→ apple-inc")
     end
   end
 end

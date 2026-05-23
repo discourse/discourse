@@ -86,7 +86,7 @@ module AdPlugin
     def sanitize_html
       return unless html_changed?
 
-      fragment = Loofah.html5_fragment(self.html)
+      fragment = Loofah.html5_fragment(html)
 
       scrubber =
         Loofah::Scrubber.new do |node|

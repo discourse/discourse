@@ -260,8 +260,7 @@ zh_CN:
             ui_settings: "UI 设置"
             integrations: "集成"
         nav:
-          configured: "已配置"
-          unconfigured: "未配置"
+          enabled: "已启用"
         filters:
           all: "所有"
           text: "搜索功能、智能体、LLM 或群组…"
@@ -1156,6 +1155,7 @@ zh_CN:
           min_input_length_message:
             other: "消息必须为 %{count} 个字符或更长"
           messages_sidebar_title: "对话"
+          starred: "收藏"
           today: "今天"
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

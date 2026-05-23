@@ -17,7 +17,7 @@ module Migrations
           @tracker = tracker
 
           args.each do |arg, value|
-            setter = "#{arg}=".to_sym
+            setter = :"#{arg}="
             public_send(setter, value) if respond_to?(setter, true)
           end
         end

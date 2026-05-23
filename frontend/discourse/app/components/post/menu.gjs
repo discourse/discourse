@@ -636,6 +636,7 @@ export default class PostMenu extends Component {
             "replies-button-visible"
           )
         }}
+        role="none"
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
         {{#each this.extraControls key="key" as |extraControl|}}

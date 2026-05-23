@@ -16,11 +16,11 @@ module DiscourseTopicVoting
     end
 
     def topics_with_vote
-      self.votes.where(archive: false)
+      votes.where(archive: false)
     end
 
     def topics_with_archived_vote
-      self.votes.where(archive: true)
+      votes.where(archive: true)
     end
 
     def can_vote?
@@ -34,7 +34,7 @@ module DiscourseTopicVoting
 
     def vote_limit
       return nil unless SiteSetting.topic_voting_enable_vote_limits
-      SiteSetting.public_send("topic_voting_tl#{self.trust_level}_vote_limit")
+      SiteSetting.public_send("topic_voting_tl#{trust_level}_vote_limit")
     end
 
     def votes_left

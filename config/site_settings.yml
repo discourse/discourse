@@ -2549,6 +2549,7 @@ files:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
   composer_media_optimization_gif_conversion_threshold:
@@ -3372,6 +3373,10 @@ navigation:
 embedding:
   embed_full_app:
     default: false
+    client: true
+    area: "embedding"
+  embed_full_app_signin_flow:
+    default: true
     client: true
     area: "embedding"
   suppress_third_party_analytics_in_embed:
@@ -4427,8 +4432,9 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "stable"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403284"
   enable_new_post_reactions_menu:
     default: false
     client: true
@@ -4437,6 +4443,7 @@ experimental:
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/389820"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4520,7 +4527,7 @@ experimental:
     upcoming_change:
       status: "alpha"
       impact: "site_setting_default,all_members"
-      learn_more_url: "http://meta.discourse.org/t/-/402843"
+      learn_more_url: "https://meta.discourse.org/t/-/402843"
       allow_enabled_for:
         - everyone
   granular_anonymous_and_logged_in_groups_permissions:
@@ -4541,3 +4548,6 @@ experimental:
     upcoming_change:
       status: "conceptual"
       impact: "feature,admins"
+  admin_dashboard_reports_seeded:
+    default: false
+    hidden: true

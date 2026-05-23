@@ -99,34 +99,36 @@ export default class AiSummaryModal extends Component {
 
   @action
   generateSummary() {
-    let fetchURL = this.baseSummarizationURL;
+    let ajaxOpts = {};
 
-    if (this.currentUser) {
-      fetchURL += `?stream=true`;
+    if (this.currentUser && !this.args.model.topic.has_cached_summary) {
+      ajaxOpts.type = "POST";
+      ajaxOpts.data = { stream: true };
     }
 
-    return this._requestSummary(fetchURL);
+    return this._requestSummary(this.baseSummarizationURL, ajaxOpts);
   }
 
   @action
   regenerateSummary() {
-    let fetchURL = this.baseSummarizationURL;
+    let ajaxOpts = {};
 
     if (this.currentUser) {
-      fetchURL += `?stream=true`;
+      ajaxOpts.type = "POST";
+      ajaxOpts.data = { stream: true };
 
       if (this.canRegenerate) {
-        fetchURL += "&skip_age_check=true";
+        ajaxOpts.data.skip_age_check = true;
       }
     }
 
     // ensure summary is reset before requesting a new one:
     this.resetSummary();
-    return this._requestSummary(fetchURL);
+    return this._requestSummary(this.baseSummarizationURL, ajaxOpts);
   }
 
   @action
-  _requestSummary(url) {
+  _requestSummary(url, ajaxOpts = {}) {
     if (this.loading || (this.text && !this.canRegenerate)) {
       return;
     }
@@ -134,7 +136,7 @@ export default class AiSummaryModal extends Component {
     this.loading = true;
     this.summarizedOn = null;
 
-    return ajax(url)
+    return ajax(url, ajaxOpts)
       .then((data) => {
         if (data?.ai_topic_summary?.summarized_text) {
           data.done = true;

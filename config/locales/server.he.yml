@@ -426,7 +426,6 @@ he:
       <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
     not_found_template_link: |
       <p>לא ניתן עוד לממש את ההזמנה הזאת שנשלחה אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
-    existing_user_cannot_redeem: "לא ניתן לממש הזמנה זו. נא לבקש ממי שהזמין אותך לשלוח לך הזמנה חדשה."
     existing_user_already_redemeed: "כבר מימשת את קישור ההזמנה הזה."
     user_exists: "אין צורך להזמין את <b>%{email}</b>, יש כבר חשבון עם הכתובת הזאת!"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
@@ -1391,6 +1390,30 @@ he:
       xaxis: "יום"
       yaxis: "מספר תורמים חדשים."
       description: "מספר המשתמשים שכתבו את הפוסט הראשון שלהם במהלך התקופה הזו."
+    activity_by_category:
+      labels:
+        category: "קטגוריה"
+        topics: "נושאים"
+        posts: "פרסומים"
+        share: "שיתוף"
+    posters_by_member_type:
+      labels:
+        count: "פרסומים"
+        share: "שיתוף"
+      types:
+        staff: "סגל"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "דרגת אמון"
+        count: "חברים"
+        share: "שיתוף"
+      levels:
+        "0": "חדשות"
+        "1": "בסיסיים"
+        "2": "חברים"
+        "3": "רגילה"
+        "4": "מובילים"
     trust_level_growth:
       title: "עלייה בדרגת האמון"
       xaxis:
@@ -1436,9 +1459,8 @@ he:
     site_traffic:
       title: "תעבורת האתר"
       xaxis:
-        page_view_anon_browser: "צפיות עמודים (אלמוניות)"
-        page_view_logged_in_browser: "צפיות בעמודים (מחוברים לחשבון)"
-        page_view_crawler: "סורקים ידועים"
+        page_view_anon_browser: "אלמוני"
+        page_view_crawler: "סורקי אינטרנט"
         page_view_other: "תעבורה אחרת"
       yaxis: "יום"
       description: "תצוגות דף עבור משתמשים מחוברים, משתמשים אלמוניים, וסורקים אוטומטיים (crawlers) ותעבורה מסוגים נוספים."
@@ -1553,6 +1575,12 @@ he:
         num_clicks: "לחיצות"
         num_topics: "נושאים"
       description: "משתמשים מסודרים לפי מספר לחיצות על קישורים שהם שיתפו."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "ביקורים"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "ביקורים"
     top_traffic_sources:
       title: "מקורות התעבורה הטובים ביותר"
       xaxis: "שם מתחם"
@@ -1875,7 +1903,6 @@ he:
     x_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימת כותרות דוא״ל בהתאמה אישית"
-    email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי (2FA) לפני שיוכלו לגשת לממשק המשתמש של Discourse. ההגדרה הזאת לא משפיעה על ה־API או על אימות ‚DiscourseConnect provider’. אם ההגדרה enforce_second_factor_on_external_auth (אכיפת אימות דו־שלבי על אימות חיצוני) פעילה, משתמשים לא יוכלו להיכנס דרך ספקי אימות חיצוניים לאחר הגדרת אימות דו־שלבי."
     enforce_second_factor_on_external_auth: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי (2FA) באופן גורף. כשהאפשרות הזאת פעילה היא תמנע ממשתמשים להיכנס עם שיטות אימות חיצוניות כגון רשתות חברתיות אם מופעל אימות דו־שלבי מהצד שלהן. כשהאפשרות מושבתת משתמשים יצטרכו לאמת את האימות הדו־שלבי שלהם רק בעת כניסה עם שם משתמש וסיסמה. כדאי לקרוא על ההגדרה ‚enforce_second_factor’ (אכיפת אימות דו־שלבי)."
@@ -1942,7 +1969,6 @@ he:
     moderators_manage_groups: "לאפשר למפקחים ליצור ולנהל קבוצות"
     moderators_change_post_ownership: "לאפשר למפקחים לשנות בעלות על פוסטים"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
-    use_admin_ip_allowlist: "מנהלים יכולים להיכנס רק אם הכתובת שלהם מופיעה ברשימת כתובות ה־IP המפוקחות (ניהול > יומנים > כתובות IP מפוקחות)."
     blocked_ip_blocks: "רשימת מקטעי כתובות IP פרטיות ש־Discourse לא אמור לסרוק"
     allowed_internal_hosts: "רשימת מארחים פנימיים ש־Discourse יכול לסרוק לטובת תיבת תחימה ומטרות אחרות."
     allowed_onebox_iframes: "רשימה של שמות תחום ל־src של iframe שמותר להשתמש בהטמעות לתיבות תחימה. `*` יאפשר את כל מנועי תיבות התחימה כבררת מחדל."
@@ -2043,7 +2069,6 @@ he:
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
-    google_oauth2_hd_groups: "למשוך את קבוצות ה־Google של משתמשים בשם התחום המתארח עם האימות. ניתן להשתמש בקבוצות Google שנמשכו כדי להעניק חברות אוטומטית בקבוצות של Discourse (ניתן להציץ בהגדרות הקבוצה). למידע נוסף ניתן לעיין ב־https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "כתובת דוא״ל ששייכת לחשבון ניהול ב־Google Workspace. יתבצע בה שימוש עם פרטי הגישה של חשבון השירות כדי למשוך פרטי קבוצות."
     google_oauth2_hd_groups_service_account_json: "פרטי מפתח בתצורת JSON עבור חשבון השירות. ישמש כדי למשוך פרטי קבוצות."
     google_oauth2_verbose_logging: "תיעוד ניתוח מורחב בנושא Google OAuth2 אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
@@ -2073,10 +2098,8 @@ he:
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
     s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
     s3_use_acls: "AWS ממליצה לא להשתמש ב־ACLs (רשימות בקרת גישה) על דליים (Buckets) של S3, יש לבטל את הסימון באפשרות זו רק אם יש כוונה להגדיר מדיניות הרשאות על `s3_upload_bucket` (דלי העלאה ל־S3) ו־`s3_backup_bucket` (דלי S3 לגיבוי) שהוגדרו."
-    enable_direct_s3_uploads: "מאפשר העלאות ישירות רבות חלקים ל־S3 מבית Amazon, לפרטים: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
-    backup_location: "מקום אחסון הגיבויים. חשוב: S3 דורש מילוי פרטי גישה תקפים ל־S3 בהגדרות הקבצים. בעת שינוי ההגדרה הזאת מ־S3 למקומי, יש להריץ את משימת ה־rake‏ `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "רמת דחיסת Gzip המשמשת לדחיסת העלאות."
     include_thumbnails_in_backups: "לכלול בגיבוי תמונות ממוזערות שנוצרו. השבתת הגדרה זו יקטין את הגיבויים אך ידרוש להכין מחדש את כל הפוסטים לאחר שחזור."
     active_user_rate_limit_secs: "כל כמה זמן אנחנו מעדכנים את השדה 'last_seen_at', בשניות"
@@ -2260,7 +2283,6 @@ he:
     auto_respond_to_flag_actions: "הפעלת תגובה אוטומטית עם הסרת דגל."
     auto_silence_fast_typers_on_first_post: "להשתיק אוטומטית משתמשים שאינם עונים ל־`fast typing threshold` (סף הקלדה מהירה)"
     auto_silence_fast_typers_max_trust_level: "דרגת האמון המרבית להשתקה אוטומטית של קלדנים נמרצים"
-    auto_silence_first_post_regex: "ביטוי רגולרי שאינו מתחשב ברשיות (הבדל בין אותיות קטנות לגדולות) יגרום לכך שהפוסט הראשון שמפרסם משתמש יושתק ויועבר לתור לאישור. למשל: raging|a[bc]a, תגרום לכך שכל הפוסטים שמכילים את המילים raging או aba או aca יושתקו תחילה ובעברית: מתקפה|א[במ]א - מכילים את המילים מתקפה, אבא או אמא. תקף על הפוסט הראשון בלבד. השימוש בזה הופסק: נא להשתמש בהשתקת מילים מושגחות במקום."
     moderator_guide_topic: "הנושא שמתאר איך הקהילה מנוהלת. הקישור יהיה זמין בתור הסקירה לשימוש המפקחים והמנהלים."
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
     reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"
@@ -2326,7 +2348,6 @@ he:
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: "לאפשר למשתמשים לפרסם נושאים חדשים דרך דוא״ל. לאחר הפעלת ההגדרה הזאת, יתאפשר לך להגדיר כתובות דוא״ל נכנסות לקבוצות ולקטגוריות."
     email_in_allowed_groups: "קבוצות שמורשות ליצור נושאים חדשים דרך דוא״ל. מנהלים ומפקחים תמיד יכולים ליצור נושאים דרך דוא״ל."
-    email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
     email_in_spam_header: "בוחר את כותרת הדוא\"ל הספציפית לשימוש לזיהוי דואר זבל. אפשרות זו יכולה להיות X-Spam-Flag, X-Spam-Status או X-SES-Spam-Verdict, והאימייל מתויג כדואר זבל על סמך ערך הכותרת. לדוגמה, אם ההגדרה שנבחרה היא X-Spam-Flag, הודעת דואר אלקטרוני עם ערך כותרת זה מוגדר ל-YES תסווג כדואר זבל."
     enable_smtp: "להפעיל SMTP לשליחת התראות על הודעות קבוצתיות."
     email_prefix: "ה[תווית] שתשמש כנושא של הודעות דוא״ל. אם לא יוגדר, ברירת המחדל תכוון ל‚כותרת’ אם לא יוגדר אחרת."

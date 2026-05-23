@@ -181,7 +181,7 @@ export default class TopicList extends Component {
   }
 
   <template>
-    {{! template-lint-disable table-groups }}
+    {{! eslint-disable ember/template-table-groups }}
     <table
       class={{dConcatClass
         "topic-list"

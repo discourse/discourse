@@ -411,7 +411,7 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>This invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
+    existing_user_cannot_redeem: "This invitation isn't available for your email address. Sign in with another account, or ask for a new invitation."
     existing_user_already_redemeed: "You have already redeemed this invite link."
     user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
@@ -1377,6 +1377,43 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    activity_by_category:
+      title: "Activity by category"
+      description: "Topics, posts, and member participation per category in the selected period. Share is each category's percentage of total activity across the listed categories; Vs Prior is the change in share compared with the previous period of equal length."
+      labels:
+        category: "Category"
+        topics: "Topics"
+        posts: "Posts"
+        page_views: "Page views"
+        share: "Share"
+        vs_prior: "Vs Prior"
+    posters_by_member_type:
+      title: "Who's posting?"
+      description: "Posts authored in the selected period, bucketed by member type. \"New members\" signed up during the period, \"Returning\" signed up before it, and \"Staff\" are admins or moderators."
+      labels:
+        member_type: "Member type"
+        count: "Posts"
+        share: "Share"
+      types:
+        new_members: "New members"
+        returning: "Returning"
+        staff: "Staff"
+    trust_level_pipeline:
+      title: "Trust level pipeline"
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Trust level"
+        count: "Members"
+        share: "Share"
+        moves_in: "Moves in"
+        moves_out: "Moves out"
+      levels:
+        "0": "New"
+        "1": "Basic"
+        "2": "Member"
+        "3": "Regular"
+        "4": "Leader"
     trust_level_growth:
       title: "Trust Level growth"
       xaxis:
@@ -1422,9 +1459,9 @@ en:
     site_traffic:
       title: "Site traffic"
       xaxis:
-        page_view_anon_browser: "Pageviews (anonymous)"
-        page_view_logged_in_browser: "Pageviews (logged in)"
-        page_view_crawler: "Known crawlers"
+        page_view_anon_browser: "Anonymous"
+        page_view_logged_in_browser: "Logged in"
+        page_view_crawler: "Crawlers"
         page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"
@@ -1542,6 +1579,18 @@ en:
         num_clicks: "Clicks"
         num_topics: "Topics"
       description: "Users listed by number of clicks on links they have shared."
+    top_countries_by_browser_pageviews:
+      title: "Top countries"
+      description: "Countries driving the most browser pageviews to your forum in the selected period."
+      labels:
+        country_code: "Country code"
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      title: "Top referrers"
+      description: "External sites referring the most browser pageviews to your forum in the selected period."
+      labels:
+        normalized_referrer: "Referrer"
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -1751,6 +1800,9 @@ en:
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
+      email_sending_failures:
+        one: "Email sending has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+        other: "Email sending has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -1952,7 +2004,7 @@ en:
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     change_post_ownership_allowed_groups: "Allow users in these groups to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
+    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the <a href='%{base_path}/admin/logs/screened_ip_addresses'>Screened IPs list</a>."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
@@ -2109,7 +2161,7 @@ en:
     enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">this Meta topic</a> for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
-    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
+    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in <a href='%{base_path}/admin/site_settings/category/files'>Files settings</a>. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
     backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
     include_thumbnails_in_backups: "Include generated thumbnails in backups. Disabling this will make backups smaller, but requires a rebake of all posts after a restore."
 
@@ -2353,7 +2405,7 @@ en:
     fast_typing_threshold: "Minimum amount of time a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
-    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
+    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use <a href='%{base_path}/admin/customize/watched_words/action/silence'>Silence Watched Words</a> instead."
     moderator_guide_topic: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
@@ -2586,6 +2638,7 @@ en:
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
+    embed_full_app_signin_flow: "When full app mode is enabled, intercept logged-out actions inside the iframe with a guided flow that opens a top-level sign-in tab that auto-closes on success. Only enable this when the embed is same-site to the host page (e.g. `forum.example.com` on `blog.example.com`) or when `same site cookies` is set to `None` — otherwise the iframe will not receive the session cookie after sign-in."
     suppress_third_party_analytics_in_embed: "Skip rendering third-party analytics scripts (Google Tag Manager, Google Analytics, Adobe Analytics) when Discourse is loaded inside a full app embed iframe. Prevents duplicate pageviews and tag firing when the host page already loads the same scripts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -3255,6 +3308,7 @@ en:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
+      same_ip_address_user: "Same IP address as %{username}"
       inactive_user: "Inactive user"
       reviewable_reject_auto: "Auto handle queued reviewables"
       reviewable_reject: "Reviewable user rejected"
@@ -3417,7 +3471,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3433,7 +3487,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -4087,6 +4141,15 @@ en:
 
     email_bounced: |
       The message to %{email} bounced.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
+
+    email_sending_failed: |
+      Sending the message to %{email} failed.
 
       ### Details
 
@@ -5658,6 +5721,7 @@ en:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'

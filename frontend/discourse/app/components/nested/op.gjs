@@ -94,7 +94,7 @@ export default class NestedOp extends Component {
   <template>
     {{#if @post}}
       <div class="nested-view__op">
-        {{#let (lazyHash post=@post) as |postOutletArgs|}}
+        {{#let (lazyHash post=@post nestedReplyView=true) as |postOutletArgs|}}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
               class="nested-view__op-article boxed"
@@ -137,6 +137,20 @@ export default class NestedOp extends Component {
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}
                           @editPost={{fn @editPost @post}}
+                          @changeNotice={{fn @changeNotice @post}}
+                          @changePostOwner={{fn @changePostOwner @post}}
+                          @grantBadge={{fn @grantBadge @post}}
+                          @lockPost={{fn @lockPost @post}}
+                          @unlockPost={{fn @unlockPost @post}}
+                          @permanentlyDeletePost={{fn
+                            @permanentlyDeletePost
+                            @post
+                          }}
+                          @rebakePost={{fn @rebakePost @post}}
+                          @showPagePublish={{@showPagePublish}}
+                          @togglePostType={{fn @togglePostType @post}}
+                          @toggleWiki={{fn @toggleWiki @post}}
+                          @unhidePost={{fn @unhidePost @post}}
                           @share={{this.share}}
                           @toggleLike={{this.toggleLike}}
                           @showLogin={{this.showLogin}}

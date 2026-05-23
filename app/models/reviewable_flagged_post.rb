@@ -41,7 +41,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def post
-    @post ||= (target || Post.with_deleted.find_by(id: target_id))
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 
   def build_actions(actions, guardian, args)
@@ -242,6 +242,7 @@ class ReviewableFlaggedPost < Reviewable
     # Undo hide/silence if applicable
     if post&.hidden?
       notify_poster(performed_by)
+      post.acting_user = performed_by
       post.unhide!
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
@@ -257,7 +258,7 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, self.id)
+    PostDestroyer.delete_with_replies(performed_by, post, id)
 
     result
   end
@@ -270,7 +271,7 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, self.id)
+    PostDestroyer.delete_with_replies(performed_by, post, id)
     result
   end
 
@@ -345,7 +346,7 @@ class ReviewableFlaggedPost < Reviewable
   private
 
   def destroyer(performed_by, post)
-    PostDestroyer.new(performed_by, post, reviewable_id: self.id)
+    PostDestroyer.new(performed_by, post, reviewable_id: id)
   end
 
   def notify_poster(performed_by)

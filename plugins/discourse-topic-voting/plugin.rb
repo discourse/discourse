@@ -32,10 +32,7 @@ require_relative "lib/discourse_topic_voting/engine"
 require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails
-    .root
-    .join("plugins", "discourse-topic-voting", "db", "fixtures")
-    .to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
 
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)

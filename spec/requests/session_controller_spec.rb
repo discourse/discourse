@@ -2990,6 +2990,50 @@ RSpec.describe SessionController do
         expect(json["current_user"]["id"]).to eq(user.id)
       end
     end
+
+    context "when logged in as an anonymous shadow user" do
+      fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      end
+
+      it "stops authenticating when the master account is suspended", :aggregate_failures do
+        shadow_user = AnonymousShadowCreator.get(master_user)
+        sign_in(shadow_user)
+
+        get "/session/current.json"
+        expect(response.status).to eq(200)
+
+        UserSuspender.new(
+          master_user,
+          suspended_till: 1.day.from_now,
+          reason: "spam",
+          by_user: admin,
+        ).suspend
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(404)
+        expect(response.body).to be_blank
+      end
+
+      it "stops authenticating when the master account is deactivated", :aggregate_failures do
+        shadow_user = AnonymousShadowCreator.get(master_user)
+        sign_in(shadow_user)
+
+        get "/session/current.json"
+        expect(response.status).to eq(200)
+
+        master_user.deactivate(admin)
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(404)
+        expect(response.body).to be_blank
+      end
+    end
   end
 
   describe "#second_factor_auth_show" do

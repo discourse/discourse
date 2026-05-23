@@ -10,6 +10,7 @@ import DButton from "discourse/ui-kit/d-button";
 export default class DCopyButton extends Component {
   copyIcon = "copy";
   copyClass = "btn-primary";
+  announcement = "";
 
   init() {
     super.init(...arguments);
@@ -26,6 +27,7 @@ export default class DCopyButton extends Component {
     this.set("copyIcon", "copy");
     this.set("copyClass", "btn-primary");
     this.set("copyTranslatedLabel", this.translatedLabel);
+    this.set("announcement", "");
   }
 
   @action
@@ -44,6 +46,7 @@ export default class DCopyButton extends Component {
       this.set("copyIcon", "check");
       this.set("copyClass", "btn-primary ok");
       this.set("copyTranslatedLabel", this.translatedLabelAfterCopy);
+      this.set("announcement", this.translatedLabelAfterCopy);
 
       discourseDebounce(this._restoreButton, 3000);
     } catch {}
@@ -57,5 +60,6 @@ export default class DCopyButton extends Component {
       @ariaLabel={{this.ariaLabel}}
       @translatedLabel={{this.copyTranslatedLabel}}
     />
+    <span class="sr-only" aria-live="polite">{{this.announcement}}</span>
   </template>
 }

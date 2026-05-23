@@ -46,6 +46,8 @@ bg:
           one: "(още %{count})"
           other: "(още %{count})"
         collapse_list: "(покажи по-малко)"
+        nav:
+          enabled: "Да е включен"
         filters:
           all: "Всички"
           reset: "Нулиране"

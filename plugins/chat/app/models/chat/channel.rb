@@ -143,7 +143,7 @@ module Chat
     end
 
     def leave(user)
-      self.remove(user)
+      remove(user)
     end
 
     def pinned_messages_count
@@ -151,15 +151,15 @@ module Chat
     end
 
     def url
-      "#{Discourse.base_url}/chat/c/#{self.slug || "-"}/#{self.id}"
+      "#{Discourse.base_url}/chat/c/#{slug || "-"}/#{id}"
     end
 
     def relative_url
-      "#{Discourse.base_path}/chat/c/#{self.slug || "-"}/#{self.id}"
+      "#{Discourse.base_path}/chat/c/#{slug || "-"}/#{id}"
     end
 
     def update_last_message_id!
-      self.update!(last_message_id: self.latest_not_deleted_message_id)
+      update!(last_message_id: latest_not_deleted_message_id)
     end
 
     def self.ensure_consistency!
@@ -222,7 +222,7 @@ module Chat
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)
-      DB.query_single(<<~SQL, channel_id: self.id, anchor_message_id: anchor_message_id).first
+      DB.query_single(<<~SQL, channel_id: id, anchor_message_id: anchor_message_id).first
         SELECT chat_messages.id
         FROM chat_messages
         LEFT JOIN chat_threads original_message_threads ON original_message_threads.original_message_id = chat_messages.id
@@ -237,9 +237,9 @@ module Chat
     end
 
     def mark_all_threads_as_read(user: nil)
-      return if !self.threading_enabled
+      return if !threading_enabled
 
-      DB.exec(<<~SQL, channel_id: self.id)
+      DB.exec(<<~SQL, channel_id: id)
         UPDATE user_chat_thread_memberships
         SET last_read_message_id = chat_threads.last_message_id
         FROM chat_threads
@@ -256,7 +256,7 @@ module Chat
 
     def change_status(acting_user, target_status)
       return if !Guardian.new(acting_user).can_change_channel_status?(self, target_status)
-      self.update!(status: target_status)
+      update!(status: target_status)
       log_channel_status_change(acting_user: acting_user)
     end
 
@@ -271,11 +271,11 @@ module Chat
       StaffActionLogger.new(acting_user).log_custom(
         "chat_channel_status_change",
         {
-          chat_channel_id: self.id,
-          chat_channel_name: self.name,
+          chat_channel_id: id,
+          chat_channel_name: name,
           previous_value: status_previously_was,
           new_value: status,
-          category_id: category_channel? ? self.chatable_id : nil,
+          category_id: category_channel? ? chatable_id : nil,
         },
       )
 
@@ -283,7 +283,7 @@ module Chat
     end
 
     def duplicate_slug?
-      Chat::Channel.where(slug: self.slug).where.not(id: self.id).any?
+      Chat::Channel.where(slug: slug).where.not(id: id).any?
     end
   end
 end

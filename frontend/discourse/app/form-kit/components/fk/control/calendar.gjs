@@ -80,7 +80,7 @@ export default class FKControlCalendar extends FKBaseControl {
         id={{@field.id}}
         name={{@field.name}}
         aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
+        aria-describedby={{@field.describedBy}}
         class="form-kit__control-calendar"
       />
       <div id={{this.containerId}} class="date-picker-container"></div>
@@ -94,7 +94,7 @@ export default class FKControlCalendar extends FKBaseControl {
         value={{this.date}}
         id={{@field.id}}
         name={{@field.name}}
-        aria-describedby={{if @field.error @field.errorId}}
+        aria-describedby={{@field.describedBy}}
         {{on "change" (withEventValue this.setDate)}}
       />
     {{/if}}

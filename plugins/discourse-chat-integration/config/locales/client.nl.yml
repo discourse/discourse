@@ -74,6 +74,7 @@ nl:
             identifier:
               title: Kanaal
           errors:
+            auth_error: "Het verstrekte verificatietoken is ongeldig"
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
         telegram:
           title: "Telegram"
@@ -95,6 +96,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Discord."
             webhook_url:
               title: Webhook-URL
+              help: De gemaakte webhook-URL in je Discord-server instellingen moet de indeling https://discord.com/api/webhooks/<webhook-id>/<webhook-token> hebben
         guilded:
           title: "Guilded"
           param:

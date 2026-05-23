@@ -220,6 +220,26 @@ th:
     visits:
       xaxis:
         mobile: "โทรศัพท์"
+    activity_by_category:
+      labels:
+        category: "หมวดหมู่"
+        topics: "หัวข้อ"
+        posts: "โพส"
+        share: "แบ่งปัน"
+    posters_by_member_type:
+      labels:
+        count: "โพส"
+        share: "แบ่งปัน"
+      types:
+        staff: "ทีมงาน"
+    trust_level_pipeline:
+      labels:
+        count: "สมาชิก"
+        share: "แบ่งปัน"
+      levels:
+        "0": "ใหม่"
+        "2": "สมาชิก"
+        "3": "ทั่วไป"
     consolidated_page_views:
       labels:
         post: โพส
@@ -227,6 +247,9 @@ th:
     consolidated_api_requests:
       xaxis:
         api: "API"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "ไม่ระบุชื่อ"
     topics:
       title: "หัวข้อ"
     posts:
@@ -258,6 +281,12 @@ th:
       labels:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
     top_traffic_sources:
       xaxis: "โดเมน"
       num_topics: "หัวข้อ"

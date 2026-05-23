@@ -44,6 +44,8 @@ ca:
         expand_list:
           one: "(%{count} més)"
           other: "(%{count} més)"
+        nav:
+          enabled: "Activat"
         filters:
           all: "Tots"
           reset: "Restableix"

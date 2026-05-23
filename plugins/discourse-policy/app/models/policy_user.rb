@@ -16,7 +16,7 @@ class PolicyUser < ActiveRecord::Base
       .where(user: user)
       .update_all(accepted_at: Time.zone.now)
 
-    self.create!(
+    create!(
       post_policy_id: post_policy.id,
       user_id: user.id,
       accepted_at: Time.zone.now,
@@ -32,7 +32,7 @@ class PolicyUser < ActiveRecord::Base
       .where(user: user)
       .update_all(revoked_at: Time.zone.now)
 
-    self.create!(
+    create!(
       post_policy_id: post_policy.id,
       user_id: user.id,
       revoked_at: Time.zone.now,

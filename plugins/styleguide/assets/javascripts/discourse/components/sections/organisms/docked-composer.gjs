@@ -37,7 +37,7 @@ export default class DockedComposerSection extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-potential-path-strings}}
+    {{! eslint-disable ember/template-no-potential-path-strings }}
     <StyleguideExample @title="<DockedComposer>">
       <StyleguideComponent>
         <div class="docked-composer-styleguide">

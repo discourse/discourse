@@ -12,8 +12,8 @@
   "dependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.29.2",
-    "@babel/standalone": "^7.29.2",
-    "@csstools/postcss-light-dark-function": "^3.0.0",
+    "@babel/standalone": "^7.29.4",
+    "@csstools/postcss-light-dark-function": "^3.0.1",
     "@rollup/browser": "^4.60.3",
     "@rollup/plugin-babel": "^7.0.0",
     "abort-controller": "^3.0.0",

@@ -55,7 +55,7 @@ module DiscourseChatIntegration
         stream = channel.data["stream"]
         subject = channel.data["subject"]
 
-        message = self.generate_zulip_message(post, stream, subject)
+        message = generate_zulip_message(post, stream, subject)
 
         response = send_message(message)
 
