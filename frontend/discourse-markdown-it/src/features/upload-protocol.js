@@ -102,10 +102,10 @@ function rule(state) {
         let attrs = [];
 
         if (mapped) {
-          attrs.push(
-            attr("src", mapped.url),
-            attr("data-base62-sha1", mapped.base62_sha1)
-          );
+          attrs.push(attr("src", mapped.url));
+          if (mapped.base62_sha1) {
+            attrs.push(attr("data-base62-sha1", mapped.base62_sha1));
+          }
         } else {
           attrs.push(
             attr(
@@ -120,7 +120,9 @@ function rule(state) {
       } else if (token.tag === "img") {
         if (mapped) {
           token.attrs[srcIndex][1] = mapped.url;
-          token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
+          if (mapped.base62_sha1) {
+            token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
+          }
         } else {
           // no point putting a transparent .png for audio/video
           if (token.content.match(/\|video|\|audio/)) {
@@ -147,6 +149,10 @@ function rule(state) {
           } else {
             token.attrs[srcIndex][1] = mapped.short_path;
           }
+
+          if (mapped.base62_sha1) {
+            token.attrs.push(["data-base62-sha1", mapped.base62_sha1]);
+          }
         } else {
           token.attrs[srcIndex][1] = state.md.options.discourse.getURL("/404");
 
@@ -167,6 +173,9 @@ export function setup(helper) {
     "img[data-orig-src]",
     "img[data-base62-sha1]",
     "a[data-orig-href]",
+    "a[data-base62-sha1]",
+    "div[data-base62-sha1]",
+    "source[data-base62-sha1]",
   ]);
 
   helper.registerPlugin((md) => {

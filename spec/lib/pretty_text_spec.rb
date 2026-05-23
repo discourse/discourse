@@ -2621,9 +2621,9 @@ HTML
         <div>
           Block img <img src="#{cdn_url}" data-base62-sha1="#{upload.base62_sha1}">
         </div>
-        <p><a href="#{upload.short_path}">some attachment</a></p>
-        <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
-        <p><a href="#{upload.short_path}">some attachment|random</a></p>
+        <p><a href="#{upload.short_path}" data-base62-sha1="#{upload.base62_sha1}">some attachment</a></p>
+        <p><a class="attachment" href="#{upload.short_path}" data-base62-sha1="#{upload.base62_sha1}">some attachment</a></p>
+        <p><a href="#{upload.short_path}" data-base62-sha1="#{upload.base62_sha1}">some attachment|random</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)

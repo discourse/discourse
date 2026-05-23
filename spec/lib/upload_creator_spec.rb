@@ -617,7 +617,20 @@ RSpec.describe UploadCreator do
                 user.id,
               )
 
+            expect(first_thumb.primary_upload_id).to be_nil
             expect(second_thumb.primary_upload_id).to be_nil
+          end
+
+          it "does not use a thumbnail as the primary for a regular upload" do
+            thumb_opts = opts.merge(type: "thumbnail")
+            thumbnail = UploadCreator.new(file, filename, thumb_opts).create_for(user.id)
+            regular_upload =
+              UploadCreator.new(file_from_fixtures(filename), filename, opts).create_for(user.id)
+
+            expect(thumbnail.primary_upload_id).to be_nil
+            expect(thumbnail.original_sha1).to be_nil
+            expect(regular_upload.primary_upload_id).to be_nil
+            expect(regular_upload.url).not_to eq(thumbnail.url)
           end
         end
       end

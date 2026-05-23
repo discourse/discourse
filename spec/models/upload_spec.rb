@@ -1258,15 +1258,57 @@ RSpec.describe Upload do
         expect(dependent.url).to eq(public_primary.url)
       end
 
-      it "breaks relationship when no matching primary exists" do
+      it "promotes a dependent before a primary switches to an existing primary" do
+        secure_primary =
+          Fabricate(:upload, original_sha1: sha1_hash, secure: true, url: "/uploads/secure.png")
+        public_primary =
+          Fabricate(:upload, original_sha1: sha1_hash, secure: false, url: "/uploads/public.png")
+        dependent =
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            secure: true,
+            primary_upload: secure_primary,
+            url: secure_primary.url,
+          )
+
+        secure_primary.update_secure_status(override: false, source: "spec")
+
+        expect(secure_primary.reload.primary_upload_id).to eq(public_primary.id)
+        expect(secure_primary.url).to eq(public_primary.url)
+        expect(secure_primary.secure).to eq(false)
+        expect(dependent.reload.primary_upload_id).to be_nil
+        expect(dependent.url).to eq("/uploads/secure.png")
+      end
+
+      it "copies a local dependent upload to its own path when no matching primary exists" do
         secure_primary = Fabricate(:upload, original_sha1: sha1_hash, secure: true)
         dependent =
-          Fabricate(:upload, original_sha1: sha1_hash, secure: true, primary_upload: secure_primary)
+          Fabricate(
+            :upload,
+            original_sha1: sha1_hash,
+            secure: true,
+            primary_upload: secure_primary,
+            url: secure_primary.url,
+          )
+
+        source_path = Discourse.store.path_for(secure_primary)
+        FileUtils.mkdir_p(File.dirname(source_path))
+        File.write(source_path, "upload contents")
+        expected_url =
+          Discourse.store.get_path_for(
+            "original",
+            dependent.id,
+            dependent.sha1,
+            ".#{dependent.extension}",
+          )
 
         dependent.handle_dedup_context_transition(false)
         dependent.reload
 
         expect(dependent.primary_upload_id).to be_nil
+        expect(dependent.url).to eq(expected_url)
+        expect(File.read(Discourse.store.path_for(dependent))).to eq("upload contents")
       end
 
       it "does nothing for non-dependents" do

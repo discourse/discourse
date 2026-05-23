@@ -59,16 +59,7 @@ class Upload < ActiveRecord::Base
     )
 
     # If this is a primary upload, transfer primary status to a dependent
-    if primary_upload_id.nil? && dependent_uploads.exists?
-      new_primary = dependent_uploads.order(:id).first
-      remaining = dependent_uploads.where.not(id: new_primary.id)
-
-      new_primary.update_columns(primary_upload_id: nil, url: url)
-      remaining.update_all(primary_upload_id: new_primary.id)
-
-      # Mark that we transferred ownership so destroy skips S3 removal
-      @transferred_to_new_primary = true
-    end
+    promote_dependent_to_primary! if primary_upload_id.nil?
   end
 
   after_destroy do
@@ -225,9 +216,8 @@ class Upload < ActiveRecord::Base
 
   def destroy
     Upload.transaction do
-      # Skip S3 removal if:
-      # - This is a dependent upload (file belongs to the primary)
-      # - This primary will transfer ownership to a dependent (before_destroy sets the flag)
+      # Skip file removal if this upload depends on another primary or if a dependent
+      # is about to take over this primary's storage in the before_destroy callback.
       will_transfer = primary_upload_id.nil? && dependent_uploads.exists?
       should_remove_file = primary_upload_id.nil? && !will_transfer
       Discourse.store.remove_upload(self) if should_remove_file
@@ -285,6 +275,23 @@ class Upload < ActiveRecord::Base
   # Get the actual storage URL (from primary if dependent)
   def storage_url
     primary_upload&.url || url
+  end
+
+  def promote_dependent_to_primary!(copy_storage: false, secure: secure?)
+    new_primary = dependent_uploads.order(:id).first
+    return if new_primary.blank?
+
+    if copy_storage
+      new_primary.copy_from_upload_and_become_primary(self, secure)
+    else
+      new_primary.update_columns(primary_upload_id: nil, url: url)
+    end
+
+    dependent_uploads
+      .where.not(id: new_primary.id)
+      .update_all(primary_upload_id: new_primary.id, url: new_primary.url)
+
+    new_primary
   end
 
   def self.secure_uploads_url?(url)
@@ -546,9 +553,7 @@ class Upload < ActiveRecord::Base
     secure_status_did_change = secure? != mark_secure
 
     # Handle deduplication context transitions before changing secure status
-    if secure_status_did_change && primary_upload_id.present?
-      handle_dedup_context_transition(mark_secure)
-    end
+    handle_dedup_context_transition(mark_secure) if secure_status_did_change
 
     update(secure_params(mark_secure, reason, source))
 
@@ -562,39 +567,62 @@ class Upload < ActiveRecord::Base
   end
 
   def handle_dedup_context_transition(new_secure_status)
-    return if primary_upload_id.nil?
+    return if original_sha1.blank?
 
-    # Try to find a primary with matching secure status
     new_primary = Upload.find_primary_for(original_sha1: original_sha1, secure: new_secure_status)
 
+    if primary_upload_id.present?
+      if new_primary
+        update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
+      else
+        copy_from_primary_and_become_primary(new_secure_status)
+      end
+      return
+    end
+
+    return if new_primary.blank? && !dependent_uploads.exists?
+
+    promoted_upload =
+      if dependent_uploads.exists?
+        promote_dependent_to_primary!(copy_storage: new_primary.blank?, secure: secure?)
+      end
+
     if new_primary
-      # Switch to the new primary
+      Discourse.store.remove_upload(self) if promoted_upload.blank?
       update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
-    elsif Discourse.store.external?
-      # No matching primary exists and using S3 - copy file and become a primary
-      copy_from_primary_and_become_primary(new_secure_status)
-    else
-      # Local store - just break the relationship, file will be handled by store
-      update_columns(primary_upload_id: nil)
     end
   end
 
   def copy_from_primary_and_become_primary(new_secure_status)
     return if primary_upload_id.nil?
 
+    copy_from_upload_and_become_primary(primary_upload, new_secure_status)
+  end
+
+  def copy_from_upload_and_become_primary(source_upload, new_secure_status)
     store = Discourse.store
-    source_path = store.get_path_for_upload(self)
-
-    # Generate our own destination path using our sha1
     extension = self.extension.present? ? ".#{self.extension}" : File.extname(original_filename)
-    dest_path = store.get_path_for("original", id, sha1, extension)
-    dest_path = File.join(store.upload_path, dest_path) if Rails.configuration.multisite
+    destination_path = store.get_path_for("original", id, sha1, extension)
 
-    # Copy the file to our own path
-    store.copy_file(source: source_path, destination: dest_path, secure: new_secure_status)
+    if store.external?
+      source_path = store.get_path_for_upload(source_upload)
+      if Rails.configuration.multisite
+        if source_path.exclude?(store.upload_path)
+          source_path = File.join(store.upload_path, source_path)
+        end
+        destination_path = File.join(store.upload_path, destination_path)
+      end
 
-    # Update URL to our own path and clear primary relationship
-    new_url = File.join(store.absolute_base_url, dest_path)
+      store.copy_file(source: source_path, destination: destination_path, secure: new_secure_status)
+      new_url = File.join(store.absolute_base_url, destination_path)
+    else
+      source_path = store.path_for(source_upload)
+      File.open(source_path, "rb") do |file|
+        store.copy_file(file, "#{store.public_dir}#{destination_path}")
+      end
+      new_url = destination_path
+    end
+
     update_columns(primary_upload_id: nil, url: new_url)
   end
 

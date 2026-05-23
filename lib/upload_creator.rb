@@ -175,7 +175,7 @@ class UploadCreator
             sha1
           end
         )
-      @upload.original_sha1 = SiteSetting.secure_uploads? ? sha1 : nil
+      @upload.original_sha1 = SiteSetting.secure_uploads? && !is_thumbnail ? sha1 : nil
       @upload.url = ""
       @upload.origin = @opts[:origin][0...2000] if @opts[:origin]
       @upload.extension = image_type || File.extname(@filename)[1..10]
