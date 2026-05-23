@@ -28,7 +28,8 @@ specs are Rails-free.
   the test config and tests that specifically need those modules skip
   themselves via `Nginx::Support::ConfigRenderer.module_available?`.
 
-If nginx isn't available the suite warns and exits cleanly. Set
+If nginx isn't available, pure-Ruby support specs still run while
+integration examples that need nginx are skipped with a warning. Set
 `NGINX_TESTS_REQUIRED=1` in CI to make a missing nginx a failure
 instead.
 
