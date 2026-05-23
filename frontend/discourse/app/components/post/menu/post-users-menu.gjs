@@ -48,9 +48,11 @@ export default class PostUsersMenu extends Component {
     this.users = [];
     this.#page = 0;
     this.canLoadMore = true;
+    this.#bodyElement.scrollTop = 0;
     return this.#loadMore();
   };
   #page = 0;
+  #bodyElement = null;
 
   get bodyStyle() {
     if (this.bodyMinHeight) {
@@ -73,6 +75,7 @@ export default class PostUsersMenu extends Component {
 
   @action
   async loadInitial(element) {
+    this.#bodyElement = element;
     await this.#loadMore();
     if (this.site.mobileView) {
       return;

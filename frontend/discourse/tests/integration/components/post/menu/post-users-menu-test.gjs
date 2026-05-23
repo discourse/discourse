@@ -27,6 +27,20 @@ function deferredFetch(response) {
   };
 }
 
+function renderMenu({ fetchUsers, totalUsers, onReset = () => {} }) {
+  return render(
+    <template>
+      <PostUsersMenu
+        @fetchUsers={{fetchUsers}}
+        @titleText="Likes"
+        @totalUsers={{totalUsers}}
+      >
+        <:header as |reset|>{{onReset reset}}</:header>
+      </PostUsersMenu>
+    </template>
+  );
+}
+
 module("Integration | Component | post/menu/post-users-menu", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -45,15 +59,7 @@ module("Integration | Component | post/menu/post-users-menu", function (hooks) {
       canLoadMore: false,
     });
 
-    const renderPromise = render(
-      <template>
-        <PostUsersMenu
-          @fetchUsers={{fetchUsers}}
-          @titleText="Likes"
-          @totalUsers={{5}}
-        />
-      </template>
-    );
+    const renderPromise = renderMenu({ fetchUsers, totalUsers: 5 });
 
     await waitFor(".post-users-popup__skeleton-item");
 
@@ -82,15 +88,7 @@ module("Integration | Component | post/menu/post-users-menu", function (hooks) {
       canLoadMore: true,
     });
 
-    const renderPromise = render(
-      <template>
-        <PostUsersMenu
-          @fetchUsers={{fetchUsers}}
-          @titleText="Likes"
-          @totalUsers={{200}}
-        />
-      </template>
-    );
+    const renderPromise = renderMenu({ fetchUsers, totalUsers: 200 });
 
     await waitFor(".post-users-popup__skeleton-item");
 
@@ -122,15 +120,7 @@ module("Integration | Component | post/menu/post-users-menu", function (hooks) {
       return secondFetchPromise;
     };
 
-    await render(
-      <template>
-        <PostUsersMenu
-          @fetchUsers={{fetchUsers}}
-          @titleText="Likes"
-          @totalUsers={{30}}
-        />
-      </template>
-    );
+    await renderMenu({ fetchUsers, totalUsers: 30 });
 
     assert
       .dom(".post-users-popup__item:not(.post-users-popup__skeleton-item)")
@@ -151,17 +141,32 @@ module("Integration | Component | post/menu/post-users-menu", function (hooks) {
     await settled();
   });
 
+  test("resets scroll position when the user list is reloaded", async function (assert) {
+    const fetchUsers = () =>
+      Promise.resolve({ users: makeUsers(3), canLoadMore: false });
+
+    let resetAndReload;
+    await renderMenu({
+      fetchUsers,
+      onReset: (fn) => (resetAndReload = fn),
+    });
+
+    const body = document.querySelector(".post-users-popup__body");
+    body.style.cssText = "max-height: 20px; overflow-y: auto";
+    body.scrollTop = 50;
+
+    await resetAndReload();
+
+    assert.strictEqual(body.scrollTop, 0, "scrollTop is reset after reload");
+  });
+
   test("falls back to a small skeleton count when totalUsers is missing", async function (assert) {
     const { fetchUsers, resolve } = deferredFetch({
       users: makeUsers(2),
       canLoadMore: false,
     });
 
-    const renderPromise = render(
-      <template>
-        <PostUsersMenu @fetchUsers={{fetchUsers}} @titleText="Likes" />
-      </template>
-    );
+    const renderPromise = renderMenu({ fetchUsers });
 
     await waitFor(".post-users-popup__skeleton-item");
 
