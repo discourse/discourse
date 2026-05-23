@@ -137,21 +137,6 @@ module TurboTests
     end
 
     def start_multisite_subprocess(tests, **opts)
-      # `infer_spec_type_from_file_location!` only assigns `type: :multisite`
-      # to files under a `spec/multisite/` directory. When every file in the
-      # batch is under a `spec/system/` directory, no example can match
-      # `--tag type:multisite`, so the subprocess would boot Rails, load
-      # every file via `require`, find zero matches, and exit — pure waste
-      # that contends with regular workers during their parallel boot ramp.
-      if tests.all? { |f| f.start_with?("spec/system/") || f.include?("/spec/system/") }
-        @messages << {
-          type: "exit",
-          process_id: "multisite",
-          start_time: Process.clock_gettime(Process::CLOCK_MONOTONIC),
-        }
-        return
-      end
-
       start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
     end
 
