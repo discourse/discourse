@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Keyboard shortcuts" do
+RSpec.describe "Keyboard shortcuts", :hard_reset do
   it "can have default keyboard shortcuts disabled by the Plugin API" do
     sign_in Fabricate(:admin)
 

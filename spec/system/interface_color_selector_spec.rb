@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Interface color selector" do
+describe "Interface color selector", :hard_reset do
   let!(:light_scheme) do
     ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
   end

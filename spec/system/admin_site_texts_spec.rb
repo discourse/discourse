@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Texts Page" do
+describe "Admin Site Texts Page", :hard_reset do
   fab!(:admin)
 
   let(:site_texts_page) { PageObjects::Pages::AdminSiteTexts.new }

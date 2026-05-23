@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Locale choice" do
+RSpec.describe "Locale choice", :hard_reset do
   it "loads english locale successfully" do
     visit "/"
     expect(page).to have_css("html[lang='en']")
@@ -122,6 +122,7 @@ RSpec.describe "Locale choice" do
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
       overriden_translation_zh_tw.update_columns(value: "{ count, plural, ")
+      clear_browser_cache
     end
 
     it "works for english" do
