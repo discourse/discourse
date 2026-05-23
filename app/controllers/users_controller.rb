@@ -999,7 +999,7 @@ class UsersController < ApplicationController
     message =
       if Guardian.new(@user).can_access_forum?
         # Log in the user
-        log_on_user(@user)
+        log_on_user(@user, replay_anonymous_action: true)
         "password_reset.success"
       else
         @requires_approval = true
@@ -1139,7 +1139,7 @@ class UsersController < ApplicationController
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
-        log_on_user(@user)
+        log_on_user(@user, replay_anonymous_action: true)
 
         # invites#perform_accept_invitation already sets destination_url, but
         # sometimes it is lost (user changes browser, uses incognito, etc)

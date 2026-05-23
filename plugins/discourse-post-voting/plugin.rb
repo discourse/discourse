@@ -271,4 +271,14 @@ after_initialize do
       PostVoting::VoteManager.bulk_remove_votes_by(user)
     end,
   )
+
+  register_anonymous_action("vote_post") do |user, params|
+    direction = params["direction"].to_s
+    next if direction != "up" && direction != "down"
+
+    post = Post.find_by(id: params["post_id"])
+    next if !user.guardian.can_vote_on_post?(post, direction: direction)
+
+    PostVoting::VoteManager.vote(post, user, direction:)
+  end
 end

@@ -1422,6 +1422,8 @@ Discourse::Application.routes.draw do
     get "search" => "search#show"
     post "search/click" => "search#click"
 
+    post "anonymous-action" => "anonymous_actions#create"
+
     # Nested replies routes
     scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do
       get "/children/:post_number" => "nested_topics#children",
