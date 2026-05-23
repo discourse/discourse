@@ -351,7 +351,7 @@ describe "Composer - Drafts" do
           content: "This is the original topic OP content.",
         )
         expect(topic_page).to have_post_content(post_number: 2, content: "a b c d e f g")
-        try_until_success { expect(topic.reload.posts.last.raw).to eq("a b c d e f g") }
+        expect(topic.reload.posts.last.raw).to eq("a b c d e f g")
       end
     end
 
@@ -384,7 +384,7 @@ describe "Composer - Drafts" do
           content: "This is the other topic OP content.",
         )
         expect(topic_page).to have_post_content(post_number: 2, content: "a b c d e f g")
-        try_until_success { expect(other_topic.reload.posts.last.raw).to eq("a b c d e f g") }
+        expect(other_topic.reload.posts.last.raw).to eq("a b c d e f g")
       end
     end
 

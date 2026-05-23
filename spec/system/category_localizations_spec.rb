@@ -93,7 +93,7 @@ describe "Category Localizations" do
         form.field("locale").select("ja")
         category_page.save_settings
 
-        try_until_success { expect(category_without_locale.reload.locale).to eq("ja") }
+        expect(category_without_locale.reload.locale).to eq("ja")
       end
 
       describe "when editing a category with no category localizations" do
