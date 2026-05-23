@@ -63,7 +63,7 @@ class Upload < ActiveRecord::Base
       new_primary = dependent_uploads.order(:id).first
       remaining = dependent_uploads.where.not(id: new_primary.id)
 
-      new_primary.update_columns(primary_upload_id: nil, url: self.url)
+      new_primary.update_columns(primary_upload_id: nil, url: url)
       remaining.update_all(primary_upload_id: new_primary.id)
 
       # Mark that we transferred ownership so destroy skips S3 removal
@@ -505,7 +505,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.sha1_from_base62(base62)
-    self.sha1_from_base62_encoded(base62)
+    sha1_from_base62_encoded(base62)
   end
 
   def self.sha1_from_long_url(url)
