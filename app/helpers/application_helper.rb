@@ -585,12 +585,10 @@ module ApplicationHelper
         "splash_screen_svg_#{dark ? "dark" : "light"}_#{upload.id}_#{upload.sha1}",
         expires_in: 1.day,
       ) do
-        
-          upload.content.presence
-        rescue StandardError => e
-          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-          nil
-        
+        upload.content.presence
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+        nil
       end
   end
 
