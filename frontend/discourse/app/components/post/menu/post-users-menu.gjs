@@ -5,13 +5,29 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const PAGE_SIZE = 30;
+const FALLBACK_SKELETON_ROWS = 3;
+
+const SkeletonRow = <template>
+  <div
+    class="post-users-popup__item post-users-popup__skeleton-item"
+    aria-hidden="true"
+  >
+    <div class="post-users-popup__skeleton-avatar"></div>
+    <div class="post-users-popup__user-info">
+      <div class="post-users-popup__skeleton-name"></div>
+      {{#unless @prioritizeUsername}}
+        <div class="post-users-popup__skeleton-username"></div>
+      {{/unless}}
+    </div>
+    <div class="post-users-popup__skeleton-reaction"></div>
+  </div>
+</template>;
 
 export default class PostUsersMenu extends Component {
   @service siteSettings;
@@ -41,6 +57,18 @@ export default class PostUsersMenu extends Component {
       return trustHTML(`min-height: ${this.bodyMinHeight}px`);
     }
     return null;
+  }
+
+  get skeletonRows() {
+    if (!this.loading) {
+      return [];
+    }
+
+    const remaining = this.args.totalUsers - this.users.length;
+    const count = Number.isFinite(remaining)
+      ? Math.min(Math.max(remaining, 0), PAGE_SIZE)
+      : FALLBACK_SKELETON_ROWS;
+    return Array.from({ length: count });
   }
 
   @action
@@ -130,10 +158,11 @@ export default class PostUsersMenu extends Component {
               {{/if}}
             </div>
           {{/each}}
-          <DConditionalLoadingSpinner
-            @condition={{this.loading}}
-            @size="small"
-          />
+          {{#each this.skeletonRows}}
+            <SkeletonRow
+              @prioritizeUsername={{this.siteSettings.prioritize_username_in_ux}}
+            />
+          {{/each}}
         </DLoadMore>
       </div>
     </div>
