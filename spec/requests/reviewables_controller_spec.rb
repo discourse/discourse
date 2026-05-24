@@ -1032,7 +1032,7 @@ RSpec.describe ReviewablesController do
           expect(queued_post.reload).to be_deleted
         end
 
-        it "non-admin ignores `username` param and acts on self" do
+        it "non-admin gets 403 when passing `username` to target another user" do
           other_user = Fabricate(:user)
           api_key = Fabricate(:api_key, user: user).key
           queued_post = Fabricate(:reviewable_queued_post, target_created_by: other_user)
@@ -1046,7 +1046,7 @@ RSpec.describe ReviewablesController do
                    HTTP_API_KEY: api_key,
                  }
 
-          expect(response.status).to eq(404)
+          expect(response.status).to eq(403)
           expect(queued_post.reload).to be_present
         end
 

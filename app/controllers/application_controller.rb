@@ -577,8 +577,8 @@ class ApplicationController < ActionController::Base
   end
 
   def fetch_target_user
-    if is_api? && guardian.is_admin? &&
-         (params[:username].present? || params[:external_id].present?)
+    if params[:username].present? || params[:external_id].present?
+      raise Discourse::InvalidAccess if !is_api? || !guardian.is_admin?
       fetch_user_from_params
     else
       current_user

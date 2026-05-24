@@ -7422,7 +7422,7 @@ RSpec.describe TopicsController do
   describe "#set_notifications" do
     let(:watching) { NotificationLevels.topic_levels[:watching] }
 
-    it "ignores `username` param for session requests" do
+    it "rejects `username` param for session requests" do
       sign_in(user)
       post "/t/#{topic.id}/notifications.json",
            params: {
@@ -7430,7 +7430,8 @@ RSpec.describe TopicsController do
              notification_level: watching,
            }
 
-      expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(watching)
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: topic)).to be_blank
       expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
     end
 
@@ -7464,7 +7465,7 @@ RSpec.describe TopicsController do
         expect(TopicUser.find_by(user: admin, topic: topic).notification_level).to eq(watching)
       end
 
-      it "non-admin ignores `username` param and acts on self" do
+      it "non-admin gets 403 when passing `username` to target another user" do
         api_key = Fabricate(:api_key, user: user).key
         post "/t/#{topic.id}/notifications",
              params: {
@@ -7476,7 +7477,8 @@ RSpec.describe TopicsController do
                HTTP_API_USERNAME: user.username,
              }
 
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(watching)
+        expect(response.status).to eq(403)
+        expect(TopicUser.find_by(user: user, topic: topic)).to be_blank
         expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
       end
 

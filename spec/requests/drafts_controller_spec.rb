@@ -479,7 +479,7 @@ RSpec.describe DraftsController do
         expect(Draft.get(admin, "xxx", 0)).to eq(nil)
       end
 
-      it "non-admin ignores `username` param and acts on self" do
+      it "non-admin gets 403 when passing `username` to target another user" do
         api_key = Fabricate(:api_key, user: user).key
         Draft.set(user, "xxx", 0, "hi")
         Draft.set(other_user, "xxx", 0, "hi")
@@ -494,8 +494,8 @@ RSpec.describe DraftsController do
                  HTTP_API_KEY: api_key,
                }
 
-        expect(response.status).to eq(200)
-        expect(Draft.get(user, "xxx", 0)).to eq(nil)
+        expect(response.status).to eq(403)
+        expect(Draft.get(user, "xxx", 0)).to be_present
         expect(Draft.get(other_user, "xxx", 0)).to be_present
       end
 
@@ -705,7 +705,7 @@ RSpec.describe DraftsController do
         expect(Draft.get(admin, "draft1", 0)).to eq(nil)
       end
 
-      it "non-admin ignores `username` param and acts on self" do
+      it "non-admin gets 403 when passing `username` to target another user" do
         non_admin = Fabricate(:user)
         api_key = Fabricate(:api_key, user: non_admin).key
         Draft.set(user, "draft1", 0, '{"reply": "draft content"}')
@@ -723,7 +723,7 @@ RSpec.describe DraftsController do
                  "Api-Username" => non_admin.username,
                }
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(403)
         expect(Draft.get(user, "draft1", 0)).to be_present
       end
     end
