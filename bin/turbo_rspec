@@ -6,6 +6,9 @@ ENV["RAILS_ENV"] ||= "test"
 require "./lib/turbo_tests"
 require "optparse"
 
+# spec/nginx has its own Rails-free runner; turbo_rspec loads rails_helper.
+DEFAULT_EXCLUDE_PATTERNS = ["spec/nginx/**/*_spec.rb"].freeze
+
 requires = []
 formatters = []
 verbose = false
@@ -16,7 +19,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
-exclude_patterns = []
+exclude_patterns = DEFAULT_EXCLUDE_PATTERNS.dup
 
 OptionParser
   .new do |opts|
@@ -96,7 +99,11 @@ else
 end
 
 if exclude_patterns.any?
-  files.reject! { |file| exclude_patterns.any? { |pattern| File.fnmatch(pattern, file) } }
+  files.reject! do |file|
+    exclude_patterns.any? do |pattern|
+      File.fnmatch(pattern, file) || File.fnmatch(pattern, file, File::FNM_PATHNAME)
+    end
+  end
 end
 
 requires.each { |f| require(f) }

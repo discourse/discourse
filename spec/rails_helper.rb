@@ -261,8 +261,8 @@ RSpec.configure do |config|
 
   # spec/nginx/ has its own Rails-free harness (spawns a real nginx subprocess
   # in front of a mock upstream) and its own runner at spec/nginx/run.sh.
-  # Exclude it from the main rspec invocation, which would otherwise load the
-  # specs without their support files and fail with NameError on the harness.
+  # Exclude it from direct RSpec discovery here; bin/turbo_rspec has a matching
+  # default exclusion before it passes explicit file paths to Rails-loaded workers.
   config.exclude_pattern = "spec/nginx/**/*_spec.rb"
 
   # Default is :fork, but this causes problems if any miniracer context have started
