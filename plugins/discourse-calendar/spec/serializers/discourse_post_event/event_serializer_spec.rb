@@ -37,6 +37,33 @@ describe DiscoursePostEvent::EventSerializer do
         json = DiscoursePostEvent::EventSerializer.new(private_event, scope: Guardian.new).as_json
         expect(json[:event][:stats]).to eq(
           going: 1,
+          going_recurring: 0,
+          interested: 0,
+          invited: 2,
+          not_going: 0,
+          capacity: nil,
+        )
+      end
+    end
+
+    context "with recurring 'going' invitees" do
+      before do
+        private_event.update_with_params!(raw_invitees: [group_1.name])
+        DiscoursePostEvent::Invitee.create_attendance!(invitee_1.id, private_event.id, :going)
+        DiscoursePostEvent::Invitee.create_attendance!(
+          invitee_2.id,
+          private_event.id,
+          :going,
+          recurring: true,
+        )
+        private_event.reload
+      end
+
+      it "counts only recurring 'going' invitees in going_recurring" do
+        json = DiscoursePostEvent::EventSerializer.new(private_event, scope: Guardian.new).as_json
+        expect(json[:event][:stats]).to eq(
+          going: 2,
+          going_recurring: 1,
           interested: 0,
           invited: 2,
           not_going: 0,

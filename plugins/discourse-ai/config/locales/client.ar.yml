@@ -275,8 +275,7 @@ ar:
             ui_settings: "إعدادات واجهة الاستخدام"
             integrations: "التكاملات"
         nav:
-          configured: "مُهيأ"
-          unconfigured: "غير مُهيأ"
+          enabled: "مفعَّلة"
         filters:
           all: "الكل"
           text: "ابحث عن الميزات، أو الوكلاء، أو نماذج اللغة الكبيرة، أو المجموعات..."

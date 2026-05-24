@@ -43,7 +43,7 @@ module DiscourseChatIntegration
           )
 
         if !setting_update_result.success?
-          self.do_api_request("deleteWebhook", {})
+          do_api_request("deleteWebhook", {})
           raise DiscourseChatIntegration::ProviderError.new(
                   info: {
                     error_key: "chat_integration.errors.setting_update_failed",
@@ -60,7 +60,7 @@ module DiscourseChatIntegration
 
         response =
           begin
-            self.do_api_request("setWebhook", webhook_message, access_token: access_token)
+            do_api_request("setWebhook", webhook_message, access_token: access_token)
           rescue JSON::ParserError => err
             Rails.logger.error("Failed to parse telegram setWebhook response: #{err.message}")
             { "ok" => false, "description" => err.message }
@@ -78,7 +78,7 @@ module DiscourseChatIntegration
       end
 
       def self.sendMessage(message)
-        self.do_api_request("sendMessage", message)
+        do_api_request("sendMessage", message)
       end
 
       def self.do_api_request(method_name, message, access_token: nil)

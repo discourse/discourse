@@ -415,6 +415,8 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Ativado"
       start_posting:
         back: "Anterior"
     about:
@@ -589,6 +591,9 @@ pt:
         other_drafts:
           one: "+%{count} outro rascunho"
           other: "+%{count} outros rascunhos"
+    embed_mode:
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tópico novo"
       other: "Ver %{count} tópicos novos"
@@ -1364,7 +1369,6 @@ pt:
         normal_option: "Normal"
         normal_option_title: "Será notificado se este usuário lhe responder, citar ou mencionar."
       notification_schedule:
-        title: "Agendamento de Notificações"
         label: "Activar agendamento de notificações personalizado"
         tip: "Fora deste horário, as suas notificações serão pausadas."
         midnight: "Meia-noite"
@@ -1408,13 +1412,8 @@ pt:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificações Instantâneas"
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
-        perm_default: "Ligar Notificações"
-        perm_denied_btn: "Permissão Negada"
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
-        disable: "Desativar Notificações"
-        enable: "Ativar Notificações"
         each_browser_note: "Nota: precisa de alterar esta configuração em todos os navegadores que utilizar. Todas as notificações serão desativadas se pausar as notificações no menu do utilizador, independentemente desta definição."
         consent_prompt: "Quer receber notificações instantâneas quando outras pessoas responderem às suas publicações?"
       dismiss: "Marcar como visto"
@@ -3113,6 +3112,7 @@ pt:
         max_views:
           placeholder: máximo
     hamburger_menu: "Menu de Navegação"
+    header_panel: "Cabeçalho"
     new_item: "novo"
     go_back: "voltar atrás"
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
@@ -4790,6 +4790,25 @@ pt:
         sections:
           reports:
             title: "Relatórios"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Mensagens"
+              share: "Partilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Pessoal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Habitual"
+                "4": "Líder"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
         period:
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"

@@ -255,8 +255,8 @@ RSpec.describe PostCreator do
         admin_ids = [Group[:admins].id]
         expect(
           messages.any? do |m|
-            m.group_ids != admin_ids &&
-              (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id))
+            m.group_ids != admin_ids && !m.user_ids.include?(other_admin.id) &&
+              !m.user_ids.include?(admin.id)
           end,
         ).to eq(false)
       end
@@ -692,20 +692,22 @@ RSpec.describe PostCreator do
   describe "whisper" do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
+    before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+
     it "whispers do not mess up the public view" do
       freeze_time_safe
 
-      first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
+      first = PostCreator.new(admin, topic_id: topic.id, raw: "this is the first post").create
 
       freeze_time 1.year.from_now
 
-      user_stat = user.user_stat
+      user_stat = admin.user_stat
 
       whisper =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
-          reply_to_post_number: 1,
+          reply_to_post_number: first.post_number,
           post_type: Post.types[:whisper],
           raw: "this is a whispered reply",
         ).create
@@ -718,7 +720,7 @@ RSpec.describe PostCreator do
 
       whisper_reply =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
           reply_to_post_number: whisper.post_number,
           post_type: Post.types[:regular],
@@ -730,8 +732,8 @@ RSpec.describe PostCreator do
 
       expect(user_stat.reload.post_count).to eq(0)
 
-      user.reload
-      expect(user.last_posted_at).to eq_time(1.year.ago)
+      admin.reload
+      expect(admin.last_posted_at).to eq_time(1.year.ago)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -875,8 +877,8 @@ RSpec.describe PostCreator do
       GroupMessage
         .expects(:create)
         .with do |group_name, msg_type, params|
-          group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) &&
-            params[:user].id == (user.id)
+          group_name == Group[:moderators].name && msg_type == :spam_post_blocked &&
+            params[:user].id == user.id
         end
       creator.create
     end

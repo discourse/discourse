@@ -5,7 +5,7 @@ RSpec.describe Middleware::ProcessingRequest do
 
   describe "#call" do
     it "sets the request queue seconds in the env based on the HTTP-X-REQUEST-START header" do
-      env = create_request_env.merge("HTTP_X_REQUEST_START" => "t=#{(Time.now.to_f - 2)}")
+      env = create_request_env.merge("HTTP_X_REQUEST_START" => "t=#{Time.now.to_f - 2}")
       _status, _headers, _body = app.call(env)
 
       expect(env[described_class::REQUEST_QUEUE_SECONDS_ENV_KEY]).to be_within(0.1).of(2.0)

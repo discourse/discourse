@@ -244,6 +244,8 @@ module Chat
       return false if !can_modify_channel_message?(message.chat_channel)
 
       if message.user_id == current_user.id
+        return false if !can_preview_chat_channel?(message.chat_channel)
+
         case chatable
         when Category
           return message.deleted_by_id == current_user.id || can_moderate_chat?(chatable)

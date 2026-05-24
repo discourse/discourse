@@ -10,6 +10,9 @@ ro:
       default_query: "Implicit"
       or: "sau"
       create: "Creează"
+      ai:
+        generate: "Generare"
+        optional: "opțional"
       import:
         label: "Importă"
       help:
@@ -20,10 +23,8 @@ ro:
         bool:
           yes: "Da"
           no: "Nu"
-      export: "Exportă"
       save: "Salvează modificări"
       undo: "Renunță la modificări"
-      edit: "Editează"
       delete: "Șterge"
       query_groups: "Grupuri"
       report_name: "Raport"

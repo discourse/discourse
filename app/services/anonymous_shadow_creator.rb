@@ -26,6 +26,7 @@ class AnonymousShadowCreator
     return unless user
     return unless SiteSetting.allow_anonymous_mode
     return if !user.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map)
+    return if user.suspended? || !user.active?
     return if SiteSetting.must_approve_users? && !user.approved?
 
     shadow = user.shadow_user

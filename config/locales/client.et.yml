@@ -251,6 +251,8 @@ et:
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Sisse lülitatud"
       start_posting:
         back: "Tagasi"
     about:
@@ -321,6 +323,9 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Kas oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uue teema mustand"
+    embed_mode:
+      signin_flow:
+        cancel: "Loobu"
     topic_count_all:
       one: "Vaata %{count} uut teemat"
       other: "Vaata %{count} uut teemat"
@@ -849,13 +854,8 @@ et:
       notifications: "Teavitused"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Reaalajas teavitused"
         not_supported: "See brauser ei toeta teavitusi. Kahju."
-        perm_default: "Lülita teavitused sisse"
-        perm_denied_btn: "Pole lubatud"
         perm_denied_expl: "Oled teavitused keelanud. Luba teavitused oma brauseri sätetes."
-        disable: "Keela teavitused"
-        enable: "Luba teavitused"
         consent_prompt: "Kas soovid reaalajas teavitusi, kui inimesed su postitustele vastavad?"
       dismiss: "Ignoreeri"
       dismiss_notifications: "Ignoreeri kõiki"
@@ -1655,6 +1655,7 @@ et:
           placeholder: miinimum
         max_views:
           placeholder: maksimum
+    header_panel: "Päis"
     new_item: "uus"
     go_back: "tagasi"
     not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
@@ -2907,6 +2908,26 @@ et:
         security_tab: "Turve"
         report_filter_any: "iga"
         disabled: Välja lülitatud
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategooriad"
+              topics: "Teemasid"
+              posts: "Postitust"
+              share: "Jaga"
+            whos_posting:
+              all_categories: "Kõik foorumid"
+              staff: "Meeskond"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uus"
+                "1": "Tavakasutaja"
+                "2": "Liige"
+                "3": "Püsiliige"
+                "4": "Vedaja"
+        site_traffic:
+          series:
+            anonymous: "Anonüümne"
         period:
           custom: "Individuaalne"
         reports:

@@ -457,6 +457,28 @@ sq:
       xaxis: "Ditë"
     new_contributors:
       xaxis: "Day"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Topics"
+        posts: "Postime"
+        share: "Shpërndaje"
+    posters_by_member_type:
+      labels:
+        count: "Postime"
+        share: "Shpërndaje"
+      types:
+        staff: "Stafi"
+    trust_level_pipeline:
+      labels:
+        count: "Anëtarë"
+        share: "Shpërndaje"
+      levels:
+        "0": "I Ri"
+        "1": "Anëtar i Thjeshtë"
+        "2": "Anëtar"
+        "3": "I zakonshëm"
+        "4": "Udhëheqës"
     trust_level_growth:
       yaxis: "Day"
     consolidated_page_views:
@@ -473,6 +495,8 @@ sq:
     consolidated_page_views_browser_detection:
       yaxis: "Dit"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonim"
       yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
@@ -549,6 +573,12 @@ sq:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Tema"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizita"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizita"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"

@@ -329,6 +329,9 @@ pt_BR:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} definiu automaticamente sua presença e convidou para %{eventName}"
         an_event: "um evento"
+      event_description:
+        show_more: "Exibir mais"
+        show_less: "Exibir menos"
       edit_reason: "Evento atualizado"
       edit_reason_closed: "Evento fechado"
       edit_reason_opened: "Evento aberto"
@@ -397,10 +400,10 @@ pt_BR:
       models:
         invitee:
           no_users: "Nenhum usuário(a) encontrado(a)"
+          leave_event: "Sair do evento"
           status:
             unknown: "Não tenho interesse"
             going: "Eu vou"
-            not_going: "Não vou"
             interested: "Interessado"
             going_count:
               one: "%{count} vai"

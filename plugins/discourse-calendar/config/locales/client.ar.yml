@@ -340,6 +340,9 @@ ar:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{eventName}"
         an_event: "حدث"
+      event_description:
+        show_more: "عرض المزيد"
+        show_less: "عرض أقل"
       edit_reason: "تم تحديث الحدث"
       edit_reason_closed: "تم إغلاق الحدث"
       edit_reason_opened: "تم فتح الحدث"
@@ -412,10 +415,10 @@ ar:
       models:
         invitee:
           no_users: "لم يتم العثور على المستخدمين"
+          leave_event: "مغادرة الحدث"
           status:
             unknown: "غير مهتم"
             going: "ذاهب"
-            not_going: "لست ذاهبًا"
             interested: "مهتم"
             going_count:
               zero: "%{count} ذاهبون"
@@ -538,6 +541,8 @@ ar:
         status:
           label: "الحالة"
         delete_confirmation_message: "هل تريد حذف هذا الحدث؟"
+        image:
+          label: "صورة الحدث"
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"

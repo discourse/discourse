@@ -286,6 +286,8 @@ bg:
     suggested_topics:
       pm_title: "Предложени съобщения"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Да е включен"
       start_posting:
         back: "Назад"
     about:
@@ -369,6 +371,9 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
+    embed_mode:
+      signin_flow:
+        cancel: "Отмени"
     topic_count_all:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
@@ -1051,7 +1056,6 @@ bg:
         normal_option: "Нормален"
         normal_option_title: "Ще бъдете уведомени, ако този потребител ви отговори, цитира ви или ви спомене."
       notification_schedule:
-        title: "График за уведомяване"
         label: "Активирайте персонализиран график за известия"
         tip: "Извън тези часове известията ви ще бъдат спрени на пауза."
         midnight: "Полунощ"
@@ -1092,13 +1096,8 @@ bg:
       notifications: "Известия"
       statistics: "Статистика"
       desktop_notifications:
-        label: "Известявания в реално време"
         not_supported: "Известията не се поддържат от този браузър. Съжаляваме."
-        perm_default: "Включване на Известията"
-        perm_denied_btn: "Разрешението е отказано"
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
-        disable: "Деактивиране на Известията"
-        enable: "Активиране на Известията"
         each_browser_note: "Забележка: Трябва да промените тази настройка във всеки браузър, който използвате. Всички известия ще бъдат деактивирани, ако поставите на пауза известията от потребителското меню, независимо от тази настройка."
         consent_prompt: "Искате ли известявания в реално време, когато хората отговарят на вашите публикации?"
       dismiss: "Отмени"
@@ -2346,6 +2345,7 @@ bg:
           placeholder: минимум
         max_views:
           placeholder: максимум
+    header_panel: "Хедър"
     new_item: "нови"
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
@@ -3597,6 +3597,26 @@ bg:
         security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Теми"
+              posts: "Публикации"
+              share: "Споделяне"
+            whos_posting:
+              all_categories: "Всички категории"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Нов"
+                "1": "Основно "
+                "2": "Член"
+                "3": "Редовен"
+                "4": "лидер "
+        site_traffic:
+          series:
+            anonymous: "Анонимен"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"

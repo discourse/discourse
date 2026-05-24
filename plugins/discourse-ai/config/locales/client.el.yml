@@ -92,6 +92,8 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      bot_chats:
+        tab_label: "Συνομιλίες bot"
       llm_selector:
         none: "Κανένα"
       features:
@@ -105,6 +107,9 @@ el:
           one: "(%{count} περισσότερο)"
           other: "(%{count} περισσότερα)"
         collapse_list: "(δείξε λιγότερα)"
+        nav:
+          enabled: "Ενεργοποιημένα"
+          not_enabled: "Μη ενεργοποιημένα"
         filters:
           all: "Όλα"
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
@@ -303,6 +308,7 @@ el:
         conversations:
           placeholder: "Κάντε μια ερώτηση..."
           messages_sidebar_title: "Συζητήσεις"
+          open_conversation_menu: "Άνοιγμα μενού συζήτησης"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"

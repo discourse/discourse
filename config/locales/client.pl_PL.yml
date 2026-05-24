@@ -538,9 +538,9 @@ pl_PL:
         action: "Wybierz motyw"
         modal_title: "Wybierz motyw"
         use_theme: "Użyj tego motywu"
-        currently_selected: "Aktualnie wybrany"
+        enabled: "Włączona"
         theme_set: "%{theme} jest teraz Twoim domyślnym motywem"
-        browse_all: "Przeglądaj wszystkie motywy"
+        browse_all: "Zarządzaj motywami"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
       invite_collaborators:
@@ -796,6 +796,16 @@ pl_PL:
       replying_to: "W odpowiedzi do %{username}"
       editing_post: "Edycja wpisu"
       reply_placeholder: "Napisz odpowiedź..."
+      signin_flow:
+        share_session_title: "Zaloguj się do %{site_name}"
+        share_session_message: "Aby kontynuować, %{site_name} potrzebuje pozwolenia na korzystanie z Twojej obecnej sesji na tej stronie. Kliknij poniżej, aby zezwolić na dostęp."
+        signin_required_title: "Zaloguj się do %{site_name}"
+        signin_required_message: "Nie znaleźliśmy istniejącej sesji %{site_name} . Otwórz nową kartę, aby się zalogować lub zarejestrować, a następnie wróć tutaj, aby kontynuować."
+        open_signin_tab: "Otwórz kartę logowania"
+        waiting_title: "Oczekiwanie na zalogowanie"
+        waiting_message: "Dokończ logowanie w nowej karcie. Ta strona zaktualizuje się automatycznie, gdy skończysz."
+        cancel: "Anuluj"
+        sign_in_to_reply: "Zaloguj się, aby odpowiedzieć"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -1689,6 +1699,7 @@ pl_PL:
           in_specific_groups: "Użytkownik należy do określonych grup wymaganych do tej zmiany"
           enabled_for_everyone: "Ta zmiana jest dostępna dla wszystkich członków"
           enabled_for_no_one: "Ta zmiana jest wyłączona dla wszystkich członków"
+        enable_available_notifications: "Powiadom mnie, gdy nadchodząca zmiana będzie dostępna do podglądu"
       user_notifications:
         filters:
           filter_by: "Filtruj według"
@@ -1755,10 +1766,10 @@ pl_PL:
       notifications: "Powiadomienia"
       statistics: "Statystyki"
       desktop_notifications:
-        label: "Natychmiastowe powiadomienia"
+        label: "Powiadomienia na żywo"
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
         perm_default: "Włącz powiadomienia"
-        perm_denied_btn: "Brak uprawnień"
+        perm_denied_btn: "Odmowa uprawnienia"
         perm_denied_expl: "Odmówiłeś/łaś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
@@ -2491,7 +2502,9 @@ pl_PL:
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           description: "Opis"
+          description_help: "Uwaga, która pomoże Ci zidentyfikować to zaproszenie."
           restrict: "Ogranicz do"
+          restrict_help: "Wprowadź adres e-mail lub domenę e-mail, aby ograniczyć liczbę osób, które mogą zaakceptować to zaproszenie."
           restrict_email: "Ogranicz do e-maila"
           restrict_domain: "Ogranicz do domeny"
           email_or_domain_placeholder: "nazwa@example.com lub example.com"
@@ -2501,6 +2514,7 @@ pl_PL:
           expires_at: "Wygasa o"
           expires_after: "Wygasa po"
           custom_message: "Wiadomość niestandardowa"
+          custom_message_help: "Zawarte w e-mailu z zaproszeniem."
           custom_message_placeholder: "Dodaj prywatną notatkę do swojego zaproszenia"
           send_invite_email: "Zapisz i wyślij e-mail"
           send_invite_email_instructions: "Ogranicz zaproszenie do emaila, aby wysłać email z zaproszeniem"
@@ -3779,6 +3793,7 @@ pl_PL:
           placeholder: maksimum
           aria_label: filtrować według maksymalnych wyświetleń
     hamburger_menu: "Menu nawigacyjne"
+    header_panel: "Nagłówek"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -4860,6 +4875,7 @@ pl_PL:
         about: "ten wpis jest częścią wiki"
       few_likes_left: "Dziękuję za polubienie! Pozostało Ci tylko parę polubień do wykorzystania dzisiaj"
       controls:
+        menu_label: "Czynności wpisów"
         reply: "zacznij tworzyć odpowiedź na ten wpis"
         like_action: "Polub"
         like: "polub ten wpis"
@@ -6460,6 +6476,8 @@ pl_PL:
         group_moderation_and_security: "Moderacja i bezpieczeństwo"
         group_other: "Inne"
         legacy_warning: "To jest starszy raport. Wkrótce zostanie wycofany. Jeśli potrzebujesz pomocy w znalezieniu zamiennika, skontaktuj się z pomocą techniczną."
+        chart:
+          total: "Razem: %{count}"
       config_sections:
         account:
           title: "Konto"
@@ -7069,6 +7087,75 @@ pl_PL:
             title: "Ruch w witrynie"
           engagement:
             title: "Zaangażowanie"
+            fetch_error: "Nie udało się załadować zaangażowania. Spróbuj odświeżyć stronę."
+            activity_by_category:
+              title: "Aktywność według kategorii"
+              description: "Tematy, wpisy i uczestnictwo członków w poszczególnych kategoriach."
+              category: "Kategoria"
+              topics: "Tematy"
+              posts: "Wpisy"
+              page_views: "Wyświetlenia strony"
+              share: "Udział"
+              vs_prior: "Kontra wcześniej"
+              empty: "Brak aktywności w wybranym okresie."
+            whos_posting:
+              title: "Kto publikuje?"
+              all_categories: "Wszystkie kategorie"
+              include_subcategories: "Uwzględnij podkategorie"
+              new_members: "Nowi członkowie"
+              returning: "Powracający"
+              staff: "Zespół"
+              empty: "Brak wpisów w wybranym okresie."
+            trust_level_pipeline:
+              title: "Potok poziomu zaufania"
+              trust_levels:
+                "0": "Nowy"
+                "1": "Podstawowy"
+                "2": "Uczestnik"
+                "3": "Normalny"
+                "4": "Weteran"
+              trend:
+                climbing:
+                  one: "+%{count} wzrasta"
+                  few: "+%{count} wzrasta"
+                  many: "+%{count} wzrasta"
+                  other: "+%{count} wzrasta"
+                dropping:
+                  one: "-%{count} spada"
+                  few: "-%{count} spada"
+                  many: "-%{count} spada"
+                  other: "-%{count} spada"
+                stable: "stabilna"
+              moves_in_aria:
+                one: "%{count} członek przesunął się w górę"
+                few: "%{count} członków przesunęło się w górę"
+                many: "%{count} członków przesunęło się w górę"
+                other: "%{count} członków przesunęło się w górę"
+              moves_out_aria:
+                one: "%{count} członek przesunął się w dół"
+                few: "%{count} członków przesunęło się w dół"
+                many: "%{count} członków przesunęło się w dół"
+                other: "%{count} członków przesunęło się w dół"
+              stable_aria: "brak ruchu"
+            headline:
+              healthy_growth:
+                title: "Członkowie wyrabiają sobie nawyk powracania."
+                summary: "W tym okresie wzrosła lojalność, codzienne zaangażowanie i liczba nowych rejestracji."
+              declining:
+                title: "Członkowie powracają coraz rzadziej."
+                summary: "W tym okresie spadła lojalność, codzienne zaangażowanie i liczba nowych rejestracji."
+              engaged_but_shrinking:
+                title: "Członkowie są zaangażowani, ale społeczność się kurczy."
+                summary: "Przyczepność utrzymuje się na dobrym poziomie, ale dzienne zaangażowanie i liczba nowych rejestracji spadły."
+              growing_but_distracted:
+                title: "Nowi członkowie zapisują się, ale nie zostają na dłużej."
+                summary: "Liczba zapisów wzrosła, ale zainteresowanie spadło w tym okresie."
+              mixed:
+                title: "Trendy zaangażowania są w tym okresie zróżnicowane."
+                summary: "Niektóre wskaźniki rosną, a inne spadają — otwórz kafelki poniżej, aby zobaczyć szczegóły."
+              no_signal:
+                title: "Za mało aktywności, aby podsumować zaangażowanie."
+                summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."
@@ -7091,11 +7178,66 @@ pl_PL:
             new_contributors:
               label: "Nowi współtwórcy"
               tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis w tym okresie."
+            daily_engaged_users:
+              label: "Codziennie zaangażowani"
+              tooltip: "Liczba członków, którzy polubili lub zamieścili wpisy w społeczności w ciągu ostatniego dnia."
           comparison:
             last_7_days: "w porównaniu z ostatnimi 7 dniami"
             last_30_days: "w porównaniu z ostatnimi 30 dniami"
             last_3_months: "w porównaniu z ostatnimi 3 miesiącami"
             previous_period: "w porównaniu z poprzednim okresem"
+        site_traffic:
+          fetch_error: "Nie udało się załadować ruchu na stronie. Spróbuj odświeżyć stronę."
+          headline:
+            last_7_days:
+              one: "%{formatted_count} odsłona w ciągu ostatnich 7 dni"
+              few: "%{formatted_count} odsłony w ciągu ostatnich 7 dni"
+              many: "%{formatted_count} odsłon w ciągu ostatnich 7 dni"
+              other: "%{formatted_count} odsłon w ciągu ostatnich 7 dni"
+            last_30_days:
+              one: "%{formatted_count} odsłona w ciągu ostatnich 30 dni"
+              few: "%{formatted_count} odsłony w ciągu ostatnich 30 dni"
+              many: "%{formatted_count} odsłon w ciągu ostatnich 30 dni"
+              other: "%{formatted_count} odsłon w ciągu ostatnich 30 dni"
+            last_3_months:
+              one: "%{formatted_count} odsłona w ciągu ostatnich 3 miesięcy"
+              few: "%{formatted_count} odsłony w ciągu ostatnich 3 miesięcy"
+              many: "%{formatted_count} odsłon w ciągu ostatnich 3 miesięcy"
+              other: "%{formatted_count} odsłon w ciągu ostatnich 3 miesięcy"
+            selected_period:
+              one: "%{formatted_count} odsłona w wybranym okresie"
+              few: "%{formatted_count} odsłony w wybranym okresie"
+              many: "%{formatted_count} odsłon w wybranym okresie"
+              other: "%{formatted_count} odsłon w wybranym okresie"
+          trend:
+            up: "w górę %{percent}"
+            down: "w dół %{percent}"
+          comparison_tooltip:
+            previous_7_days: "W porównaniu z poprzednimi 7 dniami (%{start} – %{end})"
+            previous_30_days: "W porównaniu z poprzednimi 30 dniami (%{start} – %{end})"
+            previous_3_months: "W porównaniu z poprzednimi 3 miesiącami (%{start} – %{end})"
+            previous_days:
+              one: "W porównaniu z poprzednim dniem (%{start} – %{end})"
+              few: "W porównaniu z poprzednimi %{count} dniami (%{start} – %{end})"
+              many: "W porównaniu z poprzednimi %{count} dniami (%{start} – %{end})"
+              other: "W porównaniu z poprzednimi %{count} dniami (%{start} – %{end})"
+          kpi:
+            logged_in_share:
+              label: "Udział zalogowanych"
+              tooltip: "Udział wyświetleń stron pochodzących od zalogowanych członków."
+          top_countries:
+            title: "Najpopularniejsze kraje"
+            empty: "Brak danych krajowych dla tego okresu."
+            error: "Nie udało się załadować najpopularniejszych krajów. Spróbuj odświeżyć stronę."
+          top_referrers:
+            title: "Najpopularniejsi polecający"
+            empty: "Brak danych o polecających w tym okresie."
+            error: "Nie udało się załadować najpopularniejszych polecających. Spróbuj odświeżyć stronę."
+          series:
+            logged_in: "Zalogowani"
+            anonymous: "Anonimowi"
+            embedded: "Osadzone wyświetlenia stron"
+            crawlers: "Boty indeksujące"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"
@@ -8948,6 +9090,7 @@ pl_PL:
         post_edits_count: "Edycje wpisu"
         upcoming_changes:
           title: "Nadchodzące zmiany użytkownika"
+          view_modal: "Wyświetl włączone zmiany"
           description: "Aby zmodyfikować grupy lub włączyć bądź wyłączyć nadchodzące zmiany, odwiedź stronę konfiguracji nadchodzących zmian <a href='%{basePath}/admin/config/upcoming-changes'></a>."
           filter_placeholder: "Filtruj nadchodzące zmiany według nazwy lub opisu"
           filter_no_results: "Nie znaleziono żadnych nadchodzących zmian"

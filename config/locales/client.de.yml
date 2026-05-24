@@ -452,6 +452,8 @@ de:
     admin_onboarding_banner:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
+      select_theme:
+        enabled: "Aktiviert"
       invite_collaborators:
         title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
@@ -669,6 +671,8 @@ de:
       replying_to: "Antworten auf %{username}"
       editing_post: "Beitrag wird bearbeitet "
       reply_placeholder: "Schreibe deine Antwort …"
+      signin_flow:
+        cancel: "Abbrechen"
     topic_count_all:
       one: "Zeige %{count} neues Thema"
       other: "Zeige %{count} neue Themen"
@@ -1514,7 +1518,6 @@ de:
         normal_option: "Normal"
         normal_option_title: "Du wirst benachrichtigt, wenn diese Person dir antwortet, dich zitiert oder erwähnt."
       notification_schedule:
-        title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
         tip: "Außerhalb dieser Zeiten werden deine Benachrichtigungen pausiert."
         midnight: "Mitternacht"
@@ -1558,13 +1561,8 @@ de:
       notifications: "Benachrichtigungen"
       statistics: "Statistiken"
       desktop_notifications:
-        label: "Live-Benachrichtigungen"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
-        perm_default: "Benachrichtigungen einschalten"
-        perm_denied_btn: "Berechtigung verweigert"
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
-        disable: "Benachrichtigungen deaktivieren"
-        enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser, den du verwendest, ändern. Alle Benachrichtigungen werden unabhängig von dieser Einstellung deaktiviert, wenn du die Benachrichtigungen im Benutzermenü pausierst."
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
@@ -3404,6 +3402,7 @@ de:
           placeholder: Maximum
           aria_label: nach maximaler Anzahl von Aufrufen filtern
     hamburger_menu: "Navigationsmenü"
+    header_panel: "Überschrift"
     new_item: "neu"
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
@@ -6328,8 +6327,29 @@ de:
             title: "Website-Traffic"
           engagement:
             title: "Aktivität & Wachstum"
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Themen"
+              posts: "Beiträge"
+              share: "Teilen"
+            whos_posting:
+              all_categories: "Alle Kategorien"
+              staff: "Team"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Neue"
+                "1": "Anwärter"
+                "2": "Mitglied"
+                "3": "Regulär"
+                "4": "Anführer"
+              trend:
+                stable: "stabil"
         configure:
           button: "Konfigurieren"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Crawler"
         period:
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"

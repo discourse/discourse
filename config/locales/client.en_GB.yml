@@ -79,6 +79,7 @@ en_GB:
       advanced:
         in_category:
           label: Categorised
+    header_panel: "Header"
     topic:
       automatically_add_to_groups: "This invitation also includes access to these groups:"
     post:

@@ -559,6 +559,9 @@ be:
           few: "+ яшчэ %{count} чарнавікі"
           many: "+ яшчэ %{count} чарнавікоў"
           other: "+ яшчэ %{count} чарнавікоў"
+    embed_mode:
+      signin_flow:
+        cancel: "Скасаваць"
     topic_count_all:
       one: "Паглядзець %{count} новую тэму"
       few: "Паглядзець %{count} новыя тэмы"
@@ -940,11 +943,6 @@ be:
       trust_level: "Узровень даверу"
       notifications: "Апавяшчэнні"
       statistics: "Статыстыка"
-      desktop_notifications:
-        perm_default: "Уключыць апавяшчэнні"
-        perm_denied_btn: "Няма доступу"
-        disable: "Адключыць апавяшчэнні"
-        enable: "Уключыць апавяшчэнні"
       dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "Скінуць"
@@ -1419,6 +1417,7 @@ be:
             after: пасля
         views:
           label: Прагляды
+    header_panel: "Header"
     new_item: "новы"
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай актыўнасці і наладамі"
@@ -2181,6 +2180,26 @@ be:
         sections:
           reports:
             title: "Справаздачы"
+          engagement:
+            activity_by_category:
+              category: "Катэгорыя"
+              topics: "тэмы"
+              posts: "Допісы"
+              share: "Абагуліць"
+            whos_posting:
+              all_categories: "Усе катэгорыі"
+              staff: "Персанал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новы"
+                "1": "асноўнай"
+                "2": "Член"
+                "3": "рэгулярнае"
+                "4": "лідэр"
+        site_traffic:
+          series:
+            anonymous: "ананімны"
+            crawlers: "Краўлеры пошукавых сістэм"
         reports:
           today: "сёння"
           yesterday: "учора"

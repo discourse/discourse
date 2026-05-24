@@ -155,6 +155,8 @@
 
     .topic-meta-data {
       padding: 0;
+      margin-left: 0;
+      font-size: var(--font-down-1);
     }
   }
 
@@ -787,6 +789,9 @@
     border: 1px solid var(--tertiary-low);
     border-radius: var(--d-border-radius);
     font-size: var(--font-down-1);
+    position: sticky;
+    top: var(--header-offset, 0);
+    z-index: 9;
   }
 
   &__banner-icon {

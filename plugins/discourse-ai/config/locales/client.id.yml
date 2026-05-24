@@ -94,6 +94,8 @@ id:
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"
+        nav:
+          enabled: "Diaktifkan"
         filters:
           all: "Semua"
           reset: "Reset"

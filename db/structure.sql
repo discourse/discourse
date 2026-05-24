@@ -262,6 +262,39 @@ ALTER SEQUENCE public.ad_plugin_impressions_id_seq OWNED BY public.ad_plugin_imp
 
 
 --
+-- Name: admin_dashboard_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_dashboard_reports (
+    id bigint NOT NULL,
+    "position" integer NOT NULL,
+    source character varying NOT NULL,
+    identifier character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_dashboard_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_dashboard_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_dashboard_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_dashboard_reports_id_seq OWNED BY public.admin_dashboard_reports.id;
+
+
+--
 -- Name: admin_notices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1747,7 +1780,7 @@ CREATE TABLE public.badges (
 
 CREATE SEQUENCE public.badges_id_seq
     AS integer
-    START WITH 100
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1801,6 +1834,41 @@ ALTER SEQUENCE public.bookmarks_id_seq OWNED BY public.bookmarks.id;
 
 
 --
+-- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_event_scores (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    automation_ua_score smallint DEFAULT 0 NOT NULL,
+    known_asn_score smallint DEFAULT 0 NOT NULL,
+    velocity_score smallint DEFAULT 0 NOT NULL,
+    churn_score smallint DEFAULT 0 NOT NULL,
+    rapid_nav_score smallint DEFAULT 0 NOT NULL,
+    referrer_score smallint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_event_scores_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_event_scores_id_seq OWNED BY public.browser_pageview_event_scores.id;
+
+
+--
 -- Name: browser_pageview_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1816,7 +1884,8 @@ CREATE TABLE public.browser_pageview_events (
     country_code character varying(2),
     created_at timestamp without time zone NOT NULL,
     asn integer,
-    score integer
+    score integer,
+    normalized_referrer character varying(2000)
 );
 
 
@@ -3788,7 +3857,8 @@ CREATE TABLE public.discourse_post_event_invitees (
     status integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    notified boolean DEFAULT false NOT NULL
+    notified boolean DEFAULT false NOT NULL,
+    recurring boolean DEFAULT false NOT NULL
 );
 
 
@@ -4540,7 +4610,7 @@ CREATE TABLE public.flags (
 --
 
 CREATE SEQUENCE public.flags_id_seq
-    START WITH 1
+    START WITH 1001
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -5171,7 +5241,7 @@ CREATE TABLE public.groups (
 
 CREATE SEQUENCE public.groups_id_seq
     AS integer
-    START WITH 100
+    START WITH 40
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -10592,7 +10662,8 @@ CREATE TABLE public.user_options (
     discourse_rewind_dismissed_at timestamp(6) without time zone,
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
-    show_original_content boolean DEFAULT false NOT NULL
+    show_original_content boolean DEFAULT false NOT NULL,
+    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL
 );
 
 
@@ -11298,6 +11369,13 @@ ALTER TABLE ONLY public.ad_plugin_impressions ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: admin_dashboard_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_dashboard_reports_id_seq'::regclass);
+
+
+--
 -- Name: admin_notices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -11512,6 +11590,13 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 --
 
 ALTER TABLE ONLY public.bookmarks ALTER COLUMN id SET DEFAULT nextval('public.bookmarks_id_seq'::regclass);
+
+
+--
+-- Name: browser_pageview_event_scores id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_event_scores_id_seq'::regclass);
 
 
 --
@@ -13323,6 +13408,14 @@ ALTER TABLE ONLY public.ad_plugin_impressions
 
 
 --
+-- Name: admin_dashboard_reports admin_dashboard_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_reports
+    ADD CONSTRAINT admin_dashboard_reports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: admin_notices admin_notices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13576,6 +13669,14 @@ ALTER TABLE ONLY public.badges
 
 ALTER TABLE ONLY public.bookmarks
     ADD CONSTRAINT bookmarks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores
+    ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
 
 
 --
@@ -15789,6 +15890,20 @@ CREATE UNIQUE INDEX idx_bookmarks_user_polymorphic_unique ON public.bookmarks US
 
 
 --
+-- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events USING btree (created_at, country_code);
+
+
+--
+-- Name: idx_bpe_created_at_normalized_referrer; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_events USING btree (created_at, normalized_referrer);
+
+
+--
 -- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -16286,6 +16401,20 @@ CREATE INDEX index_ad_plugin_impressions_on_user_id ON public.ad_plugin_impressi
 
 
 --
+-- Name: index_admin_dashboard_reports_on_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admin_dashboard_reports_on_position ON public.admin_dashboard_reports USING btree ("position");
+
+
+--
+-- Name: index_admin_dashboard_reports_on_source_and_identifier; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_dashboard_reports_on_source_and_identifier ON public.admin_dashboard_reports USING btree (source, identifier);
+
+
+--
 -- Name: index_admin_notices_on_identifier; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -16696,6 +16825,13 @@ CREATE INDEX index_bookmarks_on_reminder_set_at ON public.bookmarks USING btree 
 --
 
 CREATE INDEX index_bookmarks_on_user_id ON public.bookmarks USING btree (user_id);
+
+
+--
+-- Name: index_browser_pageview_event_scores_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_browser_pageview_event_scores_on_event_id ON public.browser_pageview_event_scores USING btree (event_id);
 
 
 --
@@ -20802,11 +20938,19 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260522043337'),
+('20260520090937'),
+('20260518104900'),
+('20260518054805'),
+('20260514055648'),
+('20260514043815'),
 ('20260513105516'),
 ('20260513101242'),
 ('20260513055222'),
 ('20260513024004'),
 ('20260512061336'),
+('20260511145109'),
+('20260511080033'),
 ('20260511044542'),
 ('20260510232238'),
 ('20260507083943'),

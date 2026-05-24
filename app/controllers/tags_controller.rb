@@ -163,6 +163,7 @@ class TagsController < ::ApplicationController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       fetch_tag(raise_not_found: false)
+      raise Discourse::NotFound if params[:tag_id].present? && @tag.blank?
 
       if @tag
         if @tag.target_tag_id.present? && @tag.target_tag_id != @tag.id
@@ -218,7 +219,7 @@ class TagsController < ::ApplicationController
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_slug, :tag_id)
       canonical_method = url_method(canonical_params)
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *canonical_params.values.map { |t| t.force_encoding("UTF-8") })}"
 
       if @list.topics.size == 0 && @tag_name != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -320,30 +321,28 @@ class TagsController < ::ApplicationController
     file = params[:file] || params[:files].first
 
     hijack do
-      begin
-        Tag.transaction do
-          CSV.foreach(file.tempfile) do |row|
-            if row.length > 2
-              raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
-            end
+      Tag.transaction do
+        CSV.foreach(file.tempfile) do |row|
+          if row.length > 2
+            raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
+          end
 
-            tag_name = DiscourseTagging.clean_tag(row[0])
-            tag_group_name = row[1] || nil
+          tag_name = DiscourseTagging.clean_tag(row[0])
+          tag_group_name = row[1] || nil
 
-            tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
+          tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
 
-            if tag_group_name
-              tag_group =
-                TagGroup.find_by_name_insensitive(tag_group_name) ||
-                  TagGroup.create!(name: tag_group_name)
-              tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
-            end
+          if tag_group_name
+            tag_group =
+              TagGroup.find_by_name_insensitive(tag_group_name) ||
+                TagGroup.create!(name: tag_group_name)
+            tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
           end
         end
-        render json: success_json
-      rescue Discourse::InvalidParameters => e
-        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
       end
+      render json: success_json
+    rescue Discourse::InvalidParameters => e
+      render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
     end
   end
 
@@ -562,7 +561,11 @@ class TagsController < ::ApplicationController
 
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
-    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name, :slug)
+    target_tags =
+      Tag
+        .visible(guardian)
+        .where(id: tags.filter_map(&:target_tag_id).uniq)
+        .select(:id, :name, :slug)
 
     tags
       .map do |t|

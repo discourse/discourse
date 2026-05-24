@@ -270,6 +270,8 @@ bs_BA:
     suggested_topics:
       pm_title: "Preporučene Poruke"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Omogućen"
       start_posting:
         back: "Prethodno"
     about:
@@ -334,6 +336,9 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
+    embed_mode:
+      signin_flow:
+        cancel: "Odustani"
     topic_count_all:
       one: "Pogledaj %{count} novu temu"
       few: "Pogledaj %{count} nove teme"
@@ -947,13 +952,8 @@ bs_BA:
       notifications: "Obavijest"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Uživo obavjesti"
         not_supported: "Obavjesti nisu podržane na ovom web pregledniku."
-        perm_default: "Upali obavjesti"
-        perm_denied_btn: "Zabranjen pristup"
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
-        disable: "Isključi obavjesti"
-        enable: "Uključi obavijesti"
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"
@@ -1938,6 +1938,7 @@ bs_BA:
             after: poslije
         views:
           label: Pogledano
+    header_panel: "Header"
     new_item: "novo"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -3345,6 +3346,25 @@ bs_BA:
         sections:
           reports:
             title: "Izvještaji"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Topics"
+              posts: "Objave"
+              share: "Dijeli"
+            whos_posting:
+              all_categories: "Sve kategorije"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovni"
+                "2": "Član"
+                "3": "Normalno"
+                "4": "Vođa"
+        site_traffic:
+          series:
+            anonymous: "Anoniman"
         period:
           custom: "Custom"
         reports:

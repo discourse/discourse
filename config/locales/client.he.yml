@@ -485,6 +485,8 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "פעיל"
       start_posting:
         back: "חזרה"
     about:
@@ -697,6 +699,9 @@ he:
           two: "+שתי טיוטות נוספות"
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
+    embed_mode:
+      signin_flow:
+        cancel: "ביטול"
     topic_count_all:
       one: "הצגת נושא חדש"
       two: "הצגת שני נושאים חדשים"
@@ -1575,7 +1580,6 @@ he:
         normal_option: "רגיל"
         normal_option_title: "תגיע אליך התראה אם המשתמש הזה יגיב לך, יצטט אותך או יאזכר אותך."
       notification_schedule:
-        title: "תזמון התראות"
         label: "הפעלת תזמון התראות מותאם אישית"
         tip: "מחוץ לשעות אלו ההתראות שלך יושהו."
         midnight: "חצות"
@@ -1619,13 +1623,8 @@ he:
       notifications: "התראות"
       statistics: "סטטיסטיקות"
       desktop_notifications:
-        label: "התראות חיות"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
-        perm_default: "הפעלת התראות"
-        perm_denied_btn: "הרשאות נדחו"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
-        disable: "השבתת התראות"
-        enable: "הפעלת התראות"
         each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "התעלמות"
@@ -3544,6 +3543,7 @@ he:
           placeholder: מרבי
           aria_label: סינון לפי כמות הצפיות המרבית
     hamburger_menu: "תפריט ניווט"
+    header_panel: "כותרת"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"
@@ -6443,6 +6443,24 @@ he:
             title: "דוחות"
           traffic:
             title: "תעבורת האתר"
+          engagement:
+            activity_by_category:
+              category: "קטגוריה"
+              topics: "נושאים"
+              posts: "פרסומים"
+              share: "שיתוף"
+            whos_posting:
+              all_categories: "כל הקטגוריות"
+              staff: "סגל"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "חדשות"
+                "1": "בסיסיים"
+                "2": "חברים"
+                "3": "רגילה"
+                "4": "מובילים"
+              trend:
+                stable: "יציב"
         configure:
           button: "הגדרה"
           tooltip: "הגדרת איך לוח המחוונים הזה מופיע לכל מבקרי האתר הזה."
@@ -6452,6 +6470,10 @@ he:
           drag_handle: "אפשר לגרור כדי לסדר את %{label} מחדש"
           toggle_visibility: "הצגת %{label} בלוח המחוונים"
           empty_state_admin: "אין סעיפים להצגה. יש לפתוח את ההגדרות כדי להפעיל אחד כזה."
+        site_traffic:
+          series:
+            anonymous: "אלמוני"
+            crawlers: "סורקי אינטרנט"
         period:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"

@@ -451,6 +451,8 @@ pt_BR:
     admin_onboarding_banner:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
+      select_theme:
+        enabled: "Ativados"
       invite_collaborators:
         title: "Convidar colaboradores"
         description: "Os primeiros membros ajudam a dar vida à sua comunidade."
@@ -659,6 +661,8 @@ pt_BR:
       continue_as_guest: "Continuar como convidado"
       be_first_to_reply: "Seja o primeiro a responder!"
       editing_post: "Editando postagem"
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
@@ -1504,7 +1508,6 @@ pt_BR:
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
       notification_schedule:
-        title: "Agendamento de notificações"
         label: "Ativar agendamento de notificações personalizada"
         tip: "Fora desse horário, suas notificações serão pausadas."
         midnight: "Meia-noite"
@@ -1548,13 +1551,8 @@ pt_BR:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificações ao vivo"
         not_supported: "Notificações não compatíveis com este navegador. Desculpe."
-        perm_default: "Ativar notificações"
-        perm_denied_btn: "Permissão negada"
         perm_denied_expl: "Você negou permissão para notificações. Permita as notificações nas configurações do seu navegador."
-        disable: "Desativar notificações"
-        enable: "Ativar notificações"
         each_browser_note: "Observação: é preciso alterar esta configuração em todos os navegadores que você usar. Todas as notificações serão desativadas se você pausar as notificações no menu do usuário, independentemente desta configuração."
         consent_prompt: "Você quer notificações em tempo real quando as pessoas responderem às suas postagens?"
       dismiss: "Descartar"
@@ -3357,6 +3355,7 @@ pt_BR:
           placeholder: máximo
           aria_label: filtrar por visualizações máximas
     hamburger_menu: "Menu de navegação"
+    header_panel: "Cabeçalho"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
@@ -6144,8 +6143,29 @@ pt_BR:
             title: "Tráfego do site"
           engagement:
             title: "Engajamento"
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Postagens"
+              share: "Compartilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Equipe"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nova"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Regular"
+                "4": "Líder"
+              trend:
+                stable: "estável"
         configure:
           button: "Configurar"
+        site_traffic:
+          series:
+            anonymous: "Anônimo(a)"
+            crawlers: "Rastreadores"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"

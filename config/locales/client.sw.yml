@@ -211,6 +211,8 @@ sw:
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Imeruhusiwa"
       start_posting:
         back: "Iliyopita"
     about:
@@ -250,6 +252,9 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    embed_mode:
+      signin_flow:
+        cancel: "Batili"
     topic_count_all:
       one: "Angalia Topiki %{count} Mpya"
       other: "Angalia Topiki %{count} Mpya"
@@ -666,13 +671,8 @@ sw:
       notifications: "Taarifa"
       statistics: "Takwimu"
       desktop_notifications:
-        label: "Taarifa Mbashara"
         not_supported: "Taarifa hazionyeshwi kwenye kivinjari hiki. Samahani."
-        perm_default: "Ruhusu Taarifa"
-        perm_denied_btn: "Kibali Kimekataliwa"
         perm_denied_expl: "Umekataza kibali cha taarifa. Ruhusu taarifa kupitia mipangilio ya kivinjari."
-        disable: "Sitisha Taarifa"
-        enable: "Ruhusu Taarifa"
         consent_prompt: "Je, unataka taarifa mubashara watu wakijibu kwenye posti zako?"
       dismiss: "Ondosha"
       dismiss_notifications: "Puuzia Zote"
@@ -1466,6 +1466,7 @@ sw:
             after: baada
         views:
           label: Imeonwa
+    header_panel: "Kichwa"
     new_item: "mpya"
     go_back: "rudi nyuma"
     not_logged_in_user: "karatasi ya kwanza yenye muhtasari wa shughuli na mapendekezo ya sasa"
@@ -2564,6 +2565,26 @@ sw:
         security_tab: "Ulinzi"
         report_filter_any: "yoyote"
         disabled: Imezuiwa
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kikundi"
+              topics: "Mada"
+              posts: "Machapisho"
+              share: "Shirikisha"
+            whos_posting:
+              all_categories: "Kategoria Zote"
+              staff: "Wasaidizi"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Mpya"
+                "1": "Kawaida"
+                "2": "Mwanachama"
+                "3": "Kawaida"
+                "4": "Kiongozi"
+        site_traffic:
+          series:
+            anonymous: "Asiyejulikana"
         period:
           custom: "Binafsi"
         reports:

@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import { i18n } from "discourse-i18n";
 
 @classNames("tag-row")
 export default class TagRow extends SelectKitRowComponent {
@@ -20,6 +21,10 @@ export default class TagRow extends SelectKitRowComponent {
       }}
       {{#if this.rowDisabled}}
         <span class="disabled-reason">{{this.title}}</span>
+      {{else if this.item.target_tag}}
+        <span class="synonym-hint">
+          {{i18n "tagging.synonym_hint" tag_name=this.item.target_tag.name}}
+        </span>
       {{/if}}
     {{else}}
       <span class="name">{{this.rowName}}</span>

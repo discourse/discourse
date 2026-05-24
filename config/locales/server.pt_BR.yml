@@ -377,7 +377,6 @@ pt_BR:
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
     not_found_template_link: |
       <p>Este convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
-    existing_user_cannot_redeem: "Este convite não poderá ser resgatado. Peça outro convite a quem enviou."
     existing_user_already_redemeed: "Você já resgatou este link de convite."
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, visto que já têm uma conta!"
     invite_exists: "Você já convidou <b>%{email}</b>"
@@ -1250,6 +1249,30 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Quantidade de novos(as) colaboradores(as)"
       description: "Quantidade de usuários(as) que fizeram sua primeira postagem durante este período."
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Tópicos"
+        posts: "Postagens"
+        share: "Compartilhar"
+    posters_by_member_type:
+      labels:
+        count: "Postagens"
+        share: "Compartilhar"
+      types:
+        staff: "Equipe"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Nível de confiança"
+        count: "Membros"
+        share: "Compartilhar"
+      levels:
+        "0": "Nova"
+        "1": "Básico"
+        "2": "Membro"
+        "3": "Regular"
+        "4": "Líder"
     trust_level_growth:
       title: "Crescimento de nível de confiança"
       xaxis:
@@ -1295,9 +1318,8 @@ pt_BR:
     site_traffic:
       title: "Tráfego do site"
       xaxis:
-        page_view_anon_browser: "Visualizações de página (anônimas)"
-        page_view_logged_in_browser: "Visualizações de página (conectadas)"
-        page_view_crawler: "Rastreadores conhecidos"
+        page_view_anon_browser: "Anônimo(a)"
+        page_view_crawler: "Rastreadores"
         page_view_other: "Outras formas de tráfego"
       yaxis: "Dia"
       description: "Visualizações de página para usuários(as) que entraram com a conta, rastreadores conhecidos e outras formas de tráfego."
@@ -1412,6 +1434,12 @@ pt_BR:
         num_clicks: "Cliques"
         num_topics: "Tópicos"
       description: "Usuários(as) listados(as) pela quantidade de cliques nos links que eles compartilharam."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Acessos"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Acessos"
     top_traffic_sources:
       title: "Melhores fontes de tráfego"
       xaxis: "Domínio"
@@ -1803,7 +1831,6 @@ pt_BR:
     moderators_manage_groups: "Permitir que moderadores criem e gerenciem grupos."
     moderators_change_post_ownership: "Permitirem que moderadores(as) alterem a propriedade da postagem"
     cors_origins: "Origens permitidas para pedidos de origem cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como verdadeira para ativar CORS."
-    use_admin_ip_allowlist: "Administradores(as) só podem entrar com a conta se estiverem na lista de IPs filtrados (Administração > Registros > IPs filtrados)."
     blocked_ip_blocks: "Uma lista de blocos de IP privados que nunca devem ser rastreados pelo Discourse"
     allowed_internal_hosts: "Uma lista de hosts internos que podem ser rastreados com segurança pelo Discourse para uma caixa e outros fins"
     allowed_onebox_iframes: "Uma lista de domínios do iframe src permitidos via incorporações do Onebox. \"*\" permitirão todos os mecanismos padrão do Onebox."
@@ -1937,7 +1964,6 @@ pt_BR:
     s3_use_acls: "A AWS não recomenda usar ACLs em buckets S3. Só desmarque esta opção se você pretender configurar as políticas de permissão no \"s3_upload_bucket\" e \"s3_backup_bucket\" configurados."
     backup_time_of_day: "Hora do dia, em UTC, em que o backup deve ocorrer."
     backup_with_uploads: "Inclua envios nos backups programados. Desative para copiar apenas a base de dados."
-    backup_location: "O local para armazenar cópias de segurança. IMPORTANTE: S3 requer credenciais válidas S3 inseridas nas configurações de Arquivos. Ao alterar de Local para S3, é preciso executar a tarefa rake \"s3:ensure_cors_rules\"."
     backup_gzip_compression_level_for_uploads: "Nível de compactação Gzip usado para compactar envios."
     include_thumbnails_in_backups: "Incluir miniaturas geradas em backups. Desativar isto tornará os backups menores, mas exigirá o reprocessamento de todas as postagens após a restauração."
     active_user_rate_limit_secs: "Frequencia de atualização do campo \"última vez visto em\", em segundos."
@@ -2125,7 +2151,6 @@ pt_BR:
     fast_typing_threshold: "Tempo mínimo que o(a) usuário(a) tem para escrever sua primeira postagem. Se o limite não for cumprido, a postagem entrará automaticamente na fila de revisão. Baixo é 1 segundo, o padrão são 3 segundos e alto são 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atenderem ao \"limite de digitação rápida\""
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
-    auto_silence_first_post_regex: "Regex sem diferenciação de maiúsculas ou minúsculas que, caso em caso de aprovação, farão que a primeira postagem de um(a) usuário(a) seja silenciada e enviada para a fila de aprovação. Por exemplo: raging|a[bc]a silenciará todas as postagens contendo raging ou aba, ou aca, imediatamente. Isso se aplica apenas à primeira postagem. PRETERIDO: use Silenciar palavras acompanhadas."
     moderator_guide_topic: "O tópico que descreve como você modera sua comunidade. O link ficará visível na fila de revisão para moderadores e administradores."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"

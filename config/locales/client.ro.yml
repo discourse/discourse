@@ -442,6 +442,8 @@ ro:
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Activate"
       start_posting:
         back: "Înapoi"
     about:
@@ -571,6 +573,9 @@ ro:
           one: "încă %{count} ciornă"
           few: "încă %{count} ciorne"
           other: "încă %{count} de ciorne"
+    embed_mode:
+      signin_flow:
+        cancel: "Anulează"
     topic_count_all:
       one: "Vezi un subiect nou"
       few: "Vezi %{count} subiecte noi"
@@ -1308,7 +1313,6 @@ ro:
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
-        title: "Programul de notificări"
         label: "Activează programul de notificări personalizat"
         none: "Nimeni"
         monday: "Luni"
@@ -1344,13 +1348,8 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
-        label: "Notificări live"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
-        perm_default: "Activează notificări"
-        perm_denied_btn: "Notificări blocate"
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
-        disable: "Dezactivează notificări"
-        enable: "Activează notificările"
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
       dismiss: "Respinge"
       dismiss_notifications: "Respinge tot"
@@ -2512,6 +2511,7 @@ ro:
         max_views:
           placeholder: maxim
     hamburger_menu: "Meniu de navigare"
+    header_panel: "Antet"
     new_item: "nou"
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"
@@ -4242,6 +4242,26 @@ ro:
             title: "Rapoarte"
           traffic:
             title: "Trafic site"
+          engagement:
+            activity_by_category:
+              category: "Categorie"
+              topics: "Discuții"
+              posts: "Articole"
+              share: "Partajează"
+            whos_posting:
+              all_categories: "Toate categoriile"
+              staff: "Echipa"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nou"
+                "1": "De bază"
+                "2": "Membru"
+                "3": "Utilizator frecvent"
+                "4": "Lider"
+        site_traffic:
+          series:
+            anonymous: "Anonimi"
+            crawlers: "Crawlere"
         period:
           last_7_days: "Ultimele 7 zile"
           last_30_days: "Ultimele 30 de zile"

@@ -565,6 +565,29 @@ et:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    activity_by_category:
+      labels:
+        category: "Kategooriad"
+        topics: "Teemasid"
+        posts: "Postitust"
+        share: "Jaga"
+    posters_by_member_type:
+      labels:
+        count: "Postitust"
+        share: "Jaga"
+      types:
+        staff: "Meeskond"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Liikmed"
+        share: "Jaga"
+      levels:
+        "0": "Uus"
+        "1": "Tavakasutaja"
+        "2": "Liige"
+        "3": "Püsiliige"
+        "4": "Vedaja"
     trust_level_growth:
       yaxis: "Päev"
     consolidated_page_views:
@@ -581,6 +604,8 @@ et:
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonüümne"
       yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
@@ -666,6 +691,12 @@ et:
         user: "Kasutaja"
         num_clicks: "Klikke"
         num_topics: "Teemasid"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
     top_traffic_sources:
       title: "Suurima liikluse allikad"
       xaxis: "Domeen"

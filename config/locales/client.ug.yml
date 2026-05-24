@@ -428,6 +428,8 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "قوزغىتىلدى"
       invite_collaborators:
         action: "تەكلىپ قۇر"
       start_posting:
@@ -611,6 +613,8 @@ ug:
           other: "+%{count} باشقا دەسلەپكى نۇسخا"
     embed_mode:
       editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
+      signin_flow:
+        cancel: "ۋاز كەچ"
     topic_count_all:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
@@ -1438,7 +1442,6 @@ ug:
         normal_option: "ئادەتتىكى"
         normal_option_title: "ئەگەر بۇ ئىشلەتكۈچى سىزگە جاۋاب قايتۇرسا، نەقىل كەلتۈرسە ياكى سىزنى تىلغا ئالسا سىزگە ئۇقتۇرۇلىدۇ."
       notification_schedule:
-        title: "ئۇقتۇرۇش كۈنتەرتىپى"
         label: "ئىختىيارى ئۇقتۇرۇش كۈنتەرتىپىنى قوزغات"
         tip: "بۇ ۋاقىتتىن باشقا ۋاقىتتا ئۇقتۇرۇشىڭىز ۋاقىتلىق توختىتىلىدۇ."
         midnight: "يېرىم كېچە"
@@ -1482,13 +1485,8 @@ ug:
       notifications: "ئۇقتۇرۇش"
       statistics: "ئىستاتىستىكا"
       desktop_notifications:
-        label: "شۇئان ئۇقتۇرۇش"
         not_supported: "كەچۈرۈڭ. بۇ توركۆرگۈ ئۇقتۇرۇشنى قوللىمايدۇ."
-        perm_default: "ئۇقتۇرۇشنى ئاچ"
-        perm_denied_btn: "ئىجازەت رەت قىلىندى"
         perm_denied_expl: "ئۇقتۇرۇش ئىجازىتىنى رەت قىلدىڭىز. توركۆرگۈ تەڭشىكىڭىز ئارقىلىق ئۇقتۇرۇشقا يول قويالايسىز."
-        disable: "ئۇقتۇرۇشنى چەكلە"
-        enable: "ئۇقتۇرۇشنى قوزغات"
         each_browser_note: "ئەسكەرتىش: سىز ئىشلىتىدىغان ھەر بىر توركۆرگۈدە بۇ تەڭشەكنى ئۆزگەرتىشىڭىز كېرەك. بۇ تەڭشەكنىڭ قانداق بولۇشىدىن قەتئىينەزەر، ئەگەر ئىشلەتكۈچى تىزىملىكىدىن ئۇقتۇرۇشنى توختاتسىڭىز بارلىق ئۇقتۇرۇشلار چەكلىنىدۇ."
         consent_prompt: "كىشىلەر يازمىڭىزغا ئىنكاس قايتۇرغاندا شۇئان ئۇقتۇرۇشى تاپشۇرۇۋېلىشنى خالامسىز؟"
       dismiss: "پەرۋا قىلما"
@@ -3277,6 +3275,7 @@ ug:
           placeholder: ئەڭ كۆپ
           aria_label: ئەڭ كۆپ كۆرۈلۈشى بويىچە سۈزىدۇ
     hamburger_menu: "يولباشچى تىزىملىك"
+    header_panel: "بەت قاش"
     new_item: "يېڭى"
     go_back: "قايت"
     not_logged_in_user: "نۆۋەتتىكى پائالىيەت ۋە مايىللىقنىڭ ئىشلەتكۈچى بېتىدىكى خۇلاسىسى"
@@ -5904,8 +5903,30 @@ ug:
             title: "دوكلات"
           traffic:
             title: "بېكەت ئېقىمى"
+          engagement:
+            activity_by_category:
+              category: "سەھىپە"
+              topics: "تېما"
+              posts: "يازما"
+              share: "ھەمبەھىر"
+            whos_posting:
+              all_categories: "ھەممە سەھىپە"
+              staff: "باشقۇرغۇچى خادىم"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "يېڭى"
+                "1": "ئاساسىي"
+                "2": "ئەزا"
+                "3": "ئادەتتىكى"
+                "4": "باشلىق"
+              trend:
+                stable: "مۇقىم"
         configure:
           button: "سەپلە"
+        site_traffic:
+          series:
+            anonymous: "نامسىز"
+            crawlers: "ئۆمىلىگۈچ"
         period:
           last_3_months: "ئۆتكەن 3 ئاي"
           custom: "ئىختىيارى"

@@ -226,6 +226,8 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      bot_chats:
+        tab_label: "Czaty botów"
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
@@ -269,8 +271,8 @@ pl_PL:
             ui_settings: "Ustawienia interfejsu użytkownika"
             integrations: "Integracje"
         nav:
-          configured: "Skonfigurowany"
-          unconfigured: "Nieskonfigurowany"
+          enabled: "Włączono"
+          not_enabled: "Nie włączono"
         filters:
           all: "Wszystkie"
           text: "Wyszukaj funkcje, agentów, LLM-y lub grupy..."

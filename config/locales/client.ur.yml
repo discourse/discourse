@@ -423,6 +423,8 @@ ur:
       pill: "تجویز کردہ"
       pm_title: "تجویز کردہ پیغامات"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "فعال شدہ"
       start_posting:
         back: "واپس"
     about:
@@ -599,6 +601,8 @@ ur:
           other: "+%{count} دیگر مسودے"
     embed_mode:
       editing_post: "پوسٹ میں ترمیم جاری"
+      signin_flow:
+        cancel: "منسوخ کریں"
     topic_count_all:
       one: "%{count} نیا موضوع دیکھیں"
       other: "%{count} نئے موضوعات دیکھیں"
@@ -1434,7 +1438,6 @@ ur:
         normal_option: "عمومی"
         normal_option_title: " آپ کو مطلع کر دیا جائے گا اگر یہ صارف آپ کو جواب دیتا ہے، آپ کا اقتباس کرتا ہے، یا آپ کا ذکر کرتا ہے۔"
       notification_schedule:
-        title: "اطلاع کا نظام الاوقات"
         label: "حسب ضرورت نوٹیفکیشن نظام الاوقات کو فعال کریں"
         tip: "ان گھنٹوں کے علاوہ آپ کی اطلاعات کو روک دیا جائے گا۔"
         midnight: "آدھی رات"
@@ -1478,13 +1481,8 @@ ur:
       notifications: "اطلاعات"
       statistics: "اعدادوشمار"
       desktop_notifications:
-        label: "لائیو اطلاعات"
         not_supported: "نوٹیفیکیشن اس براؤزر کے لیئے غیر معاون ہیں۔ معذرت۔"
-        perm_default: "اطلاعات چالو کریں"
-        perm_denied_btn: "اِجازت نہیں دی گئی"
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
-        disable: "اطلاعات غیر فعال کریں"
-        enable: "اطلاعات فعال کریں"
         each_browser_note: "نوٹ: آپ کو اپنے استعمال کردہ ہر براؤزر پر اس ترتیب کو تبدیل کرنا ہوگا۔ اگر آپ اس ترتیب سے قطع نظر رکن مینو سے اطلاعات کو روکتے ہیں تو تمام اطلاعات غیر فعال ہو جائیں گی۔"
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
@@ -3269,6 +3267,7 @@ ur:
           placeholder: زیادہ سے زیادہ
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
     hamburger_menu: "نیویگیشن مینو"
+    header_panel: "ہَیڈر"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -5790,6 +5789,26 @@ ur:
         sections:
           reports:
             title: "گزارشات"
+          engagement:
+            activity_by_category:
+              category: "زُمرَہ"
+              topics: "موضوعات"
+              posts: "دھاگے"
+              share: "اشتراک"
+            whos_posting:
+              all_categories: "تمام زُمرَہ جات"
+              staff: "عملہ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "نیا"
+                "1": "بنیادی"
+                "2": "ممبر"
+                "3": "رَیگولر"
+                "4": "لِیڈر"
+        site_traffic:
+          series:
+            anonymous: "گمنام"
+            crawlers: "کرالرز"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"

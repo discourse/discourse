@@ -39,3 +39,4 @@ discourse_reactions:
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403390"

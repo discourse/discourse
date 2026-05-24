@@ -70,10 +70,8 @@ module DiscourseAi
 
             if agent.system
               instance = agent.new
-              (
-                instance.required_tools == [] ||
-                  (instance.required_tools - all_available_tools).empty?
-              )
+              instance.required_tools == [] ||
+                (instance.required_tools - all_available_tools).empty?
             else
               true
             end

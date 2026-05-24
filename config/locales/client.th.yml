@@ -297,6 +297,9 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
+    embed_mode:
+      signin_flow:
+        cancel: "ยกเลิก"
     topic_count_all:
       other: "ดู%{count}กระทู้ใหม่"
     topic_count_categories:
@@ -778,13 +781,8 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
-        label: "การแจ้งเตือนทันที"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
-        perm_default: "เปิดการแจ้งเตือน"
-        perm_denied_btn: "ไม่มีสิทธิ์เข้าถึง"
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
-        disable: "ปิดการแจ้งเตือน"
-        enable: "เปิดการแจ้งเตือน"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
@@ -1607,6 +1605,7 @@ th:
             after: หลังจาก
         views:
           label: ดู
+    header_panel: "Header"
     new_item: "ใหม่"
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
@@ -2690,6 +2689,24 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        sections:
+          engagement:
+            activity_by_category:
+              category: "หมวดหมู่"
+              topics: "หัวข้อ"
+              posts: "โพส"
+              share: "แบ่งปัน"
+            whos_posting:
+              all_categories: "หมวดหมู่ทั้งหมด"
+              staff: "ทีมงาน"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "ใหม่"
+                "2": "สมาชิก"
+                "3": "ทั่วไป"
+        site_traffic:
+          series:
+            anonymous: "ไม่ระบุชื่อ"
         period:
           last_7_days: "7 วันที่ผ่านมา"
           last_30_days: "30 วันที่ผ่านมา"

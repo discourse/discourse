@@ -32,7 +32,7 @@ module Migration
 
       columns.each do |column|
         column = column.to_s
-        self.drop_readonly(table, column)
+        drop_readonly(table, column)
         # safe cause it is protected on method entry, can not be passed in params
         DB.exec("ALTER TABLE #{table} DROP COLUMN IF EXISTS #{column}")
       end

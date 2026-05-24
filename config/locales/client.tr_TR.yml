@@ -454,6 +454,8 @@ tr_TR:
     admin_onboarding_banner:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
+      select_theme:
+        enabled: "Etkin mi"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
@@ -671,6 +673,8 @@ tr_TR:
       replying_to: "%{username}'e yanıt veriliyor"
       editing_post: "Gönderi düzenleniyor"
       reply_placeholder: "Yanıt yaz..."
+      signin_flow:
+        cancel: "İptal et"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -1516,7 +1520,6 @@ tr_TR:
         normal_option: "Normal"
         normal_option_title: "Bu kullanıcı size yanıt verirse, sizi alıntılarsa veya sizden bahsederse bildirim alırsınız."
       notification_schedule:
-        title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
         tip: "Bu saatler dışında bildirimleriniz duraklatılacak."
         midnight: "Gece yarısı"
@@ -1560,13 +1563,8 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "İstatistikler"
       desktop_notifications:
-        label: "Canlı Bildirimler"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
-        perm_default: "Bildirimleri Aç"
-        perm_denied_btn: "İzin Reddedildi"
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
-        disable: "Bildirimleri Devre Dışı Bırak"
-        enable: "Bildirimleri Etkinleştir"
         each_browser_note: "Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır."
         consent_prompt: "Gönderilerinize yanıt verildiğinde canlı bildirim almak ister misiniz?"
       dismiss: "Kapat"
@@ -3415,6 +3413,7 @@ tr_TR:
           placeholder: en fazla
           aria_label: en fazla görüntülemeye göre filtrele
     hamburger_menu: "Navigasyon menüsü"
+    header_panel: "Üst bilgi"
     new_item: "yeni"
     go_back: "geri dön"
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
@@ -6351,8 +6350,29 @@ tr_TR:
             title: "Site trafiği"
           engagement:
             title: "Taahhüt"
+            activity_by_category:
+              category: "Kategori"
+              topics: "Konular"
+              posts: "Gönderi"
+              share: "Paylaş"
+            whos_posting:
+              all_categories: "Tüm kategoriler"
+              staff: "Personel"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Yeni"
+                "1": "Temel"
+                "2": "Üye"
+                "3": "Normal"
+                "4": "Lider"
+              trend:
+                stable: "stabil"
         configure:
           button: "Yapılandır"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
+            crawlers: "Gezginler"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

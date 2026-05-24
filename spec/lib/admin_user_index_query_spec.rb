@@ -230,7 +230,8 @@ RSpec.describe AdminUserIndexQuery do
       fab!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
 
       it "matches the ip address" do
-        query = ::AdminUserIndexQuery.new(filter: " 117.207.94.9 ")
+        query =
+          ::AdminUserIndexQuery.new(filter: " 117.207.94.9 ", guardian: Fabricate(:admin).guardian)
         expect(query.find_users.count()).to eq(1)
       end
     end

@@ -405,11 +405,9 @@ class Middleware::RequestTracker
       limiters.each(&:rollback!)
 
       env["DISCOURSE_ASSET_RATE_LIMITERS"].each do |limiter|
-        begin
-          limiter.performed!
-        rescue RateLimiter::LimitExceeded
-          # skip
-        end
+        limiter.performed!
+      rescue RateLimiter::LimitExceeded
+        # skip
       end
     end
 
@@ -421,14 +419,12 @@ class Middleware::RequestTracker
 
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
-      begin
-        unless Discourse.pg_readonly_mode?
-          self.class.log_request(data)
-          instrument_browser_page_view(env, request, data)
-        end
-      rescue ActiveRecord::ReadOnlyError
-        # Just noop if ActiveRecord is preventing writes
+      unless Discourse.pg_readonly_mode?
+        self.class.log_request(data)
+        instrument_browser_page_view(env, request, data)
       end
+    rescue ActiveRecord::ReadOnlyError
+      # Just noop if ActiveRecord is preventing writes
     end
   end
 
@@ -725,6 +721,7 @@ class Middleware::RequestTracker
         country_code: payload[:country_code],
         asn: payload[:asn],
         referrer: payload[:referrer],
+        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
         user_id: payload[:user_id],

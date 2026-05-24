@@ -377,7 +377,6 @@ tr_TR:
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">Şifrenizi Sıfırlayın</a>.</p>
     not_found_template_link: |
       <p>Bu <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamıyor. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin.</p>
-    existing_user_cannot_redeem: "Bu davet kullanılamaz. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin."
     existing_user_already_redemeed: "Bu davet bağlantısını zaten kullandınız."
     user_exists: "<b>%{email}</b> adresini davet etmeye gerek yok, zaten hesabı var!"
     invite_exists: "<b>%{email}</b> adresini zaten davet etmiştiniz."
@@ -1269,6 +1268,30 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Yeni katkıda bulunanların sayısı"
       description: "Bu dönemde ilk gönderisini yapan kullanıcı sayısı."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Konular"
+        posts: "Gönderi"
+        share: "Paylaş"
+    posters_by_member_type:
+      labels:
+        count: "Gönderi"
+        share: "Paylaş"
+      types:
+        staff: "Personel"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Güven seviyesi"
+        count: "Üyeler"
+        share: "Paylaş"
+      levels:
+        "0": "Yeni"
+        "1": "Temel"
+        "2": "Üye"
+        "3": "Normal"
+        "4": "Lider"
     trust_level_growth:
       title: "Güven Seviyesi büyümesi"
       xaxis:
@@ -1314,9 +1337,8 @@ tr_TR:
     site_traffic:
       title: "Site trafiği"
       xaxis:
-        page_view_anon_browser: "Sayfa görüntülemeleri (anonim)"
-        page_view_logged_in_browser: "Sayfa görüntülemeleri (giriş yapılmış)"
-        page_view_crawler: "Bilinen gezginler"
+        page_view_anon_browser: "Anonim"
+        page_view_crawler: "Gezginler"
         page_view_other: "Diğer trafik"
       yaxis: "Gün"
       description: "Giriş yapmış kullanıcılar, anonim kullanıcılar, bilinen gezginler ve diğer trafik için sayfa görüntülemeleri."
@@ -1433,6 +1455,12 @@ tr_TR:
         num_clicks: "Tıklamalar"
         num_topics: "Konular"
       description: "Kullanıcılar, paylaştıkları bağlantıların tıklanma sayısına göre listelenir."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
     top_traffic_sources:
       title: "En Popüler Trafik Kaynakları"
       xaxis: "Alan Adı"
@@ -1826,7 +1854,6 @@ tr_TR:
     moderators_change_post_ownership: "Moderatörlerin gönderi sahipliğini değiştirmesine izin verin"
     change_post_ownership_allowed_groups: "Bu gruplardaki kullanıcıların gönderi sahipliğini değiştirmesine izin ver"
     cors_origins: "Kökenler arası talepler (CORS) için izin verilen kökenler. Her köken http:// veya https:// içermelidir. CORS'u etkinleştirmek için DISCOURSE_ENABLE_CORS env değişkeni true olarak ayarlanmalıdır."
-    use_admin_ip_allowlist: "Yöneticiler yalnızca Taranan IP'ler listesinde tanımlanan bir IP adresindelerse oturum açabilirler (Yönetici > Günlükler > Taranan IP'ler)."
     blocked_ip_blocks: "Discourse tarafından asla taranmaması gereken özel IP bloklarının bir listesi"
     allowed_internal_hosts: "Discourse'un oneboxing ve diğer amaçlar için güvenle tarayabileceği dahili sunucularının bir listesi"
     allowed_onebox_iframes: "Onebox yerleştirmeleri aracılığıyla izin verilen iframe src alan adlarının bir listesi. *` tüm varsayılan Onebox motorlarına izin verir."
@@ -1961,7 +1988,6 @@ tr_TR:
     s3_use_acls: "AWS, S3 kovalarında ACL kullanılmamasını önerir; yalnızca yapılandırılmış `s3_upload_bucket` ve `s3_backup_bucket` üzerinde izin politikaları yapılandırmayı düşünüyorsanız bu seçeneğin işaretini kaldırın."
     backup_time_of_day: "Yedeklemenin gerçekleşmesi gereken günün saati UTC."
     backup_with_uploads: "Yüklemeleri zamanlanan yedeklemelere dahil et. Bu devre dışı bırakıldığında yalnızca veritabanı yedeklenir."
-    backup_location: "Yedeklemelerin depolandığı konum. ÖNEMLİ: S3, Dosya ayarlarında geçerli S3 giriş bilgilerinin girilmesini gerektirir. Bunu Yerel'den S3'e değiştirirken, `s3:ensure_cors_rules` rake görevini çalıştırmanız gerekir."
     backup_gzip_compression_level_for_uploads: "Yüklemeleri sıkıştırmak için kullanılan Gzip sıkıştırma seviyesi."
     include_thumbnails_in_backups: "Oluşturulan küçük resimleri yedeklemelere dahil edin. Bunu devre dışı bırakmak yedeklemeleri küçültür, ancak geri yüklemeden sonra tüm gönderilerin yeniden yüklenmesini gerektirir."
     active_user_rate_limit_secs: "\"last_seen_at\" alanını saniye cinsinden güncelleme sıklığımız"
@@ -2152,7 +2178,6 @@ tr_TR:
     fast_typing_threshold: "Bir kullanıcının ilk gönderisi için yazması gereken minimum süre. Eşik değeri karşılanmazsa, gönderi otomatik olarak inceleme kuyruğuna girer. Düşük değer 1 saniye, standart değer 3 saniye, yüksek değer 5 saniyedir."
     auto_silence_fast_typers_on_first_post: "`fast typing threshold`u karşılamayan kullanıcıları otomatik olarak susturun"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazanları otomatik olarak susturmak için maksimum güven seviyesi"
-    auto_silence_first_post_regex: "Büyük/küçük harfe duyarlı olmayan regex, geçilirse kullanıcının ilk gönderisinin susturulmasına ve onay kuyruğuna gönderilmesine neden olur. Örnek: raging|a[bc]a , raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Sadece ilk gönderi için geçerlidir. DEVRE DIŞI BIRAKILDI: Bunun yerine İzlenen Kelimeleri Sessize Al'ı kullanın."
     moderator_guide_topic: "Topluluğunuzu nasıl yönettiğinizi özetleyen konu. Bağlantı, moderatörler ve yöneticiler için inceleme kuyruğunda görünecektir."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için talep edilmesi gerekir mi?"
     reviewable_default_topics: "İncelenebilir içeriği varsayılan olarak konuya göre gruplandırılmış şekilde gösterin"

@@ -345,7 +345,6 @@ ja:
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
     not_found_template_link: |
       <p>この <a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
-    existing_user_cannot_redeem: "この招待は引き換えられません。あなたを招待した人に、新しい招待を送るよう依頼してください。"
     existing_user_already_redemeed: "この招待リンクはすでに引き換え済みです。"
     user_exists: "<b>%{email}</b> を招待する必要はありません。すでにアカウントを持っています！"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
@@ -1167,6 +1166,30 @@ ja:
       xaxis: "日"
       yaxis: "新しい貢献者数"
       description: "この期間に初めて投稿したユーザーの数。"
+    activity_by_category:
+      labels:
+        category: "カテゴリ"
+        topics: "トピック"
+        posts: "投稿"
+        share: "共有"
+    posters_by_member_type:
+      labels:
+        count: "投稿"
+        share: "共有"
+      types:
+        staff: "スタッフ"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "信頼レベル"
+        count: "メンバー"
+        share: "共有"
+      levels:
+        "0": "新規"
+        "1": "ベーシック"
+        "2": "メンバー"
+        "3": "レギュラー"
+        "4": "リーダー"
     trust_level_growth:
       title: "信頼レベルの増加"
       xaxis:
@@ -1212,9 +1235,8 @@ ja:
     site_traffic:
       title: "サイトトラフィック"
       xaxis:
-        page_view_anon_browser: "ページビュー (匿名)"
-        page_view_logged_in_browser: "ページビュー (ログイン)"
-        page_view_crawler: "既知のクローラー"
+        page_view_anon_browser: "匿名ユーザー"
+        page_view_crawler: "クローラー"
         page_view_other: "その他のトラフィック"
       yaxis: "日"
       description: "ログインユーザー、匿名ユーザー、既知のクローラー、およびその他のトラフィックのページビュー。"
@@ -1329,6 +1351,12 @@ ja:
         num_clicks: "クリック"
         num_topics: "トピック"
       description: "共有したリンクのクリック数で表示されたユーザー。"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "アクセス"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "アクセス"
     top_traffic_sources:
       title: "上位トラフィックソース"
       xaxis: "ドメイン"
@@ -1717,7 +1745,6 @@ ja:
     moderators_manage_groups: "モデレーターによるグループの作成と管理を許可する"
     moderators_change_post_ownership: "モデレーターによる投稿の所有権の変更を許可する"
     cors_origins: "CORS を許可。オリジンは http:// か https:// を含む必要があります。CORS を有効にするには、環境変数　DISCOURSE_ENABLE_CORS に true を設定する必要があります。"
-    use_admin_ip_allowlist: "管理者はスクリーン対象 IP リスト (管理者 > ログ > スクリーン対象 IP) に定義されている IP アドレスからのみログインできる。"
     blocked_ip_blocks: "Discourse によって決してクロールされない非公開 IP ブロックリスト"
     allowed_internal_hosts: "Discourse がワンボックスやその他の目的で安全にクロールできる内部ホストのリスト"
     allowed_onebox_iframes: "ワンボックス埋め込みを介して許可される iframe src ドメインのリスト。`*` はすべてのデフォルトのワンボックスエンジンを許可します。"
@@ -1850,7 +1877,6 @@ ja:
     s3_use_acls: "AWS では、S3 バケットで ACL を使用しないことを推奨しています。構成済みの `s3_upload_bucket` および `s3_backup_bucket` で権限ポリシーを構成する場合にのみ、このオプションをオフにしてください。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
-    backup_location: "バックアップが保存される場所。重要: S3 にはファイル設定で有効な S3 資格情報が入力されている必要があります。これをローカルから S3 に変更するには、`s3:ensure_cors_rules` rake タスクを実行する必要があります。"
     backup_gzip_compression_level_for_uploads: "アップロードの圧縮に使用される Gzip 圧縮レベル。"
     include_thumbnails_in_backups: "生成されたサムネイルをバックアップに含める。これを無効にするとバックアップが小さくなりますが、復元後にすべての投稿を rebake する必要があります。"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"
@@ -2036,7 +2062,6 @@ ja:
     auto_respond_to_flag_actions: "通報を解除したときの自動返信を有効にします。"
     auto_silence_fast_typers_on_first_post: "`fast typing threshold` を満たさないユーザーを自動的に投稿禁止にする"
     auto_silence_fast_typers_max_trust_level: "高速タイパーを自動的に投稿禁止する最高信頼レベル"
-    auto_silence_first_post_regex: "大文字と小文字を区別しない正規表現。合格すると、ユーザーの最初の投稿は投稿禁止になり、承認キューに送られます。例: aging|a[bc]a はまず、「raging」または「aba」または「aca」を含むすべての投稿を投稿禁止にします。最初の投稿のみに適用されます。使用廃止: 代わりに「ウォッチ語の投稿禁止」を使用してください"
     moderator_guide_topic: "コミュニティーのモデレーション方法を説明するトピック。リンクはモデレーターと管理者のレビューキューに表示されます。"
     reviewable_claiming: "レビュー待ちコンテンツは、対応前に割り当てられる必要があるかどうか"
     reviewable_default_topics: "デフォルトでレビュー待ちコンテンツをトピック別にグループ化して表示する"

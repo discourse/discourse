@@ -20,6 +20,22 @@ RSpec.describe ThemeSetting do
                 type: upload
       YAML
 
+    let(:ui_cards_setting_yaml) { <<~YAML }
+        ui_cards_setting:
+          type: objects
+          default:
+            - title: "Build a community"
+          schema:
+            name: card
+            identifier: title
+            properties:
+              title:
+                type: string
+                required: true
+              image:
+                type: upload
+      YAML
+
     it "creates upload references for type objects settings with upload fields" do
       theme.set_field(target: :settings, name: "yaml", value: objects_setting_yaml)
       theme.save!
@@ -32,6 +48,23 @@ RSpec.describe ThemeSetting do
       theme_setting = theme.theme_settings.find_by(name: "objects_with_upload")
       upload_references = UploadReference.where(target: theme_setting)
       expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
+    end
+
+    it "stores object upload fields as upload IDs when set with upload URLs" do
+      theme.set_field(target: :settings, name: "yaml", value: ui_cards_setting_yaml)
+      theme.save!
+
+      theme.settings[:ui_cards_setting].value = [
+        { "title" => "Build a community", "image" => upload.url },
+      ]
+
+      theme_setting = theme.theme_settings.find_by(name: "ui_cards_setting")
+      expect(theme_setting.json_value).to eq(
+        [{ "title" => "Build a community", "image" => upload.id }],
+      )
+      expect(theme.cached_settings[:ui_cards_setting].first["image"]).to eq(
+        Discourse.store.cdn_url(upload.url),
+      )
     end
 
     it "destroys upload references for type objects setting when the setting is destroyed" do

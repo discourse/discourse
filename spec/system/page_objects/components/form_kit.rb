@@ -44,7 +44,7 @@ module PageObjects
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
-          component.find("input[type='checkbox']").checked?
+          component.find("input[type='checkbox']", visible: :all).checked?
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
@@ -60,12 +60,38 @@ module PageObjects
         end
       end
 
+      def uncheck
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return unless value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          uncheck("input[type='checkbox']", visible: :all)
+        end
+      end
+
+      def check
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return if value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          check("input[type='checkbox']", visible: :all)
+        end
+      end
+
       def unchecked?
         if control_type != "checkbox"
           raise "'unchecked?' is only supported for control type: #{control_type}"
         end
 
-        expect(self.value).to eq(false)
+        expect(value).to eq(false)
       end
 
       def checked?
@@ -73,11 +99,11 @@ module PageObjects
           raise "'checked?' is only supported for control type: #{control_type}"
         end
 
-        expect(self.value).to eq(true)
+        expect(value).to eq(true)
       end
 
       def has_value?(expected_value)
-        expect(self.value).to eq(expected_value)
+        expect(value).to eq(expected_value)
       end
 
       def has_errors?(*messages)
@@ -107,7 +133,11 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          component.find("input[type='checkbox']").click
+          if SiteSetting.enable_new_checkbox_style
+            component.find(".form-kit__control-checkbox-checkmark").click
+          else
+            component.find("input[type='checkbox']").click
+          end
         when "password"
           component.find(".form-kit__control-password-toggle").click
         when "toggle"
@@ -242,6 +272,14 @@ module PageObjects
         within component do
           find(".form-kit__alert-message", text: message)
         end
+      end
+
+      def collection_field(collection_name, collection_index, field_name)
+        FormKitField.new(
+          find(
+            ".form-kit__field[data-name='#{collection_name}.#{collection_index}.#{field_name}']",
+          ),
+        )
       end
 
       def field(name)

@@ -169,8 +169,18 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page]
-    if page < 0 || page > 1 && (page - 1) * @topic_view.chunk_size >= @topic_view.topic.posts_count
-      raise Discourse::NotFound
+    raise Discourse::NotFound if page < 0
+
+    if page > 1
+      visible_posts_count = @topic_view.filtered_posts.count
+      chunk_size = @topic_view.chunk_size
+      if (page - 1) * chunk_size >= visible_posts_count
+        last_page = visible_posts_count > 0 ? ((visible_posts_count - 1) / chunk_size) + 1 : 1
+        url = @topic_view.topic.relative_url
+        url += ".json" if request.format.json?
+        url += "?page=#{last_page}" if last_page > 1
+        return redirect_to url, status: :moved_permanently
+      end
     end
 
     discourse_expires_in 1.minute
@@ -185,9 +195,10 @@ class TopicsController < ApplicationController
          !@topic_view.topic.private_message? &&
          (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
          params[:flat] != "1"
-      url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
+      url = +"/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
       post_number = opts[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
+      url << "?embed_mode=true" if params[:embed_mode] == "true"
       redirect_to url, status: :found
       return
     end
@@ -471,7 +482,9 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
-    if Tag.include_tags? && changes.has_key?(:tags)
+    tags_submitted = Tag.include_tags? && changes.has_key?(:tags)
+
+    if tags_submitted
       if changes[:tags].present?
         incoming = changes[:tags]
 
@@ -481,13 +494,9 @@ class TopicsController < ApplicationController
             since: "2026.01",
             drop_from: "2026.07",
           )
-          changes.delete(:tags) if incoming.sort == topic.tags.map(&:name).sort
-        else
-          has_new = incoming.any? { |t| t[:id].blank? }
-          if !has_new && incoming.filter_map { |t| t[:id]&.to_i }.sort == topic.tags.pluck(:id).sort
-            changes.delete(:tags)
-          end
         end
+
+        changes.delete(:tags) if PostRevisor.tag_change_noop?(topic, incoming)
 
         # resolve to name strings before passing to PostRevisor
         changes[:tags] = resolve_tag_names(topic) if changes.has_key?(:tags)
@@ -512,7 +521,13 @@ class TopicsController < ApplicationController
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    if !success
+      render_json_error(topic)
+    elsif tags_submitted
+      render_topic_with_tags(topic)
+    else
+      render_serialized(topic, BasicTopicSerializer)
+    end
   end
 
   def update_tags
@@ -534,11 +549,16 @@ class TopicsController < ApplicationController
       )
     end
 
-    revisor = PostRevisor.new(topic.first_post, topic)
-    revised = revisor.revise!(current_user, { tags: }, validate_post: false)
+    unless PostRevisor.tag_change_noop?(topic, tags)
+      PostRevisor.new(topic.first_post, topic).revise!(
+        current_user,
+        { tags: },
+        validate_post: false,
+      )
+    end
 
-    if revised || topic.errors.blank?
-      render_serialized(topic, BasicTopicSerializer)
+    if topic.errors.blank?
+      render_topic_with_tags(topic)
     else
       render_json_error(topic)
     end
@@ -1203,7 +1223,7 @@ class TopicsController < ApplicationController
   def reset_new
     topic_scope =
       if current_user.new_new_view_enabled?
-        if (params[:dismiss_topics] && params[:dismiss_posts])
+        if params[:dismiss_topics] && params[:dismiss_posts]
           TopicQuery.new(current_user).new_and_unread_results(limit: false)
         elsif params[:dismiss_topics]
           TopicQuery.new(current_user).new_results(limit: false)
@@ -1340,6 +1360,14 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def render_topic_with_tags(topic)
+    payload = serialize_data(topic, BasicTopicSerializer)
+    payload[:tags] = topic
+      .visible_tags(guardian)
+      .map { |t| { id: t.id, name: t.name, slug: t.slug_for_url } }
+    render_json_dump(payload)
+  end
 
   def resolve_tag_names(topic)
     @resolved_tag_names ||=
@@ -1521,7 +1549,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = (@topic_view.topic.excerpt.presence || @topic_view.summary)
+        @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

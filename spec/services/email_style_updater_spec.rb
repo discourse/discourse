@@ -2,7 +2,7 @@
 
 RSpec.describe EmailStyleUpdater do
   fab!(:admin)
-  let(:default_html) { File.read("#{Rails.root}/app/views/email/default_template.html") }
+  let(:default_html) { File.read("#{Rails.root.join("app/views/email/default_template.html")}") }
   let(:updater) { EmailStyleUpdater.new(admin) }
 
   def expect_settings_to_be_unset

@@ -2,7 +2,7 @@
 
 require "uri"
 
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
+Dir["#{Rails.root.join("lib/onebox/engine/*_onebox.rb")}"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
@@ -604,7 +604,7 @@ module Oneboxer
   def self.template(template_name)
     @template_cache ||= {}
     @template_cache[template_name] ||= begin
-      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      full_path = "#{Rails.root.join("lib/onebox/templates/#{template_name}.mustache")}"
       File.read(full_path)
     end
   end

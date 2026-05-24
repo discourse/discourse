@@ -178,8 +178,7 @@ fi:
           name: "Botti"
           description: "Chatbotti, joka voi vastata kysymyksiin ja auttaa käyttäjiä yksityisviesteissä, foorumilla ja chatissa"
         nav:
-          configured: "Määritetty"
-          unconfigured: "Määrittämätön"
+          enabled: "Käytössä"
         filters:
           all: "Kaikki"
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."

@@ -15,7 +15,7 @@ class PostSerializer < BasicPostSerializer
     ignored_user_like_counts
   ]
 
-  INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
+  INSTANCE_VARS.each { |v| public_send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -107,7 +107,7 @@ class PostSerializer < BasicPostSerializer
     super(object, opts)
 
     PostSerializer::INSTANCE_VARS.each do |name|
-      self.public_send("#{name}=", opts[name]) if opts.include? name
+      public_send("#{name}=", opts[name]) if opts.include? name
     end
   end
 
@@ -160,15 +160,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def moderator?
-    !!(object&.user&.moderator?)
+    !!object&.user&.moderator?
   end
 
   def admin?
-    !!(object&.user&.admin?)
+    !!object&.user&.admin?
   end
 
   def staff?
-    !!(object&.user&.staff?)
+    !!object&.user&.staff?
   end
 
   def group_moderator
@@ -177,12 +177,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_group_moderator?
     @group_moderator ||=
-      begin
-        if @topic_view
-          @topic_view.category_group_moderator_user_ids.include?(object.user_id)
-        else
-          object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
-        end
+      if @topic_view
+        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+      else
+        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
       end
   end
 
@@ -339,7 +337,7 @@ class PostSerializer < BasicPostSerializer
     ignored_like_count = ignored_like_count_for_viewer
 
     @post_action_type_view.types.each do |sym, id|
-      count_col = "#{sym}_count".to_sym
+      count_col = :"#{sym}_count"
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
       count = [count.to_i - ignored_like_count, 0].max if count && sym == :like
@@ -741,7 +739,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_custom_fields_object
-    (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
+    @topic_view&.user_custom_fields || @options[:user_custom_fields] || {}
   end
 
   def topic

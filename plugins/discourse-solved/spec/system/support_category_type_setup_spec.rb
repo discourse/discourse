@@ -53,26 +53,6 @@ RSpec.describe "Support Category Type Setup" do
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
   end
 
-  context "when the support category type setup is disabled" do
-    before { SiteSetting.enable_support_category_type_setup = false }
-
-    it "does not show the support category type" do
-      visit("/new-category/setup")
-      expect(page).not_to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
-      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
-    end
-
-    it "does not show the tab for the support category type when editing an existing category" do
-      support_category = Fabricate(:category, name: "Support")
-      DiscourseSolved::Categories::Types::Support.configure_category(
-        support_category,
-        guardian: admin.guardian,
-      )
-      visit("/c/#{support_category.slug}/edit/support")
-      expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-support")
-    end
-  end
-
   context "for an existing category with no support category type" do
     fab!(:category)
 

@@ -170,7 +170,6 @@ zh_TW:
   word_connector:
     comma: "，"
   invite:
-    existing_user_cannot_redeem: "此邀請無法兌換。請找當初邀請您的人來重發一個新的邀請。"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
     disabled_errors:
       invalid_access: "你不允許查看所請求的資源。"
@@ -744,6 +743,30 @@ zh_TW:
       xaxis: "天"
       yaxis: "新的參與者數量"
       description: "這段期間第一次發文的使用者數量。"
+    activity_by_category:
+      labels:
+        category: "分類"
+        topics: "話題"
+        posts: "新發表的貼文"
+        share: "分享"
+    posters_by_member_type:
+      labels:
+        count: "新發表的貼文"
+        share: "分享"
+      types:
+        staff: "管理員"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "信任等級"
+        count: "成員"
+        share: "分享"
+      levels:
+        "0": "新使用者"
+        "1": "初級使用者"
+        "2": "成員"
+        "3": "活躍使用者"
+        "4": "資深"
     trust_level_growth:
       xaxis:
         tl1_reached: "達到信任等級 1"
@@ -772,6 +795,9 @@ zh_TW:
     consolidated_page_views_browser_detection:
       yaxis: "天"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "匿名"
+        page_view_crawler: "爬蟲"
       yaxis: "天"
     dau_by_mau:
       xaxis: "天"
@@ -881,6 +907,12 @@ zh_TW:
         num_clicks: "點擊數"
         num_topics: "話題"
       description: "透過共用連結的點擊次數列出的使用者"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "造訪"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "造訪"
     top_traffic_sources:
       title: "最高流量來源"
       xaxis: "網域"
@@ -1127,7 +1159,6 @@ zh_TW:
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
-    use_admin_ip_allowlist: "當目前的IP剛好處于IP段禁止名單(Admin > Logs > Screened Ips)中的時候，只有管理員才可登入。"
     blocked_ip_blocks: "Discourse 將不會使用爬蟲爬私人IP黑名單清單。"
     allowed_internal_hosts: "Discourse 可以安全抓取以用於 Onebox 與其他用途的內部主機列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"

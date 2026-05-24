@@ -407,6 +407,8 @@ fi:
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Käytössä"
       start_posting:
         back: "Takaisin"
     about:
@@ -576,6 +578,9 @@ fi:
         other_drafts:
           one: "+%{count} muu luonnos"
           other: "+%{count} muuta luonnosta"
+    embed_mode:
+      signin_flow:
+        cancel: "Peruuta"
     topic_count_all:
       one: "Näytä %{count} uusi ketju"
       other: "Näytä %{count} uutta ketjua"
@@ -1351,7 +1356,6 @@ fi:
         normal_option: "Normaali"
         normal_option_title: "Saat ilmoituksen, jos käyttäjä vastaa sinulle, lainaa sinua tai mainitsee sinut."
       notification_schedule:
-        title: "Ilmoitusten aikataulu"
         label: "Aseta mukautettu ilmoitusten aikataulu"
         tip: "Näiden aikojen ulkopuolella ilmoituksesi keskeytetään."
         midnight: "Keskiyö"
@@ -1395,13 +1399,8 @@ fi:
       notifications: "Ilmoitukset"
       statistics: "Tilastot"
       desktop_notifications:
-        label: "Live-ilmoitukset"
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
-        perm_default: "Näytä ilmoituksia"
-        perm_denied_btn: "Ei oikeuksia"
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
-        disable: "Poista ilmoitukset käytöstä"
-        enable: "Näytä ilmoituksia"
         each_browser_note: "Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun keskeytät ilmoitukset käyttäjävalikosta riippumatta tästä asetuksesta."
         consent_prompt: "Haluatko reaaliaikaisia ilmoituksia, kun ihmiset vastaavat viesteihisi?"
       dismiss: "Kuittaa"
@@ -3130,6 +3129,7 @@ fi:
           placeholder: enintään
           aria_label: suodata enimmäiskatselukertojen mukaan
     hamburger_menu: "Navigointivalikko"
+    header_panel: "Yläpalkki"
     new_item: "uusi"
     go_back: "palaa takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
@@ -5626,8 +5626,28 @@ fi:
             title: "Raportit"
           traffic:
             title: "Sivuston liikenne"
+          engagement:
+            activity_by_category:
+              category: "Luokka"
+              topics: "Aiheet"
+              posts: "Viestejä"
+              share: "Jaa"
+            whos_posting:
+              all_categories: "Kaikki alueet"
+              staff: "Henkilökunta"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uudet"
+                "1": "Haastaja"
+                "2": "Konkari"
+                "3": "Normaali"
+                "4": "Johtaja"
         configure:
           button: "Määritä"
+        site_traffic:
+          series:
+            anonymous: "Anonyymeja"
+            crawlers: "Hakurobotit"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"

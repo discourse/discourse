@@ -56,7 +56,7 @@ module DiscourseAutomation
 
     validate :metadata_schema
     def metadata_schema
-      if !(targetable.components.include?(component.to_sym))
+      if !targetable.components.include?(component.to_sym)
         errors.add(
           :base,
           I18n.t(

@@ -12,70 +12,65 @@ module DiscourseSubscriptions
       requires_login
 
       def index
-        begin
-          customer = Customer.where(user_id: current_user.id)
-          customer_ids = customer.map { |c| c.id } if customer
-          stripe_customer_ids = customer.map { |c| c.customer_id }.uniq if customer
-          subscription_ids =
-            Subscription.where("customer_id in (?)", customer_ids).pluck(
-              :external_id,
-            ) if customer_ids
+        customer = Customer.where(user_id: current_user.id)
+        customer_ids = customer.map { |c| c.id } if customer
+        stripe_customer_ids = customer.map { |c| c.customer_id }.uniq if customer
+        subscription_ids =
+          Subscription.where("customer_id in (?)", customer_ids).pluck(:external_id) if customer_ids
 
-          subscriptions = []
+        subscriptions = []
 
-          if subscription_ids
-            prices = []
-            price_params = { limit: 100, expand: ["data.product"] }
-            loop do
-              response = ::Stripe::Price.list(price_params, stripe_request_opts)
-              prices.concat(response[:data])
-              break unless response[:has_more]
-              price_params[:starting_after] = response[:data].last.id
-            end
-            all_subscriptions = []
+        if subscription_ids
+          prices = []
+          price_params = { limit: 100, expand: ["data.product"] }
+          loop do
+            response = ::Stripe::Price.list(price_params, stripe_request_opts)
+            prices.concat(response[:data])
+            break unless response[:has_more]
+            price_params[:starting_after] = response[:data].last.id
+          end
+          all_subscriptions = []
 
-            stripe_customer_ids.each do |stripe_customer_id|
-              customer_subscriptions =
-                ::Stripe::Subscription.list(
-                  { customer: stripe_customer_id, status: "all" },
-                  stripe_request_opts,
-                )
-              all_subscriptions.concat(customer_subscriptions[:data])
-            end
-
-            subscriptions = all_subscriptions.select { |sub| subscription_ids.include?(sub[:id]) }
-            subscriptions.map! do |subscription|
-              plan = prices.find { |p| p[:id] == subscription[:items][:data][0][:price][:id] }
-              subscription.to_h.except!(:plan)
-              subscription.to_h.merge(plan: plan, product: plan[:product].to_h.slice(:id, :name))
-            end
+          stripe_customer_ids.each do |stripe_customer_id|
+            customer_subscriptions =
+              ::Stripe::Subscription.list(
+                { customer: stripe_customer_id, status: "all" },
+                stripe_request_opts,
+              )
+            all_subscriptions.concat(customer_subscriptions[:data])
           end
 
-          render_json_dump subscriptions
-        rescue ::Stripe::InvalidRequestError => e
-          render_json_error e.message
+          subscriptions = all_subscriptions.select { |sub| subscription_ids.include?(sub[:id]) }
+          subscriptions.map! do |subscription|
+            plan = prices.find { |p| p[:id] == subscription[:items][:data][0][:price][:id] }
+            subscription.to_h.except!(:plan)
+            subscription.to_h.merge(plan: plan, product: plan[:product].to_h.slice(:id, :name))
+          end
         end
+
+        render_json_dump subscriptions
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
       end
 
       def destroy
         # we cancel but don't remove until the end of the period
         # full removal is done via webhooks
-        begin
-          subscription =
-            ::Stripe::Subscription.update(
-              params[:id],
-              { cancel_at_period_end: true },
-              stripe_request_opts,
-            )
 
-          if subscription
-            render_json_dump subscription
-          else
-            render_json_error I18n.t("discourse_subscriptions.customer_not_found")
-          end
-        rescue ::Stripe::InvalidRequestError => e
-          render_json_error e.message
+        subscription =
+          ::Stripe::Subscription.update(
+            params[:id],
+            { cancel_at_period_end: true },
+            stripe_request_opts,
+          )
+
+        if subscription
+          render_json_dump subscription
+        else
+          render_json_error I18n.t("discourse_subscriptions.customer_not_found")
         end
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
       end
 
       def update

@@ -14,7 +14,7 @@ class CustomEmoji < ActiveRecord::Base
 
   after_save do
     if saved_change_to_upload_id?
-      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+      UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
     end
   end
 

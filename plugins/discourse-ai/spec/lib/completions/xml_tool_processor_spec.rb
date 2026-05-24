@@ -17,7 +17,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
   it "can handle partial tool calls" do
     processor = DiscourseAi::Completions::XmlToolProcessor.new(partial_tool_calls: true)
 
-    xml = (<<~XML).strip
+    xml = <<~XML.strip
       <function|_calls>
       <invoke>
       <tool_name>h|ell|o<|/tool_name>
@@ -38,7 +38,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
 
     xml.split("|").each { |part| result << (processor << part).map(&:dup) }
 
-    result << (processor.finish)
+    result << processor.finish
     result.flatten!
 
     tool1_params =
@@ -68,7 +68,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
   end
 
   it "can handle mix and match xml cause tool llms may not encode" do
-    xml = (<<~XML).strip
+    xml = <<~XML.strip
       <function_calls>
       <invoke>
       <tool_name>hello</tool_name>
@@ -81,14 +81,14 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
 
     result = []
     result << (processor << xml)
-    result << (processor.finish)
+    result << processor.finish
 
     tool_call = result.last.first
     expect(tool_call.parameters).to eq(hello: "world <sam>sam</sam>", test: "</h1>\n</div>\n")
   end
 
   it "is usable for simple single message mode" do
-    xml = (<<~XML)
+    xml = <<~XML
        world <function_calls>
       <invoke>
       <tool_name>hello</tool_name>
@@ -116,7 +116,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
     result = []
     result << (processor << "hello")
     result << (processor << xml)
-    result << (processor.finish)
+    result << processor.finish
 
     tool_call =
       DiscourseAi::Completions::ToolCall.new(
@@ -133,7 +133,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
   end
 
   it "handles multiple tool calls in sequence" do
-    xml = (<<~XML).strip
+    xml = <<~XML.strip
       start
       <function_calls>
       <invoke>
@@ -154,7 +154,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
 
     result = []
     result << (processor << xml)
-    result << (processor.finish)
+    result << processor.finish
 
     first_tool =
       DiscourseAi::Completions::ToolCall.new(
@@ -179,7 +179,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
   end
 
   it "handles non-English parameters correctly" do
-    xml = (<<~XML).strip
+    xml = <<~XML.strip
       こんにちは
       <function_calls>
       <invoke>
@@ -192,7 +192,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
 
     result = []
     result << (processor << xml)
-    result << (processor.finish)
+    result << processor.finish
 
     tool_call =
       DiscourseAi::Completions::ToolCall.new(
@@ -222,7 +222,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
   end
 
   it "handles malformed XML gracefully" do
-    xml = (<<~XML).strip
+    xml = <<~XML.strip
       text
       <function_calls>
       <invoke>
@@ -236,7 +236,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
 
     result = []
     result << (processor << xml)
-    result << (processor.finish)
+    result << processor.finish
 
     # Should just do its best to parse the XML
     tool_call = DiscourseAi::Completions::ToolCall.new(id: "tool_0", name: "test", parameters: {})
@@ -244,7 +244,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
   end
 
   it "correctly processes empty parameter sets" do
-    xml = (<<~XML).strip
+    xml = <<~XML.strip
       hello
       <function_calls>
       <invoke>
@@ -256,7 +256,7 @@ RSpec.describe DiscourseAi::Completions::XmlToolProcessor do
 
     result = []
     result << (processor << xml)
-    result << (processor.finish)
+    result << processor.finish
 
     tool_call =
       DiscourseAi::Completions::ToolCall.new(id: "tool_0", name: "no_params", parameters: {})

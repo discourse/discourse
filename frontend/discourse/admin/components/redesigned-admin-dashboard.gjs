@@ -15,10 +15,6 @@ import { deepEqual } from "discourse/lib/object";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-function buildPending(committed) {
-  return committed?.map((s) => ({ ...s })) ?? [];
-}
-
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
 
@@ -29,21 +25,17 @@ export default class RedesignedAdminDashboard extends Component {
 
   constructor() {
     super(...arguments);
-    this.pendingSections = buildPending(this.committedSections);
-  }
-
-  get committedSections() {
-    return this.args.configuration?.sections ?? [];
-  }
-
-  get showSkeleton() {
-    return this.args.loadingSections && !this.args.sections;
+    this.pendingSections = this.#buildPendingSections(
+      this.args.loadedSections?.configuration?.sections
+    );
   }
 
   @action
   onMenuOpen() {
     this._opened = true;
-    this.pendingSections = buildPending(this.committedSections);
+    this.pendingSections = this.#buildPendingSections(
+      this.args.loadedSections?.configuration?.sections
+    );
   }
 
   @action
@@ -66,7 +58,11 @@ export default class RedesignedAdminDashboard extends Component {
     if (this._saving || !this._opened) {
       return;
     }
-    if (deepEqual(this.pendingSections, this.committedSections)) {
+
+    const committedSections =
+      this.args.loadedSections?.configuration?.sections ?? [];
+
+    if (deepEqual(this.pendingSections, committedSections)) {
       return;
     }
 
@@ -75,11 +71,17 @@ export default class RedesignedAdminDashboard extends Component {
       .updateConfiguration(this.pendingSections)
       .catch((e) => {
         popupAjaxError(e);
-        this.pendingSections = buildPending(this.committedSections);
+        this.pendingSections = this.#buildPendingSections(
+          this.args.loadedSections?.configuration?.sections
+        );
       })
       .finally(() => {
         this._saving = false;
       });
+  }
+
+  #buildPendingSections(sections) {
+    return sections?.map((section) => ({ ...section })) ?? [];
   }
 
   <template>
@@ -88,9 +90,9 @@ export default class RedesignedAdminDashboard extends Component {
 
       <div class="db-toolbar__actions">
         <DashboardDateRange
-          @period={{@period}}
-          @startDate={{@startDate}}
-          @endDate={{@endDate}}
+          @period={{@requestedPeriod}}
+          @startDate={{@requestedStartDate}}
+          @endDate={{@requestedEndDate}}
           @setPeriod={{@setPeriod}}
           @setCustomDateRange={{@setCustomDateRange}}
         />
@@ -119,40 +121,46 @@ export default class RedesignedAdminDashboard extends Component {
     </div>
 
     <div class="db-main">
-      {{#if this.showSkeleton}}
-        <DashboardSkeleton />
-      {{else}}
-        {{#each @sections key="id" as |section|}}
+      {{#if @loadedSections}}
+        {{#each @loadedSections.sections key="id" as |section|}}
           <div class="db-main__section" data-section-id={{section.id}}>
             {{#if (eq section.id "highlights")}}
               <DashboardHighlights
                 @highlights={{section.data}}
-                @period={{@period}}
+                @period={{@loadedSections.period}}
                 @loading={{@loadingSections}}
                 @fetchError={{@sectionsFetchError}}
-                @startDate={{@startDate}}
-                @endDate={{@endDate}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
               />
             {{else if (eq section.id "reports")}}
               <DashboardReports
-                @startDate={{@startDate}}
-                @endDate={{@endDate}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
               />
             {{else if (eq section.id "traffic")}}
               <DashboardTraffic
-                @startDate={{@startDate}}
-                @endDate={{@endDate}}
+                @traffic={{section.data}}
+                @period={{@loadedSections.period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
               />
             {{else if (eq section.id "engagement")}}
               <DashboardEngagement
-                @startDate={{@startDate}}
-                @endDate={{@endDate}}
+                @engagement={{section.data}}
+                @period={{@loadedSections.period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
               />
             {{/if}}
           </div>
         {{/each}}
 
-        {{#unless @sections.length}}
+        {{#unless @loadedSections.sections.length}}
           <div class="db-main__empty" role="status" aria-live="polite">
             {{#if this.currentUser.admin}}
               {{i18n "admin.dashboard.configure.empty_state_admin"}}
@@ -161,6 +169,8 @@ export default class RedesignedAdminDashboard extends Component {
             {{/if}}
           </div>
         {{/unless}}
+      {{else if @loadingSections}}
+        <DashboardSkeleton />
       {{/if}}
     </div>
   </template>
