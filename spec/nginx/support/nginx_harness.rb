@@ -74,6 +74,13 @@ module Nginx
         Net::HTTP.start(uri.host, uri.port) { |http| http.request(req) }
       end
 
+      def nginx_access_log
+        path = File.join(@tmpdir, "access.log")
+        return "" if @tmpdir.nil? || !File.exist?(path)
+
+        File.read(path)
+      end
+
       private
 
       def start_upstream
