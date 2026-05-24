@@ -97,7 +97,7 @@ class UpcomingChanges::NotifyPromotion
         notification_type: Notification.types[:upcoming_change_automatically_promoted],
         data:
           UpcomingChanges::Action::NotificationDataMerger.call(
-            existing_notification: existing_by_user[admin_id],
+            existing_notification_data: existing_by_user[admin_id]&.data,
             new_change_name: params.setting_name,
           ).to_json,
       }

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
+RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
   let(:enable_upload_debug_mode_status) { :experimental }
   let(:show_user_menu_avatars_status) { :beta }
 
   before do
-    # No upcoming change notifications are sent for new sites
-    UpcomingChanges.stubs(:should_notify_admins?).returns(true)
     mock_upcoming_change_metadata(
       {
         enable_upload_debug_mode: {
@@ -77,7 +75,7 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
       end
 
       it "returns N/A as previous_value in the result" do
-        expect(result[:status_changes][:enable_upload_debug_mode]).to eq(
+        expect(result[:enable_upload_debug_mode]).to eq(
           { previous_value: "N/A", new_value: :experimental },
         )
       end
@@ -183,10 +181,6 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
             "new_value" => "experimental",
           },
         )
-        UpcomingChangeEvent.create!(
-          event_type: :admins_notified_available_change,
-          upcoming_change_name: :show_user_menu_avatars,
-        )
       end
 
       it "creates a status_changed event with correct data" do
@@ -200,7 +194,6 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
 
       it "records the previous and new status values" do
         result
-        result
         expect(
           scoped_events
             .where(event_type: :status_changed, upcoming_change_name: :show_user_menu_avatars)
@@ -210,7 +203,7 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
       end
 
       it "returns the status change in the result" do
-        expect(result[:status_changes][:show_user_menu_avatars]).to eq(
+        expect(result[:show_user_menu_avatars]).to eq(
           { previous_value: "beta", new_value: :stable },
         )
       end
@@ -240,136 +233,6 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
 
       it "does not create a new status_changed event" do
         expect { result }.not_to change { scoped_events.where(event_type: :status_changed).count }
-      end
-    end
-
-    context "when an added change did not meet promotion_status - 1 initially" do
-      let(:show_user_menu_avatars_status) { :beta }
-
-      before do
-        SiteSetting.promote_upcoming_changes_on_status = "stable"
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: :show_user_menu_avatars,
-          event_data: {
-            "previous_value" => nil,
-            "new_value" => "alpha",
-          },
-        )
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: :enable_upload_debug_mode,
-          event_data: {
-            "previous_value" => nil,
-            "new_value" => "experimental",
-          },
-        )
-      end
-
-      it "notifies all admins when status now meets threshold" do
-        expect { result }.to change {
-          Notification
-            .where(
-              notification_type: Notification.types[:upcoming_change_available],
-              user_id: [admin_1.id, admin_2.id],
-            )
-            .where("data::text LIKE ?", "%show_user_menu_avatars%")
-            .count
-        }.by(2)
-      end
-
-      it "creates an admins_notified_available_change event" do
-        expect { result }.to change {
-          scoped_events.where(
-            event_type: :admins_notified_available_change,
-            upcoming_change_name: :show_user_menu_avatars,
-          ).count
-        }.by(1)
-      end
-
-      it "includes the change in notified_changes" do
-        expect(result[:notified_changes]).to include(:show_user_menu_avatars)
-      end
-
-      it "creates a UserHistory entry for the upcoming change" do
-        expect { result }.to change {
-          UserHistory.where(
-            action: UserHistory.actions[:upcoming_change_available],
-            subject: "show_user_menu_avatars",
-          ).count
-        }.by(1)
-      end
-
-      context "when the site is new (< 1 hour old)" do
-        before { UpcomingChanges.stubs(:should_notify_admins?).returns(false) }
-
-        it "does not notify admins" do
-          expect { result }.not_to change {
-            Notification
-              .where(notification_type: Notification.types[:upcoming_change_available])
-              .where("data::text LIKE ?", "%show_user_menu_avatars%")
-              .count
-          }
-        end
-      end
-
-      context "when admins were already notified" do
-        before do
-          UpcomingChangeEvent.create!(
-            event_type: :admins_notified_available_change,
-            upcoming_change_name: :show_user_menu_avatars,
-          )
-        end
-
-        it "does not notify admins again" do
-          expect { result }.not_to change {
-            Notification
-              .where(notification_type: Notification.types[:upcoming_change_available])
-              .where("data::text LIKE ?", "%show_user_menu_avatars%")
-              .count
-          }
-        end
-
-        it "does not include the change in notified_changes" do
-          expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
-        end
-      end
-    end
-
-    context "when a change jumps directly to the promotion status" do
-      let(:show_user_menu_avatars_status) { :stable }
-
-      before do
-        SiteSetting.promote_upcoming_changes_on_status = "stable"
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: :show_user_menu_avatars,
-          event_data: {
-            "previous_value" => nil,
-            "new_value" => "experimental",
-          },
-        )
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: :enable_upload_debug_mode,
-          event_data: {
-            "previous_value" => nil,
-            "new_value" => "experimental",
-          },
-        )
-      end
-
-      it "does not send an upcoming_change_available notification" do
-        expect { result }.not_to change {
-          Notification
-            .where(notification_type: Notification.types[:upcoming_change_available])
-            .where("data::text LIKE ?", "%show_user_menu_avatars%")
-            .count
-        }
-      end
-
-      it "does not include the change in notified_changes" do
-        expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
       end
     end
   end
