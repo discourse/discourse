@@ -2164,8 +2164,12 @@ HTML
 
       # Due to a bug in node 18.16 and lower this takes about 11s.
       # On node 18.19 and newer it takes about 250ms
+      # Keep PrettyText startup outside the timed assertion. The 5s timeout still
+      # catches the ~11s Node 18.16 regression while allowing randomized suite overhead.
+      PrettyText.v8
+
       expect do
-        Timeout.timeout(3) do
+        Timeout.timeout(5) do
           expect(PrettyText.cook("abc nope def")).to match_html("<p>abc yep def</p>")
         end
       end.not_to raise_error
