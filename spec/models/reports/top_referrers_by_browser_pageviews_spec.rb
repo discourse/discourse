@@ -39,7 +39,7 @@ describe Reports::TopReferrersByBrowserPageviews do
       expect(report.data.first[:percent]).to eq(50)
     end
 
-    it "excludes same-host bare, path-prefixed, and query-prefixed referrers" do
+    it "excludes same-host bare, path-prefixed, and query-prefixed referrers from numerator and denominator" do
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com")
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/topic/1")
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com?ref=email")
@@ -52,6 +52,22 @@ describe Reports::TopReferrersByBrowserPageviews do
           end_date: end_date,
         )
       expect(report.data.map { |row| row[:normalized_referrer] }).to eq(["google.com"])
+      expect(report.data.first[:percent]).to eq(100)
+    end
+
+    it "includes direct (no-referrer) pageviews in the denominator alongside external referrers" do
+      2.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com") }
+      2.times { Fabricate(:browser_pageview_event, normalized_referrer: nil) }
+      Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/topic/1")
+
+      report =
+        Report.find(
+          "top_referrers_by_browser_pageviews",
+          start_date: start_date,
+          end_date: end_date,
+        )
+      expect(report.data.map { |row| row[:normalized_referrer] }).to eq(["google.com"])
+      expect(report.data.first[:percent]).to eq(50)
     end
 
     it "does not exclude hosts that merely share a prefix with current_hostname" do
