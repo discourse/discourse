@@ -103,7 +103,7 @@ else
   use_runtime_info = false if use_runtime_info.nil?
 end
 
-files.reject! { |file| TurboRspec::Exclusion.excluded_by_patterns?(file, exclude_patterns) } if exclude_patterns.any?
+files.reject! { |file| TurboRspecExclusion.excluded_by_patterns?(file, exclude_patterns) } if exclude_patterns.any?
 
 if explicit_file_args && requested_files&.any? && files.empty?
   abort "All requested spec files were excluded. spec/nginx has its own runner; use spec/nginx/run.sh for nginx specs."
