@@ -138,7 +138,7 @@ class CategoriesController < ApplicationController
         end
 
     render json: {
-             types: Categories::TypeRegistry.list(only_visible: true, guardian:),
+             types: Categories::TypeRegistry.list(only_visible: true),
              counts: counts_by_type,
            }
   end
@@ -180,44 +180,43 @@ class CategoriesController < ApplicationController
         return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
-    configure_error = nil
+    if @category.save
+      @category.move_to(position.to_i) if position
 
-    Category.transaction do
-      if @category.save
-        @category.move_to(position.to_i) if position
+      if category_type.present? &&
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+        type_class = Categories::TypeRegistry.get(category_type.to_sym)
+        allowed_setting_keys = type_class&.configuration_schema_keys(:category_settings) || []
+        type_settings = params[:category_type_settings]&.slice(*allowed_setting_keys)&.permit!
 
-        if category_type.present? &&
-             UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-          type_class = Categories::TypeRegistry.get(category_type.to_sym)
-          allowed_setting_keys = type_class&.configuration_schema_keys(:category_settings) || []
-          type_settings = params[:category_type_settings]&.slice(*allowed_setting_keys)&.permit!
-
-          Categories::Configure.call(
-            guardian:,
-            params: {
-              category_id: @category.id,
-              category_type:,
-              site_setting_configuration_values: params[:category_type_site_settings],
-              category_configuration_values: [
-                category_params[:custom_fields],
-                type_settings,
-              ].compact.reduce(:merge),
-            },
-          ) do
-            on_failed_policy(:type_is_available) do
-              configure_error = category_type_unavailable_error(category_type)
-              raise ActiveRecord::Rollback
-            end
+        Categories::Configure.call(
+          guardian:,
+          params: {
+            category_id: @category.id,
+            category_type:,
+            site_setting_configuration_values: params[:category_type_site_settings],
+            category_configuration_values: [
+              category_params[:custom_fields],
+              type_settings,
+            ].compact.reduce(:merge),
+          },
+        ) do |result|
+          on_failed_policy(:type_is_available) do
+            return(
+              render json: {
+                       errors: [
+                         I18n.t(
+                           "category_types.not_available",
+                           type_name: category_type.capitalize,
+                         ),
+                       ],
+                     },
+                     status: :unprocessable_entity
+            )
           end
         end
       end
-    end
 
-    if configure_error
-      return render json: { errors: [configure_error] }, status: :unprocessable_entity
-    end
-
-    if @category.persisted?
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
       end
@@ -244,7 +243,7 @@ class CategoriesController < ApplicationController
       # Handles adding or removing category types registered by plugins
       # based on the multi-type selector in the General tab for categories.
       if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        return nil unless manage_category_types(cat, pending_custom_fields || {})
+        manage_category_types(cat, pending_custom_fields || {})
         cat.reload
       end
 
@@ -558,23 +557,6 @@ class CategoriesController < ApplicationController
     end
   end
 
-  def category_type_unavailable_error(category_type)
-    type_id = category_type.to_sym
-    type_class = Categories::TypeRegistry.get(type_id)
-
-    if type_class&.enables_plugin?
-      plugin_name =
-        Categories::TypeRegistry
-          .owner(type_id)
-          &.sub(/^discourse-/, "")
-          &.sub(/-plugin$/, "")
-          &.titleize
-      I18n.t("category_types.requires_plugin", type_name: category_type.to_s.humanize, plugin_name:)
-    else
-      I18n.t("category_types.not_available", type_name: category_type.to_s.humanize)
-    end
-  end
-
   def manage_category_types(category, pending_custom_fields)
     # NOTE: The code in this block is pretty similar to what we are doing in
     # configure_site_settings in Categories::Types::Base, however here we
@@ -641,19 +623,23 @@ class CategoriesController < ApplicationController
             category_id: category.id,
             category_type:,
           },
-        ) do
+        ) do |result|
           on_failed_policy(:type_is_available) do
-            render json: {
-                     errors: [category_type_unavailable_error(category_type)],
-                   },
-                   status: :unprocessable_entity
-            return false
+            return(
+              render json: {
+                       errors: [
+                         I18n.t(
+                           "category_types.not_available",
+                           type_name: category_type.capitalize,
+                         ),
+                       ],
+                     },
+                     status: :unprocessable_entity
+            )
           end
         end
       end
     end
-
-    true
   end
 
   def topics_per_page

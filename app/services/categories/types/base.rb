@@ -124,12 +124,6 @@ module Categories
         def enable_plugin
         end
 
-        # Returns true if this type overrides enable_plugin with actual behavior.
-        # Used to determine if admin privileges are required to configure this type.
-        def enables_plugin?
-          method(:enable_plugin).owner != Categories::Types::Base.singleton_class
-        end
-
         # Configure any category-specific settings or custom fields that are
         # specific to this category type, including whatever setting or custom
         # field values make this category type unique.
@@ -257,10 +251,7 @@ module Categories
 
         # Used as an extension point to limit access to a category type
         # based on certain conditions, mostly for Discourse hosting.
-        # When guardian is provided, also checks if admin is required for
-        # types that enable plugins.
-        def available?(guardian = nil)
-          return false if enables_plugin? && guardian && !guardian.is_admin?
+        def available?
           true
         end
 
@@ -337,26 +328,18 @@ module Categories
         end
 
         # Used when serializing the category configuration schema to the client.
-        def metadata(guardian: nil)
+        def metadata
           name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
-          result = {
+          {
             id: type_id,
             name: name,
             title: I18n.t("category_types.#{type_id}.title", default: name),
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
-            available: available?(guardian),
+            available: available?,
             visible: visible?,
             configuration_schema: resolved_configuration_schema,
-          }
-          if enables_plugin?
-            plugin_name = Categories::TypeRegistry.owner(type_id)
-            result[:required_plugin] = plugin_name
-              &.sub(/^discourse-/, "")
-              &.sub(/-plugin$/, "")
-              &.titleize
-          end
-          result.merge(additional_metadata)
+          }.merge(additional_metadata)
         end
 
         private

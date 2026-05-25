@@ -31,19 +31,12 @@ module Categories
         types
       end
 
-      def list(only_visible: false, guardian: nil)
-        types
-          .values
-          .select { |type| only_visible ? type.visible? : true }
-          .map { |type| type.metadata(guardian:) }
+      def list(only_visible: false)
+        types.values.select { |type| only_visible ? type.visible? : true }.map(&:metadata)
       end
 
       def valid?(id)
         types.key?(id.to_sym)
-      end
-
-      def owner(id)
-        owners[id.to_sym]
       end
 
       def reset!

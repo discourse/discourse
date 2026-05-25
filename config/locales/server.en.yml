@@ -910,7 +910,6 @@ en:
 
   category_types:
     not_available: "Category type '%{type_name}' is not available"
-    requires_plugin: "Category type '%{type_name}' requires the '%{plugin_name}' plugin to be enabled. Ask an administrator to enable it or create this category."
     discussion:
       name: "Discussion"
       title: "discussion"
