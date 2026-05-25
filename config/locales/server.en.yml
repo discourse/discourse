@@ -550,6 +550,9 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+  too_many_quotes:
+    one: "Sorry, you can only include one quote in a post."
+    other: "Sorry, you can only include %{count} quotes in a post."
   contains_blocked_word: "Sorry, you can't post the word '%{word}'; it's not allowed."
   contains_blocked_words: "Sorry, you can't post that. Not allowed: %{words}."
 
@@ -2323,6 +2326,7 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
+    max_quotes_per_post: "Maximum number of quotes allowed in a single post. Set to 0 to disable the check."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
     enable_mentions: "Permits users to tag or reference each other in their posts using the '@' symbol."
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
