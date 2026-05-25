@@ -3100,7 +3100,7 @@ tr_TR:
 
       - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/v%{new_version}) yenilikleri inceleyin
 
       - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
   new_version_mailer_with_notes:
@@ -3115,7 +3115,7 @@ tr_TR:
 
       - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/v%{new_version}) yenilikleri inceleyin
 
       - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
 

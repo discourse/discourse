@@ -3312,7 +3312,7 @@ ru:
 
       - Обновите с помощью нашего простого **[обновления в один клик в браузере](%{base_url}/admin/update)**
 
-      - Ознакомьтесь с новинками в [примечаниях к выпуску](https://releases.discourse.org/changelog/%{new_version})
+      - Ознакомьтесь с новинками в [примечаниях к выпуску](https://releases.discourse.org/changelog/v%{new_version})
 
       - Посетите [meta.discourse.org](https://meta.discourse.org) для новостей, обсуждений и поддержки Discourse
   new_version_mailer_with_notes:
@@ -3327,7 +3327,7 @@ ru:
 
       - Обновись, используя наше простое **[обновление браузера одним кликом](%{base_url}/admin/update)**
 
-      - Узнай, что нового в [заметках о выпуске](https://releases.discourse.org/changelog/%{new_version})
+      - Узнай, что нового в [заметках о выпуске](https://releases.discourse.org/changelog/v%{new_version})
 
       - Посети [meta.discourse.org](https://meta.discourse.org) для новостей, обсуждений и поддержки Discourse
 

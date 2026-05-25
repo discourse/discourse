@@ -3114,7 +3114,7 @@ de:
 
       - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/v%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -3129,7 +3129,7 @@ de:
 
       - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/v%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 

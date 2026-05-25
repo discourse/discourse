@@ -5833,6 +5833,7 @@ pl_PL:
       synonyms: "Synonimy"
       synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
       synonyms_inline: "Synonimy te zostaną zastąpione przez %{base_tag_name}:"
+      synonym_hint: "→ %{tag_name}"
       save: "Zapisz nazwę i opis tagu"
       tag_groups_info:
         one: 'Ten tag należy do grupy "%{tag_groups}”.'
@@ -8602,6 +8603,7 @@ pl_PL:
             delete_topic: "usuń temat"
             recover_topic: "przywróć wątek"
             delete_post: "usunięcie wpisu"
+            recover_post: "przywróć usunięty wpis"
             impersonate: "udawanie użytkownika"
             anonymize_user: "anonimizuj użytkownika"
             roll_up: "zwiń bloki IP"

@@ -160,6 +160,10 @@ ur:
             restricted_tags:
               label: ٹیگز
       scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: ویب ہُک یو آر ایل
         auto_tag_topic:
           fields:
             tags:
