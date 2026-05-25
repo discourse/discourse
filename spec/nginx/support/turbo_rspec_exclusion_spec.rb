@@ -2,7 +2,7 @@
 
 require_relative "../../../lib/turbo_rspec_exclusion"
 
-RSpec.describe TurboRspec::Exclusion do
+RSpec.describe TurboRspecExclusion do
   describe ".path_for_exclude_match" do
     it "strips bracketed RSpec example ids" do
       expect(described_class.path_for_exclude_match("spec/nginx/basic_proxy_spec.rb[1:1]")).to eq(
