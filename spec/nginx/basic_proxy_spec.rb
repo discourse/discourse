@@ -13,11 +13,15 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     }
   end
 
+  let(:existing_proxy_headers) do
+    { "X-Forwarded-For" => "198.51.100.7", "X-Forwarded-Proto" => "https" }
+  end
+
   before { harness.start }
   after { harness.stop }
 
   it "forwards a missing path through @discourse with the proxy headers intact" do
-    response = harness.get("/missing-path", headers: smuggled_headers)
+    response = harness.get("/missing-path", headers: smuggled_headers.merge(existing_proxy_headers))
 
     expect(response.code).to eq("200")
 
@@ -27,8 +31,8 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     expect(payload["headers"]).to include(
       "Host" => "127.0.0.1:#{harness.listen_port}",
       "X-Real-IP" => "127.0.0.1",
-      "X-Forwarded-For" => "127.0.0.1",
-      "X-Forwarded-Proto" => "http",
+      "X-Forwarded-For" => "198.51.100.7, 127.0.0.1",
+      "X-Forwarded-Proto" => "https",
     )
     expect_acceleration_headers_stripped(payload["headers"])
     expect(payload["headers"]["X-Request-Start"]).to match(/\At=\d+(?:\.\d+)?\z/)

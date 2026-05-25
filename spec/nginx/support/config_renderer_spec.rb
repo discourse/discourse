@@ -5,6 +5,32 @@ require_relative "config_renderer"
 
 RSpec.describe Nginx::Support::ConfigRenderer do
   describe "#render" do
+    it "uses mime.types next to nginx --conf-path when the prefix candidate is absent" do
+      Dir.mktmpdir do |tmpdir|
+        conf_dir = File.join(tmpdir, "etc/nginx")
+        FileUtils.mkdir_p(conf_dir)
+        mime_types = File.join(conf_dir, "mime.types")
+        File.write(mime_types, "types {}\n")
+        sample_path = File.join(tmpdir, "nginx.sample.conf")
+        File.write(sample_path, "")
+
+        allow(described_class).to receive(:module_available?).with("brotli").and_return(true)
+        allow(described_class).to receive(:nginx_build_flags).and_return(
+          "--prefix=#{File.join(tmpdir, "prefix")} --conf-path=#{File.join(conf_dir, "nginx.conf")}",
+        )
+
+        renderer =
+          described_class.new(
+            tmpdir: tmpdir,
+            sample_path: sample_path,
+            upstream_port: 3001,
+            listen_port: 3002,
+          )
+
+        expect(File.read(renderer.render)).to include("include #{mime_types};")
+      end
+    end
+
     it "runs nginx workers as the test process user when root spawns nginx" do
       Dir.mktmpdir do |tmpdir|
         name_entry = Struct.new(:name)
