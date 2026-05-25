@@ -2,7 +2,6 @@
 
 describe Jobs::Chat::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.gif" }
-  let(:second_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.gif" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
   let(:gif) do
     Base64.decode64(
@@ -17,12 +16,6 @@ describe Jobs::Chat::PullHotlinkedImages do
     Jobs.run_immediately!
 
     stub_request(:get, image_url).to_return(body: gif, headers: { "Content-Type" => "image/gif" })
-    stub_request(:get, second_image_url).to_return(
-      body: gif,
-      headers: {
-        "Content-Type" => "image/gif",
-      },
-    )
     stub_request(:get, broken_image_url).to_return(status: 404)
 
     SiteSetting.download_remote_images_to_local = true

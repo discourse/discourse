@@ -42,6 +42,10 @@ module Jobs
           img["src"] = ::UrlHelper.cook_url(upload.url, secure: upload.secure?)
           img.delete(::PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
           changed = true
+        rescue => e
+          Rails.logger.error(
+            "Failed to pull hotlinked image (#{download_src}) for chat message #{@chat_message_id}\n#{e.message}\n#{e.backtrace.join("\n")}",
+          )
         end
 
         return if !changed
@@ -139,11 +143,6 @@ module Jobs
         filename << File.extname(downloaded.path) if !filename["."]
         upload = ::UploadCreator.new(downloaded, filename, origin: src).create_for(user_id)
         upload.persisted? ? upload : nil
-      rescue => e
-        Rails.logger.warn(
-          "Chat hotlinked image download failed for message #{@chat_message_id} (#{src}): #{e.message}",
-        )
-        nil
       end
     end
   end
