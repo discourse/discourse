@@ -2,7 +2,7 @@
 
 RSpec.describe AdminDashboard::Reports::CoreReportProvider do
   fab!(:admin)
-  let(:guardian) { Guardian.new(admin) }
+  let(:guardian) { admin.guardian }
 
   describe ".source_name" do
     it "returns 'core_report'" do
@@ -48,10 +48,9 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
   describe ".list_all" do
     it "includes built-in reports" do
       reports = described_class.list_all
-      identifiers = reports.map(&:identifier)
 
-      expect(identifiers).to include("signups")
-      reports.each { |r| expect(r).to be_a(AdminDashboard::Reports::ResolvedReport) }
+      expect(reports.map(&:identifier)).to include("signups")
+      expect(reports).to all(be_a(AdminDashboard::Reports::ResolvedReport))
     end
 
     it "filters by name/description when search is given" do

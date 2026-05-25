@@ -237,8 +237,8 @@ export default class ManageReports extends Component {
           })),
         }),
       });
-      await this.args.model?.onApplied?.();
       this.args.closeModal?.();
+      this.args.model?.onApplied?.();
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -401,6 +401,7 @@ export default class ManageReports extends Component {
           @label="admin.dashboard.reports_section.modal.apply"
           @action={{this.apply}}
           @disabled={{this.applying}}
+          @isLoading={{this.applying}}
           class="btn-primary manage-reports__apply"
         />
       </:footer>

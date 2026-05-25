@@ -98,7 +98,10 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def update_reports_section
-    AdminDashboard::Reports::LayoutUpdater.call(items: parse_reports_items_payload)
+    AdminDashboard::Reports::LayoutUpdater.call(
+      items: parse_reports_items_payload,
+      guardian: guardian,
+    )
     head :no_content
   end
 

@@ -5,10 +5,7 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
   fab!(:user)
   fab!(:group)
 
-  let(:admin_guardian) { Guardian.new(admin) }
-  let(:user_guardian) { Guardian.new(user) }
-
-  let!(:visible_query) do
+  fab!(:visible_query) do
     Fabricate(
       :query,
       name: "Visible query",
@@ -19,7 +16,7 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
     )
   end
 
-  let!(:hidden_query) do
+  fab!(:hidden_query) do
     Fabricate(
       :query,
       name: "Hidden query",
@@ -29,6 +26,9 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       user: admin,
     )
   end
+
+  let(:admin_guardian) { admin.guardian }
+  let(:user_guardian) { user.guardian }
 
   before { SiteSetting.data_explorer_enabled = true }
   after { DiscourseDataExplorer::QueryRunner.invalidate(visible_query.id) }
