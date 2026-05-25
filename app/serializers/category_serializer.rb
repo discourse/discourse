@@ -87,12 +87,16 @@ class CategorySerializer < SiteCategorySerializer
       end
   end
 
+  def can_edit_category?
+    scope && scope.can_edit?(object)
+  end
+
   def include_group_permissions?
-    scope&.can_edit?(object)
+    can_edit_category?
   end
 
   def include_available_groups?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def available_groups
@@ -120,15 +124,15 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_cannot_delete_reason?
-    !include_can_delete? && scope && scope.can_edit?(object)
+    !include_can_delete? && can_edit_category?
   end
 
   def include_email_in?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def include_email_in_allow_strangers?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def include_notification_level?
@@ -158,8 +162,16 @@ class CategorySerializer < SiteCategorySerializer
     category_description
   end
 
+  def include_category_types?
+    can_edit_category?
+  end
+
   def category_types
     object.category_types
+  end
+
+  def include_category_type_settings?
+    can_edit_category?
   end
 
   def category_type_settings
@@ -170,6 +182,10 @@ class CategorySerializer < SiteCategorySerializer
         next result unless type_klass.category_matches?(object)
         result.merge(type_klass.read_category_settings(object))
       end
+  end
+
+  def include_available_category_types?
+    can_edit_category?
   end
 
   def available_category_types
