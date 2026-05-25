@@ -140,10 +140,13 @@ module Nginx
 
       def system_mime_types
         # nginx ships its own mime.types; locate it via `nginx -V`'s
-        # configured --prefix or fall back to /etc/nginx/mime.types.
-        prefix = ConfigRenderer.nginx_build_flags[/--prefix=(\S+)/, 1]
+        # configured --prefix/--conf-path or fall back to /etc/nginx/mime.types.
+        build_flags = ConfigRenderer.nginx_build_flags
+        prefix = build_flags[/--prefix=(\S+)/, 1]
+        conf_path = build_flags[/--conf-path=(\S+)/, 1]
         candidates = [
           prefix && File.join(prefix, "conf/mime.types"),
+          conf_path && File.join(File.dirname(conf_path), "mime.types"),
           "/etc/nginx/mime.types",
         ].compact
         candidates.find { |p| File.exist?(p) } || candidates.first
