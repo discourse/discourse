@@ -9,6 +9,25 @@ require "optparse"
 # spec/nginx has its own Rails-free runner; turbo_rspec loads rails_helper.
 DEFAULT_EXCLUDE_PATTERNS = ["spec/nginx/**/*_spec.rb"].freeze
 
+def path_for_exclude_match(file)
+  path = file.sub(/:\d+(?::\d+)?\z/, "")
+  expanded_path = File.expand_path(path)
+  working_directory = "#{Dir.pwd}/"
+
+  if expanded_path.start_with?(working_directory)
+    expanded_path.delete_prefix(working_directory)
+  else
+    path.delete_prefix("./")
+  end
+end
+
+def excluded_by_patterns?(file, patterns)
+  path = path_for_exclude_match(file)
+  patterns.any? do |pattern|
+    File.fnmatch(pattern, path) || File.fnmatch(pattern, path, File::FNM_PATHNAME)
+  end
+end
+
 requires = []
 formatters = []
 verbose = false
@@ -102,13 +121,7 @@ else
   use_runtime_info = false if use_runtime_info.nil?
 end
 
-if exclude_patterns.any?
-  files.reject! do |file|
-    exclude_patterns.any? do |pattern|
-      File.fnmatch(pattern, file) || File.fnmatch(pattern, file, File::FNM_PATHNAME)
-    end
-  end
-end
+files.reject! { |file| excluded_by_patterns?(file, exclude_patterns) } if exclude_patterns.any?
 
 if explicit_file_args && requested_files&.any? && files.empty?
   abort "All requested spec files were excluded. spec/nginx has its own runner; use spec/nginx/run.sh for nginx specs."
