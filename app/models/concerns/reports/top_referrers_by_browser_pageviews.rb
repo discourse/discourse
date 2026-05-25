@@ -20,30 +20,18 @@ module Reports::TopReferrersByBrowserPageviews
         },
       ]
 
-      user_filter_sql = SiteSetting.login_required ? "AND user_id IS NOT NULL" : ""
+      count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
-
-      host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
-      escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
 
       sql = <<~SQL
         WITH ranked AS (
           SELECT
             normalized_referrer,
-            COUNT(*) AS count,
-            SUM(COUNT(*)) OVER () AS total
-          FROM browser_pageview_events
-          WHERE created_at >= :start_date
-            AND created_at < :end_date_exclusive
-            #{user_filter_sql}
-            AND (
-              normalized_referrer IS NULL
-              OR (
-                normalized_referrer <> :host_exact
-                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
-              )
-            )
+            SUM(#{count_expr}) AS count,
+            SUM(SUM(#{count_expr})) OVER () AS total
+          FROM browser_pageview_referrer_daily_rollups
+          WHERE date >= :start_date
+            AND date < :end_date_exclusive
           GROUP BY normalized_referrer
         )
         SELECT normalized_referrer, count,
@@ -61,9 +49,6 @@ module Reports::TopReferrersByBrowserPageviews
             sql,
             start_date: report.start_date,
             end_date_exclusive: end_date_exclusive,
-            host_exact: host,
-            host_path_prefix: "#{escaped_host}/%",
-            host_query_prefix: "#{escaped_host}?%",
             limit: report.limit || 50,
           )
           .map do |row|

@@ -22,19 +22,18 @@ module Reports::TopCountriesByBrowserPageviews
         },
       ]
 
-      user_filter_sql = SiteSetting.login_required ? "AND user_id IS NOT NULL" : ""
+      count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
 
       sql = <<~SQL
         WITH ranked AS (
           SELECT
             country_code,
-            COUNT(*) AS count,
-            SUM(COUNT(*)) OVER () AS total
-          FROM browser_pageview_events
-          WHERE created_at >= :start_date
-            AND created_at < :end_date_exclusive
-            #{user_filter_sql}
+            SUM(#{count_expr}) AS count,
+            SUM(SUM(#{count_expr})) OVER () AS total
+          FROM browser_pageview_country_daily_rollups
+          WHERE date >= :start_date
+            AND date < :end_date_exclusive
           GROUP BY country_code
         )
         SELECT country_code, count,
