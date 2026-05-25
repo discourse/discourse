@@ -167,19 +167,32 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         normalized_referrer: nil,
         created_at: "2026-05-12",
       )
+      # Internal-referrer pageviews must not dilute the top referrers percent
+      # denominator (it covers direct + external referrer traffic only).
+      6.times do
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "DE",
+          normalized_referrer: "test.localhost/t/topic/1",
+          created_at: "2026-05-12",
+        )
+      end
 
       dashboard.visit
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_country_rows(
         [
-          { country: "US", percent: 50 },
-          { country: "DE", percent: 25 },
-          { country: "GB", percent: 25 },
+          { country: "DE", percent: 70 },
+          { country: "US", percent: 20 },
+          { country: "GB", percent: 10 },
         ],
       )
       expect(traffic).to have_top_referrer_rows(
-        [{ referrer: "news.ycombinator.com/item?id=42" }, { referrer: "reddit.com/r/discourse" }],
+        [
+          { referrer: "news.ycombinator.com/item?id=42", percent: 50 },
+          { referrer: "reddit.com/r/discourse", percent: 25 },
+        ],
       )
     end
 

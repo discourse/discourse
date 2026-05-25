@@ -36,6 +36,14 @@ module Reports::TopReferrersByBrowserPageviews
           WHERE created_at >= :start_date
             AND created_at < :end_date_exclusive
             #{user_filter_sql}
+            AND (
+              normalized_referrer IS NULL
+              OR (
+                normalized_referrer <> :host_exact
+                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+              )
+            )
           GROUP BY normalized_referrer
         )
         SELECT normalized_referrer, count,
@@ -43,9 +51,6 @@ module Reports::TopReferrersByBrowserPageviews
                     ELSE ROUND((count::numeric / total) * 100)::integer END AS percent
         FROM ranked
         WHERE normalized_referrer IS NOT NULL
-          AND normalized_referrer <> :host_exact
-          AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-          AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
         ORDER BY count DESC, normalized_referrer ASC
         LIMIT :limit
       SQL
