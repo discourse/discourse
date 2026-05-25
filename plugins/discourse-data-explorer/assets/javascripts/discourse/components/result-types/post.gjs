@@ -1,4 +1,6 @@
+import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
+import getURL from "discourse/lib/get-url";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 const Post = <template>
@@ -12,7 +14,11 @@ const Post = <template>
         <div class="quote-controls">
           {{! eslint-disable ember/template-no-invalid-link-text }}
           <a
-            href="/t/via-quote/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
+            href={{getURL
+              (concat
+                "/t/via-quote/" @ctx.post.topic_id "/" @ctx.post.post_number
+              )
+            }}
             title="go to the quoted post"
             class="quote-other-topic"
           >
@@ -21,7 +27,9 @@ const Post = <template>
 
         <a
           class="result-post-link"
-          href="/t/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
+          href={{getURL
+            (concat "/t/" @ctx.post.topic_id "/" @ctx.post.post_number)
+          }}
         >
           {{dAvatar @ctx.post imageSize="tiny"}}{{@ctx.post.username}}:
         </a>

@@ -5,7 +5,7 @@ import {
   GROUP_ACTION_CODES,
 } from "discourse/components/post/small-action";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { userPath } from "discourse/lib/url";
+import { groupPath, userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
@@ -21,7 +21,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
       GROUP_ACTION_CODES.includes(actionCode) ||
       customGroupActionCodes.includes(actionCode)
     ) {
-      who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
+      who = `<a class="mention-group" href="${groupPath(username)}">@${username}</a>`;
     } else {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }

@@ -5,6 +5,7 @@ import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
 import DMenu from "discourse/float-kit/components/d-menu";
 import bodyClass from "discourse/helpers/body-class";
 import rawDate from "discourse/helpers/raw-date";
+import { groupPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -248,7 +249,7 @@ export default <template>
                           {{#each invite.groups as |g|}}
                             <span class="invite-extra">
                               <a
-                                href="/g/{{g.name}}"
+                                href={{groupPath g.name}}
                                 class="invite-extra-item-link"
                               >{{dIcon "users"}}
                                 {{g.name}}

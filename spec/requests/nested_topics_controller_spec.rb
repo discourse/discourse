@@ -67,6 +67,35 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response).to redirect_to("/t/#{pm.slug}/#{pm.id}/5")
       expect(response.status).to eq(302)
     end
+
+    context "when Discourse is installed in a subfolder" do
+      before { set_subfolder "/forum" }
+
+      it "prefixes the crawler redirect target with the subfolder" do
+        get "/n/#{topic.slug}/#{topic.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response).to redirect_to("/forum/t/#{topic.slug}/#{topic.id}")
+        expect(response.status).to eq(301)
+      end
+
+      it "prefixes the crawler post-number redirect target with the subfolder" do
+        get "/n/#{topic.slug}/#{topic.id}/5", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response).to redirect_to("/forum/t/#{topic.slug}/#{topic.id}/5")
+        expect(response.status).to eq(301)
+      end
+
+      it "prefixes the private-message fallback redirect with the subfolder" do
+        pm = Fabricate(:private_message_topic, user: user)
+        Fabricate(:post, topic: pm, user: user, post_number: 1)
+
+        sign_in(user)
+        get "/n/#{pm.slug}/#{pm.id}/5"
+
+        expect(response).to redirect_to("/forum/t/#{pm.slug}/#{pm.id}/5")
+        expect(response.status).to eq(302)
+      end
+    end
   end
 
   describe "GET show" do

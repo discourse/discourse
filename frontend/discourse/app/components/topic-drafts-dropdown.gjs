@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -143,7 +144,7 @@ export default class TopicDraftsDropdown extends Component {
 
               <dropdown.item>
                 <DButton
-                  @href="/my/activity/drafts"
+                  @href={{getURL "/my/activity/drafts"}}
                   @model={{this.currentUser}}
                   class="btn-link view-all-drafts"
                 >

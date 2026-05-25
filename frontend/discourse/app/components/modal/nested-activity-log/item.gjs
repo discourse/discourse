@@ -7,7 +7,7 @@ import {
 } from "discourse/components/post/small-action";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import { userPath } from "discourse/lib/url";
+import { groupPath, userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -41,7 +41,7 @@ function mentionLinkFor(code, who) {
     GROUP_ACTION_CODES.includes(code) ||
     customGroupActionCodes.includes(code)
   ) {
-    return `<a class="mention-group" href="/g/${encodeURIComponent(who)}">@${escaped}</a>`;
+    return `<a class="mention-group" href="${groupPath(encodeURIComponent(who))}">@${escaped}</a>`;
   }
   return `<a class="mention" href="${userPath(who)}">@${escaped}</a>`;
 }

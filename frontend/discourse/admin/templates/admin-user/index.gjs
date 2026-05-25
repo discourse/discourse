@@ -8,6 +8,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import getURL from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -409,7 +410,7 @@ export default <template>
         </div>
         <div class="controls">
           <DButton
-            @href="/admin/api/keys"
+            @href={{getURL "/admin/api/keys"}}
             @label="admin.api.manage_keys"
             class="btn-default"
           />
