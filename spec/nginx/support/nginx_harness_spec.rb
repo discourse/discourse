@@ -55,6 +55,12 @@ RSpec.describe Nginx::Support::NginxHarness do
     end
   end
 
+  describe "#nginx_access_log" do
+    it "returns an empty log before start creates a tmpdir" do
+      expect(described_class.new.nginx_access_log).to eq("")
+    end
+  end
+
   describe "#request" do
     it "uses short HTTP open and read timeouts" do
       harness = described_class.new
@@ -75,26 +81,25 @@ RSpec.describe Nginx::Support::NginxHarness do
       expect(http).to have_received(:request).with(instance_of(Net::HTTP::Get))
     end
 
-    it "raises with nginx logs when a request times out" do
-      harness_class =
-        Class.new(described_class) do
-          attr_reader :log_message
+    it "raises with nginx and upstream logs when a request times out" do
+      Dir.mktmpdir do |tmpdir|
+        harness = described_class.new
+        harness.instance_variable_set(:@listen_port, 30_000)
+        harness.instance_variable_set(:@tmpdir, tmpdir)
+        File.write(File.join(tmpdir, "nginx-stderr.log"), "nginx stderr\n")
+        File.write(File.join(tmpdir, "upstream.log"), "upstream log\n")
+        File.write(File.join(tmpdir, "upstream-access.log"), "upstream access\n")
 
-          private
+        allow(Net::HTTP).to receive(:start).and_raise(Net::ReadTimeout)
 
-          def raise_with_logs(message)
-            @log_message = message
-            raise "logs included"
-          end
+        expect { harness.get("/slow") }.to raise_error(RuntimeError) do |error|
+          expect(error.message).to include("GET /slow timed out")
+          expect(error.message).to include("Net::ReadTimeout")
+          expect(error.message).to include("--- nginx-stderr.log ---\nnginx stderr")
+          expect(error.message).to include("--- upstream.log ---\nupstream log")
+          expect(error.message).to include("--- upstream-access.log ---\nupstream access")
         end
-      harness = harness_class.new
-      harness.instance_variable_set(:@listen_port, 30_000)
-
-      allow(Net::HTTP).to receive(:start).and_raise(Net::ReadTimeout)
-
-      expect { harness.get("/slow") }.to raise_error(RuntimeError, "logs included")
-      expect(harness.log_message).to include("GET /slow timed out")
-      expect(harness.log_message).to include("Net::ReadTimeout")
+      end
     end
   end
 end

@@ -86,8 +86,10 @@ module Nginx
       end
 
       def nginx_access_log
+        return "" if @tmpdir.nil?
+
         path = File.join(@tmpdir, "access.log")
-        return "" if @tmpdir.nil? || !File.exist?(path)
+        return "" unless File.exist?(path)
 
         File.read(path)
       end
@@ -202,7 +204,13 @@ module Nginx
 
       def raise_with_logs(message)
         details = []
-        %w[nginx-stderr.log nginx-stdout.log error.log].each do |name|
+        %w[
+          nginx-stderr.log
+          nginx-stdout.log
+          error.log
+          upstream.log
+          upstream-access.log
+        ].each do |name|
           path = File.join(@tmpdir, name)
           next unless File.exist?(path)
           details << "--- #{name} ---\n#{File.read(path)}"
