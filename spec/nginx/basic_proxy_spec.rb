@@ -41,7 +41,7 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
 
   it "forwards /srv/status directly to the upstream with the proxy headers intact" do
     access_log_before = harness.nginx_access_log
-    response = harness.get("/srv/status", headers: smuggled_headers)
+    response = harness.get("/srv/status", headers: smuggled_headers.merge(existing_proxy_headers))
 
     expect(response.code).to eq("200")
 
@@ -51,8 +51,8 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     expect(payload["headers"]).to include(
       "Host" => "127.0.0.1:#{harness.listen_port}",
       "X-Real-IP" => "127.0.0.1",
-      "X-Forwarded-For" => "127.0.0.1",
-      "X-Forwarded-Proto" => "http",
+      "X-Forwarded-For" => "198.51.100.7, 127.0.0.1",
+      "X-Forwarded-Proto" => "https",
     )
     expect_acceleration_headers_stripped(payload["headers"])
     expect(payload["headers"]["X-Request-Start"]).to match(/\At=\d+(?:\.\d+)?\z/)
