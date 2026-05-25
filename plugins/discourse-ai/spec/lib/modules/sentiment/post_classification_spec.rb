@@ -172,6 +172,29 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       )
     end
 
+    it "skips storing when the agent returns no usable classification" do
+      llm_model = Fabricate(:fake_model)
+      ai_agent =
+        agent_for(
+          %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          llm_model,
+        )
+      SiteSetting.ai_sentiment_model_configs = ""
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+      SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["not json"]) do
+        post_classification.classify!(post_1)
+      end
+
+      expect(
+        ClassificationResult.where(
+          model_used: DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
+          target: post_1,
+        ),
+      ).to be_empty
+    end
+
     it "falls back to the newest LLM model when the configured agent does not set a default LLM" do
       Fabricate(:fake_model, name: "older-model", created_at: 1.day.ago)
       llm_model = Fabricate(:fake_model, name: "newer-model")

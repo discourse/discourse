@@ -126,17 +126,22 @@ module DiscourseAi
       end
 
       CONCURRENT_CLASSFICATIONS = 40
+      CONCURRENT_AGENT_CLASSIFICATIONS = 5
 
       def bulk_classify!(relation)
-        pool =
-          Scheduler::ThreadPool.new(
-            min_threads: 0,
-            max_threads: CONCURRENT_CLASSFICATIONS,
-            idle_time: 30,
-          )
-
         available_classifiers = classifiers
         return if available_classifiers.blank?
+
+        max_threads =
+          (
+            if available_classifiers.any? { |c| c[:provider] == :agent }
+              CONCURRENT_AGENT_CLASSIFICATIONS
+            else
+              CONCURRENT_CLASSFICATIONS
+            end
+          )
+
+        pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: max_threads, idle_time: 30)
 
         results = Queue.new
         queued = 0
@@ -169,7 +174,7 @@ module DiscourseAi
           result = results.pop
           if result[:error]
             errors << result
-          else
+          elsif result[:classification].present?
             store_classification(
               result[:target],
               [[result[:classifier][:model_name], result[:classification]]],
@@ -187,8 +192,10 @@ module DiscourseAi
           )
         end
       ensure
-        pool.shutdown
-        pool.wait_for_termination(timeout: 30)
+        if pool
+          pool.shutdown
+          pool.wait_for_termination(timeout: 30)
+        end
       end
 
       def classify!(target)
@@ -204,12 +211,12 @@ module DiscourseAi
           available_classifiers.reject { |ac| already_classified.include?(ac[:model_name]) }
 
         results =
-          classifiers_for_target.reduce({}) do |memo, cft|
-            memo[cft[:model_name]] = request_with(cft, target, to_classify)
-            memo
+          classifiers_for_target.each_with_object({}) do |cft, memo|
+            classification = request_with(cft, target, to_classify)
+            memo[cft[:model_name]] = classification if classification.present?
           end
 
-        store_classification(target, results)
+        store_classification(target, results) if results.present?
       end
 
       def classifiers
@@ -356,13 +363,17 @@ module DiscourseAi
       def transform_agent_result(structured_output, raw_result, labels)
         parsed_result = parse_raw_agent_result(raw_result)
 
-        labels.index_with do |label|
-          value =
-            structured_output&.read_buffered_property(label.to_sym) || parsed_result[label] ||
-              parsed_result[label.to_sym] || 0
+        result =
+          labels.index_with do |label|
+            value =
+              structured_output&.read_buffered_property(label.to_sym) || parsed_result[label] ||
+                parsed_result[label.to_sym] || 0
 
-          value.to_f.clamp(0.0, 1.0)
-        end
+            value.to_f.clamp(0.0, 1.0)
+          end
+
+        return nil if result.values.all?(&:zero?)
+        result
       end
 
       def parse_raw_agent_result(raw_result)
