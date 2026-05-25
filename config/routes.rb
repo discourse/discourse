@@ -337,6 +337,10 @@ Discourse::Application.routes.draw do
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
+      get "dashboard/reports/available" => "dashboard#available_reports",
+          :constraints => AdminConstraint.new
+      put "dashboard/reports/layout" => "dashboard#update_reports_section",
+          :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"
