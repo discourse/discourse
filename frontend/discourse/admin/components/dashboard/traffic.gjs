@@ -210,11 +210,11 @@ export default class DashboardTraffic extends Component {
                 </span>
               {{/if}}
             </h3>
-            <p>
+            {{! <p>
               Placeholder: Logged-in traffic is growing steadily. Two spikes on
               Mar 8-9 drove a burst of anonymous visitors who didn't log in,
               pulling the logged-in share down slightly to 38%.
-            </p>
+            </p> }}
           </div>
 
           {{#if this.showLoggedInShare}}
@@ -244,10 +244,10 @@ export default class DashboardTraffic extends Component {
           {{/if}}
         </div>
 
-        <div class="db-section__callout">
+        {{! <div class="db-section__callout">
           Placeholder: Spikes on Mar 8 and Mar 9 - a Hacker News post linking to
           the plugin release docs drove a surge in anonymous pageviews.
-        </div>
+        </div> }}
 
         {{#if @fetchError}}
           <div class="db-section__traffic-chart">
