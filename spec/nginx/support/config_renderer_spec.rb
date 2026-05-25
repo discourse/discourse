@@ -58,18 +58,28 @@ RSpec.describe Nginx::Support::ConfigRenderer do
   end
 
   describe ".module_available?" do
-    before do
-      described_class.instance_variable_set(:@module_cache, {})
-      described_class.remove_instance_variable(:@nginx_build_flags) if build_flags_cached?
+    before { described_class.instance_variable_set(:@module_cache, {}) }
+
+    after { described_class.remove_instance_variable(:@module_cache) if module_cache_exists? }
+
+    it "does not trust build flags when nginx rejects the directive probe" do
+      allow(described_class).to receive(:nginx_build_flags).and_return(
+        "--add-dynamic-module=/tmp/ngx_brotli",
+      )
+      allow(described_class).to receive(:system).and_return(false)
+
+      expect(described_class.module_available?("brotli")).to eq(false)
+      expect(described_class).not_to have_received(:nginx_build_flags)
     end
 
-    after do
-      described_class.remove_instance_variable(:@module_cache) if module_cache_exists?
-      described_class.remove_instance_variable(:@nginx_build_flags) if build_flags_cached?
+    it "returns true when nginx accepts the directive probe" do
+      allow(described_class).to receive(:system).and_return(true)
+
+      expect(described_class.module_available?("brotli")).to eq(true)
     end
 
-    it "memoizes missing modules" do
-      allow(described_class).to receive(:nginx_build_flags).once.and_return("")
+    it "memoizes rejected module probes" do
+      allow(described_class).to receive(:system).once.and_return(false)
 
       expect(described_class.module_available?("brotli")).to eq(false)
       expect(described_class.module_available?("brotli")).to eq(false)
@@ -77,10 +87,6 @@ RSpec.describe Nginx::Support::ConfigRenderer do
 
     def module_cache_exists?
       described_class.instance_variable_defined?(:@module_cache)
-    end
-
-    def build_flags_cached?
-      described_class.instance_variable_defined?(:@nginx_build_flags)
     end
   end
 end
