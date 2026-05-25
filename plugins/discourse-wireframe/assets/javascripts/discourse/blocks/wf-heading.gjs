@@ -5,7 +5,7 @@ import { block } from "discourse/blocks";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
+import RichTextRenderer from "../components/rich-text-renderer";
 
 const VALID_LEVELS = [1, 2, 3, 4, 5, 6];
 const VALID_ALIGNMENTS = ["left", "center", "right"];
@@ -65,7 +65,7 @@ export default class WFHeading extends Component {
   }
 
   <template>
-    <InlineRichTextRenderer
+    <RichTextRenderer
       @arg="text"
       @schema="heading"
       @value={{@text}}
@@ -77,6 +77,6 @@ export default class WFHeading extends Component {
       >
         {{#if @icon}}{{dIcon @icon}}{{/if}}<R.Content />
       </this.headingTag>
-    </InlineRichTextRenderer>
+    </RichTextRenderer>
   </template>
 }

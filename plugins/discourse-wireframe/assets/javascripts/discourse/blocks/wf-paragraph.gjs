@@ -2,7 +2,7 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
-import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
+import RichTextRenderer from "../components/rich-text-renderer";
 
 const VALID_ALIGNMENTS = ["left", "center", "right"];
 
@@ -38,7 +38,7 @@ export default class WFParagraph extends Component {
   }
 
   <template>
-    <InlineRichTextRenderer
+    <RichTextRenderer
       @arg="text"
       @schema="paragraph"
       @value={{@text}}
@@ -48,6 +48,6 @@ export default class WFParagraph extends Component {
       <p class="{{this.className}} {{if R.isEmpty 'wf-paragraph--empty'}}">
         <R.Content />
       </p>
-    </InlineRichTextRenderer>
+    </RichTextRenderer>
   </template>
 }

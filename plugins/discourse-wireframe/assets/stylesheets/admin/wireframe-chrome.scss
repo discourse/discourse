@@ -3610,14 +3610,20 @@ body.wireframe-active {
     padding: 0;
     margin: 0;
 
+    /* `inline-block` so PM stays in the parent renderer span's inline
+       flow — blocks like `wf:heading` and `wf:callout` render an inline
+       icon next to the renderer span, and PM's default block `<div>`
+       would shove the editor onto a new line on edit-start. Not plain
+       `inline`: PM's view needs a real block-level layout box for the
+       outline below + caret rendering, and outlines on inline elements
+       draw around line fragments rather than the editor area. */
+    display: inline-block;
+
     /* Replaces the browser's default contenteditable focus ring. PM is
        only mounted when the field is actively being edited, so any time
        this rule applies the user IS editing — no extra gating needed.
-       Lives here (not on `.wf-inline-rich-text`) because the renderer
-       span is `display: inline` and once a block-level PM div mounts
-       inside it, the outer span's outline draws around line fragments
-       rather than the editor area. Outlining PM's own block-level div
-       hugs the editor cleanly. */
+       Outlining PM's own block-level (now inline-block) div hugs the
+       editor cleanly. */
     outline: 2px solid var(--tertiary);
     outline-offset: 2px;
     border-radius: 2px;
@@ -3679,7 +3685,7 @@ body.wireframe-active {
 /* Placeholder text for empty fields, shown only on the canvas. Triggered
    by the renderer's explicit `--empty` modifier (set in JS from
    `runs.length === 0`), not by the `:empty` CSS pseudo — Glimmer's
-   comment / whitespace text nodes inside the content span would
+   comment / whitespace text nodes inside the renderer span would
    defeat `:empty`. */
 
 .wf-inline-rich-text.--empty

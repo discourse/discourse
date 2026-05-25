@@ -4,7 +4,7 @@ import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
+import RichTextRenderer from "../components/rich-text-renderer";
 
 /**
  * Standalone media card for podcast / video / article promos. One
@@ -150,7 +150,7 @@ export default class WFMediaCard extends Component {
         {{/if}}
 
         <div class="wf-media-card__identity">
-          <InlineRichTextRenderer
+          <RichTextRenderer
             @arg="name"
             @schema="plain"
             @value={{@name}}
@@ -160,8 +160,8 @@ export default class WFMediaCard extends Component {
             <span class="wf-media-card__name">
               <R.Content />
             </span>
-          </InlineRichTextRenderer>
-          <InlineRichTextRenderer
+          </RichTextRenderer>
+          <RichTextRenderer
             @arg="role"
             @schema="plain"
             @value={{@role}}
@@ -171,7 +171,7 @@ export default class WFMediaCard extends Component {
             <span class="wf-media-card__role">
               <R.Content />
             </span>
-          </InlineRichTextRenderer>
+          </RichTextRenderer>
         </div>
       </div>
 
@@ -188,7 +188,7 @@ export default class WFMediaCard extends Component {
             {{if this.isBadgeCollapsed 'wf-media-card__badge--empty'}}"
         >
           {{#if @badgeIcon}}{{dIcon @badgeIcon}}{{/if}}
-          <InlineRichTextRenderer
+          <RichTextRenderer
             @arg="badgeLabel"
             @schema="plain"
             @value={{@badgeLabel}}
@@ -200,10 +200,10 @@ export default class WFMediaCard extends Component {
             <span class="wf-media-card__badge-label">
               <R.Content />
             </span>
-          </InlineRichTextRenderer>
+          </RichTextRenderer>
         </span>
 
-        <InlineRichTextRenderer
+        <RichTextRenderer
           @arg="title"
           @schema="paragraph"
           @value={{@title}}
@@ -216,13 +216,13 @@ export default class WFMediaCard extends Component {
           >
             <R.Content />
           </h4>
-        </InlineRichTextRenderer>
+        </RichTextRenderer>
 
         {{! CTA wrapper is always rendered so the label is reachable for
             inline editing on the canvas. The `--empty` BEM modifier hides
             the wrapper on live when the label is empty; the chrome reveal
             re-shows it on the canvas. }}
-        <InlineRichTextRenderer
+        <RichTextRenderer
           @arg="ctaLabel"
           @schema="plain"
           @value={{@ctaLabel}}
@@ -236,7 +236,7 @@ export default class WFMediaCard extends Component {
           >
             <R.Content />
           </a>
-        </InlineRichTextRenderer>
+        </RichTextRenderer>
       </div>
     </div>
   </template>

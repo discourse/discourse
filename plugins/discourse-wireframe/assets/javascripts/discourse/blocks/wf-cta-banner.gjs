@@ -7,7 +7,7 @@ import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import InlineRichTextRenderer from "../components/inline-rich-text-renderer";
+import RichTextRenderer from "../components/rich-text-renderer";
 
 const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
 
@@ -114,7 +114,7 @@ export default class WFCTABanner extends Component {
     {{#if this.shouldShow}}
       <div class="wf-cta-banner">
         <div class="wf-cta-banner__content">
-          <InlineRichTextRenderer
+          <RichTextRenderer
             @arg="title"
             @schema="heading"
             @value={{@title}}
@@ -127,8 +127,8 @@ export default class WFCTABanner extends Component {
             >
               <R.Content />
             </h3>
-          </InlineRichTextRenderer>
-          <InlineRichTextRenderer
+          </RichTextRenderer>
+          <RichTextRenderer
             @arg="content"
             @schema="paragraph"
             @value={{@content}}
@@ -141,7 +141,7 @@ export default class WFCTABanner extends Component {
             >
               <R.Content />
             </p>
-          </InlineRichTextRenderer>
+          </RichTextRenderer>
         </div>
 
         {{#if this.hasActions}}

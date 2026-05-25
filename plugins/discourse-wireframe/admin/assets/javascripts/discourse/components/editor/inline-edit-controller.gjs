@@ -632,13 +632,14 @@ export default class InlineEditController extends Component {
   <template>
     {{! insertBefore=null keeps the renderer's existing __content span
         intact instead of wiping it. The default in-element behavior
-        replaces the destination's children — fine for a fresh mount,
-        but it leaves the renderer span permanently empty once the
-        portal unmounts, since Glimmer doesn't restore what it cleared.
-        We need the rendered text to be there both during the edit
-        (hidden by CSS rule that targets renderers containing a
-        `.wf-inline-editor-mount` sibling) AND after the editor goes
-        away. }}
+        replaces the destination's children — Glimmer keeps its tracking
+        references on those children but they're detached from the
+        document, so subsequent patches (after value or runs change on
+        commit) land on orphan nodes and never re-appear.
+        insertBefore=null switches the portal to append-as-sibling mode
+        so __content stays in the document, Glimmer's tracking stays in
+        sync with reality, and the rendered text comes back on commit.
+        We verified this empirically. }}
     {{#if this.activeRendererEl}}
       {{#in-element this.activeRendererEl insertBefore=null}}
         <span
