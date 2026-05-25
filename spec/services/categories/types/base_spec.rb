@@ -13,26 +13,6 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
-  describe ".enables_plugin?" do
-    it "returns false when enable_plugin is not overridden" do
-      test_type = Class.new(described_class) { type_id :no_plugin }
-
-      expect(test_type.enables_plugin?).to eq(false)
-    end
-
-    it "returns true when enable_plugin is overridden" do
-      test_type =
-        Class.new(described_class) do
-          type_id :with_plugin
-
-          def self.enable_plugin
-          end
-        end
-
-      expect(test_type.enables_plugin?).to eq(true)
-    end
-  end
-
   describe ".metadata" do
     it "returns type information including configuration_schema" do
       expect(described_class.metadata).to include(

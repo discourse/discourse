@@ -4947,8 +4947,7 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
-        requires_plugin: "Requires %{plugin_name} plugin"
-        unavailable: "Unavailable"
+        requires_plugin: "Requires plugin"
       create_category: "Create category"
       save: "Save category"
       unsaved_changes: "You have unsaved changes"

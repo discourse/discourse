@@ -176,6 +176,6 @@ class CategorySerializer < SiteCategorySerializer
 
   def available_category_types
     return [] if !SiteSetting.enable_simplified_category_creation
-    Categories::TypeRegistry.list(only_visible: true, guardian: scope)
+    Categories::TypeRegistry.list(only_visible: true)
   end
 end
