@@ -232,9 +232,15 @@ module DiscourseAi
       def hugging_face_classifiers
         return [] if agent_strategy_for?(:sentiment) && agent_strategy_for?(:emotion)
 
-        DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values.filter_map do |config|
+        configs = DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values
+        legacy_sentiment_model = self.class.untyped_custom_model_name(configs, "sentiment")
+
+        configs.filter_map do |config|
           classification_type = classification_type_for(config)
-          next if classification_type.present? && agent_strategy_for?(classification_type)
+          effective_type =
+            classification_type.presence ||
+              ("sentiment" if config.model_name == legacy_sentiment_model)
+          next if effective_type.present? && agent_strategy_for?(effective_type)
 
           api_endpoint = config.endpoint
 

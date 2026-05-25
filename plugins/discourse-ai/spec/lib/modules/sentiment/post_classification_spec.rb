@@ -172,6 +172,24 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       )
     end
 
+    it "skips a lone legacy untyped sentiment config when sentiment strategy is agent" do
+      llm_model = Fabricate(:fake_model)
+      ai_agent =
+        agent_for(
+          %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          llm_model,
+        )
+      SiteSetting.ai_sentiment_model_configs = [
+        { model_name: "custom/legacy", endpoint: "https://legacy.example.com", api_key: "123" },
+      ].to_json
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+      SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+
+      model_names = post_classification.classifiers.map { |c| c[:model_name] }
+      expect(model_names).to include(DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL)
+      expect(model_names).not_to include("custom/legacy")
+    end
+
     it "skips storing when the agent returns no usable classification" do
       llm_model = Fabricate(:fake_model)
       ai_agent =
