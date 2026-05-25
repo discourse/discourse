@@ -806,8 +806,6 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#bulk_reports" do
-    before { SiteSetting.dashboard_improvements = true }
-
     let(:fake_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
@@ -845,12 +843,6 @@ RSpec.describe Admin::DashboardController do
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
-
-      it "returns 404 when the dashboard_improvements feature flag is off" do
-        SiteSetting.dashboard_improvements = false
-        post "/admin/dashboard/reports/bulk.json", params: { items: [] }
-        expect(response.status).to eq(404)
-      end
 
       it "returns items in the order they were requested" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
@@ -938,10 +930,7 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#available_reports" do
-    before do
-      SiteSetting.dashboard_improvements = true
-      AdminDashboardReport.delete_all
-    end
+    before { AdminDashboardReport.delete_all }
 
     let(:fake_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
@@ -1024,10 +1013,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "when signed in as a moderator" do
-      before do
-        SiteSetting.dashboard_improvements = true
-        sign_in(Fabricate(:moderator))
-      end
+      before { sign_in(Fabricate(:moderator)) }
 
       it "denies access" do
         get "/admin/dashboard/reports/available.json"
@@ -1037,12 +1023,6 @@ RSpec.describe Admin::DashboardController do
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
-
-      it "returns 404 when dashboard_improvements is off" do
-        SiteSetting.dashboard_improvements = false
-        get "/admin/dashboard/reports/available.json"
-        expect(response.status).to eq(404)
-      end
 
       it "returns enabled, available, and providers" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
@@ -1140,10 +1120,7 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#update_reports_section" do
-    before do
-      SiteSetting.dashboard_improvements = true
-      AdminDashboardReport.delete_all
-    end
+    before { AdminDashboardReport.delete_all }
 
     let(:fake_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
@@ -1171,10 +1148,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "when signed in as a moderator" do
-      before do
-        SiteSetting.dashboard_improvements = true
-        sign_in(Fabricate(:moderator))
-      end
+      before { sign_in(Fabricate(:moderator)) }
 
       it "denies access" do
         put "/admin/dashboard/reports/layout.json", params: { items: [] }
@@ -1184,12 +1158,6 @@ RSpec.describe Admin::DashboardController do
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
-
-      it "returns 404 when dashboard_improvements is off" do
-        SiteSetting.dashboard_improvements = false
-        put "/admin/dashboard/reports/layout.json", params: { items: [] }
-        expect(response.status).to eq(404)
-      end
 
       it "replaces the current layout with the supplied items in order" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
