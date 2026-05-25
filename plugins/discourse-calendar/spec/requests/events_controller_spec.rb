@@ -59,6 +59,25 @@ module DiscoursePostEvent
         expect(event_ids).to match_array([active_event1.id, active_event2.id])
       end
 
+      it "includes linkified multiline description HTML in detailed JSON" do
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            description: "Visit https://example.com\n\nBring snacks",
+          )
+
+        get "/discourse-post-event/events.json", params: { include_details: "true" }
+
+        expect(response.status).to eq(200)
+        description_html =
+          response.parsed_body["events"].find { |event_json| event_json["id"] == event.id }[
+            "description_html"
+          ]
+        expect(description_html).to include('<a href="https://example.com"')
+        expect(description_html).to include("<br>")
+      end
+
       it "should return events in ics format" do
         event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
         event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
