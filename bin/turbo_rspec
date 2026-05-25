@@ -77,6 +77,9 @@ OptionParser
   end
   .parse!(ARGV)
 
+explicit_file_args = ARGV.any?
+requested_files = nil
+
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
   files = Dir.glob("spec/**/*_spec.rb")
@@ -95,6 +98,7 @@ else
       end
     end
 
+  requested_files = files.dup
   use_runtime_info = false if use_runtime_info.nil?
 end
 
@@ -104,6 +108,10 @@ if exclude_patterns.any?
       File.fnmatch(pattern, file) || File.fnmatch(pattern, file, File::FNM_PATHNAME)
     end
   end
+end
+
+if explicit_file_args && requested_files&.any? && files.empty?
+  abort "All requested spec files were excluded. spec/nginx has its own runner; use spec/nginx/run.sh for nginx specs."
 end
 
 requires.each { |f| require(f) }

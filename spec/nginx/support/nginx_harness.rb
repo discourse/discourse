@@ -15,6 +15,8 @@ module Nginx
     # `start` brings both up; `stop` tears both down. `get` / `request`
     # send HTTP to nginx and return the response.
     class NginxHarness
+      HTTP_TIMEOUT_SECONDS = 5
+
       attr_reader :listen_port, :upstream_port, :tmpdir
 
       def initialize(sample_path: default_sample_path)
@@ -30,9 +32,9 @@ module Nginx
       def start
         @tmpdir = Dir.mktmpdir("nginx-spec-")
         @upstream_port = allocate_port
-        @listen_port = allocate_port
-
         start_upstream
+
+        @listen_port = allocate_port
         render_and_spawn_nginx
         wait_for_port(@listen_port, "nginx") or
           raise_with_logs("nginx never bound to port #{@listen_port}")
@@ -71,7 +73,16 @@ module Nginx
         req = req_class.new(uri)
         headers.each { |k, v| req[k] = v }
         req.body = body if body
-        Net::HTTP.start(uri.host, uri.port) { |http| http.request(req) }
+        Net::HTTP.start(
+          uri.host,
+          uri.port,
+          open_timeout: HTTP_TIMEOUT_SECONDS,
+          read_timeout: HTTP_TIMEOUT_SECONDS,
+        ) { |http| http.request(req) }
+      rescue Net::OpenTimeout, Net::ReadTimeout => e
+        raise_with_logs(
+          "#{method.to_s.upcase} #{path} timed out after #{HTTP_TIMEOUT_SECONDS}s (#{e.class}: #{e.message})",
+        )
       end
 
       def nginx_access_log

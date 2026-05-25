@@ -2,6 +2,7 @@
 
 require "etc"
 require "fileutils"
+require "tmpdir"
 
 # Reads `config/nginx.sample.conf` and rewrites the handful of references
 # that don't work outside a deployed Discourse environment: hardcoded
@@ -11,12 +12,23 @@ require "fileutils"
 # invoke `nginx -c <wrapper> -p <tmpdir>`.
 #
 # Optional nginx modules (brotli today; potentially others later) that
-# the system's nginx wasn't built with get commented out so the test
-# suite runs against a stock nginx. Tests that need a stripped directive
-# should skip themselves when `module_available?` reports it missing.
+# the system's nginx cannot use in this generated wrapper get commented
+# out so the test suite runs against a stock nginx. Tests that need a
+# stripped directive should skip themselves when `module_available?`
+# reports it missing.
 module Nginx
   module Support
     class ConfigRenderer
+      MODULE_PROBES = {
+        "brotli" => [
+          "brotli on;",
+          "brotli_min_length 1000;",
+          "brotli_comp_level 4;",
+          "brotli_types text/plain;",
+          "brotli_static on;",
+        ],
+      }.freeze
+
       WRAPPER_TEMPLATE = <<~CONF
         # Generated for tests — do not edit by hand.
         # Wraps nginx.sample.conf with the events+http blocks it omits.
@@ -79,18 +91,48 @@ module Nginx
         wrapper_path
       end
 
-      # Whether the system's nginx supports the given add-on module.
-      # Used by tests to skip when running on a stock nginx without it.
+      # Whether the system's nginx can use this module's directives in the
+      # generated test wrapper. Dynamic modules can appear in `nginx -V` output
+      # but still be unavailable unless a separate `load_module` directive runs,
+      # so probe a tiny standalone config instead of trusting build flags.
       def self.module_available?(name)
         @module_cache ||= {}
-        @module_cache.fetch(name) do
-          @module_cache[name] = nginx_build_flags.split.grep(/#{Regexp.escape(name)}/i).any?
-        end
+        @module_cache.fetch(name) { @module_cache[name] = module_directive_usable?(name) }
       end
 
       def self.nginx_build_flags
         @nginx_build_flags ||= `nginx -V 2>&1`
       end
+
+      def self.module_directive_usable?(name)
+        Dir.mktmpdir("nginx-module-probe-") do |tmpdir|
+          config_path = File.join(tmpdir, "nginx.conf")
+          File.write(config_path, module_probe_config(tmpdir, name))
+
+          !!system("nginx", "-t", "-c", config_path, "-p", tmpdir, out: File::NULL, err: File::NULL)
+        end
+      rescue SystemCallError
+        false
+      end
+
+      def self.module_probe_config(tmpdir, name)
+        directives = MODULE_PROBES.fetch(name) { ["#{name} on;"] }
+
+        [
+          "worker_processes 1;",
+          "error_log #{File.join(tmpdir, "error.log")} warn;",
+          "pid #{File.join(tmpdir, "nginx.pid")};",
+          "",
+          "events {",
+          "  worker_connections 16;",
+          "}",
+          "",
+          "http {",
+          *directives.map { |directive| "  #{directive}" },
+          "}",
+        ].join("\n") + "\n"
+      end
+      private_class_method :module_directive_usable?, :module_probe_config
 
       private
 
@@ -114,10 +156,9 @@ module Nginx
             .gsub("/var/www/discourse/public", File.join(tmpdir, "public"))
             .gsub("conf.d/outlets/", File.join(tmpdir, "outlets/"))
 
-        # Comment out directives belonging to nginx modules that the system
-        # nginx wasn't built with. We do this with a regex rather than
-        # listing every directive name so future additions (e.g. ngx_pagespeed)
-        # work too.
+        # Comment out directives belonging to nginx modules that the generated
+        # wrapper cannot use. We do this with a regex rather than listing every
+        # directive name so future additions (e.g. ngx_pagespeed) work too.
         unless ConfigRenderer.module_available?("brotli")
           source = comment_directives(source, /\bbrotli(_[a-z_]+)?\b/)
         end
