@@ -3,8 +3,6 @@
 class Admin::DashboardController < Admin::StaffController
   BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
-  before_action :ensure_dashboard_improvements_enabled,
-                only: %i[bulk_reports available_reports update_reports_section]
   before_action :ensure_admin,
                 only: %i[available_reports update_reports_section update_configuration]
 
