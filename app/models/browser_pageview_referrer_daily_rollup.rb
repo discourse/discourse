@@ -3,6 +3,8 @@
 class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
   def self.aggregate(start_date:, end_date:)
     host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+    return if host.nil?
+
     escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
 
     DB.exec(
