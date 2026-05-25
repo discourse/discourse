@@ -4,6 +4,7 @@ RSpec.describe AdminDashboardSiteTraffic do
   before do
     freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
     SiteSetting.use_legacy_pageviews = false
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   def traffic_point(date, count)
