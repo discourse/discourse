@@ -27,6 +27,7 @@ RSpec.describe UpcomingChanges::StatusReport do
       "permanent_change" => "permanent",
       "never_change" => "never",
     )
+    write_plugin_settings("plugin_alpha_change" => "alpha")
     commit_shas[:original] = commit(
       "FEATURE: Add upcoming changes (#123)",
       date: "2026-04-01T12:00:00Z",
@@ -44,6 +45,7 @@ RSpec.describe UpcomingChanges::StatusReport do
       "permanent_change" => "permanent",
       "never_change" => "never",
     )
+    write_plugin_settings("plugin_alpha_change" => "alpha")
     commit_shas[:recent] = commit(
       "DEV: Bump recent upcoming change (#456)",
       date: "2026-05-20T12:00:00Z",
@@ -59,6 +61,7 @@ RSpec.describe UpcomingChanges::StatusReport do
       records = report.report.index_by { |record| record.fetch("name") }
 
       expect(records.fetch("experimental_change")).to include(
+        "settings_path" => "config/site_settings.yml",
         "current_status" => "experimental",
         "next_status" => "alpha",
         "eligible" => true,
@@ -109,24 +112,31 @@ RSpec.describe UpcomingChanges::StatusReport do
         "eligible" => false,
         "eligibility_reason" => "terminal_status",
       )
+      expect(records.fetch("plugin_alpha_change")).to include(
+        "settings_path" => "plugins/chat/config/settings.yml",
+        "current_status" => "alpha",
+        "next_status" => "beta",
+        "eligible" => true,
+        "original_commit" => commit_shas[:original],
+      )
     end
   end
 
   describe "#apply" do
-    it "updates only the target status" do
-      report.apply("alpha_change")
+    it "updates only the target setting file" do
+      report.apply("plugin_alpha_change")
 
       metadata =
         described_class::MetadataLoader.from_file(
-          File.join(repo_path, "config/site_settings.yml"),
+          File.join(repo_path, "plugins/chat/config/settings.yml"),
           strict: true,
         )
 
       expect(metadata.transform_values { |value| value[:status].to_s }).to include(
-        alpha_change: "beta",
-        beta_change: "beta",
-        experimental_change: "experimental",
-        stable_change: "stable",
+        plugin_alpha_change: "beta",
+      )
+      expect(File.read(File.join(repo_path, "config/site_settings.yml"))).to include(
+        "  alpha_change:\n    default: false\n    client: true\n    hidden: true\n    upcoming_change:\n      status: alpha\n",
       )
     end
   end
@@ -139,7 +149,7 @@ RSpec.describe UpcomingChanges::StatusReport do
   end
 
   def commit(message, date:, author_name:, author_email:)
-    git("add", "config/site_settings.yml")
+    git("add", ".")
     git(
       "commit",
       "-m",
@@ -161,6 +171,24 @@ RSpec.describe UpcomingChanges::StatusReport do
     File.write(File.join(repo_path, "config/site_settings.yml"), "experimental:\n")
 
     File.open(File.join(repo_path, "config/site_settings.yml"), "a") do |file|
+      statuses.each do |name, status|
+        file.write("  #{name}:\n")
+        file.write("    default: false\n")
+        file.write("    client: true\n")
+        file.write("    hidden: true\n")
+        file.write("    upcoming_change:\n")
+        file.write("      status: #{status}\n")
+        file.write("      impact: \"feature,all_members\"\n")
+        file.write("      learn_more_url: \"https://meta.discourse.org/t/-/123\"\n")
+      end
+    end
+  end
+
+  def write_plugin_settings(statuses)
+    FileUtils.mkdir_p(File.join(repo_path, "plugins/chat/config"))
+    File.write(File.join(repo_path, "plugins/chat/config/settings.yml"), "chat:\n")
+
+    File.open(File.join(repo_path, "plugins/chat/config/settings.yml"), "a") do |file|
       statuses.each do |name, status|
         file.write("  #{name}:\n")
         file.write("    default: false\n")

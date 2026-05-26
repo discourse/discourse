@@ -75,7 +75,7 @@ jobs:
             echo "- Stale after days: \`${{ steps.config.outputs.stale_after_days }}\`"
             echo "- Eligible changes: \`${eligible_count}\`"
             echo
-            jq -r '.[] | select(.eligible) | "- `\(.name)`: `\(.current_status)` -> `\(.next_status)`; last changed \(.days_since_status_change) days ago"' /tmp/upcoming_changes_status_report.json
+            jq -r '.[] | select(.eligible) | "- `\(.name)`: `\(.current_status)` -> `\(.next_status)` in `\(.settings_path)`; last changed \(.days_since_status_change) days ago"' /tmp/upcoming_changes_status_report.json
           } >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Create or print pull requests

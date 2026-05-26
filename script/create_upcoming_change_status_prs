@@ -26,13 +26,14 @@ resolve_assignee() {
 write_pr_body() {
   local body_file="$1"
   local name="$2"
-  local current_status="$3"
-  local next_status="$4"
-  local last_status_change_commit="$5"
-  local last_status_change_date="$6"
-  local original_author_name="$7"
-  local original_author_email="$8"
-  local original_pr_number="$9"
+  local settings_path="$3"
+  local current_status="$4"
+  local next_status="$5"
+  local last_status_change_commit="$6"
+  local last_status_change_date="$7"
+  local original_author_name="$8"
+  local original_author_email="$9"
+  local original_pr_number="${10}"
 
   cat > "${body_file}" <<BODY
 <!-- upcoming-change-status-pr:${name} -->
@@ -41,6 +42,7 @@ This automated PR moves \`${name}\` from \`${current_status}\` to \`${next_statu
 
 - Last status change commit: [\`${last_status_change_commit}\`](https://github.com/discourse/discourse/commit/${last_status_change_commit})
 - Last status change date: \`${last_status_change_date}\`
+- Settings file: \`${settings_path}\`
 - Original author: ${original_author_name} (<${original_author_email}>)
 - Original PR: #${original_pr_number:-N/A}
 BODY
@@ -52,6 +54,7 @@ write_dry_run_summary() {
   local title="$3"
   local body_file="$4"
   local assignee="$5"
+  local settings_path="$6"
 
   {
     echo "### ${name}"
@@ -59,7 +62,7 @@ write_dry_run_summary() {
     echo '```bash'
     echo "git checkout -B ${branch} origin/${base_branch}"
     echo "SKIP_DB_AND_REDIS=1 RAILS_DB=nonexistent bin/rails runner script/upcoming_changes_status_report -- --stale-after-days ${stale_after_days} --apply ${name}"
-    echo "git add config/site_settings.yml"
+    echo "git add ${settings_path}"
     echo "git commit -m \"${title}\""
     echo "git push -f origin ${branch}"
     if [ -n "${assignee}" ]; then
@@ -83,6 +86,7 @@ git fetch origin "${base_branch}"
 
 while IFS= read -r change; do
   name="$(jq -r ".name" <<< "${change}")"
+  settings_path="$(jq -r ".settings_path" <<< "${change}")"
   current_status="$(jq -r ".current_status" <<< "${change}")"
   next_status="$(jq -r ".next_status" <<< "${change}")"
   original_pr_number="$(jq -r ".original_pr_number // empty" <<< "${change}")"
@@ -98,6 +102,7 @@ while IFS= read -r change; do
   write_pr_body \
     "${body_file}" \
     "${name}" \
+    "${settings_path}" \
     "${current_status}" \
     "${next_status}" \
     "${last_status_change_commit}" \
@@ -107,7 +112,7 @@ while IFS= read -r change; do
     "${original_pr_number}"
 
   if [ "${dry_run}" = "true" ]; then
-    write_dry_run_summary "${name}" "${branch}" "${title}" "${body_file}" "${assignee}"
+    write_dry_run_summary "${name}" "${branch}" "${title}" "${body_file}" "${assignee}" "${settings_path}"
     continue
   fi
 
@@ -121,7 +126,7 @@ while IFS= read -r change; do
   rails_runner script/upcoming_changes_status_report -- \
     --stale-after-days "${stale_after_days}" \
     --apply "${name}"
-  git add config/site_settings.yml
+  git add "${settings_path}"
   git commit -m "${title}"
   git push -f origin "${branch}"
 

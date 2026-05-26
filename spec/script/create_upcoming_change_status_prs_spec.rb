@@ -26,6 +26,7 @@ RSpec.describe "script/create_upcoming_change_status_prs" do # rubocop:disable R
         [
           {
             name: "alpha_change",
+            settings_path: "plugins/chat/config/settings.yml",
             current_status: "alpha",
             next_status: "beta",
             eligible: true,
@@ -62,6 +63,7 @@ RSpec.describe "script/create_upcoming_change_status_prs" do # rubocop:disable R
     expect(status).to be_success, stderr.presence || stdout
     expect(File.read(summary_file)).to include(
       "SKIP_DB_AND_REDIS=1 RAILS_DB=nonexistent bin/rails runner script/upcoming_changes_status_report -- --stale-after-days 14 --apply alpha_change",
+      "git add plugins/chat/config/settings.yml",
       "gh pr create --base main --head dev/upcoming-change-status-bump/alpha_change",
       "--assignee original-author",
     )

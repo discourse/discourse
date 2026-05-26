@@ -8,6 +8,7 @@ require "tempfile"
 module UpcomingChanges
   class StatusReport
     SETTINGS_PATH = "config/site_settings.yml"
+    PLUGIN_SETTINGS_PATH_PATTERN = "plugins/*/config/settings.yml"
     PROMOTIONS = { "experimental" => "alpha", "alpha" => "beta", "beta" => "stable" }.freeze
     TERMINAL_STATUSES = %w[conceptual stable permanent never].freeze
     STATUS_PATTERN = /\A(\s*)status:\s*(["']?)([^"'\s#]+)(["']?)([^\n]*)(\n?)\z/
@@ -96,9 +97,9 @@ module UpcomingChanges
 
         lines[status_line] = lines[status_line].sub(STATUS_PATTERN) do
           prefix = "#{Regexp.last_match(1)}status: "
-          quote = Regexp.last_match(2)
-          suffix = Regexp.last_match(5)
-          newline = Regexp.last_match(6)
+          quote = Regexp.last_match(2).to_s
+          suffix = Regexp.last_match(5).to_s
+          newline = Regexp.last_match(6).to_s
           closing_quote = quote.empty? ? "" : quote
 
           "#{prefix}#{quote}#{next_status}#{closing_quote}#{suffix}#{newline}"
@@ -148,11 +149,13 @@ module UpcomingChanges
     def initialize(
       repo_path: Rails.root.to_s,
       settings_path: SETTINGS_PATH,
+      settings_paths: nil,
       stale_after_days: 14,
       now: Time.current
     )
       @repo_path = repo_path
       @settings_path = settings_path
+      @settings_paths = settings_paths
       @stale_after_days = stale_after_days.to_i
       @now = now
       @git = Git.new(repo_path:)
@@ -169,6 +172,7 @@ module UpcomingChanges
 
         {
           "name" => name.to_s,
+          "settings_path" => metadata[:settings_path],
           "current_status" => current_status,
           "next_status" => next_status,
           "eligible" => eligible,
@@ -192,10 +196,9 @@ module UpcomingChanges
         raise "Upcoming change is not eligible: #{record["eligibility_reason"]}"
       end
 
-      SourceStatusUpdater.new(settings_file:).update!(
-        change_name: change_name.to_s,
-        next_status: record.fetch("next_status"),
-      )
+      SourceStatusUpdater.new(
+        settings_file: File.join(@repo_path, record.fetch("settings_path")),
+      ).update!(change_name: change_name.to_s, next_status: record.fetch("next_status"))
 
       record.merge("applied" => true)
     end
@@ -206,9 +209,31 @@ module UpcomingChanges
       File.join(@repo_path, @settings_path)
     end
 
+    def settings_paths
+      @settings_paths ||=
+        begin
+          paths = [@settings_path]
+          paths.concat(Dir.glob(File.join(@repo_path, PLUGIN_SETTINGS_PATH_PATTERN)).sort)
+          paths
+            .map { |path| File.expand_path(path, @repo_path) }
+            .map { |path| Pathname.new(path).relative_path_from(Pathname.new(@repo_path)).to_s }
+            .uniq
+        end
+    end
+
     def current_changes
       @current_changes ||=
-        MetadataLoader.from_current_site_setting(settings_path: settings_file).sort.to_h
+        settings_paths
+          .each_with_object({}) do |settings_path, result|
+            metadata =
+              MetadataLoader.from_current_site_setting(
+                settings_path: File.join(@repo_path, settings_path),
+              )
+
+            metadata.each { |name, data| result[name] = data.merge(settings_path:) }
+          end
+          .sort
+          .to_h
     end
 
     def history_by_change
@@ -216,18 +241,25 @@ module UpcomingChanges
         begin
           result = Hash.new { |hash, key| hash[key] = [] }
 
-          @git
-            .commits_for(@settings_path)
-            .reverse_each do |commit|
-              statuses =
-                MetadataLoader
-                  .from_content(@git.show_file(commit.sha, @settings_path))
-                  .transform_values { |metadata| metadata[:status]&.to_s }
+          settings_paths.each do |settings_path|
+            tracked_names =
+              current_changes
+                .select { |_, metadata| metadata[:settings_path] == settings_path }
+                .keys
 
-              current_changes.each_key do |name|
-                result[name] << { commit:, status: statuses[name] } if statuses.key?(name)
+            @git
+              .commits_for(settings_path)
+              .reverse_each do |commit|
+                statuses =
+                  MetadataLoader
+                    .from_content(@git.show_file(commit.sha, settings_path))
+                    .transform_values { |metadata| metadata[:status]&.to_s }
+
+                tracked_names.each do |name|
+                  result[name] << { commit:, status: statuses[name] } if statuses.key?(name)
+                end
               end
-            end
+          end
 
           result
         end
@@ -267,7 +299,7 @@ module UpcomingChanges
       def self.run(args)
         options = {
           repo_path: Rails.root.to_s,
-          settings_path: SETTINGS_PATH,
+          settings_paths: nil,
           stale_after_days: 14,
           pretty: false,
         }
@@ -283,9 +315,10 @@ module UpcomingChanges
             ) { |name| options[:apply] = name }
 
             opts.on("--repo PATH", "Git repository path") { |path| options[:repo_path] = path }
-            opts.on("--settings-path PATH", "Settings YAML path") do |path|
-              options[:settings_path] = path
-            end
+            opts.on(
+              "--settings-path PATH",
+              "Only inspect one settings YAML path; defaults to core and plugin settings",
+            ) { |path| options[:settings_paths] = [path] }
             opts.on("--stale-after-days DAYS", Integer, "Minimum unchanged age") do |days|
               options[:stale_after_days] = days
             end
@@ -297,7 +330,7 @@ module UpcomingChanges
         report =
           StatusReport.new(
             repo_path: options[:repo_path],
-            settings_path: options[:settings_path],
+            settings_paths: options[:settings_paths],
             stale_after_days: options[:stale_after_days],
           )
         output = options[:apply] ? report.apply(options[:apply]) : report.report
