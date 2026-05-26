@@ -1,10 +1,4 @@
-import {
-  fillIn,
-  find,
-  settled,
-  triggerEvent,
-  visit,
-} from "@ember/test-helpers";
+import { fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -63,6 +57,7 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     await prepareDraft();
 
     await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
 
     assert.strictEqual(postRequests, 1, "submitted once");
   });
@@ -71,45 +66,19 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     await prepareDraft();
 
     await triggerEvent(INPUT, "keydown", { key: "Enter", shiftKey: true });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
 
     assert.strictEqual(postRequests, 0, "did not submit");
   });
 
-  // Chrome fires the IME-confirming keydown with isComposing=true (compositionend follows)
-  test("IME-confirming Enter does not submit (Chrome event order)", async function (assert) {
+  test("IME-confirming Enter does not submit", async function (assert) {
     await prepareDraft();
 
-    await triggerEvent(INPUT, "keydown", { key: "Enter", isComposing: true });
-    await triggerEvent(INPUT, "compositionend");
-
-    assert.strictEqual(postRequests, 0, "did not submit");
-  });
-
-  // Safari fires compositionend first, then the IME-confirming keydown in the
-  // same task. Dispatch directly so microtasks don't drain between them.
-  test("IME-confirming Enter does not submit (Safari event order)", async function (assert) {
-    await prepareDraft();
-
-    const el = find(INPUT);
-    el.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true }));
-    el.dispatchEvent(
-      new KeyboardEvent("keydown", {
-        key: "Enter",
-        bubbles: true,
-        cancelable: true,
-      })
-    );
-    await settled();
-
-    assert.strictEqual(postRequests, 0, "did not submit");
-  });
-
-  test("Enter after composition has fully settled still submits", async function (assert) {
-    await prepareDraft();
-
-    await triggerEvent(INPUT, "compositionend");
     await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", {
+      inputType: "insertCompositionText",
+    });
 
-    assert.strictEqual(postRequests, 1, "submitted once composition is done");
+    assert.strictEqual(postRequests, 0, "did not submit");
   });
 });

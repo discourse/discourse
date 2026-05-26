@@ -48,7 +48,7 @@ export default class AiBotConversations extends Component {
   @tracked selectedLlmId = null;
   @tracked uploads = trackedArray();
 
-  justEndedComposition = false;
+  shiftHeldOnEnter = false;
 
   // Don't track this directly - we'll get it from uppyUpload
 
@@ -222,29 +222,28 @@ export default class AiBotConversations extends Component {
   }
 
   @action
-  handleCompositionEnd() {
-    // Safari fires compositionend before the IME-confirming Enter keydown,
-    // so event.isComposing reads false there. Bridge the gap with a flag
-    // cleared on the next microtask.
-    this.justEndedComposition = true;
-    Promise.resolve().then(() => (this.justEndedComposition = false));
-  }
-
-  @action
   handleKeyDown(event) {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.isComposing &&
-      !this.justEndedComposition
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.prepareAndSubmitToBot();
+    if (event.key === "Enter") {
+      this.shiftHeldOnEnter = event.shiftKey;
     }
+  }
+
+  @action
+  handleBeforeInput(event) {
+    // Real Enter on a textarea inserts a line break; IME-confirming Enter
+    // inserts composition text. Reading inputType is deterministic across
+    // browsers regardless of compositionend/keydown ordering quirks.
+    const shiftHeld = this.shiftHeldOnEnter;
+    this.shiftHeldOnEnter = false;
+    if (event.inputType !== "insertLineBreak" || shiftHeld) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.prepareAndSubmitToBot();
   }
 
   @action
@@ -429,7 +428,7 @@ export default class AiBotConversations extends Component {
             {{didInsert this.setTextArea}}
             {{on "input" this.updateInputValue}}
             {{on "keydown" this.handleKeyDown}}
-            {{on "compositionend" this.handleCompositionEnd}}
+            {{on "beforeinput" this.handleBeforeInput}}
             id="ai-bot-conversations-input"
             autofocus={{unless this.isSubmitDisabled "true"}}
             placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
