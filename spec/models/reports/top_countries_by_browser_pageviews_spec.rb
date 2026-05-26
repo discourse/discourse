@@ -65,21 +65,12 @@ describe Reports::TopCountriesByBrowserPageviews do
       expect(report.data.first[:count]).to eq(1)
     end
 
-    it "respects the limit opt" do
-      %w[US GB DE FR JP CN].each_with_index do |code, idx|
-        (idx + 1).times { Fabricate(:browser_pageview_event, country_code: code) }
-      end
+    it "caps results at MAX_ROWS when no explicit limit is given" do
+      stub_const(Reports::TopCountriesByBrowserPageviews, "MAX_ROWS", 2) do
+        %w[US GB DE].each { |code| Fabricate(:browser_pageview_event, country_code: code) }
 
-      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      BrowserPageviewEvent.delete_all
-      limited =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-          limit: 3,
-        )
-      expect(limited.data.size).to eq(3)
+        expect(report.data.size).to eq(2)
+      end
     end
   end
 end
