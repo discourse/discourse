@@ -242,7 +242,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
       "pAEDAzkBACBZAQCqsl50KrR5zVm/QT9vWkeGTGxby32m0QRtCRh2UWseqoG0ZmBhGeWEYvkdoYlB1jObQKEHsAeB+1NBf5q69/88AA5zv4fzrvCydCtL41EUsHYFEbaPGnB61zZmYVLTPI7BYa+fu4F4MzFa924s36tVlU/L7n04peviJVZW2C1YIQfwOGDZJSvUpqJoZMQtw1vGRfrb4cQKlHfrpDZUpa3QLE8phh4ce4nwtX1tUnUGgCy8sOaFVkDNufENGTNr8HdAIHcinUiax3yy/Q8LjSZb8UR2ha6oXSe1vRHhj001B/P/mr5AdVMxSrOT1sUNXWkHv8L8IzS/iTBQpsC8CADZIUMBAAE="
     end
     # This key was generated using this specific origin
-    let(:client_data_origin) { "http://localhost:4200" }
+    let(:client_data_origin) { "http://localhost:3000" }
 
     # This has to be in the exact same order with the same data as it was originally
     # generated.
@@ -258,7 +258,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     end
 
     it "updates last_used when the security key and params are valid" do
-      DiscourseWebauthn.stubs(:origin).returns("http://localhost:4200")
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
       expect(service.authenticate_security_key).to eq(security_key)
       expect(security_key.reload.last_used).not_to eq(nil)

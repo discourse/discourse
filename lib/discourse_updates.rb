@@ -330,7 +330,7 @@ module DiscourseUpdates
 
     def new_features_endpoint
       return "https://meta.discourse.org/new-features.json" if Rails.env.production?
-      ENV["DISCOURSE_NEW_FEATURES_ENDPOINT"] || "http://localhost:4200/new-features.json"
+      ENV["DISCOURSE_NEW_FEATURES_ENDPOINT"] || "http://localhost:3000/new-features.json"
     end
 
     # We no longer delete new features on Meta, so we need to filter out old ones.

@@ -82,7 +82,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           status: "complete",
           submit_type: nil,
           subscription: "sub_1P9b7iEYXaQnncSh3H3G9d2Y",
-          success_url: "http://localhost:4200/my/billing/subscriptions",
+          success_url: "http://localhost:3000/my/billing/subscriptions",
           url: nil,
         },
       }
@@ -104,7 +104,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           status: "complete",
           submit_type: nil,
           subscription: nil,
-          success_url: "http://localhost:4200/my/billing/subscriptions",
+          success_url: "http://localhost:3000/my/billing/subscriptions",
           url: nil,
         },
       }
@@ -125,7 +125,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           status: "complete",
           submit_type: nil,
           subscription: nil,
-          success_url: "http://localhost:4200/my/billing/subscriptions",
+          success_url: "http://localhost:3000/my/billing/subscriptions",
           url: nil,
         },
       }

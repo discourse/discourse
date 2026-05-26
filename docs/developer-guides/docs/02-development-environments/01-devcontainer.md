@@ -32,7 +32,7 @@ Dev Containers can be used in a number of different IDEs, or directly using thei
 
    This will install dependencies, migrate the database, and start the server. It'll take a few minutes, especially on the lower-end machines. You'll see "Build successful" in the terminal when it's done.
 
-1. Visit `http://localhost:4200` in your browser to see your new Discourse instance
+1. Visit `http://localhost:3000` in your browser to see your new Discourse instance
 
 1. All done! You can now make changes to Discourse's source code and see them reflected in the preview.
 

@@ -476,7 +476,7 @@ function getBookmark(overrides = {}, siteSettings, site) {
       excerpt: "poll",
       bookmarkable_id: 1009,
       bookmarkable_type: "Post",
-      bookmarkable_url: "http://localhost:4200/t/this-bookmarkable-url/227/1",
+      bookmarkable_url: "http://localhost:3000/t/this-bookmarkable-url/227/1",
       tags: [],
       tags_descriptions: {},
       truncated: true,

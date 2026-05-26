@@ -26,7 +26,7 @@ id: github-codespaces
 
    This will install dependencies, migrate the database, and start the server. It'll take a few minutes, especially on the lower-end machines. You'll see "Build successful" in the terminal when it's done.
 
-7. Visit the "Ports" tab, and click the :globe_with_meridians: button for port 4200. This will open a new tab showing your development copy of Discourse
+7. Visit the "Ports" tab, and click the :globe_with_meridians: button for port 3000. This will open a new tab showing your development copy of Discourse
 
    ![Codespaces ports tab|1198x282,40%](/assets/codespaces-4.png)
 
