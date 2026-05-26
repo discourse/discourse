@@ -627,11 +627,19 @@ export default class BlockChrome extends Component {
 
     const argEl = event.target.closest?.("[data-wf-inline-edit-arg]");
     if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
-      this.wireframe.inlineEdit.start(
-        this.args.blockKey,
-        argEl.dataset.wfInlineEditArg,
-        { coords: { x: event.clientX, y: event.clientY } }
-      );
+      const kind = argEl.dataset.wfInlineEditKind ?? "rich-text";
+      const argName = argEl.dataset.wfInlineEditArg;
+      if (kind === "icon") {
+        this.wireframe.iconEdit.start({
+          blockKey: this.args.blockKey,
+          argName,
+          anchorEl: argEl,
+        });
+      } else {
+        this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
+          coords: { x: event.clientX, y: event.clientY },
+        });
+      }
       return;
     }
 

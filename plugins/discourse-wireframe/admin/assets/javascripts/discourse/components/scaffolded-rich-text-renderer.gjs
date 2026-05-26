@@ -27,6 +27,11 @@ import MarkedText from "discourse/plugins/discourse-wireframe/discourse/componen
  * The `--empty` modifier on the outer span is the explicit
  * replacement for `:empty` (Glimmer's comment / whitespace text
  * nodes inside the content span would defeat that pseudo-class).
+ *
+ * `data-wf-inline-edit-kind="rich-text"` is omitted because the
+ * block-chrome click handler defaults to rich-text when the
+ * attribute is absent. Other kinds (`icon`, `image`, …) set the
+ * attribute explicitly so dispatch routes to the right popover.
  */
 const ScaffoldedRichTextRenderer = <template>
   <span

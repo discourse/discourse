@@ -1,8 +1,8 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import IconRenderer from "../components/icon-renderer";
 import RichTextRenderer from "../components/rich-text-renderer";
 
 const VALID_TONES = ["info", "success", "warning", "danger"];
@@ -37,7 +37,9 @@ export default class WFCallout extends Component {
 
   <template>
     <div class={{this.calloutClass}}>
-      <span class="wf-callout__icon">{{dIcon @icon}}</span>
+      <span class="wf-callout__icon">
+        <IconRenderer @value={{@icon}} @arg="icon" />
+      </span>
       <RichTextRenderer
         @arg="body"
         @schema="paragraph"

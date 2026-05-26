@@ -19,6 +19,7 @@ import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns
 import discourseDebounce from "discourse/lib/debounce";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
+import MinimalIconRenderer from "discourse/plugins/discourse-wireframe/discourse/components/minimal-icon-renderer";
 import MinimalRichTextRenderer from "discourse/plugins/discourse-wireframe/discourse/components/minimal-rich-text-renderer";
 // Absolute addon path: `grid-math` is in the universal bundle (its
 // `parsePlacement` is called by the live-page `wf-layout.gjs`); this
@@ -29,8 +30,10 @@ import {
   parsePlacement,
   placementsOverlap,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+import ScaffoldedIconRenderer from "../components/scaffolded-icon-renderer";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
 import { resolveTemplateLayout } from "../lib/grid-templates";
+import IconEditState from "../lib/icon-edit-state";
 import InlineEditState from "../lib/inline-edit-state";
 import {
   clearValidatorStamps,
@@ -237,6 +240,16 @@ export default class WireframeService extends Service {
    * @type {InlineEditState}
    */
   inlineEdit = new InlineEditState(this);
+
+  /**
+   * Inline icon-edit session state + operations. Mirrors `inlineEdit`'s
+   * separate-object split: opens a FloatKit popover anchored to the
+   * clicked icon, hosting `DIconGridPickerContent` for the user to pick
+   * from. See `../lib/icon-edit-state.js`.
+   *
+   * @type {IconEditState}
+   */
+  iconEdit = new IconEditState(this);
 
   /**
    * Sticky mirror of `activeDropPreview` captured at the moment of
@@ -559,12 +572,13 @@ export default class WireframeService extends Service {
     document.body.classList.add("wireframe-active");
     document.addEventListener("mousedown", this._onCanvasMouseDown);
     document.addEventListener("mouseup", this._onCanvasMouseUp);
-    // Swap in the editor-aware rich-text renderer so every block-arg
-    // of type rich-text gains the click-to-edit scaffold. The minimal
-    // (live-style) renderer is restored in `exit()`. Admin pages that
-    // haven't opened the editor render the same minimal markup as
-    // logged-out viewers see.
+    // Swap in the editor-aware renderers so every block-arg of these
+    // kinds gains its click-to-edit scaffold. The minimal (live-style)
+    // renderers are restored in `exit()`. Admin pages that haven't
+    // opened the editor render the same minimal markup as logged-out
+    // viewers see.
     blockArgRenderers["rich-text"] = ScaffoldedRichTextRenderer;
+    blockArgRenderers["icon"] = ScaffoldedIconRenderer;
     this._materializeAllDrafts();
 
     // Warm the inline-rich-text editor bundle in the background so the
@@ -712,10 +726,10 @@ export default class WireframeService extends Service {
     this.dragSourceOutlet = null;
     this.activeDropTarget = null;
     this._undoStack.length = 0;
-    // Revert to the minimal rich-text renderer so admin pages without
-    // an open editor render the same DOM as live (no scaffold,
-    // no data-attrs).
+    // Revert to the minimal renderers so admin pages without an open
+    // editor render the same DOM as live (no scaffold, no data-attrs).
     blockArgRenderers["rich-text"] = MinimalRichTextRenderer;
+    blockArgRenderers["icon"] = MinimalIconRenderer;
     this._redoStack.length = 0;
     this._initialSnapshots.clear();
     this._pendingArgs.clear();

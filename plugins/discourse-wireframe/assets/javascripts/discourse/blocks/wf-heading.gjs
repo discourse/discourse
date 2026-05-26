@@ -3,8 +3,8 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { block } from "discourse/blocks";
 import dElement from "discourse/ui-kit/helpers/d-element";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import IconRenderer from "../components/icon-renderer";
 import RichTextRenderer from "../components/rich-text-renderer";
 
 const VALID_LEVELS = [1, 2, 3, 4, 5, 6];
@@ -74,9 +74,8 @@ export default class WFHeading extends Component {
     >
       <this.headingTag
         class={{concat this.className (if R.isEmpty " wf-heading--empty")}}
-      >
-        {{#if @icon}}{{dIcon @icon}}{{/if}}<R.Content />
-      </this.headingTag>
+      ><IconRenderer @value={{@icon}} @arg="icon" /><R.Content
+        /></this.headingTag>
     </RichTextRenderer>
   </template>
 }

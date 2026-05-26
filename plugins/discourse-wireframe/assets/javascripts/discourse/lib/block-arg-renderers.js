@@ -1,11 +1,12 @@
 import { trackedObject } from "@ember/reactive/collections";
+import MinimalIconRenderer from "../components/minimal-icon-renderer.gjs";
 import MinimalRichTextRenderer from "../components/minimal-rich-text-renderer.gjs";
 
 /**
  * Kind-keyed registry of inline-edit-aware renderers for block-arg
- * values. Each key (`"rich-text"`, future `"icon"` / `"image"` / `"link"`
- * / `"button-label"` / …) maps to a component that renders that kind
- * of value.
+ * values. Each key (`"rich-text"`, `"icon"`, future `"image"` /
+ * `"link"` / `"button-label"` / …) maps to a component that renders
+ * that kind of value.
  *
  * The default entries are minimal renderers: they emit just the value
  * with no editor scaffolding, no data-attrs — the same DOM a live
@@ -21,4 +22,5 @@ import MinimalRichTextRenderer from "../components/minimal-rich-text-renderer.gj
  */
 export const blockArgRenderers = trackedObject({
   "rich-text": MinimalRichTextRenderer,
+  icon: MinimalIconRenderer,
 });

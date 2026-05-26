@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import DButton from "discourse/ui-kit/d-button";
+import IconRenderer from "../components/icon-renderer";
 
 const VALID_VARIANTS = ["primary", "default", "danger"];
 
@@ -40,11 +41,14 @@ export default class WFButtonLink extends Component {
   }
 
   <template>
-    <DButton
-      class={{this.btnClass}}
-      @href={{@href}}
-      @translatedLabel={{@label}}
-      @icon={{@icon}}
-    />
+    {{! Block-form invocation so the icon renders through `IconRenderer`
+        (with its data-attrs for the click-to-edit popover) instead of
+        DButton's built-in `@icon` path. We re-create the
+        `.d-button-label` wrapper that DButton would otherwise emit
+        when `@translatedLabel` is set, so spacing / styling match. }}
+    <DButton class={{this.btnClass}} @href={{@href}}>
+      <IconRenderer @value={{@icon}} @arg="icon" />
+      <span class="d-button-label">{{@label}}</span>
+    </DButton>
   </template>
 }
