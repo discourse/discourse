@@ -196,6 +196,7 @@ export default class DashboardTraffic extends Component {
       @title={{i18n "admin.dashboard.sections.traffic.title"}}
       @startDate={{@startDate}}
       @endDate={{@endDate}}
+      ...attributes
     >
       <div class="db-traffic {{if @loading 'is-loading'}}">
         <div class="db-section__subheader">
