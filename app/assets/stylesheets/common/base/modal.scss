@@ -47,10 +47,6 @@ html:not(.keyboard-visible).mobile-device {
     --modal-min-width: 400px;
   }
 
-  &.-inline {
-    position: relative;
-  }
-
   &__container {
     display: flex;
     flex-direction: column;
@@ -83,11 +79,11 @@ html:not(.keyboard-visible).mobile-device {
       min-width: var(--modal-min-width);
       min-height: var(--modal-min-height); // unset, optional theme utility
 
-      .d-modal.-large & {
+      .d-modal.--large & {
         max-width: 800px;
       }
 
-      .d-modal.-max & {
+      .d-modal.--max & {
         max-width: 90vw;
       }
 
