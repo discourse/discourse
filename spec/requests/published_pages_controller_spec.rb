@@ -187,8 +187,9 @@ RSpec.describe PublishedPagesController do
 
           expect(response.status).to eq(200)
           expect(response.headers["Cache-Control"]).to include("public")
-          expect(response.headers["Cache-Control"]).to include("s-maxage=300")
-          expect(response.headers["Cache-Control"]).to include("stale-while-revalidate=60")
+          expect(response.headers["Cache-Control"]).to include("s-maxage=0")
+          expect(response.headers["Cache-Control"]).to include("must-revalidate")
+          expect(response.headers["Cache-Control"]).not_to include("stale-while-revalidate")
           expect(response.headers["Vary"]).to eq("Accept, Accept-Encoding")
           expect(response.headers["ETag"]).to be_present
         end
@@ -216,7 +217,6 @@ RSpec.describe PublishedPagesController do
           private_category = Fabricate(:private_category, group: group)
           public_page.topic.update!(category: private_category)
 
-          sign_in(admin)
           get public_page.path
 
           expect(response.status).to eq(200)
@@ -260,6 +260,20 @@ RSpec.describe PublishedPagesController do
           get public_page.path, headers: { "If-None-Match" => first_etag }
           expect(response.status).to eq(200)
           expect(response.headers["ETag"]).not_to eq(first_etag)
+        end
+
+        it "returns a fresh 200 when the published page author changes" do
+          get public_page.path
+          first_etag = response.headers["ETag"]
+
+          freeze_time 1.minute.from_now do
+            public_page.topic.user.update!(username: "renamed_author")
+          end
+
+          get public_page.path, headers: { "If-None-Match" => first_etag }
+          expect(response.status).to eq(200)
+          expect(response.headers["ETag"]).not_to eq(first_etag)
+          expect(response.body).to include("renamed_author")
         end
       end
     end

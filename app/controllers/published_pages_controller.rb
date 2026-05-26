@@ -115,15 +115,13 @@ class PublishedPagesController < ApplicationController
       !SiteSetting.login_required?
   end
 
-  # Sets Cache-Control on the response. s-maxage is deliberately short
-  # (~5 minutes) because there is no CloudFront invalidation hook yet;
-  # the published page validator set by `stale?` gives cheap
-  # conditional revalidation when content changes inside that window.
+  # Sets Cache-Control on the response. Shared caches must revalidate
+  # every request because published-page visibility can be revoked by
+  # changing the published page, category permissions, or login_required
+  # without a CDN purge hook.
   def apply_cache_headers!(pp)
     if publicly_cacheable?(pp)
-      response.headers[
-        "Cache-Control"
-      ] = "public, max-age=60, s-maxage=300, stale-while-revalidate=60"
+      response.headers["Cache-Control"] = "public, max-age=60, s-maxage=0, must-revalidate"
       append_vary_header!("Accept", "Accept-Encoding")
     else
       response.headers["Cache-Control"] = "private, no-store"
@@ -131,7 +129,12 @@ class PublishedPagesController < ApplicationController
   end
 
   def published_page_cache_validator(pp)
-    [pp.updated_at, @topic.updated_at, @topic.first_post&.updated_at].compact.max
+    [
+      pp.updated_at,
+      @topic.updated_at,
+      @topic.first_post&.updated_at,
+      @topic.user&.updated_at,
+    ].compact.max
   end
 
   def append_vary_header!(*values)
