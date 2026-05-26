@@ -1205,3 +1205,7 @@ body.has-sidebar-page {
     }
   }
 }
+
+.composer-toggle-item {
+  @include menu-item;
+}
