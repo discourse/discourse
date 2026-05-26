@@ -88,6 +88,10 @@ fa_IR:
         one: "شما یک پیام گفتگو جدیدی دارید"
         other: "شما پیام‌های گفتگو جدیدی دارید"
       from: "%{site_name}"
+      subject:
+        private_email_improved:
+          one: "پیام جدید"
+          other: "پیام جدید"
       view_messages:
         one: "مشاهده پیام"
         other: "مشاهده %{count} پیام"

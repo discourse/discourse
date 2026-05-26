@@ -916,6 +916,10 @@ he:
         other: "אין אפשרות למחוק קטגוריה זו כיוון שהיא מכילה %{count} נושאים. הנושא הוותיק ביותר הוא %{topic_link}."
       topic_exists_no_oldest: "לא ניתן להסיר קטגוריה זו משום שסך הנושאים הוא %{count}."
     uncategorized_description: "נושאים שלא דורשים קטגוריה מסויימת, או שאינם מתאימים לאף קטגוריה קיימת."
+  category_types:
+    discussion:
+      name: "דיון"
+      title: "דיון"
   trust_levels:
     admin: "ניהול"
     staff: "סגל"
@@ -1297,6 +1301,7 @@ he:
     permissions_header: 'ההרשאה הזאת תאפשר ל־„%{application_name}” לבצע:'
     redirect_warning: "האימות יפנה אותך אל"
     instructions: 'הרגע יצרנו מפתח משתמש API חדש עבורך לטובת שימוש עם „%{application_name}”, נא להדביק את המפתח הבא ליישום שלך:'
+    copy_key: "העתקת מפתח"
     copied: "הועתק!"
     otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
     otp_confirmation:
@@ -2296,7 +2301,7 @@ he:
     sparkpost_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה זמנית."
     hard_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה קבועה."
-    bounce_score_threshold: "ניקוד-החזר מקסימלי לפני שנפסיק לשלוח מיילים למשתמש."
+    bounce_score_threshold: "ניקוד הקפצה מרבי לפני שנפסיק לשלוח הודעות למשתמש בדוא״ל."
     reset_bounce_score_after_days: "איפוס אוטומטי של ניקוד-החזר לאחר X ימים."
     blocked_attachment_content_types: "רשימת מילות מפתח שמשמשות להכנסת צירופים לרשימת חסימה על בסיס סוג התוכן."
     blocked_attachment_filenames: "רשימת מילות מפתח לרשימת חסימה של קבצים מצורפים לפי שם."
@@ -2324,7 +2329,7 @@ he:
     email_in: "לאפשר למשתמשים לפרסם נושאים חדשים דרך דוא״ל. לאחר הפעלת ההגדרה הזאת, יתאפשר לך להגדיר כתובות דוא״ל נכנסות לקבוצות ולקטגוריות."
     email_in_allowed_groups: "קבוצות שמורשות ליצור נושאים חדשים דרך דוא״ל. מנהלים ומפקחים תמיד יכולים ליצור נושאים דרך דוא״ל."
     email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
-    email_in_spam_header: "בוחר את כותרת הדוא\"ל הספציפית לשימוש לזיהוי דואר זבל. אפשרות זו יכולה להיות X-Spam-Flag, X-Spam-Status או X-SES-Spam-Verdict, והאימייל מתויג כדואר זבל על סמך ערך הכותרת. לדוגמה, אם ההגדרה שנבחרה היא X-Spam-Flag, הודעת דואר אלקטרוני עם ערך כותרת זה מוגדר ל-YES תסווג כדואר זבל."
+    email_in_spam_header: "בחירת כותרת הדוא״ל הנקודתית לשימוש לזיהוי דואר זבל. אפשרות זו יכולה להיות X-Spam-Flag,‏ X-Spam-Status או X-SES-Spam-Verdict, וההודעה מתויגת כדואר זבל על סמך ערך הכותרת. לדוגמה, אם ההגדרה שנבחרה היא X-Spam-Flag, הודעת דוא״ל כשערך הכותרת הזה מוגדר ל־YES תסווג כדואר זבל."
     enable_smtp: "להפעיל SMTP לשליחת התראות על הודעות קבוצתיות."
     email_prefix: "ה[תווית] שתשמש כנושא של הודעות דוא״ל. אם לא יוגדר, ברירת המחדל תכוון ל‚כותרת’ אם לא יוגדר אחרת."
     email_site_title: "כותרת האתר שתשמש כשם המוען להודעות דוא״ל שנשלחות מהאתר. ברירת המחדל היא ‚כותרת’ אם לא הוגדר אחרת. אם ה‚כותרת’ שלך מכילה תווים שאסור להשתמש בהם במחרוזות מוען דוא״ל, יש להשתמש בהגדרה זו."
@@ -2344,8 +2349,8 @@ he:
     digest_posts: "המספר המרבי של פוסטים נפוצים להצגה בהודעת סיכום בדוא״ל."
     digest_other_topics: "המספר המרבי של נושאים להצגה בסעיף ‚חדש בנושאים וקטגוריות שאתם עוקבים אחריהם’ של הודעת הסיכום בדוא״ל."
     digest_min_excerpt_length: "אורך קטע מזערי מהפוסט להודעות סיכום בדוא״ל, בתווים."
-    suppress_digest_email_after_days: "השתקת מיילים של סיכום למשתמשים שלא נראו באתר למעלה מ (n) ימים."
-    digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
+    suppress_digest_email_after_days: "השתקת הודעות דוא״ל של סיכום למשתמשים שלא נראו באתר למעלה מ־(n) ימים."
+    digest_suppress_categories: "להדחיק את הקטגוריות האלו בהודעות סיכום."
     digest_suppress_tags: "לוותר על התגיות האלו בהודעות תקציר."
     disable_digest_emails: "כיבוי הודעות תקציר בדוא״ל לכל המשתמשים באתר. כל המשתמשים יפסיקו לקבל הודעות דוא״ל שמדגישות נושאים נפוצים ותקצירי תוכן נוספים מהאתר שלך."
     apply_custom_styles_to_digest: "תבנית ו־css לדוא״ל בהתאמה אישית חלים על הודעות התקציר שנשלחות בדוא״ל."
@@ -2470,7 +2475,7 @@ he:
     default_email_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל לנושאים רגילים."
     default_email_messages_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת שליחת הודעה למשתמש."
     default_email_mailing_list_mode: "לשלוח דוא״ל על כל פוסט חדש כברירת מחדל."
-    default_email_mailing_list_mode_frequency: "משתמשים שאיפשרו את מצב רשימת התפוצה יקבלו מיילים בתדירות זו כברירת מחדל."
+    default_email_mailing_list_mode_frequency: "משתמשים שאיפשרו את מצב רשימת התפוצה יקבלו הודעות בתדירות הזאת כברירת מחדל."
     disable_mailing_list_mode: "לאסור על משתמשים להפעיל את מצב רשימת הדיוור (מונע שליחת הודעות דיוור.)"
     default_email_previous_replies: "לכלול תגובות קודמות בהודעות דוא״ל כברירת מחדל."
     default_emoji_reactions: "תגובות אמוג׳י מועדפות כברירת מחדל. אפשר להוסיף עד 5 אמוג׳ים לתגובות במהירות."
@@ -2941,6 +2946,7 @@ he:
       invalid_iat: "לא הצלחנו לוודא את אסימון האימות עקב הפרשים בין השעה המקומית לשעה בשרת, עמך הסליחה. נא לנסות שוב."
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד הכניסה שלך, נא לנסות שוב."
     omniauth_confirm_button: "המשך"
+    omniauth_confirm_provider_description: "אימות מאובטח"
     authenticator_error_no_valid_email: "אף אחת מהכתובת שמשויכות אל %{account} אינה מורשית. ייתכן שיהיה עליך להגדיר את החשבון שלך עם כתובת דוא״ל אחרת."
     new_registrations_disabled: "הוספת חשבונות חדשים אינה מותרת בעת זו."
     new_registrations_disabled_discourse_connect: "רישום חשבונות חדשים מותר רק דרך Discourse Connect."
@@ -2991,6 +2997,7 @@ he:
         updating_user_ids: "מזהי המשתמש מתעדכנים…"
         deleting_source_user: "משתמש המקור נמחק…"
   user:
+    anonymized: "[הוסר עקב מסכת אלמוניות של המשתמש]"
     deactivated: "הושבת בעקבות כמות גדולה מדי של הודעות דוא״ל שהוחזרו אל ‚%{email}’."
     deactivated_by_staff: "הושבת על ידי הצוות"
     deactivated_by_inactivity:
@@ -3177,6 +3184,7 @@ he:
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
+    subject_template_improved: "%{email_prefix}: יצא עדכון"
   flag_reasons:
     off_topic: "הפוסט שלך סומן כ**חורג מהנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "הפוסט שלך סומן כ**בלתי הולם**: הקהילה מרגישה שהוא מעליב, פוגע, מלבה שנאה או מפר את [הנחיות הקהילה שלנו](%{base_path}/guidelines)"
@@ -3477,6 +3485,7 @@ he:
     email_reject_insufficient_trust_level:
       title: "דחיית דוא״ל עקב דרגת אמון בלתי מספקת"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- דרגת אמון לא מספיקה"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- דרגת האמון לא מספיקה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3484,6 +3493,7 @@ he:
     email_reject_user_not_found:
       title: "הודעת דוא״ל נדחתה, משתמש לא נמצא"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- משתמש לא נמצא"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- משתמש לא נמצא"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3491,12 +3501,15 @@ he:
     email_reject_screened_email:
       title: "הודעת דוא״ל נדחתה, היא מסוננת"
       subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- כתובת דוא״ל חסומה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
         התגובה שלך נשלחה מכתובת דוא״ל שנחסמה. אם לדעתך מדובר בטעות, מוטב לשלוח מכתובת דוא״ל אחרת או [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "דחיית דוא״ל עקב כתובת אסורה"
+      subject_template: "[%{email_prefix}] בעיית דוא״ל -- כתובת דוא״ל חסומה"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- כתובת דוא״ל חסומה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3504,6 +3517,7 @@ he:
     email_reject_inactive_user:
       title: "מייל נדחה, משתמש לא פעיל"
       subject_template: "[%{email_prefix}] בעיית מייל -- משתמש לא-פעיל"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- משתמש לא פעיל"
       text_body_template: |
         הודעת הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, מחילה.
 
@@ -3511,6 +3525,7 @@ he:
     email_reject_silenced_user:
       title: "דחיית דוא״ל עקב השתקה על משתמש"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- משתמש מושתק"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- משתמש מושתק"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3518,6 +3533,7 @@ he:
     email_reject_reply_user_not_matching:
       title: "דחיית מייל משתמש/ת לא מתאימים"
       subject_template: "[%{email_prefix}] בעיית מייל -- נמען לא תואם"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- כתובת תגובה לא צפויה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3525,6 +3541,7 @@ he:
     email_reject_empty:
       title: "דוא״ל נדחה, ריק"
       subject_template: "[%{email_prefix}] תקלת דוא״ל -- ללא תוכן"
+      subject_template_improved: "%{email_prefix}: תקלת דוא״ל -- אין תוכן"
       text_body_template: |
         אנו מצטערים, אך הודעת הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא הגיעה ליעדה.
 
@@ -3534,6 +3551,7 @@ he:
     email_reject_parsing:
       title: "דוא״ל נדחה, פענוח"
       subject_template: "[%{email_prefix}] תקלת דוא״ל -- תוכן לא זוהה"
+      subject_template_improved: "%{email_prefix}: תקלת דוא״ל -- תוכן לא זוהה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3541,6 +3559,7 @@ he:
     email_reject_invalid_access:
       title: "דחיית דוא״ל גישה שגויה"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- גישה שגויה"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- גישה שגויה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3548,6 +3567,7 @@ he:
     email_reject_strangers_not_allowed:
       title: "דחיית מייל זרים לא מורשים"
       subject_template: "[%{email_prefix}] בעיית מייל -- גישה לא נכונה"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- גישה שגויה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3555,6 +3575,7 @@ he:
     email_reject_invalid_post:
       title: "דחיית דוא״ל פוסט שגוי"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- תקלה בפרסום"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- שגיאת פרסום"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3562,6 +3583,7 @@ he:
     email_reject_invalid_post_specified:
       title: "דחיית דוא״ל צוין פוסט שגוי"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- תקלה בפרסום"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- שגיאת פרסום"
       text_body_template: |
         הודעת הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
@@ -3574,6 +3596,7 @@ he:
     email_reject_post_too_short:
       title: "דחיית הודעת דוא״ל עקב פוסט קצר מדי"
       subject_template: "[%{email_prefix}] תקלת דוא״ל -- פוסט קצר מדי"
+      subject_template_improved: "%{email_prefix}: תקלת דוא״ל -- פוסט קצר מדי"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3581,6 +3604,7 @@ he:
     email_reject_invalid_post_action:
       title: "דחיית דוא״ל פעולה שגויה על פוסט"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- פעולה שגויה על פוסט"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- פעולה שגויה על פוסט"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3610,6 +3634,7 @@ he:
     email_reject_old_destination:
       title: "דחיית דוא״ל יעד ישן"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- ניסית להגיב להתראה ישנה"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- ניסית להגיב להתראה ישנה"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3617,6 +3642,7 @@ he:
     email_reject_topic_not_found:
       title: "דחיית דוא״ל נושא לא נמצא"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- נושא לא נמצא"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- נושא לא נמצא"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3624,6 +3650,7 @@ he:
     email_reject_topic_closed:
       title: "דחיית דוא״ל נושא נסגר"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- נושא נסגר"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- נושא נסגר"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3638,6 +3665,7 @@ he:
     email_reject_unrecognized_error:
       title: "דחיית דוא״ל עקב שגיאה לא ידועה"
       subject_template: "[%{email_prefix}] בעיה עם הדוא״ל -- שגיאה לא מוכרת"
+      subject_template_improved: "%{email_prefix}: בעיית הדוא״ל -- שגיאה לא מוכרת"
       text_body_template: |
         ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
 
@@ -3661,6 +3689,7 @@ he:
         אין לך הרשאות להגיב לנושא הזה. אם לדעתך מדובר בטעות, מוטב [ליצור קשר עם הסגל](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "דחיית דוא״ל תגובה לתקציר"
+      subject_template_improved: "%{email_prefix}: תקלת דוא״ל -- תגובה לתקציר"
       text_body_template: |
         מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברו.
 
@@ -3670,6 +3699,7 @@ he:
     email_reject_too_many_recipients:
       title: "דחיית דוא״ל יותר מדי נמענים"
       subject_template: "[%{email_prefix}] תקלת דוא״ל -- יותר מדי נמענים"
+      subject_template_improved: "%{email_prefix}: תקלת דוא״ל -- יותר מדי נמענים"
       text_body_template: |
         מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברה.
 
@@ -3679,6 +3709,7 @@ he:
     email_error_notification:
       title: "התראת שגיאת דוא״ל"
       subject_template: "[%{email_prefix}] בעיית מייל -- בעיית אימות POP"
+      subject_template_improved: "%{email_prefix}: בעיית דוא״ל -- שגיאת אימות POP"
       text_body_template: |
         למרבה הצער התרחשה שגיאת אימות בעת תשאול הודעות דוא״ל משרת ה־POP.
 
@@ -3805,6 +3836,9 @@ he:
         שלום,
 
         פוסטים של משתמשים חדשים הושהו לצורך בדיקה והם כרגע ממתינים לסקירה. [ניתן לאשר או לדחות אותם כאן](%{base_url}/review?type=ReviewableQueuedPost)
+    user_posts_deleted:
+      title: "פוסטים של המשתמש נמחקו"
+      subject_template: "כל הפוסטים של %{user} נמחקו"
   unsubscribe_link: |
     כדי להפסיק את הודעות הדוא״ל האלו, יש [ללחוץ כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -3874,6 +3908,7 @@ he:
     user_invited_to_private_message_pm_group:
       title: "משתמש הזמין קבוצה להודעה פרטית"
       subject_template: "[%{email_prefix}] ‎@%{group_name}‎ הוזמנה להודעה ‚%{topic_title}’ על ידי %{username}"
+      subject_template_improved: "%{email_prefix}: ‎@%{group_name} הוזמן על ידי %{username} להודעה '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3883,6 +3918,7 @@ he:
     user_invited_to_private_message_pm:
       title: "משתמש/ת הוזמן/ה להודעה פרטית"
       subject_template: "[%{email_prefix}] %{username} הזמין אותך להודעה '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: הוזמנת להודעה ‚%{topic_title}’ על ידי %{username}"
       text_body_template: |
         %{header_instructions}
 
@@ -3892,6 +3928,7 @@ he:
     user_invited_to_private_message_pm_staged:
       title: "משתמש/ת הוזמן/ה להודעה פרטית מבוימת"
       subject_template: "הוזמנת לדיון '%{topic_title}' על ידי [%{email_prefix}] %{username}"
+      subject_template_improved: "%{email_prefix}: הוזמנת להודעה ‚%{topic_title}’ על ידי %{username}"
       text_body_template: |
         %{header_instructions}
 
@@ -3901,6 +3938,7 @@ he:
     user_invited_to_topic:
       title: "משתמש/ת הוזמן/ה לנושא"
       subject_template: "הוזמנת לדיון שכותרתו '%{topic_title}' על ידי [%{email_prefix}] %{username}"
+      subject_template_improved: "%{email_prefix}: הוזמנת אל ‚%{topic_title}’ על ידי %{username}"
       text_body_template: |
         %{header_instructions}
 
@@ -3909,7 +3947,9 @@ he:
         %{respond_instructions}
     user_replied:
       title: "משתמש/ת הגיב"
+      preview: "קיבלת תגובה לפוסט שלך."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3921,6 +3961,7 @@ he:
     user_replied_pm:
       title: "משתמש/ת הגיב/ה בהודעה פרטית"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3931,7 +3972,9 @@ he:
         %{respond_instructions}
     user_quoted:
       title: "משתמש/ת צוטט/ה"
+      preview: "צוטטת בפוסט."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3942,7 +3985,9 @@ he:
         %{respond_instructions}
     user_linked:
       title: "משתמש/ת קושר/ה"
+      preview: "הפוסט קושר בנושא אחר."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3953,6 +3998,7 @@ he:
         %{respond_instructions}
     user_mentioned:
       title: "משתמש/ת הוזכר/ה"
+      preview: "הוזכרת בפוסט."
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3965,6 +4011,7 @@ he:
     user_mentioned_pm:
       title: "משתמש אזכר הודעה פרטית"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3976,6 +4023,7 @@ he:
     user_group_mentioned:
       title: "קבוצת משתמשים הוזכרה"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3987,6 +4035,7 @@ he:
     user_group_mentioned_pm:
       title: "קבוצת משתמשים שהוזכרה בהודעה פרטית"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3998,6 +4047,7 @@ he:
     user_group_mentioned_pm_group:
       title: "קבוצת משתמשים שהוזכרה בהודעה פרטית"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4008,7 +4058,9 @@ he:
         %{respond_instructions}
     user_posted:
       title: "משתמש/ה פרסם/ה"
+      preview: "נשלחה תגובה לנושא שבמעקב שלך."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4020,6 +4072,7 @@ he:
     user_watching_category_or_tag:
       title: "משתמש שעוקב אחר קטגוריה או תגית"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4031,6 +4084,7 @@ he:
     user_watching_first_post:
       title: "משתמש/ת צופה בפוסט ראשון"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4042,6 +4096,7 @@ he:
     user_posted_pm:
       title: "משתמש/ת פרסם/ה הודעה פרטית"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4059,6 +4114,7 @@ he:
     account_suspended:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
+      subject_template_improved: "חשבונך הושעה"
       text_body_template: |
         הושעית מהפורום עד %{suspended_till}.
 
@@ -4066,6 +4122,7 @@ he:
     account_suspended_forever:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
+      subject_template_improved: "חשבונך הושעה"
       text_body_template: |
         הושעית מהפורום.
 
@@ -4073,6 +4130,7 @@ he:
     account_silenced:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
+      subject_template_improved: "חשבונך הושתק"
       text_body_template: |
         הושתקת בפורום עד %{silenced_till}.
 
@@ -4080,6 +4138,7 @@ he:
     account_silenced_forever:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
+      subject_template_improved: "חשבונך הושתק"
       text_body_template: |
         הושתקת בפורום.
 
@@ -4087,6 +4146,7 @@ he:
     account_deleted:
       title: "החשבון נמחק"
       subject_template: "[%{email_prefix}] החשבון שלך נמחק"
+      subject_template_improved: "חשבונך נמחק"
       text_body_template: |
         שלום,
 
@@ -4111,6 +4171,12 @@ he:
       title: "אימות דו־שלבי מושבת"
       subject_template: "[%{email_prefix}] אימות דו־שלבי מושבת"
       subject_template_improved: "אימות דו־שלבי מושבת"
+      text_body_template: |
+        אימות דו־שלבי הושבת לחשבונך אצל %{site_name}. מעתה יתאפשר לך להיכנס עם ססמתך בלבד, לא נדרש אף קוד אימות נוסף.
+
+        אם לא בחרת להשבית אימות דו־שלבי (2FA), יתכן שחשבונך הושחת.
+
+        אם צצות לך שאלות, ניתן [ליצור קשר עם הסגל הידידותי שלנו](%{base_url}/about).
     digest:
       why: "תקציר של %{site_link} מאז %{since}"
       since_last_visit: "מאז הביקור האחרון"
@@ -4132,7 +4198,9 @@ he:
       preheader: "תקציר מאז %{since}"
     forgot_password:
       title: "שכח/ה סיסמה"
+      preview: "איפוס הסיסמה שלך."
       subject_template: "[%{email_prefix}] איפוס סיסמה"
+      subject_template_improved: "איפוס סיסמה"
       text_body_template: |
         התקבלה בקשה לאפס את הסיסמה שלך באתר [%{site_name}](%{base_url}).
 
@@ -4154,6 +4222,9 @@ he:
         ‎%{base_url}/session/email-login/%{email_token}‎
     set_password:
       title: "קביעת סיסמה"
+      preview: "הגדרת סיסמת חשבון."
+      subject_template: "[%{email_prefix}] הגדרת סיסמה"
+      subject_template_improved: "הגדרת סיסמה"
       text_body_template: |
         מישהו ביקש להוסיף סיסמה לחשבון שלך ב־[%{site_name}](%{base_url}). לחלופין, אפשר להיכנס דרך כל שירות מקוון נתמך (Google, פייסבוק, וכד׳) שמקושר עם כתובת דוא״ל זו.
 
@@ -4174,6 +4245,7 @@ he:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
+      subject_template_improved: "החשבון החדש שלך"
       text_body_template: |
         חשבון חדש נוצר עבורך באתר %{site_name}
 
@@ -4182,6 +4254,7 @@ he:
     confirm_new_email:
       title: "אישור דוא״ל חדש"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל החדשה שלך"
+      subject_template_improved: "נא לאשר את כתובת הדוא״ל החדשה שלך"
       text_body_template: |
         לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
 
@@ -4191,6 +4264,7 @@ he:
     confirm_new_email_via_admin:
       title: "אישור כתובת דוא״ל חדשה"
       subject_template: "[%{email_prefix}] אישור כתובת הדוא״ל החדשה שלך"
+      subject_template_improved: "נא לאשר את כתובת הדוא״ל החדשה שלך"
       text_body_template: |
         לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
 
@@ -4200,6 +4274,7 @@ he:
     confirm_old_email:
       title: "אישור דוא״ל ישן"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל הנוכחית שלך"
+      subject_template_improved: "נא לאשר את כתובת הדוא״ל הנוכחית שלך"
       text_body_template: |
         לפני שנוכל להחליף את כתובת הדוא״ל שלך, עלינו לאשר שיש לך שליטה
         בחשבון הדוא״ל הנוכחי. לאחר השלמת השלב הזה, נבקש ממך לאשר
@@ -4211,6 +4286,7 @@ he:
     confirm_old_email_add:
       title: "אישור דוא״ל ישן (הוספה)"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל הנוכחית שלך"
+      subject_template_improved: "נא לאשר את כתובת הדוא״ל הנוכחית שלך"
       text_body_template: |
         לפני שיתאפשר לנו להוסיף כתובת דוא״ל חדשה, עלינו לאמת את שליטתך על כתובת הדוא״ל
         הנוכחית. לאחר השלמת השלב הזה, נבקש ממך לאשר את כתובת הדוא״ל החדשה.
@@ -4220,7 +4296,9 @@ he:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "התראת דוא״ל ישן"
+      preview: "כתובת הדוא״ל עודכנה."
       subject_template: "[%{email_prefix}] כתובת הדוא״ל שלך הוחלפה"
+      subject_template_improved: "כתובת הדוא״ל שלך הוחלפה"
       text_body_template: |
         זוהי הודעה אוטומטית כדי ליידע אותך שכתובת הדוא״ל שלך עבור %{site_name} הוחלפה. אם זה נעשה בטעות, נא ליצור קשר עם הנהלת האתר.
 
@@ -4230,6 +4308,7 @@ he:
     notify_old_email_add:
       title: "הודעה לכתובת הדוא״ל הקודמת (הוספה)"
       subject_template: "[%{email_prefix}] נוספה כתובת דוא״ל חדשה"
+      subject_template_improved: "נוספה כתובת דוא״ל חדשה"
       text_body_template: |
         זו הודעה אוטומטית שנועדה ליידע אותך שנוספה כתובת דוא״ל עבור %{site_name}.
          אם זה נעשה בטעות, נא ליצור קשר עם הנהלת האתר.
@@ -4239,6 +4318,7 @@ he:
         %{new_email}
     signup_after_approval:
       title: "הרשמה אחרי אישור"
+      preview: "חשבון חדש קיבל אישור."
       subject_template: "אושרתם באתר %{site_name}!"
       text_body_template: |
         ברוך בואך אל %{site_name}!
@@ -4286,6 +4366,8 @@ he:
         אם הקישור שלהלן אינו זמין ללחיצה, מוטב לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן שלך.
     suspicious_login:
       title: "התראת כניסה חדשה"
+      subject_template: "[%{site_name}] כניסה חדשה מ%{location}"
+      subject_template_improved: "%{site_name}: כניסה חדשה מ%{location}"
       text_body_template: |
         שלום,
 
@@ -4301,6 +4383,7 @@ he:
     post_approved:
       title: "הפוסט שלך אושר"
       subject_template: "[%{site_name}] הפוסט שלך אושר"
+      subject_template_improved: "%{site_name}: הפוסט שלך קיבל אישור"
       text_body_template: |
         שלום,
 

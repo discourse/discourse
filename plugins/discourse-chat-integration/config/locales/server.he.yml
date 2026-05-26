@@ -73,6 +73,10 @@ he:
       added_and_removed: "נוספו %{added} והוסרו %{removed}"
       added: "נוספו %{added}"
       removed: "הוסרו %{removed}"
+    errors:
+      provider_already_enabled: "הספק ‚%{name}’ כבר פעיל"
+      provider_not_found: "הספק ‚%{name}’ לא נמצא"
+      setting_update_failed: "עדכון ההגדרות נכשל: %{errors}"
     provider:
       slack:
         status:
