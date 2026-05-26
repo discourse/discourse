@@ -14,32 +14,32 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
-export default class PostExcerptAccordionItem extends Component {
+export default class DPostAccordionItem extends Component {
   @tracked measured = false;
   @tracked isOverflowing = false;
 
-  get excerptPost() {
-    return this.args.excerptPost;
+  get post() {
+    return this.args.post;
   }
 
   get quoteId() {
-    return `post-excerpt-${this.excerptPost.topic_id}-${this.excerptPost.post_number}`;
+    return `post-accordion-item-${this.post.topic_id}-${this.post.post_number}`;
   }
 
   get hasContent() {
-    return !!this.excerptPost?.cooked;
+    return !!this.post?.cooked;
   }
 
   get userDisplayName() {
     return userPrioritizedName({
-      username: this.excerptPost.username,
-      name: this.excerptPost.name,
+      username: this.post.username,
+      name: this.post.name,
     });
   }
 
   get maxHeightStyle() {
     if (this.args.linesDisplayed) {
-      return trustHTML(`--excerpt-max-lines: ${this.args.linesDisplayed}`);
+      return trustHTML(`--max-lines-displayed: ${this.args.linesDisplayed}`);
     }
   }
 
@@ -56,7 +56,7 @@ export default class PostExcerptAccordionItem extends Component {
     if (this.hasContent) {
       this.args.onToggleExpanded();
     } else {
-      DiscourseURL.routeTo(this.excerptPost.url);
+      DiscourseURL.routeTo(this.post.url);
     }
   }
 
@@ -77,52 +77,47 @@ export default class PostExcerptAccordionItem extends Component {
   }
 
   <template>
-    {{#if this.excerptPost}}
+    {{#if this.post}}
       <div
         class={{dConcatClass
-          "quote d-post-excerpt-accordion-item"
-          (if this.hasContent "d-post-excerpt-accordion-item--has-excerpt")
-          (unless this.hasContent "title-only")
+          "quote d-post-accordion-item"
+          (if this.hasContent "d-post-accordion-item--has-content")
         }}
         style={{this.maxHeightStyle}}
         data-expanded={{@isExpanded}}
         data-overflowing={{this.overflowingAttr}}
-        data-username={{this.excerptPost.username}}
-        data-post={{this.excerptPost.post_number}}
-        data-topic={{this.excerptPost.topic_id}}
+        data-username={{this.post.username}}
+        data-post={{this.post.post_number}}
+        data-topic={{this.post.topic_id}}
       >
         {{! eslint-disable ember/template-no-invalid-interactive }}
         <div
-          class="d-post-excerpt-accordion-item__header"
+          class="d-post-accordion-item__header"
           {{on "click" this.onClickHeader}}
         >
-          <div class="d-post-excerpt-accordion-item__metadata">
+          <div class="d-post-accordion-item__metadata">
             {{#if @hasItemMetadataBlock}}
-              {{yield this.excerptPost to="itemMetadata"}}
+              {{yield this.post to="itemMetadata"}}
             {{else}}
-              <DUserLink
-                @username={{this.excerptPost.username}}
-                class="user-link"
-              >
-                {{dBoundAvatarTemplate this.excerptPost.avatar_template "tiny"}}
+              <DUserLink @username={{this.post.username}} class="user-link">
+                {{dBoundAvatarTemplate this.post.avatar_template "tiny"}}
                 <span>{{this.userDisplayName}}</span>
               </DUserLink>
               <span class="dot-separator"></span>
               <a
-                href={{this.excerptPost.url}}
+                href={{this.post.url}}
                 class="date-link"
                 title={{i18n "post.sr_date"}}
               >
-                <DRelativeDate @date={{this.excerptPost.created_at}} />
+                <DRelativeDate @date={{this.post.created_at}} />
               </a>
             {{/if}}
           </div>
-          <div class="d-post-excerpt-accordion-item__controls">
+          <div class="d-post-accordion-item__controls">
             {{#if this.hasContent}}
               <DButton
-                class="btn-flat d-post-excerpt-accordion-item__toggle"
+                class="btn-flat d-post-accordion-item__toggle"
                 @action={{@onToggleExpanded}}
-                @ariaControls={{this.quoteId}}
                 @ariaExpanded={{@isExpanded}}
                 @ariaLabel={{if @isExpanded "post.collapse" "expand"}}
                 @title={{if @isExpanded "post.collapse" "expand"}}
@@ -130,8 +125,8 @@ export default class PostExcerptAccordionItem extends Component {
               />
             {{else}}
               <DButton
-                class="btn-flat d-post-excerpt-accordion-item__jump"
-                @href={{this.excerptPost.url}}
+                class="btn-flat d-post-accordion-item__jump"
+                @href={{this.post.url}}
                 @ariaLabel="post.follow_quote"
                 @title="post.follow_quote"
                 @icon="arrow-down"
@@ -141,25 +136,25 @@ export default class PostExcerptAccordionItem extends Component {
         </div>
 
         {{#if this.hasContent}}
-          <div class="d-post-excerpt-accordion-item__body">
+          <div class="d-post-accordion-item__body">
             <blockquote
               id={{this.quoteId}}
-              class="d-post-excerpt-accordion-item__content"
+              class="d-post-accordion-item__content"
               {{dOnResize this.checkOverflow}}
             >
               {{#if @hasBeforeItemContentBlock}}
-                {{yield this.excerptPost to="beforeItemContent"}}
+                {{yield this.post to="beforeItemContent"}}
               {{/if}}
 
               <PostCookedHtml
-                @post={{this.excerptPost}}
+                @post={{this.post}}
                 @decoratorState={{@decoratorState}}
               />
 
             </blockquote>
 
-            <div class="d-post-excerpt-accordion-item__read-more">
-              <a href={{this.excerptPost.url}} class="read-more-link">
+            <div class="d-post-accordion-item__read-more">
+              <a href={{this.post.url}} class="read-more-link">
                 {{i18n "read_more"}}
               </a>
             </div>

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import PostExcerptAccordion from "discourse/components/post/post-excerpt-accordion";
+import DPostAccordion from "discourse/ui-kit/d-post-accordion";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SolvedAccordionItemMetadata from "./solved-accordion-item-metadata";
@@ -43,8 +43,8 @@ export default class SolvedAcceptedAnswers extends Component {
   }
 
   <template>
-    <PostExcerptAccordion
-      @excerptPosts={{this.acceptedAnswers}}
+    <DPostAccordion
+      @posts={{this.acceptedAnswers}}
       @decoratorState={{@decoratorState}}
       @linesDisplayed={{this.linesDisplayed}}
       class="accepted-answers"
@@ -67,9 +67,9 @@ export default class SolvedAcceptedAnswers extends Component {
         {{/if}}
       </:header>
 
-      <:itemMetadata as |excerptPost|>
-        <SolvedAccordionItemMetadata @excerptPost={{excerptPost}} />
+      <:itemMetadata as |post|>
+        <SolvedAccordionItemMetadata @post={{post}} />
       </:itemMetadata>
-    </PostExcerptAccordion>
+    </DPostAccordion>
   </template>
 }

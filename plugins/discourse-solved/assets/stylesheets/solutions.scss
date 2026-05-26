@@ -110,10 +110,16 @@ $solved-color: var(--success);
 }
 
 .accepted-answers {
-  margin-left: var(--topic-body-width-padding);
-  margin-bottom: 0.5em;
+  & .d-post-accordion {
+    &__layout {
+      padding-bottom: var(--space-4);
 
-  & .d-post-excerpt-accordion {
+      @include viewport.from(sm) {
+        padding: var(--space-1) var(--topic-body-width-padding) var(--space-4)
+          var(--topic-body-width-padding);
+      }
+    }
+
     &__header {
       color: var(--secondary);
       background-color: $solved-color;
@@ -133,16 +139,12 @@ $solved-color: var(--success);
   &__solution-count {
     font-size: var(--font-down-1);
   }
-
-  .d-post-excerpt-accordion-item {
-    &__metadata {
-      color: var(--primary-low-mid);
-    }
-  }
 }
 
 .solved-shared-issue-row {
-  padding-left: var(--topic-body-width-padding);
+  @include viewport.from(sm) {
+    padding-left: var(--topic-body-width-padding);
+  }
 }
 
 .solved-shared-issue-row .post-action-menu__solved-shared-issue {

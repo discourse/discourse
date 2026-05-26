@@ -9,9 +9,9 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
 
 acceptance(`Discourse Solved Plugin`, function (needs) {
-  const ITEM_SELECTOR = ".accepted-answers .d-post-excerpt-accordion-item";
-  const BODY_SELECTOR = ".d-post-excerpt-accordion-item__body";
-  const CONTENT_SELECTOR = ".d-post-excerpt-accordion-item__content";
+  const ITEM_SELECTOR = ".accepted-answers .d-post-accordion-item";
+  const BODY_SELECTOR = ".d-post-accordion-item__body";
+  const CONTENT_SELECTOR = ".d-post-accordion-item__content";
   const ACCEPTER_SELECTOR = ".accepter-link";
 
   needs.user();
@@ -34,7 +34,9 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
 
     await visit("/t/without-excerpt/12");
 
-    assert.dom(`${ITEM_SELECTOR}.title-only`).exists();
+    assert
+      .dom(`${ITEM_SELECTOR} .d-post-accordion-item--has-content`)
+      .doesNotExist();
     assert.dom(`${ITEM_SELECTOR} ${BODY_SELECTOR}`).doesNotExist();
   });
 
@@ -72,7 +74,9 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
 
     await visit("/t/without-excerpt/12");
 
-    assert.dom(`${ITEM_SELECTOR}.title-only`).exists();
+    assert
+      .dom(`${ITEM_SELECTOR} .d-post-accordion-item--has-content`)
+      .doesNotExist();
     assert.dom(`${ITEM_SELECTOR} ${BODY_SELECTOR}`).doesNotExist();
   });
 
@@ -102,14 +106,10 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
 
     assert.dom(ITEM_SELECTOR).exists({ count: 2 });
     assert
-      .dom(
-        `${ITEM_SELECTOR}[data-post='2'] .d-post-excerpt-accordion-item__content`
-      )
+      .dom(`${ITEM_SELECTOR}[data-post='2'] .d-post-accordion-item__content`)
       .hasText("this is an excerpt");
     assert
-      .dom(
-        `${ITEM_SELECTOR}[data-post='3'] .d-post-excerpt-accordion-item__content`
-      )
+      .dom(`${ITEM_SELECTOR}[data-post='3'] .d-post-accordion-item__content`)
       .hasText("another excerpt");
   });
 
