@@ -23,6 +23,9 @@ module Reports::TopReferrersByBrowserPageviews
       count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
 
+      host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+      escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
+
       sql = <<~SQL
         WITH ranked AS (
           SELECT
@@ -32,6 +35,14 @@ module Reports::TopReferrersByBrowserPageviews
           FROM browser_pageview_referrer_daily_rollups
           WHERE date >= :start_date
             AND date < :end_date_exclusive
+            AND (
+              normalized_referrer IS NULL
+              OR (
+                normalized_referrer <> :host_exact
+                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+              )
+            )
           GROUP BY normalized_referrer
         )
         SELECT normalized_referrer, count,
@@ -49,6 +60,9 @@ module Reports::TopReferrersByBrowserPageviews
             sql,
             start_date: report.start_date,
             end_date_exclusive: end_date_exclusive,
+            host_exact: host,
+            host_path_prefix: "#{escaped_host}/%",
+            host_query_prefix: "#{escaped_host}?%",
             limit: report.limit || 50,
           )
           .map do |row|

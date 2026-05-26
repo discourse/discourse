@@ -5,8 +5,6 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
     let(:start_date) { 3.days.ago.to_date }
     let(:end_date) { Date.current }
 
-    before { Discourse.stubs(:current_hostname).returns("forum.example.com") }
-
     it "groups events by date and normalized_referrer into one row per combination" do
       Fabricate(:browser_pageview_event, normalized_referrer: "google.com")
       Fabricate(:browser_pageview_event, normalized_referrer: "google.com")
@@ -30,7 +28,7 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
       expect(row.logged_in_count).to eq(1)
     end
 
-    it "stores NULL-referrer rows (direct visits) for use in the denominator" do
+    it "stores NULL-referrer rows (direct visits)" do
       Fabricate(:browser_pageview_event, normalized_referrer: nil)
       Fabricate(:browser_pageview_event, normalized_referrer: "google.com")
 
@@ -39,34 +37,16 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
       expect(described_class.where(normalized_referrer: nil).first.count).to eq(1)
     end
 
-    it "excludes same-host bare, path-prefixed, and query-prefixed referrers" do
+    it "stores internal-referrer rows so the data remains recoverable on hostname or rule changes" do
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com")
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/topic/1")
-      Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com?ref=email")
-      Fabricate(:browser_pageview_event, normalized_referrer: "google.com")
-
-      described_class.aggregate(start_date: start_date, end_date: end_date)
-
-      expect(described_class.pluck(:normalized_referrer)).to contain_exactly("google.com")
-    end
-
-    it "does not exclude hosts that merely share a prefix with current_hostname" do
-      Fabricate(:browser_pageview_event, normalized_referrer: "evilforum.example.com/x")
-
-      described_class.aggregate(start_date: start_date, end_date: end_date)
-
-      expect(described_class.pluck(:normalized_referrer)).to eq(["evilforum.example.com/x"])
-    end
-
-    it "escapes LIKE wildcards in current_hostname so other hosts do not over-match" do
-      Discourse.stubs(:current_hostname).returns("my_blog.example.com")
-      Fabricate(:browser_pageview_event, normalized_referrer: "my-blog.example.com/x")
       Fabricate(:browser_pageview_event, normalized_referrer: "google.com")
 
       described_class.aggregate(start_date: start_date, end_date: end_date)
 
       expect(described_class.pluck(:normalized_referrer)).to contain_exactly(
-        "my-blog.example.com/x",
+        "forum.example.com",
+        "forum.example.com/t/topic/1",
         "google.com",
       )
     end
