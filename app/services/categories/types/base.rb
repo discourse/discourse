@@ -124,6 +124,12 @@ module Categories
         def enable_plugin
         end
 
+        # Returns true if this type overrides enable_plugin with actual behavior.
+        # Used to determine if admin privileges are required to configure this type.
+        def enables_plugin?
+          method(:enable_plugin).owner != Categories::Types::Base.singleton_class
+        end
+
         # Configure any category-specific settings or custom fields that are
         # specific to this category type, including whatever setting or custom
         # field values make this category type unique.
@@ -255,6 +261,13 @@ module Categories
           true
         end
 
+        # Checks availability considering both the base available? check and
+        # guardian permissions. Types that enable plugins require admin access.
+        def available_for?(guardian = nil)
+          return false if enables_plugin? && guardian && !guardian.is_admin?
+          available?
+        end
+
         # One level above available? to allow for more granular control over visibility.
         # For example, a category type may not be visible at all if a plugin isn't installed
         # or if a certain site setting is not enabled, whereas available? is more
@@ -328,18 +341,28 @@ module Categories
         end
 
         # Used when serializing the category configuration schema to the client.
-        def metadata
+        def metadata(guardian: nil)
           name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
-          {
+          result = {
             id: type_id,
             name: name,
             title: I18n.t("category_types.#{type_id}.title", default: name),
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
-            available: available?,
+            available: guardian ? available_for?(guardian) : available?,
             visible: visible?,
             configuration_schema: resolved_configuration_schema,
-          }.merge(additional_metadata)
+          }
+          if enables_plugin?
+            plugin_name =
+              Categories::TypeRegistry
+                .owner(type_id)
+                &.sub(/^discourse-/, "")
+                &.sub(/-plugin$/, "")
+                &.titleize
+            result[:required_plugin] = plugin_name
+          end
+          result.merge(additional_metadata)
         end
 
         private

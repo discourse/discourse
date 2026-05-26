@@ -13,6 +13,75 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
+  describe ".enables_plugin?" do
+    it "returns false when enable_plugin is not overridden" do
+      test_type = Class.new(described_class) { type_id :no_plugin }
+
+      expect(test_type.enables_plugin?).to eq(false)
+    end
+
+    it "returns true when enable_plugin is overridden" do
+      test_type =
+        Class.new(described_class) do
+          type_id :with_plugin
+
+          def self.enable_plugin
+          end
+        end
+
+      expect(test_type.enables_plugin?).to eq(true)
+    end
+  end
+
+  describe ".available_for?" do
+    fab!(:moderator)
+
+    it "returns true for types that don't enable plugins regardless of guardian" do
+      test_type = Class.new(described_class) { type_id :no_plugin_type }
+
+      expect(test_type.available_for?(admin.guardian)).to eq(true)
+      expect(test_type.available_for?(moderator.guardian)).to eq(true)
+      expect(test_type.available_for?).to eq(true)
+    end
+
+    it "returns true for plugin-enabling types when user is admin" do
+      test_type =
+        Class.new(described_class) do
+          type_id :plugin_type
+
+          def self.enable_plugin
+          end
+        end
+
+      expect(test_type.available_for?(admin.guardian)).to eq(true)
+    end
+
+    it "returns false for plugin-enabling types when user is not admin" do
+      test_type =
+        Class.new(described_class) do
+          type_id :plugin_type_mod
+
+          def self.enable_plugin
+          end
+        end
+
+      expect(test_type.available_for?(moderator.guardian)).to eq(false)
+    end
+
+    it "respects the base available? method" do
+      test_type =
+        Class.new(described_class) do
+          type_id :unavailable_type
+
+          def self.available?
+            false
+          end
+        end
+
+      expect(test_type.available_for?(admin.guardian)).to eq(false)
+    end
+  end
+
   describe ".metadata" do
     it "returns type information including configuration_schema" do
       expect(described_class.metadata).to include(
