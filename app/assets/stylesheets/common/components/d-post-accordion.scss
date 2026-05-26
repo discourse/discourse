@@ -1,6 +1,4 @@
 .d-post-accordion {
-  background: var(--secondary);
-
   * {
     font-size: var(--font-down-1-rem);
   }
@@ -43,6 +41,7 @@
 }
 
 .d-post-accordion-item {
+  background: var(--secondary);
   border-width: 1px 0 0 0;
   border-color: var(--primary-low);
   border-style: solid;
