@@ -1476,6 +1476,10 @@ posting:
   max_mentions_per_post:
     default: 10
     area: "notifications"
+  max_quotes_per_post:
+    default: 50
+    min: 0
+    area: "posts_and_topics"
   max_users_notified_per_group_mention:
     default: 100
     client: true
