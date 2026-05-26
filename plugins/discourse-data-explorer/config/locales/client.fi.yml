@@ -25,6 +25,7 @@ fi:
       description_placeholder: "Kirjoita kuvaus tähän"
       ai:
         generate: "Luo"
+        optional: "valinnainen"
       import:
         label: "Tuo"
         unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."
@@ -41,17 +42,11 @@ fi:
           yes: "Kyllä"
           no: "Ei"
           null_: "Tyhjä"
-      export: "Vie"
       view_json: "Näytä JSON"
       save: "Tallenna muutokset"
       run: "Suorita"
       undo: "Hylkää muutokset"
-      edit: "Muokkaa"
       delete: "Poista"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Taulukko"
-      show_graph: "Kaavio"
       others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois."
       run_time: "Kysely suoritettu %{value} millisekunnissa."
       result_count:
@@ -68,7 +63,6 @@ fi:
       query_time: "Viimeisin suoritus"
       query_user: "Luonut"
       column: "Sarake %{number}"
-      explain_label: "Sisällytä kyselysuunnitelma?"
       reset_params: "Palauta"
       search_placeholder: "Hae..."
       no_search_results: "Pahoittelut, emme löytäneet tekstiäsi vastaavia tuloksia."

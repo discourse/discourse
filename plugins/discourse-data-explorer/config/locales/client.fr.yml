@@ -25,6 +25,7 @@ fr:
       description_placeholder: "Saisissez une description ici"
       ai:
         generate: "Générer"
+        optional: "facultatif"
       import:
         label: "Importer"
         unparseable_json: "Fichier JSON non analysable."
@@ -41,17 +42,11 @@ fr:
           yes: "Oui"
           no: "Non"
           null_: "Nul"
-      export: "Exporter"
       view_json: "Afficher JSON"
       save: "Enregistrer les modifications"
       run: "Exécuter"
       undo: "Annuler les modifications"
-      edit: "Modifier"
       delete: "Supprimer"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tableau"
-      show_graph: "Graphique"
       others_dirty: "Une requête comporte des modifications non enregistrées qui seront perdues si vous quittez la page"
       run_time: "Requête exécutée en %{value} millisecondes."
       result_count:
@@ -68,7 +63,6 @@ fr:
       query_time: "Dernière exécution"
       query_user: "Créé par "
       column: "Colonne %{number}"
-      explain_label: "Inclure le plan d'exécution ?"
       reset_params: "Réinitialiser"
       search_placeholder: "Recherche…"
       no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."

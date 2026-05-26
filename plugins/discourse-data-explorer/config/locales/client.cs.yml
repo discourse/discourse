@@ -12,6 +12,7 @@ cs:
       create: "Vytvořit"
       ai:
         generate: "Vygenerovat API klíč"
+        optional: "volitelné"
       import:
         label: "Import"
       help:
@@ -23,14 +24,9 @@ cs:
           yes: "Ano"
           no: "Ne"
           null_: "Null"
-      export: "Export"
-      view: "Zobrazit"
       save: "Uložit změny"
       undo: "Zahodit změny"
-      edit: "Upravit"
       delete: "Smazat"
-      download_json: "JSON"
-      download_csv: "CSV"
       result_count:
         one: "%{count} výsledek."
         few: "%{count} výsledky."

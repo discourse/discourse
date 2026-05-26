@@ -53,7 +53,6 @@ module DiscourseAi
     def can_request_summary?
       return false if anonymous?
 
-      user_group_ids = user.group_ids
       if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)).blank?
         return false
       end

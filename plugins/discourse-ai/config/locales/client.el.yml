@@ -92,6 +92,8 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      bot_chats:
+        tab_label: "Συνομιλίες bot"
       llm_selector:
         none: "Κανένα"
       features:
@@ -105,6 +107,9 @@ el:
           one: "(%{count} περισσότερο)"
           other: "(%{count} περισσότερα)"
         collapse_list: "(δείξε λιγότερα)"
+        nav:
+          enabled: "Ενεργοποιημένα"
+          not_enabled: "Μη ενεργοποιημένα"
         filters:
           all: "Όλα"
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
@@ -182,6 +187,9 @@ el:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
+        features_list:
+          one: "Λειτουργία:"
+          other: "Λειτουργίες:"
       rag:
         uploads:
           title: "Μεταφορτώσεις"
@@ -227,7 +235,6 @@ el:
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
-        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: Διαγραφή
@@ -290,10 +297,6 @@ el:
           title: "Προβολή αλληλεπίδρασης AI"
           copy_request: "Αντιγραφή αιτήματος"
           copy_response: "Αντιγραφή απάντησης"
-          request_tokens: "Διακριτικά αιτήματος:"
-          response_tokens: "Διακριτικά απάντησης:"
-          cache_read_tokens: "Διακριτικά ανάγνωσης προσωρινής μνήμης:"
-          cache_write_tokens: "Διακριτικά εγγραφής προσωρινής μνήμης:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
@@ -305,9 +308,12 @@ el:
         conversations:
           placeholder: "Κάντε μια ερώτηση..."
           messages_sidebar_title: "Συζητήσεις"
+          open_conversation_menu: "Άνοιγμα μενού συζήτησης"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"
+          scroll_to_bottom: "Κύλιση προς τα κάτω"
+          editing_post: "Γίνεται επεξεργασία ανάρτησης"
       sentiments:
         sentiment_analysis:
           filter_types:

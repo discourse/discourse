@@ -361,7 +361,6 @@ fa_IR:
       <p>در غیر این صورت لطفاً <a href="%{base_url}/password-reset">رمز عبور را</a>بازنشانی کنید.</p>
     not_found_template_link: |
       <p>این دعوت‌نامه برای <a href="%{base_url}">%{site_name}</a> دیگر قابل استفاده نیست. لطفا از فردی که شما را دعوت کرده است، بخواهید یکبار دیگر دعوت‌نامه جدیدی ارسال کند.</p>
-    existing_user_cannot_redeem: "این دعوتنامه قابل استفاده نیست. لطفا از شخصی که شما را دعوت کرده بخواهید برای شما دعوتنامه جدیدی ارسال کند."
     existing_user_already_redemeed: "شما قبلا این پیوند دعوتنامه را استفاده‌ کرده‌اید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر حساب کاربری دارند! "
     invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
@@ -422,7 +421,13 @@ fa_IR:
   deleted_topic: "متاسفیم! این موضوع حذف شده است و دیگر در دسترس نیست."
   delete_topic_failed: "هنگام حذف موضوع خطایی روی داد. لطفا با مدیر سایت تماس بگیرید."
   reading_time: "زمان مطالعه"
+  reading_time_minutes:
+    one: "%{count} دقیقه 🕑"
+    other: "%{count} دقیقه 🕑"
   likes: "پسند‌ها"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "متاسفیم! شما قبلاً این عمل را انجام داده اید. آیا می توانید صفحه را به روز کنید؟"
   too_many_replies:
     one: "متأسفیم، ولی کاربران جدید موقتا محدود به %{count}  پاسخ در یک موضوع هستند."
@@ -581,6 +586,7 @@ fa_IR:
       admins: "مدیران ارشد"
       moderators: "مدیران"
       staff: "همکاران"
+      anonymous: "ناشناس"
       trust_level_0: "سطح اعتماد 0"
       trust_level_1: "سطح اعتماد 1"
       trust_level_2: "سطح اعتماد 2"
@@ -1120,6 +1126,30 @@ fa_IR:
       xaxis: "روز"
       yaxis: "تعداد مشارکت کنندگان جدید"
       description: "تعداد کاربرانی که اولین پست خود را در این مدت ارسال کردند."
+    activity_by_category:
+      labels:
+        category: "دسته‌بندی"
+        topics: "موضوعات"
+        posts: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
+    posters_by_member_type:
+      labels:
+        count: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
+      types:
+        staff: "همکاران"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "سطح اعتماد"
+        count: "اعضاء"
+        share: "اشتراک‌گذاری"
+      levels:
+        "0": "جدید"
+        "1": "پایه‌ای"
+        "2": "عضو"
+        "3": "عادی"
+        "4": "رهبر"
     trust_level_growth:
       title: "رشد سطح اعتماد"
       xaxis:
@@ -1158,9 +1188,8 @@ fa_IR:
     site_traffic:
       title: "ترافیک سایت"
       xaxis:
-        page_view_anon_browser: "بازدید از صفحه (ناشناس)"
-        page_view_logged_in_browser: "بازدید از صفحه (وارد شده)"
-        page_view_crawler: "خزنده های شناخته شده"
+        page_view_anon_browser: "ناشناس"
+        page_view_crawler: "خزنده‌ها"
         page_view_other: "ترافیک‌های دیگر"
       yaxis: "روز"
       description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
@@ -1273,6 +1302,12 @@ fa_IR:
         num_clicks: "کلیک‌ها"
         num_topics: "موضوعات"
       description: "لیست کاربران بر اساس تعداد کلیک روی پیوندهایی که به اشتراک گذاشته‌اند."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "بازدیدها"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "بازدیدها"
     top_traffic_sources:
       title: "بالاترین منابع ترافیک"
       xaxis: "دومین"
@@ -1329,6 +1364,8 @@ fa_IR:
     page_view_logged_in_browser_reqs:
       xaxis: "روز"
       description: "تعداد بازدید از صفحه توسط بازدیدکنندگان وارد شده با استفاده از مرورگرهای واقعی."
+    page_view_embed_reqs:
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
@@ -1386,7 +1423,7 @@ fa_IR:
         os: سیستم‌عامل
         login_time: زمان ورود
       description: "جزئیات ورودهای جدید که به طور مشکوکی با ورودهای قبلی متفاوت است."
-    staff_logins:
+    admin_logins:
       title: "ورود مدیریت"
       labels:
         user: کاربر
@@ -1528,7 +1565,6 @@ fa_IR:
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری و...)."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
-    use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
     content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
     share_links: "مشخص کنید کدام موارد روی کادر گفتگو در قسمت اشترک گذاری و بر اساس چه ترتیبی نشان داده شوند. "
     site_contact_username: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود، از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود."
@@ -1757,7 +1793,6 @@ fa_IR:
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
-    use_name_for_username_suggestions: "هنگام پیشنهاد نام‌کاربری از نام کامل، کاربر استفاده کنید."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -2063,8 +2098,6 @@ fa_IR:
     email_reject_screened_email:
       title: "ایمیل نمایش داده شده رد می‌شود"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- ایمیل مسدود شد"
-    email_reject_not_allowed_email:
-      subject_template: "[%{email_prefix}] مشکل ایمیل -- ایمیل مسدود شد"
     email_reject_inactive_user:
       title: "ایمیل رد شده کاربر غیر‌فعال"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- کاربر غیر‌فعال"
@@ -2187,7 +2220,6 @@ fa_IR:
       text_body_template: " تنظیم `download_remote_images_to_local` غیرفعال شد زیرا به محدودیت فضای دیسک در `download_remote_images_threshold` رسیده بود."
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
-      subject_template: "شما کاربر جدید ماه هستید!"
     queued_posts_reminder:
       title: "یادآور نوشته‌های زمانبندی شده"
       subject_template:
@@ -2405,6 +2437,7 @@ fa_IR:
     account_exists:
       title: "حساب کاربری وحود دارد"
       subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
+      subject_template_improved: "حساب کاربری وحود دارد"
     digest:
       since_last_visit: "از آخرین بازدید شما"
       new_topics: "موضوع جدید"
@@ -2416,6 +2449,7 @@ fa_IR:
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
       subject_template: "«%{email_prefix}» خلاصه"
+      subject_template_improved: "خلاصه"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name}"
     forgot_password:
@@ -2430,7 +2464,6 @@ fa_IR:
         %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "تنظیم رمز عبور"
-      subject_template: "[%{email_prefix}] تنظیم رمز عبور"
       text_body_template: |
         فردی درخواست افزودن رمز به حساب‌کاربری شما در [%{site_name}](%{base_url}) را داشته. به جای آن، می‌توانید با حساب کاربری خود در سرویس‌های (گوگل، فیسبوک و...) که دارای ایمیل معتبر هستند نیز وارد شوید.
 
@@ -2441,9 +2474,9 @@ fa_IR:
     admin_login:
       title: "ورود مدیریت"
       subject_template: "[%{email_prefix}] ورود"
+      subject_template_improved: "ورود"
     account_created:
       title: "حساب کاربری ایجاد شد"
-      subject_template: "[%{email_prefix}] حساب کاربری جدید شما"
       text_body_template: |
         یک حساب کاربری در %{site_name} برای شما ساخته شده
 

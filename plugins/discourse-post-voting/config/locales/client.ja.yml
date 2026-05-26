@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ja:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: 投稿の投票
   post_voting:
     reviewables:
       comment_already_handled: "ありがとうございます。ただ、このコメントはすでにレビュー済みで、通報の必要がないと判断されています。"

@@ -314,6 +314,12 @@ en:
             tags:
               label: Tags
               description: List of tags to add to the topic.
+            closed_automatically:
+              label: Automatically closed topics 
+              description: Add tags to automatically closed topics.
+            closed_manually:
+              label: Manually closed topics
+              description: Add tags to manually closed topics.
         post:
           fields:
             creator:

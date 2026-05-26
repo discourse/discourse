@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Calendar - hamburger action shown", function (needs) {
+acceptance("hamburger action shown", function (needs) {
   needs.user();
 
   needs.settings({
@@ -26,7 +26,7 @@ acceptance("Discourse Calendar - hamburger action shown", function (needs) {
   });
 });
 
-acceptance("Discourse Calendar - hamburger action hidden", function (needs) {
+acceptance("hamburger action hidden", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,
@@ -42,7 +42,7 @@ acceptance("Discourse Calendar - hamburger action hidden", function (needs) {
   });
 });
 
-acceptance("Discourse Calendar - sidebar link shown", function (needs) {
+acceptance("sidebar link shown", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,
@@ -60,7 +60,7 @@ acceptance("Discourse Calendar - sidebar link shown", function (needs) {
   });
 });
 
-acceptance("Discourse Calendar - sidebar link hidden", function (needs) {
+acceptance("sidebar link hidden", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,

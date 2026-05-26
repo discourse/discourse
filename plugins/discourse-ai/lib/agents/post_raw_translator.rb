@@ -21,11 +21,11 @@ module DiscourseAi
           {
             input: {
               content:
-                "[quote] What does the new update include? [/quote]\n\nNew Update for Minecraft Adds Underwater Temples",
-              target_locale: "es",
+                "[quote=\"alice, post:3, topic:42\"]\nHow do I get started?\n[/quote]\n\nWe're so glad you're here! Want to run your own Minecraft server? Just click the Get Started button below — it's easy.",
+              target_locale: "de",
             }.to_json,
             output:
-              "[quote]¿Qué incluye la nueva actualización?[/quote]\n\nNueva actualización para Minecraft añade templos submarinos",
+              "[quote=\"alice, post:3, topic:42\"]\nWie fange ich an?\n[/quote]\n\nWir freuen uns sehr, dass du hier bist! Möchtest du deinen eigenen Minecraft-Server betreiben? Klick einfach unten auf den „Loslegen“-Button — es ist ganz einfach.",
           },
           {
             input: {
@@ -39,18 +39,18 @@ module DiscourseAi
           {
             input: {
               content:
-                "We're so glad you're here! Want to run your own community site? It's easy to get started.",
+                "He proposed a so-called clean architecture for the new service. But clean doesn't always mean simple.",
               target_locale: "de",
             }.to_json,
             output:
-              "Wir freuen uns sehr, dass du hier bist! Möchtest du deine eigene Community-Seite betreiben? Der Einstieg ist ganz einfach.",
+              "Er schlug eine sogenannte „saubere“ Architektur für den neuen Dienst vor. Doch „sauber“ bedeutet nicht immer einfach.",
           },
         ]
 
         <<~PROMPT.strip
           You are a friendly and very skilled human linguist and translator. Your goal is to produce translations that read naturally to native speakers, as if originally written in the target language — indistinguishable from content written by a human. Follow these instructions strictly:
 
-          1. Preserve Markdown elements, HTML elements, or newlines. Text must be translated without altering the original formatting.
+          1. Preserve Markdown elements, HTML elements, BBCode tags and their attributes, or newlines. Text must be translated without altering the original formatting.
           2. Maintain the original document structure including headings, lists, tables, code blocks, etc.
           3. Preserve all links, images, and other media references without translation.
           4. For technical and brand terminology:
@@ -59,11 +59,12 @@ module DiscourseAi
           5. For ambiguous terms or phrases, do not translate word-for-word in isolation. Derive the intended meaning from the full context of the document before choosing a translation.
           6. Ensure the translation only contains the original language and the target language.
           7. Match the tone and register of the source text. If the source is informal and conversational, use informal address forms and a casual tone in the target language. Do not default to formal address (e.g. German Sie, French vous) unless the source text is itself formal.
+          8. Your translation is wrapped in a JSON string, so any bare ASCII `"` inside it will truncate the response. For any quoted text, both the opening and closing quote characters must be the target language's native quotation marks — for example German `„…"`, French `«…»`, Japanese `「…」` — never ASCII `"`.
 
           Follow these instructions on what NOT to do:
-          8. Do not translate code snippets or programming language names, but ensure that any comments within the code are translated. Code can be represented in ``` or in single ` backticks or in <code> HTML tags.
-          9. Do not add any content besides the translation.
-          10. Do not add unnecessary newlines.
+          9. Do not translate code snippets or programming language names, but ensure that any comments within the code are translated. Code can be represented in ``` or in single ` backticks or in <code> HTML tags.
+          10. Do not add any content besides the translation.
+          11. Do not add unnecessary newlines.
 
           Here are four examples of correct translations:
 

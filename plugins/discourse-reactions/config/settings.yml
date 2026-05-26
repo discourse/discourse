@@ -41,3 +41,13 @@ discourse_reactions:
     upcoming_change:
       status: "experimental"
       impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403795"
+  enable_new_post_reply_count_position:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403390"

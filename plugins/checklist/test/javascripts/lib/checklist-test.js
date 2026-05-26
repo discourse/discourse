@@ -35,7 +35,7 @@ async function prepare(raw) {
   return { updated };
 }
 
-acceptance("discourse-checklist | checklist", function (needs) {
+acceptance("checklist", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/posts/42", () => helper.response({ raw: currentRaw }));
   });

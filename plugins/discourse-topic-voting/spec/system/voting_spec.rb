@@ -17,9 +17,12 @@ RSpec.describe "Topic voting" do
   fab!(:post2) { Fabricate(:post, topic: topic2) }
 
   let(:category_page) { PageObjects::Pages::Category.new }
+  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:user_page) { PageObjects::Pages::User.new }
   let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -30,18 +33,17 @@ RSpec.describe "Topic voting" do
     category_page.visit(category1)
     expect(category_page).to have_no_css(category_page.votes)
 
-    # enable voting in category
-    category_page
-      .visit_settings(category1)
-      .toggle_setting("enable-topic-voting", "Allow users to vote on topics in this category")
-      .save_settings
+    category_page.visit_general(category1)
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.expand
+    category_type_selector.option(".category-type-selector__result.--category-type-ideas").click
+    banner.click_save
 
-    expect(Category.can_vote?(category1.id)).to eq(true)
+    try_until_success { expect(Category.can_vote?(category1.id)).to eq(true) }
 
     # make a vote
     category_page.visit(category1)
     expect(category_page).to have_css(category_page.votes)
-    expect(category_page).to have_css(category_page.topic_with_vote_count(0), count: 2)
     category_page.select_topic(topic1)
 
     expect(topic_page.vote_count).to have_text("0")
@@ -55,7 +57,7 @@ RSpec.describe "Topic voting" do
     topic_page.click_my_votes
     expect(user_page.active_user_primary_navigation).to have_text("Activity")
     expect(user_page.active_user_secondary_navigation).to have_text("Votes")
-    expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]", text: "1 vote")
+    expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]")
     find(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"] a.raw-link").click
 
     # unvoting
@@ -76,10 +78,10 @@ RSpec.describe "Topic voting" do
       Fabricate(:post, topic: voting_topic1, raw: "Check out #{voting_topic2.url}")
 
       visit("/t/#{voting_topic3.slug}/#{voting_topic3.id}")
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.voting_closed_title"))
+      expect(page).to have_css("button.voting-wrapper__button[disabled]")
 
       find("a[href='#{voting_topic1.url}']").click
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+      expect(page).to have_no_css("button.voting-wrapper__button[disabled]")
 
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
@@ -87,11 +89,30 @@ RSpec.describe "Topic voting" do
       )
 
       find("a[href='#{voting_topic2.url}']").click
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+      expect(page).to have_no_css("button.voting-wrapper__button[disabled]")
 
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
         I18n.t("js.topic_voting.see_votes", count: 8, max: 10),
+      )
+    end
+  end
+
+  context "when toggling watch from the vote menu" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "sets the topic to watching" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.vote
+      expect(topic_page).to have_watch_toggle_off
+
+      topic_page.click_watch_toggle
+      expect(topic_page).to have_watch_toggle_on
+      expect(TopicUser.find_by(user: admin, topic: voting_topic1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
       )
     end
   end
@@ -104,7 +125,7 @@ RSpec.describe "Topic voting" do
       Fabricate(:post, topic: voting_topic1)
 
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
-      topic_page.vote
+      expect(page).to have_css("button.voting-wrapper__button[disabled]")
       expect(topic_page).to have_no_remove_vote_button
     end
   end
@@ -125,6 +146,107 @@ RSpec.describe "Topic voting" do
     end
   end
 
+  context "when viewing as anonymous user" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before do
+      DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
+      Capybara.reset_session!
+    end
+
+    it "redirects to login when clicking vote" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+      find(".title-voting button.voting-wrapper__button").click
+      expect(page).to have_current_path("/login")
+    end
+  end
+
+  context "when scrolling down on a voting topic" do
+    fab!(:voting_posts) { Fabricate.times(21, :post, topic: voting_topic1) }
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "shows voting in the docked header" do
+      sign_in(admin)
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      expect(page).to have_css(".title-voting")
+      expect(page).to have_no_css(".header-title-voting")
+
+      page.execute_script("document.querySelector('#post_4').scrollIntoView()")
+
+      expect(page).to have_css(".header-title-voting .voting-wrapper")
+    end
+  end
+
+  context "when viewing who voted" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before do
+      DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
+      SiteSetting.topic_voting_show_who_voted = true
+      DiscourseTopicVoting::Vote.create!(user: admin, topic: voting_topic1)
+      voting_topic1.update_vote_count
+    end
+
+    it "shows voter avatars in the popup" do
+      sign_in(admin)
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      find(".title-voting .voting-wrapper__count").click
+      expect(page).to have_css(".voting-voters__list")
+      expect(page).to have_css(".voting-voters__avatar", count: 1)
+    end
+
+    it "shows empty state when no votes" do
+      DiscourseTopicVoting::Vote.where(topic: voting_topic1).destroy_all
+      voting_topic1.update_vote_count
+
+      sign_in(admin)
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      find(".title-voting .voting-wrapper__count").click
+      expect(page).to have_css(".voting-voters__empty")
+    end
+
+    it "uses the topic vote count for overflow text while only loading preview rows" do
+      stub_const(DiscourseTopicVoting, "VOTER_PREVIEW_LIMIT", 10) do
+        Fabricate
+          .times(11, :user)
+          .each { |user| DiscourseTopicVoting::Vote.create!(user: user, topic: voting_topic1) }
+        voting_topic1.update_vote_count
+
+        sign_in(admin)
+        visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+        find(".title-voting .voting-wrapper__count").click
+        expect(page).to have_css(".voting-voters__avatar", count: 10)
+        expect(page).to have_css(".voting-voters__overflow", text: "and 2 more...")
+      end
+    end
+  end
+
+  context "when viewing navigation tooltips" do
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "shows custom tooltips in voting categories" do
+      category_page.visit(voting_category)
+
+      hot_item = find("#navigation-bar .nav-item_hot")
+      votes_item = find("#navigation-bar .nav-item_votes")
+
+      expect(hot_item["title"]).to eq(I18n.t("js.topic_voting.hot_nav_help"))
+      expect(votes_item["title"]).to eq(I18n.t("js.filters.votes.help"))
+    end
+
+    it "shows default Hot tooltip in non-voting categories" do
+      category_page.visit(category1)
+
+      hot_item = find("#navigation-bar .nav-item_hot")
+      expect(hot_item["title"]).to eq(I18n.t("js.filters.hot.help"))
+    end
+  end
+
   context "when vote limits are disabled" do
     fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
     fab!(:voting_post2) { Fabricate(:post, topic: voting_topic2) }
@@ -139,15 +261,12 @@ RSpec.describe "Topic voting" do
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
 
       topic_page.vote
-      expect(topic_page).to have_see_all_votes_link
-      expect(topic_page).to have_no_votes_left_text
       expect(topic_page.vote_count).to have_text("1")
+      expect(topic_page).to have_voted
 
       visit("/t/#{voting_topic2.slug}/#{voting_topic2.id}")
 
       topic_page.vote
-      expect(topic_page).to have_see_all_votes_link
-      expect(topic_page).to have_no_votes_left_text
       expect(topic_page.vote_count).to have_text("1")
     end
 
@@ -156,6 +275,7 @@ RSpec.describe "Topic voting" do
       voting_topic1.update_vote_count
 
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+      expect(topic_page.vote_count).to have_text("1")
 
       topic_page.remove_vote
       expect(topic_page.vote_count).to have_text("0")

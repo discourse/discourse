@@ -505,7 +505,7 @@ module FileStore
 
       if acl.present? || remove_existing_acl
         begin
-          object = object_from_path(key).acl.put(acl:)
+          object_from_path(key).acl.put(acl:)
         rescue Aws::S3::Errors::NotImplemented => err
           Discourse.warn_exception(
             err,

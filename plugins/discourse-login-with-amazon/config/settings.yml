@@ -1,4 +1,4 @@
-plugins:
+discourse_login_with_amazon:
   enable_login_with_amazon:
     default: false
     validator: "EnableLoginWithAmazonValidator"

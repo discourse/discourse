@@ -1,0 +1,74 @@
+# frozen_string_literal: true
+
+module Reports::TopReferrersByBrowserPageviews
+  extend ActiveSupport::Concern
+
+  class_methods do
+    def report_top_referrers_by_browser_pageviews(report)
+      report.modes = [Report::MODES[:table]]
+
+      report.labels = [
+        {
+          property: :normalized_referrer,
+          type: :text,
+          title: I18n.t("reports.top_referrers_by_browser_pageviews.labels.normalized_referrer"),
+        },
+        {
+          property: :count,
+          type: :number,
+          title: I18n.t("reports.top_referrers_by_browser_pageviews.labels.count"),
+        },
+      ]
+
+      user_filter_sql = SiteSetting.login_required ? "AND user_id IS NOT NULL" : ""
+      end_date_exclusive = report.end_date.to_date + 1
+
+      host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+      escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
+
+      sql = <<~SQL
+        WITH ranked AS (
+          SELECT
+            normalized_referrer,
+            COUNT(*) AS count,
+            SUM(COUNT(*)) OVER () AS total
+          FROM browser_pageview_events
+          WHERE created_at >= :start_date
+            AND created_at < :end_date_exclusive
+            #{user_filter_sql}
+            AND (
+              normalized_referrer IS NULL
+              OR (
+                normalized_referrer <> :host_exact
+                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+              )
+            )
+          GROUP BY normalized_referrer
+        )
+        SELECT normalized_referrer, count,
+               CASE WHEN total = 0 THEN 0
+                    ELSE ROUND((count::numeric / total) * 100)::integer END AS percent
+        FROM ranked
+        WHERE normalized_referrer IS NOT NULL
+        ORDER BY count DESC, normalized_referrer ASC
+        LIMIT :limit
+      SQL
+
+      report.data =
+        DB
+          .query(
+            sql,
+            start_date: report.start_date,
+            end_date_exclusive: end_date_exclusive,
+            host_exact: host,
+            host_path_prefix: "#{escaped_host}/%",
+            host_query_prefix: "#{escaped_host}?%",
+            limit: report.limit || 50,
+          )
+          .map do |row|
+            { normalized_referrer: row.normalized_referrer, count: row.count, percent: row.percent }
+          end
+    end
+  end
+end

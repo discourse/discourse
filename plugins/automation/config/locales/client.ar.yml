@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "تشغيل الأتمتة عبر API"
   js:
     admin:
       logs:

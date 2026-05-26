@@ -5,8 +5,8 @@ module DiscourseGamification
     extend ActiveSupport::Concern
 
     prepended do
-      has_many :gamification_scores,
-               class_name: "DiscourseGamification::GamificationScore",
+      has_many :gamification_leaderboard_scores,
+               class_name: "DiscourseGamification::GamificationLeaderboardScore",
                dependent: :destroy
     end
 
@@ -18,7 +18,7 @@ module DiscourseGamification
       DiscourseGamification::GamificationLeaderboard.find_position_by(
         leaderboard_id: default_leaderboard.id,
         period: "all_time",
-        for_user_id: self.id,
+        for_user_id: id,
       )&.total_score || DEFAULT_SCORE
     rescue DiscourseGamification::LeaderboardCachedView::NotReadyError
       Jobs.enqueue(Jobs::GenerateLeaderboardPositions, leaderboard_id: default_leaderboard.id)

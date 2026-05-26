@@ -224,7 +224,6 @@ fi:
       retry_staged_message:
         title: "Verkkovirhe"
         action: "Lähetetäänkö uudelleen?"
-      unreliable_network: "Verkko on epäluotettava, viestien lähettäminen ja luonnoksen tallentaminen ei ehkä toimi"
       bookmark_message: "Kirjanmerkki"
       bookmark_message_edit: "Muokkaa kirjanmerkkiä"
       restore: "Palauta poistettu viesti"

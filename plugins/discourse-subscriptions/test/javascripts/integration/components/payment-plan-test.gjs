@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import PaymentPlan from "discourse/plugins/discourse-subscriptions/discourse/components/payment-plan";
 
-module("Subscriptions | payment-plan", function (hooks) {
+module("payment-plan", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Payment plan subscription button rendered", async function (assert) {

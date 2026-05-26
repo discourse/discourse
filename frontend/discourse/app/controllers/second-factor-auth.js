@@ -31,9 +31,21 @@ export default class SecondFactorAuthController extends Controller {
     return this.model?.backup_enabled;
   }
 
-  @computed("model.security_keys_enabled")
+  @computed("model.security_keys_enabled", "model.passkeys_enabled")
   get securityKeysEnabled() {
-    return this.model?.security_keys_enabled;
+    return this.model?.security_keys_enabled || this.model?.passkeys_enabled;
+  }
+
+  @computed("model.passkeys_enabled")
+  get passkeysEnabled() {
+    return this.model?.passkeys_enabled;
+  }
+
+  @computed("passkeysEnabled")
+  get securityKeyAuthenticateLabel() {
+    return this.passkeysEnabled
+      ? "login.security_key_or_passkey_authenticate"
+      : "login.security_key_authenticate";
   }
 
   @computed("model.allowed_methods")
@@ -153,13 +165,15 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
-  @computed("shownSecondFactorMethod")
+  @computed("shownSecondFactorMethod", "passkeysEnabled")
   get secondFactorDescription() {
     switch (this.shownSecondFactorMethod) {
       case TOTP:
         return i18n("login.second_factor_description");
       case SECURITY_KEY:
-        return i18n("login.security_key_description");
+        return this.passkeysEnabled
+          ? i18n("login.security_key_or_passkey_description")
+          : i18n("login.security_key_description");
       case BACKUP_CODE:
         return i18n("login.second_factor_backup_description");
     }
@@ -189,6 +203,14 @@ export default class SecondFactorAuthController extends Controller {
     this.set("secondFactorToken", null);
     this.set("userSelectedMethod", null);
     this.set("loadError", false);
+    this.set("autoTriggeredPasskey", false);
+  }
+
+  maybeAutoTriggerPasskey() {
+    if (this.passkeysEnabled && !this.autoTriggeredPasskey) {
+      this.set("autoTriggeredPasskey", true);
+      this.authenticateSecurityKey({ silent: true });
+    }
   }
 
   displayError(message) {
@@ -241,7 +263,8 @@ export default class SecondFactorAuthController extends Controller {
   }
 
   @action
-  authenticateSecurityKey() {
+  authenticateSecurityKey(options = {}) {
+    const silent = options?.silent === true;
     getWebauthnCredential(
       this.model.challenge,
       this.model.allowed_credential_ids,
@@ -249,8 +272,11 @@ export default class SecondFactorAuthController extends Controller {
         this.verifySecondFactor({ second_factor_token: credentialData });
       },
       (errorMessage) => {
-        this.displayError(errorMessage);
-      }
+        if (!silent) {
+          this.displayError(errorMessage);
+        }
+      },
+      { userVerification: this.passkeysEnabled ? "preferred" : "discouraged" }
     );
   }
 

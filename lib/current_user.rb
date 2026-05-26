@@ -19,8 +19,8 @@ module CurrentUser
     user.logged_in
   end
 
-  def log_off_user
-    current_user_provider.log_off_user(session, cookies)
+  def log_off_user(push_subscription: nil)
+    current_user_provider.log_off_user(session, cookies, push_subscription:)
   end
 
   def start_impersonating_user(user)

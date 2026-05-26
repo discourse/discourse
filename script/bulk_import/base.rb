@@ -197,6 +197,24 @@ class BulkImport::Base
     @last_imported_post_id = imported_post_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
     @last_imported_private_post_id =
       imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
+
+    if defined?(BulkImport::Generic::MERGE_IMPORT) && BulkImport::Generic::MERGE_IMPORT
+      puts "MERGE_IMPORT mode: clearing imported ID maps to avoid cross-source collisions"
+      @groups = {}
+      @users = {}
+      @categories = {}
+      @topics = {}
+      @posts = {}
+      @uploads_mapping = {}
+      @badge_mapping = {}
+      @poll_mapping = {}
+      @poll_option_mapping = {}
+      @chat_direct_message_channel_mapping = {}
+      @chat_channel_mapping = {}
+      @chat_thread_mapping = {}
+      @chat_message_mapping = {}
+      @discourse_reaction_mapping = {}
+    end
   end
 
   def last_id(klass)
@@ -220,12 +238,22 @@ class BulkImport::Base
   def load_index(type)
     map = {}
 
-    @raw_connection.send_query(
-      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type}",
-    )
-    @raw_connection.set_single_row_mode
-
-    @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    if @import_prefix
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id LIKE '#{@import_prefix}:%'",
+      )
+      @raw_connection.set_single_row_mode
+      prefix_length = @import_prefix.length + 1
+      @raw_connection.get_result.stream_each do |row|
+        map[row["original_id"][prefix_length..]] = row["discourse_id"]
+      end
+    else
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
+      )
+      @raw_connection.set_single_row_mode
+      @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    end
 
     @raw_connection.get_result
 
@@ -695,6 +723,7 @@ class BulkImport::Base
     category_id
     visible
     closed
+    archived
     pinned_at
     pinned_until
     pinned_globally
@@ -1528,7 +1557,7 @@ class BulkImport::Base
     category[:name_lower] = name_lower
 
     slug_next_number = 1
-    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+    original_slug = slug = category[:slug] || Slug.for(name_lower, "")
 
     while !@category_slugs.add?(slug.downcase)
       slug = "#{original_slug}-#{slug_next_number}"
@@ -2160,24 +2189,20 @@ class BulkImport::Base
       begin
         @raw_connection.copy_data(sql, @encoder) do
           rows.each do |row|
-            begin
-              if (mapped = yield(row))
-                processed = send(process_method_name, mapped)
-                imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-                imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-                unless processed[:skip]
-                  @raw_connection.put_copy_data columns.map { |c| processed[c] }
-                end
-              end
-              rows_created += 1
-              if rows_created % 100 == 0
-                print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
-              end
-            rescue => e
-              puts "\n"
-              puts "ERROR: #{e.message}"
-              puts e.backtrace.join("\n")
+            if (mapped = yield(row))
+              processed = send(process_method_name, mapped)
+              imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+              imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+              @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
             end
+            rows_created += 1
+            if rows_created % 100 == 0
+              print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+            end
+          rescue => e
+            puts "\n"
+            puts "ERROR: #{e.message}"
+            puts e.backtrace.join("\n")
           end
         end
       rescue => e
@@ -2193,7 +2218,8 @@ class BulkImport::Base
     id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
-      { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
+      value = @import_prefix ? "#{@import_prefix}:#{imported_id}" : imported_id
+      { record_id: send(id_mapping_method_name, imported_id), value: value }
     end
     true
   rescue => e
@@ -2228,7 +2254,8 @@ class BulkImport::Base
     sql = "COPY migration_mappings (original_id, type, discourse_id) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |original_id, discourse_id|
-        @raw_connection.put_copy_data [original_id, type, discourse_id]
+        prefixed_id = @import_prefix ? "#{@import_prefix}:#{original_id}" : original_id
+        @raw_connection.put_copy_data [prefixed_id, type, discourse_id]
       end
     end
   end

@@ -7,10 +7,6 @@ import User from "discourse/models/user";
 import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
 
-const ChatChannel = optionalRequire(
-  "discourse/plugins/chat/discourse/models/chat-channel"
-);
-
 const DEFAULT_REMINDER = {
   type: "notification",
   value: 15,
@@ -35,6 +31,7 @@ export default class DiscoursePostEventEvent {
   @tracked location;
   @tracked url;
   @tracked description;
+  @tracked descriptionHtml;
   @tracked timezone;
   @tracked showLocalTime;
   @tracked status;
@@ -62,6 +59,10 @@ export default class DiscoursePostEventEvent {
   @tracked _reminders;
 
   constructor(args = {}) {
+    const ChatChannel = optionalRequire(
+      "discourse/plugins/chat/discourse/models/chat-channel"
+    );
+
     this.id = args.id;
     this.rrule = args.rrule;
     this.name = args.name;
@@ -75,6 +76,7 @@ export default class DiscoursePostEventEvent {
     this.location = args.location;
     this.url = args.url;
     this.description = args.description;
+    this.descriptionHtml = args.description_html;
     this.timezone = args.timezone;
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
@@ -169,6 +171,7 @@ export default class DiscoursePostEventEvent {
     this.timezone = event.timezone;
     this.showLocalTime = event.showLocalTime;
     this.description = event.description;
+    this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
     this.isClosed = event.isClosed;

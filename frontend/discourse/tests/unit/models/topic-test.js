@@ -106,6 +106,20 @@ module("Unit | Model | topic", function (hooks) {
     assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/6");
   });
 
+  test("nested view URLs omit post number", function (assert) {
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      last_read_post_number: 5,
+      slug: "hello",
+      is_nested_view: true,
+    });
+
+    assert.strictEqual(topic.lastUnreadUrl, "/n/hello/101");
+    assert.strictEqual(topic.lastReadUrl, "/n/hello/101");
+    assert.strictEqual(topic.lastPostUrl, "/n/hello/101");
+  });
+
   test("has details", function (assert) {
     const topic = this.store.createRecord("topic", { id: 1234 });
     const topicDetails = topic.details;

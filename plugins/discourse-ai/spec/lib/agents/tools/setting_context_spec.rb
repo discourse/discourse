@@ -4,7 +4,7 @@ def has_rg?
   if defined?(@has_rg)
     @has_rg
   else
-    @has_rg |= system("which rg")
+    @has_rg |= system("which rg", out: File::NULL)
   end
 end
 

@@ -196,6 +196,9 @@ te:
     join_group: "సమూహంలో చేరండి"
   reading_time: "చదివే సమయం"
   likes: "ఇష్టాలు"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "క్షమించాలి. కొత్త సభ్యులు తాత్కాలికంగా ఒక విషయానికి ఒక జవాబుకు మాత్రమే పరిమితం చేయబడ్డారు"
     other: "క్షమించాలి. కొత్త సభ్యులు, తాత్కాలికంగా ఒక విషయానికి %{count} జవాబులకు మాత్రమే పరిమితం చెయ్యబడ్డారు."
@@ -293,6 +296,7 @@ te:
       admins: "అధికారులు"
       moderators: "నిర్వాహకులు"
       staff: "సిబ్బంది"
+      anonymous: "అనామక"
       trust_level_0: "నమ్మకం_స్థాయి_0"
       trust_level_1: "నమ్మకం_స్థాయి_1"
       trust_level_2: "నమ్మకం_స్థాయి_2"
@@ -703,6 +707,30 @@ te:
       title: "కొత్త కంట్రిబ్యూటర్లు"
       xaxis: "రోజు"
       yaxis: "కొత్త సహకారుల సంఖ్య"
+    activity_by_category:
+      labels:
+        category: "వర్గం"
+        topics: "విషయాలు"
+        posts: "పోస్ట్‌లు"
+        share: "షేర్ చేయండి"
+    posters_by_member_type:
+      labels:
+        count: "పోస్ట్‌లు"
+        share: "షేర్ చేయండి"
+      types:
+        staff: "సిబ్బంది"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "విశ్వసనీయ స్థాయి"
+        count: "సభ్యులు"
+        share: "షేర్ చేయండి"
+      levels:
+        "0": "కొత్త"
+        "1": "ప్రాథమిక"
+        "2": "సభ్యుడు"
+        "3": "రెగ్యులరు"
+        "4": "లీడరు"
     trust_level_growth:
       title: "నమ్మకం స్థాయి పెరుగుదల"
       xaxis:
@@ -733,6 +761,9 @@ te:
     consolidated_page_views_browser_detection:
       yaxis: "రోజు"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "అనామక"
+        page_view_crawler: "క్రాలర్లు"
       yaxis: "రోజు"
     dau_by_mau:
       xaxis: "రోజు"
@@ -831,6 +862,12 @@ te:
         user: "సభ్యుడు"
         num_clicks: "నొక్కులు"
         num_topics: "విషయాలు"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "సందర్శనాలు"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "సందర్శనాలు"
     top_traffic_sources:
       title: "అగ్ర ట్రాఫిక్ మూలాలు"
       xaxis: "డొమైను"
@@ -874,6 +911,8 @@ te:
     page_view_anon_browser_reqs:
       xaxis: "రోజు"
     page_view_logged_in_browser_reqs:
+      xaxis: "రోజు"
+    page_view_embed_reqs:
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"
@@ -927,7 +966,7 @@ te:
         device: పరికరం
         os: ఆపరేటింగ్ సిస్టమ్
         login_time: లాగిన్ సమయం
-    staff_logins:
+    admin_logins:
       title: "అడ్మిన్ లాగిన్‌లు"
       labels:
         user: సభ్యుడు
@@ -1057,7 +1096,6 @@ te:
     opengraph_image: "డిఫాల్ట్ ఓపెన్‌గ్రాఫ్ చిత్రం, పేజీకి తగిన ఇతర చిత్రం లేనప్పుడు ఉపయోగించబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది"
     x_summary_large_image: "Twitter కార్డ్ 'సారాంశం పెద్ద చిత్రం' (కనీసం 280 వెడల్పు ఉండాలి మరియు కనీసం 150 ఎత్తు ఉండాలి, .svg ఉండకూడదు). ఖాళీగా ఉంచినట్లయితే, సాధారణ కార్డ్ మెటాడేటా opengraph_imageని ఉపయోగించి రూపొందించబడుతుంది, అది కూడా .svg కాదు."
     notification_email: "నుండి: అన్ని అవసరమైన సిస్టమ్ ఇమెయిల్‌లను పంపేటప్పుడు ఉపయోగించే ఇమెయిల్ చిరునామా. ఇమెయిల్ రావాలంటే ఇక్కడ పేర్కొన్న డొమైన్ తప్పనిసరిగా SPF, DKIM మరియు రివర్స్ PTR రికార్డ్‌లను సరిగ్గా సెట్ చేసి ఉండాలి."
-    email_subject: "ప్రామాణిక ఇమెయిల్‌ల కోసం అనుకూలీకరించదగిన సబ్జెక్ట్ ఫార్మాట్. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>చూడండి"
     detailed_404: "వినియోగదారులు నిర్దిష్ట అంశాన్ని ఎందుకు యాక్సెస్ చేయలేకపోతున్నారనే దాని గురించి మరిన్ని వివరాలను అందిస్తుంది. గమనిక: చెల్లుబాటు అయ్యే అంశానికి URL లింక్ చేయబడితే వినియోగదారులకు తెలుస్తుంది కాబట్టి ఇది తక్కువ సురక్షితమైనది."
     force_https: "HTTPSని మాత్రమే ఉపయోగించమని మీ సైట్‌ని బలవంతం చేయండి. హెచ్చరిక: HTTPS పూర్తిగా సెటప్ చేయబడిందని మరియు ప్రతిచోటా పని చేస్తుందని మీరు ధృవీకరించే వరకు దీన్ని ప్రారంభించవద్దు! మీరు మీ CDN, అన్ని సోషల్ లాగిన్‌లు మరియు ఏవైనా బాహ్య లోగోలు / డిపెండెన్సీలు అన్నీ కూడా HTTPS అనుకూలంగా ఉన్నాయని నిర్ధారించుకోవడానికి తనిఖీ చేసారా?"
     summary_score_threshold: "'ఈ అంశాన్ని సారాంశం'లో చేర్చడానికి పోస్ట్‌కు అవసరమైన కనీస స్కోర్"
@@ -1112,7 +1150,6 @@ te:
     enable_escaped_fragments: "వెబ్‌క్రాలర్ కనుగొనబడకపోతే Google యొక్క Ajax-Crawling APIకి తిరిగి వెళ్లండి. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>చూడండి"
     moderators_change_post_ownership: "పోస్ట్ యాజమాన్యాన్ని మార్చడానికి మోడరేటర్‌లను అనుమతించండి"
     cors_origins: "క్రాస్-ఆరిజిన్ అభ్యర్థనల కోసం అనుమతించబడిన మూలాలు (CORS). ప్రతి మూలం తప్పనిసరిగా http:// లేదా https://ని కలిగి ఉండాలి. CORSని ప్రారంభించడానికి DISCOURSE_ENABLE_CORS env వేరియబుల్ తప్పక ఒప్పుకు సెట్ చేయబడాలి."
-    use_admin_ip_allowlist: "అడ్మిన్‌లు స్క్రీన్ చేయబడిన IPల జాబితాలో (అడ్మిన్ > లాగ్‌లు > స్క్రీన్ చేయబడిన Ips) నిర్వచించబడిన IP చిరునామాలో ఉన్నట్లయితే మాత్రమే లాగిన్ చేయగలరు."
     blocked_ip_blocks: "డిస్కోర్స్ ద్వారా ఎప్పుడూ క్రాల్ చేయకూడని ప్రైవేట్ IP బ్లాక్‌ల జాబితా"
     allowed_internal_hosts: "ఉపన్యాసం చేసే అంతర్గత హోస్ట్‌ల జాబితా వన్‌బాక్సింగ్ మరియు ఇతర ప్రయోజనాల కోసం సురక్షితంగా క్రాల్ చేయగలదు"
     allowed_onebox_iframes: "Onebox పొందుపరచడం ద్వారా అనుమతించబడే iframe src డొమైన్‌ల జాబితా. `*` అన్ని డిఫాల్ట్ Onebox ఇంజిన్‌లను అనుమతిస్తుంది."
@@ -1371,7 +1408,6 @@ te:
     num_hours_to_close_topic: "జోక్యం కోసం అంశాన్ని పాజ్ చేయడానికి గంటల సంఖ్య."
     auto_respond_to_flag_actions: "ఫ్లాగ్‌ను పారవేసేటప్పుడు స్వయంచాలక ప్రత్యుత్తరాన్ని ప్రారంభించండి."
     auto_silence_fast_typers_max_trust_level: "వేగవంతమైన టైపర్‌లను స్వయంచాలకంగా నిశ్శబ్దం చేయడానికి గరిష్ట విశ్వసనీయ స్థాయి"
-    auto_silence_first_post_regex: "కేస్ ఇన్సెన్సిటివ్ రీజెక్స్ పాస్ అయినట్లయితే, వినియోగదారు మొదటి పోస్ట్ నిశ్శబ్దం చేయబడి, ఆమోదం క్యూకు పంపబడుతుంది. ఉదాహరణ: ర్యాగింగ్|a[bc]a , ర్యాగింగ్ లేదా అబా లేదా అకాను కలిగి ఉన్న అన్ని పోస్ట్‌లు ముందుగా నిశ్శబ్దం చేయబడతాయి. మొదటి పోస్ట్‌కి మాత్రమే వర్తిస్తుంది. విస్మరించబడింది: బదులుగా నిశ్శబ్దం వీక్షించిన పదాలను ఉపయోగించండి."
     reviewable_claiming: "సమీక్షించదగిన కంటెంట్‌పై చర్య తీసుకునే ముందు క్లెయిమ్ చేయాల్సిన అవసరం ఉందా?"
     reviewable_default_topics: "డిఫాల్ట్‌గా టాపిక్ ద్వారా సమూహం చేయబడిన సమీక్షించదగిన కంటెంట్‌ను చూపండి"
     reviewable_default_visibility: "సమీక్షించదగిన అంశాలు ఈ ప్రాధాన్యతకు అనుగుణంగా ఉంటే తప్ప వాటిని చూపవద్దు"
@@ -1425,7 +1461,6 @@ te:
     pop3_polling_delete_from_server: "సర్వర్ నుండి ఇమెయిల్‌లను తొలగించండి. గమనిక: మీరు దీన్ని నిలిపివేస్తే, మీరు మీ మెయిల్ ఇన్‌బాక్స్‌ను మాన్యువల్‌గా శుభ్రం చేయాలి"
     log_mail_processing_failures: "అన్ని ఇమెయిల్ ప్రాసెసింగ్ వైఫల్యాలను <a href='%{base_path}/logs' target='_blank'>/లాగ్‌లు</a>కి లాగ్ చేయండి"
     email_in: "ఇమెయిల్ ద్వారా కొత్త అంశాలను పోస్ట్ చేయడానికి వినియోగదారులను అనుమతించండి. ఈ సెట్టింగ్‌ని ప్రారంభించిన తర్వాత, మీరు సమూహాలు మరియు వర్గాల కోసం ఇన్‌కమింగ్ ఇమెయిల్ చిరునామాలను కాన్ఫిగర్ చేయగలరు."
-    email_in_authserv_id: "సేవ యొక్క ఐడెంటిఫైయర్ ఇన్‌కమింగ్ ఇమెయిల్‌లపై ప్రమాణీకరణ తనిఖీ చేస్తుంది. దీన్ని ఎలా కాన్ఫిగర్ చేయాలో సూచనల కోసం <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> ని చూడండి."
     enable_smtp: "సమూహ సందేశాల కోసం నోటిఫికేషన్‌లను పంపడం కోసం SMTPని ప్రారంభించండి."
     email_prefix: "ఇమెయిల్‌ల విషయంలో ఉపయోగించబడిన [లేబుల్]. సెట్ చేయకుంటే అది 'టైటిల్'కి డిఫాల్ట్ అవుతుంది."
     email_site_title: "సైట్ యొక్క శీర్షిక సైట్ నుండి ఇమెయిల్‌లను పంపేవారిగా ఉపయోగించబడింది. సెట్ చేయకుంటే 'టైటిల్'కి డిఫాల్ట్ అవుతుంది. మీ 'శీర్షిక' ఇమెయిల్ పంపినవారి స్ట్రింగ్‌లలో అనుమతించబడని అక్షరాలను కలిగి ఉంటే, ఈ సెట్టింగ్‌ని ఉపయోగించండి."
@@ -1606,9 +1641,7 @@ te:
     share_quote_visibility: "కోట్ షేరింగ్ బటన్‌లను ఎప్పుడు చూపించాలో నిర్ణయించండి: ఎప్పుడూ, అనామక వినియోగదారులకు మాత్రమే లేదా వినియోగదారులందరికీ. "
     create_revision_on_bulk_topic_moves: "టాపిక్‌లు పెద్దమొత్తంలో కొత్త వర్గానికి తరలించబడినప్పుడు మొదటి పోస్ట్‌ల కోసం పునర్విమర్శను సృష్టించండి."
     allow_changing_staged_user_tracking: "నిర్వాహక వినియోగదారు ద్వారా దశలవారీ వినియోగదారు వర్గం మరియు ట్యాగ్ నోటిఫికేషన్ ప్రాధాన్యతలను మార్చడానికి అనుమతించండి."
-    use_name_for_username_suggestions: "సభ్యుడు పేర్లను సూచించేటప్పుడు సభ్యుడు పూర్తి పేరును ఉపయోగించండి."
     suggest_weekends_in_date_pickers: "తేదీ పికర్ సూచనలలో వారాంతాలను (శనివారం మరియు ఆదివారం) చేర్చండి (మీరు వారాంతపు రోజులలో, సోమవారం నుండి శుక్రవారం వరకు మాత్రమే ప్రసంగాన్ని ఉపయోగిస్తే దీన్ని నిలిపివేయండి)."
-    splash_screen: "సైట్ ఆస్తులు లోడ్ అవుతున్నప్పుడు తాత్కాలిక లోడింగ్ స్క్రీన్‌ని ప్రదర్శిస్తుంది"
     default_navigation_menu_categories: "ఎంచుకున్న వర్గాలు డిఫాల్ట్‌గా నావిగేషన్ మెనూ యొక్క కేటగిరీల విభాగంలో ప్రదర్శించబడతాయి."
     default_navigation_menu_tags: "ఎంచుకున్న ట్యాగ్‌లు డిఫాల్ట్‌గా నావిగేషన్ మెనూ ట్యాగ్‌ల విభాగంలో ప్రదర్శించబడతాయి."
     page_loading_indicator: "డిస్కోర్స్‌లో పేజీ నావిగేషన్‌ల సమయంలో కనిపించే లోడింగ్ సూచికను కాన్ఫిగర్ చేయండి. 'స్పిన్నర్' అనేది పూర్తి పేజీ సూచిక. 'స్లైడర్' స్క్రీన్ పైభాగంలో ఇరుకైన పట్టీని చూపుతుంది."
@@ -1706,7 +1739,6 @@ te:
     suspended: "మీరు %{date}. తారీకు వరకు లాగిన్ అవ్వలేరు"
     errors: "%{errors}"
     not_available: "అందుబాటులో లేదు. %{suggestion} ప్రయత్నించండి?"
-    omniauth_confirm_title: "%{provider} ని ఉపయోగించి లాగిన్ చేయండి"
     omniauth_confirm_button: "కొనసాగించండి"
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
@@ -2004,8 +2036,10 @@ te:
       title: "ఖాతా నిశ్శబ్దం చేయబడింది"
     account_exists:
       title: "ఖాతా ఇప్పటికే ఉంది"
+      subject_template_improved: "ఖాతా ఇప్పటికే ఉంది"
     account_second_factor_disabled:
       title: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
+      subject_template_improved: "రెండు-కారకాల ప్రమాణీకరణ నిలిపివేయబడింది"
     digest:
       since_last_visit: "మీ చివరి సందర్శన నుండి"
       new_topics: "క్రొత్త విషయాలు"
@@ -2017,6 +2051,7 @@ te:
       popular_posts: "ప్రసిద్ధ పోస్ట్‌లు"
       more_new: "మీ కోసం కొత్తది"
       subject_template: "[%{email_prefix}] సారాంశం"
+      subject_template_improved: "సారాంశం"
       your_email_settings: "మీ ఇమెయిల్ సెట్టింగ్‌లు"
       click_here: "ఇక్కడ క్లిక్ చేయండి"
       from: "%{site_name}"
@@ -2025,15 +2060,15 @@ te:
     email_login:
       title: "లింక్ ద్వారా లాగిన్ అవ్వండి"
       subject_template: "[%{email_prefix}] లింక్ ద్వారా లాగిన్ అవ్వండి"
+      subject_template_improved: "లింక్ ద్వారా లాగిన్ అవ్వండి"
     set_password:
       title: "సంకేతపదం అమర్చండి"
-      subject_template: "[%{email_prefix}] పాస్‌వర్డ్‌ని సెట్ చేయండి"
     admin_login:
       title: "అడ్మిన్ లాగిన్"
       subject_template: "[%{email_prefix}] లాగిన్"
+      subject_template_improved: "లాగిన్"
     account_created:
       title: "ఖాతా సృష్టించబడింది"
-      subject_template: "[%{email_prefix}] మీ కొత్త ఖాతా"
     confirm_new_email:
       title: "కొత్త ఇమెయిల్‌ను నిర్ధారించండి"
     confirm_new_email_via_admin:
@@ -2072,7 +2107,6 @@ te:
       title: "యాక్టివేషన్ రిమైండర్"
     suspicious_login:
       title: "కొత్త లాగిన్ హెచ్చరిక"
-      subject_template: "[%{site_name}] %{location} నుండి కొత్త లాగిన్"
     post_approved:
       title: "మీ పోస్ట్ ఆమోదించబడింది"
       subject_template: "[%{site_name}] మీ పోస్ట్ ఆమోదించబడింది"

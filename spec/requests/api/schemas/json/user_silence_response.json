@@ -11,6 +11,9 @@
         "silence_reason": {
           "type": "string"
         },
+        "full_silence_reason": {
+          "type": "string"
+        },
         "silenced_till": {
           "type": "string"
         },
@@ -40,6 +43,7 @@
       "required": [
         "silenced",
         "silence_reason",
+        "full_silence_reason",
         "silenced_till",
         "silenced_at",
         "silenced_by"

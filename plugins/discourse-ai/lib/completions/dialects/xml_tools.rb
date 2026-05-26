@@ -49,7 +49,7 @@ module DiscourseAi
             begin
               has_arrays = raw_tools.any? { |tool| tool.parameters&.any? { |p| p.type == "array" } }
 
-              (<<~TEXT).strip
+              <<~TEXT.strip
               #{tool_preamble(include_array_tip: has_arrays)}
               <tools>
               #{translated_tools}</tools>
@@ -61,7 +61,7 @@ module DiscourseAi
           "Regardless of what you think, REPLY IMMEDIATELY, WITHOUT MAKING ANY FURTHER TOOL CALLS, YOU ARE OUT OF TOOL CALL QUOTA!"
 
         def from_raw_tool(raw_message)
-          result = (<<~TEXT).strip
+          result = <<~TEXT.strip
             <function_results>
             <result>
             <tool_name>#{raw_message[:name] || raw_message[:id]}</tool_name>
@@ -89,7 +89,7 @@ module DiscourseAi
             parameters << "</parameters>\n"
           end
 
-          (<<~TEXT).strip
+          <<~TEXT.strip
             <function_calls>
             <invoke>
             <tool_name>#{raw_message[:name] || parsed[:name]}</tool_name>

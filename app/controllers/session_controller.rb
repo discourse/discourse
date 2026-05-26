@@ -56,8 +56,8 @@ class SessionController < ApplicationController
     if result.second_factor_auth_skipped?
       data = result.data
       if data[:logout]
-        params[:return_url] = data[:return_sso_url]
-        destroy
+        PushNotificationPusher.clear_subscriptions(current_user) if current_user
+        destroy(trusted_return_url: data[:return_sso_url])
         return
       end
 
@@ -288,7 +288,7 @@ class SessionController < ApplicationController
       text = nil
 
       # If there's a problem with the email we can explain that
-      if (e.record.is_a?(User) && e.record.errors[:primary_email].present?)
+      if e.record.is_a?(User) && e.record.errors[:primary_email].present?
         if e.record.email.blank?
           text = I18n.t("discourse_connect.no_email")
         else
@@ -534,12 +534,21 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      if user.security_keys_enabled?
+      passkeys_for_2fa = user.passkeys_for_2fa_enabled?
+      if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
-        json.merge!(DiscourseWebauthn.allowed_credentials(user, server_session))
-        json[:security_keys_enabled] = true
+        json.merge!(
+          DiscourseWebauthn.allowed_credentials(
+            user,
+            server_session,
+            include_passkeys: passkeys_for_2fa,
+          ),
+        )
+        json[:security_keys_enabled] = user.security_keys_enabled?
+        json[:passkeys_enabled] = passkeys_for_2fa
       else
         json[:security_keys_enabled] = false
+        json[:passkeys_enabled] = false
       end
       json[:description] = challenge[:description] if challenge[:description]
     else
@@ -676,8 +685,18 @@ class SessionController < ApplicationController
     end
   end
 
-  def destroy
-    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+  def destroy(trusted_return_url: nil)
+    return_url = params[:return_url].presence
+    if return_url
+      begin
+        uri = URI(return_url)
+        return_url = nil if uri.host.present? || uri.scheme.present? || !uri.path&.start_with?("/")
+      rescue URI::Error, ArgumentError
+        return_url = nil
+      end
+    end
+
+    redirect_url = trusted_return_url || return_url || SiteSetting.logout_redirect.presence
 
     redirect_url ||=
       if SiteSetting.login_required
@@ -700,8 +719,17 @@ class SessionController < ApplicationController
     # `redirect_url` might have been updated by a `before_session_destroy` listener
     redirect_url = data[:redirect_url]
 
+    push_subscription =
+      begin
+        if params[:push_subscription].is_a?(ActionController::Parameters)
+          params.require(:push_subscription).permit(:endpoint, keys: %i[p256dh auth])
+        end
+      rescue StandardError
+        nil # best-effort: malformed push_subscription should never block logout
+      end
+
     reset_session
-    log_off_user
+    log_off_user(push_subscription:)
 
     if request.xhr?
       render json: { redirect_url: }

@@ -23,15 +23,6 @@ class ComposerMessagesController < ApplicationController
     users = ComposerMessagesFinder.user_not_seen_in_a_while(usernames)
     user_count = users.count
 
-    if user_count > 0
-      message_locale =
-        if user_count == 1
-          "education.user_not_seen_in_a_while.single"
-        else
-          "education.user_not_seen_in_a_while.multiple"
-        end
-    end
-
     json = {
       user_count: user_count,
       usernames: users,

@@ -191,7 +191,12 @@ module Helpers
       File.write("#{repo_dir}/#{name}", data)
       system("git -C #{repo_dir} add #{name}", exception: true)
     end
-    system("git -C #{repo_dir} commit -q -am 'first commit'", exception: false)
+    system(
+      "git -C #{repo_dir} commit -q -am 'first commit'",
+      out: File::NULL,
+      err: File::NULL,
+      exception: false,
+    )
     repo_dir
   end
 
@@ -200,7 +205,7 @@ module Helpers
     system("git -C #{path} fetch -q", exception: true)
     branch = `git -C #{path} rev-parse --abbrev-ref HEAD`.strip
     raise "no branch in setup_remote_upstream" if branch.blank?
-    system("git -C #{path} branch -u origin/#{branch}", exception: true)
+    system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
     system("git -C #{path} remote set-head origin #{branch}", exception: true)
   end
 
@@ -328,17 +333,6 @@ module Helpers
     plugin = Discourse.plugins_by_name[directory_from_caller.split("/").last]
     return if plugin.enabled?
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
-  end
-
-  def try_until_success(timeout: 3, frequency: 0.01)
-    start ||= Time.zone.now
-    backoff ||= frequency
-    yield
-  rescue RSpec::Expectations::ExpectationNotMetError
-    raise if Time.zone.now >= start + timeout.seconds
-    sleep backoff
-    backoff += frequency
-    retry
   end
 
   def mock_upcoming_change_metadata(metadata)

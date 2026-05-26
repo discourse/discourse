@@ -24,6 +24,10 @@ sw:
         single_user: "%{username}"
     mention_warning:
       dismiss: "ondosha..."
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: Jibu
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

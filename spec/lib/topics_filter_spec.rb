@@ -455,7 +455,7 @@ RSpec.describe TopicsFilter do
 
       TopicUser.notification_levels.keys.each do |notification_level|
         describe "when query string is `in:#{notification_level}`" do
-          fab!("user_#{notification_level}_topic".to_sym) do
+          fab!(:"user_#{notification_level}_topic") do
             Fabricate(:topic).tap do |topic|
               TopicUser.change(
                 user.id,
@@ -480,7 +480,7 @@ RSpec.describe TopicsFilter do
                 .new(guardian: Guardian.new(user))
                 .filter_from_query_string("in:#{notification_level}")
                 .pluck(:id),
-            ).to contain_exactly(self.public_send("user_#{notification_level}_topic").id)
+            ).to contain_exactly(public_send("user_#{notification_level}_topic").id)
           end
         end
       end
@@ -1301,6 +1301,18 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("tags:#{tag.name}+#{tag2.name}")
             .pluck(:id),
         ).to contain_exactly(topic_with_tag_and_tag2.id)
+      end
+
+      it "should return topics tagged with period-delimited tag names" do
+        tag_with_period = Fabricate(:tag, name: "node.js")
+        topic_with_period_tag = Fabricate(:topic, tags: [tag_with_period])
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tags:#{tag_with_period.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_period_tag.id)
       end
 
       it "should only return topics that are tagged with tag1 and tag2 when query string is `tags:tag1 tags:tag2`" do

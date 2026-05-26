@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-channel-card", function (hooks) {
+module("Component | chat-channel-card", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

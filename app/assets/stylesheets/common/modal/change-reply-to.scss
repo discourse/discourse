@@ -1,0 +1,50 @@
+.change-reply-to-modal {
+  .d-modal__container {
+    max-width: 720px;
+    width: 100%;
+  }
+
+  .d-modal__body {
+    padding-bottom: 0;
+  }
+
+  .change-reply-to-modal__hint,
+  .change-reply-to-modal__selection {
+    margin: 0 0 var(--space-2) 0;
+    color: var(--primary-medium);
+  }
+
+  // Re-flow the fullscreen timeline inline inside the modal body.
+  .timeline-container.timeline-fullscreen {
+    position: static;
+    max-height: none;
+    padding: var(--space-2) 0 0 0;
+    margin: 0;
+    box-shadow: none;
+    border-top: none;
+    background-color: transparent;
+    z-index: auto;
+
+    &.show {
+      max-height: none;
+    }
+
+    .topic-timeline {
+      display: block;
+      width: auto;
+      table-layout: auto;
+    }
+
+    // The timeline footer has "jump to post" and notification controls that
+    // are irrelevant inside this picker; hide them.
+    .timeline-footer-controls {
+      display: none;
+    }
+
+    // Keep the excerpt readable; the fullscreen styles line-clamp to 8 which
+    // is fine here too.
+    .post-excerpt {
+      margin-bottom: var(--space-2);
+    }
+  }
+}

@@ -87,7 +87,10 @@ RSpec.describe Admin::StaffActionLogsController do
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        admin.update!(last_seen_at: 1.day.ago)
+        sign_in(admin)
+      end
 
       include_examples "staff action logs accessible"
 
@@ -126,6 +129,37 @@ RSpec.describe Admin::StaffActionLogsController do
         get "/admin/logs/staff_action_logs.json"
 
         expect(response.parsed_body["staff_action_logs"].first["details"]).to include(pm.title)
+      end
+
+      describe "reviewable_id" do
+        it "is included when the staff action log is linked to a reviewable" do
+          reviewable = Fabricate(:reviewable_queued_post_topic)
+          UserHistory.create!(
+            action: UserHistory.actions[:post_approved],
+            acting_user_id: admin.id,
+            reviewable_id: reviewable.id,
+          )
+
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                action_id: UserHistory.actions[:post_approved],
+              }
+
+          expect(response.parsed_body["staff_action_logs"].first["reviewable_id"]).to eq(
+            reviewable.id,
+          )
+        end
+
+        it "is omitted when the staff action log has no reviewable" do
+          StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
+
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                action_id: UserHistory.actions[:change_site_setting],
+              }
+
+          expect(response.parsed_body["staff_action_logs"].first).not_to have_key("reviewable_id")
+        end
       end
 
       context "when staff actions are extended" do
@@ -377,7 +411,10 @@ RSpec.describe Admin::StaffActionLogsController do
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        admin.update!(last_seen_at: 1.day.ago)
+        sign_in(admin)
+      end
 
       include_examples "theme diffs accessible"
       include_examples "tag_group diffs accessible"

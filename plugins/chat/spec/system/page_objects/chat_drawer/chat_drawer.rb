@@ -62,6 +62,11 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def open_channel_row(channel)
+        find("#{VISIBLE_DRAWER} .chat-channel-row[data-chat-channel-id='#{channel.id}']").click
+        has_no_css?(".chat-skeleton")
+      end
+
       def has_channel?(channel)
         channels_index.has_channel?(channel)
       end
@@ -97,11 +102,11 @@ module PageObjects
       end
 
       def has_unread_user_threads?
-        has_css?(".chat-channel-row.--threads .c-unread-indicator")
+        has_css?("#c-footer-threads .c-unread-indicator")
       end
 
       def has_no_unread_user_threads?
-        has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
+        has_no_css?("#c-footer-threads .c-unread-indicator")
       end
 
       def click_channels

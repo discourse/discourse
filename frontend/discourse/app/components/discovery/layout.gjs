@@ -4,8 +4,8 @@ import BlockOutlet from "discourse/blocks/block-outlet";
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /* Renders its content inside a <div> with the given class when @when is true,
    or renders the content directly when false. */
@@ -79,7 +79,7 @@ export default class Layout extends Component {
           @when={{this.hasSidebarLayout}}
           @class="discovery-layout__list"
         >
-          <div class={{concatClass "container list-container" @listClass}}>
+          <div class={{dConcatClass "container list-container" @listClass}}>
             <div class="row full-width">
               <div id="header-list-area">
                 {{yield to="header"}}

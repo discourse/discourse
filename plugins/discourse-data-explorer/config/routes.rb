@@ -9,6 +9,7 @@ DiscourseDataExplorer::Engine.routes.draw do
   scope "/", defaults: { format: :json } do
     get "schema" => "query#schema"
     get "groups" => "query#groups"
+    post "queries/generate" => "query#generate_with_ai"
     post "queries" => "query#create"
     put "queries/:id" => "query#update"
     delete "queries/:id" => "query#destroy"
@@ -39,6 +40,8 @@ Discourse::Application.routes.draw do
   scope "/", defaults: { format: :json } do
     get "/admin/plugins/explorer/schema" => "discourse_data_explorer/query#schema"
     get "/admin/plugins/explorer/groups" => "discourse_data_explorer/query#groups"
+    post "/admin/plugins/explorer/queries/generate" =>
+           "discourse_data_explorer/query#generate_with_ai"
     post "/admin/plugins/explorer/queries" => "discourse_data_explorer/query#create"
     put "/admin/plugins/explorer/queries/:id" => "discourse_data_explorer/query#update"
     delete "/admin/plugins/explorer/queries/:id" => "discourse_data_explorer/query#destroy"

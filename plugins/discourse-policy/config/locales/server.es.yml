@@ -8,6 +8,7 @@ es:
   site_settings:
     policy_enabled: "¿Permitir políticas?"
     policy_restrict_to_staff_posts: "Las políticas solo pueden aparecer en las publicaciones del personal"
+    create_policy_allowed_groups: "Es necesario ser miembro de un grupo para añadir políticas a las publicaciones"
     policy_easy_revoke: "Mostrar los botones aceptar y revocar al mismo tiempo"
   discourse_policy:
     errors:

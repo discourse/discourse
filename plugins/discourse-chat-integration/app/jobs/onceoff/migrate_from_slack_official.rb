@@ -86,13 +86,12 @@ module Jobs
         end
 
         # Create the rule, with clever logic for avoiding duplicates
-        success =
-          DiscourseChatIntegration::Helper.smart_create_rule(
-            channel: channel,
-            filter: row[:filter],
-            category_id: row[:category_id],
-            tags: row[:tags],
-          )
+        DiscourseChatIntegration::Helper.smart_create_rule(
+          channel: channel,
+          filter: row[:filter],
+          category_id: row[:category_id],
+          tags: row[:tags],
+        )
       end
     end
 

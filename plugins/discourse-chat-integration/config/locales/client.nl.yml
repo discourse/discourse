@@ -14,9 +14,14 @@ nl:
     chat_integration:
       menu_title: "Chatintegraties"
       settings: "Instellingen"
+      more_providers: "Meer"
+      channels_title: "Kanalen"
       channels_with_errors: "De laatste keer dat berichten werden gestuurd, werkten sommige kanalen niet voor deze provider. Klik op de foutpictogrammen voor meer informatie."
       group_mention_template: "Vermeldingen van: @%{name}"
       group_message_template: "Berichten naar: @%{name}"
+      choose_group: "(Kies een groep)"
+      all_categories: "(Alle categorieën)"
+      all_tags: "(Alle tags)"
       delete_channel: "Verwijderen"
       test_channel: "Testen"
       edit_channel: "Bewerken"
@@ -69,6 +74,7 @@ nl:
             identifier:
               title: Kanaal
           errors:
+            auth_error: "Het verstrekte verificatietoken is ongeldig"
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
         telegram:
           title: "Telegram"
@@ -90,6 +96,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Discord."
             webhook_url:
               title: Webhook-URL
+              help: De gemaakte webhook-URL in je Discord-server instellingen moet de indeling https://discord.com/api/webhooks/<webhook-id>/<webhook-token> hebben
         guilded:
           title: "Guilded"
           param:

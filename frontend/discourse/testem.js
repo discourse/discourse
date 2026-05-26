@@ -59,13 +59,17 @@ class Reporter extends TapReporter {
 
   display(prefix, result) {
     if (this.willDisplay(result)) {
-      const string = displayUtils.resultString(
+      this.showBrowserVersion(prefix);
+
+      const rawString = displayUtils.resultString(
         this.id++,
         prefix,
         result,
         this.quietLogs,
         this.strictSpecCompliance
       );
+
+      const string = this.reformatTapLine(rawString, prefix);
 
       const color = this.colorForResult(result);
       const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
@@ -77,6 +81,43 @@ class Reporter extends TapReporter {
         this.out.write(color(string));
       }
     }
+  }
+
+  showBrowserVersion(prefix) {
+    if (!prefix) {
+      return;
+    }
+
+    this.shownBrowserVersions ??= new Set();
+    if (!this.shownBrowserVersions.has(prefix)) {
+      this.shownBrowserVersions.add(prefix);
+      this.out.write(colors.gray(`# Launcher: ${prefix}\n`));
+    }
+  }
+
+  reformatTapLine(rawString, prefix) {
+    const newlineIndex = rawString.indexOf("\n");
+    const firstLine =
+      newlineIndex >= 0 ? rawString.slice(0, newlineIndex) : rawString;
+    const rest = newlineIndex >= 0 ? rawString.slice(newlineIndex) : "";
+    let line = firstLine;
+
+    if (prefix) {
+      const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      line = line.replace(
+        new RegExp(
+          `^(ok|not ok|skip|todo) (\\d+) ${escaped} - (\\[\\d+ ms\\])`
+        ),
+        "$1 $2 $3"
+      );
+    }
+
+    line = line.replace(
+      /^(ok|not ok|skip|todo) (\d+) (\[\d+ ms\]) - Browser Id (\d+) - /,
+      "$1 $2 #$4 $3 - "
+    );
+
+    return line + rest;
   }
 
   colorForResult(result) {
@@ -237,10 +278,11 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      "--remote-debugging-port=4201",
+      `--remote-debugging-port=${process.env.CI ? 0 : 4201}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--disable-background-networking",
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
@@ -250,10 +292,11 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      "--remote-debugging-port=4201",
+      `--remote-debugging-port=${process.env.CI ? 0 : 4201}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--disable-background-networking",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },

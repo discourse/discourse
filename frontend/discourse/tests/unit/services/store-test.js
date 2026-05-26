@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import pretender, {
   fixturesByUrl,
   response,
@@ -24,6 +25,22 @@ module("Unit | Service | store", function (hooks) {
 
     assert.true(widget.isNew, "it is a new record");
     assert.strictEqual(widget.id, undefined, "there is no id");
+  });
+
+  test("createRecord doesn't overwrite __-prefixed metadata", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const widget = store.createRecord("widget", { id: 77, name: "first" });
+
+    store.createRecord("widget", {
+      id: 77,
+      name: "second",
+      __type: "evil",
+      __plugin: "evil",
+    });
+
+    assert.strictEqual(widget.name, "second");
+    assert.strictEqual(widget.__type, "widget");
+    assert.strictEqual(widget.__plugin, undefined);
   });
 
   test("createRecord doesn't modify the input `id` field", function (assert) {
@@ -265,14 +282,37 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("Spec incompliant embedded record name", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
+    pretender.get("/fruits/5", () =>
+      response({
+        __rest_serializer: "1",
+        fruit: {
+          id: 5,
+          name: "kiwi",
+          farmer_id: null,
+          color_ids: [1],
+          category_id: 5,
+          other_fruit_ids: { apple: 1, banana: 2 },
+        },
+      })
+    );
+
     const store = getOwner(this).lookup("service:store");
-    const fruit = await store.find("fruit", 4);
+    const fruit = await store.find("fruit", 5);
 
     assert.propContains(
       fruit.other_fruit_ids,
       { apple: 1, banana: 2 },
       "embedded record remains unhydrated"
     );
+    assert.true(
+      stub.calledWith(
+        "WARNING: Expected an array of resource ids for fruit.other_fruit_ids"
+      )
+    );
+
+    stub.restore();
   });
 
   test("hydrateEmbedded", async function (assert) {

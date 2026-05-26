@@ -10,6 +10,8 @@ th:
       default_query: "ค่าเริ่มต้น"
       or: "หรือ"
       create: "สร้าง"
+      ai:
+        optional: "ทางเลือก"
       help:
         label: "ช่วยเหลือ"
       schema:
@@ -18,8 +20,6 @@ th:
         bool:
           yes: "ใช่"
           no: "ไม่ใช่"
-      export: "ส่งออก"
-      edit: "แก้ไข"
       delete: "ลบ"
       query_groups: "กลุ่ม"
       query_description: "รายละเอียด"

@@ -332,7 +332,6 @@ ar:
       retry_staged_message:
         title: "خطأ في الشبكة"
         action: "هل تريد الإرسال مجددًا؟"
-      unreliable_network: "الشبكة غير موثوقة، وقد لا تعمل ميزتا إرسال الرسائل وحفظ المسودات"
       bookmark_message: "إشارة مرجعية"
       bookmark_message_edit: "تعديل الإشارة المرجعية"
       restore: "استعادة الرسالة المحذوفة"

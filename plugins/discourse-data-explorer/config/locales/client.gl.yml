@@ -12,6 +12,7 @@ gl:
       create: "Crear"
       ai:
         generate: "Xerar"
+        optional: "opcional"
       import:
         label: "Importar"
       help:
@@ -22,8 +23,6 @@ gl:
         bool:
           yes: "Si"
           no: "Non"
-      export: "Exportar"
-      edit: "Editar"
       delete: "Eliminar"
       query_groups: "Grupos"
       query_description: "Descrición"

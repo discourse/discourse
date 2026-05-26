@@ -205,6 +205,12 @@
               "null"
             ]
           },
+          "description_html": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "location": {
             "type": [
               "string",

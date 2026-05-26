@@ -64,18 +64,14 @@ RSpec.describe "backups" do
         expected_response_schema = load_spec_schema("success_ok_response")
         schema expected_response_schema
 
-        #BackupRestore.expects(:backup!).with(admin.id, publish_to_message_bus: true, with_uploads: false, client_id: "foo")
+        before { BackupRestore.stubs(:backup!) }
+
         let(:params) { { "with_uploads" => false } }
 
-        #it_behaves_like "a JSON endpoint", 200 do
-        #  let(:expected_response_schema) { expected_response_schema }
-        #  let(:expected_request_schema) { expected_request_schema }
-        #end
-
-        # Skipping this test for now because mocking of BackupRestore isn't working for some reason.
-        # Without mocking it spawns a background process which we don't want to happen in our tests.
-        # This still allows the API docs to be generated for this endpoint.
-        xit
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end

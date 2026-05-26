@@ -3,10 +3,10 @@
 module PostVoting
   module GuardianExtension
     def can_edit_comment?(comment)
-      return false if !self.user
-      return true if comment.user_id == self.user.id
-      return true if self.is_admin?
-      return true if self.is_moderator?
+      return false if !user
+      return true if comment.user_id == user.id
+      return true if is_admin?
+      return true if is_moderator?
       false
     end
 
@@ -15,10 +15,10 @@ module PostVoting
     end
 
     def can_flag_post_voting_comments?
-      return false if self.user.silenced?
-      return true if self.user.staff?
+      return false if user.silenced?
+      return true if user.staff?
 
-      self.user.in_any_groups?(SiteSetting.flag_posts_voting_comments_allowed_groups_map)
+      user.in_any_groups?(SiteSetting.flag_posts_voting_comments_allowed_groups_map)
     end
 
     def can_flag_post_voting_comment?(comment)

@@ -300,7 +300,6 @@ de:
       retry_staged_message:
         title: "Netzwerkfehler"
         action: "Erneut senden?"
-      unreliable_network: "Das Netzwerk ist unzuverlässig, das Senden von Nachrichten und das Speichern von Entwürfen funktioniert möglicherweise nicht"
       bookmark_message: "Lesezeichen"
       bookmark_message_edit: "Lesezeichen bearbeiten"
       restore: "Gelöschte Nachricht wiederherstellen"

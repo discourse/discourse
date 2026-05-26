@@ -10,10 +10,10 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import { isValidInput } from "discourse/select-kit/lib/input-utils";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @classNames("select-kit-row")
@@ -167,7 +167,9 @@ export default class SelectKitRow extends Component {
   click(event) {
     event.preventDefault();
     event.stopPropagation();
-    this.selectKit.select(this.rowValue, this.item);
+    if (!this.rowDisabled) {
+      this.selectKit.select(this.rowValue, this.item);
+    }
     return false;
   }
 
@@ -201,10 +203,12 @@ export default class SelectKitRow extends Component {
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
 
-        this.selectKit.select(
-          this.getValue(this.selectKit.highlighted),
-          this.selectKit.highlighted
-        );
+        if (!this.rowDisabled) {
+          this.selectKit.select(
+            this.getValue(this.selectKit.highlighted),
+            this.selectKit.highlighted
+          );
+        }
         return false;
       } else if (event.key === "Escape") {
         this.selectKit.close(event);
@@ -225,7 +229,7 @@ export default class SelectKitRow extends Component {
 
   <template>
     {{#each this.icons as |i|}}
-      {{icon i translatedTitle=this.dasherizedTitle}}
+      {{dIcon i translatedTitle=this.dasherizedTitle}}
     {{/each}}
 
     <span class="name">

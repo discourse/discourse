@@ -22,6 +22,19 @@ module PageObjects
         revision_numbers.find("strong:nth-child(3)")
       end
 
+      def hide_revision
+        footer.find("button.hide-revision").click
+        self
+      end
+
+      def destroy_revisions
+        footer.find("button.destroy-revision").click
+      end
+
+      def has_destroy_revisions_button?
+        footer.has_css?("button.destroy-revision")
+      end
+
       def has_tag_changes?
         body.has_css?(".-tag-revisions")
       end

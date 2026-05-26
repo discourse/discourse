@@ -117,3 +117,5 @@ de:
         char_counter:
           title: "Zeichenzähler"
           placeholder: "Gib deinen Text hier ein …"
+        segmented_control:
+          title: "Segmentiertes Steuerelement (Schaltflächengruppe)"

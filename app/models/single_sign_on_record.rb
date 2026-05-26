@@ -11,17 +11,17 @@ end
 # Table name: single_sign_on_records
 #
 #  id                              :integer          not null, primary key
-#  user_id                         :integer          not null
-#  external_id                     :string           not null
+#  external_avatar_url             :string(2000)
+#  external_card_background_url    :string
+#  external_email                  :string
+#  external_name                   :string
+#  external_profile_background_url :string
+#  external_username               :string
 #  last_payload                    :text             not null
 #  created_at                      :datetime         not null
 #  updated_at                      :datetime         not null
-#  external_username               :string
-#  external_email                  :string
-#  external_name                   :string
-#  external_avatar_url             :string(2000)
-#  external_profile_background_url :string
-#  external_card_background_url    :string
+#  external_id                     :string           not null
+#  user_id                         :integer          not null
 #
 # Indexes
 #

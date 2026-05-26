@@ -5,41 +5,38 @@ import { i18n } from "discourse-i18n";
 import ChatRetentionReminder from "discourse/plugins/chat/discourse/components/chat-retention-reminder";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module(
-  "Discourse Chat | Component | chat-retention-reminder",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Component | chat-retention-reminder", function (hooks) {
+  setupRenderingTest(hooks);
 
-    test("display retention info", async function (assert) {
-      this.channel = ChatChannel.create({ chatable_type: "Category" });
-      this.currentUser.set("needs_channel_retention_reminder", true);
+  test("display retention info", async function (assert) {
+    this.channel = ChatChannel.create({ chatable_type: "Category" });
+    this.currentUser.set("needs_channel_retention_reminder", true);
 
-      await render(
-        <template><ChatRetentionReminder @channel={{this.channel}} /></template>
+    await render(
+      <template><ChatRetentionReminder @channel={{this.channel}} /></template>
+    );
+
+    assert
+      .dom(".chat-retention-reminder")
+      .includesText(
+        `retain channel messages for ${this.siteSettings.chat_channel_retention_days} days`
       );
+  });
 
-      assert
-        .dom(".chat-retention-reminder")
-        .includesText(
-          `retain channel messages for ${this.siteSettings.chat_channel_retention_days} days`
-        );
-    });
+  test("@type=short", async function (assert) {
+    this.channel = ChatChannel.create({ chatable_type: "Category" });
+    this.currentUser.set("needs_channel_retention_reminder", true);
 
-    test("@type=short", async function (assert) {
-      this.channel = ChatChannel.create({ chatable_type: "Category" });
-      this.currentUser.set("needs_channel_retention_reminder", true);
+    await render(
+      <template>
+        <ChatRetentionReminder @channel={{this.channel}} @type="short" />
+      </template>
+    );
 
-      await render(
-        <template>
-          <ChatRetentionReminder @channel={{this.channel}} @type="short" />
-        </template>
-      );
-
-      assert.dom(".chat-retention-reminder").includesText(
-        i18n("chat.retention_reminders.short", {
-          count: this.siteSettings.chat_channel_retention_days,
-        })
-      );
-    });
-  }
-);
+    assert.dom(".chat-retention-reminder").includesText(
+      i18n("chat.retention_reminders.short", {
+        count: this.siteSettings.chat_channel_retention_days,
+      })
+    );
+  });
+});

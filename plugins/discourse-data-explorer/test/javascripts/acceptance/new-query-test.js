@@ -2,7 +2,7 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Data Explorer Plugin | New Query", function (needs) {
+acceptance("New Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
@@ -28,7 +28,15 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
-      return helper.response({});
+      return helper.response({
+        topics: [
+          {
+            column_name: "id",
+            data_type: "serial",
+            primary: true,
+          },
+        ],
+      });
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
@@ -74,7 +82,7 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     });
   });
 
-  test("navigates to new query page and creates a query", async function (assert) {
+  test("renders the manual create form and transitions on submit", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     await click(".d-page-subheader .btn-primary");
@@ -83,12 +91,19 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
       "/admin/plugins/discourse-data-explorer/queries/new"
     );
 
-    await fillIn(".query-new [data-name='name'] input", "foo");
+    assert
+      .dom(".query-new__manual-form .right-panel .schema")
+      .exists("schema sidebar renders");
+    assert
+      .dom(".query-new__manual-form .editor-panel .ace-wrapper")
+      .exists("SQL editor renders alongside the schema sidebar");
+
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
     await fillIn(
-      ".query-new [data-name='description'] textarea",
+      ".query-new__manual-form [data-name='description'] textarea",
       "a test query"
     );
-    await click(".query-new .btn-primary");
+    await click(".query-new__manual-form .btn-primary");
 
     assert.strictEqual(
       currentURL(),

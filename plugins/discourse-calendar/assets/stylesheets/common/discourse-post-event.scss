@@ -101,7 +101,6 @@ $show-interested: inherit;
 
     .more-dropdown {
       margin-left: auto;
-      align-self: flex-start;
 
       &.has-no-actions {
         display: none;
@@ -125,6 +124,12 @@ $show-interested: inherit;
           }
         }
       }
+    }
+
+    &__controls {
+      display: flex;
+      gap: var(--space-2);
+      margin-left: auto;
     }
   }
 
@@ -239,11 +244,20 @@ $show-interested: inherit;
         flex: 1;
       }
 
+      .going-button.d-combo-button {
+        flex: 1;
+
+        .d-combo-button-menu {
+          flex: 0 0 auto;
+        }
+      }
+
       .interested-button {
         display: $show-interested;
       }
 
-      &.status-going .going-button .d-icon {
+      &.status-going .going-button > .d-icon,
+      &.status-going .going-button .d-combo-button-button .d-icon {
         color: var(--success);
       }
 
@@ -341,7 +355,10 @@ $show-interested: inherit;
       .topic-invitee-avatar {
         position: relative;
         display: inline-block;
-        padding-right: 0.5em;
+
+        &:has(.avatar-flair) {
+          padding-right: var(--space-2);
+        }
 
         .avatar {
           width: 1.5rem;
@@ -404,10 +421,6 @@ $show-interested: inherit;
 
     > .d-icon {
       margin-top: 0.25em;
-    }
-
-    .event-description__text {
-      text-align: justify;
     }
 
     &.is-clamped .event-description__text {
@@ -488,6 +501,12 @@ $show-interested: inherit;
     align-items: center;
     justify-content: center;
     color: var(--primary-medium);
+  }
+}
+
+.discourse-post-event-going-menu-content {
+  .--selected .d-icon {
+    color: var(--success);
   }
 }
 

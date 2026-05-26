@@ -36,4 +36,32 @@ describe DiscourseTopicVoting::TopicExtension do
       expect(topic2.reload.topic_vote_count.votes_count).to eq(1)
     end
   end
+
+  describe "#who_voted" do
+    it "returns recent active voters up to the requested limit" do
+      DiscourseTopicVoting::Vote.create!(user: user, topic: topic, created_at: 2.hours.ago)
+      DiscourseTopicVoting::Vote.create!(user: user2, topic: topic, created_at: 1.hour.ago)
+      archived_user = Fabricate(:user)
+      DiscourseTopicVoting::Vote.create!(
+        user: archived_user,
+        topic: topic,
+        archive: true,
+        created_at: Time.zone.now,
+      )
+
+      expect(topic.who_voted(limit: 1)).to eq([user2])
+    end
+  end
+
+  describe "topic associations" do
+    it "keeps soft-deleted topics available from votes and vote counts" do
+      vote = DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+      topic_vote_count = DiscourseTopicVoting::TopicVoteCount.create!(topic: topic, votes_count: 1)
+
+      topic.trash!
+
+      expect(vote.reload.topic).to eq(topic)
+      expect(topic_vote_count.reload.topic).to eq(topic)
+    end
+  end
 end

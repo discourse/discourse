@@ -21,12 +21,12 @@ end
 # Table name: category_localizations
 #
 #  id          :bigint           not null, primary key
-#  category_id :bigint           not null
+#  description :string(1000)
 #  locale      :string(20)       not null
 #  name        :string(50)       not null
-#  description :string(1000)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  category_id :bigint           not null
 #
 # Indexes
 #

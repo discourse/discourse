@@ -3,6 +3,7 @@ en:
     discourse_reactions_like_icon: "Defines the icon used for the main reaction button. This should be a <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> icon name, not an emoji name."
     discourse_reactions_reaction_for_like: "Defines the reaction associated to the Like action. Historical Like records will not be changed if this setting changes, it is <strong>strongly recommended</strong> that this setting is never changed."
     discourse_reactions_enabled: "Enable the discourse-reactions plugin."
+    enable_new_post_reply_count_position: "Move the post reactions summary before the reply count in the post controls."
     discourse_reactions_enabled_reactions: "Defines a list of enabled reactions, any emoji is allowed here."
     discourse_reactions_desaturated_reaction_panel: "Reduces visual noise of reactions by displaying them desaturated until hover."
     discourse_reactions_excluded_from_like: "Reactions that do not count as a Like. Any reactions that are not on this list will count as a Like for badges, reporting, and other purposes."

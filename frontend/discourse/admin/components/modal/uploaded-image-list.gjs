@@ -3,15 +3,15 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import ImagesUploader from "discourse/admin/components/images-uploader";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UploadedImageList extends Component {
@@ -51,8 +51,8 @@ export default class UploadedImageList extends Component {
               class="selectable-avatar"
               {{on "click" (fn this.remove image)}}
             >
-              {{boundAvatarTemplate image "huge"}}
-              <span class="selectable-avatar__remove">{{icon
+              {{dBoundAvatarTemplate image "huge"}}
+              <span class="selectable-avatar__remove">{{dIcon
                   "circle-xmark"
                 }}</span>
             </a>

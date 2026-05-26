@@ -1,0 +1,36 @@
+.expanding-text-area {
+  width: 100%;
+  min-width: 0;
+
+  > textarea {
+    field-sizing: content;
+    height: auto;
+    resize: none;
+    max-width: 100%;
+    min-height: var(--expanding-text-area-min-height, auto);
+    max-height: var(--expanding-text-area-max-height, none);
+  }
+
+  @supports not (field-sizing: content) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+
+    > textarea {
+      grid-area: 1 / 1;
+    }
+
+    &::after {
+      content: attr(data-replicated-value) " ";
+      white-space: pre-wrap;
+      word-break: break-word;
+      visibility: hidden;
+      grid-area: 1 / 1;
+      box-sizing: border-box;
+      padding: 0.5em 0.65em;
+      border: 1px solid transparent;
+      font: inherit;
+      min-height: var(--expanding-text-area-min-height, auto);
+      max-height: var(--expanding-text-area-max-height, none);
+    }
+  }
+}

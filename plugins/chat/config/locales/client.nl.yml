@@ -277,7 +277,6 @@ nl:
       retry_staged_message:
         title: "Netwerkfout"
         action: "Opnieuw sturen?"
-      unreliable_network: "Netwerk is onbetrouwbaar, het verzenden van berichten en het opslaan van concepten werkt mogelijk niet"
       bookmark_message: "Bladwijzer maken"
       bookmark_message_edit: "Bladwijzer bewerken"
       restore: "Verwijderd bericht herstellen"
@@ -332,6 +331,8 @@ nl:
         yesterday: Gisteren
       search_view:
         filter_placeholder: Zoeken in berichten
+        message_result_label: "Chatbericht van %{username}: %{preview} %{threadInfo}"
+        in_thread: "in thread %{title}"
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen

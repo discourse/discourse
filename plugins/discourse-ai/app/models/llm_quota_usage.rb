@@ -103,15 +103,15 @@ end
 # Table name: llm_quota_usages
 #
 #  id                 :bigint           not null, primary key
-#  user_id            :bigint           not null
-#  llm_quota_id       :bigint           not null
 #  input_tokens_used  :integer          not null
 #  output_tokens_used :integer          not null
-#  usages             :integer          not null
-#  started_at         :datetime         not null
 #  reset_at           :datetime         not null
+#  started_at         :datetime         not null
+#  usages             :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  llm_quota_id       :bigint           not null
+#  user_id            :bigint           not null
 #
 # Indexes
 #

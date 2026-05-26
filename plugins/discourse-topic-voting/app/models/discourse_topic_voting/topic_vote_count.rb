@@ -4,7 +4,7 @@ module DiscourseTopicVoting
   class TopicVoteCount < ActiveRecord::Base
     self.table_name = "topic_voting_topic_vote_count"
 
-    belongs_to :topic
+    belongs_to :topic, -> { with_deleted }
   end
 end
 

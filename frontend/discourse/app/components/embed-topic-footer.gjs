@@ -3,18 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
-import icon from "discourse/helpers/d-icon";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
-import Composer from "discourse/models/composer";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedTopicFooter extends Component {
   @service appEvents;
-  @service composer;
   @service currentUser;
+  @service embedAuthFlow;
   @service siteSettings;
 
   @tracked footerButtonsVisible = false;
@@ -61,18 +60,11 @@ export default class EmbedTopicFooter extends Component {
     return this.currentUser ? "topic.reply.title" : "topic.login_reply";
   }
 
-  get showFloatingReplyButton() {
-    return (
-      this.args.topic?.details?.can_create_post && !this.footerButtonsVisible
-    );
-  }
-
   get showFloatingTimelineButton() {
+    if (this.currentUser) {
+      return false;
+    }
     return this.args.topic?.replyCount > 0 && !this.footerButtonsVisible;
-  }
-
-  get showFloatingButtons() {
-    return this.showFloatingReplyButton || this.showFloatingTimelineButton;
   }
 
   @action
@@ -81,9 +73,13 @@ export default class EmbedTopicFooter extends Component {
   }
 
   @action
-  async handleReply() {
+  handleReply() {
     if (!this.currentUser) {
-      window.open(getURL("/login"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "login" });
+      } else {
+        window.open(getURL("/login"), "_blank");
+      }
       return;
     }
 
@@ -92,12 +88,7 @@ export default class EmbedTopicFooter extends Component {
       return;
     }
 
-    await this.composer.open({
-      action: Composer.REPLY,
-      topic,
-      draftKey: topic.draft_key,
-      draftSequence: topic.draft_sequence,
-    });
+    this.appEvents.trigger("embed-composer:reply-to-post", null);
   }
 
   <template>
@@ -105,7 +96,7 @@ export default class EmbedTopicFooter extends Component {
       <div class="embed-topic-footer" {{this.trackFooterVisibility}}>
         {{#if this.showFirstReplyMessage}}
           <div class="embed-topic-footer__first-reply">
-            {{icon "comment"}}
+            {{dIcon "comment"}}
             <span>{{i18n "embed_mode.be_first_to_reply"}}</span>
             <DButton
               @action={{this.handleReply}}
@@ -120,24 +111,14 @@ export default class EmbedTopicFooter extends Component {
           </div>
         {{/if}}
       </div>
-      {{#if this.showFloatingButtons}}
+      {{#if this.showFloatingTimelineButton}}
         <div class="embed-floating-buttons">
-          {{#if this.showFloatingTimelineButton}}
-            <DButton
-              @action={{this.handleTimelineToggle}}
-              @icon="bars-staggered"
-              @title="topic.progress.title"
-              class="btn-default embed-floating-timeline-button"
-            />
-          {{/if}}
-          {{#if this.showFloatingReplyButton}}
-            <DButton
-              @action={{this.handleReply}}
-              @icon="reply"
-              @title={{this.replyButtonLabel}}
-              class="btn-primary embed-floating-reply-button"
-            />
-          {{/if}}
+          <DButton
+            @action={{this.handleTimelineToggle}}
+            @icon="bars-staggered"
+            @title="topic.progress.title"
+            class="btn-default embed-floating-timeline-button"
+          />
         </div>
       {{/if}}
     {{/if}}

@@ -44,9 +44,16 @@ const categoryFixtures = {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
   "/c/11/show.json": {
@@ -124,9 +131,16 @@ const categoryFixtures = {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
   "/c/2481/show.json": {
@@ -146,9 +160,16 @@ const categoryFixtures = {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
 };

@@ -17,7 +17,7 @@ module ::DiscourseGraphviz
 
   def self.context
     context = MiniRacer::Context.new
-    context.load("#{Rails.root}/plugins/discourse-graphviz/public/javascripts/viz-3.0.1.js")
+    context.load("#{Rails.root.join("plugins/discourse-graphviz/public/javascripts/viz-3.0.1.js")}")
     context
   end
 

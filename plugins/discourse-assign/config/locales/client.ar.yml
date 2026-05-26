@@ -138,6 +138,26 @@ ar:
           unassigned: "غير معيَّنة"
         assigned:
           label: "معيَّنة إلى"
+    topics:
+      bulk:
+        unassign: "إلغاء تعيين الموضوعات"
+        assign: "تعيين الموضوعات"
+        assign_description: "تعيين الموضوعات المحددة إلى المستخدم التالي:"
+        unassign_description: "هل تريد إلغاء تعيين الموضوعات المحددة؟"
+        confirm_assign_topics:
+          zero: "تعيين %{count} من الموضوعات"
+          one: "تعيين موضوع واحد (%{count})"
+          two: "تعيين موضوعيْن (%{count})"
+          few: "تعيين %{count} موضوعات"
+          many: "تعيين %{count} موضوعًا"
+          other: "تعيين %{count} موضوع"
+        confirm_unassign_topics:
+          zero: "إلغاء تعيين %{count} من الموضوعات"
+          one: "إلغاء تعيين موضوع واحد (%{count})"
+          two: "إلغاء تعيين موضوعيْن (%{count})"
+          few: "إلغاء تعيين %{count} موضوعات"
+          many: "إلغاء تعيين %{count} موضوعًا"
+          other: "إلغاء تعيين %{count} موضوع"
     discourse_automation:
       scriptables:
         random_assign:

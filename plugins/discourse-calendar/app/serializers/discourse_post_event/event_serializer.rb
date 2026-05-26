@@ -25,6 +25,7 @@ module DiscoursePostEvent
     attributes :status
     attributes :url
     attributes :description
+    attributes :description_html
     attributes :location
     attributes :watching_invitee
     attributes :chat_enabled
@@ -36,11 +37,17 @@ module DiscoursePostEvent
     has_one :image_upload, embed: :object, serializer: UploadSerializer
 
     def channel
-      ::Chat::ChannelSerializer.new(object.chat_channel, root: false, scope:)
+      ::Chat::ChannelSerializer.new(
+        object.chat_channel,
+        root: false,
+        scope:,
+        membership: object.chat_channel.membership_for(scope.current_user),
+      )
     end
 
     def include_channel?
-      object.chat_enabled && defined?(::Chat::ChannelSerializer) && object.chat_channel.present?
+      object.chat_enabled && defined?(::Chat::ChannelSerializer) && object.chat_channel.present? &&
+        scope.can_chat? && scope.can_preview_chat_channel?(object.chat_channel)
     end
 
     def at_capacity
@@ -123,6 +130,11 @@ module DiscoursePostEvent
 
     def include_url?
       object.url.present?
+    end
+
+    def description_html
+      return if object.description.blank?
+      EventParser.linkify_description(object.description, post: object.post)
     end
   end
 end

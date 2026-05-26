@@ -60,6 +60,15 @@ module PageObjects
           has_css?(".fc-event-title", text: title)
         end
 
+        def click_event_on(date)
+          try_until_success do
+            page.execute_script(<<~JS)
+              document.querySelector(".fc-daygrid-day[data-date='#{date}'] .fc-event").click();
+            JS
+            has_css?("[data-identifier='post-event-menu']")
+          end
+        end
+
         def has_no_event?(title)
           has_no_css?(".fc-event-title", text: title)
         end

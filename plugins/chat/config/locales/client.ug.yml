@@ -278,7 +278,6 @@ ug:
       retry_staged_message:
         title: "تور خاتالىقى"
         action: "قايتا يوللامدۇ؟"
-      unreliable_network: "تور مۇقىم ئەمەس، ئۇچۇر يوللاش ۋە دەسلەپكى نۇسخىدا ساقلاش ئىشلىمەسلىكى مۇمكىن"
       bookmark_message: "خەتكۈچ"
       bookmark_message_edit: "خەتكۈچ تەھرىر"
       restore: "ئۆچۈرۈلگەن ئۇچۇرنى ئەسلىگە قايتۇر"

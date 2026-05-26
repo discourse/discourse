@@ -72,6 +72,55 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body).to be_present
       end
+
+      it "returns users with the same IP as a user" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        same_ip_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "43.43.43.43")
+
+        get "/admin/users/list.json",
+            params: {
+              same_ip_user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).to contain_exactly(
+          same_ip_user.id,
+        )
+      end
+
+      it "does not allow raw IP searches when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+        user_with_ip = Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/list.json", params: { filter: user_with_ip.ip_address }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).not_to include(user_with_ip.id)
+      end
+
+      it "ignores raw IP filters when searching by a server-resolved same-IP user" do
+        SiteSetting.moderators_view_ips = false
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        same_ip_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "43.43.43.43")
+
+        get "/admin/users/list.json",
+            params: {
+              same_ip_user_id: target_user.id,
+              exclude: target_user.id,
+              filter: "43.43.43.43",
+              ip: "43.43.43.43",
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).to contain_exactly(
+          same_ip_user.id,
+        )
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -122,6 +171,28 @@ RSpec.describe Admin::UsersController do
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+      end
+
+      it "does not leak the message body in the public silence_reason" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              reason: "because I said so",
+              message: "private email body",
+              post_action: "delete",
+              silenced_till: 2.days.from_now,
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence"]["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["silence"]["full_silence_reason"]).to eq(
+          "because I said so\n\nprivate email body",
+        )
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["full_silence_reason"]).to eq(
+          "because I said so<br><br>private email body",
+        )
       end
 
       context "with a non-existing user" do
@@ -2121,7 +2192,7 @@ RSpec.describe Admin::UsersController do
       it "retrieves IP info" do
         ip = "81.2.69.142"
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
 
         get "/admin/users/ip-info.json", params: { ip: ip }
@@ -2158,7 +2229,7 @@ RSpec.describe Admin::UsersController do
       it "prevents retrieval of IP info with a 404 response" do
         ip = "81.2.69.142"
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
 
         get "/admin/users/ip-info.json", params: { ip: ip }
@@ -2169,21 +2240,90 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#total_other_accounts_with_same_ip" do
+    shared_examples "counting other accounts with same ip possible" do
+      it "returns the count for a user" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/total-others-with-same-ip.json",
+            params: {
+              user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["total"]).to eq(2)
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      include_examples "counting other accounts with same ip possible"
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "counting other accounts with same ip possible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/total-others-with-same-ip.json",
+            params: {
+              user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#delete_other_accounts_with_same_ip" do
     shared_examples "deleting other accounts with same ip possible" do
       it "works" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
         user_a = Fabricate(:user, ip_address: "42.42.42.42")
         user_b = Fabricate(:user, ip_address: "42.42.42.42")
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 ip: "42.42.42.42",
-                 exclude: -1,
+                 user_id: target_user.id,
+                 exclude: target_user.id,
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(200)
-        expect(User.where(id: user_a.id).count).to eq(0)
-        expect(User.where(id: user_b.id).count).to eq(0)
+        expect(User.exists?(target_user.id)).to eq(true)
+        expect(User.exists?(user_a.id)).to eq(false)
+        expect(User.exists?(user_b.id)).to eq(false)
+      end
+
+      it "does not delete the target user when exclude is tampered with" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        other_user = Fabricate(:user, ip_address: "42.42.42.42")
+
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 exclude: other_user.id,
+                 filter: target_user.ip_address,
+                 ip: target_user.ip_address,
+                 order: "trust_level DESC",
+               }
+
+        expect(response.status).to eq(200)
+        expect(User.exists?(target_user.id)).to eq(true)
+        expect(User.exists?(other_user.id)).to eq(false)
       end
     end
 
@@ -2197,25 +2337,50 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "deleting other accounts with same ip possible"
+
+      it "does not reveal the IP address in the staff log context without IP viewing permission" do
+        SiteSetting.moderators_view_ips = false
+        ip_address = "42.42.42.42"
+        target_user = Fabricate(:user, ip_address: ip_address)
+        Fabricate(:user, ip_address: ip_address)
+
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 exclude: target_user.id,
+                 order: "trust_level DESC",
+               }
+
+        expect(response.status).to eq(200)
+
+        histories =
+          UserHistory.where(action: UserHistory.actions[:delete_user], acting_user_id: moderator.id)
+        contexts = histories.pluck(:context)
+
+        expect(histories).to be_exists
+        expect(contexts).to all(include(target_user.username))
+        expect(contexts).to all(exclude(ip_address))
+      end
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
 
       it "prevents deletion of other accounts with same ip with a 404 response" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
         user_a = Fabricate(:user, ip_address: "42.42.42.42")
         user_b = Fabricate(:user, ip_address: "42.42.42.42")
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 ip: "42.42.42.42",
-                 exclude: -1,
+                 user_id: target_user.id,
+                 exclude: target_user.id,
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-        expect(User.where(id: user_a.id).count).to eq(1)
-        expect(User.where(id: user_b.id).count).to eq(1)
+        expect(User.exists?(user_a.id)).to eq(true)
+        expect(User.exists?(user_b.id)).to eq(true)
       end
     end
   end

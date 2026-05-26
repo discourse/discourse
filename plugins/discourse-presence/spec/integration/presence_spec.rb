@@ -66,7 +66,7 @@ RSpec.describe "discourse-presence" do
     end
 
     it "handles category moderators for edit" do
-      SiteSetting.edit_all_post_groups = nil
+      SiteSetting.edit_all_post_groups = ""
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")

@@ -20,7 +20,7 @@ class ApiKey < ActiveRecord::Base
   after_initialize :generate_key
 
   def generate_key
-    if !self.key_hash
+    if !key_hash
       @key ||= SecureRandom.hex(32) # Not saved to DB
       self.truncated_key = key[0..3]
       self.key_hash = ApiKey.hash_key(key)
@@ -101,7 +101,9 @@ class ApiKey < ActiveRecord::Base
     if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(Rack::Request.new(env).ip) }
       return false
     end
-    return true if RouteMatcher.new(methods: :get, actions: "session#scopes").match?(env: env)
+    if RouteMatcher.new(methods: :get, actions: %w[session#scopes about#index]).match?(env: env)
+      return true
+    end
 
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
@@ -130,18 +132,18 @@ end
 # Table name: api_keys
 #
 #  id            :integer          not null, primary key
-#  user_id       :integer
-#  created_by_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
 #  allowed_ips   :inet             is an Array
+#  description   :text
 #  hidden        :boolean          default(FALSE), not null
+#  key_hash      :string           not null
 #  last_used_at  :datetime
 #  revoked_at    :datetime
-#  description   :text
-#  key_hash      :string           not null
-#  truncated_key :string           not null
 #  scope_mode    :integer
+#  truncated_key :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  created_by_id :integer
+#  user_id       :integer
 #
 # Indexes
 #

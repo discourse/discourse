@@ -156,11 +156,21 @@ export default class EditCategoryTabsController extends Controller {
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
 
       data.category_type_site_settings = {};
+      data.category_type_settings = {
+        ...(this.model.category_type_settings ?? {}),
+      };
+      data.category_types = Object.keys(this.model.categoryTypes ?? {});
 
       Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
         categoryType.configuration_schema.category_custom_fields?.forEach(
           (field) => {
             data.custom_fields[field.key] ??= field.default;
+          }
+        );
+
+        categoryType.configuration_schema.category_settings?.forEach(
+          (field) => {
+            data.category_type_settings[field.key] ??= field.default;
           }
         );
 
@@ -369,6 +379,9 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const previousTypes = new Set(
+        Object.keys(this.model.categoryTypes ?? {})
+      );
       const result = await this.model.save();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
@@ -376,6 +389,22 @@ export default class EditCategoryTabsController extends Controller {
       if (lostAccess) {
         this.router.transitionTo(`discovery.${defaultHomepage()}`);
         return;
+      }
+
+      if (this.siteSettings.enable_simplified_category_creation) {
+        const newTypes = Object.keys(result.category.category_types ?? {});
+        const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+        if (typeWasAdded) {
+          if (this.model.id) {
+            window.location.reload();
+          } else {
+            window.location = this.router.urlFor(
+              "editCategory",
+              Category.slugFor(updatedModel)
+            );
+          }
+          return;
+        }
       }
 
       this.set("saving", false);

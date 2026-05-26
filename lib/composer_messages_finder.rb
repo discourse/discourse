@@ -26,11 +26,17 @@ class ComposerMessagesFinder
   # Determines whether to show the user education text
   def check_education_message
     return if @topic&.private_message?
+    return if UserHistory.exists_for_user?(@user, :notified_about_composer_education)
 
     education_key = creating_topic? ? "education.new-topic" : "education.new-reply"
     count = @user.topic_count + @user.post_count
 
     if count < SiteSetting.educate_until_posts
+      UserHistory.create!(
+        action: UserHistory.actions[:notified_about_composer_education],
+        target_user_id: @user.id,
+      )
+
       return(
         {
           id: "education",
@@ -185,7 +191,7 @@ class ComposerMessagesFinder
   private
 
   def educate_reply?(type)
-    replying? && @details[:topic_id] && (@topic.present? && !@topic.private_message?) &&
+    replying? && @details[:topic_id] && @topic.present? && !@topic.private_message? &&
       (@user.post_count >= SiteSetting.educate_until_posts) &&
       !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
   end

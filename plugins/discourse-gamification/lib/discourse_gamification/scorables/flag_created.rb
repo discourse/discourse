@@ -2,16 +2,12 @@
 
 module DiscourseGamification
   class FlagCreated < Scorable
-    def self.score_multiplier
-      SiteSetting.flag_created_score_value
-    end
-
-    def self.query
+    def self.query(leaderboard: nil)
       <<~SQL
         SELECT
           r.created_by_id AS user_id,
           date_trunc('day', r.created_at) AS date,
-          COUNT(*) * #{score_multiplier} AS points
+          COUNT(*) * #{score_multiplier(leaderboard:)} AS points
         FROM
           reviewables AS r
         WHERE

@@ -5,7 +5,7 @@ import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Calendar - Event Title Decorator", function (needs) {
+acceptance("Event Title Decorator", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,

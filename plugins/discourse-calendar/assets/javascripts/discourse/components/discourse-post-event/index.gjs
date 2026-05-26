@@ -2,15 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
@@ -31,7 +31,7 @@ const StatusSeparator = <template>
 const InfoSection = <template>
   <section class="event__section" ...attributes>
     {{#if @icon}}
-      {{icon @icon}}
+      {{dIcon @icon}}
     {{/if}}
 
     {{yield}}
@@ -126,17 +126,51 @@ export default class DiscoursePostEvent extends Component {
 
     if (this.args.event) {
       try {
-        this.event = await this.discoursePostEventApi.event(this.args.event.id);
-        this.event.startsAt = this.args.event.startsAt;
-        this.event.endsAt = this.args.event.endsAt;
+        const fetched = await this.discoursePostEventApi.event(
+          this.args.event.id
+        );
+        const displayedStartsAt = this.args.event.startsAt;
+
+        if (
+          fetched.recurrence &&
+          displayedStartsAt &&
+          fetched.startsAt &&
+          displayedStartsAt !== fetched.startsAt
+        ) {
+          this.#filterForFutureOccurrence(fetched);
+        }
+
+        fetched.startsAt = displayedStartsAt;
+        fetched.endsAt = this.args.event.endsAt;
+        this.event = fetched;
       } catch (error) {
         popupAjaxError(error);
       }
     }
   }
 
+  #filterForFutureOccurrence(event) {
+    event.sampleInvitees = event.sampleInvitees.filter(
+      (invitee) => invitee.status !== "going" || invitee.recurring
+    );
+
+    const recurringCount = event.stats?.goingRecurring ?? 0;
+    if (event.stats) {
+      event.stats.going = recurringCount;
+    }
+    event.atCapacity =
+      event.maxAttendees != null && recurringCount >= event.maxAttendees;
+
+    if (
+      event.watchingInvitee?.status === "going" &&
+      !event.watchingInvitee?.recurring
+    ) {
+      event.watchingInvitee = null;
+    }
+  }
+
   <template>
-    <AsyncContent @asyncData={{this.loadEvent}}>
+    <DAsyncContent @asyncData={{this.loadEvent}}>
       <:content as |event|>
         <div class="discourse-post-event">
           <div class="discourse-post-event-widget">
@@ -168,9 +202,9 @@ export default class DiscoursePostEvent extends Component {
                       <a
                         href={{event.post.url}}
                         rel="noopener noreferrer"
-                      >{{replaceEmoji this.eventName}}</a>
+                      >{{dReplaceEmoji this.eventName}}</a>
                     {{else}}
-                      {{replaceEmoji this.eventName}}
+                      {{dReplaceEmoji this.eventName}}
                     {{/if}}
                   </span>
                   <div class="status-and-creators">
@@ -190,19 +224,23 @@ export default class DiscoursePostEvent extends Component {
                   </div>
                 </div>
 
-                <MoreMenu
-                  @event={{event}}
-                  @isStandaloneEvent={{this.isStandaloneEvent}}
-                  @composePrivateMessage={{routeAction "composePrivateMessage"}}
-                />
-
-                {{#if @onClose}}
-                  <DButton
-                    class="btn-default btn-small discourse-post-event-close"
-                    @icon="xmark"
-                    @action={{@onClose}}
+                <div class="event-header__controls">
+                  <MoreMenu
+                    @event={{event}}
+                    @isStandaloneEvent={{this.isStandaloneEvent}}
+                    @composePrivateMessage={{routeAction
+                      "composePrivateMessage"
+                    }}
                   />
-                {{/if}}
+
+                  {{#if @onClose}}
+                    <DButton
+                      class="btn-default btn-small discourse-post-event-close"
+                      @icon="xmark"
+                      @action={{@onClose}}
+                    />
+                  {{/if}}
+                </div>
               </header>
 
               <PluginOutlet
@@ -250,7 +288,7 @@ export default class DiscoursePostEvent extends Component {
 
                 {{#if this.withDescription}}
                   <Description
-                    @description={{event.description}}
+                    @descriptionHtml={{event.descriptionHtml}}
                     @clamp={{this.clampDescription}}
                   />
                 {{/if}}
@@ -268,6 +306,6 @@ export default class DiscoursePostEvent extends Component {
           <div class="spinner"></div>
         </div>
       </:loading>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }

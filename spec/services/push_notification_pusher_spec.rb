@@ -62,6 +62,45 @@ RSpec.describe PushNotificationPusher do
       expect(message[:icon]).to match(%r{\A/assets/push-notifications/mentioned-\w{8}.png\z})
     end
 
+    it "forwards actions and action_data when present in the payload" do
+      actions = [
+        {
+          action: "test-reply",
+          title: "Reply",
+          placeholder: "Reply…",
+          type: "text",
+          icon: "https://example.com/icon.png",
+        },
+      ]
+      action_data = { channel_id: 42, thread_id: 7 }
+
+      message =
+        PushNotificationPusher.push(
+          user,
+          {
+            topic_title: topic_title,
+            username: username,
+            excerpt: "description",
+            topic_id: 1,
+            base_url: base_url,
+            post_url: post_url,
+            notification_type: 1,
+            post_number: 1,
+            actions: actions,
+            action_data: action_data,
+          },
+        )
+
+      expect(message[:actions]).to eq(actions)
+      expect(message[:action_data]).to eq(action_data)
+    end
+
+    it "omits actions and action_data when not present in the payload" do
+      message = execute_push
+      expect(message).not_to have_key(:actions)
+      expect(message).not_to have_key(:action_data)
+    end
+
     it "sends notification in user's locale" do
       SiteSetting.allow_user_locale = true
       user.update!(locale: "pt_BR")
@@ -189,6 +228,30 @@ RSpec.describe PushNotificationPusher do
       expect(subscription.error_count).to eq(1)
     end
 
+    it "handles DNS lookup failures for endpoints whose domain no longer resolves" do
+      WebPush.expects(:payload_send).raises(
+        FinalDestination::SSRFDetector::LookupFailedError.new("lookup failed"),
+      )
+      subscription = create_subscription
+
+      expect { execute_push }.to_not raise_exception
+
+      subscription.reload
+      expect(subscription.error_count).to eq(1)
+    end
+
+    it "handles endpoints that resolve to disallowed IPs" do
+      WebPush.expects(:payload_send).raises(
+        FinalDestination::SSRFDetector::DisallowedIpError.new("disallowed"),
+      )
+      subscription = create_subscription
+
+      expect { execute_push }.to_not raise_exception
+
+      subscription.reload
+      expect(subscription.error_count).to eq(1)
+    end
+
     describe "`watching_category_or_tag` notifications" do
       it "Uses the 'watching_first_post' translation when new topic was created" do
         message =
@@ -222,91 +285,6 @@ RSpec.describe PushNotificationPusher do
             username: username,
           ),
         )
-      end
-    end
-
-    describe "localized content" do
-      fab!(:topic) { Fabricate(:topic, title: "Original topic title") }
-      fab!(:post) { Fabricate(:post, topic: topic, raw: "Original post content") }
-
-      before do
-        SiteSetting.content_localization_enabled = true
-        SiteSetting.allow_user_locale = true
-        user.update!(locale: "ja")
-      end
-
-      def execute_localized_push
-        PushNotificationPusher.push(
-          user,
-          {
-            topic_title: topic.title,
-            username: "system",
-            excerpt: "Original post content",
-            topic_id: topic.id,
-            post_id: post.id,
-            post_url: "/t/#{topic.id}/#{post.post_number}",
-            notification_type: Notification.types[:mentioned],
-            post_number: post.post_number,
-          },
-        )
-      end
-
-      it "uses localized topic title and post excerpt when localization exists" do
-        Fabricate(
-          :topic_localization,
-          topic: topic,
-          locale: "ja",
-          title: "ローカライズされたトピック",
-          fancy_title: "ローカライズされたトピック",
-        )
-        Fabricate(
-          :post_localization,
-          post: post,
-          locale: "ja",
-          raw: "ローカライズされた投稿",
-          cooked: "<p>ローカライズされた投稿</p>",
-        )
-
-        message = execute_localized_push
-
-        expect(message[:title]).to include("ローカライズされたトピック")
-        expect(message[:body]).to eq("ローカライズされた投稿")
-      end
-
-      it "falls back to original content when no localization exists" do
-        message = execute_localized_push
-
-        expect(message[:title]).to include("Original topic title")
-        expect(message[:body]).to eq("Original post content")
-      end
-
-      it "falls back to original content when content_localization_enabled is false" do
-        SiteSetting.content_localization_enabled = false
-        Fabricate(
-          :topic_localization,
-          topic: topic,
-          locale: "ja",
-          title: "ローカライズされたトピック",
-          fancy_title: "ローカライズされたトピック",
-        )
-
-        message = execute_localized_push
-
-        expect(message[:title]).to include("Original topic title")
-      end
-
-      it "matches regionless locale variants" do
-        Fabricate(
-          :topic_localization,
-          topic: topic,
-          locale: "ja_JP",
-          title: "ローカライズされたトピック",
-          fancy_title: "ローカライズされたトピック",
-        )
-
-        message = execute_localized_push
-
-        expect(message[:title]).to include("ローカライズされたトピック")
       end
     end
 

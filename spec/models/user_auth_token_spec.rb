@@ -18,11 +18,14 @@ RSpec.describe UserAuthToken do
 
         expect(token.user).to eq(user)
         expect(token.user.is_impersonating).to be_falsey
+        expect(token.user.impersonation_expires_at).to be_nil
       end
     end
 
     context "when impersonating another user" do
       it "returns the user being impersonated if not expired" do
+        freeze_time
+
         token =
           UserAuthToken.generate!(
             user_id: admin.id,
@@ -34,6 +37,7 @@ RSpec.describe UserAuthToken do
 
         expect(token.user).to eq(user)
         expect(token.user.is_impersonating).to eq(true)
+        expect(token.user.impersonation_expires_at).to eq_time(15.minutes.from_now)
       end
 
       it "returns the user associated with the session if expired" do
@@ -48,6 +52,7 @@ RSpec.describe UserAuthToken do
 
         expect(token.user).to eq(admin)
         expect(token.user.is_impersonating).to be_falsey
+        expect(token.user.impersonation_expires_at).to be_nil
       end
 
       it "returns the user associated with the session if can no longer impersonate" do
@@ -63,6 +68,7 @@ RSpec.describe UserAuthToken do
 
         expect(token.user).to eq(admin)
         expect(token.user.is_impersonating).to be_falsey
+        expect(token.user.impersonation_expires_at).to be_nil
       end
     end
   end

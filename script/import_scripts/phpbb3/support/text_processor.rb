@@ -72,19 +72,15 @@ module ImportScripts::PhpBB3
     end
 
     def process_post(raw, attachments)
-      begin
-        process_raw_text(raw, attachments)
-      rescue StandardError
-        raw
-      end
+      process_raw_text(raw, attachments)
+    rescue StandardError
+      raw
     end
 
     def process_private_msg(raw, attachments)
-      begin
-        process_raw_text(raw, attachments)
-      rescue StandardError
-        raw
-      end
+      process_raw_text(raw, attachments)
+    rescue StandardError
+      raw
     end
 
     protected
@@ -100,12 +96,10 @@ module ImportScripts::PhpBB3
     end
 
     def bbcode_to_md(text)
-      begin
-        text.bbcode_to_md(false)
-      rescue => e
-        puts "Problem converting \n#{text}\n using ruby-bbcode-to-md"
-        text
-      end
+      text.bbcode_to_md(false)
+    rescue => e
+      puts "Problem converting \n#{text}\n using ruby-bbcode-to-md"
+      text
     end
 
     def process_smilies(text)

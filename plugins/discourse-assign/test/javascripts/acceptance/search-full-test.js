@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Discourse Assign | Search - Full Page", function (needs) {
+acceptance("Search - Full Page", function (needs) {
   needs.settings({ assign_enabled: true });
   needs.user({ can_assign: true });
   needs.pretender((server, helper) => {

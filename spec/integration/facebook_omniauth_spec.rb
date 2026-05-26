@@ -22,7 +22,7 @@ describe "Facebook OAuth2" do
 
     stub_request(
       :get,
-      "https://graph.facebook.com/v5.0/me?appsecret_proof=#{appsecret_proof}&fields=name,first_name,last_name,email",
+      "https://graph.facebook.com/v19.0/me?appsecret_proof=#{appsecret_proof}&fields=name,first_name,last_name,email",
     ).with(headers: { "Authorization" => "OAuth #{access_token}" }).to_return(
       status: 200,
       body: JSON.dump(body),
@@ -37,7 +37,7 @@ describe "Facebook OAuth2" do
     SiteSetting.facebook_app_id = app_id
     SiteSetting.facebook_app_secret = app_secret
 
-    stub_request(:post, "https://graph.facebook.com/v5.0/oauth/access_token").with(
+    stub_request(:post, "https://graph.facebook.com/v19.0/oauth/access_token").with(
       body:
         hash_including(
           "client_id" => app_id,
@@ -59,7 +59,7 @@ describe "Facebook OAuth2" do
   it "signs in the user if the API response from facebook includes an email (implies it's verified) and the email matches an existing user's" do
     post "/auth/facebook"
     expect(response.status).to eq(302)
-    expect(response.location).to start_with("https://www.facebook.com/v5.0/dialog/oauth")
+    expect(response.location).to start_with("https://www.facebook.com/v19.0/dialog/oauth")
 
     setup_facebook_email_stub(email: user1.email)
 
@@ -73,7 +73,7 @@ describe "Facebook OAuth2" do
   it "doesn't sign in anyone if the API response from facebook doesn't include an email (implying the user's email on facebook isn't verified)" do
     post "/auth/facebook"
     expect(response.status).to eq(302)
-    expect(response.location).to start_with("https://www.facebook.com/v5.0/dialog/oauth")
+    expect(response.location).to start_with("https://www.facebook.com/v19.0/dialog/oauth")
 
     setup_facebook_email_stub(email: nil)
 

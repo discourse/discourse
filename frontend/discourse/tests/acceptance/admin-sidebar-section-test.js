@@ -1,5 +1,6 @@
 import { click, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
@@ -397,9 +398,13 @@ acceptance("Admin Sidebar - Plugin Icons", function (needs) {
   });
 
   test("setAdminPluginIcon with falsy icon is ignored and keeps default gear icon", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
     withPluginApi((api) => {
       api.setAdminPluginIcon("discourse-calendar", "");
     });
+
+    assert.true(stub.calledWith("", "An icon must be provided!"));
 
     await visit("/admin");
     await click(".sidebar-toggle-all-sections");
@@ -409,6 +414,8 @@ acceptance("Admin Sidebar - Plugin Icons", function (needs) {
         ".sidebar-section[data-section-name='admin-plugins'] .sidebar-section-link-wrapper[data-list-item-name='admin_plugin_discourse-calendar'] .d-icon-gear"
       )
       .exists("default gear icon is displayed when falsy icon is provided");
+
+    stub.restore();
   });
 });
 

@@ -23,7 +23,7 @@ module DiscourseAi
         metric.description = "AI spam scanning statistics"
         metric.labels = { db: RailsMultisite::ConnectionManagement.current_db, type: }
         metric.value = value
-        $prometheus_client.send_json(metric.to_h) # rubocop:disable Style/GlobalVars
+        $prometheus_client.send_json(metric.to_h) unless Rails.env.test? # rubocop:disable Style/GlobalVars
       end
     end
   end

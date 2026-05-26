@@ -12,6 +12,7 @@ hr:
       create: "Stvorite"
       ai:
         generate: "Generiraj"
+        optional: "neobvezno"
       help:
         label: "Pomoć"
       schema:
@@ -20,9 +21,7 @@ hr:
         bool:
           yes: "Da"
           no: "Ne"
-      export: "Izvoz"
       save: "Zabilježi promjene"
-      edit: "Uredi"
       delete: "Izbriši"
       result_count:
         one: "%{count} rezultat."

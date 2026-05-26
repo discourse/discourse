@@ -48,6 +48,8 @@ sl:
           few: "(%{count} več)"
           other: "(%{count} več)"
         collapse_list: "(manj)"
+        nav:
+          enabled: "Vključeno"
         filters:
           all: "Vsi"
           reset: "Ponastavi"

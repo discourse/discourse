@@ -58,77 +58,75 @@ if defined?(DiscourseAutomation)
     field :debug_mode, component: :boolean
 
     script do |context, fields, automation|
-      begin
-        sender = fields.dig("sender", "value")
-        receivers = fields.dig("receivers", "value")
-        topic_id = fields.dig("topic_id", "value")
-        title = fields.dig("title", "value")
-        model = fields.dig("model", "value")
-        category_ids = fields.dig("categories", "value")
-        tags = fields.dig("tags", "value")
-        allow_secure_categories = !!fields.dig("allow_secure_categories", "value")
-        debug_mode = !!fields.dig("debug_mode", "value")
-        sample_size = fields.dig("sample_size", "value")
-        instructions = fields.dig("instructions", "value")
-        days = fields.dig("days", "value")
-        offset = fields.dig("offset", "value").to_i
-        priority_group = fields.dig("priority_group", "value")
-        tokens_per_post = fields.dig("tokens_per_post", "value")
-        agent_id = fields.dig("agent_id", "value")
+      sender = fields.dig("sender", "value")
+      receivers = fields.dig("receivers", "value")
+      topic_id = fields.dig("topic_id", "value")
+      title = fields.dig("title", "value")
+      model = fields.dig("model", "value")
+      category_ids = fields.dig("categories", "value")
+      tags = fields.dig("tags", "value")
+      allow_secure_categories = !!fields.dig("allow_secure_categories", "value")
+      debug_mode = !!fields.dig("debug_mode", "value")
+      sample_size = fields.dig("sample_size", "value")
+      instructions = fields.dig("instructions", "value")
+      days = fields.dig("days", "value")
+      offset = fields.dig("offset", "value").to_i
+      priority_group = fields.dig("priority_group", "value")
+      tokens_per_post = fields.dig("tokens_per_post", "value")
+      agent_id = fields.dig("agent_id", "value")
 
-        exclude_category_ids = fields.dig("exclude_categories", "value")
-        exclude_tags = fields.dig("exclude_tags", "value")
+      exclude_category_ids = fields.dig("exclude_categories", "value")
+      exclude_tags = fields.dig("exclude_tags", "value")
 
-        top_p = fields.dig("top_p", "value")
-        if top_p == "" || top_p.nil?
-          top_p = nil
-        else
-          top_p = top_p.to_f
-        end
+      top_p = fields.dig("top_p", "value")
+      if top_p == "" || top_p.nil?
+        top_p = nil
+      else
+        top_p = top_p.to_f
+      end
 
-        temperature = fields.dig("temperature", "value")
-        if temperature == "" || temperature.nil?
-          temperature = nil
-        else
-          temperature = temperature.to_f
-        end
+      temperature = fields.dig("temperature", "value")
+      if temperature == "" || temperature.nil?
+        temperature = nil
+      else
+        temperature = temperature.to_f
+      end
 
-        # Backwards-compat for scripts created before this field was added.
-        if agent_id == "" || agent_id.nil?
-          agent_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ReportRunner]
-        end
+      # Backwards-compat for scripts created before this field was added.
+      if agent_id == "" || agent_id.nil?
+        agent_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::ReportRunner]
+      end
 
-        suppress_notifications = !!fields.dig("suppress_notifications", "value")
-        DiscourseAi::Automation::ReportRunner.run!(
-          sender_username: sender,
-          receivers: receivers,
-          topic_id: topic_id,
-          title: title,
-          agent_id: agent_id,
-          model: model,
-          category_ids: category_ids,
-          tags: tags,
-          allow_secure_categories: allow_secure_categories,
-          debug_mode: debug_mode,
-          sample_size: sample_size,
-          instructions: instructions,
-          days: days,
-          offset: offset,
-          priority_group_id: priority_group,
-          tokens_per_post: tokens_per_post,
-          exclude_category_ids: exclude_category_ids,
-          exclude_tags: exclude_tags,
-          temperature: temperature,
-          top_p: top_p,
-          suppress_notifications: suppress_notifications,
-          automation: self.automation,
-        )
-      rescue => e
-        Discourse.warn_exception e, message: "Error running LLM report!"
-        if Rails.env.development?
-          p e
-          puts e.backtrace
-        end
+      suppress_notifications = !!fields.dig("suppress_notifications", "value")
+      DiscourseAi::Automation::ReportRunner.run!(
+        sender_username: sender,
+        receivers: receivers,
+        topic_id: topic_id,
+        title: title,
+        agent_id: agent_id,
+        model: model,
+        category_ids: category_ids,
+        tags: tags,
+        allow_secure_categories: allow_secure_categories,
+        debug_mode: debug_mode,
+        sample_size: sample_size,
+        instructions: instructions,
+        days: days,
+        offset: offset,
+        priority_group_id: priority_group,
+        tokens_per_post: tokens_per_post,
+        exclude_category_ids: exclude_category_ids,
+        exclude_tags: exclude_tags,
+        temperature: temperature,
+        top_p: top_p,
+        suppress_notifications: suppress_notifications,
+        automation: self.automation,
+      )
+    rescue => e
+      Discourse.warn_exception e, message: "Error running LLM report!"
+      if Rails.env.development?
+        p e
+        puts e.backtrace
       end
     end
   end

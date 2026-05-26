@@ -94,6 +94,17 @@ module Scheduler
       do_work(non_block = true) while !@queue.empty?
     end
 
+    # For tests: runs blocks passed to #later after the yielded block returns,
+    # rather than during.
+    def capture_later
+      captured = []
+      define_singleton_method(:later) { |*, **, &blk| captured << blk }
+      yield
+      captured.shift.call until captured.empty?
+    ensure
+      singleton_class.remove_method(:later)
+    end
+
     private
 
     def start_thread
@@ -101,8 +112,8 @@ module Scheduler
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do
-            @thread.abort_on_exception = true if Rails.env.test?
-            do_work while (!@finish || !@queue.empty?)
+            Thread.current.abort_on_exception = true if Rails.env.test?
+            do_work while !@finish || !@queue.empty?
           end if !@thread&.alive?
       end
     end
@@ -117,21 +128,19 @@ module Scheduler
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
       RailsMultisite::ConnectionManagement.with_connection(db) do
-        begin
-          warning_job =
-            @reactor.queue(@timeout) do
-              Rails.logger.error "'#{desc}' is still running after #{@timeout} seconds on db #{db}, this process may need to be restarted!"
-            end if !non_block
-          job.call
-        rescue => ex
-          @stats_mutex.synchronize do
-            stats = @stats[desc]
-            stats[:errors] += 1 if stats
-          end
-          Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
-        ensure
-          warning_job&.cancel
+        warning_job =
+          @reactor.queue(@timeout) do
+            Rails.logger.error "'#{desc}' is still running after #{@timeout} seconds on db #{db}, this process may need to be restarted!"
+          end if !non_block
+        job.call
+      rescue => ex
+        @stats_mutex.synchronize do
+          stats = @stats[desc]
+          stats[:errors] += 1 if stats
         end
+        Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
+      ensure
+        warning_job&.cancel
       end
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")

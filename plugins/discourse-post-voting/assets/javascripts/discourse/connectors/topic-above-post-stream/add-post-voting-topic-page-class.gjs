@@ -4,13 +4,10 @@ import { ORDER_BY_ACTIVITY_FILTER } from "../../components/post-voting-answer-he
 
 const AddPostVotingTopicPageClass = <template>
   {{#if @outletArgs.model.is_post_voting}}
-    {{bodyClass
-      (if
-        (eq @outletArgs.model.postStream.filter ORDER_BY_ACTIVITY_FILTER)
-        "post-voting-topic-sort-by-activity"
-        "post-voting-topic"
-      )
-    }}
+    {{bodyClass "post-voting-topic"}}
+    {{#if (eq @outletArgs.model.postStream.filter ORDER_BY_ACTIVITY_FILTER)}}
+      {{bodyClass "--sort-by-activity"}}
+    {{/if}}
   {{/if}}
 </template>;
 

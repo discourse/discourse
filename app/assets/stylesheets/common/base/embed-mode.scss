@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for the full Ember app when rendered in embed mode (iframe)
 // Activated when ?embed_mode=true is in the URL
 body.embed-mode {
@@ -17,6 +19,8 @@ body.embed-mode {
   .suggested-topics,
   .more-topics__container,
   #topic-title,
+  .nested-view__header,
+  .nested-view__topic-map,
   .topic-above-footer-buttons-outlet.presence,
   .above-main-container-outlet,
   .topic-footer-main-buttons__actions .toggle-admin-menu,
@@ -29,7 +33,8 @@ body.embed-mode {
   .time-gap,
   .post-stream .gap,
   .container.posts:not(:has(.post-stream .topic-post ~ .topic-post))
-    ~ #topic-footer-buttons {
+    ~ #topic-footer-buttons,
+  .topic-post .post-notice.new-user {
     display: none !important;
   }
 
@@ -38,22 +43,10 @@ body.embed-mode {
     max-width: 100%;
   }
 
-  // Composer styling for embed mode
-  &:not(.has-sidebar-page) #reply-control:not(.fullscreen),
-  #reply-control {
-    margin-inline: 0;
-    margin-left: 0;
-    max-width: 100%;
-    border-radius: 0;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom: none;
-    border-right: none;
-    border-left: none;
-
-    .composer-action-title {
-      display: none;
-    }
+  // Hide the standard composer in embed mode — the docked composer replaces it.
+  // Allow it to show when editing a post (composer-action-edit class).
+  #reply-control:not(.composer-action-edit) {
+    display: none !important;
   }
 
   .embed-topic-footer {
@@ -115,6 +108,25 @@ body.embed-mode {
     }
   }
 
+  // prevent horizontal overflow
+  .topic-meta-data {
+    @include viewport.until(sm) {
+      .post-infos {
+        position: relative;
+        overflow: hidden;
+        padding-right: 6px;
+      }
+
+      .read-state {
+        right: 1px;
+
+        svg {
+          right: 0;
+        }
+      }
+    }
+  }
+
   // Hide the docked timeline sidebar (fullscreen timeline still works)
   .timeline-container:not(.timeline-fullscreen) {
     display: none !important;
@@ -126,21 +138,14 @@ body.embed-mode {
     display: none;
   }
 
-  // Floating action buttons (timeline + reply) in the bottom-right
+  // Floating timeline button in the bottom-right
   .embed-floating-buttons {
     position: fixed;
-    bottom: calc(
-      env(safe-area-inset-bottom) + var(--composer-height, 0px) + 1em
-    );
+    bottom: calc(env(safe-area-inset-bottom) + 1em);
     right: var(--space-4);
     z-index: z("timeline");
-    display: flex;
-    flex-direction: column;
-    gap: 0.65em;
-    align-items: center;
 
-    .embed-floating-timeline-button,
-    .embed-floating-reply-button {
+    .embed-floating-timeline-button {
       width: 2.75em;
       height: 2.75em;
       border-radius: 50%;
@@ -162,9 +167,106 @@ body.embed-mode {
 
   // Hide OP
   // Use visibility hidden to prevent issues with jumpy behavior
-  .post-stream .topic-post.topic-owner:first-child {
+  .post-stream .topic-post.topic-owner:first-child,
+  .nested-view__op {
     opacity: 0;
     height: 0;
     visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  // Drop the nested-view's outer framing so it sits flush in the iframe
+  .nested-view {
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .embed-mode-composer {
+    position: sticky;
+    bottom: 0;
+    z-index: z("composer", "content");
+    background: var(--secondary);
+    padding-inline: 0.5em;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -2.5em;
+      height: 2.5em;
+      background: linear-gradient(to bottom, transparent, var(--secondary));
+      pointer-events: none;
+    }
+
+    .docked-composer {
+      --docked-composer-input-min-height: 10em;
+      margin-top: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .embed-floating-buttons {
+      position: absolute;
+      bottom: 100%;
+      right: var(--space-4);
+      z-index: z("timeline");
+      padding-bottom: 0.5em;
+    }
+
+    &__replying-to {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.35em 0.75em;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      border-top: 1px solid var(--primary-low);
+    }
+
+    &__replying-to-text {
+      display: flex;
+      align-items: center;
+      gap: 0.35em;
+    }
+
+    &__replying-to-dismiss {
+      padding: 0.25em;
+    }
+
+    &__editing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.35em 0.75em;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      border-top: 1px solid var(--primary-low);
+    }
+
+    &__editing-text {
+      display: flex;
+      align-items: center;
+      gap: 0.35em;
+    }
+
+    &__editing-dismiss {
+      padding: 0.25em;
+    }
+  }
+}
+
+.embed-auth-flow-modal {
+  &__waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 1em 0;
+    text-align: center;
   }
 }
