@@ -21,6 +21,9 @@ de:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
         dirty: "Du musst die Anfrage vor der Ausführung speichern."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Keine Ergebnisse"
     explorer:
       default_query: "Standard"
       default_query_notice: "Dies ist eine Standardabfrage, deren SQL-Code nicht bearbeitet werden kann. Erstelle eine neue Abfrage, um den SQL-Code zu bearbeiten."

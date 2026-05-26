@@ -359,8 +359,6 @@ vi:
     tos: "Điều khoản dịch vụ"
     rules: "Các quy tắc"
     conduct: "Quy tắc ứng xử"
-    mobile_view: "Xem chế độ điện thoại"
-    desktop_view: "Xem chế độ máy tính"
     now: "vừa xong"
     read_more: "đọc thêm"
     more: "Thêm nữa"
@@ -3957,7 +3955,6 @@ vi:
         name_placeholder: "Bạn đánh dấu cái này để làm gì?"
         name_input_label: "Tên đánh dấu"
         set_reminder: "Nhắc nhở tôi"
-        options: "Lựa chọn"
         actions:
           delete_bookmark:
             name: "Xóa đánh dấu"
@@ -5711,6 +5708,14 @@ vi:
                 "4": "Nhà Lãnh Đạo"
               trend:
                 stable: "ổn định"
+        reports_section:
+          no_data: "Không có dữ liệu để hiển thị"
+          modal:
+            enabled_heading: "Đã bật"
+            all_heading: "Tất cả các báo cáo"
+            apply: "Áp dụng"
+            move_up: "Chuyển lên"
+            move_down: "Chuyển xuống"
         site_traffic:
           series:
             anonymous: "Ẩn danh"

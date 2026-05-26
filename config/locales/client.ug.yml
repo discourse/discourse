@@ -395,8 +395,6 @@ ug:
     tos: "مۇلازىمەت شەرتلىرى"
     rules: "قائىدە"
     conduct: "ھەرىكەت قائىدىسى"
-    mobile_view: "كۆچمە كۆرۈنۈش"
-    desktop_view: "ئۈستەل يۈزى كۆرۈنۈشى"
     now: "ھازىر"
     read_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
     more: "تېخىمۇ كۆپ"
@@ -4185,7 +4183,6 @@ ug:
         name_placeholder: "بۇ خەتكۈچ نېمىگە ئىشلىتىلىدۇ؟"
         name_input_label: "خەتكۈچ ئىسمى"
         set_reminder: "مېنى ئەسكەرت"
-        options: "تاللانما"
         actions:
           delete_bookmark:
             name: "خەتكۈچنى ئۆچۈر"
@@ -5921,6 +5918,14 @@ ug:
                 "4": "باشلىق"
               trend:
                 stable: "مۇقىم"
+        reports_section:
+          no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
+          modal:
+            enabled_heading: "قوزغىتىلدى"
+            all_heading: "بارلىق دوكلات"
+            apply: "قوللان"
+            move_up: "ئۈستىگە يۆتكەل"
+            move_down: "ئاستىغا يۆتكەل"
         configure:
           button: "سەپلە"
         site_traffic:

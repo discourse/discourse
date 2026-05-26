@@ -34,6 +34,7 @@ ar:
         title: جدولة منشور في موضوع باستخدام نتائج مستكشف البيانات
         description: احصل على تقارير مجدولة يتم نشرها في موضوع معيَّن
   data_explorer:
+    admin_dashboard_label: "مستكشف البيانات"
     report_generator:
       private_message:
         title: "تقرير مجدول للاستعلام %{query_name}"

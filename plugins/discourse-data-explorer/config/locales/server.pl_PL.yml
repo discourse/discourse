@@ -36,6 +36,7 @@ pl_PL:
         title: Zaplanuj post w temacie z wynikami eksploratora danych
         description: Otrzymuj zaplanowane raporty publikowane w określonym temacie
   data_explorer:
+    admin_dashboard_label: "Eksplorator danych"
     report_generator:
       private_message:
         title: "Zaplanowany raport dla %{query_name}"

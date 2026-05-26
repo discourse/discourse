@@ -311,8 +311,6 @@ sr:
     tos: "Uslovi Korišćenja"
     rules: "Pravila"
     conduct: "Kodeks ponašanja"
-    mobile_view: "Mobilni pogled"
-    desktop_view: "Računarski pogled"
     now: "upravo sad"
     read_more: "pročitaj više"
     more: "Više"
@@ -1848,8 +1846,12 @@ sr:
       watching_first_post_label: "Nova Tema"
       replied_consolidated_in_topic:
         one: "%{count} novi odgovor u vašoj temi"
-        few: "%{count} novih odgovora u vašoj temi"
+        few: "%{count} nova odgovora u vašoj temi"
         other: "%{count} novih odgovora u vašoj temi"
+      replied_consolidated_to_post:
+        one: "%{count} novi odgovor na vašu objavu"
+        few: "%{count} nova odgovora na vašu objavu"
+        other: "%{count} novih odgovora na vašu objavu"
       granted_badge: "Zasluženo '%{description}'"
       dismiss_confirmation:
         dismiss: "Odbaci"
@@ -1935,6 +1937,18 @@ sr:
         actions: "Grupne aktivnosti"
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         manage_tags: "Upravljaj oznakama"
+        confirm_enable_nested_replies:
+          one: "Omogući ugnežđene odgovore na %{count} temi"
+          few: "Omogući ugnežđene odgovore na %{count} teme"
+          other: "Omogući ugnežđene odgovore na %{count} temaNeviđeno"
+        confirm_disable_nested_replies:
+          one: "Onemogući ugnežđene odgovore na %{count} temi"
+          few: "Onemogući ugnežđene odgovore na %{count} teme"
+          other: "Onemogući ugnežđene odgovore na %{count} tema"
+        confirm_apply_to_topics:
+          one: "Primeni na %{count} temu"
+          few: "Primeni na %{count} teme"
+          other: "Primeni na %{count} tema"
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} tema"
@@ -2257,7 +2271,6 @@ sr:
             title: "Prikaži razlike u sirovom izvoru jednu nasuprot druge."
       bookmarks:
         name: "Ime foruma"
-        options: "Opcije"
       filtered_replies:
         viewing_subset: "Neki odgovori su sažeti"
     category:
@@ -2934,7 +2947,23 @@ sr:
                 "3": "Stalni član"
                 "4": "Vođa"
               trend:
+                climbing:
+                  one: "+%{count} napredak"
+                  few: "+%{count} napretka"
+                  other: "+%{count} napredaka"
+                dropping:
+                  one: "-%{count} pad"
+                  few: "-%{count} pada"
+                  other: "-%{count} padova"
                 stable: "stabilan"
+              moves_in_aria:
+                one: "%{count} član se pomerio gore"
+                few: "%{count} člana su se pomerila gore"
+                other: "%{count} članova se pomerilo gore"
+              moves_out_aria:
+                one: "%{count} član se pomerio dole"
+                few: "%{count} člana su se pomerila dole"
+                other: "%{count} članova se pomerilo dole"
               stable_aria: "bez pokreta"
             headline:
               healthy_growth:
@@ -2945,8 +2974,80 @@ sr:
                 summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u padu."
               engaged_but_shrinking:
                 title: "Članovi su angažovani, ali se zajednica smanjuje."
+                summary: "Lepljivost se održava, ali dnevna angažovanost ili nove registracije su opali."
+              growing_but_distracted:
+                title: "Novi članovi se registruju, ali ne ostaju."
+                summary: "Registracije rastu, ali je lepljivost ovog perioda opala."
+              mixed:
+                title: "Trendovi angažovanja su ovog perioda mešoviti."
+                summary: "Neki metrici su u porastu, a drugi u padu — otvorite pločice ispod za detalje."
+              no_signal:
+                title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
+                summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+        reports_section:
+          modal:
+            enabled_heading: "Omogućeno"
+            apply: "Primeni"
+        configure:
+          button: "Konfiguriši"
+          reorder_up: "Pomeri %{label} gore"
+          reorder_down: "Pomeri %{label} dole"
+          drag_handle: "Prevucite za promenu redosleda %{label}"
+          toggle_visibility: "Prikaži %{label} na kontrolnoj tabli"
+          empty_state_admin: "Nema odeljaka za prikaz. Otvorite Konfiguriši da biste omogućili jedan."
+          empty_state_moderator: "Nema omogućenih odeljaka. Zatražite od administratora da omogući jedan."
+        highlights:
+          fetch_error: "Nije moguće učitati istaknuto. Pokušajte da osvežite stranicu."
+          kpi:
+            new_signups:
+              label: "Nove registracije"
+              tooltip: "Nalozi kreirani u ovom periodu, uključujući neaktivirane i pripremne naloge."
+            dau_mau:
+              label: "DAU / MAU lepljivost"
+              tooltip: 'Udeo mesečno aktivnih korisnika koji su se vratili u zajednicu u poslednjem danu. Ovo pokazuje koliko je vaša zajednica "aktivna" na osnovu toga koliko se često ljudi vraćaju.'
+            new_contributors:
+              label: "Novi saradnici"
+              tooltip: "Broj članova koji su objavili svoju prvu objavu u ovom periodu."
+            daily_engaged_users:
+              label: "Dnevno angažovano"
+              tooltip: "Broj članova koji su lajkovali ili objavili u zajednici u poslednjem danu."
+          comparison:
+            last_7_days: "u odnosu na poslednjih 7 dana"
+            last_30_days: "u odnosu na poslednjih 30 dana"
+            last_3_months: "u odnosu na poslednja 3 meseca"
+            previous_period: "u odnosu na prethodni period"
         site_traffic:
+          fetch_error: "Nije moguće učitati saobraćaj sajta. Pokušajte da osvežite stranicu."
+          headline:
+            last_7_days:
+              one: "%{formatted_count} pregled stranice u poslednjih 7 dana"
+              few: "%{formatted_count} pregleda stranice u poslednjih 7 dana"
+              other: "%{formatted_count} pregleda stranice u poslednjih 7 dana"
+            last_30_days:
+              one: "%{formatted_count} pregled stranice u poslednjih 30 dana"
+              few: "%{formatted_count} pregleda stranice u poslednjih 30 dana"
+              other: "%{formatted_count} pregleda stranice u poslednjih 30 dana"
+            last_3_months:
+              one: "%{formatted_count} pregled stranice u poslednja 3 meseca"
+              few: "%{formatted_count} pregleda stranice u poslednja 3 meseca"
+              other: "%{formatted_count} pregleda stranice u poslednja 3 meseca"
+          trend:
+            up: "porast %{percent}"
+            down: "pad %{percent}"
+          comparison_tooltip:
+            previous_7_days: "U poređenju sa prethodnih 7 dana (%{start} – %{end})"
+            previous_30_days: "U poređenju sa prethodnih 30 dana (%{start} – %{end})"
+            previous_3_months: "U poređenju sa prethodna 3 meseca (%{start} – %{end})"
+          kpi:
+            logged_in_share:
+              label: "Udeo prijavljenih"
+              tooltip: "Udeo pregleda stranica od prijavljenih članova."
+          top_countries:
+            title: "Najpopularnije zemlje"
+            empty: "Nema podataka o zemljama za ovaj period."
+            error: "Nije moguće učitati najpopularnije zemlje. Pokušajte da osvežite stranicu."
           top_referrers:
+            title: "Najveći upućivači"
             empty: "Nema podataka o upućivačima za ovaj period."
             error: "Nije moguće učitati najveće upućivače. Pokušajte da osvežite stranicu."
           series:

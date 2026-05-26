@@ -310,8 +310,6 @@ lt:
     tos: "Paslaugų teikimo sąlygos"
     rules: "Tisyklės"
     conduct: "Elgesio kodeksas"
-    mobile_view: "Mobili peržiūra"
-    desktop_view: "Pilna peržiūra"
     now: "Ką tik"
     read_more: "skaityti daugiau"
     more: "Daugiau"
@@ -3366,7 +3364,6 @@ lt:
         name: "Vardas"
         name_placeholder: "Kam skirta ši žymė?"
         set_reminder: "Priminti man"
-        options: "Nustatymai"
         actions:
           delete_bookmark:
             name: "Ištrinti žymę"
@@ -4350,6 +4347,12 @@ lt:
                 "2": "Narys"
                 "3": "Nuolatinės"
                 "4": "Lyderis"
+        reports_section:
+          no_data: "Nėra rodomų duomenų"
+          modal:
+            enabled_heading: "Galimas"
+            all_heading: "Visi pranešimai"
+            apply: "Kandidatuoti"
         site_traffic:
           series:
             anonymous: "Anonimas"

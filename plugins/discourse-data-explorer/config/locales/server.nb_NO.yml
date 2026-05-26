@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  data_explorer:
+    admin_dashboard_label: "Datautforsker"
