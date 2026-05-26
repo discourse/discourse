@@ -88,7 +88,7 @@ module DiscourseAi
           request_body =
             begin
               sdk_params.to_json
-            rescue EncodingError
+            rescue EncodingError, JSON::GeneratorError
               "[converse params contained binary payload, omitted from log]"
             end
 
