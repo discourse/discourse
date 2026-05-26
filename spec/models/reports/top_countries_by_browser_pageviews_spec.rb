@@ -7,6 +7,7 @@ describe Reports::TopCountriesByBrowserPageviews do
 
     let(:report) do
       BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewEvent.delete_all
       Report.find("top_countries_by_browser_pageviews", start_date: start_date, end_date: end_date)
     end
 
@@ -70,6 +71,7 @@ describe Reports::TopCountriesByBrowserPageviews do
       end
 
       BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewEvent.delete_all
       limited =
         Report.find(
           "top_countries_by_browser_pageviews",

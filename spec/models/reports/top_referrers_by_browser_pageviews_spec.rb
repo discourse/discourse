@@ -9,6 +9,7 @@ describe Reports::TopReferrersByBrowserPageviews do
 
     let(:report) do
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewEvent.delete_all
       Report.find("top_referrers_by_browser_pageviews", start_date: start_date, end_date: end_date)
     end
 
@@ -113,6 +114,7 @@ describe Reports::TopReferrersByBrowserPageviews do
       end
 
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewEvent.delete_all
       limited =
         Report.find(
           "top_referrers_by_browser_pageviews",
