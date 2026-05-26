@@ -4,23 +4,23 @@ module PageObjects
   module Components
     class AdminDashboardSiteTraffic < PageObjects::Components::Base
       def has_headline?(text)
-        has_css?(".db-traffic__headline", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_trend?(text)
-        has_css?(".db-traffic__trend", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_up_trend?(text)
-        has_css?(".db-traffic__trend.--up", text: text)
+        has_trend?(text)
       end
 
       def has_down_trend?(text)
-        has_css?(".db-traffic__trend.--down", text: text)
+        has_trend?(text)
       end
 
       def has_no_trend?
-        has_no_css?(".db-traffic__trend")
+        has_no_css?(".db-section__subintro h3", text: "—")
       end
 
       def has_metric?(label, value)

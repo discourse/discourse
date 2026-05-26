@@ -815,24 +815,7 @@ h1 {
     opacity: 0.55;
   }
 
-  &__headline {
-    margin: 0;
-    font-size: var(--font-up-3-rem);
-    line-height: 1.2;
-    color: var(--primary);
-  }
-
-  &__headline-separator {
-    color: var(--primary);
-  }
-
   &__trend {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-1);
-    font-size: inherit;
-    line-height: inherit;
-
     &.--up {
       color: var(--success);
     }
@@ -840,11 +823,6 @@ h1 {
     &.--down {
       color: var(--danger);
     }
-  }
-
-  &__info {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1-rem);
   }
 
   &__list {
