@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DComboButton from "discourse/components/d-combo-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class TopicDismissButtons extends Component {
