@@ -1207,5 +1207,7 @@ body.has-sidebar-page {
 }
 
 .composer-toggle-item {
+  cursor: pointer;
+
   @include menu-item;
 }

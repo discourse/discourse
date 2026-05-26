@@ -300,8 +300,10 @@ export default class ComposerActions extends Component {
                 <div class="composer-actions-toggles">
                   {{#if this.composer.canToggleWhisper}}
                     <dropdown.item>
+                      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
                       <div
                         class="composer-toggle-item composer-toggle-whisper --with-description"
+                        {{on "click" this.toggleWhisper}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "far-eye-slash"}}
@@ -327,8 +329,10 @@ export default class ComposerActions extends Component {
 
                   {{#if this.composer.canToggleNoBump}}
                     <dropdown.item>
+                      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
                       <div
                         class="composer-toggle-item composer-toggle-no-bump --with-description"
+                        {{on "click" this.toggleNoBump}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "anchor"}}
@@ -354,8 +358,10 @@ export default class ComposerActions extends Component {
 
                   {{#if this.composer.canUnlistTopic}}
                     <dropdown.item>
+                      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
                       <div
                         class="composer-toggle-item composer-toggle-unlisted --with-description"
+                        {{on "click" this.toggleUnlisted}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "far-eye-slash"}}
