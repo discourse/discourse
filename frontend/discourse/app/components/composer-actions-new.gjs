@@ -196,17 +196,20 @@ export default class ComposerActions extends Component {
   }
 
   @action
-  toggleWhisper() {
+  toggleWhisper(event) {
+    event?.stopPropagation();
     this.composerModel.toggleProperty("whisper");
   }
 
   @action
-  toggleNoBump() {
+  toggleNoBump(event) {
+    event?.stopPropagation();
     this.composerModel.toggleProperty("noBump");
   }
 
   @action
-  toggleUnlisted() {
+  toggleUnlisted(event) {
+    event?.stopPropagation();
     this.composerModel.toggleProperty("unlistTopic");
   }
 
