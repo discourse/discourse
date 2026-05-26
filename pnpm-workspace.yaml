@@ -1,6 +1,4 @@
 strictPeerDependencies: true
-onlyBuiltDependencies:
-  - "@ember/render-modifiers"
 packages:
 - "docs/developer-guides"
 - "frontend/deprecation-silencer"
