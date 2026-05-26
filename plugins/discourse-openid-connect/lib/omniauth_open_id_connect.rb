@@ -210,6 +210,7 @@ module OmniAuth
         hash = {}
         hash[:raw_info] = options.use_userinfo ? userinfo_response : id_token_info
         hash[:id_token] = access_token["id_token"]
+        hash[:id_token_info] = id_token_info
         prune! hash
       end
 

@@ -12,6 +12,8 @@ nl:
     github_linkback_access_token: 'Een geldig toegangstoken voor de gebruiker die de teruglink plaatst en voor het tellen van commits/bijdragen om badges toe te kennen. Zie <a href="https://meta.discourse.org/t/99895">hier</a> voor instructies voor het verkrijgen van een token.'
     github_linkback_maximum_links: "Maximaal aantal teruglinks om te maken vanuit één enkele post. Als een bericht meer links bevat, wordt er geen gemaakt."
     github_permalinks_enabled: "Overschrijven van GitHub-permalink inschakelen"
+    github_pr_status_enabled: "Toon GitHub-pullverzoekstatussen in oneboxes (concept, open, goedgekeurd, samengevoegd, gesloten)"
+    github_webhook_secret: "Geheim token voor verfificatie van GitHub-webhookhandtekeningen. Configureer deze waarde in je GitHub-webhookinstellingen."
     github_permalinks_exclude: "Bestandsnaam of map die moet worden uitgesloten van permalinkoverschrijvingen. Geef alleen de bestandsnaam of het volledige pad op: gebruiker/repository/optionele-directory/bestandsnaam"
     github_badges_enabled: "GitHub-badges inschakelen"
     github_badges_repos: "URL's van de GitHub-repository's om te scannen op bijdragen en commits"

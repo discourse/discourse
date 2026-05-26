@@ -247,6 +247,9 @@ he:
         other_type: "נוסף אזכור של ‎%{identifier} בצ׳אט אישי על ידי %{username}"
       new_chat_message: 'נשלחה הודעה על ידי %{username} ב־„%{channel}”'
       new_direct_chat_message: "נשלחה הודעה על ידי %{username} בצ׳אט אישי"
+    actions:
+      chat_reply:
+        title: להגיב
   discourse_automation:
     scriptables:
       send_chat_message:

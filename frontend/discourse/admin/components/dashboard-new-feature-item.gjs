@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { dasherize } from "@ember/string";
-import CookText from "discourse/components/cook-text";
 import { and, not } from "discourse/truth-helpers";
+import DCookText from "discourse/ui-kit/d-cook-text";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseNewFeatureItem extends Component {
@@ -39,7 +39,7 @@ export default class DiscourseNewFeatureItem extends Component {
 
           <div class="admin-new-feature-item__body">
             <div class="admin-new-feature-item__feature-description">
-              <CookText @rawText={{@item.description}} />
+              <DCookText @rawText={{@item.description}} />
 
               {{#if @item.link}}
                 <a

@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import EventTracker from "@uppy/utils/lib/EventTracker";
+import { EventManager } from "@uppy/core";
 import { Promise } from "rsvp";
 import getURL from "discourse/lib/get-url";
 import UppyChunkedUpload from "discourse/lib/uppy-chunked-upload";
@@ -101,7 +101,7 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       });
 
       this.uploaders[file.id] = upload;
-      this.uploaderEvents[file.id] = new EventTracker(this.uppy);
+      this.uploaderEvents[file.id] = new EventManager(this.uppy);
 
       next(() => {
         if (!file.isPaused) {

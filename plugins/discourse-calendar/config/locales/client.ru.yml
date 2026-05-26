@@ -413,10 +413,10 @@ ru:
       models:
         invitee:
           no_users: "Пользователи не найдены"
+          leave_event: "Покинуть мероприятие"
           status:
             unknown: "Не интересует"
             going: "Участвую"
-            not_going: "Не участвую"
             interested: "Интересно"
             going_count:
               one: "%{count} участвует"
@@ -531,6 +531,8 @@ ru:
         status:
           label: "Статус"
         delete_confirmation_message: "Удалить это событие?"
+        image:
+          label: "Изображение события"
       invite_user_or_group:
         title: "Уведомить пользователей или группы"
         invite: "Отправить"

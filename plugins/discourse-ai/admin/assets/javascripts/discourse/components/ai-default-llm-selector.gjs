@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AiDefaultLlmSelector extends Component {
@@ -68,11 +68,17 @@ export default class AiDefaultLlmSelector extends Component {
     this.isSaving = true;
 
     try {
-      const backendValue = value === "none" ? "" : value;
-      await ajax("/admin/site_settings/ai_default_llm_model", {
-        type: "PUT",
-        data: { ai_default_llm_model: backendValue },
-      });
+      try {
+        const backendValue = value === "none" ? "" : value;
+        await ajax("/admin/site_settings/ai_default_llm_model", {
+          type: "PUT",
+          data: { ai_default_llm_model: backendValue },
+        });
+      } catch (error) {
+        this.selectedValue = previousValue;
+        popupAjaxError(error);
+        return;
+      }
 
       this.toasts.success({
         duration: 3000,
@@ -80,9 +86,12 @@ export default class AiDefaultLlmSelector extends Component {
           message: i18n("discourse_ai.llm_selector.saved"),
         },
       });
-    } catch (error) {
-      this.selectedValue = previousValue;
-      popupAjaxError(error);
+
+      try {
+        await this.args.onChange?.();
+      } catch (error) {
+        popupAjaxError(error);
+      }
     } finally {
       this.isSaving = false;
     }
@@ -104,7 +113,10 @@ export default class AiDefaultLlmSelector extends Component {
           @nameProperty="name"
           @options={{hash disabled=this.isSaving}}
         />
-        <ConditionalLoadingSpinner @condition={{this.isSaving}} @size="small" />
+        <DConditionalLoadingSpinner
+          @condition={{this.isSaving}}
+          @size="small"
+        />
       </div>
     </div>
   </template>

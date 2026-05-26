@@ -8,7 +8,6 @@ describe "capabilities service" do
       end
 
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(matches("sm")).to eq(true)
       expect(matches("lg")).to eq(true)

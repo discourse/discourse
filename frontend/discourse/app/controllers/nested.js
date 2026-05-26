@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -18,8 +19,10 @@ export default class NestedController extends Controller {
   @service dialog;
   @service currentUser;
   @service messageBus;
+  @service modal;
   @service nestedViewCache;
   @service router;
+  @service site;
 
   @tracked topic;
   @tracked opPost;
@@ -39,7 +42,13 @@ export default class NestedController extends Controller {
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
   @tracked pinnedPostIds = [];
-  queryParams = ["sort", "context"];
+  // Persisted in the URL across in-topic navigation by design — once a
+  // user lands via a consolidated reply notification, browsing within
+  // the topic keeps the collapsed view, and the URL is shareable in that
+  // state. If we ever want to scope it to entry-only, clear after the
+  // initial render in the route.
+  @tracked collapseReplies = false;
+  queryParams = ["sort", "context", { collapseReplies: "collapse_replies" }];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
   // Components read on construction, write on toggle.
@@ -281,6 +290,68 @@ export default class NestedController extends Controller {
     this.#topicRoute.showFlags(post);
   }
 
+  @action
+  changeNotice(post) {
+    return this.#topicController.changeNotice(post);
+  }
+
+  @action
+  changePostOwner(post) {
+    return this.#topicRoute.changeOwner(post);
+  }
+
+  @action
+  grantBadge(post) {
+    return this.#topicRoute.showGrantBadgeModal(post);
+  }
+
+  @action
+  lockPost(post) {
+    return this.#topicController.lockPost(post);
+  }
+
+  @action
+  unlockPost(post) {
+    return this.#topicController.unlockPost(post);
+  }
+
+  @action
+  permanentlyDeletePost(post) {
+    return this.#topicController.permanentlyDeletePost(post);
+  }
+
+  @action
+  rebakePost(post) {
+    return this.#topicController.rebakePost(post);
+  }
+
+  @action
+  showPagePublish() {
+    return this.#topicRoute.showPagePublish();
+  }
+
+  @action
+  togglePostType(post) {
+    return this.#topicController.togglePostType(post);
+  }
+
+  @action
+  toggleWiki(post) {
+    return this.#topicController.toggleWiki(post);
+  }
+
+  @action
+  unhidePost(post) {
+    return this.#topicController.unhidePost(post);
+  }
+
+  @action
+  showActivityLog() {
+    this.modal.show(NestedActivityLog, {
+      model: { topic: this.topic },
+    });
+  }
+
   // editingTopic is @tracked locally because the topic controller's
   // editingTopic is a classic property (not @tracked) — a plain getter
   // aliasing it won't trigger Glimmer re-renders. We sync the flag to
@@ -330,6 +401,11 @@ export default class NestedController extends Controller {
       this,
       this.#onPostUnregistered
     );
+    this.appEvents.on(
+      "nested-replies:scroll-restored",
+      this,
+      this.#onScrollRestored
+    );
     this.#postEventsSubscribed = true;
 
     // Register the OP post directly since it's not rendered by NestedPost
@@ -359,6 +435,11 @@ export default class NestedController extends Controller {
         this,
         this.#onPostUnregistered
       );
+      this.appEvents.off(
+        "nested-replies:scroll-restored",
+        this,
+        this.#onScrollRestored
+      );
       this.#postEventsSubscribed = false;
     }
     if (this.#messageBusChannel) {
@@ -378,6 +459,10 @@ export default class NestedController extends Controller {
     if (post?.post_number != null) {
       this.postRegistry.delete(post.post_number);
     }
+  }
+
+  #onScrollRestored() {
+    this.scrollAnchor = null;
   }
 
   @bind
@@ -415,6 +500,10 @@ export default class NestedController extends Controller {
         return;
       }
 
+      if (!this.#isVisibleInTree(postData)) {
+        return;
+      }
+
       const post = this.store.createRecord("post", postData);
       post.topic = this.topic;
 
@@ -439,6 +528,20 @@ export default class NestedController extends Controller {
     } finally {
       this.#pendingPostIds.delete(data.id);
     }
+  }
+
+  // Mirrors the server-side filter in NestedReplies::TreeLoader#apply_visibility:
+  // small_action posts (close/open/etc.) belong in the activity log, not the tree;
+  // whispers with an action_code (e.g. assigns) are likewise activity-log-only.
+  #isVisibleInTree(postData) {
+    const postTypes = this.site.post_types;
+    if (postData.post_type === postTypes.small_action) {
+      return false;
+    }
+    if (postData.post_type === postTypes.whisper && postData.action_code) {
+      return false;
+    }
+    return true;
   }
 
   #isPostKnown(postId) {

@@ -491,7 +491,7 @@ class TopicsFilter
       column_name: "first_posts.like_count",
       min:,
       max:,
-      scope: self.joins_first_posts(@scope),
+      scope: joins_first_posts(@scope),
     )
   end
 
@@ -937,14 +937,9 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /\A(?<tag_names>([\p{N}\p{L}\-_]+)(?<delimiter>[,+])?([\p{N}\p{L}\-_]+)?(\k<delimiter>[\p{N}\p{L}\-_]+)*)\z/,
+        /\A(?<tag_names>([\p{N}\p{L}\-_.]+)(?<delimiter>[,+])?([\p{N}\p{L}\-_.]+)?(\k<delimiter>[\p{N}\p{L}\-_.]+)*)\z/,
       ) do |tag_names, delimiter|
-        match_all =
-          if delimiter == ","
-            false
-          else
-            true
-          end
+        match_all = delimiter != ","
 
         tags = tag_names.split(delimiter)
         tag_ids = tag_ids_from_tag_names(tags)

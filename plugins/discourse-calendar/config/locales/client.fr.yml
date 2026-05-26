@@ -396,10 +396,10 @@ fr:
       models:
         invitee:
           no_users: "Aucun utilisateur trouvé"
+          leave_event: "Quitter l'événement"
           status:
             unknown: "Pas intéressé(e)"
             going: "Participera"
-            not_going: "Ne participera pas"
             interested: "Intéressé(e)"
             going_count:
               one: "%{count} utilisateur participera"

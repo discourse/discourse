@@ -67,7 +67,6 @@ ro:
           status:
             unknown: "Nu sunt interesat"
             going: "Merg"
-            not_going: "Nu merg"
             interested: "Interesat"
         event:
           expired: "Expirate"

@@ -300,7 +300,7 @@ class InviteRedeemer
 
   def delete_duplicate_invites
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
-    return if email.blank?
+    return if email.blank? || invite.is_invite_link?
 
     Invite
       .where("invites.max_redemptions_allowed = 1")

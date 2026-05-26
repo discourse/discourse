@@ -12,7 +12,7 @@ function buildChange(overrides = {}) {
     value: true,
     plugin: null,
     dependents: [],
-    related: null,
+    overriding_defaults: false,
     groups: "",
     upcoming_change: {
       status: "beta",
@@ -71,9 +71,9 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       .doesNotExist("does not show the dependent settings link");
   });
 
-  test("renders related setting link when related exists and enabled", async function (assert) {
+  test("renders default override setting link when overriding defaults and enabled", async function (assert) {
     const change = buildChange({
-      related: "some_other_setting",
+      overriding_defaults: true,
     });
 
     await render(
@@ -85,11 +85,11 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     );
 
     assert
-      .dom(".upcoming-change__related a")
-      .exists("shows the related setting link");
+      .dom(".upcoming-change__default-override-setting a")
+      .exists("shows the default override setting link");
   });
 
-  test("does not render related setting link when related is null", async function (assert) {
+  test("does not render default override setting link when overriding defaults is false", async function (assert) {
     const change = buildChange();
 
     await render(
@@ -101,13 +101,13 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     );
 
     assert
-      .dom(".upcoming-change__related")
-      .doesNotExist("does not show the related setting link");
+      .dom(".upcoming-change__default-override-setting")
+      .doesNotExist("does not show the default override setting link");
   });
 
-  test("does not render related setting link when enabled_for is no_one", async function (assert) {
+  test("does not render default override setting link when enabled_for is no_one", async function (assert) {
     const change = buildChange({
-      related: "some_other_setting",
+      overriding_defaults: true,
       upcoming_change: {
         status: "beta",
         impact: "feature,all_members",
@@ -126,8 +126,10 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     );
 
     assert
-      .dom(".upcoming-change__related")
-      .doesNotExist("does not show the related setting link when disabled");
+      .dom(".upcoming-change__default-override-setting")
+      .doesNotExist(
+        "does not show the default override setting link when disabled"
+      );
   });
 
   test("renders the permanent soon notice when status is stable", async function (assert) {

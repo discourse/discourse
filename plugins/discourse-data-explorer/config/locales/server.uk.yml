@@ -24,6 +24,8 @@ uk:
     ai:
       error_agent_not_configured: "ШІ-агент не налаштований. Будь ласка, перевірте налаштування функцій ШІ."
       error_no_sql_returned: "ШІ не повернув правильний SQL-запит. Будь ласка, спробуйте ще раз або напишіть запит вручну."
+    errors:
+      tool_not_allowed: "Ви не маєте права використовувати цей інструмент"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -34,6 +36,7 @@ uk:
         title: Запланувати публікацію в темі за допомогою результатів Data Explorer
         description: Отримуйте заплановані звіти, опубліковані на певну тему
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Запланований звіт для %{query_name}"

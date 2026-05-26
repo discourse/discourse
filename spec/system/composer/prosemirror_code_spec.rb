@@ -232,12 +232,13 @@ describe "Composer - ProseMirror - Code formatting" do
       expect(composer).to have_value("This is ~~SPARTA!~~ `code!`.")
     end
 
-    xit "allows typing before a code mark with/without the mark" do
+    it "allows typing before a code mark with/without the mark" do
       open_composer
       composer.type_content("`code mark`")
       expect(rich).to have_css("code", text: "code mark")
       # before the code mark
       composer.send_keys(SystemHelpers::LINE_START_KEY)
+      wait_for_timeout
       composer.send_keys(:left)
       composer.type_content("..")
       # within the code mark

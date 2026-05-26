@@ -20,20 +20,26 @@ module("Integration | Component | query-result", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert
-      .dom(
-        ".result-info .query-result-download-buttons button:nth-child(1) span"
-      )
-      .hasText(i18n("explorer.download_json"), "renders the JSON button");
+    await click(".result-actions .query-result-download-buttons");
 
     assert
-      .dom(
-        ".result-info .query-result-download-buttons button:nth-child(2) span"
-      )
-      .hasText(i18n("explorer.download_csv"), "renders the CSV button");
+      .dom(".query-result-export__results-json")
+      .hasText(
+        i18n("explorer.export_as.results_json"),
+        "renders the Results (JSON) item"
+      );
+
+    assert
+      .dom(".query-result-export__results-csv")
+      .hasText(
+        i18n("explorer.export_as.results_csv"),
+        "renders the Results (CSV) item"
+      );
 
     assert.dom("div.result-about").exists("renders a query summary");
-    assert.dom("canvas").exists("renders the chart above the table");
+    assert.dom("canvas").exists("renders the chart by default");
+
+    await click(".query-results-modes input[value='table']");
 
     assert.dom("table thead tr th:nth-child(1)").hasText("user_name");
     assert.dom("table thead tr th:nth-child(2)").hasText("like_count");
@@ -132,7 +138,7 @@ module("Integration | Component | query-result", function (hooks) {
 module("Integration | Component | query-result | chart", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders the chart above the table for chartable results", async function (assert) {
+  test("renders the chart by default and the toggle for chartable results", async function (assert) {
     const content = {
       colrender: [],
       result_count: 2,
@@ -145,11 +151,14 @@ module("Integration | Component | query-result | chart", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert.dom("canvas").exists("the chart was rendered");
-    assert.dom("table").exists("the table was rendered");
+    assert.dom("canvas").exists("the chart was rendered by default");
     assert
       .dom(".query-results-modes")
-      .exists("the chart/table toggle buttons are rendered");
+      .exists("the chart/table toggle is rendered");
+
+    await click(".query-results-modes input[value='table']");
+
+    assert.dom("table").exists("table renders after switching view");
   });
 
   test("renders a chart when data has two columns and numbers in the second column", async function (assert) {
@@ -252,6 +261,22 @@ module("Integration | Component | query-result | chart", function (hooks) {
     assert.dom("canvas").exists("renders a chart canvas");
   });
 
+  test("renders charts with null label values", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["user_name", "like_count"],
+      rows: [
+        [null, 10],
+        ["user2", 20],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert.dom("canvas").exists("renders a chart canvas");
+  });
+
   test("renders a multi-series chart", async function (assert) {
     const content = {
       colrender: [],
@@ -268,7 +293,7 @@ module("Integration | Component | query-result | chart", function (hooks) {
     assert.dom("canvas").exists("renders a chart canvas for multi-series");
   });
 
-  test("doesn't render a chart when there are text columns alongside numeric columns", async function (assert) {
+  test("charts numeric columns and ignores text columns alongside them", async function (assert) {
     const content = {
       colrender: [],
       result_count: 2,
@@ -281,10 +306,15 @@ module("Integration | Component | query-result | chart", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert.dom("canvas").doesNotExist();
+    await click(".query-results-modes input[value='chart']");
+
+    assert.dom("canvas").exists("renders the chart for numeric columns");
+    assert
+      .dom(".query-results-chart__footnote")
+      .exists("shows a footnote listing ignored columns");
   });
 
-  test("toggle buttons independently show and hide chart and table", async function (assert) {
+  test("chart/table toggle switches the view (XOR)", async function (assert) {
     const content = {
       colrender: [],
       result_count: 2,
@@ -297,23 +327,21 @@ module("Integration | Component | query-result | chart", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert.dom("canvas").exists("chart is visible by default");
-    assert.dom("table").exists("table is visible by default");
+    assert
+      .dom("canvas")
+      .exists("chart is visible by default for chartable data");
+    assert.dom("table").doesNotExist("table hidden when chart is shown");
 
-    await click(".query-results-modes .btn:first-child");
-    assert.dom("canvas").doesNotExist("chart is hidden after toggle");
-    assert.dom("table").exists("table remains visible");
+    await click(".query-results-modes input[value='table']");
+    assert.dom("table").exists("table shown after switching");
+    assert.dom("canvas").doesNotExist("chart hidden when table is shown");
 
-    await click(".query-results-modes .btn:last-child");
-    assert.dom("canvas").doesNotExist("chart stays hidden");
-    assert.dom("table").doesNotExist("table is hidden after toggle");
-
-    await click(".query-results-modes .btn:first-child");
-    assert.dom("canvas").exists("chart is visible again");
-    assert.dom("table").doesNotExist("table stays hidden");
+    await click(".query-results-modes input[value='chart']");
+    assert.dom("canvas").exists("chart shown after switching back");
+    assert.dom("table").doesNotExist("table hidden again");
   });
 
-  test("persists toggle state per query in localStorage", async function (assert) {
+  test("persists view per query in localStorage", async function (assert) {
     const query = { id: 42 };
     const content = {
       colrender: [],
@@ -329,27 +357,19 @@ module("Integration | Component | query-result | chart", function (hooks) {
       <template><QueryResult @content={{content}} @query={{query}} /></template>
     );
 
-    assert.dom(".query-results-chart").exists("chart is visible by default");
-    assert.dom(".query-results-table").exists("table is visible by default");
-
-    await click(".btn-toggle-chart");
-    assert
-      .dom(".query-results-chart")
-      .doesNotExist("chart is hidden after toggle");
+    await click(".query-results-modes input[value='table']");
+    assert.dom("table").exists("table shown after switching");
+    assert.dom("canvas").doesNotExist("chart is hidden");
 
     await render(
       <template><QueryResult @content={{content}} @query={{query}} /></template>
     );
 
-    assert
-      .dom(".query-results-chart")
-      .doesNotExist("chart state is restored from localStorage");
-    assert
-      .dom(".query-results-table")
-      .exists("table state is restored from localStorage");
+    assert.dom("table").exists("table view restored from localStorage");
+    assert.dom("canvas").doesNotExist("chart still hidden after rerender");
   });
 
-  test("toggle buttons are not shown for non-chartable data", async function (assert) {
+  test("toggle is always visible when rows exist (even for non-chartable data)", async function (assert) {
     const content = {
       colrender: [],
       result_count: 2,
@@ -359,7 +379,12 @@ module("Integration | Component | query-result | chart", function (hooks) {
 
     await render(<template><QueryResult @content={{content}} /></template>);
 
-    assert.dom(".query-results-modes").doesNotExist();
+    assert.dom(".query-results-modes").exists("toggle is always shown");
+
+    await click(".query-results-modes input[value='chart']");
+    assert
+      .dom(".query-chart-empty-state")
+      .exists("shows empty state for non-chartable data");
   });
 
   test("handles no results", async function (assert) {

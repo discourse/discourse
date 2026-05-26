@@ -7,8 +7,6 @@
 te:
   js:
     discourse_reactions:
-      users_popup:
-        all: "అన్నీ"
       main_reaction:
         add: "ఈ టపాను ఇష్టపడు"
     notifications:

@@ -13,15 +13,11 @@ module PageObjects
       end
 
       def choose_requirement(requirement)
-        form = page.find(".user-field")
-
-        form.choose(I18n.t("admin_js.admin.user_fields.requirement.#{requirement}.title"))
+        form.choose_conditional(requirement)
       end
 
       def unselect_preference(preference)
-        form = page.find(".user-field")
-
-        form.find(".form-kit__control-checkbox[name='#{preference}']:checked").click
+        form.field(preference).uncheck
       end
 
       def click_add_field
@@ -32,14 +28,12 @@ module PageObjects
         page.find(".admin-user_field-item__edit").click
       end
 
-      def add_field(name: nil, description: nil, requirement: nil, preferences: [])
+      def add_field(name: nil, description: nil, requirement: nil, preferences: [], save: true)
         click_add_field
 
-        form = page.find(".user-field")
-
-        form.find(".user-field-name").fill_in(with: name)
-        form.find(".user-field-desc").fill_in(with: description)
-        form.find(".save").click
+        form.field("name").fill_in(name)
+        form.field("description").fill_in(description)
+        form.submit if save
       end
 
       def has_user_field?(name)

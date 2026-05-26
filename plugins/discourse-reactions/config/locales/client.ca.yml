@@ -9,8 +9,6 @@ ca:
     discourse_reactions:
       state_panel:
         more_users: "i %{count} més..."
-      users_popup:
-        all: "Tots"
       main_reaction:
         add: "M'agrada aquesta publicació"
     notifications:

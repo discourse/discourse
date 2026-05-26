@@ -20,7 +20,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -347,6 +347,15 @@ export default class TextareaTextManipulation {
     this._insertAt(start, end, text);
     this.textarea.setSelectionRange(start + text.length, start + text.length);
     schedule("afterRender", this, this.blurAndFocus);
+  }
+
+  applyLink(url) {
+    const sel = this.getSelected();
+    if (sel.start === sel.end) {
+      return;
+    }
+    this._insertAt(sel.start, sel.end, `[${sel.value}](${url})`);
+    this.blurAndFocus();
   }
 
   addText(sel, text, options) {
@@ -741,7 +750,7 @@ export default class TextareaTextManipulation {
   @bind
   emojiSelected(code) {
     let selected = this.getSelected();
-    const captures = selected.pre.match(/\B:(\w*)$/);
+    const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
     if (isEmpty(captures)) {
       if (selected.pre.match(/\S$/)) {
@@ -992,7 +1001,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
       this.autocompleteHandler,

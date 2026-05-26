@@ -4,6 +4,7 @@ import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { i18n } from "discourse-i18n";
 import PluginOutlet from "../plugin-outlet";
 import HeaderSearch from "./header-search";
 import HomeLogo from "./home-logo";
@@ -122,7 +123,11 @@ export default class Contents extends Component {
           }}
         />
       </div>
-      <div class="panel" role="navigation">{{yield}}</div>
+      <div
+        class="panel"
+        role="navigation"
+        aria-label={{i18n "header_panel"}}
+      >{{yield}}</div>
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @name="after-header-panel"

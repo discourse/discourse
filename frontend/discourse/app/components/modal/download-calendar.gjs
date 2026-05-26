@@ -4,10 +4,10 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import RadioButton from "discourse/components/radio-button";
 import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
 import { i18n } from "discourse-i18n";
 
 export default class DownloadCalendar extends Component {
@@ -66,7 +66,7 @@ export default class DownloadCalendar extends Component {
         <div class="control-group">
           <div class="ics">
             <label class="radio" for="ics">
-              <RadioButton
+              <DRadioButton
                 id="ics"
                 @name="select-calendar"
                 @value="ics"
@@ -78,7 +78,7 @@ export default class DownloadCalendar extends Component {
           </div>
           <div class="google">
             <label class="radio" for="google">
-              <RadioButton
+              <DRadioButton
                 id="google"
                 @name="select-calendar"
                 @value="google"

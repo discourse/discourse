@@ -400,10 +400,10 @@ hu:
       models:
         invitee:
           no_users: "Nem található felhasználó"
+          leave_event: "Kilépés az eseményről"
           status:
             unknown: "Nem érdekli"
             going: "Megy"
-            not_going: "Nem megy"
             interested: "Érdeklődik"
             going_count:
               one: "%{count} résztvevő"

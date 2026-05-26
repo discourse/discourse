@@ -190,7 +190,7 @@ RSpec.describe "Nested view post lifecycle" do
 
         expect(nested_view).to have_deleted_content_visible_for(root_reply)
         expect(page).to have_css(
-          ".nested-post__deleted-content",
+          ".nested-post__placeholder-reveal",
           text: "Secret deleted content here",
         )
       end

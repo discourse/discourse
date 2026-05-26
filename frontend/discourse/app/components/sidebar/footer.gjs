@@ -1,35 +1,22 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import mobile from "discourse/lib/mobile";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class SidebarFooter extends Component {
-  @service capabilities;
   @service currentUser;
   @service modal;
   @service site;
-  @service siteSettings;
   @service sidebarState;
   @service interfaceColor;
 
   get showManageSectionsButton() {
     return this.currentUser && this.sidebarState.isCurrentPanel(MAIN_PANEL);
-  }
-
-  get showToggleMobileButton() {
-    if (this.siteSettings.viewport_based_mobile_mode) {
-      return false;
-    }
-    return (
-      this.site.mobileView ||
-      (this.siteSettings.enable_mobile_theme && this.capabilities.touch)
-    );
   }
 
   @action
@@ -40,11 +27,6 @@ export default class SidebarFooter extends Component {
   @action
   showKeyboardShortcuts() {
     this.modal.show(KeyboardShortcutsHelp);
-  }
-
-  @action
-  toggleMobileView() {
-    mobile.toggleMobileView();
   }
 
   <template>
@@ -64,20 +46,6 @@ export default class SidebarFooter extends Component {
               @title="sidebar.sections.custom.add"
               @ariaLabel="sidebar.sections.custom.add"
               class="btn-flat sidebar-footer-actions-button add-section"
-            />
-          {{/if}}
-
-          {{#if this.showToggleMobileButton}}
-            <DButton
-              @action={{this.toggleMobileView}}
-              @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
-              @ariaLabel={{if
-                this.site.mobileView
-                "desktop_view"
-                "mobile_view"
-              }}
-              @icon={{if this.site.mobileView "desktop" "mobile-screen-button"}}
-              class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
             />
           {{/if}}
 

@@ -6,15 +6,15 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AvatarUploader from "discourse/components/avatar-uploader";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import RadioButton from "discourse/components/radio-button";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages } from "discourse/lib/uploads";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
 
 export default class AvatarSelectorModal extends Component {
@@ -186,7 +186,7 @@ export default class AvatarSelectorModal extends Component {
                 class="selectable-avatar"
                 {{on "click" (fn this.selectAvatar avatar)}}
               >
-                {{boundAvatarTemplate avatar "huge"}}
+                {{dBoundAvatarTemplate avatar "huge"}}
               </a>
             {{/each}}
           </div>
@@ -197,7 +197,7 @@ export default class AvatarSelectorModal extends Component {
         {{#if this.showCustomAvatarSelector}}
           {{#if this.user.use_logo_small_as_avatar}}
             <div class="avatar-choice">
-              <RadioButton
+              <DRadioButton
                 @id="logo-small"
                 @name="logo"
                 @value="logo"
@@ -205,7 +205,7 @@ export default class AvatarSelectorModal extends Component {
                 @onChange={{this.onSelectedChanged}}
               />
               <label class="radio" for="logo-small">
-                {{boundAvatarTemplate
+                {{dBoundAvatarTemplate
                   this.siteSettings.site_logo_small_url
                   "large"
                 }}
@@ -214,7 +214,7 @@ export default class AvatarSelectorModal extends Component {
             </div>
           {{/if}}
           <div class="avatar-choice avatar-choice--system">
-            <RadioButton
+            <DRadioButton
               @id="system-avatar"
               @name="avatar"
               @value="system"
@@ -222,13 +222,13 @@ export default class AvatarSelectorModal extends Component {
               @onChange={{this.onSelectedChanged}}
             />
             <label class="radio" for="system-avatar">
-              {{boundAvatarTemplate this.user.system_avatar_template "large"}}
+              {{dBoundAvatarTemplate this.user.system_avatar_template "large"}}
               {{i18n "user.change_avatar.letter_based"}}
             </label>
           </div>
           {{#if this.allowGravatar}}
             <div class="avatar-choice avatar-choice--gravatar">
-              <RadioButton
+              <DRadioButton
                 @id="gravatar"
                 @name="avatar"
                 @value="gravatar"
@@ -236,7 +236,7 @@ export default class AvatarSelectorModal extends Component {
                 @onChange={{this.onSelectedChanged}}
               />
               <label class="radio" for="gravatar">
-                {{boundAvatarTemplate
+                {{dBoundAvatarTemplate
                   this.user.gravatar_avatar_template
                   "large"
                 }}
@@ -276,7 +276,7 @@ export default class AvatarSelectorModal extends Component {
           {{/if}}
           {{#if this.allowAvatarUpload}}
             <div class="avatar-choice avatar-choice--upload">
-              <RadioButton
+              <DRadioButton
                 @id="uploaded-avatar"
                 @name="avatar"
                 @value="custom"
@@ -285,7 +285,7 @@ export default class AvatarSelectorModal extends Component {
               />
               <label class="radio" for="uploaded-avatar">
                 {{#if this.user.custom_avatar_template}}
-                  {{boundAvatarTemplate
+                  {{dBoundAvatarTemplate
                     this.user.custom_avatar_template
                     "large"
                   }}

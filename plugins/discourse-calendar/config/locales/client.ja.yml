@@ -399,10 +399,10 @@ ja:
       models:
         invitee:
           no_users: "ユーザーが見つかりません"
+          leave_event: "イベントから退出"
           status:
             unknown: "興味なし"
             going: "出席"
-            not_going: "欠席"
             interested: "興味あり"
             going_count:
               other: "%{count} 出席"

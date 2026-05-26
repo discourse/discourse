@@ -426,7 +426,6 @@ sk:
       <p>V opačnom prípade prosím <a href="%{base_url}/password-reset">Obnoviť heslo</a>.</p>
     not_found_template_link: |
       <p>Túto pozvánku do <a href="%{base_url}">%{site_name}</a> už nie je možné uplatniť. Požiadajte osobu, ktorá vás pozvala, aby vám poslala novú pozvánku.</p>
-    existing_user_cannot_redeem: "Túto pozvánku nie je možné uplatniť. Požiadajte osobu, ktorá vás pozvala, aby vám poslala novú pozvánku."
     existing_user_already_redemeed: "Tento odkaz na pozvánku ste už uplatnili."
     user_exists: "Nie je potrebné pozývať <b>%{email}</b>, už majú účet!"
     invite_exists: "Už ste pozvali <b>%{email}</b>."
@@ -700,6 +699,7 @@ sk:
       admins: "administrátori"
       moderators: "moderátori"
       staff: "personál"
+      anonymous: "anonymný"
       trust_level_0: "stupen_dovery_0"
       trust_level_1: "stupen_dovery_1"
       trust_level_2: "stupen_dovery_2"
@@ -1385,6 +1385,30 @@ sk:
       xaxis: "Deň"
       yaxis: "Počet nových prispievateľov"
       description: "Počet používateľov, ktorí v tomto období uverejnili svoj prvý príspevok."
+    activity_by_category:
+      labels:
+        category: "Kategória"
+        topics: "Témy"
+        posts: "Príspevky"
+        share: "Zdieľať"
+    posters_by_member_type:
+      labels:
+        count: "Príspevky"
+        share: "Zdieľať"
+      types:
+        staff: "Personál"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Úroveň dôvery"
+        count: "Členovia"
+        share: "Zdieľať"
+      levels:
+        "0": "Nový"
+        "1": "Základné"
+        "2": "Člen"
+        "3": "Bežné"
+        "4": "Vodca"
     trust_level_growth:
       title: "Rast úrovne dôveryhodnosti"
       xaxis:
@@ -1428,9 +1452,8 @@ sk:
     site_traffic:
       title: "Návštevnosť stránky"
       xaxis:
-        page_view_anon_browser: "Zobrazenia stránky (anonymné)"
-        page_view_logged_in_browser: "Zobrazenia stránky (prihlásení)"
-        page_view_crawler: "Známe prehľadávače"
+        page_view_anon_browser: "Anonymný"
+        page_view_crawler: "Crawlery"
         page_view_other: "Iný prenos"
       yaxis: "Deň"
       description: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a inej návštevnosti."
@@ -1545,6 +1568,12 @@ sk:
         num_clicks: "Klinutia"
         num_topics: "Témy"
       description: "Zoznam používateľov podľa počtu kliknutí na odkazy, ktoré zdieľali."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštev"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Návštev"
     top_traffic_sources:
       title: "Najlepšie zdroje"
       xaxis: "Doména"
@@ -1607,6 +1636,8 @@ sk:
       xaxis: "Deň"
       yaxis: "Zobrazenia stránok prihláseného prehliadača"
       description: "Počet zobrazení stránok prihlásenými návštevníkmi, ktorí používajú skutočné prehliadače."
+    page_view_embed_reqs:
+      xaxis: "Deň"
     http_background_reqs:
       title: "Pozadie"
       xaxis: "Deň"
@@ -1668,7 +1699,7 @@ sk:
         os: Operačný systém
         login_time: Čas prihlásenia
       description: "Podrobnosti o nových prihláseniach, ktoré sa podozrivo líšia od predchádzajúcich prihlásení."
-    staff_logins:
+    admin_logins:
       title: "Prihlásenie správcu"
       labels:
         user: Používateľ
@@ -1755,6 +1786,9 @@ sk:
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
     back_from_logster_text: "Späť na stránku"
+    reports_section:
+      providers:
+        core_report: "Štandardné"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
     disabled: "vypnuté"
@@ -1852,7 +1886,6 @@ sk:
     opengraph_image: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon"
     x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
-    email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
     force_https: "Vynútiť, aby váš web používal iba HTTPS. UPOZORNENIE: NEZAPÍNAJTE to, kým neoveríte, že HTTPS je úplne nastavené a funguje úplne všade! Skontrolovali ste svoje CDN, všetky sociálne prihlásenia a akékoľvek externé logá / závislosti, aby ste sa uistili, že sú tiež kompatibilné s HTTPS?"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
@@ -1914,7 +1947,6 @@ sk:
     enable_escaped_fragments: "Ak sa nezistí žiadny webový prehľadávač, vráťte sa späť na rozhranie API Ajax-Crawling od spoločnosti Google. Pozrite si <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Povoliť moderátorom zmeniť vlastníctvo príspevku"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
-    use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     blocked_ip_blocks: "Zoznam súkromných blokov IP, ktoré by Discourse nikdy nemal prehľadávať"
     allowed_internal_hosts: "Zoznam interných hostiteľov, ktoré môže diskurz bezpečne prehľadávať na účely oneboxingu a iné účely"
     allowed_onebox_iframes: "Zoznam domén src iframe, ktoré sú povolené prostredníctvom vložených súborov Onebox. `*` povolí všetky predvolené motory Onebox."
@@ -2010,7 +2042,6 @@ sk:
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
     google_oauth2_prompt: "Nepovinný zoznam reťazcových hodnôt obmedzených medzerou, ktorý určuje, či autorizačný server vyzve používateľa na opätovné overenie a súhlas. Možné hodnoty <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>nájdete na adrese https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "Voliteľná doména Google Apps Hosted, na ktorú bude prihlasovanie obmedzené. Viac informácií nájdete <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>na stránke https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "Získanie skupín Google používateľov v hostovanej doméne pri overovaní. Získané skupiny Google možno použiť na udelenie automatického členstva v skupine Discourse (pozri nastavenia skupín). Viac informácií nájdete na stránke https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "E-mailová adresa patriaca k účtu správcu služby Google Workspace. Použije sa spolu s povereniami servisného účtu na získanie informácií o skupine."
     google_oauth2_hd_groups_service_account_json: "Informácie o kľúči vo formáte JSON pre účet služby. Použije sa na načítanie informácií o skupine."
     google_oauth2_verbose_logging: "Zaznamenávanie slovnej diagnostiky súvisiacej s Google OAuth2 do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2039,10 +2070,8 @@ sk:
     s3_configure_tombstone_policy: "Povolenie politiky automatického odstraňovania pre nahrávanie náhrobných kameňov. DÔLEŽITÉ: Ak je táto funkcia vypnutá, po vymazaní nahraných súborov nebude obnovené žiadne miesto."
     s3_disable_cleanup: "Zabrániť odstráneniu starých záloh zo služby S3, ak je ich viac, ako je povolené maximum."
     s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; túto možnosť zrušte, len ak máte v úmysle konfigurovať politiky oprávnení na nakonfigurovaných vedrách `s3_upload_bucket` a `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Umožňuje priame nahrávanie viacerých častí do Amazon S3, viac informácií nájdete na stránke https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
     backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
-    backup_location: "Miesto, kde sú uložené zálohy. DÔLEŽITÉ: S3 vyžaduje platné poverenia S3 zadané v nastaveniach súborov. Keď to zmeníte na S3 z Local, musíte spustiť úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň kompresie Gzip používaná na komprimovanie odosielania."
     include_thumbnails_in_backups: "Zahrnúť vygenerované miniatúry do záloh. Ak túto funkciu zakážete, zálohy budú menšie, ale po obnovení sa budú musieť všetky príspevky znovu obnoviť."
     active_user_rate_limit_secs: "Ako často máme aktualizovať pole 'naposledy videný o', v sekundách"
@@ -2225,7 +2254,6 @@ sk:
     auto_respond_to_flag_actions: "Zapnúť automatickú odpoveď pri odstránení označenia."
     auto_silence_fast_typers_on_first_post: "Automatické umlčanie používateľov, ktorí nespĺňajú prah `rýchleho písania`"
     auto_silence_fast_typers_max_trust_level: "Maximálna úroveň dôvery na automatické umlčanie rýchlych pisateľov"
-    auto_silence_first_post_regex: "Regex nerozlišujúci veľké a malé písmená, ktorý v prípade odovzdania spôsobí, že prvý príspevok používateľa bude umlčaný a odoslaný do frontu na schválenie. Príklad: raging|a[bc]a , spôsobí, že všetky príspevky obsahujúce raging alebo aba alebo aca budú umlčané ako prvé. Platí len pre prvý príspevok. ZRUŠENÉ: Namiesto toho použite umlčanie sledovaných slov."
     reviewable_claiming: "Musí byť obsah, ktorý je možné preskúmať, reklamovaný predtým, ako sa naň začne reagovať?"
     reviewable_default_topics: "V predvolenom nastavení zobrazovať kontrolovaný obsah zoskupený podľa tém"
     reviewable_default_visibility: "Nezobrazujte položky, ktoré sa dajú skontrolovať, pokiaľ nespĺňajú túto prioritu"
@@ -2289,7 +2317,6 @@ sk:
     log_mail_processing_failures: "Zaznamenávanie všetkých zlyhaní spracovania e-mailov do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Povoliť používateľom uverejňovať nové témy prostredníctvom e-mailu. Po povolení tohto nastavenia budete môcť nakonfigurovať prichádzajúce e-mailové adresy pre skupiny a kategórie."
     email_in_allowed_groups: "Skupiny, ktoré môžu zverejňovať nové témy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy zverejňovať nové témy prostredníctvom e-mailu."
-    email_in_authserv_id: "Identifikátor služby, ktorá vykonáva overovanie prichádzajúcich e-mailov. Pokyny na konfiguráciu <a href='https://meta.discourse.org/t/134358'>nájdete na adrese https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Výber konkrétnej hlavičky e-mailu, ktorá sa má použiť na identifikáciu spamu. Táto možnosť môže byť X-Spam-Flag, X-Spam-Status alebo X-SES-Spam-Verdict a e-mail sa označí ako spam na základe hodnoty hlavičky. Ak je napríklad zvolené nastavenie X-Spam-Flag, e-mail s hodnotou tejto hlavičky nastavenou na ÁNO bude klasifikovaný ako spam."
     enable_smtp: "Povolenie protokolu SMTP na odosielanie oznámení pre skupinové správy."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
@@ -2344,7 +2371,6 @@ sk:
     allow_profile_backgrounds: "Povoliť používateľov nahranie pozadia do profilu."
     get_a_room_threshold: "Počet príspevkov, ktoré musí používateľ odoslať tej istej osobe v rovnakej téme, kým bude upozornený."
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
-    enable_mobile_theme: "Mobilné zariadenia používajú tému pre mobilné zariadenia s možnosťou prepnutia na plnú verziu stránok. Vypnite, ak chcete použiť vlastný štýl, ktorý podporuje mobilné zariadenia."
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
     header_dropdown_category_count: "Koľko kategórií sa môže zobraziť v rozbaľovacom menu v záhlaví."
@@ -2529,7 +2555,6 @@ sk:
     show_topic_map_in_topics_without_replies: "Zobrazí mapu témy, aj keď téma nemá žiadne odpovede."
     enable_welcome_banner: "Zobrazenie banneru na hlavných stránkach zoznamu tém, ktorý víta členov a umožňuje im vyhľadávať obsah webu"
     welcome_banner_location: "Určuje, kde sa na stránke zobrazí uvítací banner."
-    splash_screen: "Zobrazí dočasnú obrazovku načítania, kým sa načítajú aktíva webu"
     navigation_menu: "Ako hlavnú navigačnú ponuku na stránke môžete určiť bočný panel alebo rozbaľovaciu ponuku v záhlaví. Odporúča sa bočný panel."
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
@@ -3442,7 +3467,6 @@ sk:
         Vaša odpoveď bola odoslaná zo zablokovanej e-mailovej adresy. Skúste odoslať z inej e-mailovej adresy alebo [kontaktujte personál](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail odmietnutý: Nepovolená e-mailová adresa"
-      subject_template: "[%{email_prefix}] Problém s e-mailom -- Blokovaný e-mail"
       text_body_template: |
         Je nám ľúto, ale tvoja e-mailová správa pre %{destination} (s názvom %{former_title}) nebola úspešná.
 
@@ -3613,7 +3637,6 @@ sk:
         Nemáte oprávnenie odpovedať na túto tému. Ak sa domnievate, že ide o chybu, [kontaktujte personál](%{base_url}/o).
     email_reject_reply_to_digest:
       title: "E-mail odmietnutý: Odpoveď na súhrnný e-mail nie je povolená"
-      subject_template: "[%{email_prefix}] Problém s e-mailom -- Odpoveď na súhrn"
       text_body_template: |
         Je nám ľúto, ale vaša e-mailová správa na adresu %{destination} (s názvom %{former_title}) nefungovala.
 
@@ -3741,7 +3764,6 @@ sk:
       text_body_template: "Nastavenie `download_remote_images_to_local` bolo vypnuté, pretože bol dosiahnutý limit miesta na disku na úrovni `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Ste novým používateľom mesiaca!"
-      subject_template: "Ste novým používateľom mesiaca!"
       text_body_template: |
         Gratulujeme, získal si ocenenie **Nový používateľ mesiaca za %{month_year}**. :trophy:
 
@@ -4065,6 +4087,7 @@ sk:
     account_exists:
       title: "Účet už existuje"
       subject_template: "[%{email_prefix}] Účet už existuje"
+      subject_template_improved: "Účet už existuje"
       text_body_template: |
         Práve si sa pokúsil vytvoriť účet na %{site_name}, alebo si sa pokúsil zmeniť e-mail účtu na %{email}. Avšak, účet pre %{email} už existuje.
 
@@ -4076,6 +4099,7 @@ sk:
     account_second_factor_disabled:
       title: "Vypnuté dvojfaktorové overovanie"
       subject_template: "[%{email_prefix}] Dvojfaktorové overovanie vypnuté"
+      subject_template_improved: "Vypnuté dvojfaktorové overovanie"
     digest:
       why: "Stručný prehľad %{site_link} od %{since}"
       since_last_visit: "Od Vašej poslednej návštevy"
@@ -4089,6 +4113,7 @@ sk:
       popular_posts: "Obľúbené príspevky"
       more_new: "Novinka pre vás"
       subject_template: "[%{email_prefix}] Zhrnutie"
+      subject_template_improved: "Zhrnutie"
       unsubscribe: "Tento súhrn sa odosiela z %{site_link} , keď sme vás nejaký čas nevideli. Zmeňte %{email_preferences_link}alebo %{unsubscribe_link} , ak chcete zrušiť odber."
       your_email_settings: "nastavenia vášho e-mailu"
       click_here: "kliknite tu"
@@ -4108,6 +4133,7 @@ sk:
       title: "Prihláste sa prostredníctvom odkazu"
       preview: "Prihláste sa prostredníctvom odkazu."
       subject_template: "[%{email_prefix}] Prihláste sa prostredníctvom odkazu"
+      subject_template_improved: "Prihláste sa prostredníctvom odkazu"
       text_body_template: |
         Tu je váš odkaz na prihlásenie na [%{site_name}](%{base_url}).
 
@@ -4117,7 +4143,6 @@ sk:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Nastavte heslo"
-      subject_template: "[%{email_prefix}] Nastavenie hesla"
       text_body_template: |
         Niekto požiadal o pridanie hesla k vášmu účtu na [%{site_name}](%{base_url}). Prípadne sa môžete prihlásiť pomocou akejkoľvek podporovanej online služby (Google, Facebook atď.), ktorá je spojená s touto overenou e-mailovou adresou.
 
@@ -4128,6 +4153,7 @@ sk:
     admin_login:
       title: "Prihlásenie administrátora"
       subject_template: "[%{email_prefix}] Prihlásenie"
+      subject_template_improved: "Prihlásenie"
       text_body_template: |
         Niekto požiadal o prihlásenie do vášho účtu na [%{site_name}] (%{base_url}).
 
@@ -4137,7 +4163,6 @@ sk:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Účet vytvorený"
-      subject_template: "[%{email_prefix}] Váš nový účet"
       text_body_template: |
         Bol pre teba vytvorený nový účet na %{site_name}.
 
@@ -4246,7 +4271,6 @@ sk:
         /Ak sa na uvedený odkaz nedá kliknúť, skúste ho skopírovať a vložiť do adresného riadku svojho webového prehliadača.
     suspicious_login:
       title: "Nové upozornenie na prihlásenie"
-      subject_template: "[%{site_name}] Nové prihlásenie z %{location}"
       text_body_template: |
         Ahoj,
 

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import FlashMessage from "discourse/components/flash-message";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 
 /**
  * Displays an error inline within a block outlet.
@@ -19,6 +19,6 @@ export default class BlockOutletInlineError extends Component {
   }
 
   <template>
-    <FlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
+    <DFlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
   </template>
 }

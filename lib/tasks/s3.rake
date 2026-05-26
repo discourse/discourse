@@ -59,7 +59,7 @@ def assets
   results = Set.new
 
   load_path.assets.each do |asset|
-    fullpath = "#{Rails.root}/public/assets/#{asset.digested_path}"
+    fullpath = "#{Rails.root.join("public/assets/#{asset.digested_path}")}"
 
     content_type = MiniMime.lookup_by_filename(fullpath)&.content_type
     content_type ||= "application/json" if fullpath.end_with?(".map")

@@ -395,10 +395,10 @@ it:
       models:
         invitee:
           no_users: "Nessun utente trovato"
+          leave_event: "Abbandona l'evento"
           status:
             unknown: "Nessun interesse"
             going: "Parteciperò"
-            not_going: "Non parteciperò"
             interested: "Interessato"
             going_count:
               one: "%{count} partecipa"

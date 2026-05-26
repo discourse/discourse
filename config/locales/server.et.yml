@@ -239,6 +239,7 @@ et:
       admins: "adminid"
       moderators: "moderaatorid"
       staff: "meeskond"
+      anonymous: "anonüümne"
       trust_level_0: "usaldustase_0"
       trust_level_1: "usaldustase_1"
       trust_level_2: "usaldustase_2"
@@ -564,6 +565,29 @@ et:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    activity_by_category:
+      labels:
+        category: "Kategooriad"
+        topics: "Teemasid"
+        posts: "Postitust"
+        share: "Jaga"
+    posters_by_member_type:
+      labels:
+        count: "Postitust"
+        share: "Jaga"
+      types:
+        staff: "Meeskond"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Liikmed"
+        share: "Jaga"
+      levels:
+        "0": "Uus"
+        "1": "Tavakasutaja"
+        "2": "Liige"
+        "3": "Püsiliige"
+        "4": "Vedaja"
     trust_level_growth:
       yaxis: "Päev"
     consolidated_page_views:
@@ -580,6 +604,8 @@ et:
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonüümne"
       yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
@@ -665,6 +691,12 @@ et:
         user: "Kasutaja"
         num_clicks: "Klikke"
         num_topics: "Teemasid"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
     top_traffic_sources:
       title: "Suurima liikluse allikad"
       xaxis: "Domeen"
@@ -702,6 +734,8 @@ et:
       xaxis: "Päev"
     page_view_logged_in_browser_reqs:
       xaxis: "Päev"
+    page_view_embed_reqs:
+      xaxis: "Päev"
     http_background_reqs:
       title: "Taustal"
       xaxis: "Päev"
@@ -736,7 +770,7 @@ et:
       labels:
         user: Kasutaja
         location: Asukoht
-    staff_logins:
+    admin_logins:
       labels:
         user: Kasutaja
         location: Asukoht
@@ -857,6 +891,7 @@ et:
       popular_posts: "Populaarsed postitused"
       more_new: "Uus sinu jaoks"
       subject_template: "[%{email_prefix}] Kokkuvõte"
+      subject_template_improved: "Kokkuvõte"
       your_email_settings: "sinu e-posti seaded"
       click_here: "kliki siia"
     forgot_password:
@@ -864,6 +899,8 @@ et:
       subject_template: "[%{email_prefix}] Parooli taastamine"
     set_password:
       title: "Määra Parool"
+    admin_login:
+      subject_template_improved: "Sisselogimine"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:

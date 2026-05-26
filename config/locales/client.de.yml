@@ -358,7 +358,6 @@ de:
         condition_debugging: "Debugging der Bedingungen"
       toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
-      toggle_mobile_view: "Mobile Ansicht umschalten"
       disable_dev_tools: "Entwicklertools deaktivieren"
       toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
@@ -417,8 +416,6 @@ de:
     tos: "Nutzungsbedingungen"
     rules: "Regeln"
     conduct: "Verhaltenskodex"
-    mobile_view: "Mobile Ansicht"
-    desktop_view: "Desktop-Ansicht"
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
@@ -452,6 +449,8 @@ de:
     admin_onboarding_banner:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
+      select_theme:
+        enabled: "Aktiviert"
       invite_collaborators:
         title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
@@ -479,11 +478,6 @@ de:
           what_is_your_favorite_food:
             title: "Was ist dein Lieblingsessen?"
             body: "Teile dein Lieblingsessen mit der Community! Ich fange an: Ich liebe Pizza, besonders mit extra viel Käse und Peperoni."
-      spread_the_word:
-        title: "Mach deine Community bekannt!"
-        description: "Teile einen Link mit deinem Netzwerk"
-        action: "Link kopieren"
-        copied_to_clipboard: "Link in die Zwischenablage kopiert!"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -671,6 +665,11 @@ de:
       allow_access: "Zugriff erlauben"
       continue_as_guest: "Als Gast fortfahren"
       be_first_to_reply: "Schreib die erste Antwort!"
+      replying_to: "Antworten auf %{username}"
+      editing_post: "Beitrag wird bearbeitet "
+      reply_placeholder: "Schreibe deine Antwort …"
+      signin_flow:
+        cancel: "Abbrechen"
     topic_count_all:
       one: "Zeige %{count} neues Thema"
       other: "Zeige %{count} neue Themen"
@@ -1516,7 +1515,6 @@ de:
         normal_option: "Normal"
         normal_option_title: "Du wirst benachrichtigt, wenn diese Person dir antwortet, dich zitiert oder erwähnt."
       notification_schedule:
-        title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
         tip: "Außerhalb dieser Zeiten werden deine Benachrichtigungen pausiert."
         midnight: "Mitternacht"
@@ -1560,13 +1558,8 @@ de:
       notifications: "Benachrichtigungen"
       statistics: "Statistiken"
       desktop_notifications:
-        label: "Live-Benachrichtigungen"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
-        perm_default: "Benachrichtigungen einschalten"
-        perm_denied_btn: "Berechtigung verweigert"
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
-        disable: "Benachrichtigungen deaktivieren"
-        enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser, den du verwendest, ändern. Alle Benachrichtigungen werden unabhängig von dieser Einstellung deaktiviert, wenn du die Benachrichtigungen im Benutzermenü pausierst."
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
@@ -2826,7 +2819,9 @@ de:
         tag_category_admin_dropdown:
           title: "Kategorie- und Schlagworteinstellungen"
           edit_category: "Kategorie bearbeiten"
+          edit_category_description: "Einstellungen für %{badge} anpassen"
           edit_tag: "Schlagwort bearbeiten"
+          edit_tag_description: "Einstellungen für %{badge} anpassen"
         bulk_select_topics_dropdown:
           title: "Massenoperationen"
         bulk_select_bookmarks_dropdown:
@@ -2983,6 +2978,7 @@ de:
       uploading: "Wird hochgeladen …"
       show_preview: "Vorschau zeigen"
       hide_preview: "Vorschau ausblenden"
+      resize: "Editorgröße anpassen"
       switch_to_markdown: "Zum Standard-Markdown-Editor wechseln (%{keyboardShortcut})"
       switch_to_rich_text: "Zum Rich-Text-Editor wechseln (%{keyboardShortcut})"
       quote_post_title: "Ganzen Beitrag zitieren"
@@ -3403,6 +3399,7 @@ de:
           placeholder: Maximum
           aria_label: nach maximaler Anzahl von Aufrufen filtern
     hamburger_menu: "Navigationsmenü"
+    header_panel: "Überschrift"
     new_item: "neu"
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
@@ -3475,6 +3472,8 @@ de:
         relist_topics: "Themen wieder auflisten"
         pin_topics: "Diese Themen hervorheben"
         unpin_topics: "Themen loslösen"
+        enable_nested_replies: "Verschachtelte Antworten aktivieren"
+        disable_nested_replies: "Verschachtelte Antworten deaktivieren"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Als ungelesen markieren"
         delete: "Themen löschen"
@@ -3521,24 +3520,14 @@ de:
         archive_topics: "Themen archivieren"
         move_messages_to_inbox: "In Posteingang verschieben"
         archive_messages: "Ins Archiv verschieben"
+        convert_to_public_topic: "Öffentliche Themen erstellen"
+        convert_to_private_message: "Persönliche Nachrichten erstellen"
         notification_level: "Benachrichtigungsstufe aktualisieren"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
-        selected_sole_category:
-          one: "Du hast <b>%{count}</b> Thema aus der Kategorie ausgewählt:"
-          other: "Du hast <b>%{count}</b> Themen aus der Kategorie ausgewählt:"
         selected_count:
           one: "%{count} ausgewählt"
           other: "%{count} ausgewählt"
-        change_tags: "Schlagwörter ersetzen"
-        append_tags: "Schlagwörter hinzufügen"
-        choose_new_tags: "Neue Schlagwörter für diese Themen wählen:"
-        choose_append_tags: "Schlagwörter hinzufügen"
-        changed_tags: "Die Schlagwörter dieser Themen wurden geändert."
-        remove_tags: "Schlagwörter entfernen"
-        confirm_remove_tags:
-          one: "Alle Schlagwörter werden aus diesem Thema entfernt. Bist du sicher?"
-          other: "Alle Schlagwörter werden aus <b>%{count}</b> Themen entfernt. Bist du sicher?"
         confirm_unpin_topics:
           one: "%{count} Thema loslösen"
           other: "%{count} Themen loslösen"
@@ -3622,15 +3611,13 @@ de:
         description: "Nicht gelistete Themen sind in der Themenliste nicht sichtbar aber der Zugriff ist immer noch über einem direkten Link möglich. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Mehr erfahren</a>"
       relist_topics:
         name: "Wieder sichtbar machen"
-      remove_tags:
-        name: "Schlagwörter entfernen"
-        description: "Entferne alle Schlagwörter von den ausgewählten Themen."
-      append_tags:
-        name: "Schlagwörter hinzufügen"
-        description: "Füge die folgenden Schlagwörter zu den ausgewählten Themen hinzu:"
-      replace_tags:
-        name: "Schlagwörter ersetzen"
-        description: "Ersetze alle vorhandenen Schlagwörter der ausgewählten Themen durch die folgenden:"
+      manage_tags:
+        add:
+          title: "Schlagwörter hinzufügen"
+        remove:
+          title: "Schlagwörter entfernen"
+        replace:
+          title: "Schlagwörter ersetzen"
       delete_topics:
         name: "Löschen"
         description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
@@ -3639,8 +3626,10 @@ de:
         description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
       convert_to_public_topic:
         name: "Umwandeln in öffentliches Thema …"
+        description: "Verschiebe die ausgewählten privaten Nachrichten in ein öffentliches Thema in der folgenden Kategorie:"
       convert_to_private_message:
         name: "In persönliche Nachricht umwandeln"
+        description: "Wandle die ausgewählten öffentlichen Themen in persönliche Nachrichten um."
       reset_bump_dates:
         name: "„Nach oben verschieben“-Daten zurücksetzen"
         description: "Möchtest du das „Nach oben verschieben“-Datum auf das vom zuletzt erstellten Beitrag setzen? Das kann die Reihenfolge in der Themenliste beeinflussen."
@@ -3654,21 +3643,49 @@ de:
       unpin_topics:
         name: "Loslösen"
         description: "Alle ausgewählten Themen, die in einer Kategorie oder global angeheftet sind, loslösen"
+      enable_nested_replies:
+        name: "Verschachtelte Antworten aktivieren"
+      disable_nested_replies:
+        name: "Verschachtelte Antworten deaktivieren"
     nested_replies:
+      nested_view: "Verschachtelte Ansicht"
+      flat_view: "Flache Ansicht"
+      view_as_nested: "Verschachtelt anzeigen"
+      view_as_flat: "Flach anzeigen"
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
         new: "Neue"
+        old: "Alt"
       load_more_children:
         one: "%{count} weitere Antwort"
         other: "%{count} weitere Antworten"
+      load_more_children_generic: "Weitere Antworten"
+      continue_thread: "Diesen Thread fortsetzen"
+      new_replies:
+        one: "%{count} neue Antwort"
+        other: "%{count} neue Antworten"
       collapsed_replies:
         one: "%{count} Antwort"
         other: "%{count} Antworten"
       collapse: "Zuklappen"
+      collapse_parent: "Übergeordneten Thread einklappen"
+      category_settings:
+        default_nested_view: "Verschachtelte Ansicht als Standard für Themen dieser Kategorie verwenden"
       no_replies: "Noch keine Antworten."
       deleted_post_placeholder: "[gelöscht]"
+      ignored_post_placeholder: "[ignoriert]"
+      op_badge: "OP"
       pinned_reply: "Angeheftet"
+      pin_reply: "Oben anheften"
+      unpin_reply: "Abheften"
+      topic_admin_menu:
+        enable_nested_replies: "Verschachtelte Antworten aktivieren"
+        disable_nested_replies: "Verschachtelte Antworten deaktivieren"
+      context:
+        banner: "Du betrachtest einen einzelnen Thread aus diesem Thema."
+        view_full_topic: "Vollständiges Thema anzeigen"
+        view_parent_context: "Übergeordneten Kontext anzeigen"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -4241,6 +4258,8 @@ de:
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
+          title: "Sprache des Beitrags"
+          header: "Dieser Beitrag ist auf …"
           none: "Nicht festgelegt"
         edit_warning:
           message: "Dies ist ein übersetzter Beitrag.<br><br>Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
@@ -4312,13 +4331,19 @@ de:
         admin: "Administrative Aktionen"
         admin_action: "Admin-Panel"
         permanently_delete: "Endgültig löschen"
+        permanently_delete_post_confirmation: "Diese Aktion <b>kann nicht</b> rückgängig gemacht werden. Dadurch wird <b>dieser Beitrag endgültig gelöscht</b> und aus der Datenbank entfernt."
+        permanently_delete_topic_confirmation: "Diese Aktion <b>kann nicht</b> rückgängig gemacht werden. Dadurch wird <b>dieses Thema endgültig gelöscht</b> und aus der Datenbank entfernt."
         permanently_delete_confirm_phrase: "endgültig löschen"
         wiki: "Wiki erstellen"
+        wiki_description: "Gruppen mit Erlaubnis dürfen diesen Beitrag bearbeiten"
         unwiki: "Wiki entfernen"
         convert_to_moderator: "Team-Einfärbung hinzufügen"
+        convert_to_moderator_description: "hebe den Inhalt dieses Beitrags hervor"
         revert_to_regular: "Team-Einfärbung entfernen"
         rebake: "HTML erneuern"
+        rebake_description: "bearbeite diesen Beitrag erneut, um Formatierungen oder Einbettungen zu korrigieren"
         publish_page: "Als Seite veröffentlichen"
+        publish_page_description: "veröffentliche dieses Thema als eigenständige Seite"
         unhide: "Einblenden"
         change_owner: "Eigentümer ändern …"
         grant_badge: "Abzeichen verleihen …"
@@ -4326,6 +4351,7 @@ de:
         lock_post_description: "verhindern, dass der Autor den Beitrag bearbeitet"
         unlock_post: "Beitrag entsperren"
         unlock_post_description: "erlauben, dass der Autor den Beitrag bearbeitet"
+        add_post_notice_description: "füge einen hervorgehobenen Hinweis über diesem Beitrag hinzu"
         delete_topic_disallowed_modal: "Du hast keine Berechtigung, dieses Thema zu löschen. Wenn du wirklich möchtest, dass es gelöscht wird, melde es mit einer Begründung, um einen Moderator darauf aufmerksam zu machen."
         delete_topic_disallowed: "du hast keine Berechtigung, dieses Thema zu löschen"
         delete_topic_confirm_modal:
@@ -4420,7 +4446,6 @@ de:
         name_placeholder: "Wofür dient dieses Lesezeichen?"
         name_input_label: "Name des Lesezeichens"
         set_reminder: "Erinnere mich"
-        options: "Optionen"
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
@@ -4519,6 +4544,7 @@ de:
       validations:
         emoji_required: "Wähle ein Emoji."
         icon_required: "Wähle ein Symbol."
+        groups_required: "Wähle mindestens eine Gruppe für diesen Genehmigungsmodus aus."
       name: "Name der Kategorie"
       untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
@@ -4604,11 +4630,17 @@ de:
       review_group_name: "Gruppenname"
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
+      require_topic_approval_for: "Erfordere Moderator-Genehmigung neuer Themen für …"
+      require_reply_approval_for: "Erfordere Moderator-Genehmigung neuer Antworten für …"
+      new_topic_approval: "Genehmigung neuer Themen"
+      new_reply_approval: "Genehmigung neuer Antworten"
       posting_review_modes:
-        no_one: "Keinen"
-        everyone: "Jeden"
+        no_one: "Niemand"
+        everyone: "Alle"
         everyone_except: "Alle außer ausgewählten Gruppen"
         no_one_except: "Niemand außer ausgewählten Gruppen"
+      posting_review_groups_require_approval: "Gruppen, die eine Genehmigung benötigen"
+      posting_review_groups_no_approval: "Gruppen, die keine Genehmigung benötigen"
       posting_review_groups_placeholder: "Gruppen auswählen …"
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
@@ -4966,110 +4998,63 @@ de:
       title: "Tastenkombinationen"
       short_title: "Tastenkombinationen"
       search_ctrl_f_tip: "Um das gesamte Forum zu durchsuchen, drücke <kbd>/</kbd>"
+      description_header: "Beschreibung"
+      key_header: "Schlüssel"
+      search_aliases:
+        shift: "umschalt"
       jump_to:
         title: "Springe zu"
-        home: "%{shortcut} Startseite"
-        latest: "%{shortcut} Neueste Beiträge"
-        new: "%{shortcut} Neue Beiträge"
-        unread: "%{shortcut} Ungelesene Beiträge"
-        unseen: "%{shortcut} Ungesehen"
-        categories: "%{shortcut} Kategorien"
-        top: "%{shortcut} Top-Beiträge"
-        bookmarks: "%{shortcut} Lesezeichen"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Nachrichten"
-        drafts: "%{shortcut} Entwürfe"
-        next: "%{shortcut} Nächstes Thema"
-        previous: "%{shortcut} Vorheriges Thema"
+        home: "Startseite"
+        latest: "Aktuelle"
+        new: "Neue"
+        unread: "Ungelesene"
+        unseen: "Ungesehene"
+        categories: "Kategorien"
+        top: "Angesagte"
+        bookmarks: "Lesezeichen"
+        profile: "Profil"
+        messages: "Nachrichten"
+        drafts: "Entwürfe"
       navigation:
         title: "Navigation"
-        jump: "%{shortcut} Springe zu Beitrag #"
-        back: "%{shortcut} Zurück"
-        up_down: "%{shortcut} Auswahl bewegen &uarr; &darr;"
-        open: "%{shortcut} Ausgewähltes Thema öffnen"
-        open_new_window: "%{shortcut} Ausgewähltes Thema in neuem Tab/Fenster öffnen"
-        next_prev: "%{shortcut} Nächster/Vorheriger Abschnitt"
-        go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
+        back: "Zurück"
+        up_down: "Auswahl bewegen &uarr; &darr;"
       application:
         title: "Anwendung"
-        create: "%{shortcut} Neues Thema oder persönliche Nachricht erstellen"
-        notifications: "%{shortcut} Benachrichtigungen öffnen"
-        hamburger_menu: "%{shortcut} Navigationsmenü öffnen"
-        user_profile_menu: "%{shortcut} Benutzermenü öffnen"
-        show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
-        search: "%{shortcut} Suche"
-        filter_sidebar: "%{shortcut} Seitenleiste filtern"
-        help: "%{shortcut} Tastenkombinationen anzeigen"
-        toggle_bulk_select: "%{shortcut} Massenauswahl umschalten"
-        dismiss: "%{shortcut} Ausgewählte Themen verwerfen"
-        x: "%{shortcut} Auswahl umschalten (im Massenauswahlmodus)"
-        log_out: "%{shortcut} Abmelden"
+        search: "Suche"
+        log_out: "Abmelden"
       composing:
         title: "Schreiben"
-        return: "%{shortcut} Zurück zum Editor"
-        minimize: "%{shortcut} Editor minimieren"
-        create_or_reply: "%{shortcut} Thema erstellen oder Antwort posten"
-        fullscreen: "%{shortcut} Vollbild-Editor"
-        insert_current_time: "%{shortcut} Aktuelle Uhrzeit einfügen"
-        bold: "%{shortcut} Fett"
-        italic: "%{shortcut} Kursiv"
-        link: "%{shortcut} Link einfügen"
-        preformatted: "%{shortcut} Vorformatierter Text"
-        paragraph: "%{shortcut} Absatz"
-        heading_1: "%{shortcut} Überschrift 1"
-        heading_2: "%{shortcut} Überschrift 2"
-        heading_3: "%{shortcut} Überschrift 3"
-        heading_4: "%{shortcut} Überschrift 4"
-        toggle_direction: "%{shortcut} Textrichtung umschalten"
-        ordered_list: "%{shortcut} Geordnete Liste"
-        unordered_list: "%{shortcut} Ungeordnete Liste"
-        blockquote: "%{shortcut} Blockzitat"
+        link: "Link einfügen"
+        preformatted: "Vorformatierter Text"
+        paragraph: "Absatz"
+        blockquote: "Blockzitat"
       bookmarks:
         title: "Lesezeichen setzen"
-        enter: "%{shortcut} Speichern und schließen"
-        later_today: "%{shortcut} Im Laufe des Tages"
-        later_this_week: "%{shortcut} Später in dieser Woche"
-        tomorrow: "%{shortcut} Morgen"
-        next_week: "%{shortcut} Nächste Woche"
-        next_month: "%{shortcut} Nächsten Monat"
-        next_business_week: "%{shortcut} Anfang nächster Woche"
-        next_business_day: "%{shortcut} Nächster Arbeitstag"
-        custom: "%{shortcut} Datum und Uhrzeit auswählen"
-        none: "%{shortcut} Keine Erinnerung"
-        delete: "%{shortcut} Lesezeichen löschen"
+        enter: "Speichern und schließen"
+        later_today: "Im Laufe des Tages"
+        later_this_week: "Später in dieser Woche"
+        tomorrow: "Morgen"
+        next_week: "Nächste Woche"
+        next_month: "Nächsten Monat"
+        next_business_day: "Nächster Arbeitstag"
+        custom: "Datum und Uhrzeit auswählen"
+        none: "Keine Erinnerung"
+        delete: "Lesezeichen löschen"
       actions:
         title: "Aktionen"
-        bookmark_topic: "%{shortcut} Lesezeichen hinzufügen/entfernen"
-        pin_unpin_topic: "%{shortcut} Thema anheften/loslösen"
-        share_topic: "%{shortcut} Thema teilen"
-        share_post: "%{shortcut} Beitrag teilen"
-        reply_as_new_topic: "%{shortcut} Mit verknüpftem Thema antworten"
-        reply_topic: "%{shortcut} Auf Thema antworten"
-        reply_post: "%{shortcut} Auf Beitrag antworten"
-        quote_post: "%{shortcut} Beitrag zitieren"
-        like: "%{shortcut} Beitrag mit „Gefällt mir“ markieren"
-        flag: "%{shortcut} Beitrag melden"
-        bookmark: "%{shortcut} Beitrag mit Lesezeichen versehen"
-        edit: "%{shortcut} Beitrag bearbeiten"
-        delete: "%{shortcut} Beitrag löschen"
-        mark_muted: "%{shortcut} Thema stummschalten"
-        mark_regular: "%{shortcut} Thema auf Normal (Standard) setzen"
-        mark_tracking: "%{shortcut} Thema verfolgen"
-        mark_watching: "%{shortcut} Thema beobachten"
-        print: "%{shortcut} Thema ausdrucken"
-        defer: "%{shortcut} Thema als ungelesen markieren"
-        topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
-        archive_private_message: "%{shortcut} Persönliche Nachricht archivieren/entarchivieren"
+        reply_as_new_topic: "Mit verknüpftem Thema antworten"
+        reply_topic: "Auf Thema antworten"
+        flag: "Beitrag melden"
+        edit: "Beitrag bearbeiten"
+        delete: "Beitrag löschen"
+        mark_tracking: "Thema verfolgen"
+        mark_watching: "Thema beobachten"
+        defer: "Thema als ungelesen markieren"
       search_menu:
         title: "Suchmenü"
-        prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
-        insert_url: "%{shortcut} Auswahl in geöffneten Editor einfügen"
-        full_page_search: "%{shortcut} Startet die Ganzseitensuche"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
-        search_open: "%{shortcut} Suche der Administrationsoberfläche öffnen"
-        search_full_page: "%{shortcut} Ganzseitensuche für Administratoren öffnen"
     badges:
       earned_n_times:
         one: "Abzeichen %{count}-mal erhalten"
@@ -5844,6 +5829,7 @@ de:
           header_description: "Gib hier Informationen über diese Website und dein Team an, damit andere erfahren, worum es in deiner Community geht, wer dahinter steht und wie sie dich erreichen können, falls es ein Problem gibt. Wird auf der Seite <a href='%{basePath}/about'>Über uns</a> deiner Website angezeigt."
         developer:
           title: "Entwickler"
+          header_description: "Entwicklereinstellungen zur Steuerung des abgesicherten Modus und anderer erweiterter Funktionen"
         experimental:
           title: "Experimentell"
           header_description: "Schalte experimentelle Funktionen für deine Website ein oder aus – die meisten davon können auf Gruppenbasis gesteuert werden"
@@ -6092,10 +6078,17 @@ de:
               title: "Protokolle"
               header_description: "Protokolle für Backups, Wiederherstellungen und Uploads anzeigen und verwalten"
         problem_checks:
+          title: "Problemprüfungen"
+          header_description: "Zeige alle registrierten Problemprüfungen und ihren aktuellen Status an."
+          identifier: "Prüfung"
+          target: "Ziel"
           priority: "Priorität"
           status: "Status"
+          passing: "Bestanden"
+          failing: "Fehlgeschlagen"
           last_run_at: "Letzte Ausführung"
           ignore: "Ignorieren"
+          watch: "Beobachten"
           more_options:
             title: "Mehr Optionen"
         reports:
@@ -6281,6 +6274,8 @@ de:
         new_features:
           title: "Was ist neu?"
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
+          no_new_features_found: "Es gibt keine Einträge im Feed oder der ausgewählte Filter hat keine Ergebnisse zurückgegeben. Du kannst frühere Ankündigungen neuer Funktionen auf der <a href='%{url}' target='_blank'>Seite mit den Discource-Releases</a> sehen."
+          no_new_features_error: "Es gab einen Fehler beim Laden des Feeds. Du kannst frühere Ankündigungen neuer Funktionen auf der <a href='%{url}' target='_blank'>Seite mit den Discource-Releases</a> sehen."
           learn_more: "Mehr erfahren …"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
@@ -6321,6 +6316,49 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        sections:
+          reports:
+            title: "Berichte"
+          traffic:
+            title: "Website-Traffic"
+          engagement:
+            title: "Aktivität & Wachstum"
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Themen"
+              posts: "Beiträge"
+              share: "Teilen"
+            whos_posting:
+              all_categories: "Alle Kategorien"
+              staff: "Team"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Neue"
+                "1": "Anwärter"
+                "2": "Mitglied"
+                "3": "Regulär"
+                "4": "Anführer"
+              trend:
+                stable: "stabil"
+        reports_section:
+          no_data: "Keine Daten anzuzeigen"
+          modal:
+            enabled_heading: "Aktiviert"
+            all_heading: "Alle Berichte"
+            apply: "Anwenden"
+            move_up: "Nach oben"
+            move_down: "Nach unten"
+        configure:
+          button: "Konfigurieren"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Crawler"
+        period:
+          last_7_days: "Letzte 7 Tage"
+          last_30_days: "Letzte 30 Tage"
+          last_3_months: "Letzte 3 Monate"
+          custom: "Benutzerdefiniert"
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           percent_change_tooltip: "Änderung von %{percent}."
@@ -7295,6 +7333,7 @@ de:
             button: "Quelle ändern"
             title: "Theme-Quelle ändern"
             repository_url: "Repository-URL"
+            branch: "Branch"
             updating: "Theme-Quelle wird aktualisiert …"
             update: "Quelle aktualisieren"
             has_existing_key: "Für dieses Theme ist ein vorhandener SSH-Schlüssel konfiguriert."
@@ -7597,6 +7636,7 @@ de:
         topic_id: "Themen-ID"
         post_id: "Beitrags-ID"
         category_id: "Kategorie-ID"
+        reviewable_id: "Überprüfen"
         delete: "Löschen"
         edit: "Bearbeiten"
         save: "Speichern"
@@ -8195,7 +8235,6 @@ de:
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
         delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
-        delete_and_block: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren"
         delete_dont_block: "Benutzer löschen"
         deleting_user: "Benutzer wird gelöscht …"
         deleted: "Der Benutzer wurde gelöscht."
@@ -8383,6 +8422,9 @@ de:
       site_settings:
         title: "Website-Einstellungen"
         description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzererfahrung anzupassen."
+        depends_on_notice:
+          one: "Diese Einstellung wird nur angewendet, wenn %{dependencyLinks} aktiviert ist."
+          other: "Diese Einstellung wird nur angewendet, wenn %{dependencyLinks} aktiviert sind."
         discard:
           one: "Änderung verwerfen"
           other: "Änderungen verwerfen"
@@ -8450,6 +8492,7 @@ de:
           groups: "Gruppen"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          nested_replies: "Verschachtelte Antworten"
           experimental: "Experimentell"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
@@ -8492,6 +8535,9 @@ de:
           clean_up_inactive_users_after_days:
             prompt: "Wenn du diesen Wert auf einen anderen Wert als 0 setzt, werden Benutzer, die seit so vielen Tagen nicht mehr aktiv sind, endgültig gelöscht. Bist du sicher, dass du fortfahren willst?"
             confirm: "Ja, ich verstehe, dass inaktive Benutzer dauerhaft gelöscht werden, wenn ich diesen Wert nicht auf 0 setze."
+          can_permanently_delete:
+            prompt: "Wenn du diese Option aktivierst, können Administratoren Beiträge, Themen und Beitragsversionen endgültig löschen. Endgültig gelöschte Daten können nicht wiederhergestellt werden. Dies kann sich auch auf die Datenintegrität auswirken und bestehende Links unbrauchbar machen."
+            confirm: "Verstanden"
         job_status:
           completed: "Update abgeschlossen"
           enqueued: "Update läuft"

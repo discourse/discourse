@@ -10,6 +10,11 @@ he:
       site_settings:
         categories:
           discourse_solved: "Discourse נפתר"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "פתרונות מקובלים"
   js:
     notifications:
       alt:

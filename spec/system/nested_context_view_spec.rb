@@ -197,6 +197,67 @@ RSpec.describe "Nested context view" do
     end
   end
 
+  describe "in-route navigation between context views" do
+    # Navigating context A → context B in-app (without a full page reload)
+    # keeps the same controller/component mounted. When the two chains
+    # share a root ancestor, the chain root <NestedPost> would be reused
+    # by Glimmer (same post.id key) and its <NestedPostChildren> only
+    # reads @preloadedChildren in its constructor — so without a forced
+    # rebuild, the inner cascade keeps rendering the *previous* target's
+    # chain. routes/nested.js stamps a per-fetch _renderKey on the chain
+    # to force a full recreation; these specs guard that.
+    it "rebuilds the chain so the new target is visible" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_post(chain_posts[2])
+
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
+
+      expect(page).to have_current_path(
+        %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[4].post_number}\b},
+      )
+      expect(nested_view).to have_post(chain_posts[4])
+      expect(nested_view).to have_post(chain_posts[3])
+      expect(nested_view).to have_post(chain_posts[0])
+    end
+
+    it "re-fires the highlight pulse on the new target after navigation" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
+
+      expect(nested_view).to have_highlighted_post(chain_posts[4])
+    end
+
+    # Notifications produce /t/slug/id/N URLs; topic/from-params.js
+    # detects is_nested_view and redirects to /n/.../N. When N is the
+    # post we're already viewing, the redirect is a no-op transition —
+    # we still need the URL to stay on /n/ (not leak to /t/) and the
+    # target to re-highlight via the nested:scroll-to-target appEvent.
+    it "keeps the URL on /n/ and re-highlights when /t/ is routed to the post we're already on" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+
+      nested_view.route_to_topic_post(topic, post_number: chain_posts[2].post_number)
+
+      expect(page).to have_current_path(
+        %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[2].post_number}\b},
+      )
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+    end
+  end
+
+  describe "suggested topics" do
+    fab!(:other_topic) { Fabricate(:post).topic }
+
+    it "renders suggested topics below the chain" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+
+      expect(nested_view).to have_suggested_topics
+      expect(nested_view).to have_suggested_topic(other_topic)
+    end
+  end
+
   describe "replying in context view" do
     it "stays in nested view after replying" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[1].post_number)

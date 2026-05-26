@@ -12,8 +12,6 @@ be:
         link_to_settings: "Налады"
         refresh: "абнавіць"
         name: "Імя"
-        section:
-          groups: "Групы"
         period:
           all_time: "За ўвесь час"
           yearly: "штогод"

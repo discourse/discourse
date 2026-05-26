@@ -5,8 +5,8 @@ import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
 import ReviewableTags from "discourse/components/reviewable-tags";
 import TopicStatus from "discourse/components/topic-status";
-import categoryBadge from "discourse/helpers/category-badge";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -24,7 +24,7 @@ export default class ReviewableTopicLink extends Component {
           this.reviewable.topic.fancyTitle
           this.reviewable
         }}</a>
-      {{categoryBadge this.reviewable.category}}
+      {{dCategoryBadge this.reviewable.category}}
       <ReviewableTags
         @topic={{this.reviewable.topic}}
         @tags={{this.reviewable.topic_tags}}

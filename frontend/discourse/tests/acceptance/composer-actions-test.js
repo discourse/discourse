@@ -3,6 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import Draft from "discourse/models/draft";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -27,6 +28,13 @@ acceptance(`Composer Actions`, function (needs) {
     server.put("/u/kris.json", () => helper.response({ user: {} }));
     const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
     server.get("/u/shade/card.json", () => helper.response(cardResponse));
+    server.get("/c/shared-drafts/24/l/latest.json", () => {
+      const response = cloneJSON(discoveryFixtures["/c/bug/1/l/latest.json"]);
+      response.topic_list.can_create_topic = true;
+      response.topic_list.filter = "c/shared-drafts/24/l/latest";
+
+      return helper.response(response);
+    });
   });
 
   test("replying to post", async function (assert) {
@@ -221,6 +229,26 @@ acceptance(`Composer Actions`, function (needs) {
       "create_private_message"
     );
     assert.strictEqual(composerActions.rows().length, 5);
+  });
+
+  test("new topic in shared drafts category opens shared draft composer", async function (assert) {
+    await visit("/c/shared-drafts/24");
+
+    assert.dom("#create-topic").hasText(i18n("topic.create_shared_draft"));
+
+    await click("#create-topic");
+
+    assert
+      .dom("#reply-control .btn-primary.create .d-button-label")
+      .hasText(i18n("composer.create_shared_draft"));
+    assert
+      .dom(".composer-actions svg.d-icon-far-clipboard")
+      .exists("shared draft icon is visible");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().value(),
+      null,
+      "shared drafts category is not selected as the destination category"
+    );
   });
 
   test("interactions - private message", async function (assert) {

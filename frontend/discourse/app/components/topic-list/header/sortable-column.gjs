@@ -4,9 +4,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SortableColumn extends Component {
@@ -73,7 +73,7 @@ export default class SortableColumn extends Component {
       data-sort-order={{@order}}
       scope="col"
       aria-sort={{this.ariaSort}}
-      class={{concatClass
+      class={{dConcatClass
         "topic-list-data"
         @order
         (if @sortable "sortable")
@@ -89,7 +89,7 @@ export default class SortableColumn extends Component {
             title={{i18n "topics.bulk.toggle"}}
             class="btn-transparent bulk-select no-text"
           >
-            {{icon "list-check"}}
+            {{dIcon "list-check"}}
           </button>
         {{/if}}
 
@@ -120,7 +120,7 @@ export default class SortableColumn extends Component {
           <button aria-pressed={{this.isSorting}}>
             {{this.localizedName}}
             {{#if this.isSorting}}
-              {{icon (if @ascending "chevron-up" "chevron-down")}}
+              {{dIcon (if @ascending "chevron-up" "chevron-down")}}
             {{/if}}
           </button>
         {{else}}

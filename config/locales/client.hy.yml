@@ -264,8 +264,6 @@ hy:
     tos: "Պայմանները"
     rules: "Կանոններ"
     conduct: "Վարքագծի Կանոններ"
-    mobile_view: "Տեսքը Հեռախոսով"
-    desktop_view: "Տեսքը Համակարգչով"
     now: "հենց նոր"
     read_more: "կարդալ ավելին"
     more: "Ավելին"
@@ -299,8 +297,6 @@ hy:
     admin_onboarding_banner:
       start_posting:
         back: "Ետ"
-      spread_the_word:
-        action: "Պատճենել հղումը"
     about:
       edit: "Խմբագրել այս էջը"
       simple_title: "Մեր Մասին"
@@ -458,6 +454,9 @@ hy:
       remove_confirmation: "Իսկապե՞ս ուզում եք ջնջել այս սևագիրը:"
       new_topic: "Նոր թեմայի սևագիր"
       new_private_message: "Նոր անձնական հաղորդագրության սևագիր"
+    embed_mode:
+      signin_flow:
+        cancel: "Չեղարկել"
     topic_count_all:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
@@ -1165,7 +1164,6 @@ hy:
         normal_option: "Նորմալ"
         normal_option_title: "Դուք ծանուցում կստանաք, եթե այդ օգտատերը պատասխանի ձեր հրապարակմանը, մեջբերում անի կամ հիշատակի ձեր անունը:"
       notification_schedule:
-        title: "Ծանուցումների Ժամանակացույց"
         label: "Միացնել ծանուցումների անհատական ժամանակացույցը"
         tip: "Այս ժամերից դուրս ձեր ծանուցումները կդադարեցվեն:"
         midnight: "Կեսգիշեր"
@@ -1209,13 +1207,8 @@ hy:
       notifications: "Ծանուցումներ"
       statistics: "Վիճակագրություն"
       desktop_notifications:
-        label: "Այժմեական(Live) Ծանուցումներ"
         not_supported: "Այս բրաուզերը չի ապահովում ծանուցումներ, ներողություն:"
-        perm_default: "Միացնել Ծանուցումները"
-        perm_denied_btn: "Թույլտվությունը Մերժված է"
         perm_denied_expl: "Դուք մերժել եք ծանուցումների թույլտվությունը: Թույլատրեք ծանուցումները Ձեր բրաուզերի կարգավորումներից:"
-        disable: "Անջատել Ծանուցումները"
-        enable: "Միացնել Ծանուցումները"
         each_browser_note: "Նշում. Դուք պետք է փոփոխեք այս կարգավորումը յուրաքանչյուր բրաուզերում, որը օգտագործում եք։ Բոլոր ծանուցումները կդադարեցվեն, եթե դադարեցնեք դրանք օգտատերի մենյուից, անկախ այս կարգավորումից։"
         consent_prompt: "Դուք ցանկանո՞ւմ եք ստանալ այժմեական ծանուցումներ, երբ մարդիկ պատասխանեն Ձեր գրառումներին:"
       dismiss: "Չեղարկել"
@@ -2528,6 +2521,7 @@ hy:
         max_views:
           placeholder: առավելագույնը
           aria_label: զտել ըստ առավելագույն դիտումների
+    header_panel: "Վերնամաս"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
@@ -2561,8 +2555,6 @@ hy:
         selected_count:
           one: "%{count} ընտրված"
           other: "%{count} ընտրված"
-        choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
-        changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
         error_topic_count:
           one: "%{count} թեմա"
           other: "%{count} թեմա"
@@ -2588,8 +2580,6 @@ hy:
         name: "Տեղափոխել Մուտքային"
       unlist_topics:
         name: "Ցուցակից հանել"
-      replace_tags:
-        name: "Փոխարինել Պիտակները"
       delete_topics:
         name: "Ջնջել"
       update_category:
@@ -2610,6 +2600,7 @@ hy:
       collapse: "Կրճատել"
       no_replies: "Պատասխաններ դեռևս չկան:"
       deleted_post_placeholder: "[ջնջված է]"
+      ignored_post_placeholder: "[անտեսված]"
       pinned_reply: "Ամրակցված"
     topic:
       filter_to:
@@ -3116,7 +3107,6 @@ hy:
         name: "Անուն"
         name_placeholder: "Ինչի՞ համար է այս էջանշանը: "
         set_reminder: "Հիշեցնել ինձ"
-        options: "Տարբերակներ"
         actions:
           delete_bookmark:
             name: "Ջնջել էջանշանը"
@@ -3233,7 +3223,7 @@ hy:
           low: "Բարձր"
           high: "Բարձր"
       sort_options:
-        default: "լռելյայն"
+        default: "Լռելյայն"
         likes: "Հավանումների"
         views: "Դիտումների"
         posts: "Գրառումների"
@@ -3463,79 +3453,53 @@ hy:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Ստեղնաշարի Համադրություններ"
+      description_header: "Նկարագրություն"
+      key_header: "Բանալի"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Ցատկել Դեպի"
-        home: "%{shortcut} Գլխավոր էջ"
-        latest: "%{shortcut} Վերջինները"
-        new: "%{shortcut} Նոր"
-        unread: "%{shortcut} Չկարդացած"
-        categories: "%{shortcut} Կատեգորիաներ"
-        top: "%{shortcut} Թոփ"
-        bookmarks: "%{shortcut} Էջանշաններ"
-        profile: "%{shortcut} Պրոֆիլ"
-        messages: "%{shortcut} Հաղորդագրություններ"
-        drafts: "%{shortcut} Սևագրեր"
+        home: "Գլխավոր էջ"
+        latest: "Վերջինը"
+        new: "Նոր"
+        unread: "Չկարդացած"
+        unseen: "Չդիտված"
+        categories: "Կատեգորիաներ"
+        top: "Ամենահայտնի"
+        bookmarks: "Էջանշաններ"
+        profile: "Պրոֆիլ"
+        messages: "Հաղորդագրություն"
+        drafts: "Սևագրեր"
       navigation:
         title: "Նավիգացիա"
-        jump: "%{shortcut} Գնալ դեպի գրառում # "
-        back: "%{shortcut} Ետ"
-        up_down: "%{shortcut} Տեղաշարժել նշվածը &uarr; &darr;"
-        open: "%{shortcut} Բացել ընտրված թեման"
-        next_prev: "%{shortcut} Հաջորդ/նախորդ բաժին"
-        go_to_unread_post: "%{shortcut} Գնալ դեպի առաջին չընթերցված գրառումը"
+        back: "Ետ"
+        up_down: "Տեղաշարժել նշվածը &uarr; &darr;"
       application:
         title: "Հավելված"
-        notifications: "%{shortcut} Բացել ծանուցումները"
-        user_profile_menu: "%{shortcut} Բացել օգտատիրոջ մենյուն"
-        show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
-        search: "%{shortcut} Որոնել"
-        help: "%{shortcut} Բացել ստեղնաշարի օգնականը"
-        log_out: "%{shortcut} Ելք"
+        search: "Որոնում"
+        log_out: "Դուրս Գալ"
       composing:
         title: "Կազմում"
-        return: "%{shortcut} Վերադառնալ խմբագրին"
-        fullscreen: "%{shortcut} Ամբողջական էկրանով խմբագիր"
+        preformatted: "Ձևաչափված տեքստ"
+        blockquote: "Մեջբերել"
       bookmarks:
         title: "Էջանշում"
-        enter: "%{shortcut} Պահել և փակել"
-        later_today: "%{shortcut} Այսօր, բայց ավելի ուշ"
-        later_this_week: "%{shortcut} Այս շաբաթ, մի փոքր ավելի ուշ"
-        tomorrow: "%{shortcut} Վաղը"
-        next_week: "%{shortcut} Հաջորդ շաբաթ"
-        next_month: "%{shortcut} Հաջորդ ամիս"
-        next_business_week: "%{shortcut} Հաջորդ աշխատանքային շաբաթում "
-        next_business_day: "%{shortcut} Հաջորդ աշխատանքային օրը"
-        custom: "%{shortcut} Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
-        none: "%{shortcut} Հիշեցում չսահմանել "
-        delete: "%{shortcut} Ջնջել էջանշանը"
+        later_today: "Այսօր, մի փոքր ուշ"
+        later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
+        tomorrow: "Վաղը"
+        next_week: "Հաջորդ շաբաթ"
+        next_month: "Հաջորդ ամիս"
+        next_business_day: "Հաջորդ աշխատանքային օրը: "
+        custom: "Սահմանեք հիշեցումների ամսաթիվն ու ժամանակը:"
+        delete: "Ջնջել էջանշանը"
       actions:
         title: "Գործողություններ"
-        bookmark_topic: "%{shortcut} Փոխանջատել թեմայի էջանշանը"
-        pin_unpin_topic: "%{shortcut} Ամրակցել/Ապակցել թեման"
-        share_topic: "%{shortcut} Կիսվել թեմայով"
-        share_post: "%{shortcut} Կիսվել գրառմամբ"
-        reply_as_new_topic: "%{shortcut} Պատասխանել որպես կապված թեմա"
-        reply_topic: "%{shortcut} Պատասխանել թեմային"
-        reply_post: "%{shortcut} Պատասխանել գրառմանը"
-        quote_post: "%{shortcut} Մեջբերել գրառումը"
-        like: "%{shortcut} Հավանել գրառումը"
-        flag: "%{shortcut} Բողոքել գրառումը"
-        bookmark: "%{shortcut} Էջանշել գրառումը"
-        edit: "%{shortcut} Խմբագրել գրառումը"
-        delete: "%{shortcut} Ջնջել գրառումը"
-        mark_muted: "%{shortcut} Խլացնել թեման"
-        mark_tracking: "%{shortcut} Հետևել թեմային"
-        mark_watching: "%{shortcut} Դիտել թեման"
-        print: "%{shortcut} Տպել թեման"
-        topic_admin_actions: "%{shortcut} Բացել թեմայի ադմինի գործողությունները "
+        reply_as_new_topic: "Պատասխանել որպես կապված թեմա"
+        reply_topic: "Պատասխանել թեմային"
       search_menu:
         title: "Որոնման արդյունքների Մենյու "
-        prev_next: "%{shortcut} Տեղաշարժել նշվածը վեր և վար"
-        insert_url: "%{shortcut} Ընտրված հղումը տեղադրել բաց խմբագրի մեջ"
-        full_page_search: "%{shortcut} Գործարկում է ամբողջական էջի որոնումը"
       admin:
         title: "Ադմին"
-        search_prev_next: "%{shortcut} Տեղաշարժել նշվածը վեր և վար"
     badges:
       earned_n_times:
         one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
@@ -4018,6 +3982,35 @@ hy:
         exception_error: Ներողություն, հարցումը կատարելիս տեղի է ունեցել սխալ
         too_many_requests: 'Դուք կատարել եք այս գործողությունը չափից շատ անգամ: Խնդրում ենք սպասել՝ մինչև կրկին փորձելը:'
         not_found_error: Ներողություն, այս հաշվետվությունը գոյություն չունի
+        sections:
+          reports:
+            title: "Հաշվետվություններ"
+          engagement:
+            activity_by_category:
+              category: "Կատեգորիա"
+              topics: "Թեմաներ"
+              posts: "Գրառումներ"
+              share: "Կիսվել"
+            whos_posting:
+              all_categories: "Բոլոր կատեգորիաները"
+              staff: "Անձնակազմ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Նոր"
+                "1": "Հիմնական"
+                "2": "Անդամ"
+                "3": "Սովորական"
+                "4": "Առաջնորդ"
+        reports_section:
+          modal:
+            all_heading: "Բոլոր հաշվետվությունները"
+            apply: "Կիրառել"
+        site_traffic:
+          series:
+            anonymous: "Անանուն"
+            crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
+        period:
+          custom: "Մասնավոր"
         reports:
           trend_title: "%{percent} փոփոխություն: Ներկայումս %{current}, նախորդ շրջանում եղել է %{prev}:"
           today: "Այսօրվա"
@@ -4674,6 +4667,7 @@ hy:
         topic_id: "Թեմայի ID"
         post_id: "Գրառման ID"
         category_id: "Կատեգորիայի ID"
+        reviewable_id: "Վերանայում"
         delete: "Ջնջել"
         edit: "Խմբագրել"
         save: "Պահպանել"

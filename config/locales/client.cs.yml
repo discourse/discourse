@@ -448,8 +448,6 @@ cs:
     tos: "Podmínky služby"
     rules: "Pravidla"
     conduct: "Kodex chování"
-    mobile_view: "Mobilní verze"
-    desktop_view: "Plná verze"
     now: "právě teď"
     read_more: "číst dále"
     more: "Více"
@@ -488,11 +486,10 @@ cs:
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
       launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
+      select_theme:
+        enabled: "Zapnuto"
       start_posting:
         back: "Zpět"
-      spread_the_word:
-        action: "Kopírovat odkaz"
-        copied_to_clipboard: "Odkaz zkopírován do schránky!"
     about:
       edit: "Upravit tuto stránku"
       simple_title: "O tomto webu"
@@ -703,6 +700,10 @@ cs:
           few: "+%{count} další koncepty"
           many: "+%{count} dalších konceptů"
           other: "+%{count} dalších konceptů"
+    embed_mode:
+      editing_post: "Příspěvek je upravován"
+      signin_flow:
+        cancel: "Zrušit"
     topic_count_all:
       one: "Zobrazit %{count} nové téma"
       few: "Zobrazit %{count} nová témata"
@@ -1606,7 +1607,6 @@ cs:
         normal_option: "Normální"
         normal_option_title: "Budete upozorněni, pokud vám tento uživatel odpoví, cituje vás nebo vás zmiňuje."
       notification_schedule:
-        title: "Harmonogram upozorňování"
         label: "Povolit vlastní harmonogram upozorňování"
         tip: "Mimo tyto hodiny budou vaše upozornění ztlumena."
         midnight: "Půlnoc"
@@ -1650,13 +1650,8 @@ cs:
       notifications: "Upozornění"
       statistics: "Statistiky"
       desktop_notifications:
-        label: "Upozornění v reálném čase"
         not_supported: "Tento prohlížeč nepodporuje upozornění. Omlouváme se."
-        perm_default: "Vypnout upozornění."
-        perm_denied_btn: "Povolení zamítnuto"
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
-        disable: "Vypnout upozornění"
-        enable: "Povolit upozornění"
         each_browser_note: "Poznámka: Toto nastavení musíte změnit v každém prohlížeči, který používáte. Všechna upozornění budou deaktivována, pokud vypnete upozornění z uživatelské nabídky."
         consent_prompt: "Chcete dostávat upozornění v reálném čase, když někdo odpoví na vaše příspěvky?"
       dismiss: "Označit jako přečtené"
@@ -3594,6 +3589,7 @@ cs:
           placeholder: maximum
           aria_label: filtrovat podle maximálního počtu zobrazení
     hamburger_menu: "Navigační nabídka"
+    header_panel: "Hlavička"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -3732,23 +3728,11 @@ cs:
         archive_messages: "Přesunout do archivu"
         change_notification_level: "Změnit úroveň upozornění"
         choose_new_category: "Zvolte novou kategorii pro témata:"
-        selected_sole_category:
-          one: "Vybrali jste <b>%{count}</b> téma z kategorie:"
-          few: "Vybrali jste <b>%{count}</b> témata z kategorie:"
-          many: "Vybrali jste <b>%{count}</b> témat z kategorie:"
-          other: "Vybrali jste <b>%{count}</b> témat z kategorie:"
         selected_count:
           one: "%{count} vybrané"
           few: "%{count} vybraná"
           many: "%{count} vybraných"
           other: "%{count} vybraných"
-        choose_new_tags: "Zvolte nové štítky pro tato témata:"
-        changed_tags: "Štítky těchto témat byly změněny."
-        confirm_remove_tags:
-          one: "Všechny štítky budou z tohoto tématu odstraněny. Jsi si jisti?"
-          few: "Všechny štítky budou z těchto %{count} témat odstraněny. Jste si jisti?"
-          many: "Všechny štítky budou z těchto %{count} témat odstraněny. Jste si jisti?"
-          other: "Všechny štítky budou z těchto %{count} témat odstraněny. Jste si jisti?"
         progress:
           one: "Průběh: <strong>%{count}</strong> téma"
           few: "Průběh: <strong>%{count}</strong> témata"
@@ -3796,10 +3780,6 @@ cs:
         name: "Skrýt"
       relist_topics:
         name: "Zrušit skrytí"
-      remove_tags:
-        name: "Odebrat štítky"
-      replace_tags:
-        name: "Zaměnit štítky"
       delete_topics:
         name: "Smazat"
       update_category:
@@ -3832,6 +3812,7 @@ cs:
       collapse: "Sbalit"
       no_replies: "Zatím žádné odpovědi."
       deleted_post_placeholder: "[smazáno]"
+      ignored_post_placeholder: "[ignorováno]"
       pinned_reply: "Připnuto"
     topic:
       filter_to:
@@ -4666,7 +4647,6 @@ cs:
         name_placeholder: "K čemu je tato záložka?"
         name_input_label: "Název záložky"
         set_reminder: "Připomenout"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Smazat záložku"
@@ -4735,9 +4715,17 @@ cs:
       topic_featured_link_allowed: "Povolit zobrazené odkazy v této kategorii"
       delete: "Smazat kategorii"
       create: "Přidat kategorii"
+      create_with_type: "Nová kategorie typu %{typeName}"
       create_long: "Vytvořit novou kategorii"
+      settings_apply_to_all_of_type_warning: "Níže uvedené změny se vztahují na všechny kategorie tohoto typu"
       type_settings_schema:
+        category_settings: "Nastavení kategorie"
+        category_custom_fields: "Nastavení kategorie"
         site_settings: "Nastavení webu"
+      choose_type:
+        title: "Vyberte typ kategorie"
+        requires_plugin: "Vyžaduje plugin"
+      create_category: "Vytvořit kategorii"
       save: "Uložit kategorii"
       unsaved_changes: "Máte neuložené změny"
       slug: "URL kategorie"
@@ -4797,9 +4785,15 @@ cs:
         reply: "Odpovědět"
         create: "Vytvořit"
         no_groups_selected: "Nebyl udělen přístup žádným skupinám; tato kategorie bude viditelná pouze pro redaktory."
+        everyone_full_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "%{everyone_group}".'
+        everyone_reply_access: 'Tato kategorie je veřejná, každý může vidět a odpovídat na témata. Chcete-li omezit oprávnění, odeberte skupinu "%{everyone_group}“.'
+        everyone_see_access: 'Tato kategorie je veřejná, každý může vidět příspěvky. Chcete-li omezit oprávnění, odeberte skupinu "%{everyone_group}“.'
         specific_groups_have_access: "Tato kategorie je soukromá, pouze vybrané skupiny mohou vidět, odpovědět a vytvářet příspěvky."
+        all_parent_groups_used: "Byly přidány všechny skupiny z nadřazené kategorie. Chcete-li přidat další skupiny, přidejte je nejprve do nadřazené kategorie."
         toggle_reply: "Přepnout oprávnění Odpovědět"
         toggle_full: "Přepnout oprávnění Vytvořit"
+        inherited: 'Toto oprávnění se dědí ze skupiny "%{everyone_group}".'
+      special_warning: "Tato kategorie je přednastavená a její nastavení zabezpečení nelze změnit. Pokud tuto kategorii nechcete používat, nesnažte se ji měnit, ale odstraňte ji."
       uncategorized_security_warning: "Toto je speciální kategorie, která je určena pro témata, která nemají žádnou kategorii a nemůže mít nastavení zabezpečení."
       uncategorized_general_warning: 'Toto je speciální kategorie. Používá se jako výchozí kategorie pro nová témata, u kterých není vybrána žádná kategorie. Pokud chcete tomuto chování zabránit a vynutit si výběr kategorie, <a href="%{settingLink}">, zakažte prosím toto nastavení</a>. Pokud chcete změnit název nebo popis, přejděte na <a href="%{customizeLink}">Přizpůsobení/Textový obsah</a>.'
       pending_permission_change_alert: "Do této kategorie jste nepřidali %{group} ; kliknutím na toto tlačítko je přidejte."
@@ -4875,7 +4869,7 @@ cs:
           high: "Vysoká"
           very_high: "Velmi vysoká"
       sort_options:
-        default: "výchozí"
+        default: "Výchozí"
         likes: "Líbí se"
         op_likes: "Líbí se v úvodním příspěvku"
         views: "Zobrazení"
@@ -5224,110 +5218,61 @@ cs:
       title: "Klávesové zkratky"
       short_title: "Zkratky"
       search_ctrl_f_tip: "Pro vyhledávání v celém fóru stiskněte <kbd>/</kbd>"
+      description_header: "Popis"
+      key_header: "Klíč"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Přejít na"
-        home: "%{shortcut} Domů"
-        latest: "%{shortcut} Nejnovější"
-        new: "%{shortcut} Nové"
-        unread: "%{shortcut} Nepřečtěné"
-        unseen: "%{shortcut} Neshlédnutá"
-        categories: "%{shortcut} Kategorie"
-        top: "%{shortcut} Nahoru"
-        bookmarks: "%{shortcut} Záložky"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Zprávy"
-        drafts: "%{shortcut} Koncepty"
-        next: "%{shortcut} Další téma"
-        previous: "%{shortcut} Předchozí téma"
+        home: "Domů"
+        latest: "Nejnovější"
+        new: "Nový"
+        unread: "Nepřečtené"
+        unseen: "Neshlédnutá"
+        categories: "Kategorie"
+        top: "Nejlepší"
+        bookmarks: "Záložky"
+        profile: "Profil"
+        messages: "Zprávy"
+        drafts: "Koncepty"
       navigation:
         title: "Navigace"
-        jump: "%{shortcut} Přejít na příspěvek #"
-        back: "%{shortcut} Zpět"
-        up_down: "%{shortcut} Posunout výběr &uarr; &darr;"
-        open: "%{shortcut} Otevři vybrané téma"
-        open_new_window: "%{shortcut} Otevřít vybrané téma v nové záložce/okně"
-        next_prev: "%{shortcut} Následující/předchozí výběr"
-        go_to_unread_post: "%{shortcut} Přejít na první nepřečtený příspěvek"
+        back: "Zpět"
+        up_down: "Posunout výběr &uarr; &darr;"
       application:
         title: "Aplikace"
-        create: "%{shortcut} Vytvořit nové téma nebo osobní zprávu"
-        notifications: "%{shortcut} Otevře upozornění"
-        hamburger_menu: "%{shortcut} Schovat/zobrazit navigační nabídku"
-        user_profile_menu: "%{shortcut} Otevřít nabídku pro uživatele"
-        show_incoming_updated_topics: "%{shortcut} Zobrazit aktualizovaná témata"
-        search: "%{shortcut}Vyhledávání"
-        filter_sidebar: "%{shortcut} Filtr postranního panelu"
-        help: "%{shortcut} Otevřít nápovědu pro klávesnici"
-        toggle_bulk_select: "%{shortcut} Přepnout hromadný výběr"
-        dismiss: "%{shortcut} Odmítnout vybraná témata"
-        x: "%{shortcut} Přepnout výběr (v režimu hromadného výběru)"
-        log_out: "%{shortcut} Odhlásit se"
+        search: "Vyhledat"
+        log_out: "Odhlásit se"
       composing:
         title: "Editace"
-        return: "%{shortcut} Návrat do editoru"
-        minimize: "%{shortcut} Minimalizovat editor"
-        create_or_reply: "%{shortcut} Vytvořit téma nebo odeslat odpověď"
-        fullscreen: "%{shortcut} Editor na celou obrazovku"
-        insert_current_time: "%{shortcut} Vložit aktuální čas"
-        bold: "%{shortcut} Tučné"
-        italic: "%{shortcut} Kurzíva"
-        link: "%{shortcut} Vložit odkaz"
-        preformatted: "%{shortcut} Předformátovaný text"
-        paragraph: "%{shortcut} Odstavec"
-        heading_1: "%{shortcut} Nadpis 1"
-        heading_2: "%{shortcut} Nadpis 2"
-        heading_3: "%{shortcut} Nadpis 3"
-        heading_4: "%{shortcut} Nadpis 4"
-        toggle_direction: "%{shortcut} Přepnout směr textu"
-        ordered_list: "%{shortcut} Řazený seznam"
-        unordered_list: "%{shortcut} Neuspořádaný seznam"
-        blockquote: "%{shortcut} Citace"
+        link: "Vložit odkaz"
+        preformatted: "Předformátovaný text"
+        paragraph: "Odstavec"
+        blockquote: "Bloková citace"
       bookmarks:
         title: "Záložky"
-        enter: "%{shortcut} Uložit a zavřít"
-        later_today: "%{shortcut} Dnes později"
-        later_this_week: "%{shortcut} Později tento týden"
-        tomorrow: "%{shortcut} Zítra"
-        next_week: "%{shortcut} Příští týden"
-        next_month: "%{shortcut} Příští měsíc"
-        next_business_week: "%{shortcut} Začátek následujícího týdne"
-        next_business_day: "%{shortcut} Další pracovní den"
-        custom: "%{shortcut} Vlastní datum a čas"
-        none: "%{shortcut} Bez připomenutí"
-        delete: "%{shortcut} Odstranit záložku"
+        enter: "Uložit a zavřít"
+        later_today: "Později dnes"
+        later_this_week: "Později tento týden"
+        tomorrow: "Zítra"
+        next_week: "Příští týden"
+        next_month: "Další měsíc"
+        next_business_day: "Následující pracovní den"
+        custom: "Vlastní datum a čas"
+        delete: "Smazat záložku"
       actions:
         title: "Akce"
-        bookmark_topic: "%{shortcut} Přidat/odebrat záložku na téma"
-        pin_unpin_topic: "%{shortcut} Připnout/odepnout téma"
-        share_topic: "%{shortcut} Sdílet téma"
-        share_post: "%{shortcut} Sdílet příspěvek"
-        reply_as_new_topic: "%{shortcut} Odpovědět v propojeném tématu"
-        reply_topic: "%{shortcut} Odpovědět na téma"
-        reply_post: "%{shortcut} Odpovědět na příspěvek"
-        quote_post: "%{shortcut} Citovat příspěvek"
-        like: "%{shortcut} Dát \"líbí se\" k příspěvku"
-        flag: "%{shortcut} Nahlásit příspěvek"
-        bookmark: "%{shortcut} Přidat záložku na příspěvek"
-        edit: "%{shortcut} Upravit příspěvek"
-        delete: "%{shortcut} Smazat příspěvek"
-        mark_muted: "%{shortcut} Ztišit téma"
-        mark_regular: "%{shortcut} Normální (výchozí) téma"
-        mark_tracking: "%{shortcut} Sledovat téma"
-        mark_watching: "%{shortcut} Hlídat téma"
-        print: "%{shortcut} Vytisknout téma"
-        defer: "%{shortcut} Označit téma jako nepřečtené"
-        topic_admin_actions: "%{shortcut} Otevřít akce správce tématu"
-        archive_private_message: "%{shortcut} Přepnout archivaci soukromé zprávy"
+        reply_as_new_topic: "Odpovědět v propojeném tématu"
+        reply_topic: "Odpovědět na téma"
+        edit: "Upravit příspěvek"
+        delete: "Odstranit příspěvek"
+        mark_tracking: "Sledovat téma"
+        mark_watching: "Hlídat téma"
+        defer: "Označit téma jako nepřečtené"
       search_menu:
         title: "Nabídka vyhledávání"
-        prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
-        insert_url: "%{shortcut} Vložit výběr do otevřeného editoru"
-        full_page_search: "%{shortcut} Spustí celostránkové vyhledávání"
       admin:
         title: "Administrace"
-        search_prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
-        search_open: "%{shortcut} Otevřít vyhledávání pro administrátorské rozhraní"
-        search_full_page: "%{shortcut} Otevřít celoobrazovkové vyhledávání v administraci"
     badges:
       earned_n_times:
         one: "Získal/a tento odznak %{count} krát"
@@ -6071,7 +6016,7 @@ cs:
           everyone: "Všichni"
           specific_groups: "Specifické skupiny"
           specific_groups_with_group_names:
-            one: "skupina %{groupNames}"
+            one: "skupinu %{groupNames}"
             few: "skupiny %{groupNames}"
             many: "skupiny %{groupNames}"
             other: "skupiny %{groupNames}"
@@ -6596,6 +6541,46 @@ cs:
         too_many_requests: Tuto akci jste provedli příliš mnohokrát. Počkejte prosím před dalším pokusem.
         not_found_error: Omlouváme se, tato sestava neexistuje
         custom_date_range: Vlastní období
+        sections:
+          reports:
+            title: "Sestav"
+          traffic:
+            title: "Návštěvnost stránek"
+          engagement:
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Témata"
+              posts: "Příspěvky"
+              share: "Sdílet"
+            whos_posting:
+              all_categories: "Všechny kategorie"
+              staff: "Redakce"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základní"
+                "2": "Člen"
+                "3": "Stálý člen"
+                "4": "Leader"
+              trend:
+                stable: "stabilní"
+        reports_section:
+          no_data: "Žádná data k zobrazení"
+          modal:
+            enabled_heading: "Zapnuto"
+            all_heading: "Všechny sestavy"
+            apply: "Použít"
+            move_up: "Posunout nahoru"
+            move_down: "Posunout dolů"
+        site_traffic:
+          series:
+            anonymous: "Anonymní"
+            crawlers: "Vyhledávače"
+        period:
+          last_7_days: "Posledních 7 dní"
+          last_30_days: "Posledních 30 dní"
+          last_3_months: "Posledních 3 měsíců"
+          custom: "Přizpůsobené"
         reports:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           percent_change_tooltip: "%{percent} změna."
@@ -7891,6 +7876,7 @@ cs:
         topic_id: "ID tématu"
         post_id: "ID příspěvku"
         category_id: "ID kategorie"
+        reviewable_id: "Revize"
         delete: "Smazat"
         edit: "Upravit"
         save: "Uložit"
@@ -8522,7 +8508,6 @@ cs:
           other: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvků. (delete_all_posts_max)"
         delete_confirm_title: "Jste si jisti, že chcete odstranit tohoto uživatele? Tato akce je trvalá!"
         delete_confirm: "Obecně je vhodnější uživatele spíše anonymizovat než mazat, aby se předešlo odstranění obsahu existujících diskusí."
-        delete_and_block: "Smazat uživatele a zablokovat jeho e-mail a IP adresu"
         delete_dont_block: "Smazat uživatele"
         deleting_user: "Odstranění uživatele…"
         deleted: "Uživatel byl smazán."

@@ -19,8 +19,6 @@ it:
         react_with: "Reagisci a questo messaggio con: %{reaction}"
         cant_remove_reaction: "Non puoi più rimuovere la tua reazione"
         remove_reaction: "Rimuovi questa reazione %{reaction}"
-      users_popup:
-        all: "Tutte"
       main_reaction:
         add: "Metti \"Mi piace\" a questo messaggio"
         remove: "Rimuovi questo \"Mi piace\""

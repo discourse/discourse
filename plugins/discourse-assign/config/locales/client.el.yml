@@ -6,6 +6,20 @@
 
 el:
   js:
+    action_codes:
+      assigned: "Ανέθεσε σε %{who} %{when}"
+      assigned_group: "Ανέθεσε σε %{who} %{when}"
+      assigned_to_post: "Ανέθεσε σε %{who} την <a href='%{path}'>ανάρτηση</a> %{when}"
+      assigned_group_to_post: "Ανέθεσε σε %{who} την <a href='%{path}'>ανάρτηση</a> %{when}"
+      unassigned: "Αναίρεσε την ανάθεση σε %{who} %{when}"
+      unassigned_group: "Αναίρεσε την ανάθεση σε %{who} %{when}"
+      unassigned_from_post: "Αναίρεσε την ανάθεση σε %{who} από την <a href='%{path}'>ανάρτηση</a> %{when}"
+      unassigned_group_from_post: "Αναίρεσε την ανάθεση σε %{who} από την <a href='%{path}'>ανάρτηση</a> %{when}"
+      reassigned: "Ανέθεσε ξανά σε %{who} %{when}"
+      reassigned_group: "Ανέθεσε ξανά σε %{who} %{when}"
+      details_change: "Άλλαξε τις λεπτομέρειες ανάθεσης για %{who} %{when}"
+      note_change: "Άλλαξε τη σημείωση ανάθεσης για %{who} %{when}"
+      status_change: "Άλλαξε την κατάσταση ανάθεσης για %{who} %{when}"
     discourse_assign:
       topic_search_placeholder: "Αναζητήστε θέματα βάσει τίτλου ή λέξεις-κλειδιών…"
       sidebar_name_filter_placeholder: "Όνομα/Όνομα χρήστη"

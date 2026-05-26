@@ -23,11 +23,8 @@ lt:
         bool:
           yes: "Taip"
           no: "Ne"
-      export: "Eksportuoti"
       save: "Išsaugoti pakeitimus"
-      edit: "Redaguoti"
       delete: "Pašalinti"
-      show_table: "Lentelė"
       result_count:
         one: "%{count} rezultatas."
         few: "%{count} rezultatai."

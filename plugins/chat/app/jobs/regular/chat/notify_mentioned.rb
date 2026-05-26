@@ -79,7 +79,7 @@ module Jobs
           post_url: post_url,
           channel_id: @chat_channel.id,
           is_direct_message_channel: @is_direct_message_channel,
-        }
+        }.merge(::Chat::Notifier.push_notification_reply_action(@chat_message, membership.user))
 
         translation_prefix =
           (

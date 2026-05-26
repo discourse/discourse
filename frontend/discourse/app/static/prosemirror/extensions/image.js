@@ -33,9 +33,7 @@ const extension = {
     image: {
       component: ImageNodeView,
       shouldRender: ({ node }) =>
-        !node.attrs.placeholder &&
-        node.attrs.extras !== "audio" &&
-        node.attrs.extras !== "video",
+        node.attrs.extras !== "audio" && node.attrs.extras !== "video",
     },
   },
 
@@ -108,6 +106,7 @@ const extension = {
               originalSrc,
               extras,
               scale: dom.getAttribute("data-scale"),
+              placeholder: dom.dataset.placeholder || null,
             };
           },
         },

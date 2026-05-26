@@ -362,7 +362,6 @@ sv:
           status:
             unknown: "Inte intresserad"
             going: "Kommer"
-            not_going: "Kommer inte"
             interested: "Intresserad"
         event:
           expired: "Utgången"

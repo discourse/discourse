@@ -158,16 +158,18 @@ export function registerRichEditorExtension(extension) {
   registeredExtensions.push(extension);
 }
 
-export function clearRichEditorExtensions() {
+export async function clearRichEditorExtensions() {
+  // Import it first - a lazy import later would re-register the defaults.
+  const module = await waitForPromise(
+    import("discourse/static/prosemirror/extensions/register-default")
+  );
   registeredExtensions.length = 0;
   defaultExtensionsRegistered = false;
+  return module;
 }
 
 export async function resetRichEditorExtensions() {
-  const { default: extensions } = await waitForPromise(
-    import("discourse/static/prosemirror/extensions/register-default")
-  );
-  clearRichEditorExtensions();
+  const { default: extensions } = await clearRichEditorExtensions();
   extensions.forEach(registerRichEditorExtension);
   markDefaultExtensionsRegistered();
 }

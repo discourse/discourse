@@ -96,7 +96,7 @@ module FileStore
     end
 
     def public_dir
-      File.join(Rails.root, "public")
+      Rails.public_path.to_s
     end
 
     def tombstone_dir

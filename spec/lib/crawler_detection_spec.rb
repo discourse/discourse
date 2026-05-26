@@ -2,7 +2,7 @@
 
 RSpec.describe CrawlerDetection do
   def crawler!(user_agent, via = nil)
-    raise "#{user_agent} should be a crawler!" if (!CrawlerDetection.crawler?(user_agent, via))
+    raise "#{user_agent} should be a crawler!" if !CrawlerDetection.crawler?(user_agent, via)
   end
 
   def not_crawler!(s)

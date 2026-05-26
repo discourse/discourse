@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -11,11 +12,6 @@ import {
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import {
-  NON_STREAM_HTML_DECORATOR,
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -46,13 +42,8 @@ import { registerFullPageSearchType } from "discourse/controllers/full-page-sear
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
@@ -84,6 +75,7 @@ import {
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
+import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import {
   extraConnectorClass,
@@ -140,6 +132,16 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
+import { addToolbarCallback } from "discourse/ui-kit/d-editor";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/ui-kit/helpers/d-category-link";
+import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
@@ -2927,6 +2929,28 @@ class _PluginApi {
   }
 
   /**
+   * Registers a component used to render a report on the customisable
+   * Reports section of the new admin dashboard. Pair with the server-side
+   * `register_admin_dashboard_report_source` registration: the source name
+   * passed here matches the provider's `source_name`. The component
+   * receives `@item`, `@payload`, and `@filters` and is mounted inside the
+   * card's chart area; the card frame (title, label pill, X-to-remove) is
+   * owned by core.
+   *
+   * ```
+   * import MyReportCard from "discourse/plugins/my-plugin/discourse/components/my-report-card";
+   *
+   * api.registerAdminDashboardReportRenderer("my_source", MyReportCard);
+   * ```
+   *
+   * @param {string} source - The provider's source_name.
+   * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
+   */
+  registerAdminDashboardReportRenderer(source, componentClass) {
+    registerAdminDashboardReportRenderer(source, componentClass);
+  }
+
+  /**
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -3336,6 +3360,26 @@ class _PluginApi {
    */
   registerEditCategoryTab(tab) {
     registeredEditCategoryTabs.push(tab);
+  }
+
+  /**
+   * Register a callback that runs when the user changes category type selection in the
+   * **simplified** category editor (General tab) when `enable_simplified_category_creation` is
+   * enabled. It does not run on the legacy category editor.
+   *
+   * Callbacks run in order. Each may be `async`. The change applies only if every callback
+   * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback
+   * throws, the error is reported and the change is blocked; in tests the error is rethrown.
+   *
+   * The callback receives:
+   * - `nextTypes` - normalized type objects after the empty-to-discussion rule
+   * - `previousTypes` - selection before this change
+   * - `category`, `form`, and optionally `transientData`
+   *
+   * @param {function(Object): (boolean|undefined|Promise<boolean|undefined>)} fn
+   */
+  registerOnBeforeCategoryTypesChange(fn) {
+    registerOnBeforeCategoryTypesChange(fn);
   }
 
   /**

@@ -238,12 +238,22 @@ class BulkImport::Base
   def load_index(type)
     map = {}
 
-    @raw_connection.send_query(
-      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
-    )
-    @raw_connection.set_single_row_mode
-
-    @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    if @import_prefix
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id LIKE '#{@import_prefix}:%'",
+      )
+      @raw_connection.set_single_row_mode
+      prefix_length = @import_prefix.length + 1
+      @raw_connection.get_result.stream_each do |row|
+        map[row["original_id"][prefix_length..]] = row["discourse_id"]
+      end
+    else
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
+      )
+      @raw_connection.set_single_row_mode
+      @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    end
 
     @raw_connection.get_result
 
@@ -713,6 +723,7 @@ class BulkImport::Base
     category_id
     visible
     closed
+    archived
     pinned_at
     pinned_until
     pinned_globally
@@ -1546,7 +1557,7 @@ class BulkImport::Base
     category[:name_lower] = name_lower
 
     slug_next_number = 1
-    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+    original_slug = slug = category[:slug] || Slug.for(name_lower, "")
 
     while !@category_slugs.add?(slug.downcase)
       slug = "#{original_slug}-#{slug_next_number}"
@@ -2178,24 +2189,20 @@ class BulkImport::Base
       begin
         @raw_connection.copy_data(sql, @encoder) do
           rows.each do |row|
-            begin
-              if (mapped = yield(row))
-                processed = send(process_method_name, mapped)
-                imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-                imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-                unless processed[:skip]
-                  @raw_connection.put_copy_data columns.map { |c| processed[c] }
-                end
-              end
-              rows_created += 1
-              if rows_created % 100 == 0
-                print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
-              end
-            rescue => e
-              puts "\n"
-              puts "ERROR: #{e.message}"
-              puts e.backtrace.join("\n")
+            if (mapped = yield(row))
+              processed = send(process_method_name, mapped)
+              imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+              imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+              @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
             end
+            rows_created += 1
+            if rows_created % 100 == 0
+              print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+            end
+          rescue => e
+            puts "\n"
+            puts "ERROR: #{e.message}"
+            puts e.backtrace.join("\n")
           end
         end
       rescue => e

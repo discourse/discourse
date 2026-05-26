@@ -8,8 +8,8 @@ module Jobs
       url = args[:pr_url]
       return if url.blank?
 
-      # invalidate & refresh the onebox cache for this PR URL
       Oneboxer.preview(url, invalidate_oneboxes: true)
+      InlineOneboxer.invalidate(url)
 
       rebake_posts(url)
       rebake_chat_messages(url) if SiteSetting.chat_enabled
@@ -22,7 +22,10 @@ module Jobs
 
       Post
         .where(id: post_ids)
-        .where("cooked LIKE ?", "%githubpullrequest%#{url}%")
+        .where(
+          "cooked LIKE :pattern AND (cooked LIKE '%githubpullrequest%' OR cooked LIKE '%inline-onebox%')",
+          pattern: "%#{url}%",
+        )
         .find_each { |post| post.rebake!(priority: :low, skip_publish_rebaked_changes: true) }
     end
 
@@ -35,7 +38,10 @@ module Jobs
 
       ::Chat::Message
         .where(id: message_ids)
-        .where("cooked LIKE ?", "%githubpullrequest%#{url}%")
+        .where(
+          "cooked LIKE :pattern AND (cooked LIKE '%githubpullrequest%' OR cooked LIKE '%inline-onebox%')",
+          pattern: "%#{url}%",
+        )
         .find_each { |message| message.rebake!(priority: :low, skip_notifications: true) }
     end
   end

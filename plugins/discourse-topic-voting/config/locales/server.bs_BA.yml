@@ -16,9 +16,6 @@ bs_BA:
     topic_voting_show_votes_on_profile: 'Dozvoli korisnicima da vide svoje glasove u svojem pregledu aktivnosti?'
     topic_voting_alert_votes_left: 'Upozorite korisnike kada do naksimalnog broja glasova ostano još'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Pokaži ko je glasao"
     votes_moved:
       one: "Glas je maknut."
       few: "%{count} glasa je maknuto."

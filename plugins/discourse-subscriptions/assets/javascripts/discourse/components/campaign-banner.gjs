@@ -8,11 +8,11 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../helpers/format-currency";
 
@@ -293,8 +293,8 @@ export default class CampaignBanner extends Component {
                   @disabled={{this.product.subscribed}}
                   class="btn btn-primary campaign-banner-info-button"
                 >
-                  {{icon "far-heart"}}
-                  {{icon "heart" class="hover-heart"}}
+                  {{dIcon "far-heart"}}
+                  {{dIcon "heart" class="hover-heart"}}
                   {{i18n "discourse_subscriptions.campaign.button"}}
                 </LinkTo>
               {{else}}
@@ -302,8 +302,8 @@ export default class CampaignBanner extends Component {
                   @route={{this.subscribeRoute}}
                   class="btn btn-primary campaign-banner-info-button"
                 >
-                  {{icon "far-heart"}}
-                  {{icon "heart" class="hover-heart"}}
+                  {{dIcon "far-heart"}}
+                  {{dIcon "heart" class="hover-heart"}}
                   {{i18n "discourse_subscriptions.campaign.button"}}
                 </LinkTo>
               {{/if}}
@@ -343,7 +343,7 @@ export default class CampaignBanner extends Component {
                 </p>
 
                 {{#if this.showContributors}}
-                  <ConditionalLoadingSpinner
+                  <DConditionalLoadingSpinner
                     @condition={{this.loading}}
                     @size="small"
                   >
@@ -358,7 +358,7 @@ export default class CampaignBanner extends Component {
 
                       <div class="campaign-banner-progress-users-avatars">
                         {{#each this.contributors as |contributor|}}
-                          {{avatar
+                          {{dAvatar
                             contributor
                             avatarTemplatePath="avatar_template"
                             usernamePath="username"
@@ -368,7 +368,7 @@ export default class CampaignBanner extends Component {
                         {{/each}}
                       </div>
                     </div>
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 {{/if}}
               {{/if}}
             {{else}}
@@ -409,7 +409,7 @@ export default class CampaignBanner extends Component {
               {{/if}}
 
               {{#if this.showContributors}}
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @condition={{this.loading}}
                   @size="small"
                 >
@@ -424,7 +424,7 @@ export default class CampaignBanner extends Component {
 
                     <div class="campaign-banner-progress-users-avatars">
                       {{#each this.contributors as |contributor|}}
-                        {{avatar
+                        {{dAvatar
                           contributor
                           avatarTemplatePath="avatar_template"
                           usernamePath="username"
@@ -434,7 +434,7 @@ export default class CampaignBanner extends Component {
                       {{/each}}
                     </div>
                   </div>
-                </ConditionalLoadingSpinner>
+                </DConditionalLoadingSpinner>
               {{/if}}
             {{/if}}
           </div>

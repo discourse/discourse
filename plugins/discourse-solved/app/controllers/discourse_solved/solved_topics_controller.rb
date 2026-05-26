@@ -16,6 +16,8 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
     offset = [0, params[:offset].to_i].max
     limit = params.fetch(:limit, 30).to_i
 
+    include_unlisted_topics = current_user&.id == user.id || guardian.can_see_unlisted_topics?
+
     posts =
       Post
         .joins(
@@ -29,6 +31,11 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
           "topics.category_id IS NULL OR NOT categories.read_restricted OR topics.category_id IN (:secure_category_ids)",
           secure_category_ids: guardian.secure_category_ids,
         )
+
+    posts = posts.where(topics: { visible: true }) unless include_unlisted_topics
+
+    posts =
+      posts
         .includes(:user, topic: %i[category tags])
         .order("discourse_solved_solved_topics.created_at DESC")
         .offset(offset)

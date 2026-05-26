@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Reports::ListQuery do
+  fab!(:admin)
+  fab!(:moderator)
+
+  let(:admin_guardian) { admin.guardian }
+  let(:moderator_guardian) { moderator.guardian }
+
   describe ".call" do
-    subject(:result) { described_class.call(admin: true) }
+    subject(:result) { described_class.call(guardian: admin_guardian) }
 
     let(:result_page_view_report_types) do
       result.filter { |r| r[:type].starts_with?("page_view") }.map { |r| r[:type] }
@@ -22,9 +28,10 @@ RSpec.describe Reports::ListQuery do
     end
 
     it "sorts reports by title" do
-      expect(result.map { |r| r[:title] }[0..5]).to eq(
+      expect(result.map { |r| r[:title] }[0..6]).to eq(
         [
-          I18n.t("reports.staff_logins.title"),
+          I18n.t("reports.activity_by_category.title"),
+          I18n.t("reports.admin_logins.title"),
           I18n.t("reports.page_view_anon_browser_reqs.title"),
           I18n.t("reports.associated_accounts_by_provider.title"),
           I18n.t("reports.bookmarks.title"),
@@ -46,6 +53,7 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_reqs
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
+            page_view_embed_reqs
           ],
         )
       end
@@ -78,21 +86,22 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
             page_view_legacy_total_reqs
+            page_view_embed_reqs
           ],
         )
       end
     end
 
-    context "when admin is true" do
-      subject(:result) { described_class.call(admin: true) }
+    context "when the user is an admin" do
+      subject(:result) { described_class.call(guardian: admin_guardian) }
 
       it "includes admin-only reports" do
         expect(result.map { |r| r[:type] }).to include(*Report::ADMIN_ONLY_REPORTS)
       end
     end
 
-    context "when admin is false" do
-      subject(:result) { described_class.call(admin: false) }
+    context "when the user is not an admin" do
+      subject(:result) { described_class.call(guardian: moderator_guardian) }
 
       it "excludes admin-only reports" do
         expect(result.map { |r| r[:type] }).not_to include(*Report::ADMIN_ONLY_REPORTS)
@@ -103,9 +112,10 @@ RSpec.describe Reports::ListQuery do
       before { SiteSetting.reporting_improvements = true }
 
       it "sorts reports by title" do
-        expect(result.map { |r| r[:title] }[0..4]).to eq(
+        expect(result.map { |r| r[:title] }[0..5]).to eq(
           [
-            I18n.t("reports.staff_logins.title"),
+            I18n.t("reports.activity_by_category.title"),
+            I18n.t("reports.admin_logins.title"),
             I18n.t("reports.page_view_anon_browser_reqs.title"),
             I18n.t("reports.dau_by_mau.title"),
             I18n.t("reports.daily_engaged_users.title"),
@@ -150,7 +160,7 @@ RSpec.describe Reports::ListQuery do
           formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
           formatted.stubs(:resolve_plugin_name).returns("test-plugin")
 
-          expect(formatted.visible?(admin: true)).to eq(false)
+          expect(formatted.visible?(guardian: admin_guardian)).to eq(false)
         end
 
         it "is visible when the source plugin is enabled" do
@@ -160,7 +170,7 @@ RSpec.describe Reports::ListQuery do
           formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
           formatted.stubs(:resolve_plugin_name).returns("test-plugin")
 
-          expect(formatted.visible?(admin: true)).to eq(true)
+          expect(formatted.visible?(guardian: admin_guardian)).to eq(true)
 
           result = formatted.to_h
           expect(result[:plugin]).to eq("test-plugin")

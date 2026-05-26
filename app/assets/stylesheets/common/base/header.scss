@@ -440,6 +440,7 @@
 
       li {
         flex-wrap: nowrap;
+        max-width: 100%;
       }
 
       @include ellipsis;
@@ -568,13 +569,11 @@ $mobile-avatar-height: 1.532em;
 
 .impersonation-notice {
   background-color: var(--header_background);
+  color: var(--header_primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: var(--space-2);
   text-align: center;
-
-  button {
-    margin-left: 10px;
-  }
+  gap: var(--space-2);
 }

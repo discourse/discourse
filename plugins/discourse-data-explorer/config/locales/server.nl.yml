@@ -5,6 +5,25 @@
 # https://translate.discourse.org/
 
 nl:
+  site_settings:
+    data_explorer_enabled: "Gegevensverkenner inschakelen"
+    data_explorer_ai_queries_enabled: "AI-querygeneratie voor Gegevensverkenner inschakelen"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "Gegevensverkenner-querygenerator"
+          description: "Genereert SQL-query's voor Gegevensverkenner vanuit natuurlijke taal"
+      tool_help:
+        run_sql: "Voert een SQL-query uit en retourneert resultaten"
+      tool_summary:
+        run_sql: "SQL-query uitvoeren"
+      tool_description:
+        run_sql: "SQL-query uitgevoerd"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "AI-agent is niet geconfigureerd. Controleer de instellingen van de AI-functies."
+      error_no_sql_returned: "AI heeft geen geldige SQL-query geretourneerd. Probeer het opnieuw of schrijf de query handmatig."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -15,7 +34,30 @@ nl:
         title: Plaats een bericht in een topic met Gegevensverkenner-resultaten
         description: Ontvang geplande rapporten over een specifiek topic
   data_explorer:
+    admin_dashboard_label: "Gegevensverkenner"
     report_generator:
       private_message:
         title: "Gepland rapport voor %{query_name}"
+        body: |
+          Hallo %{recipient_name}, je Gegevensverkenner-rapport is gereed.
+
+          Querynaam:
+          %{query_name}
+
+          Hier zijn de resultaten:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Query bekijken in Gegevensverkenner</a>
+
+          Rapport gemaakt op %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Gepland rapport voor %{query_name}
+
+          Hier zijn de resultaten:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Query bekijken in Gegevensverkenner</a>
+
+          Rapport gemaakt op %{created_at} (%{timezone})
       upload_appendix: "Bijlage: [%{filename}|bijlage](%{short_url})"

@@ -5,11 +5,6 @@
 # https://translate.discourse.org/
 
 uk:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_login_with_amazon: "Вхід до Discourse через Amazon"
   js:
     login:
       amazon:

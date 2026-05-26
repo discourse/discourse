@@ -19,8 +19,6 @@ ur:
         react_with: "اس پوسٹ پر اس کے ساتھ ردعمل دیں: %{reaction}"
         cant_remove_reaction: "آپ اپنے ردعمل کو مزید نہیں ہٹا سکتے"
         remove_reaction: "اس %{reaction} ردعمل کو ہٹا دیں"
-      users_popup:
-        all: "تمام"
       main_reaction:
         add: "اس پوسٹ کو پسند کریں"
         remove: "اس پسندکو ہٹائیں"

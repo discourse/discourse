@@ -32,8 +32,6 @@ vi:
         cta: "Tạo bảng xếp hạng đầu tiên của bạn"
         none: "Chưa có bảng xếp hạng nào được tạo."
         confirm_destroy: "Bạn có chắc muốn xóa bảng xếp hạng này?"
-        section:
-          groups: "Nhóm"
         date:
           range: "Khoảng thời gian từ / đến"
           from: "Từ ngày"
@@ -48,9 +46,6 @@ vi:
         default_period: "Khoảng thời gian mặc định"
         default_period_help: "Đặt khoảng thời gian mặc định để hiển thị cho bảng xếp hạng này."
         period_filter_disabled: "Vô hiệu hóa bộ lọc khoảng thời gian"
-        weight:
-          post_created: "Tút đã được tạo"
-          solution: "Giải pháp"
         period:
           all_time: "Từ trước tới nay"
           yearly: "Hàng năm"

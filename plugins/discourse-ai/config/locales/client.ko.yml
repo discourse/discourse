@@ -50,6 +50,8 @@ ko:
         bot:
           setting_groups:
             settings: "기본 설정"
+        nav:
+          enabled: "활성화"
         filters:
           all: "모두"
           reset: "리셋"
@@ -223,6 +225,7 @@ ko:
           today: "오늘"
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"
+          scroll_to_bottom: "맨 아래로 스크롤"
       sentiments:
         sentiment_analysis:
           filter_types:

@@ -16,8 +16,6 @@ be:
         bool:
           yes: "Так"
           no: "Не"
-      export: "экспарт"
-      edit: "Рэдагаваць"
       delete: "Выдаліць"
       query_groups: "групы"
       query_description: "Апісанне"

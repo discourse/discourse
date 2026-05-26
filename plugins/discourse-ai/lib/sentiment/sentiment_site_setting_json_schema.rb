@@ -11,6 +11,10 @@ module DiscourseAi
             format: "table",
             title: "model",
             properties: {
+              classification_type: {
+                type: "string",
+                enum: %w[sentiment emotion],
+              },
               model_name: {
                 type: "string",
               },
@@ -21,7 +25,7 @@ module DiscourseAi
                 type: "string",
               },
             },
-            required: %w[model_name endpoint api_key],
+            required: %w[classification_type model_name endpoint api_key],
           },
         }
       end

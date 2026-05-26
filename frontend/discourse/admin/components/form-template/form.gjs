@@ -7,10 +7,10 @@ import FormTemplateValidationOptionsModal from "discourse/admin/components/modal
 import { templateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
-import DButton from "discourse/components/d-button";
 import FormTemplateFormPreview from "discourse/components/modal/form-template-form-preview";
-import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class FormTemplateForm extends Component {
@@ -157,7 +157,7 @@ export default class FormTemplateForm extends Component {
         <label for="template-name">
           {{i18n "admin.form_templates.new_template_form.name.label"}}
         </label>
-        <TextField
+        <DTextField
           @value={{this.templateName}}
           @name="template-name"
           @placeholderKey="admin.form_templates.new_template_form.name.placeholder"

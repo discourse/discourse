@@ -46,6 +46,8 @@ nb_NO:
           one: "(%{count} mer)"
           other: "(%{count} mer)"
         collapse_list: "(vis mindre)"
+        nav:
+          enabled: "Aktivert"
         filters:
           all: "Alle"
           reset: "Tilbakestill"

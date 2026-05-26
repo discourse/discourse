@@ -137,7 +137,7 @@ ensure
 end
 
 build_cmd = %w[pnpm ember build]
-build_env = { "CI" => "1" }
+build_env = { "CI" => "1", "SKIP_DB_AND_REDIS" => "1" }
 
 if Etc.nprocessors > 2
   # Anything more than 2 doesn't seem to improve build times
@@ -164,7 +164,8 @@ else
   File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
 end
 
-system("bin/rake", "assets:precompile:build_plugins", exception: true)
+build_plugin_env = { "SKIP_DB_AND_REDIS" => "1" }
+system(build_plugin_env, "bin/rake", "assets:precompile:build_plugins", exception: true)
 
 if ARGV.include?("--compress")
   files = [*Dir.glob("#{EMBER_APP_DIR}/dist/**/*.js"), *Dir.glob("app/assets/generated/**/*.js")]

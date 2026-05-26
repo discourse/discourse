@@ -21,7 +21,7 @@ import { resetSettings as resetThemeSettings } from "discourse/lib/theme-setting
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
-} from "discourse/components/load-more";
+} from "discourse/ui-kit/d-load-more";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { resetCategoryCache } from "discourse/models/category";
@@ -224,13 +224,6 @@ export default function setupTests(config) {
       window.location.href,
       "0"
     );
-  };
-
-  sinon.config = {
-    injectIntoThis: false,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: true,
   };
 
   // Stop the message bus so we don't get ajax calls

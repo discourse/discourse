@@ -32,8 +32,6 @@ de:
         cta: "Erstelle deine erste Rangliste"
         none: "Es wurden noch keine Ranglisten erstellt."
         confirm_destroy: "Bist du sicher, dass du diese Rangliste löschen möchtest?"
-        section:
-          groups: "Gruppen"
         date:
           range: "Datumsbereich von/bis"
           from: "Ab Datum"
@@ -48,9 +46,6 @@ de:
         default_period: "Standard-Zeitraum"
         default_period_help: "Lege den Standard-Zeitraum fest, der für diese Rangliste angezeigt werden soll."
         period_filter_disabled: "Zeitraumfilter deaktivieren"
-        weight:
-          post_created: "Beitrag erstellt"
-          solution: "Lösung"
         period:
           all_time: "Gesamt"
           yearly: "Jährlich"

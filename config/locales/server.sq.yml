@@ -190,6 +190,7 @@ sq:
       admins: "admins"
       moderators: "moderatorët"
       staff: "stafi"
+      anonymous: "anonim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -456,6 +457,28 @@ sq:
       xaxis: "Ditë"
     new_contributors:
       xaxis: "Day"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Topics"
+        posts: "Postime"
+        share: "Shpërndaje"
+    posters_by_member_type:
+      labels:
+        count: "Postime"
+        share: "Shpërndaje"
+      types:
+        staff: "Stafi"
+    trust_level_pipeline:
+      labels:
+        count: "Anëtarë"
+        share: "Shpërndaje"
+      levels:
+        "0": "I Ri"
+        "1": "Anëtar i Thjeshtë"
+        "2": "Anëtar"
+        "3": "I zakonshëm"
+        "4": "Udhëheqës"
     trust_level_growth:
       yaxis: "Day"
     consolidated_page_views:
@@ -472,6 +495,8 @@ sq:
     consolidated_page_views_browser_detection:
       yaxis: "Dit"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonim"
       yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
@@ -548,6 +573,12 @@ sq:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Tema"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizita"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizita"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -583,6 +614,8 @@ sq:
       xaxis: "Dit"
     page_view_logged_in_browser_reqs:
       xaxis: "Dit"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -624,7 +657,7 @@ sq:
       labels:
         user: User
         location: Vendndodhja
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Vendndodhja
@@ -805,7 +838,6 @@ sq:
     enable_user_directory: "Provide a directory of users for browsing"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
@@ -1147,11 +1179,14 @@ sq:
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
+      subject_template_improved: "Përmbledhja"
       click_here: "klikoni këtu"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:
       title: "Vendos Fjalëkalim"
+    admin_login:
+      subject_template_improved: "Identifikohu"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_new_email_via_admin:

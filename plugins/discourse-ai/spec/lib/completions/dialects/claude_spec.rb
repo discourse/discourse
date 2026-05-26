@@ -137,5 +137,35 @@ RSpec.describe DiscourseAi::Completions::Dialects::Claude do
       ]
       expect(translated.messages).to eq(expected)
     end
+
+    it "renders converted document uploads as text" do
+      llm_model.update!(allowed_attachment_types: ["docx"])
+      converted_text = "Uploaded document: sample.docx (13 Bytes)\n\nConverted text"
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Read this: ", { upload_id: 123 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [
+          {
+            kind: :document,
+            filename: "sample.docx",
+            mime_type: "text/plain",
+            text: converted_text,
+            converted_from: "docx",
+          },
+        ],
+      )
+
+      translated = described_class.new(prompt, llm_model).translate
+      content = translated.messages.first[:content]
+
+      expect(content).to eq(
+        [{ type: "text", text: "Read this: " }, { type: "text", text: converted_text }],
+      )
+      expect(content).not_to include(hash_including(type: "document"))
+    end
   end
 end

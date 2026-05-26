@@ -23,8 +23,6 @@ lv:
         bool:
           yes: "Jā"
           no: "Nē"
-      export: "Eksportēt"
-      edit: "Labot"
       delete: "Dzēst"
       query_groups: "Grupas"
       query_description: "Apraksts"

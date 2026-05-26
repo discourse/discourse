@@ -348,7 +348,6 @@ sl:
           status:
             unknown: "Neodločen"
             going: "Pridem"
-            not_going: "Ne pridem"
             interested: "Mogoče pridem"
         event:
           expired: "Poteklo"

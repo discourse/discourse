@@ -334,6 +334,30 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(nested_reply.reload.deleted_at).to be_present
     end
 
+    it "delete_and_ignore_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_ignore_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
+    it "delete_and_agree_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_agree_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
     it "disagrees with the flags" do
       reviewable.perform(moderator, :disagree)
       expect(reviewable).to be_rejected
@@ -469,6 +493,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(flagged_reply.reload).to be_ignored
+    end
+  end
+
+  describe "#perform_disagree" do
+    it "restores a hidden post even when the author would no longer pass post validations" do
+      SiteSetting.newuser_max_embedded_media = 1
+
+      author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      flagged_post =
+        create_post(
+          user: author,
+          raw: "![one](http://example.com/one.png)\n![two](http://example.com/two.png)",
+        )
+      reviewable = PostActionCreator.spam(user, flagged_post).reviewable
+      flagged_post.hide!(PostActionType.types[:spam])
+
+      author.update!(trust_level: TrustLevel[0])
+
+      expect { reviewable.perform(moderator, :disagree) }.not_to raise_error
+      expect(flagged_post.reload.hidden).to eq(false)
+      expect(flagged_post.topic.reload.visible).to eq(true)
     end
   end
 

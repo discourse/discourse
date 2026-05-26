@@ -22,19 +22,10 @@ ru:
           few: "%{reaction}: %{count} пользователей"
           many: "%{reaction}: %{count} пользователей"
           other: "%{reaction}: %{count} пользователи"
-      reaction:
-        forbidden: "Вам запрещено реагировать на этот пост или менять свою реакцию на него."
       picker:
         react_with: "Отреагировать на это сообщение: %{reaction}"
         cant_remove_reaction: "Вы больше не можете удалить свою реакцию"
         remove_reaction: "Удалить реакцию %{reaction}"
-      users_popup:
-        all: "Все"
-        title:
-          one: "%{count} Реакция"
-          few: "%{count} Реакций"
-          many: "%{count} Реакций"
-          other: "%{count} Реакции"
       counter:
         aria_label:
           one: "%{count} реакция"

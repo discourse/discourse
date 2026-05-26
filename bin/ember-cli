@@ -21,6 +21,15 @@ rescue Errno::ESRCH
   false
 end
 
+def kill_tree(root_pid, signal)
+  return unless root_pid
+  children = `pgrep -P #{root_pid} 2>/dev/null`.to_s.split.map(&:to_i)
+  children.each { |c| kill_tree(c, signal) }
+  Process.kill(signal, root_pid)
+rescue Errno::ESRCH, Errno::EPERM
+  # already gone
+end
+
 command =
   if ARGV.include?("--test")
     "test"
@@ -93,7 +102,9 @@ if ARGV.include?("-u") || ARGV.include?("--server") || ARGV.include?("--unicorn"
     )
   end
 
-  server_pid = spawn(server_env, "#{__dir__}/pitchfork")
+  # Own process group so terminal Ctrl+C only hits bin/ember-cli.
+  # The INT trap below is the only signaller.
+  server_pid = spawn(server_env, "#{__dir__}/pitchfork", pgroup: true)
   ember_cli_pid = nil
   sigint_received = false
 
@@ -110,12 +121,8 @@ if ARGV.include?("-u") || ARGV.include?("--server") || ARGV.include?("--unicorn"
         end
       end
     end
-    # Only send TERM to the server if ember exited on its own (not from
-    # Ctrl+C). When the user presses Ctrl+C, all processes in the foreground
-    # group already received INT directly from the terminal. Sending an
-    # additional TERM races with the server's hard shutdown and can cause it
-    # to fall back to a slow graceful shutdown, making the process appear
-    # stuck for up to 60 seconds.
+    # On Ctrl+C the INT trap already TERMs the server. Only do it here if
+    # ember-cli exited on its own.
     if !sigint_received && process_running?(server_pid)
       puts "[bin/ember-cli] ember-cli process stopped. Terminating server."
       Process.kill("TERM", server_pid)
@@ -126,30 +133,45 @@ if ARGV.include?("-u") || ARGV.include?("--server") || ARGV.include?("--unicorn"
   trap("INT") do
     sigint_received = true
     int_count += 1
-    case int_count
-    when 1
-      # Swallowed to give children time to handle it
-    when 2
-      puts "\n[bin/ember-cli] Interrupt again to force shutdown..."
-    else
-      puts "\n[bin/ember-cli] Forcing shutdown..."
+
+    if int_count == 1
+      # TERM the supervisor. Its trap forwards to the master, which gracefully
+      # stops workers and Demon::Sidekiq.
       begin
-        Process.kill("KILL", server_pid)
+        Process.kill("TERM", server_pid)
       rescue StandardError
         nil
       end
+
       if ember_cli_pid
         begin
-          Process.kill("KILL", ember_cli_pid)
+          Process.kill("TERM", ember_cli_pid)
         rescue StandardError
           nil
         end
       end
+
+      # If shutdown drags, show the force-quit option.
+      Thread.new do
+        sleep 2
+        if process_running?(server_pid)
+          puts "\n[bin/ember-cli] Shutting down... press Ctrl+C again to force quit."
+        end
+      end
+    else
+      puts "\n[bin/ember-cli] Forcing shutdown..."
+      # Catch orphans (e.g. stuck sidekiq).
+      kill_tree(server_pid, "KILL")
+      kill_tree(ember_cli_pid, "KILL") if ember_cli_pid
       exit!(1)
     end
   end
 
   Process.wait(server_pid)
+
+  # Drain pgroup so shutdown messages don't print after the exit.
+  deadline = Time.now + 10
+  sleep 0.05 while Time.now < deadline && !`pgrep -g #{server_pid} 2>/dev/null`.strip.empty?
 
   if ember_cli_pid && process_running?(ember_cli_pid)
     puts "[bin/ember-cli] server process stopped. Terminating ember-cli."

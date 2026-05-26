@@ -10,6 +10,11 @@ es:
       site_settings:
         categories:
           discourse_solved: "Discourse resuelto"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluciones aceptadas"
   js:
     notifications:
       alt:
@@ -71,9 +76,6 @@ es:
           description: "Recibirás una notificación de cada respuesta nueva de este tema y cuando el tema se resuelva. Se mostrará un recuento de las respuestas nuevas de este tema."
       category_type_support:
         title: "Soporte"
-        not_support_type: "¡Atención! Has desactivado la posibilidad de marcar publicaciones como soluciones en esta categoría. Para volver a activarla, encontrarás la configuración correspondiente en la pestaña Ajustes."
-        remove_support_type: "Eliminar tipo de soporte"
-        confirm_remove_support_type: "¿Seguro que quieres eliminar la posibilidad de marcar publicaciones como soluciones en esta categoría? Puedes volver a activarlo en la pestaña Ajustes más tarde."
     topic_statuses:
       solved:
         help: "Este tema tiene una solución"

@@ -411,10 +411,10 @@ tr_TR:
       models:
         invitee:
           no_users: "Kullanıcı bulunamadı"
+          leave_event: "Etkinlikten ayrıl"
           status:
             unknown: "İlgilenmiyorum"
             going: "Gidiyorum"
-            not_going: "Gitmiyorum"
             interested: "İlgileniyorum"
             going_count:
               one: "%{count} gidiyor"

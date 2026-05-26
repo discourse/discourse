@@ -12,10 +12,6 @@ bg:
         link_to_settings: "Настройки"
         refresh: "Обнови"
         name: "Име "
-        section:
-          groups: "Групи"
-        weight:
-          solution: "Решение"
         period:
           all_time: "От началото"
           yearly: "Годишно"

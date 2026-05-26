@@ -333,6 +333,7 @@ pl_PL:
       search: "Wyszukiwanie..."
       group_availability: "Dostępność %{group}"
     discourse_post_event:
+      new_event: "Nowe wydarzenie"
       notifications:
         before_event_reminder: "Wydarzenie wkrótce się rozpocznie"
         after_event_reminder: "Wydarzenie zakończyło się"
@@ -413,10 +414,13 @@ pl_PL:
       models:
         invitee:
           no_users: "Nie znaleziono użytkowników"
+          this_event: "To wydarzenie"
+          this_and_following: "To wydarzenie i wszystkie kolejne wydarzenia"
+          leave_event: "Opuść wydarzenie"
           status:
             unknown: "Nie zainteresowany"
             going: "Wezmę udział"
-            not_going: "Nie biorę udziału"
+            not_going: "Nie idę"
             interested: "Zainteresowany"
             going_count:
               one: "%{count} idzie"

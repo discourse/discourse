@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class TopicBookmarkPostSubmenu extends Component {
@@ -28,7 +28,7 @@ export default class TopicBookmarkPostSubmenu extends Component {
   }
 
   <template>
-    <DropdownMenu class="topic-bookmark-post-submenu" as |dropdown|>
+    <DDropdownMenu class="topic-bookmark-post-submenu" as |dropdown|>
       <dropdown.item
         class="bookmark-menu__row --jump"
         data-menu-option-id="jump"
@@ -68,6 +68,6 @@ export default class TopicBookmarkPostSubmenu extends Component {
           class="bookmark-menu__row-btn --danger"
         />
       </dropdown.item>
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

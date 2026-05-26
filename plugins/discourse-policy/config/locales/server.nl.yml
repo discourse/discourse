@@ -8,6 +8,7 @@ nl:
   site_settings:
     policy_enabled: "Beleid toestaan?"
     policy_restrict_to_staff_posts: "Beleid mag alleen worden weergegeven in berichten van medewerkers"
+    create_policy_allowed_groups: "Groepslidmaatschap is vereist om beleid aan berichten toe te voegen."
     policy_easy_revoke: "Knoppen Accepteren en Intrekken tegelijk weergeven"
   discourse_policy:
     errors:

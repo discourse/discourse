@@ -35,7 +35,6 @@ zh_CN:
       already_voted: "您只能为每个问题投一次票。"
       user_over_limit: "您不能超过您的信任级别对应的投票数。"
       one_vote_per_post: "您只能为每个帖子投一次票。"
-      toggle_voters: "显示投票人"
     last_answer_lowercase: 最后一个回答
     answer_lowercase:
       other: 回答
@@ -53,8 +52,6 @@ zh_CN:
           edit: "编辑"
           cancel: "取消"
           add: "添加评论"
-          actions:
-            delete: "删除评论"
           show:
             other: 显示其他 %{count} 条评论
           delete:

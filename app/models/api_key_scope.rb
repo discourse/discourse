@@ -314,10 +314,8 @@ class ApiKeyScope < ActiveRecord::Base
             action = "#{defaults[:controller]}##{defaults[:action]}"
             path = route.path.spec.to_s.gsub(/\(\.:format\)/, "")
             api_supported_path =
-              (
-                path.end_with?(".rss") || !route.path.requirements[:format] ||
-                  route.path.requirements[:format].match?("json")
-              )
+              path.end_with?(".rss") || !route.path.requirements[:format] ||
+                route.path.requirements[:format].match?("json")
             excluded_paths = %w[/new-topic /new-message /exception]
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
@@ -358,12 +356,12 @@ end
 # Table name: api_key_scopes
 #
 #  id                 :bigint           not null, primary key
-#  api_key_id         :integer          not null
-#  resource           :string           not null
 #  action             :string           not null
 #  allowed_parameters :json
+#  resource           :string           not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  api_key_id         :integer          not null
 #
 # Indexes
 #

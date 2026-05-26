@@ -3,13 +3,13 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
 import { POSTING_REVIEW_GROUP_BASED_MODES } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryModeration extends Component {
@@ -150,9 +150,10 @@ export default class UpsertCategoryModeration extends Component {
 
   <template>
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-moderation"
+        "--full"
         (if (eq @selectedTab "moderation") "active")
       }}
     >
@@ -167,7 +168,7 @@ export default class UpsertCategoryModeration extends Component {
       {{/if}}
 
       <@form.Container @title={{i18n "category.default_slow_mode"}}>
-        <RelativeTimePicker
+        <DRelativeTimePicker
           @id="category-default-slow-mode"
           @durationMinutes={{this.defaultSlowModeMinutes}}
           @onChange={{this.onDefaultSlowModeDurationChange}}
@@ -175,7 +176,7 @@ export default class UpsertCategoryModeration extends Component {
       </@form.Container>
 
       <@form.Container @title={{i18n "topic.auto_close.label"}}>
-        <RelativeTimePicker
+        <DRelativeTimePicker
           @id="topic-auto-close"
           @durationHours={{this.autoCloseHours}}
           @hiddenIntervals={{this.hiddenRelativeIntervals}}
@@ -187,6 +188,7 @@ export default class UpsertCategoryModeration extends Component {
         @name="auto_close_based_on_last_post"
         @title={{i18n "topic.auto_close.based_on_last_post"}}
         @type="checkbox"
+        @format="full"
         as |field|
       >
         <field.Control />
