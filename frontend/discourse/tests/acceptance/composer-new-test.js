@@ -69,7 +69,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
       .dom(".composer-toggle-whisper")
       .exists("whisper toggle item is visible in dropdown");
 
-    await click(".composer-toggle-whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -77,7 +77,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
       )
       .exists("sets the post type to whisper");
 
-    await click(".composer-toggle-whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -182,7 +182,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
     await click(".topic-post[data-post-number='1'] button.reply");
 
     await click(".composer-actions-trigger");
-    await click(".composer-toggle-whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -203,7 +203,7 @@ acceptance(`Composer (new composer actions)`, function (needs) {
       .doesNotExist("the save button should not use the whisper icon");
 
     await click(".composer-actions-trigger");
-    await click(".composer-toggle-unlisted");
+    await click(".composer-toggle-unlisted .d-toggle-switch__checkbox");
 
     assert
       .dom(

@@ -7,7 +7,6 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
-import { _clearSnapshots as _clearComposerActionsSnapshotsNew } from "discourse/components/composer-actions-new";
 import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
@@ -108,6 +107,7 @@ export function addComposerSaveErrorCallback(callback) {
 export default class ComposerService extends Service {
   @service appEvents;
   @service capabilities;
+  @service composerActionState;
   @service currentUser;
   @service dialog;
   @service keyValueStore;
@@ -1424,7 +1424,7 @@ export default class ComposerService extends Service {
         if (result.responseJson.route_to) {
           // TODO: await this:
           this.destroyDraft();
-          _clearComposerActionsSnapshotsNew();
+          this.composerActionState.clear();
           if (result.responseJson.message) {
             return this.dialog.alert({
               message: result.responseJson.message,
@@ -1684,7 +1684,7 @@ export default class ComposerService extends Service {
 
     tags = await this.filterTags(tags);
 
-    _clearComposerActionsSnapshotsNew();
+    this.composerActionState.clear();
 
     return this.open({
       prioritizedCategoryId: categoryId,
@@ -1705,7 +1705,7 @@ export default class ComposerService extends Service {
   async openNewMessage({ title, body, recipients, hasGroups, tags }) {
     tags = await this.filterTags(tags);
 
-    _clearComposerActionsSnapshotsNew();
+    this.composerActionState.clear();
 
     return this.open({
       action: Composer.PRIVATE_MESSAGE,
@@ -2078,7 +2078,7 @@ export default class ComposerService extends Service {
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
 
-    _clearComposerActionsSnapshotsNew();
+    this.composerActionState.clear();
   }
 
   @computed("model.action")

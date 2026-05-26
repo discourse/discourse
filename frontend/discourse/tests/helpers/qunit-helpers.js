@@ -17,7 +17,6 @@ import sinon from "sinon";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
-import { _clearSnapshots as _clearComposerActionsSnapshotsNew } from "discourse/components/composer-actions-new";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
@@ -232,7 +231,7 @@ export function testCleanup(container, app) {
   clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
-  _clearComposerActionsSnapshotsNew();
+  container?.lookup?.("service:composer-action-state")?.clear();
   _clearComposerActionsSnapshotsOld();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();

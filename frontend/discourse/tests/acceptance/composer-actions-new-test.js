@@ -114,7 +114,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .dom(".composer-toggle-whisper")
       .exists("whisper toggle item is visible in dropdown");
 
-    await click(".composer-toggle-whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -122,7 +122,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       )
       .exists("whisper toggle is on after click");
 
-    await click(".composer-toggle-whisper");
+    await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -259,7 +259,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .dom(".composer-toggle-no-bump")
       .exists("no-bump toggle item is visible in dropdown");
 
-    await click(".composer-toggle-no-bump");
+    await click(".composer-toggle-no-bump .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -267,7 +267,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       )
       .exists("no-bump toggle is on after click");
 
-    await click(".composer-toggle-no-bump");
+    await click(".composer-toggle-no-bump .d-toggle-switch__checkbox");
 
     assert
       .dom(
@@ -413,7 +413,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .dom(".composer-toggle-unlisted")
       .exists("unlisted toggle is visible for staff in create topic mode");
 
-    await click(".composer-toggle-unlisted");
+    await click(".composer-toggle-unlisted .d-toggle-switch__checkbox");
     composer.model.set("noBump", true);
 
     assert

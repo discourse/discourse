@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { service } from "@ember/service";
-import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { buildComposerActionItems } from "discourse/lib/composer/action-items";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import {
   applyBehaviorTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
-import { escapeExpression } from "discourse/lib/utilities";
 import {
   ADD_TRANSLATION,
   CREATE_SHARED_DRAFT,
@@ -20,7 +20,6 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import Draft from "discourse/models/draft";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -31,28 +30,16 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
-// Separate snapshots for new component validation
-let _topicSnapshot = null;
-let _postSnapshot = null;
-let _actionSnapshot = null;
-
-export function _clearSnapshots() {
-  _topicSnapshot = null;
-  _postSnapshot = null;
-  _actionSnapshot = null;
-}
-
 export default class ComposerActions extends Component {
-  @service dialog;
   @service composer;
+  @service composerActionState;
   @service currentUser;
   @service site;
 
   constructor() {
     super(...arguments);
-    this.ensureSnapshotsUpdated();
+    this.composerActionState.remember({ topic: this.topic, post: this.post });
   }
-
 
   get action() {
     return this.args.action;
@@ -80,37 +67,6 @@ export default class ComposerActions extends Component {
 
   get isInSlowMode() {
     return this.topic?.slow_mode_seconds > 0;
-  }
-
-  // Mirrors the original composer-actions.js didReceiveAttrs behaviour: only
-  // update snapshots when this.topic / this.post are present and changed. Do
-  // NOT clear snapshots when this.topic becomes null — module-level snapshots
-  // are intentionally session-scoped so that flows like reply_as_new_topic
-  // (which switch to CREATE_TOPIC with a null this.topic) can still surface
-  // "Reply to topic" / "Reply to post" as a way back. Tests reset snapshots
-  // between runs via _clearSnapshots in qunit-helpers.js.
-  //
-  // Safe to call from getters: the snapshot vars are plain (not @tracked), so
-  // mutating them does not trigger re-renders. Called from the constructor,
-  // from _computeAvailableActions() before each render, and defensively at
-  // the top of selection handlers in case args drift between menu render and
-  // click.
-  ensureSnapshotsUpdated() {
-    if (
-      this.topic &&
-      (!_topicSnapshot || this.topic.id !== _topicSnapshot.id)
-    ) {
-      _topicSnapshot = this.topic;
-      _postSnapshot = this.post;
-    }
-
-    if (this.post && (!_postSnapshot || this.post.id !== _postSnapshot.id)) {
-      _postSnapshot = this.post;
-    }
-
-    if (this.action !== _actionSnapshot) {
-      _actionSnapshot = this.action;
-    }
   }
 
   @cached
@@ -201,236 +157,23 @@ export default class ComposerActions extends Component {
   }
 
   _computeAvailableActions() {
-    // Refresh module-level snapshots against current args before deciding
-    // which actions to expose. Without this, a composer instance that was
-    // first constructed in REPLY mode but later retargeted to a fresh
-    // CREATE_TOPIC (this.topic === null) would still show snapshot-backed
-    // reply_to_post / reply_to_topic items, and selecting one would open
-    // REPLY with a null topic once the handler clears the snapshots.
-    this.ensureSnapshotsUpdated();
+    this.composerActionState.remember({ topic: this.topic, post: this.post });
 
-    let items = [];
-
+    const currentAction = this.action;
     const currentTopic = this.topic;
     const currentPost = this.post;
-    const currentAction = this.action;
-
-    // 1. Reply as New Topic (reply_as_new_topic)
-    if (
-      currentAction === REPLY &&
-      currentAction !== CREATE_TOPIC &&
-      currentAction !== CREATE_SHARED_DRAFT &&
-      currentTopic &&
-      !currentTopic.isPrivateMessage &&
-      !this.isEditing &&
-      this.currentUser?.can_create_topic &&
-      currentTopic.id
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.reply_as_new_topic.label"),
-        description: i18n("composer.composer_actions.reply_as_new_topic.desc"),
-        icon: "far-pen-to-square",
-        id: "reply_as_new_topic",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 1b. Reply as New Group Message (reply_as_new_group_message) - PM with
-    // multiple recipients or any group recipient
-    if (
-      currentAction === REPLY &&
-      !this.isEditing &&
-      currentTopic?.isPrivateMessage &&
-      currentTopic.details &&
-      (currentTopic.details.allowed_users?.length > 1 ||
-        currentTopic.details.allowed_groups?.length > 0)
-    ) {
-      const actionObj = {
-        name: i18n(
-          "composer.composer_actions.reply_as_new_group_message.label"
-        ),
-        description: i18n(
-          "composer.composer_actions.reply_as_new_group_message.desc"
-        ),
-        icon: "plus",
-        id: "reply_as_new_group_message",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 2. Reply to Post (reply_to_post)
-    const canRestoreReplyToPost =
-      currentAction === REPLY &&
-      !currentPost &&
-      _postSnapshot &&
-      _topicSnapshot &&
-      currentTopic?.id === _topicSnapshot.id;
-
-    if (
-      !this.isEditing &&
-      ((currentAction !== REPLY && currentPost) ||
-        (currentAction === REPLY &&
-          currentPost &&
-          !(this.replyOptions?.userAvatar && this.replyOptions?.userLink)) ||
-        canRestoreReplyToPost)
-    ) {
-      const postForLabel = currentPost || _postSnapshot;
-      const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_post.label", {
-          postUsername: this._postDisplayName(postForLabel),
-        }),
-        description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
-        id: "reply_to_post",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 2.5. Reply to Topic (reply_to_topic) - show when user is currently replying to a specific post
-    // Excludes CREATE_TOPIC and PRIVATE_MESSAGE modes which have their own reply_to_topic sections
-    if (
-      !this.isEditing &&
-      currentAction !== CREATE_TOPIC &&
-      currentAction !== PRIVATE_MESSAGE &&
-      ((currentAction !== REPLY && currentTopic) ||
-        (currentAction === REPLY &&
-          currentTopic &&
-          this.replyOptions?.userAvatar &&
-          this.replyOptions?.userLink &&
-          this.replyOptions?.topicLink))
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
-        id: "reply_to_topic",
-      };
-
-      items.push(actionObj);
-    }
-
-    // === CREATE_TOPIC / CREATE_SHARED_DRAFT MODE ACTIONS ===
-
-    const inCreateTopicLike =
-      currentAction === CREATE_TOPIC || currentAction === CREATE_SHARED_DRAFT;
-
-    // 2b. Reply to Post (when in CREATE_TOPIC/CREATE_SHARED_DRAFT mode with a
-    // remembered post)
-    if (
-      inCreateTopicLike &&
-      !this.isEditing &&
-      _postSnapshot &&
-      _topicSnapshot
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_post.label", {
-          postUsername: this._postDisplayName(_postSnapshot),
-        }),
-        description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
-        id: "reply_to_post",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 3. Reply to Topic (allow going back to REPLY from
-    // CREATE_TOPIC/CREATE_SHARED_DRAFT)
-    if (inCreateTopicLike && !this.isEditing && _topicSnapshot) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
-        id: "reply_to_topic",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 4. Shared Draft (shared_draft) - CREATE_TOPIC MODE ONLY
-    if (currentAction === CREATE_TOPIC && this.site.shared_drafts_category_id) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.shared_draft.label"),
-        description: i18n("composer.composer_actions.shared_draft.desc"),
-        icon: "far-clipboard",
-        id: "shared_draft",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 5. Create Topic (when in CREATE_SHARED_DRAFT mode, allow switching back
-    // to CREATE_TOPIC)
-    if (
-      currentAction === CREATE_SHARED_DRAFT &&
-      this.currentUser?.can_create_topic &&
-      !this.isEditing
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.create_topic.label"),
-        description: i18n("composer.composer_actions.create_topic.desc"),
-        icon: "far-pen-to-square",
-        id: "create_topic",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 7. Create Private Message (create_private_message) -
-    // CREATE_TOPIC/CREATE_SHARED_DRAFT MODE
-    if (
-      this.currentUser?.can_send_private_messages &&
-      inCreateTopicLike &&
-      !this.isEditing
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.create_personal_message.label"),
-        description: i18n(
-          "composer.composer_actions.create_personal_message.desc"
-        ),
-        icon: "envelope",
-        id: "create_private_message",
-      };
-
-      items.push(actionObj);
-    }
-
-    // === PRIVATE_MESSAGE MODE ACTIONS ===
-
-    // 8. Reply to Topic (when in PRIVATE_MESSAGE mode, allow going back to REPLY)
-    if (
-      currentAction === PRIVATE_MESSAGE &&
-      !this.isEditing &&
-      _topicSnapshot
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
-        id: "reply_to_topic",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 9. Create Topic (when in PRIVATE_MESSAGE mode, allow switching to CREATE_TOPIC)
-    if (
-      currentAction === PRIVATE_MESSAGE &&
-      this.currentUser?.can_create_topic &&
-      !this.isEditing
-    ) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.create_topic.label"),
-        description: i18n("composer.composer_actions.create_topic.desc"),
-        icon: "far-pen-to-square",
-        id: "create_topic",
-      };
-
-      items.push(actionObj);
-    }
+    const items = buildComposerActionItems({
+      action: currentAction,
+      topic: currentTopic,
+      post: currentPost,
+      replyOptions: this.replyOptions,
+      snapshots: this.composerActionState.snapshot,
+      currentUser: this.currentUser,
+      site: this.site,
+      composerModel: this.composerModel,
+      isEditing: this.isEditing,
+      postDisplayName: (post) => this._postDisplayName(post),
+    });
 
     return applyValueTransformer("composer-actions-content", items, {
       action: currentAction,
@@ -487,152 +230,22 @@ export default class ComposerActions extends Component {
       "unlistTopic"
     );
 
-    const composerAction = `${camelize(actionId)}Selected`;
-    if (this[composerAction]) {
-      this[composerAction](options, this.composerModel);
-    } else {
+    this.composerActionState.remember({ topic: this.topic, post: this.post });
+
+    const handled = await this.composerActionState.selectAction(actionId, {
+      options,
+      composerModel: this.composerModel,
+      topic: this.topic,
+      post: this.post,
+    });
+
+    if (!handled) {
       applyBehaviorTransformer("composer-actions-on-select", () => {}, {
         actionId,
         options,
         model: this.composerModel,
       });
     }
-  }
-
-  _continuedFromText(post, topic) {
-    let url = post?.url || topic?.url;
-    const topicTitle = topic?.title;
-
-    if (!url || !topicTitle) {
-      return;
-    }
-
-    url = `${location.protocol}//${location.host}${url}`;
-    const link = `[${escapeExpression(topicTitle)}](${url})`;
-    return i18n("post.continue_discussion", {
-      postLink: link,
-    });
-  }
-
-  async _replyFromExisting(options, post, topic) {
-    this._clearUnsupportedToggles(options);
-    await this.composer.destroyDraft();
-    this.composer.close();
-    await this.composer.open({
-      ...options,
-      prependText: this._continuedFromText(post, topic),
-    });
-    this._reapplyToggles(options);
-  }
-
-  async _openComposer(options) {
-    this._clearUnsupportedToggles(options);
-    this.composer.closeComposer();
-    await this.composer.open(options);
-    this._reapplyToggles(options);
-  }
-
-  _clearUnsupportedToggles(options) {
-    if (options.action !== REPLY) {
-      options.whisper = false;
-      options.noBump = false;
-    }
-
-    if (options.action !== CREATE_TOPIC) {
-      options.unlistTopic = false;
-    }
-  }
-
-  // composer.open() / model.open() pick up `whisper` and `noBump` from opts but
-  // not `unlistTopic`, so make sure supported toggle states survive a mode
-  // switch (reply-to-topic <-> reply-to-post, etc.) without leaking into modes
-  // that do not support them.
-  _reapplyToggles(options) {
-    const model = this.composer.model;
-    if (!model) {
-      return;
-    }
-    if (model.creatingTopic && options.unlistTopic) {
-      model.set("unlistTopic", true);
-    }
-    if (model.replyingToTopic && options.whisper) {
-      model.set("whisper", true);
-    }
-    if (model.replyingToTopic && options.noBump) {
-      model.set("noBump", true);
-    }
-  }
-
-  replyAsNewGroupMessageSelected(options) {
-    this.ensureSnapshotsUpdated();
-    const recipients = [];
-    const details = this.topic.details;
-    details.allowed_users.forEach((u) => recipients.push(u.username));
-    details.allowed_groups.forEach((g) => recipients.push(g.name));
-
-    options.action = PRIVATE_MESSAGE;
-    options.recipients = recipients.join(",");
-    options.archetypeId = "private_message";
-
-    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
-  }
-
-  replyAsNewTopicSelected(options) {
-    Draft.get("new_topic").then((response) => {
-      if (response.draft) {
-        this.dialog.confirm({
-          message: i18n("composer.composer_actions.reply_as_new_topic.confirm"),
-          confirmButtonLabel: "composer.ok_proceed",
-          didConfirm: () => this._replyAsNewTopicSelect(options),
-        });
-      } else {
-        this._replyAsNewTopicSelect(options);
-      }
-    });
-  }
-
-  _replyAsNewTopicSelect(options) {
-    this.ensureSnapshotsUpdated();
-    options.action = CREATE_TOPIC;
-    options.draftKey = this.composer.topicDraftKey;
-    options.categoryId = this.composerModel.topic?.category?.id;
-    options.disableScopedCategory = true;
-    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
-  }
-
-  replyToPostSelected(options) {
-    this.ensureSnapshotsUpdated();
-    options.action = REPLY;
-    options.post = _postSnapshot;
-    this._openComposer(options);
-  }
-
-  replyToTopicSelected(options) {
-    this.ensureSnapshotsUpdated();
-    options.action = REPLY;
-    options.topic = _topicSnapshot;
-    this._openComposer(options);
-  }
-
-  _switchCreate(options, composerAction) {
-    options.action = composerAction;
-    options.categoryId = this.composerModel.categoryId;
-    options.topicTitle = this.composerModel.title;
-    options.tags = this.composerModel.tags;
-    this._openComposer(options);
-  }
-
-  sharedDraftSelected(options) {
-    this._switchCreate(options, CREATE_SHARED_DRAFT);
-  }
-
-  createTopicSelected(options) {
-    this._switchCreate(options, CREATE_TOPIC);
-  }
-
-  createPrivateMessageSelected(options) {
-    options.archetypeId = "private_message";
-    this._switchCreate(options, PRIVATE_MESSAGE);
   }
 
   <template>
@@ -687,9 +300,8 @@ export default class ComposerActions extends Component {
                 <div class="composer-actions-toggles">
                   {{#if this.composer.canToggleWhisper}}
                     <dropdown.item>
-                      <DButton
+                      <div
                         class="composer-toggle-item composer-toggle-whisper --with-description"
-                        @action={{this.toggleWhisper}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "far-eye-slash"}}
@@ -702,16 +314,21 @@ export default class ComposerActions extends Component {
                               "composer.composer_actions.toggle_whisper.desc"
                             }}</span>
                         </div>
-                        <DToggleSwitch @state={{this.composerModel.whisper}} />
-                      </DButton>
+                        <DToggleSwitch
+                          @state={{this.composerModel.whisper}}
+                          aria-label={{i18n
+                            "composer.composer_actions.toggle_whisper.label"
+                          }}
+                          {{on "click" this.toggleWhisper}}
+                        />
+                      </div>
                     </dropdown.item>
                   {{/if}}
 
                   {{#if this.composer.canToggleNoBump}}
                     <dropdown.item>
-                      <DButton
+                      <div
                         class="composer-toggle-item composer-toggle-no-bump --with-description"
-                        @action={{this.toggleNoBump}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "anchor"}}
@@ -724,16 +341,21 @@ export default class ComposerActions extends Component {
                               "composer.composer_actions.toggle_topic_bump.desc"
                             }}</span>
                         </div>
-                        <DToggleSwitch @state={{this.composerModel.noBump}} />
-                      </DButton>
+                        <DToggleSwitch
+                          @state={{this.composerModel.noBump}}
+                          aria-label={{i18n
+                            "composer.composer_actions.toggle_topic_bump.label"
+                          }}
+                          {{on "click" this.toggleNoBump}}
+                        />
+                      </div>
                     </dropdown.item>
                   {{/if}}
 
                   {{#if this.composer.canUnlistTopic}}
                     <dropdown.item>
-                      <DButton
+                      <div
                         class="composer-toggle-item composer-toggle-unlisted --with-description"
-                        @action={{this.toggleUnlisted}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "far-eye-slash"}}
@@ -748,8 +370,12 @@ export default class ComposerActions extends Component {
                         </div>
                         <DToggleSwitch
                           @state={{this.composerModel.unlistTopic}}
+                          aria-label={{i18n
+                            "composer.composer_actions.toggle_unlisted.label"
+                          }}
+                          {{on "click" this.toggleUnlisted}}
                         />
-                      </DButton>
+                      </div>
                     </dropdown.item>
                   {{/if}}
                 </div>
