@@ -992,6 +992,7 @@ module ApplicationHelper
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,
       user_dark_scheme_id: user_dark_scheme_id || -1,
+      is_staff: staff?,
     }
 
     if Rails.env.development?

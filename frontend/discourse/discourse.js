@@ -4,10 +4,7 @@ document.addEventListener("discourse-init", async (e) => {
   performance.mark("discourse-init");
   const config = e.detail;
 
-  // TODO!
-  if (
-    document.querySelector('script[src*="/extra-locales/"][src*="/admin.js"]')
-  ) {
+  if (document.querySelector('#data-discourse-setup[data-is-staff="true"]')) {
     await loadAdmin();
   }
 
