@@ -1639,7 +1639,7 @@ posting:
   klipy_api_key:
     default: ""
     client: true
-    hidden: true
+    area: "gifs"
   klipy_file_detail:
     default: "webp"
     client: true
