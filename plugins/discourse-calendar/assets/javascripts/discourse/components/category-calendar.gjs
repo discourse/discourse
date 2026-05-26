@@ -28,6 +28,7 @@ export default class CategoryCalendar extends Component {
     await openEventComposer({
       composer: this.composer,
       currentUser: this.currentUser,
+      siteSettings: this.siteSettings,
       info,
       category: this.category,
     });

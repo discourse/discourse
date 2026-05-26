@@ -24,10 +24,11 @@ module("Unit | Lib | open-event-composer", function (hooks) {
     };
   });
 
-  test("all-day click defaults to 9:00 in the user's timezone", async function (assert) {
+  test("all-day click defaults to 9:00 when the setting is unset", async function (assert) {
     await openEventComposer({
       composer: this.composer,
       currentUser: { user_option: { timezone: "America/New_York" } },
+      siteSettings: { all_day_event_start_time: "" },
       info: { dateStr: "2026-05-22", allDay: true },
       category: null,
     });
@@ -37,6 +38,19 @@ module("Unit | Lib | open-event-composer", function (hooks) {
     assert.strictEqual(params.timezone, "America/New_York");
     assert.strictEqual(params.status, "public");
     assert.strictEqual(params.allDay, undefined, "does not emit allDay flag");
+  });
+
+  test("all-day click honors the all_day_event_start_time setting", async function (assert) {
+    await openEventComposer({
+      composer: this.composer,
+      currentUser: { user_option: { timezone: "America/New_York" } },
+      siteSettings: { all_day_event_start_time: "08:30" },
+      info: { dateStr: "2026-05-22", allDay: true },
+      category: null,
+    });
+
+    const params = parseBbcode(this.calls[0].body);
+    assert.strictEqual(params.start, "2026-05-22 08:30");
   });
 
   test("timegrid click preserves the clicked time", async function (assert) {
