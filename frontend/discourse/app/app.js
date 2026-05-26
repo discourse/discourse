@@ -21,36 +21,8 @@ import { importSync } from "@embroider/macros";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import PreloadStore from "discourse/lib/preload-store";
+import { populatePreloadStore } from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
-
-function populatePreloadStore() {
-  let setupData;
-  const setupDataElement = document.getElementById("data-discourse-setup");
-  if (setupDataElement) {
-    setupData = setupDataElement.dataset;
-  }
-
-  let preloaded;
-  const preloadedDataElement = document.getElementById("data-preloaded");
-  if (preloadedDataElement) {
-    preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-  }
-
-  const keys = preloaded ? Object.keys(preloaded) : [];
-  if (keys.length === 0 && !isTesting()) {
-    throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
-  }
-
-  keys.forEach(function (key) {
-    PreloadStore.store(key, JSON.parse(preloaded[key]));
-
-    if (setupData.debugPreloadedAppData === "true") {
-      // eslint-disable-next-line no-console
-      console.log(key, PreloadStore.get(key));
-    }
-  });
-}
 
 populatePreloadStore();
 
