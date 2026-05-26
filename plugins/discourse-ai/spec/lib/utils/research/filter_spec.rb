@@ -164,9 +164,54 @@ describe DiscourseAi::Utils::Research::Filter do
     end
 
     describe "category filtering" do
+      fab!(:announcement_child_category) do
+        Fabricate(
+          :category,
+          name: "Announcements Child",
+          parent_category_id: announcement_category.id,
+        )
+      end
+      fab!(:announcement_child_topic) do
+        Fabricate(
+          :topic,
+          user: user,
+          category: announcement_child_category,
+          title: "Child Category Discussion",
+        )
+      end
+      fab!(:announcement_child_post) do
+        Fabricate(:post, topic: announcement_child_topic, user: user)
+      end
+
       it "correctly filters posts by categories" do
         filter = described_class.new("category:Announcements")
+        expect(filter.search.pluck(:id)).to contain_exactly(
+          feature_post.id,
+          bug_post.id,
+          announcement_child_post.id,
+        )
+
+        filter = described_class.new("category:=Announcements")
         expect(filter.search.pluck(:id)).to contain_exactly(feature_post.id, bug_post.id)
+
+        filter = described_class.new("category:#{announcement_category.id}")
+        expect(filter.search.pluck(:id)).to contain_exactly(
+          feature_post.id,
+          bug_post.id,
+          announcement_child_post.id,
+        )
+
+        filter =
+          described_class.new(
+            "category:#{announcement_category.slug}/#{announcement_child_category.slug}",
+          )
+        expect(filter.search.pluck(:id)).to contain_exactly(announcement_child_post.id)
+
+        filter = described_class.new('category:"Announcements Child"')
+        expect(filter.search.pluck(:id)).to contain_exactly(announcement_child_post.id)
+
+        filter = described_class.new('category:="Announcements Child"')
+        expect(filter.search.pluck(:id)).to contain_exactly(announcement_child_post.id)
 
         # it can tack on topics
         filter =
@@ -176,6 +221,7 @@ describe DiscourseAi::Utils::Research::Filter do
         expect(filter.search.pluck(:id)).to contain_exactly(
           feature_post.id,
           bug_post.id,
+          announcement_child_post.id,
           feature_bug_post.id,
           no_tag_post.id,
         )
@@ -184,6 +230,7 @@ describe DiscourseAi::Utils::Research::Filter do
         expect(filter.search.pluck(:id)).to contain_exactly(
           feature_post.id,
           bug_post.id,
+          announcement_child_post.id,
           feature_bug_post.id,
           no_tag_post.id,
         )

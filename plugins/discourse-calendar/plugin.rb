@@ -84,6 +84,7 @@ Dir
 
 after_initialize do
   reloadable_patch do
+    register_category_type(DiscourseCalendar::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
     Category.register_custom_field_type("disable_topic_resorting", :boolean)
     register_preloaded_category_custom_fields("sort_topics_by_event_start_date")
@@ -229,7 +230,7 @@ after_initialize do
 
   TopicView.on_preload do |topic_view|
     if SiteSetting.discourse_post_event_enabled
-      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(:event))
+      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(event: :image_upload))
     end
   end
 
@@ -243,7 +244,7 @@ after_initialize do
 
   on(:post_created) do |post|
     DiscoursePostEvent::Event.update_from_raw(post)
-    post.reload
+    post.association(:event).reload
     if SiteSetting.discourse_post_event_enabled && post.event
       WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
     end
@@ -251,19 +252,17 @@ after_initialize do
 
   on(:post_edited) do |post|
     event_before = post.event
-    had_event_before = event_before.present?
+    had_image_before = event_before&.image_upload_id.present?
     DiscoursePostEvent::Event.update_from_raw(post)
-    post.reload
+    post.association(:event).reload
 
     if SiteSetting.discourse_post_event_enabled
-      if post.event && had_event_before
-        WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
-      elsif post.event && !had_event_before
-        WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
-      elsif !post.event && had_event_before
-        payload = WebHook.build_calendar_event_payload(event_before)
-        WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
+      if post.event&.image_upload_id
+        post.event.sync_image_to_post_and_topic
+      elsif had_image_before
+        post.trigger_post_process
       end
+      DiscoursePostEvent::Event.handle_post_event_webhooks(post, event_before)
     end
   end
 
@@ -426,6 +425,11 @@ after_initialize do
     DiscourseCalendar::Calendar.update(post)
     DiscourseCalendar::GroupTimezones.update(post)
     CalendarEvent.update(post)
+
+    if SiteSetting.discourse_post_event_enabled
+      event = DiscoursePostEvent::Event.find_by(id: post.id)
+      event&.sync_image_to_post_and_topic(generate_thumbnails: true) if event&.image_upload_id
+    end
   end
 
   on(:post_recovered) do |post, _, _|
@@ -440,18 +444,18 @@ after_initialize do
   end
 
   validate(:post, :validate_calendar) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscourseCalendar::CalendarValidator.new(self)
     validator.validate_calendar
   end
 
   validate(:post, :validate_event) do |force = nil|
-    return unless self.raw_changed? || force
-    return if self.is_first_post?
+    return unless raw_changed? || force
+    return if is_first_post?
 
     # Skip if not a calendar topic
-    return if !self.topic&.first_post&.custom_fields&.[](DiscourseCalendar::CALENDAR_CUSTOM_FIELD)
+    return if !topic&.first_post&.custom_fields&.[](DiscourseCalendar::CALENDAR_CUSTOM_FIELD)
 
     validator = DiscourseCalendar::EventValidator.new(self)
     validator.validate_event
@@ -623,7 +627,19 @@ after_initialize do
           location = event_node["data-location"]
           url = event_node["data-url"]
 
+          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
+          image_url = UrlHelper.absolute(event.image_upload.url) if event&.image_upload_id
+
           rows = +""
+
+          rows << <<~HTML if image_url.present?
+            <tr>
+              <td style="padding: 0;">
+                <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
+              </td>
+            </tr>
+          HTML
+
           rows << <<~HTML
             <tr>
               <td style="padding: 12px;">

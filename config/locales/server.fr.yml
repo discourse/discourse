@@ -370,7 +370,6 @@ fr:
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
     not_found_template_link: |
       <p>La date d'expiration de cette invitation à <a href="%{base_url}">%{site_name}</a> est dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
-    existing_user_cannot_redeem: "Cette invitation ne peut pas être utilisée. Demandez à la personne qui vous a invité(e) de vous envoyer une nouvelle invitation."
     existing_user_already_redemeed: "Vous avez déjà utilisé ce lien d'invitation."
     user_exists: "Inutile d'inviter <b>%{email}</b>, cette adresse est déjà associée à un compte !"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
@@ -433,7 +432,13 @@ fr:
   deleted_topic: "Ce sujet a été supprimé et n'est plus disponible."
   delete_topic_failed: "Une erreur est survenue pendant la suppression de ce sujet. Veuillez contacter l'administrateur du site."
   reading_time: "Temps de lecture"
+  reading_time_minutes:
+    one: "%{count} minute 🕑"
+    other: "%{count} minutes 🕑"
   likes: "J'aime"
+  likes_count:
+    one: "%{count}  ❤"
+    other: "%{count}  ❤"
   action_already_performed: "Oups ! Vous avez déjà effectué cette action. Pouvez-vous essayer d'actualiser la page ?"
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponse par sujet."
@@ -598,6 +603,7 @@ fr:
       admins: "administrateurs"
       moderators: "modérateurs"
       staff: "responsables"
+      anonymous: "anonymes"
       trust_level_0: "niveau_confiance_0"
       trust_level_1: "niveau_confiance_1"
       trust_level_2: "niveau_confiance_2"
@@ -822,7 +828,6 @@ fr:
       one: "%{count} « J'aime »"
       other: "%{count} « J'aime »"
     cannot_permanently_delete:
-      many_posts: "Ce sujet contient des messages non supprimés. Veuillez les supprimer définitivement avant de supprimer définitivement le sujet."
       wait_or_different_admin: "Vous devez attendre %{time_left} avant de supprimer définitivement ce message ou demander à un autre administrateur de le faire."
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, veuillez réessayer plus tard."
@@ -1226,6 +1231,30 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux contributeurs"
       description: "Nombre d'utilisateurs qui ont fait leur première contribution durant cette période."
+    activity_by_category:
+      labels:
+        category: "Catégorie"
+        topics: "Sujets"
+        posts: "Publications"
+        share: "Partager"
+    posters_by_member_type:
+      labels:
+        count: "Publications"
+        share: "Partager"
+      types:
+        staff: "Responsable"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Niveau de confiance"
+        count: "Membres"
+        share: "Partager"
+      levels:
+        "0": "Nouveau"
+        "1": "Actif"
+        "2": "Membre"
+        "3": "Normal"
+        "4": "Meneur"
     trust_level_growth:
       title: "Progression du niveau de confiance"
       xaxis:
@@ -1269,9 +1298,8 @@ fr:
     site_traffic:
       title: "Trafic du site"
       xaxis:
-        page_view_anon_browser: "Pages vues (anonymes)"
-        page_view_logged_in_browser: "Pages vues (connectés)"
-        page_view_crawler: "Robots d'indexation connus"
+        page_view_anon_browser: "Anonymes"
+        page_view_crawler: "Robots d'indexation"
         page_view_other: "Autre trafic"
       yaxis: "Jour"
       description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et les autres trafics."
@@ -1386,6 +1414,12 @@ fr:
         num_clicks: "Clics"
         num_topics: "Sujets"
       description: "Utilisateurs par nombre de clics sur les liens qu'ils ont partagés."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visites"
     top_traffic_sources:
       title: "Meilleures sources de trafic"
       xaxis: "Domaine"
@@ -1448,6 +1482,8 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les navigateurs connectés"
       description: "Nombre de vues de pages par des visiteurs connectés utilisant des navigateurs authentiques."
+    page_view_embed_reqs:
+      xaxis: "Jour"
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -1509,11 +1545,11 @@ fr:
         os: Système d'exploitation
         login_time: Heure de connexion
       description: "Détails des nouvelles connexions qui diffèrent de manière suspecte des connexions précédentes."
-    staff_logins:
+    admin_logins:
       title: "Connexions des administrateurs"
       labels:
         user: Utilisateur
-        location: Localisation
+        location: Emplacement
         login_at: Heure de connexion
       description: "Liste des heures et localisations des connexions des administrateurs."
     top_uploads:
@@ -1698,7 +1734,6 @@ fr:
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée"
     x_summary_large_image: "Carte X « summary large image » (au moins 280 px de largeur et 150 px de hauteur, le format .svg n'est pas autorisé). Si ce champ est laissé vide, des métadonnées de carte classiques seront générées à partir de l'image opengraph_image, à condition que celle-ci ne soit pas elle-même au format .svg."
     notification_email: "L'adresse e-mail utilisée pour envoyer les e-mails systèmes essentiels et affichée dans le champ « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que l'e-mail arrive à destination."
-    email_subject: "Format du sujet personnalisable pour les e-mails normaux. Voir <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Donne plus d'informations aux utilisateurs concernant la raison pour laquelle ils ne peuvent pas accéder à ce sujet en particulier. Note : cela est moins sécurisé car les utilisateurs sauront si une URL pointe vers un sujet valide ou non."
     force_https: "Forcer votre site en HTTPS uniquement. ATTENTION : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions de réseaux sociaux et tous les logos/dépendances tiers sont eux aussi compatibles avec HTTPS ?"
     summary_score_threshold: "Le score minimal pour qu'un message soit inclus dans le résultat de « Résumer ce sujet »"
@@ -1760,7 +1795,6 @@ fr:
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Permettre aux modérateurs de modifier l'utilisateur propriétaire d'un message."
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. La variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée sur la valeur « true » pour activer CORS."
-    use_admin_ip_allowlist: "Les administrateurs ne peuvent se connecter que s'ils sont sur une adresse IP définie dans la liste des IP sous surveillance (Administration > Journaux > IP sous surveillance)."
     blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
     allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_onebox_iframes: "Liste de domaines dans l'attribut « src » des iframes qui sont autorisés dans les prévisualisations Onebox. Le caractère « * » autorise tous les moteurs Onebox par défaut."
@@ -1857,7 +1891,6 @@ fr:
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     google_oauth2_prompt: "Liste facultative de valeurs de chaînes de caractères délimitées par des espaces, qui spécifie si le serveur d'autorisation invite l'utilisateur à s'authentifier à nouveau et à donner son consentement. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> pour connaître les valeurs possibles."
     google_oauth2_hd: "Un domaine optionnel Google Apps Hosted auquel la connexion sera limitée. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> pour obtenir plus de détails."
-    google_oauth2_hd_groups: "Récupérez les groupes Google des utilisateurs sur le domaine hébergé lors de l'authentification. Les groupes Google récupérés peuvent être utilisés pour accorder automatiquement l'adhésion au groupe Discourse (voir les paramètres du groupe). Pour en savoir plus, consultez https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Une adresse e-mail appartenant à un compte administrateur Google Workspace. Elle sera utilisée avec les informations d'identification du compte de service pour récupérer les informations du groupe."
     google_oauth2_hd_groups_service_account_json: "Informations clés au format JSON pour le compte de service. Elles seront utilisées pour récupérer les informations du groupe."
     google_oauth2_verbose_logging: "Enregistrez les diagnostics détaillés liés à Google OAuth2 dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1887,10 +1920,8 @@ fr:
     s3_configure_tombstone_policy: "Activer la suppression automatique des fichiers non utilisés. IMPORTANT : en cas de désactivation, aucun espace disque ne sera récupéré après la suppression des fichiers."
     s3_disable_cleanup: "Empêcher la suppression des anciennes sauvegardes sur S3 lorsqu'il y a plus de sauvegardes que le maximum autorisé."
     s3_use_acls: "AWS recommande de ne pas utiliser de listes de contrôle d'accès sur les compartiments S3 ; ne décochez cette option que si vous avez l'intention de configurer des politiques d'autorisations sur les compartiments « s3_upload_bucket » et « s3_backup_bucket » configurés."
-    enable_direct_s3_uploads: "Permet le téléversement direct en plusieurs parties vers Amazon S3. Consultez https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 pour obtenir plus de détails."
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si cette option est désactivée, seule la base de données sera sauvegardée."
-    backup_location: "Emplacement où les sauvegardes sont stockées. IMPORTANT : S3 nécessite des informations d'identification S3 valides saisies dans les paramètres des fichiers. Lorsque vous passez de Local à S3, vous devez exécuter la tâche de rake « s3:ensure_cors_rules »."
     backup_gzip_compression_level_for_uploads: "Niveau de compression gzip utilisé pour compresser les envois."
     include_thumbnails_in_backups: "Inclure les vignettes générées dans les sauvegardes. Si vous désactivez cette option, les sauvegardes seront plus petites mais leur restauration nécessitera de régénérer tous les messages."
     active_user_rate_limit_secs: "À quelle fréquence mettre à jour le champ « last_seen_at », en secondes."
@@ -2073,7 +2104,6 @@ fr:
     auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
     auto_silence_fast_typers_on_first_post: "Mettre en sourdine automatiquement les utilisateurs qui n'ont pas respecté le « fast typing threshold »"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximal pour automatiquement mettre en sourdine les utilisateurs rédigeant des messages trop rapidement."
-    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise en sourdine du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra en sourdine les premiers messages contenant « rageux » ou « aba » ou « aca ». DÉPRÉCIÉ : utilisez la fonctionnalité « Mettre en sourdine » à la place."
     reviewable_claiming: "Les éléments à examiner doivent-ils être réservés avant de pouvoir être traités ?"
     reviewable_default_topics: "Par défaut, afficher les éléments à examiner en les regroupant par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
@@ -2137,7 +2167,6 @@ fr:
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Autoriser les utilisateurs à publier de nouveaux sujets par e-mail. Après avoir activé ce paramètre, vous pourrez configurer les adresses e-mail entrantes pour les groupes et les catégories."
     email_in_allowed_groups: "Groupes autorisés à publier de nouveaux sujets par e-mail. Les administrateurs et les modérateurs peuvent toujours publier de nouveaux sujets par e-mail."
-    email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     email_in_spam_header: "Sélectionne l'en-tête d'e-mail spécifique à utiliser pour identifier le courrier indésirable. Cette option peut être X-Spam-Flag, X-Spam-Status ou X-SES-Spam-Verdict, et l'e-mail est marqué comme spam en fonction de la valeur de l'en-tête. Par exemple, si le paramètre choisi est X-Spam-Flag, un e-mail dont la valeur d'en-tête est définie sur OUI sera classé comme courrier indésirable."
     enable_smtp: "Activer SMTP pour l'envoi de notifications concernant les messages de groupe."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des e-mails. Par défaut il prend la valeur de « title »."
@@ -2374,7 +2403,6 @@ fr:
     create_revision_on_bulk_topic_moves: "Créer une révision des premières publications lorsque des sujets sont déplacés en bloc vers une nouvelle catégorie."
     allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux étiquettes, pour les comptes d'utilisateurs distants."
     use_email_for_username_and_name_suggestions: "Utilisez la première partie des adresses e-mail pour suggérer des noms d'utilisateur et des noms de famille. Attention : cela peut faciliter la découverte de l'adresse e-mail de vos membres par des personnes malintentionnées (car de nombreuses personnes utilisent des fournisseurs de messagerie courants comme « gmail.com »)."
-    use_name_for_username_suggestions: "Utiliser le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
     show_bottom_topic_map: "Affiche la carte du sujet en bas du sujet lorsqu'il contient 10 réponses ou plus."
     show_topic_map_in_topics_without_replies: "Affiche la carte du sujet même si le sujet ne comprend aucune réponse."
@@ -2382,7 +2410,6 @@ fr:
     welcome_banner_image: "Définissez une image à afficher en arrière-plan de la bannière de bienvenue."
     welcome_banner_location: "Détermine l'endroit où la bannière de bienvenue apparaîtra sur la page."
     welcome_banner_page_visibility: "Détermine les pages sur lesquelles la bannière de bienvenue apparaîtra."
-    splash_screen: "Affiche un écran de chargement temporaire pendant le chargement des ressources du site"
     navigation_menu: "Spécifiez la barre latérale ou la liste déroulante d'en-tête comme menu de navigation principal de votre site. La barre latérale est recommandée."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
@@ -2689,7 +2716,6 @@ fr:
       request_error: "Une erreur s'est produite lors du démarrage de l'autorisation. Veuillez réessayer."
       invalid_iat: "Nous ne sommes pas en mesure de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Un problème est survenu lors de votre connexion. Veuillez réessayer."
-    omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
     omniauth_confirm_button: "Continuer"
     authenticator_error_no_valid_email: "Aucune adresse e-mail associée à %{account} n'est autorisée. Vous devrez peut-être configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveaux comptes n'est pas autorisée pour le moment."
@@ -3249,7 +3275,6 @@ fr:
         Votre réponse a été envoyée depuis une adresse bloquée. Essayez de l'envoyer depuis une autre adresse ou [contactez un responsable](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail rejeté - E-mail non autorisé"
-      subject_template: "[%{email_prefix}] Problème d'e-mail - E-mail bloqué"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -3414,7 +3439,6 @@ fr:
         Vous n'êtes pas autorisé(e) à répondre au sujet. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail rejeté - Réponse au résumé"
-      subject_template: "[%{email_prefix}] Problème d'e-mail - Réponse au résumé"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -3533,7 +3557,6 @@ fr:
       text_body_template: "Le paramètre « download_remote_images_to_local » a été désactivé car la limite (« download_remote_images_threshold ») d'espace disque utilisé par les images vient d'être dépassée."
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
-      subject_template: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
       text_body_template: |
         Félicitations, vous avez reçu le prix du **nouveau membre du mois de %{month_year}**. :trophy:
 
@@ -3851,6 +3874,7 @@ fr:
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
+      subject_template_improved: "Le compte existe déjà"
       text_body_template: |
         Vous venez d'essayer de créer un compte sur %{site_name}, ou d'essayer de changer l'adresse e-mail d'un compte vers %{email}. Cependant, un compte existe déjà pour %{email}.
 
@@ -3862,6 +3886,7 @@ fr:
     account_second_factor_disabled:
       title: "Authentification à deux facteurs désactivée"
       subject_template: "[%{email_prefix}] Authentification à deux facteurs désactivée"
+      subject_template_improved: "Authentification à deux facteurs désactivée"
     digest:
       why: "Un bref résumé de %{site_link} depuis %{since}"
       since_last_visit: "Depuis votre dernière visite"
@@ -3875,6 +3900,7 @@ fr:
       popular_posts: "Messages populaires"
       more_new: "Nouveau pour vous"
       subject_template: "[%{email_prefix}] Résumé"
+      subject_template_improved: "Résumé"
       unsubscribe: "Ce résumé vous est envoyé par %{site_link} lorsque vous ne vous connectez pas pendant un moment. Vous pouvez %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       your_email_settings: "vos préférences d'e-mail"
       click_here: "cliquez ici"
@@ -3895,6 +3921,7 @@ fr:
       title: "Se connecter avec un lien"
       preview: "Se connecter avec un lien."
       subject_template: "[%{email_prefix}] Se connecter avec un lien"
+      subject_template_improved: "Se connecter avec un lien"
       text_body_template: |
         Voici votre lien pour vous connecter à [%{site_name}](%{base_url}).
 
@@ -3905,7 +3932,6 @@ fr:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Définir le mot de passe"
-      subject_template: "[%{email_prefix}] Définir le mot de passe"
       text_body_template: |
         Quelqu'un a demandé un mot de passe pour votre compte sur [%{site_name}](%{base_url}). Vous pouvez vous identifier en utilisant un service en ligne pris en charge (Google, Facebook, etc.) qui est associé avec cette adresse e-mail.
 
@@ -3917,6 +3943,7 @@ fr:
     admin_login:
       title: "Connexion administrateur"
       subject_template: "[%{email_prefix}] Connexion"
+      subject_template_improved: "Connexion"
       text_body_template: |
         Quelqu'un a demandé à se connecter sur votre compte sur [%{site_name}](%{base_url}).
 
@@ -3927,7 +3954,6 @@ fr:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Compte créé"
-      subject_template: "[%{email_prefix}] Votre nouveau compte"
       text_body_template: |
         Un nouveau compte a été créé pour vous sur %{site_name}
 
@@ -4040,7 +4066,6 @@ fr:
         Si le lien n'est pas cliquable, essayez de le copier-coller dans la barre d'adresse de votre navigateur.
     suspicious_login:
       title: "Notification de nouvelle connexion"
-      subject_template: "[%{site_name}] Nouvelle connexion depuis %{location}"
       text_body_template: |
         Bonjour,
 
@@ -4796,7 +4821,6 @@ fr:
       restricted_to:
         one: 'L''étiquette « %{tag_name} » est réservée à la catégorie « %{category_names} »'
         other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
-      synonym: 'Les synonymes ne sont pas autorisés. Utilisez « %{tag_name} ».'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''étiquette « %{tags} » ne peut pas être utilisée dans la catégorie « %{category} ». Veuillez la supprimer.'

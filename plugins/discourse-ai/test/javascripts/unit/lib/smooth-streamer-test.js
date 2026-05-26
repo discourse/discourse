@@ -4,7 +4,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SmoothStreamer from "discourse/plugins/discourse-ai/discourse/lib/smooth-streamer";
 
-module("Discourse AI | Unit | Lib | smooth-streamer", function (hooks) {
+module("Unit | Lib | smooth-streamer", function (hooks) {
   setupTest(hooks);
 
   test("it initializes correctly", function (assert) {

@@ -179,7 +179,13 @@ nb_NO:
   not_in_group:
     join_group: "Bli medlem av gruppe"
   reading_time: "Lesetid"
+  reading_time_minutes:
+    one: "%{count} minutt 🕑"
+    other: "%{count} minutter 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme tråden."
     other: "Vi beklager, men for nye brukere er det en midlertidig begrenset på %{count} svar i samme emne."
@@ -283,6 +289,7 @@ nb_NO:
       admins: "administratorer"
       moderators: "moderatorer"
       staff: "stab"
+      anonymous: "anonym"
       trust_level_0: "tillitsnivå_0"
       trust_level_1: "tillitsnivå_1"
       trust_level_2: "tillitsnivå_2"
@@ -673,6 +680,28 @@ nb_NO:
       title: "Nye Bidragsytere"
       xaxis: "Dag"
       yaxis: "Antall nye bidragsytere"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Emner"
+        posts: "Innlegg"
+        share: "Del"
+    posters_by_member_type:
+      labels:
+        count: "Innlegg"
+        share: "Del"
+      types:
+        staff: "Stab"
+    trust_level_pipeline:
+      labels:
+        count: "Medlemmer"
+        share: "Del"
+      levels:
+        "0": "Ny"
+        "1": "Basic"
+        "2": "Medlem"
+        "3": "Aktivt medlem"
+        "4": "Leder"
     trust_level_growth:
       yaxis: "Dag"
     consolidated_page_views:
@@ -690,6 +719,8 @@ nb_NO:
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonym"
       yaxis: "Dag"
     dau_by_mau:
       xaxis: "Dag"
@@ -783,6 +814,12 @@ nb_NO:
         user: "Bruker"
         num_clicks: "Klikk"
         num_topics: "Emner"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøk"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besøk"
     top_traffic_sources:
       title: "Topp trafikk-kilder"
       xaxis: "Domene"
@@ -828,6 +865,8 @@ nb_NO:
     page_view_anon_browser_reqs:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
+    page_view_embed_reqs:
       xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
@@ -875,7 +914,7 @@ nb_NO:
       labels:
         user: Bruker
         location: Sted
-    staff_logins:
+    admin_logins:
       labels:
         user: Bruker
         location: Sted
@@ -1146,11 +1185,14 @@ nb_NO:
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
+      subject_template_improved: "Sammendrag"
       click_here: "trykk her"
     forgot_password:
       title: "Glemt passord"
     set_password:
       title: "Sett passord"
+    admin_login:
+      subject_template_improved: "Login"
     post_approved:
       title: "Ditt innlegg ble godkjent"
   page_not_found:

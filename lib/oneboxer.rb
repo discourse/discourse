@@ -2,7 +2,7 @@
 
 require "uri"
 
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
+Dir["#{Rails.root.join("lib/onebox/engine/*_onebox.rb")}"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
@@ -125,6 +125,13 @@ module Oneboxer
   def self.invalidate(url)
     Discourse.cache.delete(onebox_cache_key(url))
     Discourse.cache.delete(onebox_failed_cache_key(url))
+  end
+
+  def self.inline_data_for(url)
+    engine_class = engine(url)
+    return if engine_class.nil? || !engine_class.method_defined?(:inline_data)
+
+    engine_class.new(url).inline_data
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -597,7 +604,7 @@ module Oneboxer
   def self.template(template_name)
     @template_cache ||= {}
     @template_cache[template_name] ||= begin
-      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      full_path = "#{Rails.root.join("lib/onebox/templates/#{template_name}.mustache")}"
       File.read(full_path)
     end
   end

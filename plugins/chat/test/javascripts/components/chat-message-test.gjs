@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-message", function (hooks) {
+module("Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Message with edits", async function (assert) {

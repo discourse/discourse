@@ -74,6 +74,8 @@ ug:
         chat_usage:
           title: سۆھبەت پائالىيىتى
           total_messages: جەمئىي ئۇچۇر
+          dm_messages: بىۋاسىتە ئۇچۇر
+          unique_dm_channels: بىۋاسىتە ئۇچۇر سۆھبىتى
           reactions_received: تاپشۇرۇۋالغان ئىنكاس
           avg_message_length: ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقى
           favorite_channels: ياقتۇرىدىغان قانال
@@ -83,8 +85,14 @@ ug:
           author_others: "%{username}"
           channel_title: "#سۆھبەت پائالىيىتى"
           status_online: "● توردا"
+          message_1:
+            one: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
+            other: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
           reply_1: "lol قالتىس B-)"
           reply_2: "ئاجايىپ :D"
+          message_3:
+            one: "كىشىلەر ئۇچۇرىڭىزنى ياقتۇردى! <strong>%{count}</strong> ئىنكاسقا ئېرىشتىڭىز ❤️"
+            other: "كىشىلەر ئۇچۇرىڭىزنى ياقتۇردى! <strong>%{count}</strong> ئىنكاسقا ئېرىشتىڭىز ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "سىزنىڭ ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقىڭىز <strong>%{length}</strong> ھەرپ"
           message_5: "ياقتۇرىدىغان قانىلىڭىز:"

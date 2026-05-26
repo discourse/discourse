@@ -11,6 +11,7 @@ require_relative "runners/discoveries"
 require_relative "runners/inference"
 require_relative "runners/spam"
 require_relative "runners/summarization"
+require_relative "runners/data_explorer"
 require_relative "judge"
 require_relative "agent_prompt_loader"
 require_relative "console_formatter"
@@ -295,7 +296,13 @@ module DiscourseAi
           metadata = entry.is_a?(Hash) ? entry[:metadata] : nil
 
           classification =
-            classify_result(eval_case, raw_value, skip_judge: skip_judge, execution_context:)
+            classify_result(
+              eval_case,
+              raw_value,
+              metadata: metadata,
+              skip_judge: skip_judge,
+              execution_context: execution_context,
+            )
 
           classification[:metadata] = metadata if metadata.present?
 
@@ -466,7 +473,13 @@ module DiscourseAi
         DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm)
       end
 
-      def classify_result(eval_case, result, skip_judge: false, execution_context: nil)
+      def classify_result(
+        eval_case,
+        result,
+        metadata: nil,
+        skip_judge: false,
+        execution_context: nil
+      )
         if eval_case.expected_output
           if result == eval_case.expected_output
             { result: :pass }
@@ -486,10 +499,20 @@ module DiscourseAi
         elsif eval_case.expected_tool_call
           classify_tool_call(eval_case.expected_tool_call, result)
         elsif eval_case.judge && !skip_judge
-          judge_result(eval_case, result, execution_context:)
+          judge_result(eval_case, judge_input(result, metadata), execution_context:)
         else
           { result: :pass }
         end
+      end
+
+      def judge_input(result, metadata)
+        return result if metadata.blank? || !metadata.is_a?(Hash)
+
+        keys = %i[name description]
+        extras = metadata.slice(*keys).compact
+        return result if extras.empty?
+
+        { result: result }.merge(extras)
       end
 
       def classify_tool_call(expected_tool_call, result)

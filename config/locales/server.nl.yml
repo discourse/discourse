@@ -370,7 +370,6 @@ nl:
       <p>Zo niet, dan kun je je <a href="%{base_url}/password-reset">Wachtwoord herstellen</a>.</p>
     not_found_template_link: |
       <p>Deze uitnodiging voor <a href="%{base_url}">%{site_name}</a> kan niet meer worden verzilverd. Vraag de persoon die je heeft uitgenodigd om je een nieuwe uitnodiging te sturen.</p>
-    existing_user_cannot_redeem: "Deze uitnodiging kan niet worden verzilverd. Vraag de persoon die je heeft uitgenodigd je een nieuwe uitnodiging te sturen."
     existing_user_already_redemeed: "Je hebt deze uitnodigingslink al verzilverd."
     user_exists: "Het is niet nodig om <b>%{email}</b>uit te nodigen, deze heeft al een account!"
     invite_exists: "Je hebt <b>%{email}</b> al uitgenodigd."
@@ -433,7 +432,13 @@ nl:
   deleted_topic: "Oeps! Dit topic is verwijderd en is niet meer beschikbaar."
   delete_topic_failed: "Er is een fout opgetreden bij het verwijderen van dat topic. Neem contact op met de beheerder van de website."
   reading_time: "Leestijd"
+  reading_time_minutes:
+    one: "%{count} min. 🕑"
+    other: "%{count} min. 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Oeps! Je hebt deze actie al uitgevoerd. Kun je proberen de pagina te vernieuwen?"
   too_many_replies:
     one: "Sorry, nieuwe gebruikers mogen tijdelijk slechts %{count} antwoord in hetzelfde topic plaatsen."
@@ -598,6 +603,7 @@ nl:
       admins: "beheerders"
       moderators: "moderators"
       staff: "medewerkers"
+      anonymous: "anoniem"
       trust_level_0: "vertrouwensniveau_0"
       trust_level_1: "vertrouwensniveau_1"
       trust_level_2: "vertrouwensniveau_2"
@@ -822,7 +828,6 @@ nl:
       one: "%{count} like"
       other: "%{count} likes"
     cannot_permanently_delete:
-      many_posts: "Dit topic bevat verwijderde berichten. Verwijder ze permanent voordat je het topic permanent verwijdert."
       wait_or_different_admin: "Je moet %{time_left} wachten voordat je dit bericht definitief verwijdert, of een andere beheerder moet het doen."
   rate_limiter:
     slow_down: "Je hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
@@ -1226,6 +1231,30 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal nieuwe bijdragers"
       description: "Aantal gebruikers die tijdens deze periode hun eerste bericht hebben gemaakt."
+    activity_by_category:
+      labels:
+        category: "Categorie"
+        topics: "Topics"
+        posts: "Berichten"
+        share: "Delen"
+    posters_by_member_type:
+      labels:
+        count: "Berichten"
+        share: "Delen"
+      types:
+        staff: "Medewerker"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Vertrouwensniveau"
+        count: "Leden"
+        share: "Delen"
+      levels:
+        "0": "Nieuw"
+        "1": "Basis"
+        "2": "Lid"
+        "3": "Normaal"
+        "4": "Leider"
     trust_level_growth:
       title: "Groei van vertrouwensniveau"
       xaxis:
@@ -1269,9 +1298,8 @@ nl:
     site_traffic:
       title: "Siteverkeer"
       xaxis:
-        page_view_anon_browser: "Paginaweergaven (anoniem)"
-        page_view_logged_in_browser: "Paginaweergaven (aangemeld)"
-        page_view_crawler: "Bekende crawlers"
+        page_view_anon_browser: "Anoniem"
+        page_view_crawler: "Crawlers"
         page_view_other: "Ander verkeer"
       yaxis: "Dag"
       description: "Paginaweergaven voor aangemelde gebruikers, bekende crawlers en ander verkeer."
@@ -1386,6 +1414,12 @@ nl:
         num_clicks: "Klikken"
         num_topics: "Topics"
       description: "Gebruikers vermeld op volgorde van het aantal klikken op links die ze hebben gedeeld."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Bezoeken"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Bezoeken"
     top_traffic_sources:
       title: "Meeste verkeersbronnen"
       xaxis: "Domein"
@@ -1448,6 +1482,8 @@ nl:
       xaxis: "Dag"
       yaxis: "Paginaweergaven door aangemelde browsers"
       description: "Aantal paginaweergaven door aangemelde bezoekers die echte browsers gebruiken."
+    page_view_embed_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -1509,7 +1545,7 @@ nl:
         os: Besturingssysteem
         login_time: Tijd van aanmelding
       description: "Details over nieuwe aanmeldingen die op een verdachte manier afwijken t.o.v. eerdere aanmeldingen."
-    staff_logins:
+    admin_logins:
       title: "Beheerdersaanmeldingen"
       labels:
         user: Gebruiker
@@ -1692,7 +1728,6 @@ nl:
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
-    email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     force_https: "Dwing gebruik van alleen HTTPS af voor je website. WAARSCHUWING: schakel dit NIET in voordat je hebt geverifieerd dat HTTPS volledig is geconfigureerd en echt overal werkt! Heb je ook je CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze allemaal compatibel met HTTPS zijn?"
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
@@ -1751,10 +1786,10 @@ nl:
     ga_universal_domain_name: "Google Universal Analytics-domeinnaam, bijvoorbeeld: mijnsite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics-cross-domain-tracking inschakelen. Aan uitgaande links naar deze domein wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain Tracking-gids.</a>"
     gtm_container_id: "ID van Google Tag Manager-container, bijvoorbeeld GTM-ABCD12E. <br/>Opmerking: om GTM te gebruiken wanneer de Content Security Policy (CSP) is ingeschakeld, zie de documentatie over meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces gebruiken in Google Tag Manager-scripts</a>."
+    google_site_verification_token: Verificatietoken Google-zoekconsole. Wordt opgenomen als metatag in de HTML-kop.
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Moderators toestaan het eigendom van een bericht te wijzigen"
     cors_origins: "Toegestane domeinen voor cross-origin-verzoeken (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
-    use_admin_ip_allowlist: "Beheerders kunnen zich alleen aanmelden vanaf een IP-adres dat is gedefinieerd in de lijst Gecontroleerde IP-nummers (Beheer > Logs > Gecontroleerde IP-adressen)."
     blocked_ip_blocks: "Een lijst van private IP-blokken die nooit door Discourse mogen worden verkend"
     allowed_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_onebox_iframes: "Een lijst van iframe-src-domeinen die zijn toegestaan via Onebox-insluitingen. `*` staat alle standaard Onebox-engines toe."
@@ -1851,7 +1886,6 @@ nl:
     google_oauth2_client_secret: "Client-geheim van je Google-toepassing."
     google_oauth2_prompt: "Een optionele door spaties gescheiden lijst van tekenreekswaarden die bepaalt of de autorisatieserver de gebruiker opnieuw om verificatie en instemming vraagt. Zie <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> voor de mogelijke waarden."
     google_oauth2_hd: "Een optioneel door Google Apps gehost domein waartoe de aanmelding wordt beperkt. Zie <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> voor meer informatie."
-    google_oauth2_hd_groups: "Haal de Google-groepen van gebruikers op het gehoste domein op bij verificatie. Opgehaalde Google-groepen kunnen worden gebruikt om automatisch Discourse-groepslidmaatschappen te verlenen (zie groepsinstellingen). Voor meer informatie zie https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Een e-mailadres behorende bij een Google Workspace-beheerdersaccount. Wordt gebruikt met de aanmeldgegevens van het serviceaccount om groepsinformatie op te halen."
     google_oauth2_hd_groups_service_account_json: "Sleutelinformatie in JSON-indeling voor het serviceaccount. Wordt gebruikt om groepsgegevens op te halen."
     google_oauth2_verbose_logging: "Log uitgebreide Google OAuth2-gerelateerde diagnostiek naar <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1881,10 +1915,8 @@ nl:
     s3_configure_tombstone_policy: "Automatisch verwijderingsbeleid voor tombstone-uploads inschakelen. BELANGRIJK: wanneer uitgeschakeld, wordt geen ruimte vrijgemaakt na het verwijderen van uploads."
     s3_disable_cleanup: "Verwijderen van oude back-ups van S3 voorkomen als er meer back-ups zijn dan maximaal toegestaan."
     s3_use_acls: "AWS raadt aan om geen ACL's te gebruiken op S3-buckets. Schakel deze optie alleen uit als je machtigingsbeleid wilt configureren op de geconfigureerde 's3_upload_bucket' en 's3_backup_bucket'."
-    enable_direct_s3_uploads: "Maakt directe meerdelige uploads naar Amazon S3 mogelijk, zie https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 voor meer informatie."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."
-    backup_location: "Locatie waar back-ups worden opgeslagen. BELANGRIJK: S3 vereist geldige S3-aanmeldgegevens in Bestandsinstellingen. Als je dit wijzigt van Lokaal naar S3, moet je de raketaak 's3:ensure_cors_rules' uitvoeren."
     backup_gzip_compression_level_for_uploads: "Gzip-compressieniveau voor het comprimeren van uploads."
     include_thumbnails_in_backups: "Gegenereerde miniaturen opnemen in back-ups. Uitschakelen hiervan maakt back-ups kleiner, maar vereist opnieuw opbouwen van alle berichten na een terugzetactie."
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld bijwerken, in seconden."
@@ -2067,7 +2099,6 @@ nl:
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
     auto_silence_fast_typers_on_first_post: "Demp automatisch gebruikers die niet aan `fast typing threshold` voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
-    auto_silence_first_post_regex: "Hoofdletterongevoelige reguliere expressie die bij een overeenkomst het eerste bericht van een gebruiker dempt en in de goedkeuringswachtrij plaatst. Voorbeeld: bizar|a[bc]a zorgt ervoor dat alle eerste berichten die bizar, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
     reviewable_claiming: "Moet beoordeelbare inhoud worden geclaimd voordat er een actie op kan worden uitgevoerd?"
     reviewable_default_topics: "Beoordeelbare inhoud standaard gegroepeerd op topic weergeven"
     reviewable_default_visibility: "Geen beoordeelbare items weergeven, tenzij ze aan deze prioriteit voldoen"
@@ -2131,7 +2162,6 @@ nl:
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Sta gebruikers toe om nieuwe topics te plaatsen via e-mail. Na het inschakelen van deze instelling kun je inkomende e-mailadressen configureren voor groepen en categorieën."
     email_in_allowed_groups: "Groepen die nieuwe topics mogen plaatsen via e-mail. Beheerders en moderators kunnen altijd nieuwe topics plaatsen via e-mail."
-    email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "Selecteert de specifieke e-mailheader die moet worden gebruikt voor het identificeren van spam. Deze optie kan X-Spam-Flag, X-Spam-Status of X-SES-Spam-Verdict zijn. De e-mail wordt als spam geclassificeerd op basis van de waarde van de header. Als de gekozen instelling bijvoorbeeld X-Spam-Flag is, wordt een e-mail waarvoor deze headerwaarde is ingesteld op JA als spam geclassificeerd."
     enable_smtp: "SMTP inschakelen voor het sturen van meldingen voor groepsberichten."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'titel' gebruikt."
@@ -2368,7 +2398,6 @@ nl:
     create_revision_on_bulk_topic_moves: "Maak een revisie voor eerste berichten wanneer topics in bulk naar een nieuwe categorie worden verplaatst."
     allow_changing_staged_user_tracking: "Sta toe dat de meldingsvoorkeuren voor categorieën en tags van een gefaseerde gebruiker worden gewijzigd door een beheerder."
     use_email_for_username_and_name_suggestions: "Gebruik het eerste deel van e-mailadressen als suggestie voor namen en gebruikersnamen. Waarschuwing: dit kan het makkelijker maken voor kwaadwillenden om het e-mailadres van je leden te achterhalen (omdat veel mensen gebruik maken van veelgebruikte aanbieders als 'gmail.com')."
-    use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen."
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     show_bottom_topic_map: "Geeft de topickaart onderaan het topic weer wanneer er 10 of meer antwoorden zijn."
     show_topic_map_in_topics_without_replies: "Geeft de onderwerpkaart weer, ook als er geen antwoorden op het topic zijn."
@@ -2376,7 +2405,6 @@ nl:
     welcome_banner_image: "Stel een afbeelding in die op de achtergrond van de welkomstbanner wordt weergegeven."
     welcome_banner_location: "Bepaalt waar op de pagina de welkomstbanner wordt weergegeven."
     welcome_banner_page_visibility: "Bepaalt op welke pagina's de welkomstbanner wordt weergegeven."
-    splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
     navigation_menu: "Geef een vervolgkeuzelijst voor de zijbalk of koptekst op als het hoofdnavigatiemenu voor je site. Zijbalk wordt aanbevolen."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
@@ -2398,6 +2426,8 @@ nl:
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
+    nested_replies_max_depth: "Maximale visuele nestdiepte voor antwoorden in thread. Berichten die dieper zijn dan dit tonen een link 'Doorgaan met deze thread'."
+    nested_replies_cap_nesting_depth: "Beperk antwoordnesting op de maximale visuele diepte. Als dit is ingeschakeld, worden antwoorden op het diepste niveau opnieuw gelijkliggend in plaats van onderliggend."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_email: "Ongeldig e-mailadres."
@@ -2683,7 +2713,6 @@ nl:
       request_error: "Er is een fout opgetreden bij het starten van de autorisatie. Probeer het opnieuw."
       invalid_iat: "We kunnen het autorisatietoken niet verifiëren vanwege verschillen met de serverklok. Probeer het opnieuw."
     omniauth_error_unknown: "Er is iets misgegaan bij het verwerken van je aanmelding. Probeer het opnieuw."
-    omniauth_confirm_title: "Aanmelden via %{provider}"
     omniauth_confirm_button: "Doorgaan"
     authenticator_error_no_valid_email: "E-mailadressen gekoppeld aan %{account} zijn niet toegestaan. Mogelijk moet je je account configureren met een ander e-mailadres."
     new_registrations_disabled: "Nieuwe accountregistraties zijn op dit moment niet toegestaan."
@@ -3231,7 +3260,6 @@ nl:
         Je antwoord is verzonden vanaf een geblokkeerd e-mailadres. Probeer te verzenden vanaf een ander e-mailadres, of [neem contact op met een medewerker](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-mail geweigerd e-mailadres niet toegestaan"
-      subject_template: "[%{email_prefix}] E-mailprobleem -- geblokkeerd e-mailadres"
       text_body_template: |
         Sorry, je e-mailbericht aan %{destination} (getiteld %{former_title}) werkte niet.
 
@@ -3396,7 +3424,6 @@ nl:
         Je hebt geen toestemming om te antwoorden op het topic. Als je denkt dat dit een fout is, [neem dan contact op met een medewerker](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-mail geweigerd antwoord op samenvatting"
-      subject_template: "[%{email_prefix}] E-mailprobleem -- antwoord op samenvatting"
       text_body_template: |
         Sorry, je e-mailbericht aan %{destination} (getiteld %{former_title}) werkte niet.
 
@@ -3522,7 +3549,6 @@ nl:
       text_body_template: "De instelling 'download_remote_images_to_local' is uitgeschakeld omdat de schijfruimtelimiet van 'download_remote_images_threshold' is bereikt."
     new_user_of_the_month:
       title: "Je bent een nieuwe gebruiker van de maand!"
-      subject_template: "Je bent een nieuwe gebruiker van de maand!"
       text_body_template: |
         Gefeliciteerd, je hebt de de prijs **Nieuwe gebruiker van de maand voor %{month_year}** verdiend. :trophy:
 
@@ -3840,6 +3866,7 @@ nl:
     account_exists:
       title: "Account bestaat al"
       subject_template: "[%{email_prefix}] Account bestaat al"
+      subject_template_improved: "Account bestaat al"
       text_body_template: |
         Je hebt geprobeerd een account te maken op %{site_name}, of je hebt geprobeerd het e-mailadres van een account te wijzigen naar %{email}. Er bestaat echter al een account voor %{email}.
 
@@ -3851,6 +3878,7 @@ nl:
     account_second_factor_disabled:
       title: "Tweeledige verificatie uitgeschakeld"
       subject_template: "[%{email_prefix}] Tweeledige verificatie uitgeschakeld"
+      subject_template_improved: "Tweeledige verificatie uitgeschakeld"
     digest:
       why: "Een kort overzicht van %{site_link} sinds %{since}"
       since_last_visit: "Sinds je laatste bezoek"
@@ -3864,6 +3892,7 @@ nl:
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
       subject_template: "[%{email_prefix}] Samenvatting"
+      subject_template_improved: "Samenvatting"
       unsubscribe: "Deze samenvatting wordt verzonden van %{site_link} als we je een tijdje niet hebben gezien. Wijzig %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       your_email_settings: "uw e-mailinstellingen"
       click_here: "klik hier"
@@ -3883,6 +3912,7 @@ nl:
       title: "Aanmelden via link"
       preview: "Aanmelden via link."
       subject_template: "[%{email_prefix}] Aanmelden via link"
+      subject_template_improved: "Aanmelden via link"
       text_body_template: |
         Dit is je link om je aan te melden bij [%{site_name}](%{base_url}).
 
@@ -3892,7 +3922,6 @@ nl:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Wachtwoord instellen"
-      subject_template: "[%{email_prefix}] Wachtwoord instellen"
       text_body_template: |
         Iemand heeft gevraagd een wachtwoord toe te voegen aan je account op [%{site_name}](%{base_url}). Je kunt je ook aanmelden met elke ondersteunde online service (Google, Facebook, enz.) die aan dit gevalideerde e-mailadres is gekoppeld.
 
@@ -3903,6 +3932,7 @@ nl:
     admin_login:
       title: "Beheerdersaanmelding"
       subject_template: "[%{email_prefix}] Aanmelding"
+      subject_template_improved: "Aanmelden"
       text_body_template: |
         Iemand heeft gevraagd om aanmelding op je account op [%{site_name}](%{base_url}).
 
@@ -3912,7 +3942,6 @@ nl:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Account gemaakt"
-      subject_template: "[%{email_prefix}] Je nieuwe account"
       text_body_template: |
         Er is een nieuw account voor je gemaakt op %{site_name}
 
@@ -4027,7 +4056,6 @@ nl:
         Als je niet op de bovenstaande link kunt klikken, kopieer en plak deze dan in de adresbalk van je webbrowser.
     suspicious_login:
       title: "Waarschuwing voor nieuwe aanmelding"
-      subject_template: "[%{site_name}] Nieuwe aanmelding vanaf %{location}"
       text_body_template: |
         Hallo,
 
@@ -4056,7 +4084,7 @@ nl:
     see_more: "Meer"
     search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
-    home: "Ga naar de startpagina"
+    home: "Naar de startpagina"
     placeholder: "Zoek topics op titel of trefwoorden…"
   offline:
     title: "Kan app niet laden"
@@ -4786,7 +4814,6 @@ nl:
       restricted_to:
         one: '"%{tag_name}" is beperkt tot de categorie "%{category_names}"'
         other: '"%{tag_name}" is beperkt tot de volgende categorieën: %{category_names}'
-      synonym: 'Synoniemen zijn niet toegestaan. Gebruik in plaats hiervan ''%{tag_name}''.'
       has_synonyms: '''%{tag_name}'' kan niet worden gebruikt, omdat deze geen synoniemen heeft.'
       restricted_tags_cannot_be_used_in_category:
         one: 'De tag "%{tags}" kan niet worden gebruikt in de categorie "%{category}". Verwijder deze alsjeblieft.'

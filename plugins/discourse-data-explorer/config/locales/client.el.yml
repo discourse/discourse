@@ -8,27 +8,42 @@ el:
   js:
     explorer:
       default_query: "Προεπιλογή"
+      mode:
+        label: "Λειτουργία σύνταξης ερωτήματος"
+        manual: "Γράψτε SQL"
+        ai: "Δημιουργήστε με AI"
       or: "ή"
       create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       ai:
         generate: "Δημιουργία"
+        optional: "προαιρετικό"
       import:
         label: "Εισαγωγή"
       help:
         label: "Βοήθεια"
       schema:
         filter: "Αναζήτηση..."
+        search_tables: "Αναζήτηση πινάκων"
       types:
         bool:
           yes: "Ναι "
           no: "Όχι"
-      export: "Εξαγωγή"
-      view: "Προβολή"
       save: "Αποθήκευση αλλαγών"
       undo: "Απόρριψη αλλαγών"
-      edit: "Επεξεργασία"
       delete: "Διαγραφή"
+      sql_label: "SQL"
+      run_with_explain: "Εκτέλεση με σχέδιο ερωτήματος"
+      run_options: "Περισσότερες επιλογές εκτέλεσης"
+      view:
+        label: "Προβολή αποτελεσμάτων"
+      chart_empty:
+        view_as_table: "Προβολή ως πίνακα"
+      export_as:
+        label: "Εξαγωγή ως…"
+        results_json: "Αποτελέσματα (JSON)"
+        results_csv: "Αποτελέσματα (CSV)"
+        query_json: "Ορισμός ερωτήματος (JSON)"
       result_count:
         one: "%{count} αποτέλεσμα."
         other: "%{count} αποτελέσματα."

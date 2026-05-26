@@ -1,47 +1,33 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Composer helper" do
-  let(:search_page) { PageObjects::Pages::Search.new }
-  let(:query) { "apple_pie" }
-  let(:hypothetical_post) { "This is an hypothetical post generated from the keyword apple_pie" }
-
-  fab!(:user, :admin)
+RSpec.describe "AI semantic search in full-page search" do
+  fab!(:user)
+  fab!(:embedding_definition)
   fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic, raw: "Apple pie is a delicious dessert to eat") }
+  fab!(:post) { Fabricate(:post, topic:) }
+
+  let(:search_page) { PageObjects::Pages::Search.new }
+  let(:query) { "apple pie" }
+  let(:embedding) { [0.049382] * embedding_definition.dimensions }
 
   before do
     enable_current_plugin
-
-    prompt = DiscourseAi::Embeddings::HydeGenerators::OpenAi.new.prompt(query)
-    OpenAiCompletionsInferenceStubs.stub_response(
-      prompt,
-      hypothetical_post,
-      req_opts: {
-        max_tokens: 400,
-      },
-    )
-
-    hyde_embedding = [0.049382, 0.9999]
-    EmbeddingsGenerationStubs.hugging_face_service(hypothetical_post, hyde_embedding)
-
-    SearchIndexer.enable
-    SearchIndexer.index(topic, force: true)
+    SiteSetting.ai_embeddings_selected_model = embedding_definition.id
     SiteSetting.ai_embeddings_semantic_search_enabled = true
+
+    DiscourseAi::Embeddings::Schema.for(Topic).store(topic, embedding, "digest")
+    EmbeddingsGenerationStubs.hugging_face_service(query, embedding)
+
     sign_in(user)
   end
 
-  after do
-    described_class.clear_cache_for(query)
-    SearchIndexer.disable
-  end
+  after { DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query) }
 
-  describe "when performing a search in the full page search page" do
-    skip "TODO: Implement test after doing LLM abstraction" do
-      it "performs AI search in the background and hides results by default" do
-        visit("/search?expanded=true")
-        search_page.type_in_search("apple pie")
-        search_page.click_search_button
-      end
-    end
+  it "renders AI results in the toggle panel after a search" do
+    visit("/search?expanded=true")
+    search_page.type_in_search(query)
+    search_page.click_search_button
+
+    expect(page).to have_css(".semantic-search__results .badge-notification", text: "1")
   end
 end

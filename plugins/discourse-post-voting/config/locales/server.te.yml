@@ -8,8 +8,6 @@ te:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "చర్య తీసుకోలేదు"
         agree_and_suspend:
           title: "సభ్యుడిని సస్పెండు చేయండి"
           description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని సస్పెండ్ చేయండి."

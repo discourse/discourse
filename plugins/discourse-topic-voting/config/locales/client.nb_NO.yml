@@ -12,18 +12,15 @@ nb_NO:
     topic_voting:
       reached_limit: "Du har ikke flere stemmer igjen, fjern en eksisterende stemme."
       list_votes: "List opp dine stemmer"
-      votes_nav_help: "emner med flest stemmer"
       voted: "Du stemte på dette emnet"
       allow_topic_voting: "Tillat brukere å stemme på emner i denne kategorien"
       vote_title: "Stemme"
       vote_title_plural: "Stemmer"
-      voted_title: "Stemt"
-      voting_closed_title: "Lukket"
-      voting_limit: "Grense"
       anonymous_button:
         one: "Stemme"
         other: "Stemmer"
+      show_voters: "Vis hvem som har stemt"
+      vote_count_thousands: "%{count}k"
     filters:
       votes:
         title: "Stemmer"
-        help: "emner med flest stemmer"

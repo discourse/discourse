@@ -7,7 +7,7 @@
 be:
   reports:
     emotion_neutral:
-      title: "\U0001F610 нейтральны"
+      title: "😐 нейтральны"
   discourse_ai:
     ai_bot:
       tool_summary:
@@ -51,6 +51,6 @@ be:
     sentiment:
       reports:
         post_emotion:
-          neutral: "нейтральны \U0001F610"
+          neutral: "нейтральны 😐"
         sentiment_analysis:
           neutral: "нейтральны"

@@ -37,16 +37,14 @@ module DiscourseSubscriptions
     end
 
     def create_campaign
-      begin
-        group = create_campaign_group
-        product = create_campaign_product
-        create_campaign_prices(product, group)
+      group = create_campaign_group
+      product = create_campaign_product
+      create_campaign_prices(product, group)
 
-        SiteSetting.discourse_subscriptions_campaign_enabled = true
-        SiteSetting.discourse_subscriptions_campaign_product = product[:id]
-      rescue ::Stripe::InvalidRequestError => e
-        e
-      end
+      SiteSetting.discourse_subscriptions_campaign_enabled = true
+      SiteSetting.discourse_subscriptions_campaign_product = product[:id]
+    rescue ::Stripe::InvalidRequestError => e
+      e
     end
 
     protected
@@ -138,7 +136,7 @@ module DiscourseSubscriptions
         },
       }
 
-      plan = ::Stripe::Price.create(price_object, stripe_request_opts)
+      ::Stripe::Price.create(price_object, stripe_request_opts)
     end
 
     def get_one_time_payments(product_ids)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-xdescribe Jobs::CategoriesLocaleDetectionBackfill do
+describe Jobs::CategoriesLocaleDetectionBackfill do
   subject(:job) { described_class.new }
 
   fab!(:category) { Fabricate(:category, locale: nil) }

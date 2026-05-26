@@ -3,8 +3,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DComboButton from "discourse/components/d-combo-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class TopicDismissButtons extends Component {
@@ -134,7 +135,7 @@ export default class TopicDismissButtons extends Component {
                   id="dismiss-new-menu-{{@position}}"
                   class="btn-default dismiss-read topic-dismiss-buttons__menu"
                 >
-                  <DropdownMenu as |dropdown|>
+                  <DDropdownMenu as |dropdown|>
                     <dropdown.item class="topic-dismiss-buttons__menu-item">
                       <DButton
                         @action={{this.dismissNewAndStopTracking}}
@@ -144,7 +145,7 @@ export default class TopicDismissButtons extends Component {
                         class="btn-secondary dismiss-new-stop-tracking"
                       />
                     </dropdown.item>
-                  </DropdownMenu>
+                  </DDropdownMenu>
                 </combo.Menu>
               {{/if}}
             </DComboButton>

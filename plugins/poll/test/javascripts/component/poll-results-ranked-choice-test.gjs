@@ -30,7 +30,7 @@ const RANKED_CHOICE_OUTCOME = {
   ],
 };
 
-module("Poll | Component | poll-results-ranked-choice", function (hooks) {
+module("Component | poll-results-ranked-choice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the ranked choice results component correctly", async function (assert) {

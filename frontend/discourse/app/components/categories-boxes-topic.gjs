@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("")
 export default class CategoriesBoxesTopic extends Component {
@@ -20,7 +20,7 @@ export default class CategoriesBoxesTopic extends Component {
 
   <template>
     <li data-topic-id={{this.topic.id}} ...attributes>
-      {{icon this.topicStatusIcon}}
+      {{dIcon this.topicStatusIcon}}
 
       <a href={{this.topic.lastUnreadUrl}} class="title">
         {{trustHTML this.topic.fancyTitle}}

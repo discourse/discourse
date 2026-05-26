@@ -37,6 +37,24 @@ RSpec.describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  describe "AnonymousUser#in_any_groups?" do
+    let(:anon) { Guardian::AnonymousUser.new }
+
+    it "returns true when the anonymous auto group is in the list" do
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(true)
+      expect(
+        anon.in_any_groups?([Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:anonymous]]),
+      ).to eq(true)
+    end
+
+    it "returns false for any other group, including everyone and logged_in_users" do
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:everyone]])).to eq(false)
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(false)
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(false)
+      expect(anon.in_any_groups?([])).to eq(false)
+    end
+  end
+
   describe "can_enable_safe_mode" do
     fab!(:user)
     fab!(:moderator)
@@ -175,7 +193,7 @@ RSpec.describe Guardian do
     it "respects the group's messageable_level" do
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        user_output = level == :everyone ? true : false
+        user_output = level == :everyone
         admin_output = level != :nobody
         mod_output = %i[nobody only_admins].exclude?(level)
 
@@ -1388,6 +1406,24 @@ RSpec.describe Guardian do
       Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
     end
+
+    it "returns false for a category group moderator who cannot see the topic" do
+      SiteSetting.enable_category_group_moderation = true
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      Fabricate(:category_moderation_group, category: private_category, group:)
+      expect(Guardian.new(user).can_review_topic?(private_topic)).to eq(false)
+    end
+
+    it "returns true for a category group moderator who can see the topic" do
+      SiteSetting.enable_category_group_moderation = true
+      private_category = Fabricate(:private_category, group:)
+      private_topic = Fabricate(:topic, category: private_category)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      Fabricate(:category_moderation_group, category: private_category, group:)
+      expect(Guardian.new(user).can_review_topic?(private_topic)).to eq(true)
+    end
   end
 
   describe "#can_close_topic?" do
@@ -1833,12 +1869,10 @@ RSpec.describe Guardian do
     end
 
     it "should not allow an admin to grant admin access to a non real user" do
-      begin
-        Discourse.system_user.update!(admin: false)
-        expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
-      ensure
-        Discourse.system_user.update!(admin: true)
-      end
+      Discourse.system_user.update!(admin: false)
+      expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
+    ensure
+      Discourse.system_user.update!(admin: true)
     end
   end
 
@@ -1889,12 +1923,10 @@ RSpec.describe Guardian do
     end
 
     it "should not allow an admin to grant moderation to a non real user" do
-      begin
-        Discourse.system_user.update!(moderator: false)
-        expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
-      ensure
-        Discourse.system_user.update!(moderator: true)
-      end
+      Discourse.system_user.update!(moderator: false)
+      expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
+    ensure
+      Discourse.system_user.update!(moderator: true)
     end
   end
 
@@ -2524,6 +2556,14 @@ RSpec.describe Guardian do
         moderator_guardian.can_export_entity?("report", nil, { name: "top_uploads" }),
       ).to be_falsey
       expect(admin_guardian.can_export_entity?("report", nil, { name: "top_uploads" })).to be_truthy
+    end
+
+    it "allows moderators to export suspicious login reports when IP viewing is disabled" do
+      SiteSetting.moderators_view_ips = false
+
+      expect(
+        moderator_guardian.can_export_entity?("report", nil, { name: "suspicious_logins" }),
+      ).to be_truthy
     end
 
     it "does not allow anonymous to export" do

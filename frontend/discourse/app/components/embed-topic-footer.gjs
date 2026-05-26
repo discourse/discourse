@@ -1,18 +1,48 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import { modifier } from "ember-modifier";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
-import icon from "discourse/helpers/d-icon";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
-import Composer from "discourse/models/composer";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedTopicFooter extends Component {
-  @service composer;
+  @service appEvents;
   @service currentUser;
+  @service embedAuthFlow;
   @service siteSettings;
+
+  @tracked footerButtonsVisible = false;
+
+  trackFooterVisibility = modifier((element) => {
+    const footerButtons = document.querySelector("#topic-footer-buttons");
+    const targets = [footerButtons, element].filter(Boolean);
+
+    if (targets.length === 0) {
+      return;
+    }
+
+    const visibilityMap = new Map();
+    targets.forEach((t) => visibilityMap.set(t, false));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          visibilityMap.set(entry.target, entry.isIntersecting);
+        });
+        this.footerButtonsVisible = [...visibilityMap.values()].some(Boolean);
+      },
+      { threshold: 0 }
+    );
+
+    targets.forEach((t) => observer.observe(t));
+
+    return () => observer.disconnect();
+  });
 
   get isEmbedMode() {
     return EmbedMode.enabled;
@@ -30,10 +60,26 @@ export default class EmbedTopicFooter extends Component {
     return this.currentUser ? "topic.reply.title" : "topic.login_reply";
   }
 
+  get showFloatingTimelineButton() {
+    if (this.currentUser) {
+      return false;
+    }
+    return this.args.topic?.replyCount > 0 && !this.footerButtonsVisible;
+  }
+
   @action
-  async handleReply() {
+  handleTimelineToggle() {
+    this.appEvents.trigger("topic:toggle-progress-expansion");
+  }
+
+  @action
+  handleReply() {
     if (!this.currentUser) {
-      window.open(getURL("/login"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "login" });
+      } else {
+        window.open(getURL("/login"), "_blank");
+      }
       return;
     }
 
@@ -42,20 +88,15 @@ export default class EmbedTopicFooter extends Component {
       return;
     }
 
-    await this.composer.open({
-      action: Composer.REPLY,
-      topic,
-      draftKey: topic.draft_key,
-      draftSequence: topic.draft_sequence,
-    });
+    this.appEvents.trigger("embed-composer:reply-to-post", null);
   }
 
   <template>
     {{#if this.isEmbedMode}}
-      <div class="embed-topic-footer">
+      <div class="embed-topic-footer" {{this.trackFooterVisibility}}>
         {{#if this.showFirstReplyMessage}}
           <div class="embed-topic-footer__first-reply">
-            {{icon "comment"}}
+            {{dIcon "comment"}}
             <span>{{i18n "embed_mode.be_first_to_reply"}}</span>
             <DButton
               @action={{this.handleReply}}
@@ -70,6 +111,16 @@ export default class EmbedTopicFooter extends Component {
           </div>
         {{/if}}
       </div>
+      {{#if this.showFloatingTimelineButton}}
+        <div class="embed-floating-buttons">
+          <DButton
+            @action={{this.handleTimelineToggle}}
+            @icon="bars-staggered"
+            @title="topic.progress.title"
+            class="btn-default embed-floating-timeline-button"
+          />
+        </div>
+      {{/if}}
     {{/if}}
   </template>
 }

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AiSearchDiscoveriesTooltip extends Component {
@@ -12,7 +12,7 @@ export default class AiSearchDiscoveriesTooltip extends Component {
     <span class="ai-search-discoveries-tooltip">
       <DTooltip @placement="top-end" @interactive={{true}}>
         <:trigger>
-          {{icon "circle-info"}}
+          {{dIcon "circle-info"}}
         </:trigger>
         <:content>
           <div class="ai-search-discoveries-tooltip__content">

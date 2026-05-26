@@ -20,6 +20,10 @@ export default function () {
 
   this.route("topicBySlugOrId", { path: "/t/:slug_or_id" });
 
+  // Nested replies routes
+  this.route("nested", { path: "/n/:slug/:topic_id" });
+  this.route("nestedPost", { path: "/n/:slug/:topic_id/:post_number" });
+
   this.route("discovery", { path: "/" }, function () {
     // top by periods - legacy route
     Site.currentProp("periods").forEach((period) => {

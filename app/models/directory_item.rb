@@ -242,18 +242,20 @@ end
 #
 # Table name: directory_items
 #
-#  id             :integer          not null, primary key
-#  days_visited   :integer          default(0), not null
-#  likes_given    :integer          not null
-#  likes_received :integer          not null
-#  period_type    :integer          not null
-#  post_count     :integer          not null
-#  posts_read     :integer          default(0), not null
-#  topic_count    :integer          not null
-#  topics_entered :integer          not null
-#  created_at     :datetime
-#  updated_at     :datetime
-#  user_id        :integer          not null
+#  id                 :integer          not null, primary key
+#  days_visited       :integer          default(0), not null
+#  gamification_score :integer          default(0)
+#  likes_given        :integer          not null
+#  likes_received     :integer          not null
+#  period_type        :integer          not null
+#  post_count         :integer          not null
+#  posts_read         :integer          default(0), not null
+#  solutions          :integer          default(0)
+#  topic_count        :integer          not null
+#  topics_entered     :integer          not null
+#  created_at         :datetime
+#  updated_at         :datetime
+#  user_id            :integer          not null
 #
 # Indexes
 #

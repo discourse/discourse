@@ -14,6 +14,7 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -22,9 +23,8 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { resetComposerMessagesCache } from "discourse/components/composer-messages";
 import { clearPluginDocumentTitleCounters } from "discourse/components/d-document";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
-import { resetHtmlDecorators } from "discourse/components/decorated-html";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
@@ -56,6 +56,7 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
+import { resetOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
@@ -111,6 +112,8 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
+import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
+import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -211,6 +214,7 @@ export function testCleanup(container, app) {
   User.resetCurrent();
   resetMobile();
   resetAdditionalReportModes();
+  resetAdminDashboardReportRenderers();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -233,6 +237,7 @@ export function testCleanup(container, app) {
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();
+  resetComposerMessagesCache();
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
@@ -273,6 +278,7 @@ export function testCleanup(container, app) {
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
   clearRegisteredEditCategoryTabs();
+  resetOnBeforeCategoryTypesChange();
   clearAddedTrackedPostProperties();
   clearAddedTrackedTopicProperties();
   resetGroupPostSmallActionCodes();
@@ -576,6 +582,18 @@ export function chromeTest(name, testCase) {
 
 export function firefoxTest(name, testCase) {
   conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
+}
+
+export function silenceConsoleErrorsMatching(substring) {
+  const stub = sinon.stub(console, "error").callsFake((...args) => {
+    if (typeof args[0] === "string" && args[0].includes(substring)) {
+      return;
+    }
+
+    stub.wrappedMethod.apply(console, args);
+  });
+
+  return stub;
 }
 
 export function createFile(name, type = "image/png", blobData = null) {

@@ -68,26 +68,24 @@ class UploadsController < ApplicationController
     # note, atm hijack is processed in its own context and has not access to controller
     # longer term we may change this
     hijack do
-      begin
-        info =
-          UploadsController.create_upload(
-            current_user: me,
-            file:,
-            url:,
-            type:,
-            for_private_message:,
-            for_site_setting:,
-            site_setting_name:,
-            pasted:,
-            is_api:,
-            retain_hours:,
-          )
-      rescue => e
-        render json: failed_json.merge(message: e.message&.split("\n")&.first),
-               status: :unprocessable_entity
-      else
-        render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
-      end
+      info =
+        UploadsController.create_upload(
+          current_user: me,
+          file:,
+          url:,
+          type:,
+          for_private_message:,
+          for_site_setting:,
+          site_setting_name:,
+          pasted:,
+          is_api:,
+          retain_hours:,
+        )
+    rescue => e
+      render json: failed_json.merge(message: e.message&.split("\n")&.first),
+             status: :unprocessable_entity
+    else
+      render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
     end
   end
 
@@ -95,7 +93,7 @@ class UploadsController < ApplicationController
     params.permit(short_urls: [])
     uploads = []
 
-    if (params[:short_urls] && params[:short_urls].length > 0)
+    if params[:short_urls] && params[:short_urls].length > 0
       PrettyText::Helpers
         .lookup_upload_urls(params[:short_urls])
         .each do |short_url, paths|
@@ -117,26 +115,24 @@ class UploadsController < ApplicationController
         request.env.delete(Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY)
 
       RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-        begin
-          # current_user here refers to the user for the site that we are operating on
-          # using with_connection. If DB for the target site matches the current site
-          # for the request, then current_user will be the same as the request_site_current_user
-          return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
+        # current_user here refers to the user for the site that we are operating on
+        # using with_connection. If DB for the target site matches the current site
+        # for the request, then current_user will be the same as the request_site_current_user
+        return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 
-          upload =
-            Upload.find_by(sha1: params[:sha]) ||
-              Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
+        upload =
+          Upload.find_by(sha1: params[:sha]) ||
+            Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
 
-          if upload.present?
-            if !Discourse.store.internal?
-              local_store = FileStore::LocalStore.new
-              return render_404 unless local_store.has_been_uploaded?(upload.url)
-            end
-
-            send_file_local_upload(upload)
-          else
-            render_404
+        if upload.present?
+          if !Discourse.store.internal?
+            local_store = FileStore::LocalStore.new
+            return render_404 unless local_store.has_been_uploaded?(upload.url)
           end
+
+          send_file_local_upload(upload)
+        else
+          render_404
         end
       end
     ensure
@@ -386,21 +382,19 @@ class UploadsController < ApplicationController
     response.headers["Content-Security-Policy"] = "sandbox;"
 
     file_path = Discourse.store.path_for(upload)
-    return render_404 unless file_path
+    return render_404 unless file_path && File.exist?(file_path)
 
     send_file(file_path, opts)
   end
 
   def create_direct_multipart_upload
-    begin
-      yield
-    rescue Aws::S3::Errors::ServiceError => err
-      message =
-        debug_upload_error(
-          err,
-          I18n.t("upload.create_multipart_failure", additional_detail: err.message),
-        )
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
-    end
+    yield
+  rescue Aws::S3::Errors::ServiceError => err
+    message =
+      debug_upload_error(
+        err,
+        I18n.t("upload.create_multipart_failure", additional_detail: err.message),
+      )
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
   end
 end

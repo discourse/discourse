@@ -393,28 +393,26 @@ RSpec.describe TopicsController do
         end
 
         it "triggers an event on merge" do
-          begin
-            called = false
+          called = false
 
-            assert = ->(original_topic, destination_topic) do
-              called = true
-              expect(original_topic).to eq(topic)
-              expect(destination_topic).to eq(dest_topic)
-            end
-
-            DiscourseEvent.on(:topic_merged, &assert)
-
-            post "/t/#{topic.id}/move-posts.json",
-                 params: {
-                   post_ids: [p2.id],
-                   destination_topic_id: dest_topic.id,
-                 }
-
-            expect(called).to eq(true)
-            expect(response.status).to eq(200)
-          ensure
-            DiscourseEvent.off(:topic_merged, &assert)
+          assert = ->(original_topic, destination_topic) do
+            called = true
+            expect(original_topic).to eq(topic)
+            expect(destination_topic).to eq(dest_topic)
           end
+
+          DiscourseEvent.on(:topic_merged, &assert)
+
+          post "/t/#{topic.id}/move-posts.json",
+               params: {
+                 post_ids: [p2.id],
+                 destination_topic_id: dest_topic.id,
+               }
+
+          expect(called).to eq(true)
+          expect(response.status).to eq(200)
+        ensure
+          DiscourseEvent.off(:topic_merged, &assert)
         end
       end
 
@@ -1208,7 +1206,7 @@ RSpec.describe TopicsController do
         end
 
         it "returns 403 when group is not allow listed" do
-          SiteSetting.change_post_ownership_allowed_groups = nil
+          SiteSetting.change_post_ownership_allowed_groups = ""
 
           post "/t/#{topic_allowed_user_can_see.id}/change-owner.json",
                params: {
@@ -1914,6 +1912,72 @@ RSpec.describe TopicsController do
           expect(post.trashed?).to be_falsey
         end
       end
+
+      context "when logged in as a category group moderator who cannot see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) do
+          Fabricate(:topic, category: private_category, deleted_at: Time.now, deleted_by: moderator)
+        end
+        fab!(:private_post) do
+          Fabricate(
+            :post,
+            topic: private_topic,
+            post_number: 1,
+            deleted_at: Time.now,
+            deleted_by: moderator,
+          )
+        end
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "prevents recovering a topic the user cannot see" do
+          put "/t/#{private_topic.id}/recover.json"
+
+          expect(response).to be_forbidden
+          expect(private_topic.reload.trashed?).to be_truthy
+        end
+      end
+
+      context "when logged in as a category group moderator who can see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) do
+          Fabricate(:topic, category: private_category, deleted_at: Time.now, deleted_by: moderator)
+        end
+        fab!(:private_post) do
+          Fabricate(
+            :post,
+            topic: private_topic,
+            post_number: 1,
+            deleted_at: Time.now,
+            deleted_by: moderator,
+          )
+        end
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          private_category.set_permissions(mod_group => :full)
+          private_category.save!
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "allows recovering a topic the user can see" do
+          put "/t/#{private_topic.id}/recover.json"
+
+          expect(response.status).to eq(200)
+          expect(private_topic.reload.trashed?).to be_falsey
+        end
+      end
     end
   end
 
@@ -1943,6 +2007,52 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
           topic.reload
           expect(topic.trashed?).to be_truthy
+        end
+      end
+
+      context "when logged in as a category group moderator who cannot see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic, user: user, post_number: 1) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "prevents deleting a topic the user cannot see" do
+          delete "/t/#{private_topic.id}.json"
+
+          expect(response.status).to eq(422)
+          expect(private_topic.reload.trashed?).to be_falsey
+        end
+      end
+
+      context "when logged in as a category group moderator who can see the topic" do
+        fab!(:mod_group, :group)
+        fab!(:cat_mod_user, :user)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic, user: user, post_number: 1) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          private_category.set_permissions(mod_group => :full)
+          private_category.save!
+          Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+          mod_group.add(cat_mod_user)
+          sign_in(cat_mod_user)
+        end
+
+        it "allows deleting a topic the user can see" do
+          delete "/t/#{private_topic.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(private_topic.reload.trashed?).to be_truthy
         end
       end
     end
@@ -2360,6 +2470,53 @@ RSpec.describe TopicsController do
 
               expect(response.status).to eq(200)
             end
+
+            it "returns canonical tags in the response when synonyms are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              Fabricate(:tag, name: "aapl", target_tag: canonical)
+              Fabricate(:tag, name: "appl", target_tag: canonical)
+
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: %w[aapl appl apple-inc] }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+              expect(topic.reload.tags.pluck(:name)).to contain_exactly("apple-inc")
+            end
+
+            it "does not include tags in the response when tags were not part of the update" do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    title: "This is a new title for the topic",
+                  }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body).not_to have_key("tags")
+            end
+
+            it "does not create a revision when only synonyms of existing tags are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+              appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+              topic.tags << canonical
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json",
+                    params: {
+                      tags: [
+                        { id: aapl.id, name: "aapl" },
+                        { id: appl.id, name: "appl" },
+                        { id: canonical.id, name: "apple-inc" },
+                      ],
+                    }
+              end.not_to change { topic.reload.first_post.revisions.count }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+            end
           end
 
           it "returns success when updating with empty tags on a topic with no tags" do
@@ -2406,6 +2563,29 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
             expect(topic.reload.tags.pluck(:name)).to contain_exactly("brand-new")
+          end
+
+          it "returns canonical tags and skips revision when only synonyms are submitted" do
+            canonical = Fabricate(:tag, name: "apple-inc")
+            aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+            appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+            topic.tags << canonical
+
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: [
+                      { id: aapl.id, name: "aapl" },
+                      { id: appl.id, name: "appl" },
+                      { id: canonical.id, name: "apple-inc" },
+                    ],
+                  }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+              "apple-inc",
+            )
           end
 
           it "does not remove tag if no params is given" do
@@ -2892,6 +3072,63 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it "does not expose private message tag descriptions when the viewer cannot see tags" do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:admins].to_s
+      pm_post = Fabricate(:private_message_post, user: admin, recipient: user)
+      pm_topic = pm_post.topic
+      pm_tag = Fabricate(:tag, name: "secret-pm-tag", description: "secret PM tag description")
+      pm_topic.tags << pm_tag
+
+      sign_in(user)
+      get "/t/#{pm_topic.slug}/#{pm_topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("tags")
+      expect(response.parsed_body).not_to have_key("tags_descriptions")
+    end
+
+    it "does not expose links from hidden posts in topic details to non-staff viewers" do
+      test_topic = Fabricate(:topic, user: post_author1)
+      visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
+      hidden_post = Fabricate(:post, topic: test_topic, user: post_author1)
+
+      Fabricate(
+        :topic_link,
+        post: visible_post,
+        url: "https://visible-link.example.com",
+        domain: "visible-link.example.com",
+        clicks: 1,
+        title: "Visible title",
+      )
+      Fabricate(
+        :topic_link,
+        post: hidden_post,
+        url: "https://hidden-link.example.com",
+        domain: "hidden-link.example.com",
+        clicks: 1,
+        title: "Hidden title",
+      )
+
+      hidden_post.hide!(PostActionType.types[:off_topic])
+
+      get "/t/#{test_topic.slug}/#{test_topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["details"]["links"]).to contain_exactly(
+        a_hash_including("url" => "https://visible-link.example.com", "title" => "Visible title"),
+      )
+
+      sign_in(moderator)
+      get "/t/#{test_topic.slug}/#{test_topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["details"]["links"]).to contain_exactly(
+        a_hash_including("url" => "https://visible-link.example.com", "title" => "Visible title"),
+        a_hash_including("url" => "https://hidden-link.example.com", "title" => "Hidden title"),
+      )
+    end
+
     it "shows a blank-slug topic without redirecting" do
       topic.update_columns(title: "", slug: nil)
       topic.reload
@@ -2901,29 +3138,34 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    it "return 404 for an invalid page" do
+    it "redirects an over-range page to the last valid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
     end
 
-    it "handles pagination correctly with deleted posts" do
+    it "redirects over-range pages to the last multi-page page" do
       topic_with_posts = Fabricate(:topic)
-
-      24.times do |i|
-        Fabricate(:post, topic: topic_with_posts, deleted_at: i.even? ? DateTime.now : nil)
-      end
-
+      Fabricate.times(25, :post, topic: topic_with_posts)
       Topic.reset_highest(topic_with_posts.id)
-      topic_with_posts.reload
 
-      expect(topic_with_posts.posts_count).to eq(12)
-      expect(topic_with_posts.highest_post_number).to eq(24)
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}", params: { page: 5 }
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2")
+    end
 
-      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 1 }
-      expect(response.status).to eq(200)
+    it "uses viewer-visible post count when deciding the last valid page (whispers)" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(20, :post, topic: topic_with_posts)
+      Fabricate(:post, topic: topic_with_posts, post_type: Post.types[:whisper])
+      Topic.reset_highest(topic_with_posts.id)
 
       get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json")
+
+      sign_in(admin)
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
+      expect(response.status).to eq(200)
     end
 
     it "can find a topic given a slug in the id param" do
@@ -2973,6 +3215,46 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}", params: { silly_param: "hehe" }
 
       expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it "redirects to nested view when nested_replies_default is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}"
+
+      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+    end
+
+    it "does not redirect crawlers to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "crawler" })
+    end
+
+    it "does not redirect private messages to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user)
+
+      sign_in(user)
+      get "/t/#{pm.slug}/#{pm.id}"
+
+      expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
+    end
+
+    it "preserves embed_mode when redirecting to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+
+      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
     end
 
     it "returns 404 when an invalid slug is given and no id" do
@@ -3574,7 +3856,7 @@ RSpec.describe TopicsController do
         expect(extract_post_stream).to eq(@post_ids[3..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 3 }
-        expect(response.status).to eq(404)
+        expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json?page=2")
 
         TopicView.stubs(:chunk_size).returns(4)
 
@@ -3583,7 +3865,7 @@ RSpec.describe TopicsController do
         expect(extract_post_stream).to eq(@post_ids[0..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-        expect(response.status).to eq(404)
+        expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
       end
     end
 
@@ -4600,8 +4882,58 @@ RSpec.describe TopicsController do
         expect(topic.reload.tags).to include(tag1)
       end
 
+      it "can manage tags via add, remove and replace across multiple topics" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag_1 = Fabricate(:tag)
+        tag_2 = Fabricate(:tag)
+        tag_3 = Fabricate(:tag)
+        tag_4 = Fabricate(:tag)
+        topic_1 = Fabricate(:topic_with_op, user: user, tags: [tag_1, tag_2])
+        topic_2 = Fabricate(:topic_with_op, user: user, tags: [tag_2, tag_3])
+        topic_3 = Fabricate(:topic_with_op, user: user, tags: [tag_1])
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic_1.id, topic_2.id, topic_3.id],
+              operation: {
+                type: "manage_tags",
+                add_tag_ids: [tag_4.id],
+                remove_tag_ids: [tag_2.id],
+                replace_tags: [{ from_tag_id: tag_1.id, to_tag_id: tag_3.id }],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic_1.reload.tags).to contain_exactly(tag_3, tag_4)
+        expect(topic_2.reload.tags).to contain_exactly(tag_3, tag_4)
+        expect(topic_3.reload.tags).to contain_exactly(tag_3, tag_4)
+      end
+
+      it "can clear all tags with remove_all_tags across multiple topics" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag_1 = Fabricate(:tag)
+        tag_2 = Fabricate(:tag)
+        topic_1 = Fabricate(:topic_with_op, user: user, tags: [tag_1, tag_2])
+        topic_2 = Fabricate(:topic_with_op, user: user, tags: [tag_2])
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic_1.id, topic_2.id],
+              operation: {
+                type: "manage_tags",
+                remove_all_tags: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic_1.reload.tags).to be_empty
+        expect(topic_2.reload.tags).to be_empty
+      end
+
       it "includes errors in the response when operations partially fail" do
-        sign_in(Fabricate(:admin))
+        sign_in(Fabricate(:moderator))
 
         restricted_tag = Fabricate(:tag, name: "restricted-tag")
         source_category = Fabricate(:category, tags: [restricted_tag])
@@ -5657,6 +5989,27 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      context "when the PM recipient cap would be exceeded" do
+        fab!(:reply_1) { Fabricate(:post, topic: topic, user: post_author1, post_number: 2) }
+        fab!(:reply_2) { Fabricate(:post, topic: topic, user: post_author2, post_number: 3) }
+
+        before { SiteSetting.max_allowed_message_recipients = 2 }
+
+        it "returns an error" do
+          sign_in(admin)
+          put "/t/#{topic.id}/convert-topic/private.json"
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(
+            I18n.t(
+              "topic_converter.too_many_recipients",
+              max: SiteSetting.max_allowed_message_recipients,
+            ),
+          )
+          expect(topic.reload.archetype).to eq(Archetype.default)
+        end
+      end
+
       context "with success" do
         it "returns success" do
           sign_in(admin)
@@ -6017,6 +6370,23 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
       end
 
+      it "raises an error when publishing a private message to a category" do
+        sign_in(trust_level_4)
+
+        pm_topic = Fabricate(:private_message_topic, user: trust_level_4)
+
+        post "/t/#{pm_topic.id}/timer.json",
+             params: {
+               time: 24,
+               status_type: "publish_to_category",
+               category_id: category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(pm_topic.reload.public_topic_timer).to eq(nil)
+      end
+
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         Group.user_trust_level_change!(user.id, user.trust_level)
@@ -6085,6 +6455,32 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(403)
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
+      end
+    end
+
+    context "when logged in as a moderator" do
+      it "blocks duration-based publishing to a category the moderator cannot create topics in" do
+        sign_in(moderator)
+
+        admin_only_category = Fabricate(:category)
+        admin_only_category.set_permissions(admins: :full)
+        admin_only_category.save!
+
+        moderator_guardian = Guardian.new(moderator)
+        expect(moderator_guardian.can_moderate?(topic)).to eq(true)
+        expect(moderator_guardian.can_create_topic_on_category?(admin_only_category)).to eq(false)
+
+        post "/t/#{topic.id}/timer.json",
+             params: {
+               duration_minutes: 60,
+               based_on_last_post: true,
+               status_type: "publish_to_category",
+               category_id: admin_only_category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(topic.reload.public_topic_timer).to eq(nil)
       end
     end
   end
@@ -7124,30 +7520,23 @@ RSpec.describe TopicsController do
     fab!(:topic)
     fab!(:user)
 
-    before do
-      Jobs.run_immediately!
-      Scheduler::Defer.async = true
-      Scheduler::Defer.timeout = 0.1
-    end
-
-    after do
-      Scheduler::Defer.async = false
-      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
-    end
+    before { Jobs.run_immediately! }
 
     it "does nothing if topic does not exist" do
       topic.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "does nothing if user from ID does not exist" do
       user.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7155,8 +7544,9 @@ RSpec.describe TopicsController do
       topic.shared_draft = Fabricate(:shared_draft)
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7164,15 +7554,17 @@ RSpec.describe TopicsController do
       topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "creates a topic view" do
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.to change { TopicViewItem.count }
     end
   end
@@ -7225,6 +7617,45 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+  end
+
+  describe "third-party analytics in embed mode" do
+    fab!(:topic)
+
+    before do
+      SiteSetting.embed_full_app = true
+      SiteSetting.gtm_container_id = "GTM-ABCDEF"
+      SiteSetting.adobe_analytics_tags_url = "https://assets.adobedtm.com/launch-EN.min.js"
+    end
+
+    def parsed_body
+      Nokogiri::HTML5.fragment(response.body)
+    end
+
+    it "renders analytics tags by default" do
+      get "/t/#{topic.slug}/#{topic.id}"
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
+    end
+
+    it "skips analytics tags when loaded in embed mode" do
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_empty
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_empty
+    end
+
+    it "still renders analytics tags in embed mode when suppression setting is disabled" do
+      SiteSetting.suppress_third_party_analytics_in_embed = false
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
+      expect(parsed_body.css("#data-google-tag-manager")).to be_present
+      expect(
+        parsed_body.css("script[src='https://assets.adobedtm.com/launch-EN.min.js']"),
+      ).to be_present
     end
   end
 end

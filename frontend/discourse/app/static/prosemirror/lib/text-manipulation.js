@@ -3,6 +3,8 @@ import { getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+// @ts-ignore — pretty-text has no type declarations
+import { lookupCachedUploadUrl } from "pretty-text/upload-short-url";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import {
@@ -10,12 +12,30 @@ import {
   sinkListItem,
   wrapInList,
 } from "prosemirror-schema-list";
-import { Selection, TextSelection } from "prosemirror-state";
+import { NodeSelection, Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
+
+function isPlainTextFragment(fragment, schema) {
+  return fragment.content.every((node) => {
+    if (node.isText) {
+      return node.marks.length === 0;
+    }
+
+    if (node.type === schema.nodes.hard_break) {
+      return true;
+    }
+
+    if (node.type === schema.nodes.paragraph) {
+      return isPlainTextFragment(node.content, schema);
+    }
+
+    return false;
+  });
+}
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
@@ -40,6 +60,8 @@ export default class ProsemirrorTextManipulation {
   state = trackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
+  splitNonEmptyLines;
+  buildListNode;
 
   constructor(
     owner,
@@ -48,6 +70,8 @@ export default class ProsemirrorTextManipulation {
       view,
       convertFromMarkdown,
       convertToMarkdown,
+      splitNonEmptyLines,
+      buildListNode,
       commands,
       customState,
     }
@@ -57,6 +81,8 @@ export default class ProsemirrorTextManipulation {
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.splitNonEmptyLines = splitNonEmptyLines;
+    this.buildListNode = buildListNode;
     this.commands = commands;
     this.customState = customState;
 
@@ -111,7 +137,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.view.dom,
       this.autocompleteHandler,
@@ -155,6 +181,18 @@ export default class ProsemirrorTextManipulation {
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
     );
+  }
+
+  applyLink(url) {
+    const { state, dispatch } = this.view;
+    const { from, to, empty } = state.selection;
+    if (empty) {
+      return;
+    }
+    dispatch(
+      state.tr.addMark(from, to, state.schema.marks.link.create({ href: url }))
+    );
+    this.focus();
   }
 
   addText(sel, text) {
@@ -208,6 +246,35 @@ export default class ProsemirrorTextManipulation {
       return null;
     };
 
+    const replaceSelectionWithList = (targetType) => {
+      const { state } = this.view;
+      const selectedContent = state.selection.content().content;
+
+      if (!isPlainTextFragment(selectedContent, this.schema)) {
+        return false;
+      }
+
+      const selectedText = state.doc.textBetween(
+        state.selection.from,
+        state.selection.to,
+        "\n",
+        "\n"
+      );
+      const lines = this.splitNonEmptyLines(selectedText);
+
+      if (lines.length <= 1) {
+        return false;
+      }
+
+      const listNode = this.buildListNode(this.schema, targetType, lines);
+
+      this.view.dispatch(
+        state.tr.replaceSelectionWith(listNode).scrollIntoView()
+      );
+
+      return true;
+    };
+
     if (exampleKey === "list_item") {
       const targetType =
         head === "* "
@@ -242,6 +309,11 @@ export default class ProsemirrorTextManipulation {
           };
         }
       } else {
+        if (replaceSelectionWithList(targetType)) {
+          this.focus();
+          return;
+        }
+
         // Not in a list - wrap in the target type
         command = wrapInList(targetType);
       }
@@ -281,7 +353,7 @@ export default class ProsemirrorTextManipulation {
     let index = 0;
 
     const value = this.autocompleteHandler.getValue();
-    const match = value.match(/\B:(\w*)$/);
+    const match = value.match(/\B:([\p{L}\p{N}_]*)$/u);
     if (match) {
       index = value.length - match.index;
     }
@@ -421,9 +493,7 @@ export default class ProsemirrorTextManipulation {
     const imagesToWrapGrid = new Set(consecutiveImages);
     const placeholderNodes = [];
 
-    // Find all placeholder image nodes in the document that match our consecutive images
     this.view.state.doc.descendants((node, pos) => {
-      // Skip traversing grids
       if (node.type === this.schema.nodes.grid) {
         return false;
       }
@@ -433,7 +503,6 @@ export default class ProsemirrorTextManipulation {
         node.attrs.placeholder &&
         node.attrs.alt
       ) {
-        // Extract filename from the alt text (which contains the upload placeholder text)
         const uploadingText = i18n("uploading_filename", {
           filename: "%placeholder%",
         });
@@ -454,43 +523,38 @@ export default class ProsemirrorTextManipulation {
       }
     });
 
-    // Check if we found all consecutive images and they are adjacent
-    if (placeholderNodes.length === consecutiveImages.length) {
-      // Sort by position to ensure correct order
-      placeholderNodes.sort((a, b) => a.pos - b.pos);
+    if (placeholderNodes.length !== consecutiveImages.length) {
+      return;
+    }
 
-      // Check if nodes are consecutive (adjacent)
-      let areConsecutive = true;
-      for (let i = 1; i < placeholderNodes.length; i++) {
-        const prevNode = placeholderNodes[i - 1];
-        const currNode = placeholderNodes[i];
-        const expectedNextPos = prevNode.pos + prevNode.node.nodeSize;
+    placeholderNodes.sort((a, b) => a.pos - b.pos);
 
-        // Allow some flexibility for whitespace between nodes
-        if (currNode.pos > expectedNextPos + 2) {
-          areConsecutive = false;
-          break;
-        }
+    let areConsecutive = true;
+    for (let i = 1; i < placeholderNodes.length; i++) {
+      const prevNode = placeholderNodes[i - 1];
+      const currNode = placeholderNodes[i];
+      if (currNode.pos > prevNode.pos + prevNode.node.nodeSize + 2) {
+        areConsecutive = false;
+        break;
       }
+    }
 
-      if (areConsecutive) {
-        const firstNode = placeholderNodes[0];
-        const lastNode = placeholderNodes[placeholderNodes.length - 1];
-        const startPos = firstNode.pos;
-        const endPos = lastNode.pos + lastNode.node.nodeSize;
+    if (!areConsecutive) {
+      return;
+    }
 
-        // Replace the placeholder content with the actual placeholder nodes inside a grid
-        const tr = this.view.state.tr;
-        const content = tr.doc.slice(startPos, endPos).content;
+    const firstNode = placeholderNodes[0];
+    const lastNode = placeholderNodes[placeholderNodes.length - 1];
+    const startPos = firstNode.pos;
+    const endPos = lastNode.pos + lastNode.node.nodeSize;
 
-        // Create grid node and put the content inside it
-        const gridNode = this.schema.nodes.grid.createAndFill(null, content);
+    const tr = this.view.state.tr;
+    const content = tr.doc.slice(startPos, endPos).content;
+    const gridNode = this.schema.nodes.grid.createAndFill(null, content);
 
-        if (gridNode) {
-          tr.replaceWith(startPos, endPos, gridNode);
-          this.view.dispatch(tr);
-        }
-      }
+    if (gridNode) {
+      tr.replaceWith(startPos, endPos, gridNode);
+      this.view.dispatch(tr);
     }
   }
 
@@ -632,26 +696,59 @@ class ProsemirrorPlaceholderHandler {
     this.convertFromMarkdown = convertFromMarkdown;
   }
 
+  #revokeBlobUrl(node) {
+    if (node.attrs.src?.startsWith("blob:")) {
+      URL.revokeObjectURL(node.attrs.src);
+    }
+  }
+
+  #findPlaceholder(fileId) {
+    let result = null;
+    this.view.state.doc.descendants((node, pos) => {
+      if (result) {
+        return false;
+      }
+      if (
+        (node.type === this.schema.nodes.image &&
+          node.attrs.placeholder &&
+          node.attrs.title === fileId) ||
+        (node.type === this.schema.nodes.upload_placeholder &&
+          node.attrs.fileId === fileId)
+      ) {
+        result = { node, pos };
+        return false;
+      }
+    });
+    return result;
+  }
+
   insert(file) {
+    const isImage = file.data?.type?.startsWith("image/");
     const isEmptyParagraph =
       this.view.state.selection.$from.parent.type.name === "paragraph" &&
       this.view.state.selection.$from.parent.nodeSize === 2;
 
-    const imageNode = this.schema.nodes.image.create({
-      src: URL.createObjectURL(file.data),
-      alt: i18n("uploading_filename", { filename: file.name }),
-      title: file.id,
-      width: 120,
-      placeholder: true,
-    });
+    const node = isImage
+      ? this.schema.nodes.image.create({
+          src: URL.createObjectURL(file.data),
+          alt: i18n("uploading_filename", { filename: file.name }),
+          title: file.id,
+          placeholder: true,
+        })
+      : this.schema.nodes.upload_placeholder.create({
+          fileId: file.id,
+          filename: file.name,
+        });
 
     this.view.dispatch(
-      this.view.state.tr.insert(
-        this.view.state.selection.from,
-        isEmptyParagraph
-          ? imageNode
-          : this.schema.nodes.paragraph.create(null, imageNode)
-      )
+      this.view.state.tr
+        .insert(
+          this.view.state.selection.from,
+          isEmptyParagraph
+            ? node
+            : this.schema.nodes.paragraph.create(null, node)
+        )
+        .setMeta("addToHistory", false)
     );
   }
 
@@ -660,53 +757,84 @@ class ProsemirrorPlaceholderHandler {
   progressComplete() {}
 
   cancelAll() {
+    const toDelete = [];
     this.view.state.doc.descendants((node, pos) => {
       if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
-        this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
+        this.#revokeBlobUrl(node);
+        toDelete.push({ pos, size: node.nodeSize });
+      } else if (node.type === this.schema.nodes.upload_placeholder) {
+        toDelete.push({ pos, size: node.nodeSize });
       }
     });
+
+    if (toDelete.length) {
+      const tr = this.view.state.tr;
+      for (const { pos, size } of toDelete.reverse()) {
+        tr.delete(pos, pos + size);
+      }
+      this.view.dispatch(tr.setMeta("addToHistory", false));
+    }
   }
 
   cancel(file) {
-    this.view.state.doc.descendants((node, pos) => {
-      if (
-        node.type === this.schema.nodes.image &&
-        node.attrs.placeholder &&
-        node.attrs.title === file.id
-      ) {
-        this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
-      }
-    });
+    const found = this.#findPlaceholder(file.id);
+    if (found) {
+      this.#revokeBlobUrl(found.node);
+      this.view.dispatch(
+        this.view.state.tr
+          .delete(found.pos, found.pos + found.node.nodeSize)
+          .setMeta("addToHistory", false)
+      );
+    }
   }
 
   success(file, markdown) {
-    /** @type {null | { node: import("prosemirror-model").Node, pos: number }} */
-    let nodeToReplace = null;
-    this.view.state.doc.descendants((node, pos) => {
-      if (
-        node.type === this.schema.nodes.image &&
-        node.attrs.placeholder &&
-        node.attrs.title === file.id
-      ) {
-        nodeToReplace = { node, pos };
-        return false;
-      }
-      return true;
-    });
-
-    if (!nodeToReplace) {
+    const found = this.#findPlaceholder(file.id);
+    if (!found) {
       return;
     }
 
+    const wasSelected = this.view.state.selection.from === found.pos;
+
     // keeping compatibility with plugins that change the upload markdown
     const doc = this.convertFromMarkdown(markdown);
+    const tr = this.view.state.tr;
+    const replacement = doc.content.firstChild.content;
 
-    this.view.dispatch(
-      this.view.state.tr.replaceWith(
-        nodeToReplace.pos,
-        nodeToReplace.pos + nodeToReplace.node.nodeSize,
-        doc.content.firstChild.content
-      )
-    );
+    if (found.node.type === this.schema.nodes.image) {
+      this.#revokeBlobUrl(found.node);
+    }
+
+    tr.replaceWith(found.pos, found.pos + found.node.nodeSize, replacement);
+
+    // resolve transparent.png placeholders using the upload URL cache,
+    // which was populated before success() was called
+    if (found.node.type === this.schema.nodes.image) {
+      tr.doc.nodesBetween(
+        found.pos,
+        found.pos + replacement.size,
+        (node, pos) => {
+          if (
+            node.type.name === "image" &&
+            node.attrs.originalSrc &&
+            node.attrs.src?.includes("transparent.png")
+          ) {
+            const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
+            if (cached?.url) {
+              tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
+            }
+          }
+        }
+      );
+    }
+
+    if (wasSelected) {
+      const resolved = tr.doc.resolve(found.pos);
+      if (resolved.nodeAfter) {
+        tr.setSelection(NodeSelection.create(tr.doc, found.pos));
+      }
+    }
+
+    this.view.dispatch(tr);
   }
 }

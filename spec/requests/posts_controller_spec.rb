@@ -75,7 +75,7 @@ end
 
 RSpec.shared_examples "action requires login" do |method, url, params = {}|
   it "raises an exception when not logged in" do
-    self.public_send(method, url, **params)
+    public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
@@ -836,6 +836,52 @@ RSpec.describe PostsController do
       end
     end
 
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents editing a post in a topic the user cannot see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(403)
+        expect(private_post.reload.raw).not_to eq("edited body")
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows editing a post in a topic the user can see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(200)
+        expect(private_post.reload.raw).to eq("edited body")
+      end
+    end
+
     it "can not change category to a disallowed category" do
       post = create_post
       sign_in(post.user)
@@ -917,6 +963,68 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(200)
         expect(post.reload.custom_fields[:random_number]).to eq("244")
+      end
+    end
+
+    describe "reply_to_post_number" do
+      fab!(:topic)
+      fab!(:op) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
+      fab!(:first_reply) do
+        Fabricate(:post, topic: topic, user: Fabricate(:user), reply_to_post_number: op.post_number)
+      end
+      fab!(:editable_post) do
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: op.post_number,
+          reply_to_user_id: op.user_id,
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "reparents the post to another earlier post" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: first_reply.post_number,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        editable_post.reload
+        expect(editable_post.reply_to_post_number).to eq(first_reply.post_number)
+        expect(editable_post.reply_to_user_id).to eq(first_reply.user_id)
+      end
+
+      it "clears the reply relationship when set to null" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: nil,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        editable_post.reload
+        expect(editable_post.reply_to_post_number).to be_nil
+        expect(editable_post.reply_to_user_id).to be_nil
+      end
+
+      it "returns an error when the target is invalid" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: editable_post.post_number,
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(editable_post.reload.reply_to_post_number).to eq(op.post_number)
       end
     end
   end
@@ -1771,6 +1879,41 @@ RSpec.describe PostsController do
         expect(topic.title).to eq("This is the test title for the topic")
         expect(topic.category).to eq(category)
         expect(topic.visible).to eq(true)
+      end
+
+      it "prevents regular users from replying to whispers" do
+        sign_in(admin)
+        post "/posts.json",
+             params: {
+               raw: "this is the first post with enough words",
+               title: "this is a topic title for whispers",
+             }
+        expect(response.status).to eq(200)
+
+        topic_id = response.parsed_body["topic_id"]
+        post "/posts.json",
+             params: {
+               raw: "this is a staff-only whisper",
+               topic_id: topic_id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+
+        whisper_post_number = response.parsed_body["post_number"]
+        sign_in(user)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "replying to a whisper over http",
+                 topic_id: topic_id,
+                 reply_to_post_number: whisper_post_number,
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t(:topic_not_found))
       end
 
       describe "posts_controller_create_user modifier" do
@@ -2628,6 +2771,19 @@ RSpec.describe PostsController do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
+
+      context "when names are disabled" do
+        before { SiteSetting.enable_names = false }
+
+        it "does not expose the acting user's name" do
+          post_revision.user.update!(name: "Hidden Editor")
+
+          get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["acting_user_name"]).to eq(nil)
+        end
+      end
     end
 
     context "with deleted post" do
@@ -2671,6 +2827,70 @@ RSpec.describe PostsController do
 
         get "/posts/#{post_revision.post_id}/revisions/latest.json"
         expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe "#permanently_delete_check" do
+    fab!(:post)
+
+    before { SiteSetting.can_permanently_delete = true }
+
+    it "returns 404 for anonymous users" do
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for regular users" do
+      sign_in(user)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when logged in as admin" do
+      before { sign_in(admin) }
+
+      it "returns can_permanently_delete true when allowed" do
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(true)
+        expect(json["reason"]).to be_nil
+      end
+
+      it "returns the reason when the same admin must wait" do
+        freeze_time do
+          PostDestroyer.new(admin, post).destroy
+          get "/posts/#{post.id}/permanently_delete_check.json"
+        end
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(
+          I18n.t("post.cannot_permanently_delete.wait_or_different_admin", time_left: "5 minutes"),
+        )
+      end
+
+      it "returns the reason when topic has undeleted posts" do
+        Fabricate(:post, topic: post.topic)
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(I18n.t("post.cannot_permanently_delete.many_posts", count: 1))
       end
     end
   end
@@ -2895,6 +3115,25 @@ RSpec.describe PostsController do
 
         post.topic.reload
         expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
+      end
+
+      it "supports reverting reply-target-only revisions" do
+        earlier_post = Fabricate(:post, topic: post.topic, post_number: post.post_number - 1)
+        post.update!(reply_to_post_number: nil)
+
+        reply_to_revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "reply_to_post_number" => [earlier_post.post_number, nil],
+            },
+          )
+
+        put "/posts/#{post_id}/revisions/#{reply_to_revision.number}/revert.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.reply_to_post_number).to eq(earlier_post.post_number)
       end
     end
   end
@@ -3239,6 +3478,23 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.topic.slug)
     end
 
+    it "excludes ignored users' likes from JSON like counts" do
+      viewer = Fabricate(:user, refresh_auto_groups: true)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      regular_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, public_post)
+      PostActionCreator.like(regular_liker, public_post)
+      Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+      sign_in(viewer)
+
+      get "/u/#{user.username}/activity.json"
+
+      post_json = response.parsed_body.find { |post| post["id"] == public_post.id }
+      like_summary =
+        post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+      expect(like_summary["count"]).to eq(1)
+    end
+
     it "returns 404 if `hide_profile` user option is checked" do
       user.user_option.update_columns(hide_profile: true)
 
@@ -3419,6 +3675,24 @@ RSpec.describe PostsController do
         expect(post_ids).to include public_post.id
         expect(post_ids).to_not include private_post.id
         expect(post_ids).to_not include topicless_post.id
+      end
+
+      it "excludes ignored users' likes from json like counts" do
+        viewer = Fabricate(:user, refresh_auto_groups: true)
+        ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+        regular_liker = Fabricate(:user, refresh_auto_groups: true)
+        PostActionCreator.like(ignored_liker, public_post)
+        PostActionCreator.like(regular_liker, public_post)
+        Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+        sign_in(viewer)
+
+        get "/posts.json"
+
+        post_json =
+          response.parsed_body["latest_posts"].find { |post| post["id"] == public_post.id }
+        like_summary =
+          post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+        expect(like_summary["count"]).to eq(1)
       end
     end
   end

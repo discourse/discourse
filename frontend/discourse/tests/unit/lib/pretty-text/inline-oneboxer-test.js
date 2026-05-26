@@ -21,6 +21,29 @@ module("Unit | Pretty Text | Inline Oneboxer", function (hooks) {
     links = {};
   });
 
+  test("applies the css_class returned by the server", async function (assert) {
+    const url = "http://example.com/pr";
+    const link = document.createElement("a");
+    link.classList.add("inline-onebox-loading");
+    link.href = url;
+
+    pretender.get("/inline-onebox", async () =>
+      response({
+        "inline-oneboxes": [
+          { url, title: "PR title", css_class: "--gh-status-merged" },
+        ],
+      })
+    );
+
+    applyInlineOneboxes({ [url]: [link] }, ajax);
+    await settled();
+
+    assert.dom(link).hasClass("inline-onebox");
+    assert.dom(link).hasClass("--gh-status-merged");
+    assert.dom(link).doesNotHaveClass("inline-onebox-loading");
+    assert.dom(link).hasText("PR title");
+  });
+
   test("batches requests when oneboxing more than 10 urls", async function (assert) {
     const requestedUrls = [];
     let requestCount = 0;

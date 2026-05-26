@@ -78,14 +78,12 @@ after_initialize do
   Discourse::Application.routes.append { mount DiscourseSubscriptions::Engine, at: "s" }
 
   add_to_serializer(:site, :show_campaign_banner) do
-    begin
-      enabled = SiteSetting.discourse_subscriptions_enabled
-      campaign_enabled = SiteSetting.discourse_subscriptions_campaign_enabled
-      goal_met = Discourse.redis.get("subscriptions_goal_met_date")
+    enabled = SiteSetting.discourse_subscriptions_enabled
+    campaign_enabled = SiteSetting.discourse_subscriptions_campaign_enabled
+    goal_met = Discourse.redis.get("subscriptions_goal_met_date")
 
-      enabled && campaign_enabled && (!goal_met || 7.days.ago <= Date.parse(goal_met))
-    rescue StandardError
-      false
-    end
+    enabled && campaign_enabled && (!goal_met || 7.days.ago <= Date.parse(goal_met))
+  rescue StandardError
+    false
   end
 end

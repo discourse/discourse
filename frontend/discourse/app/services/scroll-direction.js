@@ -92,8 +92,11 @@ export default class ScrollDirection extends Service {
       return;
     }
 
-    // don't calculate when resetting offset (i.e. going to /latest or to next topic in suggested list)
+    // Reset when scrolled back to top (e.g. scrollTo(0,0), navigating
+    // to /latest, or jumping to next topic in suggested list)
     if (offset === 0) {
+      this.lastScrollDirection = UNSCROLLED;
+      this.#lastScroll = 0;
       return;
     }
 

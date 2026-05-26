@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 de:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Beitragsabstimmung
   post_voting:
     reviewables:
       comment_already_handled: "Danke, aber wir haben diesen Kommentar bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."

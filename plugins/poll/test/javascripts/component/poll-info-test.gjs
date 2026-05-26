@@ -10,7 +10,7 @@ const OPTIONS = [
   { id: "6c986ebcde3d5822a6e91a695c388094", html: "Other", votes: 5, rank: 0 },
 ];
 
-module("Poll | Component | poll-info", function (hooks) {
+module("Component | poll-info", function (hooks) {
   setupRenderingTest(hooks);
 
   test("public multiple poll with results anytime", async function (assert) {

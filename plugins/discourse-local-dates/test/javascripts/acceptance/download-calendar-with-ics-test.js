@@ -5,20 +5,18 @@ import { cloneJSON } from "discourse/lib/object";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance(
-  "Local Dates - Download calendar with embedded ICS data",
-  function (needs) {
-    needs.user({ "user_option.default_calendar": "none_selected" });
-    needs.settings({ discourse_local_dates_enabled: true });
-    needs.pretender((server, helper) => {
-      const response = cloneJSON(fixturesByUrl["/t/281.json"]);
-      const startDate = moment
-        .tz("America/Lima")
-        .add(1, "days")
-        .format("YYYY-MM-DD");
+acceptance("Download calendar with embedded ICS data", function (needs) {
+  needs.user({ "user_option.default_calendar": "none_selected" });
+  needs.settings({ discourse_local_dates_enabled: true });
+  needs.pretender((server, helper) => {
+    const response = cloneJSON(fixturesByUrl["/t/281.json"]);
+    const startDate = moment
+      .tz("America/Lima")
+      .add(1, "days")
+      .format("YYYY-MM-DD");
 
-      // Create sample ICS data
-      const icsData = `BEGIN:VCALENDAR
+    // Create sample ICS data
+    const icsData = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Discourse//EN
 BEGIN:VEVENT
@@ -32,47 +30,46 @@ DESCRIPTION:Test Description
 END:VEVENT
 END:VCALENDAR`;
 
-      // Use shared helper to encode ICS payload for data-ics attribute
-      const base64url = bbcodeAttributeEncode(icsData);
+    // Use shared helper to encode ICS payload for data-ics attribute
+    const base64url = bbcodeAttributeEncode(icsData);
 
-      response.post_stream.posts[0].cooked = `<p><span data-date="${startDate}" data-time="13:00:00" class="discourse-local-date" data-timezone="America/Lima" data-ics="${base64url}" data-email-preview="${startDate}T18:00:00Z UTC">${startDate}T18:00:00Z</span></p>`;
+    response.post_stream.posts[0].cooked = `<p><span data-date="${startDate}" data-time="13:00:00" class="discourse-local-date" data-timezone="America/Lima" data-ics="${base64url}" data-email-preview="${startDate}T18:00:00Z UTC">${startDate}T18:00:00Z</span></p>`;
 
-      server.get("/t/281.json", () => helper.response(response));
-    });
+    server.get("/t/281.json", () => helper.response(response));
+  });
 
-    test("Downloads ICS file with embedded data", async function (assert) {
-      await visit("/t/local-dates/281");
-      await click(".discourse-local-date");
+  test("Downloads ICS file with embedded data", async function (assert) {
+    await visit("/t/local-dates/281");
+    await click(".discourse-local-date");
 
-      assert
-        .dom(".download-calendar")
-        .exists("download calendar button is present");
+    assert
+      .dom(".download-calendar")
+      .exists("download calendar button is present");
 
-      // We can't fully test the download without mocking File/Blob APIs
-      // but we can verify the button has the data-ics attribute
-      const downloadButton = document.querySelector(".download-calendar");
-      assert.true(
-        !!downloadButton.dataset.ics,
-        "download button has data-ics attribute"
-      );
-      assert.true(
-        downloadButton.dataset.ics.length > 0,
-        "data-ics attribute is not empty"
-      );
-      assert.false(
-        downloadButton.dataset.ics.includes("+"),
-        "data-ics uses base64url encoding (no +)"
-      );
-      assert.false(
-        downloadButton.dataset.ics.includes("/"),
-        "data-ics uses base64url encoding (no /)"
-      );
-    });
-  }
-);
+    // We can't fully test the download without mocking File/Blob APIs
+    // but we can verify the button has the data-ics attribute
+    const downloadButton = document.querySelector(".download-calendar");
+    assert.true(
+      !!downloadButton.dataset.ics,
+      "download button has data-ics attribute"
+    );
+    assert.true(
+      downloadButton.dataset.ics.length > 0,
+      "data-ics attribute is not empty"
+    );
+    assert.false(
+      downloadButton.dataset.ics.includes("+"),
+      "data-ics uses base64url encoding (no +)"
+    );
+    assert.false(
+      downloadButton.dataset.ics.includes("/"),
+      "data-ics uses base64url encoding (no /)"
+    );
+  });
+});
 
 acceptance(
-  "Local Dates - Falls back to default ICS generation without embedded data",
+  "Falls back to default ICS generation without embedded data",
   function (needs) {
     needs.user({ "user_option.default_calendar": "none_selected" });
     needs.settings({ discourse_local_dates_enabled: true });

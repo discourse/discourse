@@ -7,7 +7,7 @@ module Migrations
         class PluginManifest
           def initialize(manifest_path:, plugins_path: nil)
             @manifest_path = manifest_path
-            @plugins_path = plugins_path || File.join(Rails.root, "plugins")
+            @plugins_path = plugins_path || Rails.root.join("plugins").to_s
 
             @data = YAML.safe_load_file(@manifest_path) if available?
             @data ||= empty_data

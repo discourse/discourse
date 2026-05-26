@@ -17,7 +17,7 @@ async function visitWithRedirects(url) {
   }
 }
 
-acceptance("Chat Integration - slack transcript", function (needs) {
+acceptance("slack transcript", function (needs) {
   needs.user({
     can_create_topic: true,
   });

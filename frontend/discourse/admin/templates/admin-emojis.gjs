@@ -1,6 +1,6 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -21,12 +21,12 @@ export default <template>
         <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
       </:actions>
       <:tabs>
-        <NavItem
+        <DNavItem
           @route="adminEmojis.settings"
           @label="settings"
           class="admin-emoji-tabs__settings"
         />
-        <NavItem
+        <DNavItem
           @route="adminEmojis.index"
           @label="admin.emoji.title"
           class="admin-emoji-tabs__emoji"

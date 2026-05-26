@@ -1,5 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
+import NestedRootAd from "../components/nested-root-ad";
 import PostBottomAd from "../components/post-bottom-ad";
 
 export default {
@@ -26,8 +27,19 @@ function customizePost(api) {
   api.renderAfterWrapperOutlet(
     "post-article",
     <template>
-      <div class="ad-connector">
-        <PostBottomAd @model={{@post}} />
+      {{#unless @nestedReplyView}}
+        <div class="ad-connector">
+          <PostBottomAd @model={{@post}} />
+        </div>
+      {{/unless}}
+    </template>
+  );
+
+  api.renderInOutlet(
+    "nested-roots-between",
+    <template>
+      <div class="ad-connector ad-connector--nested-root">
+        <NestedRootAd @index={{@index}} @topic={{@topic}} />
       </div>
     </template>
   );

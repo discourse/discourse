@@ -8,9 +8,11 @@ describe "Edit Category Tags" do
   fab!(:tag3) { Fabricate(:tag, name: "tag3") }
   fab!(:tag_group) { Fabricate(:tag_group, name: "My Group", tags: [tag2]) }
   let(:category_page) { PageObjects::Pages::Category.new }
-  let(:allowed_tags_chooser) { PageObjects::Components::SelectKit.new("#category-allowed-tags") }
+  let(:allowed_tags_chooser) do
+    PageObjects::Components::SelectKit.new("#control-allowed_tags .tag-chooser")
+  end
   let(:allowed_tag_groups_chooser) do
-    PageObjects::Components::SelectKit.new("#category-allowed-tag-groups")
+    PageObjects::Components::SelectKit.new("#category-allowed-tag-groups.tag-group-chooser")
   end
   let(:composer) { PageObjects::Components::Composer.new }
 

@@ -7,6 +7,7 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
@@ -19,6 +20,7 @@ import {
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
@@ -40,7 +42,9 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
+  CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
+  EDIT,
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
   SAVE_ICONS,
@@ -75,6 +79,14 @@ async function loadDraft(store, opts = {}) {
     attrs[f] = draft[f] || opts[f];
   });
 
+  // `||` above collapses explicit `null`; for these fields `null` means
+  // "no reply target" and must round-trip through the draft.
+  ["reply_to_post_number", "reply_to_user"].forEach((f) => {
+    if (draft && f in draft) {
+      attrs[f] = draft[f];
+    }
+  });
+
   const composer = store.createRecord("composer");
   await composer.open(attrs);
 
@@ -101,6 +113,7 @@ export default class ComposerService extends Service {
   @service messageBus;
   @service modal;
   @service router;
+  @service session;
   @service site;
   @service siteSettings;
   @service store;
@@ -129,6 +142,37 @@ export default class ComposerService extends Service {
 
   @tracked _isStaffUserOverride;
   @tracked _whispererOverride;
+
+  init() {
+    super.init(...arguments);
+    window.addEventListener("beforeunload", this._beaconSaveDraft);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("beforeunload", this._beaconSaveDraft);
+  }
+
+  @bind
+  _beaconSaveDraft() {
+    if (!this._saveDraftDebounce || !this.model || !this.model.canSaveDraft) {
+      return;
+    }
+
+    cancel(this._saveDraftDebounce);
+    this._saveDraftDebounce = null;
+
+    const draftSequence = this.model.draftSequence;
+    this.model.set("draftSequence", draftSequence + 1);
+
+    Draft.saveBeacon(
+      this.model.draftKey,
+      draftSequence,
+      this.model.serializeDraftData(),
+      this.messageBus.clientId,
+      this.session.csrfToken
+    );
+  }
 
   @computed("site.mobileView", "showPreview")
   get forcePreview() {
@@ -438,6 +482,18 @@ export default class ComposerService extends Service {
     return SAVE_LABELS[this.model?.action];
   }
 
+  @computed("model.editingPost")
+  get cancelLabel() {
+    return this.model?.editingPost
+      ? "composer.cancel_edit"
+      : "composer.discard";
+  }
+
+  @computed("model.editingPost")
+  get cancelIcon() {
+    return this.model?.editingPost ? "xmark" : "trash-can";
+  }
+
   @computed("whisperer", "model.action")
   get canWhisper() {
     return this.whisperer && this.model?.action === Composer.REPLY;
@@ -474,7 +530,13 @@ export default class ComposerService extends Service {
     return this.model?.requiredCategoryMissing && this.model?.replyLength === 0;
   }
 
-  @computed("model.composeState", "model.creatingTopic", "model.post")
+  @computed(
+    "model.composeState",
+    "model.creatingTopic",
+    "model.post",
+    "model.action",
+    "model.reply_to_post_number"
+  )
   get popupMenuOptions() {
     if (
       this.model?.composeState === "open" ||
@@ -511,6 +573,17 @@ export default class ComposerService extends Service {
         })
       );
 
+      if (this.canOpenReplyToModal) {
+        options.push(
+          this._setupPopupMenuOption({
+            name: "change-reply-to",
+            action: this.openChangeReplyToModal,
+            icon: "share",
+            label: "composer.change_reply_to.open_from_menu",
+          })
+        );
+      }
+
       const secondaryOptions = [
         this._setupPopupMenuOption({
           name: "toggle-wrap",
@@ -531,6 +604,52 @@ export default class ComposerService extends Service {
         ...secondaryOptions,
       ];
     }
+  }
+
+  // Exposed via the composer toolbar popup as a fallback entry point for
+  // the reply-target picker. Needed in contexts where the reply indicator
+  // isn't rendered next to the title (mobile) or is suppressed (e.g.
+  // `suppress_reply_when_quoting`), regardless of whether a target already
+  // exists.
+  //
+  // Post 1 (the OP) has no earlier posts — the picker would have nothing
+  // to select.
+  get canOpenReplyToModal() {
+    const model = this.model;
+    return (
+      model?.action === EDIT &&
+      !!model?.post?.can_edit &&
+      !!model?.topic &&
+      (model?.post?.post_number ?? 0) > 1
+    );
+  }
+
+  @action
+  openChangeReplyToModal() {
+    const model = this.model;
+    if (!model) {
+      return;
+    }
+
+    this.modal.show(ChangeReplyTo, {
+      model: {
+        topic: model.topic,
+        editingPostNumber: model.post?.post_number,
+        currentPostNumber: model.reply_to_post_number,
+        onSelect: (post) => {
+          if (!post) {
+            model.setReplyTo(null, null);
+            return;
+          }
+          model.setReplyTo(post.post_number, {
+            id: post.user_id,
+            username: post.username,
+            name: post.name,
+            avatar_template: post.avatar_template,
+          });
+        },
+      },
+    });
   }
 
   @computed(
@@ -1543,17 +1662,23 @@ export default class ComposerService extends Service {
 
   @action
   async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
-    const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
+    const sharedDraftsCategoryId = this.site.shared_drafts_category_id;
+    const isSharedDraftCategory =
+      !!sharedDraftsCategoryId && category?.id === sharedDraftsCategoryId;
+    const categoryId = isSharedDraftCategory ? null : category?.id;
+    const readOnlyCategoryId =
+      !isSharedDraftCategory && !category?.canCreateTopic ? category?.id : null;
+
     tags = await this.filterTags(tags);
 
     return this.open({
-      prioritizedCategoryId: category?.id,
-      topicCategoryId: category?.id,
+      prioritizedCategoryId: categoryId,
+      topicCategoryId: categoryId,
       formTemplateId: formTemplate?.id,
       topicTitle: title,
       topicBody: body,
       topicTags: tags,
-      action: CREATE_TOPIC,
+      action: isSharedDraftCategory ? CREATE_SHARED_DRAFT : CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
       locale: null,
@@ -1723,6 +1848,12 @@ export default class ComposerService extends Service {
       if (this.get("model.anyDirty")) {
         this.modal.show(DiscardDraftModal, {
           model: {
+            confirmMessageKey: this.get("model.editingPost")
+              ? "post.cancel_composer.confirm_edit"
+              : "post.cancel_composer.confirm",
+            discardButtonKey: this.get("model.editingPost")
+              ? "post.cancel_composer.discard_edit"
+              : "post.cancel_composer.discard",
             onDestroyDraft: () => {
               return this.destroyDraft()
                 .then(() => {

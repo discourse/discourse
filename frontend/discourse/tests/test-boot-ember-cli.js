@@ -26,9 +26,10 @@ document.addEventListener("discourse-init", async () => {
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
-  const hasThemeJs = !!document.querySelector(
-    "link[rel=modulepreload][data-theme-id]"
-  );
+  const themeName = document.querySelector(
+    "link[rel=modulepreload][data-theme-name]"
+  )?.dataset.themeName;
+  const hasThemeJs = !!themeName;
 
   document.body.insertAdjacentHTML(
     "afterbegin",
@@ -49,6 +50,12 @@ document.addEventListener("discourse-init", async () => {
   setup(QUnit.assert);
   setupTests(config.APP);
   let loader = loadEmberExam();
+
+  if (window.Testem && (hasThemeJs || target !== "core")) {
+    window.Testem.on("test-result", (t) => {
+      t.name = `${themeName || target} - ${t.name}`;
+    });
+  }
 
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam

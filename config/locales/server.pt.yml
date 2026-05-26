@@ -252,7 +252,13 @@ pt:
   deleted_topic: "Oops! Este tópico foi excluído e não está mais disponível."
   delete_topic_failed: "Ocorreu um erro ao excluir esse tópico. Entre em contato com o administrador do site."
   reading_time: "Tempo de leitura"
+  reading_time_minutes:
+    one: "%{count} minuto 🕑"
+    other: "%{count} minutos 🕑"
   likes: "Gostos"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} resposta no mesmo tópico."
     other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."
@@ -382,6 +388,7 @@ pt:
       admins: "administradores"
       moderators: "moderadores"
       staff: "pessoal"
+      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
@@ -751,6 +758,29 @@ pt:
       xaxis: "Dia"
     new_contributors:
       xaxis: "Dia"
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Tópicos"
+        posts: "Mensagens"
+        share: "Partilhar"
+    posters_by_member_type:
+      labels:
+        count: "Mensagens"
+        share: "Partilhar"
+      types:
+        staff: "Pessoal"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membros"
+        share: "Partilhar"
+      levels:
+        "0": "Novo"
+        "1": "Básico"
+        "2": "Membro"
+        "3": "Habitual"
+        "4": "Líder"
     trust_level_growth:
       yaxis: "Dia"
     consolidated_page_views:
@@ -767,6 +797,8 @@ pt:
     consolidated_page_views_browser_detection:
       yaxis: "Dia"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anónimo"
       yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
@@ -850,6 +882,12 @@ pt:
         user: "Utilizador"
         num_clicks: "Cliques"
         num_topics: "Tópicos"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visitas"
     top_traffic_sources:
       title: "As Melhores Fontes de Tráfego"
       xaxis: "Domínio"
@@ -896,6 +934,8 @@ pt:
       xaxis: "Dia"
     page_view_logged_in_browser_reqs:
       xaxis: "Dia"
+    page_view_embed_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"
@@ -940,7 +980,7 @@ pt:
       labels:
         user: Utilizador
         location: Localização
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizador
         location: Localização
@@ -1029,7 +1069,6 @@ pt:
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
-    use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
     top_menu: "Determine quais os itens que aparecem na navegação da página incial, e em que ordem."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
@@ -1771,11 +1810,14 @@ pt:
       popular_topics: "Tópicos Populares"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
+      subject_template_improved: "Resumo"
       click_here: "clique aqui"
     forgot_password:
       title: "Esqueci a palavra-passe"
     set_password:
       title: "Definir Palavra-passe"
+    admin_login:
+      subject_template_improved: "Login"
     notify_old_email:
       text_body_template: |2
 

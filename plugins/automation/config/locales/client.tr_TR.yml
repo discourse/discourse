@@ -215,9 +215,6 @@ tr_TR:
               description: "İsteğe bağlı, tetiklemeyi yalnızca bu özelliklere sahip gönderilerle sınırlayın"
           created: Oluşturulma
           edited: Düzenlendi
-          topics: Konular (tüm kategoriler)
-          personal_messages: Yalnızca kişisel mesajlar
-          public_topics: Konular (sadece herkese açık kategoriler)
           with_images: Görüntüler
           with_links: Bağlantılar
           with_code: Kod

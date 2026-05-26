@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Item from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-thread-list-item", function (hooks) {
+module("Component | chat-thread-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it safely renders title", async function (assert) {

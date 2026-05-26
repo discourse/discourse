@@ -10,11 +10,16 @@ module PageObjects
       def fill_link(name, url, icon = "link")
         fill_in("link-name", with: name, match: :first)
         fill_in("link-url", with: url, match: :first)
-        first_link = find(".sidebar-section-form-link", match: :first)
-        icon_picker = PageObjects::Components::DIconGridPicker.new(first_link)
+        icon_picker = first_link_icon_picker
         icon_picker.expand
         icon_picker.filter(icon)
         icon_picker.select_icon(icon)
+      end
+
+      def first_link_icon_picker
+        PageObjects::Components::DIconGridPicker.new(
+          find(".sidebar-section-form-link", match: :first),
+        )
       end
 
       def mark_as_public

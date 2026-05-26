@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::WebexProvider
   PROVIDER_NAME = "webex"
+  POPULARITY_SCORE = 50
   PROVIDER_ENABLED_SETTING = :chat_integration_webex_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
@@ -51,7 +52,7 @@ module DiscourseChatIntegration::Provider::WebexProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"

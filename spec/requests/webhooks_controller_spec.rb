@@ -182,6 +182,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIGHQVtGj+Y3LkG9fLcxf3qfI10QysgDWmMOVmxG0u6ZUAiEAyBiXDWzM+uOe5W0JuG+luQAbPIqHh89M15TluLtEZtM=",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112502",
@@ -198,6 +199,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIQCtIHJeH93Y+qpYeWrySphQgpNGNr/U+UyUlBkU6n7RAwIgJTz2C+8a8xonZGi6BpSzoQsbVRamr2nlxFDWYNH3j/0=",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112502",
@@ -213,6 +215,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIQCtIHJeH93Y+qpYeWrySphQgpNGNr/U+UyUlBkU6n7RAwIgJTz2C+8a8xonZGi6BpSzoQsbVRamr2nlxFDWYNH3j/0=",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112502",
@@ -229,6 +232,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Timestamp" => "1600112492",
            },
            params:
@@ -243,6 +247,7 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/sendgrid.json",
            headers: {
+             "Content-Type" => "application/json",
              "X-Twilio-Email-Event-Webhook-Signature" =>
                "MEUCIGHQVtGj+Y3LkG9fLcxf3qfI10QysgDWmMOVmxG0u6ZUAiEAyBiXDWzM+uOe5W0JuG+luQAbPIqHh89M15TluLtEZtM=",
            },
@@ -474,7 +479,7 @@ RSpec.describe WebhooksController do
                  "msg" => {
                    "email" => email,
                    "diag" => "5.1.1",
-                   :"bounce_description" =>
+                   :bounce_description =>
                      "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
                    "metadata" => {
                      "message_id" => message_id,
@@ -791,10 +796,10 @@ RSpec.describe WebhooksController do
         "Type" => "Notification",
         "Message" => {
           "notificationType" => "Bounce",
-          :"bounce" => {
+          :bounce => {
             "bounceType" => "Permanent",
             "reportingMTA" => "dns; email.example.com",
-            :"bouncedRecipients" => [
+            :bouncedRecipients => [
               {
                 "emailAddress" => email,
                 "status" => "5.1.1",
@@ -807,7 +812,7 @@ RSpec.describe WebhooksController do
             "feedbackId" => "00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa068a-000000",
             "remoteMtaIp" => "127.0.2.0",
           },
-          :"mail" => {
+          :mail => {
             "timestamp" => "2016-01-27T14:59:38.237Z",
             "source" => "john@example.com",
             "sourceArn" => "arn:aws:ses:us-east-1:888888888888:identity/example.com",

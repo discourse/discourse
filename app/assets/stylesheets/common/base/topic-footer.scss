@@ -52,9 +52,14 @@
     }
 
     .bookmark.bookmarked {
-      .d-icon-discourse-bookmark-clock,
-      .d-icon-bookmark {
+      .d-icon-discourse-bookmark-clock {
         color: var(--tertiary);
+      }
+
+      &:not(.--post-bookmarked-only) {
+        .d-icon-bookmark {
+          color: var(--tertiary);
+        }
       }
     }
 

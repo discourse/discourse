@@ -5,15 +5,15 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 
@@ -172,9 +172,9 @@ export default class AutomationList extends Component {
                         href={{automation.last_updated_by.userPath}}
                         data-user-card={{automation.last_updated_by.username}}
                       >
-                        {{avatar automation.last_updated_by imageSize="small"}}
+                        {{dAvatar automation.last_updated_by imageSize="small"}}
                       </a>
-                      {{formatDate automation.updated_at leaveAgo="true"}}
+                      {{dFormatDate automation.updated_at leaveAgo="true"}}
                     </div>
                   </td>
                   <td class="d-table__cell --detail automations__runs">
@@ -206,7 +206,7 @@ export default class AutomationList extends Component {
                       }}
                     </div>
                     {{#if automation.stats.last_run_at}}
-                      {{formatDate
+                      {{dFormatDate
                         automation.stats.last_run_at
                         leaveAgo="true"
                       }}

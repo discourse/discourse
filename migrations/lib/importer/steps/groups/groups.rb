@@ -11,8 +11,8 @@ module Migrations
         ALIAS_LEVELS = Group::ALIAS_LEVELS.values.to_set.freeze
         TRUST_LEVELS = TrustLevel.levels.values.to_set.freeze
         NOTIFICATION_LEVELS = GroupUser.notification_levels.values.to_set.freeze
-        DOMAIN_PROTOCOL_REGEX = %r{\Ahttps?://}.freeze
-        DOMAIN_PATH_REGEX = %r{/.*\z}.freeze
+        DOMAIN_PROTOCOL_REGEX = %r{\Ahttps?://}
+        DOMAIN_PATH_REGEX = %r{/.*\z}
         MAX_FULL_NAME_LENGTH = 100
         MAX_MEMBER_REQUEST_TEMPLATE_LENGTH = 5_000
 

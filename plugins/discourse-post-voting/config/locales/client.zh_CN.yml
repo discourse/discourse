@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 zh_CN:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: 帖子投票
   post_voting:
     reviewables:
       comment_already_handled: "谢谢，但我们已经审核这条评论，并确定不需要再次对其进行举报。"

@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const SearchResultDecoration = <template>
@@ -6,7 +6,7 @@ const SearchResultDecoration = <template>
     class="ai-result__icon"
     title={{i18n "discourse_ai.embeddings.ai_generated_result"}}
   >
-    {{icon "discourse-sparkles"}}
+    {{dIcon "discourse-sparkles"}}
   </div>
 </template>;
 

@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { tomorrow } from "discourse/lib/time-utils";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
+acceptance("Upcoming Events Calendar", function (needs) {
   needs.site({
     categories: [
       {

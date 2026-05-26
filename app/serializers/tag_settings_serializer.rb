@@ -28,7 +28,7 @@ class TagSettingsSerializer < ApplicationSerializer
   end
 
   def synonyms
-    object.synonyms.map { |t| { id: t.id, name: t.name } }
+    visible_synonyms.map { |t| { id: t.id, name: t.name } }
   end
 
   def categories
@@ -40,11 +40,11 @@ class TagSettingsSerializer < ApplicationSerializer
   end
 
   def tag_group_names
-    object.tag_groups.map(&:name)
+    visible_tag_groups.map(&:name)
   end
 
   def tag_groups
-    object.tag_groups.map { |tg| { id: tg.id, name: tg.name } }
+    visible_tag_groups.map { |tg| { id: tg.id, name: tg.name } }
   end
 
   def can_edit
@@ -65,5 +65,20 @@ class TagSettingsSerializer < ApplicationSerializer
 
   def include_localizations?
     SiteSetting.content_localization_enabled
+  end
+
+  private
+
+  def visible_synonyms
+    @visible_synonyms ||= object.synonyms.select { |tag| scope.can_see_tag?(tag) }
+  end
+
+  def visible_tag_groups
+    @visible_tag_groups ||=
+      begin
+        tag_groups = object.tag_groups
+        visible_tag_group_ids = TagGroup.visible(scope).where(id: tag_groups.map(&:id)).pluck(:id)
+        tag_groups.select { |tag_group| visible_tag_group_ids.include?(tag_group.id) }
+      end
   end
 end

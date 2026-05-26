@@ -25,7 +25,7 @@ module DiscourseAi
         end
 
         true
-      rescue Net::HTTPBadResponse => e
+      rescue Net::HTTPBadResponse
         false
       end
 

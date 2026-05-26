@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoursePostEventDescription extends Component {
@@ -43,19 +44,19 @@ export default class DiscoursePostEventDescription extends Component {
   }
 
   <template>
-    {{#if @description}}
+    {{#if @descriptionHtml}}
       <section
         class="event__section event-description
           {{if this.clamp 'is-clamped'}}
           {{if this.expanded 'is-expanded'}}"
       >
-        {{icon "file-lines"}}
+        {{dIcon "file-lines"}}
 
         <div
           class="event-description__content"
           {{(if this.clamp this.detectOverflow)}}
         >
-          <p class="event-description__text">{{@description}}</p>
+          <p class="event-description__text">{{trustHTML @descriptionHtml}}</p>
           {{#if this.showToggle}}
             <a
               href

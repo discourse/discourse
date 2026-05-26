@@ -133,7 +133,10 @@ RSpec.describe "AI Bot - Homepage" do
   end
 
   context "when `ai_bot_enable_dedicated_ux` is enabled" do
-    before { SiteSetting.ai_bot_add_to_header = true }
+    before do
+      SiteSetting.ai_bot_add_to_header = true
+      SiteSetting.ai_bot_enable_docked_composer = true
+    end
 
     it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit
@@ -254,14 +257,12 @@ RSpec.describe "AI Bot - Homepage" do
     end
 
     it "removes agent from selector when allow_personal_messages is disabled" do
-      begin
-        agent.update!(allow_personal_messages: false)
-        ai_pm_homepage.visit
-        ai_pm_homepage.agent_selector.expand
-        expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
-      ensure
-        agent.update!(allow_personal_messages: true)
-      end
+      agent.update!(allow_personal_messages: false)
+      ai_pm_homepage.visit
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
+    ensure
+      agent.update!(allow_personal_messages: true)
     end
 
     it "includes agent in selector when allow_personal_messages is enabled" do
@@ -354,14 +355,15 @@ RSpec.describe "AI Bot - Homepage" do
       expect(ai_pm_homepage).to have_homepage
     end
 
-    it "can send a new message to the bot" do
+    it "can send a new message to the bot via the docked composer" do
       topic_page.visit_topic(pm)
-      topic_page.click_reply_button
-      expect(composer).to be_opened
+      expect(page).to have_css(".ai-bot-docked-composer")
 
-      composer.fill_in(with: "Hello bot replying to you")
-      composer.submit
-      expect(page).to have_content("Hello bot replying to you")
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hello user"]) do
+        find(".ai-bot-docked-composer .d-editor-input").fill_in(with: "Hello bot replying to you")
+        find(".ai-bot-docked-composer .d-editor-input").send_keys(:enter)
+        expect(page).to have_content("Hello bot replying to you")
+      end
     end
 
     it "does not render custom sidebar on non-authored bot pms" do

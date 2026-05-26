@@ -221,6 +221,12 @@
                 "null"
               ]
             },
+            "nested_replies_default": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "topic_posting_review_mode": {
               "type": "string"
             },
@@ -352,6 +358,52 @@
         },
         "category_types": {
           "type": "object"
+        },
+        "category_type_settings": {
+          "type": "object"
+        },
+        "available_category_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "visible": {
+                "type": "boolean"
+              },
+              "configuration_schema": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "title",
+              "description",
+              "icon",
+              "available",
+              "visible",
+              "configuration_schema"
+            ]
+          }
         }
       },
       "required": [

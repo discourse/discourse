@@ -6,7 +6,6 @@ packages:
 - "frontend/discourse"
 - "frontend/discourse-i18n"
 - "frontend/discourse-markdown-it"
-- "frontend/discourse-plugins"
 - "frontend/ember-cli-progress-ci"
 - "frontend/pretty-text"
 - "frontend/asset-processor"

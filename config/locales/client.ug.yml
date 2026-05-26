@@ -428,14 +428,13 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "قوزغىتىلدى"
       invite_collaborators:
         action: "تەكلىپ قۇر"
       start_posting:
         title: "يوللاشنى باشلا"
         back: "كەينى"
-      spread_the_word:
-        action: "ئۇلانما كۆچۈر"
-        copied_to_clipboard: "ئۇلانما چاپلاش تاختىسىغا كۆچۈرۈلدى!"
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -517,6 +516,10 @@ ug:
           other: "%{count} يىل ئىلگىرى قۇرۇلغان"
     bookmarked:
       title: "خەتكۈچ"
+      edit_bookmark:
+        one: "خەتكۈچ تەھرىر"
+        other: "خەتكۈچ تەھرىر"
+      delete_bookmarks: "ھەممە خەتكۈچنى ئۆچۈر"
       help:
         bookmark: "چېكىلسە بۇ تېمىنى خەتكۈچكە قوشىدۇ"
         edit_bookmark: "چېكىلسە بۇ تېمىدىكى يازمىنىڭ خەتكۈچىنى تەھرىرلەيدۇ"
@@ -608,6 +611,10 @@ ug:
         other_drafts:
           one: "+%{count} باشقا دەسلەپكى نۇسخا"
           other: "+%{count} باشقا دەسلەپكى نۇسخا"
+    embed_mode:
+      editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
+      signin_flow:
+        cancel: "ۋاز كەچ"
     topic_count_all:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
@@ -1435,7 +1442,6 @@ ug:
         normal_option: "ئادەتتىكى"
         normal_option_title: "ئەگەر بۇ ئىشلەتكۈچى سىزگە جاۋاب قايتۇرسا، نەقىل كەلتۈرسە ياكى سىزنى تىلغا ئالسا سىزگە ئۇقتۇرۇلىدۇ."
       notification_schedule:
-        title: "ئۇقتۇرۇش كۈنتەرتىپى"
         label: "ئىختىيارى ئۇقتۇرۇش كۈنتەرتىپىنى قوزغات"
         tip: "بۇ ۋاقىتتىن باشقا ۋاقىتتا ئۇقتۇرۇشىڭىز ۋاقىتلىق توختىتىلىدۇ."
         midnight: "يېرىم كېچە"
@@ -1479,13 +1485,8 @@ ug:
       notifications: "ئۇقتۇرۇش"
       statistics: "ئىستاتىستىكا"
       desktop_notifications:
-        label: "شۇئان ئۇقتۇرۇش"
         not_supported: "كەچۈرۈڭ. بۇ توركۆرگۈ ئۇقتۇرۇشنى قوللىمايدۇ."
-        perm_default: "ئۇقتۇرۇشنى ئاچ"
-        perm_denied_btn: "ئىجازەت رەت قىلىندى"
         perm_denied_expl: "ئۇقتۇرۇش ئىجازىتىنى رەت قىلدىڭىز. توركۆرگۈ تەڭشىكىڭىز ئارقىلىق ئۇقتۇرۇشقا يول قويالايسىز."
-        disable: "ئۇقتۇرۇشنى چەكلە"
-        enable: "ئۇقتۇرۇشنى قوزغات"
         each_browser_note: "ئەسكەرتىش: سىز ئىشلىتىدىغان ھەر بىر توركۆرگۈدە بۇ تەڭشەكنى ئۆزگەرتىشىڭىز كېرەك. بۇ تەڭشەكنىڭ قانداق بولۇشىدىن قەتئىينەزەر، ئەگەر ئىشلەتكۈچى تىزىملىكىدىن ئۇقتۇرۇشنى توختاتسىڭىز بارلىق ئۇقتۇرۇشلار چەكلىنىدۇ."
         consent_prompt: "كىشىلەر يازمىڭىزغا ئىنكاس قايتۇرغاندا شۇئان ئۇقتۇرۇشى تاپشۇرۇۋېلىشنى خالامسىز؟"
       dismiss: "پەرۋا قىلما"
@@ -2912,6 +2913,8 @@ ug:
         name_label: "ئوراش ئىسمى"
         attributes_label: "خاسلىق"
         add_attribute: "خاسلىق قوش"
+        attribute_key: "ئاچقۇچ"
+        attribute_value: "قىممەت"
         remove_attribute: "خاسلىق چىقىرىۋەت"
         apply: "قوللان"
         unwrap: "ئوراشنى سۆك"
@@ -3000,6 +3003,9 @@ ug:
         copy: "ئۇلانما كۆچۈر"
         remove: "ئۇلانمىنى چىقىرىۋەت"
         visit: "ئۇلانمىنى سىرتقى بەتكۈچتە ئاچ"
+        link_copied: "ئۇلانما كۆچۈرۈلدى!"
+      onebox_toolbar:
+        copy: "ئۇلانما كۆچۈر"
         link_copied: "ئۇلانما كۆچۈرۈلدى!"
       unsupported_token: "مول تېكىست تەھرىرلىگۈچ بۇ يازمىدا ئىشلىتىلگەن بارلىق ئىقتىدارنى قوللىمايدۇ؛ Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ."
     notifications:
@@ -3269,6 +3275,7 @@ ug:
           placeholder: ئەڭ كۆپ
           aria_label: ئەڭ كۆپ كۆرۈلۈشى بويىچە سۈزىدۇ
     hamburger_menu: "يولباشچى تىزىملىك"
+    header_panel: "بەت قاش"
     new_item: "يېڭى"
     go_back: "قايت"
     not_logged_in_user: "نۆۋەتتىكى پائالىيەت ۋە مايىللىقنىڭ ئىشلەتكۈچى بېتىدىكى خۇلاسىسى"
@@ -3375,17 +3382,9 @@ ug:
         archive_messages: "ئارخىپقا يۆتكە"
         change_notification_level: "ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرت"
         choose_new_category: "تېمىغا يېڭى سەھىپە تاللىنىدۇ:"
-        selected_sole_category:
-          one: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
-          other: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
         selected_count:
           one: "%{count} تاللاندى"
           other: "%{count} تاللاندى"
-        choose_new_tags: "بۇ تېمىغا يېڭى بەلگە تاللىنىدۇ:"
-        changed_tags: "بۇ تېمىلارنىڭ بەلگىسى ئۆزگەرتىلگەن."
-        confirm_remove_tags:
-          one: "ھەممە بەلگە بۇ تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
-          other: "ھەممە بەلگە %{count} تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
         progress:
           one: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
           other: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
@@ -3428,20 +3427,35 @@ ug:
         name: "تىزىمدىن چىقىرىۋەت"
       relist_topics:
         name: "تىزىمغا قايتا قوش"
-      remove_tags:
-        name: "بەلگىنى چىقىرىۋەت"
-      replace_tags:
-        name: "بەلگە ئالماشتۇر"
       delete_topics:
         name: "ئۆچۈر"
       update_category:
         name: "سەھىپىنى يېڭىلا"
+      convert_to_public_topic:
+        name: "ئاشكارا تېما قىلىپ تەڭشە…"
+      convert_to_private_message:
+        name: "شەخسىي ئۇچۇر دەپ تەڭشە"
       reset_bump_dates:
         name: "چوققىلىغان چېسلانى ئەسلىگە قايتۇر"
       defer:
         name: "ئوقۇلمىغان بەلگىسى سال"
       update_notifications:
         name: "ئوقتۇرۇش يېڭىلا"
+    nested_replies:
+      sort:
+        label: "تەرتىپى"
+        top: "قىزغىن"
+        new: "يېڭى"
+      load_more_children:
+        one: "باشقا %{count} جاۋاب"
+        other: "باشقا %{count} جاۋاب"
+      collapsed_replies:
+        one: "%{count} جاۋاب"
+        other: "%{count} جاۋاب"
+      collapse: "يىغ"
+      no_replies: "تېخى جاۋاب يوق."
+      ignored_post_placeholder: "[پەرۋا قىلمايدىغان]"
+      pinned_reply: "چوققىلاندى"
     topic:
       filter_to:
         one: "تېمىدىكى %{count} يازما"
@@ -3961,6 +3975,10 @@ ug:
       sr_post_like_count_button:
         one: "بۇ يازمىنى %{count} كىشى ياقتۇردى."
         other: "بۇ يازمىنى %{count} كىشى ياقتۇردى."
+      likes_popup:
+        title:
+          one: "%{count} ياقتۇرۇش"
+          other: "%{count} ياقتۇرۇش"
       sr_post_read_count_button:
         one: "بۇ يازمىنى %{count} كىشى ئوقۇدى."
         other: "بۇ يازمىنى %{count} كىشى ئوقۇدى."
@@ -3991,7 +4009,7 @@ ug:
           confirm_delete: "«%{languageCode}» نىڭ تەرجىمىسىنى راستتىنلا ئۆچۈرەمسىز؟"
         success: "تەرجىمە مۇۋەپپەقىيەتلىك يېڭىلاندى"
         post_language_selector:
-          none: "يوق"
+          none: "تەڭشەلمىدى"
         edit_warning:
           message: "بۇ تەرجىمە قىلىنغان يازما. <br><br>سىز %{language} دىكى ئەسلى يازمىنى تەھرىرلەمسىز ياكى بۇ تەرجىمىنى تەھرىرلەمسىز؟"
           action_original: "ئەسلى يازمىنى تەھرىرلە"
@@ -4016,6 +4034,7 @@ ug:
       cancel_composer:
         confirm: "يازمىڭىزنى تاشلىۋېتەمسىز؟"
         discard: "تاشلىۋەت"
+        discard_edit: "ئۆزگەرتىشنى تاشلىۋەت"
       via_email: "بۇ يازما ئېلخەتتە كەلگەن"
       via_auto_generated_email: "بۇ يازما ئۆزلۈكىدىن ھاسىللانغان ئېلخەتتە كەلگەن"
       whisper: "بۇ يازما رىياسەتچىلەرگە قىلىنغان شەخسىي پىچىر"
@@ -4059,7 +4078,7 @@ ug:
         admin: "يازما باشقۇرۇش مەشغۇلاتى"
         admin_action: "باشقۇرغۇچى"
         permanently_delete: "مەڭگۈلۈك ئۆچۈر"
-        permanently_delete_confirmation: "بۇ يازمىنى راستتىنلا مەڭگۈلۈك ئۆچۈرەمسىز؟ ئۇ ئەسلىگە قايتۇرالمايسىز."
+        permanently_delete_confirm_phrase: "مەڭگۈلۈك ئۆچۈر"
         wiki: "ۋىكى ياسا"
         unwiki: "ۋىكىنى چىقىرىۋەت"
         convert_to_moderator: "باشقۇرغۇچى رەڭگىنى قوش"
@@ -4205,6 +4224,7 @@ ug:
       back: "سەھىپىگە قايت"
       general: "ئادەتتىكى"
       settings: "تەڭشەك"
+      moderation: "رىياسەتچىلىك"
       advanced: "ئالىي"
       topic_template: "قېلىپ"
       tags: "بەلگە"
@@ -4677,108 +4697,61 @@ ug:
       title: "ھەرپتاختا تېزلەتمىسى"
       short_title: "تېزلەتمە"
       search_ctrl_f_tip: "پۈتكۈل مۇنبەردىن ئىزدەشتە، <kbd>/</kbd> بېسىلىدۇ"
+      description_header: "چۈشەندۈرۈش"
+      key_header: "ئاچقۇچ"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "ئاتلاش ئورنى"
-        home: "%{shortcut} باش بەت"
-        latest: "%{shortcut} ئاخىرقى"
-        new: "%{shortcut} يېڭى"
-        unread: "%{shortcut} ئوقۇلمىغان"
-        categories: "%{shortcut} سەھىپە"
-        top: "%{shortcut} قىزغىن"
-        bookmarks: "%{shortcut} خەتكۈچ"
-        profile: "%{shortcut} تەرجىمىھال"
-        messages: "%{shortcut} ئۇچۇر"
-        drafts: "%{shortcut} دەسلەپكى نۇسخا"
-        next: "%{shortcut} كېيىنكى تېما"
-        previous: "%{shortcut} ئالدىنقى تېما"
+        home: "باش بەت"
+        latest: "ئاخىرقى"
+        new: "يېڭى"
+        unread: "ئوقۇلمىغان"
+        unseen: "كۆرۈلمىگەن"
+        categories: "سەھىپە"
+        top: "قىزغىن"
+        bookmarks: "خەتكۈچ"
+        profile: "تەرجىمىھال"
+        messages: "ئۇچۇر"
+        drafts: "دەسلەپكى نۇسخا"
       navigation:
         title: "يولباشچى"
-        jump: "%{shortcut} يۆتكىلىدىغان يازما #"
-        back: "%{shortcut} قايت"
-        up_down: "%{shortcut} تاللاش نۇقتىسىنى يۆتكە &uarr; &darr;"
-        open: "%{shortcut} تاللانغان تېمىنى ئاچ"
-        next_prev: "%{shortcut} كېيىنكى/ئالدىنقى بۆلەك"
-        go_to_unread_post: "%{shortcut} ئوقۇلمىغان تۇنجى يازمىغا يۆتكەل"
+        back: "كەينى"
+        up_down: "تاللاش نۇقتىسىنى يۆتكە &uarr; &darr;"
       application:
         title: "پىروگرامما"
-        create: "%{shortcut} يېڭى تېما ياكى شەخسىي ئۇچۇر قۇرىدۇ"
-        notifications: "%{shortcut} ئۇقتۇرۇش ئاچ"
-        hamburger_menu: "%{shortcut} يولباشچى تىزىملىكنى ئاچ"
-        user_profile_menu: "%{shortcut} ئىشلەتكۈچى تىزىملىكىنى ئاچ"
-        show_incoming_updated_topics: "%{shortcut} يېڭىلانغان تېمىنى كۆرسەت"
-        search: "%{shortcut} ئىزدە"
-        filter_sidebar: "%{shortcut} يان بالداق سۈزگۈچ"
-        help: "%{shortcut} ھەرپتاختا ياردىمىنى ئاچ"
-        toggle_bulk_select: "%{shortcut} كۆپ تاللاشنى ئالماشتۇر"
-        dismiss: "%{shortcut} تاللىغان تېمىغا پەرۋا قىلما"
-        x: "%{shortcut} تاللاش ئالماشتۇر (توپ تاللاش ھالىتىدە)"
-        log_out: "%{shortcut} تىزىمدىن چىق"
+        search: "ئىزدە"
+        log_out: "تىزىمدىن چىق"
       composing:
         title: "يېزىۋاتىدۇ"
-        return: "%{shortcut} تەھرىرلىگۈچكە قايت"
-        minimize: "%{shortcut} تەھرىرلىگۈچنى كىچىكلىتىدۇ"
-        create_or_reply: "%{shortcut} تېما قۇرىدۇ ياكى يازمىغا جاۋاب قايتۇرىدۇ"
-        fullscreen: "%{shortcut} پۈتۈن ئېكران تەھرىرلىگۈچ"
-        insert_current_time: "%{shortcut} نۆۋەتتىكى ۋاقىتنى قىستۇر"
-        bold: "%{shortcut} توم"
-        italic: "%{shortcut} يانتۇ"
-        link: "%{shortcut} ئۇلانما قىستۇر"
-        preformatted: "%{shortcut} پىچىملىق تېكىست"
-        paragraph: "%{shortcut} ئابزاس"
-        heading_1: "%{shortcut} ماۋزۇ 1"
-        heading_2: "%{shortcut} ماۋزۇ 2"
-        heading_3: "%{shortcut} ماۋزۇ 3"
-        heading_4: "%{shortcut} ماۋزۇ 4"
-        toggle_direction: "%{shortcut} تېكىست يۆنىلىشىنى ئالماشتۇر"
-        ordered_list: "%{shortcut} تەرتىپلەنگەن تىزىم"
-        unordered_list: "%{shortcut} تەرتىپلەنمىگەن تىزىم"
-        blockquote: "%{shortcut} بۆلەك نەقىل"
+        link: "ئۇلانما قىستۇر"
+        preformatted: "پىچىملىق تېكىست"
+        paragraph: "ئابزاس"
+        blockquote: "بۆلەك نەقىل"
       bookmarks:
         title: "خەتكۈچكە قوشۇۋاتىدۇ"
-        enter: "%{shortcut} ساقلاپ تاقا"
-        later_today: "%{shortcut} بۈگۈن كېيىنرەك"
-        later_this_week: "%{shortcut} بۇ ھەپتە كېيىنرەك"
-        tomorrow: "%{shortcut} ئەتە"
-        next_week: "%{shortcut} كېلەر ھەپتە"
-        next_month: "%{shortcut} كېلەر ئاي"
-        next_business_week: "%{shortcut} كېلەر ھەپتە باشلا"
-        next_business_day: "%{shortcut} كېلەر خىزمەت كۈنى"
-        custom: "%{shortcut} ئىختىيارى چېسلا ۋە ۋاقىت"
-        none: "%{shortcut} ئەسكەرتىش يوق"
-        delete: "%{shortcut} خەتكۈچ ئۆچۈر"
+        enter: "ساقلا ۋە ياپ"
+        later_today: "بۈگۈن كېيىنرەك"
+        later_this_week: "كېچىككەندە بۇ ھەپتە"
+        tomorrow: "ئەتە"
+        next_week: "كېلەر ھەپتە"
+        next_month: "كېلەر ئاي"
+        next_business_day: "كېيىنكى خىزمەت كۈنى"
+        custom: "ئىختىيارى چېسلا ۋە ۋاقىت"
+        delete: "خەتكۈچنى ئۆچۈر"
       actions:
         title: "مەشغۇلات"
-        bookmark_topic: "%{shortcut} خەتكۈچ تېمىسىنى ئالماشتۇر"
-        pin_unpin_topic: "%{shortcut} تېما چوققىلا/چوققىلىما"
-        share_topic: "%{shortcut} تېما ھەمبەھىر"
-        share_post: "%{shortcut} يازما ھەمبەھىر"
-        reply_as_new_topic: "%{shortcut} ئۇلانغان تېما سۈپىتىدە جاۋاب قايتۇرىدۇ"
-        reply_topic: "%{shortcut} تېمىغا جاۋاب"
-        reply_post: "%{shortcut} يازمىغا جاۋاب"
-        quote_post: "%{shortcut} يازما نەقىل"
-        like: "%{shortcut} يازما ياقتۇرۇش"
-        flag: "%{shortcut} يازما پاش قىل"
-        bookmark: "%{shortcut} يازمىنى خەتكۈچكە قوش"
-        edit: "%{shortcut} يازما تەھرىر"
-        delete: "%{shortcut} يازما ئۆچۈر"
-        mark_muted: "%{shortcut} يازما ئۈنسىزلە"
-        mark_regular: "%{shortcut} ئادەتتىكى (كۆڭۈلدىكى) تېما"
-        mark_tracking: "%{shortcut} تېما ئىزلا"
-        mark_watching: "%{shortcut} تېما كۆزەت"
-        print: "%{shortcut} تېما باس"
-        defer: "%{shortcut} تېمىغا ئوقۇلمىغان بەلگىسى سال"
-        topic_admin_actions: "%{shortcut} يازمىنىڭ باشقۇرۇش مەشغۇلاتىنى ئاچ"
-        archive_private_message: "%{shortcut} شەخسىي ئۇچۇرنى ئارخىپلاشتۇرۇش ئارخىپلاشتۇرماسلىقنى ئالماشتۇرىدۇ"
+        reply_as_new_topic: "ئۇلانما تېما سۈپىتىدە جاۋاب"
+        reply_topic: "تېمىغا جاۋاب"
+        edit: "يازما تەھرىر"
+        delete: "يازما ئۆچۈر"
+        mark_tracking: "تېما ئىزلا"
+        mark_watching: "كۆزەتتىكى تېما"
+        defer: "تېمىغا ئوقۇلمىدى بەلگىسى سالىدۇ"
       search_menu:
         title: "ئىزدەش تىزىملىكى"
-        prev_next: "%{shortcut} تاللىغاننى ئۈستى ۋە ئاستىغا يۆتكە"
-        insert_url: "%{shortcut} تاللىغاننى ئوچۇق تەھرىرلىگۈچكە قىستۇر"
-        full_page_search: "%{shortcut} پۈتكۈل بەتتىن ئىزدەشنى قوزغات"
       admin:
         title: "باشقۇرغۇچى"
-        search_prev_next: "%{shortcut} تاللىغاننى ئۈستى ۋە ئاستىغا يۆتكە"
-        search_open: "%{shortcut} باشقۇرغۇچى ئارايۈزىدىكى ئىزدەشنى ئاچىدۇ"
-        search_full_page: "%{shortcut} پۈتۈن بەت باشقۇرغۇچى ئىزدەشنى ئاچىدۇ"
     badges:
       earned_n_times:
         one: "بۇ تارتۇققا %{count} قېتىم ئېرىشكەن"
@@ -5463,6 +5436,9 @@ ug:
           staff: "باشقۇرغۇچى خادىم"
           all_members: "بارلىق ئەزا"
           developers: "ئىجادكار"
+        impact_types:
+          feature_type: "ئىقتىدار"
+          other_type: "باشقا"
         filter:
           search_placeholder: "ئات، چۈشەندۈرۈش ياكى قىستۇرما بويىچە سۈزىدۇ…"
           all: "ھەممىسى"
@@ -5487,7 +5463,6 @@ ug:
           header_description: "بۇ يەردە مەزكۇر تور بېكەت ۋە قوشۇنىڭىز ھەققىدىكى ئۇچۇرلار تەمىنلىنىدۇ، شۇنداق بولغاندا كىشىلەر جامائىتىڭىز ۋە ئۇلارنىڭ ئارقىسىدىكىلەر ھەققىدىكى ئۇچۇرلارنى ھەمدە مەسىلە چىقسا سىز بىلەن قانداق ئالاقىلىشالايدىغانلىقىنى بىلەلەيدۇ. تور بېكىتىڭىزنىڭ <a href='%{basePath}/about'>ھەققىدە بېتى</a>دە كۆرۈنىدۇ."
         developer:
           title: "ئىجادكار"
-          header_description: "نىسبەت چەكلىمىسى، كۆپەيتمىسى ۋە ھېسابلاش، بىخەتەر ھالەت ۋە باشقا ئالىي ئىقتىدارلارنىڭ ئىجادكارلار تەڭشىكى"
         experimental:
           title: "تەجرىبە"
           header_description: "تور بېكىتىڭىزنىڭ تەجرىبە خاراكتېرلىك ئىقتىدارىنى ئېچىپ ياكى تاقايدۇ، بۇلارنىڭ كۆپىچىسىنى گۇرۇپپا ئاساسىدا تىزگىنلىگىلى بولىدۇ."
@@ -5704,6 +5679,12 @@ ug:
             logs:
               title: "خاتىرە"
               header_description: "زاپاسلاش، ئەسلىگە كەلتۈرۈش ۋە يۈكلەش خاتىرىسىنى كۆرسىتىپ ۋە باشقۇرىدۇ"
+        problem_checks:
+          status: "ھالەت"
+          last_run_at: "ئاخىرقى ئىجرا"
+          ignore: "پەرۋا قىلما"
+          more_options:
+            title: "تېخىمۇ كۆپ تاللانما"
         reports:
           title: "دوكلات"
           header_description: "دوكلات تور بېكىتىڭىزدە نېمە ئىش يۈز بەرگەنلىكىنى بىلىشىڭىزگە ياردەم بېرىدىغان كۈچلۈك قورال. ئۇلار سىزنىڭ ۋەزىيەتنى بىلىش، مەسىلە بايقاش ۋە سانلىق مەلۇماتقا ئاساسەن قارار چىقىرىشىڭىزغا ياردەم بېرىدۇ."
@@ -5917,6 +5898,38 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        sections:
+          reports:
+            title: "دوكلات"
+          traffic:
+            title: "بېكەت ئېقىمى"
+          engagement:
+            activity_by_category:
+              category: "سەھىپە"
+              topics: "تېما"
+              posts: "يازما"
+              share: "ھەمبەھىر"
+            whos_posting:
+              all_categories: "ھەممە سەھىپە"
+              staff: "باشقۇرغۇچى خادىم"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "يېڭى"
+                "1": "ئاساسىي"
+                "2": "ئەزا"
+                "3": "ئادەتتىكى"
+                "4": "باشلىق"
+              trend:
+                stable: "مۇقىم"
+        configure:
+          button: "سەپلە"
+        site_traffic:
+          series:
+            anonymous: "نامسىز"
+            crawlers: "ئۆمىلىگۈچ"
+        period:
+          last_3_months: "ئۆتكەن 3 ئاي"
+          custom: "ئىختىيارى"
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
           percent_change_tooltip: "%{percent} ئۆزگەردى."
@@ -7161,6 +7174,7 @@ ug:
         topic_id: "تېما كىملىكى"
         post_id: "يازما كىملىكى"
         category_id: "سەھىپە كىملىكى"
+        reviewable_id: "تەستىقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"
         save: "ساقلا"
@@ -7738,7 +7752,6 @@ ug:
           other: "ھەممە يازمىنى ئۆچۈرەلمەيدۇ چۈنكى ئىشلەتكۈچىنىڭ %{count} كۆپ يازمىسى بار. (delete_all_posts_max)"
         delete_confirm_title: "بۇ ئىشلەتكۈچىنى راستتىنلا ئۆچۈرەمسىز؟ بۇ مەڭگۈلۈك!"
         delete_confirm: "ئىشلەتكۈچىنى ئۆچۈرۈۋەتمەي نامسىزلاشتۇرغان تېخىمۇ ياخشى، شۇنداق بولغاندا مەۋجۇت سۆھبەتتىكى مەزمۇننى يۆتكەشتىن ساقلانغىلى بولىدۇ."
-        delete_and_block: "بۇ ئىشلەتكۈچىنى ئۆچۈرۈپ ۋە ئۇلارنىڭ ئېلخەت ۋە IP ئادرېسىنى توسىدۇ"
         delete_dont_block: "ئىشلەتكۈچى ئۆچۈر"
         deleting_user: "ئىشلەتكۈچى ئۆچۈرۈۋاتىدۇ…"
         deleted: "ئىشلەتكۈچى ئۆچۈرۈلگەن."

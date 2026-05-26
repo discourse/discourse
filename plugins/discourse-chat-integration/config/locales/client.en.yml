@@ -12,11 +12,33 @@ en:
         providers: "Providers"
         providers_description: "Configure chat provider integrations"
       add_provider: "Add provider"
+      view_provider_settings: "View provider settings"
       more_providers: "More"
+      confirm_setup_provider: "Are you sure you want to enable the %{provider} provider? It can be disabled later in the Settings tab."
+      setup_provider_modal:
+        title: "Setup %{provider} provider"
+        setup_instructions: "Please provide the following details to setup the %{provider} provider. %{additionalInstructions}"
+        confirm_setup: "Confirm setup"
+        success: "Provider %{provider} setup successfully"
+        slack:
+          instructions: "Either access token or outbound webhook URL is required."
+          at_least_one_required: "Enter an access token or outbound webhook URL."
+          access_token:
+            title: "Access token"
+            description: "The Slack bot OAuth access token"
+          outbound_webhook_url:
+            title: "Outbound webhook URL"
+            description: "The Slack outbound webhook URL"
+        telegram:
+          instructions: "Access token will be validated on save."
+          access_token:
+            title: "Access token"
+            description: "The Telegram bot access token from BotFather"
       empty_state:
         title: "Connect your chat platform"
         body: "Send notifications from Discourse to your team's chat. Choose a provider to get started."
       channels_title: "Channels"
+      channels_description: "Configure channels for the %{provider} provider."
       no_channels: "No channels have been configured yet."
       channel_actions: "Channel actions"
       add_first_channel: "Add your first %{provider} channel"
@@ -93,6 +115,8 @@ en:
               title: Channel
               help: "For example #channel or @username"
           errors:
+            at_least_one_required: "Enter an access token or outbound webhook URL."
+            invalid_webhook_url: "The outbound webhook URL must be a valid https://hooks.slack.com/services/... link."
             auth_error: "The provided authentication token is invalid"
             action_prohibited: "The bot does not have permission to post to that channel"
             channel_not_found: "The specified channel does not exist on Slack"
@@ -110,6 +134,8 @@ en:
               title: Chat ID
               help: A number given to you by the bot, or a broadcast channel identifier in the form @channelname
           errors:
+            access_token_required: "A bot access token is required."
+            webhook_setup_failed: "Could not register the webhook with Telegram. Check the token and try again."
             channel_not_found: "The specified channel does not exist on Telegram"
             forbidden: "The bot does not have permission to post to this channel"
 

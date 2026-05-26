@@ -12,12 +12,6 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import {
@@ -31,6 +25,12 @@ import {
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { and, eq } from "discourse/truth-helpers";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class Item extends Component {
@@ -67,6 +67,15 @@ export default class Item extends Component {
     });
   }
 
+  get #transformerContext() {
+    return {
+      topic: this.args.topic,
+      index: this.args.index,
+      listContext: this.args.listContext,
+      category: this.args.category,
+    };
+  }
+
   get expandPinned() {
     let expandPinned;
     if (
@@ -84,7 +93,7 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-expand-pinned",
       expandPinned,
-      { topic: this.args.topic, mobileView: this.useMobileLayout }
+      { ...this.#transformerContext, mobileView: this.useMobileLayout }
     );
   }
 
@@ -236,24 +245,24 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-mobile-layout",
       this.site.mobileView,
-      { topic: this.args.topic, listContext: this.args.listContext }
+      this.#transformerContext
     );
   }
 
   get additionalClasses() {
-    return applyValueTransformer("topic-list-item-class", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-      listContext: this.args.listContext,
-    });
+    return applyValueTransformer(
+      "topic-list-item-class",
+      [],
+      this.#transformerContext
+    );
   }
 
   get style() {
-    const parts = applyValueTransformer("topic-list-item-style", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-      listContext: this.args.listContext,
-    });
+    const parts = applyValueTransformer(
+      "topic-list-item-style",
+      [],
+      this.#transformerContext
+    );
 
     const safeParts = parts.filter(Boolean).filter((part) => {
       if (isHTMLSafe(part)) {
@@ -272,8 +281,8 @@ export default class Item extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <tr
-      {{! template-lint-disable no-invalid-interactive }}
       {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
@@ -281,7 +290,7 @@ export default class Item extends Component {
       data-topic-id={{@topic.id}}
       role={{this.role}}
       aria-level={{this.ariaLevel}}
-      class={{concatClass
+      class={{dConcatClass
         "topic-list-item"
         (if @topic.category (concat "category-" @topic.category.fullSlug))
         (if (eq @topic @lastVisitedTopic) "last-visit")
@@ -322,7 +331,7 @@ export default class Item extends Component {
       >
         {{#if this.useMobileLayout}}
           <td
-            class={{concatClass
+            class={{dConcatClass
               "topic-list-data"
               (if @bulkSelectEnabled "bulk-select-enabled")
             }}
@@ -339,17 +348,17 @@ export default class Item extends Component {
                   @name="topic-list-item-mobile-avatar"
                   @outletArgs={{lazyHash topic=@topic}}
                 >
-                  <UserLink
+                  <DUserLink
                     @ariaLabel={{i18n
                       "latest_poster_link"
                       username=@topic.lastPosterUser.username
                     }}
                     @username={{@topic.lastPosterUser.username}}
                   >
-                    {{avatar
+                    {{dAvatar
                       @topic.lastPosterUser
                       imageSize="large"
-                    }}</UserLink>
+                    }}</DUserLink>
                 </PluginOutlet>
               {{/if}}
             </div>
@@ -424,7 +433,7 @@ export default class Item extends Component {
                       @name="topic-list-before-category"
                       @outletArgs={{lazyHash topic=@topic}}
                     />
-                    {{categoryLink @topic.category}}
+                    {{dCategoryLink @topic.category}}
                     {{~! no whitespace ~}}
                     <PluginOutlet
                       @name="topic-list-after-category"
@@ -432,7 +441,7 @@ export default class Item extends Component {
                     />{{~! no whitespace ~}}
                   {{/unless}}
                   {{~! no whitespace ~}}
-                  {{discourseTags @topic mode="list"}}
+                  {{dDiscourseTags @topic mode="list"}}
                 </span>
 
                 <div class="num activity last">
@@ -441,7 +450,7 @@ export default class Item extends Component {
                     @outletArgs={{lazyHash topic=@topic}}
                   >
                     <span title={{@topic.bumpedAtTitle}} class="age activity">
-                      <a href={{@topic.lastPostUrl}}>{{formatDate
+                      <a href={{@topic.lastPostUrl}}>{{dFormatDate
                           @topic.bumpedAt
                           format="tiny"
                           noTitle="true"

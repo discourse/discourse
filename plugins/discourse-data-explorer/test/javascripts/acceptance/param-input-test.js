@@ -5,10 +5,10 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 async function runQuery() {
-  await click("form.query-run button");
+  await click(".query-run-split__primary, form.query-run button");
 }
 
-acceptance("Data Explorer Plugin | Param Input", function (needs) {
+acceptance("Param Input", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
@@ -325,6 +325,21 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
+    server.post("/admin/plugins/discourse-data-explorer/queries/3/run", () => {
+      return helper.response({
+        success: true,
+        errors: [],
+        duration: 1.0,
+        result_count: 1,
+        params: { months_ago: "1" },
+        columns: ["?column?"],
+        default_limit: 1000,
+        relations: {},
+        colrender: {},
+        rows: [[1]],
+      });
+    });
+
     server.get("/admin/plugins/discourse-data-explorer/queries/4", () => {
       return helper.response({
         query: {
@@ -383,13 +398,13 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       '/admin/plugins/discourse-data-explorer/queries/-7?params={"user":null}'
     );
     assert.dom(".query-params .user-chooser").exists();
-    assert.dom(".query-run .btn.btn-primary").exists();
+    assert.dom(".query-run-split__primary").exists();
   });
 
   test("loads the page if one of the parameter is null for group reports", async function (assert) {
     await visit('/g/discourse/reports/-8?params={"months_ago":null}');
     assert.dom(".query-params input").exists();
-    assert.dom(".query-run .btn.btn-primary").exists();
+    assert.dom(".query-run__submit").exists();
   });
 
   test("applies params when running a report", async function (assert) {
@@ -403,13 +418,11 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   test("creates input boxes if has parameters when save", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
-    await click(".query-run-actions .btn-edit-query");
     await fillIn(
       ".query-editor .ace_text-input",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
-    await click(".query-editor .ace_text-input"); // enables `Save Changes` button
-    await click(".query-run-actions .btn-save-query");
+    await click(".query-run-split__primary");
     assert.dom(".query-params input").exists();
   });
 

@@ -8,7 +8,7 @@ const DiscourseReactionsList = <template>
         {{#each @post.reactions as |reaction|}}
           <DiscourseReactionsListEmoji
             @reaction={{reaction}}
-            @users={{get @reactionsUsers reaction.id}}
+            @users={{if @reactionsUsers (get @reactionsUsers reaction.id)}}
             @post={{@post}}
             @getUsers={{@getUsers}}
           />

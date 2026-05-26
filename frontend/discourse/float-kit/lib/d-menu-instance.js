@@ -74,8 +74,6 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await animateClosing(this.content);
 
-    await super.close(...arguments);
-
     if (this.site.mobileView && this.options.modalForMobile && this.expanded) {
       await this.modal.close();
     }
@@ -86,7 +84,7 @@ export default class DMenuInstance extends FloatKitInstance {
       this.trigger?.focus?.();
     }
 
-    await this.options.onClose?.(this);
+    await super.close(...arguments);
   }
 
   @action

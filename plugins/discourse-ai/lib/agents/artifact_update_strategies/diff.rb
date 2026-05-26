@@ -57,23 +57,21 @@ module DiscourseAi
 
             content = source.public_send(section == :javascript ? :js : section)
             blocks.each do |block|
-              begin
-                if !block[:search]
-                  content = block[:replace]
-                else
-                  content =
-                    DiscourseAi::Utils::DiffUtils::SimpleDiff.apply(
-                      content,
-                      block[:search],
-                      block[:replace],
-                    )
-                end
-              rescue DiscourseAi::Utils::DiffUtils::SimpleDiff::NoMatchError
-                @failed_searches << { section: section, search: block[:search] }
-                # TODO, we may need to inform caller here, LLM made a mistake which it
-                # should correct
-                puts "Failed to find search: #{block[:search]}"
+              if !block[:search]
+                content = block[:replace]
+              else
+                content =
+                  DiscourseAi::Utils::DiffUtils::SimpleDiff.apply(
+                    content,
+                    block[:search],
+                    block[:replace],
+                  )
               end
+            rescue DiscourseAi::Utils::DiffUtils::SimpleDiff::NoMatchError
+              @failed_searches << { section: section, search: block[:search] }
+              # TODO, we may need to inform caller here, LLM made a mistake which it
+              # should correct
+              Rails.logger.warn("Failed to find search: #{block[:search]}")
             end
             updated_content[section == :javascript ? :js : section] = content
           end

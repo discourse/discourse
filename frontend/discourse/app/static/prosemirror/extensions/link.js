@@ -53,10 +53,20 @@ const extension = {
     link: {
       mark: "link",
       getAttrs(tok, tokens, i) {
-        const nextContent = tokens[i + 1].content;
-        const attachment = nextContent.endsWith("|attachment");
-        if (attachment) {
-          tokens[i + 1].content = nextContent.slice(0, -11);
+        // Link text may span multiple tokens when it contains inline formatting.
+        let attachment = false;
+        for (let j = i + 1; j < tokens.length; j++) {
+          if (tokens[j].type === "link_close") {
+            break;
+          }
+          if (
+            tokens[j].type === "text" &&
+            tokens[j].content.endsWith("|attachment")
+          ) {
+            tokens[j].content = tokens[j].content.slice(0, -11);
+            attachment = true;
+            break;
+          }
         }
 
         return {

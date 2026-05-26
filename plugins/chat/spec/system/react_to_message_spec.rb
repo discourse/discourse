@@ -69,26 +69,23 @@ RSpec.describe "React to message" do
         end
 
         context "when current user has multiple sessions" do
-          xit "adds reaction on each session" do
-            reaction = "grimacing"
-
+          it "adds reaction on each session" do
             sign_in(current_user)
             chat.visit_channel(category_channel_1)
 
             using_session(:tab_1) do
               sign_in(current_user)
               chat.visit_channel(category_channel_1)
+
+              channel.react_to_message(message_1)
+              find(".emoji-picker [data-emoji=\"grimacing\"]").click
+
+              expect(channel).to have_reaction(message_1, "grimacing")
             end
 
-            using_session(:tab_1) do
-              channel.hover_message(message_1)
-              find(".react-btn").click
-              find(".emoji-picker [data-emoji=\"#{reaction}\"]").click
-
-              expect(channel).to have_reaction(message_1, reaction)
+            try_until_success(reason: "relies on MessageBus updates") do
+              expect(channel).to have_reaction(message_1, "grimacing")
             end
-
-            expect(channel).to have_reaction(message_1, "grimacing")
           end
         end
       end

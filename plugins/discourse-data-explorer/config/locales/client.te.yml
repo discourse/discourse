@@ -12,14 +12,13 @@ te:
       create: "సృష్టించండి"
       ai:
         generate: "ఉత్పత్తించు"
+        optional: "ఐచ్ఛికం"
       help:
         label: "సహాయం"
       types:
         bool:
           yes: "అవును"
           no: "లేదు"
-      export: "ఎగుమతి"
-      edit: "సవరించండి"
       delete: "తొలగించండి"
       query_groups: "సమూహాలు"
       query_description: "వివరణ"

@@ -31,14 +31,13 @@ class TopicGroup < ActiveRecord::Base
         tg.group_id
     SQL
 
-    updated_groups =
-      DB.query(
-        update_query,
-        user_id: user.id,
-        topic_id: topic_id,
-        post_number: post_number,
-        now: DateTime.now,
-      )
+    DB.query(
+      update_query,
+      user_id: user.id,
+      topic_id: topic_id,
+      post_number: post_number,
+      now: DateTime.now,
+    )
   end
 
   def self.create_topic_group(user, topic_id, post_number, updated_group_ids)
@@ -74,11 +73,11 @@ end
 # Table name: topic_groups
 #
 #  id                    :bigint           not null, primary key
-#  group_id              :integer          not null
-#  topic_id              :integer          not null
 #  last_read_post_number :integer          default(0), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  group_id              :integer          not null
+#  topic_id              :integer          not null
 #
 # Indexes
 #

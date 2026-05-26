@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 
-module("Discourse Chat | Component | chat-message-text", function (hooks) {
+module("Component | chat-message-text", function (hooks) {
   setupRenderingTest(hooks);
 
   test("yields", async function (assert) {

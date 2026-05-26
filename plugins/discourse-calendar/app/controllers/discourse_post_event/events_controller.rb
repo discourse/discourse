@@ -16,6 +16,7 @@ module DiscoursePostEvent
       @events =
         DiscoursePostEvent::EventFinder.search(current_user, search_params).includes(
           :event_dates,
+          :image_upload,
           post: {
             topic: %i[tags category],
           },
@@ -98,7 +99,7 @@ module DiscoursePostEvent
     end
 
     def show
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_see!(event.post)
 
       serializer = EventSerializer.new(event, scope: guardian)
@@ -106,7 +107,7 @@ module DiscoursePostEvent
     end
 
     def destroy
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_act_on_discourse_post_event!(event)
       event.publish_update!
       payload = WebHook.build_calendar_event_payload(event)
@@ -126,35 +127,33 @@ module DiscoursePostEvent
       raise Discourse::InvalidParameters.new(:file) if file.blank?
 
       hijack do
-        begin
-          invitees = []
+        invitees = []
 
-          CSV.foreach(file.tempfile) do |row|
-            invitees << { identifier: row[0], attendance: row[1] || "going" } if row[0].present?
-          end
+        CSV.foreach(file.tempfile) do |row|
+          invitees << { identifier: row[0], attendance: row[1] || "going" } if row[0].present?
+        end
 
-          if invitees.present?
-            Jobs.enqueue(
-              :discourse_post_event_bulk_invite,
-              event_id: event.id,
-              invitees: invitees,
-              current_user_id: current_user.id,
-            )
-            render json: success_json
-          else
-            render json:
-                     failed_json.merge(
-                       errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
-                     ),
-                   status: :unprocessable_entity
-          end
-        rescue StandardError
+        if invitees.present?
+          Jobs.enqueue(
+            :discourse_post_event_bulk_invite,
+            event_id: event.id,
+            invitees: invitees,
+            current_user_id: current_user.id,
+          )
+          render json: success_json
+        else
           render json:
                    failed_json.merge(
                      errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                    ),
                  status: :unprocessable_entity
         end
+      rescue StandardError
+        render json:
+                 failed_json.merge(
+                   errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
+                 ),
+               status: :unprocessable_entity
       end
     end
 

@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def search_emoji(emoji_name)
-        find(".emoji-picker .search input").fill_in(with: emoji_name)
+        find(".emoji-picker .filter-input").fill_in(with: emoji_name)
       end
 
       def has_emoji?(emoji_name)

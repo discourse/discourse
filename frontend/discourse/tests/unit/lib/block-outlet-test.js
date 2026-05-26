@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { block } from "discourse/blocks";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
@@ -148,6 +149,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     });
 
     test("sets blockMetadata with deniedOutlets", function (assert) {
+      const stub = sinon.stub(console, "warn");
+
       @block("metadata-denied-outlets", {
         deniedOutlets: ["modal-*", "tooltip-*"],
       })
@@ -157,9 +160,23 @@ module("Unit | Lib | block-outlet", function (hooks) {
         "modal-*",
         "tooltip-*",
       ]);
+      assert.true(
+        stub.calledWithMatch(
+          '[Blocks] Block "metadata-denied-outlets": deniedOutlets pattern "modal-*" does not match any registered outlet.'
+        )
+      );
+      assert.true(
+        stub.calledWithMatch(
+          '[Blocks] Block "metadata-denied-outlets": deniedOutlets pattern "tooltip-*" does not match any registered outlet.'
+        )
+      );
+
+      stub.restore();
     });
 
     test("freezes allowedOutlets and deniedOutlets arrays", function (assert) {
+      const stub = sinon.stub(console, "warn");
+
       @block("metadata-frozen-outlets", {
         allowedOutlets: ["sidebar-*"],
         deniedOutlets: ["modal-*"],
@@ -172,6 +189,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.true(
         Object.isFrozen(getBlockMetadata(FrozenOutletsBlock).deniedOutlets)
       );
+      assert.true(
+        stub.calledWithMatch(
+          '[Blocks] Block "metadata-frozen-outlets": deniedOutlets pattern "modal-*" does not match any registered outlet.'
+        )
+      );
+
+      stub.restore();
     });
 
     test("throws for conflicting outlet patterns", function (assert) {
@@ -254,6 +278,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
     });
 
     test("accepts only valid option keys", function (assert) {
+      const stub = sinon.stub(console, "warn");
+
       @block("valid-options-block", {
         container: true,
         description: "Test block",
@@ -268,6 +294,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
         getBlockMetadata(ValidOptionsBlock).description,
         "Test block"
       );
+      assert.true(
+        stub.calledWithMatch(
+          '[Blocks] Block "valid-options-block": deniedOutlets pattern "modal-*" does not match any registered outlet.'
+        )
+      );
+
+      stub.restore();
     });
 
     test("throws for invalid arg schema - missing type", function (assert) {

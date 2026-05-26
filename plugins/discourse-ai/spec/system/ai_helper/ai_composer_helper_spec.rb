@@ -86,27 +86,7 @@ RSpec.describe "AI Composer helper" do
         expect(ai_helper_menu).to have_custom_prompt_button_enabled
       end
 
-      xit "replaces the composed message with AI generated content" do
-        # TODO: @keegan - this is a flake
-        # Failure/Error: super
-
-        # Playwright::TimeoutError:
-        # Timeout 11000ms exceeded.
-        # Call log:
-        # - attempting click action
-        # -     2 × waiting for element to be visible, enabled and stable
-        # -       - element is not enabled
-        # -     - retrying click action
-        # -     - waiting 20ms
-        # -     2 × waiting for element to be visible, enabled and stable
-        # -       - element is not enabled
-        # -     - retrying click action
-        # -       - waiting 100ms
-        # -     21 × waiting for element to be visible, enabled and stable
-        # -        - element is not enabled
-        # -      - retrying click action
-        # -        - waiting 500ms
-
+      it "replaces the composed message with AI generated content" do
         trigger_composer_helper(input)
         ai_helper_menu.fill_custom_prompt(custom_prompt_input)
 

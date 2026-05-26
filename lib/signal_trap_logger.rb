@@ -35,14 +35,12 @@ class SignalTrapLogger
     @thread =
       Thread.new do
         loop do
-          begin
-            log_entry = @queue.pop
-            log_entry[:logger].public_send(log_entry[:level], log_entry[:message])
-          rescue => error
-            Rails.logger.error(
-              "Error in SignalTrapLogger thread: #{error.message}\n#{error.backtrace.join("\n")}",
-            )
-          end
+          log_entry = @queue.pop
+          log_entry[:logger].public_send(log_entry[:level], log_entry[:message])
+        rescue => error
+          Rails.logger.error(
+            "Error in SignalTrapLogger thread: #{error.message}\n#{error.backtrace.join("\n")}",
+          )
         end
       end
   end

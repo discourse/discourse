@@ -2,7 +2,6 @@
 
 class ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
   def self.new_client(conn_params)
-    start = Time.now()
     PG.connect(**conn_params)
   rescue ::PG::Error => error
     if conn_params && conn_params[:dbname] == "postgres"

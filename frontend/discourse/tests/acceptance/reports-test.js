@@ -26,7 +26,7 @@ acceptance("Reports", function (needs) {
   });
 
   test("Visit report page", async function (assert) {
-    await visit("/admin/reports/staff_logins");
+    await visit("/admin/reports/admin_logins");
 
     assert.dom(".export-csv-btn").exists();
   });

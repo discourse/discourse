@@ -31,6 +31,60 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     end
   end
 
+  def provides_groups?
+    SiteSetting.openid_connect_groups_claim.present?
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
+    result = super
+
+    if provides_groups?
+      claim = SiteSetting.openid_connect_groups_claim
+      result.associated_groups = []
+      groups =
+        auth_token.extra&.dig(:raw_info, claim) || auth_token.extra&.dig(:id_token_info, claim)
+
+      if groups.is_a?(Array)
+        result.associated_groups = groups.map { |group_name| { id: group_name, name: group_name } }
+      elsif groups.present?
+        oidc_log("groups claim '#{claim}' is not an array: #{groups.class}", error: true)
+      else
+        oidc_log("groups claim '#{claim}' not found in auth token")
+      end
+    end
+
+    result.user_field_values = user_field_values_from(auth_token)
+
+    result
+  end
+
+  def user_field_values_from(auth_token)
+    mappings = JSON.parse(SiteSetting.openid_connect_user_field_mappings.presence || "[]")
+    return {} if mappings.blank?
+
+    raw_info = auth_token.extra&.[](:raw_info)
+    id_token_info = auth_token.extra&.[](:id_token_info)
+
+    mappings.each_with_object({}) do |mapping, hash|
+      claim = mapping["claim"].to_s
+      field_id = mapping["user_field_id"]
+      next if claim.blank? || field_id.blank?
+
+      source =
+        if raw_info&.key?(claim)
+          raw_info
+        elsif id_token_info&.key?(claim)
+          id_token_info
+        end
+      next if source.nil?
+
+      value = source[claim]
+      hash[field_id.to_s] = value.is_a?(Array) ? value.join(",") : value.to_s
+    end
+  rescue JSON::ParserError
+    {}
+  end
+
   def always_update_user_email?
     SiteSetting.openid_connect_overrides_email
   end

@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 
 module(
   "Integration | Component | consistent input/dropdown/button sizes",
@@ -35,7 +35,7 @@ module(
     test("button + text input", async function (assert) {
       await render(
         <template>
-          <TextField /> <DButton @icon="plus" @label="topic.create" />
+          <DTextField /> <DButton @icon="plus" @label="topic.create" />
         </template>
       );
 
@@ -49,7 +49,7 @@ module(
     test("combo box + input", async function (assert) {
       await render(
         <template>
-          <ComboBox @options={{hash none="category.none"}} /> <TextField />
+          <ComboBox @options={{hash none="category.none"}} /> <DTextField />
         </template>
       );
 

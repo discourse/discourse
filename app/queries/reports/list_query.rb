@@ -10,8 +10,8 @@ module Reports
         @type = name.to_s.gsub("report_", "")
       end
 
-      def visible?(admin:)
-        return false if Report.hidden?(type, admin:)
+      def visible?(guardian:)
+        return false if Report.hidden?(type, guardian:)
 
         if SiteSetting.reporting_improvements
           return false if plugin_report? && plugin_disabled?
@@ -96,13 +96,13 @@ module Reports
       end
     end
 
-    def self.call(admin:)
+    def self.call(guardian:)
       page_view_req_report_methods =
         ["page_view_total_reqs"] +
           ApplicationRequest
             .req_types
             .keys
-            .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ }
+            .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ && r !~ /beacon/ }
             .map { |r| r + "_reqs" }
 
       if !SiteSetting.use_legacy_pageviews
@@ -116,7 +116,7 @@ module Reports
       reports_methods
         .filter_map do |report_name|
           report = Reports::ListQuery::FormattedReport.new(report_name)
-          report.to_h if report.visible?(admin:)
+          report.to_h if report.visible?(guardian:)
         end
         .sort_by { |report| report[:title] }
     end

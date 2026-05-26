@@ -2,7 +2,6 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setPrefix } from "discourse/lib/get-url";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL, {
   getCanonicalUrl,
   getCategoryAndTagUrl,
@@ -91,6 +90,7 @@ module("Unit | Utility | url", function (hooks) {
   test("isInternalTopic", function (assert) {
     sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
+    assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
@@ -104,6 +104,9 @@ module("Unit | Utility | url", function (hooks) {
 
     assert.true(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
+    );
+    assert.true(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/forum/n/123")
     );
     assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/admin")
@@ -193,75 +196,6 @@ module("Unit | Utility | url", function (hooks) {
     );
   });
 
-  test("routeTo applies route-to-url value transformer", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
-    sinon.stub(DiscourseURL, "handleURL");
-    sinon.stub(DiscourseURL, "router").get(() => {
-      return { currentURL: "/bar" };
-    });
-
-    withPluginApi((api) => {
-      api.registerValueTransformer("route-to-url", ({ value }) => {
-        if (value === "/t/some-topic/123") {
-          return "/nested/some-topic/123";
-        }
-        return value;
-      });
-    });
-
-    DiscourseURL.routeTo("/t/some-topic/123");
-    assert.true(
-      DiscourseURL.handleURL.calledWith("/nested/some-topic/123"),
-      "the transformed URL is used for routing"
-    );
-  });
-
-  test("routeTo passes untransformed URLs through", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
-    sinon.stub(DiscourseURL, "handleURL");
-    sinon.stub(DiscourseURL, "router").get(() => {
-      return { currentURL: "/bar" };
-    });
-
-    withPluginApi((api) => {
-      api.registerValueTransformer("route-to-url", ({ value }) => {
-        if (value.startsWith("/t/redirect-me")) {
-          return "/other/path";
-        }
-        return value;
-      });
-    });
-
-    DiscourseURL.routeTo("/some/other/path");
-    assert.true(
-      DiscourseURL.handleURL.calledWith("/some/other/path"),
-      "non-matching URLs pass through unchanged"
-    );
-  });
-
-  test("routeTo aborts when transformer returns null", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
-    sinon.stub(DiscourseURL, "handleURL");
-    sinon.stub(DiscourseURL, "redirectTo");
-    sinon.stub(DiscourseURL, "router").get(() => {
-      return { currentURL: "/bar" };
-    });
-
-    withPluginApi((api) => {
-      api.registerValueTransformer("route-to-url", () => null);
-    });
-
-    DiscourseURL.routeTo("/t/some-topic/123");
-    assert.false(
-      DiscourseURL.handleURL.called,
-      "handleURL is not called when transformer returns null"
-    );
-    assert.false(
-      DiscourseURL.redirectTo.called,
-      "redirectTo is not called when transformer returns null"
-    );
-  });
-
   test("prefixProtocol", async function (assert) {
     assert.strictEqual(
       prefixProtocol("mailto:mr-beaver@aol.com"),
@@ -292,37 +226,34 @@ module("Unit | Utility | url", function (hooks) {
   });
 
   test("getCategoryAndTagUrl", function (assert) {
+    const cat = { path: "/c/foo/1", default_list_filter: "all" };
+    const noneCat = { path: "/c/foo/1", default_list_filter: "none" };
+    const noneTag = { slug: "none", id: null };
+    const bugTag = { slug: "bug", id: 7 };
+
+    // category only
+    assert.strictEqual(getCategoryAndTagUrl(cat, true), "/c/foo/1");
+    assert.strictEqual(getCategoryAndTagUrl(cat, false), "/c/foo/1/none");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, true), "/c/foo/1/all");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, false), "/c/foo/1/none");
+
+    // category + tag
     assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        true
-      ),
-      "/c/foo/1"
+      getCategoryAndTagUrl(cat, true, "none"),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, noneTag),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, bugTag),
+      "/tags/c/foo/1/bug/7"
     );
 
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        true
-      ),
-      "/c/foo/1/all"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
+    // tag only
+    assert.strictEqual(getCategoryAndTagUrl(null, true, "none"), "/tag/none");
+    assert.strictEqual(getCategoryAndTagUrl(null, true, bugTag), "/tag/bug/7");
   });
 
   test("routeTo redirects secure uploads URLS because they are server side only", async function (assert) {

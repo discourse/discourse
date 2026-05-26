@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "meta[name=discourse-track-view-session-id]"
     )?.content;
 
+    const useBeacon =
+      document.querySelector("meta[name=discourse-beacon-pageview-enabled]")
+        ?.content === "true";
+
     let headers = {
       "Discourse-Track-View-Deferred": "true",
     };
@@ -26,5 +30,19 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "POST",
       headers,
     });
+
+    if (useBeacon) {
+      const body = {
+        session_id: trackViewSessionId,
+        url: window.location.href,
+        referrer: document.referrer.length ? document.referrer : null,
+      };
+      fetch(`${root}/srv/pv`, {
+        method: "POST",
+        keepalive: true,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    }
   }
 });

@@ -10,20 +10,18 @@ module DiscourseSubscriptions
     requires_login except: %i[index contributors show]
 
     def index
-      begin
-        product_ids = Product.all.pluck(:external_id)
-        products = []
+      product_ids = Product.all.pluck(:external_id)
+      products = []
 
-        if product_ids.present? && is_stripe_configured?
-          response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
+      if product_ids.present? && is_stripe_configured?
+        response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
 
-          products = response[:data].map { |p| serialize_product(p) }
-        end
-
-        render_json_dump products
-      rescue ::Stripe::InvalidRequestError => e
-        render_json_error e.message
+        products = response[:data].map { |p| serialize_product(p) }
       end
+
+      render_json_dump products
+    rescue ::Stripe::InvalidRequestError => e
+      render_json_error e.message
     end
 
     def contributors
@@ -111,16 +109,16 @@ module DiscourseSubscriptions
           end
           invoice = ::Stripe::Invoice.create(invoice_params, stripe_request_opts)
 
-          invoice_item =
-            ::Stripe::InvoiceItem.create(
-              {
-                customer: customer[:id],
-                price: params[:plan],
-                discounts: [{ coupon: coupon_id }],
-                invoice: invoice[:id],
-              },
-              stripe_request_opts,
-            )
+          ::Stripe::InvoiceItem.create(
+            {
+              customer: customer[:id],
+              price: params[:plan],
+              discounts: [{ coupon: coupon_id }],
+              invoice: invoice[:id],
+            },
+            stripe_request_opts,
+          )
+
           transaction = ::Stripe::Invoice.finalize_invoice(invoice[:id], {}, stripe_request_opts)
           payment_intent = retrieve_payment_intent(transaction[:id]) if transaction[:status] ==
             "open"
@@ -264,16 +262,14 @@ module DiscourseSubscriptions
     end
 
     def retrieve_transaction(transaction)
-      begin
-        case transaction
-        when /^sub_/
-          ::Stripe::Subscription.retrieve(transaction, stripe_request_opts)
-        when /^in_/
-          ::Stripe::Invoice.retrieve(transaction, stripe_request_opts)
-        end
-      rescue ::Stripe::InvalidRequestError => e
-        e.message
+      case transaction
+      when /^sub_/
+        ::Stripe::Subscription.retrieve(transaction, stripe_request_opts)
+      when /^in_/
+        ::Stripe::Invoice.retrieve(transaction, stripe_request_opts)
       end
+    rescue ::Stripe::InvalidRequestError => e
+      e.message
     end
 
     def metadata_user

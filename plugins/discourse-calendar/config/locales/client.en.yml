@@ -327,6 +327,7 @@ en:
       search: "Search..."
       group_availability: "%{group} availability"
     discourse_post_event:
+      new_event: "New Event"
       notifications:
         before_event_reminder: "An event is about to start"
         after_event_reminder: "An event has ended"
@@ -405,10 +406,13 @@ en:
       models:
         invitee:
           no_users: "No users found"
+          this_event: "This event"
+          this_and_following: "This event and all following events"
+          leave_event: "Leave event"
           status:
             unknown: "Not interested"
             going: "Going"
-            not_going: "Not Going"
+            not_going: "Not going"
             interested: "Interested"
             going_count:
               one: "%{count} going"
@@ -516,6 +520,8 @@ en:
         status:
           label: "Status"
         delete_confirmation_message: "Delete this event?"
+        image:
+          label: "Event image"
       invite_user_or_group:
         title: "Notify user(s) or group(s)"
         invite: "Send"

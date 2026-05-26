@@ -55,13 +55,6 @@ module PageObjects
 
       def scroll_to_bottom
         page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-        wait_for_loading
-        self
-      end
-
-      def wait_for_loading
-        has_selector?(".chat-search-loading .spinner")
-        has_no_selector?(".chat-search-loading .spinner")
         self
       end
 

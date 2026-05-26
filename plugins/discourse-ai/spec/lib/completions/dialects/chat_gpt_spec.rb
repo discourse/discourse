@@ -95,6 +95,69 @@ RSpec.describe DiscourseAi::Completions::Dialects::ChatGpt do
       expect(translated.last[:role]).to eq("user")
       expect(translated.last[:content].length).to be < (8000 * 4)
     end
+    it "renders converted document uploads as text content parts" do
+      llm_model.update!(allowed_attachment_types: ["docx"])
+      converted_text = "Uploaded document: sample.docx (13 Bytes)\n\nConverted text"
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Read this: ", { upload_id: 123 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [
+          {
+            kind: :document,
+            filename: "sample.docx",
+            mime_type: "text/plain",
+            text: converted_text,
+            converted_from: "docx",
+          },
+        ],
+      )
+
+      translated = described_class.new(prompt, llm_model).translate
+      user_message = translated.find { |msg| msg[:role] == "user" }
+
+      expect(user_message[:content]).to eq(
+        [{ type: "text", text: "Read this: " }, { type: "text", text: converted_text }],
+      )
+      expect(user_message[:content]).not_to include(hash_including(type: "file"))
+    end
+
+    it "trims converted document text before building the provider payload" do
+      llm_model.update!(allowed_attachment_types: ["docx"], max_prompt_tokens: 2700)
+      converted_text = "Uploaded document: sample.docx (13 Bytes)\n\n#{"document text " * 1000}"
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [{ type: :user, content: ["Read this: ", { upload_id: 123 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [
+          {
+            kind: :document,
+            filename: "sample.docx",
+            mime_type: "text/plain",
+            text: converted_text,
+            converted_from: "docx",
+          },
+        ],
+      )
+
+      dialect = described_class.new(prompt, llm_model)
+      translated = dialect.translate
+      translated_text =
+        translated.sum do |message|
+          content = message[:content]
+          text = content.is_a?(Array) ? content.pluck(:text).compact.join : content.to_s
+          llm_model.tokenizer_class.size(text)
+        end
+
+      expect(translated_text).to be <= dialect.max_prompt_tokens
+      expect(translated.last[:content].last[:text].length).to be < converted_text.length
+    end
   end
 
   describe "#tools" do

@@ -15,6 +15,8 @@ describe "Admin Dashboard General Tab" do
     it "displays correct visit counters combining desktop and mobile visits" do
       visit("/admin")
 
+      screenshot_marker(label: "admin-dashboard")
+
       within ".admin-report.visits .admin-report-counters" do
         expect(page).to have_css(".today-count", text: "2")
         expect(page).to have_css(".yesterday-count", text: "1")

@@ -6,6 +6,10 @@
 
 sk:
   accepted_answer: "Prijatá odpoveď"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Umožniť vlastníkovi témy a zamestnancom označiť odpoveď ako riešenie"
   site_settings:
     solved_enabled: "Povolenie doplnku riešenia, umožnenie používateľom vybrať riešenia pre témy"
     allow_solved_on_all_topics: "Umožniť používateľom vybrať riešenia pre všetky témy (ak nie je začiarknuté, riešenia môžu byť povolené pre jednotlivé kategórie alebo značky)"

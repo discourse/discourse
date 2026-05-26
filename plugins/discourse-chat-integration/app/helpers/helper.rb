@@ -20,7 +20,7 @@ module DiscourseChatIntegration
         if category_name
           category = Category.find_by(slug: category_name)
           unless category
-            cat_list = (CategoryList.new(guardian).categories.map(&:slug)).join(", ")
+            cat_list = CategoryList.new(guardian).categories.map(&:slug).join(", ")
             return(
               I18n.t(
                 "chat_integration.provider.#{provider}.not_found.category",
@@ -124,7 +124,7 @@ module DiscourseChatIntegration
           category: category_name,
         )
 
-        if SiteSetting.tagging_enabled && (!rule.tags.nil?)
+        if SiteSetting.tagging_enabled && !rule.tags.nil?
           text << I18n.t(
             "chat_integration.provider.#{provider}.status.rule_string_tags_suffix",
             tags: rule.tags.join(", "),
@@ -144,7 +144,7 @@ module DiscourseChatIntegration
     # status_for_channel function
     def self.delete_by_index(channel, index)
       rules = channel.rules.order_by_precedence
-      return false if index < (1) || index > (rules.size)
+      return false if index < 1 || index > rules.size
       :deleted if rules[index - 1].destroy
     end
 

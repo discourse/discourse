@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { isPostFromAiBot } from "../../lib/ai-bot-helper";
 import copyConversation from "../../lib/copy-conversation";
 import ShareModal from "../modal/share-modal";

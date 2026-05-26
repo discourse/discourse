@@ -46,23 +46,7 @@ module DiscourseDataExplorer
 
       persisted_count = base_scope.count
 
-      # Default queries are only persisted once run. Build in-memory records
-      # for any that haven't been run yet so they still appear in the list.
-      persisted_default_ids =
-        DiscourseDataExplorer::Query.where(hidden: false).where("id < 0").pluck(:id).to_set
-      unpersisted_defaults =
-        DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
-          next if persisted_default_ids.include?(attributes["id"])
-          if filter.present?
-            name_match = attributes["name"]&.downcase&.include?(filter.downcase)
-            desc_match = attributes["description"]&.downcase&.include?(filter.downcase)
-            next unless name_match || desc_match
-          end
-          query =
-            DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
-          query.user_id = Discourse::SYSTEM_USER_ID.to_s
-          query
-        end
+      unpersisted_defaults = DiscourseDataExplorer::Query.unpersisted_defaults(search: filter)
 
       total_rows = persisted_count + unpersisted_defaults.size
 
@@ -162,22 +146,41 @@ module DiscourseDataExplorer
     end
 
     def create
-      permitted = %i[name description sql]
-      permitted << :ai_description if AiQueryEnqueuer.enabled?
-
-      query_params = params.require(:query).permit(*permitted)
-      ai_description = query_params.delete(:ai_description)&.strip
+      query_params = params.require(:query).permit(:name, :description, :sql)
       group_ids = params.require(:query)[:group_ids]
 
       query =
-        QueryCreator.create(
-          query_params: query_params,
-          ai_description: ai_description,
-          group_ids: group_ids,
-          user: current_user,
-        )
+        QueryCreator.create(query_params: query_params, group_ids: group_ids, user: current_user)
 
       render_serialized query, QueryDetailsSerializer, root: "query"
+    end
+
+    def generate_with_ai
+      raise Discourse::NotFound unless AiQueryEnqueuer.enabled?
+      RateLimiter.new(
+        current_user,
+        "data-explorer-ai-generate",
+        10,
+        1.minute,
+        apply_limit_to_staff: true,
+      ).performed!
+
+      ai_description = params.require(:ai_description).strip
+      if ai_description.length > 2000
+        raise Discourse::InvalidParameters.new("ai_description is too long (max 2000 characters)")
+      end
+
+      generation_id = SecureRandom.hex
+      existing_sql = params[:existing_sql]&.strip.presence
+
+      AiQueryEnqueuer.enqueue(
+        generation_id: generation_id,
+        user: current_user,
+        ai_description: ai_description,
+        existing_sql: existing_sql,
+      )
+
+      render json: { generation_id: generation_id, status: "generating" }
     end
 
     def update

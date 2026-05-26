@@ -41,7 +41,7 @@ module DiscourseNarrativeBot
           Proc.new do
             I18n.t(
               "#{I18N_KEY}.mention.instructions",
-              discobot_username: self.discobot_username,
+              discobot_username: discobot_username,
               base_uri: Discourse.base_path,
             )
           end,
@@ -178,7 +178,7 @@ module DiscourseNarrativeBot
       MD
 
       PostRevisor.new(post, topic).revise!(
-        self.discobot_user,
+        discobot_user,
         { raw: raw },
         skip_validations: true,
         force_new_version: true,
@@ -234,7 +234,7 @@ module DiscourseNarrativeBot
 
     def missing_bookmark
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == self.discobot_user.id
+      return if @post.user_id == discobot_user.id
 
       fake_delay
       enqueue_timeout_job(@user)
@@ -246,7 +246,7 @@ module DiscourseNarrativeBot
 
     def reply_to_bookmark
       return unless valid_topic?(@post.topic_id)
-      return unless @post.user_id == self.discobot_user.id
+      return unless @post.user_id == discobot_user.id
 
       profile_page_url = url_helpers(:user_url, username: @user.username)
       bookmark_url = "#{profile_page_url}/activity/bookmarks"
@@ -389,7 +389,7 @@ module DiscourseNarrativeBot
 
     def missing_likes_like
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == self.discobot_user.id
+      return if @post.user_id == discobot_user.id
 
       fake_delay
       enqueue_timeout_job(@user)
@@ -536,7 +536,7 @@ module DiscourseNarrativeBot
             @post,
             I18n.t(
               "#{I18N_KEY}.mention.not_found",
-              i18n_post_args(username: @user.username, discobot_username: self.discobot_username),
+              i18n_post_args(username: @user.username, discobot_username: discobot_username),
             ),
           )
         end
@@ -556,7 +556,7 @@ module DiscourseNarrativeBot
           .where(user_id: @user.id)
           .where(
             "post_action_type_id IN (?)",
-            (PostActionType.flag_types.values - [PostActionType.types[:inappropriate]]),
+            PostActionType.flag_types.values - [PostActionType.types[:inappropriate]],
           )
           .destroy_all
       end
@@ -618,7 +618,7 @@ module DiscourseNarrativeBot
             username: @user.username,
             base_url: Discourse.base_url,
             certificate: certificate,
-            discobot_username: self.discobot_username,
+            discobot_username: discobot_username,
             advanced_trigger: AdvancedUserNarrative.reset_trigger,
           ),
         ),
@@ -627,7 +627,7 @@ module DiscourseNarrativeBot
     end
 
     def like_post(post)
-      PostActionCreator.like(self.discobot_user, post)
+      PostActionCreator.like(discobot_user, post)
     end
 
     def welcome_topic

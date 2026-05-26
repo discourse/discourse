@@ -252,12 +252,6 @@
   }
 }
 
-.topic-bulk-actions-modal {
-  &__selection-info {
-    margin-bottom: 0.5em;
-  }
-}
-
 .d-modal.edit-slow-mode-modal {
   .slow-mode-label {
     display: inline-flex;
@@ -290,6 +284,7 @@
   .d-modal {
     &__title {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 0.5rem;
     }
@@ -604,6 +599,14 @@
   .d-modal.change-ownership-modal {
     .d-modal__body {
       flex: 1;
+    }
+  }
+}
+
+.d-modal.admin-user-upcoming-changes-modal {
+  .d-modal {
+    &__container {
+      max-width: calc(var(--modal-max-width) * 2);
     }
   }
 }

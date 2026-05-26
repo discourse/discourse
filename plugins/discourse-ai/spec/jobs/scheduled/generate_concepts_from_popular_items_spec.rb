@@ -205,6 +205,7 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
     end
 
     it "handles nil site setting values gracefully" do
+      Discourse.expects(:deprecate).times(6)
       SiteSetting.inferred_concepts_daily_topics_limit = nil
       SiteSetting.inferred_concepts_daily_posts_limit = nil
       SiteSetting.inferred_concepts_min_posts = nil

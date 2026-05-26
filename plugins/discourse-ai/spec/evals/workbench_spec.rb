@@ -305,4 +305,18 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       expect(result[:message]).to include("LLM Rating below threshold")
     end
   end
+
+  describe "#judge_input" do
+    it "forwards `name` and `description` from metadata so the judge sees them" do
+      input =
+        workbench.send(:judge_input, "SELECT 1", { name: "My Query", description: "Counts users" })
+
+      expect(input).to eq(result: "SELECT 1", name: "My Query", description: "Counts users")
+    end
+
+    it "returns the raw result when there is no metadata" do
+      expect(workbench.send(:judge_input, "SELECT 1", nil)).to eq("SELECT 1")
+      expect(workbench.send(:judge_input, "SELECT 1", {})).to eq("SELECT 1")
+    end
+  end
 end

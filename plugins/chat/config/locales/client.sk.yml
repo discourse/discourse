@@ -293,7 +293,6 @@ sk:
       retry_staged_message:
         title: "Chyba siete"
         action: "Odoslať znova?"
-      unreliable_network: "Sieť je nespoľahlivá, odosielanie správ a ukladanie konceptu nemusí fungovať"
       bookmark_message: "Záložka"
       bookmark_message_edit: "Upraviť záložku"
       restore: "Obnoviť odstránenú správu"

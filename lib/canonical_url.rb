@@ -5,12 +5,14 @@ module CanonicalURL
     ALLOWED_CANONICAL_PARAMS = %w[page]
 
     def canonical_url(url_for_options = {})
-      case url_for_options
-      when Hash
-        @canonical_url = url_for(url_for_options)
-      else
-        @canonical_url = url_for_options
-      end
+      url =
+        case url_for_options
+        when Hash
+          url_for(url_for_options)
+        else
+          url_for_options
+        end
+      @canonical_url = append_content_localization_param(url)
     end
 
     def default_canonical
@@ -21,12 +23,30 @@ module CanonicalURL
           if allowed_params.present?
             canonical << "?#{allowed_params.keys.zip(allowed_params.values).map { |key, value| "#{key}=#{value}" }.join("&")}"
           end
-          canonical
+          append_content_localization_param(canonical)
         end
     end
 
     def self.included(base)
       base.helper_method :default_canonical
+    end
+
+    private
+
+    def append_content_localization_param(url)
+      return url unless SiteSetting.content_localization_enabled
+      return url unless SiteSetting.content_localization_crawler_param
+      return url unless use_crawler_layout?
+
+      locale = params[Discourse::LOCALE_PARAM]
+      return url if locale.blank?
+
+      supported = SiteSetting.content_localization_supported_locales.to_s.split("|")
+      return url if supported.exclude?(locale)
+
+      uri = Addressable::URI.parse(url)
+      uri.query_values = (uri.query_values || {}).merge(Discourse::LOCALE_PARAM => locale)
+      uri.to_s
     end
   end
 

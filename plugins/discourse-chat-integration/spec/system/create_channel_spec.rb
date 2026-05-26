@@ -14,15 +14,17 @@ RSpec.describe "Create channel" do
   before do
     SiteSetting.chat_integration_enabled = true
     SiteSetting.chat_integration_discord_enabled = true
+    SiteSetting.dummy_provider_enabled = true
     sign_in(admin)
   end
 
   it "creates and displays a new channel" do
     visit("/admin/plugins/discourse-chat-integration/providers/discord")
 
+    expect(page).to have_css("#site-logo")
     expect(page).to have_no_css(".channel-details")
 
-    find("#create-channel").click if page.has_css?("#create-channel", wait: 0)
+    find("#create-channel").click
 
     expect(page).to have_css(".inline-channel-form")
 

@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse 数据资源管理器"
   js:
     discourse_ai:
       features:
         data_explorer:
           name: "数据资源管理器"
+          description: "数据资源管理器的 AI 赋能查询生成"
+          query_generation: "查询生成"
     errors:
       explorer:
         no_semicolons: "从查询中移除分号。"
@@ -19,6 +26,8 @@ zh_CN:
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
       queries: "查询"
       query_created: "查询已创建！"
+      mode:
+        ai: "使用 AI 生成"
       or: "或者"
       admins_only: "数据资源管理器仅供管理员使用。"
       allow_groups: "允许群组访问此查询"
@@ -27,7 +36,18 @@ zh_CN:
       create_placeholder: "查询名称…"
       description_placeholder: "在此处输入描述"
       ai:
+        description_title: "使用 AI 生成"
+        description_hint: "请用简洁明了的语言描述您的需求。我们将为您生成 SQL 代码、名称和描述。"
+        description_placeholder: "例如，显示不同时间段的注册情况"
         generate: "生成"
+        regenerate: "重新生成"
+        generating: "正在使用 AI 生成查询…"
+        generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
+        generation_error: "生成查询时出错。"
+        save_query: "保存查询"
+        write_manually: "手动编写 SQL"
+        sql_label: "SQL"
+        optional: "可选"
       import:
         label: "导入"
         unparseable_json: "无法解析的 JSON 文件。"
@@ -48,22 +68,17 @@ zh_CN:
           yes: "是"
           no: "否"
           null_: "空"
-      export: "导出"
       view_json: "查看 JSON"
-      view: "查看"
       save: "保存更改"
       saverun: "保存更改并运行"
       run: "运行"
       undo: "舍弃更改"
-      edit: "编辑"
       delete: "删除"
       recover: "取消删除查询"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "表"
-      show_graph: "图表"
+      sql_label: "SQL"
       others_dirty: "查询具有未保存的更改，如果您离开，这些更改将丢失。"
       run_time: "查询在 %{value} 毫秒内完成。"
+      cached_result_notice: "正在显示自 %{relative_time} 起的缓存结果。"
       result_count:
         other: "%{count} 个结果。"
       max_result_count:
@@ -76,7 +91,6 @@ zh_CN:
       query_time: "最后一次运行"
       query_user: "创建者"
       column: "第 %{number} 列"
-      explain_label: "包括查询计划？"
       save_params: "设置默认值"
       reset_params: "重置"
       search_placeholder: "搜索…"

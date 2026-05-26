@@ -10,10 +10,7 @@ describe "Welcome banner" do
       Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
     end
 
-    after do
-      TranslationOverride.delete_all
-      I18n.reload!
-    end
+    after { I18n.reload! }
 
     it "shows for logged in and anonymous users" do
       visit "/"
@@ -273,7 +270,7 @@ describe "Welcome banner" do
         visit "/filter?q=tag%3Ain-progress"
         expect(banner).to be_visible
 
-        visit "/upcoming-events?view=month"
+        visit "/about"
         expect(banner).to be_hidden
       end
 
@@ -288,7 +285,7 @@ describe "Welcome banner" do
             expect(banner).to be_visible
           end
 
-        visit "/my/posts"
+        visit "/about"
         expect(banner).to be_hidden
       end
 
