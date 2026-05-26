@@ -150,6 +150,7 @@
 
   .composer-event__reminder {
     grid-template-columns: 3em auto auto 1fr;
+    justify-items: start;
 
     .composer-event__reminder-icon .d-icon {
       color: var(--primary-high);
@@ -189,6 +190,12 @@
     &:not(.composer-event__date-range--has-time) {
       grid-template-columns: auto auto;
 
+      @include viewport.until(sm) {
+        .composer-event__date-arrow {
+          display: none;
+        }
+      }
+
       @include viewport.from(sm) {
         grid-template-columns: auto auto 1fr;
       }
@@ -213,7 +220,11 @@
 
     @include viewport.until(sm) {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 1fr auto 1fr;
+
+      .composer-event__time-input {
+        max-width: unset;
+      }
 
       .composer-event__date-arrow {
         margin: 0 auto;
@@ -285,9 +296,10 @@
   }
 }
 
-.composer-event__date-input {
+.composer-event__date-wrapper .composer-event__date-input {
   padding: var(--space-half) var(--space-1);
   height: 2.25rem;
+  min-height: 2.5em; // avoids shift on focus in Chrome
   cursor: pointer;
   color: transparent !important;
   text-overflow: ellipsis;
@@ -297,13 +309,14 @@
   width: 100%;
 
   @include viewport.from(sm) {
-    min-width: 150px; // avoids shift on focus in webkit
+    min-width: 10em; // avoids shift on focus in webkit
     width: 9rem;
   }
 
   &:focus {
+    color: inherit !important;
+
     @include viewport.from(sm) {
-      color: inherit !important;
       width: auto;
     }
   }
@@ -313,6 +326,8 @@ input.composer-event__time-input[type="time"] {
   padding-block: var(--space-2);
   cursor: pointer;
   flex: 1 1 auto;
+  align-self: stretch;
+  min-height: 2.5em;
 
   @include viewport.from(sm) {
     width: 6rem;
@@ -343,10 +358,8 @@ input.composer-event__time-input[type="time"] {
   width: 100%;
 }
 
-@include viewport.from(sm) {
-  .composer-event__date-input:focus + .composer-event__date-display {
-    display: none;
-  }
+.composer-event__date-input:focus + .composer-event__date-display {
+  display: none;
 }
 
 .composer-event__location-input {
