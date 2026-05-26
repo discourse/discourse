@@ -46,7 +46,7 @@ acceptance("Create event composer action", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        /^\[event start="[^"]+" status="public" timezone="[^"]+"\]\n\[\/event\]$/,
+        /^\[event start="[^"]+" end="[^"]+" status="public" timezone="[^"]+" reminders="[^"]+"\]\n\[\/event\]$/,
         "event bbcode skeleton is inserted"
       );
     assert

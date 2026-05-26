@@ -22,7 +22,7 @@ describe "Composer - Create event action" do
     visit("/new-topic?category_id=#{events_category.id}")
 
     expect(composer).to have_value(
-      %r{\A\[event start="[^"]+" status="public" timezone="[^"]+"\]\n\[/event\]\z},
+      %r{\A\[event start="[^"]+" end="[^"]+" status="public" timezone="[^"]+" reminders="[^"]+"\]\n\[/event\]\z},
     )
     expect(composer.button_label.text).to eq(
       I18n.t("js.discourse_post_event.composer.create_event_button"),
