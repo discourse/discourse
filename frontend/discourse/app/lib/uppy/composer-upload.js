@@ -312,6 +312,10 @@ export default class UppyComposerUpload {
             (progress.bytesUploaded / progress.bytesTotal) * 100
           );
           upload.set("progress", percentage);
+          this.appEvents.trigger(
+            `composer:upload-progress:${file.id}`,
+            percentage
+          );
         }
       });
     });

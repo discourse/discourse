@@ -26,7 +26,7 @@ end
 
 def setup_redis
   log "Starting background redis"
-  data_directory = "#{Rails.root}/tmp/test_data/redis"
+  data_directory = "#{Rails.root.join("tmp/test_data/redis")}"
   `rm -rf #{data_directory} && mkdir -p #{data_directory}`
   Process.spawn("redis-server --dir #{data_directory}")
 end

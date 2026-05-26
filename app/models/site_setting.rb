@@ -87,36 +87,24 @@ class SiteSetting < ActiveRecord::Base
 
   after_save do
     if saved_change_to_value?
-      if self.data_type == SiteSettings::TypeSupervisor.types[:upload]
-        UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
-        upload_ids = self.value.split("|").compact.uniq
+      if data_type == SiteSettings::TypeSupervisor.types[:upload]
+        UploadReference.ensure_exist!(upload_ids: [value], target: self)
+      elsif data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
+        upload_ids = value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
-        upload_values =
-          SchemaSettingsObjectValidator.property_values_of_type(
-            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
-            objects: JSON.parse(self.value),
-            type: "upload",
+      elsif data_type == SiteSettings::TypeSupervisor.types[:objects] && value.present?
+        upload_ids =
+          SchemaSettingsObjectValidator.upload_ids(
+            schema: SiteSetting.type_supervisor.type_hash(name.to_sym)[:schema],
+            objects: JSON.parse(value),
           )
 
-        # Convert URLs to upload IDs (values can be either integer IDs or URL strings)
-        upload_ids =
-          upload_values.filter_map do |value|
-            if value.is_a?(Integer)
-              value
-            elsif value.is_a?(String) && value.present?
-              ::Upload.get_from_url(value)&.id
-            end
-          end
-
-        # Always call ensure_exist! to clean up old references when uploads are removed
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end
   end
 
-  load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+  load_settings(Rails.root.join("config/site_settings.yml").to_s)
 
   if Rails.env.test?
     SAMPLE_TEST_PLUGIN =
@@ -127,7 +115,7 @@ class SiteSetting < ActiveRecord::Base
     Discourse.plugins_by_name[SAMPLE_TEST_PLUGIN.name] = SAMPLE_TEST_PLUGIN
 
     load_settings(
-      File.join(Rails.root, "spec", "support", "sample_plugin_site_settings.yml"),
+      Rails.root.join("spec/support/sample_plugin_site_settings.yml").to_s,
       plugin: SAMPLE_TEST_PLUGIN.name,
     )
   end
@@ -136,7 +124,7 @@ class SiteSetting < ActiveRecord::Base
     allowed_plugins = GlobalSetting.plugins_to_load
     plugin_allowed = ->(name) { allowed_plugins.nil? || allowed_plugins.include?(name) }
 
-    Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
+    Dir[Rails.root.join("plugins/*/config/settings.yml").to_s].each do |file|
       plugin_name = file.split("/")[-3]
       load_settings(file, plugin: plugin_name) if plugin_allowed.call(plugin_name)
     end
@@ -144,7 +132,7 @@ class SiteSetting < ActiveRecord::Base
     # Sometimes plugins need to define their own fake site settings for testing
     if Rails.env.test?
       Dir[
-        File.join(Rails.root, "plugins", "*", "spec", "support", "dummy_plugin_site_settings.yml")
+        Rails.root.join("plugins/*/spec/support/dummy_plugin_site_settings.yml").to_s
       ].each do |file|
         plugin_name = file.split("/")[-4]
         load_settings(file, plugin: plugin_name) if plugin_allowed.call(plugin_name)
@@ -328,8 +316,8 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.s3_base_url
-      path = self.s3_upload_bucket.split("/", 2)[1]
-      "#{self.absolute_base_url}#{path ? "/" + path : ""}"
+      path = s3_upload_bucket.split("/", 2)[1]
+      "#{absolute_base_url}#{path ? "/" + path : ""}"
     end
 
     def self.absolute_base_url
@@ -396,7 +384,7 @@ class SiteSetting < ActiveRecord::Base
         return SiteIconManager.public_send("#{setting_name}_url")
       end
 
-      upload = self.public_send(setting_name)
+      upload = public_send(setting_name)
       upload ? full_cdn_url(upload.url) : ""
     end
   end

@@ -2558,6 +2558,14 @@ RSpec.describe Guardian do
       expect(admin_guardian.can_export_entity?("report", nil, { name: "top_uploads" })).to be_truthy
     end
 
+    it "allows moderators to export suspicious login reports when IP viewing is disabled" do
+      SiteSetting.moderators_view_ips = false
+
+      expect(
+        moderator_guardian.can_export_entity?("report", nil, { name: "suspicious_logins" }),
+      ).to be_truthy
+    end
+
     it "does not allow anonymous to export" do
       expect(anonymous_guardian.can_export_entity?("user_archive")).to be_falsey
     end

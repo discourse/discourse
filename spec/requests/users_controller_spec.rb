@@ -797,6 +797,16 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(user.id)
     end
+
+    it "does not replay queued anonymous actions on toggle" do
+      SiteSetting.allow_anonymous_mode = true
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+
+      AnonymousAction.expects(:consume).never
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#create" do
@@ -5201,7 +5211,7 @@ RSpec.describe UsersController do
     end
 
     describe "auth token IP visibility" do
-      before { DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb")) }
+      before { DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
 
       let!(:token) do
         UserAuthToken.generate!(

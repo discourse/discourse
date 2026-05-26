@@ -702,6 +702,29 @@ ro:
       xaxis: "Zi"
     new_contributors:
       xaxis: "Zi"
+    activity_by_category:
+      labels:
+        category: "Categorie"
+        topics: "Discuții"
+        posts: "Articole"
+        share: "Partajează"
+    posters_by_member_type:
+      labels:
+        count: "Articole"
+        share: "Partajează"
+      types:
+        staff: "Echipa"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membri"
+        share: "Partajează"
+      levels:
+        "0": "Nou"
+        "1": "De bază"
+        "2": "Membru"
+        "3": "Utilizator frecvent"
+        "4": "Lider"
     trust_level_growth:
       yaxis: "Zi"
     consolidated_page_views:
@@ -728,8 +751,8 @@ ro:
     site_traffic:
       title: "Trafic site"
       xaxis:
-        page_view_anon_browser: "Afișări de pagină (anonim)"
-        page_view_logged_in_browser: "Afișări de pagină (conectat)"
+        page_view_anon_browser: "Anonimi"
+        page_view_crawler: "Crawlere"
         page_view_other: "Alt trafic"
       yaxis: "Zi"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
@@ -815,6 +838,12 @@ ro:
         user: "Utilizator"
         num_clicks: "Click-uri"
         num_topics: "Discuții"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizite"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizite"
     top_traffic_sources:
       title: "Top surse de trafic"
       xaxis: "Domeniu"
@@ -957,6 +986,9 @@ ro:
       admin_sidebar_deprecation: "Vechiul aspect de administrare este depreciat în favoarea noului <a href='https://meta.discourse.org/t/-/289281'>aspect cu bară laterală</a> și va fi eliminat în următoarea versiune. Poți <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configura</a> acum noul aspect cu bară laterală pentru a-l alege înainte de această schimbare."
       starttls_disabled: "Configurația emailurilor de ieșire are STARTTLS dezactivat. Acest lucru nu este aproape niciodată necesar. Ia în considerare eliminarea <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> din mediul tău. Te rog să consulți <a href='https://meta.discourse.org/t/387286'>acest subiect</a> pentru mai multe detalii."
     back_from_logster_text: "Înapoi la site"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
@@ -1020,7 +1052,6 @@ ro:
     moderators_manage_categories: "Permite moderatorilor să creeze și să gestioneze categorii"
     moderators_manage_groups: "Permite moderatorilor să creeze și să gestioneze grupuri"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
-    use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL sursă pentru iframe pe care Discourse le poate permite în siguranță în postări. * poate fi folosit pentru a potrivi orice număr de caractere diferite de /."
     post_menu: "Configurează vizibilitatea și ordinea elementelor implicite din meniul articolului. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
     post_menu_hidden_items: "Elementele de meniu care se ascund în mod implicit în meniul articolului, cu excepția cazului în care se face clic pe o elipsă de expansiune. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
@@ -1221,7 +1252,6 @@ ro:
     allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
-    enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivează pentru a folosi o foiae de stil personalizată ce este total responsivă."
     dominating_topic_minimum_percent: "Ce procent din postările unui subiect trebuie să scrie un utilizator înainte de i se aminti că domină excesiv subiectul."
     suppress_uncategorized_badge: "Nu arăta ecusonul pentru subiectele fără categorie în lista de subiecte."
     permalink_normalizations: "Aplică următorul regex înainte de a detecta permalink-urile, de exemplu: /(topic.*)\\?.*/\\1 va elimina șirurile de interogare din căile subiectelor. Formatul este regex+șir folosește \\1 etc.pentru a capturarea secvențelor"
@@ -1302,7 +1332,6 @@ ro:
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
-    viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
     content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"

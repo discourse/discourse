@@ -152,7 +152,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def destroy
     OptimizedImage.transaction do
-      Discourse.store.remove_optimized_image(self) if self.upload
+      Discourse.store.remove_optimized_image(self) if upload
       super
     end
   end
@@ -254,7 +254,7 @@ class OptimizedImage < ActiveRecord::Base
         -interlace
         none
         -profile
-        #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+        #{Rails.root.join("vendor/data/RT_sRGB.icm")}
         #{to}
       ],
     )
@@ -283,7 +283,7 @@ class OptimizedImage < ActiveRecord::Base
       -interlace
       none
       -profile
-      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
     }
 
     instructions << "-quality" << opts[:quality].to_s if opts[:quality]
@@ -310,7 +310,7 @@ class OptimizedImage < ActiveRecord::Base
       -resize
       #{dimensions}
       -profile
-      #{File.join(Rails.root, "vendor", "data", "RT_sRGB.icm")}
+      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
       #{to}
     }
   end
@@ -330,7 +330,7 @@ class OptimizedImage < ActiveRecord::Base
   def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
 
-    instructions = self.public_send(method_name.to_sym, from, to, dimensions, opts)
+    instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
     convert_with(instructions, to, opts)
   end
 

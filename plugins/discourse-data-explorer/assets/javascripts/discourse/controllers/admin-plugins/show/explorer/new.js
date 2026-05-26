@@ -4,12 +4,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-
-const AI_GENERATION_CHANNEL_PREFIX =
-  "/discourse-data-explorer/queries/ai-generation";
-const AI_GENERATION_TIMEOUT_MS = 60000;
+import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 
 export default class AdminPluginsExplorerNew extends Controller {
   @service store;
@@ -27,12 +23,10 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = "ai";
   @tracked schema = null;
-  @tracked hideSchema = false;
   @tracked manualSql = "SELECT 1";
 
-  currentGenerationId = null;
   manualFormData = { name: "", description: "" };
-  _aiGenerationTimer = null;
+  _teardownAiGeneration = null;
 
   get aiQueriesEnabled() {
     return this.siteSettings.data_explorer_ai_queries_enabled;
@@ -49,11 +43,6 @@ export default class AdminPluginsExplorerNew extends Controller {
   @action
   setMode(value) {
     this.mode = value;
-  }
-
-  @action
-  updateHideSchema(value) {
-    this.hideSchema = value;
   }
 
   @action
@@ -92,7 +81,7 @@ export default class AdminPluginsExplorerNew extends Controller {
       return;
     }
 
-    this._teardownMessageBus();
+    this._teardownAi();
     this.aiGenerating = true;
 
     try {
@@ -107,8 +96,31 @@ export default class AdminPluginsExplorerNew extends Controller {
         }
       );
 
-      this.currentGenerationId = response.generation_id;
-      this._subscribeToGeneration(this.currentGenerationId);
+      this._teardownAiGeneration = subscribeToAiGeneration({
+        messageBus: this.messageBus,
+        generationId: response.generation_id,
+        onComplete: (data) => {
+          this.generatedSql = data.sql;
+          this.generatedName = data.name;
+          this.generatedDescription = data.description;
+          this.hasGenerated = true;
+          this.aiGenerating = false;
+        },
+        onError: (data) => {
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: {
+              message: data.error || i18n("explorer.ai.generation_error"),
+            },
+          });
+        },
+        onTimeout: () => {
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: { message: i18n("explorer.ai.generation_timeout") },
+          });
+        },
+      });
     } catch (error) {
       this.aiGenerating = false;
       popupAjaxError(error);
@@ -160,57 +172,13 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = event.target.value;
   }
 
-  _subscribeToGeneration(generationId) {
-    const channel = `${AI_GENERATION_CHANNEL_PREFIX}/${generationId}`;
-    this.messageBus.subscribe(channel, this._onAiGenerationMessage, -1);
-
-    this._aiGenerationTimer = setTimeout(() => {
-      this._teardownMessageBus();
-      this.aiGenerating = false;
-      this.toasts.error({
-        data: { message: i18n("explorer.ai.generation_timeout") },
-      });
-    }, AI_GENERATION_TIMEOUT_MS);
-  }
-
-  @bind
-  _onAiGenerationMessage(data) {
-    if (data.generation_id !== this.currentGenerationId) {
-      return;
-    }
-
-    if (data.status === "complete") {
-      this.generatedSql = data.sql;
-      this.generatedName = data.name;
-      this.generatedDescription = data.description;
-      this.hasGenerated = true;
-      this.aiGenerating = false;
-      this._teardownMessageBus();
-    } else if (data.status === "error") {
-      this.aiGenerating = false;
-      this._teardownMessageBus();
-      this.toasts.error({
-        data: {
-          message: data.error || i18n("explorer.ai.generation_error"),
-        },
-      });
-    }
-  }
-
-  _teardownMessageBus() {
-    if (this.currentGenerationId) {
-      const channel = `${AI_GENERATION_CHANNEL_PREFIX}/${this.currentGenerationId}`;
-      this.messageBus.unsubscribe(channel, this._onAiGenerationMessage);
-    }
-    if (this._aiGenerationTimer) {
-      clearTimeout(this._aiGenerationTimer);
-      this._aiGenerationTimer = null;
-    }
+  _teardownAi() {
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
   }
 
   resetState() {
-    this._teardownMessageBus();
-    this.currentGenerationId = null;
+    this._teardownAi();
     this.aiGenerating = false;
     this.hasGenerated = false;
     this.aiDescription = "";
@@ -219,7 +187,6 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = "";
     this.mode = "ai";
     this.schema = null;
-    this.hideSchema = false;
     this.manualSql = "SELECT 1";
     this.loading = false;
     this.manualFormData = { name: "", description: "" };

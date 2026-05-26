@@ -38,10 +38,14 @@ class Report
 
   ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
+  BROWSER_PAGEVIEW_REPORTS = %w[
+    top_countries_by_browser_pageviews
+    top_referrers_by_browser_pageviews
+  ]
 
   def self.hidden?(type, guardian:)
     return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
-    return true if !guardian.is_admin? && !guardian.can_see_ip? && IP_ADDRESS_REPORTS.include?(type)
+    return true if BROWSER_PAGEVIEW_REPORTS.include?(type)
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
@@ -109,9 +113,11 @@ class Report
   include Reports::SuspiciousLogins
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
+  include Reports::TopCountriesByBrowserPageviews
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
+  include Reports::TopReferrersByBrowserPageviews
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
@@ -122,6 +128,9 @@ class Report
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
+  include Reports::TrustLevelPipeline
+  include Reports::PostersByMemberType
+  include Reports::ActivityByCategory
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
@@ -156,7 +165,8 @@ class Report
                 :legacy,
                 :default_group_by,
                 :y_axis_title,
-                :current_user
+                :current_user,
+                :guardian
 
   def self.default_days
     30
@@ -189,6 +199,8 @@ class Report
   end
 
   def self.cache_key(report)
+    guardian = report.guardian || report.current_user&.guardian
+
     [
       "reports",
       report.type,
@@ -198,7 +210,8 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
-      report.current_user&.id,
+      guardian&.user&.id || report.current_user&.id,
+      guardian&.can_see_ip?,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -242,11 +255,11 @@ class Report
   end
 
   def prev_start_date
-    self.start_date - (self.end_date - self.start_date)
+    start_date - (end_date - start_date)
   end
 
   def prev_end_date
-    self.start_date
+    start_date
   end
 
   def as_json(options = nil)
@@ -263,30 +276,30 @@ class Report
       data: data,
       start_date: start_date&.iso8601,
       end_date: end_date&.iso8601,
-      prev_data: self.prev_data,
+      prev_data: prev_data,
       prev_start_date: prev_start_date&.iso8601,
       prev_end_date: prev_end_date&.iso8601,
-      prev30Days: self.prev30Days,
-      dates_filtering: self.dates_filtering,
+      prev30Days: prev30Days,
+      dates_filtering: dates_filtering,
       report_key: Report.cache_key(self),
-      primary_color: self.primary_color,
-      secondary_color: self.secondary_color,
-      available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
+      primary_color: primary_color,
+      secondary_color: secondary_color,
+      available_filters: available_filters.map { |k, v| { id: k }.merge(v) },
       labels: labels || Report.default_labels,
-      average: self.average,
-      percent: self.percent,
-      higher_is_better: self.higher_is_better,
-      modes: self.modes,
+      average: average,
+      percent: percent,
+      higher_is_better: higher_is_better,
+      modes: modes,
     }.tap do |json|
-      json[:legacy] = self.legacy if self.legacy
-      json[:icon] = self.icon if self.icon
-      json[:error] = self.error if self.error
-      json[:total] = self.total if self.total
-      json[:prev_period] = self.prev_period if self.prev_period
-      json[:prev30Days] = self.prev30Days if self.prev30Days
-      json[:limit] = self.limit if self.limit
-      json[:default_group_by] = self.default_group_by if self.default_group_by
-      json[:y_axis_title] = self.y_axis_title if self.y_axis_title
+      json[:legacy] = legacy if legacy
+      json[:icon] = icon if icon
+      json[:error] = error if error
+      json[:total] = total if total
+      json[:prev_period] = prev_period if prev_period
+      json[:prev30Days] = prev30Days if prev30Days
+      json[:limit] = limit if limit
+      json[:default_group_by] = default_group_by if default_group_by
+      json[:y_axis_title] = y_axis_title if y_axis_title
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
@@ -319,7 +332,10 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.guardian = opts[:guardian] if opts[:guardian]
     report.current_user = opts[:current_user] if opts[:current_user]
+    report.current_user ||= report.guardian&.user
+    report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
 
     report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements

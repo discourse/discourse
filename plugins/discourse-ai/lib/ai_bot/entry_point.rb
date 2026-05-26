@@ -148,9 +148,7 @@ module DiscourseAi
           doc.css("details").remove if options && options[:strip_details]
         end
 
-        plugin.register_seedfu_fixtures(
-          Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "ai_bot"),
-        )
+        plugin.register_seedfu_fixtures(Rails.root.join("plugins/discourse-ai/db/fixtures/ai_bot"))
 
         plugin.add_to_serializer(
           :topic_view,

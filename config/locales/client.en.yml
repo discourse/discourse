@@ -409,7 +409,6 @@ en:
         since: "(since %{version})"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
-      toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
@@ -470,8 +469,6 @@ en:
     tos: "Terms of Service"
     rules: "Rules"
     conduct: "Code of Conduct"
-    mobile_view: "Mobile View"
-    desktop_view: "Desktop View"
     now: "just now"
     read_more: "read more"
     more: "More"
@@ -4008,6 +4005,9 @@ en:
         other: "%{count} replies"
       collapse: "Collapse"
       collapse_parent: "Collapse parent thread"
+      focused_path: "Focused reply path"
+      return_to_branch: "Return to %{username}'s branch"
+      all_replies: "All replies"
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
       no_replies: "No replies yet."
@@ -4858,7 +4858,6 @@ en:
         name_placeholder: "What is this bookmark for?"
         name_input_label: "Bookmark name"
         set_reminder: "Remind me"
-        options: "Options"
         actions:
           delete_bookmark:
             name: "Delete bookmark"
@@ -5631,18 +5630,21 @@ en:
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
-      synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      synonyms_description:
+        one: "The synonym %{synonyms} will be replaced with %{base_tag_name}."
+        other: "The synonyms %{synonyms} will be replaced with %{base_tag_name}."
       synonyms_inline: "These synonyms will be replaced with %{base_tag_name}:"
+      synonym_hint: "→ %{tag_name}"
       save: "Save name and description of the tag"
       tag_groups_info:
-        one: 'This tag belongs to the group "%{tag_groups}".'
-        other: "This tag belongs to these groups: %{tag_groups}."
+        one: 'This tag belongs to the tag group "%{tag_groups}".'
+        other: "This tag belongs to these tag groups: %{tag_groups}."
       tag_groups_info_prefix:
-        one: "This tag belongs to the group "
-        other: "This tag belongs to these groups: "
+        one: "This tag belongs to the tag group "
+        other: "This tag belongs to these tag groups: "
       category_restrictions:
-        one: "It can only be used in this category:"
-        other: "It can only be used in these categories:"
+        one: "It can only be used in the %{categories} category."
+        other: "It can only be used in these categories: %{categories}."
       restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
@@ -6883,6 +6885,82 @@ en:
             title: "Site traffic"
           engagement:
             title: "Engagement"
+            fetch_error: "Couldn't load engagement. Try refreshing the page."
+            activity_by_category:
+              title: "Activity by category"
+              description: "Topics, posts, and member participation per category."
+              category: "Category"
+              topics: "Topics"
+              posts: "Posts"
+              page_views: "Page views"
+              share: "Share"
+              vs_prior: "Vs Prior"
+              empty: "No activity in the selected period."
+            whos_posting:
+              title: "Who's posting?"
+              all_categories: "All categories"
+              include_subcategories: "Include subcategories"
+              new_members: "New members"
+              returning: "Returning"
+              staff: "Staff"
+              empty: "No posts in the selected period."
+            trust_level_pipeline:
+              title: "Trust level pipeline"
+              trust_levels:
+                "0": "New"
+                "1": "Basic"
+                "2": "Member"
+                "3": "Regular"
+                "4": "Leader"
+              trend:
+                climbing:
+                  one: "+%{count} climbing"
+                  other: "+%{count} climbing"
+                dropping:
+                  one: "-%{count} dropping"
+                  other: "-%{count} dropping"
+                stable: "stable"
+              moves_in_aria:
+                one: "%{count} member moved up"
+                other: "%{count} members moved up"
+              moves_out_aria:
+                one: "%{count} member moved down"
+                other: "%{count} members moved down"
+              stable_aria: "no movement"
+            headline:
+              healthy_growth:
+                title: "Members are forming a habit of coming back."
+                summary: "Stickiness, daily engagement, and new sign-ups are all up this period."
+              declining:
+                title: "Members are coming back less often."
+                summary: "Stickiness, daily engagement, and new sign-ups are all down this period."
+              engaged_but_shrinking:
+                title: "Members are engaged, but the community is shrinking."
+                summary: "Stickiness is holding up, but daily engagement or new sign-ups have slipped."
+              growing_but_distracted:
+                title: "New members are signing up, but they're not sticking around."
+                summary: "Sign-ups are up, but stickiness has dropped this period."
+              mixed:
+                title: "Engagement trends are mixed this period."
+                summary: "Some metrics are up while others are down — open the tiles below for detail."
+              no_signal:
+                title: "Not enough activity yet to summarise engagement."
+                summary: "Pick a longer date range or come back once your community has more activity."
+
+        reports_section:
+          add: "Add report"
+          remove: "Remove report"
+          no_data: "No data to display"
+          modal:
+            title: "Manage reports"
+            search_placeholder: "Search reports"
+            counter: "%{count} / %{max} reports"
+            enabled_heading: "Enabled"
+            all_heading: "All reports"
+            apply: "Apply"
+            toggle: "Toggle report"
+            move_up: "Move up"
+            move_down: "Move down"
 
         configure:
           button: "Configure"
@@ -6907,6 +6985,9 @@ en:
             new_contributors:
               label: "New contributors"
               tooltip: "The number of members who made their first post in this period."
+            daily_engaged_users:
+              label: "Daily engaged"
+              tooltip: "The number of members who liked or posted in the community in the last day."
           comparison:
             last_7_days: "vs last 7 days"
             last_30_days: "vs last 30 days"
@@ -6942,11 +7023,20 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+          top_countries:
+            title: "Top countries"
+            empty: "No country data for this period."
+            error: "Couldn't load top countries. Try refreshing the page."
+          top_referrers:
+            title: "Top referrers"
+            empty: "No referrer data for this period."
+            error: "Couldn't load top referrers. Try refreshing the page."
           series:
             logged_in: "Logged in"
             anonymous: "Anonymous"
             embedded: "Embedded pageviews"
             crawlers: "Crawlers"
+          see_details: "See details"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
@@ -8298,6 +8388,7 @@ en:
             delete_topic: "delete topic"
             recover_topic: "un-delete topic"
             delete_post: "delete post"
+            recover_post: "un-delete post"
             impersonate: "impersonate"
             anonymize_user: "anonymize user"
             roll_up: "roll up IP blocks"
@@ -8798,6 +8889,7 @@ en:
         post_edits_count: "Post Edits"
         upcoming_changes:
           title: "User upcoming changes"
+          view_modal: "View enabled changes"
           description: "To modify groups or to enable or disable upcoming changes, please visit the <a href='%{basePath}/admin/config/upcoming-changes'>upcoming changes config page</a>."
           filter_placeholder: "Filter upcoming changes by name or description"
           filter_no_results: "No upcoming changes found"

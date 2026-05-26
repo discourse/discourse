@@ -39,8 +39,8 @@ class CalendarEvent < ActiveRecord::Base
     first_post = post.topic&.first_post
     return if !first_post || !first_post.custom_fields[DiscourseCalendar::CALENDAR_CUSTOM_FIELD]
 
-    from = self.convert_to_date_time(dates[0])
-    to = self.convert_to_date_time(dates[1]) if dates.size == 2
+    from = convert_to_date_time(dates[0])
+    to = convert_to_date_time(dates[1]) if dates.size == 2
 
     adjust_to = !to || !dates[1]["time"]
     if !to && dates[0]["time"]

@@ -108,7 +108,7 @@ export default class TopicDraftsDropdown extends Component {
         @action={{@action}}
         @label={{@label}}
         @ariaLabel={{@label}}
-        @icon="far-pen-to-square"
+        @icon={{or @icon "far-pen-to-square"}}
         id={{@btnId}}
         class={{@btnClasses}}
       />

@@ -411,7 +411,7 @@ RSpec.configure do |config|
 
       test_i = ENV["TEST_ENV_NUMBER"].to_i
 
-      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
+      data_dir = "#{Rails.root.join("tmp/test_data_#{test_i}/minio")}"
       FileUtils.rm_rf(data_dir)
       FileUtils.mkdir_p(data_dir)
       minio_runner_config.minio_data_directory = data_dir
@@ -781,7 +781,7 @@ RSpec.configure do |config|
       class << self
         def using_session_with_localhost_resolution(name, &block)
           attempts = 0
-          self._using_session(name, &block)
+          _using_session(name, &block)
         rescue Socket::ResolutionError
           puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
           attempts += 1
@@ -1203,7 +1203,11 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
+def file_from_fixtures(
+  filename,
+  directory = "images",
+  root_path = "#{Rails.root.join("spec/fixtures")}"
+)
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
@@ -1247,7 +1251,7 @@ def plugin_from_fixtures(plugin_name)
   tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
 
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
-  FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
+  FileUtils.cp_r("#{Rails.root.join("spec/fixtures/plugins/#{plugin_name}")}", tmp_plugins_dir)
 
   Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
@@ -1268,7 +1272,7 @@ def has_trigger?(trigger_name)
 end
 
 def stub_deprecated_settings!(override:)
-  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+  SiteSetting.load_settings("#{Rails.root.join("spec/fixtures/site_settings/deprecated_test.yml")}")
 
   stub_const(
     SiteSettings::DeprecatedSettings,

@@ -334,7 +334,6 @@ zh_CN:
         find_on_github: "在 GitHub 上查找"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
-      toggle_mobile_view: "切换移动视图"
       disable_dev_tools: "禁用开发者工具"
       toggle_upcoming_changes_debug: "切换即将推出的更改调试"
     s3:
@@ -392,8 +391,6 @@ zh_CN:
     tos: "服务条款"
     rules: "规则"
     conduct: "行为准则"
-    mobile_view: "移动版视图"
-    desktop_view: "桌面版视图"
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
@@ -4219,7 +4216,6 @@ zh_CN:
         name_placeholder: "此书签有什么用？"
         name_input_label: "书签名称"
         set_reminder: "提醒我"
-        options: "选项"
         actions:
           delete_bookmark:
             name: "删除书签"
@@ -6048,8 +6044,37 @@ zh_CN:
             title: "网站流量"
           engagement:
             title: "参与度"
+            activity_by_category:
+              category: "类别"
+              topics: "话题"
+              posts: "帖子"
+              share: "分享"
+            whos_posting:
+              all_categories: "所有类别"
+              staff: "管理人员"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新"
+                "1": "基本用户"
+                "2": "成员"
+                "3": "常规"
+                "4": "领导者"
+              trend:
+                stable: "稳定"
+        reports_section:
+          modal:
+            enabled_heading: "已启用"
+            all_heading: "所有报告"
+            apply: "应用"
+            move_up: "上移"
+            move_down: "下移"
         configure:
           button: "配置"
+        site_traffic:
+          series:
+            anonymous: "匿名"
+            embedded: "嵌入式页面浏览量"
+            crawlers: "抓取工具"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

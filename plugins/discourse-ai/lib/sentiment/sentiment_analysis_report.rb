@@ -64,6 +64,7 @@ module DiscourseAi
 
       def self.fetch_data(report, opts)
         threshold = SENTIMENT_THRESHOLD
+        model_name = DiscourseAi::Sentiment::PostClassification.active_model_name_for(:sentiment)
 
         grouping = (report.filters.dig(:group_by) || GROUP_BY_FILTER_DEFAULT).to_sym
         sorting = (report.filters.dig(:sort_by) || SORT_BY_FILTER_DEFAULT).to_sym
@@ -162,7 +163,7 @@ module DiscourseAi
               WHERE
                 t.archetype = 'regular' AND
                 p.user_id > 0 AND
-                cr.model_used = 'cardiffnlp/twitter-roberta-base-sentiment-latest' AND
+                cr.model_used = :model_name AND
                 (p.created_at > :report_start AND p.created_at < :report_end)
                 #{where_clause}
               #{group_by_clause}
@@ -173,6 +174,7 @@ module DiscourseAi
             threshold: threshold,
             category_filter: category_filter,
             tag_filter: tag_filter,
+            model_name: model_name,
           )
 
         grouped_sentiments

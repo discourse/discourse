@@ -6,7 +6,7 @@ require "net/pop"
 class EmailSettingsValidator
   def self.validate_as_user(user, protocol, **kwargs)
     DistributedMutex.synchronize("validate_#{protocol}_#{user.id}", validity: 10) do
-      self.public_send("validate_#{protocol}", **kwargs)
+      public_send("validate_#{protocol}", **kwargs)
     end
   end
 

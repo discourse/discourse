@@ -45,7 +45,7 @@ RSpec.describe "i18n integrity checks" do
       end
   end
 
-  Dir["#{Rails.root}/config/locales/{client,server}.*.yml"].each do |path|
+  Dir["#{Rails.root.join("config/locales/{client,server}.*.yml")}"].each do |path|
     it "does not contain invalid interpolation keys for '#{path}'" do
       matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
       matches.flatten!
@@ -55,7 +55,7 @@ RSpec.describe "i18n integrity checks" do
     end
   end
 
-  Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
+  Dir["#{Rails.root.join("config/locales/client.*.yml")}"].each do |path|
     it "has valid client YAML for '#{path}'" do
       yaml = load_yaml(path)
       locale = extract_locale(path)
@@ -68,7 +68,7 @@ RSpec.describe "i18n integrity checks" do
     end
   end
 
-  Dir["#{Rails.root}/**/locale*/*.en.yml"].each do |english_path|
+  Dir["#{Rails.root.join("**/locale*/*.en.yml")}"].each do |english_path|
     english_yaml = load_yaml(english_path)["en"]
 
     context(english_path) do

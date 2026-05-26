@@ -193,8 +193,8 @@ class Draft < ActiveRecord::Base
     topic_ids = drafts.map(&:topic_id)
     post_ids = drafts.map(&:post_id)
 
-    topics = self.allowed_draft_topics_for_user(user).where(id: topic_ids)
-    posts = self.allowed_draft_posts_for_user(user).where(id: post_ids)
+    topics = allowed_draft_topics_for_user(user).where(id: topic_ids)
+    posts = allowed_draft_posts_for_user(user).where(id: post_ids)
 
     drafts.each do |draft|
       draft.preload_topic(topics.detect { |t| t.id == draft.topic_id })
@@ -210,7 +210,7 @@ class Draft < ActiveRecord::Base
 
   def self.allowed_draft_posts_for_user(user)
     # .secured handles whispers, merge handles topic/pm visibility
-    Post.secured(Guardian.new(user)).joins(:topic).merge(self.allowed_draft_topics_for_user(user))
+    Post.secured(Guardian.new(user)).joins(:topic).merge(allowed_draft_topics_for_user(user))
   end
 
   def self.stream(opts = nil)
@@ -341,7 +341,7 @@ class Draft < ActiveRecord::Base
   end
 
   def update_draft_count
-    UserStat.update_draft_count(self.user_id)
+    UserStat.update_draft_count(user_id)
   end
 end
 

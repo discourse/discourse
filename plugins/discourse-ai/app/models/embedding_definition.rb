@@ -133,7 +133,7 @@ class EmbeddingDefinition < ActiveRecord::Base
   after_create :create_indexes
 
   def create_indexes
-    Jobs.enqueue(:manage_embedding_def_search_index, id: self.id)
+    Jobs.enqueue(:manage_embedding_def_search_index, id: id)
   end
 
   def tokenizer

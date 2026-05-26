@@ -1363,7 +1363,7 @@ RSpec.describe Report do
 
         ip = [81, 2, 69, 142]
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS
           .any_instance
           .stubs(:getname)
@@ -2140,11 +2140,11 @@ RSpec.describe Report do
         end
       end
 
-      it "returns true for IP reports when IP viewing is disabled" do
+      it "returns false for IP reports when IP viewing is disabled" do
         SiteSetting.moderators_view_ips = false
 
         Report::IP_ADDRESS_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
         end
       end
 
@@ -2186,6 +2186,12 @@ RSpec.describe Report do
         Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
           expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
         end
+      end
+    end
+
+    it "always hides browser pageview reports" do
+      Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+        expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
       end
     end
   end

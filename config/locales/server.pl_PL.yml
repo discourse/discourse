@@ -1433,6 +1433,43 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba nowych współtwórców"
       description: "Liczba użytkowników, którzy napisali swój pierwszy wpis w tym okresie."
+    activity_by_category:
+      title: "Aktywność według kategorii"
+      description: "Tematy, wpisy i aktywność członków w poszczególnych kategoriach w wybranym okresie. Udział to procentowy udział każdej kategorii w całkowitej aktywności w wymienionych kategoriach; W porównaniu z poprzednim okresem to zmiana udziału w porównaniu z poprzednim okresem o tej samej długości."
+      labels:
+        category: "Kategoria"
+        topics: "Tematy"
+        posts: "Wpisy"
+        page_views: "Wyświetlenia strony"
+        share: "Udział"
+        vs_prior: "Kontra wcześniej"
+    posters_by_member_type:
+      title: "Kto publikuje?"
+      description: "Wpisy utworzone w wybranym okresie, podzielone według typu użytkownika. „Nowi użytkownicy” zarejestrowali się w tym okresie, „Powracający” zarejestrowali się przed nim, a „Zespół” to administratorzy lub moderatorzy."
+      labels:
+        member_type: "Typ członka"
+        count: "Wpisy"
+        share: "Udostępnij"
+      types:
+        new_members: "Nowi członkowie"
+        returning: "Powracający"
+        staff: "Zespół"
+    trust_level_pipeline:
+      title: "Potok poziomu zaufania"
+      description: "Ruch członków między poziomami zaufania w wybranym okresie. Zlicza członków znajdujących się obecnie na każdym poziomie zaufania, ich udział w całkowitej liczbie członków oraz liczbę członków, którzy przeszli na lub z każdego poziomu zaufania w danym okresie."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Poziom zaufania"
+        count: "Członkowie"
+        share: "Udostępnij"
+        moves_in: "Wprowadza się"
+        moves_out: "Wyprowadza się"
+      levels:
+        "0": "Nowy"
+        "1": "Podstawowy"
+        "2": "Uczestnik"
+        "3": "Normalny"
+        "4": "Weteran"
     trust_level_growth:
       title: "Wzrost poziomu zaufania"
       xaxis:
@@ -1478,9 +1515,9 @@ pl_PL:
     site_traffic:
       title: "Ruch w witrynie"
       xaxis:
-        page_view_anon_browser: "Odsłony (anonimowe)"
-        page_view_logged_in_browser: "Odsłony (zalogowani)"
-        page_view_crawler: "Znane roboty internetowe"
+        page_view_anon_browser: "Anonimowi"
+        page_view_logged_in_browser: "Zalogowani"
+        page_view_crawler: "Boty indeksujące"
         page_view_embed: "Osadzone wyświetlenia stron"
         page_view_other: "Inny ruch"
       yaxis: "Dzień"
@@ -1598,6 +1635,18 @@ pl_PL:
         num_clicks: "Kliki"
         num_topics: "Tematy"
       description: "Użytkownicy wymienieni według liczby kliknięć linków, które udostępnili."
+    top_countries_by_browser_pageviews:
+      title: "Najpopularniejsze kraje"
+      description: "Kraje, które w wybranym okresie wygenerowały najwięcej odsłon Twojego forum."
+      labels:
+        country_code: "Kod kraju"
+        count: "Odwiedziny"
+    top_referrers_by_browser_pageviews:
+      title: "Najpopularniejsi polecający"
+      description: "Zewnętrzne witryny, które w wybranym okresie odnotowały największą liczbę odsłon Twojego forum."
+      labels:
+        normalized_referrer: "Polecający"
+        count: "Odwiedziny"
     top_traffic_sources:
       title: "Najlepsze źródła ruchu"
       xaxis: "Domena"
@@ -1805,6 +1854,11 @@ pl_PL:
       failing_emails: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
       subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
       translation_overrides: "Niektóre z Twoich nadpisanych tłumaczeń są nieaktualne. Sprawdź swoje <a href='%{base_path}/admin/customize/site_texts?outdated=true'>teksty witryny</a>."
+      email_sending_failures:
+        one: "Wysyłanie wiadomości e-mail nie powiodło się raz w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        few: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        many: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        other: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
       email_polling_errored_recently:
         one: "Email polling wygenerował błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
         few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
@@ -1825,6 +1879,9 @@ pl_PL:
       admin_sidebar_deprecation: "Stary układ administracyjny jest przestarzały na rzecz nowego <a href='https://meta.discourse.org/t/-/289281'>układu paska bocznego</a> i zostanie usunięty w następnej wersji. Możesz <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>skonfigurować</a> nowy układ paska bocznego już teraz, aby wcześniej się na niego przełączyć."
       starttls_disabled: "W konfiguracji poczty wychodzącej wyłączono protokół STARTTLS. Jest to prawie nigdy konieczne. Rozważ usunięcie <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> ze swojego środowiska. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/387286'>tym temacie</a> ."
     back_from_logster_text: "Powrót do strony"
+    reports_section:
+      providers:
+        core_report: "Standardowe"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -1997,7 +2054,7 @@ pl_PL:
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
     change_post_ownership_allowed_groups: "Zezwalaj użytkownikom w tych grupach na zmianę własności wpisów"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
-    use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście sprawdzonych adresów IP (Administrator > Logi > Sprawdzone adresy IP)."
+    use_admin_ip_allowlist: "Administratorzy mogą się logować tylko wtedy, gdy znajdują się pod adresem IP zdefiniowanym na liście sprawdzonych adresów IP <a href='%{base_path}/admin/logs/screened_ip_addresses'></a>."
     blocked_ip_blocks: "Lista prywatnych bloków IP, które nigdy nie powinny być indeksowane przez Discourse"
     allowed_internal_hosts: "Lista wewnętrznych hostów, które Discourse mogą bezpiecznie indeksować do oneboxingu i innych celów"
     allowed_onebox_iframes: "Lista domen iframe src, które są dozwolone do osadzania w Onebox. `*` pozwoli na wszystkie domyślne silniki Onebox."
@@ -2135,7 +2192,7 @@ pl_PL:
     enable_direct_s3_uploads: "Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3. Więcej szczegółów można znaleźć w <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">tym temacie Meta</a>."
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
-    backup_location: "Lokalizacja, w której przechowywane są kopie zapasowe. WAŻNE: S3 wymaga prawidłowych poświadczeń S3 wprowadzonych w ustawieniach plików. Zmieniając to ustawienie na S3 z Local, musisz uruchomić zadanie rake `s3:ensure_cors_rules`."
+    backup_location: "Lokalizacja przechowywania kopii zapasowych. WAŻNE: S3 wymaga wprowadzenia prawidłowych poświadczeń S3 w ustawieniach <a href='%{base_path}/admin/site_settings/category/files'>Plików</a>. Po zmianie z Lokalnego na S3 należy uruchomić zadanie rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Poziom kompresji gzip używany przy kompresowaniu wgranych plików."
     include_thumbnails_in_backups: "Uwzględnij wygenerowane miniatury w kopiach zapasowych. Wyłączenie tego spowoduje, że kopie zapasowe będą mniejsze, ale wymaga ponownego wygenerowania wszystkich wpisów po przywróceniu."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -2328,7 +2385,7 @@ pl_PL:
     fast_typing_threshold: "Minimalny czas, jaki użytkownik musi poświęcić na pisanie pierwszego wpisu. Jeśli próg nie zostanie osiągnięty, wpis automatycznie trafi do kolejki recenzji. Minimalny czas to 1 sekunda, standardowy to 3 sekundy, a maksymalny to 5 sekund."
     auto_silence_fast_typers_on_first_post: "Automatycznie wyciszaj użytkowników, którzy nie spełniają `fast typing threshold`."
     auto_silence_fast_typers_max_trust_level: "Maksymalny poziom zaufania do automatycznego wyciszania szybkich maszyn do pisania"
-    auto_silence_first_post_regex: "Wyrażenie regularne bez uwzględniania wielkości liter, które jeśli zostanie przekazane, spowoduje wyciszenie pierwszego posta użytkownika i wysłanie go do kolejki zatwierdzenia. Przykład: raging|a[bc]a , spowoduje, że wszystkie posty zawierające raging lub aba lub aca zostaną najpierw wyciszone. Dotyczy tylko pierwszego postu. PRZESTARZAŁE: Zamiast tego używaj Silence Watched Words."
+    auto_silence_first_post_regex: "Wyrażenie regularne bez uwzględniania wielkości liter, którego podanie spowoduje wyciszenie pierwszego wpisu użytkownika i wysłanie go do kolejki zatwierdzającej. Przykład: raging|a[bc]a spowoduje wyciszenie wszystkich wpisów zawierających raging, aba lub aca na początku. Dotyczy tylko pierwszego wpisu. PRZESTARZAŁE: zamiast tego użyj <a href='%{base_path}/admin/customize/watched_words/action/silence'>. Wycisz obserwowane słowa</a>."
     moderator_guide_topic: "Temat opisujący, w jaki sposób moderujesz swoją społeczność. Link będzie widoczny w kolejce recenzji dla moderatorów i administratorów."
     reviewable_claiming: "Czy treść podlegająca przeglądowi musi zostać przejęta przed podjęciem działań?"
     reviewable_default_topics: "Domyślnie wyświetlaj zawartość do przeglądania pogrupowaną według tematów"
@@ -2458,7 +2515,6 @@ pl_PL:
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     get_a_room_threshold: "Liczba wpisów dodanych przez użytkownika w odpowiedzi na wpisy tej samej osoby w jednym temacie, po której zostanie on ostrzeżony."
     dont_feed_the_trolls_threshold: "Liczba flag od innych użytkowników przed otrzymaniem ostrzeżenia."
-    enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     dominating_topic_minimum_percent: "Odsetek (%) wpisów dodanych przez użytkownika w jednym temacie, po którym otrzyma on upomnienie, że nadmiernie go dominuje."
     pm_warn_user_last_seen_months_ago: "Podczas tworzenia nowej wiadomości prywatnej ostrzegaj użytkowników, jeśli odbiorca docelowy nie został wyświetlony co najmniej n miesięcy temu."
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
@@ -2685,7 +2741,6 @@ pl_PL:
     rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
-    viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, na które można tłumaczyć treści użytkownika. Domyślne ustawienia regionalne witryny są zawsze uwzględniane. Wymagana jest włączona lokalizacja treści."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
@@ -3171,6 +3226,7 @@ pl_PL:
       unused_staged_user: "Nieużywany użytkownik etapowy"
       fixed_primary_email: "Ustalony główny adres e-mail wystawionego użytkownika"
       same_ip_address: "Taki sam adres IP (%{ip_address}) jak inni użytkownicy"
+      same_ip_address_user: "Ten sam adres IP co %{username}"
       inactive_user: "Nieaktywny użytkownik"
       reviewable_reject_auto: "Automatyczna obsługa użytkowników oczekujących sprawdzania"
       reviewable_reject: "Użytkownik odrzucony po weryfikacji"
@@ -3323,9 +3379,9 @@ pl_PL:
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
+      * Zaktualizuj za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      * Dowiedz się, co nowego w [informacjach o wydaniu](/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://meta.discourse.org)
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://releases.discourse.org/changelog/v%{new_version})
 
       * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
   new_version_mailer_with_notes:
@@ -3333,18 +3389,18 @@ pl_PL:
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
     subject_template_improved: "%{email_prefix}: Dostępna aktualizacja"
     text_body_template: |
-      Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
+      Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
 
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      - Zaktualizuj, korzystając z naszej łatwej **[aktualizacji przeglądarki jednym kliknięciem](%{base_url}/admin/update)**
+      * Zaktualizuj za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      - Zobacz, co nowego w [notatkach dotyczących wydania](https://releases.discourse.org/changelog/%{new_version})
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://releases.discourse.org/changelog/v%{new_version})
 
-      - Odwiedź [meta.discourse.org](https://meta.discourse.org) w celu uzyskania wiadomości, dyskusji i wsparcia dla Discourse
+      * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
 
-      ### Notatki dotyczące wydania
+      ### Informacje o wydaniu
 
       %{notes}
   flag_reasons:
@@ -3949,6 +4005,14 @@ pl_PL:
       ### Szczegóły
 
       ``` text
+      %{raw}
+      ```
+    email_sending_failed: |
+      Wysłanie wiadomości na adres %{email} się nie powiodło.
+
+      ### Szczegóły
+
+      `` tekst
       %{raw}
       ```
     ignored_users_summary:
@@ -5422,6 +5486,7 @@ pl_PL:
         many: "Nie można użyć wybranych tagów"
         other: "Nie można użyć wybranych tagów"
       in_this_category: '"%{tag_name}" nie może być użyty w tej kategorii'
+      not_allowed: 'Nie można użyć „%{tag_name}”'
       restricted_to:
         one: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
         few: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'

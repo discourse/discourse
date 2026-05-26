@@ -155,9 +155,9 @@ module FileStore
 
     CACHE_DIR =
       if Rails.env.test?
-        "#{Rails.root}/tmp/download_cache_test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/"
+        "#{Rails.root.join("tmp/download_cache_test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/")}"
       else
-        "#{Rails.root}/tmp/download_cache/"
+        "#{Rails.root.join("tmp/download_cache/")}"
       end
     CACHE_MAXIMUM_SIZE = 500
     CACHE_EVICT_COUNT = 100

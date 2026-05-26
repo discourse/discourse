@@ -68,3 +68,9 @@ Style/RedundantParentheses:
 
 Style/RedundantBegin:
   Enabled: true
+
+Rails/FilePath:
+  Enabled: true
+
+Style/RedundantSelf:
+  Enabled: true

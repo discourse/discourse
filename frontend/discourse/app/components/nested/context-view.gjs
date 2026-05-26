@@ -36,10 +36,15 @@ export default class NestedContextView extends Component {
   #nextTimer = null;
   #retryTimer = null;
   #highlightTimer = null;
+  #lastScrollKey = null;
 
   constructor() {
     super(...arguments);
-    this.appEvents.on("nested:scroll-to-target", this, this.scheduleScroll);
+    this.appEvents.on(
+      "nested:scroll-to-target",
+      this,
+      this.forceScheduleScroll
+    );
   }
 
   willDestroy() {
@@ -48,7 +53,11 @@ export default class NestedContextView extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
-    this.appEvents.off("nested:scroll-to-target", this, this.scheduleScroll);
+    this.appEvents.off(
+      "nested:scroll-to-target",
+      this,
+      this.forceScheduleScroll
+    );
     this.viewportTracker.destroy();
   }
 
@@ -56,11 +65,30 @@ export default class NestedContextView extends Component {
   // scroll wins. Fresh attempt counter per invocation.
   @action
   scheduleScroll() {
+    this.#scheduleScroll();
+  }
+
+  @action
+  forceScheduleScroll() {
+    this.#scheduleScroll({ force: true });
+  }
+
+  #scheduleScroll({ force = false } = {}) {
+    const scrollKey = this.#scrollKey;
+    if (!force && scrollKey === this.#lastScrollKey) {
+      return;
+    }
+
+    this.#lastScrollKey = scrollKey;
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
     this.#scrollAttempts = 0;
     this.#nextTimer = next(this, this.#scrollToTarget);
+  }
+
+  get #scrollKey() {
+    return `${this.args.targetPostNumber}:${this.args.contextChain?.post?.id}`;
   }
 
   get flatViewUrl() {
@@ -90,7 +118,14 @@ export default class NestedContextView extends Component {
           2000
         );
       }
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      const headerOffset = this.header.headerOffset || 0;
+      const banner = document.querySelector(".nested-context-view__banner");
+      const bannerHeight = banner ? banner.offsetHeight : 0;
+      const rect = target.getBoundingClientRect();
+      window.scrollTo({
+        top: window.scrollY + rect.top - headerOffset - bannerHeight,
+        behavior: "smooth",
+      });
     } else if (this.#scrollAttempts < this.#maxScrollAttempts) {
       // Target may not be in the DOM yet (async child rendering).
       this.#scrollAttempts++;

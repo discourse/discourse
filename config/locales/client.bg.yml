@@ -260,8 +260,6 @@ bg:
     tos: "Правила за ползване"
     rules: "Правила"
     conduct: "Правила за поведение"
-    mobile_view: "Мобилен изглед"
-    desktop_view: "Десктоп изглед"
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
@@ -2896,7 +2894,6 @@ bg:
         name_placeholder: "За какво е тази отметка?"
         name_input_label: "Име на отметка"
         set_reminder: "Напомни ми"
-        options: "Опции"
         actions:
           delete_bookmark:
             name: "Изтриване на отметка"
@@ -3597,6 +3594,30 @@ bg:
         security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Теми"
+              posts: "Публикации"
+              share: "Споделяне"
+            whos_posting:
+              all_categories: "Всички категории"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Нов"
+                "1": "Основно "
+                "2": "Член"
+                "3": "Редовен"
+                "4": "лидер "
+        reports_section:
+          modal:
+            enabled_heading: "Да е включен"
+            apply: "Приложи"
+        site_traffic:
+          series:
+            anonymous: "Анонимен"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"

@@ -433,7 +433,7 @@ class TopicQuery
   end
 
   def self.unseen_filter(list, user)
-    self.new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
+    new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
   end
 
   def self.new_filter(list, treat_as_new_topic_start_date: nil, treat_as_new_topic_clause_sql: nil)
@@ -1338,7 +1338,7 @@ class TopicQuery
 
       # perf note, in the past we tried doing this in a subquery but performance was
       # terrible, also tried with a join and it was bad
-      results = results.where("topics.updated_at >= ?", unread_at)
+      results = results.where("topics.bumped_at >= ?", unread_at)
     end
     results
   end

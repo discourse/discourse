@@ -8,7 +8,7 @@ import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{#if @controller.siteSettings.dashboard_improvements}}
+  {{#if @controller.showRedesign}}
     <RedesignedAdminDashboard
       @requestedPeriod={{@controller.safePeriod}}
       @requestedStartDate={{@controller.startDate}}
@@ -17,6 +17,7 @@ export default <template>
       @setCustomDateRange={{@controller.setCustomDateRange}}
       @loadedSections={{@controller.loadedSections}}
       @updateConfiguration={{@controller.updateConfiguration}}
+      @refreshSections={{@controller.fetchSections}}
       @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
     />

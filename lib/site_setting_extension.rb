@@ -23,7 +23,7 @@ module SiteSettingExtension
   def default_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
-    if val != self.default_locale
+    if val != default_locale
       add_override!(:default_locale, val)
       refresh!
       Discourse.request_refresh!
@@ -307,6 +307,11 @@ module SiteSettingExtension
           value = value.to_s
         elsif type == :uploaded_image_list && value.present?
           value = value.map(&:to_s).join("|")
+        elsif type == :objects && value.present?
+          type_hash = type_supervisor.type_hash(name)
+          if type_hash[:schema]
+            value = hydrate_objects_setting_value(name, value, type_hash:).to_json
+          end
         end
 
         [name, value]
@@ -362,7 +367,7 @@ module SiteSettingExtension
       description: description(:default_locale),
       type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
-      value: self.default_locale,
+      value: default_locale,
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?,
     }
@@ -378,7 +383,16 @@ module SiteSettingExtension
       .all(default_locale)
       .reject do |setting_name, _|
         plugin_name = plugins[setting_name]
-        plugin_name && !Discourse.plugins_by_name[plugin_name].configurable?
+        next false if !plugin_name
+        next false if Discourse.plugins_by_name[plugin_name].configurable?
+
+        # Non-configurable plugin. Surface an upcoming change only when a
+        # :hidden_site_settings modifier has explicitly un-hidden it.
+        if only_upcoming_changes && UpcomingChanges.exists?(setting_name)
+          current_hidden_settings.include?(setting_name)
+        else
+          true
+        end
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
@@ -456,8 +470,7 @@ module SiteSettingExtension
 
         # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
-          parsed_value = JSON.parse(value)
-          value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
+          value = hydrate_objects_setting_value(s, value, type_hash:)
         end
 
         opts = {
@@ -869,8 +882,7 @@ module SiteSettingExtension
       name: name,
       # default_locale is a special case, it is not themeable and we define
       # a custom getter for it, so we can just use the normal getter
-      value:
-        name.to_s == "default_locale" ? self.public_send(name) : self.public_send(name, scoped_to),
+      value: name.to_s == "default_locale" ? public_send(name) : public_send(name, scoped_to),
       scoped_to: scoped_to,
     )
   end
@@ -910,9 +922,9 @@ module SiteSettingExtension
 
       value = filter_value(name, value)
       if options
-        self.public_send("#{name}=", value, options)
+        public_send("#{name}=", value, options)
       else
-        self.public_send("#{name}=", value)
+        public_send("#{name}=", value)
       end
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -958,10 +970,10 @@ module SiteSettingExtension
                   "#{name} requires a theme_id because it is themeable",
                 )
         else
-          self.public_send(name, scoped_to)
+          public_send(name, scoped_to)
         end
       else
-        self.public_send(name)
+        public_send(name)
       end
     else
       raise Discourse::InvalidParameters.new(
@@ -1139,11 +1151,11 @@ module SiteSettingExtension
     setting_type = type_supervisor.get_type(name)
     if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
-        self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        public_send(clean_name).to_s.split("|").map(&:to_i)
       end
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
-        ids = self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        ids = public_send(clean_name).to_s.split("|").map(&:to_i)
         if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
              ids.include?(Group::AUTO_GROUPS[:everyone])
           ids =
@@ -1174,13 +1186,13 @@ module SiteSettingExtension
 
       if %w[simple compact].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
-          self.public_send(clean_name, scoped_to).to_s.split("|")
+          public_send(clean_name, scoped_to).to_s.split("|")
         end
       end
     end
 
     define_singleton_method "#{clean_name}?" do |scoped_to = nil|
-      self.public_send(clean_name, scoped_to)
+      public_send(clean_name, scoped_to)
     end
 
     define_singleton_method "#{clean_name}=" do |val|
@@ -1218,7 +1230,7 @@ module SiteSettingExtension
   #
   # @example
   #   {
-  #     enable_mobile_theme: true,
+  #     enable_badges: true,
   #     topics_per_period_in_top_page: 50,
   #     title: "My awesome forum"
   #   }
@@ -1383,38 +1395,11 @@ module SiteSettingExtension
 
   private
 
-  def hydrate_uploads_in_objects(objects, schema)
-    return objects if objects.blank?
+  def hydrate_objects_setting_value(name, value, type_hash: nil)
+    type_hash ||= type_supervisor.type_hash(name)
+    return value if !type_hash[:schema] || value.blank?
 
-    upload_ids =
-      SchemaSettingsObjectValidator.property_values_of_type(
-        schema: schema,
-        objects: objects,
-        type: "upload",
-      )
-
-    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
-    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
-  end
-
-  def hydrate_uploads_in_object(object, properties, uploads_by_id)
-    properties.each do |prop_key, prop_value|
-      case prop_value[:type]
-      when "upload"
-        key = prop_key.to_s
-        upload_id = object[key]
-        upload = uploads_by_id[upload_id]
-        object[key] = upload.url if upload
-      when "objects"
-        nested_objects = object[prop_key.to_s]
-        if nested_objects.is_a?(Array)
-          nested_objects.each do |nested_obj|
-            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
-          end
-        end
-      end
-    end
-
-    object
+    objects = value.is_a?(String) ? JSON.parse(value) : value
+    SchemaSettingsObjectValidator.hydrate_uploads(objects:, schema: type_hash[:schema])
   end
 end

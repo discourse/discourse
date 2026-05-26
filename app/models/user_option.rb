@@ -142,7 +142,7 @@ class UserOption < ActiveRecord::Base
     Jobs.enqueue_in(
       delay / 2,
       :update_top_redirection,
-      user_id: self.user_id,
+      user_id: user_id,
       redirected_at: Time.zone.now.to_s,
     )
   end

@@ -94,7 +94,7 @@ export default class NestedOp extends Component {
   <template>
     {{#if @post}}
       <div class="nested-view__op">
-        {{#let (lazyHash post=@post) as |postOutletArgs|}}
+        {{#let (lazyHash post=@post nestedReplyView=true) as |postOutletArgs|}}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
               class="nested-view__op-article boxed"

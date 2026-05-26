@@ -491,7 +491,7 @@ class TopicsFilter
       column_name: "first_posts.like_count",
       min:,
       max:,
-      scope: self.joins_first_posts(@scope),
+      scope: joins_first_posts(@scope),
     )
   end
 

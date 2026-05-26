@@ -202,7 +202,7 @@ module DiscourseAi
             (
               options[:researcher_llm].present? &&
                 LlmModel.find_by(id: options[:researcher_llm].to_i)&.to_llm
-            ) || self.llm
+            ) || llm
         end
 
         def run_inference(chunk_text, goals, post, &blk)

@@ -74,7 +74,7 @@ class Plugin::Instance
   def resolved_dir
     @resolved_dir ||=
       if File.symlink?(root_dir)
-        File.expand_path(File.readlink(root_dir), "#{Rails.root}/plugins")
+        File.expand_path(File.readlink(root_dir), "#{Rails.root.join("plugins")}")
       else
         root_dir
       end
@@ -107,7 +107,7 @@ class Plugin::Instance
   def self.parse_from_source(path)
     source = File.read(path)
     metadata = Plugin::Metadata.parse(source)
-    self.new(metadata, path)
+    new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -138,7 +138,7 @@ class Plugin::Instance
   end
 
   def full_admin_route
-    route = self.admin_route
+    route = admin_route
 
     if route.blank?
       return if !any_settings? || has_only_enabled_setting?
@@ -162,7 +162,7 @@ class Plugin::Instance
   end
 
   def plugin_settings
-    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
+    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == name }
   end
 
   def deprecate_setting(old_setting, new_setting, override, drom_from)
@@ -241,6 +241,12 @@ class Plugin::Instance
 
   def register_modifier(modifier_name, &blk)
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
+  end
+
+  # Register a handler for an action initiated by an anonymous user, to be
+  # replayed against their account after they authenticate. See AnonymousAction.
+  def register_anonymous_action(type, &block)
+    reloadable_patch { AnonymousAction.register(type, &block) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -414,7 +420,7 @@ class Plugin::Instance
   end
 
   def register_category_type(klass)
-    Categories::TypeRegistry.register(klass, plugin_identifier: self.metadata.name)
+    Categories::TypeRegistry.register(klass, plugin_identifier: metadata.name)
   end
 
   def register_problem_check(klass)
@@ -647,7 +653,7 @@ class Plugin::Instance
 
   def discourse_owned?
     return false if commit_hash.blank?
-    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    parsed_commit_url = UrlHelper.relaxed_parse(commit_url)
     return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
@@ -731,8 +737,8 @@ class Plugin::Instance
   end
 
   def listen_for(event_name)
-    return unless self.respond_to?(event_name)
-    DiscourseEvent.on(event_name, &self.method(event_name))
+    return unless respond_to?(event_name)
+    DiscourseEvent.on(event_name, &method(event_name))
   end
 
   def register_css(style)
@@ -845,7 +851,7 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-    self.instance_eval File.read(path), path
+    instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat(auto_assets)
     end
@@ -1334,6 +1340,34 @@ class Plugin::Instance
   end
 
   ##
+  # Register a class that implements [AdminDashboard::Reports::SourceProvider],
+  # exposing a kind of report (built-in, Data Explorer query, etc.) for the
+  # customisable Reports section on the new admin dashboard. The class must
+  # inherit from AdminDashboard::Reports::SourceProvider and declare a unique
+  # `.source_name`; see the base class for the full contract.
+  def register_admin_dashboard_report_source(provider_class)
+    if !provider_class.is_a?(Class) || !(provider_class < ::AdminDashboard::Reports::SourceProvider)
+      raise ArgumentError,
+            "register_admin_dashboard_report_source expects a subclass of " \
+              "AdminDashboard::Reports::SourceProvider, got #{provider_class.inspect}"
+    end
+
+    existing =
+      ::AdminDashboard::Reports::Registry.providers.find do |klass|
+        klass.source_name.to_s == provider_class.source_name.to_s
+      end
+
+    return if existing == provider_class
+
+    if existing
+      raise ArgumentError,
+            "Source #{provider_class.source_name.inspect} is already registered by #{existing}"
+    end
+
+    DiscoursePluginRegistry.register_admin_dashboard_report_source(provider_class, self)
+  end
+
+  ##
   # Register an object that inherits from [Summarization::Base], which provides a way
   # to summarize content. Staff can select which strategy to use
   # through the `summarization_strategy` setting.
@@ -1524,7 +1558,7 @@ class Plugin::Instance
   protected
 
   def self.js_path
-    File.expand_path "#{Rails.root}/app/assets/generated"
+    File.expand_path "#{Rails.root.join("app/assets/generated")}"
   end
 
   def extra_js_file_path
@@ -1547,7 +1581,7 @@ class Plugin::Instance
   end
 
   def ensure_images_symlink!
-    link_from = "#{Rails.root}/app/assets/generated/#{directory_name}/images"
+    link_from = "#{Rails.root.join("app/assets/generated/#{directory_name}/images")}"
     link_target = "#{directory}/assets/images"
 
     if Dir.exist? link_target

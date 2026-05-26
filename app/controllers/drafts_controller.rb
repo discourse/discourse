@@ -138,16 +138,7 @@ class DraftsController < ApplicationController
   end
 
   def destroy
-    user =
-      if is_api?
-        if @guardian.is_admin?
-          fetch_user_from_params
-        else
-          raise Discourse::InvalidAccess
-        end
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     begin
       Draft.clear(user, params[:id], params[:sequence].to_i)
@@ -176,16 +167,7 @@ class DraftsController < ApplicationController
 
     return render json: success_json.merge(deleted_count: 0) if draft_keys.empty?
 
-    user =
-      if is_api?
-        if @guardian.is_admin?
-          fetch_user_from_params
-        else
-          raise Discourse::InvalidAccess
-        end
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     # Validate all sequences first (fail fast)
     sequence_errors = []

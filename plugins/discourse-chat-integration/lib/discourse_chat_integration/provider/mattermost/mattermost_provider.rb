@@ -91,7 +91,7 @@ module DiscourseChatIntegration
         channel_id = channel.data["identifier"]
         message = mattermost_message(post, channel_id)
 
-        self.send_via_webhook(message)
+        send_via_webhook(message)
       end
 
       def self.get_channel_by_name(name)

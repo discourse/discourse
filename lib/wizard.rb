@@ -133,6 +133,6 @@ class Wizard
   end
 
   def self.user_requires_completion?(user)
-    self.new(user).requires_completion?
+    new(user).requires_completion?
   end
 end

@@ -72,6 +72,8 @@ fa_IR:
           one: "(%{count} مورد دیگر)"
           other: "(%{count} مورد دیگر)"
         collapse_list: "(نمایش کمتر)"
+        nav:
+          enabled: "فعال شده"
         filters:
           all: "همه"
           reset: "بازنشانی"

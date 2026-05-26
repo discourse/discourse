@@ -744,7 +744,7 @@ RSpec.describe RemoteTheme do
   end
 
   describe ".import_theme_from_directory" do
-    let(:theme_dir) { "#{Rails.root}/spec/fixtures/themes/discourse-test-theme" }
+    let(:theme_dir) { "#{Rails.root.join("spec/fixtures/themes/discourse-test-theme")}" }
 
     it "imports a theme from a directory" do
       theme = RemoteTheme.import_theme_from_directory(theme_dir)

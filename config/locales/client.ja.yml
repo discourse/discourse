@@ -359,8 +359,6 @@ ja:
     tos: "利用規約"
     rules: "ルール"
     conduct: "行動規範"
-    mobile_view: "モバイルビュー"
-    desktop_view: "デスクトップビュー"
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
@@ -3955,7 +3953,6 @@ ja:
         name_placeholder: "これは何のブックマークですか？"
         name_input_label: "ブックマーク名"
         set_reminder: "リマインダー"
-        options: "オプション"
         actions:
           delete_bookmark:
             name: "ブックマークを削除"
@@ -5690,8 +5687,37 @@ ja:
             title: "レポート"
           traffic:
             title: "サイトトラフィック"
+          engagement:
+            activity_by_category:
+              category: "カテゴリ"
+              topics: "トピック"
+              posts: "投稿"
+              share: "共有"
+            whos_posting:
+              all_categories: "すべてのカテゴリ"
+              staff: "スタッフ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新規"
+                "1": "ベーシック"
+                "2": "メンバー"
+                "3": "レギュラー"
+                "4": "リーダー"
+              trend:
+                stable: "安定"
+        reports_section:
+          modal:
+            enabled_heading: "有効"
+            all_heading: "すべてのレポート"
+            apply: "適用"
+            move_up: "上に移動"
+            move_down: "下に移動"
         configure:
           button: "構成"
+        site_traffic:
+          series:
+            anonymous: "匿名ユーザー"
+            crawlers: "クローラー"
         period:
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"

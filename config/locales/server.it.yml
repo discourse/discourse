@@ -1231,6 +1231,30 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di nuovi collaboratori"
       description: "Numero di utenti che hanno inviato il loro primo messaggio durante questo periodo."
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Argomenti"
+        posts: "Messaggi"
+        share: "Condividi"
+    posters_by_member_type:
+      labels:
+        count: "Messaggi"
+        share: "Condividi"
+      types:
+        staff: "Staff"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Livello di attendibilità"
+        count: "Membri"
+        share: "Condividi"
+      levels:
+        "0": "Nuovo"
+        "1": "Base"
+        "2": "Membro"
+        "3": "Abituale"
+        "4": "Veterano"
     trust_level_growth:
       title: "Crescita del livello di attendibilità"
       xaxis:
@@ -1274,9 +1298,8 @@ it:
     site_traffic:
       title: "Traffico del sito"
       xaxis:
-        page_view_anon_browser: "Visualizzazioni di pagina (anonime)"
-        page_view_logged_in_browser: "Visualizzazioni di pagina (accesso effettuato)"
-        page_view_crawler: "Crawler noti"
+        page_view_anon_browser: "Anonimo"
+        page_view_crawler: "Crawler"
         page_view_other: "Altro traffico"
       yaxis: "Giorno"
       description: "Visualizzazioni di pagina per utenti registrati, utenti anonimi, crawler noti e altro traffico."
@@ -1391,6 +1414,12 @@ it:
         num_clicks: "Clic"
         num_topics: "Argomenti"
       description: "Utenti elencati per numero di clic sui collegamenti che hanno condiviso."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visite"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visite"
     top_traffic_sources:
       title: "Migliori Sorgenti di Traffico"
       xaxis: "Dominio"
@@ -1601,6 +1630,9 @@ it:
       maxmind_db_configuration: 'Il server è stato configurato in modo da usare i database MaxMind per la ricerca inversa dell''indirizzo IP, ma non è stato ancora configurato un ID account MaxMind. Di conseguenza, in futuro potrebbe non essere possibile scaricare i database MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consulta questa guida per approfondimenti</a>.'
       admin_sidebar_deprecation: "Il vecchio layout di amministrazione è deprecato in favore del nuovo layout della <a href='https://meta.discourse.org/t/-/289281'>barra laterale</a> e verrà rimosso nella prossima versione. Puoi <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurare</a> il nuovo layout della barra laterale ora per aderire prima di allora."
     back_from_logster_text: "Torna al sito"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"
@@ -1760,7 +1792,6 @@ it:
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Consenti ai moderatori di modificare la proprietà del messaggio"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
-    use_admin_ip_allowlist: "Gli amministratori possono effettuare l'accesso solo se usano un indirizzo IP definito nell'elenco degli IP scansionati (Amministratore > Log > IP scansionati)."
     blocked_ip_blocks: "Un elenco di blocchi di indirizzi IP privati che non dovrebbero mai essere sottoposti a indicizzazione per ricerche da Discourse"
     allowed_internal_hosts: "Un elenco di host interni che Discourse può indicizzare in modo sicuro per la scansione onebox e altri scopi"
     allowed_onebox_iframes: "Un elenco dei domini iframe src permessi tramite gli incorporamenti di Onebox. `*` permetterà tutti i motori Onebox predefiniti."
@@ -1888,7 +1919,6 @@ it:
     s3_use_acls: "AWS consiglia di non usare ACL sui bucket S3; deseleziona questa opzione solo se intendi configurare criteri di autorizzazione sui bucket `s3_upload_bucket` e `s3_backup_bucket` configurati."
     backup_time_of_day: "Ora del giorno in UTC in cui eseguire il backup."
     backup_with_uploads: "Includi i caricamenti nei backup programmati. Se l'opzione è disabilitata verrà eseguito il backup del solo database."
-    backup_location: "Posizione in cui vengono archiviati i backup. IMPORTANTE: S3 richiede l'inserimento di credenziali S3 valide nelle impostazioni File. Se passi da Locale a S3, dovrai eseguire il rake task `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Livello di compressione Gzip utilizzato per comprimere i caricamenti."
     include_thumbnails_in_backups: "Includi le miniature generate automaticamente nei backup. Disabilitare questa opzione renderà i backup più piccoli, ma richiederà un rebake di tutti i post dopo un ripristino."
     active_user_rate_limit_secs: "Ogni quanti secondi viene aggiornato il campo 'last_seen_at'"
@@ -2071,7 +2101,6 @@ it:
     auto_respond_to_flag_actions: "Attiva risposta automatica quando viene fatta una segnalazione."
     auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non raggiungono la `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Livello di attendibilità massimo per silenziare automaticamente chi scrive troppo spesso o troppo velocemente."
-    auto_silence_first_post_regex: "Espressione regolare senza distinzione tra maiuscole e minuscole che, se soddisfatta, farà in modo che il primo messaggio dell'utente sia silenziato e inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio. Impostazione DEPRECATA: usare Silence Watched Words al suo posto."
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
     reviewable_default_topics: "Mostra contenuto revisionabile raggruppato per argomento per impostazione predefinita"
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
@@ -2189,7 +2218,6 @@ it:
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     get_a_room_threshold: "Numero di messaggi che un utente deve inviare alla stessa persona nello stesso argomento prima di essere avvertito."
     dont_feed_the_trolls_threshold: "Numero di segnalazioni da parte di altri utenti prima di essere avvisati."
-    enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
     dominating_topic_minimum_percent: "Quale percentuale di messaggi un utente deve pubblicare in un argomento prima di essere avvertito che sta intervenendo eccessivamente nell'argomento."
     suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     header_dropdown_category_count: "Quante categorie possono essere visualizzate nel menu a discesa dell'intestazione."

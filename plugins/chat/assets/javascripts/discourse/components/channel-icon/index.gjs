@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
@@ -17,6 +16,14 @@ export default class ChatChannelIcon extends Component {
     );
   }
 
+  get groupIsDuoOnly() {
+    return (
+      this.args.channel.chatable.group &&
+      // User array does not include the current user
+      this.args.channel.chatable.users.length === 1
+    );
+  }
+
   get channelColorStyle() {
     return trustHTML(`color: #${this.args.channel.chatable.color}`);
   }
@@ -30,22 +37,26 @@ export default class ChatChannelIcon extends Component {
     return emoji ? dReplaceEmoji(`:${emoji}:`) : dIcon("d-chat");
   }
 
-  get directChannelIcon() {
-    const { emoji, membershipsCount } = this.args.channel;
-    return emoji ? dReplaceEmoji(`:${emoji}:`) : membershipsCount;
+  get channelEmojiCode() {
+    return `:${this.args.channel.emoji}:`;
   }
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
       {{#if this.groupDirectMessage}}
-        <div
-          class={{dConcatClass
-            "chat-channel-icon"
-            (unless @channel.emoji "--users-count" "--emoji")
-          }}
-        >
-          {{this.directChannelIcon}}
-        </div>
+        {{#if @channel.emoji}}
+          <div class="chat-channel-icon --emoji">
+            {{dReplaceEmoji this.channelEmojiCode}}
+          </div>
+        {{else if this.groupIsDuoOnly}}
+          <div class="chat-channel-icon --avatar">
+            <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
+          </div>
+        {{else}}
+          <div class="chat-channel-icon --users-count">
+            {{@channel.membershipsCount}}
+          </div>
+        {{/if}}
       {{else}}
         <div class="chat-channel-icon --avatar">
           <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />

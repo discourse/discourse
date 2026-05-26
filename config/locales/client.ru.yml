@@ -414,7 +414,6 @@ ru:
         find_on_github: "Найти на GitHub"
       toggle_safe_mode: "Переключить безопасный режим"
       toggle_verbose_localization: "Включить/выключить подробный режим локализации"
-      toggle_mobile_view: "Переключить мобильный режим"
       disable_dev_tools: "Отключить инструменты разработчика"
       toggle_upcoming_changes_debug: "Включить/отключить отладку предстоящих изменений"
     s3:
@@ -475,8 +474,6 @@ ru:
     tos: "Условия использования"
     rules: "Правила"
     conduct: "Кодекс поведения"
-    mobile_view: "Для мобильных устройств"
-    desktop_view: "Для настольных устройств"
     now: "только что"
     read_more: "читать дальше"
     more: "Ещё"
@@ -4741,7 +4738,6 @@ ru:
         name_placeholder: "Для чего эта закладка?"
         name_input_label: "Название закладки"
         set_reminder: "Напомнить мне"
-        options: "Параметры"
         actions:
           delete_bookmark:
             name: "Удалить закладку"
@@ -6642,8 +6638,39 @@ ru:
             title: "отчетов"
           traffic:
             title: "Посещаемость сайта"
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Новые темы"
+              posts: "Записи"
+              share: "Поделиться"
+            whos_posting:
+              all_categories: "Все разделы"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новое"
+                "1": "Обычный пользователь"
+                "2": "Участник"
+                "3": "Активный пользователь"
+                "4": "Лидер"
+              trend:
+                stable: "стабильный"
+        reports_section:
+          no_data: "Нет данных для отображения"
+          modal:
+            enabled_heading: "Включено"
+            all_heading: "Все отчеты"
+            apply: "Применить"
+            move_up: "Вверх"
+            move_down: "Вниз"
         configure:
           button: "Настроить"
+        site_traffic:
+          series:
+            anonymous: "Анонимные просмотры"
+            embedded: "Встроенные просмотры страниц"
+            crawlers: "Поисковые роботы"
         period:
           last_7_days: "За последние 7 дней"
           last_30_days: "За последние 30 дней"

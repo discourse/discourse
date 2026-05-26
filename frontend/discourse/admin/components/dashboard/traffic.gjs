@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
+import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -104,7 +107,13 @@ export default class DashboardTraffic extends Component {
     return {
       hideYAxisGridLines: true,
       hiddenLabels: this.hiddenLabels,
-      legendPosition: "top",
+    };
+  }
+
+  get reportQuery() {
+    return {
+      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
+      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
     };
   }
 
@@ -187,33 +196,32 @@ export default class DashboardTraffic extends Component {
       @title={{i18n "admin.dashboard.sections.traffic.title"}}
       @startDate={{@startDate}}
       @endDate={{@endDate}}
+      ...attributes
     >
       <div class="db-traffic {{if @loading 'is-loading'}}">
         <div class="db-section__subheader">
           <div class="db-section__subintro">
-            <h3 class="db-traffic__headline">
+            <h3>
               {{this.headlineText}}
               {{#if this.trend}}
-                <span class="db-traffic__headline-separator"> - </span>
-                <span
-                  class="db-traffic__trend {{concat '--' this.trendDirection}}"
-                >
+                —
+                <span class="db-traffic__trend --{{this.trendDirection}}">
                   {{this.trendText}}
-                  <DTooltip
-                    class="db-traffic__info"
-                    @identifier="site-traffic-comparison-tooltip"
-                    @icon="circle-info"
-                  >
-                    <:content>{{this.comparisonTooltipText}}</:content>
-                  </DTooltip>
                 </span>
+                <DTooltip
+                  class="db-section__info"
+                  @identifier="site-traffic-comparison-tooltip"
+                  @icon="circle-question"
+                >
+                  <:content>{{this.comparisonTooltipText}}</:content>
+                </DTooltip>
               {{/if}}
             </h3>
-            <p>
+            {{! <p>
               Placeholder: Logged-in traffic is growing steadily. Two spikes on
               Mar 8-9 drove a burst of anonymous visitors who didn't log in,
               pulling the logged-in share down slightly to 38%.
-            </p>
+            </p> }}
           </div>
 
           {{#if this.showLoggedInShare}}
@@ -227,9 +235,9 @@ export default class DashboardTraffic extends Component {
                     "admin.dashboard.site_traffic.kpi.logged_in_share.label"
                   }}
                   <DTooltip
-                    class="db-traffic__info"
+                    class="db-section__info"
                     @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="circle-info"
+                    @icon="circle-question"
                   >
                     <:content>
                       {{i18n
@@ -243,10 +251,10 @@ export default class DashboardTraffic extends Component {
           {{/if}}
         </div>
 
-        <div class="db-section__callout">
+        {{! <div class="db-section__callout">
           Placeholder: Spikes on Mar 8 and Mar 9 - a Hacker News post linking to
           the plugin release docs drove a surge in anonymous pageviews.
-        </div>
+        </div> }}
 
         {{#if @fetchError}}
           <div class="db-section__traffic-chart">
@@ -262,89 +270,131 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
+          <LinkTo
+            class="db-traffic__see-details"
+            @route="adminReports.show"
+            @model="site_traffic"
+            @query={{hash
+              start_date=this.reportQuery.start_date
+              end_date=this.reportQuery.end_date
+            }}
+          >
+            {{i18n "admin.dashboard.site_traffic.see_details"}}
+            {{dIcon "arrow-right"}}
+          </LinkTo>
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>
           </div>
         {{/if}}
 
-        <div class="db-section__row">
-          <div class="db-section__row-block">
-            <div class="db-section__row-block-header">
-              <a class="db-section__row-block-title">
-                Placeholder: Top referrers
-                <span class="db-link-arrow">{{dIcon "arrow-right"}}</span>
-              </a>
+        {{#unless @fetchError}}
+          {{#if @traffic}}
+            {{#if (or @traffic.top_countries @traffic.top_referrers)}}
+              <div class="db-section__row">
+                <div class="db-section__row-block">
+                  <h3 class="db-section__row-block-title">
+                    {{i18n "admin.dashboard.site_traffic.top_referrers.title"}}
+                  </h3>
+                  {{#if @traffic.top_referrers.error}}
+                    <p class="db-traffic__list-error" role="status">
+                      {{i18n
+                        "admin.dashboard.site_traffic.top_referrers.error"
+                      }}
+                    </p>
+                  {{else if @traffic.top_referrers.rows.length}}
+                    <ul class="db-traffic__list">
+                      {{#each @traffic.top_referrers.rows as |row|}}
+                        <li class="db-traffic__list-row">
+                          <a
+                            class="db-traffic__link"
+                            href={{concat "https://" row.normalized_referrer}}
+                            rel="noopener noreferrer nofollow ugc"
+                            target="_blank"
+                          >
+                            {{row.normalized_referrer}}
+                          </a>
+                          <span class="db-traffic__metric">
+                            <span class="db-traffic__percent">
+                              {{row.percent}}%
+                            </span>
+                            <span class="db-traffic__count">
+                              ({{this.formatHeadlineCount row.count}})
+                            </span>
+                          </span>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  {{else}}
+                    <p class="db-traffic__list-empty">
+                      {{i18n
+                        "admin.dashboard.site_traffic.top_referrers.empty"
+                      }}
+                    </p>
+                  {{/if}}
+                </div>
+
+                <div class="db-section__row-block">
+                  <h3 class="db-section__row-block-title">
+                    {{i18n "admin.dashboard.site_traffic.top_countries.title"}}
+                  </h3>
+                  {{#if @traffic.top_countries.error}}
+                    <p class="db-traffic__list-error" role="status">
+                      {{i18n
+                        "admin.dashboard.site_traffic.top_countries.error"
+                      }}
+                    </p>
+                  {{else if @traffic.top_countries.rows.length}}
+                    <ul class="db-traffic__list">
+                      {{#each @traffic.top_countries.rows as |row|}}
+                        <li
+                          class="db-traffic__list-row"
+                          data-test-country-code={{row.country_code}}
+                        >
+                          <span class="db-traffic__name">
+                            <span aria-hidden="true">
+                              {{countryFlag row.country_code}}
+                            </span>
+                            {{countryName row.country_code}}
+                          </span>
+                          <span class="db-traffic__metric">
+                            <span class="db-traffic__percent">
+                              {{row.percent}}%
+                            </span>
+                            <span class="db-traffic__count">
+                              ({{this.formatHeadlineCount row.count}})
+                            </span>
+                          </span>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  {{else}}
+                    <p class="db-traffic__list-empty">
+                      {{i18n
+                        "admin.dashboard.site_traffic.top_countries.empty"
+                      }}
+                    </p>
+                  {{/if}}
+                </div>
+              </div>
+            {{/if}}
+          {{else}}
+            <div class="db-section__row">
+              <div class="db-section__row-block">
+                <h3 class="db-section__row-block-title">
+                  {{i18n "admin.dashboard.site_traffic.top_referrers.title"}}
+                </h3>
+                <div class="db-traffic__list-shell"></div>
+              </div>
+              <div class="db-section__row-block">
+                <h3 class="db-section__row-block-title">
+                  {{i18n "admin.dashboard.site_traffic.top_countries.title"}}
+                </h3>
+                <div class="db-traffic__list-shell"></div>
+              </div>
             </div>
-
-            <ul class="db-traffic__list">
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">news.ycombinator.com</span>
-                <span class="db-traffic__value">
-                  41%
-                  <span class="db-traffic__count">(34.2k)</span>
-                </span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">google.com</span>
-                <span class="db-traffic__value">
-                  29%
-                  <span class="db-traffic__count">(24.5k)</span>
-                </span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">github.com</span>
-                <span class="db-traffic__value">
-                  15%
-                  <span class="db-traffic__count">(12.3k)</span>
-                </span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">reddit.com/r/selfhosted</span>
-                <span class="db-traffic__value">
-                  10%
-                  <span class="db-traffic__count">(8.0k)</span>
-                </span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">duckduckgo.com</span>
-                <span class="db-traffic__value">
-                  5%
-                  <span class="db-traffic__count">(4.8k)</span>
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="db-section__row-block">
-            <h3 class="db-section__row-block-title">
-              Placeholder: Top countries
-            </h3>
-
-            <ul class="db-traffic__list">
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">🇺🇸 United States</span>
-                <span class="db-traffic__value">41%</span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">🇬🇧 United Kingdom</span>
-                <span class="db-traffic__value">12%</span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">🇩🇪 Germany</span>
-                <span class="db-traffic__value">8%</span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">🇨🇦 Canada</span>
-                <span class="db-traffic__value">7%</span>
-              </li>
-              <li class="db-traffic__list-row">
-                <span class="db-traffic__name">🇦🇺 Australia</span>
-                <span class="db-traffic__value">4%</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+          {{/if}}
+        {{/unless}}
       </div>
     </DashboardSection>
   </template>

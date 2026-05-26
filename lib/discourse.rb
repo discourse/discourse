@@ -86,8 +86,8 @@ module Discourse
       rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
 
       File.open(temp_destination, "w") do |fd|
         fd.write(contents)
@@ -105,8 +105,8 @@ module Discourse
       rescue Errno::ENOENT, Errno::EINVAL
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
       execute_command("ln", "-s", source, temp_destination)
 
       # Remove existing symlink first to prevent FileUtils.mv from moving
@@ -343,7 +343,7 @@ module Discourse
     @plugins = []
     @plugins_by_name = {}
     Plugin::Instance
-      .find_all("#{Rails.root}/plugins")
+      .find_all("#{Rails.root.join("plugins")}")
       .each do |p|
         v = p.metadata.required_version || Discourse::VERSION::STRING
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
@@ -430,7 +430,7 @@ module Discourse
   end
 
   def self.find_plugin_css_assets(args)
-    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
+    plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -453,11 +453,9 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins =
-      self
-        .find_plugins(args)
-        .select do |plugin|
-          plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
-        end
+      find_plugins(args).select do |plugin|
+        plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
+      end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 

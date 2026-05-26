@@ -9,7 +9,7 @@ class UserExport < ActiveRecord::Base
 
   after_save do
     if saved_change_to_upload_id?
-      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+      UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
     end
   end
 
@@ -35,13 +35,10 @@ class UserExport < ActiveRecord::Base
   end
 
   def self.base_directory
-    File.join(
-      Rails.root,
-      "public",
-      "uploads",
-      "csv_exports",
-      RailsMultisite::ConnectionManagement.current_db,
-    )
+    Rails
+      .public_path
+      .join("uploads", "csv_exports", RailsMultisite::ConnectionManagement.current_db)
+      .to_s
   end
 end
 

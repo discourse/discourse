@@ -365,9 +365,9 @@ module DiscourseChatIntegration::Provider::SlackProvider
     message = slack_message(post, channel_id, filter)
 
     if SiteSetting.chat_integration_slack_access_token.empty?
-      self.send_via_webhook(message)
+      send_via_webhook(message)
     else
-      self.send_via_api(post, channel_id, message)
+      send_via_api(post, channel_id, message)
     end
   end
 
