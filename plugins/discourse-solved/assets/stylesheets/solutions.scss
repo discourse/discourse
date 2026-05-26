@@ -110,20 +110,15 @@ $solved-color: var(--success);
 }
 
 .accepted-answers {
-  & .d-post-accordion {
-    &__layout {
-      padding-bottom: var(--space-4);
+  &.d-post-accordion {
+    --d-post-accordion-header-color: var(--secondary);
+    --d-post-accordion-header-background: #{$solved-color};
+    --d-post-accordion-header-border-color: #{$solved-color};
+    padding-bottom: var(--space-4);
 
-      @include viewport.from(sm) {
-        padding: var(--space-1) var(--topic-body-width-padding) var(--space-4)
-          var(--topic-body-width-padding);
-      }
-    }
-
-    &__header {
-      color: var(--secondary);
-      background-color: $solved-color;
-      border-color: $solved-color;
+    @include viewport.from(sm) {
+      padding: var(--space-1) var(--topic-body-width-padding) var(--space-4)
+        var(--topic-body-width-padding);
     }
   }
 
