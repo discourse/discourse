@@ -226,8 +226,6 @@ id:
     tos: "Ketentuan Layanan"
     rules: "Aturan"
     conduct: "Kode Etik"
-    mobile_view: "Tampilan Mobile"
-    desktop_view: "Tampilan Desktop"
     now: "baru saja"
     read_more: "baca selengkapnya"
     more: "Selengkapnya"
@@ -1954,7 +1952,6 @@ id:
         create: "Buat penanda"
         edit: "Sunting penanda"
         name: "Nama"
-        options: "Pilihan"
         actions:
           delete_bookmark:
             name: "Hapus penanda"
@@ -2473,6 +2470,10 @@ id:
                 "0": "Baru"
                 "2": "Anggota"
                 "3": "Umum"
+        reports_section:
+          modal:
+            enabled_heading: "Diaktifkan"
+            apply: "menerapkan"
         site_traffic:
           series:
             anonymous: "Anonim"

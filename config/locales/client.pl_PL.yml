@@ -430,7 +430,6 @@ pl_PL:
         since: "(od %{version})"
       toggle_safe_mode: "Przełącz tryb awaryjny"
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
-      toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
       toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
@@ -491,8 +490,6 @@ pl_PL:
     tos: "Warunki użytkowania serwisu"
     rules: "Zasady"
     conduct: "Regulamin"
-    mobile_view: "Widok mobilny"
-    desktop_view: "Wersja komputerowa"
     now: "teraz"
     read_more: "więcej"
     more: "Więcej"
@@ -5047,7 +5044,6 @@ pl_PL:
         name_placeholder: "Do czego ma służyć ta zakładka?"
         name_input_label: "Nazwa zakładki"
         set_reminder: "Przypomnij mi"
-        options: "Opcje"
         actions:
           delete_bookmark:
             name: "Usuń zakładkę"
@@ -7157,6 +7153,20 @@ pl_PL:
               no_signal:
                 title: "Za mało aktywności, aby podsumować zaangażowanie."
                 summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+        reports_section:
+          add: "Dodaj raport"
+          remove: "Usuń raport"
+          no_data: "Brak danych do wyświetlenia"
+          modal:
+            title: "Zarządzaj raportami"
+            search_placeholder: "Wyszukaj raporty"
+            counter: "Raporty: %{count} / %{max}"
+            enabled_heading: "Włączono"
+            all_heading: "Wszystkie zgłoszenia"
+            apply: "Zastosuj"
+            toggle: "Przełącz raport"
+            move_up: "Przenieś wyżej"
+            move_down: "Przenieś niżej"
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."
@@ -7239,6 +7249,7 @@ pl_PL:
             anonymous: "Anonimowi"
             embedded: "Osadzone wyświetlenia stron"
             crawlers: "Boty indeksujące"
+          see_details: "Zobacz szczegóły"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"

@@ -414,7 +414,6 @@ he:
         aliases: "כינויים"
       toggle_safe_mode: "הפעלת/כיבוי מצב בטוח"
       toggle_verbose_localization: "הפעלת/כיבוי פירוט תרגום"
-      toggle_mobile_view: "הפעלת/כיבוי תצוגת ניידים"
       disable_dev_tools: "כיבוי כלי פיתוח"
     s3:
       regions:
@@ -474,8 +473,6 @@ he:
     tos: "תנאי השירות"
     rules: "כללים"
     conduct: "נהלי התנהגות"
-    mobile_view: "תצוגת נייד"
-    desktop_view: "תצוגת מחשב"
     now: "ממש עכשיו"
     read_more: "מידע נוסף"
     more: "עוד"
@@ -4755,7 +4752,6 @@ he:
         name_placeholder: "עבור מה הסימנייה?"
         name_input_label: "שם סימנייה"
         set_reminder: "להזכיר לי"
-        options: "אפשרויות"
         actions:
           delete_bookmark:
             name: "מחיקת סימנייה"
@@ -6686,6 +6682,14 @@ he:
                 "4": "מובילים"
               trend:
                 stable: "יציב"
+        reports_section:
+          no_data: "אין נתונים להצגה"
+          modal:
+            enabled_heading: "פעיל"
+            all_heading: "כל הדיווחים"
+            apply: "החלה"
+            move_up: "העלאה למעלה"
+            move_down: "הורדה למטה"
         configure:
           button: "הגדרה"
           tooltip: "הגדרת איך לוח המחוונים הזה מופיע לכל מבקרי האתר הזה."

@@ -21,6 +21,9 @@ zh_CN:
       explorer:
         no_semicolons: "从查询中移除分号。"
         dirty: "您必须先保存查询，然后才能运行。"
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "没有结果"
     explorer:
       default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"

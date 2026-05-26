@@ -8,6 +8,8 @@ nl:
   site_settings:
     discourse_automation_enabled: "Discourse-automatiseringsplug-in inschakelen"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(leeg)"
     models:
       automations:
         validations:
@@ -20,6 +22,9 @@ nl:
         invalid_field: Veldonderdeel '%{component}' kan niet worden gebruikt op '%{target}:%{target_name}'.
         invalid_metadata: Gegevens voor '%{field}' zijn ongeldig of component '%{component}' is onbekend.
     triggerables:
+      post_flag_created:
+        title: Berichtmarkering gemaakt
+        description: Activeert een automatisering wanneer een bericht wordt gemarkeerd
       errors:
         custom_fields_or_user_profile_required: "Minimaal één van 'custom_fields' of 'user_profile' moet worden opgegeven."
       user_badge_granted:
@@ -67,6 +72,10 @@ nl:
         description: Wanneer de tags van een topic worden gewijzigd, wordt de automatisering getriggerd
       topic:
         title: Topic
+        description: Het bijbehorende script wordt alleen gebruikt voor het opgegeven topic, dit is bijvoorbeeld handig voor scripts die validatie uitvoeren
+      topic_closed:
+        title: Topic gesloten
+        description: Activeert een script wanneer een onderwerp wordt gesloten.
       after_post_cook:
         title: Na finalisering bericht
         description: Wanneer de inhoud van een bericht wordt gefinaliseerd, wordt de automatisering getriggerd
@@ -74,6 +83,24 @@ nl:
         title: Na update door gebruiker
         description: Wanneer een gebruiker gegevens bijwerkt, wordt de automatisering geactiveerd
     scriptables:
+      email_on_flagged_post:
+        title: E-mail over gemarkeerd bericht
+        description: Verzend een aangepaste e-mail wanneer een markering bij een bericht wordt gemaakt.
+        subject: "Gemarkeerd bericht: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Een bericht is gemarkeerd.
+
+          Topic: {{topic_title}} ({{topic_url}})
+          Bericht: {{post_url}} (#{{post_number}})
+          Markeringstype: {{flag_type}}
+          Gemarkeerde gebruiker: {{flagged_username}}
+          Gemarkeerde door: {{flagger_username}}
+          Categorie: {{category}}
+          Tags: {{tags}}
+
+          --------
+          Uittreksel bericht:
+          {{post_excerpt}}
       post:
         title: Een bericht maken
         description: Maak een bericht over een bepaald topic
@@ -104,6 +131,10 @@ nl:
         title: Cadeau-uitwisseling
         description: Maakt het mogelijk om gebruikers van een groep anoniem te koppelen om elkaar een cadeau te sturen.
         doc: Cadeau-uitwisseling vereist een bestaande groep met minimaal 3 gebruikers. Op de gekozen datum worden alle gebruikers van de groep gekoppeld aan één gever en één ontvanger.
+      remove_upload_markup_from_deleted_posts:
+        title: Uploadopmaak uit verwijderde berichten verwijderen
+        description: Treedt op als systeemgebruiker en voegt een revisie toe aan verwijderde berichten waarbij de uploadopmaak wordt verwijderd. In combinatie met de taak 'clean up uploads' resulteert dit in de definitieve verwijdering van uploads in verwijderde berichten. Wees voorzichtig met het gebruik!
+        edit_reason: Automatisering heeft de uploadopmaak verwijderd uit het verwijderde bericht.
       send_pms:
         title: PB's sturen
         description: Staat het sturen van PB's toe (mogelijk vertraagd).
@@ -159,3 +190,4 @@ nl:
         description: "Wijs topics willekeurig toe aan een groep"
       set_topic_timer:
         title: "Topictimer instellen"
+        description: "Stel een timer in voor een topic"

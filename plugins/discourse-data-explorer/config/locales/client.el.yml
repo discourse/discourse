@@ -6,6 +6,9 @@
 
 el:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Δεν υπάρχουν αποτελέσματα"
     explorer:
       default_query: "Προεπιλογή"
       mode:

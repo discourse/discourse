@@ -314,8 +314,6 @@ fa_IR:
     tos: "شرایط استفاده از خدمات"
     rules: "قوانین"
     conduct: "دستورالعمل"
-    mobile_view: "نمایش برای موبایل"
-    desktop_view: "نمایش برای کامپیوتر"
     now: "هم‌اکنون"
     read_more: "بیشتر بخوانید"
     more: "بیشتر"
@@ -3773,7 +3771,6 @@ fa_IR:
         name_placeholder: "این نشانک برای چی است؟"
         name_input_label: "نام نشانک"
         set_reminder: "به من یادآوری کن"
-        options: "گزینه‌ها"
         actions:
           delete_bookmark:
             name: "حذف نشانک"
@@ -5148,6 +5145,13 @@ fa_IR:
                 "2": "عضو"
                 "3": "عادی"
                 "4": "رهبر"
+        reports_section:
+          modal:
+            enabled_heading: "فعال شده"
+            all_heading: "تمامی گزارشات"
+            apply: "اعمال کردن"
+            move_up: "انتقال به بالا"
+            move_down: "انتقال به پایین"
         site_traffic:
           series:
             anonymous: "ناشناس"

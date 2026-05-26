@@ -359,8 +359,6 @@ ja:
     tos: "利用規約"
     rules: "ルール"
     conduct: "行動規範"
-    mobile_view: "モバイルビュー"
-    desktop_view: "デスクトップビュー"
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
@@ -3955,7 +3953,6 @@ ja:
         name_placeholder: "これは何のブックマークですか？"
         name_input_label: "ブックマーク名"
         set_reminder: "リマインダー"
-        options: "オプション"
         actions:
           delete_bookmark:
             name: "ブックマークを削除"
@@ -5708,6 +5705,13 @@ ja:
                 "4": "リーダー"
               trend:
                 stable: "安定"
+        reports_section:
+          modal:
+            enabled_heading: "有効"
+            all_heading: "すべてのレポート"
+            apply: "適用"
+            move_up: "上に移動"
+            move_down: "下に移動"
         configure:
           button: "構成"
         site_traffic:

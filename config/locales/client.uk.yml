@@ -430,7 +430,6 @@ uk:
         since: "(з %{version})"
       toggle_safe_mode: "Увімкнути/вимкнути безпечний режим"
       toggle_verbose_localization: "Увімкнути/вимкнути детальну локалізацію"
-      toggle_mobile_view: "Переключити мобільний перегляд"
       disable_dev_tools: "Вимкнути інструменти для розробників"
       toggle_upcoming_changes_debug: "Перемкнути налагодження майбутніх змін"
     s3:
@@ -491,8 +490,6 @@ uk:
     tos: "Умови використання"
     rules: "Правила"
     conduct: "Кодекс поведінки"
-    mobile_view: "Мобільний вигляд"
-    desktop_view: "Стаціонарний вигляд"
     now: "щойно"
     read_more: "читати далі"
     more: "Більше"
@@ -5052,7 +5049,6 @@ uk:
         name_placeholder: "Для чого ця закладка?"
         name_input_label: "Назва закладки"
         set_reminder: "Нагадати мені"
-        options: "Параметри"
         actions:
           delete_bookmark:
             name: "Видалити закладку"
@@ -7145,6 +7141,14 @@ uk:
                 many: "%{count} учасників перемістились вниз"
                 other: "%{count} учасників перемістились вниз"
               stable_aria: "без руху"
+        reports_section:
+          no_data: "Немає даних для відображення"
+          modal:
+            enabled_heading: "Включено"
+            all_heading: "Всі звіти"
+            apply: "Застосувати"
+            move_up: "Посунути вгору"
+            move_down: "Посунути вниз"
         configure:
           button: "Налаштувати"
           tooltip: "Налаштуйте вигляд цієї панелі для всіх користувачів сайту."
