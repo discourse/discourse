@@ -21,7 +21,12 @@ export default class PostMenuLikeButton extends Component {
   @tracked isAnimated = false;
 
   get disabled() {
-    return this.currentUser && !this.args.post.canToggleLike;
+    if (!this.currentUser) {
+      // Archived topics reject likes server-side; closed topics still accept
+      // them, so let anon defer-and-replay after login.
+      return !!this.args.post.topic?.archived;
+    }
+    return !this.args.post.canToggleLike;
   }
 
   get title() {
@@ -80,7 +85,7 @@ export default class PostMenuLikeButton extends Component {
           }}
           ...attributes
           data-post-id={{@post.id}}
-          disabled={{this.disabled}}
+          @disabled={{this.disabled}}
           @action={{this.toggleLike}}
           @icon={{this.likeButtonIcon}}
           @label={{if @showLabel "post.controls.like_action"}}

@@ -62,6 +62,14 @@ after_initialize do
     Notification.singleton_class.prepend DiscourseReactions::NotificationExtension
   end
 
+  register_anonymous_action("react_to_post") do |user, params|
+    post = Post.find_by(id: params["post_id"])
+    next if !post || !user.guardian.can_see?(post)
+    reaction_value = params["reaction"].to_s
+    next if !DiscourseReactions::Reaction.valid?(reaction_value)
+    DiscourseReactions::ReactionManager.new(reaction_value:, user:, post:).toggle!
+  end
+
   Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }
 
   TopicView.on_preload do |topic_view|
