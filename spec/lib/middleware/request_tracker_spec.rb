@@ -18,6 +18,7 @@ RSpec.describe Middleware::RequestTracker do
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   after do
