@@ -28,7 +28,7 @@ module Holidays
 
     def self.custom_methods
       {
-
+          
       }
     end
   end
