@@ -3989,6 +3989,8 @@ ALTER SEQUENCE public.discourse_solved_shared_issues_id_seq OWNED BY public.disc
 CREATE TABLE public.discourse_solved_solved_topics (
     id bigint NOT NULL,
     topic_id bigint NOT NULL,
+    answer_post_id integer,
+    accepter_user_id integer,
     topic_timer_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -17410,6 +17412,13 @@ CREATE UNIQUE INDEX index_discourse_solved_shared_issues_on_topic_id_and_user_id
 --
 
 CREATE INDEX index_discourse_solved_shared_issues_on_user_id_and_topic_id ON public.discourse_solved_shared_issues USING btree (user_id, topic_id);
+
+
+--
+-- Name: index_discourse_solved_solved_topics_on_answer_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_solved_solved_topics_on_answer_post_id ON public.discourse_solved_solved_topics USING btree (answer_post_id);
 
 
 --

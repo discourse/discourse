@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class DropDiscourseSolvedRemovedColumns < ActiveRecord::Migration[8.0]
+class DropMultipleSolutionsDualWriteTriggers < ActiveRecord::Migration[8.0]
   def up
     execute <<~SQL
       DROP TRIGGER IF EXISTS solved_trigger_old_answers_to_new
