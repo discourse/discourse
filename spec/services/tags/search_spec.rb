@@ -393,6 +393,26 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "with a mix of allowed and disabled matches" do
+      fab!(:blocked_sibling) { Fabricate(:tag, name: "alphablocked") }
+      fab!(:tag_group) do
+        Fabricate(
+          :tag_group,
+          name: "Exclusive Group",
+          one_per_topic: true,
+          tags: [tag2, blocked_sibling],
+        )
+      end
+
+      let(:params) { { q: "alpha", filterForInput: true, selected_tags: [tag2.name] } }
+
+      it "lists allowed tags before disabled tags" do
+        names = result[:tags].map { |t| t[:name] }
+        expect(names).to include("alpha", "alphablocked")
+        expect(names.index("alpha")).to be < names.index("alphablocked")
+      end
+    end
+
     context "when allowed tags are cut off by the limit" do
       fab!(:tag_foo1) { Fabricate(:tag, name: "foomatch1") }
       fab!(:tag_foo2) { Fabricate(:tag, name: "foomatch2") }

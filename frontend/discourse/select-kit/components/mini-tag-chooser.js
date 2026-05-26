@@ -184,16 +184,12 @@ export default class MiniTagChooser extends MultiSelectComponent {
       return [];
     }
 
-    let results = json.results;
-
     this.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.name.localeCompare(b.name));
-    }
+    let results = this.tagUtils.sortSearchResults(json.results);
 
     if (json.required_tag_group) {
       this.set(
