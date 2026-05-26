@@ -7035,6 +7035,7 @@ en:
             anonymous: "Anonymous"
             embedded: "Embedded pageviews"
             crawlers: "Crawlers"
+          see_details: "See details"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"

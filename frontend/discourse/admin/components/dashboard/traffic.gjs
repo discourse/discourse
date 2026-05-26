@@ -4,7 +4,9 @@ import AdminReportStackedChart from "discourse/admin/components/admin-report-sta
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import getURL from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const PERIOD_COPY_KEYS = {
@@ -106,6 +108,15 @@ export default class DashboardTraffic extends Component {
       hideYAxisGridLines: true,
       hiddenLabels: this.hiddenLabels,
     };
+  }
+
+  get reportUrl() {
+    const startDate = moment(this.args.startDate).format("YYYY-MM-DD");
+    const endDate = moment(this.args.endDate).format("YYYY-MM-DD");
+
+    return getURL(
+      `/admin/reports/site_traffic?start_date=${startDate}&end_date=${endDate}`
+    );
   }
 
   formatHeadlineCount(value) {
@@ -260,6 +271,10 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
+          <a class="db-traffic__see-details" href={{this.reportUrl}}>
+            {{i18n "admin.dashboard.site_traffic.see_details"}}
+            {{dIcon "arrow-right"}}
+          </a>
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>
