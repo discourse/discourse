@@ -7420,73 +7420,80 @@ RSpec.describe TopicsController do
   end
 
   describe "#set_notifications" do
-    describe "initiated by admin" do
-      it "can update another user's notification level via API" do
-        api_key = Fabricate(:api_key, user: admin)
+    let(:watching) { NotificationLevels.topic_levels[:watching] }
+
+    it "rejects `username` param for session requests" do
+      sign_in(user)
+      post "/t/#{topic.id}/notifications.json",
+           params: {
+             username: user_2.username,
+             notification_level: watching,
+           }
+
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: topic)).to be_blank
+      expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
+    end
+
+    describe "via API" do
+      it "admin can target another user with `username` param" do
+        api_key = Fabricate(:api_key, user: admin).key
         post "/t/#{topic.id}/notifications",
              params: {
                username: user.username,
-               notification_level: NotificationLevels.topic_levels[:watching],
+               notification_level: watching,
              },
              headers: {
-               HTTP_API_KEY: api_key.key,
+               HTTP_API_KEY: api_key,
                HTTP_API_USERNAME: admin.username,
              }
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
+
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(watching)
       end
 
-      it "can update own notification level via API" do
-        api_key = Fabricate(:api_key, user: admin)
+      it "admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: admin).key
         post "/t/#{topic.id}/notifications",
              params: {
-               notification_level: NotificationLevels.topic_levels[:watching],
+               notification_level: watching,
              },
              headers: {
-               HTTP_API_KEY: api_key.key,
+               HTTP_API_KEY: api_key,
                HTTP_API_USERNAME: admin.username,
              }
-        expect(TopicUser.find_by(user: admin, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
-      end
-    end
 
-    describe "initiated by non-admin" do
-      it "only acts on current_user and ignores `username` param" do
-        sign_in(user)
-        TopicUser.create!(
-          user: user,
-          topic: topic,
-          notification_level: NotificationLevels.topic_levels[:tracking],
-        )
-        post "/t/#{topic.id}/notifications.json",
+        expect(TopicUser.find_by(user: admin, topic: topic).notification_level).to eq(watching)
+      end
+
+      it "non-admin gets 403 when passing `username` to target another user" do
+        api_key = Fabricate(:api_key, user: user).key
+        post "/t/#{topic.id}/notifications",
              params: {
                username: user_2.username,
-               notification_level: NotificationLevels.topic_levels[:watching],
-             }
-
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
-        expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
-      end
-
-      it "can update own notification level via API" do
-        api_key = Fabricate(:api_key, user: user)
-        post "/t/#{topic.id}/notifications",
-             params: {
-               notification_level: NotificationLevels.topic_levels[:watching],
+               notification_level: watching,
              },
              headers: {
-               HTTP_API_KEY: api_key.key,
+               HTTP_API_KEY: api_key,
                HTTP_API_USERNAME: user.username,
              }
 
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
+        expect(response.status).to eq(403)
+        expect(TopicUser.find_by(user: user, topic: topic)).to be_blank
+        expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
+      end
+
+      it "non-admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: user).key
+        post "/t/#{topic.id}/notifications",
+             params: {
+               notification_level: watching,
+             },
+             headers: {
+               HTTP_API_KEY: api_key,
+               HTTP_API_USERNAME: user.username,
+             }
+
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(watching)
       end
     end
 
