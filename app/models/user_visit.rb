@@ -85,11 +85,11 @@ end
 # Table name: user_visits
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  visited_at :date             not null
-#  posts_read :integer          default(0)
 #  mobile     :boolean          default(FALSE)
+#  posts_read :integer          default(0)
 #  time_read  :integer          default(0), not null
+#  visited_at :date             not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

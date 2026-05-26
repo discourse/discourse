@@ -263,8 +263,7 @@ tr_TR:
             ui_settings: "Kullanıcı Arayüzü Ayarları"
             integrations: "Entegrasyonlar"
         nav:
-          configured: "Yapılandırılmış"
-          unconfigured: "Yapılandırılmamış"
+          enabled: "Etkin mi"
         filters:
           all: "Tümü"
           text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
@@ -1179,12 +1178,14 @@ tr_TR:
             one: "Mesaj %{count} karakter veya daha uzun olmalıdır"
             other: "Mesaj %{count} karakter veya daha uzun olmalıdır"
           messages_sidebar_title: "Konuşmalar"
+          starred: "Yıldızlı"
           today: "Bugün"
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
           upload_files: "Dosya yükle"
           uploads_in_progress: "Yüklemeler devam ederken gönderilemiyor"
           scroll_to_bottom: "En alta kaydır"
+          editing_post: "Gönderi düzenleniyor"
       sentiments:
         dashboard:
           title: "Duyarlılık"

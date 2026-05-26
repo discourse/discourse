@@ -23,7 +23,7 @@ class DiscourseLogstashLogger < Logger
   #
   # @return [Logger] A new logger instance with the specified log device and type.
   def self.logger(logdev:, type:, customize_event: nil, level: Logger::INFO)
-    logger = self.new(logdev)
+    logger = new(logdev)
     logger.type = type
     logger.customize_event = customize_event if customize_event
     logger.level = level

@@ -76,6 +76,7 @@ module DiscourseAi
 
         posts = results&.posts || []
         posts = posts[0..results_limit.to_i - 1]
+        regular_search_result_post_ids = posts.map(&:id).to_set
 
         if should_try_semantic_search
           semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
@@ -123,18 +124,26 @@ module DiscourseAi
         else
           hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
           format_results(posts, args: search_args, result_style: result_style) do |post|
-            format_row(topic: post.topic, post:, hidden_tags:)
+            format_row(
+              topic: post.topic,
+              post:,
+              hidden_tags:,
+              excerpt:
+                if search_query.present? && regular_search_result_post_ids.include?(post.id)
+                  results.blurb(post, scope: guardian)
+                end,
+            )
           end
         end
       end
 
-      def self.format_row(topic:, post: nil, hidden_tags: nil)
+      def self.format_row(topic:, post: nil, hidden_tags: nil, excerpt: nil)
         row = {
           title: topic.title,
           # this is deliberate, we don't want to repeat https://example.com/ in every result, but we need subfolder
           url: post ? post.relative_url : topic.relative_url,
           username: post ? post.user&.username : topic.user&.username,
-          excerpt: post ? post.excerpt : topic.excerpt,
+          excerpt: excerpt.presence || (post ? post.excerpt : topic.excerpt),
           created: post ? post.created_at : topic.created_at,
           category: category_breadcrumb(topic.category),
           likes: post ? post.like_count : topic.like_count,

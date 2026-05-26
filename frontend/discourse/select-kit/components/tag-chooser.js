@@ -193,7 +193,6 @@ export default class TagChooser extends MultiSelectComponent {
 
     const blockedTags = this._normalizedBlockedTags;
     if (blockedTags.length) {
-      // extract names from blockedTags (may be strings or objects)
       const blockedNames = blockedTags.map((t) =>
         typeof t === "string" ? t : t.name
       );
@@ -202,9 +201,7 @@ export default class TagChooser extends MultiSelectComponent {
       });
     }
 
-    if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.name > b.name);
-    }
+    results = this.tagUtils.sortSearchResults(results);
 
     return uniqueItemsFromArray(results, "name");
   }

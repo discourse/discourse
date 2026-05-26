@@ -3,7 +3,7 @@ import {
   applyHtmlDecorators,
   NON_STREAM_HTML_DECORATOR,
   NULL_HELPER,
-} from "discourse/components/decorated-html";
+} from "discourse/ui-kit/d-decorated-html";
 
 /** Modifier that sets element innerHTML and applies cooked content decorators. */
 export default modifier((element, [html]) => {

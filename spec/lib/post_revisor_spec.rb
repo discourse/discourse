@@ -267,6 +267,36 @@ describe PostRevisor do
       expect(post.topic.reload.tags).to match_array([have_attributes(name: "a-whole-new-tag")])
     end
 
+    it "does not create an empty revision when only synonyms of existing tags are submitted" do
+      canonical = Fabricate(:tag, name: "apple-inc")
+      aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+      appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+      post.topic.tags << canonical
+
+      expect do
+        post_revisor.revise!(
+          admin,
+          tags: [
+            { id: aapl.id, name: "aapl" },
+            { id: appl.id, name: "appl" },
+            { id: canonical.id, name: "apple-inc" },
+          ],
+        )
+      end.not_to change { PostRevision.count }
+      expect(post.topic.reload.tags).to contain_exactly(canonical)
+    end
+
+    it "does not create an empty revision when synonym names are submitted as strings" do
+      canonical = Fabricate(:tag, name: "tesla-inc")
+      Fabricate(:tag, name: "tsla", target_tag: canonical)
+      post.topic.tags << canonical
+
+      expect do post_revisor.revise!(admin, tags: %w[tsla tesla-inc]) end.not_to change {
+        PostRevision.count
+      }
+      expect(post.topic.reload.tags).to contain_exactly(canonical)
+    end
+
     describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
       fab!(:tag1) { Fabricate(:tag, name: "First tag") }
       fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
@@ -1476,7 +1506,7 @@ describe PostRevisor do
             expect(event[:params].first).to eq(post)
             expect(event[:params].second).to eq(true)
             expect(event[:params].third).to be_kind_of(PostRevisor)
-            expect(event[:params].third.topic_diff).to eq({ "tags" => [%w[super stuff], []] })
+            expect(event[:params].third.topic_diff).to eq({ "tags" => [%w[stuff super], []] })
           end
 
           context "with staff-only tags" do

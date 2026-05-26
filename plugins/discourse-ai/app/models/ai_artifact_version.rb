@@ -24,15 +24,15 @@ end
 # Table name: ai_artifact_versions
 #
 #  id                 :bigint           not null, primary key
-#  ai_artifact_id     :bigint           not null
-#  version_number     :integer          not null
-#  html               :string(65535)
+#  change_description :string
 #  css                :string(65535)
+#  html               :string(65535)
 #  js                 :string(65535)
 #  metadata           :jsonb
-#  change_description :string
+#  version_number     :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  ai_artifact_id     :bigint           not null
 #
 # Indexes
 #

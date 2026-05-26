@@ -24,10 +24,10 @@ end
 # Table name: child_themes
 #
 #  id              :integer          not null, primary key
-#  parent_theme_id :integer
-#  child_theme_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  child_theme_id  :integer
+#  parent_theme_id :integer
 #
 # Indexes
 #

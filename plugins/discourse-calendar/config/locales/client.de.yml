@@ -340,6 +340,9 @@ de:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} hat automatisch deine Teilnahme festgelegt und dich zu %{eventName} eingeladen"
         an_event: "einem Ereignis"
+      event_description:
+        show_more: "Mehr anzeigen"
+        show_less: "Weniger anzeigen"
       edit_reason: "Ereignis aktualisiert"
       edit_reason_closed: "Ereignis geschlossen"
       edit_reason_opened: "Ereignis geöffnet"
@@ -408,10 +411,11 @@ de:
       models:
         invitee:
           no_users: "Keine Benutzer gefunden"
+          leave_event: "Ereignis verlassen"
           status:
             unknown: "Nicht interessiert"
             going: "Dabei"
-            not_going: "Nicht dabei"
+            not_going: "Nimmt nicht teil"
             interested: "Interessiert"
             going_count:
               one: "%{count} nimmt teil"
@@ -518,6 +522,8 @@ de:
         status:
           label: "Status"
         delete_confirmation_message: "Dieses Ereignis löschen?"
+        image:
+          label: "Ereignisbild"
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"

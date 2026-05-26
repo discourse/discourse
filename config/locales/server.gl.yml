@@ -896,6 +896,29 @@ gl:
       xaxis: "Día"
       yaxis: "Número de novos colaboradores"
       description: "Número de usuarios que publicaron por primeira vez durante este período."
+    activity_by_category:
+      labels:
+        category: "Categoría"
+        topics: "Temas"
+        posts: "Publicacións"
+        share: "Compartir"
+    posters_by_member_type:
+      labels:
+        count: "Publicacións"
+        share: "Compartir"
+      types:
+        staff: "Equipo"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membros"
+        share: "Compartir"
+      levels:
+        "0": "Novo"
+        "1": "Básico"
+        "2": "Membro"
+        "3": "Normal"
+        "4": "Líder"
     trust_level_growth:
       title: "Crecemento do nivel de confianza"
       xaxis:
@@ -926,6 +949,9 @@ gl:
     consolidated_page_views_browser_detection:
       yaxis: "Día"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anónimo"
+        page_view_crawler: "Rastrexadores"
       yaxis: "Día"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1036,6 +1062,12 @@ gl:
         num_clicks: "Clics"
         num_topics: "Temas"
       description: "Usuarios listados polo número de clics nas ligazóns que compartiron."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visitas"
     top_traffic_sources:
       title: "Fontes con máis tráfico"
       xaxis: "Dominio"
@@ -1149,7 +1181,7 @@ gl:
         os: Sistema operativo
         login_time: Data e hora do inicio de sesión
       description: "Detalles de novos inicios de sesión que difiren sospeitosamente doutros anteriores."
-    staff_logins:
+    admin_logins:
       title: "Inicios de sesión de administradores"
       labels:
         user: Usuario
@@ -1274,7 +1306,6 @@ gl:
     favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
-    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
@@ -1316,7 +1347,6 @@ gl:
     ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese estabelecer como verdadeira para activar CORS."
-    use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
     blocked_ip_blocks: "Unha listaxe de bloques IP privados que Discourse nunca debería rastrexar"
     allowed_internal_hosts: "Unha listaxe de servidores internos que Discourse pode rastrexar de forma segura para as oneboxing e outros fins"
     allowed_onebox_iframes: "Unha listase de dominios iframe src que se permiten a través de incorporación Onebox. \"*\" permitirá todos os motores Onebox predeterminados."
@@ -1568,7 +1598,6 @@ gl:
     pop3_polling_password: "O contrasinal da conta POP3 na que recoller o correo."
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
     enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
     email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
     email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
@@ -1614,7 +1643,6 @@ gl:
     max_notifications_per_user: "Número máximo de notificacións por usuario. Se se supera este número, as notificacións antigas eliminaranse. Aplicación semanal. Estabelecer en 0 para desactivalo"
     allow_profile_backgrounds: "Permitir que os usuarios suban fondos de perfil."
     get_a_room_threshold: "Número de publicacións que un usuario debe facerlle á mesma persoa e no mesmo tema antes de recibir unha advertencia."
-    enable_mobile_theme: "Os dispositivos móbiles utilizan un tema adaptado para móbiles, coa posibilidade de trocar o sitio completo. Desactíveo se quere utilizar unha folla de estilo personalizada que sexa completamente adaptábel."
     dominating_topic_minimum_percent: "Que porcentaxe de publicacións ten que facer un usuario nun tema antes de recordarlle que está sendo acaparado nese tema."
     suppress_uncategorized_badge: "Non mostrar a insignia para temas sen categoría nas listaxes de temas."
     header_dropdown_category_count: "Número de categorías que se poden amosar no menú despregable da cabeceira."

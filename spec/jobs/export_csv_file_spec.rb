@@ -139,6 +139,44 @@ RSpec.describe Jobs::ExportCsvFile do
           end
         end
       end
+
+      it "redacts details and context for moderators who cannot see the log content" do
+        category = Fabricate(:private_category, group: Fabricate(:group))
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        moderator = Fabricate(:moderator)
+        action_log =
+          StaffActionLogger.new(admin).log_post_edit(
+            post,
+            old_raw: "#{post.raw} old",
+            context: "secret context",
+          )
+
+        Jobs::ExportCsvFile.new.execute(user_id: moderator.id, entity: "staff_action")
+
+        row = parse_staff_action_rows(Upload.last).find { |r| r["action"] == "post_edit" }
+        expect(row).to be_present
+        expect(row["details"]).to eq(I18n.t("staff_action_logs.redacted"))
+        expect(row["context"]).to be_blank
+
+        action_log.destroy!
+      end
+
+      it "does not redact details and context for admins" do
+        post = Fabricate(:post)
+        StaffActionLogger.new(admin).log_post_edit(
+          post,
+          old_raw: "#{post.raw} old",
+          context: "visible context",
+        )
+
+        Jobs::ExportCsvFile.new.execute(user_id: admin.id, entity: "staff_action")
+
+        row = parse_staff_action_rows(Upload.last).find { |r| r["action"] == "post_edit" }
+        expect(row).to be_present
+        expect(row["details"]).to include("---")
+        expect(row["context"]).to include("visible context")
+      end
     end
   end
 
@@ -218,12 +256,52 @@ RSpec.describe Jobs::ExportCsvFile do
         client_ip: "1.1.1.1",
         created_at: "2010-01-01",
       )
-      exporter.extra["name"] = "staff_logins"
+      exporter.extra["name"] = "admin_logins"
 
       report = export_report
 
       expect(report.first).to contain_exactly("User", "Location", "Login at")
       expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
+    end
+
+    it "exports suspicious login IP details when allowed" do
+      DiscourseIpInfo.stubs(:get).with("1.1.1.1").returns(location: "Earth")
+      user.user_auth_token_logs.create!(
+        action: "suspicious",
+        client_ip: "1.1.1.1",
+        user_agent: "Mozilla/5.0",
+        created_at: "2010-01-01 12:00:00 UTC",
+      )
+      exporter.extra["name"] = "suspicious_logins"
+
+      report = export_report
+
+      expect(report.second[0, 3]).to eq([user.username, "1.1.1.1", "Earth"])
+    end
+
+    context "when the current user cannot view IPs" do
+      fab!(:moderator_without_ip_access, :moderator)
+
+      let(:user) { moderator_without_ip_access }
+
+      it "redacts suspicious login IP address while retaining location" do
+        SiteSetting.moderators_view_ips = false
+        DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+
+        moderator_without_ip_access.user_auth_token_logs.create!(
+          action: "suspicious",
+          client_ip: "1.1.1.1",
+          user_agent: "Mozilla/5.0",
+          created_at: "2010-01-01 12:00:00 UTC",
+        )
+        exporter.extra["name"] = "suspicious_logins"
+
+        report = export_report
+
+        expect(report.second[0]).to eq(moderator_without_ip_access.username)
+        expect(report.second[1]).to eq("")
+        expect(report.second[2]).to eq("Earth")
+      end
     end
 
     it "works with topic reports" do
@@ -364,6 +442,17 @@ RSpec.describe Jobs::ExportCsvFile do
 
   def to_hash(row)
     Hash[*user_list_header.zip(row).flatten]
+  end
+
+  def parse_staff_action_rows(upload)
+    rows = []
+    Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
+      zip_file.each do |entry|
+        csv_rows = CSV.parse(zip_file.read(entry), headers: true)
+        rows.concat(csv_rows.map(&:to_h))
+      end
+    end
+    rows
   end
 
   it "exports secondary emails" do

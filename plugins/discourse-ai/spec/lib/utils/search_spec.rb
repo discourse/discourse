@@ -65,6 +65,30 @@ RSpec.describe DiscourseAi::Utils::Search do
       expect(results[:instruction]).to eq("nothing was found, expand your search")
     end
 
+    it "returns a matched-term blurb for detailed results" do
+      raw = <<~TEXT
+        Intro text that should not be enough.
+
+        #{"filler " * 80}
+
+        The needlephrase instructions are the relevant answer.
+      TEXT
+
+      post = Fabricate(:post, raw:)
+      SearchIndexer.index(post, force: true)
+
+      results =
+        described_class.perform_search(
+          search_query: "needlephrase",
+          current_user: admin,
+          result_style: :detailed,
+        )
+
+      excerpt = results[:rows].first[:excerpt].to_s.squish
+
+      expect(excerpt).to include("needlephrase")
+    end
+
     it "returns private results when user has access" do
       private_post = Fabricate(:post, topic: Fabricate(:topic, category: private_category))
 

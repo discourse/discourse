@@ -75,7 +75,7 @@ end
 
 RSpec.shared_examples "action requires login" do |method, url, params = {}|
   it "raises an exception when not logged in" do
-    self.public_send(method, url, **params)
+    public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
@@ -833,6 +833,52 @@ RSpec.describe PostsController do
 
         put "/posts/#{post.id}.json", params: update_params
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents editing a post in a topic the user cannot see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(403)
+        expect(private_post.reload.raw).not_to eq("edited body")
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows editing a post in a topic the user can see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(200)
+        expect(private_post.reload.raw).to eq("edited body")
       end
     end
 
@@ -1835,6 +1881,41 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      it "prevents regular users from replying to whispers" do
+        sign_in(admin)
+        post "/posts.json",
+             params: {
+               raw: "this is the first post with enough words",
+               title: "this is a topic title for whispers",
+             }
+        expect(response.status).to eq(200)
+
+        topic_id = response.parsed_body["topic_id"]
+        post "/posts.json",
+             params: {
+               raw: "this is a staff-only whisper",
+               topic_id: topic_id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+
+        whisper_post_number = response.parsed_body["post_number"]
+        sign_in(user)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "replying to a whisper over http",
+                 topic_id: topic_id,
+                 reply_to_post_number: whisper_post_number,
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t(:topic_not_found))
+      end
+
       describe "posts_controller_create_user modifier" do
         fab!(:different_user, :admin)
 
@@ -2690,6 +2771,19 @@ RSpec.describe PostsController do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
+
+      context "when names are disabled" do
+        before { SiteSetting.enable_names = false }
+
+        it "does not expose the acting user's name" do
+          post_revision.user.update!(name: "Hidden Editor")
+
+          get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["acting_user_name"]).to eq(nil)
+        end
+      end
     end
 
     context "with deleted post" do
@@ -3384,6 +3478,23 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.topic.slug)
     end
 
+    it "excludes ignored users' likes from JSON like counts" do
+      viewer = Fabricate(:user, refresh_auto_groups: true)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      regular_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, public_post)
+      PostActionCreator.like(regular_liker, public_post)
+      Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+      sign_in(viewer)
+
+      get "/u/#{user.username}/activity.json"
+
+      post_json = response.parsed_body.find { |post| post["id"] == public_post.id }
+      like_summary =
+        post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+      expect(like_summary["count"]).to eq(1)
+    end
+
     it "returns 404 if `hide_profile` user option is checked" do
       user.user_option.update_columns(hide_profile: true)
 
@@ -3564,6 +3675,24 @@ RSpec.describe PostsController do
         expect(post_ids).to include public_post.id
         expect(post_ids).to_not include private_post.id
         expect(post_ids).to_not include topicless_post.id
+      end
+
+      it "excludes ignored users' likes from json like counts" do
+        viewer = Fabricate(:user, refresh_auto_groups: true)
+        ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+        regular_liker = Fabricate(:user, refresh_auto_groups: true)
+        PostActionCreator.like(ignored_liker, public_post)
+        PostActionCreator.like(regular_liker, public_post)
+        Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+        sign_in(viewer)
+
+        get "/posts.json"
+
+        post_json =
+          response.parsed_body["latest_posts"].find { |post| post["id"] == public_post.id }
+        like_summary =
+          post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+        expect(like_summary["count"]).to eq(1)
       end
     end
   end

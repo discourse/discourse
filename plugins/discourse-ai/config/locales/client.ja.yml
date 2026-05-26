@@ -228,8 +228,7 @@ ja:
             ui_settings: "UI 設定"
             integrations: "統合"
         nav:
-          configured: "構成済み"
-          unconfigured: "未構成"
+          enabled: "有効"
         filters:
           all: "すべて"
           no_results: "フィルタに一致する機能は見つかりませんでした。"
@@ -925,12 +924,14 @@ ja:
           min_input_length_message:
             other: "メッセージは %{count} 文字以上である必要があります"
           messages_sidebar_title: "会話"
+          starred: "スター付き"
           today: "今日"
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"
           upload_files: "ファイルをアップロード"
           uploads_in_progress: "アップロード中は送信できません"
           scroll_to_bottom: "一番下にスクロール"
+          editing_post: "投稿を編集中"
       sentiments:
         dashboard:
           title: "センチメント"

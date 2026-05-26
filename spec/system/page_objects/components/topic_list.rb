@@ -58,6 +58,14 @@ module PageObjects
         page.has_no_css?("#{topic_list_item_unread_badge(topic)}")
       end
 
+      def has_new_replies_dot?(topic)
+        page.has_css?("#{topic_list_item_new_replies_dot(topic)}")
+      end
+
+      def has_no_new_replies_dot?(topic)
+        page.has_no_css?("#{topic_list_item_new_replies_dot(topic)}")
+      end
+
       def has_checkbox_selected_on_row?(n)
         page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
       end
@@ -156,6 +164,10 @@ module PageObjects
 
       def topic_list_item_unread_badge(topic)
         "#{topic_list_item_class(topic)} .topic-post-badges .unread-posts"
+      end
+
+      def topic_list_item_new_replies_dot(topic)
+        "#{topic_list_item_class(topic)} .topic-post-badges .new-replies"
       end
     end
   end

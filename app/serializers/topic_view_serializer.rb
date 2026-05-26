@@ -341,10 +341,10 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def is_nested_view
-    object.topic.nested_topic.present? || SiteSetting.nested_replies_default
+    true
   end
 
   def include_is_nested_view?
-    SiteSetting.nested_replies_enabled && !object.topic.private_message?
+    object.topic.nested_view?
   end
 end

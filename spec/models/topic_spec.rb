@@ -2972,6 +2972,37 @@ RSpec.describe Topic do
         )
       }.to raise_error(RateLimiter::LimitExceeded)
     end
+
+    context "with limit_admin_personal_messages_per_day" do
+      it "does not rate limit admins when set to 0" do
+        SiteSetting.limit_admin_personal_messages_per_day = 0
+
+        2.times do
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        end
+      end
+
+      it "rate limits admins when set to a non-zero value" do
+        SiteSetting.limit_admin_personal_messages_per_day = 1
+
+        create_post(
+          user: admin,
+          archetype: "private_message",
+          target_usernames: [user1.username, user2.username],
+        )
+        expect {
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+    end
   end
 
   describe ".count_exceeds_minimum?" do
@@ -3852,7 +3883,7 @@ RSpec.describe Topic do
       Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
 
       expect(topic.has_localization?(:zh_CN)).to eq(true)
-      expect(topic.has_localization?(:"zh_CN")).to eq(true)
+      expect(topic.has_localization?(:zh_CN)).to eq(true)
       expect(topic.has_localization?("zh-CN")).to eq(true)
 
       expect(topic.has_localization?("z")).to eq(false)
@@ -3915,6 +3946,36 @@ RSpec.describe Topic do
 
       topic.update!(locale: "es")
       expect(topic.in_user_locale?).to eq(false)
+    end
+  end
+
+  describe "#nested_view?" do
+    fab!(:topic)
+
+    it "returns false when nested_replies_enabled is off" do
+      SiteSetting.nested_replies_enabled = false
+      SiteSetting.nested_replies_default = true
+      Fabricate(:nested_topic, topic: topic)
+      expect(topic.reload.nested_view?).to eq(false)
+    end
+
+    it "returns true when the topic has a nested_topic record and the feature is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      expect(topic.reload.nested_view?).to eq(true)
+    end
+
+    it "returns true when nested_replies_default is on, even without a nested_topic record" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      expect(topic.nested_view?).to eq(true)
+    end
+
+    it "returns false for private messages even when defaults are on" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic)
+      expect(pm.nested_view?).to eq(false)
     end
   end
 end

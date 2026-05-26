@@ -45,6 +45,8 @@ vi:
         expand_list:
           other: "(%{count} khác)"
         collapse_list: "(thu gọn)"
+        nav:
+          enabled: "Đã bật"
         filters:
           all: "Tất cả"
           reset: "Cài lại"
@@ -239,6 +241,7 @@ vi:
           today: "Hôm nay"
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"
+          editing_post: "Đang chỉnh sửa tút"
       sentiments:
         sentiment_analysis:
           filter_types:

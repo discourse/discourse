@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import {
   parseAttributesString,
   serializeFromForm,
 } from "discourse/lib/wrap-utils";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 /**

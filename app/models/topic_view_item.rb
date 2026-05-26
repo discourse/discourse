@@ -68,10 +68,10 @@ end
 #
 # Table name: topic_views
 #
-#  topic_id   :integer          not null
-#  viewed_at  :date             not null
-#  user_id    :integer
 #  ip_address :inet
+#  viewed_at  :date             not null
+#  topic_id   :integer          not null
+#  user_id    :integer
 #
 # Indexes
 #

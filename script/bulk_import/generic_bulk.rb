@@ -853,6 +853,7 @@ class BulkImport::Generic < BulkImport::Base
         created_at: to_datetime(row["created_at"]),
         category_id: category_id,
         closed: to_boolean(row["closed"]),
+        archived: to_boolean(row["archived"]),
         views: row["views"],
         subtype: row["subtype"],
         pinned_at: to_datetime(row["pinned_at"]),
@@ -1295,7 +1296,7 @@ class BulkImport::Generic < BulkImport::Base
         original_id: row["id"],
         post_id: post_id,
         name: poll_name(row),
-        closed_at: to_datetime(row["closed_at"]),
+        closed_at: to_datetime(row["close_at"]),
         type: row["type"],
         status: row["status"],
         results: row["results"],
@@ -1361,7 +1362,7 @@ class BulkImport::Generic < BulkImport::Base
       next unless poll_id
 
       option_ids = row["option_ids"].split(",")
-      option_ids.each { |option_id| next if poll_option_id_from_original_id(option_id).present? }
+      next if option_ids.all? { |oid| poll_option_id_from_original_id(oid).present? }
 
       {
         original_ids: option_ids,
@@ -3144,6 +3145,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       original_message_user_id = user_id_from_imported_id(row["original_message_user_id"])
 
+      next if chat_thread_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || original_message_user_id.blank?
 
       # Messages aren't imported yet. Use a placeholder `original_message_id` for now.
@@ -3219,6 +3221,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       user_id = user_id_from_imported_id(row["user_id"])
 
+      next if chat_message_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || user_id.blank?
       next if row["message"].blank? && row["upload_ids"].blank?
 

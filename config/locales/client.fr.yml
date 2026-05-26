@@ -379,8 +379,6 @@ fr:
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
     conduct: "Code de conduite"
-    mobile_view: "Version mobile"
-    desktop_view: "Version ordinateur"
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
@@ -412,11 +410,10 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Activé"
       start_posting:
         back: "Retour"
-      spread_the_word:
-        action: "Copier le lien"
-        copied_to_clipboard: "Lien copié dans le presse-papiers!"
     about:
       edit: "Modifier cette page"
       simple_title: "À propos"
@@ -587,6 +584,9 @@ fr:
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
+    embed_mode:
+      signin_flow:
+        cancel: "Annuler"
     topic_count_all:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
@@ -1365,7 +1365,6 @@ fr:
         normal_option: "Normal"
         normal_option_title: "Vous recevrez une notification si cet utilisateur vous répond, vous cite ou vous mentionne."
       notification_schedule:
-        title: "Planification des notifications"
         label: "Activer la planification personnalisée des notifications"
         tip: "En dehors de ces heures, vos notifications seront suspendues."
         midnight: "Minuit"
@@ -1409,13 +1408,8 @@ fr:
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
-        label: "Notifications instantanées"
         not_supported: "Nous sommes désolés, les notifications ne sont pas supportées sur ce navigateur."
-        perm_default: "Activer les notifications"
-        perm_denied_btn: "Permission refusée"
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
-        disable: "Désactiver les notifications"
-        enable: "Activer les notifications"
         each_browser_note: "Remarque : vous devez modifier ce paramètre sur chaque navigateur utilisé. Toutes les notifications seront désactivées si vous suspendez les notifications à partir du menu utilisateur, quel que soit ce paramètre."
         consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel en cas de réponse à vos messages ?"
       dismiss: "Vu"
@@ -3148,6 +3142,7 @@ fr:
           placeholder: maximum
           aria_label: filtrer par nombre de vues maximal
     hamburger_menu: "Menu de navigation"
+    header_panel: "En-tête"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -4039,7 +4034,6 @@ fr:
         name_placeholder: "À quoi correspond ce signet ?"
         name_input_label: "Nom du signet"
         set_reminder: "Me le rappeler"
-        options: "Options"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -4515,107 +4509,61 @@ fr:
       title: "Raccourcis clavier"
       short_title: "Raccourcis"
       search_ctrl_f_tip: "Pour effectuer une recherche dans l'ensemble de ce forum, appuyez sur <kbd>/</kbd>"
+      description_header: "Description"
+      key_header: "Clé"
+      search_aliases:
+        shift: "maj"
       jump_to:
         title: "Aller à"
-        home: "%{shortcut} Accueil"
-        latest: "%{shortcut} Récents"
-        new: "%{shortcut} Nouveaux"
-        unread: "%{shortcut} Non lus"
-        categories: "%{shortcut} Catégories"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Signets"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Messages directs"
-        drafts: "%{shortcut} Brouillons"
-        next: "%{shortcut} Sujet suivant"
-        previous: "%{shortcut} Sujet précédent"
+        home: "Accueil"
+        latest: "Récents"
+        new: "Nouveau"
+        unread: "Non lus"
+        unseen: "Non lus"
+        categories: "Catégories"
+        top: "Top"
+        bookmarks: "Signets"
+        profile: "Profil"
+        messages: "Messages directs"
+        drafts: "Brouillons"
       navigation:
         title: "Navigation"
-        jump: "%{shortcut} Accéder au message numéro"
-        back: "%{shortcut} Retour"
-        up_down: "%{shortcut} Déplacer la sélection &uarr; &darr;"
-        open: "%{shortcut} Ouvrir le sujet sélectionné"
-        next_prev: "%{shortcut} Section suivante/précédente"
-        go_to_unread_post: "%{shortcut} Accéder au premier message non lu"
+        back: "Retour"
+        up_down: "Déplacer la sélection &uarr; &darr;"
       application:
         title: "Application"
-        notifications: "%{shortcut} Ouvrir les notifications"
-        hamburger_menu: "%{shortcut} Ouvrir le menu de navigation"
-        user_profile_menu: "%{shortcut} Ouvrir le menu utilisateur"
-        show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
-        search: "%{shortcut} Rechercher"
-        filter_sidebar: "%{shortcut} Barre latérale des filtres"
-        help: "%{shortcut} Ouvrir l'aide du clavier"
-        toggle_bulk_select: "%{shortcut} Activer/désactiver la sélection groupée"
-        dismiss: "%{shortcut} Rejeter les sujets sélectionnés"
-        x: "%{shortcut} Basculer la sélection (en mode de sélection groupée)"
-        log_out: "%{shortcut} Se déconnecter"
+        search: "Recherche"
+        log_out: "Déconnexion"
       composing:
         title: "Édition"
-        return: "%{shortcut} Revenir à l'éditeur"
-        minimize: "%{shortcut} Réduire l'éditeur"
-        create_or_reply: "%{shortcut} Créer un sujet ou publier une réponse"
-        fullscreen: "%{shortcut} Éditeur en plein écran"
-        insert_current_time: "%{shortcut} Insérer l'heure actuelle"
-        bold: "%{shortcut} Gras"
-        italic: "%{shortcut} Italique"
-        link: "%{shortcut} Insérer un lien"
-        preformatted: "%{shortcut} Texte préformaté"
-        paragraph: "%{shortcut} Paragraphe"
-        heading_1: "%{shortcut} Titre 1"
-        heading_2: "%{shortcut} Titre 2"
-        heading_3: "%{shortcut} Titre 3"
-        heading_4: "%{shortcut} Titre 4"
-        toggle_direction: "%{shortcut} Inverser la direction du texte"
-        ordered_list: "%{shortcut} Liste ordonnée"
-        unordered_list: "%{shortcut} Liste non ordonnée"
-        blockquote: "%{shortcut} Citation en bloc"
+        link: "Insérer un lien"
+        preformatted: "Texte préformaté"
+        paragraph: "Paragraphe"
+        blockquote: "Citation"
       bookmarks:
         title: "Gestion des signets"
-        enter: "%{shortcut} Enregistrer et fermer"
-        later_today: "%{shortcut} Plus tard dans la journée"
-        later_this_week: "%{shortcut} Plus tard cette semaine"
-        tomorrow: "%{shortcut} Demain"
-        next_week: "%{shortcut} La semaine prochaine"
-        next_month: "%{shortcut} Le mois prochain"
-        next_business_week: "%{shortcut} Au début de la semaine prochaine"
-        next_business_day: "%{shortcut} Prochain jour ouvré"
-        custom: "%{shortcut} Date et heure personnalisées"
-        none: "%{shortcut} Pas de rappel"
-        delete: "%{shortcut} Supprimer le signet"
+        later_today: "Plus tard dans la journée"
+        later_this_week: "Plus tard dans la semaine"
+        tomorrow: "Demain"
+        next_week: "La semaine prochaine"
+        next_month: "Le mois prochain"
+        next_business_day: "Au prochain jour ouvré"
+        custom: "Date et heure personnalisées"
+        none: "Pas de rappel"
+        delete: "Supprimer le signet"
       actions:
         title: "Actions"
-        bookmark_topic: "%{shortcut} Modifier le signet du sujet"
-        pin_unpin_topic: "%{shortcut} Épingler/désépingler le sujet"
-        share_topic: "%{shortcut} Partager le sujet"
-        share_post: "%{shortcut} Partager le message"
-        reply_as_new_topic: "%{shortcut} Répondre via un sujet lié"
-        reply_topic: "%{shortcut} Répondre au sujet"
-        reply_post: "%{shortcut} Répondre au message"
-        quote_post: "%{shortcut} Citer le message"
-        like: "%{shortcut} Aimer le message"
-        flag: "%{shortcut} Signaler le message"
-        bookmark: "%{shortcut} Mettre un signet au message"
-        edit: "%{shortcut} Modifier le message"
-        delete: "%{shortcut} Supprimer le message"
-        mark_muted: "%{shortcut} Mettre le sujet en sourdine"
-        mark_regular: "%{shortcut} Sujet normal (par défaut)"
-        mark_tracking: "%{shortcut} Suivre le sujet"
-        mark_watching: "%{shortcut} Surveiller le sujet"
-        print: "%{shortcut} Imprimer le sujet"
-        defer: "%{shortcut} Marquer le sujet comme non lu"
-        topic_admin_actions: "%{shortcut} Ouvrir les actions d'administration du sujet"
-        archive_private_message: "%{shortcut} Activer/désactiver l'archivage des messages directs"
+        reply_as_new_topic: "Répondre via un sujet lié"
+        reply_topic: "Répondre au sujet"
+        flag: "Signaler cette publication"
+        delete: "Supprimer la publication"
+        mark_tracking: "Suivre le sujet"
+        mark_watching: "Surveiller le sujet"
+        defer: "Marquer le sujet comme non lu"
       search_menu:
         title: "Menu de recherche"
-        prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
-        insert_url: "%{shortcut} Insérer la sélection dans l'éditeur ouvert"
-        full_page_search: "%{shortcut} Lance la recherche pleine page"
       admin:
         title: "Administrateur"
-        search_prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
-        search_open: "%{shortcut} Ouvrir la recherche pour l'interface d'administration"
-        search_full_page: "%{shortcut} Ouvrir la recherche d'administration en pleine page"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -5696,6 +5644,46 @@ fr:
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
         custom_date_range: Plage de dates personnalisée
+        sections:
+          reports:
+            title: "Rapports"
+          traffic:
+            title: "Trafic du site"
+          engagement:
+            activity_by_category:
+              category: "Catégorie"
+              topics: "Sujets"
+              posts: "Publications"
+              share: "Partager"
+            whos_posting:
+              all_categories: "Toutes les catégories"
+              staff: "Responsable"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nouveau"
+                "1": "Actif"
+                "2": "Membre"
+                "3": "Normal"
+                "4": "Meneur"
+        reports_section:
+          no_data: "Aucune donnée à afficher"
+          modal:
+            enabled_heading: "Activé"
+            all_heading: "Tous les rapports"
+            apply: "Appliquer"
+            move_up: "Déplacer vers le haut"
+            move_down: "Déplacer vers le bas"
+        configure:
+          button: "Configurer"
+        site_traffic:
+          series:
+            anonymous: "Anonymes"
+            crawlers: "Robots d'indexation"
+        period:
+          last_7_days: "Ces 7 derniers jours"
+          last_30_days: "30 derniers jours"
+          last_3_months: "3 derniers mois"
+          custom: "Personnalisé"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."

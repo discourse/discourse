@@ -48,7 +48,7 @@ export default class MoreLink extends Component {
 
   <template>
     {{#if this.topicResults}}
-      {{! template-lint-disable no-invalid-interactive }}
+      {{! eslint-disable ember/template-no-invalid-interactive }}
       <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
         {{#if this.moreUrl}}
           <a

@@ -106,31 +106,29 @@ export default {
       return;
     }
 
-    if (!(transition.urlMethod === "replace" && transition.queryParamsOnly)) {
-      const trackingSessionId = document.querySelector(
-        "meta[name=discourse-track-view-session-id]"
-      )?.content;
-      const referrerUrl = transition.from
-        ? _preNavigationUrl
-        : document.referrer.length
-          ? document.referrer
-          : null;
+    const trackingSessionId = document.querySelector(
+      "meta[name=discourse-track-view-session-id]"
+    )?.content;
+    const referrerUrl = transition.from
+      ? _preNavigationUrl
+      : document.referrer.length
+        ? document.referrer
+        : null;
 
-      let topicId;
-      if (
-        transition.to.name === "topic.fromParamsNear" ||
-        transition.to.name === "topic.fromParams"
-      ) {
-        topicId = transition.to.parent.params.id;
-      }
-
-      sendBeaconPageview({
-        sessionId: trackingSessionId,
-        url: window.location.href,
-        referrer: referrerUrl,
-        topicId,
-      });
+    let topicId;
+    if (
+      transition.to.name === "topic.fromParamsNear" ||
+      transition.to.name === "topic.fromParams"
+    ) {
+      topicId = transition.to.parent.params.id;
     }
+
+    sendBeaconPageview({
+      sessionId: trackingSessionId,
+      url: window.location.href,
+      referrer: referrerUrl,
+      topicId,
+    });
 
     _preNavigationUrl = window.location.href;
   },

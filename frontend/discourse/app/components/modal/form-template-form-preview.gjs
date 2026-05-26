@@ -1,5 +1,5 @@
-import DModal from "discourse/components/d-modal";
 import Wrapper from "discourse/components/form-template-field/wrapper";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const FormTemplateFormPreview = <template>

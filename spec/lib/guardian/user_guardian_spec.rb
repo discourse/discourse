@@ -87,6 +87,54 @@ RSpec.describe UserGuardian do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
       end
     end
+
+    context "with category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      let(:guardian) { Guardian.new(cat_mod_user) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+      end
+
+      it "returns false for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(private_topic)).to eq(false)
+      end
+
+      it "returns false for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(private_topic, true)).to eq(false)
+      end
+    end
+
+    context "with category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      let(:guardian) { Guardian.new(cat_mod_user) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+      end
+
+      it "returns true for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(private_topic)).to eq(true)
+      end
+
+      it "returns true for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(private_topic, true)).to eq(true)
+      end
+    end
   end
 
   describe "#can_pick_avatar?" do

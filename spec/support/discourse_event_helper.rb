@@ -12,7 +12,7 @@ module DiscourseEvent::TestHelper
 
   def track_events(event_name = nil, args: nil)
     @events_trigger = events_trigger = []
-    yield
+    yield events_trigger
     @events_trigger = nil
 
     if event_name

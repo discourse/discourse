@@ -49,6 +49,8 @@ hr:
           few: "(%{count} još)"
           other: "(%{count} još)"
         collapse_list: "(prikaži manje)"
+        nav:
+          enabled: "Omogućeno"
         filters:
           all: "Sve"
           reset: "Resetirati"

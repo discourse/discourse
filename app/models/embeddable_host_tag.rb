@@ -14,10 +14,10 @@ end
 # Table name: embeddable_host_tags
 #
 #  id                 :bigint           not null, primary key
-#  embeddable_host_id :integer          not null
-#  tag_id             :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  embeddable_host_id :integer          not null
+#  tag_id             :integer          not null
 #
 # Indexes
 #

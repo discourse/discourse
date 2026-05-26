@@ -42,7 +42,7 @@ class DiscoursePoll::Poll
               end
             end
 
-        self.validate_votes!(poll, new_option_ids)
+        validate_votes!(poll, new_option_ids)
 
         old_option_ids =
           poll

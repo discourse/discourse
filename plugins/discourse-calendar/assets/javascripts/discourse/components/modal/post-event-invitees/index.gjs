@@ -4,12 +4,12 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import concatClass from "discourse/helpers/concat-class";
 import { debounce } from "discourse/lib/decorators";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ToggleInvitees from "../../toggle-invitees";
 import User from "./user";
@@ -92,7 +92,7 @@ export default class PostEventInviteesModal extends Component {
     <DModal
       @title={{this.title}}
       @closeModal={{@closeModal}}
-      class={{concatClass
+      class={{dConcatClass
         (or @model.extraClass "invited")
         "post-event-invitees-modal"
       }}
@@ -108,7 +108,7 @@ export default class PostEventInviteesModal extends Component {
         />
 
         <ToggleInvitees @viewType={{this.type}} @toggle={{this.toggleType}} />
-        <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+        <DConditionalLoadingSpinner @condition={{this.isLoading}}>
           {{#if this.hasResults}}
             <ul class="invitees">
               {{#each this.inviteesList.invitees as |invitee|}}
@@ -153,7 +153,7 @@ export default class PostEventInviteesModal extends Component {
               {{i18n "discourse_post_event.models.invitee.no_users"}}
             </p>
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
     </DModal>
   </template>

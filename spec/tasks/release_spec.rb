@@ -13,7 +13,10 @@ RSpec.describe "tasks/release" do
   end
 
   def fake_version_rb(version)
-    File.read("#{Rails.root}/lib/version.rb").sub(/STRING = ".*"/, "STRING = \"#{version}\"")
+    File.read("#{Rails.root.join("lib/version.rb")}").sub(
+      /STRING = ".*"/,
+      "STRING = \"#{version}\"",
+    )
   end
 
   def commit_version(version)

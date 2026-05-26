@@ -550,7 +550,7 @@ RSpec.describe Discourse do
     it "works for individual commands" do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
       expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq(
-        "#{Rails.root}/plugins",
+        "#{Rails.root.join("plugins")}",
       )
     end
 
@@ -576,12 +576,12 @@ RSpec.describe Discourse do
 
       result =
         Discourse::Utils.execute_command(chdir: "plugins") do |runner|
-          expect(runner.exec("pwd").strip).to eq("#{Rails.root}/plugins")
+          expect(runner.exec("pwd").strip).to eq("#{Rails.root.join("plugins")}")
           runner.exec("pwd")
         end
 
       # Should return output of block
-      expect(result.strip).to eq("#{Rails.root}/plugins")
+      expect(result.strip).to eq("#{Rails.root.join("plugins")}")
     end
 
     it "does not leak chdir between threads" do

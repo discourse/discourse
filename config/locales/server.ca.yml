@@ -811,6 +811,29 @@ ca:
       xaxis: "Dia"
       yaxis: "Nombre de col·laboradors nous"
       description: "Nombre d'usuaris que han fet la seva primera publicació en aquest període."
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Temes"
+        posts: "Publicacions"
+        share: "Comparteix"
+    posters_by_member_type:
+      labels:
+        count: "Publicacions"
+        share: "Comparteix"
+      types:
+        staff: "Equip responsable"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membres"
+        share: "Comparteix"
+      levels:
+        "0": "Nou"
+        "1": "Bàsic"
+        "2": "Membre"
+        "3": "Habitual"
+        "4": "Líder"
     trust_level_growth:
       yaxis: "Dia"
     consolidated_page_views:
@@ -834,6 +857,9 @@ ca:
     consolidated_page_views_browser_detection:
       yaxis: "Dia"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anònim"
+        page_view_crawler: "Rastrejadors"
       yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
@@ -943,6 +969,12 @@ ca:
         num_clicks: "Clics"
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visites"
     top_traffic_sources:
       title: "Principals fonts de tràfic "
       xaxis: "Domini"
@@ -1056,7 +1088,7 @@ ca:
         os: Sistema operatiu
         login_time: Hora d'inici de sessió
       description: "Detalls de nous inicis de sessió que difereixen sospitosament de connexions anteriors."
-    staff_logins:
+    admin_logins:
       title: "Inicis de sessió d'administradors"
       labels:
         user: Usuari
@@ -1167,7 +1199,6 @@ ca:
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
-    email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
@@ -1200,7 +1231,6 @@ ca:
     maximum_session_age: "L'usuari romandrà amb la sessió iniciada durant n hores des de la darrera visita"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
-    use_admin_ip_allowlist: "Els administradors sols poden iniciar la sessió des d'una adreça IP definida en la llista d'IPs sota supervisió (Administració > Registres > IPs sota supervisió)."
     blocked_ip_blocks: "Una llista de blocs d'IP privades que no han de ser rastrejats mai per Discourse"
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
@@ -1449,7 +1479,6 @@ ca:
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
-    enable_mobile_theme: "Els dispositius mòbils fan servir una aparença compatible amb els mòbils, amb la possibilitat de passar a la versió normal. Desactiveu-ho si voleu fer servir un full d'estils personalitzat totalment responsiu. "
     dominating_topic_minimum_percent: "Quin percentatge de publicacions ha de fer un usuari en un tema abans de ser advertit sobre ús abusiu."
     suppress_uncategorized_badge: "No mostris la insígnia per a temes sense categoria en les llistes de temes."
     header_dropdown_category_count: "Quantes categories es poden mostrar en el menú desplegable de la capçalera."

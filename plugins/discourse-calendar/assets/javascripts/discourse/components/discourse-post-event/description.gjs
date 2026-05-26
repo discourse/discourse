@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoursePostEventDescription extends Component {
@@ -50,7 +50,7 @@ export default class DiscoursePostEventDescription extends Component {
           {{if this.clamp 'is-clamped'}}
           {{if this.expanded 'is-expanded'}}"
       >
-        {{icon "file-lines"}}
+        {{dIcon "file-lines"}}
 
         <div
           class="event-description__content"

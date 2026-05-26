@@ -30,7 +30,7 @@ describe Chat::OneboxHandler do
               <h3 class="chat-onebox-title">
                 <a href="/chat/c/-/#{public_channel.id}">
                   <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
-                    <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
+                    <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                   </span>
                   <span class="clear-badge">#{public_channel.name}</span>
                 </a>
@@ -40,6 +40,28 @@ describe Chat::OneboxHandler do
                 <a class="trigger-user-card" data-user-card="#{user.username}" aria-hidden="true" tabindex="-1">
                   <img loading="lazy" alt="#{user.username}" width="30" height="30" src="#{user.avatar_template_url.gsub("{size}", "60")}" class="avatar">
                 </a>
+              </div>
+            </article>
+          </aside>
+        HTML
+      end
+
+      it "renders the channel emoji in place of the chat bubble when set" do
+        public_channel.update!(emoji: "tada")
+
+        onebox_html = Chat::OneboxHandler.handle(public_chat_url, { channel_id: public_channel.id })
+
+        expect(onebox_html).to match_html <<~HTML
+          <aside class="onebox chat-onebox">
+            <article class="onebox-body chat-onebox-body">
+              <h3 class="chat-onebox-title">
+                <a href="/chat/c/-/#{public_channel.id}">
+                  <img src="/images/emoji/twitter/tada.png?v=15" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">
+                  <span class="clear-badge">#{public_channel.name}</span>
+                </a>
+              </h3>
+              <div class="chat-onebox-members-count">0 members</div>
+              <div class="chat-onebox-members">
               </div>
             </article>
           </aside>
@@ -95,7 +117,7 @@ describe Chat::OneboxHandler do
               </div>
               <a class="chat-transcript-channel" href="/chat/c/-/#{public_channel.id}">
                 <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
-                  <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
+                  <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                 </span>
                 #{public_channel.name}
               </a>
@@ -164,7 +186,7 @@ describe Chat::OneboxHandler do
                 <span class="thread-title-connector">in</span>
                 <a href="/chat/c/-/#{public_channel.id}">
                   <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
-                    <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
+                    <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                   </span>
                   <span class="clear-badge">#{public_channel.name}</span>
                 </a>
@@ -206,7 +228,7 @@ describe Chat::OneboxHandler do
               <h3 class="chat-onebox-title">
                 <a href="/chat/c/-/#{public_channel.id}">
                   <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
-                    <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
+                    <svg class="fa d-icon d-icon-comment svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg>
                   </span>
                   <span class="clear-badge">#{public_channel.name}</span>
                 </a>

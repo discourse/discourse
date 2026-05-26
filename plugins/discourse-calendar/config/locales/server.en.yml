@@ -1,4 +1,10 @@
 en:
+  category_types:
+    events:
+      name: "Events"
+      title: "events"
+      description: "Where members can find and discuss upcoming events on a shared calendar."
+
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Read calendar events feed"
@@ -66,6 +72,27 @@ en:
     enable_events_category_type_setup: "Enables the Events category type option during category creation setup. Note that 'enable simplified category creation' must be enabled for this to take effect."
 
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        label: "Default calendar view"
+        day: "Day"
+        week: "Week"
+        month: "Month"
+        year: "Year"
+      display_weekends:
+        label: "Display weekends"
+      discourse_post_event_allowed_on_groups:
+        label: "Groups that can create events"
+      use_local_event_date:
+        label: "Event date format"
+        local: "Local date (e.g., April 20)"
+        relative: "Relative time (e.g., in 2 days)"
+      sort_categories_by_event_start_date_enabled:
+        label: "Topic sorting"
+        event_date: "Event date"
+        latest_post: "Latest post activity"
+      sidebar_show_upcoming_events:
+        label: 'Show "Upcoming events" link in navigation menu'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - All events"
       my_events_feed_name: "%{site_title} - My events"

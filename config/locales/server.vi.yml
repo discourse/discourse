@@ -782,6 +782,29 @@ vi:
     new_contributors:
       xaxis: "Ngày"
       description: "Số lượng thành viên thực hiện tút đầu tiên của họ trong giai đoạn này."
+    activity_by_category:
+      labels:
+        category: "Danh mục"
+        topics: "Các chủ đề"
+        posts: "Số lượng tút"
+        share: "Chia sẻ"
+    posters_by_member_type:
+      labels:
+        count: "Số lượng tút"
+        share: "Chia sẻ"
+      types:
+        staff: "Nhân viên"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Thành viên kênh"
+        share: "Chia sẻ"
+      levels:
+        "0": "Chủ đề mới"
+        "1": "Cơ Bản"
+        "2": "Nâng Cao"
+        "3": "Tích Cực"
+        "4": "Nhà Lãnh Đạo"
     trust_level_growth:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Độ tin cậy của họ trong khoảng thời gian này."
@@ -806,6 +829,9 @@ vi:
     consolidated_page_views_browser_detection:
       yaxis: "Ngày"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Ẩn danh"
+        page_view_crawler: "Trình thu thập thông tin"
       yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
@@ -899,6 +925,12 @@ vi:
         num_clicks: "Clicks"
         num_topics: "Chủ đề"
       description: "Danh sách thành viên theo số lần nhấp vào liên kết họ đã chia sẻ."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
     top_traffic_sources:
       title: "Nguồn truy cập"
       xaxis: "Tên miền"
@@ -989,10 +1021,10 @@ vi:
         user: Thành viên
         location: Vị trí
       description: "Chi tiết về thông tin đăng nhập mới khác biệt đáng ngờ với thông tin đăng nhập trước đó."
-    staff_logins:
+    admin_logins:
       title: "Đăng nhập quản trị viên"
       labels:
-        user: Thành viên
+        user: Người dùng
         location: Vị trí
         login_at: Đăng nhập lúc
       description: "Danh sách thời gian đăng nhập của quản trị viên với các địa điểm."
@@ -1033,6 +1065,9 @@ vi:
         other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
       poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
       poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
+    reports_section:
+      providers:
+        core_report: "Tiêu chuẩn"
   site_settings:
     disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
@@ -1090,7 +1125,6 @@ vi:
     ga_universal_auto_link_domains: "Bật tính năng theo dõi tên miền chéo của Google Universal Analytics. Các liên kết gửi đi tới các miền này sẽ có id ứng dụng khách được thêm vào chúng. Xem <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Hướng dẫn theo dõi tên miền chéo của Google.</a>"
     moderators_change_post_ownership: "Cho phép kiểm duyệt viên thay đổi quyền sở hữu tút"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
-    use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
     top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
@@ -1263,7 +1297,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_in_authserv_id: "Mã định danh của dịch vụ đang thực hiện kiểm tra xác thực đối với các email đến. Xem <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> để biết hướng dẫn về cách định cấu hình."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
@@ -1287,7 +1320,6 @@ vi:
     clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ tút nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
     get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
-    enable_mobile_theme: "Thiết bị di động có thể sử dụng giao diện riêng, với khả năng chuyển sang chế độ xem đầy đủ. Tắt thiết lập này nếu bạn muốn sử dụng một style tùy biến hỗ trợ responsive."
     dominating_topic_minimum_percent: "Số phần trăm bài viết mà một thành viên có thể gửi trong một chủ đề trước khi được nhắc nhở về hành vi muốn tạo ưu thế trong chủ đề."
     suppress_uncategorized_badge: "Không hiển thị huy hiệu cho các chủ đề chưa phân loại trong danh sách chủ đề"
     permalink_normalizations: "Áp dụng regex sau trước khi khớp với permalink, ví dụ: /(topic.*)\\?.*/\\1 sẽ loại bỏ các chuỗi truy vấn từ đường dẫn chủ đề. Định dạng regex+string với \\1 ... để giữ truy cập"

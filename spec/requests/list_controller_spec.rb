@@ -480,6 +480,23 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_group" do
+    describe "#private_messages_group_new and #private_messages_group_unread" do
+      before do
+        group.add(user)
+        sign_in(user)
+      end
+
+      it "enforces can_see_group_messages? when personal messages are disabled for the user" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}/new.json"
+        expect(response.status).to eq(404)
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}/unread.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
     describe "when user not in personal_message_enabled_groups group" do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
@@ -699,6 +716,73 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/rss+xml")
       expect(response.body).to_not include("<item>")
+    end
+
+    it "advertises sanitized filtered feed URLs in RSS metadata" do
+      TopTopic.create!(topic: topic, yearly_score: 1.0)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
+
+      get "/latest.rss",
+          params: {
+            exclude_tag: "excludeme",
+            api_key: api_key.key,
+            api_username: user.username_lower,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+
+      latest_doc = Nokogiri::XML::Document.parse(response.body)
+      latest_atom_link =
+        URI.parse(
+          latest_doc.at_xpath(
+            "/rss/channel/atom:link",
+            { "atom" => "http://www.w3.org/2005/Atom" },
+          )[
+            "href"
+          ],
+        )
+      latest_link = URI.parse(latest_doc.at_xpath("/rss/channel/link").text)
+
+      expect(latest_atom_link.path).to eq("/latest.rss")
+      expect(Rack::Utils.parse_nested_query(latest_atom_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+      )
+      expect(latest_link.path).to eq("/latest")
+      expect(Rack::Utils.parse_nested_query(latest_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+      )
+
+      get "/top.rss",
+          params: {
+            period: "yearly",
+            exclude_tag: "excludeme",
+            api_key: api_key.key,
+            api_username: user.username_lower,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+
+      top_doc = Nokogiri::XML::Document.parse(response.body)
+      top_atom_link =
+        URI.parse(
+          top_doc.at_xpath("/rss/channel/atom:link", { "atom" => "http://www.w3.org/2005/Atom" })[
+            "href"
+          ],
+        )
+      top_link = URI.parse(top_doc.at_xpath("/rss/channel/link").text)
+
+      expect(top_atom_link.path).to eq("/top.rss")
+      expect(Rack::Utils.parse_nested_query(top_atom_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+        "period" => "yearly",
+      )
+      expect(top_link.path).to eq("/top")
+      expect(Rack::Utils.parse_nested_query(top_link.query.to_s)).to eq(
+        "exclude_tag" => "excludeme",
+        "period" => "yearly",
+      )
     end
 
     it "renders links correctly with subfolder" do
@@ -951,6 +1035,29 @@ RSpec.describe ListController do
           expect(response.status).to eq(200)
           expect(response.body).to include(untagged_topic.title)
           expect(response.body).not_to include(tagged_topic.title)
+        end
+
+        it "does not advertise the route-derived category param in the self URL" do
+          get "/c/#{category.slug}/#{category.id}.rss?exclude_tag=excludeme"
+          expect(response.status).to eq(200)
+
+          doc = Nokogiri::XML::Document.parse(response.body)
+          atom_link =
+            URI.parse(
+              doc.at_xpath("/rss/channel/atom:link", { "atom" => "http://www.w3.org/2005/Atom" })[
+                "href"
+              ],
+            )
+          link = URI.parse(doc.at_xpath("/rss/channel/link").text)
+
+          expect(atom_link.path).to eq("/c/#{category.slug}/#{category.id}.rss")
+          expect(Rack::Utils.parse_nested_query(atom_link.query.to_s)).to eq(
+            "exclude_tag" => "excludeme",
+          )
+          expect(link.path).to eq("/c/#{category.slug}/#{category.id}")
+          expect(Rack::Utils.parse_nested_query(link.query.to_s)).to eq(
+            "exclude_tag" => "excludeme",
+          )
         end
       end
 

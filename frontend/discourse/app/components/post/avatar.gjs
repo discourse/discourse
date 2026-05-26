@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatar from "discourse/components/user-avatar";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PostAvatar extends Component {
   @cached
@@ -69,7 +69,7 @@ export default class PostAvatar extends Component {
   }
 
   <template>
-    <div class={{concatClass "topic-avatar" this.additionalClasses}}>
+    <div class={{dConcatClass "topic-avatar" this.additionalClasses}}>
       {{#let
         (lazyHash
           post=@post
@@ -82,9 +82,9 @@ export default class PostAvatar extends Component {
         <PluginOutlet @name="post-avatar" @outletArgs={{avatarOutletArgs}}>
           <div class="post-avatar">
             {{#if this.userWasDeleted}}
-              {{icon "trash-can" class="deleted-user-avatar"}}
+              {{dIcon "trash-can" class="deleted-user-avatar"}}
             {{else}}
-              <UserAvatar
+              <DUserAvatar
                 class="main-avatar"
                 tabindex="-1"
                 @hideTitle={{true}}
@@ -96,7 +96,7 @@ export default class PostAvatar extends Component {
                 @name="post-avatar-flair"
                 @outletArgs={{avatarOutletArgs}}
               >
-                <UserAvatarFlair @user={{this.user}} />
+                <DUserAvatarFlair @user={{this.user}} />
               </PluginOutlet>
             {{/if}}
             {{#if @displayPosterName}}

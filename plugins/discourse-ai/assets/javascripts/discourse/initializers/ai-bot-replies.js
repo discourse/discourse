@@ -38,6 +38,34 @@ function attachHeaderIcon(api) {
 
 function initializeAIBotReplies(api) {
   const siteSettings = api.container.lookup("service:site-settings");
+  const appEvents = api.container.lookup("service:app-events");
+
+  function scrollUserPostToTopWhenReady(userPostNumber) {
+    let cancelled = false;
+    const cancel = () => {
+      cancelled = true;
+      appEvents.off("page:changed", cancel);
+    };
+    appEvents.on("page:changed", cancel);
+
+    let attempts = 0;
+    function tryScroll() {
+      if (cancelled) {
+        return;
+      }
+      const el = document.querySelector(`#post_${userPostNumber}`);
+      if (el) {
+        appEvents.off("page:changed", cancel);
+        const top = el.getBoundingClientRect().top + window.scrollY - 10;
+        window.scrollTo({ top: Math.max(0, top) });
+      } else if (++attempts < 60) {
+        requestAnimationFrame(tryScroll);
+      } else {
+        appEvents.off("page:changed", cancel);
+      }
+    }
+    requestAnimationFrame(tryScroll);
+  }
 
   initializePauseButton(api);
 
@@ -76,8 +104,21 @@ function initializeAIBotReplies(api) {
 
       if (data?.done) {
         streamingState?.markFinishedAfterRender(topicId, data?.post_id);
+        if (siteSettings.ai_bot_enable_docked_composer) {
+          appEvents.trigger("discourse-ai:bot-reply-finished", {
+            topicId,
+            postId: data?.post_id,
+          });
+        }
       } else {
+        const isNewStream = !streamingState?.isStreamingForTopic(topicId);
         streamingState?.markStarted(topicId, data?.post_id);
+        if (isNewStream && siteSettings.ai_bot_enable_docked_composer) {
+          appEvents.trigger("discourse-ai:bot-reply-started", {
+            topicId,
+            postId: data?.post_id,
+          });
+        }
       }
 
       streamPostText(this.model.postStream, data);
@@ -121,6 +162,12 @@ function initializeAIBotReplies(api) {
       this.messageBus.unsubscribe("discourse-ai/ai-bot/topic/*");
       this._super();
     },
+  });
+
+  api.onAppEvent("discourse-ai:post-submitted", ({ userPostNumber }) => {
+    if (siteSettings.ai_bot_enable_docked_composer) {
+      scrollUserPostToTopWhenReady(userPostNumber);
+    }
   });
 
   // When a user triggers a reply on a bot PM (via the `r` shortcut, the

@@ -182,6 +182,92 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["page"]).to eq(1)
     end
 
+    describe "topic.has_activity_log" do
+      it "is false when the topic has no small actions or whispers with action codes" do
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true when the topic has a visible small_action post" do
+        topic.add_small_action(admin, "closed.enabled")
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+
+      it "ignores whisper action-code posts for non-whisperers" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        topic.add_moderator_post(
+          admin,
+          nil,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+          custom_fields: {
+            "action_code_who" => user.username,
+          },
+        )
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true when whisperers have a whisper action-code post" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        topic.add_moderator_post(
+          admin,
+          nil,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+          custom_fields: {
+            "action_code_who" => user.username,
+          },
+        )
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+
+      it "does not leak the existence of hidden small_actions to non-staff" do
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true for staff when the only small_action is hidden" do
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+    end
+
     it "paginates with has_more_roots" do
       NestedReplies::TreeLoader::ROOTS_PER_PAGE.times do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
@@ -368,6 +454,28 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["deleted_post_placeholder"]).to eq(true)
         expect(root_json["cooked"]).to be_present
         expect(root_json["cooked"]).not_to eq("")
+      end
+
+      it "lets staff view a fully-deleted topic so they can recover it" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get show_url(topic)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
+
+      it "returns 404 for non-staff on a fully-deleted topic" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        sign_in(user)
+
+        get show_url(topic)
+        expect(response.status).to eq(404)
       end
     end
 
@@ -1084,6 +1192,20 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(ancestor["cooked"]).to be_present
         expect(ancestor["cooked"]).not_to eq("")
       end
+
+      it "lets staff load the context view of a fully-deleted topic" do
+        reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get context_url(topic, reply.post_number)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
     end
   end
 
@@ -1170,6 +1292,58 @@ RSpec.describe NestedTopicsController, type: :request do
       Scheduler::Defer.do_all_work
 
       expect(TopicUser.count).to eq(topic_user_count)
+    end
+
+    describe "catching up on visit" do
+      fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        Fabricate(:nested_topic, topic: topic)
+        topic.update!(highest_post_number: 2, highest_staff_post_number: 2)
+      end
+
+      it "advances last_read_post_number to highest_post_number for a nested topic" do
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: topic, user: reader)
+        expect(topic_user.last_read_post_number).to eq(2)
+      end
+
+      it "marks the topic's unread notifications as read" do
+        reply_notification =
+          Fabricate(
+            :replied_notification,
+            user: reader,
+            topic: topic,
+            post: root_reply,
+            read: false,
+          )
+
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        expect(reply_notification.reload.read).to eq(true)
+      end
+
+      it "does nothing for non-nested topics opened via /n/" do
+        flat_topic = Fabricate(:topic, user: user)
+        Fabricate(:post, topic: flat_topic, user: user, post_number: 1)
+        flat_topic.update!(highest_post_number: 1, highest_staff_post_number: 1)
+
+        sign_in(reader)
+        get show_url(flat_topic), params: { track_visit: true }
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: flat_topic, user: reader)
+        expect(topic_user&.last_read_post_number).to be_blank
+      end
     end
   end
 

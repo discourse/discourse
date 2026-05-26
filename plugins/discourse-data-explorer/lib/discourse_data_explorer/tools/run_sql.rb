@@ -31,6 +31,10 @@ module DiscourseDataExplorer
       end
 
       def invoke
+        if !context.user&.admin?
+          return error_response(I18n.t("discourse_data_explorer.errors.tool_not_allowed"))
+        end
+
         sql = parameters[:sql].to_s.strip
         return error_response("SQL query is empty") if sql.blank?
 

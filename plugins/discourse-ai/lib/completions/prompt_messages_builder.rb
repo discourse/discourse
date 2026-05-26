@@ -81,6 +81,7 @@ module DiscourseAi
                 include_image_uploads: include_image_uploads,
                 include_document_uploads: include_document_uploads,
                 allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
               )
             mapped_message = m.message
 
@@ -156,6 +157,7 @@ module DiscourseAi
 
         builder = new
         builder.topic = post.topic
+        guardian = Guardian.new(post.user)
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
           custom_prompt_translation =
@@ -193,6 +195,7 @@ module DiscourseAi
               include_image_uploads: include_image_uploads,
               include_document_uploads: include_document_uploads,
               allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
             )
             context[:created_at] = created_at
 
@@ -218,6 +221,7 @@ module DiscourseAi
         upload_ids,
         include_image_uploads:,
         include_document_uploads:,
+        guardian:,
         allowed_attachment_types: nil
       )
         return if !include_image_uploads && !include_document_uploads
@@ -235,6 +239,7 @@ module DiscourseAi
                 include_image_uploads: include_image_uploads,
                 include_document_uploads: include_document_uploads,
                 allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
               )
           end
 
@@ -245,6 +250,7 @@ module DiscourseAi
         uploads,
         include_image_uploads:,
         include_document_uploads:,
+        guardian:,
         allowed_attachment_types: nil
       )
         return if !include_image_uploads && !include_document_uploads
@@ -257,6 +263,7 @@ module DiscourseAi
               include_image_uploads: include_image_uploads,
               include_document_uploads: include_document_uploads,
               allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
             )
           end
           .map(&:id)
@@ -267,14 +274,19 @@ module DiscourseAi
         upload,
         include_image_uploads:,
         include_document_uploads:,
+        guardian:,
         allowed_attachment_types: nil
       )
-        if image_upload?(upload)
-          include_image_uploads
-        else
-          include_document_uploads &&
-            document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
-        end
+        type_allowed =
+          if image_upload?(upload)
+            include_image_uploads
+          else
+            include_document_uploads &&
+              document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
+          end
+        return false if !type_allowed
+
+        guardian.can_see_upload?(upload)
       end
 
       def self.document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
@@ -340,6 +352,7 @@ module DiscourseAi
                 include_image_uploads: include_image_uploads,
                 include_document_uploads: include_document_uploads,
                 allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
               )
             upload_ids&.each { |upload_id| posts_context << { upload_id: upload_id } }
           end

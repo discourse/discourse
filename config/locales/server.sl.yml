@@ -607,6 +607,28 @@ sl:
       xaxis:
         desktop: "Namizno"
         mobile: "Mobilno"
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Tem"
+        posts: "Prispevki"
+        share: "Deli"
+    posters_by_member_type:
+      labels:
+        count: "Prispevki"
+        share: "Deli"
+      types:
+        staff: "Osebje"
+    trust_level_pipeline:
+      labels:
+        count: "Člani"
+        share: "Deli"
+      levels:
+        "0": "Novi"
+        "1": "Osnovni uporabnik"
+        "2": "Polnopraven član"
+        "3": "Običajne"
+        "4": "Vodja"
     consolidated_page_views:
       labels:
         post: Prispevek
@@ -616,6 +638,9 @@ sl:
       xaxis:
         api: "API"
         user_api: "Uporabniški API"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonimni"
     topics:
       title: "Tem"
     posts:
@@ -649,6 +674,12 @@ sl:
       labels:
         user: "Uporabnik"
         num_topics: "Tem"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Obiskov"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Obiskov"
     top_traffic_sources:
       xaxis: "Domena"
       num_topics: "Tem"
@@ -676,7 +707,7 @@ sl:
       labels:
         user: Uporabnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Uporabnik
         location: Lokacija

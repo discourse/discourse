@@ -4,12 +4,12 @@
 
 class SystemMessage
   def self.create(recipient, type, params = {})
-    self.new(recipient).create(type, params)
+    new(recipient).create(type, params)
   end
 
   def self.create_from_system_user(recipient, type, params = {})
     params = params.merge(from_system: true)
-    self.new(recipient).create(type, params)
+    new(recipient).create(type, params)
   end
 
   def initialize(recipient)

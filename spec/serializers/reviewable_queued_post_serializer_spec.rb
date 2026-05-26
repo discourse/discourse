@@ -74,4 +74,38 @@ RSpec.describe ReviewableQueuedPostSerializer do
       expect(raw_field[:type]).to eq(:editor)
     end
   end
+
+  describe "raw email visibility" do
+    fab!(:reviewable, :reviewable_queued_post)
+    fab!(:user)
+    fab!(:group)
+    fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
+
+    def serialized_payload(scope_user)
+      ReviewableQueuedPostSerializer.new(
+        reviewable,
+        scope: Guardian.new(scope_user),
+        root: nil,
+      ).as_json[
+        :payload
+      ]
+    end
+
+    it "redacts raw_email when the user is not in view_raw_email_allowed_groups" do
+      SiteSetting.view_raw_email_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+
+      payload = serialized_payload(user)
+
+      expect(payload["via_email"]).to eq(true)
+      expect(payload).not_to have_key("raw_email")
+    end
+
+    it "exposes raw_email when the user is in view_raw_email_allowed_groups" do
+      SiteSetting.view_raw_email_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}|#{group.id}"
+
+      payload = serialized_payload(user)
+
+      expect(payload["raw_email"]).to eq("store_me")
+    end
+  end
 end

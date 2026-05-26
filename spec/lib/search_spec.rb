@@ -2130,25 +2130,23 @@ RSpec.describe Search do
     end
 
     it "finds chinese topic based on title if tokenization is forced" do
-      begin
-        SiteSetting.search_tokenize_chinese = true
-        default_min_search_term_length = SiteSetting.defaults.get(:min_search_term_length)
-        SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, 1)
+      SiteSetting.search_tokenize_chinese = true
+      default_min_search_term_length = SiteSetting.defaults.get(:min_search_term_length)
+      SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, 1)
+      SiteSetting.refresh!
+
+      topic = Fabricate(:topic, title: "My Title Discourse社區指南")
+      post = Fabricate(:post, topic: topic)
+
+      expect(Search.execute("社區指南").posts.first.id).to eq(post.id)
+      expect(Search.execute("指南").posts.first.id).to eq(post.id)
+    ensure
+      if default_min_search_term_length
+        SiteSetting.defaults.set_regardless_of_locale(
+          :min_search_term_length,
+          default_min_search_term_length,
+        )
         SiteSetting.refresh!
-
-        topic = Fabricate(:topic, title: "My Title Discourse社區指南")
-        post = Fabricate(:post, topic: topic)
-
-        expect(Search.execute("社區指南").posts.first.id).to eq(post.id)
-        expect(Search.execute("指南").posts.first.id).to eq(post.id)
-      ensure
-        if default_min_search_term_length
-          SiteSetting.defaults.set_regardless_of_locale(
-            :min_search_term_length,
-            default_min_search_term_length,
-          )
-          SiteSetting.refresh!
-        end
       end
     end
   end

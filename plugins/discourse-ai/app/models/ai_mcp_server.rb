@@ -411,7 +411,7 @@ class AiMcpServer < ActiveRecord::Base
     if instance_variable_defined?(:@tools_for_serialization)
       remove_instance_variable(:@tools_for_serialization)
     end
-    DiscourseAi::Mcp::ToolRegistry.invalidate!(self.id)
+    DiscourseAi::Mcp::ToolRegistry.invalidate!(id)
     AiAgent.agent_cache.flush!
   end
 
@@ -466,8 +466,8 @@ end
 #  oauth_last_authorized_at         :datetime
 #  oauth_last_error                 :string(1000)
 #  oauth_last_refreshed_at          :datetime
-#  oauth_require_refresh_token      :boolean          default(FALSE), not null
 #  oauth_registration_endpoint      :string(1000)
+#  oauth_require_refresh_token      :boolean          default(FALSE), not null
 #  oauth_resource_metadata_url      :string(1000)
 #  oauth_revocation_endpoint        :string(1000)
 #  oauth_scopes                     :string(2000)

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import avatar from "discourse/helpers/avatar";
-import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import I18n, { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -35,7 +35,7 @@ const UserMessage = <template>
     {{yield}}
   </div>
   <div class="chat-message__avatar">
-    {{avatar @user imageSize="small"}}
+    {{dAvatar @user imageSize="small"}}
   </div>
 </template>;
 
@@ -163,7 +163,7 @@ export default class ChatUsage extends Component {
                           class="chat-channel-link__name"
                         >#{{channel.channel_slug}}</span>
                         <span class="chat-channel-link__count">
-                          {{number channel.message_count}}
+                          {{dNumber channel.message_count}}
                         </span>
                       </a>
                     {{/each}}

@@ -20,8 +20,8 @@ class Flag < ActiveRecord::Base
   end
 
   def used?
-    PostAction.exists?(post_action_type_id: self.id) ||
-      ReviewableScore.exists?(reviewable_score_type: self.id)
+    PostAction.exists?(post_action_type_id: id) ||
+      ReviewableScore.exists?(reviewable_score_type: id)
   end
 
   def self.valid_applies_to_types
@@ -48,11 +48,11 @@ class Flag < ActiveRecord::Base
   end
 
   def system?
-    self.id.present? && self.id < MAX_SYSTEM_FLAG_ID
+    id.present? && id < MAX_SYSTEM_FLAG_ID
   end
 
   def applies_to?(type)
-    self.applies_to.include?(type)
+    applies_to.include?(type)
   end
 
   private
@@ -62,12 +62,12 @@ class Flag < ActiveRecord::Base
   end
 
   def set_position
-    self.position = Flag.maximum(:position).to_i + 1 if !self.position
+    self.position = Flag.maximum(:position).to_i + 1 if !position
   end
 
   def set_name_key
-    prefix = self.system? ? "" : "custom_"
-    self.name_key = "#{prefix}#{self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase}"
+    prefix = system? ? "" : "custom_"
+    self.name_key = "#{prefix}#{name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase}"
   end
 end
 
@@ -76,16 +76,16 @@ end
 # Table name: flags
 #
 #  id               :bigint           not null, primary key
+#  applies_to       :string           not null, is an Array
+#  auto_action_type :boolean          default(FALSE), not null
+#  description      :text
+#  enabled          :boolean          default(TRUE), not null
 #  name             :string
 #  name_key         :string
-#  description      :text
 #  notify_type      :boolean          default(FALSE), not null
-#  auto_action_type :boolean          default(FALSE), not null
-#  require_message  :boolean          default(FALSE), not null
-#  applies_to       :string           not null, is an Array
 #  position         :integer          not null
-#  enabled          :boolean          default(TRUE), not null
+#  require_message  :boolean          default(FALSE), not null
+#  score_type       :boolean          default(FALSE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  score_type       :boolean          default(FALSE), not null
 #

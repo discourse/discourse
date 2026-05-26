@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import TextField from "discourse/components/text-field";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorConfirmPhrase extends Component {
@@ -47,7 +47,7 @@ export default class SecondFactorConfirmPhrase extends Component {
       }}
     </p>
 
-    <TextField
+    <DTextField
       {{on "input" this.onConfirmPhraseInput}}
       @id="confirm-phrase"
       @autocorrect="off"

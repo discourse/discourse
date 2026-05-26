@@ -168,7 +168,7 @@ describe "Post event" do
   it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
+    tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]
@@ -215,6 +215,58 @@ describe "Post event" do
     post_event_page.going.open_more_menu
 
     expect(page).to have_no_css(".send-pm-to-creator")
+  end
+
+  context "with the Going button" do
+    fab!(:rsvp_user, :user)
+
+    before { sign_in(rsvp_user) }
+
+    it "creates a recurring going invitee when picking 'this event and all following events'" do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going_all_following
+
+      expect(post_event_page).to have_going_status
+      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(invitee.recurring).to eq(true)
+    end
+
+    it "creates a non-recurring going invitee when picking 'this event'" do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going_this_event
+
+      expect(post_event_page).to have_going_status
+      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(invitee.recurring).to eq(false)
+    end
+
+    it "renders without a dropdown on non-recurring events" do
+      raw = "[event status='public' start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title: "My one-off meetup event", raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_going_button
+      expect(post_event_page).to have_no_going_menu
+    end
+
+    it "opens the menu when tapping the whole going button on mobile", mobile: true do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going
+
+      expect(page).to have_css(".discourse-post-event-going-menu-content")
+    end
   end
 
   it "shows '-' for expired recurring events instead of dates" do

@@ -28,12 +28,12 @@ module Migrations
     end
 
     def self.names
-      self.all.keys.sort
+      all.keys.sort
     end
 
     def self.path_of(converter_name)
       converter_name = converter_name.downcase
-      path = self.all[converter_name]
+      path = all[converter_name]
       raise "Could not find a converter named '#{converter_name}'" unless path
       path
     end
