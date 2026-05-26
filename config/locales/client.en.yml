@@ -4005,6 +4005,9 @@ en:
         other: "%{count} replies"
       collapse: "Collapse"
       collapse_parent: "Collapse parent thread"
+      focused_path: "Focused reply path"
+      return_to_branch: "Return to %{username}'s branch"
+      all_replies: "All replies"
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
       no_replies: "No replies yet."
