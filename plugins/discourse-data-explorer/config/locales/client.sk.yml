@@ -14,6 +14,9 @@ sk:
       explorer:
         no_semicolons: "Odstráňte z dotazu bodkočiarky."
         dirty: "Pred spustením musíte dotaz uložiť."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Žiadne výsledky"
     explorer:
       default_query: "Predvolené"
       or: "alebo"

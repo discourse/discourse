@@ -14,6 +14,9 @@ ko:
       explorer:
         no_semicolons: "쿼리에서 세미콜론을 제거하십시오."
         dirty: "실행하기 전에 쿼리를 저장해야합니다."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "결과 없음"
     explorer:
       default_query: "기본"
       or: "또는"

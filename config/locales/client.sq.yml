@@ -269,8 +269,6 @@ sq:
     tos: "Kushtet e shërbimit"
     rules: "Rregullat"
     conduct: "Kodi i Sjelljes"
-    mobile_view: "Pamja për celular"
-    desktop_view: "Pamja për desktop"
     now: "tani"
     read_more: "lexo më shumë"
     more: "Më shumë"
@@ -3455,7 +3453,6 @@ sq:
             button: "HTML"
       bookmarks:
         name: "Emri"
-        options: "Opsione"
     category:
       none: "(pa kategori)"
       all: "Të gjitha kategoritë"
@@ -4134,6 +4131,10 @@ sq:
                 "2": "Anëtar"
                 "3": "I zakonshëm"
                 "4": "Udhëheqës"
+        reports_section:
+          modal:
+            enabled_heading: "Aktivizuar"
+            apply: "Apliko"
         site_traffic:
           series:
             anonymous: "Anonim"

@@ -370,8 +370,6 @@ da:
     tos: "Servicevilkår"
     rules: "Regler"
     conduct: "Adfærdskodeks"
-    mobile_view: "Mobil visning"
-    desktop_view: "Computervisning"
     now: "lige nu"
     read_more: "læs mere"
     more: "Mere"
@@ -3427,7 +3425,6 @@ da:
         name_placeholder: "Hvad er dette bogmærke til?"
         name_input_label: "Bogmærkenavn"
         set_reminder: "Påmind mig"
-        options: "Indstillinger"
         actions:
           delete_bookmark:
             name: "Slet bogmærke"
@@ -4625,6 +4622,14 @@ da:
                 "2": "Bruger"
                 "3": "Almindelig"
                 "4": "Leder"
+        reports_section:
+          no_data: "Ingen data at vise"
+          modal:
+            enabled_heading: "Aktiveret"
+            all_heading: "Alle rapporter"
+            apply: "Anvend"
+            move_up: "Flyt op"
+            move_down: "Flyt ned"
         site_traffic:
           series:
             anonymous: "Anonym"

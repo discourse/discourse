@@ -14,6 +14,9 @@ fr:
       explorer:
         no_semicolons: "Supprimez les points-virgules de la requête."
         dirty: "Vous devez enregistrer la requête avant de l'exécuter."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Aucun résultat"
     explorer:
       default_query: "Par défaut"
       or: "ou"

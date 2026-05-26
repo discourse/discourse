@@ -34,6 +34,7 @@ de:
         title: Einen Beitrag in einem Thema mit Daten-Explorer-Ergebnissen planen
         description: Geplante Berichte zu einem bestimmten Thema veröffentlichen
   data_explorer:
+    admin_dashboard_label: "Daten-Explorer"
     report_generator:
       private_message:
         title: "Geplanter Bericht für %{query_name}"

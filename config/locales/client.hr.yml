@@ -406,8 +406,6 @@ hr:
     tos: "Uvjeti korištenja"
     rules: "Pravila"
     conduct: "Pravila ponašanja"
-    mobile_view: "Mobilni prikaz"
-    desktop_view: "Desktop prikaz"
     now: "upravo"
     read_more: "pročitaj više"
     more: "Više"
@@ -4237,7 +4235,6 @@ hr:
         name_placeholder: "Čemu služi ova oznaka?"
         name_input_label: "Naziv oznake"
         set_reminder: "Podsjeti me"
-        options: "Mogućnosti"
         actions:
           delete_bookmark:
             name: "Izbriši oznaku"
@@ -5837,6 +5834,14 @@ hr:
                 "2": "Član"
                 "3": "Stalni član"
                 "4": "Vođa"
+        reports_section:
+          no_data: "Nema podataka za prikaz"
+          modal:
+            enabled_heading: "Omogućeno"
+            all_heading: "Sva izvješća"
+            apply: "Primijeni"
+            move_up: "Pomakni gore"
+            move_down: "Pomakni dolje"
         site_traffic:
           series:
             anonymous: "Anonimno"

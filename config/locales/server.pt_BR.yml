@@ -1662,6 +1662,9 @@ pt_BR:
       admin_sidebar_deprecation: "O layout antigo da administração foi preterido em benefício do novo <a href='https://meta.discourse.org/t/-/289281'>layout de barra de ferramentas</a> e será removido na próxima versão. Você pode <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> o layout da nova barra lateral antes disso."
       starttls_disabled: "A configuração de e-mail de saída está com a opção STARTTLS desativada. Isso quase nunca é necessário. Considere remover a opção <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> do seu ambiente. Consulte <a href='https://meta.discourse.org/t/387286'>este tópico</a> para mais informações."
     back_from_logster_text: "Voltar para o site"
+    reports_section:
+      providers:
+        core_report: "Padrão"
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
     disabled: "desativado(a)"
@@ -2278,7 +2281,6 @@ pt_BR:
     allow_profile_backgrounds: "Permita que os(as) usuários(as) enviem planos de fundo do perfil."
     get_a_room_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer para a mesma pessoa no mesmo tópico antes de ser avisado(a)."
     dont_feed_the_trolls_threshold: "Número de sinalizadores de outros(as) usuários(as) antes de serem avisados(as)."
-    enable_mobile_theme: "Os dispositivos móveis usam um tema compatível com dispositivos móveis, com a possibilidade de mudar para o site completo. Desative isso se quiser usar um estilo personalizado totalmente responsivo."
     dominating_topic_minimum_percent: "Percentual de postagens que um(a) usuário(a) precisa fazer em um tópico antes de ser relembrado(a) de ser excessivamente dominante em um tópico."
     pm_warn_user_last_seen_months_ago: "Ao criar uma nova mensagem privada, avise aos usuários quando o destinatário de destino não foi visto há mais de n meses."
     suppress_uncategorized_badge: "Não exiba o emblema para assuntos não categorizados em listas de tópicos."
@@ -2496,7 +2498,6 @@ pt_BR:
     rich_editor: "Ative o editor de rich text para o compositor, assim todos(as) usuários(as) poderão alternar entre o modo Markdown atual e o novo editor de rich text para tornar a composição mais intuitiva e amigável."
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
-    viewport_based_mobile_mode: "Usar a largura da viewport para determinar os modos mobile/desktop. Essa configuração será removida em breve. Se você precisar desativá-la, avise-nos <a href='https://meta.discourse.org/t/384280'>no Meta</a>."
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "Lista de idiomas compatíveis para os quais o conteúdo do(a) usuário(a) pode ser traduzido. O idioma padrão do site está sempre incluído. Requer 'content localization enabled'."
     content_localization_allowed_groups: "Grupos com permissão para enviar conteúdo localizado. Requer \"content localization enabled\"."

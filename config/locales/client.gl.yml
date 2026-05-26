@@ -222,8 +222,6 @@ gl:
     tos: "Termos do servizo"
     rules: "Regras"
     conduct: "Código de conduta"
-    mobile_view: "Visualización móbil"
-    desktop_view: "Visualización en escritorio"
     now: "agora mesmiño"
     read_more: "ler máis"
     more: "Máis"
@@ -2716,7 +2714,6 @@ gl:
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
         set_reminder: "Lémbreme"
-        options: "Opcións"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -3624,6 +3621,12 @@ gl:
                 "2": "Membro"
                 "3": "Normal"
                 "4": "Líder"
+        reports_section:
+          no_data: "Non hai datos que amosar"
+          modal:
+            enabled_heading: "Activado"
+            all_heading: "Todos os informes"
+            apply: "Aplicar"
         site_traffic:
           series:
             anonymous: "Anónimo"

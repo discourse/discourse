@@ -264,8 +264,6 @@ hy:
     tos: "Պայմանները"
     rules: "Կանոններ"
     conduct: "Վարքագծի Կանոններ"
-    mobile_view: "Տեսքը Հեռախոսով"
-    desktop_view: "Տեսքը Համակարգչով"
     now: "հենց նոր"
     read_more: "կարդալ ավելին"
     more: "Ավելին"
@@ -3109,7 +3107,6 @@ hy:
         name: "Անուն"
         name_placeholder: "Ինչի՞ համար է այս էջանշանը: "
         set_reminder: "Հիշեցնել ինձ"
-        options: "Տարբերակներ"
         actions:
           delete_bookmark:
             name: "Ջնջել էջանշանը"
@@ -4004,6 +4001,10 @@ hy:
                 "2": "Անդամ"
                 "3": "Սովորական"
                 "4": "Առաջնորդ"
+        reports_section:
+          modal:
+            all_heading: "Բոլոր հաշվետվությունները"
+            apply: "Կիրառել"
         site_traffic:
           series:
             anonymous: "Անանուն"
