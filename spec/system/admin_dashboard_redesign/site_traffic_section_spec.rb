@@ -178,6 +178,15 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         )
       end
 
+      BrowserPageviewCountryDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+      BrowserPageviewReferrerDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+
       dashboard.visit
       traffic = dashboard.site_traffic
 
