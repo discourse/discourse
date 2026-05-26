@@ -978,8 +978,6 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin-left: -0.5em;
-    margin-right: -0.5em;
   }
 
   .nested-view__mobile-ancestors {
@@ -1053,6 +1051,8 @@
   .nested-view__mobile-focused-branch {
     display: flex;
     flex-direction: column;
+    margin-left: -0.5em;
+    margin-right: -0.5em;
     margin-top: 0.5em;
   }
 
