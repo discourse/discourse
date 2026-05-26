@@ -637,6 +637,10 @@
     color: var(--primary-low-mid);
   }
 
+  &__collapsed-username {
+    color: var(--primary-high-or-secondary-low);
+  }
+
   &__collapsed-reply-count {
     color: var(--tertiary);
   }
@@ -909,6 +913,12 @@
     border-radius: 0;
   }
 
+  .nested-view.-mobile-focused {
+    .nested-view__header {
+      margin-bottom: 0;
+    }
+  }
+
   .nested-view__title {
     font-size: var(--font-up-3);
   }
@@ -967,6 +977,7 @@
   .nested-view__mobile-focus {
     display: flex;
     flex-direction: column;
+    gap: 0;
     margin-left: -0.5em;
     margin-right: -0.5em;
   }
@@ -1011,12 +1022,11 @@
     }
   }
 
-  .nested-view__mobile-focus-back {
-    border-bottom: 1px solid var(--primary-low);
-  }
-
   .nested-view__mobile-ancestor {
     border-top: 1px solid var(--primary-low);
+    font-size: var(--font-down-1);
+    min-height: calc(var(--nested-avatar-size) + 0.75em);
+    padding-block: 0.375em;
   }
 
   .nested-view__mobile-ancestor-meta {
@@ -1028,7 +1038,7 @@
 
   .nested-view__mobile-ancestor-username {
     flex: 0 0 auto;
-    color: var(--primary);
+    color: var(--primary-high-or-secondary-low);
     font-weight: bold;
   }
 
@@ -1043,6 +1053,7 @@
   .nested-view__mobile-focused-branch {
     display: flex;
     flex-direction: column;
+    margin-top: 0.5em;
   }
 
   @media (prefers-reduced-motion: no-preference) {

@@ -92,6 +92,10 @@ export default class Nested extends Component {
     return this.site.mobileView && this.focusedPath.length > 0;
   }
 
+  get viewClass() {
+    return this.isMobileFocused ? "nested-view -mobile-focused" : "nested-view";
+  }
+
   get mobileFocusClass() {
     return `nested-view__mobile-focus --${this.focusDirection}`;
   }
@@ -173,7 +177,7 @@ export default class Nested extends Component {
 
   <template>
     <div
-      class="nested-view"
+      class={{this.viewClass}}
       {{this.viewportTracker.setup
         eyeline=false
         headerOffset=this.header.headerOffset
