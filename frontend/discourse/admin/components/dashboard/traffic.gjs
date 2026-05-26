@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const PERIOD_COPY_KEYS = {
@@ -105,6 +107,13 @@ export default class DashboardTraffic extends Component {
     return {
       hideYAxisGridLines: true,
       hiddenLabels: this.hiddenLabels,
+    };
+  }
+
+  get reportQuery() {
+    return {
+      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
+      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
     };
   }
 
@@ -260,6 +269,18 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
+          <LinkTo
+            class="db-traffic__see-details"
+            @route="adminReports.show"
+            @model="site_traffic"
+            @query={{hash
+              start_date=this.reportQuery.start_date
+              end_date=this.reportQuery.end_date
+            }}
+          >
+            {{i18n "admin.dashboard.site_traffic.see_details"}}
+            {{dIcon "arrow-right"}}
+          </LinkTo>
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>

@@ -36,6 +36,14 @@ module PageObjects
         has_css?(".db-section__traffic-chart canvas")
       end
 
+      def has_see_details_link?
+        has_css?("a.db-traffic__see-details")
+      end
+
+      def click_see_details
+        find("a.db-traffic__see-details").click
+      end
+
       def hover_comparison_tooltip
         find("[data-trigger][data-identifier='site-traffic-comparison-tooltip']").hover
         self
