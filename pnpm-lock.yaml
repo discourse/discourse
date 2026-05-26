@@ -305,6 +305,9 @@ importers:
       jspreadsheet-ce:
         specifier: ^5.0.4
         version: 5.0.4
+      minimasonry:
+        specifier: ^1.3.2
+        version: 1.3.2
       moment:
         specifier: 2.30.1
         version: 2.30.1
@@ -6793,6 +6796,9 @@ packages:
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
+
+  minimasonry@1.3.2:
+    resolution: {integrity: sha512-ygvf5JIR4NT1LbM6o8z1oz1icTkta72gXKwidvSqIVxuzVd/P21UI0Wbq1J+MStAu50Vvr8qWYNSz1W4uycqMQ==}
 
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
@@ -16450,6 +16456,8 @@ snapshots:
       schema-utils: 4.3.3
       tapable: 2.3.2
       webpack: 5.99.9
+
+  minimasonry@1.3.2: {}
 
   minimatch@10.2.5:
     dependencies:

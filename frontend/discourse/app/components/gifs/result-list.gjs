@@ -4,8 +4,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import MiniMasonry from "minimasonry";
 import GifsResult from "discourse/components/gifs/result";
-import MiniMasonry from "discourse/lib/mini-masonry";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 
