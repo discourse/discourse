@@ -1069,7 +1069,7 @@ RSpec.describe UploadsController do
       let(:mock_multipart_upload_id) do
         "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
       end
-      let(:test_bucket_prefix) { "test_#{Discourse.test_env_number}" }
+      let(:test_bucket_prefix) { "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}" }
 
       before do
         sign_in(user)
