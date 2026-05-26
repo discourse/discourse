@@ -47,6 +47,9 @@ export default class AiBotConversations extends Component {
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
   @tracked uploads = trackedArray();
+
+  justEndedComposition = false;
+
   // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
@@ -219,11 +222,25 @@ export default class AiBotConversations extends Component {
   }
 
   @action
+  handleCompositionEnd() {
+    // Safari fires compositionend before the IME-confirming Enter keydown,
+    // so event.isComposing reads false there. Bridge the gap with a flag
+    // cleared on the next microtask.
+    this.justEndedComposition = true;
+    Promise.resolve().then(() => (this.justEndedComposition = false));
+  }
+
+  @action
   handleKeyDown(event) {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.isComposing &&
+      !this.justEndedComposition
+    ) {
       event.preventDefault();
       event.stopPropagation();
       this.prepareAndSubmitToBot();
@@ -412,6 +429,7 @@ export default class AiBotConversations extends Component {
             {{didInsert this.setTextArea}}
             {{on "input" this.updateInputValue}}
             {{on "keydown" this.handleKeyDown}}
+            {{on "compositionend" this.handleCompositionEnd}}
             id="ai-bot-conversations-input"
             autofocus={{unless this.isSubmitDisabled "true"}}
             placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}

@@ -1,6 +1,14 @@
-import { fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  fillIn,
+  find,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+const INPUT = "#ai-bot-conversations-input";
 
 acceptance("AI Bot - Conversations IME handling", function (needs) {
   let postRequests = 0;
@@ -24,12 +32,12 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/discourse-ai/ai-bot/conversations.json", () => {
-      return helper.response({
+    server.get("/discourse-ai/ai-bot/conversations.json", () =>
+      helper.response({
         conversations: [],
         meta: { has_more: false },
-      });
-    });
+      })
+    );
 
     server.post("/posts.json", () => {
       postRequests += 1;
@@ -40,21 +48,68 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
         post_url: "/t/ai-conversation/1/1",
       });
     });
+
+    server.get("/t/:slug/:id.json", () => helper.response({}));
   });
 
-  test("does not submit when Enter is pressed during IME composition", async function (assert) {
-    postRequests = 0;
+  needs.hooks.beforeEach(() => (postRequests = 0));
 
+  async function prepareDraft() {
     await visit("/discourse-ai/ai-bot/conversations");
-    await fillIn(
-      "#ai-bot-conversations-input",
-      "これはテスト入力として十分長い文章です"
+    await fillIn(INPUT, "これはテスト入力として十分長い文章です");
+  }
+
+  test("Enter submits the message", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+
+    assert.strictEqual(postRequests, 1, "submitted once");
+  });
+
+  test("Shift+Enter does not submit", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter", shiftKey: true });
+
+    assert.strictEqual(postRequests, 0, "did not submit");
+  });
+
+  // Chrome fires the IME-confirming keydown with isComposing=true (compositionend follows)
+  test("IME-confirming Enter does not submit (Chrome event order)", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter", isComposing: true });
+    await triggerEvent(INPUT, "compositionend");
+
+    assert.strictEqual(postRequests, 0, "did not submit");
+  });
+
+  // Safari fires compositionend first, then the IME-confirming keydown in the
+  // same task. Dispatch directly so microtasks don't drain between them.
+  test("IME-confirming Enter does not submit (Safari event order)", async function (assert) {
+    await prepareDraft();
+
+    const el = find(INPUT);
+    el.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true }));
+    el.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "Enter",
+        bubbles: true,
+        cancelable: true,
+      })
     );
+    await settled();
 
-    await triggerKeyEvent("#ai-bot-conversations-input", "keydown", "Enter", {
-      isComposing: true,
-    });
+    assert.strictEqual(postRequests, 0, "did not submit");
+  });
 
-    assert.strictEqual(postRequests, 0, "does not request /posts.json");
+  test("Enter after composition has fully settled still submits", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "compositionend");
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+
+    assert.strictEqual(postRequests, 1, "submitted once composition is done");
   });
 });
