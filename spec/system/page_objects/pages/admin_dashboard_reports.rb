@@ -3,7 +3,7 @@
 module PageObjects
   module Pages
     class AdminDashboardReports < PageObjects::Pages::Base
-      SECTION_SELECTOR = ".db-main__section[data-section-id='reports']"
+      SECTION_SELECTOR = ".db-main [data-section-id='reports']"
 
       def has_section?
         has_css?(SECTION_SELECTOR)
