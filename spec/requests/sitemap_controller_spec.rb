@@ -172,6 +172,12 @@ RSpec.describe SitemapController do
       SiteSetting.login_required = true
       SiteSetting.show_published_pages_login_required = true
 
+      # The sitemap controller redirects anonymous requests to /login
+      # when login_required is on, regardless of
+      # show_published_pages_login_required. Signing in lets us assert
+      # the publishable_pages filter, which is what this test is for.
+      sign_in(Fabricate(:user))
+
       locs = published_page_locs
 
       expect(response.status).to eq(200)
@@ -215,6 +221,11 @@ RSpec.describe SitemapController do
       get "/sitemap_published_pages.xml"
       expect(response.status).to eq(404)
 
+      # secure_uploads has a validator that requires s3 uploads + acls
+      # to be on first, so we use setup_s3 to satisfy it. The thing
+      # we actually want to test is publishable_pages returning none
+      # when secure_uploads is on, hiding the sitemap.
+      setup_s3
       SiteSetting.enable_page_publishing = true
       SiteSetting.secure_uploads = true
       get "/sitemap_published_pages.xml"
@@ -268,6 +279,11 @@ RSpec.describe SitemapController do
       Sitemap.regenerate_sitemaps
       expect(row.reload.enabled).to eq(false)
 
+      # secure_uploads has a validator that requires s3 uploads + acls
+      # to be on first; setup_s3 satisfies the validator so the actual
+      # branch under test (publishable_pages returning none with
+      # secure_uploads on) is what runs.
+      setup_s3
       SiteSetting.enable_page_publishing = true
       SiteSetting.secure_uploads = true
       row.update!(enabled: true)
