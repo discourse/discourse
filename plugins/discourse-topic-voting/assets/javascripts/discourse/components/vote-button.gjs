@@ -23,6 +23,10 @@ export default class VoteBox extends Component {
     return this.args.topic;
   }
 
+  get showClosedTooltip() {
+    return this.topic.closed && !this.topic.user_voted;
+  }
+
   get buttonIcon() {
     return this.topic.user_voted ? "vote-up-filled" : "vote-up";
   }
@@ -52,7 +56,7 @@ export default class VoteBox extends Component {
   }
 
   get ariaLabel() {
-    if (this.topic.closed) {
+    if (this.showClosedTooltip) {
       return i18n("topic_voting.voting_closed_description");
     }
     if (this.currentUser?.vote_limit === 0) {
@@ -151,7 +155,7 @@ export default class VoteBox extends Component {
   }
 
   <template>
-    {{#if this.topic.closed}}
+    {{#if this.showClosedTooltip}}
       <DTooltip @identifier="vote-closed-tooltip" @placement="right">
         <:trigger>
           <DButton
