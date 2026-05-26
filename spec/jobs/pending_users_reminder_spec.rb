@@ -51,12 +51,6 @@ RSpec.describe Jobs::PendingUsersReminder do
       end
     end
 
-    # https://meta.discourse.org/t/notification-claims-x-users-for-approval-but-none-are-found/262853
-    # When a ReviewableUser is rejected but the user cannot be destroyed (because
-    # they have posts or are an admin), the user record stays with approved:
-    # false, active: true. Without filtering by pending reviewables this job
-    # would still count them and send notifications pointing at an empty
-    # `/review` queue.
     context "when a pending user's reviewable has been rejected" do
       fab!(:moderator) { Fabricate(:moderator, approved: true, approved_by_id: -1) }
 
