@@ -31,10 +31,13 @@ export default async function openEventComposer({
     start.hour(hour).minute(minute);
   }
 
+  const end = start.clone().add(1, "hour");
+
   const params = {
     start: start.format("YYYY-MM-DD HH:mm"),
     status: "public",
     timezone,
+    end: end.format("YYYY-MM-DD HH:mm"),
   };
 
   const markdown = Object.entries(params)

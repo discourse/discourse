@@ -35,6 +35,11 @@ module("Unit | Lib | open-event-composer", function (hooks) {
 
     const params = parseBbcode(this.calls[0].body);
     assert.strictEqual(params.start, "2026-05-22 09:00");
+    assert.strictEqual(
+      params.end,
+      "2026-05-22 10:00",
+      "defaults to a 1h event"
+    );
     assert.strictEqual(params.timezone, "America/New_York");
     assert.strictEqual(params.status, "public");
     assert.strictEqual(params.allDay, undefined, "does not emit allDay flag");
@@ -63,6 +68,11 @@ module("Unit | Lib | open-event-composer", function (hooks) {
 
     const params = parseBbcode(this.calls[0].body);
     assert.strictEqual(params.start, "2026-05-22 14:30");
+    assert.strictEqual(
+      params.end,
+      "2026-05-22 15:30",
+      "defaults to a 1h event"
+    );
     assert.strictEqual(params.timezone, "Europe/Berlin");
   });
 

@@ -38,7 +38,7 @@ acceptance(
         .dom(".d-editor-input")
         .hasValue(
           new RegExp(
-            `^\\[event start="${date} 09:00" status="public" timezone=".+"\\]\\n\\[/event\\]\\n$`
+            `^\\[event start="${date} 09:00" status="public" timezone="[^"]+" end="${date} 10:00"\\]\\n\\[/event\\]\\n$`
           ),
           "composer opens with an all-day event defaulting to 9am for the clicked day"
         );
@@ -68,7 +68,7 @@ acceptance(
         .dom(".d-editor-input")
         .hasValue(
           new RegExp(
-            `^\\[event start="${date} 09:00" status="public" timezone=".+"\\]\\n\\[/event\\]\\n$`
+            `^\\[event start="${date} 09:00" status="public" timezone="[^"]+" end="${date} 10:00"\\]\\n\\[/event\\]\\n$`
           ),
           "composer opens with an event for the clicked day"
         );
