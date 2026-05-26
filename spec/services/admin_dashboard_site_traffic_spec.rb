@@ -528,6 +528,12 @@ RSpec.describe AdminDashboardSiteTraffic do
     context "for top countries and top referrers" do
       before { SiteSetting.persist_browser_pageview_events = true }
 
+      def aggregate_rollups
+        range = { start_date: 1.year.ago.to_date, end_date: Date.current }
+        BrowserPageviewCountryDailyRollup.aggregate(**range)
+        BrowserPageviewReferrerDailyRollup.aggregate(**range)
+      end
+
       it "omits top_countries and top_referrers when persist_browser_pageview_events is disabled" do
         SiteSetting.persist_browser_pageview_events = false
 
@@ -540,6 +546,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         6.times do
           Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
         end
+        aggregate_rollups
 
         result = described_class.build(start_date: nil, end_date: nil)
 
@@ -568,10 +575,13 @@ RSpec.describe AdminDashboardSiteTraffic do
         4.times do
           Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
         end
+        aggregate_rollups
 
         first = described_class.build(start_date: nil, end_date: nil)
         expect(first[:top_countries][:rows].first[:country_code]).to eq("US")
 
+        BrowserPageviewCountryDailyRollup.delete_all
+        BrowserPageviewReferrerDailyRollup.delete_all
         BrowserPageviewEvent.delete_all
 
         second = described_class.build(start_date: nil, end_date: nil)
@@ -583,6 +593,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         4.times do
           Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
         end
+        aggregate_rollups
 
         SiteSetting.login_required = false
         first = described_class.build(start_date: nil, end_date: nil)
@@ -596,6 +607,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       it "invalidates the cached payload when current_hostname changes" do
         Discourse.stubs(:current_hostname).returns("forum-a.example.com")
         Fabricate(:browser_pageview_event, normalized_referrer: "forum-b.example.com/path")
+        aggregate_rollups
 
         first = described_class.build(start_date: nil, end_date: nil)
         expect(first[:top_referrers][:rows].first[:normalized_referrer]).to eq(
@@ -642,6 +654,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         allow(Report).to receive(:find).and_call_original
         Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+        aggregate_rollups
 
         second = described_class.build(start_date: nil, end_date: nil)
         expect(second[:top_countries][:rows].first[:country_code]).to eq("US")

@@ -44,6 +44,7 @@ module Reports::TopReferrersByBrowserPageviews
               )
             )
           GROUP BY normalized_referrer
+          HAVING SUM(#{count_expr}) > 0
         )
         SELECT normalized_referrer, count,
                CASE WHEN total = 0 THEN 0

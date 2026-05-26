@@ -35,6 +35,7 @@ module Reports::TopCountriesByBrowserPageviews
           WHERE date >= :start_date
             AND date < :end_date_exclusive
           GROUP BY country_code
+          HAVING SUM(#{count_expr}) > 0
         )
         SELECT country_code, count,
                CASE WHEN total = 0 THEN 0
