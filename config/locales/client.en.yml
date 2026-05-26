@@ -6954,7 +6954,7 @@ en:
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
-            counter: "%{count} / %{max} reports"
+            counter: "%{count} / %{max} reports added"
             enabled_heading: "Enabled"
             all_heading: "All reports"
             apply: "Apply"

@@ -9,12 +9,13 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -62,12 +63,15 @@ export default class ManageReports extends Component {
     return this.allKeys.map((key) => this.itemsByKey.get(key)).filter(Boolean);
   }
 
-  get visibleEnabled() {
-    return this.enabledRows;
+  get disabledRows() {
+    return this.allRows.filter((row) => !this.enabledKeys.has(row.key));
   }
 
-  get visibleAll() {
-    return this.allRows;
+  get visibleRows() {
+    return [
+      ...this.enabledRows.map((row) => ({ ...row, enabled: true })),
+      ...this.disabledRows.map((row) => ({ ...row, enabled: false })),
+    ];
   }
 
   get atCap() {
@@ -250,8 +254,19 @@ export default class ManageReports extends Component {
     <DModal
       @title={{i18n "admin.dashboard.reports_section.modal.title"}}
       @closeModal={{@closeModal}}
-      class="manage-reports-modal"
+      class="manage-reports has-search"
     >
+
+      <:belowModalTitle>
+        <span class="manage-reports__counter">
+          {{i18n
+            "admin.dashboard.reports_section.modal.counter"
+            count=this.enabledOrder.length
+            max=VISIBLE_CAP
+          }}
+        </span>
+      </:belowModalTitle>
+
       <:belowHeader>
         <div class="manage-reports__search-wrapper">
           <DFilterInput
@@ -266,124 +281,82 @@ export default class ManageReports extends Component {
       </:belowHeader>
 
       <:body>
-        <div class="manage-reports">
-          {{#if this.visibleEnabled.length}}
-            <div class="manage-reports__section-header">
-              <h3 class="manage-reports__group-title">
-                {{i18n "admin.dashboard.reports_section.modal.enabled_heading"}}
-              </h3>
-              <span class="manage-reports__counter">
-                {{i18n
-                  "admin.dashboard.reports_section.modal.counter"
-                  count=this.enabledOrder.length
-                  max=VISIBLE_CAP
-                }}
-              </span>
-            </div>
-            <ul class="manage-reports__list manage-reports__list--enabled">
-              {{#each this.visibleEnabled key="key" as |row index|}}
-                <li
-                  class="manage-reports__row"
-                  draggable="true"
-                  data-identifier={{row.key}}
-                  {{on "dragstart" (fn this.onDragStart row)}}
-                  {{on "dragover" this.onDragOver}}
-                  {{on "drop" (fn this.onDrop row)}}
-                  {{on "dragend" this.onDragEnd}}
-                >
-                  {{#unless this.site.mobileView}}
-                    <span class="manage-reports__grip">
-                      {{dIcon "grip-lines"}}
-                    </span>
-                  {{/unless}}
-                  <div class="manage-reports__row-text">
-                    <div class="manage-reports__row-heading">
-                      <span class="manage-reports__title">{{row.title}}</span>
-                      {{#if this.showLabels}}
-                        <span
-                          class="manage-reports__label"
-                          data-source={{row.source}}
-                        >{{row.label}}</span>
-                      {{/if}}
-                    </div>
-                    {{#if row.description}}
-                      <p
-                        class="manage-reports__description"
-                      >{{row.description}}</p>
-                    {{/if}}
-                  </div>
-                  {{#if this.site.mobileView}}
-                    <DButton
-                      @icon="arrow-up"
-                      @action={{fn this.moveUp row}}
-                      @disabled={{eq index 0}}
-                      @translatedAriaLabel={{i18n
-                        "admin.dashboard.reports_section.modal.move_up"
-                      }}
-                      class="manage-reports__arrow btn-transparent btn-small"
-                    />
-                    <DButton
-                      @icon="arrow-down"
-                      @action={{fn this.moveDown row}}
-                      @translatedAriaLabel={{i18n
-                        "admin.dashboard.reports_section.modal.move_down"
-                      }}
-                      class="manage-reports__arrow btn-transparent btn-small"
-                    />
-                  {{/if}}
-                  <DToggleSwitch
-                    @state={{this.isEnabled row}}
-                    aria-label={{i18n
-                      "admin.dashboard.reports_section.modal.toggle"
-                    }}
-                    {{on "click" (fn this.toggle row)}}
-                  />
-                </li>
-              {{/each}}
-            </ul>
-          {{/if}}
 
-          {{#if this.visibleAll.length}}
-            <h3 class="manage-reports__group-title">
-              {{i18n "admin.dashboard.reports_section.modal.all_heading"}}
-            </h3>
-            <ul class="manage-reports__list manage-reports__list--all">
-              {{#each this.visibleAll key="key" as |row|}}
-                <li class="manage-reports__row" data-identifier={{row.key}}>
-                  <div class="manage-reports__row-text">
-                    <div class="manage-reports__row-heading">
-                      <span class="manage-reports__title">{{row.title}}</span>
-                      {{#if this.showLabels}}
-                        <span
-                          class="manage-reports__label"
-                          data-source={{row.source}}
-                        >{{row.label}}</span>
-                      {{/if}}
-                    </div>
-                    {{#if row.description}}
-                      <p
-                        class="manage-reports__description"
-                      >{{row.description}}</p>
+        {{#if this.visibleRows.length}}
+          <ul class="manage-reports__list">
+            {{#each this.visibleRows key="key" as |row index|}}
+              <li
+                class={{dConcatClass
+                  "manage-reports__row"
+                  (if row.enabled "--enabled")
+                }}
+                data-identifier={{row.key}}
+                draggable={{row.enabled}}
+                {{on "dragstart" (fn this.onDragStart row)}}
+                {{on "dragover" this.onDragOver}}
+                {{on "drop" (fn this.onDrop row)}}
+                {{on "dragend" this.onDragEnd}}
+              >
+
+                {{#unless this.site.mobileView}}
+                  <span class="manage-reports__grip">
+                    {{dIcon "grip-vertical"}}
+                  </span>
+                {{/unless}}
+
+                <div class="manage-reports__row-text">
+                  <div class="manage-reports__row-heading">
+                    <span class="manage-reports__title">{{row.title}}</span>
+                    {{#if this.showLabels}}
+                      <span
+                        class="manage-reports__label"
+                        data-source={{row.source}}
+                      >{{row.label}}</span>
                     {{/if}}
                   </div>
-                  <DToggleSwitch
-                    @state={{this.isEnabled row}}
-                    disabled={{this.toggleDisabled row}}
-                    aria-label={{i18n
-                      "admin.dashboard.reports_section.modal.toggle"
+                  {{#if row.description}}
+                    <p
+                      class="manage-reports__description"
+                    >{{row.description}}</p>
+                  {{/if}}
+                </div>
+                {{#if (and row.enabled this.site.mobileView)}}
+                  <DButton
+                    @icon="arrow-up"
+                    @action={{fn this.moveUp row}}
+                    @disabled={{eq index 0}}
+                    @translatedAriaLabel={{i18n
+                      "admin.dashboard.reports_section.modal.move_up"
                     }}
-                    {{on "click" (fn this.toggle row)}}
+                    class="manage-reports__arrow btn-transparent btn-small"
                   />
-                </li>
-              {{/each}}
-            </ul>
-            <DLoadMore
-              @action={{this.loadMore}}
-              @enabled={{this.hasMore}}
-              @isLoading={{this.loading}}
-            />
-          {{/if}}
-        </div>
+                  <DButton
+                    @icon="arrow-down"
+                    @action={{fn this.moveDown row}}
+                    @translatedAriaLabel={{i18n
+                      "admin.dashboard.reports_section.modal.move_down"
+                    }}
+                    class="manage-reports__arrow btn-transparent btn-small"
+                  />
+                {{/if}}
+                <DToggleSwitch
+                  @state={{row.enabled}}
+                  disabled={{this.toggleDisabled row}}
+                  aria-label={{i18n
+                    "admin.dashboard.reports_section.modal.toggle"
+                  }}
+                  {{on "click" (fn this.toggle row)}}
+                />
+              </li>
+            {{/each}}
+          </ul>
+          <DLoadMore
+            @action={{this.loadMore}}
+            @enabled={{this.hasMore}}
+            @isLoading={{this.loading}}
+          />
+        {{/if}}
+
       </:body>
 
       <:aboveFooter>
