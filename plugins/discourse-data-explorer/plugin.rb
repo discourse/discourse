@@ -67,6 +67,8 @@ after_initialize do
 
   register_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
 
+  register_admin_dashboard_report_source(DiscourseDataExplorer::AdminDashboardReportProvider)
+
   add_api_key_scope(
     :data_explorer,
     {

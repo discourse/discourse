@@ -38,10 +38,14 @@ class Report
 
   ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
+  BROWSER_PAGEVIEW_REPORTS = %w[
+    top_countries_by_browser_pageviews
+    top_referrers_by_browser_pageviews
+  ]
 
   def self.hidden?(type, guardian:)
     return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
-    return true if !guardian.is_admin? && !guardian.can_see_ip? && IP_ADDRESS_REPORTS.include?(type)
+    return true if BROWSER_PAGEVIEW_REPORTS.include?(type)
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
@@ -109,9 +113,11 @@ class Report
   include Reports::SuspiciousLogins
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
+  include Reports::TopCountriesByBrowserPageviews
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
+  include Reports::TopReferrersByBrowserPageviews
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
@@ -122,6 +128,9 @@ class Report
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
+  include Reports::TrustLevelPipeline
+  include Reports::PostersByMemberType
+  include Reports::ActivityByCategory
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
@@ -156,7 +165,8 @@ class Report
                 :legacy,
                 :default_group_by,
                 :y_axis_title,
-                :current_user
+                :current_user,
+                :guardian
 
   def self.default_days
     30
@@ -189,6 +199,8 @@ class Report
   end
 
   def self.cache_key(report)
+    guardian = report.guardian || report.current_user&.guardian
+
     [
       "reports",
       report.type,
@@ -198,7 +210,8 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
-      report.current_user&.id,
+      guardian&.user&.id || report.current_user&.id,
+      guardian&.can_see_ip?,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -319,7 +332,10 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.guardian = opts[:guardian] if opts[:guardian]
     report.current_user = opts[:current_user] if opts[:current_user]
+    report.current_user ||= report.guardian&.user
+    report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
 
     report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements

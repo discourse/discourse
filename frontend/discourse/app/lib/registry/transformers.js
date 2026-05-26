@@ -54,6 +54,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-toggles-class",
   "create-topic-button-class",
   "create-topic-button-draft-menu-class",
+  "create-topic-icon",
   "create-topic-label",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",

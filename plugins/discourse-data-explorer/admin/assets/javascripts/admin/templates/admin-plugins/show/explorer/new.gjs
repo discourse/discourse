@@ -151,7 +151,7 @@ export default <template>
           <label class="query-new__sql-label">
             {{i18n "explorer.ai.sql_label"}}
           </label>
-          <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
+          <div class="query-editor">
             <div class="panels-flex">
               <div class="editor-panel">
                 <AceEditor
@@ -161,11 +161,7 @@ export default <template>
                 />
               </div>
               <div class="right-panel">
-                <ExplorerSchema
-                  @schema={{@controller.schema}}
-                  @hideSchema={{@controller.hideSchema}}
-                  @updateHideSchema={{@controller.updateHideSchema}}
-                />
+                <ExplorerSchema @schema={{@controller.schema}} />
               </div>
             </div>
             <div class="clear"></div>

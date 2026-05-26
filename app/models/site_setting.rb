@@ -93,24 +93,12 @@ class SiteSetting < ActiveRecord::Base
         upload_ids = value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       elsif data_type == SiteSettings::TypeSupervisor.types[:objects] && value.present?
-        upload_values =
-          SchemaSettingsObjectValidator.property_values_of_type(
+        upload_ids =
+          SchemaSettingsObjectValidator.upload_ids(
             schema: SiteSetting.type_supervisor.type_hash(name.to_sym)[:schema],
             objects: JSON.parse(value),
-            type: "upload",
           )
 
-        # Convert URLs to upload IDs (values can be either integer IDs or URL strings)
-        upload_ids =
-          upload_values.filter_map do |value|
-            if value.is_a?(Integer)
-              value
-            elsif value.is_a?(String) && value.present?
-              ::Upload.get_from_url(value)&.id
-            end
-          end
-
-        # Always call ensure_exist! to clean up old references when uploads are removed
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end

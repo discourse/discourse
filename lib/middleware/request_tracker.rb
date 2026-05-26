@@ -721,6 +721,7 @@ class Middleware::RequestTracker
         country_code: payload[:country_code],
         asn: payload[:asn],
         referrer: payload[:referrer],
+        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
         user_id: payload[:user_id],
@@ -728,8 +729,13 @@ class Middleware::RequestTracker
         created_at: payload[:occurred_at],
       )
     rescue ActiveRecord::StatementInvalid => e
-      raise unless e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
-      Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      if e.cause.is_a?(PG::ReadOnlySqlTransaction)
+        # Skip recording browser pageviews when PostgreSQL is in read-only transaction mode.
+      elsif e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
+        Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      else
+        raise
+      end
     rescue => e
       Rails.logger.error(
         "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",

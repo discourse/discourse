@@ -13,6 +13,7 @@ import $ from "jquery";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -212,6 +213,7 @@ export function testCleanup(container, app) {
   User.resetCurrent();
   resetMobile();
   resetAdditionalReportModes();
+  resetAdminDashboardReportRenderers();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();

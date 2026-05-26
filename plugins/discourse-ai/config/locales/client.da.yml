@@ -54,6 +54,8 @@ da:
           one: "(%{count} mere)"
           other: "(%{count} mere)"
         collapse_list: "(vis mindre)"
+        nav:
+          enabled: "Aktiveret"
         filters:
           all: "Alle"
           reset: "Nulstil"

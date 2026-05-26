@@ -10,6 +10,9 @@ vi:
       default_query: "Mặc định"
       or: "hoặc"
       create: "Tạo"
+      ai:
+        generate: "Khởi tạo"
+        optional: "tùy chọn"
       import:
         label: "Nhập"
       help:
@@ -20,11 +23,8 @@ vi:
         bool:
           yes: "Đồng ý"
           no: "Không"
-      export: "Xuất"
-      view: "Xem"
       save: "Lưu thay đổi"
       undo: "Hủy bỏ các thay đổi"
-      edit: "Sửa"
       delete: "Xóa"
       result_count:
         other: "%{count} kết quả."

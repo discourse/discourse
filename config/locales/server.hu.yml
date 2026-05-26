@@ -1252,6 +1252,30 @@ hu:
       xaxis: "Nap"
       yaxis: "Új közreműködők száma"
       description: "Azon felhasználók száma, akik első bejegyzésüket tették ebben az időszakban."
+    activity_by_category:
+      labels:
+        category: "Kategória"
+        topics: "Témák"
+        posts: "Bejegyzések"
+        share: "Megosztás"
+    posters_by_member_type:
+      labels:
+        count: "Bejegyzések"
+        share: "Megosztás"
+      types:
+        staff: "Stáb"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Bizalmi szint"
+        count: "Tagok"
+        share: "Megosztás"
+      levels:
+        "0": "Új"
+        "1": "Alapvető"
+        "2": "Tag"
+        "3": "Átlagos"
+        "4": "Vezető"
     trust_level_growth:
       title: "Bizalomszint növekedés"
       xaxis:
@@ -1297,9 +1321,8 @@ hu:
     site_traffic:
       title: "Látogatottság"
       xaxis:
-        page_view_anon_browser: "Oldalmegtekintések (névtelen)"
-        page_view_logged_in_browser: "Oldalmegtekintések (bejelentkezett)"
-        page_view_crawler: "Ismert keresőrobotok"
+        page_view_anon_browser: "Névtelen"
+        page_view_crawler: "Keresőrobotok"
         page_view_other: "Egyéb forgalom"
       yaxis: "Nap"
       description: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók, ismert keresőrobotok és egyéb forgalom számára."
@@ -1414,6 +1437,12 @@ hu:
         num_clicks: "Kattintások"
         num_topics: "Témák"
       description: "A felhasználók az általuk megosztott linkekre leadott kattintások száma szerint listázva."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Látogatás"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Látogatás"
     top_traffic_sources:
       title: "Legnépszerűbb forgalmi források"
       xaxis: "Domain"
@@ -1806,7 +1835,6 @@ hu:
     moderators_change_post_ownership: "Engedélyezze a moderátoroknak a bejegyzések tulajdonjogának megváltoztatását"
     change_post_ownership_allowed_groups: "Engedélyezze a bejegyzések tulajdonosának módosítását ezen csoportok tagjai számára."
     cors_origins: "Megengedett források a kereszteredetű kérelmek (CORS) számára. Minden eredetnek tartalmaznia kell a http:// vagy https:// címet. A CORS engedélyezéséhez a DISCOURSE_ENABLE_CORS env változót igaz értékre kell állítani."
-    use_admin_ip_allowlist: "Az adminisztrátorok csak akkor tudnak bejelentkezni, ha a Szűrt IP-címek listában (Admin > Naplók > Szűrt IP-címek) meghatározott IP-címen tartózkodnak."
     blocked_ip_blocks: "Privát IP-címtartományok listája, amelyeket a Discourse soha nem indexelhet"
     allowed_internal_hosts: "Belső kiszolgálók listája, amelyeket a Discourse biztonságosan indexelhet oneboxing és egyéb célokra"
     allowed_onebox_iframes: "Az iframe src domainek listája, amelyek engedélyezettek a Onebox beágyazásokon keresztül. A * minden alapértelmezett Onebox motort engedélyez."
@@ -1940,7 +1968,6 @@ hu:
     s3_use_acls: "Az AWS azt ajánlja, hogy ne használjon ACL-eket az S3 vödrökön; csak akkor törölje ezt a jelölőnégyzetet, ha a konfigurált `s3_upload_bucket` és `s3_backup_bucket` engedélyezési házirendeket kívánja konfigurálni."
     backup_time_of_day: "A nap azon időpontja UTC-ben, amikor a biztonsági mentésnek meg kell történnie."
     backup_with_uploads: "Feltöltések felvétele az ütemezett biztonsági mentésekbe. Ennek kikapcsolásával csak az adatbázisról készül biztonsági mentés."
-    backup_location: "A biztonsági mentések tárolási helye. FONTOS: Az S3 használatához érvényes S3 hitelesítő adatokat kell megadni a Fájlok beállításaiban. Ha ezt Helyiről S3-ra változtatja, futtatnia kell az `s3:ensure_cors_rules` rake feladatot."
     backup_gzip_compression_level_for_uploads: "A feltöltések tömörítéséhez használt Gzip tömörítési szint."
     include_thumbnails_in_backups: "Generált bélyegképek beillesztése a biztonsági mentésekbe. Ennek kikapcsolása kisebb méretű biztonsági mentéseket eredményez, de visszaállítás után az összes bejegyzés újra építése szükséges."
     active_user_rate_limit_secs: "Milyen gyakran frissítjük a 'last_seen_at' mezőt, másodpercben kifejezve."
@@ -2128,7 +2155,6 @@ hu:
     fast_typing_threshold: "Az első hozzászólás gépelésére fordított minimális idő. Ha az időtartam nem éri el a küszöbértéket, a bejegyzés automatikusan a moderációs sorba kerül. Alacsony: 1 másodperc, normál: 3 másodperc, magas: 5 másodperc."
     auto_silence_fast_typers_on_first_post: "Automatikusan elnémítja azokat a felhasználókat, akik nem érik el a \"gyors gépelési küszöböt\"."
     auto_silence_fast_typers_max_trust_level: "Maximális bizalmi szint a gyors gépelők automatikus elnémításához"
-    auto_silence_first_post_regex: "Kis- és nagybetűre nem érzékeny reguláris kifejezés, amely ha teljesül, az első felhasználói bejegyzést elnémítja és a jóváhagyási sorba küldi. Például: raging|a[bc]a , minden olyan bejegyzést elnémít, amely tartalmazza a raging vagy aba vagy aca kifejezést az első alkalommal. Csak az első bejegyzésre vonatkozik. ELAVULT: Használja helyette a Figyelt Szavak Elnémítása funkciót."
     moderator_guide_topic: "A közösséged moderálását ismertető téma. A link látható lesz a moderátorok és az adminok értékelési sorában."
     reviewable_claiming: "A felülvizsgálandó tartalmat le kell-e foglalni, mielőtt intézkedni lehetne vele kapcsolatban?"
     reviewable_default_topics: "Az áttekintendő tartalmak megjelenítése alapértelmezés szerint témák szerint csoportosítva"

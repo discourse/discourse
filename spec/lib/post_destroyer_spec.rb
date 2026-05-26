@@ -172,6 +172,25 @@ RSpec.describe PostDestroyer do
       expect(post_action).to be_present
     end
 
+    it "creates a staff log entry when recovering the first post" do
+      first_post = create_post
+      PostDestroyer.new(moderator, first_post).destroy
+
+      expect { PostDestroyer.new(moderator, first_post).recover }.to change {
+        UserHistory.where(action: UserHistory.actions[:recover_topic]).count
+      }.by(1)
+    end
+
+    it "creates a staff log entry when recovering a reply" do
+      reply = create_post(topic: post.topic)
+
+      PostDestroyer.new(moderator, reply).destroy
+
+      expect { PostDestroyer.new(moderator, reply).recover }.to change {
+        UserHistory.where(action: UserHistory.actions[:recover_post]).count
+      }.by(1)
+    end
+
     it "works with topics and posts with no user" do
       post = Fabricate(:post)
       UserDestroyer.new(Discourse.system_user).destroy(post.user, delete_posts: true)

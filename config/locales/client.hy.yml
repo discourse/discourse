@@ -3988,6 +3988,26 @@ hy:
         sections:
           reports:
             title: "Հաշվետվություններ"
+          engagement:
+            activity_by_category:
+              category: "Կատեգորիա"
+              topics: "Թեմաներ"
+              posts: "Գրառումներ"
+              share: "Կիսվել"
+            whos_posting:
+              all_categories: "Բոլոր կատեգորիաները"
+              staff: "Անձնակազմ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Նոր"
+                "1": "Հիմնական"
+                "2": "Անդամ"
+                "3": "Սովորական"
+                "4": "Առաջնորդ"
+        site_traffic:
+          series:
+            anonymous: "Անանուն"
+            crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
         period:
           custom: "Մասնավոր"
         reports:

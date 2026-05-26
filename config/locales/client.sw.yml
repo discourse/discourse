@@ -2565,6 +2565,26 @@ sw:
         security_tab: "Ulinzi"
         report_filter_any: "yoyote"
         disabled: Imezuiwa
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kikundi"
+              topics: "Mada"
+              posts: "Machapisho"
+              share: "Shirikisha"
+            whos_posting:
+              all_categories: "Kategoria Zote"
+              staff: "Wasaidizi"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Mpya"
+                "1": "Kawaida"
+                "2": "Mwanachama"
+                "3": "Kawaida"
+                "4": "Kiongozi"
+        site_traffic:
+          series:
+            anonymous: "Asiyejulikana"
         period:
           custom: "Binafsi"
         reports:

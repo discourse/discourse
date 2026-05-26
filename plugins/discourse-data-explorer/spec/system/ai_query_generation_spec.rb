@@ -45,4 +45,73 @@ RSpec.describe "Data Explorer AI query generation" do
       expect(page).to have_no_css(".query-new__manual-form")
     end
   end
+
+  context "when on the edit page" do
+    fab!(:query) { Fabricate(:query, name: "Existing query", sql: "SELECT 1", user: admin) }
+
+    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+
+    it "shows the AI prompt and view segmented control (with SQL option) by default in AI mode" do
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+
+      expect(page).to have_css(".query-ai-prompt")
+      expect(page).to have_css(".query-results-modes input[value='sql']", visible: :all)
+
+      find(".query-mode-switch .d-segmented-control__label", text: "Write SQL").click
+
+      expect(page).to have_no_css(".query-ai-prompt")
+      expect(page).to have_no_css(".query-results-modes input[value='sql']", visible: :all)
+    end
+
+    it "keeps Re-generate disabled until the prompt is non-empty" do
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+
+      expect(page).to have_css(".query-ai-prompt__regenerate[disabled]")
+
+      fill_in("query-ai-prompt-input", with: "show me popular topics")
+
+      expect(page).to have_no_css(".query-ai-prompt__regenerate[disabled]")
+    end
+
+    it "switches between SQL, chart, and table views via the segmented control" do
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+
+      # Default in AI mode is SQL — editor visible, results hidden
+      expect(page).to have_css(".query-editor")
+      expect(page).to have_no_css(".query-results")
+
+      page.execute_script(
+        "document.querySelector(\".query-results-modes input[value='table']\").closest('label').click()",
+      )
+      expect(page).to have_no_css(".query-editor")
+      expect(page).to have_no_css(".sql")
+
+      page.execute_script(
+        "document.querySelector(\".query-results-modes input[value='sql']\").closest('label').click()",
+      )
+      expect(page).to have_css(".query-editor")
+    end
+
+    it "clears the prompt when switching back to manual mode" do
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+      fill_in("query-ai-prompt-input", with: "hello")
+
+      find(".query-mode-switch .d-segmented-control__label", text: "Write SQL").click
+      find(".query-mode-switch .d-segmented-control__label", text: "Generate with AI").click
+
+      expect(page).to have_field("query-ai-prompt-input", with: "")
+    end
+  end
+
+  context "when on the edit page for a default query" do
+    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+
+    it "disables the AI option in the mode switch" do
+      visit("/admin/plugins/discourse-data-explorer/queries/-1")
+
+      expect(page).to have_css(".query-mode-switch input[value='manual']:checked", visible: :all)
+      expect(page).to have_css(".query-mode-switch input[value='ai'][disabled]", visible: :all)
+      expect(page).to have_no_css(".query-ai-prompt")
+    end
+  end
 end

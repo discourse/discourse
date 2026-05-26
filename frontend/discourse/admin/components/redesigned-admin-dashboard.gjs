@@ -135,8 +135,10 @@ export default class RedesignedAdminDashboard extends Component {
               />
             {{else if (eq section.id "reports")}}
               <DashboardReports
+                @data={{section.data}}
                 @startDate={{@loadedSections.startDate}}
                 @endDate={{@loadedSections.endDate}}
+                @refreshSections={{@refreshSections}}
               />
             {{else if (eq section.id "traffic")}}
               <DashboardTraffic
@@ -149,6 +151,10 @@ export default class RedesignedAdminDashboard extends Component {
               />
             {{else if (eq section.id "engagement")}}
               <DashboardEngagement
+                @engagement={{section.data}}
+                @period={{@loadedSections.period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
                 @startDate={{@loadedSections.startDate}}
                 @endDate={{@loadedSections.endDate}}
               />

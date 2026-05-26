@@ -35,6 +35,9 @@ vi:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Hiện thêm"
+        show_less: "Thu gọn"
       show_all: "Hiển thị tất cả"
       add_to_calendar: "Thêm vào lịch"
       created_by: "Tạo bởi"

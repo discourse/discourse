@@ -4,23 +4,23 @@ module PageObjects
   module Components
     class AdminDashboardSiteTraffic < PageObjects::Components::Base
       def has_headline?(text)
-        has_css?(".db-traffic__headline", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_trend?(text)
-        has_css?(".db-traffic__trend", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_up_trend?(text)
-        has_css?(".db-traffic__trend.--up", text: text)
+        has_trend?(text)
       end
 
       def has_down_trend?(text)
-        has_css?(".db-traffic__trend.--down", text: text)
+        has_trend?(text)
       end
 
       def has_no_trend?
-        has_no_css?(".db-traffic__trend")
+        has_no_css?(".db-section__subintro h3", text: "—")
       end
 
       def has_metric?(label, value)
@@ -34,6 +34,14 @@ module PageObjects
 
       def has_chart?
         has_css?(".db-section__traffic-chart canvas")
+      end
+
+      def has_see_details_link?
+        has_css?("a.db-traffic__see-details")
+      end
+
+      def click_see_details
+        find("a.db-traffic__see-details").click
       end
 
       def hover_comparison_tooltip
@@ -56,6 +64,62 @@ module PageObjects
 
       def has_logged_in_share_tooltip?(text)
         Tooltips.new("site-traffic-logged-in-share-tooltip").present?(text: text)
+      end
+
+      def has_no_top_countries_card?
+        has_no_top_card?("Top countries")
+      end
+
+      def has_no_top_referrers_card?
+        has_no_top_card?("Top referrers")
+      end
+
+      def has_top_country_rows?(rows)
+        within_top_card("Top countries") do
+          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+
+          rows.each_with_index.all? do |row, index|
+            nth =
+              ".db-traffic__list-row:nth-child(#{index + 1})[data-test-country-code='#{row[:country]}']"
+            has_css?(nth) && has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+          end
+        end
+      end
+
+      def has_top_referrer_rows?(rows)
+        within_top_card("Top referrers") do
+          next false unless has_css?(".db-traffic__list-row", count: rows.size)
+
+          rows.each_with_index.all? do |row, index|
+            nth = ".db-traffic__list-row:nth-child(#{index + 1})"
+            next false unless has_css?("#{nth} a.db-traffic__link", text: row[:referrer])
+            next true unless row.key?(:percent)
+
+            has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+          end
+        end
+      end
+
+      def has_top_countries_empty_state?
+        has_empty_state_in?("Top countries", "No country data for this period.")
+      end
+
+      def has_top_referrers_empty_state?
+        has_empty_state_in?("Top referrers", "No referrer data for this period.")
+      end
+
+      private
+
+      def has_no_top_card?(title)
+        has_no_css?(".db-section__row-block", text: title)
+      end
+
+      def within_top_card(title, &block)
+        within(".db-section__row-block", text: title, &block)
+      end
+
+      def has_empty_state_in?(title, message)
+        within_top_card(title) { has_css?(".db-traffic__list-empty", text: message) }
       end
     end
   end

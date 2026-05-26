@@ -248,7 +248,7 @@ RSpec.describe ExportCsvController do
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
-      it "does not allow moderators to export IP reports when IP viewing is disabled" do
+      it "allows moderators to export redacted suspicious login reports when IP viewing is disabled" do
         SiteSetting.moderators_view_ips = false
 
         post "/export_csv/export_entity.json",
@@ -261,8 +261,12 @@ RSpec.describe ExportCsvController do
                },
              }
 
-        expect(response.status).to eq(422)
-        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+        expect(response.status).to eq(200)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
+
+        job_data = Jobs::ExportCsvFile.jobs.first["args"].first
+        expect(job_data["entity"]).to eq("report")
+        expect(job_data.dig("args", "name")).to eq("suspicious_logins")
       end
 
       it "allows moderators to export non-hidden reports" do

@@ -37,6 +37,17 @@ export default class ReactionsReactionButton extends Component {
 
     this.args.cancelCollapse();
 
+    // Anonymous users haven't authenticated yet — they can still pick a
+    // reaction, it gets deferred until login. Archived topics reject
+    // reactions server-side; closed topics still accept them.
+    if (!this.currentUser) {
+      if (this.args.post.topic?.archived) {
+        return;
+      }
+      this.args.toggleReactions(event);
+      return;
+    }
+
     const likeAction = this.args.post.likeAction;
     if (!likeAction?.canToggle) {
       return;

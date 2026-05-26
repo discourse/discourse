@@ -10,6 +10,9 @@ lt:
       default_query: "Numatytasis"
       or: "arba"
       create: "Sukurti"
+      ai:
+        generate: "Generuoti"
+        optional: "pasirinktinai"
       import:
         label: "Importuoti"
       help:
@@ -20,11 +23,8 @@ lt:
         bool:
           yes: "Taip"
           no: "Ne"
-      export: "Eksportuoti"
       save: "Išsaugoti pakeitimus"
-      edit: "Redaguoti"
       delete: "Pašalinti"
-      show_table: "Lentelė"
       result_count:
         one: "%{count} rezultatas."
         few: "%{count} rezultatai."

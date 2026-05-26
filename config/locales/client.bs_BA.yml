@@ -3346,6 +3346,25 @@ bs_BA:
         sections:
           reports:
             title: "Izvještaji"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Topics"
+              posts: "Objave"
+              share: "Dijeli"
+            whos_posting:
+              all_categories: "Sve kategorije"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovni"
+                "2": "Član"
+                "3": "Normalno"
+                "4": "Vođa"
+        site_traffic:
+          series:
+            anonymous: "Anoniman"
         period:
           custom: "Custom"
         reports:

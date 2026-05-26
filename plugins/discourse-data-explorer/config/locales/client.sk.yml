@@ -6,6 +6,10 @@
 
 sk:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Prieskumník údajov"
     errors:
       explorer:
         no_semicolons: "Odstráňte z dotazu bodkočiarky."
@@ -19,6 +23,9 @@ sk:
       create: "Vytvoriť"
       create_placeholder: "Názov dotazu..."
       description_placeholder: "Sem zadajte popis"
+      ai:
+        generate: "Generovať"
+        optional: "voliteľné"
       import:
         label: "Import"
         unparseable_json: "Súbor JSON, ktorý sa nedá rozdeliť."
@@ -35,17 +42,11 @@ sk:
           yes: "Áno"
           no: "Nie"
           null_: "Null"
-      export: "Exportovať"
       view_json: "Zobraziť JSON"
       save: "Uloženie zmien"
       run: "Spustiť"
       undo: "Zahodenie zmien"
-      edit: "Upraviť"
       delete: "Odstrániť"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabuľka"
-      show_graph: "Graf"
       others_dirty: "Dotaz obsahuje neuložené zmeny, ktoré sa stratia, ak prejdete preč."
       run_time: "Dotaz bol dokončený za %{value} ms."
       result_count:
@@ -66,7 +67,6 @@ sk:
       query_time: "Posledný beh"
       query_user: "Vytvoril"
       column: "Stĺpec %{number}"
-      explain_label: "Zahrnúť plán dotazov?"
       reset_params: "Resetovať"
       search_placeholder: "Hľadať"
       no_search_results: "Prepáčte, nenašli sme žiadne výsledky zodpovedajúce vášmu textu."

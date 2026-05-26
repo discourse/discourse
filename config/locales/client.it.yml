@@ -5623,8 +5623,28 @@ it:
             title: "Report"
           traffic:
             title: "Traffico del sito"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Argomenti"
+              posts: "Messaggi"
+              share: "Condividi"
+            whos_posting:
+              all_categories: "Tutte le categorie"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nuovo"
+                "1": "Base"
+                "2": "Membro"
+                "3": "Abituale"
+                "4": "Veterano"
         configure:
           button: "Configura"
+        site_traffic:
+          series:
+            anonymous: "Anonimo"
+            crawlers: "Crawler"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"

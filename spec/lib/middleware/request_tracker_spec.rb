@@ -18,6 +18,7 @@ RSpec.describe Middleware::RequestTracker do
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   after do
@@ -922,6 +923,50 @@ RSpec.describe Middleware::RequestTracker do
           expect(event.country_code).to eq("AU")
           expect(event.user_agent).to be_present
           expect(event.ip_address.to_s).to eq("1.2.3.4")
+        end
+
+        it "populates normalized_referrer via BrowserPageviewReferrerInspector" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://www.example.com/path?utm_source=x",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          Middleware::RequestTracker.log_request(data)
+
+          event = BrowserPageviewEvent.last
+          expect(event.referrer).to eq("https://www.example.com/path?utm_source=x")
+          expect(event.normalized_referrer).to eq("example.com/path")
+        end
+
+        it "stores nil normalized_referrer when the referrer is blank" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          Middleware::RequestTracker.log_request(data)
+
+          event = BrowserPageviewEvent.last
+          expect(event.normalized_referrer).to be_nil
         end
 
         it "takes precedence even when trigger_browser_pageview_events is also true" do

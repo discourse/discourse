@@ -63,7 +63,6 @@ module Middleware
 
     # This gives us an API to insert anonymous cache segments
     class Helper
-      RACK_SESSION = "rack.session"
       USER_AGENT = "HTTP_USER_AGENT"
       ACCEPT_ENCODING = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
@@ -103,16 +102,7 @@ module Middleware
       end
 
       def is_mobile?
-        @is_mobile ||=
-          begin
-            session = @env[RACK_SESSION]
-            # don't initialize params until later
-            # otherwise you get a broken params on the request
-            params = {}
-
-            MobileDetection.resolve_mobile_view!(@user_agent, params, session) ? :true : :false
-          end
-
+        @is_mobile ||= MobileDetection.mobile_device?(@user_agent) ? :true : :false
         @is_mobile == :true
       end
       alias_method :key_is_mobile?, :is_mobile?
