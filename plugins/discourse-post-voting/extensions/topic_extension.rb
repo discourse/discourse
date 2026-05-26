@@ -13,7 +13,6 @@ module PostVoting
       @answers = nil
       @comments = nil
       @last_answerer = nil
-      @is_post_voting = nil
       super(options)
     end
 
@@ -56,7 +55,7 @@ module PostVoting
     end
 
     def is_post_voting?
-      @is_post_voting ||= SiteSetting.post_voting_enabled && subtype == Topic::POST_VOTING_SUBTYPE
+      SiteSetting.post_voting_enabled && subtype == Topic::POST_VOTING_SUBTYPE && !nested_view?
     end
 
     # class methods
