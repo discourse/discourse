@@ -291,8 +291,7 @@ class PostCreator
 
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
-    increase_posts_count =
-      !post.topic&.private_message? || post.post_type != Post.types[:small_action]
+    increase_posts_count = post.post_type != Post.types[:small_action]
     post.post_number ||=
       Topic.next_post_number(
         post.topic_id,
@@ -521,12 +520,16 @@ class PostCreator
   def update_topic_stats
     attrs = { updated_at: Time.now }
 
-    if @post.post_type != Post.types[:whisper] && !@opts[:silent]
+    if ![Post.types[:whisper], Post.types[:small_action]].include?(@post.post_type) &&
+         !@opts[:silent]
       attrs[:last_posted_at] = @post.created_at
       attrs[:last_post_user_id] = @post.user_id
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
-      attrs[:bumped_at] = @post.created_at unless @post.no_bump
+    end
+
+    if @post.post_type != Post.types[:whisper] && !@opts[:silent] && !@post.no_bump
+      attrs[:bumped_at] = @post.created_at
     end
 
     @topic.update_columns(attrs)
@@ -621,7 +624,8 @@ class PostCreator
 
     UserStatCountUpdater.increment!(@post) if !@post.hidden || @post.topic.visible
 
-    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+    if !@topic.private_message? &&
+         ![Post.types[:whisper], Post.types[:small_action]].include?(@post.post_type)
       @user.update(last_posted_at: @post.created_at)
     end
   end
@@ -656,6 +660,11 @@ class PostCreator
   def track_topic
     return if @opts[:import_mode] || @opts[:auto_track] == false
 
+    if @post.post_type == Post.types[:small_action]
+      track_small_action_topic
+      return
+    end
+
     TopicUser.change(
       @post.user_id,
       @topic.id,
@@ -679,6 +688,28 @@ class PostCreator
         TopicUser.notification_reasons[:auto_watch],
       )
     elsif !@topic.private_message?
+      notification_level =
+        @user.user_option.notification_level_when_replying ||
+          NotificationLevels.topic_levels[:tracking]
+      TopicUser.auto_notification(
+        @user.id,
+        @topic.id,
+        TopicUser.notification_reasons[:created_post],
+        notification_level,
+      )
+    end
+  end
+
+  def track_small_action_topic
+    return if @topic.private_message?
+
+    if @user.staged
+      TopicUser.auto_notification_for_staging(
+        @user.id,
+        @topic.id,
+        TopicUser.notification_reasons[:auto_watch],
+      )
+    else
       notification_level =
         @user.user_option.notification_level_when_replying ||
           NotificationLevels.topic_levels[:tracking]

@@ -816,6 +816,19 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".report" do
+    it "does not report topics with only unread small actions" do
+      TopicUser.change(
+        user.id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+        last_read_post_number: post.post_number,
+      )
+
+      topic.add_small_action(Fabricate(:moderator), "closed.enabled")
+
+      expect(described_class.report(user)).to be_empty
+    end
+
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       create_post(raw: "this is a test post", topic: topic, user: post.user)

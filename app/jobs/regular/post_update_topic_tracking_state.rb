@@ -14,6 +14,8 @@ module Jobs
           TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
         end
       else
+        return if post.post_type == Post.types[:small_action]
+
         TopicTrackingState.publish_unmuted(post.topic)
         if post.post_number > 1
           TopicTrackingState.publish_muted(post.topic)

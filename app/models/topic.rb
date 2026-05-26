@@ -883,14 +883,19 @@ class Topic < ActiveRecord::Base
         .first
         .to_i
 
-    # PM small_action posts only bump highest_staff_post_number, not
-    # highest_post_number, matching the exclusion in reset_highest.
+    excluded_from_public_counters = opts[:post_type] == Post.types[:small_action]
     staff_only = opts[:post_type] == Post.types[:whisper]
-    staff_only ||=
-      opts[:post_type] == Post.types[:small_action] &&
-        Topic.where(id: topic_id, archetype: Archetype.private_message).exists?
 
-    if staff_only
+    if excluded_from_public_counters
+      result = DB.query_single(<<~SQL, highest:, topic_id:)
+        UPDATE topics
+        SET highest_staff_post_number = highest_staff_post_number
+        WHERE id = :topic_id
+        RETURNING :highest + 1
+      SQL
+
+      result.first.to_i
+    elsif staff_only
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
         SET highest_staff_post_number = ? + 1
@@ -924,7 +929,7 @@ class Topic < ActiveRecord::Base
         SELECT topic_id,
                COALESCE(MAX(post_number), 0) highest_post_number
         FROM posts
-        WHERE deleted_at IS NULL
+        WHERE deleted_at IS NULL AND post_type <> 3
         GROUP BY topic_id
       ),
       Y as (
@@ -933,14 +938,14 @@ class Topic < ActiveRecord::Base
                count(*) posts_count,
                max(created_at) last_posted_at
         FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 4
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
         GROUP BY topic_id
       ),
       Z as (
         SELECT topic_id,
                SUM(COALESCE(posts.word_count, 0)) word_count
         FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 4
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
         GROUP BY topic_id
       )
       UPDATE topics
@@ -970,7 +975,7 @@ class Topic < ActiveRecord::Base
         SELECT topic_id,
                COALESCE(MAX(post_number), 0) highest_post_number
         FROM posts
-        WHERE deleted_at IS NULL
+        WHERE deleted_at IS NULL AND post_type <> 3
         GROUP BY topic_id
       ),
       Y as (
@@ -1015,17 +1020,19 @@ class Topic < ActiveRecord::Base
   def self.reset_highest(topic_id)
     archetype = Topic.where(id: topic_id).pick(:archetype)
 
-    # ignore small_action replies for private messages
-    post_type =
-      archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ""
+    post_type = " AND post_type <> #{Post.types[:small_action]}"
+    if archetype == Archetype.private_message
+      post_type << " AND post_type <> #{Post.types[:whisper]}"
+    end
 
-    result = DB.query_single(<<~SQL, topic_id:)
+    result = DB.query(<<~SQL, topic_id:)
       UPDATE topics
       SET
         highest_staff_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
-                deleted_at IS NULL
+                deleted_at IS NULL AND
+                post_type <> 3
         ),
         highest_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
@@ -1065,17 +1072,60 @@ class Topic < ActiveRecord::Base
           LIMIT 1
         ), last_post_user_id)
       WHERE id = :topic_id
-      RETURNING highest_post_number
+      RETURNING highest_post_number, highest_staff_post_number
     SQL
 
-    highest = result.first.to_i
+    highest = result.first.highest_post_number.to_i
+    highest_staff = result.first.highest_staff_post_number.to_i
+    whisper_group_ids = SiteSetting.whispers_allowed_groups_map
 
-    DB.exec(<<~SQL, highest:, topic_id:)
-      UPDATE topic_users
-         SET last_read_post_number = :highest
-       WHERE topic_id = :topic_id
-         AND last_read_post_number > :highest
-    SQL
+    if whisper_group_ids.empty?
+      DB.exec(<<~SQL, highest:, topic_id:)
+        UPDATE topic_users
+           SET last_read_post_number = :highest
+         WHERE topic_id = :topic_id
+           AND last_read_post_number > :highest
+      SQL
+    else
+      DB.exec(<<~SQL, highest:, highest_staff:, topic_id:, whisper_group_ids:)
+        UPDATE topic_users
+           SET last_read_post_number = CASE
+             WHEN EXISTS (
+               SELECT 1
+               FROM users
+               WHERE users.id = topic_users.user_id AND (
+                 users.admin OR
+                 users.primary_group_id IN (:whisper_group_ids) OR
+                 EXISTS (
+                   SELECT 1
+                   FROM group_users
+                   WHERE group_users.user_id = users.id AND
+                     group_users.group_id IN (:whisper_group_ids)
+                 )
+               )
+             ) THEN :highest_staff
+             ELSE :highest
+           END
+         WHERE topic_id = :topic_id AND
+           last_read_post_number > CASE
+             WHEN EXISTS (
+               SELECT 1
+               FROM users
+               WHERE users.id = topic_users.user_id AND (
+                 users.admin OR
+                 users.primary_group_id IN (:whisper_group_ids) OR
+                 EXISTS (
+                   SELECT 1
+                   FROM group_users
+                   WHERE group_users.user_id = users.id AND
+                     group_users.group_id IN (:whisper_group_ids)
+                 )
+               )
+             ) THEN :highest_staff
+             ELSE :highest
+           END
+      SQL
+    end
 
     highest
   end
@@ -1399,7 +1449,8 @@ class Topic < ActiveRecord::Base
   def update_statistics!
     feature_topic_users
     update_action_counts
-    self.highest_post_number = Topic.reset_highest(id)
+    Topic.reset_highest(id)
+    reload
   end
 
   def update_action_counts

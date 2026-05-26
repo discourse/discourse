@@ -99,6 +99,7 @@ class PrivateMessageTopicTrackingState
   def self.publish_unread(post)
     topic = post.topic
     return unless topic.private_message?
+    return if post.post_type == Post.types[:small_action]
 
     scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
 

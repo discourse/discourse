@@ -16,6 +16,21 @@ RSpec.describe Jobs::PostUpdateTopicTrackingState do
     expect(messages.size).to eq(0)
   end
 
+  it "does not publish messages for small actions in regular topics" do
+    reader = Fabricate(:user)
+    TopicUser.change(
+      reader.id,
+      post.topic_id,
+      notification_level: TopicUser.notification_levels[:tracking],
+      last_read_post_number: post.post_number,
+    )
+    small_action = post.topic.add_small_action(Fabricate(:moderator), "closed.enabled")
+
+    messages = MessageBus.track_publish { job.execute({ post_id: small_action.id }) }
+
+    expect(messages).to be_empty
+  end
+
   it "should not update topic groups for small_action posts in private messages" do
     user = Fabricate(:user, refresh_auto_groups: true)
     recipient = Fabricate(:user)

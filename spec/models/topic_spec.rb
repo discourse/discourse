@@ -1483,6 +1483,54 @@ RSpec.describe Topic do
       expect(topic.reload.moderator_posts_count).to eq(1)
     end
 
+    it "does not count small actions as replies" do
+      post = create_post(topic: topic, user: topic.user)
+      topic.reload
+
+      small_action = topic.add_small_action(moderator, "closed.enabled")
+
+      expect(small_action.post_number).to eq(post.post_number + 1)
+      expect(topic.reload.highest_post_number).to eq(post.post_number)
+      expect(topic.highest_staff_post_number).to eq(post.post_number)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.last_posted_at).to eq_time(post.created_at)
+    end
+
+    it "does not let small actions advance staff-only progress" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      post = create_post(topic: topic, user: topic.user)
+      whisper = create_post(topic: topic, user: moderator, post_type: Post.types[:whisper])
+      topic.reload
+
+      topic.add_small_action(moderator, "closed.enabled")
+
+      expect(topic.reload.highest_post_number).to eq(post.post_number)
+      expect(topic.highest_staff_post_number).to eq(whisper.post_number)
+    end
+
+    it "caps read progress by whisper access when resetting highest" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      reader = Fabricate(:user)
+      post = create_post(topic: topic, user: topic.user)
+      whisper = create_post(topic: topic, user: moderator, post_type: Post.types[:whisper])
+      small_action = topic.add_small_action(moderator, "closed.enabled")
+      [moderator, reader].each do |topic_user|
+        TopicUser.change(
+          topic_user.id,
+          topic.id,
+          last_read_post_number: small_action.post_number,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
+      end
+
+      expect(Topic.reset_highest(topic.id)).to eq(post.post_number)
+
+      staff_topic_user = TopicUser.find_by!(topic: topic, user: moderator)
+      reader_topic_user = TopicUser.find_by!(topic: topic, user: reader)
+      expect(staff_topic_user.last_read_post_number).to eq(whisper.post_number)
+      expect(reader_topic_user.last_read_post_number).to eq(post.post_number)
+    end
+
     context "when moderator post fails to be created" do
       before { user.update_column(:silenced_till, 1.year.from_now) }
 
