@@ -1288,6 +1288,11 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
+  def self.test_env_number
+    return "0" if ENV["TEST_ENV_NUMBER"].nil?
+    ENV["TEST_ENV_NUMBER"].presence || "1"
+  end
+
   def self.apply_cdn_headers(headers)
     headers["Access-Control-Allow-Origin"] = "*"
   end
