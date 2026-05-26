@@ -59,6 +59,8 @@ module DiscourseAi
 
         posts = posts.joins(:topic)
 
+        # if no categories are excluded, posts from all categories will be sent for translation
+        # private categories need to be explicitly excluded
         excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
         pm_scope = SiteSetting.ai_translation_personal_messages
 
