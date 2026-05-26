@@ -23,7 +23,7 @@ task "browser_pageview_rollups:backfill", %i[start_date end_date] => :environmen
 
     DistributedMutex.synchronize(
       Jobs::AggregateBrowserPageviewDailyRollups::LOCK_KEY,
-      validity: 2.hours,
+      validity: 10.minutes,
     ) do
       BrowserPageviewCountryDailyRollup.aggregate(start_date: current, end_date: chunk_end)
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: current, end_date: chunk_end)

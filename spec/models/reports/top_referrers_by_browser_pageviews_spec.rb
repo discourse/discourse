@@ -7,14 +7,9 @@ describe Reports::TopReferrersByBrowserPageviews do
 
     before { Discourse.stubs(:current_hostname).returns("forum.example.com") }
 
-    def report(**opts)
+    let(:report) do
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      Report.find(
-        "top_referrers_by_browser_pageviews",
-        start_date: start_date,
-        end_date: end_date,
-        **opts,
-      )
+      Report.find("top_referrers_by_browser_pageviews", start_date: start_date, end_date: end_date)
     end
 
     it "ranks referrers by event count and computes percent of total browser pageviews" do
@@ -117,7 +112,15 @@ describe Reports::TopReferrersByBrowserPageviews do
         end
       end
 
-      expect(report(limit: 3).data.size).to eq(3)
+      BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      limited =
+        Report.find(
+          "top_referrers_by_browser_pageviews",
+          start_date: start_date,
+          end_date: end_date,
+          limit: 3,
+        )
+      expect(limited.data.size).to eq(3)
     end
   end
 end

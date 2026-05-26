@@ -12,7 +12,7 @@ module Jobs
       start_date = 1.day.ago.to_date
       end_date = Time.zone.today
 
-      DistributedMutex.synchronize(LOCK_KEY, validity: 2.hours) do
+      DistributedMutex.synchronize(LOCK_KEY, validity: 10.minutes) do
         BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
         BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
       end

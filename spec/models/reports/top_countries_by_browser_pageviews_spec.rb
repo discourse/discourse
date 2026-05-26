@@ -5,14 +5,9 @@ describe Reports::TopCountriesByBrowserPageviews do
     let(:start_date) { 7.days.ago.to_date }
     let(:end_date) { Date.today }
 
-    def report(**opts)
+    let(:report) do
       BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      Report.find(
-        "top_countries_by_browser_pageviews",
-        start_date: start_date,
-        end_date: end_date,
-        **opts,
-      )
+      Report.find("top_countries_by_browser_pageviews", start_date: start_date, end_date: end_date)
     end
 
     it "ranks countries by event count and computes percent of total browser pageviews" do
@@ -74,7 +69,15 @@ describe Reports::TopCountriesByBrowserPageviews do
         (idx + 1).times { Fabricate(:browser_pageview_event, country_code: code) }
       end
 
-      expect(report(limit: 3).data.size).to eq(3)
+      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      limited =
+        Report.find(
+          "top_countries_by_browser_pageviews",
+          start_date: start_date,
+          end_date: end_date,
+          limit: 3,
+        )
+      expect(limited.data.size).to eq(3)
     end
   end
 end
