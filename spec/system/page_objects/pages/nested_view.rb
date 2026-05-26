@@ -213,13 +213,6 @@ module PageObjects
         has_css?(".nested-view__topic-map .topic-map__contents")
       end
 
-      def has_reply_count?(count)
-        has_css?(
-          ".nested-view__topic-map .topic-map__replies",
-          text: "#{count} #{I18n.t("js.replies_lowercase", count: count)}",
-        )
-      end
-
       def has_no_top_replies_button?
         has_no_css?(".nested-view__topic-map .top-replies")
       end

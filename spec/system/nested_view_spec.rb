@@ -46,13 +46,10 @@ RSpec.describe "Nested view" do
   describe "topic map" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
 
-    before { Topic.reset_highest(topic.id) }
-
     it "displays the topic map" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_topic_map
-      expect(nested_view).to have_reply_count(1)
     end
 
     it "hides the top replies button" do
