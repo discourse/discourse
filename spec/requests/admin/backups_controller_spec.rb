@@ -983,7 +983,7 @@ RSpec.describe Admin::BackupsController do
 
   describe "S3 multipart uploads" do
     let(:upload_type) { "backup" }
-    let(:test_bucket_prefix) { "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}" }
+    let(:test_bucket_prefix) { "test_#{Discourse.test_env_number}" }
     let(:backup_file_exists_response) { { status: 404 } }
     let(:mock_multipart_upload_id) do
       "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
