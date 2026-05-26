@@ -91,6 +91,10 @@ html:not(.keyboard-visible).mobile-device {
         max-width: 90vw;
       }
 
+      .d-modal.has-search & {
+        height: 80vh; // fixed height so the modal doesnt jump when the search results appear/filter
+      }
+
       &.is-entering {
         @include d-animation(
           modal-enter-desktop,
