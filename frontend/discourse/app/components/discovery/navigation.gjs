@@ -75,7 +75,9 @@ export default class DiscoveryNavigation extends Component {
   get headingClasses() {
     return dConcatClass(
       "category-heading",
-      this.args.category?.uploaded_logo?.url ? "--has-logo" : null
+      this.args.category?.uploaded_logo?.url
+        ? "--has-logo discovery-heading"
+        : null
     );
   }
 
@@ -149,6 +151,9 @@ export default class DiscoveryNavigation extends Component {
         @canBulkSelect={{@canBulkSelect}}
         @bulkSelectHelper={{@bulkSelectHelper}}
         @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+        @toggleTagInfo={{@toggleTagInfo}}
+        @showTagInfo={{@showTagInfo}}
+        @loadingTagInfo={{@loadingTagInfo}}
         @tagNotification={{@tagNotification}}
         @model={{@model}}
         @showDismissRead={{@showDismissRead}}

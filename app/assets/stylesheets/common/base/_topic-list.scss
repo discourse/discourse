@@ -4,6 +4,17 @@
   --category-header-logo-size: 3rem;
   --category-description-width: 760px;
   --category-header-border: 1px solid var(--content-border-color);
+  --discovery-heading-description-color: var(--primary-800);
+}
+
+// shared banner treatment used above the discovery topic list
+// .category-heading, .tag-info
+.discovery-heading {
+  gap: 0 var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border: var(--category-header-border);
+  border-radius: var(--d-border-radius);
 }
 
 .category-heading {
@@ -11,11 +22,6 @@
 
   &.--has-logo {
     display: flex;
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-    border: var(--category-header-border);
-    padding: var(--space-4);
-    border-radius: var(--d-border-radius);
   }
 
   &__logo.category-logo.aspect-image {
@@ -29,7 +35,7 @@
     margin: 0;
     line-height: var(--line-height-large);
     font-size: var(--font-0);
-    color: var(--category-boxes-description-text-color);
+    color: var(--discovery-heading-description-color);
     max-width: var(--category-description-width);
   }
 
