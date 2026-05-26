@@ -68,11 +68,6 @@ export default class UserTopicsListController extends Controller {
     );
   }
 
-  @computed("model.params.subset")
-  get showDismissNewStopTracking() {
-    return this.model.params?.subset !== "topics";
-  }
-
   @computed("model.topics.length", "incomingCount")
   get noContent() {
     return this.model?.topics?.length === 0 && this.incomingCount === 0;

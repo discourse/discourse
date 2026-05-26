@@ -28,7 +28,6 @@ export default <template>
         @model={{@controller.model}}
         @showResetNew={{@controller.showResetNew}}
         @showDismissRead={{@controller.showDismissRead}}
-        @showDismissNewStopTracking={{@controller.showDismissNewStopTracking}}
         @resetNew={{@controller.resetNew}}
         @dismissRead={{if
           @controller.showDismissRead
@@ -80,7 +79,6 @@ export default <template>
           @model={{@controller.model}}
           @showResetNew={{@controller.showResetNew}}
           @showDismissRead={{@controller.showDismissRead}}
-          @showDismissNewStopTracking={{@controller.showDismissNewStopTracking}}
           @resetNew={{@controller.resetNew}}
           @dismissRead={{if
             @controller.showDismissRead

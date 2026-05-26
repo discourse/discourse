@@ -10,6 +10,7 @@ import { i18n } from "discourse-i18n";
 export default class TopicDismissButtons extends Component {
   @service currentUser;
   @service modal;
+  @service site;
 
   dMenu;
 
@@ -51,6 +52,19 @@ export default class TopicDismissButtons extends Component {
   get newListSubset() {
     return (
       this.args.model?.params?.subset ?? this.args.model?.listParams?.subset
+    );
+  }
+
+  get showDismissNewStopTracking() {
+    return this.newListSubset !== "topics";
+  }
+
+  get showDismissNewMenu() {
+    // On mobile the bottom dismiss button is the floating control, so the
+    // stop-tracking menu only renders on the top button.
+    return (
+      this.showDismissNewStopTracking &&
+      !(this.site.mobileView && this.args.position === "bottom")
     );
   }
 
@@ -124,7 +138,7 @@ export default class TopicDismissButtons extends Component {
                 class="btn-default dismiss-read topic-dismiss-buttons__button"
               />
 
-              {{#if @showDismissNewStopTracking}}
+              {{#if this.showDismissNewMenu}}
                 <combo.Menu
                   @identifier="dismiss-new-menu"
                   @onRegisterApi={{this.registerDMenu}}

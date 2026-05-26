@@ -25,8 +25,6 @@ export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
-  @service site;
-  @service siteSettings;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;
@@ -92,10 +90,6 @@ export default class DiscoveryTopics extends Component {
     return this.new && this.currentUser?.new_new_view_enabled;
   }
 
-  get showDismissNewStopTracking() {
-    return this.args.model.params?.subset !== "topics";
-  }
-
   get newRepliesCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
@@ -151,12 +145,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showBottomDismissButtons() {
-    return (
-      this.allLoaded &&
-      (!this.site.mobileView ||
-        (this.site.mobileView &&
-          !this.siteSettings.floating_dismiss_topics_on_mobile))
-    );
+    return this.allLoaded;
   }
 
   @action
@@ -327,7 +316,6 @@ export default class DiscoveryTopics extends Component {
               @showResetNew={{@showResetNew}}
               @showNewDismissCombo={{this.showTopicsAndRepliesToggle}}
               @showDismissRead={{@showDismissRead}}
-              @showDismissNewStopTracking={{this.showDismissNewStopTracking}}
               @resetNew={{@resetNew}}
               @dismissRead={{@dismissRead}}
             />

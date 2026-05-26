@@ -201,11 +201,6 @@ export default class DNavigation extends Component {
     );
   }
 
-  @computed("model.params.subset")
-  get showDismissNewStopTracking() {
-    return this.model.params?.subset !== "topics";
-  }
-
   @computed("filterType")
   get notCategoriesRoute() {
     return this.filterType !== "categories";
@@ -310,7 +305,6 @@ export default class DNavigation extends Component {
         @showResetNew={{@showResetNew}}
         @showNewDismissCombo={{this.showNewDismissCombo}}
         @showDismissRead={{@showDismissRead}}
-        @showDismissNewStopTracking={{this.showDismissNewStopTracking}}
         @resetNew={{@resetNew}}
         @dismissRead={{@dismissRead}}
       />
