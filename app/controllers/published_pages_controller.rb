@@ -50,7 +50,18 @@ class PublishedPagesController < ApplicationController
 
     @body_classes << @topic.category.slug if @topic.category
 
-    render layout: "publish"
+    apply_cache_headers!(pp)
+
+    if publicly_cacheable?(pp)
+      # stale? sets ETag + Last-Modified on the response. Returns true
+      # when the client's conditional headers don't match (we must
+      # re-render) and false when they do (Rails has already set 304).
+      if stale?(etag: @topic.bumped_at.to_i.to_s, last_modified: @topic.bumped_at)
+        render layout: "publish"
+      end
+    else
+      render layout: "publish"
+    end
   end
 
   def details
@@ -92,6 +103,32 @@ class PublishedPagesController < ApplicationController
   end
 
   private
+
+  # Whether anonymous /pub/<slug> hits can be cached at a shared cache
+  # (CloudFront, etc.). Authenticated requests, pages with public:
+  # false, pages whose source topic is in a read-restricted category,
+  # and login_required sites are all off-limits: a CDN entry would let
+  # an anonymous visitor with the slug bypass guardian / category
+  # permission checks the controller enforces above.
+  def publicly_cacheable?(pp)
+    current_user.nil? && pp.public && !@topic.category&.read_restricted &&
+      !SiteSetting.login_required?
+  end
+
+  # Sets Cache-Control on the response. s-maxage is deliberately short
+  # (~5 minutes) because there is no CloudFront invalidation hook yet;
+  # the topic.bumped_at-based ETag set by `stale?` gives cheap
+  # conditional revalidation when content changes inside that window.
+  def apply_cache_headers!(pp)
+    if publicly_cacheable?(pp)
+      response.headers[
+        "Cache-Control"
+      ] = "public, max-age=60, s-maxage=300, stale-while-revalidate=60"
+      response.headers["Vary"] = "Accept-Encoding"
+    else
+      response.headers["Cache-Control"] = "private, no-store"
+    end
+  end
 
   def fetch_topic
     topic = Topic.find_by(id: params[:topic_id])

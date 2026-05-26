@@ -168,6 +168,86 @@ RSpec.describe PublishedPagesController do
           end
         end
       end
+
+      describe "cache headers" do
+        # Default fab!(:published_page) has public: false, so it's
+        # never publicly cacheable. Use this fabricator for the cases
+        # that exercise the cacheable branch.
+        fab!(:public_page) do
+          Fabricate(:published_page, public: true, slug: "public-cacheable-page")
+        end
+
+        it "sets a public Cache-Control header for anonymous visitors on a public page" do
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to include("public")
+          expect(response.headers["Cache-Control"]).to include("s-maxage=300")
+          expect(response.headers["Cache-Control"]).to include("stale-while-revalidate=60")
+          expect(response.headers["ETag"]).to be_present
+        end
+
+        it "sets a private Cache-Control header for authenticated visitors" do
+          sign_in(user)
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+        end
+
+        it "sets a private Cache-Control header on a non-public page" do
+          get published_page.path
+
+          # default fab has public: false; signed-out viewer would
+          # normally see 403, but the default category isn't
+          # restricted so this still returns 200 - the point is the
+          # response must not be publicly cacheable.
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+        end
+
+        it "sets a private Cache-Control header when the source category is read-restricted" do
+          group = Fabricate(:group)
+          private_category = Fabricate(:private_category, group: group)
+          public_page.topic.update!(category: private_category)
+
+          sign_in(admin)
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+        end
+
+        it "sets a private Cache-Control header when login is required for the site" do
+          SiteSetting.login_required = true
+          SiteSetting.show_published_pages_login_required = true
+
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+        end
+
+        it "returns 304 Not Modified on a conditional GET with a matching ETag" do
+          get public_page.path
+          expect(response.status).to eq(200)
+          etag = response.headers["ETag"]
+          expect(etag).to be_present
+
+          get public_page.path, headers: { "If-None-Match" => etag }
+          expect(response.status).to eq(304)
+        end
+
+        it "returns a fresh 200 when the topic's bumped_at advances" do
+          get public_page.path
+          first_etag = response.headers["ETag"]
+
+          public_page.topic.update!(bumped_at: 1.hour.from_now)
+
+          get public_page.path, headers: { "If-None-Match" => first_etag }
+          expect(response.status).to eq(200)
+          expect(response.headers["ETag"]).not_to eq(first_etag)
+        end
+      end
     end
 
     describe "publishing" do
