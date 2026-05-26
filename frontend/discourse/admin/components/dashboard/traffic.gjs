@@ -191,22 +191,20 @@ export default class DashboardTraffic extends Component {
       <div class="db-traffic {{if @loading 'is-loading'}}">
         <div class="db-section__subheader">
           <div class="db-section__subintro">
-            <h3 class="db-traffic__headline">
+            <h3>
               {{this.headlineText}}
               {{#if this.trend}}
-                <span class="db-traffic__headline-separator"> - </span>
-                <span
-                  class="db-traffic__trend {{concat '--' this.trendDirection}}"
-                >
+                —
+                <span class="db-traffic__trend --{{this.trendDirection}}">
                   {{this.trendText}}
-                  <DTooltip
-                    class="db-traffic__info"
-                    @identifier="site-traffic-comparison-tooltip"
-                    @icon="circle-info"
-                  >
-                    <:content>{{this.comparisonTooltipText}}</:content>
-                  </DTooltip>
                 </span>
+                <DTooltip
+                  class="db-section__info"
+                  @identifier="site-traffic-comparison-tooltip"
+                  @icon="circle-question"
+                >
+                  <:content>{{this.comparisonTooltipText}}</:content>
+                </DTooltip>
               {{/if}}
             </h3>
             {{! <p>
@@ -227,9 +225,9 @@ export default class DashboardTraffic extends Component {
                     "admin.dashboard.site_traffic.kpi.logged_in_share.label"
                   }}
                   <DTooltip
-                    class="db-traffic__info"
+                    class="db-section__info"
                     @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="circle-info"
+                    @icon="circle-question"
                   >
                     <:content>
                       {{i18n
