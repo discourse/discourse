@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
