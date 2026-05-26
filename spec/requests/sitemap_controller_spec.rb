@@ -136,4 +136,83 @@ RSpec.describe SitemapController do
       expect(all_urls).not_to include("#{Discourse.base_url}/t/#{old_topic.slug}/#{old_topic.id}")
     end
   end
+
+  describe "#published_pages" do
+    before { SiteSetting.enable_page_publishing = true }
+
+    it "returns 404 when no eligible published pages exist" do
+      get "/sitemap_published_pages.xml"
+      expect(response.status).to eq(404)
+    end
+
+    it "lists public published pages whose source topic is in a public category" do
+      page = Fabricate(:published_page, public: true, slug: "public-post")
+      Discourse.cache.delete("sitemap/published_pages/#{Time.zone.now.to_i}")
+
+      get "/sitemap_published_pages.xml"
+
+      expect(response.status).to eq(200)
+      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+      expect(locs).to include("#{Discourse.base_url}/pub/#{page.slug}")
+    end
+
+    it "excludes non-public pages" do
+      Fabricate(:published_page, public: true, slug: "public-post")
+      Fabricate(:published_page, public: false, slug: "private-post")
+
+      get "/sitemap_published_pages.xml"
+
+      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+      expect(locs).not_to include(a_string_including("/pub/private-post"))
+    end
+
+    it "excludes pages whose source topic is in a read-restricted category" do
+      Fabricate(:published_page, public: true, slug: "public-post")
+      restricted = Fabricate(:private_category, group: Fabricate(:group))
+      topic = Fabricate(:topic, category: restricted)
+      Fabricate(:published_page, public: true, slug: "restricted-post", topic: topic)
+
+      get "/sitemap_published_pages.xml"
+
+      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+      expect(locs).not_to include(a_string_including("/pub/restricted-post"))
+    end
+
+    it "excludes pages whose source topic is not visible" do
+      Fabricate(:published_page, public: true, slug: "public-post")
+      hidden_topic = Fabricate(:topic, visible: false)
+      Fabricate(:published_page, public: true, slug: "hidden-post", topic: hidden_topic)
+
+      get "/sitemap_published_pages.xml"
+
+      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+      expect(locs).not_to include(a_string_including("/pub/hidden-post"))
+    end
+  end
+
+  describe ".regenerate_sitemaps and the published_pages entry" do
+    it "adds an enabled published_pages sitemap row when eligible pages exist" do
+      Fabricate(:published_page, public: true, slug: "indexed-post")
+
+      Sitemap.regenerate_sitemaps
+
+      row = Sitemap.find_by(name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
+      expect(row).to be_present
+      expect(row.enabled).to eq(true)
+    end
+
+    it "disables the published_pages row when no eligible pages remain" do
+      Sitemap.create!(
+        name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME,
+        enabled: true,
+        last_posted_at: 1.minute.ago,
+      )
+
+      Sitemap.regenerate_sitemaps
+
+      row = Sitemap.find_by(name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
+      expect(row).to be_present
+      expect(row.enabled).to eq(false)
+    end
+  end
 end

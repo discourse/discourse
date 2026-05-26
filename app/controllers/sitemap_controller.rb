@@ -58,6 +58,26 @@ class SitemapController < ApplicationController
     render plain: @output, content_type: "text/xml; charset=UTF-8" unless performed?
   end
 
+  # Emits a sitemap of /pub/<slug> URLs for PublishedPage records that
+  # the PublishedPagesController would serve to anonymous visitors
+  # without a guardian check. Sitemap.publishable_pages enforces the
+  # filter (public + visible + non-restricted category) so the source
+  # of truth for "what's publicly cacheable" lives in one place.
+  def published_pages
+    raise Discourse::NotFound if !Sitemap.publishable_pages.exists?
+    sitemap = Sitemap.touch(Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
+
+    @output =
+      Rails
+        .cache
+        .fetch("sitemap/published_pages/#{sitemap.last_posted_at.to_i}", expires_in: 1.hour) do
+          @pages = sitemap.published_pages
+          render :published_pages, content_type: "text/xml; charset=UTF-8"
+        end
+
+    render plain: @output, content_type: "text/xml; charset=UTF-8" unless performed?
+  end
+
   private
 
   def check_sitemap_enabled

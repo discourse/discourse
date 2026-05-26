@@ -3,12 +3,18 @@
 class Sitemap < ActiveRecord::Base
   RECENT_SITEMAP_NAME = "recent"
   NEWS_SITEMAP_NAME = "news"
+  PUBLISHED_PAGES_SITEMAP_NAME = "published_pages"
 
   class << self
     def regenerate_sitemaps
       names_used = [RECENT_SITEMAP_NAME, NEWS_SITEMAP_NAME]
 
       names_used.each { |name| touch(name) }
+
+      if publishable_pages.exists?
+        touch(PUBLISHED_PAGES_SITEMAP_NAME)
+        names_used << PUBLISHED_PAGES_SITEMAP_NAME
+      end
 
       count = Category.where(read_restricted: false).sum(:topic_count)
       max_page_size = SiteSetting.sitemap_page_size
@@ -29,6 +35,21 @@ class Sitemap < ActiveRecord::Base
         sitemap.update!(last_posted_at: sitemap.last_posted_topic || 3.days.ago, enabled: true)
       end
     end
+
+    # Returns PublishedPage records that are safe to expose in a public
+    # sitemap. Mirrors PublishedPagesController#publicly_cacheable? so
+    # we never advertise a URL the controller would refuse to serve
+    # without a guardian check:
+    # - public: true (not gated behind a guardian)
+    # - topic.visible (not hidden / unlisted)
+    # - topic in a non-read_restricted category
+    def publishable_pages
+      public_category_ids = Category.where(read_restricted: false).pluck(:id)
+      PublishedPage
+        .where(public: true)
+        .joins(:topic)
+        .where(topics: { visible: true, category_id: public_category_ids })
+    end
   end
 
   def topics
@@ -41,8 +62,19 @@ class Sitemap < ActiveRecord::Base
     end
   end
 
+  # Returns the page rows used to render the published-pages sitemap:
+  # [[slug, updated_at], ...]. Only meaningful when name ==
+  # PUBLISHED_PAGES_SITEMAP_NAME.
+  def published_pages
+    self.class.publishable_pages.pluck(:slug, "published_pages.updated_at")
+  end
+
   def last_posted_topic
-    sitemap_topics.maximum(:updated_at)
+    if name == PUBLISHED_PAGES_SITEMAP_NAME
+      self.class.publishable_pages.maximum("published_pages.updated_at")
+    else
+      sitemap_topics.maximum(:updated_at)
+    end
   end
 
   def max_page_size
