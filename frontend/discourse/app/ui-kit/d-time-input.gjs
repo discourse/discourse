@@ -8,6 +8,8 @@ import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
 
+const AM_PM_REGEX = /^\s*(\d{1,2}):(\d{2})\s*(am|pm)\s*$/i;
+
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
 }
@@ -176,7 +178,8 @@ export default class DTimeInput extends Component {
     }
 
     if (typeof time === "string" && time.length) {
-      const ampmMatch = time.match(/^\s*(\d{1,2}):(\d{2})\s*(am|pm)\s*$/i);
+      const ampmMatch = time.match(AM_PM_REGEX);
+
       let hours;
       let minutes;
       if (ampmMatch) {

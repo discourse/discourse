@@ -502,8 +502,8 @@ en:
         reminders:
           label: "Reminders"
           types:
-            bump_topic: "auto-bump topic"
-            notification: "notify attendees"
+            bump_topic: "Auto-bump topic"
+            notification: "Notify attendees"
           units:
             minutes: "minutes"
             hours: "hours"
