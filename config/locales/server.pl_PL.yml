@@ -1854,11 +1854,11 @@ pl_PL:
       failing_emails: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
       subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
       translation_overrides: "Niektóre z Twoich nadpisanych tłumaczeń są nieaktualne. Sprawdź swoje <a href='%{base_path}/admin/customize/site_texts?outdated=true'>teksty witryny</a>."
-      email_delivery_failures:
-        one: "W ciągu ostatnich 24 godzin nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
-        few: "W ciągu ostatnich 24 godzin %{count} razy nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
-        many: "W ciągu ostatnich 24 godzin %{count} razy nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
-        other: "W ciągu ostatnich 24 godzin %{count} razy nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+      email_sending_failures:
+        one: "Wysyłanie wiadomości e-mail nie powiodło się raz w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        few: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        many: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        other: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
       email_polling_errored_recently:
         one: "Email polling wygenerował błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
         few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
@@ -3378,9 +3378,9 @@ pl_PL:
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
+      * Zaktualizuj za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      * Dowiedz się, co nowego w [informacjach o wydaniu](/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://meta.discourse.org)
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://releases.discourse.org/changelog/v%{new_version})
 
       * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
   new_version_mailer_with_notes:
@@ -3388,18 +3388,18 @@ pl_PL:
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
     subject_template_improved: "%{email_prefix}: Dostępna aktualizacja"
     text_body_template: |
-      Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
+      Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
 
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      - Zaktualizuj, korzystając z naszej łatwej **[aktualizacji przeglądarki jednym kliknięciem](%{base_url}/admin/update)**
+      * Zaktualizuj za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      - Zobacz, co nowego w [notatkach dotyczących wydania](https://releases.discourse.org/changelog/%{new_version})
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://releases.discourse.org/changelog/v%{new_version})
 
-      - Odwiedź [meta.discourse.org](https://meta.discourse.org) w celu uzyskania wiadomości, dyskusji i wsparcia dla Discourse
+      * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
 
-      ### Notatki dotyczące wydania
+      ### Informacje o wydaniu
 
       %{notes}
   flag_reasons:
@@ -4004,6 +4004,14 @@ pl_PL:
       ### Szczegóły
 
       ``` text
+      %{raw}
+      ```
+    email_sending_failed: |
+      Wysłanie wiadomości na adres %{email} się nie powiodło.
+
+      ### Szczegóły
+
+      `` tekst
       %{raw}
       ```
     ignored_users_summary:
@@ -5477,6 +5485,7 @@ pl_PL:
         many: "Nie można użyć wybranych tagów"
         other: "Nie można użyć wybranych tagów"
       in_this_category: '"%{tag_name}" nie może być użyty w tej kategorii'
+      not_allowed: 'Nie można użyć „%{tag_name}”'
       restricted_to:
         one: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
         few: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'

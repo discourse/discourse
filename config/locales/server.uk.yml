@@ -1835,6 +1835,11 @@ uk:
       failing_emails: 'Існують завдання електронної пошти %{num_failed_jobs} , які не вдалося виконати. Перевірте ваш app.yml і переконайтеся, що налаштування поштового сервера правильні. Перегляньте невдалі <a href="%{base_path}/sidekiq/retries" target="_blank">завдання в Sidekiq</a>.'
       subfolder_ends_in_slash: "Ваша вкладена тека налаштована неправильно; DISCOURSE_RELATIVE_URL_ROOT закінчується косою рискою."
       translation_overrides: "Деякі з ваших змін перекладу застаріли. Будь ласка, перевірте свої <a href='%{base_path}/admin/customize/site_texts?outdated=true'>налаштування тексту</a>."
+      email_sending_failures:
+        one: "За останні 24 години один раз не вдалося надіслати імейл. Перевірте <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>журнал пропущених імейлів</a>, щоб дізнатися деталі помилки SMTP."
+        few: "Надсилання електронної пошти не вдалося %{count} рази протягом останніх 24 годин. Перевірте <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>пропущені журнали електронної пошти</a> на наявність деталей помилок SMTP."
+        many: "Надсилання електронної пошти не вдалося %{count} разів протягом останніх 24 годин. Перевірте <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>пропущені журнали електронної пошти</a> на наявність деталей помилок SMTP."
+        other: "Надсилання електронної пошти не вдалося %{count} разів протягом останніх 24 годин. Перевірте <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>пропущені журнали електронної пошти</a> на наявність деталей помилок SMTP."
       email_polling_errored_recently:
         one: "Опитування електронною поштою спричинило помилку за останні 24 години. Перегляньте <a href='%{base_path}/logs' target='_blank'>журнали</a> для отримання більш детальної інформації."
         few: "Опитування електронної пошти спричинило %{count} помилки за останні 24 години. Подивіться на <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
@@ -3338,7 +3343,7 @@ uk:
 
       - Оновіть за допомогою нашого простого **[оновлення браузера одним кліком](%{base_url}/admin/update)**
 
-      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/%{new_version})
+      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/v%{new_version})
 
       - Відвідайте [meta.discourse.org](https://meta.discourse.org) для новин, обговорень та підтримки Discourse
   new_version_mailer_with_notes:
@@ -3353,7 +3358,7 @@ uk:
 
       - Оновіть систему за допомогою нашого простого **[оновлення браузера одним кліком](%{base_url}/admin/update)**
 
-      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/%{new_version})
+      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/v%{new_version})
 
       - Відвідайте [meta.discourse.org](https://meta.discourse.org) для новин, обговорення та підтримки Discourse
 
@@ -3934,6 +3939,14 @@ uk:
         Чи можете ви переконатися, що [ваша електронна адреса](%{base_url}/my/preferences/email) дійсна та працює? Ви також можете додати нашу електронну адресу до адресної книги/списку контактів, щоб покращити надсилання.
     email_bounced: |
       Повідомлення до %{email} повернулось.
+
+      ### Деталі
+
+      ``` text
+      %{raw}
+      ```
+    email_sending_failed: |
+      Повідомлення на %{email} повернулось.
 
       ### Деталі
 

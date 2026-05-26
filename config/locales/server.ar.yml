@@ -3545,7 +3545,7 @@ ar:
 
       - حدّث بسهولة باستخدام **[التحديث بنقرة واحدة عبر المتصفح](%{base_url}/admin/update)**
 
-      - تعرّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/%{new_version})
+      - تعرّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/v%{new_version})
 
       - تفضل بزيارة [meta.discourse.org](https://meta.discourse.org) للاطلاع على الأخبار والمناقشات والدعم الفني لمنصة Discourse
   new_version_mailer_with_notes:
@@ -3560,7 +3560,7 @@ ar:
 
       - حدّث بسهولة باستخدام **[التحديث بنقرة واحدة عبر المتصفح](%{base_url}/admin/update)**
 
-      - تعرّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/%{new_version})
+      - تعرّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/v%{new_version})
 
       - تفضل بزيارة [meta.discourse.org](https://meta.discourse.org) للاطلاع على الأخبار والمناقشات والدعم الفني لمنصة Discourse
 

@@ -1596,6 +1596,8 @@ zh_CN:
       failing_emails: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
       subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
       translation_overrides: "您的某些翻译替换已过时。请检查您的<a href='%{base_path}/admin/customize/site_texts?outdated=true'>文本自定义</a>。"
+      email_sending_failures:
+        other: "在过去 24 小时内，电子邮件发送失败 %{count} 次。请查看<a href='%{base_path}/admin/email-logs/skipped' target='_blank'>跳过的电子邮件日志</a>，了解 SMTP 错误详情。"
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
@@ -3020,7 +3022,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
   new_version_mailer_with_notes:
@@ -3035,7 +3037,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
@@ -3635,6 +3637,14 @@ zh_CN:
       ### 详细信息
 
       ```text
+      %{raw}
+      ```
+    email_sending_failed: |
+      向 %{email} 发送信息失败。
+
+      ### 详情
+
+      ``` 文本
       %{raw}
       ```
     ignored_users_summary:
