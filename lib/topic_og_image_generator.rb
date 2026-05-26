@@ -52,7 +52,7 @@ class TopicOgImageGenerator
     posts_count = [@topic.posts_count - 1, 0].max
     read_time = calculate_read_time
     colors = fetch_colors
-    logo_upload = (SiteSetting.logo.presence || SiteSetting.logo_small)
+    logo_upload = SiteSetting.logo.presence || SiteSetting.logo_small
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
 
     title_lines = word_wrap(title, TITLE_LINE_CHARS)
