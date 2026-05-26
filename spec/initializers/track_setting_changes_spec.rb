@@ -27,6 +27,15 @@ RSpec.describe "Setting changes" do
 
       expect(non_approved_user.reload.approved?).to eq(true)
     end
+
+    it "approves a user whose id collides with a non-user reviewable's target_id" do
+      user = Fabricate(:user, approved: false)
+      Fabricate(:reviewable, type: "ReviewableFlaggedPost", target_id: user.id, target_type: "Post")
+
+      SiteSetting.must_approve_users = true
+
+      expect(user.reload.approved?).to eq(true)
+    end
   end
 
   describe "#reviewable_low_priority_threshold" do

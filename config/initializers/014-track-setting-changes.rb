@@ -9,7 +9,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     User
       .where(approved: false)
       .joins(
-        "LEFT JOIN reviewables r ON r.target_id = users.id AND r.status = #{Reviewable.statuses[:pending]}",
+        "LEFT JOIN reviewables r ON r.target_id = users.id AND r.target_type = 'User' AND r.status = #{Reviewable.statuses[:pending]}",
       )
       .where(r: { id: nil })
       .update_all(approved: true)
