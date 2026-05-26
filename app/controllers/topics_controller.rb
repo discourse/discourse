@@ -1103,7 +1103,7 @@ class TopicsController < ApplicationController
         topic_id,
         topic_time,
         timings.map { |post_number, t| [post_number.to_i, t.to_i] },
-        mobile: view_context.mobile_view?,
+        mobile: view_context.mobile_device?,
       )
       render body: nil
     end

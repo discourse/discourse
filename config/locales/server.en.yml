@@ -2571,8 +2571,6 @@ en:
 
     dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
 
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
-
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
     pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recipient has not been seen more than n months ago."
@@ -2855,7 +2853,6 @@ en:
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."

@@ -392,10 +392,6 @@ basic:
     min: 2
     max: 3
     hidden: true
-  enable_mobile_theme:
-    client: true
-    default: true
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -3332,9 +3328,6 @@ developer:
   custom_flags_limit:
     default: 50
     hidden: true
-    client: true
-  viewport_based_mobile_mode:
-    default: true
     client: true
   site_setting_verbose_client_logging:
     default: false

@@ -40,7 +40,6 @@ class ApplicationController < ActionController::Base
   before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
-  before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
@@ -452,10 +451,6 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(locale) { yield }
   end
 
-  def set_mobile_view
-    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
-  end
-
   NO_THEMES = "no_themes"
   NO_PLUGINS = "no_plugins"
   NO_UNOFFICIAL_PLUGINS = "no_unofficial_plugins"
@@ -637,7 +632,7 @@ class ApplicationController < ActionController::Base
       ApplicationLayoutPreloader.new(
         guardian:,
         theme_id: @theme_id,
-        theme_target: view_context.mobile_view? ? :mobile : :desktop,
+        theme_target: view_context.mobile_device? ? :mobile : :desktop,
         login_method:,
       )
   end
