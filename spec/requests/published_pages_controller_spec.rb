@@ -174,7 +174,12 @@ RSpec.describe PublishedPagesController do
         # never publicly cacheable. Use this fabricator for the cases
         # that exercise the cacheable branch.
         fab!(:public_page) do
-          Fabricate(:published_page, public: true, slug: "public-cacheable-page")
+          Fabricate(
+            :published_page,
+            public: true,
+            slug: "public-cacheable-page",
+            topic: Fabricate(:topic_with_op),
+          )
         end
 
         it "sets a public Cache-Control header for anonymous visitors on a public page" do
@@ -184,6 +189,7 @@ RSpec.describe PublishedPagesController do
           expect(response.headers["Cache-Control"]).to include("public")
           expect(response.headers["Cache-Control"]).to include("s-maxage=300")
           expect(response.headers["Cache-Control"]).to include("stale-while-revalidate=60")
+          expect(response.headers["Vary"]).to eq("Accept, Accept-Encoding")
           expect(response.headers["ETag"]).to be_present
         end
 
@@ -237,11 +243,19 @@ RSpec.describe PublishedPagesController do
           expect(response.status).to eq(304)
         end
 
-        it "returns a fresh 200 when the topic's bumped_at advances" do
+        it "returns a fresh 200 when the first post content changes without bumping the topic" do
           get public_page.path
           first_etag = response.headers["ETag"]
+          first_bumped_at = public_page.topic.bumped_at
 
-          public_page.topic.update!(bumped_at: 1.hour.from_now)
+          freeze_time 1.minute.from_now do
+            PostRevisor.new(public_page.topic.first_post, public_page.topic).revise!(
+              admin,
+              raw: "This public page content was edited without bumping the topic.",
+            )
+          end
+
+          expect(public_page.topic.reload.bumped_at.to_i).to eq(first_bumped_at.to_i)
 
           get public_page.path, headers: { "If-None-Match" => first_etag }
           expect(response.status).to eq(200)

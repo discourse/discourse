@@ -56,9 +56,9 @@ class PublishedPagesController < ApplicationController
       # stale? sets ETag + Last-Modified on the response. Returns true
       # when the client's conditional headers don't match (we must
       # re-render) and false when they do (Rails has already set 304).
-      if stale?(etag: @topic.bumped_at.to_i.to_s, last_modified: @topic.bumped_at)
-        render layout: "publish"
-      end
+      validator = published_page_cache_validator(pp)
+
+      render layout: "publish" if stale?(etag: validator.to_f.to_s, last_modified: validator)
     else
       render layout: "publish"
     end
@@ -117,17 +117,28 @@ class PublishedPagesController < ApplicationController
 
   # Sets Cache-Control on the response. s-maxage is deliberately short
   # (~5 minutes) because there is no CloudFront invalidation hook yet;
-  # the topic.bumped_at-based ETag set by `stale?` gives cheap
+  # the published page validator set by `stale?` gives cheap
   # conditional revalidation when content changes inside that window.
   def apply_cache_headers!(pp)
     if publicly_cacheable?(pp)
       response.headers[
         "Cache-Control"
       ] = "public, max-age=60, s-maxage=300, stale-while-revalidate=60"
-      response.headers["Vary"] = "Accept-Encoding"
+      append_vary_header!("Accept", "Accept-Encoding")
     else
       response.headers["Cache-Control"] = "private, no-store"
     end
+  end
+
+  def published_page_cache_validator(pp)
+    [pp.updated_at, @topic.updated_at, @topic.first_post&.updated_at].compact.max
+  end
+
+  def append_vary_header!(*values)
+    response.headers["Vary"] = (response.headers["Vary"].to_s.split(",").map(&:strip) + values)
+      .reject(&:blank?)
+      .uniq
+      .join(", ")
   end
 
   def fetch_topic
