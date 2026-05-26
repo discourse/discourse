@@ -336,6 +336,11 @@ Discourse::Application.routes.draw do
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
+      post "dashboard/reports/bulk" => "dashboard#bulk_reports"
+      get "dashboard/reports/available" => "dashboard#available_reports",
+          :constraints => AdminConstraint.new
+      put "dashboard/reports/layout" => "dashboard#update_reports_section",
+          :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"
@@ -1420,6 +1425,8 @@ Discourse::Application.routes.draw do
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
+
+    post "anonymous-action" => "anonymous_actions#create"
 
     # Nested replies routes
     scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do

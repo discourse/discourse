@@ -45,6 +45,8 @@ vi:
         expand_list:
           other: "(%{count} khác)"
         collapse_list: "(thu gọn)"
+        nav:
+          enabled: "Đã bật"
         filters:
           all: "Tất cả"
           reset: "Cài lại"

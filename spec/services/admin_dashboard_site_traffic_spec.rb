@@ -4,6 +4,7 @@ RSpec.describe AdminDashboardSiteTraffic do
   before do
     freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
     SiteSetting.use_legacy_pageviews = false
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   def traffic_point(date, count)
@@ -523,6 +524,142 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         ],
       )
+    end
+
+    context "for top countries and top referrers" do
+      before { SiteSetting.persist_browser_pageview_events = true }
+
+      def aggregate_rollups
+        range = { start_date: 1.year.ago.to_date, end_date: Date.current }
+        BrowserPageviewCountryDailyRollup.aggregate(**range)
+        BrowserPageviewReferrerDailyRollup.aggregate(**range)
+      end
+
+      it "omits top_countries and top_referrers when persist_browser_pageview_events is disabled" do
+        SiteSetting.persist_browser_pageview_events = false
+
+        result = described_class.build(start_date: nil, end_date: nil)
+        expect(result).not_to have_key(:top_countries)
+        expect(result).not_to have_key(:top_referrers)
+      end
+
+      it "returns top_countries and top_referrers with rows and no error when matching events exist" do
+        6.times do
+          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+        end
+        aggregate_rollups
+
+        result = described_class.build(start_date: nil, end_date: nil)
+
+        expect(result[:top_countries][:rows].first[:country_code]).to eq("US")
+        expect(result[:top_countries][:error]).to be_nil
+
+        expect(result[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
+        expect(result[:top_referrers][:error]).to be_nil
+      end
+
+      it "returns empty rows when no events match the date range" do
+        result = described_class.build(start_date: nil, end_date: nil)
+        expect(result[:top_countries]).to eq(rows: [], error: nil)
+        expect(result[:top_referrers]).to eq(rows: [], error: nil)
+      end
+
+      it "returns an exception error payload when the underlying report cannot be built" do
+        allow(Report).to receive(:find).and_return(nil)
+
+        result = described_class.build(start_date: nil, end_date: nil)
+        expect(result[:top_countries]).to eq(rows: [], error: "exception")
+        expect(result[:top_referrers]).to eq(rows: [], error: "exception")
+      end
+
+      it "serves the cached payload on subsequent calls within the cache window" do
+        4.times do
+          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+        end
+        aggregate_rollups
+
+        first = described_class.build(start_date: nil, end_date: nil)
+        expect(first[:top_countries][:rows].first[:country_code]).to eq("US")
+
+        BrowserPageviewCountryDailyRollup.delete_all
+        BrowserPageviewReferrerDailyRollup.delete_all
+        BrowserPageviewEvent.delete_all
+
+        second = described_class.build(start_date: nil, end_date: nil)
+        expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
+        expect(second[:top_countries][:rows].first.keys).to all(be_a(Symbol))
+      end
+
+      it "invalidates the cached payload when login_required is toggled" do
+        4.times do
+          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+        end
+        aggregate_rollups
+
+        SiteSetting.login_required = false
+        first = described_class.build(start_date: nil, end_date: nil)
+        expect(first[:top_countries][:rows].first[:country_code]).to eq("US")
+
+        SiteSetting.login_required = true
+        second = described_class.build(start_date: nil, end_date: nil)
+        expect(second[:top_countries][:rows]).to be_empty
+      end
+
+      it "invalidates the cached payload when current_hostname changes" do
+        Discourse.stubs(:current_hostname).returns("forum-a.example.com")
+        Fabricate(:browser_pageview_event, normalized_referrer: "forum-b.example.com/path")
+        aggregate_rollups
+
+        first = described_class.build(start_date: nil, end_date: nil)
+        expect(first[:top_referrers][:rows].first[:normalized_referrer]).to eq(
+          "forum-b.example.com/path",
+        )
+
+        Discourse.stubs(:current_hostname).returns("forum-b.example.com")
+        second = described_class.build(start_date: nil, end_date: nil)
+        expect(second[:top_referrers][:rows]).to be_empty
+      end
+
+      it "serves the cached error payload on subsequent calls" do
+        allow(Report).to receive(:find) do |type, opts|
+          Report
+            ._get(type, opts)
+            .tap do |report|
+              report.error = :exception
+              report.data = []
+            end
+        end
+
+        first = described_class.build(start_date: nil, end_date: nil)
+        expect(first[:top_countries]).to eq(rows: [], error: "exception")
+
+        allow(Report).to receive(:find).and_call_original
+
+        second = described_class.build(start_date: nil, end_date: nil)
+        expect(second[:top_countries]).to eq(rows: [], error: "exception")
+      end
+
+      it "returns a timeout error payload and retries the report on a subsequent call" do
+        allow(Report).to receive(:find) do |type, _opts|
+          Report
+            .new(type)
+            .tap do |report|
+              report.error = :timeout
+              report.data = []
+            end
+        end
+
+        first = described_class.build(start_date: nil, end_date: nil)
+        expect(first[:top_countries]).to eq(rows: [], error: "timeout")
+        expect(first[:top_referrers]).to eq(rows: [], error: "timeout")
+
+        allow(Report).to receive(:find).and_call_original
+        Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+        aggregate_rollups
+
+        second = described_class.build(start_date: nil, end_date: nil)
+        expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
+      end
     end
   end
 end

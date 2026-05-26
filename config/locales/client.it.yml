@@ -374,8 +374,6 @@ it:
     tos: "Termini di Servizio"
     rules: "Regole"
     conduct: "Codice di Condotta"
-    mobile_view: "Visualizzazione cellulari"
-    desktop_view: "Visualizzazione Desktop"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -4007,7 +4005,6 @@ it:
         name_placeholder: "A cosa serve questo segnalibro?"
         name_input_label: "Nome del segnalibro"
         set_reminder: "Ricordamelo"
-        options: "Opzioni"
         actions:
           delete_bookmark:
             name: "Cancella segnalibro"
@@ -5623,8 +5620,36 @@ it:
             title: "Report"
           traffic:
             title: "Traffico del sito"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Argomenti"
+              posts: "Messaggi"
+              share: "Condividi"
+            whos_posting:
+              all_categories: "Tutte le categorie"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nuovo"
+                "1": "Base"
+                "2": "Membro"
+                "3": "Abituale"
+                "4": "Veterano"
+        reports_section:
+          no_data: "Non ci sono dati da mostrare"
+          modal:
+            enabled_heading: "Abilitato"
+            all_heading: "Tutti i report"
+            apply: "Applica"
+            move_up: "Sposta su"
+            move_down: "Sposta giù"
         configure:
           button: "Configura"
+        site_traffic:
+          series:
+            anonymous: "Anonimo"
+            crawlers: "Crawler"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"

@@ -39,6 +39,7 @@ export default class PostLikedUsersMenu extends Component {
     <PostUsersMenu
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
+      @totalUsers={{this.post.likeCount}}
     >
       <:avatar as |user|>
         <PluginOutlet

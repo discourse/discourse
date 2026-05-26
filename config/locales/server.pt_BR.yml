@@ -1249,6 +1249,30 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Quantidade de novos(as) colaboradores(as)"
       description: "Quantidade de usuários(as) que fizeram sua primeira postagem durante este período."
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Tópicos"
+        posts: "Postagens"
+        share: "Compartilhar"
+    posters_by_member_type:
+      labels:
+        count: "Postagens"
+        share: "Compartilhar"
+      types:
+        staff: "Equipe"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Nível de confiança"
+        count: "Membros"
+        share: "Compartilhar"
+      levels:
+        "0": "Nova"
+        "1": "Básico"
+        "2": "Membro"
+        "3": "Regular"
+        "4": "Líder"
     trust_level_growth:
       title: "Crescimento de nível de confiança"
       xaxis:
@@ -1294,9 +1318,8 @@ pt_BR:
     site_traffic:
       title: "Tráfego do site"
       xaxis:
-        page_view_anon_browser: "Visualizações de página (anônimas)"
-        page_view_logged_in_browser: "Visualizações de página (conectadas)"
-        page_view_crawler: "Rastreadores conhecidos"
+        page_view_anon_browser: "Anônimo(a)"
+        page_view_crawler: "Rastreadores"
         page_view_other: "Outras formas de tráfego"
       yaxis: "Dia"
       description: "Visualizações de página para usuários(as) que entraram com a conta, rastreadores conhecidos e outras formas de tráfego."
@@ -1411,6 +1434,12 @@ pt_BR:
         num_clicks: "Cliques"
         num_topics: "Tópicos"
       description: "Usuários(as) listados(as) pela quantidade de cliques nos links que eles compartilharam."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Acessos"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Acessos"
     top_traffic_sources:
       title: "Melhores fontes de tráfego"
       xaxis: "Domínio"
@@ -1633,6 +1662,9 @@ pt_BR:
       admin_sidebar_deprecation: "O layout antigo da administração foi preterido em benefício do novo <a href='https://meta.discourse.org/t/-/289281'>layout de barra de ferramentas</a> e será removido na próxima versão. Você pode <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> o layout da nova barra lateral antes disso."
       starttls_disabled: "A configuração de e-mail de saída está com a opção STARTTLS desativada. Isso quase nunca é necessário. Considere remover a opção <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> do seu ambiente. Consulte <a href='https://meta.discourse.org/t/387286'>este tópico</a> para mais informações."
     back_from_logster_text: "Voltar para o site"
+    reports_section:
+      providers:
+        core_report: "Padrão"
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
     disabled: "desativado(a)"
@@ -1802,7 +1834,6 @@ pt_BR:
     moderators_manage_groups: "Permitir que moderadores criem e gerenciem grupos."
     moderators_change_post_ownership: "Permitirem que moderadores(as) alterem a propriedade da postagem"
     cors_origins: "Origens permitidas para pedidos de origem cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como verdadeira para ativar CORS."
-    use_admin_ip_allowlist: "Administradores(as) só podem entrar com a conta se estiverem na lista de IPs filtrados (Administração > Registros > IPs filtrados)."
     blocked_ip_blocks: "Uma lista de blocos de IP privados que nunca devem ser rastreados pelo Discourse"
     allowed_internal_hosts: "Uma lista de hosts internos que podem ser rastreados com segurança pelo Discourse para uma caixa e outros fins"
     allowed_onebox_iframes: "Uma lista de domínios do iframe src permitidos via incorporações do Onebox. \"*\" permitirão todos os mecanismos padrão do Onebox."
@@ -1936,7 +1967,6 @@ pt_BR:
     s3_use_acls: "A AWS não recomenda usar ACLs em buckets S3. Só desmarque esta opção se você pretender configurar as políticas de permissão no \"s3_upload_bucket\" e \"s3_backup_bucket\" configurados."
     backup_time_of_day: "Hora do dia, em UTC, em que o backup deve ocorrer."
     backup_with_uploads: "Inclua envios nos backups programados. Desative para copiar apenas a base de dados."
-    backup_location: "O local para armazenar cópias de segurança. IMPORTANTE: S3 requer credenciais válidas S3 inseridas nas configurações de Arquivos. Ao alterar de Local para S3, é preciso executar a tarefa rake \"s3:ensure_cors_rules\"."
     backup_gzip_compression_level_for_uploads: "Nível de compactação Gzip usado para compactar envios."
     include_thumbnails_in_backups: "Incluir miniaturas geradas em backups. Desativar isto tornará os backups menores, mas exigirá o reprocessamento de todas as postagens após a restauração."
     active_user_rate_limit_secs: "Frequencia de atualização do campo \"última vez visto em\", em segundos."
@@ -2124,7 +2154,6 @@ pt_BR:
     fast_typing_threshold: "Tempo mínimo que o(a) usuário(a) tem para escrever sua primeira postagem. Se o limite não for cumprido, a postagem entrará automaticamente na fila de revisão. Baixo é 1 segundo, o padrão são 3 segundos e alto são 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atenderem ao \"limite de digitação rápida\""
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
-    auto_silence_first_post_regex: "Regex sem diferenciação de maiúsculas ou minúsculas que, caso em caso de aprovação, farão que a primeira postagem de um(a) usuário(a) seja silenciada e enviada para a fila de aprovação. Por exemplo: raging|a[bc]a silenciará todas as postagens contendo raging ou aba, ou aca, imediatamente. Isso se aplica apenas à primeira postagem. PRETERIDO: use Silenciar palavras acompanhadas."
     moderator_guide_topic: "O tópico que descreve como você modera sua comunidade. O link ficará visível na fila de revisão para moderadores e administradores."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
@@ -2252,7 +2281,6 @@ pt_BR:
     allow_profile_backgrounds: "Permita que os(as) usuários(as) enviem planos de fundo do perfil."
     get_a_room_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer para a mesma pessoa no mesmo tópico antes de ser avisado(a)."
     dont_feed_the_trolls_threshold: "Número de sinalizadores de outros(as) usuários(as) antes de serem avisados(as)."
-    enable_mobile_theme: "Os dispositivos móveis usam um tema compatível com dispositivos móveis, com a possibilidade de mudar para o site completo. Desative isso se quiser usar um estilo personalizado totalmente responsivo."
     dominating_topic_minimum_percent: "Percentual de postagens que um(a) usuário(a) precisa fazer em um tópico antes de ser relembrado(a) de ser excessivamente dominante em um tópico."
     pm_warn_user_last_seen_months_ago: "Ao criar uma nova mensagem privada, avise aos usuários quando o destinatário de destino não foi visto há mais de n meses."
     suppress_uncategorized_badge: "Não exiba o emblema para assuntos não categorizados em listas de tópicos."
@@ -2470,7 +2498,6 @@ pt_BR:
     rich_editor: "Ative o editor de rich text para o compositor, assim todos(as) usuários(as) poderão alternar entre o modo Markdown atual e o novo editor de rich text para tornar a composição mais intuitiva e amigável."
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
-    viewport_based_mobile_mode: "Usar a largura da viewport para determinar os modos mobile/desktop. Essa configuração será removida em breve. Se você precisar desativá-la, avise-nos <a href='https://meta.discourse.org/t/384280'>no Meta</a>."
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "Lista de idiomas compatíveis para os quais o conteúdo do(a) usuário(a) pode ser traduzido. O idioma padrão do site está sempre incluído. Requer 'content localization enabled'."
     content_localization_allowed_groups: "Grupos com permissão para enviar conteúdo localizado. Requer \"content localization enabled\"."

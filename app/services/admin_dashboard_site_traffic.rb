@@ -31,15 +31,56 @@ class AdminDashboardSiteTraffic
     include_embedded = include_embedded_series?
     totals = build_totals(current_rows, include_embedded: include_embedded)
 
-    {
+    response = {
       kpis: kpis(totals, prior_rows),
       pageview_series: pageview_series(current_rows, include_embedded: include_embedded),
     }
+
+    if SiteSetting.persist_browser_pageview_events
+      response[:top_countries] = fetch_card("top_countries_by_browser_pageviews")
+      response[:top_referrers] = fetch_card("top_referrers_by_browser_pageviews")
+    end
+
+    response
   end
 
   private
 
   attr_reader :start_date, :end_date
+
+  def fetch_card(type)
+    opts = {
+      start_date: start_date,
+      end_date: end_date,
+      filters: {
+        login_required: SiteSetting.login_required,
+        host: Discourse.current_hostname,
+      },
+      limit: 5,
+      wrap_exceptions_in_test: true,
+    }
+
+    cached = Report.find_cached(type, opts)
+    return cached_to_payload(cached) if cached
+
+    report = Report.find(type, opts)
+    return { rows: [], error: "exception" } if report.nil?
+
+    # Timeouts skip the cache so the next request retries instead of being
+    # pinned to the error for the full 35-minute TTL.
+    Report.cache(report) if report.error != :timeout
+
+    return { rows: [], error: report.error.to_s } if report.error.present?
+
+    { rows: report.data, error: nil }
+  end
+
+  def cached_to_payload(cached)
+    error = cached[:error]
+    return { rows: [], error: error.to_s } if error.present?
+
+    { rows: (cached[:data] || []).map(&:symbolize_keys), error: nil }
+  end
 
   def series_ids(include_embedded:)
     series = %i[logged_in]

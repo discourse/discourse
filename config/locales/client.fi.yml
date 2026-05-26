@@ -374,8 +374,6 @@ fi:
     tos: "Käyttöehdot"
     rules: "Säännöt"
     conduct: "Käytännesäännöt"
-    mobile_view: "Mobiilinäkymä"
-    desktop_view: "Työpöytänäkymä"
     now: "hetki sitten"
     read_more: "lue lisää"
     more: "Lisää"
@@ -4010,7 +4008,6 @@ fi:
         name_placeholder: "Mitä varten kirjanmerkki on?"
         name_input_label: "Kirjanmerkin nimi"
         set_reminder: "Muistuta minua"
-        options: "Asetukset"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
@@ -5626,8 +5623,35 @@ fi:
             title: "Raportit"
           traffic:
             title: "Sivuston liikenne"
+          engagement:
+            activity_by_category:
+              category: "Luokka"
+              topics: "Aiheet"
+              posts: "Viestejä"
+              share: "Jaa"
+            whos_posting:
+              all_categories: "Kaikki alueet"
+              staff: "Henkilökunta"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uudet"
+                "1": "Haastaja"
+                "2": "Konkari"
+                "3": "Normaali"
+                "4": "Johtaja"
+        reports_section:
+          modal:
+            enabled_heading: "Käytössä"
+            all_heading: "Kaikki raportit"
+            apply: "Käytä"
+            move_up: "Siirrä ylös"
+            move_down: "Siirrä alas"
         configure:
           button: "Määritä"
+        site_traffic:
+          series:
+            anonymous: "Anonyymeja"
+            crawlers: "Hakurobotit"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"

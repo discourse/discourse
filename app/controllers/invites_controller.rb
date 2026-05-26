@@ -393,7 +393,9 @@ class InvitesController < ApplicationController
         )
       end
 
-      log_on_user(user) if !redeeming_user && user.active? && user.guardian.can_access_forum?
+      if !redeeming_user && user.active? && user.guardian.can_access_forum?
+        log_on_user(user, replay_anonymous_action: true)
+      end
 
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)

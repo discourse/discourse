@@ -379,8 +379,6 @@ fr:
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
     conduct: "Code de conduite"
-    mobile_view: "Version mobile"
-    desktop_view: "Version ordinateur"
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
@@ -4036,7 +4034,6 @@ fr:
         name_placeholder: "À quoi correspond ce signet ?"
         name_input_label: "Nom du signet"
         set_reminder: "Me le rappeler"
-        options: "Options"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -5652,8 +5649,36 @@ fr:
             title: "Rapports"
           traffic:
             title: "Trafic du site"
+          engagement:
+            activity_by_category:
+              category: "Catégorie"
+              topics: "Sujets"
+              posts: "Publications"
+              share: "Partager"
+            whos_posting:
+              all_categories: "Toutes les catégories"
+              staff: "Responsable"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nouveau"
+                "1": "Actif"
+                "2": "Membre"
+                "3": "Normal"
+                "4": "Meneur"
+        reports_section:
+          no_data: "Aucune donnée à afficher"
+          modal:
+            enabled_heading: "Activé"
+            all_heading: "Tous les rapports"
+            apply: "Appliquer"
+            move_up: "Déplacer vers le haut"
+            move_down: "Déplacer vers le bas"
         configure:
           button: "Configurer"
+        site_traffic:
+          series:
+            anonymous: "Anonymes"
+            crawlers: "Robots d'indexation"
         period:
           last_7_days: "Ces 7 derniers jours"
           last_30_days: "30 derniers jours"

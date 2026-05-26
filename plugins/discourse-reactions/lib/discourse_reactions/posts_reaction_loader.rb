@@ -7,7 +7,7 @@ module DiscourseReactions::PostsReactionLoader
 
       posts = object.posts
       user = object.respond_to?(:guardian) ? object.guardian.user : nil
-      ::ReactionsSerializerHelpers.preload_post_reactions(posts, user)
+      DiscourseReactions::ReactionsSerializerHelpers.preload_post_reactions(posts, user)
     end
   end
 end

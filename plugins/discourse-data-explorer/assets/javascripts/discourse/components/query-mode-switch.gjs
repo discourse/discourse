@@ -17,7 +17,9 @@ export default class QueryModeSwitch extends Component {
         value: "ai",
         icon: "discourse-sparkles",
         label: i18n("explorer.mode.ai"),
-        disabled: !this.siteSettings.data_explorer_ai_queries_enabled,
+        disabled:
+          !this.siteSettings.data_explorer_ai_queries_enabled ||
+          this.args.editDisabled,
       },
     ];
   }

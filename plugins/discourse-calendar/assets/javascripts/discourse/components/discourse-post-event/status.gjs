@@ -6,6 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -56,6 +57,7 @@ const GoingDropdown = <template>
 
 export default class DiscoursePostEventStatus extends Component {
   @service appEvents;
+  @service currentUser;
   @service discoursePostEventApi;
   @service site;
   @service siteSettings;
@@ -173,6 +175,17 @@ export default class DiscoursePostEventStatus extends Component {
   }
 
   async _setAttendance(payload) {
+    if (!this.currentUser) {
+      if (!payload.status) {
+        return;
+      }
+      return deferAnonymousAction(this, "rsvp_event", {
+        event_id: this.args.event.id,
+        status: payload.status,
+        recurring: payload.recurring ?? false,
+      });
+    }
+
     try {
       const event = this.args.event;
       const data = { status: payload.status, postId: event.id };

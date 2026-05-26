@@ -1385,6 +1385,30 @@ sk:
       xaxis: "Deň"
       yaxis: "Počet nových prispievateľov"
       description: "Počet používateľov, ktorí v tomto období uverejnili svoj prvý príspevok."
+    activity_by_category:
+      labels:
+        category: "Kategória"
+        topics: "Témy"
+        posts: "Príspevky"
+        share: "Zdieľať"
+    posters_by_member_type:
+      labels:
+        count: "Príspevky"
+        share: "Zdieľať"
+      types:
+        staff: "Personál"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Úroveň dôvery"
+        count: "Členovia"
+        share: "Zdieľať"
+      levels:
+        "0": "Nový"
+        "1": "Základné"
+        "2": "Člen"
+        "3": "Bežné"
+        "4": "Vodca"
     trust_level_growth:
       title: "Rast úrovne dôveryhodnosti"
       xaxis:
@@ -1428,9 +1452,8 @@ sk:
     site_traffic:
       title: "Návštevnosť stránky"
       xaxis:
-        page_view_anon_browser: "Zobrazenia stránky (anonymné)"
-        page_view_logged_in_browser: "Zobrazenia stránky (prihlásení)"
-        page_view_crawler: "Známe prehľadávače"
+        page_view_anon_browser: "Anonymný"
+        page_view_crawler: "Crawlery"
         page_view_other: "Iný prenos"
       yaxis: "Deň"
       description: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a inej návštevnosti."
@@ -1545,6 +1568,12 @@ sk:
         num_clicks: "Klinutia"
         num_topics: "Témy"
       description: "Zoznam používateľov podľa počtu kliknutí na odkazy, ktoré zdieľali."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštev"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Návštev"
     top_traffic_sources:
       title: "Najlepšie zdroje"
       xaxis: "Doména"
@@ -1757,6 +1786,9 @@ sk:
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
     back_from_logster_text: "Späť na stránku"
+    reports_section:
+      providers:
+        core_report: "Štandardné"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
     disabled: "vypnuté"
@@ -1915,7 +1947,6 @@ sk:
     enable_escaped_fragments: "Ak sa nezistí žiadny webový prehľadávač, vráťte sa späť na rozhranie API Ajax-Crawling od spoločnosti Google. Pozrite si <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Povoliť moderátorom zmeniť vlastníctvo príspevku"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
-    use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     blocked_ip_blocks: "Zoznam súkromných blokov IP, ktoré by Discourse nikdy nemal prehľadávať"
     allowed_internal_hosts: "Zoznam interných hostiteľov, ktoré môže diskurz bezpečne prehľadávať na účely oneboxingu a iné účely"
     allowed_onebox_iframes: "Zoznam domén src iframe, ktoré sú povolené prostredníctvom vložených súborov Onebox. `*` povolí všetky predvolené motory Onebox."
@@ -2041,7 +2072,6 @@ sk:
     s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; túto možnosť zrušte, len ak máte v úmysle konfigurovať politiky oprávnení na nakonfigurovaných vedrách `s3_upload_bucket` a `s3_backup_bucket`."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
     backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
-    backup_location: "Miesto, kde sú uložené zálohy. DÔLEŽITÉ: S3 vyžaduje platné poverenia S3 zadané v nastaveniach súborov. Keď to zmeníte na S3 z Local, musíte spustiť úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň kompresie Gzip používaná na komprimovanie odosielania."
     include_thumbnails_in_backups: "Zahrnúť vygenerované miniatúry do záloh. Ak túto funkciu zakážete, zálohy budú menšie, ale po obnovení sa budú musieť všetky príspevky znovu obnoviť."
     active_user_rate_limit_secs: "Ako často máme aktualizovať pole 'naposledy videný o', v sekundách"
@@ -2224,7 +2254,6 @@ sk:
     auto_respond_to_flag_actions: "Zapnúť automatickú odpoveď pri odstránení označenia."
     auto_silence_fast_typers_on_first_post: "Automatické umlčanie používateľov, ktorí nespĺňajú prah `rýchleho písania`"
     auto_silence_fast_typers_max_trust_level: "Maximálna úroveň dôvery na automatické umlčanie rýchlych pisateľov"
-    auto_silence_first_post_regex: "Regex nerozlišujúci veľké a malé písmená, ktorý v prípade odovzdania spôsobí, že prvý príspevok používateľa bude umlčaný a odoslaný do frontu na schválenie. Príklad: raging|a[bc]a , spôsobí, že všetky príspevky obsahujúce raging alebo aba alebo aca budú umlčané ako prvé. Platí len pre prvý príspevok. ZRUŠENÉ: Namiesto toho použite umlčanie sledovaných slov."
     reviewable_claiming: "Musí byť obsah, ktorý je možné preskúmať, reklamovaný predtým, ako sa naň začne reagovať?"
     reviewable_default_topics: "V predvolenom nastavení zobrazovať kontrolovaný obsah zoskupený podľa tém"
     reviewable_default_visibility: "Nezobrazujte položky, ktoré sa dajú skontrolovať, pokiaľ nespĺňajú túto prioritu"
@@ -2342,7 +2371,6 @@ sk:
     allow_profile_backgrounds: "Povoliť používateľov nahranie pozadia do profilu."
     get_a_room_threshold: "Počet príspevkov, ktoré musí používateľ odoslať tej istej osobe v rovnakej téme, kým bude upozornený."
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
-    enable_mobile_theme: "Mobilné zariadenia používajú tému pre mobilné zariadenia s možnosťou prepnutia na plnú verziu stránok. Vypnite, ak chcete použiť vlastný štýl, ktorý podporuje mobilné zariadenia."
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
     header_dropdown_category_count: "Koľko kategórií sa môže zobraziť v rozbaľovacom menu v záhlaví."

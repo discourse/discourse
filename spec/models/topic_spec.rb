@@ -2972,6 +2972,37 @@ RSpec.describe Topic do
         )
       }.to raise_error(RateLimiter::LimitExceeded)
     end
+
+    context "with limit_admin_personal_messages_per_day" do
+      it "does not rate limit admins when set to 0" do
+        SiteSetting.limit_admin_personal_messages_per_day = 0
+
+        2.times do
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        end
+      end
+
+      it "rate limits admins when set to a non-zero value" do
+        SiteSetting.limit_admin_personal_messages_per_day = 1
+
+        create_post(
+          user: admin,
+          archetype: "private_message",
+          target_usernames: [user1.username, user2.username],
+        )
+        expect {
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+    end
   end
 
   describe ".count_exceeds_minimum?" do

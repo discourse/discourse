@@ -243,6 +243,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  # Register a handler for an action initiated by an anonymous user, to be
+  # replayed against their account after they authenticate. See AnonymousAction.
+  def register_anonymous_action(type, &block)
+    reloadable_patch { AnonymousAction.register(type, &block) }
+  end
+
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_report(name, &block)
     reloadable_patch { |plugin| Report.add_report(name, &block) }
@@ -1331,6 +1337,34 @@ class Plugin::Instance
   def register_bookmarkable(klass)
     return if Bookmark.registered_bookmarkable_from_type(klass.model.name).present?
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
+  end
+
+  ##
+  # Register a class that implements [AdminDashboard::Reports::SourceProvider],
+  # exposing a kind of report (built-in, Data Explorer query, etc.) for the
+  # customisable Reports section on the new admin dashboard. The class must
+  # inherit from AdminDashboard::Reports::SourceProvider and declare a unique
+  # `.source_name`; see the base class for the full contract.
+  def register_admin_dashboard_report_source(provider_class)
+    if !provider_class.is_a?(Class) || !(provider_class < ::AdminDashboard::Reports::SourceProvider)
+      raise ArgumentError,
+            "register_admin_dashboard_report_source expects a subclass of " \
+              "AdminDashboard::Reports::SourceProvider, got #{provider_class.inspect}"
+    end
+
+    existing =
+      ::AdminDashboard::Reports::Registry.providers.find do |klass|
+        klass.source_name.to_s == provider_class.source_name.to_s
+      end
+
+    return if existing == provider_class
+
+    if existing
+      raise ArgumentError,
+            "Source #{provider_class.source_name.inspect} is already registered by #{existing}"
+    end
+
+    DiscoursePluginRegistry.register_admin_dashboard_report_source(provider_class, self)
   end
 
   ##

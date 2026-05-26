@@ -1293,6 +1293,58 @@ RSpec.describe NestedTopicsController, type: :request do
 
       expect(TopicUser.count).to eq(topic_user_count)
     end
+
+    describe "catching up on visit" do
+      fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        Fabricate(:nested_topic, topic: topic)
+        topic.update!(highest_post_number: 2, highest_staff_post_number: 2)
+      end
+
+      it "advances last_read_post_number to highest_post_number for a nested topic" do
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: topic, user: reader)
+        expect(topic_user.last_read_post_number).to eq(2)
+      end
+
+      it "marks the topic's unread notifications as read" do
+        reply_notification =
+          Fabricate(
+            :replied_notification,
+            user: reader,
+            topic: topic,
+            post: root_reply,
+            read: false,
+          )
+
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        expect(reply_notification.reload.read).to eq(true)
+      end
+
+      it "does nothing for non-nested topics opened via /n/" do
+        flat_topic = Fabricate(:topic, user: user)
+        Fabricate(:post, topic: flat_topic, user: user, post_number: 1)
+        flat_topic.update!(highest_post_number: 1, highest_staff_post_number: 1)
+
+        sign_in(reader)
+        get show_url(flat_topic), params: { track_visit: true }
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: flat_topic, user: reader)
+        expect(topic_user&.last_read_post_number).to be_blank
+      end
+    end
   end
 
   describe "GET activity" do

@@ -263,8 +263,6 @@ te:
     tos: "సేవా నిబంధనలు"
     rules: "నియమాలు"
     conduct: "ప్రవర్తనా నియమావళిని"
-    mobile_view: "మొబైల్ సందర్శనం"
-    desktop_view: "డెస్క్ టాప్ సందర్శనం"
     now: "ఇప్పుడే"
     read_more: "మరింత చదవండి"
     more: "మరింత"
@@ -3367,7 +3365,6 @@ te:
         name_placeholder: "ఈ బుక్మార్క్ దేని కోసం?"
         name_input_label: "బుక్‌మార్క్ పేరు"
         set_reminder: "నాకు గుర్తు చేయండి"
-        options: "ఎంపికలు"
         actions:
           delete_bookmark:
             name: "బుక్‌మార్క్‌ను తొలగించండి"
@@ -4536,6 +4533,31 @@ te:
         sections:
           reports:
             title: "నివేదికలు"
+          engagement:
+            activity_by_category:
+              category: "వర్గం"
+              topics: "విషయాలు"
+              posts: "పోస్ట్‌లు"
+              share: "షేర్ చేయండి"
+            whos_posting:
+              all_categories: "అన్ని వర్గాలు"
+              staff: "సిబ్బంది"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "కొత్త"
+                "1": "ప్రాథమిక"
+                "2": "సభ్యుడు"
+                "3": "రెగ్యులరు"
+                "4": "లీడరు"
+        reports_section:
+          modal:
+            enabled_heading: "ప్రారంభించబడింది"
+            all_heading: "అన్ని నివేదికలు"
+            apply: "దరఖాస్తు చేసుకోండి"
+        site_traffic:
+          series:
+            anonymous: "అనామక"
+            crawlers: "క్రాలర్లు"
         period:
           last_3_months: "గత 3 నెలలు"
           custom: "అనురూప"

@@ -9,19 +9,19 @@ import { i18n } from "discourse-i18n";
 
 export default class AiHelperCustomPrompt extends Component {
   @action
-  sendInput(event) {
-    if (event.key !== "Enter") {
+  handleSubmit(event) {
+    event.preventDefault();
+    if (!this.args.value?.length) {
       return;
     }
-    return this.args.submit(this.args.promptArgs);
+    this.args.submit(this.args.promptArgs);
   }
 
   <template>
-    <div class="ai-custom-prompt">
+    <form class="ai-custom-prompt" {{on "submit" this.handleSubmit}}>
 
       <input
         {{on "input" (withEventValue (fn (mut @value)))}}
-        {{on "keydown" this.sendInput}}
         value={{@value}}
         placeholder={{i18n
           "discourse_ai.ai_helper.context_menu.custom_prompt.placeholder"
@@ -37,6 +37,6 @@ export default class AiHelperCustomPrompt extends Component {
         @disabled={{not @value.length}}
         class="ai-custom-prompt__submit btn-primary"
       />
-    </div>
+    </form>
   </template>
 }

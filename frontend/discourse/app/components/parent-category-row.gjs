@@ -207,7 +207,7 @@ export default class ParentCategoryRow extends CategoryListItem {
             @name="category-list-topics-wrapper"
             @outletArgs={{lazyHash category=this.category}}
           >
-            <td class="topics">
+            <td class="topics topic-list-data num">
               <div title={{this.category.statTitle}}>{{trustHTML
                   this.category.stat
                 }}</div>

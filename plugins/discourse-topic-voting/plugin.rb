@@ -240,4 +240,13 @@ after_initialize do
           username: RouteFormat.username,
         }
   end
+
+  register_anonymous_action("vote_topic") do |user, params|
+    DiscourseTopicVoting::Votes::Cast.call(
+      params: {
+        topic_id: params["topic_id"],
+      },
+      guardian: user.guardian,
+    )
+  end
 end

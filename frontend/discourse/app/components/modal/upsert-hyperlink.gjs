@@ -29,6 +29,14 @@ export default class UpsertHyperlink extends Component {
     cancel(this.#debounced);
   }
 
+  get wrapsSelection() {
+    return this.args.model.hasSelection && !this.args.model.editing;
+  }
+
+  get showLinkTextField() {
+    return !this.wrapsSelection;
+  }
+
   @cached
   get data() {
     return {
@@ -63,7 +71,7 @@ export default class UpsertHyperlink extends Component {
     });
 
     this.selectedRow = -1;
-    document.querySelector("input.link-text").focus();
+    document.querySelector("input.link-text")?.focus();
   }
 
   async triggerSearch(linkUrl) {
@@ -172,9 +180,13 @@ export default class UpsertHyperlink extends Component {
       return;
     }
 
-    const sel = this.args.model.toolbarEvent.selected;
-    const linkText = data.linkText || sel.value || origLink || "";
-    this.args.model.toolbarEvent.addText(`[${linkText.trim()}](${linkUrl})`);
+    if (this.wrapsSelection) {
+      this.args.model.toolbarEvent.applyLink(linkUrl);
+    } else {
+      const sel = this.args.model.toolbarEvent.selected;
+      const linkText = data.linkText || sel?.value || origLink || "";
+      this.args.model.toolbarEvent.addText(`[${linkText.trim()}](${linkUrl})`);
+    }
 
     this.args.closeModal();
   }
@@ -264,18 +276,20 @@ export default class UpsertHyperlink extends Component {
               </div>
             {{/if}}
 
-            <form.Field
-              @name="linkText"
-              @type="input"
-              @title={{i18n "composer.link_text_label"}}
-              @format="full"
-              as |field|
-            >
-              <field.Control
-                placeholder={{i18n "composer.link_optional_text"}}
-                class="link-text"
-              />
-            </form.Field>
+            {{#if this.showLinkTextField}}
+              <form.Field
+                @name="linkText"
+                @type="input"
+                @title={{i18n "composer.link_text_label"}}
+                @format="full"
+                as |field|
+              >
+                <field.Control
+                  placeholder={{i18n "composer.link_optional_text"}}
+                  class="link-text"
+                />
+              </form.Field>
+            {{/if}}
           </Form>
         </div>
       </:body>

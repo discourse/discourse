@@ -39,6 +39,7 @@ register_svg_icon "file-csv"
 register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
+register_svg_icon "arrows-up-to-line"
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
@@ -772,5 +773,33 @@ after_initialize do
     on_holiday_usernames = DiscourseCalendar.users_on_holiday
     report.data = (group_usernames & on_holiday_usernames).map { |username| { username: username } }
     report.total = report.data.count
+  end
+
+  register_anonymous_action("rsvp_event") do |user, params|
+    event_id = params["event_id"]
+    recurring = ActiveModel::Type::Boolean.new.cast(params["recurring"])
+    existing_invitee = DiscoursePostEvent::Invitee.find_by(post_id: event_id, user_id: user.id)
+
+    if existing_invitee
+      DiscoursePostEvent::UpdateInvitee.call(
+        params: {
+          event_id: event_id,
+          invitee_id: existing_invitee.id,
+          status: params["status"],
+          recurring: recurring,
+        },
+        guardian: user.guardian,
+      )
+    else
+      DiscoursePostEvent::CreateInvitee.call(
+        params: {
+          event_id: event_id,
+          status: params["status"],
+          recurring: recurring,
+          user_id: user.id,
+        },
+        guardian: user.guardian,
+      )
+    end
   end
 end

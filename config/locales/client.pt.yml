@@ -382,8 +382,6 @@ pt:
     tos: "Termos do Serviço"
     rules: "Regras"
     conduct: "Código de Conduta"
-    mobile_view: "Visualização Móvel"
-    desktop_view: "Visualização PC"
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
@@ -3820,7 +3818,6 @@ pt:
         name_placeholder: "Para que serve este marcador?"
         name_input_label: "Nome do marcador"
         set_reminder: "Lembrar-me"
-        options: "Opções"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -4790,6 +4787,33 @@ pt:
         sections:
           reports:
             title: "Relatórios"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Mensagens"
+              share: "Partilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Pessoal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Habitual"
+                "4": "Líder"
+        reports_section:
+          no_data: "Sem dados para exibir"
+          modal:
+            enabled_heading: "Ativado"
+            all_heading: "Todos os relatórios"
+            apply: "Aplicar"
+            move_up: "Mover para cima"
+            move_down: "Mover para baixo"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
         period:
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"
