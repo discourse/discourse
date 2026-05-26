@@ -1,5 +1,8 @@
+import ActivityByCategory from "discourse/admin/components/dashboard/engagement/activity-by-category";
+import EngagementHeadline from "discourse/admin/components/dashboard/engagement/headline";
+import TrustLevelPipeline from "discourse/admin/components/dashboard/engagement/trust-level-pipeline";
+import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-posting";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import CategorySelector from "discourse/select-kit/components/category-selector";
 import { i18n } from "discourse-i18n";
 
 <template>
@@ -7,63 +10,48 @@ import { i18n } from "discourse-i18n";
     @title={{i18n "admin.dashboard.sections.engagement.title"}}
     @startDate={{@startDate}}
     @endDate={{@endDate}}
+    ...attributes
   >
-    <div class="db-section__subheader">
-      <div class="db-section__subintro">
-        <h3>Members are forming a habit of coming back.</h3>
-        <p>Stickiness is steady at 21% and new sign-ups are up 9%, but
-          daily-engaged members slipped 5% — most active members are
-          participating less often than last month.</p>
+    {{#if @fetchError}}
+      <div class="db-section__error" role="alert">
+        {{i18n "admin.dashboard.sections.engagement.fetch_error"}}
       </div>
-      <div class="db-section__metrics">
-        <div class="db-section__metric">
-          <div class="db-section__metric-number">38%</div>
-          <div class="db-section__metric-label">
-            DAU / MAU
+    {{else}}
+      {{#if @engagement.headline}}
+        <EngagementHeadline
+          @headline={{@engagement.headline}}
+          @kpis={{@engagement.kpis}}
+          @period={{@period}}
+        />
+      {{/if}}
+
+      <div class="db-section__row-group">
+        <div class="db-section__row">
+          <div class="db-section__row-block">
+            {{#if @engagement.trust_level_pipeline}}
+              <TrustLevelPipeline @data={{@engagement.trust_level_pipeline}} />
+            {{/if}}
           </div>
-          <span class="db-pill --pos">stable</span>
-        </div>
-        <div class="db-section__metric">
-          <div class="db-section__metric-number">150</div>
-          <div class="db-section__metric-label">Daily visitors
+          <div class="db-section__row-block">
+            <WhosPosting
+              @posters={{@engagement.posters}}
+              @startDate={{@startDate}}
+              @endDate={{@endDate}}
+            />
           </div>
-          <span class="db-delta --neg">-2%</span>
         </div>
-        <div class="db-section__metric">
-          <div class="db-section__metric-number">248</div>
-          <div class="db-section__metric-label">New sign ups
+        {{#if @engagement.activity_by_category}}
+          <div class="db-section__row">
+            <div class="db-section__row-block">
+              <ActivityByCategory
+                @activity={{@engagement.activity_by_category}}
+                @startDate={{@startDate}}
+                @endDate={{@endDate}}
+              />
+            </div>
           </div>
-          <span class="db-delta --pos">+12%</span>
-        </div>
+        {{/if}}
       </div>
-    </div>
-    {{! only needed when adding multiple rows }}
-    <div class="db-section__row-group">
-      <div class="db-section__row">
-        <div class="db-section__row-block">
-          <div class="db-section__row-block-header">
-            <h3 class="db-section__row-block-title">Trust Level Pipeline</h3>
-            <span class="db-pill --pos">+72 climbing</span>
-          </div>
-        </div>
-        <div class="db-section__row-block">
-          <div class="db-section__row-block-header">
-            <h3 class="db-section__row-block-title">Who's contributing?</h3>
-          </div>
-        </div>
-      </div>
-      <div class="db-section__row">
-        <div class="db-section__row-block"><div
-            class="db-section__row-block-header"
-          >
-            <h3 class="db-section__row-block-title">Activity by category</h3>
-            <CategorySelector />
-          </div>
-          <div class="db-activity">
-            //table
-          </div>
-        </div>
-      </div>
-    </div>
+    {{/if}}
   </DashboardSection>
 </template>

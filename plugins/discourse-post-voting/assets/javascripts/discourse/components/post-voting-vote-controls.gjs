@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { i18n } from "discourse-i18n";
 import { castVote, removeVote } from "../lib/post-voting-utilities";
 import PostVotingButton from "./post-voting-button";
@@ -45,7 +46,10 @@ export default class PostVotingVoteControls extends Component {
   @action
   async vote(direction) {
     if (!this.currentUser) {
-      return this.args.showLogin();
+      return deferAnonymousAction(this, "vote_post", {
+        post_id: this.args.post.id,
+        direction,
+      });
     }
 
     const post = this.args.post;

@@ -383,7 +383,16 @@ module SiteSettingExtension
       .all(default_locale)
       .reject do |setting_name, _|
         plugin_name = plugins[setting_name]
-        plugin_name && !Discourse.plugins_by_name[plugin_name].configurable?
+        next false if !plugin_name
+        next false if Discourse.plugins_by_name[plugin_name].configurable?
+
+        # Non-configurable plugin. Surface an upcoming change only when a
+        # :hidden_site_settings modifier has explicitly un-hidden it.
+        if only_upcoming_changes && UpcomingChanges.exists?(setting_name)
+          current_hidden_settings.include?(setting_name)
+        else
+          true
+        end
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
@@ -1221,7 +1230,7 @@ module SiteSettingExtension
   #
   # @example
   #   {
-  #     enable_mobile_theme: true,
+  #     enable_badges: true,
   #     topics_per_period_in_top_page: 50,
   #     title: "My awesome forum"
   #   }

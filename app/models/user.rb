@@ -1608,7 +1608,8 @@ class User < ActiveRecord::Base
     end
 
     # mark all the user's quoted posts as "needing a rebake"
-    Post.rebake_all_quoted_posts(id) if saved_change_to_uploaded_avatar_id?
+    # use background job to avoid blocking on large datasets
+    Jobs.enqueue(:rebake_quoted_posts_for_user, user_id: id) if saved_change_to_uploaded_avatar_id?
   end
 
   def first_post_created_at

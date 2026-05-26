@@ -433,8 +433,8 @@ nl:
   delete_topic_failed: "Er is een fout opgetreden bij het verwijderen van dat topic. Neem contact op met de beheerder van de website."
   reading_time: "Leestijd"
   reading_time_minutes:
-    one: "%{count} min 🕑"
-    other: "%{count} min 🕑"
+    one: "%{count} min. 🕑"
+    other: "%{count} min. 🕑"
   likes: "Likes"
   likes_count:
     one: "%{count} ❤"
@@ -1231,6 +1231,30 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal nieuwe bijdragers"
       description: "Aantal gebruikers die tijdens deze periode hun eerste bericht hebben gemaakt."
+    activity_by_category:
+      labels:
+        category: "Categorie"
+        topics: "Topics"
+        posts: "Berichten"
+        share: "Delen"
+    posters_by_member_type:
+      labels:
+        count: "Berichten"
+        share: "Delen"
+      types:
+        staff: "Medewerker"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Vertrouwensniveau"
+        count: "Leden"
+        share: "Delen"
+      levels:
+        "0": "Nieuw"
+        "1": "Basis"
+        "2": "Lid"
+        "3": "Normaal"
+        "4": "Leider"
     trust_level_growth:
       title: "Groei van vertrouwensniveau"
       xaxis:
@@ -1274,9 +1298,8 @@ nl:
     site_traffic:
       title: "Siteverkeer"
       xaxis:
-        page_view_anon_browser: "Paginaweergaven (anoniem)"
-        page_view_logged_in_browser: "Paginaweergaven (aangemeld)"
-        page_view_crawler: "Bekende crawlers"
+        page_view_anon_browser: "Anoniem"
+        page_view_crawler: "Crawlers"
         page_view_other: "Ander verkeer"
       yaxis: "Dag"
       description: "Paginaweergaven voor aangemelde gebruikers, bekende crawlers en ander verkeer."
@@ -1391,6 +1414,12 @@ nl:
         num_clicks: "Klikken"
         num_topics: "Topics"
       description: "Gebruikers vermeld op volgorde van het aantal klikken op links die ze hebben gedeeld."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Bezoeken"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Bezoeken"
     top_traffic_sources:
       title: "Meeste verkeersbronnen"
       xaxis: "Domein"
@@ -1757,10 +1786,10 @@ nl:
     ga_universal_domain_name: "Google Universal Analytics-domeinnaam, bijvoorbeeld: mijnsite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics-cross-domain-tracking inschakelen. Aan uitgaande links naar deze domein wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain Tracking-gids.</a>"
     gtm_container_id: "ID van Google Tag Manager-container, bijvoorbeeld GTM-ABCD12E. <br/>Opmerking: om GTM te gebruiken wanneer de Content Security Policy (CSP) is ingeschakeld, zie de documentatie over meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces gebruiken in Google Tag Manager-scripts</a>."
+    google_site_verification_token: Verificatietoken Google-zoekconsole. Wordt opgenomen als metatag in de HTML-kop.
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Moderators toestaan het eigendom van een bericht te wijzigen"
     cors_origins: "Toegestane domeinen voor cross-origin-verzoeken (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
-    use_admin_ip_allowlist: "Beheerders kunnen zich alleen aanmelden vanaf een IP-adres dat is gedefinieerd in de lijst Gecontroleerde IP-nummers (Beheer > Logs > Gecontroleerde IP-adressen)."
     blocked_ip_blocks: "Een lijst van private IP-blokken die nooit door Discourse mogen worden verkend"
     allowed_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_onebox_iframes: "Een lijst van iframe-src-domeinen die zijn toegestaan via Onebox-insluitingen. `*` staat alle standaard Onebox-engines toe."
@@ -1888,7 +1917,6 @@ nl:
     s3_use_acls: "AWS raadt aan om geen ACL's te gebruiken op S3-buckets. Schakel deze optie alleen uit als je machtigingsbeleid wilt configureren op de geconfigureerde 's3_upload_bucket' en 's3_backup_bucket'."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."
-    backup_location: "Locatie waar back-ups worden opgeslagen. BELANGRIJK: S3 vereist geldige S3-aanmeldgegevens in Bestandsinstellingen. Als je dit wijzigt van Lokaal naar S3, moet je de raketaak 's3:ensure_cors_rules' uitvoeren."
     backup_gzip_compression_level_for_uploads: "Gzip-compressieniveau voor het comprimeren van uploads."
     include_thumbnails_in_backups: "Gegenereerde miniaturen opnemen in back-ups. Uitschakelen hiervan maakt back-ups kleiner, maar vereist opnieuw opbouwen van alle berichten na een terugzetactie."
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld bijwerken, in seconden."
@@ -2071,7 +2099,6 @@ nl:
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
     auto_silence_fast_typers_on_first_post: "Demp automatisch gebruikers die niet aan `fast typing threshold` voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
-    auto_silence_first_post_regex: "Hoofdletterongevoelige reguliere expressie die bij een overeenkomst het eerste bericht van een gebruiker dempt en in de goedkeuringswachtrij plaatst. Voorbeeld: bizar|a[bc]a zorgt ervoor dat alle eerste berichten die bizar, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
     reviewable_claiming: "Moet beoordeelbare inhoud worden geclaimd voordat er een actie op kan worden uitgevoerd?"
     reviewable_default_topics: "Beoordeelbare inhoud standaard gegroepeerd op topic weergeven"
     reviewable_default_visibility: "Geen beoordeelbare items weergeven, tenzij ze aan deze prioriteit voldoen"
@@ -2399,6 +2426,8 @@ nl:
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
+    nested_replies_max_depth: "Maximale visuele nestdiepte voor antwoorden in thread. Berichten die dieper zijn dan dit tonen een link 'Doorgaan met deze thread'."
+    nested_replies_cap_nesting_depth: "Beperk antwoordnesting op de maximale visuele diepte. Als dit is ingeschakeld, worden antwoorden op het diepste niveau opnieuw gelijkliggend in plaats van onderliggend."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_email: "Ongeldig e-mailadres."
@@ -4055,7 +4084,7 @@ nl:
     see_more: "Meer"
     search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
-    home: "Ga naar de startpagina"
+    home: "Naar de startpagina"
     placeholder: "Zoek topics op titel of trefwoorden…"
   offline:
     title: "Kan app niet laden"

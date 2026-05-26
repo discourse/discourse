@@ -6,6 +6,10 @@
 
 nl:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Gegevensverkenner"
     errors:
       explorer:
         no_semicolons: "Verwijder de puntkomma's uit de query."
@@ -19,6 +23,9 @@ nl:
       create: "Maken"
       create_placeholder: "Querynaam..."
       description_placeholder: "Voer hier een beschrijving in"
+      ai:
+        generate: "Genereren"
+        optional: "optioneel"
       import:
         label: "Importeren"
         unparseable_json: "Onparseerbaar JSON-bestand."
@@ -35,19 +42,14 @@ nl:
           yes: "Ja"
           no: "Nee"
           null_: "Null"
-      export: "Exporteren"
       view_json: "JSON weergeven"
       save: "Wijzigingen opslaan"
       run: "Uitvoeren"
       undo: "Wijzigingen negeren"
-      edit: "Bewerken"
       delete: "Verwijderen"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabel"
-      show_graph: "Grafiek"
       others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als je de pagina verlaat."
       run_time: "Query voltooid in %{value} ms."
+      cached_result_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
       result_count:
         one: "%{count} resultaat."
         other: "%{count} resultaten."
@@ -62,7 +64,6 @@ nl:
       query_time: "Laatste uitvoering"
       query_user: "Gemaakt door"
       column: "Kolom %{number}"
-      explain_label: "Queryplan bijvoegen?"
       reset_params: "Resetten"
       search_placeholder: "Zoeken..."
       no_search_results: "Er zijn geen resultaten gevonden voor je tekst."

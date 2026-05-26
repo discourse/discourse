@@ -242,8 +242,8 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.latest")}"
-    @link = "#{Discourse.base_url}/latest"
-    @atom_link = "#{Discourse.base_url}/latest.rss"
+    @link = filtered_topic_list_url("#{Discourse.base_url}/latest")
+    @atom_link = filtered_topic_list_url("#{Discourse.base_url}/latest.rss")
     @description = I18n.t("rss_description.latest")
     @topic_list = topic_query(nil, order: "created").list_latest
 
@@ -254,11 +254,11 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.top")}"
-    @link = "#{Discourse.base_url}/top"
-    @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
     period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
     TopTopic.validate_period(period)
+    @link = filtered_topic_list_url("#{Discourse.base_url}/top", period: period)
+    @atom_link = filtered_topic_list_url("#{Discourse.base_url}/top.rss", period: period)
 
     @topic_list = topic_query(nil).list_top_for(period)
 
@@ -269,8 +269,8 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.hot")}"
-    @link = "#{Discourse.base_url}/hot"
-    @atom_link = "#{Discourse.base_url}/hot.rss"
+    @link = filtered_topic_list_url("#{Discourse.base_url}/hot")
+    @atom_link = filtered_topic_list_url("#{Discourse.base_url}/hot.rss")
     @description = I18n.t("rss_description.hot")
 
     @topic_list = topic_query(nil).list_hot
@@ -283,8 +283,10 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{@category.name} - #{SiteSetting.title}"
-    @link = "#{Discourse.base_url_no_prefix}#{@category.url}"
-    @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
+    @link =
+      filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}", category: nil)
+    @atom_link =
+      filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}.rss", category: nil)
     @description =
       "#{I18n.t("topics_in_category", category: @category.name)} #{@category.description}"
     @topic_list = topic_query.list_new_in_category(@category)
@@ -299,8 +301,8 @@ class ListController < ApplicationController
 
     @title =
       "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{target_user.full_url}/activity/topics"
-    @atom_link = "#{target_user.full_url}/activity/topics.rss"
+    @link = filtered_topic_list_url("#{target_user.full_url}/activity/topics")
+    @atom_link = filtered_topic_list_url("#{target_user.full_url}/activity/topics.rss")
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
 
     @topic_list = topic_query(nil, order: "created").public_send("list_topics_by", target_user)
@@ -356,8 +358,8 @@ class ListController < ApplicationController
 
       @description = I18n.t("rss_description.top_#{period}")
       @title = "#{SiteSetting.title} - #{@description}"
-      @link = "#{Discourse.base_url}/top?period=#{period}"
-      @atom_link = "#{Discourse.base_url}/top.rss?period=#{period}"
+      @link = filtered_topic_list_url("#{Discourse.base_url}/top", period: period)
+      @atom_link = filtered_topic_list_url("#{Discourse.base_url}/top.rss", period: period)
       @topic_list = topic_query(nil).list_top_for(period)
 
       render "list", formats: [:rss]
@@ -383,6 +385,16 @@ class ListController < ApplicationController
 
   def topic_query(user = current_user, opts = {})
     TopicQuery.new(user, build_topic_list_options.merge(opts))
+  end
+
+  def filtered_topic_list_url(base_url, extra_params = {})
+    query_params =
+      build_topic_list_options
+        .merge(extra_params)
+        .except(:api_key, :api_username, :user_api_key)
+        .compact
+
+    query_params.present? ? "#{base_url}?#{query_params.to_query}" : base_url
   end
 
   def page_params

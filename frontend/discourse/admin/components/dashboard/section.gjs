@@ -41,6 +41,7 @@ export default class DashboardSection extends Component {
       >
         {{yield (hash startDate=@startDate endDate=@endDate)}}
       </div>
+      {{yield to="footer"}}
     </section>
   </template>
 }

@@ -4334,6 +4334,25 @@ lt:
         sections:
           reports:
             title: "Pranešimai"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Temos"
+              posts: "Pranešimai"
+              share: "Dalintis"
+            whos_posting:
+              all_categories: "Visos kategorijos"
+              staff: "Personalas"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Naujas"
+                "1": "Pagrindinis"
+                "2": "Narys"
+                "3": "Nuolatinės"
+                "4": "Lyderis"
+        site_traffic:
+          series:
+            anonymous: "Anonimas"
         period:
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"

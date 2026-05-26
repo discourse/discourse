@@ -896,6 +896,29 @@ gl:
       xaxis: "Día"
       yaxis: "Número de novos colaboradores"
       description: "Número de usuarios que publicaron por primeira vez durante este período."
+    activity_by_category:
+      labels:
+        category: "Categoría"
+        topics: "Temas"
+        posts: "Publicacións"
+        share: "Compartir"
+    posters_by_member_type:
+      labels:
+        count: "Publicacións"
+        share: "Compartir"
+      types:
+        staff: "Equipo"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membros"
+        share: "Compartir"
+      levels:
+        "0": "Novo"
+        "1": "Básico"
+        "2": "Membro"
+        "3": "Normal"
+        "4": "Líder"
     trust_level_growth:
       title: "Crecemento do nivel de confianza"
       xaxis:
@@ -926,6 +949,9 @@ gl:
     consolidated_page_views_browser_detection:
       yaxis: "Día"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anónimo"
+        page_view_crawler: "Rastrexadores"
       yaxis: "Día"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1036,6 +1062,12 @@ gl:
         num_clicks: "Clics"
         num_topics: "Temas"
       description: "Usuarios listados polo número de clics nas ligazóns que compartiron."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visitas"
     top_traffic_sources:
       title: "Fontes con máis tráfico"
       xaxis: "Dominio"
@@ -1315,7 +1347,6 @@ gl:
     ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese estabelecer como verdadeira para activar CORS."
-    use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
     blocked_ip_blocks: "Unha listaxe de bloques IP privados que Discourse nunca debería rastrexar"
     allowed_internal_hosts: "Unha listaxe de servidores internos que Discourse pode rastrexar de forma segura para as oneboxing e outros fins"
     allowed_onebox_iframes: "Unha listase de dominios iframe src que se permiten a través de incorporación Onebox. \"*\" permitirá todos os motores Onebox predeterminados."

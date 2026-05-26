@@ -739,6 +739,8 @@ export function applyDefaultHandlers() {
   pretender.post("/u/action/send_activation_email", success);
   pretender.put("/u/update-activation-email", success);
 
+  pretender.post("/anonymous-action", success);
+
   pretender.get("/session/hp.json", function () {
     return response({
       value: "32faff1b1ef1ac3",

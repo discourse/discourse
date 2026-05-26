@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProblemCheck::EmailDeliveryFailures do
+RSpec.describe ProblemCheck::EmailSendingFailures do
   subject(:check) { described_class.new }
 
   describe ".call" do
@@ -34,7 +34,7 @@ RSpec.describe ProblemCheck::EmailDeliveryFailures do
       it do
         expect(check).to(
           have_a_problem.with_priority("low").with_message(
-            "Email delivery has failed once in the past 24 hours. Check the <a href='/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details.",
+            "Email sending has failed once in the past 24 hours. Check the <a href='/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details.",
           ),
         )
       end

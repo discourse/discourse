@@ -70,6 +70,7 @@ pl_PL:
       confirm_solved_removal_confirm: "Potwierdź"
       confirm_solved_removal_cancel: "Anuluj"
       shared_issue:
+        label_zero: "Ja też"
         label:
           one: "Ja również (%{count})"
           few: "Ja również (%{count})"

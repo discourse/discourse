@@ -1377,6 +1377,43 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    activity_by_category:
+      title: "Activity by category"
+      description: "Topics, posts, and member participation per category in the selected period. Share is each category's percentage of total activity across the listed categories; Vs Prior is the change in share compared with the previous period of equal length."
+      labels:
+        category: "Category"
+        topics: "Topics"
+        posts: "Posts"
+        page_views: "Page views"
+        share: "Share"
+        vs_prior: "Vs Prior"
+    posters_by_member_type:
+      title: "Who's posting?"
+      description: "Posts authored in the selected period, bucketed by member type. \"New members\" signed up during the period, \"Returning\" signed up before it, and \"Staff\" are admins or moderators."
+      labels:
+        member_type: "Member type"
+        count: "Posts"
+        share: "Share"
+      types:
+        new_members: "New members"
+        returning: "Returning"
+        staff: "Staff"
+    trust_level_pipeline:
+      title: "Trust level pipeline"
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Trust level"
+        count: "Members"
+        share: "Share"
+        moves_in: "Moves in"
+        moves_out: "Moves out"
+      levels:
+        "0": "New"
+        "1": "Basic"
+        "2": "Member"
+        "3": "Regular"
+        "4": "Leader"
     trust_level_growth:
       title: "Trust Level growth"
       xaxis:
@@ -1542,6 +1579,18 @@ en:
         num_clicks: "Clicks"
         num_topics: "Topics"
       description: "Users listed by number of clicks on links they have shared."
+    top_countries_by_browser_pageviews:
+      title: "Top countries"
+      description: "Countries driving the most browser pageviews to your forum in the selected period."
+      labels:
+        country_code: "Country code"
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      title: "Top referrers"
+      description: "External sites referring the most browser pageviews to your forum in the selected period."
+      labels:
+        normalized_referrer: "Referrer"
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -1751,9 +1800,9 @@ en:
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
-      email_delivery_failures:
-        one: "Email delivery has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
-        other: "Email delivery has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+      email_sending_failures:
+        one: "Email sending has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+        other: "Email sending has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -1772,6 +1821,9 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
+    reports_section:
+      providers:
+        core_report: "Standard"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -2519,8 +2571,6 @@ en:
 
     dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
 
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
-
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
     pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recipient has not been seen more than n months ago."
@@ -2803,7 +2853,6 @@ en:
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
@@ -3421,7 +3470,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3437,7 +3486,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -4091,6 +4140,15 @@ en:
 
     email_bounced: |
       The message to %{email} bounced.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
+
+    email_sending_failed: |
+      Sending the message to %{email} failed.
 
       ### Details
 
@@ -5662,6 +5720,7 @@ en:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'

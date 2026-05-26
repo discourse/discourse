@@ -1395,6 +1395,30 @@ cs:
       xaxis: "Den"
       yaxis: "Počet nových přispěvatelů"
       description: "Počet uživatelů, kteří během tohoto období vytvořili svůj první příspěvek."
+    activity_by_category:
+      labels:
+        category: "Kategorie"
+        topics: "Témata"
+        posts: "Příspěvky"
+        share: "Sdílet"
+    posters_by_member_type:
+      labels:
+        count: "Příspěvky"
+        share: "Sdílet"
+      types:
+        staff: "Redakce"
+    trust_level_pipeline:
+      description_link: "https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29"
+      labels:
+        level: "Úroveň důvěry"
+        count: "Členové"
+        share: "Sdílet"
+      levels:
+        "0": "Nový"
+        "1": "Základní"
+        "2": "Člen"
+        "3": "Stálý člen"
+        "4": "Leader"
     trust_level_growth:
       title: "Růst úrovně důvěry"
       xaxis:
@@ -1438,9 +1462,8 @@ cs:
     site_traffic:
       title: "Návštěvnost stránek"
       xaxis:
-        page_view_anon_browser: "Zobrazení (anonymní)"
-        page_view_logged_in_browser: "Zobrazení (přihlášení)"
-        page_view_crawler: "Známé prohledávače"
+        page_view_anon_browser: "Anonymní"
+        page_view_crawler: "Vyhledávače"
         page_view_other: "Ostatní provoz"
       yaxis: "Den"
       description: "Počty zobrazených stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další provoz."
@@ -1555,6 +1578,12 @@ cs:
         num_clicks: "Kliknutí"
         num_topics: "Témata"
       description: "Uživatelé uvedení podle počtu kliknutí na odkazy, které sdíleli."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
     top_traffic_sources:
       title: "Zdroje provozu"
       xaxis: "Doména"
@@ -1940,7 +1969,6 @@ cs:
     moderators_manage_groups: "Povolit moderátorům vytvářet a spravovat skupiny"
     moderators_change_post_ownership: "Povolit moderátorům změnit vlastnictví příspěvku"
     cors_origins: "Povolené origins pro cross-origin požadavky (CORS). Každý origin musí obsahovat http:// nebo https://. Proměnná prostředí DISCOURSE_ENABLE_CORS musí být nastavena na hodnotu true, aby bylo možné povolit CORS."
-    use_admin_ip_allowlist: "Administrátoři se mohou přihlásit pouze v případě, že se nacházejí na IP adrese definované v seznamu filtrovaných IP adres (Administrace > Protokoly a monitoring > Filtrované IP)."
     blocked_ip_blocks: "Seznam bloků soukromých IP adres, které by Discourse nikdy neměl procházet"
     allowed_internal_hosts: "Seznam interních hostitelů, které může Discourse bezpečně procházet pro OneBoxing a další účely."
     allowed_onebox_iframes: "Seznam domén iframe src, které jsou povoleny prostřednictvím vkládání do OneBoxu. `*` povolí všechny výchozí enginy OneBoxu."
@@ -2072,7 +2100,6 @@ cs:
     s3_use_acls: "AWS doporučuje nepoužívat ACL na S3 bucketech; zaškrtnutí této možnosti zrušte pouze v případě, že chcete konfigurovat zásady oprávnění na nakonfigurovaných `s3_upload_bucket` a `s3_backup_bucket`."
     backup_time_of_day: "Čas v UTC, kdy má dojít k zálohování."
     backup_with_uploads: "Zahrnout do plánovaných záloh i nahrané soubory. Zakázáním této možnosti se zálohuje pouze databáze."
-    backup_location: "Umístění, kde jsou uloženy zálohy. DŮLEŽITÉ: S3 vyžaduje platné přihlašovací údaje S3. Při změně nastavení z Lokální na S3 je nutné spustit úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň komprese Gzip použitá pro kompresi nahraných souborů."
     include_thumbnails_in_backups: "Zahrnout do záloh vygenerované miniatury (thumbnails). Zakázáním této možnosti se zmenší velikost záloh, ale po obnovení bude nutné přegenerovat (rebake) všechny příspěvky."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
@@ -2253,7 +2280,6 @@ cs:
     auto_respond_to_flag_actions: "Povolit automatickou odpověď při odebírání příznaku nahlášení."
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
-    auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."

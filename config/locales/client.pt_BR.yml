@@ -6143,8 +6143,29 @@ pt_BR:
             title: "Tráfego do site"
           engagement:
             title: "Engajamento"
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Postagens"
+              share: "Compartilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Equipe"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nova"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Regular"
+                "4": "Líder"
+              trend:
+                stable: "estável"
         configure:
           button: "Configurar"
+        site_traffic:
+          series:
+            anonymous: "Anônimo(a)"
+            crawlers: "Rastreadores"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"

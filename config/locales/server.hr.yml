@@ -922,6 +922,29 @@ hr:
       xaxis: "Dan"
     new_contributors:
       xaxis: "Dan"
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Tema"
+        posts: "Postovi"
+        share: "Podijeli"
+    posters_by_member_type:
+      labels:
+        count: "Postovi"
+        share: "Podijeli"
+      types:
+        staff: "Osoblje"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Članovi"
+        share: "Podijeli"
+      levels:
+        "0": "Novo"
+        "1": "Osnovno"
+        "2": "Član"
+        "3": "Stalni član"
+        "4": "Vođa"
     trust_level_growth:
       yaxis: "Dan"
     consolidated_page_views:
@@ -943,6 +966,8 @@ hr:
     consolidated_page_views_browser_detection:
       yaxis: "Dan"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonimno"
       yaxis: "Dan"
     dau_by_mau:
       xaxis: "Dan"
@@ -1032,6 +1057,12 @@ hr:
         num_clicks: "Klikova"
         num_topics: "Teme"
       description: "Korisnici navedeni prema broju klikova na poveznice koje su podijelili."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Posjeta"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Posjeta"
     top_traffic_sources:
       title: "Najaktivnijih izvora prometa"
       xaxis: "Domena"
@@ -1260,7 +1291,6 @@ hr:
     enable_escaped_fragments: "Vratite se na Googleov Ajax-Crawling API ako se ne otkrije alat za indeksiranje. Pogledajte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Dopusti moderatorima promjenu vlasništva posta"
     cors_origins: "Dopušteni izvori za zahtjeve s različitim izvorima (CORS). Svako podrijetlo mora sadržavati http:// ili https://. Varijabla env DISCOURSE_ENABLE_CORS mora biti postavljena na true da bi se omogućio CORS."
-    use_admin_ip_allowlist: "Administratori se mogu prijaviti samo ako su na IP adresi definiranoj na popisu Screened IPs (Administrator > Dnevnici > Screened Ips)."
     blocked_ip_blocks: "Popis privatnih IP blokova koje Discourse nikada ne bi trebao indeksirati"
     allowed_internal_hosts: "Popis internih hostova koje diskurs može sigurno indeksirati za oneboxing i druge svrhe"
     version_checks: "Pingaj Discourse Hub za dostupna ažuriranja i prikaži obavijesti o novim verzijama na <a href='%{base_path}/admin' target='_blank'>/admin</a> nadzornoj ploči"
@@ -1394,7 +1424,6 @@ hr:
     num_hours_to_close_topic: "Broj sati za pauziranje teme za intervenciju."
     auto_respond_to_flag_actions: "Omogući automatski odgovor pri uklanjanju oznake."
     auto_silence_fast_typers_max_trust_level: "Maksimalna razina povjerenja za automatsko utišavanje brzih tipkača"
-    auto_silence_first_post_regex: "Regularni izraz koji ne razlikuje velika i mala slova koji će, ako se proslijedi, utišati prvu objavu korisnika i poslati je u red čekanja za odobrenje. Primjer: raging|a[bc]a , uzrokovat će prvo utišavanje svih postova koji sadrže raging ili aba ili aca. Odnosi se samo na prvi post. ZASTARJELO: Umjesto toga koristite utišavanje promatranih riječi."
     reviewable_claiming: "Treba li potraživati sadržaj koji se može pregledati prije nego što se na njega može djelovati?"
     reviewable_default_topics: "Prikaži sadržaj koji se može pregledati prema zadanim postavkama grupiran prema temi"
     unsubscribe_via_email: "Omogućite korisnicima da otkažu pretplatu na e-poštu slanjem e-pošte s 'unsubscribe' u naslovu ili tijelu poruke"

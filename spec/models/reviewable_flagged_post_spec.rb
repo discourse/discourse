@@ -496,6 +496,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_disagree" do
+    it "restores a hidden post even when the author would no longer pass post validations" do
+      SiteSetting.newuser_max_embedded_media = 1
+
+      author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      flagged_post =
+        create_post(
+          user: author,
+          raw: "![one](http://example.com/one.png)\n![two](http://example.com/two.png)",
+        )
+      reviewable = PostActionCreator.spam(user, flagged_post).reviewable
+      flagged_post.hide!(PostActionType.types[:spam])
+
+      author.update!(trust_level: TrustLevel[0])
+
+      expect { reviewable.perform(moderator, :disagree) }.not_to raise_error
+      expect(flagged_post.reload.hidden).to eq(false)
+      expect(flagged_post.topic.reload.visible).to eq(true)
+    end
+  end
+
   describe "#perform_disagree_and_restore" do
     it "notifies the user about the flagged post being restored" do
       reviewable = Fabricate(:reviewable_flagged_post)

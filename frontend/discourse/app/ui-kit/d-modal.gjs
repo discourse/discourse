@@ -449,6 +449,10 @@ export default class DModal extends Component {
             {{/if}}
           </div>
 
+          {{#if (and (has-block "aboveFooter") (not @hideFooter))}}
+            {{yield to="aboveFooter"}}
+          {{/if}}
+
           {{#if (and (has-block "footer") (not @hideFooter))}}
             <div class="d-modal__footer">
               {{yield to="footer"}}

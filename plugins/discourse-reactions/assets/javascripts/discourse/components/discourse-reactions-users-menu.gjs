@@ -79,6 +79,13 @@ export default class DiscourseReactionsUsersMenu extends Component {
     });
   }
 
+  get activeFilterTotalUsers() {
+    if (!this.activeFilter) {
+      return this.post.reaction_users_count;
+    }
+    return this.reactions.find((r) => r.id === this.activeFilter)?.count;
+  }
+
   @action
   registerReset(resetFn) {
     this.#resetCallback = resetFn;
@@ -100,6 +107,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
     <PostUsersMenu
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
+      @totalUsers={{this.activeFilterTotalUsers}}
     >
       <:header as |resetAndReload|>
         {{this.registerReset resetAndReload}}

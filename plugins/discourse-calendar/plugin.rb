@@ -773,4 +773,32 @@ after_initialize do
     report.data = (group_usernames & on_holiday_usernames).map { |username| { username: username } }
     report.total = report.data.count
   end
+
+  register_anonymous_action("rsvp_event") do |user, params|
+    event_id = params["event_id"]
+    recurring = ActiveModel::Type::Boolean.new.cast(params["recurring"])
+    existing_invitee = DiscoursePostEvent::Invitee.find_by(post_id: event_id, user_id: user.id)
+
+    if existing_invitee
+      DiscoursePostEvent::UpdateInvitee.call(
+        params: {
+          event_id: event_id,
+          invitee_id: existing_invitee.id,
+          status: params["status"],
+          recurring: recurring,
+        },
+        guardian: user.guardian,
+      )
+    else
+      DiscoursePostEvent::CreateInvitee.call(
+        params: {
+          event_id: event_id,
+          status: params["status"],
+          recurring: recurring,
+          user_id: user.id,
+        },
+        guardian: user.guardian,
+      )
+    end
+  end
 end

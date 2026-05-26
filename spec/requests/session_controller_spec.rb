@@ -587,6 +587,14 @@ RSpec.describe SessionController do
         expect(response.body).to include("User #{user.username} is not active")
         expect(session[:current_user_id]).to be_blank
       end
+
+      it "does not replay a queued anonymous action" do
+        AnonymousAction.expects(:consume).never
+
+        get "/session/#{user.username}/become"
+
+        expect(response).to be_redirect
+      end
     end
   end
 

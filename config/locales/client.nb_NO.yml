@@ -4522,6 +4522,25 @@ nb_NO:
         sections:
           reports:
             title: "Rapporter"
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Emner"
+              posts: "Innlegg"
+              share: "Del"
+            whos_posting:
+              all_categories: "Alle kategorier"
+              staff: "Stab"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Ny"
+                "1": "Basic"
+                "2": "Medlem"
+                "3": "Aktivt medlem"
+                "4": "Leder"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
         period:
           last_7_days: "Siste 7 dager"
           last_30_days: "Siste 30 dager"

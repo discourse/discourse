@@ -2180,6 +2180,26 @@ be:
         sections:
           reports:
             title: "Справаздачы"
+          engagement:
+            activity_by_category:
+              category: "Катэгорыя"
+              topics: "тэмы"
+              posts: "Допісы"
+              share: "Абагуліць"
+            whos_posting:
+              all_categories: "Усе катэгорыі"
+              staff: "Персанал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новы"
+                "1": "асноўнай"
+                "2": "Член"
+                "3": "рэгулярнае"
+                "4": "лідэр"
+        site_traffic:
+          series:
+            anonymous: "ананімны"
+            crawlers: "Краўлеры пошукавых сістэм"
         reports:
           today: "сёння"
           yesterday: "учора"

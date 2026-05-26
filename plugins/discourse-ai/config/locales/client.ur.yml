@@ -70,6 +70,8 @@ ur:
         expand_list:
           one: "(%{count} مزید)"
           other: "(%{count} مزید)"
+        nav:
+          enabled: "فعال شدہ"
         filters:
           all: "تمام"
           reset: "رِی سَیٹ"

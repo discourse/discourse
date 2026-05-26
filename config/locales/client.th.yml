@@ -2689,6 +2689,24 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        sections:
+          engagement:
+            activity_by_category:
+              category: "หมวดหมู่"
+              topics: "หัวข้อ"
+              posts: "โพส"
+              share: "แบ่งปัน"
+            whos_posting:
+              all_categories: "หมวดหมู่ทั้งหมด"
+              staff: "ทีมงาน"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "ใหม่"
+                "2": "สมาชิก"
+                "3": "ทั่วไป"
+        site_traffic:
+          series:
+            anonymous: "ไม่ระบุชื่อ"
         period:
           last_7_days: "7 วันที่ผ่านมา"
           last_30_days: "30 วันที่ผ่านมา"

@@ -13,6 +13,9 @@ nl:
       editing:
         one: "bewerkt"
         other: "bewerken"
+      translating:
+        one: "vertaalt"
+        other: "vertalen"
       replying_to_topic:
         one: "is aan het typen"
         other: "zijn aan het typen"

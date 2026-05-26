@@ -122,6 +122,9 @@ export default class Topic extends RestModel {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
+      if (result.tags) {
+        props.tags = result.tags;
+      }
       if (topic.is_shared_draft) {
         props.destination_category_id = props.category_id;
         delete props.category_id;
@@ -1093,6 +1096,11 @@ export default class Topic extends RestModel {
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
       data: { tags: tags || [] },
+    }).then((result) => {
+      if (result?.tags) {
+        this.set("tags", result.tags);
+      }
+      return result;
     });
   }
 }

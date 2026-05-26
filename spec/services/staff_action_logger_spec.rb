@@ -79,6 +79,30 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "#log_post_recover" do
+    fab!(:topic)
+    fab!(:reply, :post)
+
+    it "raises an error when post is nil" do
+      expect { logger.log_post_recover(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error when post is not a Post" do
+      expect { logger.log_post_recover(topic) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_post_recover(reply) }.to change { UserHistory.count }.by(1)
+    end
+
+    it "truncates overly long values" do
+      long_reply = Fabricate(:post, topic: topic, skip_validation: true, raw: long_string)
+      expect { logger.log_post_recover(long_reply) }.to change { UserHistory.count }.by(1)
+      log = UserHistory.last
+      expect(log.details.size).to be_between(50_000, 110_000)
+    end
+  end
+
   describe "log_topic_delete_recover" do
     fab!(:topic)
 

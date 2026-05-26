@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -2965,6 +2966,28 @@ class _PluginApi {
    */
   registerNotificationTypeRenderer(notificationType, func) {
     registerNotificationTypeRenderer(notificationType, func);
+  }
+
+  /**
+   * Registers a component used to render a report on the customisable
+   * Reports section of the new admin dashboard. Pair with the server-side
+   * `register_admin_dashboard_report_source` registration: the source name
+   * passed here matches the provider's `source_name`. The component
+   * receives `@item`, `@payload`, and `@filters` and is mounted inside the
+   * card's chart area; the card frame (title, label pill, X-to-remove) is
+   * owned by core.
+   *
+   * ```
+   * import MyReportCard from "discourse/plugins/my-plugin/discourse/components/my-report-card";
+   *
+   * api.registerAdminDashboardReportRenderer("my_source", MyReportCard);
+   * ```
+   *
+   * @param {string} source - The provider's source_name.
+   * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
+   */
+  registerAdminDashboardReportRenderer(source, componentClass) {
+    registerAdminDashboardReportRenderer(source, componentClass);
   }
 
   /**
