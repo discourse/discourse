@@ -7,6 +7,11 @@ module Jobs
     def execute(args)
       if SiteSetting.must_approve_users && SiteSetting.pending_users_reminder_delay_minutes >= 0
         query = AdminUserIndexQuery.new(query: "pending", stats: false).find_users_query # default order is: users.created_at DESC
+        # Only count users whose ReviewableUser is still pending. Without this the
+        # reminder counts users whose reviewable has been rejected but whose row
+        # was kept (e.g. they had posts), which produces notifications pointing
+        # at an empty `/review` queue.
+        query = query.where(id: ReviewableUser.pending.select(:target_id))
         if SiteSetting.pending_users_reminder_delay_minutes > 0
           query =
             query.where(
