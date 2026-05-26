@@ -1635,7 +1635,7 @@ posting:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/-"
+      learn_more_url: "https://meta.discourse.org/t/-/123456"
   klipy_api_key:
     default: ""
     client: true
