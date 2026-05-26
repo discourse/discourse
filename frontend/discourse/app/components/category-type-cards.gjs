@@ -9,6 +9,15 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
+function unavailableBadgeText(type) {
+  if (type.required_plugin) {
+    return i18n("category.choose_type.requires_plugin", {
+      plugin_name: type.required_plugin,
+    });
+  }
+  return i18n("category.choose_type.unavailable");
+}
+
 export default class CategoryTypeCards extends Component {
   @service categoryTypeChooser;
   @service router;
@@ -53,7 +62,7 @@ export default class CategoryTypeCards extends Component {
                 @name="category-type-card-top-right-corner"
                 @outletArgs={{lazyHash type=type}}
               >
-                {{i18n "category.choose_type.requires_plugin"}}
+                {{unavailableBadgeText type}}
               </PluginOutlet>
             </span>
           {{/unless}}

@@ -46,6 +46,62 @@ RSpec.describe Categories::Configure do
       it { is_expected.to fail_a_policy(:type_is_available) }
     end
 
+    context "when type does not enable a plugin (Discussion)" do
+      context "when user is a moderator" do
+        fab!(:moderator)
+
+        let(:dependencies) { { guardian: moderator.guardian } }
+
+        before { SiteSetting.moderators_manage_categories = true }
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
+    context "when type enables a plugin" do
+      let(:test_type_class) do
+        Class.new(Categories::Types::Base) do
+          type_id :test_plugin_type
+
+          def self.enable_plugin
+          end
+
+          def self.category_matches?(category)
+            false
+          end
+
+          def self.find_matches
+            Category.none
+          end
+
+          def self.configure_category(category, guardian:, configuration_values: {})
+          end
+
+          def self.unconfigure_category(category, guardian:)
+          end
+        end
+      end
+
+      let(:params) { { category_id: category.id, category_type: "test_plugin_type" } }
+
+      before { Categories::TypeRegistry.register(test_type_class) }
+      after { Categories::TypeRegistry.reset! }
+
+      context "when user is a moderator" do
+        fab!(:moderator)
+
+        let(:dependencies) { { guardian: moderator.guardian } }
+
+        before { SiteSetting.moderators_manage_categories = true }
+
+        it { is_expected.to fail_a_policy(:type_is_available) }
+      end
+
+      context "when user is an admin" do
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
