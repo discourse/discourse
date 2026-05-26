@@ -522,7 +522,17 @@ class Topic < ActiveRecord::Base
   def limit_private_messages_per_day
     return unless private_message?
     return if subtype == TopicSubtype.notify_moderators
-    apply_per_day_rate_limit_for("pms", :max_personal_messages_per_day)
+    if user&.admin? && SiteSetting.limit_admin_personal_messages_per_day > 0
+      RateLimiter.new(
+        user,
+        "pms-per-day",
+        SiteSetting.limit_admin_personal_messages_per_day,
+        1.day.to_i,
+        apply_limit_to_staff: true,
+      )
+    else
+      apply_per_day_rate_limit_for("pms", :max_personal_messages_per_day)
+    end
   end
 
   def self.fancy_title(title)
