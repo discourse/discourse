@@ -18,6 +18,7 @@ export default class CategoryCalendar extends Component {
   get canCreateEvent() {
     return (
       !!this.currentUser?.can_create_discourse_post_event &&
+      !!this.currentUser?.can_create_topic &&
       !!this.category?.canCreateTopic
     );
   }

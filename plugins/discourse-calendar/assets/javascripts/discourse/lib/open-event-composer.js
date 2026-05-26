@@ -15,8 +15,8 @@ export default async function openEventComposer({
   }
 
   const params = {
-    status: "public",
     start: start.format("YYYY-MM-DD HH:mm"),
+    status: "public",
     timezone,
   };
 
