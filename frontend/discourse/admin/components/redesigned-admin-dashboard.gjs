@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
@@ -123,41 +124,49 @@ export default class RedesignedAdminDashboard extends Component {
     <div class="db-main">
       {{#if @loadedSections}}
         {{#each @loadedSections.sections key="id" as |section|}}
-          <div class="db-main__section" data-section-id={{section.id}}>
-            {{#if (eq section.id "highlights")}}
-              <DashboardHighlights
-                @highlights={{section.data}}
-                @period={{@loadedSections.period}}
-                @loading={{@loadingSections}}
-                @fetchError={{@sectionsFetchError}}
-                @startDate={{@loadedSections.startDate}}
-                @endDate={{@loadedSections.endDate}}
-              />
-            {{else if (eq section.id "reports")}}
-              <DashboardReports
-                @startDate={{@loadedSections.startDate}}
-                @endDate={{@loadedSections.endDate}}
-              />
-            {{else if (eq section.id "traffic")}}
-              <DashboardTraffic
-                @traffic={{section.data}}
-                @period={{@loadedSections.period}}
-                @loading={{@loadingSections}}
-                @fetchError={{@sectionsFetchError}}
-                @startDate={{@loadedSections.startDate}}
-                @endDate={{@loadedSections.endDate}}
-              />
-            {{else if (eq section.id "engagement")}}
-              <DashboardEngagement
-                @engagement={{section.data}}
-                @period={{@loadedSections.period}}
-                @loading={{@loadingSections}}
-                @fetchError={{@sectionsFetchError}}
-                @startDate={{@loadedSections.startDate}}
-                @endDate={{@loadedSections.endDate}}
-              />
-            {{/if}}
-          </div>
+          {{#if (eq section.id "highlights")}}
+            <DashboardHighlights
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @highlights={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+            />
+          {{else if (eq section.id "reports")}}
+            <DashboardReports
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @data={{section.data}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+              @refreshSections={{@refreshSections}}
+            />
+          {{else if (eq section.id "traffic")}}
+            <DashboardTraffic
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @traffic={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+            />
+          {{else if (eq section.id "engagement")}}
+            <DashboardEngagement
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @engagement={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+            />
+          {{/if}}
         {{/each}}
 
         {{#unless @loadedSections.sections.length}}

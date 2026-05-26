@@ -1596,6 +1596,8 @@ zh_CN:
       failing_emails: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
       subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
       translation_overrides: "您的某些翻译替换已过时。请检查您的<a href='%{base_path}/admin/customize/site_texts?outdated=true'>文本自定义</a>。"
+      email_sending_failures:
+        other: "在过去 24 小时内，电子邮件发送失败 %{count} 次。请查看<a href='%{base_path}/admin/email-logs/skipped' target='_blank'>跳过的电子邮件日志</a>，了解 SMTP 错误详情。"
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
@@ -1613,6 +1615,9 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
+    reports_section:
+      providers:
+        core_report: "标准"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -2239,7 +2244,6 @@ zh_CN:
     allow_profile_backgrounds: "允许用户上传个人资料背景。"
     get_a_room_threshold: "在被警告之前，用户必须在同一话题中向同一个人发布的帖子数。"
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
-    enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
     pm_warn_user_last_seen_months_ago: "创建新私信时，如果目标接收者自超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
@@ -2463,7 +2467,6 @@ zh_CN:
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
-    viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 <a href='https://meta.discourse.org/t/384280'>Meta</a> 上告诉我们。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的支持语言区域列表。站点的默认语言区域始终包含在内。需要启用 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
@@ -3019,7 +3022,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
   new_version_mailer_with_notes:
@@ -3034,7 +3037,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
@@ -3634,6 +3637,14 @@ zh_CN:
       ### 详细信息
 
       ```text
+      %{raw}
+      ```
+    email_sending_failed: |
+      向 %{email} 发送信息失败。
+
+      ### 详情
+
+      ``` 文本
       %{raw}
       ```
     ignored_users_summary:

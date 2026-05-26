@@ -1854,11 +1854,11 @@ pl_PL:
       failing_emails: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
       subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
       translation_overrides: "Niektóre z Twoich nadpisanych tłumaczeń są nieaktualne. Sprawdź swoje <a href='%{base_path}/admin/customize/site_texts?outdated=true'>teksty witryny</a>."
-      email_delivery_failures:
-        one: "W ciągu ostatnich 24 godzin nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
-        few: "W ciągu ostatnich 24 godzin %{count} razy nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
-        many: "W ciągu ostatnich 24 godzin %{count} razy nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
-        other: "W ciągu ostatnich 24 godzin %{count} razy nie udało się dostarczyć wiadomości e-mail. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+      email_sending_failures:
+        one: "Wysyłanie wiadomości e-mail nie powiodło się raz w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        few: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        many: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
+        other: "Wysyłanie wiadomości e-mail nie powiodło się %{count} razy w ciągu ostatnich 24 godzin. Sprawdź <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>dzienniki pominiętych wiadomości e-mail</a> , aby uzyskać szczegóły błędu SMTP."
       email_polling_errored_recently:
         one: "Email polling wygenerował błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
         few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
@@ -1879,6 +1879,9 @@ pl_PL:
       admin_sidebar_deprecation: "Stary układ administracyjny jest przestarzały na rzecz nowego <a href='https://meta.discourse.org/t/-/289281'>układu paska bocznego</a> i zostanie usunięty w następnej wersji. Możesz <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>skonfigurować</a> nowy układ paska bocznego już teraz, aby wcześniej się na niego przełączyć."
       starttls_disabled: "W konfiguracji poczty wychodzącej wyłączono protokół STARTTLS. Jest to prawie nigdy konieczne. Rozważ usunięcie <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> ze swojego środowiska. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/387286'>tym temacie</a> ."
     back_from_logster_text: "Powrót do strony"
+    reports_section:
+      providers:
+        core_report: "Standardowe"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -2512,7 +2515,6 @@ pl_PL:
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     get_a_room_threshold: "Liczba wpisów dodanych przez użytkownika w odpowiedzi na wpisy tej samej osoby w jednym temacie, po której zostanie on ostrzeżony."
     dont_feed_the_trolls_threshold: "Liczba flag od innych użytkowników przed otrzymaniem ostrzeżenia."
-    enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     dominating_topic_minimum_percent: "Odsetek (%) wpisów dodanych przez użytkownika w jednym temacie, po którym otrzyma on upomnienie, że nadmiernie go dominuje."
     pm_warn_user_last_seen_months_ago: "Podczas tworzenia nowej wiadomości prywatnej ostrzegaj użytkowników, jeśli odbiorca docelowy nie został wyświetlony co najmniej n miesięcy temu."
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
@@ -2739,7 +2741,6 @@ pl_PL:
     rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
-    viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, na które można tłumaczyć treści użytkownika. Domyślne ustawienia regionalne witryny są zawsze uwzględniane. Wymagana jest włączona lokalizacja treści."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
@@ -3377,9 +3378,9 @@ pl_PL:
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
+      * Zaktualizuj za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      * Dowiedz się, co nowego w [informacjach o wydaniu](/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://meta.discourse.org)
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://releases.discourse.org/changelog/v%{new_version})
 
       * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
   new_version_mailer_with_notes:
@@ -3387,18 +3388,18 @@ pl_PL:
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
     subject_template_improved: "%{email_prefix}: Dostępna aktualizacja"
     text_body_template: |
-      Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
+      Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
 
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      - Zaktualizuj, korzystając z naszej łatwej **[aktualizacji przeglądarki jednym kliknięciem](%{base_url}/admin/update)**
+      * Zaktualizuj za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      - Zobacz, co nowego w [notatkach dotyczących wydania](https://releases.discourse.org/changelog/%{new_version})
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://releases.discourse.org/changelog/v%{new_version})
 
-      - Odwiedź [meta.discourse.org](https://meta.discourse.org) w celu uzyskania wiadomości, dyskusji i wsparcia dla Discourse
+      * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
 
-      ### Notatki dotyczące wydania
+      ### Informacje o wydaniu
 
       %{notes}
   flag_reasons:
@@ -4003,6 +4004,14 @@ pl_PL:
       ### Szczegóły
 
       ``` text
+      %{raw}
+      ```
+    email_sending_failed: |
+      Wysłanie wiadomości na adres %{email} się nie powiodło.
+
+      ### Szczegóły
+
+      `` tekst
       %{raw}
       ```
     ignored_users_summary:
@@ -5476,6 +5485,7 @@ pl_PL:
         many: "Nie można użyć wybranych tagów"
         other: "Nie można użyć wybranych tagów"
       in_this_category: '"%{tag_name}" nie może być użyty w tej kategorii'
+      not_allowed: 'Nie można użyć „%{tag_name}”'
       restricted_to:
         one: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
         few: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'

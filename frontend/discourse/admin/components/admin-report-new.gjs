@@ -16,7 +16,12 @@ import { i18n } from "discourse-i18n";
 <template>
   <div
     class={{dConcatClass "admin-report" @report.reportClasses}}
-    {{didUpdate @report.fetchOrRender @filters.startDate @filters.endDate}}
+    {{didUpdate
+      @report.fetchOrRender
+      @filters.startDate
+      @filters.endDate
+      @report.preloadedData
+    }}
   >
     {{#unless @report.isHidden}}
       <DConditionalLoadingSection @isLoading={{@report.isLoading}}>

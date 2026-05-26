@@ -459,9 +459,6 @@ importers:
       a11y-dialog:
         specifier: 8.1.5
         version: 8.1.5
-      autosize:
-        specifier: ^6.0.1
-        version: 6.0.1
       babel-import-util:
         specifier: ^3.0.1
         version: 3.0.1
@@ -3642,9 +3639,6 @@ packages:
     hasBin: true
     peerDependencies:
       postcss: ^8.1.0
-
-  autosize@6.0.1:
-    resolution: {integrity: sha512-f86EjiUKE6Xvczc4ioP1JBlWG7FKrE13qe/DxBCpe8GCipCq2nFw73aO8QEBKHfSbYGDN5eB9jXWKen7tspDqQ==}
 
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
@@ -12327,8 +12321,6 @@ snapshots:
       picocolors: 1.1.1
       postcss: 8.5.14
       postcss-value-parser: 4.2.0
-
-  autosize@6.0.1: {}
 
   available-typed-arrays@1.0.7:
     dependencies:

@@ -48,7 +48,6 @@ export default class BookmarkModal extends Component {
   @tracked postDetectedLocalTimezone = null;
   @tracked prefilledDatetime = null;
   @tracked flash = null;
-  @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
   @tracked _closeWithoutSaving = false;
   @tracked _savingBookmarkManually = false;
@@ -194,11 +193,6 @@ export default class BookmarkModal extends Component {
       .finally(() => {
         this._saving = false;
       });
-  }
-
-  @action
-  toggleShowOptions() {
-    this.showOptions = !this.showOptions;
   }
 
   @action
@@ -384,7 +378,7 @@ export default class BookmarkModal extends Component {
       </:headerPrimaryAction>
 
       <:body>
-        <div class="control-group bookmark-name-wrap">
+        <div class="control-group">
           <Input
             id="bookmark-name"
             @value={{this.bookmark.name}}
@@ -393,30 +387,21 @@ export default class BookmarkModal extends Component {
             placeholder={{i18n "post.bookmarks.name_placeholder"}}
             aria-label={{i18n "post.bookmarks.name_input_label"}}
           />
-          <DButton
-            @icon="gear"
-            @action={{this.toggleShowOptions}}
-            @ariaLabel="post.bookmarks.options"
-            @title="post.bookmarks.options"
-            class="bookmark-options-button"
-          />
         </div>
 
-        {{#if this.showOptions}}
-          <div class="bookmark-options-panel">
-            <label
-              class="control-label"
-              for="bookmark_auto_delete_preference"
-            >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-            <ComboBox
-              @content={{this.autoDeletePreferences}}
-              @value={{this.bookmark.autoDeletePreference}}
-              @id="bookmark-auto-delete-preference"
-              @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
-              class="bookmark-option-selector"
-            />
-          </div>
-        {{/if}}
+        <div class="bookmark-options-panel">
+          <label
+            class="control-label"
+            for="bookmark_auto_delete_preference"
+          >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+          <ComboBox
+            @content={{this.autoDeletePreferences}}
+            @value={{this.bookmark.autoDeletePreference}}
+            @id="bookmark-auto-delete-preference"
+            @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
+            class="bookmark-option-selector"
+          />
+        </div>
 
         {{#if this.showExistingReminderAt}}
           <div class="alert alert-info existing-reminder-at-alert">

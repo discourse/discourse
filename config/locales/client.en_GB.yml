@@ -129,6 +129,8 @@ en_GB:
           header_description: "Customise the template in which all html emails are rendered, and style using CSS"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
+        reports_section:
+          no_data: "No data to display"
       flags:
         description: "Description"
       api:

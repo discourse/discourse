@@ -31,13 +31,6 @@ module PageObjects
         find(".sidebar-section-link[data-link-name='everything']").click
       end
 
-      def click_toggle_to_desktop_view_button
-        page.click_button(
-          I18n.t("js.desktop_view"),
-          class: "sidebar-footer-actions-toggle-mobile-view",
-        )
-      end
-
       def click_outside
         width = page.evaluate_script("document.body.clientWidth")
         page.find("body").click(x: width - 1, y: 1)

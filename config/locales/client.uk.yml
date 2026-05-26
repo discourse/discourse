@@ -430,7 +430,6 @@ uk:
         since: "(з %{version})"
       toggle_safe_mode: "Увімкнути/вимкнути безпечний режим"
       toggle_verbose_localization: "Увімкнути/вимкнути детальну локалізацію"
-      toggle_mobile_view: "Переключити мобільний перегляд"
       disable_dev_tools: "Вимкнути інструменти для розробників"
       toggle_upcoming_changes_debug: "Перемкнути налагодження майбутніх змін"
     s3:
@@ -491,8 +490,6 @@ uk:
     tos: "Умови використання"
     rules: "Правила"
     conduct: "Кодекс поведінки"
-    mobile_view: "Мобільний вигляд"
-    desktop_view: "Стаціонарний вигляд"
     now: "щойно"
     read_more: "читати далі"
     more: "Більше"
@@ -5050,7 +5047,6 @@ uk:
         name_placeholder: "Для чого ця закладка?"
         name_input_label: "Назва закладки"
         set_reminder: "Нагадати мені"
-        options: "Параметри"
         actions:
           delete_bookmark:
             name: "Видалити закладку"
@@ -5838,6 +5834,7 @@ uk:
       synonyms: "Синоніми"
       synonyms_description: "Коли будуть використані наступні теґи, вони будуть замінені на <b>%{base_tag_name}</b> ."
       synonyms_inline: "Ці синоніми будуть замінені на %{base_tag_name}:"
+      synonym_hint: "→ %{tag_name}"
       save: "Збережіть назву та опис теґа"
       tag_groups_info:
         one: 'Цей теґ належить до групи &quot;%{tag_groups}&quot;.'
@@ -7092,15 +7089,27 @@ uk:
             title: "Трафік сайту"
           engagement:
             title: "Залучення"
+            fetch_error: "Не вдалося завантажити дані про взаємодію. Спробуйте оновити сторінку."
             activity_by_category:
+              title: "Активність за категоріями"
+              description: "Теми, публікації та участь учасників за категоріями."
               category: "Категорія"
               topics: "Теми"
               posts: "Дописи"
+              page_views: "Перегляди сторінок"
               share: "Поширити"
+              vs_prior: "Проти попереднього"
+              empty: "Відсутня активність у вибраний період."
             whos_posting:
+              title: "Хто публікує?"
               all_categories: "Всі розділи"
+              include_subcategories: "Включити підкатегорії"
+              new_members: "Нові учасники"
+              returning: "Повернення"
               staff: "Команда обслуговування"
+              empty: "Немає публікацій за вибраний період."
             trust_level_pipeline:
+              title: "Конвеєр рівня довіри"
               trust_levels:
                 "0": "Новий"
                 "1": "Базовий"
@@ -7108,7 +7117,36 @@ uk:
                 "3": "Звичайний"
                 "4": "Лідер"
               trend:
+                climbing:
+                  one: "+%{count} сходження"
+                  few: "+%{count} сходження"
+                  many: "+%{count} сходжень"
+                  other: "+%{count} сходжень"
+                dropping:
+                  one: "-%{count} падіння"
+                  few: "-%{count} падіння"
+                  many: "-%{count} падінь"
+                  other: "-%{count} падінь"
                 stable: "стабільна"
+              moves_in_aria:
+                one: "%{count} учасника було переміщено вгору"
+                few: "%{count} учасники було переміщено вгору"
+                many: "%{count} учасників було переміщено вгору"
+                other: "%{count} учасників було переміщено вгору"
+              moves_out_aria:
+                one: "%{count} учасник перемістився вниз"
+                few: "%{count} учасники перемістились вниз"
+                many: "%{count} учасників перемістились вниз"
+                other: "%{count} учасників перемістились вниз"
+              stable_aria: "без руху"
+        reports_section:
+          no_data: "Немає даних для відображення"
+          modal:
+            enabled_heading: "Включено"
+            all_heading: "Всі звіти"
+            apply: "Застосувати"
+            move_up: "Посунути вгору"
+            move_down: "Посунути вниз"
         configure:
           button: "Налаштувати"
           tooltip: "Налаштуйте вигляд цієї панелі для всіх користувачів сайту."

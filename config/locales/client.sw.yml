@@ -192,8 +192,6 @@ sw:
     privacy_policy: "Sera ya Faragha"
     privacy: "Faragha"
     tos: "Masharti ya Huduma"
-    mobile_view: "Mtazamo wa Simu"
-    desktop_view: "Muonekano wa Eneo Kazi"
     now: "sasa hivi"
     read_more: "soma zaidi"
     more: "Zaidi"
@@ -1913,7 +1911,6 @@ sw:
             button: "HTML"
       bookmarks:
         name: "Jina"
-        options: "Chaguo"
     category:
       none: "(hakuna kategoria)"
       all: "Kategoria Zote"
@@ -2582,6 +2579,11 @@ sw:
                 "2": "Mwanachama"
                 "3": "Kawaida"
                 "4": "Kiongozi"
+        reports_section:
+          modal:
+            enabled_heading: "Imeruhusiwa"
+            all_heading: "Ripoti zote"
+            apply: "Tumia"
         site_traffic:
           series:
             anonymous: "Asiyejulikana"

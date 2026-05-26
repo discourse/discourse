@@ -620,27 +620,7 @@ module DiscourseTagging
       end
     end
 
-    if filter_for_non_admin
-      group_ids = permitted_group_ids(guardian)
-
-      builder.where(<<~SQL, group_ids, group_ids)
-        id NOT IN (
-          (SELECT tgm.tag_id
-           FROM tag_group_permissions tgp
-           INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
-           INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
-           WHERE tgp.group_id NOT IN (?))
-
-          EXCEPT
-
-          (SELECT tgm.tag_id
-           FROM tag_group_permissions tgp
-           INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
-           INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
-           WHERE tgp.group_id IN (?))
-        )
-      SQL
-    end
+    builder.where("t.id IN (#{visible_tags(guardian).select(:id).to_sql})") if filter_for_non_admin
 
     if builder_params[:selected_tag_ids] && (opts[:for_input] || opts[:for_topic])
       one_tag_per_group_sql = +<<~SQL
@@ -712,10 +692,9 @@ module DiscourseTagging
   end
 
   def self.visible_tags(guardian)
-    if guardian&.is_admin?
-      Tag.all
-    else
-      # Visible tags either have no permissions or have allowable permissions
+    return Tag.all if guardian&.is_admin?
+
+    permitted =
       Tag
         .where.not(id: TagGroupMembership.joins(tag_group: :tag_group_permissions).select(:tag_id))
         .or(
@@ -727,11 +706,34 @@ module DiscourseTagging
                 .select("tag_group_memberships.tag_id"),
           ),
         )
-    end
+
+    filter_visible_in_accessible_categories(permitted, guardian)
   end
 
   def self.filter_visible(query, guardian = nil)
     guardian&.is_admin? ? query : query.where(id: visible_tags(guardian).select(:id))
+  end
+
+  def self.filter_visible_in_accessible_categories(query, guardian = nil)
+    return query if guardian.nil? || guardian.is_admin?
+
+    query.where(<<~SQL, ids: guardian.allowed_category_ids)
+      tags.id NOT IN (
+        SELECT tag_id FROM category_tags
+        UNION
+        SELECT tgm.tag_id
+        FROM tag_group_memberships tgm
+        INNER JOIN category_tag_groups ctg ON ctg.tag_group_id = tgm.tag_group_id
+      )
+      OR tags.id IN (
+        SELECT tag_id FROM category_tags WHERE category_id IN (:ids)
+        UNION
+        SELECT tgm.tag_id
+        FROM tag_group_memberships tgm
+        INNER JOIN category_tag_groups ctg
+          ON ctg.tag_group_id = tgm.tag_group_id AND ctg.category_id IN (:ids)
+      )
+    SQL
   end
 
   def self.hidden_tags(guardian = nil)

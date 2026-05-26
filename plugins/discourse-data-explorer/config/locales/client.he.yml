@@ -14,6 +14,9 @@ he:
       explorer:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
         dirty: "עליך לשמור את השאילתה בטרם ההרצה."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "אין תוצאות"
     explorer:
       default_query: "ברירת מחדל"
       or: "או"

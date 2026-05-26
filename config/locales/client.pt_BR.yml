@@ -358,7 +358,6 @@ pt_BR:
         condition_debugging: "Depuração de condições"
       toggle_safe_mode: "Alternar modo de segurança"
       toggle_verbose_localization: "Alternar localização detalhada"
-      toggle_mobile_view: "Alternar visualização móvel"
       disable_dev_tools: "Desativar ferramentas de desenvolvimento"
     s3:
       regions:
@@ -416,8 +415,6 @@ pt_BR:
     tos: "Termos de Serviço"
     rules: "Regras"
     conduct: "Código de Conduta"
-    mobile_view: "VIsualização Móvel"
-    desktop_view: "Visualização do Desktop"
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
@@ -4300,7 +4297,6 @@ pt_BR:
         name_placeholder: "Para que serve este favorito?"
         name_input_label: "Adicionar nome aos favoritos"
         set_reminder: "Lembrar"
-        options: "Opções"
         actions:
           delete_bookmark:
             name: "Excluir favorito"
@@ -6160,6 +6156,14 @@ pt_BR:
                 "4": "Líder"
               trend:
                 stable: "estável"
+        reports_section:
+          no_data: "Nenhum dado para exibir"
+          modal:
+            enabled_heading: "Ativados"
+            all_heading: "Todos os relatórios"
+            apply: "Aplicar"
+            move_up: "Mover para cima"
+            move_down: "Mover para baixo"
         configure:
           button: "Configurar"
         site_traffic:

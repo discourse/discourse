@@ -9,8 +9,18 @@ module AdminDashboard
         SOURCE_NAME
       end
 
+      def self.label
+        I18n.t("dashboard.reports_section.providers.core_report")
+      end
+
       def self.resolve_many(identifiers, guardian:)
-        index = available_for(guardian).index_by(&:identifier)
+        return {} if guardian.nil?
+
+        index =
+          ::Reports::ListQuery
+            .call(guardian: guardian)
+            .map { |entry| build_resolved(entry) }
+            .index_by(&:identifier)
         identifiers.each_with_object({}) do |identifier, hash|
           key = identifier.to_s
           resolved = index[key]
@@ -28,7 +38,7 @@ module AdminDashboard
 
           cached = ::Report.find_cached(key, opts)
           if cached
-            hash[key] = cached
+            hash[key] = with_empty_flag(cached)
             next
           end
 
@@ -36,16 +46,20 @@ module AdminDashboard
           next if report.blank?
 
           ::Report.cache(report)
-          hash[key] = report.as_json
+          hash[key] = with_empty_flag(report.as_json)
         end
       end
 
-      # TODO: paginate once the Manage Reports modal's list-available endpoint
-      # exists; today this returns every registered built-in report unbounded.
-      def self.available_for(guardian, search: nil)
-        entries = ::Reports::ListQuery.call(guardian: guardian)
+      def self.with_empty_flag(payload)
+        payload.merge(empty: payload[:data].blank?)
+      end
+      private_class_method :with_empty_flag
+
+      def self.list_all(search: nil, offset: 0, limit: nil)
+        entries = ::Reports::ListQuery.call(guardian: Guardian.new(Discourse.system_user))
         entries = filter_by_search(entries, search) if search.present?
-        entries.map { |entry| build_resolved(entry) }
+        sliced = limit ? entries[offset, limit] : entries[offset..]
+        Array(sliced).map { |entry| build_resolved(entry) }
       end
 
       def self.build_resolved(entry)
@@ -54,6 +68,8 @@ module AdminDashboard
           identifier: entry[:type],
           title: entry[:title],
           description: entry[:description],
+          label: label,
+          url: "/admin/reports/#{entry[:type]}",
         )
       end
       private_class_method :build_resolved

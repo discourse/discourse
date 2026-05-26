@@ -30,6 +30,7 @@ en:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Scheduled report for %{query_name}"

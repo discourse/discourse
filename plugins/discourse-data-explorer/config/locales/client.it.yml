@@ -14,6 +14,9 @@ it:
       explorer:
         no_semicolons: "Rimuovi i punti e virgola dalla query."
         dirty: "È necessario salvare la query prima di eseguirla."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nessun risultato"
     explorer:
       default_query: "Predefinito"
       or: "o"

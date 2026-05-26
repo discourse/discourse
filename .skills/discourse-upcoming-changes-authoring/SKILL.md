@@ -20,7 +20,7 @@ Key methods to understand:
 - `resolved_value(setting_name)` — Determines the *effective* value of a setting. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, the resolved value is `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them).
 - `enabled_for_user?(setting_name, user)` — The primary access check. Considers: resolved value, group restrictions, anonymous users (only get access if no group restrictions).
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
-- `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackNotifyStatusChanges` detects changes.
+- `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackStatusChanges` detects changes.
 
 **`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Define a `should_display_<upcoming_change_name>?` class method on it to gate a specific change; if no method is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
 
@@ -40,20 +40,21 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 |---------|---------|
 | `List` | Admin-only, fetches all changes with metadata, group data, and images. Filters out changes whose `ConditionalDisplay.should_display?` returns false. |
 | `Toggle` | Admin enable/disable — updates SiteSetting, clears groups when neither `staff` nor `specific_groups` is in `allow_enabled_for`, validates the requested target against `allow_enabled_for`, logs staff action, fires DiscourseEvent |
-| `Track` | Orchestrator called by the scheduled job — delegates to three action sub-services |
-| `TrackNotifyAddedChanges` | Compares current settings against event history, creates `added` events |
+| `Track` | Orchestrator called by `CheckUpcomingChanges` — delegates to three action sub-services. Does not notify admins about available changes — that happens once a week in `Jobs::NotifyAdminsOfAvailableUpcomingChanges`. |
+| `TrackAddedChanges` | Compares current settings against event history, creates `added` events |
 | `TrackRemovedChanges` | Creates `removed` events for settings no longer present |
-| `TrackNotifyStatusChanges` | Detects status changes in metadata, creates events, clears caches |
+| `TrackStatusChanges` | Detects status changes in metadata, creates events, clears caches |
 | `NotifyPromotions` | Iterates all changes and calls `NotifyPromotion` for each |
 | `NotifyPromotion` | Handles one promotion — checks policies, merges notifications, fires events |
-| `NotifyAdminsOfAvailableChange` | Notifies admins when a change reaches one status below promotion threshold |
-| `NotificationDataMerger` | Consolidates multiple change notifications into one to avoid spam |
+| `NotificationDataMerger` | Consolidates multiple change notifications into one to avoid spam (used by both the weekly availability job and `NotifyPromotion`) |
 
 **`SiteSetting::UpsertGroups`** — Manages group assignments for settings (upserts `SiteSettingGroup`, refreshes caches, notifies clients).
 
-### Scheduled Job
+### Scheduled Jobs
 
-**`app/jobs/scheduled/check_upcoming_changes.rb`** — Runs every 20 minutes inside a `DistributedMutex`. Calls `Track` then `NotifyPromotions`. Supports verbose logging via the `upcoming_change_verbose_logging` setting.
+**`app/jobs/scheduled/check_upcoming_changes.rb`** — Runs every 20 minutes inside a `DistributedMutex`. Calls `Track` (to log `added`/`removed`/`status_changed` events) then `NotifyPromotions` (which sends auto-promotion notifications immediately). Supports verbose logging via the `upcoming_change_verbose_logging` setting. **Does not** send "change available" notifications to admins — that is the weekly job below.
+
+**`app/jobs/scheduled/notify_admins_of_available_upcoming_changes.rb`** — Runs once a week. Collects every change that was either `added` at, or status-changed *to*, `promote_upcoming_changes_on_status - 1` within the last week and has no prior `admins_notified_available_change` or `admins_notified_automatic_promotion` event. Notifies all admins who have `enable_upcoming_change_available_notifications` enabled, consolidating into a single notification per admin via `NotificationDataMerger` (merging with existing unread notifications if present, otherwise creating one new notification per admin covering all newly-available changes). Gated on `UpcomingChanges.should_notify_admins?` so new sites are suppressed. Writes `admins_notified_available_change` events and a `log_upcoming_change_available` staff log entry per change.
 
 ### Frontend
 
@@ -144,13 +145,13 @@ Some upcoming changes only make sense to show admins under certain conditions �
 
 - **Display-only**: This affects whether the change appears in the admin UI list, not whether it's enabled. `enabled?` / `enabled_for_user?` still resolve normally — code paths gated on the change continue to work.
 - **N+1 by design**: `should_display?` is called once per change in the loop. If a gating method does expensive work (DB queries, plugin lookups), memoize inside the method to avoid repeated cost.
-- **Notifications still fire**: Conditional display only filters the `List` service result. `TrackNotifyAddedChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+- **Notifications still fire**: Conditional display only filters the `List` service result. `TrackAddedChanges`, `NotifyAdminsOfAvailableUpcomingChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
 
 ## Key Design Decisions
 
 ### Caching Strategy
 
-The `current_statuses` and `permanent_upcoming_changes` caches are keyed by git version (`Discourse.git_version`). This means they're naturally invalidated on every deploy — no TTL needed. Within a deploy, `TrackNotifyStatusChanges` calls `clear_caches!` when it detects metadata changes. Always call `clear_caches!` in tests after modifying metadata.
+The `current_statuses` and `permanent_upcoming_changes` caches are keyed by git version (`Discourse.git_version`). This means they're naturally invalidated on every deploy — no TTL needed. Within a deploy, `TrackStatusChanges` calls `clear_caches!` when it detects metadata changes. Always call `clear_caches!` in tests after modifying metadata.
 
 ### Auto-Promotion
 
@@ -160,9 +161,11 @@ The `resolved_value` method is the single source of truth for whether a setting 
 
 When multiple changes need notifications, `NotificationDataMerger` consolidates them into a single notification per admin. It finds existing unread notifications and merges the change names array. The frontend notification types handle singular ("Feature X"), dual ("Feature X and Feature Y"), and many ("Feature X and 2 others") display.
 
+For "change available" notifications specifically, merging also happens across the *batch* processed by the weekly `NotifyAdminsOfAvailableUpcomingChanges` job — for admins without an existing unread notification, the job builds a single new notification per admin that lists every newly-available change in that run, rather than emitting one notification per change.
+
 ### New Site Notification Suppression
 
-Notifications for `added` and `promoted` changes are skipped on new sites (determined by `Migration::Helpers.new_site?` in `lib/migration/helpers.rb` — a site is "new" if its first schema migration was less than 1 hour ago). This prevents freshly provisioned sites from being flooded with notifications for every existing upcoming change on their first run. The tracking/detection steps still execute — only the notification delivery is suppressed.
+Notifications for "change available" and "promoted" are skipped on new sites (determined by `Migration::Helpers.new_site?` in `lib/migration/helpers.rb` — a site is "new" if its first schema migration was less than 1 hour ago). Both the weekly `NotifyAdminsOfAvailableUpcomingChanges` job and the `NotifyPromotion` service guard on `UpcomingChanges.should_notify_admins?`. This prevents freshly provisioned sites from being flooded with notifications for every existing upcoming change on their first run. The tracking/detection steps still execute — only the notification delivery is suppressed.
 
 ### Group-Based Access
 
@@ -406,7 +409,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Services | `app/services/upcoming_changes/*.rb` |
 | Group upsert | `app/services/site_setting/upsert_groups.rb` |
 | Controller | `admin/config/upcoming_changes_controller.rb` |
-| Scheduled job | `app/jobs/scheduled/check_upcoming_changes.rb` |
+| Scheduled jobs | `app/jobs/scheduled/check_upcoming_changes.rb`, `app/jobs/scheduled/notify_admins_of_available_upcoming_changes.rb` |
 | Problem check | `app/services/problem_check/upcoming_change_stable_opted_out.rb` |
 | Initializer | `config/initializers/015-track-upcoming-change-toggle.rb` |
 | Admin page | `admin/templates/admin-config/upcoming-changes.gjs` |
@@ -423,7 +426,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Request spec | `spec/requests/admin/config/upcoming_changes_controller_spec.rb` |
 | Admin system spec | `spec/system/admin_upcoming_changes_spec.rb` |
 | Member system spec | `spec/system/member_upcoming_changes_spec.rb` |
-| Job spec | `spec/jobs/scheduled/check_upcoming_changes_spec.rb` |
+| Job specs | `spec/jobs/scheduled/check_upcoming_changes_spec.rb`, `spec/jobs/scheduled/notify_admins_of_available_upcoming_changes_spec.rb` |
 | Multisite spec | `spec/multisite/upcoming_changes_spec.rb` |
 | Page objects | `spec/system/page_objects/pages/admin_upcoming_changes.rb`, `admin_upcoming_change_item.rb` |
 | Test helpers | `spec/support/helpers.rb` (search for `mock_upcoming_change_metadata`) |

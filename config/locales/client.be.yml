@@ -386,8 +386,6 @@ be:
     privacy: "Прыватнасць"
     tos: "Умовы абслугоўвання"
     rules: "Правілы"
-    mobile_view: "Мабільная версія"
-    desktop_view: "Поўная версія"
     now: "толькі што"
     read_more: "чытаць далей"
     more: "Больш"
@@ -1633,7 +1631,6 @@ be:
             title: "Паказаць адрозненні ў крыніцах побач"
       bookmarks:
         name: "Назва"
-        options: "Параметры"
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
@@ -2196,6 +2193,9 @@ be:
                 "2": "Член"
                 "3": "рэгулярнае"
                 "4": "лідэр"
+        reports_section:
+          modal:
+            apply: "Прымяніць"
         site_traffic:
           series:
             anonymous: "ананімны"

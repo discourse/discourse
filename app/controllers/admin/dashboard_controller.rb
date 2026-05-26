@@ -3,7 +3,8 @@
 class Admin::DashboardController < Admin::StaffController
   BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
-  before_action :ensure_dashboard_improvements_enabled, only: %i[bulk_reports]
+  before_action :ensure_admin,
+                only: %i[available_reports update_reports_section update_configuration]
 
   def index
     if dashboard_improvements?
@@ -94,29 +95,39 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def update_reports_section
+    AdminDashboard::Reports::LayoutUpdater.call(
+      items: parse_reports_items_payload,
+      guardian: guardian,
+    )
+    head :no_content
+  end
+
+  def available_reports
+    search = params[:search]
+    enabled = AdminDashboard::Reports::Section.build(guardian: guardian, search: search)[:items]
+    listing = AdminDashboard::Reports::Listing.call(cursor: params[:cursor], search: search)
+
+    render json: {
+             providers: listing[:providers],
+             enabled: enabled,
+             available: listing[:items],
+             has_more: listing[:has_more],
+             cursor: listing[:cursor],
+           }
+  end
+
   def bulk_reports
-    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
-    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
-      raise Discourse::InvalidParameters.new(:items)
-    end
-
-    items =
-      params
-        .permit(items: %i[source identifier])
-        .fetch(:items, [])
-        .map do |entry|
-          source = entry[:source]
-          identifier = entry[:identifier]
-          raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
-          { source: source.to_s, identifier: identifier.to_s }
-        end
-
     permitted_filters = params.permit(filters: BULK_REPORTS_FILTER_KEYS).fetch(:filters, nil)
     filters = permitted_filters.present? ? permitted_filters.to_h.symbolize_keys : {}
 
     hijack do
       render_json_dump(
-        AdminDashboard::Reports::BulkFetch.call(items: items, filters: filters, guardian: guardian),
+        AdminDashboard::Reports::BulkFetch.call(
+          items: parse_reports_items_payload,
+          filters: filters,
+          guardian: guardian,
+        ),
       )
     end
   end
@@ -154,5 +165,22 @@ class Admin::DashboardController < Admin::StaffController
     else
       SiteSetting.dashboard_improvements
     end
+  end
+
+  def parse_reports_items_payload
+    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
+    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
+      raise Discourse::InvalidParameters.new(:items)
+    end
+
+    params
+      .permit(items: %i[source identifier])
+      .fetch(:items, [])
+      .map do |entry|
+        source = entry[:source]
+        identifier = entry[:identifier]
+        raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
+        { source: source.to_s, identifier: identifier.to_s }
+      end
   end
 end

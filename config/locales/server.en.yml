@@ -550,6 +550,9 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+  too_many_quotes:
+    one: "Sorry, you can only include one quote in a post."
+    other: "Sorry, you can only include %{count} quotes in a post."
   contains_blocked_word: "Sorry, you can't post the word '%{word}'; it's not allowed."
   contains_blocked_words: "Sorry, you can't post that. Not allowed: %{words}."
 
@@ -1800,9 +1803,9 @@ en:
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
-      email_delivery_failures:
-        one: "Email delivery has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
-        other: "Email delivery has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+      email_sending_failures:
+        one: "Email sending has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+        other: "Email sending has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -1821,6 +1824,9 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
+    reports_section:
+      providers:
+        core_report: "Standard"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -2320,6 +2326,7 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
+    max_quotes_per_post: "Maximum number of quotes allowed in a single post. Set to 0 to disable the check."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
     enable_mentions: "Permits users to tag or reference each other in their posts using the '@' symbol."
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
@@ -2567,8 +2574,6 @@ en:
     get_a_room_threshold: "Number of posts a user has to make to the same person in the same topic before being warned."
 
     dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
-
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
@@ -2852,7 +2857,6 @@ en:
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
@@ -4139,6 +4143,15 @@ en:
 
     email_bounced: |
       The message to %{email} bounced.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
+
+    email_sending_failed: |
+      Sending the message to %{email} failed.
 
       ### Details
 
@@ -5710,6 +5723,7 @@ en:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'

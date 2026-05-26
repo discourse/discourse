@@ -262,4 +262,17 @@ after_initialize do
       posts
     end
   end
+
+  # Only single-choice (regular) polls are supported for anonymous voting.
+  # Multi-choice and ranked-choice polls require accumulating selections
+  # client-side, which is out of scope for the current anonymous flow.
+  register_anonymous_action("vote_poll") do |user, params|
+    options = params["options"]
+    next if !options.is_a?(Array) || options.size != 1
+
+    DiscoursePoll::Poll.vote(user, params["post_id"], params["poll_name"], options)
+  rescue DiscoursePoll::Error
+    # Expected business-logic failures (poll closed, group-restricted, etc.)
+    # — silently drop. Unexpected exceptions still bubble to AnonymousAction.consume.
+  end
 end

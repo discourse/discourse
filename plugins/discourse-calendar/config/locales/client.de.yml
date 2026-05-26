@@ -415,6 +415,7 @@ de:
           status:
             unknown: "Nicht interessiert"
             going: "Dabei"
+            not_going: "Nimmt nicht teil"
             interested: "Interessiert"
             going_count:
               one: "%{count} nimmt teil"

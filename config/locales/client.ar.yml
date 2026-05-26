@@ -488,7 +488,6 @@ ar:
         since: "(منذ %{version})"
       toggle_safe_mode: "تبديل الوضع الآمن"
       toggle_verbose_localization: "تبديل التوطين المطول"
-      toggle_mobile_view: "تبديل عرض الهاتف المحمول"
       disable_dev_tools: "تعطيل أدوات المطورين"
       toggle_upcoming_changes_debug: "تبديل تصحيح الأخطاء للتغييرات القادمة"
     s3:
@@ -551,8 +550,6 @@ ar:
     tos: "شروط الخدمة"
     rules: "القواعد"
     conduct: "قواعد السلوك"
-    mobile_view: "العرض على الجوَّال"
-    desktop_view: "العرض على كمبيوتر سطح المكتب"
     now: "الآن"
     read_more: "قراءة المزيد"
     more: "المزيد"
@@ -5487,7 +5484,6 @@ ar:
         name_placeholder: "ما استخدام هذه الإشارة المرجعية؟"
         name_input_label: "اسم الإشارة المرجعية"
         set_reminder: "تذكيري"
-        options: "الخيارات"
         actions:
           delete_bookmark:
             name: "حذف الإشارة المرجعية"
@@ -7584,6 +7580,14 @@ ar:
                 "4": "قائد"
               trend:
                 stable: "مستقر"
+        reports_section:
+          no_data: "لا توجد بيانات لعرضها"
+          modal:
+            enabled_heading: "مفعَّلة"
+            all_heading: "جميع التقارير"
+            apply: "تطبيق"
+            move_up: "التحريك لأعلى"
+            move_down: "التحريك لأسفل"
         configure:
           button: "التهيئة"
         highlights:

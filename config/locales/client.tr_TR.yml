@@ -360,7 +360,6 @@ tr_TR:
         condition_debugging: "Durum hata ayıklama"
       toggle_safe_mode: "Güvenli modu aç/kapat"
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
-      toggle_mobile_view: "Mobil görünümü aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
       toggle_upcoming_changes_debug: "Yaklaşan değişikliklerin hata ayıklama modunu aç/kapat"
     s3:
@@ -419,8 +418,6 @@ tr_TR:
     tos: "Hizmet Şartları"
     rules: "Kurallar"
     conduct: "Davranış Kuralları"
-    mobile_view: "Mobil Görünüm"
-    desktop_view: "Masaüstü Görünümü"
     now: "az önce"
     read_more: "devamını oku"
     more: "Daha fazla"
@@ -4470,7 +4467,6 @@ tr_TR:
         name_placeholder: "Bu yer imi ne için?"
         name_input_label: "Yer imi adı"
         set_reminder: "Bana anımsat"
-        options: "Seçenekler"
         actions:
           delete_bookmark:
             name: "Yer imini sil"
@@ -6365,6 +6361,14 @@ tr_TR:
                 "4": "Lider"
               trend:
                 stable: "stabil"
+        reports_section:
+          no_data: "Gösterilecek veri yok"
+          modal:
+            enabled_heading: "Etkin mi"
+            all_heading: "Tüm raporlar"
+            apply: "Uygula"
+            move_up: "Yukarı taşı"
+            move_down: "Aşağı taşı"
         configure:
           button: "Yapılandır"
         site_traffic:

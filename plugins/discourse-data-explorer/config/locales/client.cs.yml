@@ -6,6 +6,9 @@
 
 cs:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Žádné výsledky"
     explorer:
       default_query: "Výchozí"
       or: "nebo"

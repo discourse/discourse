@@ -342,8 +342,6 @@ zh_TW:
     tos: "服務條款"
     rules: "規則"
     conduct: "行為準則"
-    mobile_view: "手機版"
-    desktop_view: "電腦版"
     now: "就在剛才"
     read_more: "閱讀更多"
     more: "更多"
@@ -3627,7 +3625,6 @@ zh_TW:
         name_placeholder: "這個書籤有何用途？"
         name_input_label: "書籤名稱"
         set_reminder: "提醒我"
-        options: "選項"
         actions:
           delete_bookmark:
             name: "刪除書籤"
@@ -5022,6 +5019,13 @@ zh_TW:
                 "2": "成員"
                 "3": "活躍使用者"
                 "4": "資深"
+        reports_section:
+          modal:
+            enabled_heading: "啟用"
+            all_heading: "所有報告"
+            apply: "套用"
+            move_up: "上移"
+            move_down: "下移"
         site_traffic:
           series:
             anonymous: "匿名"

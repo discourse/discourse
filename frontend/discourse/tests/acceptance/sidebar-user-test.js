@@ -1,6 +1,5 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import Sinon from "sinon";
 import {
   acceptance,
   updateCurrentUser,
@@ -153,31 +152,6 @@ acceptance(
       await click(".btn-sidebar-toggle");
 
       assert.dom(".sidebar-container").exists("displays the sidebar");
-    });
-
-    test("button to toggle between legacy mobile and desktop view on touch devices", async function (assert) {
-      this.container.lookup(
-        "service:site-settings"
-      ).viewport_based_mobile_mode = false;
-
-      const capabilities = this.container.lookup("service:capabilities");
-      Sinon.stub(capabilities, "touch").value(true);
-
-      await visit("/");
-
-      assert
-        .dom(
-          `.sidebar-footer-actions-toggle-mobile-view[title="${i18n(
-            "mobile_view"
-          )}"]`
-        )
-        .exists("displays the right title for the button");
-
-      assert
-        .dom(
-          ".sidebar-footer-actions-toggle-mobile-view .d-icon-mobile-screen-button"
-        )
-        .exists("displays the mobile icon for the button");
     });
 
     test("clean up topic tracking state state changed callbacks when sidebar is destroyed", async function (assert) {

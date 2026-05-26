@@ -2,21 +2,25 @@
 
 RSpec.describe AdminDashboard::Reports::Section do
   fab!(:admin)
-  let(:guardian) { Guardian.new(admin) }
+  let(:guardian) { admin.guardian }
 
   let(:fake_provider) do
     Class.new(AdminDashboard::Reports::SourceProvider) do
       def self.source_name = "fake"
 
+      def self.label = "Fake"
+
       def self.resolve_many(identifiers, guardian:)
         identifiers
           .reject { |id| id.to_s.start_with?("missing_") }
-          .each_with_object({}) do |id, h|
-            h[id.to_s] = AdminDashboard::Reports::ResolvedReport.new(
+          .each_with_object({}) do |id, hash|
+            hash[id.to_s] = AdminDashboard::Reports::ResolvedReport.new(
               source: "fake",
               identifier: id.to_s,
               title: "Title for #{id}",
               description: "Desc for #{id}",
+              label: label,
+              url: "/fake/#{id}",
             )
           end
       end
@@ -37,7 +41,19 @@ RSpec.describe AdminDashboard::Reports::Section do
   end
 
   it "returns an empty items list when there are no rows" do
-    expect(described_class.build(guardian: guardian)).to eq(items: [])
+    result = described_class.build(guardian: guardian)
+    expect(result[:items]).to eq([])
+  end
+
+  it "sets show_labels to true when more than one provider is registered" do
+    expect(described_class.build(guardian: guardian)[:show_labels]).to eq(true)
+  end
+
+  it "sets show_labels to false when only one provider is registered" do
+    DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+      entry[:value] == fake_provider
+    end
+    expect(described_class.build(guardian: guardian)[:show_labels]).to eq(false)
   end
 
   it "returns items in position order, ignoring insertion order" do
@@ -46,10 +62,10 @@ RSpec.describe AdminDashboard::Reports::Section do
     AdminDashboardReport.create!(source: "fake", identifier: "c", position: 2)
 
     result = described_class.build(guardian: guardian)
-    expect(result[:items].map { |i| i[:identifier] }).to eq(%w[b a c])
+    expect(result[:items].map { |item| item[:identifier] }).to eq(%w[b a c])
   end
 
-  it "serializes source / identifier / title / description from the resolved metadata" do
+  it "serializes the resolved metadata along with a composite key" do
     AdminDashboardReport.create!(source: "fake", identifier: "x", position: 0)
 
     item = described_class.build(guardian: guardian)[:items].first
@@ -58,6 +74,9 @@ RSpec.describe AdminDashboard::Reports::Section do
       identifier: "x",
       title: "Title for x",
       description: "Desc for x",
+      label: "Fake",
+      url: "/fake/x",
+      key: "fake:x",
     )
   end
 
@@ -67,7 +86,7 @@ RSpec.describe AdminDashboard::Reports::Section do
     orphan.update_column(:source, "unregistered_source")
 
     result = described_class.build(guardian: guardian)
-    expect(result[:items].map { |i| i[:identifier] }).to eq(%w[good])
+    expect(result[:items].map { |item| item[:identifier] }).to eq(%w[good])
   end
 
   it "drops rows the provider declines to resolve" do
@@ -75,22 +94,22 @@ RSpec.describe AdminDashboard::Reports::Section do
     AdminDashboardReport.create!(source: "fake", identifier: "missing_one", position: 1)
 
     result = described_class.build(guardian: guardian)
-    expect(result[:items].map { |i| i[:identifier] }).to eq(%w[good])
+    expect(result[:items].map { |item| item[:identifier] }).to eq(%w[good])
   end
 
   it "caps at VISIBLE_CAP, dropping the oldest rows by created_at" do
     stub_const(AdminDashboardReport, :VISIBLE_CAP, 3) do
-      5.times do |i|
+      5.times do |index|
         AdminDashboardReport.create!(
           source: "fake",
-          identifier: "r_#{i}",
-          position: i,
-          created_at: i.minutes.ago,
+          identifier: "r_#{index}",
+          position: index,
+          created_at: index.minutes.ago,
         )
       end
 
       result = described_class.build(guardian: guardian)
-      identifiers = result[:items].map { |i| i[:identifier] }
+      identifiers = result[:items].map { |item| item[:identifier] }
 
       expect(identifiers).to eq(%w[r_0 r_1 r_2])
     end
