@@ -37,13 +37,18 @@ class Sitemap < ActiveRecord::Base
     end
 
     # Returns PublishedPage records that are safe to expose in a public
-    # sitemap. Mirrors PublishedPagesController#publicly_cacheable? so
-    # we never advertise a URL the controller would refuse to serve
-    # without a guardian check:
-    # - public: true (not gated behind a guardian)
-    # - topic.visible (not hidden / unlisted)
-    # - topic in a non-read_restricted category
+    # sitemap. Mirrors PublishedPagesController's anonymous access gates so
+    # we never advertise a URL the controller would refuse to serve without a
+    # guardian check.
     def publishable_pages
+      if !SiteSetting.enable_page_publishing? || SiteSetting.secure_uploads
+        return PublishedPage.none
+      end
+
+      if SiteSetting.login_required? && !SiteSetting.show_published_pages_login_required?
+        return PublishedPage.none
+      end
+
       public_category_ids = Category.where(read_restricted: false).pluck(:id)
       PublishedPage
         .where(public: true)

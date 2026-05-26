@@ -140,6 +140,19 @@ RSpec.describe SitemapController do
   describe "#published_pages" do
     before { SiteSetting.enable_page_publishing = true }
 
+    def clear_published_pages_sitemap_cache
+      sitemap = Sitemap.touch(Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
+      Discourse.cache.delete("sitemap/published_pages/#{sitemap.last_posted_at.to_i}")
+    end
+
+    def published_page_locs
+      clear_published_pages_sitemap_cache
+
+      get "/sitemap_published_pages.xml"
+
+      Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
+    end
+
     it "returns 404 when no eligible published pages exist" do
       get "/sitemap_published_pages.xml"
       expect(response.status).to eq(404)
@@ -147,50 +160,77 @@ RSpec.describe SitemapController do
 
     it "lists public published pages whose source topic is in a public category" do
       page = Fabricate(:published_page, public: true, slug: "public-post")
-      Discourse.cache.delete("sitemap/published_pages/#{Time.zone.now.to_i}")
 
-      get "/sitemap_published_pages.xml"
+      locs = published_page_locs
 
       expect(response.status).to eq(200)
-      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
-      expect(locs).to include("#{Discourse.base_url}/pub/#{page.slug}")
+      expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{page.slug}")
+    end
+
+    it "lists pages when published pages are shown with login required" do
+      page = Fabricate(:published_page, public: true, slug: "public-post")
+      SiteSetting.login_required = true
+      SiteSetting.show_published_pages_login_required = true
+
+      locs = published_page_locs
+
+      expect(response.status).to eq(200)
+      expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{page.slug}")
     end
 
     it "excludes non-public pages" do
-      Fabricate(:published_page, public: true, slug: "public-post")
+      public_page = Fabricate(:published_page, public: true, slug: "public-post")
       Fabricate(:published_page, public: false, slug: "private-post")
 
-      get "/sitemap_published_pages.xml"
+      locs = published_page_locs
 
-      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
-      expect(locs).not_to include(a_string_including("/pub/private-post"))
+      expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{public_page.slug}")
     end
 
     it "excludes pages whose source topic is in a read-restricted category" do
-      Fabricate(:published_page, public: true, slug: "public-post")
+      public_page = Fabricate(:published_page, public: true, slug: "public-post")
       restricted = Fabricate(:private_category, group: Fabricate(:group))
       topic = Fabricate(:topic, category: restricted)
       Fabricate(:published_page, public: true, slug: "restricted-post", topic: topic)
 
-      get "/sitemap_published_pages.xml"
+      locs = published_page_locs
 
-      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
-      expect(locs).not_to include(a_string_including("/pub/restricted-post"))
+      expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{public_page.slug}")
     end
 
     it "excludes pages whose source topic is not visible" do
-      Fabricate(:published_page, public: true, slug: "public-post")
+      public_page = Fabricate(:published_page, public: true, slug: "public-post")
       hidden_topic = Fabricate(:topic, visible: false)
       Fabricate(:published_page, public: true, slug: "hidden-post", topic: hidden_topic)
 
-      get "/sitemap_published_pages.xml"
+      locs = published_page_locs
 
-      locs = Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
-      expect(locs).not_to include(a_string_including("/pub/hidden-post"))
+      expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{public_page.slug}")
+    end
+
+    it "returns 404 when published pages are not available to anonymous visitors" do
+      Fabricate(:published_page, public: true, slug: "public-post")
+
+      SiteSetting.enable_page_publishing = false
+      get "/sitemap_published_pages.xml"
+      expect(response.status).to eq(404)
+
+      SiteSetting.enable_page_publishing = true
+      SiteSetting.secure_uploads = true
+      get "/sitemap_published_pages.xml"
+      expect(response.status).to eq(404)
+
+      SiteSetting.secure_uploads = false
+      SiteSetting.login_required = true
+      SiteSetting.show_published_pages_login_required = false
+      get "/sitemap_published_pages.xml"
+      expect(response.status).to eq(404)
     end
   end
 
   describe ".regenerate_sitemaps and the published_pages entry" do
+    before { SiteSetting.enable_page_publishing = true }
+
     it "adds an enabled published_pages sitemap row when eligible pages exist" do
       Fabricate(:published_page, public: true, slug: "indexed-post")
 
@@ -213,6 +253,33 @@ RSpec.describe SitemapController do
       row = Sitemap.find_by(name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
       expect(row).to be_present
       expect(row.enabled).to eq(false)
+    end
+
+    it "disables the published_pages row when published pages are not available to anonymous visitors" do
+      Fabricate(:published_page, public: true, slug: "indexed-post")
+      row =
+        Sitemap.create!(
+          name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME,
+          enabled: true,
+          last_posted_at: 1.minute.ago,
+        )
+
+      SiteSetting.enable_page_publishing = false
+      Sitemap.regenerate_sitemaps
+      expect(row.reload.enabled).to eq(false)
+
+      SiteSetting.enable_page_publishing = true
+      SiteSetting.secure_uploads = true
+      row.update!(enabled: true)
+      Sitemap.regenerate_sitemaps
+      expect(row.reload.enabled).to eq(false)
+
+      SiteSetting.secure_uploads = false
+      SiteSetting.login_required = true
+      SiteSetting.show_published_pages_login_required = false
+      row.update!(enabled: true)
+      Sitemap.regenerate_sitemaps
+      expect(row.reload.enabled).to eq(false)
     end
   end
 end

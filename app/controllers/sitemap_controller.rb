@@ -61,8 +61,8 @@ class SitemapController < ApplicationController
   # Emits a sitemap of /pub/<slug> URLs for PublishedPage records that
   # the PublishedPagesController would serve to anonymous visitors
   # without a guardian check. Sitemap.publishable_pages enforces the
-  # filter (public + visible + non-restricted category) so the source
-  # of truth for "what's publicly cacheable" lives in one place.
+  # same settings and visibility gates so the source of truth for
+  # "what's anonymously reachable" lives in one place.
   def published_pages
     raise Discourse::NotFound if !Sitemap.publishable_pages.exists?
     sitemap = Sitemap.touch(Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
