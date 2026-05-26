@@ -32,7 +32,7 @@ acceptance(
       );
 
       await click(".composer-actions-trigger");
-      await click(".composer-toggle-whisper");
+      await click(".composer-toggle-whisper .d-toggle-switch__checkbox");
 
       assert.deepEqual(
         presentUserIds("/discourse-presence/reply/280"),
