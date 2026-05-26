@@ -222,8 +222,6 @@ et:
     tos: "Teenuse tingimused"
     rules: "Reeglid"
     conduct: "Käitumise juhised"
-    mobile_view: "Mobiilivaade"
-    desktop_view: "Täisvaade"
     now: "just nüüd"
     read_more: "loe edasi"
     more: "Veel"
@@ -2174,7 +2172,6 @@ et:
       bookmarks:
         edit: "Muuda järjehoidjat"
         name: "Nimi"
-        options: "Suvandid"
         actions:
           delete_bookmark:
             description: "Eemaldab järjehoidja sinu profiilist ja peatab kõik järjehoidja meeldetuletused"
@@ -2925,6 +2922,12 @@ et:
                 "2": "Liige"
                 "3": "Püsiliige"
                 "4": "Vedaja"
+        reports_section:
+          no_data: "Pole andmeid, mida näidata"
+          modal:
+            enabled_heading: "Sisse lülitatud"
+            all_heading: "Kõik aruanded"
+            apply: "Rakenda"
         site_traffic:
           series:
             anonymous: "Anonüümne"

@@ -15,6 +15,12 @@ en:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
         dirty: "You must save the query before running."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "No results"
+      manage_reports_hint:
+        title: "Create a Data Explorer query"
+        description: "Write a custom SQL query to surface anything specific to your community."
     explorer:
       default_query: "Default"
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."

@@ -6,6 +6,12 @@
 
 ro:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Fără rezultate"
+      manage_reports_hint:
+        title: "Creează o interogare pentru Exploratorul de date"
+        description: "Scrie o interogare SQL personalizată pentru a scoate la iveală orice aspect specific comunității tale."
     explorer:
       default_query: "Implicit"
       or: "sau"

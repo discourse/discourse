@@ -21,7 +21,7 @@ export default class EngagementHeadline extends Component {
   }
 
   <template>
-    <div class="db-section__subheader db-engagement-headline">
+    <div class="db-section__subheader">
       <div class="db-section__subintro">
         <h3>{{i18n this.titleKey}}</h3>
         <p>{{i18n this.summaryKey}}</p>

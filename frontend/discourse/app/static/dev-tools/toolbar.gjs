@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -10,15 +9,12 @@ import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import I18n, { i18n } from "discourse-i18n";
 import BlockDebugButton from "./block-debug/button";
-import MobileViewButton from "./mobile-view/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
 import SafeModeButton from "./safe-mode/button";
 import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
-  @service siteSettings;
-
   @tracked activeDragOffset;
   @tracked ownSize = 0;
   @tracked top = 250;
@@ -85,9 +81,6 @@ export default class Toolbar extends Component {
       <UpcomingChangesDebugButton />
       <SafeModeButton />
       <VerboseLocalizationButton />
-      {{#unless this.siteSettings.viewport_based_mobile_mode}}
-        <MobileViewButton />
-      {{/unless}}
       <button
         type="button"
         title={{i18n "dev_tools.disable_dev_tools"}}

@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe AdminDashboard::Reports::SourceProvider do
-  describe ".accessible_ids (default implementation)" do
+  describe ".accessible_ids" do
     let(:provider) do
       Class.new(described_class) do
         def self.source_name = "test"
 
+        def self.label = "Test"
+
         def self.resolve_many(identifiers, guardian:)
           identifiers
             .select { |id| %w[a b].include?(id) }
-            .each_with_object({}) do |id, h|
-              h[id] = AdminDashboard::Reports::ResolvedReport.new(
+            .each_with_object({}) do |id, hash|
+              hash[id] = AdminDashboard::Reports::ResolvedReport.new(
                 source: source_name,
                 identifier: id,
                 title: id,
                 description: nil,
+                label: label,
+                url: nil,
               )
             end
         end

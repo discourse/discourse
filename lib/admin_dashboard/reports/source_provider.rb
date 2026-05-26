@@ -18,6 +18,13 @@ module AdminDashboard
         raise NotImplementedError
       end
 
+      # @return [String] a short, translated label rendered as a tag pill in
+      #                  the UI to distinguish this provider from others.
+      #                  Only shown when more than one provider is registered.
+      def self.label
+        raise NotImplementedError
+      end
+
       # Cheap metadata resolution. Called server-side on dashboard render and
       # by the Manage Reports modal to populate its enabled list.
       #
@@ -41,13 +48,17 @@ module AdminDashboard
         raise NotImplementedError
       end
 
-      # Universe of items of this source visible to the guardian. Powers the
-      # Manage Reports modal's available list and search filter.
+      # Universe of items of this source. Powers the Manage Reports modal's
+      # available list and search filter. Only invoked in admin-only contexts,
+      # so implementations should not perform per-user access filtering here.
+      # Providers paginate themselves via `offset` and `limit` arguments; the
+      # controller orchestrates cross-provider pagination.
       #
-      # @param guardian [Guardian]
       # @param search [String, nil] optional name/description filter.
+      # @param offset [Integer] starting position within this provider's set.
+      # @param limit [Integer, nil] maximum number of items to return.
       # @return [Array<AdminDashboard::Reports::ResolvedReport>]
-      def self.available_for(guardian, search: nil)
+      def self.list_all(search: nil, offset: 0, limit: nil)
         raise NotImplementedError
       end
 

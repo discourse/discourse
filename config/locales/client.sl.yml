@@ -269,8 +269,6 @@ sl:
     tos: "Pogoji uporabe"
     rules: "Pravila"
     conduct: "Pravila obnašanja"
-    mobile_view: "Mobilni pogled"
-    desktop_view: "Namizni pogled"
     now: "ravnokar"
     read_more: "preberi več"
     more: "Več"
@@ -2969,7 +2967,6 @@ sl:
         create: "Ustvari zaznamek"
         edit: "Uredi zaznamek"
         name: "Polno ime"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Izbriši zaznamek"
@@ -3937,6 +3934,12 @@ sl:
                 "2": "Polnopraven član"
                 "3": "Običajne"
                 "4": "Vodja"
+        reports_section:
+          no_data: "Ni podatkov za prikaz"
+          modal:
+            enabled_heading: "Vključeno"
+            all_heading: "Vsa poročila"
+            apply: "Uporabi"
         site_traffic:
           series:
             anonymous: "Anonimni"

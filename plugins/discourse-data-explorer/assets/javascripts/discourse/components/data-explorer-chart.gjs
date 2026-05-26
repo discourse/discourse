@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { bind } from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { SERIES_COLORS } from "../lib/chart-helpers";
@@ -148,14 +149,17 @@ export default class DataExplorerChart extends Component {
   }
 
   @action
-  updateChartData() {
+  updateChartData(canvas) {
     if (this.chart) {
       this.chart.destroy();
     }
-    this.initChart(this.chart?.canvas);
+    this.initChart(canvas);
   }
 
   <template>
-    <canvas {{didInsert this.initChart}}></canvas>
+    <canvas
+      {{didInsert this.initChart}}
+      {{didUpdate this.updateChartData @labels @datasets @chartType @stacked}}
+    ></canvas>
   </template>
 }

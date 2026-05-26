@@ -171,6 +171,10 @@ export default class AdminReport extends Component {
     return `/admin/reports/${dataSourceName}`;
   }
 
+  get preloadedData() {
+    return this.args.preloadedData;
+  }
+
   get showModes() {
     return this.displayedModes.length > 1;
   }
@@ -403,7 +407,14 @@ export default class AdminReport extends Component {
 
   @bind
   fetchOrRender() {
-    if (this.args.dataSourceName) {
+    if (this.args.preloadedData) {
+      next(() => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+        this._renderReport(this._loadReport(this.args.preloadedData));
+      });
+    } else if (this.args.dataSourceName) {
       this._fetchReport();
     }
   }

@@ -6,6 +6,9 @@
 
 te:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "ఫలితాలు లేవు"
     explorer:
       default_query: "అప్రమేయ"
       or: "లేదా"

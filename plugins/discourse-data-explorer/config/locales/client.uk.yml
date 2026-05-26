@@ -21,6 +21,9 @@ uk:
       explorer:
         no_semicolons: "Вилучіть крапки з комою з запиту."
         dirty: "Ви повинні зберегти запит перед запуском."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Немає результатів"
     explorer:
       default_query: "Стандартна"
       default_query_notice: "Це запит за замовчуванням, SQL-код не можна редагувати. Щоб редагувати SQL-код, створіть новий запит."

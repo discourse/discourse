@@ -17,6 +17,7 @@ hu:
         title: Bejegyzés ütemezése egy témában az Adatkezelő eredményeivel
         description: Ütemezett jelentések közzététele egy meghatározott témában
   data_explorer:
+    admin_dashboard_label: "Adatfelfedező"
     report_generator:
       private_message:
         title: "Ütemezett jelentés ehhez: %{query_name}"

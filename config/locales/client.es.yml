@@ -358,7 +358,6 @@ es:
         condition_debugging: "Depuración de condiciones"
       toggle_safe_mode: "Activar/desactivar el modo seguro"
       toggle_verbose_localization: "Activar/desactivar la localización detallada"
-      toggle_mobile_view: "Activar/desactivar vista móvil"
       disable_dev_tools: "Activar/desactivar herramientas de desarrollo"
       toggle_upcoming_changes_debug: "Activar/desactivar la depuración de próximos cambios"
     s3:
@@ -417,8 +416,6 @@ es:
     tos: "Términos del servicio"
     rules: "Reglas"
     conduct: "Código de conducta"
-    mobile_view: "Versión móvil"
-    desktop_view: "Versión de escritorio"
     now: "justo ahora"
     read_more: "leer más"
     more: "Más"
@@ -4392,7 +4389,6 @@ es:
         name_placeholder: "¿Para qué es este marcador?"
         name_input_label: "Nombre del marcador"
         set_reminder: "Recordarme"
-        options: "Opciones"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -6273,6 +6269,14 @@ es:
                 "4": "Líder"
               trend:
                 stable: "estable"
+        reports_section:
+          no_data: "No hay datos que mostrar"
+          modal:
+            enabled_heading: "Activado"
+            all_heading: "Todos los informes"
+            apply: "Aplicar"
+            move_up: "Mover arriba"
+            move_down: "Mover abajo"
         configure:
           button: "Configurar"
         site_traffic:

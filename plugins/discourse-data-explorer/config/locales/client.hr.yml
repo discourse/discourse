@@ -6,6 +6,9 @@
 
 hr:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nema rezultata"
     explorer:
       default_query: "Zadano"
       or: "ili"

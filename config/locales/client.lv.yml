@@ -230,8 +230,6 @@ lv:
     tos: "Pakalpojuma noteikumi"
     rules: "Noteikumi"
     conduct: "Rīcības kodekss"
-    mobile_view: "Mobilais skats"
-    desktop_view: "Datora skats"
     now: "tikko"
     read_more: "lasīt vairāk"
     more: "Vairāk"
@@ -2319,7 +2317,6 @@ lv:
             button: "HTML"
       bookmarks:
         name: "Vārds"
-        options: "Iespējas"
     category:
       none: "(nav sadaļas)"
       all: "Visas sadaļas"
@@ -3029,6 +3026,10 @@ lv:
                 "0": "Jauns"
                 "2": "Biedrs"
                 "3": "Regulārs"
+        reports_section:
+          modal:
+            enabled_heading: "Ieslēgts"
+            apply: "Pielietot"
         site_traffic:
           series:
             anonymous: "Anonīmi"
