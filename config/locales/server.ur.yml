@@ -1050,6 +1050,7 @@ ur:
     consolidated_page_views_browser_detection:
       yaxis: "دن"
     site_traffic:
+      title: "سائٹ پر آمدو رفت"
       yaxis: "دن"
     dau_by_mau:
       xaxis: "دن"
