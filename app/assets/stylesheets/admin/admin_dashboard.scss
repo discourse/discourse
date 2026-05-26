@@ -653,36 +653,11 @@ h1 {
   }
 }
 
-.db-highlights {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-
-  &__comparison {
-    align-self: flex-end;
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
-  }
-
-  &__error {
-    flex: 1;
-    padding: var(--space-4);
-    color: var(--primary-medium);
-    font-size: var(--font-down-1-rem);
-  }
-}
-
-.db-engagement {
-  .db-engagement-headline {
-    .db-section__metrics {
-      gap: 0;
-
-      .db-kpi {
-        border: none;
-        padding-top: 0;
-      }
-    }
-  }
+.db-highlights__comparison {
+  align-self: flex-end;
+  margin-top: calc(var(--space-4) * -1);
+  font-size: var(--font-down-1-rem);
+  color: var(--primary-medium);
 }
 
 .db-kpi {
