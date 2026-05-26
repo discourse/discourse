@@ -32,14 +32,12 @@ module Jobs
       return if categories.empty?
 
       categories.each do |category|
-        begin
-          DiscourseAi::Translation::CategoryLocaleDetector.detect_locale(category)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to detect category #{category.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
-        end
+        DiscourseAi::Translation::CategoryLocaleDetector.detect_locale(category)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to detect category #{category.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{categories.size} category locales")

@@ -27,7 +27,7 @@ export default class FKControlCheckbox extends FKBaseControl {
         id={{@field.id}}
         name={{@field.name}}
         aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
+        aria-describedby={{@field.describedBy}}
         ...attributes
         {{on "change" this.handleInput}}
       />

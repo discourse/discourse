@@ -455,7 +455,7 @@ RSpec.describe TopicsFilter do
 
       TopicUser.notification_levels.keys.each do |notification_level|
         describe "when query string is `in:#{notification_level}`" do
-          fab!("user_#{notification_level}_topic".to_sym) do
+          fab!(:"user_#{notification_level}_topic") do
             Fabricate(:topic).tap do |topic|
               TopicUser.change(
                 user.id,
@@ -480,7 +480,7 @@ RSpec.describe TopicsFilter do
                 .new(guardian: Guardian.new(user))
                 .filter_from_query_string("in:#{notification_level}")
                 .pluck(:id),
-            ).to contain_exactly(self.public_send("user_#{notification_level}_topic").id)
+            ).to contain_exactly(public_send("user_#{notification_level}_topic").id)
           end
         end
       end

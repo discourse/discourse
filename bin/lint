@@ -14,14 +14,9 @@ class ExternalLinter
   RUBY_EXTENSIONS = %w[rb rake thor].freeze
   PRETTIER_EXTENSIONS = %w[css scss js gjs cjs mjs].freeze
   ESLINT_EXTENSIONS = %w[js gjs].freeze
-  EMBER_TEMPLATE_LINT_EXTENSIONS = %w[gjs].freeze
   STYLELINT_EXTENSIONS = %w[scss].freeze
 
-  JS_EXTENSIONS =
-    (
-      PRETTIER_EXTENSIONS + ESLINT_EXTENSIONS + EMBER_TEMPLATE_LINT_EXTENSIONS +
-        STYLELINT_EXTENSIONS
-    ).uniq.freeze
+  JS_EXTENSIONS = (PRETTIER_EXTENSIONS + ESLINT_EXTENSIONS + STYLELINT_EXTENSIONS).uniq.freeze
 
   attr_reader :results
 
@@ -77,10 +72,9 @@ class ExternalLinter
 
     prettier_files = by_ext.call(PRETTIER_EXTENSIONS)
     eslint_files = by_ext.call(ESLINT_EXTENSIONS)
-    ember_template_lint_files = by_ext.call(EMBER_TEMPLATE_LINT_EXTENSIONS)
     stylelint_files = by_ext.call(STYLELINT_EXTENSIONS)
 
-    pnpm = ["pnpm", "--ignore-workspace"]
+    pnpm = %w[pnpm --ignore-workspace]
     puts "[bin/lint] Installing pnpm dependencies in #{@root}..."
     run_cmd(*pnpm, "i") or abort "pnpm i failed in #{@root}"
 
@@ -92,17 +86,6 @@ class ExternalLinter
     if eslint_files.any?
       args = @fix ? ["--fix"] : ["--quiet"]
       run_linter("eslint", *pnpm, "eslint", *args, *eslint_files)
-    end
-
-    if ember_template_lint_files.any?
-      args = @fix ? ["--fix"] : []
-      run_linter(
-        "ember-template-lint",
-        *pnpm,
-        "ember-template-lint",
-        *args,
-        *ember_template_lint_files,
-      )
     end
 
     if stylelint_files.any?

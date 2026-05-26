@@ -49,11 +49,11 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
-    return if polls.blank? && self.id.blank?
+    return if polls.blank? && id.blank?
 
     if polls.present?
       validator = DiscoursePoll::PostValidator.new(self)
@@ -61,7 +61,7 @@ after_initialize do
     end
 
     # are we updating a post?
-    if self.id.present?
+    if id.present?
       return if polls.blank? && ::Poll.where(post: self).empty?
 
       DiscoursePoll::PollsUpdater.update(self, polls)
@@ -221,7 +221,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
+    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) }
   end
 
   add_to_serializer(
@@ -261,5 +261,18 @@ after_initialize do
     else
       posts
     end
+  end
+
+  # Only single-choice (regular) polls are supported for anonymous voting.
+  # Multi-choice and ranked-choice polls require accumulating selections
+  # client-side, which is out of scope for the current anonymous flow.
+  register_anonymous_action("vote_poll") do |user, params|
+    options = params["options"]
+    next if !options.is_a?(Array) || options.size != 1
+
+    DiscoursePoll::Poll.vote(user, params["post_id"], params["poll_name"], options)
+  rescue DiscoursePoll::Error
+    # Expected business-logic failures (poll closed, group-restricted, etc.)
+    # — silently drop. Unexpected exceptions still bubble to AnonymousAction.consume.
   end
 end

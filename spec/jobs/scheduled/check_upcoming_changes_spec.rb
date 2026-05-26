@@ -71,32 +71,6 @@ RSpec.describe Jobs::CheckUpcomingChanges do
         end
       end
 
-      context "when admins are notified about an available change" do
-        before do
-          UpcomingChangeEvent.where(
-            upcoming_change_name: %i[enable_upload_debug_mode enable_user_tips],
-          ).delete_all
-        end
-
-        it "logs that admins were notified" do
-          track_log_messages do |logger|
-            described_class.new.execute({})
-            expect(logger.infos.join("\n")).to include(
-              "Notified site admins about added upcoming change 'enable_upload_debug_mode'",
-            )
-          end
-        end
-
-        it "does not log notification for changes that do not meet status threshold" do
-          track_log_messages do |logger|
-            described_class.new.execute({})
-            expect(logger.infos.join("\n")).not_to include(
-              "Notified site admins about added upcoming change 'enable_user_tips'",
-            )
-          end
-        end
-      end
-
       context "when changes are removed" do
         before do
           UpcomingChangeEvent.create!(event_type: :added, upcoming_change_name: :old_removed_change)
@@ -127,10 +101,6 @@ RSpec.describe Jobs::CheckUpcomingChanges do
               "previous_value" => nil,
               "new_value" => "alpha",
             },
-          )
-          UpcomingChangeEvent.create!(
-            event_type: :admins_notified_available_change,
-            upcoming_change_name: :enable_upload_debug_mode,
           )
         end
 
@@ -211,10 +181,6 @@ RSpec.describe Jobs::CheckUpcomingChanges do
             event_type: :added,
             upcoming_change_name: :enable_upload_debug_mode,
           )
-          UpcomingChangeEvent.create!(
-            event_type: :admins_notified_available_change,
-            upcoming_change_name: :enable_upload_debug_mode,
-          )
           UpcomingChangeEvent.where(
             upcoming_change_name: :enable_upload_debug_mode,
             event_type: :admins_notified_automatic_promotion,
@@ -222,10 +188,6 @@ RSpec.describe Jobs::CheckUpcomingChanges do
 
           UpcomingChangeEvent.create!(
             event_type: :added,
-            upcoming_change_name: :show_user_menu_avatars,
-          )
-          UpcomingChangeEvent.create!(
-            event_type: :admins_notified_available_change,
             upcoming_change_name: :show_user_menu_avatars,
           )
           UpcomingChangeEvent.create!(
@@ -271,10 +233,6 @@ RSpec.describe Jobs::CheckUpcomingChanges do
         before do
           UpcomingChangeEvent.create!(
             event_type: :added,
-            upcoming_change_name: :show_user_menu_avatars,
-          )
-          UpcomingChangeEvent.create!(
-            event_type: :admins_notified_available_change,
             upcoming_change_name: :show_user_menu_avatars,
           )
         end

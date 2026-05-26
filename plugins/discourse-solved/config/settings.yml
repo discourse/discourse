@@ -63,7 +63,18 @@ discourse_solved:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/398338"
+  enable_solved_shared_issues:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402498"
+  discourse_solved_admin_dashboard_seeded:
+    default: false
+    hidden: true
 

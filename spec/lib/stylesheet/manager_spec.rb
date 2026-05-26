@@ -1103,7 +1103,7 @@ RSpec.describe Stylesheet::Manager do
         initial_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
 
         additional_file_path =
-          "#{Rails.root}/spec/fixtures/plugins/scss_plugin/assets/stylesheets/colors.scss"
+          "#{Rails.root.join("spec/fixtures/plugins/scss_plugin/assets/stylesheets/colors.scss")}"
         Stylesheet::Manager.stubs(:list_files).returns(original_files + [additional_file_path])
 
         new_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!

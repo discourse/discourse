@@ -192,8 +192,6 @@ sw:
     privacy_policy: "Sera ya Faragha"
     privacy: "Faragha"
     tos: "Masharti ya Huduma"
-    mobile_view: "Mtazamo wa Simu"
-    desktop_view: "Muonekano wa Eneo Kazi"
     now: "sasa hivi"
     read_more: "soma zaidi"
     more: "Zaidi"
@@ -211,6 +209,8 @@ sw:
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Imeruhusiwa"
       start_posting:
         back: "Iliyopita"
     about:
@@ -250,6 +250,9 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    embed_mode:
+      signin_flow:
+        cancel: "Batili"
     topic_count_all:
       one: "Angalia Topiki %{count} Mpya"
       other: "Angalia Topiki %{count} Mpya"
@@ -666,13 +669,8 @@ sw:
       notifications: "Taarifa"
       statistics: "Takwimu"
       desktop_notifications:
-        label: "Taarifa Mbashara"
         not_supported: "Taarifa hazionyeshwi kwenye kivinjari hiki. Samahani."
-        perm_default: "Ruhusu Taarifa"
-        perm_denied_btn: "Kibali Kimekataliwa"
         perm_denied_expl: "Umekataza kibali cha taarifa. Ruhusu taarifa kupitia mipangilio ya kivinjari."
-        disable: "Sitisha Taarifa"
-        enable: "Ruhusu Taarifa"
         consent_prompt: "Je, unataka taarifa mubashara watu wakijibu kwenye posti zako?"
       dismiss: "Ondosha"
       dismiss_notifications: "Puuzia Zote"
@@ -1466,6 +1464,7 @@ sw:
             after: baada
         views:
           label: Imeonwa
+    header_panel: "Kichwa"
     new_item: "mpya"
     go_back: "rudi nyuma"
     not_logged_in_user: "karatasi ya kwanza yenye muhtasari wa shughuli na mapendekezo ya sasa"
@@ -1912,7 +1911,6 @@ sw:
             button: "HTML"
       bookmarks:
         name: "Jina"
-        options: "Chaguo"
     category:
       none: "(hakuna kategoria)"
       all: "Kategoria Zote"
@@ -2155,54 +2153,42 @@ sw:
       counter: "%curr% chini ya %total%"
     keyboard_shortcuts_help:
       title: "Njia Mkato za Baobonye"
+      description_header: "Maelezo"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Fikia"
-        home: "%{shortcut} Nyumbani"
-        latest: "%{shortcut} Hivi Karibuni"
-        new: "%{shortcut} Mpya"
-        unread: "%{shortcut} Haijasomwa"
-        categories: "%{shortcut} Kategoria"
-        top: "%{shortcut} Juu"
-        bookmarks: "%{shortcut} Machelezo"
-        profile: "%{shortcut} Umbo"
-        messages: "%{shortcut} Ujumbe"
+        home: "Nyumbani"
+        latest: "Hivi Karibuni"
+        new: "Mpya"
+        unread: "Haijasomwa"
+        categories: "Kategoria"
+        top: "Juu"
+        bookmarks: "Mialamisho"
+        profile: "Maelezo mafupi"
+        messages: "Ujumbe"
       navigation:
         title: "Abiri"
-        jump: "%{shortcut} Nenda kwenye chapisho #"
-        back: "%{shortcut} Nyuma"
-        up_down: "%{shortcut} Hamisha chaguo &uarr; &darr;"
-        open: "%{shortcut} Fungua mada iliyochaguliwa"
-        next_prev: "%{shortcut} Kifungu Kifuatacho/kilichopita"
+        back: "Iliyopita"
+        up_down: "Hamisha chaguo &uarr; &darr;"
       application:
         title: "Programu-tumizi"
-        notifications: "%{shortcut} Fungua taarifa"
-        user_profile_menu: "%{shortcut} Fungua menyu ya mtumiaji"
-        show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
-        search: "%{shortcut} Tafuta"
-        help: "%{shortcut} Fungua msaada wa kibodi"
-        log_out: "%{shortcut} Ondoka"
+        search: "Tafuta"
+        log_out: "Toka"
       composing:
         title: "Andika"
-        return: "%{shortcut} Rudi kwenye sehemu ya uandishi"
+        preformatted: "Maneno yaliyowekwa muundo"
+        blockquote: "Zuianukulu"
+      bookmarks:
+        later_today: "Baada ya mda leo"
+        later_this_week: "Baada ya mda ndani ya wiki hii"
+        tomorrow: "Kesho"
+        next_week: "Wiki Ijayo"
+        next_month: "Mwezi ujao"
       actions:
         title: "Vitendo"
-        bookmark_topic: "%{shortcut} Swichi alamisho ya mada"
-        pin_unpin_topic: "%{shortcut} Bandika/Ondoa mada"
-        share_topic: "%{shortcut} Gawiza mada"
-        share_post: "%{shortcut} Gawiza chapisho"
-        reply_as_new_topic: "%{shortcut} Jibu kama mada iliyounganishwa"
-        reply_topic: "%{shortcut} Jibu mada"
-        reply_post: "%{shortcut} Jibu chapisho"
-        quote_post: "%{shortcut} Nukulu chapisho"
-        like: "%{shortcut} Penda chapisho"
-        flag: "%{shortcut} Ripoti chapisho"
-        bookmark: "%{shortcut} Alamisha chapisho"
-        edit: "%{shortcut} Hariri chapisho"
-        delete: "%{shortcut} Futa chapisho"
-        mark_muted: "%{shortcut} Nyamazisha mada"
-        mark_tracking: "%{shortcut} Fuatilia mada"
-        mark_watching: "%{shortcut} Angalia mada"
-        print: "%{shortcut} Chapisha mada:"
+        reply_as_new_topic: "Jibu kama mada iliyounganishwa"
+        reply_topic: "Jibu mada"
       admin:
         title: "Kiongozi"
     badges:
@@ -2576,6 +2562,31 @@ sw:
         security_tab: "Ulinzi"
         report_filter_any: "yoyote"
         disabled: Imezuiwa
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kikundi"
+              topics: "Mada"
+              posts: "Machapisho"
+              share: "Shirikisha"
+            whos_posting:
+              all_categories: "Kategoria Zote"
+              staff: "Wasaidizi"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Mpya"
+                "1": "Kawaida"
+                "2": "Mwanachama"
+                "3": "Kawaida"
+                "4": "Kiongozi"
+        reports_section:
+          modal:
+            enabled_heading: "Imeruhusiwa"
+            all_heading: "Ripoti zote"
+            apply: "Tumia"
+        site_traffic:
+          series:
+            anonymous: "Asiyejulikana"
         period:
           custom: "Binafsi"
         reports:

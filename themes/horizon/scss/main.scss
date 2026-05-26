@@ -95,7 +95,11 @@ body:not(.has-full-page-chat, .wizard) {
       }
 
       @include viewport.from(sm) {
-        > *:not(.experimental-screen, .activate-account, .kanban-board-viewer) {
+        > *:not(
+            .experimental-screen,
+            .activate-account,
+            .discourse-kanban-board-viewer
+          ) {
           box-sizing: border-box;
           max-width: 1000px;
           margin-inline: auto;

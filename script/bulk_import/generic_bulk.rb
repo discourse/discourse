@@ -853,6 +853,7 @@ class BulkImport::Generic < BulkImport::Base
         created_at: to_datetime(row["created_at"]),
         category_id: category_id,
         closed: to_boolean(row["closed"]),
+        archived: to_boolean(row["archived"]),
         views: row["views"],
         subtype: row["subtype"],
         pinned_at: to_datetime(row["pinned_at"]),

@@ -538,7 +538,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
 
     it "does not route via GET to prevent CSRF" do
-      DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[a a]) do
         get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
         expect(response.status).to eq(404)
       end
@@ -546,7 +546,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
     context "when we can contact the model" do
       it "returns a success true flag" do
-        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(%w[a a]) do
           post "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
 
           expect(response).to be_successful
@@ -572,6 +572,20 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(response).to be_successful
           expect(response.parsed_body["success"]).to eq(false)
           expect(response.parsed_body["error"]).to eq(error_message.to_json)
+          expect(response.parsed_body["failed_mode"]).to eq("non_streaming")
+        end
+      end
+
+      it "reports a streaming failure when only the streaming probe fails" do
+        error = DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new("stream broken")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a", error]) do
+          post "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+
+          expect(response).to be_successful
+          expect(response.parsed_body["success"]).to eq(false)
+          expect(response.parsed_body["error"]).to eq("stream broken")
+          expect(response.parsed_body["failed_mode"]).to eq("streaming")
         end
       end
     end
@@ -595,7 +609,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       fab!(:seeded_llm) { Fabricate(:fake_model, id: -200) }
 
       it "tests the existing model directly instead of using params" do
-        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(%w[a a]) do
           post "/admin/plugins/discourse-ai/ai-llms/test.json",
                params: {
                  ai_llm: {

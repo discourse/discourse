@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 nl:
+  site_settings:
+    discourse_rewind_enabled: "Schakel Discourse Rewind in voor een leuk eindejaarsoverzicht van de activiteiten van leden in de community."
+  discourse_rewind:
+    report_failed: "Het genereren van het Discourse Rewind-rapport is mislukt."
+    invalid_year: "Rewind kan alleen in januari of december worden gegenereerd."
+    user_not_found: "Gebruiker niet gevonden of kan niet worden bekeken."
+    reports_not_cached: "Er zijn nog geen rapporten gegenereerd. Vernieuw de pagina."
+    report_not_found: "Rapport niet gevonden."
+    cannot_share_when_profile_hidden: "Om Rewind te kunnen delen, moet je anderen toestaan je openbare profiel te bekijken."

@@ -46,6 +46,8 @@ gl:
         expand_list:
           one: "(%{count} máis)"
           other: "(%{count} máis)"
+        nav:
+          enabled: "Activado"
         filters:
           all: "Todas"
           reset: "Restabelecer"

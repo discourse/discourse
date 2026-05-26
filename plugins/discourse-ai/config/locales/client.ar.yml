@@ -275,8 +275,7 @@ ar:
             ui_settings: "إعدادات واجهة الاستخدام"
             integrations: "التكاملات"
         nav:
-          configured: "مُهيأ"
-          unconfigured: "غير مُهيأ"
+          enabled: "مفعَّلة"
         filters:
           all: "الكل"
           text: "ابحث عن الميزات، أو الوكلاء، أو نماذج اللغة الكبيرة، أو المجموعات..."
@@ -1285,6 +1284,7 @@ ar:
             many: "يجب أن يبلغ طول الرسالة %{count} حرفًا أو أكثر"
             other: "يجب أن يبلغ طول الرسالة %{count} حرف أو أكثر"
           messages_sidebar_title: "المحادثات"
+          starred: "مميز بنجمة"
           today: "اليوم"
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"

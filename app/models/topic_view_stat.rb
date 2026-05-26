@@ -28,10 +28,10 @@ end
 # Table name: topic_view_stats
 #
 #  id              :bigint           not null, primary key
-#  topic_id        :integer          not null
-#  viewed_at       :date             not null
 #  anonymous_views :integer          default(0), not null
 #  logged_in_views :integer          default(0), not null
+#  viewed_at       :date             not null
+#  topic_id        :integer          not null
 #
 # Indexes
 #

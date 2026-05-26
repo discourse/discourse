@@ -11,11 +11,11 @@ end
 # Table name: chat_channel_custom_fields
 #
 #  id         :bigint           not null, primary key
-#  channel_id :bigint           not null
 #  name       :string(256)      not null
 #  value      :string(1000000)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  channel_id :bigint           not null
 #
 # Indexes
 #

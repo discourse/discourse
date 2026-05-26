@@ -105,7 +105,7 @@ module DiscourseAi
               if total_count <= 0
                 1
               else
-                [((total_count.to_f / PER_PAGE).ceil), MAX_ALLOWED_PAGE].min
+                [(total_count.to_f / PER_PAGE).ceil, MAX_ALLOWED_PAGE].min
               end
 
             result = { search_results: trimmed }

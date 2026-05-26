@@ -377,7 +377,6 @@ de:
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
       <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
-    existing_user_cannot_redeem: "Diese Einladung kann nicht eingelöst werden. Bitte die Person, die dich eingeladen hat, darum, dir eine neue Einladung zu schicken."
     existing_user_already_redemeed: "Du hast diesen Einladungslink bereits eingelöst."
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen. Die Person hat bereits ein Konto!"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
@@ -1269,6 +1268,30 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
       description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben."
+    activity_by_category:
+      labels:
+        category: "Kategorie"
+        topics: "Themen"
+        posts: "Beiträge"
+        share: "Teilen"
+    posters_by_member_type:
+      labels:
+        count: "Beiträge"
+        share: "Teilen"
+      types:
+        staff: "Team"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Vertrauensstufe"
+        count: "Mitglieder"
+        share: "Teilen"
+      levels:
+        "0": "Neue"
+        "1": "Anwärter"
+        "2": "Mitglied"
+        "3": "Regulär"
+        "4": "Anführer"
     trust_level_growth:
       title: "Wachstum der Vertrauensstufen"
       xaxis:
@@ -1314,9 +1337,8 @@ de:
     site_traffic:
       title: "Website-Traffic"
       xaxis:
-        page_view_anon_browser: "Seitenaufrufe (anonym)"
-        page_view_logged_in_browser: "Seitenaufrufe (angemeldet)"
-        page_view_crawler: "Bekannte Crawler"
+        page_view_anon_browser: "Anonym"
+        page_view_crawler: "Crawler"
         page_view_other: "Sonstiger Traffic"
       yaxis: "Tag"
       description: "Seitenaufrufe für angemeldete Benutzer, anonyme Benutzer, bekannte Crawler und anderen Traffic."
@@ -1433,6 +1455,12 @@ de:
         num_clicks: "Klicks"
         num_topics: "Themen"
       description: "Benutzer nach Anzahl von Klicks auf Links, die sie geteilt haben."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Aufrufe"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Aufrufe"
     top_traffic_sources:
       title: "Top-Traffic-Quellen"
       xaxis: "Domain"
@@ -1655,6 +1683,9 @@ de:
       admin_sidebar_deprecation: "Das alte Admin-Layout wird vom neuen <a href='https://meta.discourse.org/t/-/289281'>Seitenleisten-Layout</a> abgelöst und in der nächsten Version entfernt. Du kannst das neue Seitenleisten-Layout jetzt <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurieren</a>, um es vorher zu aktivieren."
       starttls_disabled: "In der Konfiguration für ausgehende E-Mails ist STARTTLS deaktiviert. Das ist fast nie notwendig. Erwäge, <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> aus deiner Umgebung zu entfernen. Weitere Informationen findest du in <a href='https://meta.discourse.org/t/387286'>diesem Thema</a>."
     back_from_logster_text: "Zurück zur Website"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1758,7 +1789,6 @@ de:
     x_summary_large_image: "Twitter-Karte „summary large image“ (sollte mindestens 280 Pixel in der Breite und mindestens 150 Pixel in der Höhe sein, keine .svg-Datei). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt"
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine Liste von eigenen E-Mail-Headern"
-    email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     simple_email_subject: "Wenn diese Option aktiviert ist, werden die Betreffzeilen der E-Mails prägnanter und enthalten nur die wichtigsten Informationen. So können Benutzer den Zweck der E-Mail auf einen Blick leichter erkennen."
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
     enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung (2FA) aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus. Wenn enforce_second_factor_on_external_auth aktiviert ist, können sich Benutzer nicht mit externen Authentifizierungsanbietern anmelden, nachdem sie die 2FA eingerichtet haben."
@@ -1827,7 +1857,6 @@ de:
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
     change_post_ownership_allowed_groups: "Erlaube Benutzern in diesen Gruppen, den Eigentümer von Beiträgen zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
-    use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     allowed_internal_hosts: "Eine Liste interner Hosts, die Discourse sicher indizieren kann (für Oneboxing und zu anderen Zwecken)"
     allowed_onebox_iframes: "Eine Liste von „iframe src“-Domains, die in Onebox-Einbettungen erlaubt sind. Mit `*` werden alle Standard-Onebox-Engines zugelassen."
@@ -1931,7 +1960,6 @@ de:
     google_oauth2_client_secret: "Client-Geheimnis deiner Google-Anwendung."
     google_oauth2_prompt: "Eine optionale, durch Leerzeichen getrennte Liste von String-Werten, die angibt, ob der Autorisierungsserver den Benutzer zur erneuten Authentifizierung und Zustimmung auffordert. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> für die möglichen Werte."
     google_oauth2_hd: "Eine optionale, bei Google Apps gehostete Domain, auf welche die Anmeldung beschränkt wird. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> für weitere Details."
-    google_oauth2_hd_groups: "Rufe die Google-Gruppen der Nutzer auf der gehosteten Domain bei der Authentifizierung ab. Die abgerufenen Google-Gruppen können verwendet werden, um die automatische Mitgliedschaft in Discourse-Gruppen zu ermöglichen (siehe Gruppeneinstellungen). Für weitere Informationen siehe https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Eine E-Mail-Adresse, die zu einem Google-Workspace-Administratorkonto gehört. Wird zusammen mit den Anmeldedaten für das Dienstkonto verwendet, um Gruppeninformationen abzurufen."
     google_oauth2_hd_groups_service_account_json: "JSON-formatierte Schlüsselinformationen für das Dienstkonto. Wird verwendet, um Gruppeninformationen abzurufen."
     google_oauth2_verbose_logging: "Protokolliere ausführliche Google-OAuth2-bezogene Diagnosdaten in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1961,10 +1989,8 @@ de:
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Uploads im Papierkorb. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
     s3_disable_cleanup: "Verhindere das Entfernen von alten Backups aus S3, wenn es mehr Backups als das erlaubte Maximum gibt."
     s3_use_acls: "AWS empfiehlt, keine ACLs für S3-Buckets zu verwenden. Deaktiviere diese Option nur, wenn du für die konfigurierten `s3_upload_bucket` und `s3_backup_bucket` Berechtigungsrichtlinien konfigurieren möchtest."
-    enable_direct_s3_uploads: "Ermöglicht direkte mehrteilige Uploads zu Amazon S3, siehe https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 für weitere Details."
     backup_time_of_day: "Uhrzeit in UTC, zu der Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups einschließen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
-    backup_location: "Ort, an dem die Backups gespeichert werden. WICHTIG: S3 erfordert gültige S3-Anmeldedaten in den Dateien-Einstellungen. Wenn du den Speicherort von „Lokal“ auf S3 änderst, musst du den Rake-Befehl `s3:ensure_cors_rules` ausführen."
     backup_gzip_compression_level_for_uploads: "Gzip-Komprimierungsstufe, die für die Komprimierung von Uploads verwendet wird."
     include_thumbnails_in_backups: "Generierte Vorschaubilder in Backups einschließen. Bei Deaktivierung werden Backups kleiner, aber nach einer Wiederherstellung müssen alle Posts überarbeitet werden."
     active_user_rate_limit_secs: "Anzahl der Sekunden, nach denen das „last_seen_at“-Feld aktualisiert wird."
@@ -2155,7 +2181,6 @@ de:
     fast_typing_threshold: "Zeit, die ein Benutzer mindestens aufwenden muss, um seinen ersten Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. „Low“ ist 1 Sekunde, „standard“ sind 3 Sekunden, „high“ sind 5 Sekunden."
     auto_silence_fast_typers_on_first_post: "Automatisches Stummschalten von Benutzern, die `fast typing threshold` nicht erreichen"
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
-    auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Erfolg dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a wird dazu führen, dass alle Beiträge, die „wüten“ oder „aba“ oder „aca“ enthalten, stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter stummschalten“."
     moderator_guide_topic: "Das Thema, das beschreibt, wie ihr eure Community moderiert. Der Link wird in der Warteschlange für Moderatoren und Administratoren angezeigt."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
@@ -2223,7 +2248,6 @@ de:
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Benutzern erlauben, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
     email_in_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen per E-Mail zu posten. Administratoren und Moderatoren können immer neue Themen per E-Mail posten."
-    email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Wählt den spezifischen E-Mail-Header aus, der zur Identifizierung von Spam verwendet wird. Diese Option kann X-Spam-Flag, X-Spam-Status oder X-SES-Spam-Verdict sein und die E-Mail wird anhand des Werts des Headers als Spam gekennzeichnet. Wenn die gewählte Einstellung zum Beispiel X-Spam-Flag ist, wird eine E-Mail mit dem Header-Wert YES als Spam eingestuft."
     enable_smtp: "Aktiviere SMTP für den Versand von Benachrichtigungen für Gruppen-Nachrichten."
     email_prefix: "Das [Präfix], das für den Betreff von E-Mails genutzt wird. Standardwert ist „title“, wenn nicht gesetzt."
@@ -2285,7 +2309,6 @@ de:
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
     dont_feed_the_trolls_threshold: "Anzahl der Meldungen von anderen Benutzern, bevor verwarnt wird."
-    enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen PN warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für nicht kategorisierte Themen in der Themenliste."
@@ -2509,7 +2532,6 @@ de:
     rich_editor: "Aktiviere den Rich-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor wechseln können, um intuitiver und benutzerfreundlicher zu arbeiten."
     default_composition_mode: "Lege den Standardmodus für den Editor deiner Community fest. Der Rich-Text-Modus bietet den meisten Benutzern ein moderneres, vertrauteres Schreibgefühl, während der Markdown-Modus für ein eher technisches Publikum geeignet sein kann. Die Mitglieder können mit einem Schalter in der Editor-Symbolleiste zwischen den Modi wechseln."
     reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
-    viewport_based_mobile_mode: "Verwende die Viewport-Breite, um den Mobil-/Desktop-Modus zu bestimmen. Diese Einstellung wird bald entfernt werden. Wenn du sie deaktivieren möchtest, lass es uns bitte <a href='https://meta.discourse.org/t/384280'>auf Meta</a> wissen."
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Die Standardsprache des Forums ist immer enthalten. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
@@ -3093,7 +3115,7 @@ de:
 
       - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/v%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -3108,7 +3130,7 @@ de:
 
       - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/v%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 

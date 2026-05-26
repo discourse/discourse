@@ -281,7 +281,7 @@ RSpec.describe AiAgent do
 
     AiAgent.all_agents
 
-    expect(AiAgent.agent_cache[:value].length).to be > (0)
+    expect(AiAgent.agent_cache[:value].length).to be > 0
     RailsMultisite::ConnectionManagement.stubs(:current_db) { "abc" }
     expect(AiAgent.agent_cache[:value]).to eq(nil)
   end

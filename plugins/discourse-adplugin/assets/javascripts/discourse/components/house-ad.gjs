@@ -11,6 +11,7 @@ const adIndex = {
   topic_above_suggested: null,
   post_bottom: null,
   topic_list_between: null,
+  nested_roots_between: null,
 };
 
 @tagName("")
@@ -40,19 +41,26 @@ export default class HouseAd extends AdComponent {
     "showToGroups",
     "showAfterPost",
     "showAfterTopicListItem",
+    "showAfterNestedRoot",
     "showOnCurrentPage"
   )
   get showAd() {
     return (
       this.showToGroups &&
-      (this.showAfterPost || this.showAfterTopicListItem) &&
+      (this.showAfterPost ||
+        this.showAfterTopicListItem ||
+        this.showAfterNestedRoot) &&
       this.showOnCurrentPage
     );
   }
 
   @computed("postNumber", "placement")
   get showAfterPost() {
-    if (!this.postNumber && this.placement !== "topic-list-between") {
+    if (
+      !this.postNumber &&
+      this.placement !== "topic-list-between" &&
+      this.placement !== "nested-roots-between"
+    ) {
       return true;
     }
 
@@ -69,6 +77,17 @@ export default class HouseAd extends AdComponent {
 
     return this.isNthTopicListItem(
       parseInt(this.site.get("house_creatives.settings.after_nth_topic"), 10)
+    );
+  }
+
+  @computed("placement")
+  get showAfterNestedRoot() {
+    if (this.placement !== "nested-roots-between") {
+      return true;
+    }
+
+    return this.isNthTopicListItem(
+      parseInt(this.site.get("house_creatives.settings.after_nth_root"), 10)
     );
   }
 

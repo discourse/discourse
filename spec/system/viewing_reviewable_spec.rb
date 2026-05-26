@@ -208,7 +208,7 @@ describe "Viewing reviewable item" do
       before do
         reviewable_flagged_post.target_created_by.update!(ip_address: "81.2.69.142")
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS
           .any_instance
           .stubs(:getname)

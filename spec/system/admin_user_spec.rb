@@ -78,11 +78,16 @@ describe "Admin User Page" do
         )
       end
 
+      def open_upcoming_changes
+        admin_user_page.open_upcoming_changes_modal
+      end
+
       context "when the change is enabled for everyone" do
         before { SiteSetting.enable_upload_debug_mode = true }
 
         it "displays the upcoming change with enabled status and correct reason" do
           admin_user_page.visit(user)
+          open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -99,6 +104,7 @@ describe "Admin User Page" do
 
         it "displays the upcoming change with disabled status and correct reason" do
           admin_user_page.visit(user)
+          open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -125,6 +131,7 @@ describe "Admin User Page" do
 
           it "displays the upcoming change with enabled status, correct reason, and specific groups" do
             admin_user_page.visit(user)
+            open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -144,6 +151,7 @@ describe "Admin User Page" do
 
           it "displays the upcoming change with all groups" do
             admin_user_page.visit(user)
+            open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -158,6 +166,7 @@ describe "Admin User Page" do
         context "when the user does not belong to any of those groups" do
           it "displays the upcoming change with disabled status, correct reason, and no specific groups" do
             admin_user_page.visit(user)
+            open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -189,6 +198,7 @@ describe "Admin User Page" do
         )
 
         admin_user_page.visit(user)
+        open_upcoming_changes
         expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
         expect(admin_user_page).to have_no_upcoming_change(
           "about_page_extra_groups_show_description",

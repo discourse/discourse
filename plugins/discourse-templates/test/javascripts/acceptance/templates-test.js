@@ -289,7 +289,7 @@ acceptance("keyboard shortcut", function (needs) {
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
 
     assert.dom(".shortcut-category-templates").exists();
-    assert.dom(".shortcut-category-templates li").exists({ count: 1 });
+    assert.dom(".shortcut-category-templates tbody tr").exists({ count: 1 });
   });
 
   test("Composer | Title field focused | Template is inserted", async function (assert) {

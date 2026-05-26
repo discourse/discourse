@@ -1282,7 +1282,9 @@ module(
     test("no whitespace for used wrapper outlet", async function (assert) {
       extraConnectorComponent(
         "test-name",
-        <template>{{! template-lint-disable no-yield-only }}{{yield}}</template>
+        <template>
+          {{! eslint-disable ember/template-no-yield-only }}{{yield}}
+        </template>
       );
       await render(
         <template>

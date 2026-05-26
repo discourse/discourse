@@ -108,7 +108,7 @@ export default class TopicDraftsDropdown extends Component {
         @action={{@action}}
         @label={{@label}}
         @ariaLabel={{@label}}
-        @icon="far-pen-to-square"
+        @icon={{or @icon "far-pen-to-square"}}
         id={{@btnId}}
         class={{@btnClasses}}
       />
@@ -121,7 +121,7 @@ export default class TopicDraftsDropdown extends Component {
           @onRegisterApi={{this.onRegisterApi}}
           @modalForMobile={{true}}
           aria-label={{i18n "drafts.dropdown.title"}}
-          class={{@btnTypeClass}}
+          class={{@draftMenuClasses}}
         >
           <DDropdownMenu as |dropdown|>
             {{#each this.drafts as |draft|}}

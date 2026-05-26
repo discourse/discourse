@@ -38,6 +38,16 @@ export default class IpLookup extends Component {
     return Math.max(visible, total);
   }
 
+  get sameIpData() {
+    return {
+      same_ip_user_id: this.args.userId,
+      user_id: this.args.userId,
+      ip_type: this.args.ipType || "last",
+      exclude: this.args.userId,
+      order: "trust_level DESC",
+    };
+  }
+
   @action
   async lookup() {
     this.loading = true;
@@ -61,18 +71,12 @@ export default class IpLookup extends Component {
       if (!this.otherAccounts && this.ipToLookup) {
         this.otherAccountsLoading = true;
 
-        const data = {
-          ip: this.ipToLookup,
-          exclude: this.args.userId,
-          order: "trust_level DESC",
-        };
-
         const result = await ajax("/admin/users/total-others-with-same-ip", {
-          data,
+          data: this.sameIpData,
         });
         this.totalOthersWithSameIP = result.total;
 
-        this.otherAccounts = await AdminUser.findAll("active", data);
+        this.otherAccounts = await AdminUser.findAll("active", this.sameIpData);
         this.otherAccountsLoading = false;
       }
     } catch (error) {
@@ -128,11 +132,7 @@ export default class IpLookup extends Component {
         try {
           await ajax("/admin/users/delete-others-with-same-ip.json", {
             type: "DELETE",
-            data: {
-              ip: this.ipToLookup,
-              exclude: this.args.userId,
-              order: "trust_level DESC",
-            },
+            data: this.sameIpData,
           });
         } catch (err) {
           popupAjaxError(err);

@@ -46,6 +46,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :ai_bot, path: "/ai-bot/conversations" do
     get "/" => "conversations#index"
+    put "/:topic_id/starred" => "conversations#update_starred"
   end
 
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
@@ -62,6 +63,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :summarization, path: "/summarization", defaults: { format: :json } do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
+    post "/t/:topic_id" => "summary#create", :constraints => { topic_id: /\d+/ }
     put "/regen_gist" => "summary#regen_gist"
     put "/regen_summary" => "summary#regen_summary"
     post "/channels/:channel_id" => "chat_summary#show"

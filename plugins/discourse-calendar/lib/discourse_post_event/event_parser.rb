@@ -74,9 +74,11 @@ module DiscoursePostEvent
     def self.linkify_description(text, post: nil)
       escaped = ERB::Util.html_escape(text)
       html =
-        escaped.gsub(URI::DEFAULT_PARSER.make_regexp(%w[http https])) do |url|
-          "<a href=\"#{url}\">#{url}</a>"
-        end
+        escaped
+          .gsub(URI::DEFAULT_PARSER.make_regexp(%w[http https])) do |url|
+            "<a href=\"#{url}\">#{url}</a>"
+          end
+          .gsub(/\r\n?|\n/, "<br>")
 
       doc = Nokogiri::HTML5.fragment(html)
       add_nofollow = post.nil? || post.add_nofollow?

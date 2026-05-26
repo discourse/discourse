@@ -4,6 +4,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -183,6 +184,15 @@ export default class AdminUserIndexController extends Controller {
   @computed("ssoLastPayload")
   get ssoPayload() {
     return this.ssoLastPayload.split("&");
+  }
+
+  @action
+  openUserUpcomingChanges() {
+    this.modal.show(AdminUserUpcomingChanges, {
+      model: {
+        user: this.model,
+      },
+    });
   }
 
   @action

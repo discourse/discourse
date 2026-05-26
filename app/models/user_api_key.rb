@@ -18,7 +18,7 @@ class UserApiKey < ActiveRecord::Base
   after_initialize :generate_key
 
   def generate_key
-    if !self.key_hash
+    if !key_hash
       @key ||= SecureRandom.hex
       self.key_hash = ApiKey.hash_key(@key)
     end
@@ -41,15 +41,12 @@ class UserApiKey < ActiveRecord::Base
 
   def update_last_used(client_id)
     update_args = { last_used_at: Time.zone.now }
-    if client_id.present? && client_id != self.client.client_id
+    if client_id.present? && client_id != client.client_id
       new_client =
-        UserApiKeyClient.create!(
-          client_id: client_id,
-          application_name: self.client.application_name,
-        )
+        UserApiKeyClient.create!(client_id: client_id, application_name: client.application_name)
       update_args[:user_api_key_client_id] = new_client.id
     end
-    self.update_columns(**update_args)
+    update_columns(**update_args)
   end
 
   # Scopes allowed to be requested by external services
@@ -101,14 +98,14 @@ end
 # Table name: user_api_keys
 #
 #  id                     :integer          not null, primary key
-#  user_id                :integer          not null
+#  key_hash               :string           not null
+#  last_used_at           :datetime         not null
 #  push_url               :string
+#  revoked_at             :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  revoked_at             :datetime
-#  last_used_at           :datetime         not null
-#  key_hash               :string           not null
 #  user_api_key_client_id :bigint
+#  user_id                :integer          not null
 #
 # Indexes
 #

@@ -8,13 +8,16 @@ const GENERAL_ATTRIBUTES = [
 ];
 
 export default class AdminDashboard extends EmberObject {
-  static async fetch({ startDate, endDate } = {}) {
+  static async fetch({ startDate, endDate, version } = {}) {
     const data = {};
     if (startDate) {
       data.start_date = moment(startDate).format("YYYY-MM-DD");
     }
     if (endDate) {
       data.end_date = moment(endDate).format("YYYY-MM-DD");
+    }
+    if (version) {
+      data.version = version;
     }
 
     const json = await ajax("/admin/dashboard.json", { data });
@@ -23,6 +26,7 @@ export default class AdminDashboard extends EmberObject {
     model.setProperties({
       version_check: json.version_check,
       sections: json.sections,
+      configuration: json.configuration,
     });
 
     return model;

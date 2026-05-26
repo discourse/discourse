@@ -51,5 +51,34 @@ module DiscourseSolved
     def can_unaccept_answer?(topic, post)
       can_accept_answer?(topic, post) || (is_staff? && topic&.solved.present?)
     end
+
+    def can_create_shared_issue?(topic)
+      return false if topic.blank? || !authenticated?
+      return false if topic.user_id == current_user.id
+      return false if topic.private_message? || topic.solved.present?
+      return false unless topic_in_support_category?(topic)
+      return false unless current_user.upcoming_change_enabled?(:enable_solved_shared_issues)
+      can_see_topic?(topic)
+    end
+
+    def shared_issue_visible?(topic)
+      return false if topic.blank?
+      return false if topic.private_message?
+      return false unless topic_in_support_category?(topic)
+      unless UpcomingChanges.enabled_for_user?(:enable_solved_shared_issues, current_user)
+        return false
+      end
+      true
+    end
+
+    def topic_in_support_category?(topic)
+      return false if topic.category_id.blank?
+
+      if !DiscourseSolved::AcceptedAnswerCache.allowed
+        DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+      end
+
+      DiscourseSolved::AcceptedAnswerCache.allowed.include?(topic.category_id)
+    end
   end
 end

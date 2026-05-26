@@ -12,6 +12,8 @@ nl:
           poll: "Discourse-poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Opties kunnen worden toegevoegd of verwijderd."
       voters:
         one: "stemmer"
         other: "stemmers"
@@ -148,6 +150,8 @@ nl:
           step: Stap
         poll_public:
           label: Weergeven wie er heeft gestemd
+        poll_dynamic:
+          label: Toestaan dat na het plaatsen opties kunnen worden toegevoegd of verwijderd
         poll_title:
           label: Titel (optioneel)
         poll_options:

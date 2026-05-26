@@ -8,12 +8,12 @@ end
 #
 # Table name: post_search_data
 #
-#  post_id         :integer          not null, primary key
-#  search_data     :tsvector
-#  raw_data        :text
 #  locale          :string
-#  version         :integer          default(0)
 #  private_message :boolean          not null
+#  raw_data        :text
+#  search_data     :tsvector
+#  version         :integer          default(0)
+#  post_id         :integer          not null, primary key
 #
 # Indexes
 #

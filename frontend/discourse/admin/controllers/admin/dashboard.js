@@ -10,6 +10,7 @@ import {
 } from "discourse/admin/components/dashboard/date-range";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
+import { ajax } from "discourse/lib/ajax";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
@@ -17,6 +18,7 @@ const PROBLEMS_CHECK_MINUTES = 1;
 export default class AdminDashboardController extends Controller {
   @service router;
   @service siteSettings;
+  @service loadingSlider;
   @controller("exception") exceptionController;
 
   @tracked loadingProblems = false;
@@ -24,16 +26,18 @@ export default class AdminDashboardController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
-  @tracked sections = null;
+  @tracked version = null;
+  @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
   @autoTrackedArray problems;
 
-  queryParams = ["range", "start_date", "end_date"];
+  queryParams = ["range", "start_date", "end_date", "version"];
 
   isLoading = false;
   dashboardFetchedAt = null;
   _sectionsLoadId = 0;
+  _sectionsLoadingCount = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -81,30 +85,71 @@ export default class AdminDashboardController extends Controller {
     this.fetchSections();
   }
 
+  @action
+  async updateConfiguration(sections) {
+    await ajax("/admin/dashboard/configuration.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({ sections }),
+    });
+    await this.fetchSections();
+  }
+
+  @action
   async fetchSections() {
     const id = ++this._sectionsLoadId;
+    const period = this.safePeriod;
+    const startDate = this.startDate;
+    const endDate = this.endDate;
+
     this.loadingSections = true;
     this.sectionsFetchError = false;
 
+    this._sectionsLoadingCount += 1;
+    if (this._sectionsLoadingCount === 1) {
+      this.loadingSlider.transitionStarted();
+    }
+
     try {
       const model = await AdminDashboard.fetch({
-        startDate: this.startDate,
-        endDate: this.endDate,
+        startDate,
+        endDate,
+        version: this.version,
       });
+
       if (id !== this._sectionsLoadId) {
         return;
       }
-      this.sections = model.sections;
+
+      this.loadedSections = {
+        period,
+        startDate,
+        endDate,
+        sections: model.sections,
+        configuration: model.configuration,
+      };
     } catch {
       if (id !== this._sectionsLoadId) {
         return;
       }
       this.sectionsFetchError = true;
     } finally {
+      this._sectionsLoadingCount = Math.max(this._sectionsLoadingCount - 1, 0);
+      if (this._sectionsLoadingCount === 0) {
+        this.loadingSlider.transitionEnded();
+      }
+
       if (id === this._sectionsLoadId) {
         this.loadingSections = false;
       }
     }
+  }
+
+  get showRedesign() {
+    if (this.version === "alt") {
+      return !this.siteSettings.dashboard_improvements;
+    }
+    return this.siteSettings.dashboard_improvements;
   }
 
   @computed("siteSettings.version_checks")
@@ -161,7 +206,7 @@ export default class AdminDashboardController extends Controller {
     ) {
       this.set("isLoading", true);
 
-      AdminDashboard.fetch()
+      AdminDashboard.fetch({ version: this.version })
         .then((model) => {
           let properties = {
             dashboardFetchedAt: new Date(),

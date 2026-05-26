@@ -6,15 +6,14 @@ class CategoryTagStat < ActiveRecord::Base
 
   def self.topic_moved(topic, from_category_id, to_category_id)
     if from_category_id
-      self
-        .where(tag_id: topic.tags.map(&:id), category_id: from_category_id)
-        .where("topic_count > 0")
-        .update_all("topic_count = topic_count - 1")
+      where(tag_id: topic.tags.map(&:id), category_id: from_category_id).where(
+        "topic_count > 0",
+      ).update_all("topic_count = topic_count - 1")
     end
 
     if to_category_id
       sql = <<~SQL
-        UPDATE #{self.table_name}
+        UPDATE #{table_name}
            SET topic_count = topic_count + 1
          WHERE tag_id in (:tag_ids)
            AND category_id = :category_id
@@ -39,7 +38,7 @@ class CategoryTagStat < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    self.update_topic_counts
+    update_topic_counts
   end
 
   # Recalculate all topic counts if they got out of sync
@@ -85,9 +84,9 @@ end
 # Table name: category_tag_stats
 #
 #  id          :bigint           not null, primary key
+#  topic_count :integer          default(0), not null
 #  category_id :bigint           not null
 #  tag_id      :bigint           not null
-#  topic_count :integer          default(0), not null
 #
 # Indexes
 #

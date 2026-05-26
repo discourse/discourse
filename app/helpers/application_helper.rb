@@ -196,10 +196,6 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    unless SiteSetting.viewport_based_mobile_mode
-      list << (mobile_view? ? "mobile-view" : "desktop-view")
-      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -398,7 +394,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url = (opts[:x_summary_large_image].presence || opts[:image])
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -457,32 +453,28 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      begin
-        if mobile_view?
-          if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-            SiteSetting.site_mobile_logo_dark_url
-          elsif SiteSetting.site_mobile_logo_url.present?
-            SiteSetting.site_mobile_logo_url
-          end
+      if mobile_device?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
+      else
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
         else
-          if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-            SiteSetting.site_logo_dark_url
-          else
-            SiteSetting.site_logo_url
-          end
+          SiteSetting.site_logo_url
         end
       end
   end
 
   def application_logo_dark_url
     @application_logo_dark_url ||=
-      begin
-        if dark_scheme_id != -1
-          if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-            SiteSetting.site_mobile_logo_dark_url
-          elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
-            SiteSetting.site_logo_dark_url
-          end
+      if dark_scheme_id != -1
+        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
         end
       end
   end
@@ -495,8 +487,8 @@ module ApplicationHelper
     "#{Discourse.base_path}/login"
   end
 
-  def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
+  def mobile_device?
+    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def crawler_layout?
@@ -509,16 +501,12 @@ module ApplicationHelper
     else
       return false if !current_user && SiteSetting.login_required?
 
-      crawler_layout? || !mobile_view? || !modern_mobile_device?
+      crawler_layout? || !mobile_device? || !modern_mobile_device?
     end
   end
 
   def modern_mobile_device?
     MobileDetection.modern_mobile_device?(request.user_agent)
-  end
-
-  def mobile_device?
-    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -584,12 +572,10 @@ module ApplicationHelper
       Discourse
         .cache
         .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          begin
-            upload.content.presence
-          rescue StandardError => e
-            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-            nil
-          end
+          upload.content.presence
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
         end
   end
 
@@ -665,14 +651,12 @@ module ApplicationHelper
   end
 
   def topic_featured_link_domain(link)
-    begin
-      uri = UrlHelper.encode_and_parse(link)
-      uri = URI.parse("http://#{uri}") if uri.scheme.nil?
-      host = uri.host.downcase
-      host.start_with?("www.") ? host[4..-1] : host
-    rescue StandardError
-      ""
-    end
+    uri = UrlHelper.encode_and_parse(link)
+    uri = URI.parse("http://#{uri}") if uri.scheme.nil?
+    host = uri.host.downcase
+    host.start_with?("www.") ? host[4..-1] : host
+  rescue StandardError
+    ""
   end
 
   def theme_id
@@ -801,7 +785,7 @@ module ApplicationHelper
   def theme_lookup(name)
     Theme.lookup_field(
       theme_id,
-      mobile_view? ? :mobile : :desktop,
+      mobile_device? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
       csp_nonce: csp_nonce_placeholder,
@@ -849,11 +833,7 @@ module ApplicationHelper
 
     name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
 
-    manager.stylesheet_link_tag(
-      name,
-      opts[:media] || "all",
-      self.method(:add_resource_preload_list),
-    )
+    manager.stylesheet_link_tag(name, opts[:media] || "all", method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -950,7 +930,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "light" if cookie.present?
 
-    !!(current_user&.user_option&.light_mode_forced?)
+    !!current_user&.user_option&.light_mode_forced?
   end
 
   def forced_dark_mode?
@@ -959,7 +939,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "dark" if cookie.present?
 
-    !!(current_user&.user_option&.dark_mode_forced?)
+    !!current_user&.user_option&.dark_mode_forced?
   end
 
   def light_color_hex_for_name(name)

@@ -222,8 +222,6 @@ gl:
     tos: "Termos do servizo"
     rules: "Regras"
     conduct: "Código de conduta"
-    mobile_view: "Visualización móbil"
-    desktop_view: "Visualización en escritorio"
     now: "agora mesmiño"
     read_more: "ler máis"
     more: "Máis"
@@ -249,6 +247,8 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Activado"
       start_posting:
         back: "Volver"
     about:
@@ -319,6 +319,9 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
+    embed_mode:
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -938,7 +941,6 @@ gl:
         normal_option: "Normal"
         normal_option_title: "Recibirá unha notificación se este usuario lle responde, cita a súa mensaxe ou menciona o seu nome."
       notification_schedule:
-        title: "Calendario de notificacións"
         label: "Activar o calendario personalizado de notificacións"
         midnight: "Medianoite"
         none: "Ningunha"
@@ -975,13 +977,8 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificacións ao vivo"
         not_supported: "Este navegador non admite notificacións. Desculpe."
-        perm_default: "Acender notificacións"
-        perm_denied_btn: "Permiso denegado"
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
-        disable: "Desactivar as notificacións"
-        enable: "Activar as notificacións"
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -2090,6 +2087,7 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
+    header_panel: "Cabeceira"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
@@ -2716,7 +2714,6 @@ gl:
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
         set_reminder: "Lémbreme"
-        options: "Opcións"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -3064,80 +3061,52 @@ gl:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atallos do teclado"
+      description_header: "Descrición"
+      key_header: "Chave"
+      search_aliases:
+        shift: "maiús"
       jump_to:
         title: "Ir a"
-        home: "%{shortcut} Inicio"
-        latest: "%{shortcut} Último"
-        new: "%{shortcut} Novo"
-        unread: "%{shortcut} Pendentes de lectura"
-        categories: "%{shortcut} Categorías"
-        top: "%{shortcut} Arriba"
-        bookmarks: "%{shortcut} Marcadores"
-        profile: "%{shortcut} Perfil"
-        messages: "%{shortcut} Mensaxes"
-        drafts: "%{shortcut} Borradores"
-        next: "%{shortcut} Seguinte tema"
-        previous: "%{shortcut} Tema anterior"
+        home: "Inicio"
+        latest: "Últimos"
+        new: "Novo"
+        unread: "Pendentes de lectura"
+        categories: "Categorías"
+        top: "Destacados"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
+        messages: "Mensaxes"
+        drafts: "Borradores"
       navigation:
         title: "Navegación"
-        jump: "%{shortcut} Ir á publicación #"
-        back: "%{shortcut} Volver"
-        up_down: "%{shortcut} Mover selección &uarr; &darr;"
-        open: "%{shortcut} Abrir tema seleccionado"
-        next_prev: "%{shortcut} Sección seguinte/anterior"
-        go_to_unread_post: "%{shortcut} Ir á primeira publicación pendente de lectura"
+        back: "Volver"
+        up_down: "Mover selección &uarr; &darr;"
       application:
         title: "Aplicativo"
-        notifications: "%{shortcut} Abrir notificacións"
-        user_profile_menu: "%{shortcut} Abrir o menú do usuario"
-        show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
-        search: "%{shortcut} Buscar"
-        help: "%{shortcut} Abrir a axuda do teclado"
-        log_out: "%{shortcut} Saír da sesión"
+        search: "Buscar"
+        log_out: "Saír da sesión"
       composing:
         title: "Escribindo"
-        return: "%{shortcut} Volver ao panel de composición"
-        fullscreen: "%{shortcut} Panel de composición en pantalla completa"
+        preformatted: "Texto preformatado"
+        blockquote: "Cita"
       bookmarks:
         title: "Marcadores"
-        enter: "%{shortcut} Gardar e pechar"
-        later_today: "%{shortcut} Hoxe pero despois"
-        later_this_week: "%{shortcut} Esta semana pero despois"
-        tomorrow: "%{shortcut} Mañá"
-        next_week: "%{shortcut} A vindeira semana"
-        next_month: "%{shortcut} O vindeiro mes"
-        next_business_week: "%{shortcut} A principios da próxima semana"
-        next_business_day: "%{shortcut} O vindeiro día laborábel"
-        custom: "%{shortcut} Personalizar data e hora"
-        none: "%{shortcut} Sen recordatorio"
-        delete: "%{shortcut} Eliminar marcador"
+        later_today: "Hoxe, máis tarde"
+        later_this_week: "Máis tarde, esta semana"
+        tomorrow: "Mañá"
+        next_week: "A vindeira semana"
+        next_month: "O vindeiro mes"
+        next_business_day: "O vindeiro día laborábel"
+        custom: "Personalizar data e hora"
+        delete: "Eliminar marcador"
       actions:
         title: "Accións"
-        bookmark_topic: "%{shortcut} Trocar marcar tema"
-        pin_unpin_topic: "%{shortcut} Fixar/Desprender tema"
-        share_topic: "%{shortcut} Compartir tema"
-        share_post: "%{shortcut} Compartir publicación"
-        reply_as_new_topic: "%{shortcut} Responder como tema ligado"
-        reply_topic: "%{shortcut} Responder no tema"
-        reply_post: "%{shortcut} Responder na publicación"
-        quote_post: "%{shortcut} Citar a publicación"
-        like: "%{shortcut} Gústame a publicación"
-        flag: "%{shortcut} Sinalar a publicación"
-        bookmark: "%{shortcut} Marcar a publicación"
-        edit: "%{shortcut} Editar a publicación"
-        delete: "%{shortcut} Eliminar a publicación"
-        mark_muted: "%{shortcut} Silenciar o tema"
-        mark_tracking: "%{shortcut} Seguir o tema"
-        mark_watching: "%{shortcut} Ver o tema"
-        print: "%{shortcut} Imprimir o tema"
-        topic_admin_actions: "%{shortcut} Abrir intervencións do admin no tema"
+        reply_as_new_topic: "Responder como tema ligado"
+        reply_topic: "Responder ao tema"
       search_menu:
         title: "Menú de busca"
-        prev_next: "%{shortcut} Mover a selección arriba e abaixo"
-        insert_url: "%{shortcut} Introducir selección no panel de composición"
       admin:
         title: "Administrador"
-        search_prev_next: "%{shortcut} Mover a selección arriba e abaixo"
     badges:
       earned_n_times:
         one: "Gañou esta insignia %{count} vez"
@@ -3636,6 +3605,32 @@ gl:
         sections:
           reports:
             title: "Informes"
+          engagement:
+            activity_by_category:
+              category: "Categoría"
+              topics: "Temas"
+              posts: "Publicacións"
+              share: "Compartir"
+            whos_posting:
+              all_categories: "Todas as categorías"
+              staff: "Equipo"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Normal"
+                "4": "Líder"
+        reports_section:
+          no_data: "Non hai datos que amosar"
+          modal:
+            enabled_heading: "Activado"
+            all_heading: "Todos os informes"
+            apply: "Aplicar"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
+            crawlers: "Rastrexadores"
         period:
           custom: "Personalizado"
         reports:

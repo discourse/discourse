@@ -9,11 +9,13 @@ RSpec.describe BrowserPageviewEvent do
         user_agent: "a" * (described_class::MAX_USER_AGENT_LENGTH + 1),
         ip_address: "1.2.3.4",
         session_id: "a" * (described_class::MAX_SESSION_ID_LENGTH + 1),
+        normalized_referrer: "a" * (described_class::MAX_NORMALIZED_REFERRER_LENGTH + 1),
       )
 
     expect(event.url.length).to eq(described_class::MAX_URL_LENGTH)
     expect(event.referrer.length).to eq(described_class::MAX_REFERRER_LENGTH)
     expect(event.user_agent.length).to eq(described_class::MAX_USER_AGENT_LENGTH)
     expect(event.session_id.length).to eq(described_class::MAX_SESSION_ID_LENGTH)
+    expect(event.normalized_referrer.length).to eq(described_class::MAX_NORMALIZED_REFERRER_LENGTH)
   end
 end

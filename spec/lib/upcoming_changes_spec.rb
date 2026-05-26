@@ -32,7 +32,7 @@ RSpec.describe UpcomingChanges do
 
     # There is a fixture image at spec/fixtures/images/upcoming_changes/enable_upload_debug_mode.png,
     # but normally upcoming change images are at Rails.public_path + /images/upcoming_changes/
-    Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
+    Rails.stubs(:public_path).returns(Rails.root.join("spec/fixtures").to_s)
   end
 
   describe ".image_exists?" do
@@ -77,14 +77,10 @@ RSpec.describe UpcomingChanges do
         result = described_class.image_data(setting_name, include_file_path: true)
 
         expect(result[:file_path]).to eq(
-          File.join(
-            Rails.root,
-            "spec",
-            "fixtures",
-            "images",
-            "upcoming_changes",
-            "#{setting_name}.png",
-          ),
+          Rails
+            .root
+            .join("spec", "fixtures", "images", "upcoming_changes", "#{setting_name}.png")
+            .to_s,
         )
       end
     end

@@ -386,8 +386,6 @@ be:
     privacy: "Прыватнасць"
     tos: "Умовы абслугоўвання"
     rules: "Правілы"
-    mobile_view: "Мабільная версія"
-    desktop_view: "Поўная версія"
     now: "толькі што"
     read_more: "чытаць далей"
     more: "Больш"
@@ -559,6 +557,9 @@ be:
           few: "+ яшчэ %{count} чарнавікі"
           many: "+ яшчэ %{count} чарнавікоў"
           other: "+ яшчэ %{count} чарнавікоў"
+    embed_mode:
+      signin_flow:
+        cancel: "Скасаваць"
     topic_count_all:
       one: "Паглядзець %{count} новую тэму"
       few: "Паглядзець %{count} новыя тэмы"
@@ -940,11 +941,6 @@ be:
       trust_level: "Узровень даверу"
       notifications: "Апавяшчэнні"
       statistics: "Статыстыка"
-      desktop_notifications:
-        perm_default: "Уключыць апавяшчэнні"
-        perm_denied_btn: "Няма доступу"
-        disable: "Адключыць апавяшчэнні"
-        enable: "Уключыць апавяшчэнні"
       dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "Скінуць"
@@ -1419,6 +1415,7 @@ be:
             after: пасля
         views:
           label: Прагляды
+    header_panel: "Header"
     new_item: "новы"
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай актыўнасці і наладамі"
@@ -1634,7 +1631,6 @@ be:
             title: "Паказаць адрозненні ў крыніцах побач"
       bookmarks:
         name: "Назва"
-        options: "Параметры"
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
@@ -1813,28 +1809,33 @@ be:
       download: "Спампаваць"
     keyboard_shortcuts_help:
       title: "Спалучэнні клавіш"
+      description_header: "Апісанне"
       jump_to:
         title: "Перайсці да"
-        top: "%{shortcut} Топ"
+        home: "Галоўная старонка"
+        latest: "Апошняя"
+        new: "Новы"
+        unread: "Непрачытаныя"
+        categories: "катэгорыі"
+        top: "Топ тэм"
+        bookmarks: "Закладкі"
+        profile: "Профіль"
+        messages: "Паведамленні"
+        drafts: "Чарнавікі"
       navigation:
         title: "Навігацыя"
-        open: "%{shortcut} Адкрыць выбраную тэму"
+        back: "Назад"
       application:
         title: "Праграма"
-        notifications: "%{shortcut} Адкрыць апавяшчэнні"
-        log_out: "%{shortcut} Выйсці"
+        search: "Пошук"
+        log_out: "выхад"
+      composing:
+        preformatted: "Папярэдне фармаціраваны тэкст"
+        blockquote: "Цытата"
+      bookmarks:
+        tomorrow: "заўтра"
       actions:
         title: "Дзеянні"
-        share_post: "%{shortcut} Абагуліць допіс"
-        reply_post: "%{shortcut} Адказаць на допіс"
-        quote_post: "%{shortcut} Працытаваць допіс"
-        like: "%{shortcut} Упадабаць допіс"
-        flag: "%{shortcut} Паскардзіцца на допіс"
-        bookmark: "%{shortcut} Дадаць допіс у закладкі"
-        edit: "%{shortcut} Рэдагаваць допіс"
-        delete: "%{shortcut} Выдаліць допіс"
-        mark_muted: "%{shortcut} Адключыць апавяшчэнні тэмы"
-        mark_tracking: "%{shortcut} Адсочваць тэму"
       admin:
         title: "Адміністратар"
     badges:
@@ -2176,6 +2177,29 @@ be:
         sections:
           reports:
             title: "Справаздачы"
+          engagement:
+            activity_by_category:
+              category: "Катэгорыя"
+              topics: "тэмы"
+              posts: "Допісы"
+              share: "Абагуліць"
+            whos_posting:
+              all_categories: "Усе катэгорыі"
+              staff: "Персанал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новы"
+                "1": "асноўнай"
+                "2": "Член"
+                "3": "рэгулярнае"
+                "4": "лідэр"
+        reports_section:
+          modal:
+            apply: "Прымяніць"
+        site_traffic:
+          series:
+            anonymous: "ананімны"
+            crawlers: "Краўлеры пошукавых сістэм"
         reports:
           today: "сёння"
           yesterday: "учора"

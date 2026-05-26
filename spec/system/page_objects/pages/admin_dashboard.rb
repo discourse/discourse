@@ -5,6 +5,13 @@ module PageObjects
     class AdminDashboard < PageObjects::Pages::Base
       def visit
         page.visit("/admin")
+        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
+        self
+      end
+
+      def visit_with_query(params)
+        page.visit("/admin?#{params.to_query}")
+        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
         self
       end
 
@@ -39,6 +46,75 @@ module PageObjects
 
       def open_custom_date_range
         find(".db-date-range__custom").click
+        self
+      end
+
+      def has_configure_button?
+        has_css?(".btn[data-identifier='db-configure']")
+      end
+
+      def has_no_configure_button?
+        has_no_css?(".btn[data-identifier='db-configure']")
+      end
+
+      def open_configure_menu
+        find(".btn[data-identifier='db-configure']").click
+        has_css?(".db-configure")
+        self
+      end
+
+      def close_configure_menu
+        if page.has_css?(".d-modal__backdrop", wait: 0)
+          page.send_keys :escape
+        else
+          find(".btn[data-identifier='db-configure']").click
+        end
+        has_no_css?(".db-configure")
+        self
+      end
+
+      def has_section?(id)
+        has_css?(".db-main [data-section-id='#{id}']")
+      end
+
+      def has_no_section?(id)
+        has_no_css?(".db-main [data-section-id='#{id}']")
+      end
+
+      def has_first_section?(id)
+        has_css?(".db-main > :first-child[data-section-id='#{id}']")
+      end
+
+      def site_traffic
+        PageObjects::Components::AdminDashboardSiteTraffic.new
+      end
+
+      def section_ids_in_order
+        all(".db-main [data-section-id]").map { |el| el["data-section-id"] }
+      end
+
+      def has_empty_state?
+        has_css?(".db-main__empty")
+      end
+
+      def toggle_section(id)
+        within(".db-configure__row[data-section-id='#{id}']") do
+          find(".d-toggle-switch__label").click
+        end
+        self
+      end
+
+      def move_section_down(id)
+        within(".db-configure__row[data-section-id='#{id}']") do
+          find(".db-configure__arrow:last-child").click
+        end
+        self
+      end
+
+      def move_section_up(id)
+        within(".db-configure__row[data-section-id='#{id}']") do
+          find(".db-configure__arrow:first-child").click
+        end
         self
       end
 

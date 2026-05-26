@@ -13,10 +13,10 @@ end
 # Table name: post_custom_prompts
 #
 #  id            :bigint           not null, primary key
-#  post_id       :integer          not null
 #  custom_prompt :json             not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  post_id       :integer          not null
 #
 # Indexes
 #

@@ -47,6 +47,8 @@ export default class OnboardingStep extends Component {
     });
     this.completed = true;
     this.appEvents.trigger(`onboarding-step:completed`, this.name);
+
+    return this.args.onCompleted?.(this.name);
   }
 
   <template>

@@ -329,6 +329,56 @@ RSpec.describe ComposerController do
       end
     end
 
+    context "with the composer_mention_user_reason modifier" do
+      fab!(:modified_user) { Fabricate(:user, username: "ModifiedReason") }
+      fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
+      fab!(:restricted_topic) { Fabricate(:topic, category: private_category) }
+
+      before { sign_in(Fabricate(:admin)) }
+
+      it "lets a plugin clear the reachability reason" do
+        target_id = modified_user.id
+        modifier = Proc.new { |reason, user| user.id == target_id ? nil : reason }
+        plugin_instance = Plugin::Instance.new
+        DiscoursePluginRegistry.register_modifier(
+          plugin_instance,
+          :composer_mention_user_reason,
+          &modifier
+        )
+
+        begin
+          get "/composer/mentions.json",
+              params: {
+                names: [modified_user.username],
+                topic_id: restricted_topic.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["users"]).to contain_exactly(modified_user.username.downcase)
+          expect(response.parsed_body["user_reasons"]).to eq({})
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :composer_mention_user_reason,
+            &modifier
+          )
+        end
+      end
+
+      it "still returns the reachability reason without the modifier" do
+        get "/composer/mentions.json",
+            params: {
+              names: [modified_user.username],
+              topic_id: restricted_topic.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(
+          modified_user.username.downcase => "category",
+        )
+      end
+    end
+
     context "with an invalid topic" do
       it "returns an error" do
         get "/composer/mentions.json", params: { names: base_names, topic_id: -1 }
