@@ -11,43 +11,41 @@ class UploadRecovery
   end
 
   def recover_post(post)
-    begin
-      analyzer = PostAnalyzer.new(post.raw, post.topic_id)
+    analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
-      analyzer
-        .cooked_stripped
-        .css("img", "a")
-        .each do |media|
-          if media.name == "img" && orig_src = media["data-orig-src"]
-            if dom_class = media["class"]
-              next if (Post.allowed_image_classes & dom_class.split).count > 0
-            end
+    analyzer
+      .cooked_stripped
+      .css("img", "a")
+      .each do |media|
+        if media.name == "img" && orig_src = media["data-orig-src"]
+          if dom_class = media["class"]
+            next if (Post.allowed_image_classes & dom_class.split).count > 0
+          end
 
+          if @dry_run
+            puts "#{post.full_url} #{orig_src}"
+          else
+            recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
+          end
+        elsif url = media["href"] || media["src"]
+          data = Upload.extract_url(url)
+          next unless data
+
+          upload = Upload.get_from_url(url)
+
+          if !upload || upload.verification_status == Upload.verification_statuses[:invalid_etag]
             if @dry_run
-              puts "#{post.full_url} #{orig_src}"
+              puts "#{post.full_url} #{url}"
             else
-              recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
-            end
-          elsif url = (media["href"] || media["src"])
-            data = Upload.extract_url(url)
-            next unless data
-
-            upload = Upload.get_from_url(url)
-
-            if !upload || upload.verification_status == Upload.verification_statuses[:invalid_etag]
-              if @dry_run
-                puts "#{post.full_url} #{url}"
-              else
-                sha1 = data[2]
-                recover_post_upload(post, sha1)
-              end
+              sha1 = data[2]
+              recover_post_upload(post, sha1)
             end
           end
         end
-    rescue => e
-      raise e if @stop_on_error
-      puts "#{post.full_url} #{e.class}: #{e.message}"
-    end
+      end
+  rescue => e
+    raise e if @stop_on_error
+    puts "#{post.full_url} #{e.class}: #{e.message}"
   end
 
   private
@@ -95,11 +93,9 @@ class UploadRecovery
 
   def recover_from_local(sha1:, user_id:)
     @paths ||=
-      begin
-        Dir.glob(File.join(Discourse.store.tombstone_dir, "original", "**", "*.*")).concat(
-          Dir.glob(File.join(Discourse.store.upload_path, "original", "**", "*.*")),
-        )
-      end
+      Dir.glob(File.join(Discourse.store.tombstone_dir, "original", "**", "*.*")).concat(
+        Dir.glob(File.join(Discourse.store.upload_path, "original", "**", "*.*")),
+      )
 
     @paths.each do |path|
       if path =~ /#{sha1}/

@@ -947,6 +947,30 @@ da:
       xaxis: "Dag"
       yaxis: "Antal nye bidragsydere"
       description: "Antal brugere, der har foretaget deres første indlæg i denne periode."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Emner"
+        posts: "Indlæg"
+        share: "Del"
+    posters_by_member_type:
+      labels:
+        count: "Indlæg"
+        share: "Del"
+      types:
+        staff: "Personale"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Tillidsniveau"
+        count: "Brugere"
+        share: "Del"
+      levels:
+        "0": "Nye"
+        "1": "Basis"
+        "2": "Bruger"
+        "3": "Almindelig"
+        "4": "Leder"
     trust_level_growth:
       title: "Tillidsniveau vækst"
       xaxis:
@@ -982,9 +1006,8 @@ da:
     site_traffic:
       title: "Webstedstrafik"
       xaxis:
-        page_view_anon_browser: "Sidevisninger (anonyme)"
-        page_view_logged_in_browser: "Sidevisninger (logget ind)"
-        page_view_crawler: "Kendte crawlere"
+        page_view_anon_browser: "Anonym"
+        page_view_crawler: "Crawlere"
         page_view_other: "Anden trafik"
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
@@ -1093,6 +1116,12 @@ da:
         num_clicks: "Klik"
         num_topics: "Emner"
       description: "Brugere opført efter antal klik på links, de har delt."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøg"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besøg"
     top_traffic_sources:
       title: "Top Trafik Kilder"
       xaxis: "Domæne"
@@ -1202,7 +1231,7 @@ da:
         os: Operativsystem
         login_time: Login Tid
       description: "Detaljer om nye logins, der afviger mistænkeligt fra tidligere logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: Bruger
@@ -1349,7 +1378,6 @@ da:
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     moderators_change_post_ownership: "Tillad moderatorer at ændre ejerskab af indlæg"
-    use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
     allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
     allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."

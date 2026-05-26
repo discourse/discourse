@@ -7,6 +7,7 @@
 nl:
   site_settings:
     topic_voting_enabled: 'Toestaan dat gebruikers op topics kunnen stemmen?'
+    topic_voting_enable_vote_limits: 'Beperk het aantal stemmen per gebruiker op basis van het vertrouwensniveau'
     topic_voting_tl0_vote_limit: 'Hoeveel actieve stemmen mogen TL0-gebruikers hebben?'
     topic_voting_tl1_vote_limit: 'Hoeveel actieve stemmen mogen TL1-gebruikers hebben?'
     topic_voting_tl2_vote_limit: 'Hoeveel actieve stemmen mogen TL2-gebruikers hebben?'
@@ -22,3 +23,9 @@ nl:
     duplicated_votes:
       one: "Een stem kon niet worden verplaatst, omdat de gebruiker al in het andere topic heeft gestemd."
       other: "%{count} stemmen konden niet worden verplaatst, omdat de gebruikers ervan al in het andere topic hebben gestemd."
+    filter:
+      description:
+        topic_votes_min: "Minimaal aantal topicstemmen"
+        topic_votes_max: "Maximaal aantal topicstemmen"
+        order_topic_votes: "Topics sorteren op meeste stemmen"
+        order_topic_votes_asc: "Topics sorteren op minste stemmen"

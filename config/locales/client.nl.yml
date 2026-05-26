@@ -9,9 +9,19 @@ nl:
     blocks:
       ghost:
         status: "Status"
+        conditions: "Voorwaarden"
+        arguments: "Argumenten"
+        container_args: "Containerargumenten"
         in_location: "in"
         hidden: "verborgen"
+        not_registered: "niet geregistreerd"
+        no_visible_children: "geen zichtbare onderliggende"
         failed: "mislukt"
+      ghost_reasons:
+        optional_missing_hint: "Dit optionele blok wordt niet gerenderd omdat het niet is geregistreerd."
+        no_visible_children_hint: "Dit containerblok wordt niet weergegeven omdat geen van de onderliggende zichtbaar is."
+        condition_failed_hint: "Dit blok wordt niet gerenderd omdat niet aan de voorwaarden is voldaan."
+        head_hidden_tail_hint: "Dit blok wordt niet gerenderd omdat er eerst een ander blok is gerenderd in de container `head`."
     carousel:
       go_to_slide: "Ga naar dia %{index}"
       previous: "Vorige dia"
@@ -296,8 +306,14 @@ nl:
     topic_admin_menu: "topicacties"
     skip_to_main_content: "Overslaan naar hoofdinhoud"
     skip_links_label: "Navigatielinks overslaan"
+    skip_to_post: "Overslaan tot bericht %{post_number}"
+    skip_to_where_you_left_off: "Overslaan tot waar je gebleven was (bericht %{post_number})"
+    skip_to_where_you_left_off_last: "Overslaan tot waar je gebleven was (laatste antwoord, bericht %{post_number})"
+    skip_to_last_reply: "Overslaan tot laatste bericht"
+    skip_to_top: "Overslaan tot boven"
     skip_user_nav: "Overslaan naar profielcontent"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
+    emails_are_disabled_no_smtp: "Alle uitgaande e-mail is uitgeschakeld omdat er geen SMTP-server is geconfigureerd. Er kan geen enkele e-mail worden verzonden."
     emails_are_disabled_non_staff: "Uitgaande e-mail is uitgeschakeld voor niet-medewerkers."
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, <span>vernieuw</span> om alles soepel te laten werken."
@@ -311,6 +327,9 @@ nl:
         logged_in_members: "Welkom terug, %{preferred_display_name}!"
         anonymous_members: "Welkom bij %{site_name}!"
       search_placeholder: "Zoeken"
+    impersonation:
+      notice: "Je imiteert %{username}"
+      stop: "Imiteren stoppen"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je site werkt mogelijk niet omdat een thema/onderdeel fouten bevat. Zie de browserconsole voor meer informatie."
@@ -320,12 +339,23 @@ nl:
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     broken_transformer_alert: "Er is een fout opgetreden. Je site werkt mogelijk niet goed."
+    broken_block_alert: "Er is een blokconfiguratiefout gedetecteerd. Controleer de browserconsole voor meer informatie."
+    broken_block_factory_alert: "Het laden van een blok is mislukt. Sommige UI-elementen worden mogelijk niet correct weergegeven."
     critical_deprecation:
       notice: "<b>[Beheerdersmededeling]</b> %{source} bevat code die moet worden bijgewerkt. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>Meer informatie</em></a>)"
       theme_source: "Thema <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plug-in '%{name}'"
       unknown_source: "Een van je thema's of plug-ins"
+    dev_tools:
+      toggle_plugin_outlet_debug: "Debug outlet plug-in in-/uitschakelen"
+      toggle_block_debug: "Debug blok in-/uitschakelen"
+      block_debug:
+        outlet_boundaries: "Outletgrenzen"
+        visual_overlay: "Visuele overlay"
+        ghost_blocks: "Spookblokken"
+        condition_debugging: "Debuggen voorwaarde"
+      toggle_upcoming_changes_debug: "Debug aankomende wijzigingen in-/uitschakelen"
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -417,11 +447,13 @@ nl:
     admin_onboarding_banner:
       launch_in_easy_steps: "Start in %{step_count} eenvoudige stappen"
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
+      select_theme:
+        enabled: "Ingeschakeld"
       invite_collaborators:
         description: "Vroege leden helpen je community tot leven te brengen"
-        action: "Uitnodiging aanmaken"
+        action: "Uitnodiging maken"
       start_posting:
-        title: "Begin met posten"
+        title: "Begin met plaatsen"
         description: "Geef mensen iets om samen over te praten"
         back: "Terug"
         icebreakers:
@@ -430,18 +462,13 @@ nl:
             body: "Hoi allemaal! Ik heb veel zin om deze nieuwe community te starten. Laten we om te beginnen een leuk weetje over onszelf delen. Ik begin: ik ben dol op wandelen en nieuwe paden ontdekken! Wat is iets interessants over jou?"
           coolest_thing_you_have_seen_today:
             title: "Wat is het gaafste dat je vandaag hebt gezien?"
-            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een random act of kindness. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
+            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een en spontaan gebaar van vriendelijkheid. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
           introduce_yourself:
             title: "Stel jezelf voor"
             body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
           what_is_your_favorite_food:
             title: "Wat is je favoriete eten?"
             body: "Deel je favoriete eten met de community! Ik begin: ik hou van pizza, vooral met extra kaas en pepperoni."
-      spread_the_word:
-        title: "Zeg het voort!"
-        description: "Deel een link met iedereen in je netwerk"
-        action: "Link kopiëren"
-        copied_to_clipboard: "Link gekopieerd naar klembord!"
     about:
       edit: "Deze pagina bewerken"
       simple_title: "Over"
@@ -612,6 +639,9 @@ nl:
         other_drafts:
           one: "+%{count} ander concept"
           other: "+%{count} andere concepten"
+    embed_mode:
+      signin_flow:
+        cancel: "Annuleren"
     topic_count_all:
       one: "%{count} nieuw topic weergeven"
       other: "%{count} nieuwe topics weergeven"
@@ -1391,7 +1421,6 @@ nl:
         normal_option: "Normaal"
         normal_option_title: "Je ontvangt een melding als deze gebruiker een bericht van je beantwoordt, je citeert, of je naam noemt."
       notification_schedule:
-        title: "Meldingsschema"
         label: "Aangepast meldingsschema inschakelen"
         tip: "Buiten deze tijden worden je meldingen gepauzeerd."
         midnight: "Middernacht"
@@ -1435,13 +1464,8 @@ nl:
       notifications: "Meldingen"
       statistics: "Statistieken"
       desktop_notifications:
-        label: "Livemeldingen"
         not_supported: "Meldingen worden niet ondersteund in deze browser. Sorry."
-        perm_default: "Meldingen inschakelen"
-        perm_denied_btn: "Toestemming geweigerd"
         perm_denied_expl: "Je hebt toestemming voor meldingen geweigerd. Sta meldingen toe via je browserinstellingen."
-        disable: "Meldingen uitschakelen"
-        enable: "Meldingen inschakelen"
         each_browser_note: "Opmerking: je moet deze instelling wijzigen in elke browser die je gebruikt. Alle meldingen worden uitgeschakeld als je meldingen onderbreekt vanuit het gebruikersmenu, ongeacht deze instelling."
         consent_prompt: "Wil je live meldingen ontvangen als mensen antwoorden op je berichten?"
       dismiss: "Negeren"
@@ -1710,6 +1734,7 @@ nl:
         verify_identity: "Verifieer je identiteit om verder te gaan."
         title: "Wachtwoord herstellen"
         remove: "Wachtwoord verwijderen"
+        remove_disabled: "Het account heeft minstens één andere aanmeldmethode nodig (bijvoorbeeld een toegangssleutel of een gekoppeld extern account) voordat het wachtwoord wordt verwijderd."
         remove_detail: "Je account is niet langer toegankelijk met een wachtwoord, tenzij je het opnieuw instelt."
       second_factor_backup:
         title: "Back-upcodes voor tweeledige verificatie"
@@ -1795,7 +1820,7 @@ nl:
           default: "Hoofdtoegangssleutel"
         save: "Opslaan"
         title: "Toegangssleutels"
-        short_description: "Toegangssleutels zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
+        short_description: "Toegangssleutels zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijvoorbeeld touch, faceID) of via een apparaatpincode/-wachtwoord."
         added_date: "%{date} toegevoegd"
         last_used_date: "Laatst gebruikt %{date}"
         never_used: "Nooit gebruikt"
@@ -2926,6 +2951,7 @@ nl:
       onebox_toolbar:
         copy: "Link kopiëren"
         link_copied: "Link gekopieerd!"
+      unsupported_token: "De rich text-editor ondersteunt niet alle functies die in dit bericht worden gebruikt, schakel over naar de Markdown-editor."
     notifications:
       tooltip:
         regular:
@@ -3188,6 +3214,7 @@ nl:
           placeholder: maximum
           aria_label: filteren op maximumaantal weergaven
     hamburger_menu: "Navigatiemenu"
+    header_panel: "Koptekst"
     new_item: "nieuw"
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
@@ -3319,7 +3346,7 @@ nl:
           unread: "Niets ongelezen gelaten... indrukwekkend!"
           new_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
-          generic: "Niets om te zien hier...kom snel terug!"
+          generic: "Niets te zien hier...kom snel terug!"
     topic_bulk_actions:
       dismiss:
         name: "Sluiten"
@@ -3361,14 +3388,19 @@ nl:
       load_more_children:
         one: "Nog %{count} antwoord"
         other: "Nog %{count} antwoorden"
+      load_more_children_generic: "Meer antwoorden"
+      continue_thread: "Doorgaan met deze thread"
       collapsed_replies:
         one: "%{count} antwoord"
         other: "%{count} antwoorden"
       collapse: "Samenvouwen"
+      collapse_parent: "Bovenliggende thread samenvouwen"
       no_replies: "Nog geen antwoorden."
       deleted_post_placeholder: "[verwijderd]"
       ignored_post_placeholder: "[genegeerd]"
       pinned_reply: "Vastgemaakt"
+      context:
+        banner: "Je bekijkt een enkele thread van dit topic."
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4141,7 +4173,7 @@ nl:
         delete: "Verwijderen"
         add: "Vereiste taggroep toevoegen"
         placeholder: "Selecteer taggroep…"
-        tag_group: "Tag-groep"
+        tag_group: "Taggroep"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       create_long: "Nieuwe categorie maken"
       type_settings_schema:
@@ -4151,7 +4183,7 @@ nl:
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
       validations:
-        emoji_required: "Kies een emoji."
+        emoji_required: "Selecteer een emoji."
         icon_required: "Selecteer een pictogram."
       description: "Beschrijving"
       logo_description: "Aanbevolen beeldverhouding 1:1 met een minimale bestandsgrootte van 200 pixels. Als dit leeg wordt gelaten, wordt er geen afbeelding weergegeven."
@@ -4553,107 +4585,61 @@ nl:
       title: "Sneltoetsen"
       short_title: "Sneltoetsen"
       search_ctrl_f_tip: "Druk op <kbd>/</kbd> om het hele forum te doorzoeken"
+      description_header: "Beschrijving"
+      key_header: "Sleutel"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Springen naar"
-        home: "%{shortcut} Start"
-        latest: "%{shortcut} Nieuwste"
-        new: "%{shortcut} Nieuw"
-        unread: "%{shortcut} Ongelezen"
-        categories: "%{shortcut} Categorieën"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Bladwijzers"
-        profile: "%{shortcut} Profiel"
-        messages: "%{shortcut} Berichten"
-        drafts: "%{shortcut} Concepten"
-        next: "%{shortcut} Volgende topic"
-        previous: "%{shortcut} Vorige topic"
+        home: "Start"
+        latest: "Recent"
+        new: "Nieuw"
+        unread: "Ongelezen"
+        unseen: "Ongezien"
+        categories: "Categorieën"
+        top: "Top"
+        bookmarks: "Bladwijzers"
+        profile: "Profiel"
+        messages: "Berichten"
+        drafts: "Concepten"
       navigation:
         title: "Navigatie"
-        jump: "%{shortcut} Naar bericht #"
-        back: "%{shortcut} Terug"
-        up_down: "%{shortcut} Selectie verplaatsen &uarr; &darr;"
-        open: "%{shortcut} Geselecteerd topic openen"
-        next_prev: "%{shortcut} Volgende/vorige sectie"
-        go_to_unread_post: "%{shortcut} Naar eerste ongelezen bericht"
+        back: "Terug"
+        up_down: "Selectie verplaatsen &uarr; &darr;"
       application:
         title: "Toepassing"
-        notifications: "%{shortcut} Meldingen openen"
-        hamburger_menu: "%{shortcut} Navigatiemenu openen"
-        user_profile_menu: "%{shortcut} Gebruikersmenu openen"
-        show_incoming_updated_topics: "%{shortcut} Bijgewerkte topics weergeven"
-        search: "%{shortcut} Zoeken"
-        filter_sidebar: "%{shortcut} Filterzijbalk"
-        help: "%{shortcut} Toetsenbordhulp openen"
-        toggle_bulk_select: "%{shortcut} Bulkselectie in-/uitschakelen"
-        dismiss: "%{shortcut} Geselecteerde topics sluiten"
-        x: "%{shortcut} Selectie wisselen (in bulkselectiemodus)"
-        log_out: "%{shortcut} Afmelden"
+        search: "Zoeken"
+        log_out: "Afmelden"
       composing:
         title: "Opstellen"
-        return: "%{shortcut} Terug naar editor"
-        minimize: "%{shortcut} Editor minimaliseren"
-        create_or_reply: "%{shortcut} Topic maken of antwoord plaatsen"
-        fullscreen: "%{shortcut} Editor in volledig scherm"
-        insert_current_time: "%{shortcut} Huidige tijd invoegen"
-        bold: "%{shortcut} Vet"
-        italic: "%{shortcut} Schuin"
-        link: "%{shortcut} Link invoegen"
-        preformatted: "%{shortcut} Vooraf opgemaakte tekst"
-        paragraph: "%{shortcut} Alinea"
-        heading_1: "%{shortcut} Kop 1"
-        heading_2: "%{shortcut} Kop 2"
-        heading_3: "%{shortcut} Kop 3"
-        heading_4: "%{shortcut} Kop 4"
-        toggle_direction: "%{shortcut} Tekstrichting wisselen"
-        ordered_list: "%{shortcut} Geordende lijst"
-        unordered_list: "%{shortcut} Ongeordende lijst"
-        blockquote: "%{shortcut} Blokcitaat"
+        link: "Link invoegen"
+        preformatted: "Vooraf opgemaakte tekst"
+        paragraph: "Alinea"
+        blockquote: "Blokcitaat"
       bookmarks:
         title: "Bladwijzers maken"
-        enter: "%{shortcut} Opslaan en sluiten"
-        later_today: "%{shortcut} Later vandaag"
-        later_this_week: "%{shortcut} Later deze week"
-        tomorrow: "%{shortcut} Morgen"
-        next_week: "%{shortcut} Volgende week"
-        next_month: "%{shortcut} Volgende maand"
-        next_business_week: "%{shortcut} Begin volgende week"
-        next_business_day: "%{shortcut} Volgende werkdag"
-        custom: "%{shortcut} Aangepaste datum en tijd"
-        none: "%{shortcut} Geen herinnering"
-        delete: "%{shortcut} Bladwijzer verwijderen"
+        later_today: "Later vandaag"
+        later_this_week: "Later deze week"
+        tomorrow: "Morgen"
+        next_week: "Volgende week"
+        next_month: "Volgende maand"
+        next_business_day: "Volgende werkdag"
+        custom: "Aangepaste datum en tijd"
+        none: "Geen herinnering"
+        delete: "Bladwijzer verwijderen"
       actions:
         title: "Acties"
-        bookmark_topic: "%{shortcut} Topicbladwijzer in-/uitschakelen"
-        pin_unpin_topic: "%{shortcut} Topic vast-/losmaken"
-        share_topic: "%{shortcut} Topic delen"
-        share_post: "%{shortcut} Bericht delen"
-        reply_as_new_topic: "%{shortcut} Beantwoorden als gekoppeld topic"
-        reply_topic: "%{shortcut} Antwoorden op topic"
-        reply_post: "%{shortcut} Antwoorden op bericht"
-        quote_post: "%{shortcut} Bericht citeren"
-        like: "%{shortcut} Bericht liken"
-        flag: "%{shortcut} Bericht markeren"
-        bookmark: "%{shortcut} Bladwijzer voor bericht maken"
-        edit: "%{shortcut} Bericht bewerken"
-        delete: "%{shortcut} Bericht verwijderen"
-        mark_muted: "%{shortcut} Topic negeren"
-        mark_regular: "%{shortcut} Normaal (standaard) topic"
-        mark_tracking: "%{shortcut} Topic volgen"
-        mark_watching: "%{shortcut} Topic observeren"
-        print: "%{shortcut} Topic afdrukken"
-        defer: "%{shortcut} Topic markeren als ongelezen"
-        topic_admin_actions: "%{shortcut} Beheeracties voor topic openen"
-        archive_private_message: "%{shortcut} Schakelaar persoonlijk bericht archiveren"
+        reply_as_new_topic: "Antwoorden als gekoppeld topic"
+        reply_topic: "Antwoorden op topic"
+        flag: "Bericht markeren"
+        delete: "Bericht verwijderen"
+        mark_tracking: "Topic volgen"
+        mark_watching: "Topic observeren"
+        defer: "Topic markeren als ongelezen"
       search_menu:
         title: "Zoekmenu"
-        prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
-        insert_url: "%{shortcut} Selectie invoegen in open editorvenster"
-        full_page_search: "%{shortcut} Start zoeken op volledige pagina"
       admin:
         title: "Beheerder"
-        search_prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
-        search_open: "%{shortcut} Zoeken openen voor de beheerdersinterface"
-        search_full_page: "%{shortcut} Zoeken voor beheerders openen op volledige pagina"
     badges:
       earned_n_times:
         one: "Deze badge is %{count} keer verdiend"
@@ -5309,7 +5295,7 @@ nl:
           status_experimental: "Experimenteel"
           impact_role_admins: "Beheerders"
           impact_role_moderators: "Moderators"
-          impact_role_staff: "Medewerker"
+          impact_role_staff: "Medewerkers"
       config:
         about:
           title: "Over je site"
@@ -5349,7 +5335,7 @@ nl:
               title: "Discourse ID"
         discourse_id:
           title: "Discourse ID"
-          learn_more: "Meer info"
+          learn_more: "Meer informatie"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"
@@ -5739,6 +5725,33 @@ nl:
             title: "Rapporten"
           traffic:
             title: "Siteverkeer"
+          engagement:
+            activity_by_category:
+              category: "Categorie"
+              topics: "Topics"
+              posts: "Berichten"
+              share: "Delen"
+            whos_posting:
+              all_categories: "Alle categorieën"
+              staff: "Medewerker"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nieuw"
+                "1": "Basis"
+                "2": "Lid"
+                "3": "Normaal"
+                "4": "Leider"
+        configure:
+          button: "Configureren"
+        site_traffic:
+          series:
+            anonymous: "Anoniem"
+            crawlers: "Crawlers"
+        period:
+          last_7_days: "Afgelopen 7 dagen"
+          last_30_days: "Afgelopen 30 dagen"
+          last_3_months: "Afgelopen 3 maanden"
+          custom: "Aangepast"
         reports:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
           percent_change_tooltip: "%{percent} verandering."

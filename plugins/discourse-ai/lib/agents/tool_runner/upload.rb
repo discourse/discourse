@@ -28,6 +28,9 @@ module DiscourseAi
 
                 return nil if upload.nil?
 
+                guardian = @context.user&.guardian || Guardian.new
+                return nil if !guardian.can_see_upload?(upload)
+
                 max_pixels = max_pixels&.to_i
                 max_pixels = nil if max_pixels && max_pixels <= 0
 

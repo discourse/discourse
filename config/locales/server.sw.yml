@@ -541,6 +541,29 @@ sw:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
       yaxis: "Idadi ya wachangiaji wapya"
+    activity_by_category:
+      labels:
+        category: "Kikundi"
+        topics: "Mada"
+        posts: "Machapisho"
+        share: "Shirikisha"
+    posters_by_member_type:
+      labels:
+        count: "Machapisho"
+        share: "Shirikisha"
+      types:
+        staff: "Wasaidizi"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Wanachama"
+        share: "Shirikisha"
+      levels:
+        "0": "Mpya"
+        "1": "Kawaida"
+        "2": "Mwanachama"
+        "3": "Kawaida"
+        "4": "Kiongozi"
     trust_level_growth:
       yaxis: "Siku"
     consolidated_page_views:
@@ -557,6 +580,8 @@ sw:
     consolidated_page_views_browser_detection:
       yaxis: "Siku"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Asiyejulikana"
       yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
@@ -644,6 +669,12 @@ sw:
         user: "Mtumiaji"
         num_clicks: "Imebonyezwa"
         num_topics: "Mada"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
     top_traffic_sources:
       title: "Chanzo cha Msongamano Kwenye Mtandao"
       xaxis: "Kikoa"
@@ -730,7 +761,7 @@ sw:
       labels:
         user: Mtumiaji
         location: Sehemu
-    staff_logins:
+    admin_logins:
       labels:
         user: Mtumiaji
         location: Sehemu

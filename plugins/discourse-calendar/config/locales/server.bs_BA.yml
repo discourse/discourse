@@ -9,3 +9,10 @@ bs_BA:
     currently_away:
       labels:
         username: Nadimak
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Day"
+        week: "Sedmica"
+        month: "Mjesec"
+        year: "Godina"

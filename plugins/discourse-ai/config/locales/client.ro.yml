@@ -65,6 +65,8 @@ ro:
           few: "(încă %{count})"
           other: "(încă %{count})"
         collapse_list: "(arată mai puține)"
+        nav:
+          enabled: "Activate"
         filters:
           all: "Toate"
           reset: "Resetare"

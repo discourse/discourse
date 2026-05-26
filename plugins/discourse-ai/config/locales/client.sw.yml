@@ -41,6 +41,8 @@ sw:
         groups: "Makundi:"
         no_groups: "Hakuna"
         edit: "Mipangilio"
+        nav:
+          enabled: "Imeruhusiwa"
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"

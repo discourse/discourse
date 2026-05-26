@@ -235,8 +235,7 @@ pt_BR:
             ui_settings: "Configurações da interface do usuário"
             integrations: "Integrações"
         nav:
-          configured: "Configurado"
-          unconfigured: "Não configurado"
+          enabled: "Ativados"
         filters:
           all: "Tudo"
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
@@ -971,12 +970,14 @@ pt_BR:
             one: "A mensagem deve ter pelo menos %{count} caractere"
             other: "A mensagem deve ter pelo menos %{count} caracteres"
           messages_sidebar_title: "Conversas"
+          starred: "Marcado como favorito"
           today: "Hoje"
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"
           upload_files: "Enviar arquivos"
           uploads_in_progress: "Não é possível enviar enquanto houver envios em andamento"
           scroll_to_bottom: "Rolar para a parte inferior"
+          editing_post: "Editando postagem"
       sentiments:
         dashboard:
           title: "Sentimento"

@@ -226,37 +226,34 @@ module("Unit | Utility | url", function (hooks) {
   });
 
   test("getCategoryAndTagUrl", function (assert) {
+    const cat = { path: "/c/foo/1", default_list_filter: "all" };
+    const noneCat = { path: "/c/foo/1", default_list_filter: "none" };
+    const noneTag = { slug: "none", id: null };
+    const bugTag = { slug: "bug", id: 7 };
+
+    // category only
+    assert.strictEqual(getCategoryAndTagUrl(cat, true), "/c/foo/1");
+    assert.strictEqual(getCategoryAndTagUrl(cat, false), "/c/foo/1/none");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, true), "/c/foo/1/all");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, false), "/c/foo/1/none");
+
+    // category + tag
     assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        true
-      ),
-      "/c/foo/1"
+      getCategoryAndTagUrl(cat, true, "none"),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, noneTag),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, bugTag),
+      "/tags/c/foo/1/bug/7"
     );
 
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        true
-      ),
-      "/c/foo/1/all"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
+    // tag only
+    assert.strictEqual(getCategoryAndTagUrl(null, true, "none"), "/tag/none");
+    assert.strictEqual(getCategoryAndTagUrl(null, true, bugTag), "/tag/bug/7");
   });
 
   test("routeTo redirects secure uploads URLS because they are server side only", async function (assert) {

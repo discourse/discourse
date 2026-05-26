@@ -5,11 +5,11 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DTextarea from "discourse/components/d-textarea";
-import icon from "discourse/helpers/d-icon";
-import autoFocus from "discourse/modifiers/auto-focus";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class AiImageCaptionContainer extends Component {
@@ -58,7 +58,7 @@ export default class AiImageCaptionContainer extends Component {
         class="composer-popup education-message ai-caption-popup"
         {{willDestroy this.hidePopup}}
       >
-        <ConditionalLoadingSpinner
+        <DConditionalLoadingSpinner
           @condition={{this.imageCaptionPopup.loading}}
         >
           <DTextarea
@@ -66,9 +66,9 @@ export default class AiImageCaptionContainer extends Component {
             {{didUpdate this.resizeTextarea this.imageCaptionPopup.newCaption}}
             @value={{this.imageCaptionPopup.newCaption}}
             {{on "change" this.updateCaption}}
-            {{autoFocus}}
+            {{dAutoFocus}}
           />
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
 
         <div class="actions">
           <DButton
@@ -84,7 +84,7 @@ export default class AiImageCaptionContainer extends Component {
           />
 
           <span class="credits">
-            {{icon "discourse-sparkles"}}
+            {{dIcon "discourse-sparkles"}}
             <span>{{i18n "discourse_ai.ai_helper.image_caption.credits"}}</span>
           </span>
         </div>

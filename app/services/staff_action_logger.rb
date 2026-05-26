@@ -106,6 +106,29 @@ class StaffActionLogger
     )
   end
 
+  def log_post_recover(post)
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+
+    user = post.user ? "#{post.user.username} (#{post.user.name})" : "(deleted user)"
+    topic = post.topic || Topic.with_deleted.find_by(id: post.topic_id)
+
+    details = [
+      "id: #{post.id}",
+      "created_at: #{post.created_at}",
+      "user: #{user}",
+      "raw: #{truncate(post.raw)}",
+    ]
+
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:recover_post],
+        topic_id: topic&.id,
+        post_id: post.id,
+        details: details.join("\n"),
+      ),
+    )
+  end
+
   def log_topic_delete_recover(topic, action = "delete_topic", opts = {})
     raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
 

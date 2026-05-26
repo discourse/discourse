@@ -12,11 +12,9 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -30,7 +28,9 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
 
@@ -47,6 +47,9 @@ export default class AiBotConversations extends Component {
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
   @tracked uploads = trackedArray();
+
+  shiftHeldOnEnter = false;
+
   // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
@@ -223,9 +226,24 @@ export default class AiBotConversations extends Component {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey) {
-      this.prepareAndSubmitToBot();
+    if (event.key === "Enter") {
+      this.shiftHeldOnEnter = event.shiftKey;
     }
+  }
+
+  @action
+  handleBeforeInput(event) {
+    // Real Enter on a textarea inserts a line break; IME-confirming Enter
+    // inserts composition text. Reading inputType is deterministic across
+    // browsers regardless of compositionend/keydown ordering quirks.
+    const shiftHeld = this.shiftHeldOnEnter;
+    this.shiftHeldOnEnter = false;
+    if (event.inputType !== "insertLineBreak" || shiftHeld) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.prepareAndSubmitToBot();
   }
 
   @action
@@ -253,7 +271,7 @@ export default class AiBotConversations extends Component {
     }
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -295,7 +313,7 @@ export default class AiBotConversations extends Component {
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -394,7 +412,7 @@ export default class AiBotConversations extends Component {
 
         <div
           {{this.creditLimitTooltipModifier}}
-          class={{concatClass
+          class={{dConcatClass
             "ai-bot-conversations__input-wrapper"
             (if this.isSubmitDisabled "--disabled")
           }}
@@ -410,6 +428,7 @@ export default class AiBotConversations extends Component {
             {{didInsert this.setTextArea}}
             {{on "input" this.updateInputValue}}
             {{on "keydown" this.handleKeyDown}}
+            {{on "beforeinput" this.handleBeforeInput}}
             id="ai-bot-conversations-input"
             autofocus={{unless this.isSubmitDisabled "true"}}
             placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}

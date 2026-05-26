@@ -1,7 +1,7 @@
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 <template>
@@ -10,7 +10,7 @@ import { i18n } from "discourse-i18n";
     @route={{@route}}
     @models={{if @model (array @model) (array)}}
   >
-    {{icon "chevron-left"}}
+    {{dIcon "chevron-left"}}
     {{i18n (or @label "back_button")}}
   </LinkTo>
 </template>

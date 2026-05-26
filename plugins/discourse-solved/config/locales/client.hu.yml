@@ -10,6 +10,11 @@ hu:
       site_settings:
         categories:
           discourse_solved: "Discourse Megoldások"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Elfogadott megoldások"
   js:
     notifications:
       alt:

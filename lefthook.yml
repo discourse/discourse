@@ -45,13 +45,7 @@ pre-commit:
         - "frontend/**/*.{js,gjs}"
         - "plugins/**/*.{js,gjs}"
         - "themes/**/*.{js,gjs}"
-      run: pnpm eslint --quiet {staged_files}
-    ember-template-lint:
-      glob:
-        - "frontend/**/*.gjs"
-        - "plugins/**/*.gjs"
-        - "themes/**/*.gjs"
-      run: pnpm ember-template-lint {staged_files}
+      run: pnpm eslint --max-warnings 0 {staged_files}
     yaml-syntax:
       glob: "**/*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
@@ -83,12 +77,6 @@ fix-staged:
         - "plugins/**/*.{js,gjs}"
         - "themes/**/*.{js,gjs}"
       run: pnpm eslint --fix {staged_files}
-    ember-template-lint:
-      glob:
-        - "frontend/**/*.gjs"
-        - "plugins/**/*.gjs"
-        - "themes/**/*.gjs"
-      run: pnpm ember-template-lint --fix {staged_files}
     stylelint:
       glob:
         - "app/assets/stylesheets/**/*.scss"
@@ -121,8 +109,6 @@ fix-all:
       run: pnpm lint:prettier:fix
     eslint:
       run: pnpm lint:js:fix
-    ember-template-lint:
-      run: pnpm lint:hbs:fix
     stylelint:
       run: pnpm lint:css:fix
     rubocop:
@@ -159,8 +145,6 @@ lints:
       run: pnpm lint:prettier
     eslint:
       run: pnpm lint:js
-    ember-template-lint:
-      run: pnpm lint:hbs
     stylelint:
       run: pnpm lint:css
     yaml-syntax:

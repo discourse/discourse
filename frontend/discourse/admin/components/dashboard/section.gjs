@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const LAYOUTS = ["column", "row", "grid"];
 

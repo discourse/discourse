@@ -18,6 +18,8 @@ en:
     ai:
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
+    errors:
+      tool_not_allowed: "You are not allowed to use this tool"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -28,6 +30,7 @@ en:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Scheduled report for %{query_name}"

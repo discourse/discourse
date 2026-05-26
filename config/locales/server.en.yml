@@ -411,7 +411,7 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>This invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
+    existing_user_cannot_redeem: "This invitation isn't available for your email address. Sign in with another account, or ask for a new invitation."
     existing_user_already_redemeed: "You have already redeemed this invite link."
     user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
@@ -1377,6 +1377,43 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    activity_by_category:
+      title: "Activity by category"
+      description: "Topics, posts, and member participation per category in the selected period. Share is each category's percentage of total activity across the listed categories; Vs Prior is the change in share compared with the previous period of equal length."
+      labels:
+        category: "Category"
+        topics: "Topics"
+        posts: "Posts"
+        page_views: "Page views"
+        share: "Share"
+        vs_prior: "Vs Prior"
+    posters_by_member_type:
+      title: "Who's posting?"
+      description: "Posts authored in the selected period, bucketed by member type. \"New members\" signed up during the period, \"Returning\" signed up before it, and \"Staff\" are admins or moderators."
+      labels:
+        member_type: "Member type"
+        count: "Posts"
+        share: "Share"
+      types:
+        new_members: "New members"
+        returning: "Returning"
+        staff: "Staff"
+    trust_level_pipeline:
+      title: "Trust level pipeline"
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Trust level"
+        count: "Members"
+        share: "Share"
+        moves_in: "Moves in"
+        moves_out: "Moves out"
+      levels:
+        "0": "New"
+        "1": "Basic"
+        "2": "Member"
+        "3": "Regular"
+        "4": "Leader"
     trust_level_growth:
       title: "Trust Level growth"
       xaxis:
@@ -1422,9 +1459,9 @@ en:
     site_traffic:
       title: "Site traffic"
       xaxis:
-        page_view_anon_browser: "Pageviews (anonymous)"
-        page_view_logged_in_browser: "Pageviews (logged in)"
-        page_view_crawler: "Known crawlers"
+        page_view_anon_browser: "Anonymous"
+        page_view_logged_in_browser: "Logged in"
+        page_view_crawler: "Crawlers"
         page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"
@@ -1542,6 +1579,18 @@ en:
         num_clicks: "Clicks"
         num_topics: "Topics"
       description: "Users listed by number of clicks on links they have shared."
+    top_countries_by_browser_pageviews:
+      title: "Top countries"
+      description: "Countries driving the most browser pageviews to your forum in the selected period."
+      labels:
+        country_code: "Country code"
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      title: "Top referrers"
+      description: "External sites referring the most browser pageviews to your forum in the selected period."
+      labels:
+        normalized_referrer: "Referrer"
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -1671,7 +1720,7 @@ en:
         os: Operating System
         login_time: Login Time
       description: "Details of new logins that differ suspiciously from previous logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: User
@@ -1751,6 +1800,9 @@ en:
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
+      email_sending_failures:
+        one: "Email sending has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+        other: "Email sending has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -1769,6 +1821,9 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
+    reports_section:
+      providers:
+        core_report: "Standard"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1875,7 +1930,7 @@ en:
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A list of custom email headers"
-    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Customizing specific system email templates on Meta</a>."
     simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
@@ -1952,7 +2007,7 @@ en:
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     change_post_ownership_allowed_groups: "Allow users in these groups to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
+    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the <a href='%{base_path}/admin/logs/screened_ip_addresses'>Screened IPs list</a>."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
@@ -2070,7 +2125,7 @@ en:
     google_oauth2_client_secret: "Client secret of your Google application."
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
-    google_oauth2_hd_groups: "Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information see https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/226850\">this Meta topic</a>."
     google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
     google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
     google_oauth2_verbose_logging: "Log verbose Google OAuth2 related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2106,10 +2161,10 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; only uncheck this option if intend to configure permissions policies on the configured `s3_upload_bucket` and `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
+    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">this Meta topic</a> for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
-    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
+    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in <a href='%{base_path}/admin/site_settings/category/files'>Files settings</a>. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
     backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
     include_thumbnails_in_backups: "Include generated thumbnails in backups. Disabling this will make backups smaller, but requires a rebake of all posts after a restore."
 
@@ -2197,6 +2252,8 @@ en:
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
+    composer_media_optimization_image_convert_enabled: "Enables client-side conversion of JXL, HEIC, and animated GIF images before upload. JXL and HEIC are converted to JPEG, animated GIFs larger than the threshold are converted to animated WEBP."
+    composer_media_optimization_gif_conversion_threshold: "Minimum GIF file size in bytes to trigger client-side conversion to animated WEBP."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
     video_conversion_service: "The video conversion service to use for processing uploaded videos."
@@ -2351,7 +2408,7 @@ en:
     fast_typing_threshold: "Minimum amount of time a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
-    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
+    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use <a href='%{base_path}/admin/customize/watched_words/action/silence'>Silence Watched Words</a> instead."
     moderator_guide_topic: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
@@ -2428,7 +2485,7 @@ en:
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_allowed_groups: "Groups that are allowed to post new topics via email. Admins and moderators can always post new topics via email."
 
-    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
+    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358' target='_blank'>this Meta topic</a> for instructions on how to configure this."
     email_in_spam_header: "Selects the specific email header to use for identifying spam. This option can be X-Spam-Flag, X-Spam-Status, or X-SES-Spam-Verdict, and the email is tagged as spam based on the header's value. For instance, if the chosen setting is X-Spam-Flag, an email with this header value set to YES would be classified as spam."
 
     enable_smtp: "Enable SMTP for sending notifications for group messages."
@@ -2514,8 +2571,6 @@ en:
 
     dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
 
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
-
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
     pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recipient has not been seen more than n months ago."
@@ -2584,6 +2639,7 @@ en:
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
+    embed_full_app_signin_flow: "When full app mode is enabled, intercept logged-out actions inside the iframe with a guided flow that opens a top-level sign-in tab that auto-closes on success. Only enable this when the embed is same-site to the host page (e.g. `forum.example.com` on `blog.example.com`) or when `same site cookies` is set to `None` — otherwise the iframe will not receive the session cookie after sign-in."
     suppress_third_party_analytics_in_embed: "Skip rendering third-party analytics scripts (Google Tag Manager, Google Analytics, Adobe Analytics) when Discourse is loaded inside a full app embed iframe. Prevents duplicate pageviews and tag firing when the host page already loads the same scripts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -2604,6 +2660,7 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    enable_gifs: "Adds a button to easily search and insert GIFs in posts."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."
@@ -2746,6 +2803,7 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+    admin_dashboard_sections: "Sections shown on the redesigned admin dashboard, in display order. Managed via the Configure menu on the dashboard."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -2795,7 +2853,6 @@ en:
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
@@ -2816,7 +2873,9 @@ en:
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
+    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Improvements to navigation, design, and usability for the Discourse admin dashboard."
 
     errors:
@@ -3248,6 +3307,7 @@ en:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
+      same_ip_address_user: "Same IP address as %{username}"
       inactive_user: "Inactive user"
       reviewable_reject_auto: "Auto handle queued reviewables"
       reviewable_reject: "Reviewable user rejected"
@@ -3410,7 +3470,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3426,7 +3486,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -4080,6 +4140,15 @@ en:
 
     email_bounced: |
       The message to %{email} bounced.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
+
+    email_sending_failed: |
+      Sending the message to %{email} failed.
 
       ### Details
 
@@ -5651,6 +5720,7 @@ en:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'

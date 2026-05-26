@@ -9,12 +9,9 @@ import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SmallUserList, {
-  smallUserAttrs,
-} from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import DAG from "discourse/lib/dag";
 import {
   applyBehaviorTransformer,
@@ -22,6 +19,10 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { and } from "discourse/truth-helpers";
+import DSmallUserList, {
+  smallUserAttrs,
+} from "discourse/ui-kit/d-small-user-list";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -82,7 +83,6 @@ const defaultDagOptions = {
 export default class PostMenu extends Component {
   @service capabilities;
   @service currentUser;
-  @service keyValueStore;
   @service modal;
   @service menu;
   @service siteSettings;
@@ -455,14 +455,14 @@ export default class PostMenu extends Component {
       "post-menu-toggle-like-action",
       async () => {
         if (!this.currentUser) {
-          this.keyValueStore &&
-            this.keyValueStore.set({
-              key: "likedPostId",
-              value: this.args.post.id,
-            });
-
-          this.args.showLogin();
-          return;
+          // Archived topics reject likes server-side; closed topics still
+          // accept them, so let anon defer-and-replay after login.
+          if (this.args.post.topic?.archived) {
+            return;
+          }
+          return deferAnonymousAction(this, "like_post", {
+            post_id: this.args.post.id,
+          });
         }
 
         if (
@@ -619,7 +619,7 @@ export default class PostMenu extends Component {
     >
       <nav
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
-        class={{concatClass
+        class={{dConcatClass
           "post-controls"
           (if
             (and
@@ -636,6 +636,7 @@ export default class PostMenu extends Component {
             "replies-button-visible"
           )
         }}
+        role="none"
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
         {{#each this.extraControls key="key" as |extraControl|}}
@@ -657,7 +658,7 @@ export default class PostMenu extends Component {
           {{/each}}
         </div>
       </nav>
-      <SmallUserList
+      <DSmallUserList
         class="who-read"
         @addSelf={{false}}
         @isVisible={{this.isWhoReadVisible}}

@@ -427,6 +427,29 @@ bs_BA:
       xaxis: "Day"
     new_contributors:
       xaxis: "Day"
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Topics"
+        posts: "Objave"
+        share: "Dijeli"
+    posters_by_member_type:
+      labels:
+        count: "Objave"
+        share: "Dijeli"
+      types:
+        staff: "Staff"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Članovi"
+        share: "Dijeli"
+      levels:
+        "0": "Novo"
+        "1": "Osnovni"
+        "2": "Član"
+        "3": "Normalno"
+        "4": "Vođa"
     trust_level_growth:
       yaxis: "Day"
     consolidated_page_views:
@@ -443,6 +466,8 @@ bs_BA:
     consolidated_page_views_browser_detection:
       yaxis: "Day"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anoniman"
       yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
@@ -528,6 +553,12 @@ bs_BA:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Teme"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -596,7 +627,7 @@ bs_BA:
       labels:
         user: User
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Lokacija

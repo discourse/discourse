@@ -3,16 +3,8 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import AdminEditableField from "discourse/admin/components/admin-editable-field";
 import AdminUserExportsTable from "discourse/admin/components/admin-user-exports-table";
-import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import IpLookup from "discourse/admin/components/ip-lookup";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import avatar from "discourse/helpers/avatar";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
@@ -20,6 +12,12 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, gt, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -31,7 +29,7 @@ export default <template>
           @model={{@controller.model}}
           class="btn btn-default"
         >
-          {{icon "user"}}
+          {{dIcon "user"}}
           {{i18n "admin.user.show_public_profile"}}
         </LinkTo>
       {{/if}}
@@ -208,7 +206,7 @@ export default <template>
 
     <div class="display-row">
       <div class="field">{{i18n "user.avatar.title"}}</div>
-      <div class="value">{{avatar @controller.model imageSize="large"}}</div>
+      <div class="value">{{dAvatar @controller.model imageSize="large"}}</div>
       <div class="controls">
         {{trustHTML
           (i18n "admin.user.visit_profile" url=@controller.preferencesPath)
@@ -235,6 +233,7 @@ export default <template>
               <IpLookup
                 @ip={{@controller.model.ip_address}}
                 @userId={{@controller.model.id}}
+                @ipType="last"
               />
             {{/if}}
           {{/if}}
@@ -252,6 +251,7 @@ export default <template>
               <IpLookup
                 @ip={{@controller.model.registration_ip_address}}
                 @userId={{@controller.model.id}}
+                @ipType="registration"
               />
             {{/if}}
           {{/if}}
@@ -271,7 +271,7 @@ export default <template>
             @model={{@controller.model}}
             class="btn btn-default"
           >
-            {{icon "certificate"}}
+            {{dIcon "certificate"}}
             {{i18n "admin.badges.edit_badges"}}
           </LinkTo>
         </div>
@@ -335,7 +335,7 @@ export default <template>
           {{#if @controller.model.approved}}
             {{i18n "admin.user.approved_by"}}
             <LinkTo @route="adminUser" @model={{@controller.model.approvedBy}}>
-              {{avatar @controller.model.approvedBy imageSize="small"}}
+              {{dAvatar @controller.model.approvedBy imageSize="small"}}
             </LinkTo>
             <LinkTo @route="adminUser" @model={{@controller.model.approvedBy}}>
               {{@controller.model.approvedBy.username}}
@@ -496,14 +496,14 @@ export default <template>
         {{#if @controller.model.can_change_trust_level}}
           {{#if @controller.model.canLockTrustLevel}}
             {{#if @controller.hasLockedTrustLevel}}
-              {{icon "lock" title="admin.user.trust_level_locked_tip"}}
+              {{dIcon "lock" title="admin.user.trust_level_locked_tip"}}
               <DButton
                 @action={{fn @controller.lockTrustLevel false}}
                 @label="admin.user.unlock_trust_level"
                 class="btn-default"
               />
             {{else}}
-              {{icon "unlock" title="admin.user.trust_level_unlocked_tip"}}
+              {{dIcon "unlock" title="admin.user.trust_level_unlocked_tip"}}
               <DButton
                 @action={{fn @controller.lockTrustLevel true}}
                 @label="admin.user.lock_trust_level"
@@ -568,7 +568,7 @@ export default <template>
         <div class="field">{{i18n "admin.user.suspended_by"}}</div>
         <div class="value">
           <LinkTo @route="adminUser" @model={{@controller.model.suspendedBy}}>
-            {{avatar @controller.model.suspendedBy imageSize="tiny"}}
+            {{dAvatar @controller.model.suspendedBy imageSize="tiny"}}
           </LinkTo>
           <LinkTo @route="adminUser" @model={{@controller.model.suspendedBy}}>
             {{@controller.model.suspendedBy.username}}
@@ -599,7 +599,7 @@ export default <template>
         {{/if}}
       </div>
       <div class="controls">
-        <ConditionalLoadingSpinner
+        <DConditionalLoadingSpinner
           @size="small"
           @condition={{@controller.model.silencingUser}}
         >
@@ -622,7 +622,7 @@ export default <template>
               {{i18n "admin.user.silence_explanation"}}
             {{/if}}
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </div>
     </div>
 
@@ -631,7 +631,7 @@ export default <template>
         <div class="field">{{i18n "admin.user.silenced_by"}}</div>
         <div class="value">
           <LinkTo @route="adminUser" @model={{@controller.model.silencedBy}}>
-            {{avatar @controller.model.silencedBy imageSize="tiny"}}
+            {{dAvatar @controller.model.silencedBy imageSize="tiny"}}
           </LinkTo>
           <LinkTo @route="adminUser" @model={{@controller.model.silencedBy}}>
             {{@controller.model.silencedBy.username}}
@@ -663,6 +663,27 @@ export default <template>
             {{i18n "admin.user.clear_penalty_history.description"}}
           </div>
         {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if
+      (and
+        @controller.currentUser.staff @controller.model.upcoming_changes_stats
+      )
+    }}
+      <div class="display-row upcoming-changes-info">
+        <div class="field">{{i18n "admin.user.upcoming_changes.title"}}</div>
+        <div class="value">
+          <DButton
+            @action={{@controller.openUserUpcomingChanges}}
+            @icon="eye"
+            @label="admin.user.upcoming_changes.view_modal"
+            class="btn-default"
+          />
+        </div>
+        <div class="controls">
+          &nbsp;
+        </div>
       </div>
     {{/if}}
 
@@ -735,18 +756,18 @@ export default <template>
 
     <div class="display-row">
       <div class="field">{{i18n "created"}}</div>
-      <div class="value">{{formatDate
+      <div class="value">{{dFormatDate
           @controller.model.created_at
           leaveAgo="true"
         }}</div>
     </div>
     <div class="display-row">
       <div class="field">{{i18n "admin.users.last_emailed"}}</div>
-      <div class="value">{{formatDate @controller.model.last_emailed_at}}</div>
+      <div class="value">{{dFormatDate @controller.model.last_emailed_at}}</div>
     </div>
     <div class="display-row">
       <div class="field">{{i18n "last_seen"}}</div>
-      <div class="value">{{formatDate
+      <div class="value">{{dFormatDate
           @controller.model.last_seen_at
           leaveAgo="true"
         }}</div>
@@ -820,7 +841,7 @@ export default <template>
     </div>
     <div class="display-row">
       <div class="field">{{i18n "admin.user.time_read"}}</div>
-      <div class="value">{{formatDuration @controller.model.time_read}}</div>
+      <div class="value">{{dFormatDuration @controller.model.time_read}}</div>
     </div>
     <div class="display-row">
       <div class="field">{{i18n "user.invited.days_visited"}}</div>
@@ -843,7 +864,7 @@ export default <template>
             @query={{hash filters=@controller.postEditsByEditorFilter}}
             class="btn btn-icon btn-default"
           >
-            {{icon "far-eye"}}
+            {{dIcon "far-eye"}}
             {{i18n "admin.user.view_edits"}}
           </LinkTo>
         {{/if}}
@@ -934,18 +955,6 @@ export default <template>
     </section>
   {{/if}}
 
-  {{#if
-    (and @controller.currentUser.staff @controller.model.upcoming_changes_stats)
-  }}
-    <section class="details">
-      <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>
-      <p>{{trustHTML
-          (i18n "admin.user.upcoming_changes.description" basePath=basePath)
-        }}</p>
-      <AdminUserUpcomingChanges @user={{@controller.model}} />
-    </section>
-  {{/if}}
-
   {{#if @controller.currentUser.admin}}
     <AdminUserExportsTable @model={{@controller.model}} />
   {{/if}}
@@ -1011,7 +1020,7 @@ export default <template>
 
     {{#if @controller.deleteExplanation}}
       <div class="pull-right">
-        {{icon "triangle-exclamation"}}
+        {{dIcon "triangle-exclamation"}}
         <span class="delete-explanation">
           {{@controller.deleteExplanation}}
         </span>

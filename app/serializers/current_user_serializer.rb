@@ -84,6 +84,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :effective_locale,
              :can_see_ip,
              :is_impersonating,
+             :impersonation_expires_at,
              :can_change_post_owner,
              :show_site_owner_onboarding
 
@@ -107,6 +108,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def is_impersonating
     !!object.is_impersonating
+  end
+
+  def impersonation_expires_at
+    object.impersonation_expires_at
   end
 
   def include_can_change_post_owner?
@@ -367,7 +372,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_view_raw_email
-    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+    scope.can_view_raw_emails?
   end
 
   def do_not_disturb_channel_position

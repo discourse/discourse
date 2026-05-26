@@ -45,7 +45,7 @@ module Migrations
           end
 
           def initialize(plugins_path: nil)
-            @plugins_path = plugins_path || File.join(Rails.root, "plugins")
+            @plugins_path = plugins_path || Rails.root.join("plugins").to_s
           end
 
           def introspect
@@ -153,7 +153,7 @@ module Migrations
           end
 
           def core_migration_paths
-            [File.join(Rails.root, "db", "migrate"), File.join(Rails.root, "db", "post_migrate")]
+            [Rails.root.join("db/migrate").to_s, Rails.root.join("db/post_migrate").to_s]
           end
 
           def run_core_migrations

@@ -66,16 +66,31 @@ module Jobs
         .with_deleted
         .where("raw ILIKE ?", "%@#{@old_username}%")
         .where("posts.user_id = :user_id", user_id: @user_id)
+        .where.not(id: updated_post_ids)
         .find_each do |post|
           update_post(post)
           updated_post_ids << post.id
         end
 
+      # Posts quoting this user
       Post
         .with_deleted
         .joins(quoted("posts.id"))
         .where("p.user_id = :user_id", user_id: @user_id)
-        .find_each { |post| update_post(post) if updated_post_ids.exclude?(post.id) }
+        .where.not(id: updated_post_ids)
+        .find_each do |post|
+          update_post(post)
+          updated_post_ids << post.id
+        end
+
+      # Category description posts may be authored by the system user and have no user_actions
+      Post
+        .with_deleted
+        .joins("INNER JOIN categories ON categories.topic_id = posts.topic_id")
+        .where(post_number: 1)
+        .where("raw ILIKE ?", "%@#{@old_username}%")
+        .where.not(id: updated_post_ids)
+        .find_each { |post| update_post(post) }
     end
 
     def update_revisions
@@ -138,6 +153,7 @@ module Jobs
       post.cooked = update_cooked(post.cooked)
 
       post.update_columns(raw: post.raw, cooked: post.cooked)
+      post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
     rescue => e

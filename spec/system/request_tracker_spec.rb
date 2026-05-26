@@ -7,6 +7,7 @@ describe "Request tracking" do
     CachedCounting.reset
     CachedCounting.enable
     SiteSetting.trigger_browser_pageview_events = true
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   after do
@@ -14,6 +15,8 @@ describe "Request tracking" do
     ApplicationRequest.disable
     CachedCounting.disable
   end
+
+  let(:pageview_tracking) { PageObjects::Pages::PageviewTracking.new }
 
   describe "pageviews" do
     it "tracks an anonymous visit correctly" do
@@ -44,7 +47,7 @@ describe "Request tracking" do
       expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event[:ip_address]).to eq("::1")
       expect(event[:referrer]).to be_blank
-      expect(event[:session_id]).to be_present
+      expect(event[:session_id]).to eq(pageview_tracking.session_id)
 
       events =
         DiscourseEvent.track_events(:browser_pageview) do
@@ -352,7 +355,7 @@ describe "Request tracking" do
 
       it "tracks an anonymous visit correctly" do
         all_events =
-          DiscourseEvent.track_events do
+          DiscourseEvent.track_events do |captured|
             visit "/"
             try_until_success do
               CachedCounting.flush
@@ -371,17 +374,14 @@ describe "Request tracking" do
                 "page_view_logged_in_total" => 0,
                 "page_view_crawler_total" => 0,
               )
+              expect(captured.count { |e| e[:event_name] == :beacon_browser_pageview }).to eq(1)
+              expect(captured.count { |e| e[:event_name] == :browser_pageview }).to eq(1)
             end
           end
 
-        beacon_events = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
-        non_beacon_events = all_events.select { |e| e[:event_name] == :browser_pageview }
-
-        expect(beacon_events.size).to eq(1)
-        expect(non_beacon_events.size).to eq(1)
-
-        beacon_event = beacon_events[0][:params].last
-        non_beacon_event = non_beacon_events[0][:params].last
+        beacon_event =
+          all_events.find { |e| e[:event_name] == :beacon_browser_pageview }[:params].last
+        non_beacon_event = all_events.find { |e| e[:event_name] == :browser_pageview }[:params].last
 
         [beacon_event, non_beacon_event].each do |event|
           expect(event[:user_id]).to be_nil
@@ -438,7 +438,7 @@ describe "Request tracking" do
         sign_in user
 
         all_events =
-          DiscourseEvent.track_events do
+          DiscourseEvent.track_events do |captured|
             visit "/"
 
             try_until_success do
@@ -460,17 +460,14 @@ describe "Request tracking" do
                 "page_view_logged_in_browser_beacon_total" => 1,
                 "page_view_crawler_total" => 0,
               )
+              expect(captured.count { |e| e[:event_name] == :beacon_browser_pageview }).to eq(1)
+              expect(captured.count { |e| e[:event_name] == :browser_pageview }).to eq(1)
             end
           end
 
-        beacon_events = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
-        non_beacon_events = all_events.select { |e| e[:event_name] == :browser_pageview }
-
-        expect(beacon_events.size).to eq(1)
-        expect(non_beacon_events.size).to eq(1)
-
-        beacon_event = beacon_events[0][:params].last
-        non_beacon_event = non_beacon_events[0][:params].last
+        beacon_event =
+          all_events.find { |e| e[:event_name] == :beacon_browser_pageview }[:params].last
+        non_beacon_event = all_events.find { |e| e[:event_name] == :browser_pageview }[:params].last
 
         [beacon_event, non_beacon_event].each do |event|
           expect(event[:user_id]).to eq(user.id)

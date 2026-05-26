@@ -1,83 +1,179 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
+import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deepEqual } from "discourse/lib/object";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const sections = [
-  {
-    id: "highlights",
-    label: "admin.dashboard.sections.highlights.title",
-    visible: true,
-  },
-  {
-    id: "reports",
-    label: "admin.dashboard.sections.reports.title",
-    visible: true,
-  },
-  {
-    id: "traffic",
-    label: "admin.dashboard.sections.traffic.title",
-    visible: true,
-  },
-  {
-    id: "engagement",
-    label: "admin.dashboard.sections.engagement.title",
-    visible: true,
-  },
-];
+export default class RedesignedAdminDashboard extends Component {
+  @service currentUser;
 
-const RedesignedAdminDashboard = <template>
-  <div class="db-toolbar">
-    <h1>Dashboard</h1>
+  @tracked pendingSections;
 
-    <div class="db-toolbar__actions">
-      <DashboardDateRange
-        @period={{@period}}
-        @startDate={{@startDate}}
-        @endDate={{@endDate}}
-        @setPeriod={{@setPeriod}}
-        @setCustomDateRange={{@setCustomDateRange}}
-      />
+  _saving = false;
+  _opened = false;
 
-      <DMenu
-        @identifier="db-customise"
-        @icon="gear"
-        @label="Customise"
-        @triggerClass="btn-default"
-        @modalForMobile={{true}}
-      >
-        <:content>
-          <div class="db-customise">
-            <ul class="db-customise__list">
-              {{#each sections as |s|}}
-                <li class="db-customise__row">
-                  <span class="db-customise__drag-handle">{{icon
-                      "grip-vertical"
-                    }}</span>
-                  <span class="db-customise__section-name">{{i18n
-                      s.label
-                    }}</span>
-                  <DToggleSwitch @state={{s.visible}} />
-                </li>
-              {{/each}}
-            </ul>
-          </div>
-        </:content>
-      </DMenu>
+  constructor() {
+    super(...arguments);
+    this.pendingSections = this.#buildPendingSections(
+      this.args.loadedSections?.configuration?.sections
+    );
+  }
+
+  @action
+  onMenuOpen() {
+    this._opened = true;
+    this.pendingSections = this.#buildPendingSections(
+      this.args.loadedSections?.configuration?.sections
+    );
+  }
+
+  @action
+  toggleVisibility(id) {
+    this.pendingSections = this.pendingSections.map((s) =>
+      s.id === id ? { ...s, visible: !s.visible } : s
+    );
+  }
+
+  @action
+  reorder(fromIndex, toIndex) {
+    const next = [...this.pendingSections];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    this.pendingSections = next;
+  }
+
+  @action
+  onMenuClose() {
+    if (this._saving || !this._opened) {
+      return;
+    }
+
+    const committedSections =
+      this.args.loadedSections?.configuration?.sections ?? [];
+
+    if (deepEqual(this.pendingSections, committedSections)) {
+      return;
+    }
+
+    this._saving = true;
+    this.args
+      .updateConfiguration(this.pendingSections)
+      .catch((e) => {
+        popupAjaxError(e);
+        this.pendingSections = this.#buildPendingSections(
+          this.args.loadedSections?.configuration?.sections
+        );
+      })
+      .finally(() => {
+        this._saving = false;
+      });
+  }
+
+  #buildPendingSections(sections) {
+    return sections?.map((section) => ({ ...section })) ?? [];
+  }
+
+  <template>
+    <div class="db-toolbar">
+      <h1>Dashboard</h1>
+
+      <div class="db-toolbar__actions">
+        <DashboardDateRange
+          @period={{@requestedPeriod}}
+          @startDate={{@requestedStartDate}}
+          @endDate={{@requestedEndDate}}
+          @setPeriod={{@setPeriod}}
+          @setCustomDateRange={{@setCustomDateRange}}
+        />
+
+        {{#if this.currentUser.admin}}
+          <DMenu
+            @identifier="db-configure"
+            @icon="gear"
+            @label={{i18n "admin.dashboard.configure.button"}}
+            @title={{i18n "admin.dashboard.configure.tooltip"}}
+            @triggerClass="btn-default"
+            @modalForMobile={{true}}
+            @onClose={{this.onMenuClose}}
+            @onShow={{this.onMenuOpen}}
+          >
+            <:content>
+              <ConfigureMenu
+                @sections={{this.pendingSections}}
+                @onReorder={{this.reorder}}
+                @onToggleVisibility={{this.toggleVisibility}}
+              />
+            </:content>
+          </DMenu>
+        {{/if}}
+      </div>
     </div>
-  </div>
 
-  <div class="db-main">
-    <DashboardHighlights @startDate={{@startDate}} @endDate={{@endDate}} />
-    <DashboardReports @startDate={{@startDate}} @endDate={{@endDate}} />
-    <DashboardTraffic @startDate={{@startDate}} @endDate={{@endDate}} />
-    <DashboardEngagement @startDate={{@startDate}} @endDate={{@endDate}} />
-  </div>
-</template>;
+    <div class="db-main">
+      {{#if @loadedSections}}
+        {{#each @loadedSections.sections key="id" as |section|}}
+          <div class="db-main__section" data-section-id={{section.id}}>
+            {{#if (eq section.id "highlights")}}
+              <DashboardHighlights
+                @highlights={{section.data}}
+                @period={{@loadedSections.period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
+              />
+            {{else if (eq section.id "reports")}}
+              <DashboardReports
+                @data={{section.data}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
+                @refreshSections={{@refreshSections}}
+              />
+            {{else if (eq section.id "traffic")}}
+              <DashboardTraffic
+                @traffic={{section.data}}
+                @period={{@loadedSections.period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
+              />
+            {{else if (eq section.id "engagement")}}
+              <DashboardEngagement
+                @engagement={{section.data}}
+                @period={{@loadedSections.period}}
+                @loading={{@loadingSections}}
+                @fetchError={{@sectionsFetchError}}
+                @startDate={{@loadedSections.startDate}}
+                @endDate={{@loadedSections.endDate}}
+              />
+            {{/if}}
+          </div>
+        {{/each}}
 
-export default RedesignedAdminDashboard;
+        {{#unless @loadedSections.sections.length}}
+          <div class="db-main__empty" role="status" aria-live="polite">
+            {{#if this.currentUser.admin}}
+              {{i18n "admin.dashboard.configure.empty_state_admin"}}
+            {{else}}
+              {{i18n "admin.dashboard.configure.empty_state_moderator"}}
+            {{/if}}
+          </div>
+        {{/unless}}
+      {{else if @loadingSections}}
+        <DashboardSkeleton />
+      {{/if}}
+    </div>
+  </template>
+}

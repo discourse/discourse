@@ -1921,8 +1921,8 @@ RSpec.describe TopicQuery do
           fully_read_archived.archived = true
           fully_read_archived.save
 
-          old_partially_read.update!(updated_at: 2.weeks.ago)
-          partially_read.update!(updated_at: Time.now)
+          old_partially_read.update!(bumped_at: 2.weeks.ago)
+          partially_read.update!(bumped_at: Time.now)
         end
 
         it "operates correctly" do

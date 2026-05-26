@@ -269,6 +269,26 @@ lv:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    activity_by_category:
+      labels:
+        category: "Sadaļa"
+        topics: "Tēmas"
+        posts: "Ieraksti"
+        share: "Dalīties"
+    posters_by_member_type:
+      labels:
+        count: "Ieraksti"
+        share: "Dalīties"
+      types:
+        staff: "Personāls"
+    trust_level_pipeline:
+      labels:
+        count: "Dalībnieki"
+        share: "Dalīties"
+      levels:
+        "0": "Jauns"
+        "2": "Biedrs"
+        "3": "Regulārs"
     trust_level_growth:
       yaxis: "Diena"
     consolidated_page_views:
@@ -284,6 +304,8 @@ lv:
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonīmi"
       yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
@@ -338,6 +360,12 @@ lv:
       labels:
         user: "Lietotājs"
         num_topics: "Tēmas"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
     top_traffic_sources:
       xaxis: "Domēns"
       num_topics: "Tēmas"
@@ -399,7 +427,7 @@ lv:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
-    staff_logins:
+    admin_logins:
       labels:
         user: Lietotājs
         location: Atrašanās vieta

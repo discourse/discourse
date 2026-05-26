@@ -263,8 +263,7 @@ es:
             ui_settings: "Ajustes de interfaz de usuario"
             integrations: "Integraciones"
         nav:
-          configured: "Configurado"
-          unconfigured: "Sin configurar"
+          enabled: "Activado"
         filters:
           all: "Todo"
           text: "Buscar características, agentes, LLM o grupos..."
@@ -1168,12 +1167,14 @@ es:
             one: "El mensaje debe tener %{count} carácter o más"
             other: "El mensaje debe tener %{count} caracteres o más"
           messages_sidebar_title: "Conversaciones"
+          starred: "Favoritos"
           today: "Hoy"
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"
           upload_files: "Subir archivos"
           uploads_in_progress: "No se puede enviar mientras se están subiendo archivos"
           scroll_to_bottom: "Desplazar hacia abajo"
+          editing_post: "Editando publicación"
       sentiments:
         dashboard:
           title: "Sentimiento"

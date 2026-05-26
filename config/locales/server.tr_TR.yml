@@ -377,7 +377,6 @@ tr_TR:
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">Şifrenizi Sıfırlayın</a>.</p>
     not_found_template_link: |
       <p>Bu <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamıyor. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin.</p>
-    existing_user_cannot_redeem: "Bu davet kullanılamaz. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin."
     existing_user_already_redemeed: "Bu davet bağlantısını zaten kullandınız."
     user_exists: "<b>%{email}</b> adresini davet etmeye gerek yok, zaten hesabı var!"
     invite_exists: "<b>%{email}</b> adresini zaten davet etmiştiniz."
@@ -1269,6 +1268,30 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Yeni katkıda bulunanların sayısı"
       description: "Bu dönemde ilk gönderisini yapan kullanıcı sayısı."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Konular"
+        posts: "Gönderi"
+        share: "Paylaş"
+    posters_by_member_type:
+      labels:
+        count: "Gönderi"
+        share: "Paylaş"
+      types:
+        staff: "Personel"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Güven seviyesi"
+        count: "Üyeler"
+        share: "Paylaş"
+      levels:
+        "0": "Yeni"
+        "1": "Temel"
+        "2": "Üye"
+        "3": "Normal"
+        "4": "Lider"
     trust_level_growth:
       title: "Güven Seviyesi büyümesi"
       xaxis:
@@ -1314,9 +1337,8 @@ tr_TR:
     site_traffic:
       title: "Site trafiği"
       xaxis:
-        page_view_anon_browser: "Sayfa görüntülemeleri (anonim)"
-        page_view_logged_in_browser: "Sayfa görüntülemeleri (giriş yapılmış)"
-        page_view_crawler: "Bilinen gezginler"
+        page_view_anon_browser: "Anonim"
+        page_view_crawler: "Gezginler"
         page_view_other: "Diğer trafik"
       yaxis: "Gün"
       description: "Giriş yapmış kullanıcılar, anonim kullanıcılar, bilinen gezginler ve diğer trafik için sayfa görüntülemeleri."
@@ -1433,6 +1455,12 @@ tr_TR:
         num_clicks: "Tıklamalar"
         num_topics: "Konular"
       description: "Kullanıcılar, paylaştıkları bağlantıların tıklanma sayısına göre listelenir."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
     top_traffic_sources:
       title: "En Popüler Trafik Kaynakları"
       xaxis: "Alan Adı"
@@ -1558,7 +1586,7 @@ tr_TR:
         os: İşletim Sistemi
         login_time: Giriş Zamanı
       description: "Önceki girişlerden şüpheli bir şekilde farklı olan yeni girişlerin ayrıntıları."
-    staff_logins:
+    admin_logins:
       title: "Yönetici Girişleri"
       labels:
         user: Kullanıcı
@@ -1758,7 +1786,6 @@ tr_TR:
     x_summary_large_image: "Twitter kartı \"özet büyük görüntü\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
     email_custom_headers: "Özel e-posta başlıklarının listesi"
-    email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     simple_email_subject: "Bu özellik etkinleştirildiğinde, e-posta konu satırları daha kısa ve öz olacak ve yalnızca gerekli bilgileri içerecektir. Bu sayede kullanıcılar, e-postanın amacını bir bakışta kolayca anlayabilirler."
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
     enforce_second_factor: "Kullanıcıların Discourse kullanıcı arayüzüne erişmeden önce iki faktörlü kimlik doğrulamayı (2FA) etkinleştirmelerini zorunlu kılın. Bu ayar, API veya 'DiscourseConnect sağlayıcı' kimlik doğrulamasını etkilemez. enforce_second_factor_on_external_auth etkinleştirilirse, kullanıcılar 2FA'yı kurduktan sonra harici kimlik doğrulama sağlayıcılarıyla oturum açamazlar."
@@ -1827,7 +1854,6 @@ tr_TR:
     moderators_change_post_ownership: "Moderatörlerin gönderi sahipliğini değiştirmesine izin verin"
     change_post_ownership_allowed_groups: "Bu gruplardaki kullanıcıların gönderi sahipliğini değiştirmesine izin ver"
     cors_origins: "Kökenler arası talepler (CORS) için izin verilen kökenler. Her köken http:// veya https:// içermelidir. CORS'u etkinleştirmek için DISCOURSE_ENABLE_CORS env değişkeni true olarak ayarlanmalıdır."
-    use_admin_ip_allowlist: "Yöneticiler yalnızca Taranan IP'ler listesinde tanımlanan bir IP adresindelerse oturum açabilirler (Yönetici > Günlükler > Taranan IP'ler)."
     blocked_ip_blocks: "Discourse tarafından asla taranmaması gereken özel IP bloklarının bir listesi"
     allowed_internal_hosts: "Discourse'un oneboxing ve diğer amaçlar için güvenle tarayabileceği dahili sunucularının bir listesi"
     allowed_onebox_iframes: "Onebox yerleştirmeleri aracılığıyla izin verilen iframe src alan adlarının bir listesi. *` tüm varsayılan Onebox motorlarına izin verir."
@@ -1931,7 +1957,6 @@ tr_TR:
     google_oauth2_client_secret: "Google uygulamanızın istemci gizli dizisi."
     google_oauth2_prompt: "Yetkilendirme sunucusunun kullanıcıdan yeniden kimlik doğrulaması ve onay isteyip istemediğini belirten, isteğe bağlı, boşlukla sınırlandırılmış bir dize değerleri listesi. Olası değerler için bkz. <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Oturum açmanın sınırlı olacağı isteğe bağlı bir Google Apps'in Sunucu alan adı. Daha fazla bilgi için <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> adresini ziyaret edin."
-    google_oauth2_hd_groups: "Kimlik doğrulama sırasında sunucu alan adındaki kullanıcıların Google gruplarını alın. Alınan Google grupları, otomatik Discourse grup üyeliği vermek için kullanılabilir (grup ayarlarına bakın). Daha fazla bilgi için bkz. https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Google Workspace yönetici hesabına ait bir e-posta adresi. Grup bilgilerini almak için hizmet hesabı giriş bilgileriyle birlikte kullanılır."
     google_oauth2_hd_groups_service_account_json: "Hizmet Hesabı için JSON biçimlendirilmiş anahtar bilgileri. Grup bilgilerini almak için kullanılır."
     google_oauth2_verbose_logging: "Google OAuth2 ile ilgili ayrıntılı tanılamaları <a href='%{base_path}/logs' target='_blank'>/logs</a> (günlükler) bölümüne kaydedin"
@@ -1961,10 +1986,8 @@ tr_TR:
     s3_configure_tombstone_policy: "Silinmiş öge yüklemeleri için otomatik silme ilkesini etkinleştirin. ÖNEMLİ: Devre dışı bırakılırsa yüklemeler silindikten sonra hiçbir alan geri alınmaz."
     s3_disable_cleanup: "İzin verilen maksimum değerden daha fazla yedekleme olduğunda eski yedeklemelerin S3'ten kaldırılmasını önleyin."
     s3_use_acls: "AWS, S3 kovalarında ACL kullanılmamasını önerir; yalnızca yapılandırılmış `s3_upload_bucket` ve `s3_backup_bucket` üzerinde izin politikaları yapılandırmayı düşünüyorsanız bu seçeneğin işaretini kaldırın."
-    enable_direct_s3_uploads: "Amazon S3'e doğrudan çok parçalı yüklemelere izin verir, daha fazla bilgi için https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 adresine bakın."
     backup_time_of_day: "Yedeklemenin gerçekleşmesi gereken günün saati UTC."
     backup_with_uploads: "Yüklemeleri zamanlanan yedeklemelere dahil et. Bu devre dışı bırakıldığında yalnızca veritabanı yedeklenir."
-    backup_location: "Yedeklemelerin depolandığı konum. ÖNEMLİ: S3, Dosya ayarlarında geçerli S3 giriş bilgilerinin girilmesini gerektirir. Bunu Yerel'den S3'e değiştirirken, `s3:ensure_cors_rules` rake görevini çalıştırmanız gerekir."
     backup_gzip_compression_level_for_uploads: "Yüklemeleri sıkıştırmak için kullanılan Gzip sıkıştırma seviyesi."
     include_thumbnails_in_backups: "Oluşturulan küçük resimleri yedeklemelere dahil edin. Bunu devre dışı bırakmak yedeklemeleri küçültür, ancak geri yüklemeden sonra tüm gönderilerin yeniden yüklenmesini gerektirir."
     active_user_rate_limit_secs: "\"last_seen_at\" alanını saniye cinsinden güncelleme sıklığımız"
@@ -2155,7 +2178,6 @@ tr_TR:
     fast_typing_threshold: "Bir kullanıcının ilk gönderisi için yazması gereken minimum süre. Eşik değeri karşılanmazsa, gönderi otomatik olarak inceleme kuyruğuna girer. Düşük değer 1 saniye, standart değer 3 saniye, yüksek değer 5 saniyedir."
     auto_silence_fast_typers_on_first_post: "`fast typing threshold`u karşılamayan kullanıcıları otomatik olarak susturun"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazanları otomatik olarak susturmak için maksimum güven seviyesi"
-    auto_silence_first_post_regex: "Büyük/küçük harfe duyarlı olmayan regex, geçilirse kullanıcının ilk gönderisinin susturulmasına ve onay kuyruğuna gönderilmesine neden olur. Örnek: raging|a[bc]a , raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Sadece ilk gönderi için geçerlidir. DEVRE DIŞI BIRAKILDI: Bunun yerine İzlenen Kelimeleri Sessize Al'ı kullanın."
     moderator_guide_topic: "Topluluğunuzu nasıl yönettiğinizi özetleyen konu. Bağlantı, moderatörler ve yöneticiler için inceleme kuyruğunda görünecektir."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için talep edilmesi gerekir mi?"
     reviewable_default_topics: "İncelenebilir içeriği varsayılan olarak konuya göre gruplandırılmış şekilde gösterin"
@@ -2223,7 +2245,6 @@ tr_TR:
     log_mail_processing_failures: "Tüm e-posta işleme hatalarını <a href='%{base_path}/logs' target='_blank'>/logs</a> bölümüne kaydedin"
     email_in: "Kullanıcıların e-posta yoluyla yeni konular oluşturmasına izin verin. Bu ayarı etkinleştirdikten sonra, gruplar ve kategoriler için gelen e-posta adreslerini yapılandırabileceksiniz."
     email_in_allowed_groups: "E-posta yoluyla yeni konu göndermesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman e-posta yoluyla yeni konular gönderebilir."
-    email_in_authserv_id: "Gelen e-postalarda kimlik doğrulaması kontrolleri yapan hizmetin tanımlayıcısı. Bunun nasıl yapılandırılacağına ilişkin talimatlar için <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> adresine bakın."
     email_in_spam_header: "Spam'i tanımlamak için kullanılacak belirli e-posta başlığını seçer. Bu seçenek X-Spam-Flag, X-Spam-Status veya X-SES-Spam-Verdict olabilir ve e-posta, başlığın değerine göre spam olarak etiketlenir. Örneğin, seçilen ayar X-Spam-Flag ise, bu başlık değeri EVET olarak ayarlanmış bir e-posta istenmeyen olarak sınıflandırılır."
     enable_smtp: "Grup mesajları için bildirim göndermek üzere SMTP'yi etkinleştirin."
     email_prefix: "E-postaların konusunda kullanılan [label]. Ayarlanmamışsa varsayılan olarak \"başlık\" olacaktır."
@@ -3079,7 +3100,7 @@ tr_TR:
 
       - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/v%{new_version}) yenilikleri inceleyin
 
       - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
   new_version_mailer_with_notes:
@@ -3094,7 +3115,7 @@ tr_TR:
 
       - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/v%{new_version}) yenilikleri inceleyin
 
       - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
 

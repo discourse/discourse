@@ -2,19 +2,24 @@ import { LinkTo } from "@ember/routing";
 import DashboardProblems from "discourse/admin/components/dashboard-problems";
 import RedesignedAdminDashboard from "discourse/admin/components/redesigned-admin-dashboard";
 import VersionChecks from "discourse/admin/components/version-checks";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{#if @controller.siteSettings.dashboard_improvements}}
+  {{#if @controller.showRedesign}}
     <RedesignedAdminDashboard
-      @period={{@controller.safePeriod}}
-      @startDate={{@controller.startDate}}
-      @endDate={{@controller.endDate}}
+      @requestedPeriod={{@controller.safePeriod}}
+      @requestedStartDate={{@controller.startDate}}
+      @requestedEndDate={{@controller.endDate}}
       @setPeriod={{@controller.setPeriod}}
       @setCustomDateRange={{@controller.setCustomDateRange}}
+      @loadedSections={{@controller.loadedSections}}
+      @updateConfiguration={{@controller.updateConfiguration}}
+      @refreshSections={{@controller.fetchSections}}
+      @loadingSections={{@controller.loadingSections}}
+      @sectionsFetchError={{@controller.sectionsFetchError}}
     />
   {{else}}
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />

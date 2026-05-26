@@ -21,6 +21,7 @@ sr:
     actions:
       chat_reply:
         title: Odgovori
+        placeholder: Odgovori...
   unsubscribe:
     chat_summary:
       never: Nikad

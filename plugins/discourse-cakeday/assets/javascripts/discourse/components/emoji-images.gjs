@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { emojiUnescape } from "discourse/lib/text";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -30,7 +30,7 @@ export default class EmojiImages extends Component {
           {{/each}}
         </div>
       {{else}}
-        {{icon "cake-candles" title=this.titleText}}
+        {{dIcon "cake-candles" title=this.titleText}}
       {{/if}}
     </div>
   </template>

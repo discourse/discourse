@@ -4,9 +4,11 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import { or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import ArgsTable from "../shared/args-table";
 import devToolsState from "../state";
 
@@ -31,6 +33,8 @@ const SMALL_OUTLETS = [
  * @param {string} outletName - The name of the plugin outlet.
  * @param {Object} [outletArgs] - Arguments passed to the outlet. May contain a non-enumerable
  *   `__deprecatedArgs__` property with the raw deprecated args for display in the debug tooltip.
+ * @param {Array<Object>} [aliases] - Normalized alias entries for this outlet.
+ * @param {Object} [deprecated] - Deprecation info if the outlet itself is deprecated.
  */
 export default class OutletInfoComponent extends Component {
   static shouldRender() {
@@ -101,6 +105,24 @@ export default class OutletInfoComponent extends Component {
   }
 
   /**
+   * Whether this outlet has any aliases configured.
+   *
+   * @returns {boolean}
+   */
+  get hasAliases() {
+    return this.args.aliases?.length > 0;
+  }
+
+  /**
+   * Whether this outlet itself is deprecated.
+   *
+   * @returns {boolean}
+   */
+  get isDeprecated() {
+    return !!this.args.deprecated;
+  }
+
+  /**
    * Returns the heading modifier class based on outlet type.
    *
    * @returns {string} The CSS modifier class for the heading.
@@ -111,7 +133,7 @@ export default class OutletInfoComponent extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "plugin-outlet-debug"
         (if this.partOfWrapper "--wrapper")
         (if this.isHidden "hidden")
@@ -135,7 +157,7 @@ export default class OutletInfoComponent extends Component {
                 this.displayName
               }}&gt;
             {{else}}
-              {{icon "plug"}}
+              {{dIcon "plug"}}
               {{if this.showName this.displayName}}
             {{/if}}
           </span>
@@ -143,13 +165,13 @@ export default class OutletInfoComponent extends Component {
         <:content>
           <div class="outlet-info__wrapper">
             <div
-              class={{concatClass "outlet-info__heading" this.headingModifier}}
+              class={{dConcatClass "outlet-info__heading" this.headingModifier}}
             >
               <span class="title">
-                {{icon "plug"}}
+                {{dIcon "plug"}}
                 {{this.displayName}}
                 {{#if this.partOfWrapper}}
-                  (wrapper)
+                  {{i18n "js.dev_tools.plugin_outlet_debug.wrapper"}}
                 {{/if}}
               </span>
               <a
@@ -157,18 +179,71 @@ export default class OutletInfoComponent extends Component {
                 href="https://github.com/search?q=repo%3Adiscourse%2Fdiscourse%20@name=%22{{this.displayName}}%22&type=code"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Find on GitHub"
-              >{{icon "fab-github"}}</a>
+                title={{i18n "js.dev_tools.plugin_outlet_debug.find_on_github"}}
+              >{{dIcon "fab-github"}}</a>
             </div>
             <div class="outlet-info__content">
+              {{#if this.isDeprecated}}
+                <div class="outlet-info__deprecation-banner">
+                  {{dIcon "triangle-exclamation"}}
+                  <span>
+                    {{or
+                      @deprecated.message
+                      (i18n
+                        "js.dev_tools.plugin_outlet_debug.deprecated_outlet"
+                      )
+                    }}
+                    {{#if @deprecated.since}}
+                      <span class="outlet-info__since">
+                        {{i18n
+                          "js.dev_tools.plugin_outlet_debug.since"
+                          version=@deprecated.since
+                        }}
+                      </span>
+                    {{/if}}
+                  </span>
+                </div>
+              {{/if}}
+
+              {{#if this.hasAliases}}
+                <div class="outlet-info__section">
+                  <div class="outlet-info__section-title">
+                    {{i18n "js.dev_tools.plugin_outlet_debug.aliases"}}
+                  </div>
+                  <ul class="outlet-info__aliases">
+                    {{#each @aliases as |alias|}}
+                      <li class="outlet-info__alias">
+                        <code>{{alias.name}}</code>
+                        {{#if alias.deprecated}}
+                          <span class="outlet-info__alias-deprecated">
+                            {{dIcon "triangle-exclamation"}}
+                            {{i18n
+                              "js.dev_tools.plugin_outlet_debug.deprecated"
+                            }}
+                            {{#if alias.since}}
+                              {{i18n
+                                "js.dev_tools.plugin_outlet_debug.since"
+                                version=alias.since
+                              }}
+                            {{/if}}
+                          </span>
+                        {{/if}}
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
+              {{/if}}
+
               {{#if this.hasOutletArgs}}
                 <div class="outlet-info__section">
-                  <div class="outlet-info__section-title">Outlet Args</div>
+                  <div class="outlet-info__section-title">
+                    {{i18n "js.dev_tools.plugin_outlet_debug.outlet_args"}}
+                  </div>
                   <ArgsTable @args={{@outletArgs}} @prefix="plugin outlet" />
                 </div>
               {{else}}
                 <div class="outlet-info__empty">
-                  No outlet args passed to this outlet
+                  {{i18n "js.dev_tools.plugin_outlet_debug.no_outlet_args"}}
                 </div>
               {{/if}}
             </div>

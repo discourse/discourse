@@ -476,18 +476,16 @@ class ImportScripts::NodeBB < ImportScripts::Base
     start_time = Time.now
 
     Post.find_each do |post|
-      begin
-        next if post.custom_fields["import_post_processing"]
+      next if post.custom_fields["import_post_processing"]
 
-        new_raw = postprocess_post(post)
-        if new_raw != post.raw
-          post.raw = new_raw
-          post.custom_fields["import_post_processing"] = true
-          post.save
-        end
-      ensure
-        print_status(current += 1, max, start_time)
+      new_raw = postprocess_post(post)
+      if new_raw != post.raw
+        post.raw = new_raw
+        post.custom_fields["import_post_processing"] = true
+        post.save
       end
+    ensure
+      print_status(current += 1, max, start_time)
     end
   end
 

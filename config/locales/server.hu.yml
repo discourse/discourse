@@ -377,7 +377,6 @@ hu:
       <p>Ha nem <a href="%{base_url}/password-reset">állítsa helyre a jelszavát</a>.</p>
     not_found_template_link: |
       <p>Ez a(z) <a href="%{base_url}">%{site_name}</a> meghívó már nem váltható be. Kérje meg az Ön meghívó személyt, hogy küldjön egy új meghívót.</p>
-    existing_user_cannot_redeem: "Ez a meghívó nem váltható be. Kérje meg az Önt meghívó személyt, hogy küldjön új meghívót."
     existing_user_already_redemeed: "Már beváltotta ezt a meghívólinket."
     user_exists: "Nem kell meghívni <b>%{email}</b>, már van fiókja!"
     invite_exists: "Már meghívtad: <b>%{email}</b>."
@@ -1253,6 +1252,30 @@ hu:
       xaxis: "Nap"
       yaxis: "Új közreműködők száma"
       description: "Azon felhasználók száma, akik első bejegyzésüket tették ebben az időszakban."
+    activity_by_category:
+      labels:
+        category: "Kategória"
+        topics: "Témák"
+        posts: "Bejegyzések"
+        share: "Megosztás"
+    posters_by_member_type:
+      labels:
+        count: "Bejegyzések"
+        share: "Megosztás"
+      types:
+        staff: "Stáb"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Bizalmi szint"
+        count: "Tagok"
+        share: "Megosztás"
+      levels:
+        "0": "Új"
+        "1": "Alapvető"
+        "2": "Tag"
+        "3": "Átlagos"
+        "4": "Vezető"
     trust_level_growth:
       title: "Bizalomszint növekedés"
       xaxis:
@@ -1298,9 +1321,8 @@ hu:
     site_traffic:
       title: "Látogatottság"
       xaxis:
-        page_view_anon_browser: "Oldalmegtekintések (névtelen)"
-        page_view_logged_in_browser: "Oldalmegtekintések (bejelentkezett)"
-        page_view_crawler: "Ismert keresőrobotok"
+        page_view_anon_browser: "Névtelen"
+        page_view_crawler: "Keresőrobotok"
         page_view_other: "Egyéb forgalom"
       yaxis: "Nap"
       description: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók, ismert keresőrobotok és egyéb forgalom számára."
@@ -1415,6 +1437,12 @@ hu:
         num_clicks: "Kattintások"
         num_topics: "Témák"
       description: "A felhasználók az általuk megosztott linkekre leadott kattintások száma szerint listázva."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Látogatás"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Látogatás"
     top_traffic_sources:
       title: "Legnépszerűbb forgalmi források"
       xaxis: "Domain"
@@ -1540,7 +1568,7 @@ hu:
         os: Operációs rendszer
         login_time: Bejelentkezési idő
       description: "Az új bejelentkezések adatai, amelyek gyanúsan különböznek a korábbi bejelentkezésektől."
-    staff_logins:
+    admin_logins:
       title: "Admin bejelentkezések"
       labels:
         user: Felhasználó
@@ -1740,7 +1768,6 @@ hu:
     x_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
     notification_email: "A feladó e-mail címe, amelyet az összes lényeges rendszerüzenet küldésekor használ a rendszer. Az itt megadott domainhez helyesen beállított SPF, DKIM és fordított PTR rekordokkal kell rendelkeznie ahhoz, hogy az e-mailek megérkezzenek."
     email_custom_headers: "Egyéni e-mail fejlécek listája"
-    email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Részletesebb tájékoztatást nyújt a felhasználóknak arról, hogy miért nem férhetnek hozzá egy adott témához. Megjegyzés: Ez kevésbé biztonságos, mert a felhasználók tudni fogják, ha egy URL érvényes témára mutat."
     enforce_second_factor: "A felhasználóknak engedélyezniük kell a kétfaktoros hitelesítést (2FA), mielőtt hozzáférhetnének a Discourse felhasználói felületéhez. Ez a beállítás nem befolyásolja az API vagy a „DiscourseConnect szolgáltató” hitelesítését. Ha az enforce_second_factor_on_external_auth engedélyezve van, a felhasználók a 2FA beállítása után nem tudnak majd bejelentkezni külső hitelesítési szolgáltatókkal."
     enforce_second_factor_on_external_auth: "A kétlépcsős azonosítás (2FA) folyamatos használatának megkövetelése. Ha engedélyezi, ez megakadályozza, hogy a felhasználók külső azonosítási módszerekkel (például közösségi bejelentkezéssel) lépjenek be, amennyiben aktiválva van náluk a 2FA. Ha ki van kapcsolva, a felhasználóknak csak akkor kell megerősíteniük a kétlépcsős azonosítást, ha felhasználónévvel és jelszóval jelentkeznek be. Lásd még az enforce_second_factor beállítást."
@@ -1808,7 +1835,6 @@ hu:
     moderators_change_post_ownership: "Engedélyezze a moderátoroknak a bejegyzések tulajdonjogának megváltoztatását"
     change_post_ownership_allowed_groups: "Engedélyezze a bejegyzések tulajdonosának módosítását ezen csoportok tagjai számára."
     cors_origins: "Megengedett források a kereszteredetű kérelmek (CORS) számára. Minden eredetnek tartalmaznia kell a http:// vagy https:// címet. A CORS engedélyezéséhez a DISCOURSE_ENABLE_CORS env változót igaz értékre kell állítani."
-    use_admin_ip_allowlist: "Az adminisztrátorok csak akkor tudnak bejelentkezni, ha a Szűrt IP-címek listában (Admin > Naplók > Szűrt IP-címek) meghatározott IP-címen tartózkodnak."
     blocked_ip_blocks: "Privát IP-címtartományok listája, amelyeket a Discourse soha nem indexelhet"
     allowed_internal_hosts: "Belső kiszolgálók listája, amelyeket a Discourse biztonságosan indexelhet oneboxing és egyéb célokra"
     allowed_onebox_iframes: "Az iframe src domainek listája, amelyek engedélyezettek a Onebox beágyazásokon keresztül. A * minden alapértelmezett Onebox motort engedélyez."
@@ -1911,7 +1937,6 @@ hu:
     google_oauth2_client_secret: "A Google-alkalmazás titkos kliens kódja."
     google_oauth2_prompt: "Egy opcionális szóközzel elválasztott karakterlánc-értékek listája, amely meghatározza, hogy az autorizációs szerver kér-e újrahitelesítést és hozzájárulást a felhasználótól. A lehetséges értékeket lásd itt: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "Egy opcionális Google Apps által hosztolt domain, amelyre a bejelentkezés korlátozva lesz. További részletek: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "A felhasználók Google-csoportjainak lekérése a hosztolt domainen hitelesítéskor. A lekért Google-csoportok felhasználhatók automatikus Discourse csoporttagság megadására (lásd csoportbeállítások). További információért: https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Egy Google Workspace adminisztrátori fiókhoz tartozó e-mail cím. A szolgáltatásfiók hitelesítő adataival együtt használva a csoportinformációk lekérésére szolgál."
     google_oauth2_hd_groups_service_account_json: "JSON formátumú kulcsinformáció a szolgáltatásfiókhoz. Csoportinformációk lekérésére lesz használva."
     google_oauth2_verbose_logging: "A Google OAuth2-vel kapcsolatos részletes diagnosztika naplózása a <a href='%{base_path}/logs' target='_blank'>/logs</a> fájlba"
@@ -1941,10 +1966,8 @@ hu:
     s3_configure_tombstone_policy: "Automatikus törlési szabályzat engedélyezése a törölt feltöltésekre. FONTOS: Ha ki van kapcsolva, a feltöltések törlése után nem szabadul fel tárhely."
     s3_disable_cleanup: "Megakadályozza a régi biztonsági mentések eltávolítását az S3-ból, ha több biztonsági mentés van, mint a megengedett maximum."
     s3_use_acls: "Az AWS azt ajánlja, hogy ne használjon ACL-eket az S3 vödrökön; csak akkor törölje ezt a jelölőnégyzetet, ha a konfigurált `s3_upload_bucket` és `s3_backup_bucket` engedélyezési házirendeket kívánja konfigurálni."
-    enable_direct_s3_uploads: "Lehetővé teszi a közvetlen többrészes feltöltéseket az Amazon S3-ba, további részletekért lásd: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469"
     backup_time_of_day: "A nap azon időpontja UTC-ben, amikor a biztonsági mentésnek meg kell történnie."
     backup_with_uploads: "Feltöltések felvétele az ütemezett biztonsági mentésekbe. Ennek kikapcsolásával csak az adatbázisról készül biztonsági mentés."
-    backup_location: "A biztonsági mentések tárolási helye. FONTOS: Az S3 használatához érvényes S3 hitelesítő adatokat kell megadni a Fájlok beállításaiban. Ha ezt Helyiről S3-ra változtatja, futtatnia kell az `s3:ensure_cors_rules` rake feladatot."
     backup_gzip_compression_level_for_uploads: "A feltöltések tömörítéséhez használt Gzip tömörítési szint."
     include_thumbnails_in_backups: "Generált bélyegképek beillesztése a biztonsági mentésekbe. Ennek kikapcsolása kisebb méretű biztonsági mentéseket eredményez, de visszaállítás után az összes bejegyzés újra építése szükséges."
     active_user_rate_limit_secs: "Milyen gyakran frissítjük a 'last_seen_at' mezőt, másodpercben kifejezve."
@@ -2132,7 +2155,6 @@ hu:
     fast_typing_threshold: "Az első hozzászólás gépelésére fordított minimális idő. Ha az időtartam nem éri el a küszöbértéket, a bejegyzés automatikusan a moderációs sorba kerül. Alacsony: 1 másodperc, normál: 3 másodperc, magas: 5 másodperc."
     auto_silence_fast_typers_on_first_post: "Automatikusan elnémítja azokat a felhasználókat, akik nem érik el a \"gyors gépelési küszöböt\"."
     auto_silence_fast_typers_max_trust_level: "Maximális bizalmi szint a gyors gépelők automatikus elnémításához"
-    auto_silence_first_post_regex: "Kis- és nagybetűre nem érzékeny reguláris kifejezés, amely ha teljesül, az első felhasználói bejegyzést elnémítja és a jóváhagyási sorba küldi. Például: raging|a[bc]a , minden olyan bejegyzést elnémít, amely tartalmazza a raging vagy aba vagy aca kifejezést az első alkalommal. Csak az első bejegyzésre vonatkozik. ELAVULT: Használja helyette a Figyelt Szavak Elnémítása funkciót."
     moderator_guide_topic: "A közösséged moderálását ismertető téma. A link látható lesz a moderátorok és az adminok értékelési sorában."
     reviewable_claiming: "A felülvizsgálandó tartalmat le kell-e foglalni, mielőtt intézkedni lehetne vele kapcsolatban?"
     reviewable_default_topics: "Az áttekintendő tartalmak megjelenítése alapértelmezés szerint témák szerint csoportosítva"
@@ -2200,7 +2222,6 @@ hu:
     log_mail_processing_failures: "Minden e-mail-feldolgozási hiba naplózása ide: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Felhasználók számára új témák létrehozásának engedélyezése e-mailen keresztül. Ennek a beállításnak az engedélyezése után konfigurálhatja a beérkező e-mail címeket a csoportokhoz és kategóriákhoz."
     email_in_allowed_groups: "Csoportok, amelyek új témákat tehetnek közzé e-mailben. Az adminisztrátorok és a moderátorok bármikor közzétehetnek új témákat e-mailben."
-    email_in_authserv_id: "A bejövő e-mailek hitelesítését végző szolgáltatás azonosítója. Ennek beállításaira vonatkozó utasításokat <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> oldalon találja."
     email_in_spam_header: "Kiválasztja a levélszemét azonosítására használt e-mail-fejlécet. Ez a lehetőség az X-Spam-Flag, az X-Spam-Status vagy az X-SES-Spam-Verdict lehet, és a fejléc értéke alapján lesz az e-mail levélszemétnek jelölve. Például, ha a kiválasztott beállítás az X-Spam-Flag, akkor egy YES fejlécértékű üzenet levélszemétként lesz osztályozva."
     enable_smtp: "Engedélyezze az SMTP-t a csoportos üzenetekhez tartozó értesítések küldéséhez."
     email_prefix: "Az e-mailek tárgyában használt [címke]. Alapértelmezés szerint a „cím” lesz, ha nincs beállítva."

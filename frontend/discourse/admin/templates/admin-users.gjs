@@ -1,7 +1,7 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import routeAction from "discourse/helpers/route-action";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -38,48 +38,48 @@ export default <template>
         {{/if}}
       </:actions>
       <:tabs>
-        <NavItem
+        <DNavItem
           @route="adminUsers.settings"
           @label="settings"
           class="admin-users-tabs__settings"
         />
-        <NavItem
+        <DNavItem
           @route="adminUsersList.show"
           @routeParam="active"
           @label="admin.users.nav.active"
           class="admin-users-tabs__active"
         />
-        <NavItem
+        <DNavItem
           @route="adminUsersList.show"
           @routeParam="new"
           @label="admin.users.nav.new"
           class="admin-users-tabs__new"
         />
-        <NavItem
+        <DNavItem
           @route="adminUsersList.show"
           @routeParam="staff"
           @label="admin.users.nav.staff"
           class="admin-users-tabs__staff"
         />
-        <NavItem
+        <DNavItem
           @route="adminUsersList.show"
           @routeParam="suspended"
           @label="admin.users.nav.suspended"
           class="admin-users-tabs__suspended"
         />
-        <NavItem
+        <DNavItem
           @route="adminUsersList.show"
           @routeParam="silenced"
           @label="admin.users.nav.silenced"
           class="admin-users-tabs__silenced"
         />
-        <NavItem
+        <DNavItem
           @route="adminUsersList.show"
           @routeParam="staged"
           @label="admin.users.nav.staged"
           class="admin-users-tabs__staged"
         />
-        <NavItem
+        <DNavItem
           @route="adminGroups.index"
           @label="groups.index.title"
           class="admin-users-tabs__groups"

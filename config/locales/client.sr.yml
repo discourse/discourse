@@ -184,6 +184,7 @@ sr:
       comma: ", "
       last_item: "i"
     action_codes:
+      topic_created: "Kreirao ovu temu %{when}"
       public_topic: "Objavi ovu temu javno %{when}"
       open_topic: "Konvertovao sam ovo u temu %{when}"
       private_topic: "Претвара ову тему у приватну поруку %{when}"
@@ -229,6 +230,11 @@ sr:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
       search_placeholder: "Pretraži"
+    impersonation:
+      time_left:
+        one: "(%{count} minut preostao)"
+        few: "(%{count} minuta preostalo)"
+        other: "(%{count} minuta preostalo)"
     themes:
       default_description: "Подразумевано"
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
@@ -237,6 +243,17 @@ sr:
     broken_page_change_alert: "onPageChange izvršitelj je prijavio grešku. Proverite pretražvačke razvnojne alate za više informacija."
     broken_plugin_alert: "Izazvano od plugina '%{name}'"
     broken_transformer_alert: "Desila se greška. Vaš sajt možda ne radi kako treba."
+    on_before_category_types_change_error: "Došlo je do greške prilikom promene tipova kategorija. Proverite konzolu pregledača za više informacija."
+    dev_tools:
+      plugin_outlet_debug:
+        find_on_github: "Pronađi na GitHub-u"
+        wrapper: "(omotač)"
+        outlet_args: "Argumenti izlaza"
+        no_outlet_args: "Nijedan argument izlaza nije prosleđen ovom izlazu"
+        aliases: "Alijasi"
+        deprecated: "zastareo"
+        deprecated_outlet: "Ovaj izlaz je zastareo i biće uklonjen."
+        since: "(od %{version})"
     s3:
       regions:
         ap_northeast_1: "Азија-Пацифик (Токио)"
@@ -330,6 +347,17 @@ sr:
       pill: "Predloženo"
       pm_title: "Predložene poruke"
     admin_onboarding_banner:
+      select_theme:
+        title: "Prilagodite svoj sajt"
+        description: "Izaberite početnu temu za svoju zajednicu"
+        action: "Izaberi temu"
+        modal_title: "Izaberite temu"
+        use_theme: "Koristi ovu temu"
+        enabled: "Omogućeno"
+        theme_set: "%{theme} je sada vaša podrazumevana tema"
+        browse_all: "Upravljanje temama"
+        show_light_screenshot: "Prikaži svetli snimak ekrana"
+        show_dark_screenshot: "Prikaži tamni snimak ekrana"
       start_posting:
         back: "Nazad"
     about:
@@ -512,6 +540,18 @@ sr:
           one: "+%{count} drugi nacrt"
           few: "+%{count} drugih nacrta"
           other: "+%{count} drugih nacrta"
+    embed_mode:
+      editing_post: "Uređivanje objave"
+      signin_flow:
+        share_session_title: "Prijavite se na %{site_name}"
+        share_session_message: "Da biste nastavili, %{site_name} treba dozvolu da koristi vašu postojeću sesiju unutar ove stranice. Kliknite ispod da biste omogućili pristup."
+        signin_required_title: "Prijavite se na %{site_name}"
+        signin_required_message: "Nismo pronašli postojeću %{site_name} sesiju. Otvorite novi tab da biste se prijavili ili registrovali, a zatim se vratite ovde da biste nastavili."
+        open_signin_tab: "Otvori karticu za prijavu"
+        waiting_title: "Čekanje na prijavu"
+        waiting_message: "Završite prijavljivanje u novom tabu. Ova stranica će se automatski osvežiti kada završite."
+        cancel: "Odustani"
+        sign_in_to_reply: "Prijavite se da biste odgovorili"
     topic_count_all:
       one: "Pogledajte %{count} novu temu"
       few: "Pogledajte%{count} novih tema"
@@ -1122,6 +1162,7 @@ sr:
       upcoming_changes:
         for_user:
           enabled: "Omgućeno"
+        enable_available_notifications: "Obavesti me kada predstojeća promena postane dostupna za pregled"
       user_notifications:
         filters:
           all: "Sve"
@@ -1132,6 +1173,7 @@ sr:
         mute_option: "Utišano"
         normal_option: "Normalno"
       notification_schedule:
+        title: "Raspored obaveštenja"
         none: "Ništa"
         monday: "Ponedeljak"
         to: "ka"
@@ -1166,13 +1208,13 @@ sr:
       notifications: "Obaveštenja"
       statistics: "Statistike"
       desktop_notifications:
-        label: "Notifikacije Uživo"
+        label: "Obaveštenja uživo"
         not_supported: "Notifikacije nisu podržane u ovom pregledaču. Izvinite."
-        perm_default: "Uključi Notifikacije"
-        perm_denied_btn: "Dozvola Odbijena"
+        perm_default: "Uključi obaveštenja"
+        perm_denied_btn: "Dozvola odbijena"
         perm_denied_expl: "Niste dozvolili notifikacije. Dopustitke notifikacije preko podešavanja pregledača."
-        disable: "Isključi Notifikacije"
-        enable: "Uključi Notifikacije"
+        disable: "Isključi obaveštenja"
+        enable: "Omogući obaveštenja"
         each_browser_note: "Napomena: Morate da promenite ovo podešavanje na svakom pregledaču koji koristite. Sve notifikacije će biti isključene ukoliko pauzirate notifikacije iz korsničkog menija, bez obzira na ovo podešavanje."
         consent_prompt: "Da li želite notifikacije uživo kada ljudi odgovore na vaše postove?"
       dismiss: "Odbaci"
@@ -1486,6 +1528,9 @@ sr:
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Sakrij napredne opcije"
           description: "Opis"
+          description_help: "Beleška koja vam pomaže da identifikujete ovaj poziv."
+          restrict_help: "Unesite email ili email domen da biste ograničili ko može da prihvati ovaj poziv."
+          custom_message_help: "Uključeno u email poziva."
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
@@ -1673,6 +1718,8 @@ sr:
       show_password: "Pokaži"
       hide_password: "Sakrij"
       hide_password_title: "Sakrij lozinku"
+      security_key_or_passkey_description: "Kada pripremite svoj bezbednosni ključ, passkey ili kompatibilni mobilni uređaj, pritisnite dugme ispod."
+      security_key_or_passkey_authenticate: "Autentifikuj se pomoću bezbednosnog ključa ili passkey-a"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
@@ -1738,6 +1785,15 @@ sr:
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "sačuvano lokalno"
       drafts_offline: "nacrti offline"
+      change_reply_to:
+        title: "Promeni cilj odgovora"
+        hint: "Pomerite vremensku liniju da biste pronašli objavu na koju želite da odgovorite."
+        current_selection: "Izabrano: objava #%{post_number} od @%{username}"
+        invalid_target: "Izaberite objavu raniju od one koju uređujete."
+        submit: "Postavi cilj odgovora"
+        open: "Promeni na koju objavu ovo odgovara"
+        open_from_menu: "Odgovori na drugu objavu"
+        remove: "Ukloni cilj odgovora"
       error:
         title_missing: "Naslov je obavezan"
         category_missing: "Morate odabrati kategoriju"
@@ -1790,6 +1846,10 @@ sr:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
       watching_first_post_label: "Nova Tema"
+      replied_consolidated_in_topic:
+        one: "%{count} novi odgovor u vašoj temi"
+        few: "%{count} novih odgovora u vašoj temi"
+        other: "%{count} novih odgovora u vašoj temi"
       granted_badge: "Zasluženo '%{description}'"
       dismiss_confirmation:
         dismiss: "Odbaci"
@@ -1847,6 +1907,7 @@ sr:
             before: pre
         views:
           label: Pregledi
+    header_panel: "Zaglavlje"
     new_item: "novo"
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
@@ -1862,6 +1923,8 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
+        enable_nested_replies: "Omogući ugnežđene odgovore"
+        disable_nested_replies: "Onemogući ugnežđene odgovore"
         delete_topics_count:
           one: "Obriši temu"
           few: "Obriši Teme"
@@ -1871,6 +1934,7 @@ sr:
         toggle: "uključi/isključi grupni odabir tema"
         actions: "Grupne aktivnosti"
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
+        manage_tags: "Upravljaj oznakama"
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} tema"
@@ -1891,8 +1955,33 @@ sr:
         optional: (opciono)
       archive_topics:
         name: "Arhiviraj"
+      manage_tags:
+        name: "Upravljaj oznakama"
+        add:
+          title: "Dodaj oznake"
+          description: "Dodato u sve izabrane teme"
+        remove:
+          title: "Ukloni oznake"
+          description: "Uklonjeno kad god je prisutno"
+          all_toggle: "Ukloni sve oznake"
+          all_warning: "<strong>Sve postojeće oznake</strong> biće uklonjene iz izabranih tema. Ovo se ne može poništiti."
+        replace:
+          title: "Zameni oznake"
+          description: "Zamenjuje jednu oznaku drugom"
+          add_replacement: "Dodaj zamenu"
+          remove_replacement: "Ukloni zamenu"
+          from_placeholder: "Oznaka za zamenu"
+          to_placeholder: "Zamenska oznaka"
+          missing_from: "Oznaka izvora je obavezna"
+          missing_to: "Potrebna je zamenska oznaka"
       delete_topics:
         name: "Obriši"
+      enable_nested_replies:
+        name: "Omogući ugnežđene odgovore"
+        description: "Prebaci izabrane teme na ugnežđen prikaz. Odgovori će biti prikazani kao niti."
+      disable_nested_replies:
+        name: "Prebaci izabrane teme na ugnežđen prikaz. Odgovori će biti prikazani kao niti."
+        description: "Vrati izabrane teme na ravan prikaz."
     nested_replies:
       sort:
         label: "Sortiraj po"
@@ -1904,13 +1993,21 @@ sr:
         other: "%{count} odgovora"
       collapse: "Spusti"
       no_replies: "Bez odgovora, još uvek."
+      ignored_post_placeholder: "[ignorisano]"
+      toggle_ignored_content: "Prikaži ignorisani sadržaj"
       pinned_reply: "Zakvačeno"
+      activity_log:
+        link: "Dnevnik aktivnosti"
+        title: "Dnevnik aktivnosti teme"
+        empty: "Nema aktivnosti teme za prikaz."
     topic:
       create: "Nova Tema"
+      create_shared_draft: "Novi deljeni nacrt"
       archive_message:
         title: "Arhiviraj"
       list: "Teme"
       new: "nova tema"
+      has_new_replies: "novih odgovora od vaše poslednje posete"
       unread: "nepročitano"
       new_topics:
         one: "%{count} nova tema"
@@ -2022,6 +2119,7 @@ sr:
       feature_topic:
         title: "Prikaži ovu temu"
         unpin: "Ukloni ovu temu sa vrha %{categoryLink} kategorije."
+        pin_until: "Zakači do"
         pin_validation: "Neophodan je datum da zakačite ovu temu"
         unpin_globally: "Ukloni ovu temu sa vrha svih lista"
       invite_private:
@@ -2108,6 +2206,7 @@ sr:
         discard: "Odbaci"
       via_email: "ova poruka stigla je preko e-maila"
       controls:
+        menu_label: "Akcije objave"
         reply: "počnite sa sastavljanjem odgovora na ovu poruku"
         like: "Lajkuj ovu poruku"
         has_liked: "lajkovao si ovu poruku"
@@ -2140,6 +2239,8 @@ sr:
           inappropriate: "Označili ste ovo kao neprikladno"
           notify_moderators: "Označili ste ovo za moderatore"
       revisions:
+        reply_to:
+          none: "Nema cilja za odgovor"
         controls:
           first: "Prva revizija"
           previous: "Prethodna revizija"
@@ -2189,6 +2290,10 @@ sr:
         options:
           icon: "Ikona"
           emoji: "Emoji"
+      category_types: "Tipovi kategorija"
+      unknown_category_type: "Nepoznat tip kategorije"
+      unknown_category_type_description: "Tip kategorije \"%{categoryType}\" nije podržan ili nije omogućen na ovoj kategoriji."
+      category_types_no_results: "Nisu pronađeni drugi tipovi kategorija"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
@@ -2233,6 +2338,7 @@ sr:
         activity: "Aktivnost"
         category: "Kategorija"
         created: "Napravljeno"
+      sort_direction: "Smer sortiranja"
       settings_sections:
         general: "Opšti"
         email: "E-mail"
@@ -2393,45 +2499,72 @@ sr:
       counter: "%curr% od %total%"
     keyboard_shortcuts_help:
       title: "Prečice na tastaturi"
+      description_header: "Opis"
+      key_header: "Taster"
+      search_aliases:
+        shift: "shift"
+        alt: "alt option"
+        meta: "meta cmd command win windows super"
+        ctrl: "ctrl control"
+        enter: "enter return"
+        esc: "esc escape"
       jump_to:
         title: "Skoči Na"
-        latest: "%{shortcut} Poslednje"
-        new: "%{shortcut} Novo"
-        unread: "%{shortcut} Nepročitano"
-        categories: "%{shortcut} Kategorije"
-        top: "%{shortcut} Najaktivnije"
+        home: "Home"
+        latest: "Poslednje"
+        new: "Novo"
+        unread: "Nepročitano"
+        categories: "Kategorije"
+        top: "Top"
+        bookmarks: "Markiraj"
+        profile: "Profil"
+        messages: "Poruke"
+        drafts: "Skice"
       navigation:
         title: "Navigacija"
-        jump: "%{shortcut} Idi na poruku #"
-        back: "%{shortcut} Nazad"
-        up_down: "%{shortcut} Premesti odabrano &uarr; &darr;"
-        open: "%{shortcut} Otvori odabranu temu"
-        next_prev: "%{shortcut} Sledeći/predhodni deo"
+        back: "Nazad"
+        up_down: "Premesti odabrano &uarr; &darr;"
       application:
         title: "Aplikacija"
-        notifications: "%{shortcut} Otvori obaveštenja"
-        user_profile_menu: "%{shortcut} Otvori korisnički meni"
-        show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
-        help: "%{shortcut} Otvori pomoć za tastaturu"
+        search: "Pretraži"
+        log_out: "Odjava"
+      composing:
+        preformatted: "Pred-formatirani tekst"
+        blockquote: "izdvojeni citat"
+      bookmarks:
+        later_today: "Kasnije ovog dana"
+        later_this_week: "Kasnije ove sedmice"
+        tomorrow: "Sutra"
+        next_week: "Sledeće sedmice"
+        next_month: "Naredni mesec"
+        next_business_day: "Naredni radni dan"
+        custom: "Prilagođen datum i vreme"
+        delete: "Obriši oznaku"
       actions:
         title: "Akcije"
-        pin_unpin_topic: "%{shortcut} Zakvači/Odkvači temu"
-        share_topic: "%{shortcut} Podeli temu"
-        share_post: "%{shortcut} Podijeli poruku"
-        reply_as_new_topic: "%{shortcut} Odgovori u linkovanoj temi"
-        reply_topic: "%{shortcut} Odgovori u temu"
-        reply_post: "%{shortcut} Odgovori na poruku"
-        quote_post: "%{shortcut} Citiraj poruku"
-        like: "%{shortcut} Lajkuj poruku"
-        flag: "%{shortcut} Označi poruku zastavom"
-        bookmark: "%{shortcut} Markiraj poruku"
-        edit: "%{shortcut} Izmeni poruku"
-        delete: "%{shortcut} Obriši poruku"
-        mark_muted: "%{shortcut} Utišaj poruku"
-        mark_tracking: "%{shortcut} Prati temu"
-        mark_watching: "%{shortcut} Posmatraj temu"
+        quote_post: "Citiraj objavu"
+        like: "Lajkuj objavu"
+        flag: "Prijavi objavu"
+        bookmark: "Označi objavu"
+        edit: "Uredi objavu"
+        delete: "Obriši objavu"
+        mark_muted: "Utišaj temu"
+        mark_regular: "Normalna (podrazumevana) tema"
+        mark_tracking: "Prati temu"
+        mark_watching: "Posmatraj temu"
+        print: "Štampaj temu"
+        defer: "Označi temu kao nepročitanu"
+        topic_admin_actions: "Otvori administratorske akcije teme"
+        archive_private_message: "Prebaci arhivu lične poruke"
+      search_menu:
+        prev_next: "Pomeri izbor gore i dole"
+        insert_url: "Ubaci izbor u otvoreni kompozer"
+        full_page_search: "Pokreće pretragu cele stranice"
       admin:
         title: "Admin"
+        search_prev_next: "Pomeri izbor gore i dole"
+        search_open: "Otvori pretragu za administratorski interfejs"
+        search_full_page: "Otvori administratorsku pretragu cele stranice"
     badges:
       title: Značke
       more_badges:
@@ -2456,6 +2589,7 @@ sr:
     tagging:
       selector_remove_filter: "uklonite filter"
       choose_for_topic: "opcione oznake"
+      synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"
       description: "Opis"
       settings:
@@ -2621,6 +2755,8 @@ sr:
       reports:
         group_members: "Članovi"
         group_other: "Ostalo"
+        chart:
+          total: "Ukupno: %{count}"
       config_sections:
         community:
           title: "Zajednica"
@@ -2760,6 +2896,70 @@ sr:
         backups: "Sigurnosne kopije"
         general_tab: "Opšti"
         security_tab: "Sigurnost"
+        loading: "Učitavanje kontrolne table..."
+        sections:
+          highlights:
+            title: "Istaknuto"
+          reports:
+            title: "Izveštaji"
+          traffic:
+            title: "Saobraćaj sajta"
+          engagement:
+            title: "Angažovanje"
+            fetch_error: "Nije moguće učitati angažovanje. Pokušajte da osvežite stranicu."
+            activity_by_category:
+              title: "Aktivnost po kategoriji"
+              description: "Teme, objave i učešće članova po kategoriji."
+              category: "Kategorija"
+              topics: "Teme"
+              posts: "Poruka"
+              page_views: "Pregledi stranice"
+              share: "Podeli"
+              vs_prior: "U odnosu na prethodni period"
+              empty: "Nema aktivnosti u izabranom periodu."
+            whos_posting:
+              title: "Ko objavljuje?"
+              all_categories: "Sve kategorije"
+              include_subcategories: "Uključi potkategorije"
+              new_members: "Novi članovi"
+              returning: "Vraćajući"
+              staff: "Osoblje"
+              empty: "Nema objava u izabranom periodu."
+            trust_level_pipeline:
+              title: "Pipeline nivoa poverenja"
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovno"
+                "2": "Član"
+                "3": "Stalni član"
+                "4": "Vođa"
+              trend:
+                stable: "stabilan"
+              stable_aria: "bez pokreta"
+            headline:
+              healthy_growth:
+                title: "Članovi stvaraju naviku da se vraćaju."
+                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u porastu."
+              declining:
+                title: "Članovi se vraćaju ređe."
+                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u padu."
+              engaged_but_shrinking:
+                title: "Članovi su angažovani, ali se zajednica smanjuje."
+        site_traffic:
+          top_referrers:
+            empty: "Nema podataka o upućivačima za ovaj period."
+            error: "Nije moguće učitati najveće upućivače. Pokušajte da osvežite stranicu."
+          series:
+            logged_in: "Prijavljen"
+            anonymous: "Anonimno"
+            embedded: "Ugrađeni pregledi stranica"
+            crawlers: "Pretraživači"
+        period:
+          last_7_days: "Последњих 7 дана"
+          last_30_days: "Последњих 30 дана"
+          last_3_months: "Poslednja 3 meseca"
+          custom: "Posebna"
+          custom_range: "%{start} — %{end}"
         reports:
           today: "Danas"
           yesterday: "Juče"
@@ -2995,6 +3195,8 @@ sr:
           all_filter: "sve"
         theme:
           filter_all: "Sve"
+          install_more_themes: "Instaliraj više tema"
+          install_more_themes_description: "Pretražujte popularne teme zajednice ili instalirajte jednu iz datoteke ili git repozitorijuma."
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"
@@ -3006,6 +3208,7 @@ sr:
           discard: "Odbaci"
           remote_branch: "Naziv grane (opciono)"
           installed: "Instalirano"
+          screenshot: "%{name} snimak ekrana"
           about_theme: "O nama"
           version: "Verzija:"
           enable: "Omogući"
@@ -3123,6 +3326,7 @@ sr:
             check_email: "proveri email"
             delete_topic: "obriši temu"
             delete_post: "obriši poruku"
+            recover_post: "Vrati obrisanu objavu"
             impersonate: "predstavi se kao"
             activate_user: "aktivirati korisnika"
             deactivate_user: "deaktivirati korisnika"
@@ -3260,6 +3464,8 @@ sr:
         approve_success: "Korisnik odobren i email sa aktivacionim upustvima poslat."
         approve_bulk_success: "Uspeh! Svi označeni korisnici su odobreni i obavešteni."
         time_read: "Vreme Čitanja"
+        upcoming_changes:
+          view_modal: "Prikaži omogućene promene"
         delete: "Obriši Korisnika"
         delete_posts:
           button: "Obriši sve poruke"
@@ -3282,6 +3488,9 @@ sr:
           one: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
+        delete_and_block: "Obriši i blokiraj korisnika"
+        delete_and_block_description: "Obrišite korisnika i blokirajte njihovu email i IP adresu."
+        delete_dont_block_description: "Obrišite korisnika bez blokiranja."
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Proverite da li ste obrisali sve njegove poruke pre nego što ponovo pokušate brisati."
         send_activation_email: "Pošalji Aktivacijski Email"

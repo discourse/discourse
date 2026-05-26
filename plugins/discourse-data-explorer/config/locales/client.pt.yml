@@ -6,6 +6,10 @@
 
 pt:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Explorador de Dados"
     errors:
       explorer:
         no_semicolons: "Remova os pontos e vírgulas da consulta."
@@ -17,6 +21,9 @@ pt:
       title: "Explorador de Dados"
       create: "Criar"
       create_placeholder: "Nome da consulta..."
+      ai:
+        generate: "Gerar"
+        optional: "opcional"
       import:
         label: "Importar"
       help:
@@ -29,12 +36,8 @@ pt:
         bool:
           yes: "Sim"
           no: "Não"
-      export: "Exportar"
       run: "Executar"
-      edit: "Editar"
       delete: "Eliminar"
-      download_json: "JSON"
-      download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
       run_time: "Consulta concluída em %{value} ms."
       result_count:
@@ -43,7 +46,6 @@ pt:
       query_groups: "Grupos"
       query_description: "Descrição"
       column: "Coluna %{number}"
-      explain_label: "Incluir plano de consulta?"
       reset_params: "Repor"
       search_placeholder: "Pesquisar..."
     group:

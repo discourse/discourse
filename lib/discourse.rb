@@ -86,8 +86,8 @@ module Discourse
       rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
 
       File.open(temp_destination, "w") do |fd|
         fd.write(contents)
@@ -105,8 +105,8 @@ module Discourse
       rescue Errno::ENOENT, Errno::EINVAL
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
       execute_command("ln", "-s", source, temp_destination)
 
       # Remove existing symlink first to prevent FileUtils.mv from moving
@@ -343,7 +343,7 @@ module Discourse
     @plugins = []
     @plugins_by_name = {}
     Plugin::Instance
-      .find_all("#{Rails.root}/plugins")
+      .find_all("#{Rails.root.join("plugins")}")
       .each do |p|
         v = p.metadata.required_version || Discourse::VERSION::STRING
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
@@ -430,7 +430,7 @@ module Discourse
   end
 
   def self.find_plugin_css_assets(args)
-    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
+    plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -453,11 +453,9 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins =
-      self
-        .find_plugins(args)
-        .select do |plugin|
-          plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
-        end
+      find_plugins(args).select do |plugin|
+        plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
+      end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
@@ -589,12 +587,10 @@ module Discourse
 
   def self.cache
     @cache ||=
-      begin
-        if GlobalSetting.skip_redis?
-          ActiveSupport::Cache::MemoryStore.new
-        else
-          Cache.new
-        end
+      if GlobalSetting.skip_redis?
+        ActiveSupport::Cache::MemoryStore.new
+      else
+        Cache.new
       end
   end
 
@@ -944,7 +940,7 @@ module Discourse
       User.find_by(
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
-    user ||= (system_user || User.admins.real.order(:id).first)
+    user ||= system_user || User.admins.real.order(:id).first
   end
 
   SYSTEM_USER_ID = -1
@@ -1193,11 +1189,9 @@ module Discourse
   def self.reset_active_record_cache
     ActiveRecord::Base.connection.query_cache.clear
     (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      begin
-        table.classify.constantize.reset_column_information
-      rescue StandardError
-        nil
-      end
+      table.classify.constantize.reset_column_information
+    rescue StandardError
+      nil
     end
     nil
   end
@@ -1221,11 +1215,9 @@ module Discourse
 
       # load up all models and schema
       (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-        begin
-          table.classify.constantize.first
-        rescue StandardError
-          nil
-        end
+        table.classify.constantize.first
+      rescue StandardError
+        nil
       end
 
       # ensure we have a full schema cache in case we missed something above
@@ -1257,11 +1249,10 @@ module Discourse
     [
       Thread.new do
         # router warm up
-        begin
-          Rails.application.routes.recognize_path("abc")
-        rescue StandardError
-          nil
-        end
+
+        Rails.application.routes.recognize_path("abc")
+      rescue StandardError
+        nil
       end,
       Thread.new do
         # preload discourse version
@@ -1292,6 +1283,11 @@ module Discourse
 
   def self.is_parallel_test?
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
+  end
+
+  def self.test_env_number
+    return "0" if ENV["TEST_ENV_NUMBER"].nil?
+    ENV["TEST_ENV_NUMBER"].presence || "1"
   end
 
   def self.apply_cdn_headers(headers)

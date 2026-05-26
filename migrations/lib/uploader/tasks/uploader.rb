@@ -153,17 +153,15 @@ module Migrations
             with_retries do
               upload =
                 copy_to_tempfile(path) do |file|
-                  begin
-                    UploadCreator.new(
-                      file,
-                      metadata.original_filename,
-                      type: row[:type],
-                      origin: metadata.origin_url,
-                    ).create_for(Discourse::SYSTEM_USER_ID)
-                  rescue StandardError => e
-                    error_message = e.message
-                    nil
-                  end
+                  UploadCreator.new(
+                    file,
+                    metadata.original_filename,
+                    type: row[:type],
+                    origin: metadata.origin_url,
+                  ).create_for(Discourse::SYSTEM_USER_ID)
+                rescue StandardError => e
+                  error_message = e.message
+                  nil
                 end
 
               if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)

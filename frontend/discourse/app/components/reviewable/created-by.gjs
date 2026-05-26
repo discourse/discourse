@@ -1,7 +1,7 @@
 import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -20,11 +20,11 @@ import { i18n } from "discourse-i18n";
 <template>
   <div class="created-by">
     {{#if @user}}
-      <UserLink @user={{@user}}>{{avatar @user imageSize="small"}}</UserLink>
+      <DUserLink @user={{@user}}>{{dAvatar @user imageSize="small"}}</DUserLink>
       <ReviewableCreatedByName @user={{@user}} />
     {{else}}
       <div class="deleted-user">
-        {{icon "trash-can" class="deleted-user-avatar"}}
+        {{dIcon "trash-can" class="deleted-user-avatar"}}
         <span class="deleted-user-name">{{i18n "review.deleted_user"}}</span>
       </div>
     {{/if}}

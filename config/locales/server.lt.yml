@@ -904,6 +904,30 @@ lt:
       xaxis: "Diena"
       yaxis: "Naujų prisidedančių asmenų skaičius"
       description: "Vartotojų, kurie per šį laikotarpį paskelbė pirmą įrašą, skaičius."
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Temos"
+        posts: "Pranešimai"
+        share: "Dalintis"
+    posters_by_member_type:
+      labels:
+        count: "Pranešimai"
+        share: "Dalintis"
+      types:
+        staff: "Personalas"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Patikimumo lygis"
+        count: "Nariai"
+        share: "Dalintis"
+      levels:
+        "0": "Naujas"
+        "1": "Pagrindinis"
+        "2": "Narys"
+        "3": "Nuolatinės"
+        "4": "Lyderis"
     trust_level_growth:
       title: "Pasitikėjimo lygio augimas"
       xaxis:
@@ -933,6 +957,8 @@ lt:
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonimas"
       yaxis: "Diena"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1039,6 +1065,12 @@ lt:
         num_clicks: "Spustelėjimai"
         num_topics: "Temos"
       description: "Vartotojai išvardyti pagal paspaudimų skaičių nuorodose, kurias jie bendrino."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Apsilankymai"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Apsilankymai"
     top_traffic_sources:
       title: "Populiariausi srauto šaltiniai"
       xaxis: "Domenas"
@@ -1140,7 +1172,7 @@ lt:
         device: Įrenginys
         os: Operacinė sistema
         login_time: Prisijungimo laikas
-    staff_logins:
+    admin_logins:
       title: "Administratoriaus prisijungimai"
       labels:
         user: Narys
@@ -1244,7 +1276,6 @@ lt:
     maximum_session_age: "Vartotojas liks prisijungęs n valandų nuo paskutinio apsilankymo"
     ga_version: "Naudojama „Google Universal Analytics“ versija: v3 (analytics.js), v4 (gtag)"
     moderators_change_post_ownership: "Leisti moderatoriams pakeisti įrašo nuosavybę"
-    use_admin_ip_allowlist: "Administratoriai gali prisijungti tik tuo atveju, jei yra IP adresas, apibrėžtas sąraše „Tikrinami IP“ (Administratorius> Žurnalai> Tikrinami IP)."
     blocked_ip_blocks: "Sąrašas privačių IP blokų, kurių niekada neturėtų tikrinti „Discourse“"
     share_links: "Nustatykite, kurie elementai rodomi bendrinimo dialogo lange ir kokia tvarka."
     site_contact_username: "Tinkamas personalo vartotojo vardas, iš kurio siunčiami visi automatiniai pranešimai. Jei jis paliekamas tuščias, bus naudojama numatytoji sistemos paskyra."

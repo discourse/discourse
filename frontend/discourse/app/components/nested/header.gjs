@@ -3,9 +3,10 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicCategory from "discourse/components/topic-category";
 import TopicMetadata from "discourse/components/topic-metadata";
+import TopicStatus from "discourse/components/topic-status";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 <template>
   <div class="nested-view__header">
@@ -31,6 +32,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
       </div>
     {{else}}
       <h1 class="nested-view__title">
+        <TopicStatus @topic={{@topic}} />
         <a
           href={{@topic.url}}
           {{on "click" @startEditingTopic}}
@@ -39,7 +41,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
           {{trustHTML @topic.fancyTitle~}}
           {{~#if @topic.details.can_edit~}}
             <span class="edit-topic__wrapper">
-              {{icon "pencil" class="edit-topic"}}
+              {{dIcon "pencil" class="edit-topic"}}
             </span>
           {{~/if}}
         </a>

@@ -1,6 +1,8 @@
 @use "lib/viewport";
 
 body.has-ai-bot-docked-composer {
+  --ai-bot-placeholder-height: 60vh;
+
   // hide the floating composer on bot PMs — the docked composer has
   // replaced it (including edits). Scoped to the body class, which is
   // only present while the DockedComposer component is rendered (cleared
@@ -23,6 +25,14 @@ body.has-ai-bot-docked-composer {
   .more-topics__container {
     display: none;
   }
+
+  // Lift the sticky topic-progress above the docked composer. No-op on
+  // desktop where .with-topic-progress is absent (timeline panel instead).
+  .with-topic-progress {
+    bottom: calc(
+      var(--ai-docked-composer-height, 0px) + env(safe-area-inset-bottom)
+    );
+  }
 }
 
 // AI-bot variant of the docked composer: align with the PM post body's
@@ -42,14 +52,12 @@ body.has-ai-bot-docked-composer {
 
   // ~4 lines tall by default; still expands further with content
   --docked-composer-input-min-height: 7em;
-
-  // Remove the spacing above the composer
-  padding-top: 0;
+  background: transparent;
+  padding: 0.75em 0 max(env(safe-area-inset-bottom), 0.5em);
   margin-top: 0;
 
-  // Hide the fade when already at the bottom — nothing is being obscured
-  // above the composer so the gradient adds no information.
-  &.docked-composer--at-bottom::before {
+  // Suppress the core ::before gradient.
+  &::before {
     display: none;
   }
 
@@ -80,23 +88,6 @@ body.has-ai-bot-docked-composer {
   }
 }
 
-// Place the resize handle inside the bordered wrapper. The handle overlaps 1em
-// into the wrapper's padding-top zone, above the input area.
-.docked-composer.ai-bot-docked-composer.docked-composer--resizable {
-  gap: 0;
-
-  .docked-composer__resize-handle {
-    height: 1em;
-    position: relative;
-    z-index: 2;
-    margin-bottom: -1em;
-
-    @include viewport.until(sm) {
-      display: none;
-    }
-  }
-}
-
 // Remove default border from the column; the wrapper gets the border instead.
 .docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
   border: none;
@@ -114,17 +105,26 @@ body.has-ai-bot-docked-composer {
 .docked-composer.ai-bot-docked-composer .d-editor-textarea-wrapper {
   display: flex;
   flex-direction: column-reverse;
-  padding-top: 1em;
   border: var(--d-input-border);
   border-color: var(--content-border-color);
   border-radius: var(--d-input-border-radius);
   background: var(--d-input-bg-color);
   transition: border-color 0.15s ease-in-out;
+  position: relative;
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
-    outline: 2px solid var(--d-input-focused-color) !important;
-    outline-offset: -2px;
+    outline: none !important;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: 1;
+      border: 2px solid var(--d-input-focused-color);
+      border-radius: var(--d-input-border-radius);
+      pointer-events: none;
+    }
   }
 }
 
@@ -141,7 +141,6 @@ body.has-ai-bot-docked-composer {
   max-height: 4em;
   opacity: 1;
   margin: 0;
-  padding-bottom: var(--space-3);
   padding-right: 3em;
   border-top: 1px solid var(--primary-low);
   border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
@@ -189,9 +188,13 @@ body.has-ai-bot-docked-composer {
   }
 }
 
-// Send button: vertically centered with toolbar icons.
+// Send button: smaller icon than core default (font-up-1 → font-down-1).
 .docked-composer.ai-bot-docked-composer .docked-composer__submit-btn.btn {
   bottom: var(--space-2);
+
+  .d-icon {
+    font-size: var(--font-down-1) !important;
+  }
 }
 
 .docked-composer.ai-bot-docked-composer .ai-bot-docked-composer__editing {
@@ -287,6 +290,59 @@ body.has-ai-bot-docked-composer {
   30% {
     transform: translateY(-4px);
     opacity: 1;
+  }
+}
+
+body.has-ai-bot-docked-composer
+  [data-user-id^="-"].ai-bot-streaming-placeholder {
+  animation: ai-bot-fade-in 0.3s ease-out;
+
+  .cooked {
+    min-height: var(--ai-bot-placeholder-height);
+  }
+}
+
+body.has-ai-bot-docked-composer [data-user-id^="-"] .cooked {
+  transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-bot-reply-placeholder {
+  --docked-composer-content-offset: 0px;
+  padding-left: var(--docked-composer-content-offset);
+  padding-bottom: 1em;
+  animation: ai-bot-fade-in 0.2s ease-out;
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--topic-avatar-width, 45px);
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    min-height: var(--ai-bot-placeholder-height);
+    padding-top: 0.25em;
+  }
+
+  &__username {
+    font-weight: bold;
+    color: var(--primary-high);
+  }
+}
+
+@keyframes ai-bot-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

@@ -5,7 +5,7 @@
     <% canonical_url = "#{Discourse.base_url}#{current_path}" %>
     <link rel="alternate" href="<%= canonical_url %>" hreflang="x-default" />
     <% locales.each do |locale| %>
-      <link rel="alternate" href="<%= canonical_url %>?<%= Discourse::LOCALE_PARAM %>=<%= locale %>" hreflang="<%= locale %>" />
+      <link rel="alternate" href="<%= canonical_url %>?<%= Discourse::LOCALE_PARAM %>=<%= locale %>" hreflang="<%= locale.tr('_', '-') %>" />
     <% end %>
   <% end %>
 <% end %>

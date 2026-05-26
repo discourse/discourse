@@ -4,7 +4,7 @@ RSpec.describe ThemeSettingsManager do
   let!(:theme) { Fabricate(:theme) }
 
   let(:theme_settings) do
-    yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
+    yaml = File.read("#{Rails.root.join("spec/fixtures/theme_settings/valid_settings.yaml")}")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
     theme.settings

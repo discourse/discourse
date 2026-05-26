@@ -167,6 +167,8 @@ class UserHistory < ActiveRecord::Base
         upcoming_change_toggled: 122,
         change_site_setting_groups: 123,
         upcoming_change_available: 124,
+        notified_about_composer_education: 125,
+        recover_post: 126,
       )
   end
 
@@ -221,6 +223,7 @@ class UserHistory < ActiveRecord::Base
       post_edit
       topic_published
       recover_topic
+      recover_post
       post_approved
       create_badge
       change_badge
@@ -345,6 +348,7 @@ class UserHistory < ActiveRecord::Base
       :post_staff_note_destroy,
       :delete_post,
       :delete_post_permanently,
+      :recover_post,
       :permanently_delete_post_revisions,
       # topics
       :topic_published,
@@ -409,12 +413,12 @@ class UserHistory < ActiveRecord::Base
   end
 
   def self.for(user, action_type)
-    self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
+    where(target_user_id: user.id, action: UserHistory.actions[action_type])
   end
 
   def self.exists_for_user?(user, action_type, opts = nil)
     opts = opts || {}
-    result = self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
+    result = where(target_user_id: user.id, action: UserHistory.actions[action_type])
     result = result.where(topic_id: opts[:topic_id]) if opts[:topic_id]
     result.exists?
   end
@@ -430,12 +434,11 @@ class UserHistory < ActiveRecord::Base
     if custom_staff
       opts[:custom_type] = opts[:action_name]
     else
-      opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+      opts[:action_id] = actions[opts[:action_name].to_sym] if opts[:action_name]
     end
 
     query =
-      self
-        .with_filters(opts.slice(*staff_filters))
+      with_filters(opts.slice(*staff_filters))
         .only_staff_actions
         .order("id DESC")
         .includes(:acting_user, :target_user, :topic, :post, :category)
@@ -449,7 +452,7 @@ class UserHistory < ActiveRecord::Base
   end
 
   def set_admin_only
-    self.admin_only = UserHistory.admin_only_action_ids.include?(self.action)
+    self.admin_only = UserHistory.admin_only_action_ids.include?(action)
     self
   end
 
@@ -470,23 +473,23 @@ end
 #
 #  id             :integer          not null, primary key
 #  action         :integer          not null
-#  acting_user_id :integer
-#  target_user_id :integer
+#  admin_only     :boolean          default(FALSE)
+#  context        :string
+#  custom_type    :string
 #  details        :text
+#  email          :string
+#  ip_address     :string
+#  new_value      :text
+#  previous_value :text
+#  subject        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string
-#  ip_address     :string
-#  email          :string
-#  subject        :text
-#  previous_value :text
-#  new_value      :text
-#  topic_id       :integer
-#  admin_only     :boolean          default(FALSE)
-#  post_id        :integer
-#  custom_type    :string
+#  acting_user_id :integer
 #  category_id    :integer
+#  post_id        :integer
 #  reviewable_id  :bigint
+#  target_user_id :integer
+#  topic_id       :integer
 #
 # Indexes
 #

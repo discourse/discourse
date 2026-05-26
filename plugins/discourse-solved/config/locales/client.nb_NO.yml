@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Godtatte løsninger"
   js:
     notifications:
       alt:

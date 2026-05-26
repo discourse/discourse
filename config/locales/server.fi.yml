@@ -370,7 +370,6 @@ fi:
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
     not_found_template_link: |
       <p>Tätä kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voa enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
-    existing_user_cannot_redeem: "Tätä kutsua ei voi lunastaa. Pyydä kutsujaasi lähettämään sinulle uusi kutsu."
     existing_user_already_redemeed: "Olet jo lunastanut tämän kutsulinkin."
     user_exists: "Henkilöä <b>%{email}</b> ei tarvitse kutsua, hänellä on jo tili!"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
@@ -1232,6 +1231,30 @@ fi:
       xaxis: "Päivä"
       yaxis: "Uusien kirjoittajien lukumäärä"
       description: "Kuinka moni kirjoitti ensimmäisen viestinsä tällä ajanjaksolla."
+    activity_by_category:
+      labels:
+        category: "Luokka"
+        topics: "Aiheet"
+        posts: "Viestejä"
+        share: "Jaa"
+    posters_by_member_type:
+      labels:
+        count: "Viestejä"
+        share: "Jaa"
+      types:
+        staff: "Henkilökunta"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Luottamustaso"
+        count: "Jäsenet"
+        share: "Jaa"
+      levels:
+        "0": "Uudet"
+        "1": "Haastaja"
+        "2": "Konkari"
+        "3": "Normaali"
+        "4": "Johtaja"
     trust_level_growth:
       title: "Luottamustasojen nousu"
       xaxis:
@@ -1275,9 +1298,8 @@ fi:
     site_traffic:
       title: "Sivuston liikenne"
       xaxis:
-        page_view_anon_browser: "Sivunkatselut (anonyymit)"
-        page_view_logged_in_browser: "Sivunkatselut (kirjautuneet)"
-        page_view_crawler: "Tunnetut hakurobotit"
+        page_view_anon_browser: "Anonyymeja"
+        page_view_crawler: "Hakurobotit"
         page_view_other: "Muu liikenne"
       yaxis: "Päivä"
       description: "Kirjautuneiden käyttäjien, anonyymien käyttäjien, tunnettujen hakurobottien ja muun liikenteen sivunkatselut."
@@ -1392,6 +1414,12 @@ fi:
         num_clicks: "Klikkauksia"
         num_topics: "Ketjuja"
       description: "Käyttäjät järjestettynä sen mukaan, montako kertaa heidän jakamiaan linkkejä on klikattu."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vierailuja"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vierailuja"
     top_traffic_sources:
       title: "Parhaat liikenteen lähteet"
       xaxis: "Verkkotunnus"
@@ -1517,7 +1545,7 @@ fi:
         os: Käyttöjärjestelmä
         login_time: Kirjautumisaika
       description: "Tiedot uusista kirjautumisista, jotka poikkesivat epäilyttävällä tavalla aiemmista kirjautumisista."
-    staff_logins:
+    admin_logins:
       title: "Ylläpitäjien kirjautumiset"
       labels:
         user: Käyttäjä
@@ -1706,7 +1734,6 @@ fi:
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
-    email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN:n, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot ja muut riippuvuudet varmistaaksesi, että ne ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
@@ -1768,7 +1795,6 @@ fi:
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua APIa, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Salli valvojien muuttaa viestin omistajuutta"
     cors_origins: "Sallitut alkuperät eri alkuperät sisältäville pyynnöille (CORS). Jokaisen alkuperän täytyy sisältää http:// tai https://. DISCOURSE_ENABLE_CORS-ympäristömuuttuja täytyy olla asetettu todeksi CORSin käyttöönottamiseksi."
-    use_admin_ip_allowlist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blocked_ip_blocks: "Luettelo yksityisistä IP-lohkoista, joita Discourse ei tulisi koskaan indeksoida"
     allowed_internal_hosts: "Luettelo sisäisistä isännistä, joita Discourse voi turvallisesti indeksoida onebox-esikatselua ja muita tarkoituksia varten"
     allowed_onebox_iframes: "Luettelo iframe src -verkkotunnuksista, jotka sallitaan Onebox-upotusten kautta. `*` sallii kaikki Onebox-oletusmoduulit."
@@ -1865,7 +1891,6 @@ fi:
     google_oauth2_client_secret: "Google-sovelluksesi asiakkaan salatunnus."
     google_oauth2_prompt: "Valinnainen välilyönneillä eroteltu lista merkkijonoarvoja, jotka määräävät pyytääkö todennuspalvelin käyttäjältä uudelleentunnistautumista ja suostumusta. Ks. käyvät arvot: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>"
     google_oauth2_hd: "Valinnainen Google Appsin isännöity verkkotunnus, johon kirjautuminen on rajoitettu. Katso lisätietoja osoitteesta <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "Hae käyttäjien Google-ryhmät isännöidyllä verkkotunnuksella todennuksen yhteydessä. Haettuja Google-ryhmiä voidaan käyttää automaattisen Discourse-ryhmän jäsenyyden myöntämiseen (katso ryhmäasetukset). Lisätietoja on osoitteessa https://meta.discourse.org/t/226850."
     google_oauth2_hd_groups_service_account_admin_email: "Sähköpostiosoite, joka kuuluu Google Workspacen järjestelmänvalvojan tilille. Käytetään palvelutilin tunnistetietojen kanssa ryhmän tietojen hakemiseen."
     google_oauth2_hd_groups_service_account_json: "Palvelutilin JSON-muotoiset avaintiedot. Käytetään ryhmän tietojen hakemiseen."
     google_oauth2_verbose_logging: "Kirjaa runsaat Google OAuth2 -diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1895,10 +1920,8 @@ fi:
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys. TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu, kun ladattuja tiedostoja poistetaan."
     s3_disable_cleanup: "Estä vanhojen varmuuskopioiden poistaminen S3:sta, kun varmuuskopioita on enemmän kuin suurin sallittu määrä."
     s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säiliöissä; poista tämän asetuksen valinta vain, jos aiot määrittää käyttöoikeuskäytäntöjä määritetyille s3_upload_bucket- ja s3_backup_bucket-säiliöille."
-    enable_direct_s3_uploads: "Mahdollistaa suorat moniosaiset lataukset Amazon S3:een. Lisätietoja on osoitteessa https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."
-    backup_location: "Sijainti, johon varmuuskopiot tallennetaan. TÄRKEÄÄ: S3 edelyttää, että kelvolliset S3-tunnistetiedot syötetään tiedostoasetuksissa. Kun muutat tämän S3:ksi Localista, sinun täytyy suorittaa rake-tehtävä \"s3:ensure_cors_rules\"."
     backup_gzip_compression_level_for_uploads: "Gzip-pakkausaste, jota käytetään palvelimeen ladattujen tiedostojen pakkaamiseen."
     include_thumbnails_in_backups: "Sisällytä luodut esikatselukuvat varmuuskopioihin. Käytöstä poistaminen pienentää varmuuskopioita, mutta varmuuskopiopalautuksen yhteydessä kaikki viestit on rakennettava uudelleen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
@@ -2081,7 +2104,6 @@ fi:
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus merkintää poistettaessa."
     auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, jotka eivät täytä \"fast typing threshold\" -rajaa"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
-    auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viestin lähettämiseen hyväksyntäjonoon. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan \"hemmetti\", \"aba\" tai \"aca\". Koskee vain käyttäjän ensimmäistä viestiä. VANHENTUNUT: käytä tämän sijaan tarkkailtujen sanojen hiljennystä."
     reviewable_claiming: "Tarvitseeko arvioitava sisältö omia ennen kuin sen voi käsitellä?"
     reviewable_default_topics: "Oletuksena, näytä arvioitava sisältö ryhmiteltynä ketjuittain"
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
@@ -2144,7 +2166,6 @@ fi:
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Salli käyttäjien julkaista uusia aiheita sähköpostitse. Kun asetustus on käytössä, voidaan ryhmille ja kategorioille määrittää vastaanottoon käytettävät sähköpostiosoitteet."
     email_in_allowed_groups: "Ryhmät, jotka voivat julkaista uusia ketjuja sähköpostitse. Ylläpitäjät ja valvojat voivat aina julkaista uusia ketjuja sähköpostitse."
-    email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Valitsee tietyn sähköpostin ylätunnisteen, jota käytetään roskapostin tunnistamiseen. Tämä vaihtoehto voi olla X-Spam-Flag, X-Spam-Status tai X-SES-Spam-Verdict, ja sähköposti merkitään roskapostiksi ylätunnisteen arvon perusteella. Jos valittu asetus on esimerkiksi X-Spam-Flag, sähköposti, jonka ylätunnisteen arvo on KYLLÄ, luokitellaan roskapostiksi."
     enable_smtp: "Ota SMTP käyttöön ryhmäviestien ilmoitusten lähettämisessä."
     email_prefix: "Sähköpostin aiheessa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."

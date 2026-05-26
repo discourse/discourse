@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
 import { gt, lt } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FKCharCounter extends Component {
   get currentLength() {
@@ -9,7 +9,7 @@ export default class FKCharCounter extends Component {
 
   <template>
     <span
-      class={{concatClass
+      class={{dConcatClass
         "form-kit__char-counter"
         (if (gt this.currentLength @maxLength) "--exceeded")
         (if (lt this.currentLength @minLength) "--insufficient")

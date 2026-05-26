@@ -148,9 +148,34 @@ module PageObjects
         has_css?("#{@context}.is-expanded .select-kit-row.is-selected[data-name='#{name}']")
       end
 
+      def has_disabled_row_name?(name)
+        expanded_component
+        has_css?("#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}']")
+      end
+
+      def has_no_disabled_row_name?(name)
+        expanded_component
+        has_no_css?("#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}']")
+      end
+
+      def has_row_synonym_hint?(name, hint_text)
+        expanded_component
+        has_css?(
+          "#{@context}.is-expanded .select-kit-row[data-name='#{name}'] .synonym-hint",
+          text: hint_text,
+        )
+      end
+
       def has_no_selected_row?
         expanded_component
         has_no_css?("#{@context}.is-expanded .select-kit-row.is-selected")
+      end
+
+      def has_disabled_row_reason?(name)
+        expanded_component
+        has_css?(
+          "#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}'] .disabled-reason",
+        )
       end
 
       def option_names

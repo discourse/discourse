@@ -1,12 +1,12 @@
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
-import DButton from "discourse/components/d-button";
 import GroupNotificationsTracking from "discourse/components/group-notifications-tracking";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 export default <template>
   {{bodyClass "user-messages-page"}}
@@ -27,7 +27,7 @@ export default <template>
       </li>
     </ol>
 
-    <HorizontalOverflowNav
+    <DHorizontalOverflowNav
       @ariaLabel="User secondary - messages"
       id="user-navigation-secondary__horizontal-nav"
       class="messages-nav"

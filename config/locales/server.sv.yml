@@ -267,7 +267,6 @@ sv:
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
       <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
-    existing_user_cannot_redeem: "Denna inbjudan kan inte lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig."
     existing_user_already_redemeed: "Du har redan löst in den här inbjudningslänken."
     user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
@@ -1060,6 +1059,30 @@ sv:
       xaxis: "Dag"
       yaxis: "Antal nya deltagare"
       description: "Antal användare som genomförde sitt första inlägg under denna period."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Ämnen"
+        posts: "Inlägg"
+        share: "Dela"
+    posters_by_member_type:
+      labels:
+        count: "Inlägg"
+        share: "Dela"
+      types:
+        staff: "Personal"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Förtroendenivå"
+        count: "Medlemmar"
+        share: "Dela"
+      levels:
+        "0": "Nya"
+        "1": "Grundläggande"
+        "2": "Medlem"
+        "3": "Vanlig"
+        "4": "Ledare"
     trust_level_growth:
       title: "Tillväxt av förtroendenivå"
       xaxis:
@@ -1092,6 +1115,9 @@ sv:
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonym"
+        page_view_crawler: "Sökrobotar"
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1202,6 +1228,12 @@ sv:
         num_clicks: "Klickningar"
         num_topics: "Ämnen"
       description: "Användare listade efter antal klickningar på länkar de har delat."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besök"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besök"
     top_traffic_sources:
       title: "Vanligaste trafikkällor"
       xaxis: "Domän"
@@ -1315,7 +1347,7 @@ sv:
         os: Operativsystem
         login_time: Inloggningstid
       description: "Detaljer om nya inloggningar som skiljer sig misstänksamt från tidigare inloggningar."
-    staff_logins:
+    admin_logins:
       title: "Administratörsinloggningar"
       labels:
         user: Användare
@@ -1478,7 +1510,6 @@ sv:
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
     x_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
-    email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
@@ -1533,7 +1564,6 @@ sv:
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Tillåt att moderatorer ändrar inläggsägarskap"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. Variabeln DISCOURSE_ENABLE_CORS env måste ställas in till true för att aktivera CORS."
-    use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress som definierats i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     blocked_ip_blocks: "En lista över privata IP-block som aldrig bör genomsökas av Discourse"
     allowed_internal_hosts: "En lista över interna värdar som discourse säkert kan söka igenom för oneboxar och andra syften"
     allowed_onebox_iframes: "En lista över källdomäner för iframe som är tillåtna via Onebox-inbäddningar. `*` kommer tillåta alla standardmotorer för Onebox."
@@ -1793,7 +1823,6 @@ sv:
     num_hours_to_close_topic: "Antal timmar ett ämne ska pausas för ingripande."
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
     auto_silence_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt tysta snabba författare"
-    auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget. UTFASAT: Använd Tystnad bevakade ord istället."
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
@@ -1847,7 +1876,6 @@ sv:
     pop3_polling_delete_from_server: "Ta bort e-postmeddelanden från servern. NOTERA! Om du inaktiverar detta bör du rensa din inkorg manuellt"
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Tillåt användare att lägga upp nya ämnen via e-post. När du har aktiverat den här inställningen kan du konfigurera inkommande e-postadresser för grupper och kategorier."
-    email_in_authserv_id: "Identifieraren för tjänsten som utför autentiseringskontroller av inkommande e-postmeddelanden. Se <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> för instruktioner om hur du konfigurerar detta."
     enable_smtp: "Aktivera SMTP för att skicka aviseringar för gruppmeddelanden."
     email_prefix: "[label] används i ämnesraden för e-post. Om ej ifylld sätts standardrubriken 'title'."
     email_site_title: "Webbplatsens titel som används som avsändare för e-post från webbplatsen. Om ej ifylld sätts standardtiteln 'title'. Använd det alternativet om din titel innehåller tecken som inte tillåts i e-posts avsändarsträngar."
