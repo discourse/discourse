@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+report_file="${REPORT_FILE:?REPORT_FILE is required}"
+base_branch="${BASE_BRANCH:?BASE_BRANCH is required}"
+dry_run="${DRY_RUN:-true}"
+stale_after_days="${STALE_AFTER_DAYS:-14}"
+github_repository="${GITHUB_REPOSITORY:-}"
+github_step_summary="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+
+rails_runner() {
+  SKIP_DB_AND_REDIS=1 RAILS_DB=nonexistent bin/rails runner "$@"
+}
+
+resolve_assignee() {
+  local original_pr_number="$1"
+
+  if [ -z "${original_pr_number}" ]; then
+    return 0
+  fi
+
+  gh pr view "${original_pr_number}" --json author --jq ".author.login" 2>/dev/null || true
+}
+
+write_pr_body() {
+  local body_file="$1"
+  local name="$2"
+  local current_status="$3"
+  local next_status="$4"
+  local last_status_change_commit="$5"
+  local last_status_change_date="$6"
+  local original_author_name="$7"
+  local original_author_email="$8"
+  local original_pr_number="$9"
+
+  cat > "${body_file}" <<BODY
+<!-- upcoming-change-status-pr:${name} -->
+
+This automated PR moves \`${name}\` from \`${current_status}\` to \`${next_status}\` after ${stale_after_days}+ days without a status change.
+
+- Last status change commit: [\`${last_status_change_commit}\`](https://github.com/discourse/discourse/commit/${last_status_change_commit})
+- Last status change date: \`${last_status_change_date}\`
+- Original author: ${original_author_name} (<${original_author_email}>)
+- Original PR: #${original_pr_number:-N/A}
+BODY
+}
+
+write_dry_run_summary() {
+  local name="$1"
+  local branch="$2"
+  local title="$3"
+  local body_file="$4"
+  local assignee="$5"
+
+  {
+    echo "### ${name}"
+    echo
+    echo '```bash'
+    echo "git checkout -B ${branch} origin/${base_branch}"
+    echo "SKIP_DB_AND_REDIS=1 RAILS_DB=nonexistent bin/rails runner script/upcoming_changes_status_report -- --stale-after-days ${stale_after_days} --apply ${name}"
+    echo "git add config/site_settings.yml"
+    echo "git commit -m \"${title}\""
+    echo "git push -f origin ${branch}"
+    if [ -n "${assignee}" ]; then
+      echo "gh pr create --base ${base_branch} --head ${branch} --title \"${title}\" --body-file ${body_file} --label upcoming-change --assignee ${assignee}"
+    else
+      echo "gh pr create --base ${base_branch} --head ${branch} --title \"${title}\" --body-file ${body_file} --label upcoming-change"
+    fi
+    echo '```'
+    echo
+  } >> "${github_step_summary}"
+}
+
+if [ "${dry_run}" != "true" ] && [ "${github_repository}" != "discourse/discourse" ]; then
+  echo "Refusing to create pull requests outside discourse/discourse."
+  exit 1
+fi
+
+git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+git config --global user.name "github-actions[bot]"
+git fetch origin "${base_branch}"
+
+while IFS= read -r change; do
+  name="$(jq -r ".name" <<< "${change}")"
+  current_status="$(jq -r ".current_status" <<< "${change}")"
+  next_status="$(jq -r ".next_status" <<< "${change}")"
+  original_pr_number="$(jq -r ".original_pr_number // empty" <<< "${change}")"
+  original_author_name="$(jq -r ".original_author_name // empty" <<< "${change}")"
+  original_author_email="$(jq -r ".original_author_email // empty" <<< "${change}")"
+  last_status_change_commit="$(jq -r ".last_status_change_commit // empty" <<< "${change}")"
+  last_status_change_date="$(jq -r ".last_status_change_date // empty" <<< "${change}")"
+  branch="dev/upcoming-change-status-bump/${name}"
+  title="DEV: Bump ${name} upcoming change to ${next_status}"
+  body_file="/tmp/upcoming-change-${name}-body.md"
+  assignee="$(resolve_assignee "${original_pr_number}")"
+
+  write_pr_body \
+    "${body_file}" \
+    "${name}" \
+    "${current_status}" \
+    "${next_status}" \
+    "${last_status_change_commit}" \
+    "${last_status_change_date}" \
+    "${original_author_name}" \
+    "${original_author_email}" \
+    "${original_pr_number}"
+
+  if [ "${dry_run}" = "true" ]; then
+    write_dry_run_summary "${name}" "${branch}" "${title}" "${body_file}" "${assignee}"
+    continue
+  fi
+
+  existing_pr_count="$(gh pr list --head "${branch}" --state open --json number --jq "length")"
+  if [ "${existing_pr_count}" != "0" ]; then
+    echo "Open PR already exists for ${branch}; skipping."
+    continue
+  fi
+
+  git checkout -B "${branch}" "origin/${base_branch}"
+  rails_runner script/upcoming_changes_status_report -- \
+    --stale-after-days "${stale_after_days}" \
+    --apply "${name}"
+  git add config/site_settings.yml
+  git commit -m "${title}"
+  git push -f origin "${branch}"
+
+  if [ -n "${assignee}" ]; then
+    gh pr create \
+      --base "${base_branch}" \
+      --head "${branch}" \
+      --title "${title}" \
+      --body-file "${body_file}" \
+      --label upcoming-change \
+      --assignee "${assignee}"
+  else
+    gh pr create \
+      --base "${base_branch}" \
+      --head "${branch}" \
+      --title "${title}" \
+      --body-file "${body_file}" \
+      --label upcoming-change
+  fi
+done < <(jq -c '.[] | select(.eligible)' "${report_file}")
