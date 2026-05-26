@@ -105,7 +105,6 @@ export default class DashboardTraffic extends Component {
     return {
       hideYAxisGridLines: true,
       hiddenLabels: this.hiddenLabels,
-      legendPosition: "top",
     };
   }
 
