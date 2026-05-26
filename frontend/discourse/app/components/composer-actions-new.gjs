@@ -195,22 +195,38 @@ export default class ComposerActions extends Component {
     return this.templateData.hasActions || this.hasToggles;
   }
 
-  @action
-  toggleWhisper(event) {
-    event?.stopPropagation();
-    this.composerModel.toggleProperty("whisper");
+  toggleProperty(property) {
+    this.composerModel.toggleProperty(property);
   }
 
   @action
-  toggleNoBump(event) {
-    event?.stopPropagation();
-    this.composerModel.toggleProperty("noBump");
+  toggleFromRow(property, event) {
+    if (event?.target?.closest(".d-toggle-switch")) {
+      return;
+    }
+
+    this.toggleProperty(property);
   }
 
   @action
-  toggleUnlisted(event) {
+  toggleFromSwitch(property, event) {
     event?.stopPropagation();
-    this.composerModel.toggleProperty("unlistTopic");
+    this.toggleProperty(property);
+  }
+
+  @action
+  toggleWhisper() {
+    this.toggleProperty("whisper");
+  }
+
+  @action
+  toggleNoBump() {
+    this.toggleProperty("noBump");
+  }
+
+  @action
+  toggleUnlisted() {
+    this.toggleProperty("unlistTopic");
   }
 
   @action
@@ -306,7 +322,7 @@ export default class ComposerActions extends Component {
                       {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
                       <div
                         class="composer-toggle-item composer-toggle-whisper --with-description"
-                        {{on "click" this.toggleWhisper}}
+                        {{on "click" (fn this.toggleFromRow "whisper")}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "far-eye-slash"}}
@@ -324,7 +340,7 @@ export default class ComposerActions extends Component {
                           aria-label={{i18n
                             "composer.composer_actions.toggle_whisper.label"
                           }}
-                          {{on "click" this.toggleWhisper}}
+                          {{on "click" (fn this.toggleFromSwitch "whisper")}}
                         />
                       </div>
                     </dropdown.item>
@@ -335,7 +351,7 @@ export default class ComposerActions extends Component {
                       {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
                       <div
                         class="composer-toggle-item composer-toggle-no-bump --with-description"
-                        {{on "click" this.toggleNoBump}}
+                        {{on "click" (fn this.toggleFromRow "noBump")}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "anchor"}}
@@ -353,7 +369,7 @@ export default class ComposerActions extends Component {
                           aria-label={{i18n
                             "composer.composer_actions.toggle_topic_bump.label"
                           }}
-                          {{on "click" this.toggleNoBump}}
+                          {{on "click" (fn this.toggleFromSwitch "noBump")}}
                         />
                       </div>
                     </dropdown.item>
@@ -364,7 +380,7 @@ export default class ComposerActions extends Component {
                       {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
                       <div
                         class="composer-toggle-item composer-toggle-unlisted --with-description"
-                        {{on "click" this.toggleUnlisted}}
+                        {{on "click" (fn this.toggleFromRow "unlistTopic")}}
                       >
                         <div class="composer-toggle-item__icons">
                           {{dIcon "far-eye-slash"}}
@@ -382,7 +398,10 @@ export default class ComposerActions extends Component {
                           aria-label={{i18n
                             "composer.composer_actions.toggle_unlisted.label"
                           }}
-                          {{on "click" this.toggleUnlisted}}
+                          {{on
+                            "click"
+                            (fn this.toggleFromSwitch "unlistTopic")
+                          }}
                         />
                       </div>
                     </dropdown.item>
