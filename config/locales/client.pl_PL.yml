@@ -4133,6 +4133,8 @@ pl_PL:
     nested_replies:
       nested_view: "Widok zagnieżdżony"
       flat_view: "Widok płaski"
+      view_as_nested: "Wyświetl jako zagnieżdżone"
+      view_as_flat: "Wyświetl jako płaskie"
       sort:
         label: "Sortuj po"
         top: "Popularne"

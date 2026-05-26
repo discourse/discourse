@@ -3650,6 +3650,8 @@ de:
     nested_replies:
       nested_view: "Verschachtelte Ansicht"
       flat_view: "Flache Ansicht"
+      view_as_nested: "Verschachtelt anzeigen"
+      view_as_flat: "Flach anzeigen"
       sort:
         label: "Sortieren nach"
         top: "Angesagte"

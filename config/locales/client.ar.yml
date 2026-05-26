@@ -4477,6 +4477,8 @@ ar:
     nested_replies:
       nested_view: "العرض المتداخل"
       flat_view: "العرض المسطح"
+      view_as_nested: "عرض بشكل متداخل"
+      view_as_flat: "عرض بشكل مسطح"
       sort:
         label: "الترتيب حسب"
         top: "الأكثر نشاطًا"

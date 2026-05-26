@@ -2752,6 +2752,7 @@ pl_PL:
     nested_replies_default: "Użyj zagnieżdżonych odpowiedzi jako domyślnego widoku dla wszystkich tematów."
     nested_replies_default_sort: "Domyślny algorytm sortowania dla widoku zagnieżdżonych odpowiedzi."
     nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
+    nested_replies_toggle_mode_groups: "Grupy, które mogą przełączać się między widokiem zagnieżdżonym i płaskim."
     nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."

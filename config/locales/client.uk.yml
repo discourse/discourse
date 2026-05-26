@@ -4138,6 +4138,8 @@ uk:
     nested_replies:
       nested_view: "Вкладений вигляд"
       flat_view: "Плоский вигляд"
+      view_as_nested: "Дивитись як вкладене"
+      view_as_flat: "Вигляд як плоский"
       sort:
         label: "Сортувати за"
         top: "Топ"
