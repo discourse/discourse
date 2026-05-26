@@ -4,7 +4,7 @@ module DiscourseSolved
   class SolvedTopic < ActiveRecord::Base
     self.table_name = "discourse_solved_solved_topics"
 
-    # TODO: Remove after post-deploy migration DropDiscourseSolvedRemovedColumns is promoted
+    # TODO: Remove these columns fully in a future migration
     self.ignored_columns += %i[answer_post_id accepter_user_id]
 
     belongs_to :topic, class_name: "Topic"
