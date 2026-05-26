@@ -1,7 +1,3 @@
-performance.mark("discourse-init");
-const initEvent = new CustomEvent("discourse-init");
-document.dispatchEvent(initEvent);
-
 import "./global-compat";
 import "./setup-deprecation-workflow";
 import "./array-shim";

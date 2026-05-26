@@ -1,20 +1,6 @@
 import App, { loadAdmin, loadThemesAndPlugins } from "discourse/app";
 
-document.addEventListener("discourse-init", async (e) => {
-  performance.mark("discourse-init");
-  const config = e.detail;
-
-  if (document.querySelector('#data-discourse-setup[data-is-staff="true"]')) {
-    await loadAdmin();
-  }
-
-  await loadThemesAndPlugins();
-
-  const app = App.create(config);
-  app.start();
-});
-
-(function () {
+(async function () {
   if (window.unsupportedBrowser) {
     throw "Unsupported browser detected";
   }
@@ -25,6 +11,15 @@ document.addEventListener("discourse-init", async (e) => {
   const config = JSON.parse(
     decodeURIComponent(element.getAttribute("content"))
   );
-  const event = new CustomEvent("discourse-init", { detail: config });
-  document.dispatchEvent(event);
+
+  performance.mark("discourse-init");
+
+  if (document.querySelector('#data-discourse-setup[data-is-staff="true"]')) {
+    await loadAdmin();
+  }
+
+  await loadThemesAndPlugins();
+
+  const app = App.create(config.detail);
+  app.start();
 })();
