@@ -19,7 +19,7 @@ function deprecationWarning(name) {
     `${name} is deprecated. Use api.registerRichEditorExtension() instead.`,
     {
       id: `discourse.to-markdown.${name}`,
-      since: "v2026.4",
+      since: "2026.4.0",
     }
   );
 }
@@ -33,9 +33,15 @@ export function addBlockDecorateCallback() {
 export function addTextDecorateCallback() {
   deprecationWarning("addTextDecorateCallback");
 }
-export function clearTagDecorateCallbacks() {}
-export function clearBlockDecorateCallbacks() {}
-export function clearTextDecorateCallbacks() {}
+export function clearTagDecorateCallbacks() {
+  deprecationWarning("clearTagDecorateCallbacks");
+}
+export function clearBlockDecorateCallbacks() {
+  deprecationWarning("clearBlockDecorateCallbacks");
+}
+export function clearTextDecorateCallbacks() {
+  deprecationWarning("clearTextDecorateCallbacks");
+}
 
 export default async function toMarkdown(html) {
   try {

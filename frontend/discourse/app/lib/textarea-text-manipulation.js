@@ -517,6 +517,11 @@ export default class TextareaTextManipulation {
             : this.insertText(markdown);
           handled = true;
         }
+      } else if (plainText && isComposer) {
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
+          : this.insertText(plainText);
+        handled = true;
       }
     }
 

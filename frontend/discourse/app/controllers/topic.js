@@ -588,10 +588,6 @@ export default class TopicController extends Controller {
     const composer = this.composer;
     const { markdown: buffer, opts } = await this.quoteState.markdown();
 
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
     if (EmbedMode.enabled) {
       const loadedPost = postStream.findLoadedPost(postId);
       const post = loadedPost ? loadedPost : await postStream.loadPost(postId);

@@ -40,7 +40,7 @@ const extension = {
         attrs["data-username"] = username;
         attrs["data-post"] = postNumber;
         attrs["data-topic"] = topicId;
-        attrs["data-full"] = full ? "true" : "false";
+        attrs["data-full"] = full === "true" ? "true" : "false";
         if (displayName) {
           attrs["data-display-name"] = displayName;
         }
