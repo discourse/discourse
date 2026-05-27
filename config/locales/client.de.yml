@@ -3497,6 +3497,8 @@ de:
           other: "Ignorieren (%{count}) …"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
+        dismiss_new_topics: "Neue Themen verwerfen"
+        dismiss_new_replies: "Neue Antworten verwerfen"
         dismiss_new: "Neue Themen ignorieren"
         dismiss_new_modal:
           title: "Neue verwerfen"
@@ -5124,18 +5126,8 @@ de:
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
-      synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
       synonyms_inline: "Diese Synonyme werden durch %{base_tag_name} ersetzt:"
       save: "Name und Beschreibung des Schlagwortes speichern"
-      tag_groups_info:
-        one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
-      tag_groups_info_prefix:
-        one: "Dieses Schlagwort gehört zur Gruppe: "
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: "
-      category_restrictions:
-        one: "Es kann nur in dieser Kategorie verwendet werden:"
-        other: "Es kann nur in folgenden Kategorien verwendet werden:"
       restricted_to: "Beschränkt auf"
       no_synonyms: "Dieses Schlagwort hat keine Synonyme."
       edit_synonyms: "Synonyme bearbeiten"

@@ -441,11 +441,19 @@ zh_CN:
               title: "不公开"
               description: "只有受邀用户可以加入不公开活动。"
       composer:
-        name_placeholder: "活动"
-        end_date_placeholder: "设置结束日期"
+        name_placeholder: "活动名称"
         location_placeholder: "添加位置或网址"
-        max_attendees_placeholder: "设置最大参与人数"
         description_placeholder: "添加活动描述"
+        reminder:
+          units:
+            minutes:
+              other: "分钟"
+            hours:
+              other: "小时"
+            days:
+              other: "天"
+            weeks:
+              other: "周"
       builder_modal:
         custom_fields:
           label: "自定义字段"
@@ -453,6 +461,8 @@ zh_CN:
           description: "允许的自定义字段在站点设置中定义。自定义字段用于将数据传输到其他插件。"
         create_event_title: "创建活动"
         update_event_title: "编辑活动"
+        advanced_settings_title: "高级设置"
+        advanced_settings: "高级设置"
         confirm_delete: "确定要删除此活动吗？"
         confirm_close: "确定要关闭此活动吗？"
         confirm_open: "确定要开放此活动吗？"
@@ -466,14 +476,13 @@ zh_CN:
         timezone:
           label: 时区
           remove_timezone: 无时区 (UTC)
+        starts_at:
+          label: "开始日期"
         all_day:
           label: "全天事件"
           description: "全天事件没有具体时间，只有日期。事件将从当天开始持续到当天结束。"
         reminders:
           label: "提醒"
-          types:
-            bump_topic: "自动顶帖话题"
-            notification: "通知参与者"
           units:
             minutes: "分钟"
             hours: "小时"
@@ -482,23 +491,18 @@ zh_CN:
           periods:
             before: "提前"
             after: "推后"
-        recurrence_until:
-          label: "直到（包含）"
         recurrence:
           label: "重复"
           none: "不重复"
           every_day: "每天"
-          every_month: "每个月的这个工作日"
           every_weekday: "每个工作日"
-          every_week: "每周的这个工作日"
-          every_two_weeks: "每两周的这个工作日"
-          every_four_weeks: "每四周的这个工作日"
-        minimal:
-          label: "最低限度活动"
-          checkbox_label: "隐藏“参加/不参加”按钮和受邀者状态"
+          ordinals:
+            last: "最近"
         max_attendees:
           label: "最多参与者"
           placeholder: "无限制"
+        attendance:
+          none: "无"
         allow_chat:
           label: "聊天集成"
           checkbox_label: "创建和管理活动特定的聊天频道"
@@ -516,8 +520,9 @@ zh_CN:
           placeholder: "可选，默认为话题标题"
         invitees:
           label: "受邀群组"
-        status:
-          label: "状态"
+        event_type:
+          public:
+            title: "公开"
         delete_confirmation_message: "删除此活动？"
         image:
           label: "活动图片"

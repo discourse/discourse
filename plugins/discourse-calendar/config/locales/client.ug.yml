@@ -51,6 +51,18 @@ ug:
               title: "ئاممىۋى"
             private:
               title: "شەخسىي"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "مىنۇت"
+              other: "مىنۇت"
+            hours:
+              one: "سائەت"
+              other: "سائەت"
+            days:
+              one: "كۈن"
+              other: "كۈن"
       builder_modal:
         custom_fields:
           placeholder: "تاللاشچان"
@@ -58,6 +70,8 @@ ug:
         update: "ساقلا"
         timezone:
           label: ۋاقىت رايونى
+        starts_at:
+          label: "باشلىنىش ۋاقتى"
         reminders:
           units:
             minutes: "مىنۇت"
@@ -70,6 +84,8 @@ ug:
           label: "تەكرار"
           none: "تەكرارلانمايدۇ"
           every_day: "ھەر كۈنى"
+        attendance:
+          none: "يوق"
         url:
           label: "تور ئادرېسى"
           placeholder: "تاللاشچان"
@@ -77,7 +93,8 @@ ug:
           label: "ئورنى"
         description:
           label: "چۈشەندۈرۈش"
-        status:
-          label: "ھالەت"
+        event_type:
+          public:
+            title: "ئاممىۋى"
       invite_user_or_group:
         invite: "يوللا"

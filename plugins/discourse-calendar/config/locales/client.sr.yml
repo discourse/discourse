@@ -33,6 +33,13 @@ sr:
           status:
             private:
               title: "Privatna"
+      composer:
+        reminder:
+          units:
+            days:
+              one: "dan"
+              few: "dana"
+              other: "dana"
       builder_modal:
         custom_fields:
           placeholder: "Opciono"
@@ -45,6 +52,11 @@ sr:
             days: "dana"
           periods:
             before: "pre"
+        recurrence:
+          ordinals:
+            last: "poslednji"
+        attendance:
+          none: "Ništa"
         url:
           label: "URL"
           placeholder: "Opciono"
@@ -52,5 +64,3 @@ sr:
           label: "Lokacija"
         description:
           label: "Opis"
-        status:
-          label: "Status"

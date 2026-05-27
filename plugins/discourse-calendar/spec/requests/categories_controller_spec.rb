@@ -5,7 +5,6 @@ describe CategoriesController do
   fab!(:category)
 
   before do
-    SiteSetting.enable_simplified_category_creation = true
     SiteSetting.enable_events_category_type_setup = true
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true

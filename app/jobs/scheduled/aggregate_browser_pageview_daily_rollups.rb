@@ -16,9 +16,6 @@ module Jobs
         BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
         BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
       end
-
-      Report.clear_cache("top_countries_by_browser_pageviews")
-      Report.clear_cache("top_referrers_by_browser_pageviews")
     end
 
     private

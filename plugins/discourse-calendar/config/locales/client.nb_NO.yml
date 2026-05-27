@@ -51,6 +51,18 @@ nb_NO:
               title: "Offentlig"
             private:
               title: "Privat"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minutt"
+              other: "minutter"
+            hours:
+              one: "time"
+              other: "timer"
+            days:
+              one: "dag"
+              other: "dager"
       builder_modal:
         custom_fields:
           placeholder: "Valgfritt"
@@ -70,6 +82,8 @@ nb_NO:
           label: "Regelmessighet"
           none: "Ingen regelmessighet"
           every_day: "Hver dag"
+        attendance:
+          none: "Ingen"
         url:
           label: "URL"
           placeholder: "Valgfritt"
@@ -77,7 +91,8 @@ nb_NO:
           label: "Sted"
         description:
           label: "Beskrivelse"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Offentlig"
       invite_user_or_group:
         invite: "Send"

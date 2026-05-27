@@ -591,6 +591,41 @@ export function applyDefaultHandlers() {
     response(fixturesByUrl["/c/2481/show.json"])
   );
 
+  pretender.get("/c/:category_id/show.json", (request) => {
+    const fixture = fixturesByUrl[request.url];
+
+    if (fixture) {
+      return response(fixture);
+    }
+
+    const categoryId = parseInt(request.params.category_id, 10);
+    const siteCategory = fixturesByUrl["site.json"].site.categories.find(
+      (category) => category.id === categoryId
+    );
+
+    if (!siteCategory) {
+      return response(404, { errors: ["category not found"] });
+    }
+
+    const category = cloneJSON(siteCategory);
+
+    category.available_groups ||= ["admins", "everyone", "moderators", "staff"];
+    category.group_permissions ||= [
+      { permission_type: 1, group_name: "everyone", group_id: 0 },
+    ];
+    category.custom_fields ||= {};
+    category.category_types ||= {
+      discussion: {
+        id: "discussion",
+        name: "Discussion",
+        configuration_schema: {},
+      },
+    };
+    category.available_category_types ||= [];
+
+    return response({ category });
+  });
+
   pretender.put("/categories/:category_id", (request) => {
     const category = JSON.parse(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
@@ -627,6 +662,25 @@ export function applyDefaultHandlers() {
 
   pretender.post("/categories", () =>
     response(fixturesByUrl["/c/11/show.json"])
+  );
+
+  pretender.get("/categories/types", () =>
+    response({
+      types: [
+        {
+          id: "discussion",
+          name: "Discussion",
+          title: "discussion",
+          icon: "comments",
+          description: "General discussion",
+          configuration_schema: {},
+          available: true,
+        },
+      ],
+      counts: {
+        discussion: 1,
+      },
+    })
   );
 
   pretender.get("/categories/find", () => {

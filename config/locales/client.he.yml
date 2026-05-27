@@ -3754,6 +3754,8 @@ he:
           other: "להתעלם (%{count})…"
         dismiss_tooltip: "ביטול הצגת פוסטים חדשים או מעקב אחר נושאים"
         also_dismiss_topics: "הפסיקו לעקוב אחרי נושאים אלו כדי שהם לא יופיעו שוב בתור לא-נקראו"
+        dismiss_new_topics: "התעלמות מנושאים חדשים"
+        dismiss_new_replies: "התעלמות מתגובות חדשות"
         dismiss_new: "ביטול חדשים"
         dismiss_new_modal:
           title: "התעלמות מחדשים"
@@ -5456,24 +5458,8 @@ he:
       staff_info: "כדי להוסיף הגבלות, יש לשים את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
       synonyms: "מילים נרדפות"
-      synonyms_description: "תגיות אלו תוחלפנה בתגית <b>%{base_tag_name}</b>."
       synonyms_inline: "המילים הנרדפות האלו יוחלפו ב־%{base_tag_name}:"
       save: "שמירת השם ותיאור התגית"
-      tag_groups_info:
-        one: 'תגית זו שייכת לקבוצה הזאת: %{tag_groups}'
-        two: "תגית זו שייכת לקבוצות האלו: %{tag_groups}"
-        many: "תגית זו שייכת לקבוצות האלו: %{tag_groups}"
-        other: "תגית זו שייכת לקבוצות האלו: %{tag_groups}"
-      tag_groups_info_prefix:
-        one: "התגית הזאת שייכת לקבוצה "
-        two: "התגית הזאת שייכת לקבוצות האלו: "
-        many: "התגית הזאת שייכת לקבוצות האלו: "
-        other: "התגית הזאת שייכת לקבוצות האלו: "
-      category_restrictions:
-        one: "ניתן להשתמש בה בקטגוריה זו בלבד:"
-        two: "ניתן להשתמש בה בקטגוריות אלו בלבד:"
-        many: "ניתן להשתמש בה בקטגוריות אלו בלבד:"
-        other: "ניתן להשתמש בה בקטגוריות אלו בלבד:"
       restricted_to: "מוגבלת לכדי"
       no_synonyms: "לתגית הזאת אין מילים נרדפות."
       edit_synonyms: "עריכת מילים נרדפות"

@@ -58,6 +58,21 @@ ur:
               title: "عوامی"
             private:
               title: "ذاتی"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "منٹ"
+              other: "منٹ"
+            hours:
+              one: "گھنٹہ"
+              other: "گھنٹے"
+            days:
+              one: "دن"
+              other: "دن"
+            weeks:
+              one: "ہفتہ"
+              other: "ہفتے"
       builder_modal:
         custom_fields:
           placeholder: "اختیاری"
@@ -69,6 +84,8 @@ ur:
         timezone:
           label: خطہ کا وقت
           remove_timezone: کوئی خطہ کا وقت نہیں (UTC)
+        starts_at:
+          label: "تاریخِ آغاز"
         reminders:
           units:
             minutes: "منٹ"
@@ -82,11 +99,9 @@ ur:
           label: "تَقْلِید"
           none: "تَقْلِید نہیں"
           every_day: "ہر دن"
-          every_month: "ہر ماہ اس ہفتے کے دن"
           every_weekday: "ہر ہفتے کے دن"
-          every_week: "ہر ہفتے اس ہفتے کے دن"
-          every_two_weeks: "ہر دو ہفتے بعد اس ہفتے کے دن"
-          every_four_weeks: "ہر چار ہفتے بعد اس ہفتے کے دن"
+        attendance:
+          none: "کوئی نہیں"
         allow_chat:
           label: "چیٹ انٹیگریشن"
         url:
@@ -96,7 +111,8 @@ ur:
           label: "محل وقوع"
         description:
           label: "تفصیل"
-        status:
-          label: "سٹیٹس"
+        event_type:
+          public:
+            title: "عوامی"
       invite_user_or_group:
         invite: "بھیجیں"

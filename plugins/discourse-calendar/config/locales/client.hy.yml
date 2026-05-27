@@ -51,6 +51,18 @@ hy:
               title: "Հանրային"
             private:
               title: "Մասնավոր"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "րոպե"
+              other: "րոպե"
+            hours:
+              one: "ժամ"
+              other: "ժամ"
+            days:
+              one: "օր"
+              other: "օր"
       builder_modal:
         custom_fields:
           placeholder: "Ընտրովի"
@@ -69,6 +81,10 @@ hy:
         recurrence:
           label: "Կրկնություն"
           none: "Կրկնություն չկա"
+          ordinals:
+            last: "օգտագործել ամսաթվի և ժամանակի վերջին գրառումը  "
+        attendance:
+          none: "Ոչ մի"
         url:
           label: "URL"
           placeholder: "Ընտրովի"
@@ -76,7 +92,8 @@ hy:
           label: "Տեղակայություն"
         description:
           label: "Նկարագրություն"
-        status:
-          label: "Ստատուս"
+        event_type:
+          public:
+            title: "Հանրային"
       invite_user_or_group:
         invite: "Ուղարկել"
