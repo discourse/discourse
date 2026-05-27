@@ -61,19 +61,6 @@ module TurboTests
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
-      # Pure system-test runs are CPU-bound by each Ruby worker AND its
-      # child Chromium + Playwright/Node bridge processes — every "worker"
-      # is really 2-3 heavy processes contending for cores. The Core
-      # System Tests step sets PARALLEL_TEST_PROCESSORS = nproc/2 + 2,
-      # which on the 16-core runner is 10 Ruby workers, i.e. ~20–30 heavy
-      # processes total. Prior measurements showed +1 worker → +7.7%
-      # regression at this saturation point. Trim Ruby worker count by 2
-      # so each Ruby+Chromium pair has more CPU headroom; the
-      # `nproc/2` floor keeps us safely above 4 workers.
-      if @files.any? && @files.all? { |f| f.match?(%r{(?:\A|/)spec/system/}) }
-        @num_processes = [@num_processes - 2, 4].max
-      end
-
       group_opts = {}
       group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
