@@ -65,7 +65,7 @@ TEXT
   describe "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")
-      expect(plugins.count).to eq(5)
+      expect(plugins.count).to eq(6)
       plugin = plugins[3]
 
       expect(plugin.name).to eq("plugin-name")
