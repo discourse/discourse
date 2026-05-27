@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { ComposerActionItemBuilder } from "discourse/lib/composer/action-items";
 import {
   CREATE_SHARED_DRAFT,
@@ -182,5 +183,62 @@ module("Unit | Lib | composer action items", function (hooks) {
       }),
       ["create_topic", "reply_to_topic"]
     );
+  });
+
+  test("toggle actions are included when composer allows them", function (assert) {
+    const composer = this.owner.lookup("service:composer");
+    sinon.stub(composer, "canToggleWhisper").value(true);
+    sinon.stub(composer, "canToggleNoBump").value(true);
+    sinon.stub(composer, "canUnlistTopic").value(true);
+
+    const composerModel = {
+      whisper: true,
+      noBump: false,
+      unlistTopic: true,
+      toggleProperty() {},
+    };
+
+    const items = build(this, {
+      action: REPLY,
+      topic: topic(),
+      composerModel,
+    });
+
+    const toggleWhisper = items.find((item) => item.id === "toggle_whisper");
+    const toggleTopicBump = items.find(
+      (item) => item.id === "toggle_topic_bump"
+    );
+    const toggleUnlisted = items.find((item) => item.id === "toggle_unlisted");
+
+    assert.true(toggleWhisper?.isToggle, "includes whisper toggle");
+    assert.true(toggleWhisper?.state, "whisper state reads from model");
+
+    assert.true(toggleTopicBump?.isToggle, "includes no-bump toggle");
+    assert.false(toggleTopicBump?.state, "no-bump state reads from model");
+
+    assert.true(toggleUnlisted?.isToggle, "includes unlisted toggle");
+    assert.true(toggleUnlisted?.state, "unlisted state reads from model");
+  });
+
+  test("toggle actions are excluded when composer disallows them", function (assert) {
+    const composer = this.owner.lookup("service:composer");
+    sinon.stub(composer, "canToggleWhisper").value(false);
+    sinon.stub(composer, "canToggleNoBump").value(false);
+    sinon.stub(composer, "canUnlistTopic").value(false);
+
+    const actionIds = ids(this, {
+      action: CREATE_TOPIC,
+      topic: topic(),
+      composerModel: {
+        whisper: false,
+        noBump: false,
+        unlistTopic: false,
+        toggleProperty() {},
+      },
+    });
+
+    assert.false(actionIds.includes("toggle_whisper"));
+    assert.false(actionIds.includes("toggle_topic_bump"));
+    assert.false(actionIds.includes("toggle_unlisted"));
   });
 });

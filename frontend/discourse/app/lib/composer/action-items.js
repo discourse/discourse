@@ -15,6 +15,7 @@ export class ComposerActionItemBuilder {
   @service currentUser;
   @service site;
   @service composerActionState;
+  @service composer;
 
   constructor(context, action, topic, post, replyOptions, composerModel) {
     setOwner(this, getOwner(context));
@@ -71,6 +72,18 @@ export class ComposerActionItemBuilder {
       items.push(this.#replyToSnapshottedPost());
       items.push(this.#replyToSnapshottedTopic());
       items.push(this.#createPersonalMessage());
+    }
+
+    if (this.composer.canToggleWhisper) {
+      items.push(this.#toggleWhisper());
+    }
+
+    if (this.composer.canToggleNoBump) {
+      items.push(this.#toggleNoBump());
+    }
+
+    if (this.composer.canUnlistTopic) {
+      items.push(this.#toggleUnlisted());
     }
 
     return items.filter(Boolean).flat();
@@ -234,5 +247,47 @@ export class ComposerActionItemBuilder {
         id: "create_topic",
       };
     }
+  }
+
+  #toggleWhisper() {
+    return {
+      isToggle: true,
+      action: () => this.composerModel.toggleProperty("whisper"),
+      class: "composer-toggle-whisper",
+      icon: "far-eye-slash",
+      label: i18n("composer.composer_actions.toggle_whisper.label"),
+      description: i18n("composer.composer_actions.toggle_whisper.desc"),
+      state: this.composerModel.whisper,
+      ariaLabel: i18n("composer.composer_actions.toggle_whisper.label"),
+      id: "toggle_whisper",
+    };
+  }
+
+  #toggleNoBump() {
+    return {
+      isToggle: true,
+      action: () => this.composerModel.toggleProperty("noBump"),
+      class: "composer-toggle-no-bump",
+      icon: "anchor",
+      label: i18n("composer.composer_actions.toggle_topic_bump.label"),
+      description: i18n("composer.composer_actions.toggle_topic_bump.desc"),
+      state: this.composerModel.noBump,
+      ariaLabel: i18n("composer.composer_actions.toggle_topic_bump.label"),
+      id: "toggle_topic_bump",
+    };
+  }
+
+  #toggleUnlisted() {
+    return {
+      isToggle: true,
+      action: () => this.composerModel.toggleProperty("unlistTopic"),
+      class: "composer-toggle-unlisted",
+      icon: "far-eye-slash",
+      label: i18n("composer.composer_actions.toggle_unlisted.label"),
+      description: i18n("composer.composer_actions.toggle_unlisted.desc"),
+      state: this.composerModel.unlistTopic,
+      ariaLabel: i18n("composer.composer_actions.toggle_unlisted.label"),
+      id: "toggle_unlisted",
+    };
   }
 }

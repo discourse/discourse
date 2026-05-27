@@ -27,16 +27,8 @@ function composerActionsDropdown() {
         ".composer-actions-dropdown [data-action-id]"
       );
     },
-    rowByIndex(index) {
-      const rows = document.querySelectorAll(
-        ".composer-actions-dropdown [data-action-id]"
-      );
-      const row = rows[index];
-      return {
-        value() {
-          return row ? row.dataset.actionId : null;
-        },
-      };
+    actionIds() {
+      return [...this.rows()].map((row) => row.dataset.actionId);
     },
   };
 }
@@ -73,12 +65,10 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.strictEqual(
-      composerActions.rowByIndex(0).value(),
-      "reply_as_new_topic"
-    );
-    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rows().length, 2);
+    assert.deepEqual(composerActions.actionIds().sort(), [
+      "reply_as_new_topic",
+      "reply_to_topic",
+    ]);
   });
 
   test("replying to post - reply_to_topic", async function (assert) {
@@ -204,37 +194,31 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
 
     await composerActions.expand();
 
-    assert.strictEqual(
-      composerActions.rowByIndex(0).value(),
-      "reply_as_new_topic"
-    );
-    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_post");
-    assert.strictEqual(composerActions.rows().length, 2);
+    assert.deepEqual(composerActions.actionIds().sort(), [
+      "reply_as_new_topic",
+      "reply_to_post",
+    ]);
 
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
     assert.dom(".composer-actions-trigger").includesText("tms");
     assert.dom(".d-editor-input").hasValue(quote);
-    assert.strictEqual(
-      composerActions.rowByIndex(0).value(),
-      "reply_as_new_topic"
-    );
-    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rows().length, 2);
+    assert.deepEqual(composerActions.actionIds().sort(), [
+      "reply_as_new_topic",
+      "reply_to_topic",
+    ]);
 
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
     assert.dom(".d-editor-input").includesValue(quote);
-    assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
-    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "shared_draft");
-    assert.strictEqual(
-      composerActions.rowByIndex(3).value(),
-      "create_private_message"
-    );
-    assert.strictEqual(composerActions.rows().length, 4);
+    assert.deepEqual(composerActions.actionIds().sort(), [
+      "create_private_message",
+      "reply_to_post",
+      "reply_to_topic",
+      "shared_draft",
+    ]);
   });
 
   test("interactions - private message", async function (assert) {
@@ -245,8 +229,7 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await click(".usercard-controls .compose-pm .btn-primary");
     await composerActions.expand();
 
-    assert.strictEqual(composerActions.rowByIndex(0).value(), "create_topic");
-    assert.strictEqual(composerActions.rows().length, 1);
+    assert.deepEqual(composerActions.actionIds().sort(), ["create_topic"]);
   });
 
   test("toggle no-bump via actions dropdown", async function (assert) {
@@ -338,9 +321,9 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await click("article#post_1 button.edit");
     await composerActions.expand();
 
-    assert.strictEqual(
-      composerActions.rows().length,
-      0,
+    assert.deepEqual(
+      composerActions.actionIds(),
+      [],
       "no switch actions are offered while editing a post"
     );
   });

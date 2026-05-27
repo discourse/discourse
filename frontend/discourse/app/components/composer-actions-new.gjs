@@ -74,6 +74,8 @@ export default class ComposerActions extends Component {
       get(this.composerModel, "tags");
       get(this.composerModel, "category");
       get(this.composerModel, "whisper");
+      get(this.composerModel, "noBump");
+      get(this.composerModel, "unlistTopic");
     }
 
     let iconName;
@@ -273,26 +275,28 @@ export default class ComposerActions extends Component {
           <:content>
             <DDropdownMenu as |dropdown|>
               {{#each data.actions as |availAction|}}
-                <dropdown.item>
-                  <DButton
-                    class="composer-actions-btn
-                      {{if availAction.description '--with-description'}}"
-                    @action={{fn this.onSelectAction availAction.id}}
-                    data-action-id={{availAction.id}}
-                  >
-                    <div class="composer-actions-btn__icons">
-                      {{dIcon availAction.icon}}
-                    </div>
-                    <div class="composer-actions-btn__texts">
-                      <span class="composer-actions-btn__label">
-                        {{availAction.name}}
-                      </span>
-                      <span class="composer-actions-btn__description">
-                        {{availAction.description}}
-                      </span>
-                    </div>
-                  </DButton>
-                </dropdown.item>
+                {{#unless availAction.isToggle}}
+                  <dropdown.item>
+                    <DButton
+                      class="composer-actions-btn
+                        {{if availAction.description '--with-description'}}"
+                      @action={{fn this.onSelectAction availAction.id}}
+                      data-action-id={{availAction.id}}
+                    >
+                      <div class="composer-actions-btn__icons">
+                        {{dIcon availAction.icon}}
+                      </div>
+                      <div class="composer-actions-btn__texts">
+                        <span class="composer-actions-btn__label">
+                          {{availAction.name}}
+                        </span>
+                        <span class="composer-actions-btn__description">
+                          {{availAction.description}}
+                        </span>
+                      </div>
+                    </DButton>
+                  </dropdown.item>
+                {{/unless}}
               {{/each}}
               {{#unless (or data.actions.length this.hasToggles)}}
                 <div class="composer-actions-btn">
@@ -302,92 +306,36 @@ export default class ComposerActions extends Component {
 
               {{#if this.hasToggles}}
                 <div class="composer-actions-toggles">
-                  {{#if this.composer.canToggleWhisper}}
-                    <dropdown.item>
-                      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
-                      <div
-                        class="composer-toggle-item composer-toggle-whisper --with-description"
-                        {{on "click" this.toggleWhisper}}
-                      >
-                        <div class="composer-toggle-item__icons">
-                          {{dIcon "far-eye-slash"}}
-                        </div>
-                        <div class="composer-toggle-item__texts">
-                          <span class="composer-toggle-item__label">{{i18n
-                              "composer.composer_actions.toggle_whisper.label"
-                            }}</span>
-                          <span class="composer-toggle-item__description">{{i18n
-                              "composer.composer_actions.toggle_whisper.desc"
-                            }}</span>
-                        </div>
-                        <DToggleSwitch
-                          @state={{this.composerModel.whisper}}
-                          aria-label={{i18n
-                            "composer.composer_actions.toggle_whisper.label"
+                  {{#each data.actions as |availAction|}}
+                    {{#if availAction.isToggle}}
+                      <dropdown.item>
+                        {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
+                        <div
+                          class={{dConcatClass
+                            availAction.class
+                            "composer-toggle-item --with-description"
                           }}
-                          {{on "click" this.toggleWhisper}}
-                        />
-                      </div>
-                    </dropdown.item>
-                  {{/if}}
-
-                  {{#if this.composer.canToggleNoBump}}
-                    <dropdown.item>
-                      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
-                      <div
-                        class="composer-toggle-item composer-toggle-no-bump --with-description"
-                        {{on "click" this.toggleNoBump}}
-                      >
-                        <div class="composer-toggle-item__icons">
-                          {{dIcon "anchor"}}
+                          {{on "click" availAction.action}}
+                        >
+                          <div class="composer-toggle-item__icons">
+                            {{dIcon availAction.icon}}
+                          </div>
+                          <div class="composer-toggle-item__texts">
+                            <span
+                              class="composer-toggle-item__label"
+                            >{{availAction.label}}</span>
+                            <span
+                              class="composer-toggle-item__description"
+                            >{{availAction.description}}</span>
+                          </div>
+                          <DToggleSwitch
+                            @state={{availAction.state}}
+                            aria-label={{availAction.ariaLabel}}
+                          />
                         </div>
-                        <div class="composer-toggle-item__texts">
-                          <span class="composer-toggle-item__label">{{i18n
-                              "composer.composer_actions.toggle_topic_bump.label"
-                            }}</span>
-                          <span class="composer-toggle-item__description">{{i18n
-                              "composer.composer_actions.toggle_topic_bump.desc"
-                            }}</span>
-                        </div>
-                        <DToggleSwitch
-                          @state={{this.composerModel.noBump}}
-                          aria-label={{i18n
-                            "composer.composer_actions.toggle_topic_bump.label"
-                          }}
-                          {{on "click" this.toggleNoBump}}
-                        />
-                      </div>
-                    </dropdown.item>
-                  {{/if}}
-
-                  {{#if this.composer.canUnlistTopic}}
-                    <dropdown.item>
-                      {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
-                      <div
-                        class="composer-toggle-item composer-toggle-unlisted --with-description"
-                        {{on "click" this.toggleUnlisted}}
-                      >
-                        <div class="composer-toggle-item__icons">
-                          {{dIcon "far-eye-slash"}}
-                        </div>
-                        <div class="composer-toggle-item__texts">
-                          <span class="composer-toggle-item__label">{{i18n
-                              "composer.composer_actions.toggle_unlisted.label"
-                            }}</span>
-                          <span class="composer-toggle-item__description">{{i18n
-                              "composer.composer_actions.toggle_unlisted.desc"
-                            }}</span>
-                        </div>
-                        <DToggleSwitch
-                          @state={{this.composerModel.unlistTopic}}
-                          aria-label={{i18n
-                            "composer.composer_actions.toggle_unlisted.label"
-                          }}
-                          {{on "click" this.toggleUnlisted}}
-                        />
-                      </div>
-                    </dropdown.item>
-                  {{/if}}
+                      </dropdown.item>
+                    {{/if}}
+                  {{/each}}
                 </div>
               {{/if}}
             </DDropdownMenu>
