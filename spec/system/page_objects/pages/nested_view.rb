@@ -228,6 +228,20 @@ module PageObjects
         has_no_css?(".edit-topic-title")
       end
 
+      def has_topic_title_in_site_header?(topic)
+        has_css?(
+          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
+          text: topic.title,
+        )
+      end
+
+      def has_no_topic_title_in_site_header?(topic)
+        has_no_css?(
+          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
+          text: topic.title,
+        )
+      end
+
       def has_topic_map?
         has_css?(".nested-view__topic-map .topic-map__contents")
       end
@@ -313,6 +327,13 @@ module PageObjects
           const post = document.querySelector("[data-post-number='#{post.post_number}']");
           post.scrollIntoView();
           window.scrollBy(0, -#{offset});
+        JS
+        self
+      end
+
+      def scroll_past_topic_title
+        page.execute_script(<<~JS)
+          window.scrollTo(0, document.body.scrollHeight);
         JS
         self
       end
