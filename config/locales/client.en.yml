@@ -3242,7 +3242,7 @@ en:
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
-      edit_reason_placeholder: "why are you editing?"
+      edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
@@ -6116,7 +6116,7 @@ en:
           title: "Edit Table"
           cancel: "cancel"
           create: "Save"
-          reason: "why are you editing?"
+          reason: "Why are you editing?"
           trigger_reason: "Add reason for edit"
         default_edit_reason: "Update Table with Table Editor"
       default_header:
