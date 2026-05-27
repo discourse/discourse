@@ -12,36 +12,39 @@ class ReviewableUser < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    if status == "rejected" && !payload["scrubbed_by"]
+    if status == "rejected" && !payload&.dig("scrubbed_by")
       build_action(actions, :scrub, client_action: "scrub")
     end
-    if status == "pending"
-      if is_a_suspect_user?
-        confirm_spam_bundle =
-          actions.add_bundle(
-            "#{id}-confirm-spam",
-            icon: "user-xmark",
-            label: "reviewables.actions.confirm_spam.title",
-          )
-        delete_user_actions(actions, confirm_spam_bundle, require_reject_reason: false)
 
-        if guardian.can_approve?(target)
-          actions.add(:approve_user, bundle: nil) do |a|
-            a.icon = "user-plus"
-            a.label = "reviewables.actions.not_spam.title"
-            a.description = "reviewables.actions.not_spam.description"
-            a.completed_message = "reviewables.actions.approve_user.complete"
-          end
+    suspect_pending = status == "pending" && is_a_suspect_user?
+
+    # For suspect users the destructive "confirm spam" bundle must be added
+    # before the approve action so it renders first in the queue UI.
+    if suspect_pending
+      bundle =
+        actions.add_bundle(
+          "#{id}-confirm-spam",
+          icon: "user-xmark",
+          label: "reviewables.actions.confirm_spam.title",
+        )
+      delete_user_actions(actions, bundle, require_reject_reason: false)
+    end
+
+    if guardian.can_approve?(target)
+      actions.add(:approve_user, bundle: nil) do |a|
+        a.icon = "user-plus"
+        a.completed_message = "reviewables.actions.approve_user.complete"
+        if suspect_pending
+          a.label = "reviewables.actions.not_spam.title"
+          a.description = "reviewables.actions.not_spam.description"
+        else
+          a.label = "reviewables.actions.approve_user.title"
         end
-      else
-        if guardian.can_approve?(target)
-          actions.add(:approve_user, bundle: nil) do |a|
-            a.icon = "user-plus"
-            a.label = "reviewables.actions.approve_user.title"
-          end
-        end
-        delete_user_actions(actions, require_reject_reason: true)
       end
+    end
+
+    if status == "pending" && !suspect_pending
+      delete_user_actions(actions, nil, require_reject_reason: true)
     end
   end
 
