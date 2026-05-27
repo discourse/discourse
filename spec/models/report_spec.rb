@@ -96,7 +96,7 @@ RSpec.describe Report do
 
     describe "topics" do
       before do
-        Report.clear_cache
+        Report.clear_cache("topics")
         freeze_time_safe
         user = Fabricate(:user)
         topics =
@@ -1846,6 +1846,28 @@ RSpec.describe Report do
         .expects(:write)
         .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 35.minutes)
       Report.cache(valid_report)
+    end
+  end
+
+  describe ".clear_cache" do
+    let(:report) { Report.find("valid_test", wrap_exceptions_in_test: true) }
+    let(:other_report) { Report.find("other_valid_test", wrap_exceptions_in_test: true) }
+
+    before(:each) do
+      Report.stubs(:report_valid_test)
+      Report.stubs(:report_other_valid_test)
+    end
+
+    it "rotates the cache key for the given type so existing entries become unreachable" do
+      key_before = Report.cache_key(report)
+      Report.clear_cache("valid_test")
+      expect(Report.cache_key(report)).not_to eq(key_before)
+    end
+
+    it "does not rotate the cache key for unrelated types" do
+      other_key_before = Report.cache_key(other_report)
+      Report.clear_cache("valid_test")
+      expect(Report.cache_key(other_report)).to eq(other_key_before)
     end
   end
 

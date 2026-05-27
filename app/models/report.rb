@@ -204,6 +204,7 @@ class Report
     [
       "reports",
       report.type,
+      cache_version(report.type),
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
       report.facets,
@@ -213,6 +214,12 @@ class Report
       guardian&.user&.id || report.current_user&.id,
       guardian&.can_see_ip?,
     ].compact.map(&:to_s).join(":")
+  end
+
+  def self.cache_version(type)
+    Discourse
+      .cache
+      .fetch("reports:cache_version:#{type}", expires_in: 1.day) { SecureRandom.hex(4) }
   end
 
   def add_filter(name, options = {})
@@ -238,10 +245,8 @@ class Report
     [category_id, include_subcategories]
   end
 
-  def self.clear_cache(type = nil)
-    pattern = type ? "reports:#{type}:*" : "reports:*"
-
-    Discourse.cache.keys(pattern).each { |key| Discourse.cache.redis.del(key) }
+  def self.clear_cache(type)
+    Discourse.cache.delete("reports:cache_version:#{type}")
   end
 
   def self.wrap_slow_query(timeout = 20_000)
