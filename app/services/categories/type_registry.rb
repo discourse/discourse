@@ -46,6 +46,10 @@ module Categories
         owners[id.to_sym]
       end
 
+      def plugin_display_name(id)
+        owner(id)&.sub(/^discourse-/, "")&.sub(/-plugin$/, "")&.titleize
+      end
+
       def reset!
         @types = nil
         @owners = nil

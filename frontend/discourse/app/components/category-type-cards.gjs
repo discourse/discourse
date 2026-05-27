@@ -5,18 +5,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import {
+  availableCategoryType,
+  unavailableBadgeText,
+} from "discourse/lib/category-type-utils";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
-import { i18n } from "discourse-i18n";
-
-function unavailableBadgeText(type) {
-  if (type.required_plugin) {
-    return i18n("category.choose_type.requires_plugin", {
-      plugin_name: type.required_plugin,
-    });
-  }
-  return i18n("category.choose_type.unavailable");
-}
 
 export default class CategoryTypeCards extends Component {
   @service categoryTypeChooser;
@@ -34,14 +28,14 @@ export default class CategoryTypeCards extends Component {
         <div
           class={{dConcatClass
             "category-type-cards__card"
-            (unless type.available "--unavailable")
+            (unless (availableCategoryType type) "--unavailable")
             (concat "--category-type-" type.id)
           }}
         >
           <button
             type="button"
             class="category-type-cards__card-select"
-            disabled={{unless type.available true}}
+            disabled={{unless (availableCategoryType type) true}}
             {{on "click" (fn this.selectType type)}}
           >
             <span class="category-type-cards__card-icon">
@@ -56,7 +50,7 @@ export default class CategoryTypeCards extends Component {
               </span>
             {{/if}}
           </button>
-          {{#unless type.available}}
+          {{#unless (availableCategoryType type)}}
             <span class="category-type-cards__card-badge">
               <PluginOutlet
                 @name="category-type-card-top-right-corner"
