@@ -6959,13 +6959,14 @@ en:
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
-            counter: "%{count} / %{max} reports"
+            counter: "%{count} / %{max} reports added"
             enabled_heading: "Enabled"
             all_heading: "All reports"
             apply: "Apply"
-            toggle: "Toggle report"
-            move_up: "Move up"
-            move_down: "Move down"
+            enable: "Enable %{title}"
+            disable: "Disable %{title}"
+            move_up: "Move %{title} up"
+            move_down: "Move %{title} down"
 
         configure:
           button: "Configure"
