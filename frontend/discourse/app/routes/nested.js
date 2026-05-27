@@ -1,5 +1,6 @@
 import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -68,11 +69,12 @@ export default class NestedRoute extends Route {
   }
 
   setupController(controller, model) {
-    if (this._restoringFromCache) {
-      controller.expansionState = this._restoringFromCache.expansionState;
-      controller.fetchedChildrenCache =
-        this._restoringFromCache.fetchedChildrenCache;
-      controller.scrollAnchor = this._restoringFromCache.scrollAnchor;
+    const restoringFromCache = this._restoringFromCache;
+
+    if (restoringFromCache) {
+      controller.expansionState = restoringFromCache.expansionState;
+      controller.fetchedChildrenCache = restoringFromCache.fetchedChildrenCache;
+      controller.scrollAnchor = restoringFromCache.scrollAnchor;
       this._restoringFromCache = null;
     } else {
       controller.expansionState = new Map();
@@ -114,6 +116,12 @@ export default class NestedRoute extends Route {
         ignoreIfChanged: true,
         topic: model.topic,
       });
+    }
+
+    if (!restoringFromCache && !model.contextMode) {
+      // Nested opts out of the global scroll manager for cache restoration,
+      // so fresh root-topic entries need their own top reset.
+      schedule("afterRender", () => window.scrollTo(0, 0));
     }
   }
 
