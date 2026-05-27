@@ -9523,3 +9523,4 @@ en:
   wizard_js:
     wizard:
       jump_in: "Let's go!"
+      field_required: "Required"

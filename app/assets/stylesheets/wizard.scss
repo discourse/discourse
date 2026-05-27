@@ -139,14 +139,11 @@ body.wizard {
     margin-bottom: 2em;
   }
 
-  &__field.invalid input {
-    outline: 0;
-    border: 3px solid var(--danger);
-
-    @media (prefers-reduced-motion: no-preference) {
-      animation: bump 0.25s ease-in-out;
-      animation-iteration-count: 2;
-    }
+  &__error {
+    color: var(--danger);
+    font-size: var(--font-0);
+    font-weight: normal;
+    margin: 0.25em 0 1em;
   }
 
   &__field label {
@@ -267,11 +264,6 @@ body.wizard {
   &__label {
     font-weight: bold;
     color: var(--primary);
-  }
-
-  &__label.required {
-    display: inline;
-    color: var(--danger);
   }
 
   &__description {

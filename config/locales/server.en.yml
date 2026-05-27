@@ -5789,6 +5789,7 @@ en:
     enter: "Enter Developer Mode"
   wizard:
     title: "Discourse Setup"
+    field_required: "Required"
     step:
       setup:
         title: "Getting started"

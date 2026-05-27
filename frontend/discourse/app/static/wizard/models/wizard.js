@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { i18n } from "discourse-i18n";
 
 export default class Wizard {
   static async load() {
@@ -238,13 +239,12 @@ export class Field {
   }
 
   validate() {
-    let valid = true;
-
-    if (this.required) {
-      valid = !!(this.value?.length > 0);
+    if (this.required && !(this.value?.length > 0)) {
+      this.errorDescription = i18n("wizard.field_required");
+      return false;
     }
 
-    return (this.valid = valid);
+    return (this.valid = true);
   }
 
   addListener(listener) {
