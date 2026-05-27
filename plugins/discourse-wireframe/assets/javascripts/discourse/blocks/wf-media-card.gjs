@@ -2,8 +2,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import IconRenderer from "../components/icon-renderer";
 import RichTextRenderer from "../components/rich-text-renderer";
 
 /**
@@ -187,7 +187,11 @@ export default class WFMediaCard extends Component {
           class="wf-media-card__badge
             {{if this.isBadgeCollapsed 'wf-media-card__badge--empty'}}"
         >
-          <IconRenderer @value={{@badgeIcon}} @arg="badgeIcon" />
+          {{#if @badgeIcon}}
+            <span class="wf-inline-icon" data-block-arg="badgeIcon">
+              {{dIcon @badgeIcon}}
+            </span>
+          {{/if}}
           <RichTextRenderer
             @arg="badgeLabel"
             @schema="plain"

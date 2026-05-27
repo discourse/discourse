@@ -3682,9 +3682,9 @@ body.wireframe-active {
   }
 }
 
-/* Inline icon edit — the scaffolded variant of an icon arg. The
-   wrapper hugs the icon glyph and carries the data-attrs the chrome's
-   onClick handler reads to open the icon picker popover. */
+/* Inline icon edit — the wrapper hugs the icon glyph and carries the
+   `data-block-arg` the chrome's onClick handler reads to open the
+   icon picker popover. Emitted directly by block templates. */
 
 .wf-inline-icon {
   display: inline-flex;
