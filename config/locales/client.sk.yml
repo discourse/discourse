@@ -3428,6 +3428,8 @@ sk:
           other: "Odmietnuť (%{count})…"
         dismiss_tooltip: "Zahoď iba nové príspevky, alebo prestaň pozorovať témy"
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
+        dismiss_new_topics: "Zamietnuť nové témy"
+        dismiss_new_replies: "Skryť nové odpovede"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -4971,18 +4973,7 @@ sk:
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."
       synonyms: "Synonymá"
-      synonyms_description: "Ak sa použijú nasledujúce značky, nahradia sa týmito značkami <b>%{base_tag_name}</b>."
       save: "Uloženie názvu a popisu značky"
-      tag_groups_info:
-        one: 'Táto značka patrí do skupiny "%{tag_groups}".'
-        few: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        many: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        other: "Táto značka patrí do týchto skupín: %{tag_groups}."
-      category_restrictions:
-        one: "Môže sa používať len v tejto kategórii:"
-        few: "Môže sa používať len v týchto kategóriách:"
-        many: "Môže sa používať len v týchto kategóriách:"
-        other: "Môže sa používať len v týchto kategóriách:"
       edit_synonyms: "Upraviť synonymá"
       add_synonyms_label: "Pridajte synonymá:"
       add_synonyms: "Pridať"

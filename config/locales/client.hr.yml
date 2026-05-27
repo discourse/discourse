@@ -3379,6 +3379,8 @@ hr:
           other: "Odbaci (%{count})…"
         dismiss_tooltip: "Odbacite samo nove objave ili prestanite pratiti teme"
         also_dismiss_topics: "Prestani pratiti ove teme kako bi mi se prestale prikazivati kao nepročitane"
+        dismiss_new_topics: "Odbaci nove teme"
+        dismiss_new_replies: "Odbaci nove odgovore"
         dismiss_new: "Odbaci novo"
         dismiss_new_modal:
           title: "Odbaci novo"
@@ -4851,16 +4853,7 @@ hr:
       staff_info: "Da biste dodali ograničenja, stavite ovu oznaku u grupu oznaka <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Ova je oznaka ograničena na kategorije kojima nemate dopuštenje za pristup."
       synonyms: "Sinonimi"
-      synonyms_description: "Kada se koriste sljedeće oznake, one će biti zamijenjene s <b>%{base_tag_name}</b>."
       save: "Spremite naziv i opis oznake"
-      tag_groups_info:
-        one: 'Ova oznaka pripada grupi "%{tag_groups}".'
-        few: "Ova oznaka pripada grupama \"%{tag_groups}\"."
-        other: "Ova oznaka pripada ovim grupama: %{tag_groups}."
-      category_restrictions:
-        one: "Može se koristiti samo u ovoj kategoriji:"
-        few: "Može se koristiti samo u ovoj kategorijama:"
-        other: "Može se koristiti samo u sljedećim kategorijama:"
       edit_synonyms: "Uredite sinonime"
       add_synonyms_label: "Dodajte sinonime:"
       add_synonyms: "Dodaj"

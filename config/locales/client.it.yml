@@ -3202,6 +3202,8 @@ it:
           other: "Ignora (%{count})…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
+        dismiss_new_topics: "Ignora nuovi argomenti"
+        dismiss_new_replies: "Ignora nuove risposte"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_modal:
           title: "Ignora nuovi"
@@ -4602,14 +4604,7 @@ it:
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
-      synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."
       save: "Salva il nome e la descrizione dell’etichetta"
-      tag_groups_info:
-        one: 'Questa etichetta appartiene al gruppo "%{tag_groups}".'
-        other: "Questa etichetta appartiene a questi gruppi: %{tag_groups}."
-      category_restrictions:
-        one: "Può essere utilizzato solo in questa categoria:"
-        other: "Può essere utilizzato solo in queste categorie:"
       edit_synonyms: "Modifica Sinonimi"
       add_synonyms_label: "Aggiungi sinonimi:"
       add_synonyms: "Aggiungi"

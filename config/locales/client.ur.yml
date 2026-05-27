@@ -3366,6 +3366,8 @@ ur:
           other: "برخاست (%{count})…"
         dismiss_tooltip: "صرف نئے دھاگے برخاست کریں یا موضوعات کو نہ ڈھونڈیں"
         also_dismiss_topics: "ان موضوعات کو نہ ڈھونڈیں تاکہ وہ کبھی دوبارہ میرے لیے \"بغیر پڑھے\"میں نظر نہ آئیں"
+        dismiss_new_topics: "نئے موضوعات کو برخاست"
+        dismiss_new_replies: "نئے جوابات کو برخاست"
         dismiss_new: "نیا برخاست کریں"
         dismiss_new_modal:
           title: "نیا برخاست کریں"
@@ -4781,14 +4783,7 @@ ur:
       staff_info: "پابندیاں شامل کرنے کے لیے، اس ٹیگ کو <a href=%{basePath}/tag_groups>ٹیگ گروپ</a>میں ڈالیں۔"
       category_restricted: "یہ ٹیگ ان زمروں تک محدود ہے جن تک آپ کو رسائی کی اجازت نہیں ہے۔"
       synonyms: "مترادفات"
-      synonyms_description: "جب مندرجہ ذیل ٹیگز استعمال کیے جائیں گے، تو وہ <b>%{base_tag_name}</b>سے بدل جائیں گے۔"
       save: "ٹیگ کا نام اور تفصیل محفوظ کریں۔"
-      tag_groups_info:
-        one: 'یہ ٹیگ گروپ "%{tag_groups}" سے تعلق رکھتا ہے۔'
-        other: "یہ ٹیگ ان گروپوں سے تعلق رکھتا ہے: %{tag_groups}۔"
-      category_restrictions:
-        one: "یہ صرف اس زمرے میں استعمال کیا جا سکتا ہے:"
-        other: "یہ صرف ان زمروں میں استعمال کیا جا سکتا ہے:"
       edit_synonyms: "مترادفات میں ترمیم"
       add_synonyms_label: "مترادفات شامل کریں:"
       add_synonyms: "شامل کریں"

@@ -77,6 +77,21 @@ ro:
               title: "Public"
             private:
               title: "Privat"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minut"
+              few: "de minute"
+              other: "de minute"
+            hours:
+              one: "oră"
+              few: "de ore"
+              other: "de ore"
+            days:
+              one: "zi"
+              few: "de zile"
+              other: "de zile"
       builder_modal:
         custom_fields:
           placeholder: "Opțional"
@@ -96,9 +111,13 @@ ro:
           label: "Recurență"
           none: "Fără recurență"
           every_day: "În fiecare zi"
+          ordinals:
+            last: "ultima"
         max_attendees:
           label: "Număr maxim de participanți"
           placeholder: "Fără limită"
+        attendance:
+          none: "Nimic"
         url:
           label: "URL"
           placeholder: "Opțional"
@@ -106,8 +125,9 @@ ro:
           label: "Locație"
         description:
           label: "Descriere"
-        status:
-          label: "Stare"
+        event_type:
+          public:
+            title: "Public"
       invite_user_or_group:
         title: "Notifică utilizatorul (utilizatorii) sau grupul (grupurile)"
         invite: "Trimite"

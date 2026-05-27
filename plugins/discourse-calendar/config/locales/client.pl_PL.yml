@@ -457,11 +457,45 @@ pl_PL:
               title: "Prywatne"
               description: "Do wydarzenia prywatnego mogą dołączyć wyłącznie zaproszeni użytkownicy."
       composer:
-        name_placeholder: "Wydarzenie"
-        end_date_placeholder: "Ustaw datę zakończenia"
+        name_placeholder: "Nazwa wydarzenia"
+        end_date_placeholder: "Data zakończenia"
         location_placeholder: "Dodaj lokalizację lub adres URL"
-        max_attendees_placeholder: "Ustaw maksymalną liczbę uczestników"
+        max_attendees_placeholder: "Nieograniczona liczba uczestników"
+        max_attendees_display:
+          one: "Maksymalnie %{count} uczestnik"
+          few: "Maksymalnie %{count} uczestników"
+          many: "Maksymalnie %{count} uczestników"
+          other: "Maksymalnie %{count} uczestników"
+        no_rsvps_label: "Nieodnotowywanie obecności"
         description_placeholder: "Dodaj opis wydarzenia"
+        all_day: "Cały dzień"
+        reminder:
+          units:
+            minutes:
+              one: "minuta"
+              few: "minuty"
+              many: "minut"
+              other: "minut"
+            hours:
+              one: "godzina"
+              few: "godziny"
+              many: "godzin"
+              other: "godzin"
+            days:
+              one: "dzień"
+              few: "dni"
+              many: "dni"
+              other: "dni"
+            weeks:
+              one: "tydzień"
+              few: "tygodnie"
+              many: "tygodnie"
+              other: "tygodnie"
+          before: "%{unit} przed"
+          after: "%{unit} po"
+          notification_title: "Powiadom uczestników"
+          bump_topic_title: "Automatycznie podbij temat"
+          remove: "Usuń przypomnienie"
       builder_modal:
         custom_fields:
           label: "Pola niestandardowe"
@@ -469,6 +503,8 @@ pl_PL:
           description: "Dozwolone pola niestandardowe są zdefiniowane w ustawieniach witryny. Pola niestandardowe służą do przesyłania danych do innych wtyczek."
         create_event_title: "Utwórz wydarzenie"
         update_event_title: "Edytuj wydarzenie"
+        advanced_settings_title: "Ustawienia zaawansowane"
+        advanced_settings: "Ustawienia zaawansowane"
         confirm_delete: "Czy na pewno chcesz usunąć to wydarzenie?"
         confirm_close: "Czy na pewno chcesz zamknąć to wydarzenie?"
         confirm_open: "Czy na pewno chcesz otworzyć to wydarzenie?"
@@ -482,14 +518,18 @@ pl_PL:
         timezone:
           label: Strefa czasowa
           remove_timezone: Brak strefy czasowej (UTC)
+        starts_at:
+          label: "Data rozpoczęcia"
+        ends_at:
+          label: "Data zakończenia"
         all_day:
           label: "Wydarzenie całodniowe"
           description: "Wydarzenie całodniowe nie będzie miało konkretnych godzin, tylko datę. Wydarzenie będzie trwało od początku do końca dnia."
         reminders:
           label: "Przypomnienia"
           types:
-            bump_topic: "automatycznie podbij temat"
-            notification: "powiadom uczestników"
+            bump_topic: "Automatycznie podbij temat"
+            notification: "Powiadom uczestników"
           units:
             minutes: "minut"
             hours: "godzin"
@@ -499,22 +539,30 @@ pl_PL:
             before: "przed"
             after: "po"
         recurrence_until:
-          label: "Do (włącznie)"
+          label: "Do (włącznie z tą datą)"
         recurrence:
           label: "Powtarzanie"
           none: "Brak powtarzania"
           every_day: "Codziennie"
-          every_month: "Co miesiąc w ten dzień tygodnia"
           every_weekday: "Każdego dnia roboczego"
-          every_week: "Co tydzień w ten dzień tygodnia"
-          every_two_weeks: "Co dwa tygodnie w ten dzień tygodnia"
-          every_four_weeks: "Co cztery tygodnie w ten dzień tygodnia"
-        minimal:
-          label: "Minimalne wydarzenie"
-          checkbox_label: "Ukryj przyciski Wezmę udział/Nie biorę udziału oraz status zaproszeń"
+          every_week: "Co %{weekday}"
+          every_two_weeks: "Co drugi %{weekday}"
+          every_four_weeks: "Co 4 tygodnie w %{weekday}"
+          every_month: "%{ordinal} %{weekday} każdego miesiąca"
+          ordinals:
+            first: "pierwszy"
+            second: "drugi"
+            third: "trzeci"
+            fourth: "czwarty"
+            last: "ostatni"
         max_attendees:
           label: "Maksymalna liczba uczestników"
           placeholder: "Bez limitu"
+        attendance:
+          label: "Ilu członków może potwierdzić swój udział w tym wydarzeniu?"
+          unlimited: "Bez ograniczeń"
+          up_to: "Do..."
+          none: "Brak"
         allow_chat:
           label: "Integracja czatu"
           checkbox_label: "Twórz i zarządzaj kanałami czatu specyficznymi dla wydarzenia"
@@ -532,8 +580,14 @@ pl_PL:
           placeholder: "Opcjonalne, domyślnie jest to tytuł tematu"
         invitees:
           label: "Zaproszone grupy"
-        status:
-          label: "Status"
+        event_type:
+          label: "Rodzaj obecności"
+          public:
+            title: "Publiczny"
+            description: "Udział może wziąć każdy."
+          private:
+            title: "Tylko na zaproszenie"
+            description: "Udział mogą wziąć tylko członkowie wybranych grup."
         delete_confirmation_message: "Usunąć to wydarzenie?"
         image:
           label: "Obraz zdarzenia"

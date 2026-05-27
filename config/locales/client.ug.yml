@@ -3358,6 +3358,8 @@ ug:
           other: "پەرۋا قىلما (%{count})…"
         dismiss_tooltip: "يېڭى يازمىغىلا پەرۋا قىلما ياكى تېما ئىزلاشنى توختات"
         also_dismiss_topics: "بۇ تېمىلارنى ئىزلاشنى توختىتىپ ئۇلارنى ئوقۇلمىغانلاردا قايتا كۆرسەتمەيدۇ"
+        dismiss_new_topics: "يېڭى تېمىغا پەرۋا قىلما"
+        dismiss_new_replies: "يېڭى جاۋابقا پەرۋا قىلما"
         dismiss_new: "يېڭىغا پەرۋا قىلما"
         dismiss_new_modal:
           title: "يېڭىغا پەرۋا قىلما"
@@ -4818,14 +4820,7 @@ ug:
       staff_info: "چەكلىمە قوشۇشتا، بەلگىنى <a href=%{basePath}/tag_groups>بەلگە گۇرۇپپا</a>غا قوشۇش كېرەك."
       category_restricted: "بۇ بەلگە سىز زىيارەت قىلالمايدىغان سەھىپە بىلەن چەكلىنىدۇ."
       synonyms: "مەنىداش سۆز"
-      synonyms_description: "تۆۋەندىكى بەلگە ئىشلىتىلگەندە، ئۇلار <b>%{base_tag_name}</b> غا ئالماشتۇرۇلىدۇ."
       save: "بەلگە ئىسمى ۋە چۈشەندۈرۈشىنى ساقلايدۇ"
-      tag_groups_info:
-        one: 'بۇ بەلگە تەۋە گۇرۇپپا «%{tag_groups}».'
-        other: "بۇ بەلگە تەۋە گۇرۇپپا «%{tag_groups}»."
-      category_restrictions:
-        one: "ئۇنى پەقەت تۆۋەندىكى سەھىپىدىلا ئىشلەتكىلى بولىدۇ:"
-        other: "ئۇنى پەقەت تۆۋەندىكى سەھىپىدىلا ئىشلەتكىلى بولىدۇ:"
       edit_synonyms: "مەنىداش سۆز تەھرىر"
       add_synonyms_label: "مەنىداش سۆز قوش:"
       add_synonyms: "قوش"

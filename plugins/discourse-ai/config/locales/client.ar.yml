@@ -384,8 +384,6 @@ ar:
         description: "تمكين الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
         supported_locales_description: "يتيح هذا الإعداد أيضًا للزوار المساهمة بترجمة المنشورات."
-        translatable_categories: "الفئات القابلة للترجمة"
-        translatable_categories_description: "سيتم ترجمة المحتوى الموجود في الفئات المحددة فقط. يجب إضافة الفئات الفرعية بشكل منفصل."
         admin_actions:
           translation_settings: "إعدادات الترجمة"
           localization_settings: "إعدادات التوطين"

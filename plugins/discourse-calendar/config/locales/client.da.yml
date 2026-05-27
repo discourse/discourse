@@ -361,6 +361,19 @@ da:
             private:
               title: "Privat"
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
+      composer:
+        name_placeholder: "Navn på begivenhed"
+        reminder:
+          units:
+            minutes:
+              one: "minut"
+              other: "minutter"
+            hours:
+              one: "time"
+              other: "timer"
+            days:
+              one: "dag"
+              other: "dage"
       builder_modal:
         custom_fields:
           label: "Brugerdefinerede Felter"
@@ -389,9 +402,11 @@ da:
           label: "Gentagelse"
           none: "Ingen gentagelse"
           every_day: "Hver dag"
-          every_month: "Hver måned på denne ugedag"
           every_weekday: "Hver ugedag"
-          every_week: "Hver uge på denne ugedag"
+          ordinals:
+            last: "sidste"
+        attendance:
+          none: "Ingen"
         url:
           label: "URL"
           placeholder: "Valgfri"
@@ -404,8 +419,9 @@ da:
           placeholder: "Valgfri, standard er emnetitel"
         invitees:
           label: "Inviterede grupper"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Offentlig"
       invite_user_or_group:
         title: "Underret bruger(e) eller gruppe(r)"
         invite: "Send"
