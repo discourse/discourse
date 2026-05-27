@@ -439,6 +439,7 @@ TEXT
       plugin.register_asset("mobile.css", :mobile)
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
+      plugin.register_asset("admin.css", :admin)
 
       plugin.activate!
 
@@ -446,6 +447,7 @@ TEXT
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)
+      expect(DiscoursePluginRegistry.admin_stylesheets[plugin.directory_name].count).to eq(1)
     end
   end
 

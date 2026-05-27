@@ -437,6 +437,7 @@ module Discourse
     targets = [nil]
     targets << :mobile if args[:mobile_view]
     targets << :desktop if args[:desktop_view]
+    targets << :admin if args[:include_admin]
 
     targets.each do |target|
       assets +=

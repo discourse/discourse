@@ -61,7 +61,12 @@ class BootstrapController < ApplicationController
 
     plugin_css_string =
       Discourse
-        .find_plugin_css_assets(include_disabled: true, desktop_view: true, only: required_plugins)
+        .find_plugin_css_assets(
+          include_disabled: true,
+          desktop_view: true,
+          include_admin: true,
+          only: required_plugins,
+        )
         .map { |file| helpers.discourse_stylesheet_link_tag(file) }
         .join("\n")
 

@@ -57,12 +57,14 @@ class Stylesheet::Manager
         include_disabled: true,
         mobile_view: true,
         desktop_view: true,
+        include_admin: true,
       )
     targets +=
       Discourse.find_plugin_css_assets(
         include_disabled: true,
         mobile_view: true,
         desktop_view: true,
+        include_admin: true,
         rtl: true,
       )
 
