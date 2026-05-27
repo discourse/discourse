@@ -30,6 +30,7 @@ class Admin::Config::LogoController < Admin::AdminController
   end
 
   def update
+    hidden_settings_allowed_by_logo_form = %i[generate_topic_og_image]
     settings =
       %i[
         logo
@@ -48,11 +49,23 @@ class Admin::Config::LogoController < Admin::AdminController
         opengraph_image
         x_summary_large_image
       ].filter_map do |setting|
-        next if SiteSetting.hidden_settings.include?(setting)
+        if SiteSetting.hidden_settings.include?(setting) &&
+             !hidden_settings_allowed_by_logo_form.include?(setting)
+          next
+        end
+
         { setting_name: setting, value: params[setting] }
       end
 
-    SiteSetting::Update.call(guardian:, params: { settings: }) do
+    SiteSetting::Update.call(
+      guardian:,
+      params: {
+        settings:,
+      },
+      options: {
+        allow_changing_hidden: hidden_settings_allowed_by_logo_form,
+      },
+    ) do
       on_success { render json: success_json }
       on_failed_policy(:settings_are_visible) do |policy|
         raise Discourse::InvalidParameters, policy.reason

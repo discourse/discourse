@@ -450,7 +450,7 @@ class Topic < ActiveRecord::Base
 
   def regenerate_og_image
     if (saved_changes[:title] || saved_changes[:category_id]) && og_image_upload_id.present? &&
-         SiteSetting.generate_topic_og_image
+         TopicOgImageGenerator.enabled?
       Jobs.enqueue(:generate_topic_og_image, topic_id: id) if TopicOgImageGenerator.eligible?(self)
     end
   end

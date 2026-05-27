@@ -17,6 +17,26 @@ module PageObjects
         image_uploader(image_type).remove_image
       end
 
+      def selected_radio_value(field)
+        form
+          .field(field)
+          .component
+          .find("input.form-kit__control-radio:checked", visible: :all)
+          .value
+      end
+
+      def select_og_image_source(value)
+        form.field(:og_image_source).select(value)
+      end
+
+      def has_og_image_preview?
+        page.has_css?(".og-image-preview")
+      end
+
+      def has_no_og_image_preview?
+        page.has_no_css?(".og-image-preview")
+      end
+
       def has_no_form_field?(field)
         page.has_no_css?("#control-#{field}")
       end
@@ -44,7 +64,9 @@ module PageObjects
       end
 
       def submit
-        form.submit
+        within ".admin-logo-form" do
+          all("button[type='submit']").last.click
+        end
       end
 
       def has_saved_successfully?

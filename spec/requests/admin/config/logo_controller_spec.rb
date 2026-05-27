@@ -5,6 +5,21 @@ RSpec.describe Admin::Config::LogoController do
   fab!(:moderator)
   fab!(:user)
   fab!(:topic)
+  fab!(:image_upload)
+
+  describe "#update" do
+    before { sign_in(admin) }
+
+    it "allows the logo form to enable generated topic OpenGraph images and clear the default image" do
+      SiteSetting.opengraph_image = image_upload
+
+      put "/admin/config/logo.json", params: { generate_topic_og_image: true, opengraph_image: "" }
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.generate_topic_og_image).to eq(true)
+      expect(SiteSetting.opengraph_image).to eq(nil)
+    end
+  end
 
   describe "#og_image_preview" do
     before do

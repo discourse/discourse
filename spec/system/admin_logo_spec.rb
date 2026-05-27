@@ -156,6 +156,64 @@ describe "Admin Logo Page" do
 
   describe "social media section" do
     let(:social_media_section_logos) { %i[opengraph_image] }
+
+    it "lets admins keep an uploaded OpenGraph image while generated images are enabled" do
+      SiteSetting.generate_topic_og_image = true
+      SiteSetting.opengraph_image = image_upload
+
+      logo_page.visit
+      logo_page.form.expand_social_media_section
+
+      expect(logo_page.form.selected_radio_value(:og_image_source)).to eq("uploaded")
+      expect(logo_page.form).to have_form_field(:opengraph_image)
+      expect(logo_page.form).to have_no_og_image_preview
+
+      logo_page.form.submit
+      expect(logo_page.form).to have_saved_successfully
+
+      visit("/")
+      logo_page.visit
+      logo_page.form.expand_social_media_section
+
+      expect(logo_page.form.selected_radio_value(:og_image_source)).to eq("uploaded")
+      expect(logo_page.form.image_uploader(:opengraph_image)).to have_uploaded_image
+    end
+
+    it "lets admins clear an uploaded OpenGraph image so generated images can take over" do
+      SiteSetting.generate_topic_og_image = true
+      SiteSetting.opengraph_image = image_upload
+
+      logo_page.visit
+      logo_page.form.expand_social_media_section
+      logo_page.form.remove_image(:opengraph_image)
+      logo_page.form.submit
+      expect(logo_page.form).to have_saved_successfully
+
+      visit("/")
+      logo_page.visit
+      logo_page.form.expand_social_media_section
+
+      expect(logo_page.form.selected_radio_value(:og_image_source)).to eq("generated")
+      expect(logo_page.form).to have_og_image_preview
+    end
+
+    it "lets admins switch from an uploaded OpenGraph image to generated images" do
+      SiteSetting.opengraph_image = image_upload
+
+      logo_page.visit
+      logo_page.form.expand_social_media_section
+      logo_page.form.select_og_image_source("generated")
+      logo_page.form.submit
+      expect(logo_page.form).to have_saved_successfully
+
+      visit("/")
+      logo_page.visit
+      logo_page.form.expand_social_media_section
+
+      expect(logo_page.form.selected_radio_value(:og_image_source)).to eq("generated")
+      expect(logo_page.form).to have_og_image_preview
+    end
+
     it "can upload images" do
       logo_page.visit
       logo_page.form.expand_social_media_section
