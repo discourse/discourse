@@ -42,7 +42,7 @@ module DiscourseSubscriptions
 
     def show
       params.require(:id)
-      return render_not_found unless published_product?(params[:id])
+      ensure_published_product!(params[:id])
 
       begin
         product = ::Stripe::Product.retrieve(params[:id], stripe_request_opts)
@@ -59,8 +59,7 @@ module DiscourseSubscriptions
     def create
       params.require(%i[source plan])
       begin
-        plan = ::Stripe::Price.retrieve(params[:plan], stripe_request_opts)
-        return render_not_found unless published_price?(plan)
+        plan = fetch_published_plan(params[:plan])
 
         customer =
           find_or_create_customer(
@@ -159,9 +158,7 @@ module DiscourseSubscriptions
       raise Discourse::InvalidAccess if pending.blank?
 
       begin
-        plan = ::Stripe::Price.retrieve(pending[:plan_id], stripe_request_opts)
-        return render_not_found unless published_price?(plan)
-
+        plan = fetch_published_plan(pending[:plan_id])
         transaction = retrieve_transaction(pending[:transaction_id])
         raise Discourse::InvalidAccess unless transaction_ok(transaction)
 
@@ -282,12 +279,14 @@ module DiscourseSubscriptions
       { user_id: current_user.id, username: current_user.username_lower }
     end
 
-    def published_product?(product_id)
-      Product.exists?(external_id: product_id)
+    def fetch_published_plan(plan_id)
+      plan = ::Stripe::Price.retrieve(plan_id, stripe_request_opts)
+      ensure_published_product!(price_product_id(plan))
+      plan
     end
 
-    def published_price?(price)
-      published_product?(price_product_id(price))
+    def ensure_published_product!(product_id)
+      raise Discourse::NotFound unless Product.exists?(external_id: product_id)
     end
 
     def price_product_id(price)
@@ -295,10 +294,6 @@ module DiscourseSubscriptions
       return product if product.is_a?(String) || product.nil?
 
       product[:id]
-    end
-
-    def render_not_found
-      render_json_error(I18n.t("not_found"), status: 404)
     end
 
     def transaction_ok(transaction)
