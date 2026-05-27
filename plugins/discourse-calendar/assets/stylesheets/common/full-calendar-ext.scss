@@ -52,12 +52,6 @@
 }
 
 .fc-daygrid-day-frame {
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--tertiary-50);
-  }
-
   .fc-daygrid-day-top {
     justify-content: center;
 
@@ -65,6 +59,14 @@
       font-size: var(--font-down-2);
       color: var(--primary);
     }
+  }
+}
+
+.fc-daygrid-day {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--tertiary-50);
   }
 }
 
