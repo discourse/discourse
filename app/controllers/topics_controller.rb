@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
+  include EmbedModeHandler
+
   requires_login only: %i[
                    timings
                    destroy_timings
@@ -199,7 +201,11 @@ class TopicsController < ApplicationController
       url = +"/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
       post_number = opts[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
-      url << "?embed_mode=true" if params[:embed_mode] == "true"
+      if params[:embed_mode] == "true"
+        embed_query = { embed_mode: true }
+        embed_query[:class_name] = params[:class_name] if params[:class_name].present?
+        url << "?#{embed_query.to_query}"
+      end
       redirect_to url, status: :found
       return
     end
@@ -1386,27 +1392,6 @@ class TopicsController < ApplicationController
       else
         topic.tags.pluck(:name)
       end
-  end
-
-  def allow_embed_mode
-    response.headers.delete("X-Frame-Options") if embed_mode_allowed?
-  end
-
-  # Applies the `class_name` passed by the embedding page (see EmbedController)
-  # to the `<html>` element of the full app, mirroring classic embed mode.
-  def set_embed_class
-    return unless embed_mode_allowed?
-    return if params[:class_name].blank?
-    return unless params[:class_name].match?(/\A[a-zA-Z0-9\-_ ]+\z/)
-
-    @embed_class = params[:class_name]
-  end
-
-  def embed_mode_allowed?
-    return false if params[:embed_mode].blank?
-    return false unless SiteSetting.embed_full_app
-
-    SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer).present?
   end
 
   def topic_params
