@@ -53,10 +53,6 @@ module Reports
         I18n.t("reports.#{type}.description", default: "").presence
       end
 
-      def short_description
-        I18n.t("reports.#{type}.short_description", default: "").presence || description
-      end
-
       def legacy?
         SiteSetting.use_legacy_pageviews &&
           type.in?(%w[consolidated_page_views consolidated_page_views_browser_detection])
