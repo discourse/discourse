@@ -67,9 +67,21 @@ export default class ManageReports extends Component {
     return this.allRows.filter((row) => !this.enabledKeys.has(row.key));
   }
 
+  get filteredEnabledRows() {
+    const query = this.search.trim().toLowerCase();
+    if (!query) {
+      return this.enabledRows;
+    }
+    return this.enabledRows.filter(
+      (row) =>
+        (row.title ?? "").toLowerCase().includes(query) ||
+        (row.description ?? "").toLowerCase().includes(query)
+    );
+  }
+
   get visibleRows() {
     return [
-      ...this.enabledRows.map((row) => ({ ...row, enabled: true })),
+      ...this.filteredEnabledRows.map((row) => ({ ...row, enabled: true })),
       ...this.disabledRows.map((row) => ({ ...row, enabled: false })),
     ];
   }
@@ -151,7 +163,6 @@ export default class ManageReports extends Component {
       const page = response.available ?? [];
       this.cacheItems(enabled);
       this.cacheItems(page);
-      this.enabledOrder = enabled.map((item) => item.key);
       this.allKeys = page.map((item) => item.key);
       this.nextCursor = response.cursor ?? null;
       this.hasMore = !!response.has_more;
