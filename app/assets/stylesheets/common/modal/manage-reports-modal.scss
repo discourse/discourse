@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .manage-reports {
   .d-modal__body {
     padding-inline: 0;
@@ -34,11 +36,26 @@
     &[draggable="true"] {
       cursor: grab;
     }
+
+    @include viewport.until(sm) {
+      padding-inline: var(--space-3) var(--space-6);
+    }
   }
 
   &__grip {
     align-self: flex-start;
     color: var(--primary-low-mid);
+    visibility: hidden;
+
+    .manage-reports__row.--enabled & {
+      visibility: visible;
+    }
+  }
+
+  &__order-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
     visibility: hidden;
 
     .manage-reports__row.--enabled & {

@@ -9,7 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { and, eq } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -304,6 +304,28 @@ export default class ManageReports extends Component {
                   </span>
                 {{/unless}}
 
+                {{#if this.site.mobileView}}
+                  <div class="manage-reports__order-mobile">
+                    <DButton
+                      @icon="arrow-up"
+                      @action={{fn this.moveUp row}}
+                      @disabled={{eq index 0}}
+                      @translatedAriaLabel={{i18n
+                        "admin.dashboard.reports_section.modal.move_up"
+                      }}
+                      class="manage-reports__arrow btn-transparent"
+                    />
+                    <DButton
+                      @icon="arrow-down"
+                      @action={{fn this.moveDown row}}
+                      @translatedAriaLabel={{i18n
+                        "admin.dashboard.reports_section.modal.move_down"
+                      }}
+                      class="manage-reports__arrow btn-transparent"
+                    />
+                  </div>
+                {{/if}}
+
                 <div class="manage-reports__row-text">
                   <div class="manage-reports__row-heading">
                     <span class="manage-reports__title">{{row.title}}</span>
@@ -320,25 +342,7 @@ export default class ManageReports extends Component {
                     >{{row.description}}</p>
                   {{/if}}
                 </div>
-                {{#if (and row.enabled this.site.mobileView)}}
-                  <DButton
-                    @icon="arrow-up"
-                    @action={{fn this.moveUp row}}
-                    @disabled={{eq index 0}}
-                    @translatedAriaLabel={{i18n
-                      "admin.dashboard.reports_section.modal.move_up"
-                    }}
-                    class="manage-reports__arrow btn-transparent btn-small"
-                  />
-                  <DButton
-                    @icon="arrow-down"
-                    @action={{fn this.moveDown row}}
-                    @translatedAriaLabel={{i18n
-                      "admin.dashboard.reports_section.modal.move_down"
-                    }}
-                    class="manage-reports__arrow btn-transparent btn-small"
-                  />
-                {{/if}}
+
                 <DToggleSwitch
                   @state={{row.enabled}}
                   disabled={{this.toggleDisabled row}}
