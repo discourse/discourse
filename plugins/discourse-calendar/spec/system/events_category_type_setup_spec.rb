@@ -9,7 +9,6 @@ RSpec.describe "Events Category Type Setup" do
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.enable_simplified_category_creation = true
     SiteSetting.enable_events_category_type_setup = true
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
