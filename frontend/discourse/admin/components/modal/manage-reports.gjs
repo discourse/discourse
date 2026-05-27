@@ -323,6 +323,7 @@ export default class ManageReports extends Component {
                       @disabled={{eq index 0}}
                       @translatedAriaLabel={{i18n
                         "admin.dashboard.reports_section.modal.move_up"
+                        title=row.title
                       }}
                       class="manage-reports__arrow btn-transparent"
                     />
@@ -331,6 +332,7 @@ export default class ManageReports extends Component {
                       @action={{fn this.moveDown row}}
                       @translatedAriaLabel={{i18n
                         "admin.dashboard.reports_section.modal.move_down"
+                        title=row.title
                       }}
                       class="manage-reports__arrow btn-transparent"
                     />
@@ -358,7 +360,12 @@ export default class ManageReports extends Component {
                   @state={{row.enabled}}
                   disabled={{this.toggleDisabled row}}
                   aria-label={{i18n
-                    "admin.dashboard.reports_section.modal.toggle"
+                    (if
+                      row.enabled
+                      "admin.dashboard.reports_section.modal.disable"
+                      "admin.dashboard.reports_section.modal.enable"
+                    )
+                    title=row.title
                   }}
                   {{on "click" (fn this.toggle row)}}
                 />
