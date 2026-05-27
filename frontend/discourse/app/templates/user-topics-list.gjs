@@ -72,19 +72,20 @@ export default <template>
         @listContext={{@controller.listContext}}
       />
 
-      <TopicDismissButtons
-        @position="bottom"
-        @selectedTopics={{@controller.bulkSelectHelper.selected}}
-        @model={{@controller.model}}
-        @showResetNew={{@controller.showResetNew}}
-        @showDismissRead={{@controller.showDismissRead}}
-        @resetNew={{@controller.resetNew}}
-        @dismissRead={{if
-          @controller.showDismissRead
-          (routeAction "dismissReadTopics")
-        }}
-      />
-
+      {{#if @controller.showBottomDismissButtons}}
+        <TopicDismissButtons
+          @position="bottom"
+          @selectedTopics={{@controller.bulkSelectHelper.selected}}
+          @model={{@controller.model}}
+          @showResetNew={{@controller.showResetNew}}
+          @showDismissRead={{@controller.showDismissRead}}
+          @resetNew={{@controller.resetNew}}
+          @dismissRead={{if
+            @controller.showDismissRead
+            (routeAction "dismissReadTopics")
+          }}
+        />
+      {{/if}}
       <DConditionalLoadingSpinner
         @condition={{@controller.model.loadingMore}}
       />
