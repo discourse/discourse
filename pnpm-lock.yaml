@@ -164,9 +164,6 @@ importers:
       postcss-js:
         specifier: ^5.1.0
         version: 5.1.0(postcss@8.5.15)
-      postcss-media-minmax:
-        specifier: ^5.0.0
-        version: 5.0.0(postcss@8.5.15)
       postcss-nesting:
         specifier: ^14.0.0
         version: 14.0.0(postcss@8.5.15)
@@ -7426,12 +7423,6 @@ packages:
     engines: {node: ^20 || ^22 || >= 24}
     peerDependencies:
       postcss: ^8.4.21
-
-  postcss-media-minmax@5.0.0:
-    resolution: {integrity: sha512-yDUvFf9QdFZTuCUg0g0uNSHVlJ5X1lSzDZjPSFaiCWvjgsvu8vEVxtahPrLMinIDEEGnx6cBe6iqdx5YWz08wQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      postcss: ^8.1.0
 
   postcss-media-query-parser@0.2.3:
     resolution: {integrity: sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig==}
@@ -17108,10 +17099,6 @@ snapshots:
   possible-typed-array-names@1.1.0: {}
 
   postcss-js@5.1.0(postcss@8.5.15):
-    dependencies:
-      postcss: 8.5.15
-
-  postcss-media-minmax@5.0.0(postcss@8.5.15):
     dependencies:
       postcss: 8.5.15
 
