@@ -6943,6 +6943,7 @@ en:
                 summary: "Pick a longer date range or come back once your community has more activity."
 
         reports_section:
+          description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"
