@@ -30,8 +30,11 @@
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3) var(--space-6);
-    border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--primary-low);
+    }
 
     &[draggable="true"] {
       cursor: grab;
@@ -91,9 +94,9 @@
     background: var(--primary-low);
     border-radius: 4px;
     font-size: var(--font-down-3);
-    padding: var(--space-half) var(--space-2);
-    flex: 0 0 auto;
     white-space: nowrap;
+    padding: var(--space-half) var(--space-2);
+    line-height: normal;
   }
 
   &__description {
@@ -102,8 +105,11 @@
     font-size: var(--font-down-1);
   }
 
-  &__arrow,
-  &__toggle {
+  &__arrow {
     flex: 0 0 auto;
+  }
+
+  .d-modal__footer {
+    justify-content: flex-end;
   }
 }
