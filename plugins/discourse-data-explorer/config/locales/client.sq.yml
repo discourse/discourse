@@ -7,7 +7,12 @@
 sq:
   js:
     explorer:
+      default_query: "Paracaktuar"
       or: "ose"
+      create: "Krijo"
+      ai:
+        generate: "Gjenero"
+        optional: "opsionale"
       import:
         label: "Importo"
       help:
@@ -16,9 +21,6 @@ sq:
         bool:
           yes: "Po"
           no: "Jo"
-      export: "Eksporto"
-      save: "Ruaj ndryshimet"
-      edit: "Redaktoni"
       delete: "Fshij"
       result_count:
         one: "%{count} rezultat."

@@ -3,7 +3,6 @@
 module Chat
   class Mention < ActiveRecord::Base
     self.table_name = "chat_mentions"
-    self.ignored_columns = %w[notification_id user_id]
 
     belongs_to :chat_message, class_name: "Chat::Message"
     has_many :mention_notifications,
@@ -18,10 +17,10 @@ end
 # Table name: chat_mentions
 #
 #  id              :bigint           not null, primary key
-#  chat_message_id :bigint           not null
+#  type            :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  type            :string           not null
+#  chat_message_id :bigint           not null
 #  target_id       :integer
 #
 # Indexes

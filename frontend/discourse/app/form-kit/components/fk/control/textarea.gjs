@@ -1,24 +1,13 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
-import { modifier as modifierFn } from "ember-modifier";
+import { trustHTML } from "@ember/template";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
-export default class FKControlTextarea extends Component {
+export default class FKControlTextarea extends FKBaseControl {
   static controlType = "textarea";
-
-  resizeObserver = modifierFn((element) => {
-    const observer = new ResizeObserver(() => {
-      this.args.onControlWidthChange?.(element.offsetWidth);
-    });
-
-    observer.observe(element);
-
-    return () => {
-      observer.disconnect();
-    };
-  });
 
   @action
   handleInput(event) {
@@ -50,19 +39,26 @@ export default class FKControlTextarea extends Component {
       return;
     }
 
-    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
+  }
+
+  get textareaElement() {
+    return this.args.autoResize ? DExpandingTextArea : dElement("textarea");
   }
 
   <template>
-    <textarea
-      class="form-kit__control-textarea"
+    <this.textareaElement
+      {{on "input" this.handleInput}}
+      {{on "keydown" this.onKeyDown}}
       style={{this.style}}
       disabled={{@field.disabled}}
       value={{@field.value}}
+      id={{@field.id}}
+      name={{@field.name}}
+      aria-invalid={{if @field.error "true"}}
+      aria-describedby={{@field.describedBy}}
+      class="form-kit__control-textarea"
       ...attributes
-      {{this.resizeObserver}}
-      {{on "input" this.handleInput}}
-      {{on "keydown" this.onKeyDown}}
     />
   </template>
 }

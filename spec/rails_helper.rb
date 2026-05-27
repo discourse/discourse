@@ -18,7 +18,6 @@ require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
 require "pry-rails"
-require "pry-stack_explorer"
 require "fabrication"
 require "mocha/api"
 require "certified"
@@ -30,7 +29,7 @@ CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127
 
 class RspecErrorTracker
   def self.exceptions
-    @exceptions ||= {}
+    @exceptions ||= []
   end
 
   def self.clear_exceptions
@@ -38,7 +37,7 @@ class RspecErrorTracker
   end
 
   def self.report_exception(path, exception)
-    exceptions[path] = exception
+    exceptions << [path, exception]
   end
 
   def initialize(app, config = {})
@@ -46,16 +45,24 @@ class RspecErrorTracker
   end
 
   def call(env)
-    begin
-      @app.call(env)
+    @app.call(env)
 
-      # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-      # and also Mocha::ExpectationError inherit from Exception instead of StandardError
-      # they do not get captured by the rescue => e shorthand :(
-    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-      RspecErrorTracker.report_exception(env["PATH_INFO"], e)
-      raise e
-    end
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+  rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
+    RspecErrorTracker.report_exception(env["PATH_INFO"], e)
+    raise e
+  end
+end
+
+# Some errors are caught by `Discourse.warn_exception` and don't reach
+# `RspecErrorTracker`, for example errors in hijacked responses.
+module RspecWarnExceptionCapture
+  def warn_exception(e, message: "", env: nil)
+    path = env&.[]("PATH_INFO") || "(no request path)"
+    RspecErrorTracker.report_exception(path, e)
+    super
   end
 end
 
@@ -92,7 +99,9 @@ class PlaywrightLogger
 end
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
+Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
@@ -146,6 +155,7 @@ module TestSetup
     NotificationEmailer.disable
     SiteIconManager.disable
     WordWatcher.disable_cache
+    UpcomingChanges.clear_caches!
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
 
@@ -163,6 +173,7 @@ module TestSetup
     }.each { |k, v| SiteSetting.set(k, v) }
 
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
+    SiteSetting.refresh_site_setting_group_ids!
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
@@ -171,6 +182,11 @@ module TestSetup
     Sidekiq::Worker.clear_all
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+
+    # Database is rolled back between specs, but I18n override cache doesn't.
+    # Flush it if there were any TranslationOverrides created.
+    overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
+    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
 
     RspecErrorTracker.clear_exceptions
 
@@ -255,6 +271,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
+  config.include ThemeScreenshotMarker, type: :system
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
@@ -337,6 +354,15 @@ RSpec.configure do |config|
 
     Sidekiq.default_configuration.error_handlers.clear
 
+    # No-op handler to suppress Sidekiq's `p ["!!!!!", ex]` fallback.
+    Sidekiq.default_configuration.error_handlers << ->(_ex, _ctx, _config) {}
+
+    # Quiet seed-fu output produced by specs that call `Model.seed`.
+    SeedFu.quiet = true
+
+    # json-schema's MultiJSON support is deprecated.
+    JSON::Validator.use_multi_json = false
+
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
@@ -346,6 +372,7 @@ RSpec.configure do |config|
 
     SystemThemesManager.clear_system_theme_user_history!
     ThemeField.delete_all
+    ThemeSettingsMigration.delete_all
     JavascriptCache.delete_all
     ThemeSiteSetting.delete_all
     SiteSetting.refresh!
@@ -384,7 +411,7 @@ RSpec.configure do |config|
 
       test_i = ENV["TEST_ENV_NUMBER"].to_i
 
-      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
+      data_dir = "#{Rails.root.join("tmp/test_data_#{test_i}/minio")}"
       FileUtils.rm_rf(data_dir)
       FileUtils.mkdir_p(data_dir)
       minio_runner_config.minio_data_directory = data_dir
@@ -423,16 +450,15 @@ RSpec.configure do |config|
         (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
-    module IgnoreUnicornCapturedErrors
+    module IgnoreServerCapturedErrors
       def raise_server_error!
         super
-      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
-        # Ignore these exceptions - caused by client. Handled by unicorn in dev/prod
-        # https://github.com/defunkt/unicorn/blob/d947cb91cf/lib/unicorn/http_server.rb#L570-L573
+      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN
+        # Ignore these exceptions - caused by client. Handled by the app server in dev/prod
       end
     end
 
-    Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
+    Capybara::Session.class_eval { prepend IgnoreServerCapturedErrors }
 
     module CapybaraTimeoutExtension
       class CapybaraTimedOut < StandardError
@@ -482,6 +508,37 @@ RSpec.configure do |config|
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
     config.before(:each, type: :system) do |example|
+      # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
+      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
+        example_file_path = example.metadata[:rerun_file_path]
+
+        if example_file_path
+          match =
+            example_file_path.to_s.match(
+              %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},
+            )
+
+          if match
+            should_set_raise_on_deprecation =
+              begin
+                type_dir, extension_name = match.captures
+
+                case type_dir
+                when "spec"
+                  true
+                when "plugins"
+                  Discourse.preinstalled_plugins.any? { |p| p.directory_name == extension_name }
+                when "themes"
+                  # Preinstalled themes don't have a .git directory
+                  !Rails.root.join(type_dir, extension_name, ".git").exist?
+                end
+              end
+
+            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation
+          end
+        end
+      end
+
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
         page.driver.with_playwright_page do |pw_page|
@@ -558,9 +615,20 @@ RSpec.configure do |config|
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
+          wait_for_ember_boot
           wait_for_client_settled(method_name)
           result
         end
+      end
+
+      private
+
+      # `<discourse-assets>` is only present on Ember pages; `ember-application`
+      # is added to the root element (`#main`) once Ember mounts.
+      def wait_for_ember_boot
+        session = @driver.send(:session)
+        return if session.has_no_css?("discourse-assets", wait: 0, visible: :all)
+        session.assert_selector("#main.ember-application", visible: :all)
       end
     end
 
@@ -713,7 +781,7 @@ RSpec.configure do |config|
       class << self
         def using_session_with_localhost_resolution(name, &block)
           attempts = 0
-          self._using_session(name, &block)
+          _using_session(name, &block)
         rescue Socket::ResolutionError
           puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
           attempts += 1
@@ -764,7 +832,7 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system) do |example|
     if !system_tests_initialized
-      # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
+      # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
       # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
       # To work around this problem, we are going to preload all the model schemas before running any system tests so that
       # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
@@ -786,7 +854,9 @@ RSpec.configure do |config|
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
-      timezoneId: example.metadata[:timezone],
+      # NOTE: timezoneId is NOT set here because the driver is cached and reused,
+      # so only the first test's timezone would be applied. Instead, we use CDP
+      # to override the timezone per-test in the before(:each) hook below.
       colorScheme: example.metadata[:color_scheme],
     }
 
@@ -829,6 +899,11 @@ RSpec.configure do |config|
 
     BlockRequestsMiddleware.current_example_location = example.location
 
+    # Suppress the "Before you post, please select a category or tag" education
+    # popup — it intercepts pointer events and makes system specs flaky when
+    # they click things in the composer.
+    SiteSetting.educate_until_posts = 0
+
     if example.metadata[:video]
       Capybara.current_session.driver.on_save_screenrecord do |video|
         saved_path =
@@ -852,6 +927,15 @@ RSpec.configure do |config|
 
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
+
+      # Apply timezone override via CDP if timezone metadata is present.
+      # We use CDP instead of the driver's timezoneId option because the driver
+      # instance is cached and reused between tests, so timezoneId only affects
+      # the first test. CDP override works at runtime for each test.
+      if (tz = example.metadata[:timezone])
+        cdp = pw_page.context.new_cdp_session(pw_page)
+        cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: tz })
+      end
     end
   end
 
@@ -897,6 +981,7 @@ RSpec.configure do |config|
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
     clear_mocked_upcoming_change_metadata
+    clear_mocked_upcoming_change_default_overrides
   end
 
   config.after(:each, type: :system) do |example|
@@ -958,13 +1043,28 @@ RSpec.configure do |config|
       end
     end
 
-    $playwright_logger&.logs&.each do |log|
-      next if log[:level] != "WARNING"
-      deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
-      next if deprecation_id.nil?
+    deprecation_error =
+      $playwright_logger
+        &.logs
+        &.filter_map do |log|
+          if log[:level] == "trace"
+            error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
+            "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
+          end
+        end
+        &.first
 
-      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
-      deprecations[deprecation_id] ||= 0
+    expect(deprecation_error).to be_nil, deprecation_error
+
+    expected_deprecations = RSpec.current_example.metadata[:expected_js_deprecations] || []
+
+    $playwright_logger&.logs&.each do |log|
+      next if log[:level] != "count"
+      deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
+      next if deprecation_id.nil?
+      next if expected_deprecations.include?(deprecation_id)
+
+      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
     end
 
@@ -999,7 +1099,7 @@ RSpec.configure do |config|
       super
     end
 
-    def log_off_user(session, cookies)
+    def log_off_user(session, cookies, push_subscription: nil)
       # Try using the main session as `session` sometimes is a server session
       (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super
@@ -1103,7 +1203,11 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
+def file_from_fixtures(
+  filename,
+  directory = "images",
+  root_path = "#{Rails.root.join("spec/fixtures")}"
+)
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
@@ -1147,11 +1251,9 @@ def plugin_from_fixtures(plugin_name)
   tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
 
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
-  FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
+  FileUtils.cp_r("#{Rails.root.join("spec/fixtures/plugins/#{plugin_name}")}", tmp_plugins_dir)
 
-  plugin = Plugin::Instance.new
-  plugin.path = File.join(tmp_plugins_dir, plugin_name, "plugin.rb")
-  plugin
+  Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
 
 def concurrency_safe_tmp_dir
@@ -1170,7 +1272,7 @@ def has_trigger?(trigger_name)
 end
 
 def stub_deprecated_settings!(override:)
-  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+  SiteSetting.load_settings("#{Rails.root.join("spec/fixtures/site_settings/deprecated_test.yml")}")
 
   stub_const(
     SiteSettings::DeprecatedSettings,
@@ -1257,6 +1359,13 @@ def apply_base_chrome_args(args = [])
     base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
     base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
   end
+
+  resolver_rules = ["MAP test.localhost:80 127.0.0.1:#{Capybara.server_port}"]
+  if ENV["CI"]
+    # Bypass the OS resolver for localhost lookups inside the browser.
+    resolver_rules.push("MAP localhost [::1]", "MAP *.localhost [::1]")
+  end
+  base_args << "--host-resolver-rules=#{resolver_rules.join(",")}"
 
   # A file that contains just a list of paths like so:
   #

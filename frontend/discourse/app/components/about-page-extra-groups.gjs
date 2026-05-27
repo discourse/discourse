@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 
 export default class AboutPageExtraGroups extends Component {
   @service site;
@@ -109,27 +109,25 @@ export default class AboutPageExtraGroups extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
-      {{#if this.groups}}
-        {{#each this.groups as |group|}}
-          <section
-            class="about__{{group.name}}
-              --custom-group
-              {{if this.showGroupDescription '--has-description'}}"
-          >
-            <h3>
-              <a href="/g/{{group.name}}">{{this.groupName group}}</a>
-            </h3>
-            {{#if this.showGroupDescription}}
-              <p>{{htmlSafe group.bio_cooked}}</p>
-            {{/if}}
-            <AboutPageUsers
-              @users={{group.members}}
-              @truncateAt={{this.showInitialMembers}}
-            />
-          </section>
-        {{/each}}
-      {{/if}}
-    </ConditionalLoadingSpinner>
+    <DConditionalLoadingSpinner @condition={{this.loading}}>
+      {{#each this.groups as |group|}}
+        <section
+          class="about__{{group.name}}
+            --custom-group
+            {{if this.showGroupDescription '--has-description'}}"
+        >
+          <h3>
+            <a href="/g/{{group.name}}">{{this.groupName group}}</a>
+          </h3>
+          {{#if this.showGroupDescription}}
+            <p>{{trustHTML group.bio_cooked}}</p>
+          {{/if}}
+          <AboutPageUsers
+            @users={{group.members}}
+            @truncateAt={{this.showInitialMembers}}
+          />
+        </section>
+      {{/each}}
+    </DConditionalLoadingSpinner>
   </template>
 }

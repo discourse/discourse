@@ -42,16 +42,20 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      llm_selector:
+        none: "Ingen"
       features:
-        back: "Tilbage"
         disabled: "(deaktiveret)"
         groups: "Grupper:"
+        no_agent: "Ikke indstillet"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Indstillinger"
         expand_list:
           one: "(%{count} mere)"
           other: "(%{count} mere)"
         collapse_list: "(vis mindre)"
+        nav:
+          enabled: "Aktiveret"
         filters:
           all: "Alle"
           reset: "Nulstil"
@@ -92,11 +96,11 @@ da:
         summary: "Statistik"
         username: "Brugernavn"
         total_requests: "Total antal anmodninger"
+        total: "Total"
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
-      ai_persona:
-        back: "Tilbage"
+      ai_agent:
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
@@ -105,6 +109,8 @@ da:
         user: Bruger
         save: "Gem"
         enabled: "Aktiveret?"
+        mcp_tools_modal:
+          clear_all: "Ryd alle"
         allowed_groups: "Tilladte grupper"
         delete: "Slet"
         response_format:
@@ -118,7 +124,6 @@ da:
           title: "Overførsler"
           uploading: "Overfører…"
       tools:
-        back: "Tilbage"
         export: "Eksporter"
         import: "Importer"
         name: "Navn"
@@ -127,16 +132,37 @@ da:
         save: "Gem"
         remove_parameter: "Fjern"
         parameter_required: "Obligatoriske"
+        credential_not_set: "(ikke indstillet)"
         edit: "Rediger"
-        test: "Kør test"
+        test: "Test"
         delete: "Slet"
         test_modal:
           run: "Kør test"
+      secrets:
+        short_title: "Legitimationsoplysninger"
+        name: "Navn"
+        secret: "værdi"
+        save: "Gem"
+        edit: "Rediger"
+        delete: "Slet"
+        embedding: "Indlejring"
+      mcp_servers:
+        name: "Navn"
+        description: "Beskrivelse"
+        url: "URL"
+        oauth_statuses:
+          connected: "Tilsluttet"
+        oauth_connect: "Forbind"
+        enabled: "Aktiveret"
+        save: "Gem"
+        edit: "Rediger"
+        delete: "Slet"
+        tools_modal:
+          required: "Obligatoriske"
       llms:
         display_name: "Navn"
         save: "Gem"
         edit: "Rediger"
-        back: "Tilbage"
         delete: Slet
         quotas:
           group: "Gruppe"
@@ -172,10 +198,10 @@ da:
           cancel: "Annuller"
         thumbnail_suggestions:
           select: "Vælg"
+          try_again: "Prøv igen"
         image_caption:
           save_caption: "Gem"
       embeddings:
-        back: "Tilbage"
         save: "Gem"
         delete: "Slet"
         edit: "Rediger"

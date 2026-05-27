@@ -1,6 +1,25 @@
 en:
   site_settings:
-    data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/explorer"
+    data_explorer_enabled: "Enable data explorer"
+    data_explorer_ai_queries_enabled: "Enable AI query generation in Data Explorer"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "Data Explorer Query Generator"
+          description: "Generates SQL queries for Data Explorer from natural language"
+      tool_help:
+        run_sql: "Runs a SQL query and returns results"
+      tool_summary:
+        run_sql: "Running SQL query"
+      tool_description:
+        run_sql: "Ran SQL query"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
+      error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
+    errors:
+      tool_not_allowed: "You are not allowed to use this tool"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -11,6 +30,7 @@ en:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Scheduled report for %{query_name}"
@@ -23,7 +43,7 @@ en:
           Here are the results:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>View query in Data Explorer</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>View query in Data Explorer</a>
 
           Report created at %{created_at} (%{timezone})
       post:
@@ -33,7 +53,7 @@ en:
           Here are the results:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>View query in Data Explorer</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>View query in Data Explorer</a>
 
           Report created at %{created_at} (%{timezone})
       upload_appendix: "Appendix: [%{filename}|attachment](%{short_url})"

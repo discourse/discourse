@@ -305,6 +305,56 @@ RSpec.describe DiscourseAi::Completions::ToolDefinition do
     end
   end
 
+  describe "#parameters_json_schema" do
+    it "includes items with explicit item_type for array parameters" do
+      param =
+        DiscourseAi::Completions::ToolDefinition::ParameterDefinition.new(
+          name: "numbers",
+          description: "List of numbers",
+          type: :array,
+          item_type: :integer,
+        )
+
+      tool =
+        described_class.new(
+          name: "stats",
+          description: "Statistical operations",
+          parameters: [param],
+        )
+
+      schema = tool.parameters_json_schema
+      expect(schema[:properties]["numbers"][:items]).to eq({ type: :integer })
+    end
+
+    it "defaults items to string for array parameters without item_type" do
+      param =
+        DiscourseAi::Completions::ToolDefinition::ParameterDefinition.new(
+          name: "tags",
+          description: "List of tags",
+          type: :array,
+        )
+
+      tool = described_class.new(name: "tagger", description: "Tag operations", parameters: [param])
+
+      schema = tool.parameters_json_schema
+      expect(schema[:properties]["tags"][:items]).to eq({ type: :string })
+    end
+
+    it "does not include items for non-array parameters" do
+      param =
+        DiscourseAi::Completions::ToolDefinition::ParameterDefinition.new(
+          name: "query",
+          description: "Search query",
+          type: :string,
+        )
+
+      tool = described_class.new(name: "search", description: "Search tool", parameters: [param])
+
+      schema = tool.parameters_json_schema
+      expect(schema[:properties]["query"]).not_to have_key(:items)
+    end
+  end
+
   # Test case 10: Serialization to hash
   describe "#to_h" do
     it "serializes the tool to a hash with all properties" do

@@ -27,16 +27,23 @@ module Chat
     model :thread
     policy :invalid_access
     policy :threading_enabled_for_channel
+    policy :original_message_not_deleted
     model :membership, optional: true
     model :participants, optional: true
 
     private
 
     def fetch_thread(params:)
+      user_includes = SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
+
       Chat::Thread.includes(
         :channel,
         original_message_user: :user_status,
-        original_message: :chat_webhook_event,
+        original_message: [
+          :chat_webhook_event,
+          { user: user_includes },
+          { user_mentions: { user: user_includes } },
+        ],
       ).find_by(id: params.thread_id, channel_id: params.channel_id)
     end
 
@@ -46,6 +53,11 @@ module Chat
 
     def threading_enabled_for_channel(thread:)
       thread.channel.threading_enabled || thread.force
+    end
+
+    def original_message_not_deleted(thread:, guardian:)
+      thread.original_message.deleted_at.blank? ||
+        guardian.can_moderate_chat?(thread.channel.chatable)
     end
 
     def fetch_membership(thread:, guardian:)

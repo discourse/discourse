@@ -414,6 +414,38 @@ module("Unit | Model | category", function (hooks) {
     );
   });
 
+  test("search with accented category name", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const category1 = store.createRecord("category", {
+      id: 1,
+      name: "Éditions",
+      slug: "publications",
+    });
+    const category2 = store.createRecord("category", {
+      id: 2,
+      name: "Cinéma",
+      slug: "films",
+    });
+
+    sinon.stub(Category, "listByActivity").returns([category1, category2]);
+
+    assert.deepEqual(
+      Category.search("editions"),
+      [category1],
+      "finds accented category with unaccented search term"
+    );
+    assert.deepEqual(
+      Category.search("cinema"),
+      [category2],
+      "finds accented category by unaccented name"
+    );
+    assert.deepEqual(
+      Category.search("Édit"),
+      [category1],
+      "finds accented category with accented search term"
+    );
+  });
+
   test("search with category slug", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const category1 = store.createRecord("category", {
@@ -478,6 +510,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("asyncFindByIds - do not request categories that have been loaded already", async function (assert) {
+    const stub = sinon.stub(console, "warn");
     const requestedIds = [];
     pretender.get("/categories/find", (request) => {
       const ids = request.queryParams.ids.map((id) => parseInt(id, 10));
@@ -495,9 +528,16 @@ module("Unit | Model | category", function (hooks) {
 
     await Category.asyncFindByIds([12345, 12346, 12347]);
     assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
+    assert.true(
+      stub.calledWith(
+        "WARNING: Multiple calls to Category.asyncFindByIds within a second. Could they be combined?"
+      )
+    );
 
     await Category.asyncFindByIds([12345]);
     assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
+
+    stub.restore();
   });
 
   test("registerCategorySaveProperty includes property in save request", async function (assert) {

@@ -1,25 +1,41 @@
 import { tracked } from "@glimmer/tracking";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class AdminDashboardTabController extends Controller {
-  @service modal;
+  @controller("admin.dashboard") dashboardController;
 
-  @tracked endDate = moment().locale("en").utc().endOf("day");
-  @tracked startDate = this.calculateStartDate();
-  @tracked
-  filters = new TrackedObject({
-    startDate: this.startDate,
-    endDate: this.endDate,
-  });
-
+  @tracked period = "monthly";
   queryParams = ["period"];
-  period = "monthly";
 
-  calculateStartDate() {
+  get startDate() {
+    if (this.dashboardController.start_date) {
+      return moment
+        .utc(this.dashboardController.start_date)
+        .locale("en")
+        .startOf("day");
+    }
+    return this.#calculateStartDate();
+  }
+
+  get endDate() {
+    if (this.dashboardController.end_date) {
+      return moment
+        .utc(this.dashboardController.end_date)
+        .locale("en")
+        .endOf("day");
+    }
+    return moment().locale("en").utc().endOf("day");
+  }
+
+  get filters() {
+    return {
+      startDate: this.startDate,
+      endDate: this.endDate,
+    };
+  }
+
+  #calculateStartDate() {
     const fullDay = moment().locale("en").utc().endOf("day");
 
     switch (this.period) {
@@ -29,8 +45,6 @@ export default class AdminDashboardTabController extends Controller {
         return fullDay.subtract(3, "month").startOf("day");
       case "weekly":
         return fullDay.subtract(6, "days").startOf("day");
-      case "monthly":
-        return fullDay.subtract(1, "month").startOf("day");
       default:
         return fullDay.subtract(1, "month").startOf("day");
     }
@@ -38,28 +52,16 @@ export default class AdminDashboardTabController extends Controller {
 
   @action
   setCustomDateRange(startDate, endDate) {
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.filters.startDate = this.startDate;
-    this.filters.endDate = this.endDate;
+    this.period = "custom";
+    this.dashboardController.start_date =
+      moment(startDate).format("YYYY-MM-DD");
+    this.dashboardController.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @action
   setPeriod(period) {
-    this.set("period", period);
-    this.startDate = this.calculateStartDate();
-    this.filters.startDate = this.startDate;
-    this.filters.endDate = this.endDate;
-  }
-
-  @action
-  openCustomDateRangeModal() {
-    this.modal.show(CustomDateRangeModal, {
-      model: {
-        startDate: this.startDate,
-        endDate: this.endDate,
-        setCustomDateRange: this.setCustomDateRange,
-      },
-    });
+    this.period = period;
+    this.dashboardController.start_date = null;
+    this.dashboardController.end_date = null;
   }
 }

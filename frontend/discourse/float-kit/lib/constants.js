@@ -30,6 +30,7 @@ export const TOOLTIP = {
     component: null,
     content: null,
     identifier: null,
+    inline: null,
     interactive: false,
     listeners: false,
     maxWidth: 350,
@@ -38,6 +39,7 @@ export const TOOLTIP = {
     triggers: { mobile: ["click"], desktop: ["hover", "click"] },
     untriggers: { mobile: ["click"], desktop: ["hover", "click"] },
     placement: "top",
+    shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
@@ -45,7 +47,7 @@ export const TOOLTIP = {
     onClose: null,
     onShow: null,
     onRegisterApi: null,
-    updateOnScroll: true,
+    portalOutletElement: null,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -70,6 +72,7 @@ export const MENU = {
     triggers: ["click"],
     untriggers: ["click"],
     placement: "bottom-start",
+    shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
@@ -84,9 +87,9 @@ export const MENU = {
     triggerClass: null,
     contentClass: null,
     class: null,
-    updateOnScroll: true,
     matchTriggerMinWidth: false,
     matchTriggerWidth: false,
+    portalOutletElement: null,
   },
   portalOutletId: "d-menu-portal-outlet",
 };
@@ -96,6 +99,7 @@ import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 export const TOAST = {
   options: {
     autoClose: true,
+    autoUpdate: { ancestorScroll: false },
     duration: "short",
     component: DDefaultToast,
     showProgressBar: false,

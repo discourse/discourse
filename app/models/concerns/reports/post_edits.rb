@@ -81,13 +81,20 @@ module Reports::PostEdits
       /*limit*/
       SQL
 
+      builder.join "topics t ON t.id = p.topic_id"
+
       if category_id
-        builder.join "topics t ON t.id = p.topic_id"
         if include_subcategories
           builder.where("t.category_id IN (?)", Category.subcategory_ids(category_id))
         else
           builder.where("t.category_id = ?", category_id)
         end
+      end
+
+      unless report.current_user&.admin?
+        builder.where("t.archetype != ?", Archetype.private_message)
+        builder.join "categories c ON c.id = t.category_id"
+        builder.secure_category(Guardian.new(report.current_user).secure_category_ids)
       end
 
       if editor_username

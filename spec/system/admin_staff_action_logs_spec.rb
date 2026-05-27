@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin staff action logs", type: :system do
+describe "Admin staff action logs" do
   fab!(:current_user, :admin)
   fab!(:history_1) do
     Fabricate(

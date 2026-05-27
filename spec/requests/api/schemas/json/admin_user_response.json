@@ -140,6 +140,9 @@
     "latest_export": {
       "type": ["object", "null"]
     },
+    "full_silence_reason": {
+      "type": ["string", "null"]
+    },
     "silence_reason": {
       "type": ["string", "null"]
     },
@@ -500,6 +503,40 @@
     },
     "include_ip": {
       "type": "boolean"
+    },
+    "upcoming_changes_stats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "humanized_name": { "type": "string" },
+          "description": { "type": "string" },
+          "enabled": { "type": "boolean" },
+          "specific_groups": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "enabled_for_everyone",
+              "enabled_for_no_one",
+              "in_specific_groups",
+              "not_in_specific_groups"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "humanized_name",
+          "description",
+          "enabled",
+          "specific_groups",
+          "reason"
+        ]
+      }
     }
   },
   "required": [

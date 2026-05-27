@@ -45,11 +45,49 @@ ro:
         search: "Caută"
         time: "Oră"
         summarize: "Rezumat"
+      close_topic:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      unlist_topic:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      delete_topic:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      edit_tags:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      edit_category:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      set_topic_timer:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      set_slow_mode:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      move_posts:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+      assign:
+        errors:
+          not_found: "Subiectul nu a fost găsit."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprobare"
+        reject:
+          title: "Respingere"
     llm:
       configuration:
         disable_modules_first: "Mai întâi trebuie să dezactivezi aceste module: %{settings}"
     embeddings:
       configuration:
         model_test_failed: "Nu am reușit să generăm un test încorporat cu acest model. Asigură-te că este configurat corect."
+    llm_models:
+      bedrock_missing_auth: "AWS Bedrock necesită configurarea fie a ID-ului cheii de acces, fie a rolului ARN."
     ai_staff_action_logger:
       updated: "actualizat"
+    translation:
+      errors:
+        all_posts_translated: "Toate postările din acest subiect sunt deja traduse."

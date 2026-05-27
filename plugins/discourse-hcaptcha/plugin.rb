@@ -11,6 +11,8 @@
 
 enabled_site_setting :discourse_hcaptcha_enabled
 
+register_svg_icon "hand"
+
 extend_content_security_policy(script_src: %w[https://hcaptcha.com])
 
 module ::DiscourseHcaptcha

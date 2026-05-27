@@ -1,35 +1,35 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
 import { i18n } from "discourse-i18n";
 
 export default class UserInvitedController extends Controller {
-  @discourseComputed("invitesCount.total", "invitesCount.pending")
-  pendingLabel(invitesCountTotal, invitesCountPending) {
-    if (invitesCountTotal > 0) {
+  @computed("invitesCount.total", "invitesCount.pending")
+  get pendingLabel() {
+    if (this.invitesCount?.total > 0) {
       return i18n("user.invited.pending_tab_with_count", {
-        count: invitesCountPending,
+        count: this.invitesCount?.pending,
       });
     } else {
       return i18n("user.invited.pending_tab");
     }
   }
 
-  @discourseComputed("invitesCount.total", "invitesCount.expired")
-  expiredLabel(invitesCountTotal, invitesCountExpired) {
-    if (invitesCountTotal > 0) {
+  @computed("invitesCount.total", "invitesCount.expired")
+  get expiredLabel() {
+    if (this.invitesCount?.total > 0) {
       return i18n("user.invited.expired_tab_with_count", {
-        count: invitesCountExpired,
+        count: this.invitesCount?.expired,
       });
     } else {
       return i18n("user.invited.expired_tab");
     }
   }
 
-  @discourseComputed("invitesCount.total", "invitesCount.redeemed")
-  redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
-    if (invitesCountTotal > 0) {
+  @computed("invitesCount.total", "invitesCount.redeemed")
+  get redeemedLabel() {
+    if (this.invitesCount?.total > 0) {
       return i18n("user.invited.redeemed_tab_with_count", {
-        count: invitesCountRedeemed,
+        count: this.invitesCount?.redeemed,
       });
     } else {
       return i18n("user.invited.redeemed_tab");

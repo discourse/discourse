@@ -255,8 +255,8 @@ RSpec.describe PostCreator do
         admin_ids = [Group[:admins].id]
         expect(
           messages.any? do |m|
-            m.group_ids != admin_ids &&
-              (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id))
+            m.group_ids != admin_ids && !m.user_ids.include?(other_admin.id) &&
+              !m.user_ids.include?(admin.id)
           end,
         ).to eq(false)
       end
@@ -268,19 +268,19 @@ RSpec.describe PostCreator do
         p = nil
         messages = MessageBus.track_publish { p = creator.create }
 
-        expect(messages.find { _1.channel == "/latest" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/new" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/latest" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/new" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
 
-        user_action = messages.find { _1.channel == "/u/#{p.user.username}" }
+        user_action = messages.find { it.channel == "/u/#{p.user.username}" }
         expect(user_action).to eq(nil)
 
         topics_stats =
           messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
         expect(topics_stats).to eq(nil)
 
-        expect(messages.filter { _1.channel != "/distributed_hash" }.size).to eq(6)
+        expect(messages.filter { it.channel != "/distributed_hash" }.size).to eq(6)
       end
 
       it "extracts links from the post" do
@@ -692,20 +692,22 @@ RSpec.describe PostCreator do
   describe "whisper" do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
+    before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+
     it "whispers do not mess up the public view" do
       freeze_time_safe
 
-      first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
+      first = PostCreator.new(admin, topic_id: topic.id, raw: "this is the first post").create
 
       freeze_time 1.year.from_now
 
-      user_stat = user.user_stat
+      user_stat = admin.user_stat
 
       whisper =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
-          reply_to_post_number: 1,
+          reply_to_post_number: first.post_number,
           post_type: Post.types[:whisper],
           raw: "this is a whispered reply",
         ).create
@@ -718,7 +720,7 @@ RSpec.describe PostCreator do
 
       whisper_reply =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
           reply_to_post_number: whisper.post_number,
           post_type: Post.types[:regular],
@@ -730,8 +732,8 @@ RSpec.describe PostCreator do
 
       expect(user_stat.reload.post_count).to eq(0)
 
-      user.reload
-      expect(user.last_posted_at).to eq_time(1.year.ago)
+      admin.reload
+      expect(admin.last_posted_at).to eq_time(1.year.ago)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -875,8 +877,8 @@ RSpec.describe PostCreator do
       GroupMessage
         .expects(:create)
         .with do |group_name, msg_type, params|
-          group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) &&
-            params[:user].id == (user.id)
+          group_name == Group[:moderators].name && msg_type == :spam_post_blocked &&
+            params[:user].id == user.id
         end
       creator.create
     end
@@ -1007,7 +1009,7 @@ RSpec.describe PostCreator do
       end
 
       it "fails if the user recently posted in this topic" do
-        TopicUser.create!(user: user, topic: topic, last_posted_at: 10.minutes.ago)
+        Fabricate(:post, topic: topic, user: user, created_at: 10.minutes.ago)
 
         post = creator.create
 
@@ -1017,7 +1019,7 @@ RSpec.describe PostCreator do
       end
 
       it "creates the topic if the user last post is older than the slow mode interval" do
-        TopicUser.create!(user: user, topic: topic, last_posted_at: 5.days.ago)
+        Fabricate(:post, topic: topic, user: user, created_at: 5.days.ago)
 
         post = creator.create
 
@@ -1028,7 +1030,7 @@ RSpec.describe PostCreator do
       it "creates the topic if the user is a staff member" do
         post_creator =
           PostCreator.new(admin, raw: "test reply", topic_id: topic.id, reply_to_post_number: 4)
-        TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
+        Fabricate(:post, topic: topic, user: admin, created_at: 10.minutes.ago)
 
         post = post_creator.create
 
@@ -1236,6 +1238,28 @@ RSpec.describe PostCreator do
       expect(topic.posts_count).to eq(3)
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
+
+    it "does not bump highest_post_number for small_action posts in PMs" do
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
+      Fabricate(:post, topic: topic)
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(1)
+
+      PostCreator.create!(
+        Discourse.system_user,
+        raw: "topic unlisted",
+        topic_id: topic.id,
+        post_type: Post.types[:small_action],
+        action_code: "visible.disabled",
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+    end
   end
 
   describe "warnings" do
@@ -1328,14 +1352,45 @@ RSpec.describe PostCreator do
     end
   end
 
+  describe "private message with target_user_ids" do
+    fab!(:target_user1) { coding_horror }
+    fab!(:target_user2, :moderator)
+
+    it "creates a PM targeting users by ID" do
+      post =
+        PostCreator.create!(
+          user,
+          title: "PM via user IDs",
+          raw: "this is a PM sent using target_user_ids",
+          archetype: Archetype.private_message,
+          target_user_ids: [target_user1.id, target_user2.id],
+        )
+
+      expect(post.topic.archetype).to eq(Archetype.private_message)
+      expect(post.topic.allowed_users).to include(target_user1, target_user2, user)
+    end
+
+    it "raises when both target_usernames and target_user_ids are provided" do
+      expect {
+        PostCreator.create!(
+          user,
+          title: "PM with both",
+          raw: "this should fail",
+          archetype: Archetype.private_message,
+          target_usernames: target_user1.username,
+          target_user_ids: [target_user2.id],
+        )
+      }.to raise_error(ArgumentError, /Cannot specify both/)
+    end
+  end
+
   describe "private message to group" do
     fab!(:target_user1) { coding_horror }
     fab!(:target_user2, :moderator)
     let!(:group) do
-      g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
+      g = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
       g.add(target_user2)
-      g.save
       g
     end
     fab!(:unrelated, :user)
@@ -1620,6 +1675,21 @@ RSpec.describe PostCreator do
       _post = pc.create
       expect(@posts_created).to eq(1)
       expect(@topics_created).to eq(0)
+    end
+
+    it "fires post_created even when topic_created handler raises" do
+      bad_handler = proc { raise "topic_created boom" }
+      DiscourseEvent.on(:topic_created, &bad_handler)
+
+      PostCreator.new(
+        user,
+        raw: "this is the new content for my topic",
+        title: "this is my new topic title",
+      ).create
+
+      expect(@posts_created).to eq(1)
+    ensure
+      DiscourseEvent.off(:topic_created, &bad_handler)
     end
   end
 
@@ -2223,6 +2293,45 @@ RSpec.describe PostCreator do
       reviewable = manager.perform.reviewable
 
       expect { reviewable.perform(admin, :approve_post) }.not_to change(ReviewablePost, :count)
+    end
+  end
+
+  describe "draft cleanup" do
+    it "deletes the draft after successful post creation" do
+      topic = Fabricate(:topic)
+      draft_key = topic.draft_key
+      Draft.set(user, draft_key, 0, '{"reply":"test draft"}')
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_present
+
+      PostCreator.create(
+        user,
+        topic_id: topic.id,
+        raw: "reply content for testing",
+        advance_draft: true,
+      )
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_nil
+    end
+
+    it "deletes the draft even when draft sequence exceeds DraftSequence" do
+      topic = Fabricate(:topic)
+      draft_key = topic.draft_key
+
+      # Simulate edge case: draft sequence is higher than DraftSequence
+      Draft.create!(user: user, draft_key: draft_key, data: '{"reply":"test"}', sequence: 6)
+      DraftSequence.create!(user_id: user.id, draft_key: draft_key, sequence: 5)
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_present
+
+      PostCreator.create(
+        user,
+        topic_id: topic.id,
+        raw: "reply content for testing",
+        advance_draft: true,
+      )
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_nil
     end
   end
 end

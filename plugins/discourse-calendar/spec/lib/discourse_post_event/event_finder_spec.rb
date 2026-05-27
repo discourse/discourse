@@ -222,6 +222,89 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
 
+    describe "with after=now" do
+      let!(:past_event) { Fabricate(:event, original_starts_at: 2.hours.ago) }
+      let!(:future_event) { Fabricate(:event, original_starts_at: 2.hours.from_now) }
+
+      it "resolves 'now' to the current time" do
+        results = finder.search(current_user, { after: "now" })
+        expect(results).not_to include(past_event)
+        expect(results).to include(future_event)
+      end
+    end
+
+    describe "with include_ongoing" do
+      fab!(:past_event) do
+        Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 1.hour.ago)
+      end
+      fab!(:ongoing_event) do
+        Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 2.hours.from_now)
+      end
+      fab!(:future_event) do
+        Fabricate(:event, original_starts_at: 2.hours.from_now, original_ends_at: 3.hours.from_now)
+      end
+
+      it "includes events that started in the past but have not ended yet" do
+        results = finder.search(current_user, { after: "now", include_ongoing: "true" })
+        expect(results).not_to include(past_event)
+        expect(results).to include(ongoing_event)
+        expect(results).to include(future_event)
+      end
+
+      it "does not include ongoing events without the flag" do
+        results = finder.search(current_user, { after: "now" })
+        expect(results).not_to include(past_event)
+        expect(results).not_to include(ongoing_event)
+        expect(results).to include(future_event)
+      end
+
+      it "includes multi-month spanning events when viewing later months" do
+        freeze_time DateTime.parse("2025-06-15 12:00")
+
+        spanning_event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.parse("2025-03-01 09:00"),
+            original_ends_at: Time.parse("2025-12-01 17:00"),
+          )
+
+        results =
+          finder.search(
+            current_user,
+            {
+              after: Time.parse("2025-06-01 00:00").to_s,
+              before: Time.parse("2025-07-01 00:00").to_s,
+              include_ongoing: "true",
+            },
+          )
+
+        expect(results).to include(spanning_event)
+      end
+
+      it "does not include multi-month spanning events that have already ended" do
+        freeze_time DateTime.parse("2025-06-15 12:00")
+
+        ended_spanning_event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.parse("2025-01-01 09:00"),
+            original_ends_at: Time.parse("2025-05-01 17:00"),
+          )
+
+        results =
+          finder.search(
+            current_user,
+            {
+              after: Time.parse("2025-06-01 00:00").to_s,
+              before: Time.parse("2025-07-01 00:00").to_s,
+              include_ongoing: "true",
+            },
+          )
+
+        expect(results).not_to include(ended_spanning_event)
+      end
+    end
+
     describe "expired events" do
       let!(:expired_event) do
         Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 1.hour.ago)
@@ -235,6 +318,47 @@ describe DiscoursePostEvent::EventFinder do
         results = finder.search(current_user)
         expect(results).to include(expired_event)
         expect(results).to include(current_event)
+      end
+    end
+
+    describe "event edited to earlier date" do
+      it "returns the event when querying its new date range after multiple edits" do
+        freeze_time DateTime.parse("2025-12-05 12:00")
+
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.parse("2025-12-05 15:30"),
+            original_ends_at: Time.parse("2025-12-05 16:30"),
+          )
+
+        expect(event.event_dates.count).to eq(1)
+        expect(event.event_dates.first.finished_at).to be_nil
+
+        event.update!(
+          original_starts_at: Time.parse("2025-11-05 15:30"),
+          original_ends_at: Time.parse("2025-11-05 16:30"),
+        )
+
+        expect(event.event_dates.count).to eq(2)
+
+        event.update!(
+          original_starts_at: Time.parse("2025-10-05 15:30"),
+          original_ends_at: Time.parse("2025-10-05 16:30"),
+        )
+
+        expect(event.event_dates.count).to eq(3)
+
+        october_results =
+          finder.search(
+            current_user,
+            {
+              after: Time.parse("2025-09-29 00:00:00").to_s,
+              before: Time.parse("2025-11-10 00:00:00").to_s,
+            },
+          )
+
+        expect(october_results).to include(event)
       end
     end
 

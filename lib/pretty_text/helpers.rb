@@ -44,7 +44,7 @@ module PrettyText
 
       urls.each do |url|
         sha1 = Upload.sha1_from_short_url(url)
-        if (url.split(".")[1].nil?) # video sha1 without extension for thumbnail
+        if url.split(".")[1].nil? # video sha1 without extension for thumbnail
           thumbnail = Upload.where("original_filename LIKE ?", "#{sha1}.%").last if sha1
           # Fallback for old posts that don't contain data-video-base62-sha1
           thumbnail = Upload.where("original_filename LIKE ?", "#{url}.%").last if thumbnail.nil? &&
@@ -64,9 +64,9 @@ module PrettyText
 
         Upload
           .where(sha1: map.values)
-          .pluck(:sha1, :url, :extension, :original_filename, :secure)
+          .pluck(:sha1, :url, :extension, :secure)
           .each do |row|
-            sha1, url, extension, original_filename, secure = row
+            sha1, url, extension, secure = row
 
             if short_urls = reverse_map[sha1]
               secure_uploads = SiteSetting.secure_uploads? && secure
@@ -104,14 +104,9 @@ module PrettyText
     end
 
     def hashtag_lookup(slug, cooking_user_id, types_in_priority_order)
-      # NOTE: This is _somewhat_ expected since we need to be able to cook posts
-      # etc. without a user sometimes, but it is still an edge case.
-      #
-      # The Discourse.system_user is usually an admin with access to _all_
-      # categories, however if the suppress_secured_categories_from_admin
-      # site setting is activated then this user will not be able to access
-      # secure categories, so hashtags that are secure will not render.
-      cooking_user = User.find_by(id: cooking_user_id) || Discourse.system_user
+      # Missing or invalid user IDs cook with anonymous permissions. Callers that
+      # need wider access must pass an explicit trusted user_id.
+      cooking_user = User.find_by(id: cooking_user_id)
 
       types_in_priority_order =
         types_in_priority_order.select do |type|

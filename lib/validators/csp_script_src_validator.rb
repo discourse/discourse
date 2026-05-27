@@ -13,7 +13,7 @@ class CspScriptSrcValidator
   end
 
   def valid_value?(values)
-    values.split("|").all? { _1.match? VALID_SOURCE_REGEX }
+    values.split("|").all? { it.match? VALID_SOURCE_REGEX }
   end
 
   def error_message

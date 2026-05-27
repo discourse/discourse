@@ -49,11 +49,11 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
-    return if polls.blank? && self.id.blank?
+    return if polls.blank? && id.blank?
 
     if polls.present?
       validator = DiscoursePoll::PostValidator.new(self)
@@ -61,7 +61,7 @@ after_initialize do
     end
 
     # are we updating a post?
-    if self.id.present?
+    if id.present?
       return if polls.blank? && ::Poll.where(post: self).empty?
 
       DiscoursePoll::PollsUpdater.update(self, polls)
@@ -99,7 +99,20 @@ after_initialize do
       fragment
         .css(".poll, [data-poll-name]")
         .each do |poll|
-          poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+          html = +""
+
+          if title = poll.at_css(".poll-title")
+            html << title.to_html
+          end
+
+          if container = poll.at_css(".poll-container")
+            container.css("li").each { |li| li.remove_attribute("data-poll-option-id") }
+            html << container.inner_html
+          end
+
+          html << "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+
+          poll.replace(html)
         end
     end
   end
@@ -107,14 +120,11 @@ after_initialize do
   on(:reduce_excerpt) do |doc, options|
     post = options[:post]
 
-    replacement =
-      (
-        if post&.url.present?
-          "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>"
-        else
-          I18n.t("poll.poll")
-        end
-      )
+    if post&.url.present?
+      replacement = "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>"
+    else
+      replacement = I18n.t("poll.poll")
+    end
 
     doc.css("div.poll").each { |poll| poll.replace(replacement) }
   end
@@ -134,6 +144,26 @@ after_initialize do
         scope: guardian,
       ).as_json
     post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+  end
+
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+
+    ActiveRecord::Base.transaction do
+      # Remove empty polls auto-created by PostCreator on the new post
+      # so the originals (with votes) can be moved without a unique constraint violation.
+      new_polls = Poll.where(post_id: new_post.id)
+      if new_polls.exists?
+        PollVote.where(poll_id: new_polls.select(:id)).delete_all
+        PollOption.where(poll_id: new_polls.select(:id)).delete_all
+        new_polls.delete_all
+      end
+
+      Poll.where(post_id: old_post.id).update_all(post_id: new_post.id)
+    end
+
+    DiscoursePoll::PollsUpdater.update_post_custom_fields(new_post)
+    DiscoursePoll::PollsUpdater.update_post_custom_fields(old_post)
   end
 
   on(:merging_users) do |source_user, target_user|
@@ -191,7 +221,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
+    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) }
   end
 
   add_to_serializer(
@@ -231,5 +261,18 @@ after_initialize do
     else
       posts
     end
+  end
+
+  # Only single-choice (regular) polls are supported for anonymous voting.
+  # Multi-choice and ranked-choice polls require accumulating selections
+  # client-side, which is out of scope for the current anonymous flow.
+  register_anonymous_action("vote_poll") do |user, params|
+    options = params["options"]
+    next if !options.is_a?(Array) || options.size != 1
+
+    DiscoursePoll::Poll.vote(user, params["post_id"], params["poll_name"], options)
+  rescue DiscoursePoll::Error
+    # Expected business-logic failures (poll closed, group-restricted, etc.)
+    # — silently drop. Unexpected exceptions still bubble to AnonymousAction.consume.
   end
 end

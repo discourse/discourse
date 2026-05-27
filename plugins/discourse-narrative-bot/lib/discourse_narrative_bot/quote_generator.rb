@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 module DiscourseNarrativeBot
   class QuoteGenerator
     API_ENDPOINT = "http://api.forismatic.com/api/1.0/"

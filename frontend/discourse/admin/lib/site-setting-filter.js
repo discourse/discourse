@@ -10,6 +10,7 @@ export default class SiteSettingFilter {
   filterSettings(filter, opts = {}) {
     opts.maxResults ??= 100;
     opts.onlyOverridden ??= false;
+    opts.dependsOn ??= null;
 
     return this.performSearch(filter, opts);
   }
@@ -19,6 +20,7 @@ export default class SiteSettingFilter {
     opts.includeAllCategory ??= true;
 
     let pluginFilter;
+    let upcomingChangeDefaultOverrideFilter;
 
     if (filter) {
       filter = filter
@@ -31,6 +33,13 @@ export default class SiteSettingFilter {
 
           if (word.startsWith("plugin:")) {
             pluginFilter = word.slice("plugin:".length).trim();
+            return false;
+          }
+
+          if (word.startsWith("upcoming_change_default_override:")) {
+            upcomingChangeDefaultOverrideFilter = word
+              .slice("upcoming_change_default_override:".length)
+              .trim();
             return false;
           }
 
@@ -65,7 +74,22 @@ export default class SiteSettingFilter {
             return false;
           }
 
+          if (opts.dependsOn) {
+            return (
+              siteSetting.get("depends_on") &&
+              siteSetting.get("depends_on").includes(opts.dependsOn)
+            );
+          }
+
           if (pluginFilter && siteSetting.plugin !== pluginFilter) {
+            return false;
+          }
+
+          if (
+            upcomingChangeDefaultOverrideFilter &&
+            siteSetting.get("upcoming_change_default_override_metadata")
+              ?.change_setting_name !== upcomingChangeDefaultOverrideFilter
+          ) {
             return false;
           }
 

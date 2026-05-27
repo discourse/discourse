@@ -1,20 +1,15 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
-import { alias, not } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import List from "discourse/components/topic-list/list";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class BasicTopicList extends Component {
   @service site;
-
-  @alias("topicList.loadingMore") loadingMore;
-
-  @not("loaded") loading;
 
   init() {
     super.init(...arguments);
@@ -24,8 +19,22 @@ export default class BasicTopicList extends Component {
     }
   }
 
-  @discourseComputed("topicList.loaded")
-  loaded() {
+  @computed("topicList.loadingMore")
+  get loadingMore() {
+    return this.topicList?.loadingMore;
+  }
+
+  set loadingMore(value) {
+    set(this, "topicList.loadingMore", value);
+  }
+
+  @computed("loaded")
+  get loading() {
+    return !this.loaded;
+  }
+
+  @computed("topicList.loaded")
+  get loaded() {
     let topicList = this.topicList;
     if (topicList) {
       return topicList.get("loaded");
@@ -46,40 +55,9 @@ export default class BasicTopicList extends Component {
     }
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    this.topics.forEach((topic) => {
-      if (typeof topic.unread_by_group_member !== "undefined") {
-        this.messageBus.subscribe(
-          `/private-messages/unread-indicator/${topic.id}`,
-          this.onMessage
-        );
-      }
-    });
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.messageBus.unsubscribe(
-      "/private-messages/unread-indicator/*",
-      this.onMessage
-    );
-  }
-
-  @bind
-  onMessage(data) {
-    const nodeClassList = document.querySelector(
-      `.indicator-topic-${data.topic_id}`
-    ).classList;
-
-    nodeClassList.toggle("read", !data.show_indicator);
-  }
-
-  @discourseComputed("topics")
-  showUnreadIndicator(topics) {
-    return topics.some(
+  @computed("topics")
+  get showUnreadIndicator() {
+    return this.topics.some(
       (topic) => typeof topic.unread_by_group_member !== "undefined"
     );
   }
@@ -122,7 +100,7 @@ export default class BasicTopicList extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
+    <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#if this.topics}}
         <List
           @showPosters={{this.showPosters}}
@@ -136,6 +114,7 @@ export default class BasicTopicList extends Component {
           @order={{this.order}}
           @ascending={{this.ascending}}
           @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          @listContext={{this.listContext}}
         />
       {{else}}
         {{#unless this.loadingMore}}
@@ -144,6 +123,6 @@ export default class BasicTopicList extends Component {
           </div>
         {{/unless}}
       {{/if}}
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </template>
 }

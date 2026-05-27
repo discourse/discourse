@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Details button", type: :system do
+describe "Details button" do
   fab!(:admin)
 
   let(:composer) { PageObjects::Components::Composer.new }
@@ -17,7 +17,6 @@ describe "Details button", type: :system do
       composer.fill_content("test :+1:").toggle_rich_editor.select_all
       find(".toolbar-menu__options-trigger").click
       find("button[title='Hide details']").click
-      rich.click(x: 22, y: 30) # hack for pseudo element
 
       expect(rich).to have_css(
         "details img.emoji[src=\"/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}\"]",

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    lti_enabled: LTI 1.3 hitelesítés engedélyezése
+    lti_authorization_endpoint: '„Az LTI-platform engedélyezési végpontja'
+    lti_client_ids: Az eszköz kliensazonosítói
+    lti_platform_issuer_id: Az LTI platform kibocsátójának azonosítója. Általában egy URL, amely tartalmazza a https:// előtagot.
+    lti_platform_public_key: Az LTI platform nyilvános kulcsa
+    lti_email_verified: Engedélyezze, ha a platformról származó e-mail címeket ellenőrizték.

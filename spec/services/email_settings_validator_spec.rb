@@ -4,69 +4,6 @@ RSpec.describe EmailSettingsValidator do
   let(:username) { "kwest@gmail.com" }
   let(:password) { "mbdtf" }
 
-  describe "#validate_imap" do
-    let(:host) { "imap.gmail.com" }
-    let(:port) { 993 }
-
-    let(:net_imap_stub) do
-      obj = mock()
-      obj.stubs(:login).returns(true)
-      obj
-    end
-
-    before { Net::IMAP.stubs(:new).returns(net_imap_stub) }
-
-    it "is valid if no error is raised" do
-      net_imap_stub.stubs(:logout).returns(true)
-      net_imap_stub.stubs(:disconnect).returns(true)
-      expect {
-        described_class.validate_imap(
-          host: host,
-          port: port,
-          username: username,
-          password: password,
-        )
-      }.not_to raise_error
-    end
-
-    it "is invalid if an error is raised" do
-      net_imap_stub.stubs(:login).raises(
-        Net::IMAP::NoResponseError,
-        stub(data: stub(text: "no response")),
-      )
-      expect {
-        described_class.validate_imap(
-          host: host,
-          port: port,
-          username: username,
-          password: password,
-          debug: true,
-        )
-      }.to raise_error(Net::IMAP::NoResponseError)
-    end
-
-    it "logs a warning if debug: true passed in and still raises the error" do
-      net_imap_stub.stubs(:login).raises(
-        Net::IMAP::NoResponseError,
-        stub(data: stub(text: "no response")),
-      )
-      Rails
-        .logger
-        .expects(:warn)
-        .with(regexp_matches(/\[EmailSettingsValidator\] Error encountered/))
-        .at_least_once
-      expect {
-        described_class.validate_imap(
-          host: host,
-          port: port,
-          username: username,
-          password: password,
-          debug: true,
-        )
-      }.to raise_error(Net::IMAP::NoResponseError)
-    end
-  end
-
   describe "#validate_pop3" do
     let(:host) { "pop.gmail.com" }
     let(:port) { 995 }

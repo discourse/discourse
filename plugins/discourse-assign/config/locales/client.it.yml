@@ -41,7 +41,6 @@ it:
       assigned_topic_to: "Argomento assegnato a <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} assegnato a %{username}"
       assign_post_to_multiple: "n°%{post_number} a %{username}"
-      assigned_to_w_ellipsis: "Assegnato a..."
       unassign:
         title: "Annulla assegnazione"
         title_w_ellipsis: "Annullamento assegnazione..."
@@ -130,8 +129,6 @@ it:
       web_hooks:
         assign_event:
           group_name: "Assegna eventi"
-          assigned: "Quando un utente assegna un argomento"
-          unassigned: "Quando un utente rimuove l'assegnazione di un argomento"
     search:
       advanced:
         in:
@@ -139,10 +136,6 @@ it:
           unassigned: "non sono assegnati"
         assigned:
           label: "Assegnato a"
-    topics:
-      bulk:
-        unassign: "Annulla assegnazione argomenti"
-        assign: "Assegna argomenti"
     discourse_automation:
       scriptables:
         random_assign:

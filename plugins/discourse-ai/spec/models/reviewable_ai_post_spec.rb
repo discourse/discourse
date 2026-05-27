@@ -186,7 +186,7 @@ describe ReviewableAiPost do
           Fabricate(:user),
           raw: "this is the reply text",
           reply_to_post_number: post.post_number,
-          topic_id: post.topic,
+          topic_id: post.topic_id,
         )
       end
 
@@ -233,6 +233,15 @@ describe ReviewableAiPost do
 
         expect(result.transition_to).to eq :approved
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "links the staff action log to the reviewable" do
+        expect { reviewable.perform(admin, :delete_user) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
       end
     end
 

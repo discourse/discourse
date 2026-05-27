@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Topic Selector Component", type: :system do
+describe "Admin Site Setting Topic Selector Component" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:banner) { PageObjects::Components::AdminChangesBanner.new }
   fab!(:admin)

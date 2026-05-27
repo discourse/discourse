@@ -2,20 +2,29 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { debounce, schedule } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { createPopper } from "@popperjs/core";
-import emoji from "discourse/helpers/emoji";
+import {
+  computePosition,
+  flip,
+  limitShift,
+  offset,
+  shift,
+} from "@floating-ui/dom";
 import { bind } from "discourse/lib/decorators";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 const DISPLAY_MAX_USERS = 19;
-let _popperReactionUserPanel;
 
 export default class DiscourseReactionsListEmoji extends Component {
   @service siteSettings;
 
   @tracked loadingReactions = false;
+
+  get useNewMenu() {
+    return this.siteSettings.enable_new_post_reactions_menu;
+  }
 
   get elementId() {
     return `discourse-reactions-list-emoji-${this.args.post.id}-${this.args.reaction.id}`;
@@ -23,47 +32,44 @@ export default class DiscourseReactionsListEmoji extends Component {
 
   @action
   pointerOver(event) {
-    if (event.pointerType !== "mouse") {
+    if (this.useNewMenu) {
       return;
     }
 
-    this._setupPopper(".user-list");
+    if (event.pointerType !== "mouse" || !this.args.reaction.count) {
+      return;
+    }
+
+    this.showTooltip();
 
     if (!this.args.users?.length && !this.loadingReactions) {
       debounce(this, this._loadReactionUsers, 3000, true);
     }
   }
 
-  _setupPopper(selector) {
-    schedule("afterRender", () => {
-      const elementId = CSS.escape(this.elementId);
-      const trigger = document.querySelector(`#${elementId}`);
-      const popperElement = document.querySelector(`#${elementId} ${selector}`);
+  showTooltip() {
+    const referenceElement = document.getElementById(this.elementId);
+    const floatingElement = referenceElement.querySelector(".user-list");
 
-      if (popperElement) {
-        _popperReactionUserPanel && _popperReactionUserPanel.destroy();
-        _popperReactionUserPanel = createPopper(trigger, popperElement, {
-          placement: "bottom",
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, -5],
-              },
-            },
-            {
-              name: "preventOverflow",
-              options: {
-                padding: 5,
-              },
-            },
-          ],
-        });
-      }
+    computePosition(referenceElement, floatingElement, {
+      placement: "bottom",
+      middleware: [
+        offset(-5),
+        shift({ limiter: limitShift() }),
+        flip({ padding: 5 }),
+      ],
+    }).then(({ x, y }) => {
+      Object.assign(floatingElement.style, {
+        left: `${x}px`,
+        top: `${y}px`,
+      });
     });
   }
 
   _loadReactionUsers() {
+    if (!this.args.getUsers) {
+      return;
+    }
     this.loadingReactions = true;
     this.args.getUsers(this.args.reaction.id).finally(() => {
       this.loadingReactions = false;
@@ -95,41 +101,61 @@ export default class DiscourseReactionsListEmoji extends Component {
   }
 
   <template>
-    <div
-      class="discourse-reactions-list-emoji"
-      id={{this.elementId}}
-      {{on "pointerover" this.pointerOver}}
-    >
-      {{#if @reaction.count}}
-        {{emoji
-          @reaction.id
-          skipTitle=true
-          class=(if
-            this.siteSettings.discourse_reactions_desaturated_reaction_panel
-            "desaturated"
-            ""
-          )
-        }}
+    {{#if this.useNewMenu}}
+      <div
+        class="discourse-reactions-list-emoji"
+        id={{this.elementId}}
+        data-reaction-id={{@reaction.id}}
+      >
+        {{#if @reaction.count}}
+          {{dEmoji
+            @reaction.id
+            skipTitle=true
+            class=(if
+              this.siteSettings.discourse_reactions_desaturated_reaction_panel
+              "desaturated"
+              ""
+            )
+          }}
+        {{/if}}
+      </div>
+    {{else}}
+      <div
+        class="discourse-reactions-list-emoji"
+        id={{this.elementId}}
+        {{on "pointerover" this.pointerOver}}
+      >
+        {{#if @reaction.count}}
+          {{dEmoji
+            @reaction.id
+            skipTitle=true
+            class=(if
+              this.siteSettings.discourse_reactions_desaturated_reaction_panel
+              "desaturated"
+              ""
+            )
+          }}
 
-        <div class="user-list">
-          <div class="container">
-            <span class="heading">{{@reaction.id}}</span>
-            {{#each this.truncatedUsers as |user|}}
-              <span class="username">{{this.displayNameForUser user}}</span>
-            {{else}}
-              <div class="center"><div class="spinner small"></div></div>
-            {{/each}}
-            {{#if this.hiddenUserCount}}
-              <span class="other-users">
-                {{i18n
-                  "discourse_reactions.state_panel.more_users"
-                  count=this.hiddenUserCount
-                }}
-              </span>
-            {{/if}}
+          <div class="user-list">
+            <div class="container">
+              <span class="heading">{{@reaction.id}}</span>
+              {{#each this.truncatedUsers as |user|}}
+                <span class="username">{{this.displayNameForUser user}}</span>
+              {{else}}
+                <div class="center"><div class="spinner small"></div></div>
+              {{/each}}
+              {{#if this.hiddenUserCount}}
+                <span class="other-users">
+                  {{i18n
+                    "discourse_reactions.state_panel.more_users"
+                    count=this.hiddenUserCount
+                  }}
+                </span>
+              {{/if}}
+            </div>
           </div>
-        </div>
-      {{/if}}
-    </div>
+        {{/if}}
+      </div>
+    {{/if}}
   </template>
 }

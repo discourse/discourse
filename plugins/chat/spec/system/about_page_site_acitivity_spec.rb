@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Chat messages site activity in the about page", type: :system do
+describe "Chat messages site activity in the about page" do
   let(:about_page) { PageObjects::Pages::About.new }
 
   before do

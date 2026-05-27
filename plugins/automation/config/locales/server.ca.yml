@@ -16,3 +16,5 @@ ca:
         title: Tanca tema
       append_last_checked_by:
         button_text: Fet
+      set_topic_timer:
+        title: "Estableix el temporitzador del tema"

@@ -2,9 +2,10 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ComposerActionTitle from "discourse/components/composer-action-title";
 import ComposerBody from "discourse/components/composer-body";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -14,34 +15,93 @@ import ComposerSaveButton from "discourse/components/composer-save-button";
 import ComposerTitle from "discourse/components/composer-title";
 import ComposerToggles from "discourse/components/composer-toggles";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
-import DButton from "discourse/components/d-button";
 import LinkToInput from "discourse/components/link-to-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PopupInputTip from "discourse/components/popup-input-tip";
-import TextField from "discourse/components/text-field";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerContainer extends Component {
   @service composer;
+  @service languageNameLookup;
   @service site;
+  @service siteSettings;
   @service appEvents;
   @service keyValueStore;
 
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
+  }
+
+  get availableContentLocalizationLocales() {
+    const originalPostLocale = this.composer.model?.post?.locale;
+
+    return this.siteSettings.available_content_localization_locales
+      .filter(({ value }) => value !== originalPostLocale)
+      .map(({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      }));
+  }
+
+  @action
+  async updateSelectedTranslationLocale(locale) {
+    const { model } = this.composer;
+    const replyBefore = model.reply;
+    const titleBefore = model.title;
+    this.composer.selectedTranslationLocale = locale;
+
+    let localization;
+    try {
+      const { post_localizations } = await PostLocalization.find(model.post.id);
+      localization = post_localizations.find((l) => l.locale === locale);
+    } catch {}
+
+    // Bail if the user picked a different locale or typed during the fetch.
+    if (
+      this.composer.selectedTranslationLocale !== locale ||
+      model.reply !== replyBefore ||
+      model.title !== titleBefore
+    ) {
+      return;
+    }
+
+    if (localization) {
+      model.setProperties({
+        reply: localization.raw,
+        originalText: localization.raw,
+      });
+
+      if (localization.topic_localization) {
+        model.setProperties({
+          title: localization.topic_localization.title,
+          originalTitle: localization.topic_localization.title,
+        });
+      }
+    } else {
+      model.setProperties({
+        reply: "",
+        title: "",
+        originalText: "",
+        originalTitle: "",
+      });
+    }
   }
 
   @bind
@@ -154,6 +214,25 @@ export default class ComposerContainer extends Component {
                     @canUnlistTopic={{this.composer.canUnlistTopic}}
                   />
 
+                  {{#if this.composer.showTranslationSelector}}
+                    <DropdownSelectBox
+                      @nameProperty="name"
+                      @valueProperty="value"
+                      @value={{this.composer.selectedTranslationLocale}}
+                      @content={{this.availableContentLocalizationLocales}}
+                      @onChange={{this.updateSelectedTranslationLocale}}
+                      @options={{hash
+                        icon="language"
+                        showCaret=true
+                        filterable=true
+                        disabled=this.composer.loading
+                        placement="bottom-start"
+                        translatedNone=(i18n "composer.translations.select")
+                      }}
+                      class="translation-selector-dropdown btn-small"
+                    />
+                  {{/if}}
+
                   <PluginOutlet
                     @name="composer-action-after"
                     @outletArgs={{lazyHash model=this.composer.model}}
@@ -165,7 +244,7 @@ export default class ComposerContainer extends Component {
                     {{/if}}
                     {{#if this.composer.isWhispering}}
                       {{#if this.composer.model.noBump}}
-                        <span class="no-bump">{{icon "anchor"}}</span>
+                        <span class="no-bump">{{dIcon "anchor"}}</span>
                       {{/if}}
                     {{/if}}
                   {{/if}}
@@ -174,10 +253,12 @@ export default class ComposerContainer extends Component {
                     <LinkToInput
                       @onClick={{this.composer.displayEditReason}}
                       @showInput={{this.composer.showEditReason}}
-                      @icon="circle-info"
-                      class="display-edit-reason"
+                      @icon="pen-to-square"
+                      class="display-edit-reason
+                        {{if this.composer.showEditReason '--active'}}"
+                      title={{i18n "composer.edit_reason"}}
                     >
-                      <TextField
+                      <DTextField
                         @value={{this.composer.editReason}}
                         @id="edit-reason"
                         @maxlength="255"
@@ -219,7 +300,7 @@ export default class ComposerContainer extends Component {
                           @recipients={{this.composer.model.targetRecipients}}
                           @hasGroups={{this.composer.model.hasTargetGroups}}
                           @focusTarget={{this.composer.focusTarget}}
-                          class={{concatClass
+                          class={{dConcatClass
                             "users-input"
                             (if this.composer.showWarning "can-warn")
                           }}
@@ -264,7 +345,7 @@ export default class ComposerContainer extends Component {
                               composer=this.composer.model
                             }}
                           />
-                          <PopupInputTip
+                          <DPopupInputTip
                             @validation={{this.composer.categoryValidation}}
                           />
                         </div>
@@ -287,7 +368,7 @@ export default class ComposerContainer extends Component {
                               composer=this.composer.model
                             }}
                           />
-                          <PopupInputTip
+                          <DPopupInputTip
                             @validation={{this.composer.tagValidation}}
                           />
                         </div>
@@ -348,21 +429,21 @@ export default class ComposerContainer extends Component {
                   <DButton
                     @action={{this.composer.cancel}}
                     class="discard-button btn-transparent"
-                    @title="composer.discard"
-                    @label="composer.discard"
+                    @title={{this.composer.cancelLabel}}
+                    @label={{this.composer.cancelLabel}}
                   />
                 {{/unless}}
 
                 {{#if this.site.mobileView}}
                   <DButton
                     @action={{this.composer.cancel}}
-                    @icon="trash-can"
+                    @icon={{this.composer.cancelIcon}}
                     class="discard-button btn-transparent"
-                    @title="composer.discard"
+                    @title={{this.composer.cancelLabel}}
                   />
 
                   {{#if this.composer.model.noBump}}
-                    <span class="no-bump">{{icon "anchor"}}</span>
+                    <span class="no-bump">{{dIcon "anchor"}}</span>
                   {{/if}}
                 {{/if}}
 
@@ -389,7 +470,7 @@ export default class ComposerContainer extends Component {
                       {{if this.composer.isUploading 'hidden'}}"
                     aria-label={{i18n "composer.upload_title"}}
                   >
-                    {{icon this.composer.uploadIcon}}
+                    {{dIcon this.composer.uploadIcon}}
                   </a>
                 {{/if}}
 
@@ -401,7 +482,7 @@ export default class ComposerContainer extends Component {
                     {{on "click" this.composer.togglePreview}}
                     aria-label={{i18n "composer.show_preview"}}
                   >
-                    {{icon "desktop"}}
+                    {{dIcon "desktop"}}
                   </a>
                 {{/if}}
 
@@ -421,11 +502,11 @@ export default class ComposerContainer extends Component {
               }}
                 <div id="file-uploading">
                   {{#if this.composer.isProcessingUpload}}
-                    {{loadingSpinner size="small"}}<span>{{i18n
+                    {{dLoadingSpinner size="small"}}<span>{{i18n
                         "upload_selector.processing"
                       }}</span>
                   {{else}}
-                    {{loadingSpinner size="small"}}<span>{{i18n
+                    {{dLoadingSpinner size="small"}}<span>{{i18n
                         "upload_selector.uploading"
                       }}
                       {{this.composer.uploadProgress}}%</span>
@@ -436,7 +517,7 @@ export default class ComposerContainer extends Component {
                       href
                       id="cancel-file-upload"
                       {{on "click" this.composer.cancelUpload}}
-                    >{{icon "xmark"}}</a>
+                    >{{dIcon "xmark"}}</a>
                   {{/if}}
                 </div>
               {{/if}}
@@ -451,13 +532,13 @@ export default class ComposerContainer extends Component {
                     title={{this.composer.model.draftStatus}}
                   >
                     {{#if this.composer.model.draftConflictUser}}
-                      {{avatar
+                      {{dAvatar
                         this.composer.model.draftConflictUser
                         imageSize="small"
                       }}
-                      {{icon "user-pen"}}
+                      {{dIcon "user-pen"}}
                     {{else}}
-                      {{icon "triangle-exclamation"}}
+                      {{dIcon "triangle-exclamation"}}
                     {{/if}}
                     {{#if this.site.desktopView}}
                       {{this.composer.model.draftStatus}}
@@ -471,7 +552,7 @@ export default class ComposerContainer extends Component {
                   @action={{this.composer.togglePreview}}
                   @translatedTitle={{this.composer.toggleText}}
                   @icon="angles-left"
-                  class={{concatClass
+                  class={{dConcatClass
                     "btn-transparent btn-mini-toggle toggle-preview"
                     (unless this.composer.isPreviewVisible "active")
                   }}
@@ -490,14 +571,14 @@ export default class ComposerContainer extends Component {
               >{{i18n "composer.view_new_post"}}</a>
             {{else}}
               {{i18n "composer.saving"}}
-              {{loadingSpinner size="small"}}
+              {{dLoadingSpinner size="small"}}
             {{/if}}
           </div>
 
           <div class="draft-text">
             {{#if this.composer.model.topic}}
-              {{icon "share"}}
-              {{htmlSafe this.composer.draftTitle}}
+              {{dIcon "share"}}
+              {{trustHTML this.composer.draftTitle}}
             {{else}}
               {{i18n "composer.saved_draft"}}
             {{/if}}

@@ -5,6 +5,12 @@ module Email
     def initialize(mail, remove_attachments: true, truncate: true, rejected: false)
       @mail = Mail.new(mail)
       @mail.charset = "UTF-8"
+      # The default sort order may incorrectly put postscripts to the message
+      # (e.g. such as those that might be appended by mailing lists as in
+      # https://meta.discourse.org/t/377793/21) ahead of "real content"
+      #
+      # default is: "text/plain", "text/enriched", "text/html", "multipart/alternative"
+      @mail.body.set_sort_order([])
       @remove_attachments = remove_attachments
       @truncate = truncate
       @rejected = rejected
@@ -26,7 +32,12 @@ module Email
     private
 
     def truncate!
-      parts.each { |part| part.body = part.body.decoded.truncate(truncate_limit, omission: "") }
+      parts.each do |part|
+        part.body = part.body.decoded.truncate(truncate_limit, omission: "")
+        # let the serialiser re-encode it with an appropriate format - leaving
+        # the original one set tells Mail that the content is *already* encoded
+        part.content_transfer_encoding = nil
+      end
     end
 
     def parts

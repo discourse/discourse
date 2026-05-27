@@ -43,8 +43,6 @@ ko:
           title: "내비게이션 스택"
         categories_list:
           title: "카테고리 목록"
-        topic_link:
-          title: "글 링크"
         topic_list_item:
           title: "글 목록 항목"
         topic_statuses:
@@ -53,8 +51,6 @@ ko:
           title: "글 목록"
         basic_topic_list:
           title: "기본 글 목록"
-        footer_message:
-          title: "하단 메시지"
         signup_cta:
           title: "가입 CTA"
         topic_timer_info:

@@ -9,7 +9,6 @@ module DiscourseSubscriptions
 
     layout false
 
-    before_action :set_api_key
     skip_before_action :check_xhr
     skip_before_action :redirect_to_login_if_required
     skip_before_action :verify_authenticity_token, only: [:create]
@@ -20,6 +19,8 @@ module DiscourseSubscriptions
         sig_header = request.env["HTTP_STRIPE_SIGNATURE"]
         webhook_secret = SiteSetting.discourse_subscriptions_webhook_secret
 
+        return head :forbidden if webhook_secret.blank?
+
         event = ::Stripe::Webhook.construct_event(payload, sig_header, webhook_secret)
       rescue JSON::ParserError => e
         return render_json_error e.message
@@ -28,19 +29,21 @@ module DiscourseSubscriptions
       end
 
       case event[:type]
-      when "checkout.session.completed"
+      when "checkout.session.completed", "checkout.session.async_payment_succeeded"
         checkout_session = event[:data][:object]
 
-        if SiteSetting.discourse_subscriptions_enable_verbose_logging
-          Rails.logger.warn("checkout.session.completed data: #{checkout_session}")
-        end
-        email = checkout_session[:customer_email]
-
         return head :ok if checkout_session[:status] != "complete"
+        return head :ok if checkout_session[:payment_status] != "paid"
+
+        if SiteSetting.discourse_subscriptions_enable_verbose_logging
+          Rails.logger.warn("#{event[:type]} data: #{checkout_session}")
+        end
+
+        email = checkout_session[:customer_email]
         return render_json_error "email not found" if !email
 
         if checkout_session[:customer].nil?
-          customer = ::Stripe::Customer.create({ email: email })
+          customer = ::Stripe::Customer.create({ email: email }, stripe_request_opts)
           customer_id = customer[:id]
         else
           customer_id = checkout_session[:customer]
@@ -63,7 +66,11 @@ module DiscourseSubscriptions
         end
 
         line_items =
-          ::Stripe::Checkout::Session.list_line_items(checkout_session[:id], { limit: 1 })
+          ::Stripe::Checkout::Session.list_line_items(
+            checkout_session[:id],
+            { limit: 1 },
+            stripe_request_opts,
+          )
         item = line_items[:data].first
 
         group = plan_group(item[:price])
@@ -85,6 +92,7 @@ module DiscourseSubscriptions
           ::Stripe::Subscription.update(
             subscription,
             { metadata: { user_id: user.id, username: user.username } },
+            stripe_request_opts,
           )
         end
       when "customer.subscription.created"

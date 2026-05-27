@@ -2,13 +2,13 @@ import loadEmberExam from "ember-exam/test-support/load";
 import { setupEmberOnerrorValidation, start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
-import { loadAdmin, loadThemes } from "discourse/app";
+import { loadAdmin, loadThemesAndPlugins } from "discourse/app";
 import setupTests from "discourse/tests/setup-tests";
 import config from "../config/environment";
 
 document.addEventListener("discourse-init", async () => {
   await loadAdmin();
-  await loadThemes();
+  await loadThemesAndPlugins();
 
   if (!window.EmberENV.TESTS_FILE_LOADED) {
     throw new Error(
@@ -26,9 +26,10 @@ document.addEventListener("discourse-init", async () => {
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
-  const hasThemeJs = !!document.querySelector(
-    "link[rel=modulepreload][data-theme-id]"
-  );
+  const themeName = document.querySelector(
+    "link[rel=modulepreload][data-theme-name]"
+  )?.dataset.themeName;
+  const hasThemeJs = !!themeName;
 
   document.body.insertAdjacentHTML(
     "afterbegin",
@@ -49,6 +50,12 @@ document.addEventListener("discourse-init", async () => {
   setup(QUnit.assert);
   setupTests(config.APP);
   let loader = loadEmberExam();
+
+  if (window.Testem && (hasThemeJs || target !== "core")) {
+    window.Testem.on("test-result", (t) => {
+      t.name = `${themeName || target} - ${t.name}`;
+    });
+  }
 
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam

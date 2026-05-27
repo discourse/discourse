@@ -17,22 +17,27 @@ module Jobs
       end
 
       post = Post.find_by(id: args[:post_id])
-      return if post.blank? || post.raw.blank? || post.deleted_at.present? || post.user_id <= 0
+      return if post.blank? || post.raw.blank? || post.deleted_at.present?
+
+      force = args[:force] || false
+      return if post.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
 
       topic = post.topic
       return if topic.blank?
 
-      force = args[:force] || false
-
       if force
         # no restrictions
-      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
-        return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
-      else
-        if topic.archetype == Archetype.private_message &&
-             !TopicAllowedGroup.exists?(topic_id: topic.id)
+      elsif topic.archetype == Archetype.private_message
+        case SiteSetting.ai_translation_personal_messages
+        when "all"
+          # allow
+        when "group"
+          return unless TopicAllowedGroup.exists?(topic_id: topic.id)
+        else
           return
         end
+      else
+        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
       end
 
       # the user may fill locale in manually
@@ -47,16 +52,23 @@ module Jobs
       end
 
       return if detected_locale.blank?
-      locales = SiteSetting.content_localization_supported_locales.split("|")
+      locales = DiscourseAi::Translation.locales
       return if locales.blank?
+
+      existing_base_locales =
+        PostLocalization
+          .where(post_id: post.id)
+          .pluck(:locale)
+          .map { |l| l.split("_").first }
+          .to_set
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        exists = post.localizations.matching_locale(locale).exists?
+        base_locale = locale.split("_").first
+        exists = existing_base_locales.include?(base_locale)
 
-        if exists && !DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
-          next
-        end
+        has_quota = DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
+        next if !force && exists && !has_quota
 
         localize(post, locale)
       end
@@ -67,15 +79,13 @@ module Jobs
     private
 
     def localize(post, locale)
-      begin
-        DiscourseAi::Translation::PostLocalizer.localize(post, locale)
-      rescue FinalDestination::SSRFDetector::LookupFailedError
-        # do nothing, there are too many sporadic lookup failures
-      rescue => e
-        DiscourseAi::Translation::VerboseLogger.log(
-          "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-        )
-      end
+      DiscourseAi::Translation::PostLocalizer.localize(post, locale)
+    rescue FinalDestination::SSRFDetector::LookupFailedError
+      # do nothing, there are too many sporadic lookup failures
+    rescue => e
+      DiscourseAi::Translation::VerboseLogger.log(
+        "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+      )
     end
   end
 end

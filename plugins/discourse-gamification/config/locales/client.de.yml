@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_gamification: "Discourse – Gamifizierung"
+          discourse_gamification: "Discourse Gamifizierung"
   js:
     gamification_score: "Beifall"
     gamification:

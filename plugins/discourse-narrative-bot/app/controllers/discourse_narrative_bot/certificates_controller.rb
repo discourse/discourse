@@ -29,7 +29,7 @@ module DiscourseNarrativeBot
 
         svg = params[:type] == "advanced" ? generator.advanced_user_track : generator.new_user_track
 
-        respond_to { |format| format.svg { render inline: svg } }
+        respond_to { |format| format.svg { render body: svg, content_type: "image/svg+xml" } }
       end
     end
 

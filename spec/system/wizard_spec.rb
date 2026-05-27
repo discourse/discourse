@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Wizard", type: :system do
+describe "Wizard" do
   fab!(:admin)
 
   let(:wizard_page) { PageObjects::Pages::Wizard.new }
@@ -9,6 +9,8 @@ describe "Wizard", type: :system do
 
   it "successfully completes the setup wizard" do
     visit("/wizard")
+    screenshot_marker(label: "wizard")
+
     expect(wizard_page).to be_on_step("setup")
     wizard_page.fill_field("text", "title", "My Test Site")
     wizard_page.select_dropdown_option("default-locale", "en")
@@ -63,6 +65,37 @@ describe "Wizard", type: :system do
 
       expect(wizard_page).to be_on_step("setup")
       expect(page).to have_css(".wizard-container__field.text-title.invalid")
+    end
+
+    it "allows keyboard navigation of radio inputs" do
+      wizard_page.go_to_step("setup")
+
+      radio_field = wizard_page.find_field("radio", "login-required")
+      first_radio = radio_field.find("input[type='radio']", match: :first, visible: :all)
+      choice_id = first_radio[:value]
+
+      page.execute_script("arguments[0].focus()", first_radio)
+
+      expect(radio_field).to have_css(".wizard-container__radio-choice:focus-within")
+      expect(page.evaluate_script("document.activeElement.type")).to eq("radio")
+
+      first_radio.send_keys(:space)
+      expect(radio_field).to have_css(
+        ".wizard-container__radio-choice[data-choice-id='#{choice_id}'].--selected",
+      )
+    end
+
+    it "keeps arrow key navigation within same radio group" do
+      wizard_page.go_to_step("setup")
+
+      login_required_field = wizard_page.find_field("radio", "login-required")
+      private_radio =
+        login_required_field.find("[data-choice-id='private'] input[type='radio']", visible: :all)
+
+      private_radio.click
+      private_radio.send_keys(:right)
+
+      expect(login_required_field).to have_css("input[type='radio']:focus", visible: :all)
     end
   end
 end

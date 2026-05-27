@@ -50,8 +50,6 @@ da:
           title: "Navigation overlappet"
         categories_list:
           title: "Kategorioversigt"
-        topic_link:
-          title: "Emne Link"
         topic_list_item:
           title: "Emnelisteelement"
         topic_statuses:
@@ -60,8 +58,6 @@ da:
           title: "Emneliste"
         basic_topic_list:
           title: "Grundlæggende Emneliste"
-        footer_message:
-          title: "Sidefod Besked"
         signup_cta:
           title: "Tilmeld CTA"
         topic_timer_info:

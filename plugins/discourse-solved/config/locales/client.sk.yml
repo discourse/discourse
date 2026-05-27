@@ -10,11 +10,17 @@ sk:
       site_settings:
         categories:
           discourse_solved: "Discourse vyriešený"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Prijaté riešenia"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "prijať"
+          topic_solved_notification: "vyriešené"
     solutions: "Riešenia"
     solved:
       title: "Vyriešené"
@@ -40,9 +46,13 @@ sk:
       no_solved_topics_title: "Ešte ste nevyriešili žiadnu tému"
       no_solved_topics_title_others: "%{username} zatiaľ nevyriešil žiadne témy"
       no_solved_topics_body: "Keď poskytnete užitočnú odpoveď na tému, môže byť vaša odpoveď vybraná ako riešenie vlastníkom témy alebo zamestnancami."
+      move_post_cancel: "Zrušiť"
+      confirm_solved_removal_confirm: "Potvrďte"
+      confirm_solved_removal_cancel: "Zrušiť"
       no_answer:
         title: Bola vaša otázka zodpovedaná?
         description: "Zvýraznite odpoveď a pomôžte ostatným pomocou tlačidla riešenia pod správnou odpoveďou."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "Váš príspevok bol označený ako riešenie"
     topic_statuses:

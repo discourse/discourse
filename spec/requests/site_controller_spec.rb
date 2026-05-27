@@ -45,6 +45,37 @@ RSpec.describe SiteController do
     end
   end
 
+  describe "#banner" do
+    fab!(:admin)
+    fab!(:group)
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+    before { ApplicationLayoutPreloader.banner_json_cache.clear }
+    after { ApplicationLayoutPreloader.banner_json_cache.clear }
+
+    it "does not expose banner content from a read-restricted category to anonymous users" do
+      topic = Fabricate(:topic, category: private_category, archetype: Archetype.banner)
+      Fabricate(:post, topic: topic, raw: "secret banner content")
+
+      get "/site/banner.json"
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json).to eq({})
+    end
+
+    it "does not expose banner content from a read-restricted category to regular users" do
+      user = Fabricate(:user)
+      topic = Fabricate(:topic, category: private_category, archetype: Archetype.banner)
+      Fabricate(:post, topic: topic, raw: "secret banner content")
+
+      sign_in(user)
+      get "/site/banner.json"
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json).to eq({})
+    end
+  end
+
   describe "#statistics" do
     after { DiscoursePluginRegistry.reset! }
 

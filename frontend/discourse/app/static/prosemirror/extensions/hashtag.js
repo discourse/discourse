@@ -47,10 +47,20 @@ const extension = {
 
   inputRules: [
     {
-      match: /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
+      match:
+        /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-](?:[\u00C0-\u1FFF\u2C00-\uD7FF\w:.-]{0,99}[\u00C0-\u1FFF\u2C00-\uD7FF\w:-])?)\s$/,
       handler: (state, match, start, end) => {
         const hashtagStart = start + match[1].length;
         const name = match[2].slice(1);
+
+        // Don't convert anchors in URLs to hashtags
+        const $pos = state.doc.resolve(hashtagStart);
+        if (
+          $pos.marks().some((mark) => mark.type === state.schema.marks.link)
+        ) {
+          return false;
+        }
+
         return (
           state.selection.$from.nodeBefore?.type !==
             state.schema.nodes.hashtag &&
@@ -175,7 +185,8 @@ const extension = {
                   getHashtagTypeClasses()[validHashtag.type];
                 const hashtagIconHTML =
                   validHashtag.iconHtml ||
-                  hashtagTypeClass.generateIconHTML(validHashtag).trim();
+                  hashtagTypeClass?.generateIconHTML(validHashtag).trim() ||
+                  "";
 
                 domNode.innerHTML = `${hashtagIconHTML}${tagText}`;
               }

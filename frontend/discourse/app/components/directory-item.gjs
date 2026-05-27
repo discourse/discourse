@@ -1,69 +1,74 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-  tagName,
-} from "@ember-decorators/component";
+import { computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import DirectoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
-import UserInfo from "discourse/components/user-info";
-import icon from "discourse/helpers/d-icon";
 import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
 import directoryItemLabel from "discourse/helpers/directory-item-label";
 import directoryItemValue from "discourse/helpers/directory-item-value";
-import formatDuration from "discourse/helpers/format-duration";
-import { propertyEqual } from "discourse/lib/computed";
+import { deepEqual } from "discourse/lib/object";
+import DUserInfo from "discourse/ui-kit/d-user-info";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("div")
-@classNames("directory-table__row")
-@classNameBindings("me")
-@attributeBindings("role")
+@tagName("")
 export default class DirectoryItem extends Component {
-  role = "row";
-
-  @propertyEqual("item.user.id", "currentUser.id") me;
   columns = null;
 
   <template>
-    <div class="directory-table__cell" role="rowheader">
-      <UserInfo @user={{this.item.user}} @headingLevel={{3}} />
-    </div>
+    <div
+      role="row"
+      class={{dConcatClass "directory-table__row" (if this.me "me")}}
+      ...attributes
+    >
+      <div class="directory-table__cell" role="rowheader">
+        <DUserInfo @user={{this.item.user}} @headingLevel={{3}} />
+      </div>
 
-    {{#each this.columns as |column|}}
-      {{#if (directoryColumnIsUserField column=column)}}
-        <div class="directory-table__cell--user-field" role="cell">
-          <span class="directory-table__label">
-            <span>{{column.name}}</span>
-          </span>
-          <DirectoryItemUserFieldValue @item={{this.item}} @column={{column}} />
-        </div>
-      {{else}}
-        <div class="directory-table__cell" role="cell">
-          <span class="directory-table__label">
-            <span>
-              {{#if column.icon}}
-                {{icon column.icon}}
-              {{/if}}
-              {{directoryItemLabel item=this.item column=column}}
+      {{#each this.columns as |column|}}
+        {{#if (directoryColumnIsUserField column=column)}}
+          <div class="directory-table__cell--user-field" role="cell">
+            <span class="directory-table__label">
+              <span>{{column.name}}</span>
             </span>
+            <DirectoryItemUserFieldValue
+              @item={{this.item}}
+              @column={{column}}
+            />
+          </div>
+        {{else}}
+          <div class="directory-table__cell" role="cell">
+            <span class="directory-table__label">
+              <span>
+                {{#if column.icon}}
+                  {{dIcon column.icon}}
+                {{/if}}
+                {{directoryItemLabel item=this.item column=column}}
+              </span>
+            </span>
+            {{directoryItemValue item=this.item column=column}}
+          </div>
+        {{/if}}
+
+      {{/each}}
+
+      {{#if this.showTimeRead}}
+        <div class="directory-table__cell time-read" role="cell">
+          <span class="directory-table__label">
+            <span>{{i18n "directory.time_read"}}</span>
           </span>
-          {{directoryItemValue item=this.item column=column}}
+          <span class="directory-table__value">
+            {{dFormatDuration this.item.time_read}}
+          </span>
         </div>
       {{/if}}
-
-    {{/each}}
-
-    {{#if this.showTimeRead}}
-      <div class="directory-table__cell time-read" role="cell">
-        <span class="directory-table__label">
-          <span>{{i18n "directory.time_read"}}</span>
-        </span>
-        <span class="directory-table__value">
-          {{formatDuration this.item.time_read}}
-        </span>
-      </div>
-    {{/if}}
+    </div>
   </template>
+
+  @computed("item.user.id", "currentUser.id")
+  get me() {
+    return deepEqual(this.item?.user?.id, this.currentUser?.id);
+  }
 }

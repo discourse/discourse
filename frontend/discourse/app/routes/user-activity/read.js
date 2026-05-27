@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import UserAction from "discourse/models/user-action";
@@ -25,7 +25,7 @@ export default class UserActivityRead extends UserTopicListRoute {
 
   emptyState() {
     const title = i18n("user_activity.no_read_topics_title");
-    const body = htmlSafe(
+    const body = trustHTML(
       i18n("user_activity.no_read_topics_body", {
         topUrl: getURL("/top"),
         categoriesUrl: getURL("/categories"),

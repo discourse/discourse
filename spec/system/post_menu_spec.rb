@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post menu", type: :system do
+describe "Post menu" do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic, reload: true)
@@ -133,6 +133,31 @@ describe "Post menu", type: :system do
       expect(topic_page).to have_no_post_admin_menu
       topic_page.click_post_action_button(post, :admin)
       expect(topic_page).to have_post_admin_menu
+    end
+
+    describe "with change_post_ownership_allowed_groups" do
+      fab!(:allowed_group, :group)
+      fab!(:allowed_group_user) { Fabricate(:user, groups: [allowed_group]) }
+
+      before { SiteSetting.change_post_ownership_allowed_groups = "#{allowed_group.id}" }
+
+      it "displays the admin button when the group is allowed" do
+        sign_in(allowed_group_user)
+
+        topic_page.visit_topic(post.topic)
+
+        expect(topic_page).to have_post_action_button(post, :admin)
+        expect(topic_page).to have_post_action_button(post2, :admin)
+      end
+      it "does not display the admin button when the group is not allowed" do
+        SiteSetting.change_post_ownership_allowed_groups = ""
+        sign_in(allowed_group_user)
+
+        topic_page.visit_topic(post.topic)
+
+        expect(topic_page).to have_no_post_action_button(post, :admin)
+        expect(topic_page).to have_no_post_action_button(post2, :admin)
+      end
     end
   end
 
@@ -488,6 +513,7 @@ describe "Post menu", type: :system do
     end
 
     it "shows the users who liked when clicking on the like count" do
+      SiteSetting.enable_new_post_reactions_menu = true
       PostActionCreator.like(user, post)
       PostActionCreator.like(admin, post)
 
@@ -496,6 +522,16 @@ describe "Post menu", type: :system do
       # show users who liked on
       topic_page.click_post_action_button(post, :like_count)
       expect(topic_page).to have_who_liked_on_post(post, count: 2)
+    end
+
+    it "does not allow silenced users to like posts" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      sign_in(user)
+
+      topic_page.visit_topic(post.topic)
+
+      expect(topic_page).to have_no_post_action_button(post, :like)
     end
   end
 
@@ -522,7 +558,7 @@ describe "Post menu", type: :system do
       # don't show when the post has reads = 0
       expect(topic_page).to have_no_post_action_button(pm_post2, :read)
 
-      # dont't show on regular posts
+      # don't show on regular posts
       topic_page.visit_topic(post.topic)
       expect(topic_page).to have_no_post_action_button(post, :read)
       expect(topic_page).to have_no_post_action_button(post2, :read)

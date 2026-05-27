@@ -43,8 +43,6 @@ nb_NO:
           title: "Navigasjon Stablet"
         categories_list:
           title: "Liste over kategorier"
-        topic_link:
-          title: "Emne Link"
         topic_list_item:
           title: "Element for emne liste"
         topic_statuses:
@@ -53,8 +51,6 @@ nb_NO:
           title: "Emne liste"
         basic_topic_list:
           title: "Enkel Emneliste"
-        footer_message:
-          title: "Bunntekst Melding"
         signup_cta:
           title: "Registrering av CTA"
         topic_timer_info:

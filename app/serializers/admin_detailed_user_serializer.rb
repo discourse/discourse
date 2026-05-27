@@ -21,6 +21,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_be_merged,
              :full_suspend_reason,
              :suspended_till,
+             :full_silence_reason,
              :silence_reason,
              :penalty_counts,
              :next_penalty,
@@ -37,7 +38,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :api_key_count,
              :external_ids,
              :similar_users_count,
-             :latest_export
+             :latest_export,
+             :upcoming_changes_stats
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
@@ -182,5 +184,17 @@ class AdminDetailedUserSerializer < AdminUserSerializer
         .first
 
     UserExportSerializer.new(export, scope:).as_json if export
+  end
+
+  def include_latest_export?
+    scope.can_export_entity?("user_archive", object.id)
+  end
+
+  def upcoming_changes_stats
+    object.upcoming_change_stats(scope)
+  end
+
+  def include_upcoming_changes_stats?
+    scope.is_staff?
   end
 end

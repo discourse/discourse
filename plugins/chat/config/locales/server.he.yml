@@ -145,16 +145,12 @@ he:
           title: "מחיקת ההודעה"
           description: "למחוק את ההודעה כדי שמשתמשים לא יוכלו לראות אותה."
         delete_and_agree:
-          title: "התעלמות מהדגל ומחיקת ההודעה"
           description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת ההודעה."
         disagree_and_restore:
           title: "חוסר הסכמה ושחזור ההודעה"
           description: "לשחזר את ההודעה כדי שכל המשתמשים יוכלו לראות אותה."
-        disagree:
-          title: "אי קבלה"
         ignore:
-          title: "לא לעשות דבר"
-          description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+          title: "התעלמות מדגל"
       direct_messages:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"
@@ -217,6 +213,9 @@ he:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
         is_already_in_use: "כבר בשימוש"
+    bookmarkable:
+      notification_title_channel: "הודעה ב־%{channel_name}"
+      notification_title_direct_message: "הודעה עם %{channel_name}"
     personal_chat: "צ׳אט אישי"
     onebox:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"
@@ -248,6 +247,9 @@ he:
         other_type: "נוסף אזכור של ‎%{identifier} בצ׳אט אישי על ידי %{username}"
       new_chat_message: 'נשלחה הודעה על ידי %{username} ב־„%{channel}”'
       new_direct_chat_message: "נשלחה הודעה על ידי %{username} בצ׳אט אישי"
+    actions:
+      chat_reply:
+        title: להגיב
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -284,25 +286,18 @@ he:
           two: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
           many: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
           other: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
-        watched_threads:
-          one: "[%{site_name}] הודעת שרשור חדשה בערוץ %{channel} ובעוד %{count}"
-          two: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
-          many: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
-          other: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
         chat_dm_1:
           one: "[%{site_name}] הודעה חדשה מאת %{name}"
           two: "[%{site_name}] הודעות חדשות מאת %{name}"
           many: "[%{site_name}] הודעות חדשות מאת %{name}"
           other: "[%{site_name}] הודעות חדשות מאת %{name}"
         chat_dm_2: "[%{site_name}] הודעות חדשות שנשלחות מאת %{name_1} וגם %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] הודעות חדשות מאת %{name} ועוד %{count}"
         chat_channel_1:
           one: "[%{site_name}] הודעה חדשה תחת %{channel}"
           two: "[%{site_name}] הודעות חדשות תחת %{channel}"
           many: "[%{site_name}] הודעות חדשות תחת %{channel}"
           other: "[%{site_name}] הודעות חדשות תחת %{channel}"
         chat_channel_2: "[%{site_name}] הודעה חדשה בערוץ %{channel_1} ובערוץ %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] הודעות חדשות בערוץ %{channel} ובעוד %{count}"
         chat_channel_and_dm: "[%{site_name}] הודעות חדשות בערוץ %{channel} וגם מאת %{name}"
       unsubscribe: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך או %{unsubscribe_link} כדי להפסיק לקבל הודעות."
       unsubscribe_no_link: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך."
@@ -316,8 +311,10 @@ he:
         two: "הצגת %{count} הודעות נוספות"
         many: "הצגת %{count} הודעות נוספות"
         other: "הצגת %{count} הודעות נוספות"
+      your_chat_settings: "העדפת דוא״ל צ׳אט"
   unsubscribe:
     chat_summary:
+      select_title: "הגדרת הודעות תקציר צ׳אט אל:"
       never: לעולם לא
       when_away: רק כשלא במערכת
   category:

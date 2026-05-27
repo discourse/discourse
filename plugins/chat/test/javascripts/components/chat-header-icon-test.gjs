@@ -6,9 +6,9 @@ import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
-import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/controllers/preferences/chat";
+import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
-module("Discourse Chat | Component | chat-header-icon", function (hooks) {
+module("Component | chat-header-icon", function (hooks) {
   setupRenderingTest(hooks);
 
   test("full page - never separated sidebar mode", async function (assert) {

@@ -26,7 +26,8 @@ class UserField < ActiveRecord::Base
   scope :user_editable_text_fields, -> { where(field_type: %w[text textarea]) }
 
   enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
-  enum :field_type_enum, { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4 }.freeze
+  enum :field_type_enum,
+       { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4, date: 5 }.freeze
   alias_attribute :field_type, :field_type_enum
 
   def self.max_length
@@ -38,7 +39,7 @@ class UserField < ActiveRecord::Base
   end
 
   def queue_index_search
-    Jobs.enqueue(:index_user_fields_for_search, user_field_id: self.id)
+    Jobs.enqueue(:index_user_fields_for_search, user_field_id: id)
   end
 
   private
@@ -52,7 +53,7 @@ class UserField < ActiveRecord::Base
 
   def sanitize_description
     if description_changed?
-      self.description = sanitize_field(self.description, additional_attributes: ["target"])
+      self.description = sanitize_field(description, additional_attributes: ["target"])
     end
   end
 end

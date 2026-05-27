@@ -103,13 +103,7 @@
 }
 
 .admin-site-settings-filter-controls {
-  background: var(--primary-very-low);
-  margin-bottom: 1em;
-
-  .controls,
-  .search.controls {
-    background: var(--primary-very-low);
-  }
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 .admin-config-area-empty-list,
@@ -131,7 +125,8 @@
   flex-direction: column;
   width: calc(100% - 1em);
   border: 1px solid var(--content-border-color);
-  padding: 0.5em;
+  padding: var(--space-4);
+  border-radius: var(--d-border-radius);
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;
@@ -170,12 +165,12 @@
     }
   }
 
-  #control-logo_dark .image-uploader.has-image .uploaded-image-preview {
+  #control-logo_dark .file-uploader.has-image .file-uploader__preview {
     background-color: #333;
     background-clip: border-box;
   }
 
-  .form-kit__field-toggle .form-kit__container-content.--full {
+  .form-kit__field-toggle.--full .form-kit__container-content {
     // avoid label wrapping
     width: var(--form-kit-small-input) !important;
   }
@@ -276,6 +271,17 @@
             font-size: var(--base-font-size-largest);
           }
         }
+      }
+    }
+  }
+}
+
+.admin-welcome-banner-form {
+  #control-enabledThemes {
+    .form-kit__field.--large .form-kit__container-content {
+      .d-multi-select-trigger__selection-label {
+        // show selection full names (overrides unnecessary truncation)
+        max-width: unset;
       }
     }
   }

@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
@@ -7,7 +7,6 @@ import { isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { REVIEWABLE_UNKNOWN_TYPE_SOURCE } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexController extends Controller {
@@ -51,8 +50,8 @@ export default class ReviewIndexController extends Controller {
   filterScoreType = null;
   unknownTypeSource = REVIEWABLE_UNKNOWN_TYPE_SOURCE;
 
-  @discourseComputed("reviewableTypes")
-  allTypes() {
+  @computed("reviewableTypes")
+  get allTypes() {
     return (this.reviewableTypes || []).map((type) => {
       const translationKey = underscore(type).replace(/[^\w]+/g, "_");
 
@@ -63,13 +62,13 @@ export default class ReviewIndexController extends Controller {
     });
   }
 
-  @discourseComputed("scoreTypes")
-  allScoreTypes() {
+  @computed("scoreTypes")
+  get allScoreTypes() {
     return this.scoreTypes || [];
   }
 
-  @discourseComputed
-  priorities() {
+  @computed
+  get priorities() {
     return ["any", "low", "medium", "high"].map((priority) => {
       return {
         id: priority,
@@ -78,8 +77,8 @@ export default class ReviewIndexController extends Controller {
     });
   }
 
-  @discourseComputed
-  sortOrders() {
+  @computed
+  get sortOrders() {
     return ["score", "score_asc", "created_at", "created_at_asc"].map(
       (order) => {
         return {
@@ -90,8 +89,8 @@ export default class ReviewIndexController extends Controller {
     );
   }
 
-  @discourseComputed
-  statuses() {
+  @computed
+  get statuses() {
     return [
       "pending",
       "approved",
@@ -105,9 +104,9 @@ export default class ReviewIndexController extends Controller {
     });
   }
 
-  @discourseComputed("filtersExpanded")
-  toggleFiltersIcon(filtersExpanded) {
-    return filtersExpanded ? "chevron-up" : "chevron-down";
+  @computed("filtersExpanded")
+  get toggleFiltersIcon() {
+    return this.filtersExpanded ? "chevron-up" : "chevron-down";
   }
 
   setRange(range) {
@@ -118,9 +117,9 @@ export default class ReviewIndexController extends Controller {
     next(() => this.send("refreshRoute"));
   }
 
-  @discourseComputed("unknownReviewableTypes")
-  displayUnknownReviewableTypesWarning(unknownReviewableTypes) {
-    return unknownReviewableTypes?.length > 0 && this.currentUser.admin;
+  @computed("unknownReviewableTypes")
+  get displayUnknownReviewableTypesWarning() {
+    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
   }
 
   @action

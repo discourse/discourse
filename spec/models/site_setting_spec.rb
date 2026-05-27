@@ -168,22 +168,22 @@ RSpec.describe SiteSetting do
 
   describe "#all_settings" do
     it "does not include the `default_locale` setting if include_locale_setting is false" do
-      expect(SiteSetting.all_settings.map { |s| s[:setting] }).to include("default_locale")
+      expect(SiteSetting.all_settings.map { |s| s[:setting] }).to include(:default_locale)
       expect(
         SiteSetting.all_settings(include_locale_setting: false).map { |s| s[:setting] },
-      ).not_to include("default_locale")
+      ).not_to include(:default_locale)
     end
 
     it "does not include the `default_locale` setting if filter_categories are specified" do
       expect(
         SiteSetting.all_settings(filter_categories: ["branding"]).map { |s| s[:setting] },
-      ).not_to include("default_locale")
+      ).not_to include(:default_locale)
     end
 
     it "does not include the `default_locale` setting if filter_plugin is specified" do
       expect(
         SiteSetting.all_settings(filter_plugin: "chat").map { |s| s[:setting] },
-      ).not_to include("default_locale")
+      ).not_to include(:default_locale)
     end
 
     it "includes only settings for the specified category" do
@@ -327,6 +327,145 @@ RSpec.describe SiteSetting do
         UploadReference.count
       }.by(-2)
     end
+
+    it "creates upload references for objects with upload URLs" do
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(2)
+
+      upload_references =
+        UploadReference.where(target: SiteSetting.find_by(name: "test_objects_with_uploads"))
+
+      expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
+    end
+
+    it "stores object upload fields as upload IDs when set with upload URLs" do
+      old_provider = SiteSetting.provider
+      SiteSetting.provider = provider
+      SiteSetting.refresh!
+
+      begin
+        SiteSetting.ui_cards_setting =
+          JSON.generate([{ "title" => "Build a community", "image" => upload.url }])
+
+        setting = provider.find("ui_cards_setting")
+        expect(JSON.parse(setting.value)).to eq(
+          [{ "title" => "Build a community", "image" => upload.id }],
+        )
+      ensure
+        SiteSetting.provider = old_provider
+        SiteSetting.refresh!
+      end
+    end
+
+    it "hydrates object upload fields in client settings" do
+      settings = new_settings(SiteSettings::LocalProcessProvider.new)
+      settings.setting(
+        :ui_cards_setting,
+        "[]",
+        type: :objects,
+        client: true,
+        schema: {
+          name: "card",
+          identifier: "title",
+          properties: {
+            title: {
+              type: "string",
+              required: true,
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        },
+      )
+
+      settings.ui_cards_setting =
+        JSON.generate([{ "title" => "Build a community", "image" => upload.url }])
+
+      client_settings = JSON.parse(settings.client_settings_json_uncached)
+      expect(JSON.parse(client_settings["ui_cards_setting"])).to eq(
+        [{ "title" => "Build a community", "image" => upload.url }],
+      )
+    end
+
+    it "removes upload references when uploads are removed from objects" do
+      # First save with two uploads
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      provider.save(
+        "test_objects_with_uploads",
+        objects_value,
+        SiteSettings::TypeSupervisor.types[:objects],
+      )
+
+      setting = SiteSetting.find_by(name: "test_objects_with_uploads")
+      expect(UploadReference.where(target: setting).count).to eq(2)
+
+      # Now save with only one upload - should remove the other reference
+      objects_value_updated = JSON.generate([{ "name" => "object1", "upload_id" => upload.url }])
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value_updated,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(-1)
+
+      expect(UploadReference.where(target: setting).pluck(:upload_id)).to contain_exactly(upload.id)
+    end
+
+    it "removes all upload references when all uploads are removed from objects" do
+      # First save with uploads
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.url },
+            { "name" => "object2", "upload_id" => upload2.url },
+          ],
+        )
+
+      provider.save(
+        "test_objects_with_uploads",
+        objects_value,
+        SiteSettings::TypeSupervisor.types[:objects],
+      )
+
+      setting = SiteSetting.find_by(name: "test_objects_with_uploads")
+      expect(UploadReference.where(target: setting).count).to eq(2)
+
+      # Now save with no uploads - should remove all references
+      objects_value_empty = JSON.generate([{ "name" => "object1" }])
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value_empty,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(-2)
+
+      expect(UploadReference.where(target: setting).count).to eq(0)
+    end
   end
 
   describe "Upload" do
@@ -365,6 +504,36 @@ RSpec.describe SiteSetting do
           expect(SiteSetting.Upload.use_dualstack_endpoint).to eq(true)
         end
       end
+    end
+  end
+
+  describe ".content_localization_locales" do
+    it "returns configured supported locales" do
+      SiteSetting.content_localization_supported_locales = "es|fr|de"
+      SiteSetting.default_locale = "es"
+
+      expect(SiteSetting.content_localization_locales).to contain_exactly("es", "fr", "de")
+    end
+
+    it "includes default locale when not in supported locales" do
+      SiteSetting.content_localization_supported_locales = "es|fr"
+      SiteSetting.default_locale = "en"
+
+      expect(SiteSetting.content_localization_locales).to contain_exactly("es", "fr", "en")
+    end
+
+    it "does not duplicate default locale when already in supported locales" do
+      SiteSetting.content_localization_supported_locales = "en|es|fr"
+      SiteSetting.default_locale = "en"
+
+      expect(SiteSetting.content_localization_locales).to contain_exactly("en", "es", "fr")
+    end
+
+    it "returns only default locale when no supported locales configured" do
+      SiteSetting.content_localization_supported_locales = ""
+      SiteSetting.default_locale = "en"
+
+      expect(SiteSetting.content_localization_locales).to eq(["en"])
     end
   end
 end

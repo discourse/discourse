@@ -47,8 +47,6 @@ id:
           title: "Navigasi Bertumpuk"
         categories_list:
           title: "Daftar Kategori"
-        topic_link:
-          title: "Tautan Topik"
         topic_list_item:
           title: "Item Daftar Topik"
         topic_statuses:
@@ -57,8 +55,6 @@ id:
           title: "Daftar Topik"
         basic_topic_list:
           title: "Daftar Topik Dasar"
-        footer_message:
-          title: "Pesan Footer"
         signup_cta:
           title: "CTA Pendaftaran"
         topic_timer_info:

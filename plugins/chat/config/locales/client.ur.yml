@@ -9,41 +9,47 @@ ur:
     admin:
       site_settings:
         categories:
-          chat: گپ شپ
+          chat: گفتگو
   js:
     admin:
       site_settings:
         chat_separate_sidebar_mode:
           always: "ہمیشہ"
-          fullscreen: "جب چیٹ پوری اسکرین میں ہو۔"
+          fullscreen: "جب گفتگو پوری اسکرین میں ہو۔"
           never: "کبھی نہیں"
       logs:
         staff_actions:
           actions:
-            chat_channel_status_change: "چیٹ چینل کی حیثیت بدل گئی"
-            chat_channel_delete: "چیٹ چینل حذف کر دیا گیا۔"
+            chat_channel_status_change: "گفتگو کے چینل کی حیثیت بدل گئی"
+            chat_channel_delete: "گفتگو کے چینل حذف کر دیا گیا"
             chat_auto_remove_membership: "چینلز سے رکنیتیں خود بخود ہٹا دی گئیں"
       api:
         scopes:
           descriptions:
             chat:
-              create_message: "ایک مخصوص چینل میں چیٹ پیغام بنائیں۔"
+              create_message: "ایک مخصوص چینل میں گفتگو کے پیغام بنائیں۔"
       web_hooks:
         chat_event:
-          group_name: "چیٹ کے واقعات"
+          group_name: "گفتگو کے واقعات"
           chat_message_created: "پیغام بن گیا"
           chat_message_edited: "پیغام میں ترمیم"
           chat_message_trashed: "پیغام ضائع ہوگیا"
           chat_message_restored: "پیغام بحال ہوا"
     about:
-      chat_messages_count: "چیٹ پیغامات"
-      chat_channels_count: "گپ شپ کے چینلز"
-      chat_users_count: "گپ شپ اراکین"
+      chat_messages_count: "گفتگو کے پیغامات"
+      chat_channels_count: "گفتگو کے چینلز"
+      chat_users_count: "گفتگو کے اراکین"
       activities:
         chat_messages:
-          one: "%{formatted_number} چیٹ پیغام"
-          other: "%{formatted_number} چیٹ کے پیغامات"
+          one: "%{formatted_number} گفتگو کا پیغام"
+          other: "%{formatted_number} گفتگو کے پیغامات"
     chat:
+      edit_category:
+        tab_title: "گفتگو"
+        channel: "چَینل"
+        description: "تفصیل"
+        actions: "عمل"
+        settings: "ترتیبات"
       text_copied: متن کلپ بورڈ پر کاپی ہوا
       link_copied: رابطہ کلپ بورڈ پر کاپی ہوا
       back_to_forum: "فورم"
@@ -51,13 +57,14 @@ ur:
       dates:
         yesterday: "کَل"
       all_loaded: "تمام پیغامات دکھا رہے"
-      already_enabled: "اس موضوع پر چیٹ پہلے ہی فعال ہے۔ براہ کرم ریفریش کریں۔"
-      disabled_for_topic: "اس موضوع پر چیٹ غیر فعال ہے۔"
+      already_enabled: "اس موضوع پر گفتگو پہلے ہی فعال ہے۔ براہ کرم ریفریش کریں۔"
+      disabled_for_topic: "اس موضوع پر گفتگو غیر فعال ہے۔"
       bot: "بوٹ"
       create: "بنائیں"
       cancel: "منسوخ"
       cancel_reply: "جواب منسوخ کریں"
       chat_channels: "چینلز"
+      pinned: "پِن ہوا"
       browse_all_channels: "تمام چینلز کو براؤز کریں"
       see_in: "میں دیکھیں"
       move_to_channel:
@@ -81,6 +88,7 @@ ur:
         join_channel: "چینل جوائن کریں"
         leave_channel: "چینل چھوڑیں"
         leave_groupchat_info: "اس گروپ چیٹ کو چھوڑنے سے، آپ کو اس تک مزید رسائی حاصل نہیں ہوگی اور آپ کو اس سے متعلق اطلاعات موصول نہیں ہوں گی۔ دوبارہ شامل ہونے کے لیے، آپ کو گروپ چیٹ کے کسی رکن کے ذریعے دوبارہ مدعو کرنے کی ضرورت ہوگی۔"
+        notification_settings_context: "اطلاعات"
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
         save_label:
@@ -109,8 +117,8 @@ ur:
         create: "نیا چینل"
       close: "بند کریں"
       remove: "خارج کریں"
-      collapse: "چیٹ دراز کو ختم کریں"
-      expand: "چیٹ دراز کو پھیلائیں"
+      collapse: "گفتگو کے دراز کو ختم کریں"
+      expand: "گفتگو کے دراز کو پھیلائیں"
       confirm_flag: "کیا آپ واقعی %{username}کے پیغام کو نشان زد کرنا چاہتے ہیں؟"
       deleted:
         one: "ایک پیغام حذف کر دیا گیا۔ [دیکھیں]"
@@ -121,13 +129,14 @@ ur:
       muted: "خاموش کِیا ہوا"
       joined: "شمولیت اختیار کی"
       empty_state:
-        direct_message_cta: "ذاتی چیٹ شروع کریں"
-        direct_message: "آپ ایک یا زیادہ اراکین کے ساتھ ذاتی بات چیت بھی شروع کر سکتے ہیں۔"
+        direct_message_cta: "ذاتی گفتگو شروع کریں"
+        direct_message: "آپ ایک یا زیادہ اراکین کے ساتھ ذاتی گفتگو بھی شروع کر سکتے ہیں۔"
         title: "کوئی چینل نہیں ملا"
         my_threads: "آپ کے پاس ابھی تک کوئی دھاگہ نہیں ہے۔ جن دھاگوں میں آپ حصہ لیتے ہیں وہ یہاں دکھائے جائیں گے۔"
       email_frequency:
         description: "ہم صرف آپ کو ای میل کریں گے اگر ہم نے آپ کو پچھلے 15 منٹ میں نہیں دیکھا۔"
         never: "کبھی نہیں"
+        title: "جب مجھے براہِ راست گفتگو یا گروپ گفتگو میں پیغام بھیجا جائے مجھے ای میل کریں۔"
         when_away: "صرف دور ہونے پر"
       header_indicator_preference:
         title: "ہیڈر میں سرگرمی کا اشارہ دکھائیں"
@@ -140,16 +149,14 @@ ur:
       send_shortcut:
         enter:
           label: "Enter کے ذریعے بھیجیں"
-          description: "Shift + Enter کے ذریعے نئی لائن"
         meta_enter:
           label: "%{meta_key} + Enter کے ذریعے بھیجیں"
-          description: "Enter کے ذریعے نئی لائن"
-      enable: "چیٹ کو فعال کریں"
-      flag: "فلَیگ"
+      enable: "گفتگو کو فعال کریں"
+      flag: "نشان دہی"
       emoji: "ایموجی داخل کریں"
       flagged: "اس پیغام کو نظرثانی کے لیے نشان زد کیا گیا"
-      invalid_access: "آپ کو اس چیٹ چینل کو دیکھنے کی رسائی نہیں"
-      invitation_notification: "<span>%{username}</span> <span>نے آپ کو ایک چیٹ چینل میں شامل ہونے کی دعوت دی</span>"
+      invalid_access: "آپ کو اس گفتگو کے چینل کو دیکھنے کی رسائی نہیں"
+      invitation_notification: "<span>%{username}</span> <span>نے آپ کو ایک گفتگو کے چینل میں شامل ہونے کی دعوت دی</span>"
       in_reply_to: "کے جواب میں"
       heading: "گفتگو"
       join: "شمولیت اختیار کریں"
@@ -167,11 +174,9 @@ ur:
           unreachable_1: "@%{group} ذکر کی اجازت نہیں دیتا۔"
           unreachable_2: "@%{group1} اور @%{group2} تذکروں کی اجازت نہیں دیتے۔"
       only_chat_push_notifications:
-        title: "صرف چیٹ کی اطلاعات بھیجیں"
-        description: "چیٹ کے علاوہ تمام اطلاعات کو روکیں"
+        title: "صرف گفتگو کی اطلاعات بھیجیں"
       ignore_channel_wide_mention:
         title: "چینل بھر کے تذکروں کو نظر انداز کریں"
-        description: "چینل بھر میں تذکروں کے لئے اطلاعات نہ بھیجیں (@here اور @all)"
       show_thread_title_prompts:
         description: "نئے دھاگوں کے لیے عنوان سیٹ کرنے کے لیے بلا تاخیردکھائیں"
       placeholder_channel: "%{channelName} میں چیٹ کریں"
@@ -198,8 +203,8 @@ ur:
         none: "کوئی نہیں"
         bell: "گھنٹی"
         ding: "ٹرنگ"
-      title: "چیٹ"
-      title_capitalized: "چیٹ"
+      title: "گفتگو"
+      title_capitalized: "گفتگو"
       upload: "ایک فائل منسلک کریں"
       upload_to_channel: "%{title}پر اپ لوڈ کریں"
       upload_to_thread: "دھاگے پر اپ لوڈ کریں"
@@ -207,7 +212,7 @@ ur:
         one: "%{count} فائل"
         other: "%{count} فائلیں"
       you_flagged: "آپ نے اس پیغام کو نشان زد کیا"
-      exit: "چیٹ سے باہر نکلیں"
+      exit: "گفتگو سے باہر نکلیں"
       channel_status:
         read_only_header: "چینل صرف پڑھا جا سکتا ہے"
         read_only: "صرف پڑھیں"
@@ -260,14 +265,14 @@ ur:
         default_channel_search_placeholder: "#ایک چینل"
         default_user_search_placeholder: "@کوئی بندہ"
         user_search_placeholder: "...مزید اراکین شامل کریں"
-        disabled_user: "نے چیٹ کو غیر فعال کر دیا"
+        disabled_user: "نے گفتگو کو غیر فعال کر دیا"
         no_items: "کوئی اشیاء نہیں"
         create_group_placeholder: "گروپ چیٹ کا نام (اختیاری)"
         participants_counter: "%{selection_count}/%{max} شرکاء"
-        new_group_chat: "نئی گروپ چیٹ"
+        new_group_chat: "نئے گروپ کی گفتگو"
         filter: "فِلٹر"
         cant_add_more_members: "ممبران کی زیادہ سے زیادہ تعداد پہنچ گئی"
-        create_new_group_chat: "گروپ چیٹ بنائیں"
+        create_new_group_chat: "گروپ کی گفتگو بنائیں"
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
@@ -290,7 +295,7 @@ ur:
           category: "زمرہ"
           topic: "موضوع"
       reviewable:
-        type: "گپ شپ کا پیغام"
+        type: "گفتگو کا پیغام"
         message_in_channel: "چَینل"
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
@@ -320,6 +325,7 @@ ur:
         history_label: "تاریخی"
         members_label: "ممبران"
       search:
+        short_title: تلاش کریں
         sort:
           relevance: "مطابقت"
           latest: "تازہ ترین"
@@ -349,13 +355,9 @@ ur:
         new_message:
           title: "نئے پیغام پر منتقل کریں"
       retention_reminders:
-        indefinitely_long: "چینل کے پیغامات کو غیر معینہ مدت تک برقرار رکھنے کے لیے چیٹ کی ترتیبات میں ترتیب دی گئی ہے۔"
         short:
           one: "%{count} دن"
           other: "%{count} دن"
-        long:
-          one: "چیٹ کی ترتیبات %{count} دن کے لیے چینل کے پیغامات کو برقرار رکھنے کے لیے سیٹ کی گئی ہے۔"
-          other: "چیٹ کی ترتیبات %{count} دنوں تک چینل کے پیغامات کو برقرار رکھنے کے لیے سیٹ کی گئی ہے۔"
       flags:
         notify_moderators: "اس پیغام پر عملے کی توجہ کی ضرورت ہے کسی اور وجہ سے جو اوپر درج نہیں۔"
       emoji_picker:

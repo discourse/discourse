@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "cbor"
 require "cose"
+require "stringio"
 
 module DiscourseWebauthn
   class RegistrationService < BaseValidationService
@@ -117,7 +118,11 @@ module DiscourseWebauthn
         name: @params[:name],
         factor_type: @factor_type,
       )
-    rescue CBOR::UnpackError, CBOR::TypeError, CBOR::MalformedFormatError, CBOR::StackError
+    rescue CBOR::UnpackError,
+           CBOR::TypeError,
+           CBOR::MalformedFormatError,
+           CBOR::StackError,
+           COSE::MalformedKeyError
       raise MalformedAttestationError, I18n.t("webauthn.validation.malformed_attestation_error")
     end
 
@@ -149,15 +154,15 @@ module DiscourseWebauthn
 
       # see https://w3c.github.io/webauthn/#attested-credential-data for lengths
       # of data for extraction
-      aa_guid = attested_credential_data[0..15]
+      # aa_guid = attested_credential_data[0..15]
       credential_id_length = attested_credential_data[16..17].unpack("n*")[0]
       credential_id = attested_credential_data[18..(18 + credential_id_length - 1)]
 
       public_key_start_position = 18 + credential_id_length
-      public_key_bytes =
-        attested_credential_data[
-          public_key_start_position..(public_key_start_position + attested_credential_data.size - 1)
-        ]
+      public_key_and_extension_bytes = attested_credential_data[public_key_start_position..-1]
+      unpacker = CBOR::Unpacker.new(StringIO.new(public_key_and_extension_bytes))
+      public_key_cbor = unpacker.read
+      public_key_bytes = CBOR.encode(public_key_cbor)
       public_key = COSE::Key.deserialize(public_key_bytes)
 
       [public_key, public_key_bytes, credential_id]

@@ -1,32 +1,38 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { empty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
-import { classNameBindings, tagName } from "@ember-decorators/component";
+import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
-import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { deepEqual } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
-@tagName("li")
-@classNameBindings("active", "tabClassName")
+@tagName("")
 export default class EditCategoryTab extends Component {
-  @empty("params.slug") newCategory;
-  @propertyEqual("selectedTab", "tab") active;
-
-  @discourseComputed("tab")
-  tabClassName(tab) {
-    return "edit-category-" + tab;
+  @computed("params.slug")
+  get newCategory() {
+    return isEmpty(this.params?.slug);
   }
 
-  @discourseComputed("tab")
-  title(tab) {
-    return i18n(`category.${underscore(tab)}`);
+  @computed("selectedTab", "tab")
+  get active() {
+    return deepEqual(this.selectedTab, this.tab);
+  }
+
+  @computed("tab")
+  get tabClassName() {
+    return `edit-category-${this.tab}`;
+  }
+
+  @computed("tab", "tabTitle")
+  get title() {
+    return this.tabTitle ?? i18n(`category.${underscore(this.tab)}`);
   }
 
   didInsertElement() {
@@ -34,39 +40,42 @@ export default class EditCategoryTab extends Component {
     scheduleOnce("afterRender", this, this._addToCollection);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.setProperties({
-      selectedTab: "general",
-      params: {},
-    });
-  }
-
   _addToCollection() {
     addUniqueValueToArray(this.panels, this.tabClassName);
   }
 
-  @discourseComputed("params.slug", "params.parentSlug")
-  fullSlug(slug, parentSlug) {
-    const slugPart = parentSlug && slug ? `${parentSlug}/${slug}` : slug;
+  @computed("params.slug", "params.parentSlug")
+  get fullSlug() {
+    const slugPart =
+      this.params?.parentSlug && this.params?.slug
+        ? `${this.params?.parentSlug}/${this.params?.slug}`
+        : this.params?.slug;
     return getURL(`/c/${slugPart}/edit/${this.tab}`);
   }
 
   @action
   select(event) {
     event?.preventDefault();
+    if (this.selectedTab === this.tab) {
+      return;
+    }
+
     this.set("selectedTab", this.tab);
-    if (!this.newCategory) {
+    if (this.newCategory) {
+      DiscourseURL.routeTo(getURL(`/new-category/${this.tab}`));
+    } else {
       DiscourseURL.routeTo(this.fullSlug);
     }
   }
 
   <template>
-    <a
-      href
-      {{on "click" this.select}}
-      class={{if this.active "active"}}
-    >{{this.title}}</a>
+    <li
+      class={{dConcatClass (if this.active "active") this.tabClassName}}
+      ...attributes
+    >
+      <a href {{on "click" this.select}} class={{if this.active "active"}}>
+        {{this.title}}
+      </a>
+    </li>
   </template>
 }

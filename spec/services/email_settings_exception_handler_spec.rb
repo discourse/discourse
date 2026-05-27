@@ -9,20 +9,6 @@ RSpec.describe EmailSettingsExceptionHandler do
       )
     end
 
-    it "formats a Net::IMAP::NoResponseError for invalid credentials" do
-      exception = Net::IMAP::NoResponseError.new(stub(data: stub(text: "Invalid credentials")))
-      expect(described_class.friendly_exception_message(exception, "imap.test.com")).to eq(
-        I18n.t("email_settings.imap_authentication_error"),
-      )
-    end
-
-    it "formats a general Net::IMAP::NoResponseError" do
-      exception = Net::IMAP::NoResponseError.new(stub(data: stub(text: "NO bad problem (Failure)")))
-      expect(described_class.friendly_exception_message(exception, "imap.test.com")).to eq(
-        I18n.t("email_settings.imap_no_response_error", message: "NO bad problem"),
-      )
-    end
-
     it "formats a Net::SMTPAuthenticationError" do
       exception = Net::SMTPAuthenticationError.new("invalid credentials")
       expect(described_class.friendly_exception_message(exception, "smtp.test.com")).to eq(

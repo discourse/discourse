@@ -90,6 +90,7 @@ module("Unit | Utility | url", function (hooks) {
   test("isInternalTopic", function (assert) {
     sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
+    assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
@@ -103,6 +104,9 @@ module("Unit | Utility | url", function (hooks) {
 
     assert.true(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
+    );
+    assert.true(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/forum/n/123")
     );
     assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/admin")
@@ -218,40 +222,38 @@ module("Unit | Utility | url", function (hooks) {
       "ftp://www.discourse.org"
     );
     assert.strictEqual(prefixProtocol("/my/preferences"), "/my/preferences");
+    assert.strictEqual(prefixProtocol("#anchor-fragment"), "#anchor-fragment");
   });
 
   test("getCategoryAndTagUrl", function (assert) {
+    const cat = { path: "/c/foo/1", default_list_filter: "all" };
+    const noneCat = { path: "/c/foo/1", default_list_filter: "none" };
+    const noneTag = { slug: "none", id: null };
+    const bugTag = { slug: "bug", id: 7 };
+
+    // category only
+    assert.strictEqual(getCategoryAndTagUrl(cat, true), "/c/foo/1");
+    assert.strictEqual(getCategoryAndTagUrl(cat, false), "/c/foo/1/none");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, true), "/c/foo/1/all");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, false), "/c/foo/1/none");
+
+    // category + tag
     assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        true
-      ),
-      "/c/foo/1"
+      getCategoryAndTagUrl(cat, true, "none"),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, noneTag),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, bugTag),
+      "/tags/c/foo/1/bug/7"
     );
 
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        true
-      ),
-      "/c/foo/1/all"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
+    // tag only
+    assert.strictEqual(getCategoryAndTagUrl(null, true, "none"), "/tag/none");
+    assert.strictEqual(getCategoryAndTagUrl(null, true, bugTag), "/tag/bug/7");
   });
 
   test("routeTo redirects secure uploads URLS because they are server side only", async function (assert) {
@@ -261,6 +263,55 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.redirectTo.calledWith("/secure-uploads/original/1X/test.pdf")
     );
+  });
+
+  test("routeTo redirects server-side-only URLs on subfolder setup", async function (assert) {
+    setPrefix("/forum");
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    DiscourseURL.routeTo("/forum/uploads/short-url/test.csv.gz");
+    assert.true(
+      DiscourseURL.redirectTo.calledWith(
+        "/forum/uploads/short-url/test.csv.gz"
+      ),
+      "uploads short-url on subfolder is redirected to server"
+    );
+
+    DiscourseURL.redirectTo.resetHistory();
+
+    DiscourseURL.routeTo("/forum/secure-uploads/original/1X/test.pdf");
+    assert.true(
+      DiscourseURL.redirectTo.calledWith(
+        "/forum/secure-uploads/original/1X/test.pdf"
+      ),
+      "secure-uploads on subfolder is redirected to server"
+    );
+  });
+
+  test("routeTo redirects server-side-only routes", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    const routes = [
+      "/safe-mode",
+      "/dev-mode",
+      "/theme-qunit",
+      "/llms.txt",
+      "/robots.txt",
+      "/offline.html",
+      "/manifest.webmanifest",
+      "/opensearch.xml",
+    ];
+
+    for (const route of routes) {
+      DiscourseURL.redirectTo.resetHistory();
+      DiscourseURL.routeTo(route);
+      assert.true(
+        DiscourseURL.redirectTo.calledWith(route),
+        `${route} is redirected to server`
+      );
+    }
   });
 
   test("anchor handling", async function (assert) {

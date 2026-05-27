@@ -1,4 +1,4 @@
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import RestModel from "discourse/models/rest";
 
 const CREATE_ATTRIBUTES = [
@@ -7,6 +7,8 @@ const CREATE_ATTRIBUTES = [
   "tool_name",
   "description",
   "parameters",
+  "secret_contracts",
+  "secret_bindings",
   "script",
   "summary",
   "rag_uploads",
@@ -26,12 +28,12 @@ export default class AiTool extends RestModel {
   }
 
   trackParameters(parameters) {
-    return new TrackedArray(
+    return trackedArray(
       parameters?.map((p) => {
-        const parameter = new TrackedObject(p);
+        const parameter = trackedObject(p);
 
         if (parameter.enum && parameter.enum.length) {
-          parameter.enum = new TrackedArray(parameter.enum);
+          parameter.enum = trackedArray(parameter.enum);
         } else {
           parameter.enum = null;
         }

@@ -23,7 +23,7 @@ export function nativeLazyLoading(api) {
       if (siteSettings.secure_uploads && smallUpload) {
         // Secure uploads requests go through the app. In topics with many images,
         // this makes it very easy to hit rate limiters. Skipping the low-res
-        // placeholders reduces the chance of this problem occuring.
+        // placeholders reduces the chance of this problem occurring.
         return;
       }
 

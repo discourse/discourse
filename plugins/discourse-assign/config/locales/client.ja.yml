@@ -41,7 +41,6 @@ ja:
       assigned_topic_to: "トピックを <a href='%{path}'>%{username}</a> に割り当てました"
       assign_post_to: "#%{post_number} を %{username} に割り当てました"
       assign_post_to_multiple: "#%{post_number} を %{username}"
-      assigned_to_w_ellipsis: "割り当て先..."
       unassign:
         title: "割り当て解除"
         title_w_ellipsis: "割り当て解除..."
@@ -130,8 +129,6 @@ ja:
       web_hooks:
         assign_event:
           group_name: "割り当てイベント"
-          assigned: "ユーザーがトピックを割り当てたとき"
-          unassigned: "ユーザーがトピックの割り当てを解除したとき"
     search:
       advanced:
         in:
@@ -139,10 +136,6 @@ ja:
           unassigned: "未割り当てである"
         assigned:
           label: "割り当て先"
-    topics:
-      bulk:
-        unassign: "トピックを割り当て解除"
-        assign: "トピックを割り当てる"
     discourse_automation:
       scriptables:
         random_assign:

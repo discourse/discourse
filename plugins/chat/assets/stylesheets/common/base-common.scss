@@ -15,9 +15,20 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-html.ios-device.composer-open body,
-html.ios-device.has-full-page-chat body {
+html.ios-device:not(.ipados-device:not(.keyboard-visible)).composer-open body {
   overflow: hidden;
+}
+
+html.ios-device.has-full-page-chat body {
+  position: fixed;
+  overflow: hidden;
+}
+
+html.ios-device.has-full-page-chat body #main-outlet {
+  .c-routes.--channel-info {
+    @include chat-height;
+    overflow-y: auto;
+  }
 }
 
 .uppy-is-drag-over .chat-composer .drop-a-file {
@@ -143,11 +154,11 @@ html.ios-device.has-full-page-chat body {
       margin: 0;
     }
   }
+}
 
-  .chat-time {
-    color: var(--primary-high);
-    font-size: var(--font-down-2);
-  }
+.chat-time {
+  color: var(--primary-high);
+  font-size: var(--font-down-2);
 }
 
 .chat-emoji-avatar {
@@ -270,6 +281,7 @@ html.has-full-page-chat {
         min-height: 0;
         max-width: 100vw;
         box-sizing: border-box;
+        container-type: inline-size;
       }
     }
   }
@@ -288,10 +300,6 @@ html.has-full-page-chat {
       // allows containers to shrink to fit
       min-height: 0;
     }
-  }
-
-  [data-popper-reference-hidden] {
-    visibility: hidden;
   }
 }
 

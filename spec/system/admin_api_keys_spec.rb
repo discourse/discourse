@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe "Admin API Keys Page", type: :system do
+describe "Admin API Keys Page" do
   fab!(:current_user, :admin)
 
   let(:api_keys_page) { PageObjects::Pages::AdminApiKeys.new }
@@ -23,6 +23,8 @@ describe "Admin API Keys Page", type: :system do
     api_keys_page.add_api_key(description: "Second Integration")
 
     expect(api_keys_page).to have_generated_api_key
+    expect(api_keys_page).to have_copy_button
+    expect(api_keys_page).to have_warning_banner
 
     api_keys_page.click_continue
 
@@ -47,7 +49,7 @@ describe "Admin API Keys Page", type: :system do
     expect(api_keys_page).to have_revoked_api_key_listed("Integration")
   end
 
-  it "can undo revokation of API keys" do
+  it "can undo revocation of API keys" do
     api_keys_page.visit_page
     api_keys_page.click_edit("Integration")
     api_keys_page.click_revoke
@@ -65,5 +67,19 @@ describe "Admin API Keys Page", type: :system do
 
     expect(api_keys_page).to have_current_path("/admin/api/keys")
     expect(api_keys_page).to have_no_api_key_listed("Integration")
+  end
+
+  it "displays scopes when viewing a granular API key from the list" do
+    Fabricate(
+      :api_key,
+      description: "Granular Key",
+      api_key_scopes: [Fabricate.build(:api_key_scope, resource: "topics", action: "read")],
+    )
+
+    api_keys_page.visit_page
+    api_keys_page.click_edit("Granular Key")
+
+    expect(api_keys_page).to have_scopes_displayed
+    expect(api_keys_page).to have_scope(resource: "topics", action: "read")
   end
 end

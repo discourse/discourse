@@ -41,7 +41,6 @@ sk:
       assigned_topic_to: "Priradená téma <a href='%{path}'>%{username}</a>"
       assign_post_to: "Priradené #%{post_number} k %{username}"
       assign_post_to_multiple: "#%{post_number} na %{username}"
-      assigned_to_w_ellipsis: "Priradené k..."
       unassign:
         title: "Nepriradené"
         title_w_ellipsis: "Nepriradené..."
@@ -130,8 +129,6 @@ sk:
       web_hooks:
         assign_event:
           group_name: "Priradenie udalostí"
-          assigned: "Keď používateľ priradí tému"
-          unassigned: "Keď používateľ zruší priradenie témy"
     search:
       advanced:
         in:
@@ -139,10 +136,6 @@ sk:
           unassigned: "sú nepriradené"
         assigned:
           label: "Priradené k"
-    topics:
-      bulk:
-        unassign: "Zrušenie priradenia tém"
-        assign: "Priradenie tém"
     discourse_automation:
       scriptables:
         random_assign:

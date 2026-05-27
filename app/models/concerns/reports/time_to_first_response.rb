@@ -5,11 +5,11 @@ module Reports::TimeToFirstResponse
 
   class_methods do
     def report_time_to_first_response(report)
-      category_filter = report.filters.dig(:category)
       category_id, include_subcategories = report.add_category_filter
 
       report.icon = "reply"
       report.higher_is_better = false
+      report.y_axis_title = I18n.t("reports.time_to_first_response.yaxis")
       report.data = []
       report.average = true
 

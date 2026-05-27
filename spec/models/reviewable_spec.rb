@@ -498,8 +498,6 @@ RSpec.describe Reviewable, type: :model do
       expect(messages.first.data).to eq(
         {
           success: true,
-          transition_to: :approved,
-          transition_to_id: 1,
           created_post_id: perform_result.created_post.id,
           created_post_topic_id: perform_result.created_post_topic.id,
           remove_reviewable_ids: [reviewable.id],
@@ -529,8 +527,6 @@ RSpec.describe Reviewable, type: :model do
       expect(messages.first.data).to eq(
         {
           success: true,
-          transition_to: :rejected,
-          transition_to_id: 2,
           remove_reviewable_ids: [reviewable.id],
           version: 1,
           reviewable_count: 0,
@@ -564,83 +560,6 @@ RSpec.describe Reviewable, type: :model do
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
       expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
-    end
-
-    describe "action logging" do
-      fab!(:guardian) { Guardian.new(moderator) }
-      fab!(:reviewable, :reviewable_flagged_post)
-
-      context "with new UI enabled" do
-        before do
-          SiteSetting.reviewable_old_moderator_actions = false
-          allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(
-            true,
-          )
-        end
-
-        it "creates an action log" do
-          expect { reviewable.perform(moderator, :edit_post, guardian: guardian) }.to change {
-            reviewable.reviewable_action_logs.count
-          }.by(1)
-
-          log = reviewable.reviewable_action_logs.last
-          expect(log.action_key).to eq("edit_post")
-          expect(log.status).to eq("approved")
-          expect(log.bundle).to eq("post-actions")
-          expect(log.performed_by).to eq(moderator)
-        end
-
-        it "keeps reviewable pending when not all bundles are actioned" do
-          reviewable.perform(moderator, :edit_post, guardian: guardian)
-
-          reviewable.reload
-          expect(reviewable.status).to eq("pending")
-          expect(reviewable.reviewable_action_logs.count).to eq(1)
-        end
-
-        it "finalizes status when all bundles are actioned" do
-          reviewable.perform(moderator, :edit_post, guardian: guardian)
-          expect(reviewable.reload.status).to eq("pending")
-          reviewable.perform(moderator, :suspend_user, guardian: guardian)
-
-          reviewable.reload
-          expect(reviewable.status).to eq("approved")
-          expect(reviewable.reviewable_action_logs.count).to eq(2)
-        end
-
-        it "calculates correct final status for all ignored" do
-          reviewable.perform(moderator, :no_action_post, guardian: guardian)
-          reviewable.perform(moderator, :no_action_user, guardian: guardian)
-
-          reviewable.reload
-          expect(reviewable.status).to eq("ignored")
-        end
-
-        it "calculates correct final status for all rejected" do
-          reviewable.perform(moderator, :hide_post, guardian: guardian)
-          reviewable.perform(moderator, :silence_user, guardian: guardian)
-
-          reviewable.reload
-          expect(reviewable.status).to eq("rejected")
-        end
-      end
-
-      context "with old UI (backward compatibility)" do
-        before { SiteSetting.reviewable_old_moderator_actions = true }
-
-        it "creates an action log" do
-          expect { reviewable.perform(moderator, :agree_and_keep, guardian: guardian) }.to change {
-            reviewable.reviewable_action_logs.count
-          }.by(1)
-        end
-
-        it "transitions immediately (original behavior)" do
-          reviewable.perform(moderator, :agree_and_keep, guardian: guardian)
-
-          reviewable.reload
-          expect(reviewable.status).to eq("approved")
-        end
-      end
     end
   end
 
@@ -751,6 +670,32 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#add_score" do
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:post)
+
+    it "does not overwrite force_review=true when set by trusted sources" do
+      reviewable =
+        ReviewableFlaggedPost.needs_review!(
+          target: post,
+          topic: post.topic,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      # Spam detection system flags with force_review: true
+      reviewable.add_score(Discourse.system_user, PostActionType.types[:spam], force_review: true)
+      expect(reviewable.reload.force_review).to eq(true)
+
+      # Regular user adds another score without force_review
+      reviewable.add_score(user1, PostActionType.types[:inappropriate])
+
+      # force_review should remain true (set by spam detection)
+      expect(reviewable.reload.force_review).to eq(true)
+    end
+  end
+
   describe "priorities" do
     it "returns 0 for unknown priorities" do
       expect(Reviewable.min_score_for_priority(:wat)).to eq(0.0)
@@ -844,16 +789,13 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(%w[approve_post reject_post revise_and_reject_post])
+      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
       expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
         ["approve_post"],
       )
-      expect(actions.bundles.find { |b| b.id == "reject_post" }.actions.map(&:id)).to eq(
-        ["reject_post"],
-      )
-      expect(actions.bundles.find { |b| b.id == "revise_and_reject_post" }.actions.map(&:id)).to eq(
-        ["revise_and_reject_post"],
-      )
+      expect(
+        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+      ).to eq(%w[reject_post revise_and_reject_post])
     end
 
     describe "handling empty bundles" do

@@ -55,6 +55,17 @@ RSpec.describe PostVoting::CommentsController do
 
       expect(comment["id"]).to eq(comment_3.id)
     end
+
+    it "does not expose names when names are disabled" do
+      SiteSetting.enable_names = false
+      comment_2.user.update!(name: "Secret Name")
+
+      get "/post_voting/comments.json", params: { post_id: answer.id, last_comment_id: comment.id }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Secret Name")
+      expect(response.parsed_body["comments"].any? { |comment| comment.key?("name") }).to eq(false)
+    end
   end
 
   describe "#create" do
@@ -65,6 +76,18 @@ RSpec.describe PostVoting::CommentsController do
       category.save!
 
       post "/post_voting/comments.json", params: { post_id: answer.id, raw: "this is some content" }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 403 when user cannot see the post (e.g. whisper)" do
+      whisper_post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], user: admin)
+
+      post "/post_voting/comments.json",
+           params: {
+             post_id: whisper_post.id,
+             raw: "this is some content",
+           }
 
       expect(response.status).to eq(403)
     end
@@ -275,6 +298,19 @@ RSpec.describe PostVoting::CommentsController do
     end
   end
 
+  describe "#flag" do
+    it "should return 403 with not_logged_in error for an anon user" do
+      put "/post_voting/comments/flag.json",
+          params: {
+            comment_id: comment.id,
+            flag_type_id: ReviewableScore.types[:off_topic],
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+  end
+
   describe "#destroy" do
     it "should return 403 for an anon user" do
       delete "/post_voting/comments.json", params: { comment_id: comment.id }
@@ -359,6 +395,25 @@ RSpec.describe PostVoting::CommentsController do
           .where("deleted_at IS NOT NULL AND id = ?", comment.id)
           .exists?,
       ).to eq(true)
+    end
+  end
+
+  describe "#flag" do
+    fab!(:flagger) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
+
+    before { sign_in(flagger) }
+
+    it "should return 403 when trying to flag a comment on a post the user cannot see" do
+      category.set_permissions(group => :full)
+      category.save!
+
+      put "/post_voting/comments/flag.json",
+          params: {
+            comment_id: comment.id,
+            flag_type_id: ReviewableScore.types[:off_topic],
+          }
+
+      expect(response.status).to eq(403)
     end
   end
 end

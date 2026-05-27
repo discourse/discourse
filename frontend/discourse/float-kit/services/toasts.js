@@ -1,13 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import Service from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 
 export default class Toasts extends Service {
-  @tracked activeToasts = new TrackedArray();
+  @tracked activeToasts = trackedArray();
 
   /**
    * Render a toast
@@ -114,7 +114,7 @@ export default class Toasts extends Service {
    */
   @action
   close(toast) {
-    this.activeToasts = new TrackedArray(
+    this.activeToasts = trackedArray(
       this.activeToasts.filter((activeToast) => activeToast.id !== toast.id)
     );
   }

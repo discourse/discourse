@@ -58,7 +58,9 @@ RSpec.describe TopicListItemSerializer do
     it "returns hidden tag to staff" do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
 
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq(
+        [{ id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug }],
+      )
     end
 
     it "trucates description" do
@@ -94,6 +96,17 @@ RSpec.describe TopicListItemSerializer do
         ).as_json
 
       expect(json[:posters].length).to eq(1)
+    end
+
+    it "uses slug_for_url for tags with empty slugs" do
+      numeric_tag = Fabricate(:tag, name: "7")
+      expect(numeric_tag.slug).to eq("")
+
+      topic.tags << numeric_tag
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
+      entry = json[:tags].find { |t| t[:id] == numeric_tag.id }
+
+      expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
     end
   end
 
@@ -205,6 +218,176 @@ RSpec.describe TopicListItemSerializer do
       expect(json[:first_post_id]).to eq(first_post.id)
     ensure
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+    end
+
+    it "serializes op_like_count" do
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+      expect(json[:op_like_count]).to eq(first_post.like_count)
+    end
+  end
+
+  describe "tag localization" do
+    fab!(:user)
+    fab!(:localized_tag, :tag) { Fabricate(:tag, name: "cats", locale: "en") }
+    fab!(:localization) do
+      Fabricate(
+        :tag_localization,
+        tag: localized_tag,
+        locale: "ja",
+        name: "猫",
+        description: "猫についてのタグです",
+      )
+    end
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topic.tags << localized_tag
+    end
+
+    def serialize
+      TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+    end
+
+    it "returns localized tag name when conditions met" do
+      SiteSetting.content_localization_enabled = true
+      localized_tag.update!(locale: "en")
+      I18n.locale = "ja"
+
+      expect(serialize[:tags]).to include(
+        { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
+      )
+    end
+
+    it "returns original tag name when localization disabled" do
+      SiteSetting.content_localization_enabled = false
+      I18n.locale = "ja"
+
+      expect(serialize[:tags]).to include(
+        { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+      )
+    end
+
+    it "returns original tag name when tag has no locale" do
+      SiteSetting.content_localization_enabled = true
+      localized_tag.update!(locale: nil)
+      I18n.locale = "ja"
+
+      expect(serialize[:tags]).to include(
+        { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+      )
+    end
+
+    it "uses localized tag name as key in tags_descriptions" do
+      SiteSetting.content_localization_enabled = true
+      localized_tag.update!(locale: "en", description: "A tag about cats")
+      I18n.locale = "ja"
+
+      expect(serialize[:tags_descriptions]).to have_key("猫")
+      expect(serialize[:tags_descriptions]).not_to have_key("cats")
+      expect(serialize[:tags_descriptions]["猫"]).to eq("猫についてのタグです")
+    end
+
+    it "uses original tag name as key when localization disabled" do
+      SiteSetting.content_localization_enabled = false
+      localized_tag.update!(description: "A tag about cats")
+      I18n.locale = "ja"
+
+      expect(serialize[:tags_descriptions]).to have_key("cats")
+      expect(serialize[:tags_descriptions]).not_to have_key("猫")
+      expect(serialize[:tags_descriptions]["cats"]).to eq("A tag about cats")
+    end
+  end
+
+  describe "#has_new_replies" do
+    fab!(:user)
+    fab!(:other_user, :user)
+    fab!(:nested_topic_record, :topic) { Fabricate(:topic, user: other_user) }
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: nested_topic_record)
+    end
+
+    def serialize_with_user_data(last_visited_at:)
+      nested_topic_record.user_data =
+        TopicUser
+          .find_or_create_by(user: user, topic: nested_topic_record)
+          .tap { |tu| tu.update!(last_visited_at: last_visited_at) }
+      TopicListItemSerializer.new(
+        nested_topic_record,
+        scope: Guardian.new(user),
+        root: false,
+      ).as_json
+    end
+
+    it "is included when bumped_at is after last_visited_at and the user wasn't the last poster" do
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
+
+      expect(json[:has_new_replies]).to eq(true)
+    end
+
+    it "is omitted when last_visited_at is more recent than bumped_at" do
+      nested_topic_record.update!(bumped_at: 5.minutes.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: 1.minute.ago)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted when the current user was the last poster" do
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: user.id)
+      json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted when the user has never visited the topic" do
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: nil)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted from the payload for flat topics" do
+      flat_topic = Fabricate(:topic, user: other_user)
+      flat_topic.user_data =
+        TopicUser
+          .find_or_create_by(user: user, topic: flat_topic)
+          .tap { |tu| tu.update!(last_visited_at: 5.minutes.ago) }
+
+      json = TopicListItemSerializer.new(flat_topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted from the payload when the user is anonymous" do
+      json =
+        TopicListItemSerializer.new(nested_topic_record, scope: Guardian.new, root: false).as_json
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "leaves the existing flat-topic unread payload (unread_posts, unseen) intact" do
+      flat_topic = Fabricate(:topic, user: other_user, bumped_at: 1.minute.ago)
+      Fabricate(:post, topic: flat_topic, user: other_user)
+      Fabricate(:post, topic: flat_topic, user: other_user)
+      flat_topic.reload
+      flat_topic.user_data =
+        TopicUser
+          .find_or_create_by(user: user, topic: flat_topic)
+          .tap do |tu|
+            tu.update!(
+              last_visited_at: 5.minutes.ago,
+              last_read_post_number: 1,
+              notification_level: TopicUser.notification_levels[:watching],
+            )
+          end
+
+      json = TopicListItemSerializer.new(flat_topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:unread_posts]).to be > 0
+      expect(json.key?(:unseen)).to eq(true)
+      expect(json.key?(:has_new_replies)).to eq(false)
     end
   end
 

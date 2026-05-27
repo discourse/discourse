@@ -178,7 +178,7 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
     filter =
       DiscoursePluginRegistry
         .custom_filter_mappings
-        .find { _1.keys.include? "order:emotion_#{emotion}" }
+        .find { it.keys.include? "order:emotion_#{emotion}" }
         .values
         .first
     result = filter.call(scope, order_direction, guardian)
@@ -188,6 +188,27 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
       "classification_results.model_used = 'SamLowe/roberta-base-go_emotions'",
     )
     expect(result.to_sql).to include("ORDER BY topic_emotion.emotion_joy desc")
+  end
+
+  context "when emotion classification uses an agent" do
+    let(:model_used) { DiscourseAi::Sentiment::Constants::EMOTION_AGENT_MODEL }
+
+    before { SiteSetting.ai_sentiment_emotion_classification_strategy = "agent" }
+
+    it "filters topics using the stable emotion agent model key" do
+      emotion = "joy"
+      filter =
+        DiscoursePluginRegistry
+          .custom_filter_mappings
+          .find { it.keys.include? "order:emotion_#{emotion}" }
+          .values
+          .first
+      result = filter.call(Topic.all, "desc", guardian)
+
+      expect(result.to_sql).to include(
+        "classification_results.model_used = '#{DiscourseAi::Sentiment::Constants::EMOTION_AGENT_MODEL}'",
+      )
+    end
   end
 
   it "sorts emotion in ascending order" do

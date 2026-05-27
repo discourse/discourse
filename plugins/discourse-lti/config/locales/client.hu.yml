@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    login:
+      lti:
+        name: "LTI"
+        title: "LTI-vel"

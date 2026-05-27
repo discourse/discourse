@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin editing objects type", type: :system do
+RSpec.describe "Admin editing objects type" do
   let(:admin_objects_setting_editor_page) { PageObjects::Pages::AdminObjectsSettingEditor.new }
 
   fab!(:admin)
@@ -13,7 +13,8 @@ RSpec.describe "Admin editing objects type", type: :system do
       theme.set_field(
         target: :settings,
         name: "yaml",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+        value:
+          File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}"),
       )
 
       theme.save!
@@ -28,7 +29,8 @@ RSpec.describe "Admin editing objects type", type: :system do
       theme.set_field(
         target: :translations,
         name: "en",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        value:
+          File.read("#{Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")}"),
       )
 
       theme.save!
@@ -97,7 +99,7 @@ RSpec.describe "Admin editing objects type", type: :system do
       expect(admin_objects_theme_setting_editor).to have_setting_field("name", "section 1")
     end
 
-    it "displays the validation errors when an admin tries to save the settting with an invalid value" do
+    it "displays the validation errors when an admin tries to save the setting with an invalid value" do
       visit("/admin/customize/themes/#{theme.id}")
 
       admin_objects_theme_setting_editor =
@@ -160,7 +162,7 @@ RSpec.describe "Admin editing objects type", type: :system do
   describe "when editing a site setting of objects type" do
     before do
       SiteSetting.load_settings(
-        File.join("#{Rails.root}/spec/fixtures/site_settings/object_settings.yml"),
+        Rails.root.join("spec/fixtures/site_settings/object_settings.yml").to_s,
       )
     end
 

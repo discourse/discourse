@@ -13,3 +13,7 @@ es:
       site_settings:
         categories:
           discourse_oauth2_basic: "Inicio de sesión OAuth2"
+      config:
+        login:
+          sub_pages:
+            oauth2: "OAuth2"

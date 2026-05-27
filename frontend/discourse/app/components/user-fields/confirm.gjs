@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
-import InputTip from "discourse/components/input-tip";
+import { trustHTML } from "@ember/template";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 
@@ -28,13 +28,13 @@ export default class UserFieldConfirm extends UserFieldBase {
           @type="checkbox"
         />
         <span>
-          {{htmlSafe this.field.description}}
+          {{trustHTML this.field.description}}
           {{#unless this.field.name}}{{#if this.field.required}}<span
                 class="required"
               >*</span>{{/if}}{{/unless}}
         </span>
       </label>
-      <InputTip
+      <DInputTip
         @validation={{@validation}}
         class={{unless @validation.reason "hidden"}}
       />

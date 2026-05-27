@@ -10,7 +10,7 @@ module Chat
 
       schemer = JSONSchemer.schema(Chat::Schemas::MessageBlocks)
       if !schemer.valid?(record.blocks)
-        record.errors.add(:blocks, schemer.validate(record.blocks).map { _1.fetch("error") })
+        record.errors.add(:blocks, schemer.validate(record.blocks).map { it.fetch("error") })
         return
       end
 

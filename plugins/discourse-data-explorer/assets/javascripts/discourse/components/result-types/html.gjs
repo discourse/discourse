@@ -1,5 +1,5 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
-const Html = <template>{{htmlSafe @ctx.value}}</template>;
+const Html = <template>{{trustHTML @ctx.value}}</template>;
 
 export default Html;

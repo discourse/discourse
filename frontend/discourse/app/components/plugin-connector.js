@@ -1,11 +1,11 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed, defineProperty } from "@ember/object";
 import { afterRender } from "discourse/lib/decorators";
 import {
   buildArgsWithDeprecations,
   deprecatedArgumentValue,
-} from "discourse/lib/plugin-connectors";
+} from "discourse/lib/outlet-args";
 
 let _decorators = {};
 

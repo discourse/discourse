@@ -1,15 +1,16 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="search-area">
-    <TextField
+    <DTextField
       @value={{@controller.q}}
       @placeholderKey="admin.site_text.search"
       @autofocus="true"
@@ -84,24 +85,28 @@ export default <template>
     </p>
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.searching}}>
-    {{#if @controller.model.extras.recommended}}
-      <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
-    {{/if}}
+  {{#if @controller.extras.recommended}}
+    <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
+  {{/if}}
 
-    {{#each @controller.model.content as |siteText|}}
+  <DLoadMore
+    @action={{@controller.loadMore}}
+    @enabled={{@controller.canLoadMore}}
+    @isLoading={{@controller.searching}}
+    class="site-text-list"
+  >
+    {{#each @controller.siteTexts as |siteText|}}
       <SiteTextSummary
         @siteText={{siteText}}
         @editAction={{@controller.edit}}
         @term={{@controller.q}}
-        @searchRegex={{@controller.model.extras.regex}}
+        @searchRegex={{@controller.extras.regex}}
       />
     {{else}}
-      {{i18n "admin.site_text.no_results"}}
+      {{#unless @controller.searching}}
+        {{i18n "admin.site_text.no_results"}}
+      {{/unless}}
     {{/each}}
-
-    {{#if @controller.model.extras.has_more}}
-      <p class="warning">{{i18n "admin.site_text.more_than_50_results"}}</p>
-    {{/if}}
-  </ConditionalLoadingSpinner>
+    <DConditionalLoadingSpinner @condition={{@controller.searching}} />
+  </DLoadMore>
 </template>

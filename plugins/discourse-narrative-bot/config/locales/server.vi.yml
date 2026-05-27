@@ -11,13 +11,15 @@ vi:
     discourse_narrative_bot_ignored_usernames: "Những tên người dùng mà Bot tường thuật diễn văn nên bỏ qua"
   badges:
     certified:
-      name: Đã chứng nhận
-      description: "Đã hoàn thành hướng dẫn thành viên mới của chúng tôi"
+      name: Đạt Chuẩn
+      description: "Đã hoàn thành hướng dẫn cho thành viên mới"
       long_description: |
-        Huy hiệu này được cấp khi hoàn thành thành công hướng dẫn tương tác cho thành viên mới. Bạn đã chủ động tìm hiểu các công cụ thảo luận cơ bản và giờ bạn đã được chứng nhận!
+        Huy hiệu này được trao sau khi bạn hoàn thành hướng dẫn tương tác dành cho người dùng mới. Bạn đã chủ động học các công cụ cơ bản của diễn đàn, và giờ bạn đã được chứng nhận!
     licensed:
-      name: Đã cấp phép
-      description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
+      name: Vượt Chuẩn
+      description: "Đã hoàn thành hướng dẫn cho thành viên nâng cao"
+      long_description: |
+        Huy hiệu này được trao sau khi bạn hoàn thành hướng dẫn tương tác dành cho người dùng nâng cao. Bạn đã thành thạo các công cụ thảo luận nâng cao — và giờ đây bạn đã đủ sức mạnh!
   discourse_narrative_bot:
     quote:
       trigger: "trích dẫn"
@@ -34,6 +36,7 @@ vi:
         "2": "Nó được quyết định như vậy"
         "9": "Đồng ý"
         "11": "Trả lời không rõ ràng, hãy thử lại"
+        "12": "Hỏi lại sau"
         "15": "Tập trung và hỏi lại lần nữa"
         "20": "Rất đáng ngờ"
     track_selector:
@@ -43,11 +46,11 @@ vi:
     new_user_narrative:
       hello:
         message: |-
-          Cảm ơn bạn đã tham gia %{title}, và chào mừng bạn!
+          Cảm ơn bạn đã tham gia %{title}, và chào mừng!
 
-          - Tôi chỉ là người máy, nhưng [nhân viên thân thiện của chúng tôi](%{base_uri}/about) cũng sẵn sàng trợ giúp nếu bạn cần tiếp cận một người.
+          - Tôi chỉ là người máy, nhưng [nhân viên thân thiện của chúng tôi](%{base_uri}/about) cũng sẵn sàng hỗ trợ nếu bạn cần người thật.
 
-          - Vì lý do an toàn, chúng tôi tạm thời giới hạn những gì người dùng mới có thể làm. Bạn sẽ đạt được [khả năng mới](https://blog.discourse.org/2018/06/undilities-discourse-trust-levels/) (là [badges](%{base_uri}/badges)) khi chúng tôi làm quen với bạn.
+          - Vì lý do an toàn, chúng tôi tạm thời giới hạn những gì thành viên mới có thể làm. Bạn sẽ đạt được [khả năng mới](https://blog.discourse.org/2018/06/undilities-discourse-trust-levels/) (và [những huy hiệu](%{base_uri}/badges)) trong quá trình làm quen.
 
           - Chúng tôi tin tưởng vào [hành vi cộng đồng văn minh](%{base_uri}/guidelines) mọi lúc.
       images:
@@ -63,8 +66,10 @@ vi:
       bookmark:
         instructions: |-
           Nếu bạn muốn tìm hiểu thêm, hãy chọn nút <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> bên dưới và chọn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> để **đánh dấu tin nhắn cá nhân này**. Nếu bạn làm như vậy, bạn có thể có một :gift: trong tương lai!
+        reply: |-
+          Tuyệt vời! Giờ đây, bạn có thể dễ dàng tìm đường quay lại cuộc trò chuyện riêng tư của chúng tôi bất kỳ lúc nào, ngay từ [tab đánh dấu trên hồ sơ của bạn](%{bookmark_url}). Chỉ cần chọn ảnh hồ sơ của bạn ở phía trên bên phải &#8599;
         not_found: |-
-          Rất tiếc, tôi không thấy bất kỳ dấu trang nào trong chủ đề này. Bạn có tìm thấy dấu trang dưới mỗi bài viết không? Sử dụng hiển thị thêm <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> để hiển thị các hành động bổ sung nếu cần.
+          Rất tiếc, tôi không thấy bất kỳ đánh dấu nào trong chủ đề này. Bạn có tìm thấy đánh dấu dưới mỗi tút không? Sử dụng hiển thị thêm <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> để hiển thị các hành động bổ sung nếu cần.
       emoji:
         instructions: |-
           Bạn có thể đã thấy tôi sử dụng những hình ảnh nhỏ trong câu trả lời của tôi :blue_car::dash: , những hình ảnh đó được gọi là [emoji](https://en.wikipedia.org/wiki/Emoji). Bạn có thể **thêm biểu tượng cảm xúc** vào câu trả lời của mình không? Bất kỳ cái nào trong số này sẽ hoạt động:
@@ -115,7 +120,16 @@ vi:
       edit:
         bot_created_post_raw: "@%{discobot_username} cho đến nay là bot thú vị nhất mà tôi biết :wink:"
       recover:
-        deleted_post_raw: "Tại sao @%{discobot_username} xóa bài đăng của tôi? :anguished:"
+        deleted_post_raw: "Tại sao @%{discobot_username} xóa tút của tôi? :anguished:"
       category_hashtag:
         reply: |-
-          Xuất sắc! Hãy nhớ điều này hoạt động cho cả hai loại danh mục và  thẻ, nếu thẻ được bật.
+          Xuất sắc! Hãy nhớ điều này áp dụng cho cả hai loại chuyên mục và thẻ, nếu thẻ được bật.
+      change_topic_notification_level:
+        instructions: |-
+          Mỗi chủ đề đều có một mức độ thông báo. Mức độ mặc định là 'bình thường', nghĩa là bạn sẽ chỉ nhận được thông báo khi ai đó đang nói chuyện trực tiếp với bạn.
+
+          Theo mặc định, mức độ thông báo cho tin nhắn cá nhân được đặt ở mức cao nhất là 'giám sát', nghĩa là bạn sẽ nhận được thông báo về mọi phản hồi mới. Nhưng bạn có thể thay đổi mức độ thông báo cho _bất kỳ_ chủ đề nào thành 'giám sát', 'theo dõi' hoặc 'phớt lờ'.
+
+          Hãy thử thay đổi mức độ thông báo cho chủ đề này. Ở cuối chủ đề, bạn sẽ thấy một nút cho biết bạn đang **giám sát** chủ đề này. Bạn có thể thay đổi mức độ thông báo thành **theo dõi** không?
+        not_found: |-
+          Có vẻ như bạn vẫn đang giám sát :eyes: chủ đề này! Nếu bạn gặp khó khăn trong việc tìm kiếm, nút cấp độ thông báo nằm ở cuối chủ đề.

@@ -171,8 +171,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
+
+      before { SiteSetting.reviewable_claiming = "required" }
       it "clears the claimed topic on resolve" do
-        SiteSetting.reviewable_claiming = "required"
         reviewable.perform(moderator, :agree_and_keep)
         expect(reviewable).to be_approved
         expect(score.reload).to be_agreed
@@ -187,6 +188,38 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
             .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
             .size,
         ).to eq(1)
+      end
+
+      it "does not log unclaimed history when topic was not claimed" do
+        claimed.destroy!
+        reviewable.perform(moderator, :agree_and_keep)
+        expect(reviewable).to be_approved
+        expect(score.reload).to be_agreed
+        expect(
+          post
+            .topic
+            .reviewables
+            .first
+            .history
+            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
+            .size,
+        ).to eq(0)
+      end
+
+      it "publishes reviewable_claimed message with user data when claim is removed" do
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            reviewable.perform(moderator, :agree_and_keep)
+          end
+
+        expect(messages.size).to eq(1)
+        message = messages.first
+
+        expect(message.data[:topic_id]).to eq(post.topic.id)
+        expect(message.data[:claimed]).to eq(false)
+        expect(message.data[:user]).to be_present
+        expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:user][:username]).to eq(moderator.username)
       end
     end
 
@@ -228,11 +261,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "sends email when deleting a spammer" do
+      SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user) }.to change {
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 
@@ -245,11 +279,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "sends email when deleting and blocking a spammer" do
+      SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user_block) }.to change {
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 
@@ -299,6 +334,30 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(nested_reply.reload.deleted_at).to be_present
     end
 
+    it "delete_and_ignore_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_ignore_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
+    it "delete_and_agree_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_agree_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
     it "disagrees with the flags" do
       reviewable.perform(moderator, :disagree)
       expect(reviewable).to be_rejected
@@ -312,45 +371,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(score.reload).to be_disagreed
       expect(post.user_deleted?).to eq(false)
       expect(post.hidden?).to eq(false)
-    end
-
-    context "when reviewable_ui_refresh enabled (separated bundles)" do
-      before do
-        SiteSetting.reviewable_old_moderator_actions = false
-        # Stub guardian check on reviewable to simulate feature flag on
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-      end
-
-      it "builds post action bundles" do
-        actions = reviewable.actions_for(guardian)
-        post_bundle = actions.bundles.find { |b| b.id.ends_with?("-post-actions") }
-        expect(post_bundle).to be_present
-        expect(actions.has?(:no_action_post)).to eq(true)
-        expect(actions.has?(:hide_post)).to eq(true)
-      end
-
-      it "builds user actions bundle with moderation actions" do
-        actions = reviewable.actions_for(guardian)
-        user_bundle = actions.bundles.find { |b| b.id.ends_with?("-user-actions") }
-        expect(user_bundle).to be_present
-        expect(actions.has?(:silence_user)).to eq(true)
-        expect(actions.has?(:suspend_user)).to eq(true)
-        expect(actions.has?(:delete_user)).to eq(true)
-      end
-
-      it "omits user deletion when reviewer cannot delete user" do
-        allow(guardian).to receive(:can_delete_user?).and_return(false)
-        actions = reviewable.actions_for(guardian)
-        expect(actions.has?(:delete_user)).to eq(false)
-        expect(actions.has?(:delete_and_block_user)).to eq(false)
-      end
-
-      it "shows unhide_post when post hidden" do
-        post.update(hidden: true, hidden_at: Time.zone.now)
-        actions = reviewable.actions_for(guardian)
-        expect(actions.has?(:unhide_post)).to eq(true)
-        expect(actions.has?(:hide_post)).to eq(false)
-      end
     end
   end
 
@@ -473,6 +493,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(flagged_reply.reload).to be_ignored
+    end
+  end
+
+  describe "#perform_disagree" do
+    it "restores a hidden post even when the author would no longer pass post validations" do
+      SiteSetting.newuser_max_embedded_media = 1
+
+      author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      flagged_post =
+        create_post(
+          user: author,
+          raw: "![one](http://example.com/one.png)\n![two](http://example.com/two.png)",
+        )
+      reviewable = PostActionCreator.spam(user, flagged_post).reviewable
+      flagged_post.hide!(PostActionType.types[:spam])
+
+      author.update!(trust_level: TrustLevel[0])
+
+      expect { reviewable.perform(moderator, :disagree) }.not_to raise_error
+      expect(flagged_post.reload.hidden).to eq(false)
+      expect(flagged_post.topic.reload.visible).to eq(true)
     end
   end
 

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class TopicsBulkAction
+  attr_reader :errors
+
   def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids
     @operation = operation
     @changed_ids = []
+    @errors = Hash.new(0)
     @options = options
   end
 
@@ -24,9 +27,16 @@ class TopicsBulkAction
       change_tags
       append_tags
       remove_tags
+      manage_tags
       relist
       dismiss_topics
       reset_bump_dates
+      pin
+      unpin
+      convert_to_public_topic
+      convert_to_private_message
+      enable_nested_view
+      disable_nested_view
     ]
   end
 
@@ -39,8 +49,17 @@ class TopicsBulkAction
     if TopicsBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
+
     # careful these are private methods, we need send
     send(@operation[:type])
+
+    if @errors.present?
+      error_details = @errors.map { |msg, count| "- #{msg} (#{count} topics)" }.join("\n")
+      Rails.logger.warn(
+        "Bulk '#{@operation[:type]}' by @#{@user.username} (id=#{@user.id}) failed for #{@errors.values.sum} topics:\n#{error_details}",
+      )
+    end
+
     @changed_ids.sort
   end
 
@@ -66,6 +85,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.move_to_inbox!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -79,6 +99,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.archive!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -134,27 +155,47 @@ class TopicsBulkAction
   def change_category
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
-    if SiteSetting.create_revision_on_bulk_topic_moves
-      opts = {
-        bypass_bump: true,
-        validate_post: false,
-        bypass_rate_limiter: true,
-        silent: @operation[:silent],
-      }
+    opts = {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      silent: @operation[:silent],
+      skip_revision: !SiteSetting.create_revision_on_bulk_topic_moves,
+    }
 
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          changes = { category_id: @operation[:category_id] }
-          @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
+    updatable_topics.each do |t|
+      if guardian.can_edit?(t)
+        changes = { category_id: @operation[:category_id] }
+        if t.first_post.revise(@user, changes, opts)
+          @changed_ids << t.id
+        else
+          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
         end
       end
-    else
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          if t.change_category_to_id(@operation[:category_id], silent: @operation[:silent])
-            @changed_ids << t.id
-          end
-        end
+    end
+  end
+
+  def convert_to_public_topic
+    bulk_convert(from_pm: true) { |c| c.convert_to_public_topic(@operation[:category_id]) }
+  end
+
+  def convert_to_private_message
+    bulk_convert(from_pm: false, &:convert_to_private_message)
+  end
+
+  def bulk_convert(from_pm:)
+    silent = @operation.fetch(:silent, true)
+
+    topics.each do |t|
+      next if t.private_message? != from_pm
+      next unless guardian.can_convert_topic?(t)
+
+      yield TopicConverter.new(t, @user, silent: silent)
+
+      if t.errors.any?
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      elsif t.reload.private_message? != from_pm
+        @changed_ids << t.id
       end
     end
   end
@@ -223,6 +264,26 @@ class TopicsBulkAction
     end
   end
 
+  def pin
+    status = @operation[:pinned_globally] ? "pinned_globally" : "pinned"
+    topics.each do |t|
+      if guardian.can_moderate?(t)
+        t.update_status(status, true, @user, until: @operation[:pinned_until])
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def unpin
+    topics.each do |t|
+      if guardian.can_moderate?(t) && t.pinned_at
+        status = t.pinned_globally ? "pinned_globally" : "pinned"
+        t.update_status(status, false, @user)
+        @changed_ids << t.id
+      end
+    end
+  end
+
   def archive
     topics.each do |t|
       if guardian.can_moderate?(t)
@@ -241,41 +302,104 @@ class TopicsBulkAction
     end
   end
 
-  def change_tags
-    tags = @operation[:tags]
-    tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
+  def enable_nested_view
+    toggle_nested_view(enabled: true)
+  end
+
+  def disable_nested_view
+    toggle_nested_view(enabled: false)
+  end
+
+  def toggle_nested_view(enabled:)
+    return unless SiteSetting.nested_replies_enabled
+    return if SiteSetting.nested_replies_default
 
     topics.each do |t|
-      if guardian.can_edit?(t)
-        if tags.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tags)
-        else
-          t.tags = []
-        end
-        @changed_ids << t.id
-      end
+      next if t.private_message?
+
+      result = NestedTopic::Toggle.call(guardian: guardian, params: { topic_id: t.id, enabled: })
+      @changed_ids << t.id if result.success?
     end
   end
 
-  def append_tags
-    tags = @operation[:tags]
-    tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
+  def change_tags
+    tags = resolve_tag_names || []
+    topics_with_tags.each { |t| apply_tag_revision(t, tags) }
+  end
 
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true) if tags.present?
-        @changed_ids << t.id
-      end
+  def append_tags
+    tags = resolve_tag_names || []
+    return if tags.blank?
+
+    topics_with_tags.each do |t|
+      merged = t.tags.map(&:name) | tags
+      apply_tag_revision(t, merged)
     end
   end
 
   def remove_tags
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        TopicTag.where(topic_id: t.id).in_batches.destroy_all
-        @changed_ids << t.id
+    topics_with_tags.each { |t| apply_tag_revision(t, []) }
+  end
+
+  def manage_tags
+    add_ids = (@operation[:add_tag_ids] || []).map(&:to_i)
+    remove_ids = (@operation[:remove_tag_ids] || []).map(&:to_i)
+    replace_pairs =
+      (@operation[:replace_tags] || []).map { |e| [e[:from_tag_id].to_i, e[:to_tag_id].to_i] }
+
+    valid_ids = Tag.where(id: (add_ids + remove_ids + replace_pairs).flatten).pluck(:id)
+    add_ids &= valid_ids
+    remove_ids &= valid_ids
+    replace_map =
+      replace_pairs.each_with_object({}) do |(from_id, to_id), map|
+        map[from_id] ||= to_id if valid_ids.include?(from_id) && valid_ids.include?(to_id)
       end
+
+    topics_with_tags.each do |t|
+      current = t.tags.map(&:id)
+      base = @operation[:remove_all_tags] ? [] : current - remove_ids
+      final = (base | add_ids).map { |id| replace_map[id] || id }.uniq
+
+      next if final.sort == current.sort
+
+      apply_tag_revision(t, Tag.where(id: final).pluck(:name))
     end
+  end
+
+  def apply_tag_revision(topic, tag_names)
+    return false unless guardian.can_edit?(topic)
+    return false unless topic.first_post
+
+    if topic.first_post.revise(@user, { tags: tag_names }, bulk_tag_opts)
+      @changed_ids << topic.id
+      true
+    else
+      topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      false
+    end
+  end
+
+  def resolve_tag_names
+    if @operation[:tag_ids].present?
+      Tag.where(id: @operation[:tag_ids]).pluck(:name)
+    elsif @operation[:tags].present?
+      Discourse.deprecate(
+        "the tags param for bulk actions is deprecated, use tag_ids instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+      @operation[:tags]
+    end
+  end
+
+  def bulk_tag_opts
+    {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      skip_revision: true,
+      silent: true,
+    }
   end
 
   def guardian
@@ -284,6 +408,10 @@ class TopicsBulkAction
 
   def topics
     @topics ||= Topic.where(id: @topic_ids)
+  end
+
+  def topics_with_tags
+    @topics_with_tags ||= topics.includes(:first_post, :tags)
   end
 
   def dismiss_topics_since_date

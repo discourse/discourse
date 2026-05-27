@@ -2,15 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DSelect from "discourse/ui-kit/d-select";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
  * admin filter controls component that support both client-side and server-side filtering
@@ -34,14 +35,17 @@ import { and, not } from "discourse/truth-helpers";
  * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
  *                                              For multiple dropdowns: receives (key, value)
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
+ * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  */
 
 export default class AdminFilterControls extends Component {
-  @tracked textFilter = "";
   @tracked dropdownFilter = "all";
-  @tracked dropdownFilters = new TrackedObject();
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  @resettableTracked
+  textFilter = this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+
+  dropdownFilters = trackedObject();
 
   constructor() {
     super(...arguments);
@@ -122,13 +126,18 @@ export default class AdminFilterControls extends Component {
     }
 
     if (this.textFilter.length > 0) {
-      const term = this.textFilter.toLowerCase();
-      filtered = filtered.filter((item) => {
-        return this.searchableProps.some((key) => {
-          const value = this.getNestedValue(item, key);
-          return value && value.toString().toLowerCase().includes(term);
-        });
-      });
+      const terms = this.textFilter
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
+      filtered = filtered.filter((item) =>
+        terms.some((term) =>
+          this.searchableProps.some((key) => {
+            const value = this.getNestedValue(item, key);
+            return value && value.toString().toLowerCase().includes(term);
+          })
+        )
+      );
     }
 
     if (this.hasMultipleDropdowns) {
@@ -230,22 +239,33 @@ export default class AdminFilterControls extends Component {
   }
 
   <template>
+    {{yield to="aboveFilters"}}
+
     {{#if this.showFilters}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "admin-filter-controls"
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
         {{didInsert this.setupComponent}}
       >
         <div class="admin-filter-controls__inputs">
-          <FilterInput
+          <DFilterInput
             placeholder={{@inputPlaceholder}}
             @filterAction={{this.onTextFilterChange}}
             @value={{this.textFilter}}
             class="admin-filter-controls__input"
             @icons={{hash left="magnifying-glass"}}
           />
+
+          {{#if (and this.hasActiveFilters (not @loading))}}
+            <DButton
+              @icon="arrow-rotate-left"
+              @label="reset_filter"
+              @action={{this.resetFilters}}
+              class="btn-default admin-filter-controls__reset"
+            />
+          {{/if}}
 
           {{#if this.hasMultipleDropdowns}}
             <DButton

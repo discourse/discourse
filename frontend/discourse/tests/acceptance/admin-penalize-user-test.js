@@ -68,8 +68,6 @@ acceptance("Admin - Suspend User", function (needs) {
   test("suspend, then unsuspend a user", async function (assert) {
     const suspendUntilCombobox = selectKit(".suspend-until .combobox");
 
-    await visit("/admin/flags/active");
-
     await visit("/admin/users/1234/regular");
 
     assert.dom(".suspension-info").doesNotExist();

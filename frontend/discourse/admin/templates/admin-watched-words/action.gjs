@@ -1,10 +1,10 @@
 import { Input } from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminWatchedWord from "discourse/admin/components/admin-watched-word";
 import WatchedWordForm from "discourse/admin/components/watched-word-form";
 import WatchedWordUploader from "discourse/admin/components/watched-word-uploader";
-import DButton from "discourse/components/d-button";
-import basePath from "discourse/helpers/base-path";
+import DButton from "discourse/ui-kit/d-button";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -55,8 +55,8 @@ export default <template>
 
   {{#if @controller.siteSettings.watched_words_regular_expressions}}
     <p>
-      {{htmlSafe
-        (i18n "admin.watched_words.regex_warning" basePath=(basePath))
+      {{trustHTML
+        (i18n "admin.watched_words.regex_warning" basePath=(dBasePath))
       }}
     </p>
   {{/if}}

@@ -1,18 +1,18 @@
 import { Input } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import UserField from "discourse/components/user-field";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -170,8 +170,8 @@ export default <template>
                 @controller.model.featured_topic.id
               }}
             >
-              {{replaceEmoji
-                (htmlSafe @controller.model.featured_topic.fancy_title)
+              {{dReplaceEmoji
+                (trustHTML @controller.model.featured_topic.fancy_title)
               }}
             </LinkTo>
           </label>
@@ -238,7 +238,7 @@ export default <template>
     />
   {{/unless}}
 
-  <SaveControls
+  <DSaveControls
     @model={{@controller.model}}
     @action={{@controller.save}}
     @saved={{@controller.saved}}

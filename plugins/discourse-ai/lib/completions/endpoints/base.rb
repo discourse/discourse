@@ -7,6 +7,8 @@ module DiscourseAi
         attr_reader :partial_tool_calls, :output_thinking
 
         CompletionFailed = Class.new(StandardError)
+        FAIL_THRESHOLD = 5
+        FAIL_TTL = 1.hour
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -14,10 +16,12 @@ module DiscourseAi
         TIMEOUT = 360
 
         class << self
-          def endpoint_for(provider_name)
+          def endpoint_for(llm_model)
             endpoints = [
+              DiscourseAi::Completions::Endpoints::AwsBedrockConverse,
               DiscourseAi::Completions::Endpoints::AwsBedrock,
               DiscourseAi::Completions::Endpoints::OpenAi,
+              DiscourseAi::Completions::Endpoints::OpenAiResponses,
               DiscourseAi::Completions::Endpoints::HuggingFace,
               DiscourseAi::Completions::Endpoints::Gemini,
               DiscourseAi::Completions::Endpoints::Vllm,
@@ -33,11 +37,11 @@ module DiscourseAi
             endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
-              ek.can_contact?(provider_name)
+              ek.can_contact?(llm_model)
             end
           end
 
-          def can_contact?(_model_provider)
+          def can_contact?(_llm_model)
             raise NotImplementedError
           end
         end
@@ -75,6 +79,7 @@ module DiscourseAi
           partial_tool_calls: false,
           output_thinking: false,
           cancel_manager: nil,
+          execution_context: nil,
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
@@ -107,6 +112,7 @@ module DiscourseAi
                 partial_tool_calls: partial_tool_calls,
                 output_thinking: output_thinking,
                 cancel_manager: cancel_manager,
+                execution_context:,
               )
 
             wrapped = result
@@ -149,6 +155,7 @@ module DiscourseAi
               cancel_manager_callback =
                 lambda do
                   cancelled = true
+                  call_status = :cancelled
                   http.finish
                 end
               cancel_manager.add_callback(cancel_manager_callback)
@@ -181,14 +188,21 @@ module DiscourseAi
                   )
               end
 
-            # during dev we want to log all requests even ones that fail
-            start_logging.call if Rails.env.development?
+            start_logging.call
+
+            if cancelled || cancel_manager&.cancelled?
+              call_status = :cancelled
+              break
+            end
 
             http.request(request) do |response|
+              log.response_status = response.code.to_i if log
+
               if response.code.to_i != 200
                 Rails.logger.error(
                   "#{self.class.name}: status: #{response.code.to_i} - body: #{response.body}",
                 )
+                response_raw << response.body.to_s
                 raise CompletionFailed, response.body
               end
 
@@ -217,8 +231,6 @@ module DiscourseAi
                   end
               end
 
-              start_logging.call if !log
-
               if !@streaming_mode
                 response_data =
                   non_streaming_response(
@@ -233,25 +245,24 @@ module DiscourseAi
                 return response_data
               end
 
-              begin
-                response.read_body do |chunk|
+              response.read_body do |chunk|
+                break if cancelled
+
+                response_raw << chunk
+
+                decode_chunk(chunk).each do |partial|
                   break if cancelled
-
-                  response_raw << chunk
-
-                  decode_chunk(chunk).each do |partial|
-                    break if cancelled
-                    partials_raw << partial.to_s
-                    response_data << partial if partial.is_a?(String)
-                    partials = [partial]
-                    if xml_tool_processor && partial.is_a?(String)
-                      partials = (xml_tool_processor << partial)
-                      break if xml_tool_processor.should_cancel?
-                    end
-                    partials.each { |inner_partial| blk.call(inner_partial) }
+                  partials_raw << partial.to_s
+                  response_data << partial if partial.is_a?(String)
+                  partials = [partial]
+                  if xml_tool_processor && partial.is_a?(String)
+                    partials = (xml_tool_processor << partial)
+                    break if xml_tool_processor.should_cancel?
                   end
+                  partials.each { |inner_partial| blk.call(inner_partial) }
                 end
               end
+
               if xml_stripper
                 stripped = xml_stripper.finish
                 if stripped.present?
@@ -278,14 +289,20 @@ module DiscourseAi
               call_status = :success
               return response_data
             ensure
-              if log
+              should_log = log && call_status != :cancelled
+
+              if should_log
                 log.raw_response_payload = response_raw
                 final_log_update(log)
                 log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
+                log.response_status ||= 200
                 log.created_at = start_time
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
+
+                execution_context&.token_usage_tracker&.add_from_audit_log(log)
+
                 AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
                 LlmCreditAllocation.deduct_credits!(
@@ -309,7 +326,10 @@ module DiscourseAi
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end
               end
-              if log && (logger = Thread.current[:llm_audit_log])
+
+              track_failures(call_status)
+
+              if should_log && (logger = execution_context&.audit_logger)
                 call_data = <<~LOG
                   #{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}
                   request:
@@ -319,7 +339,7 @@ module DiscourseAi
                 LOG
                 logger.info(call_data)
               end
-              if log && (structured_logger = Thread.current[:llm_audit_structured_log])
+              if should_log && (structured_logger = execution_context&.structured_audit_logger)
                 llm_request =
                   begin
                     JSON.parse(log.raw_request_payload)
@@ -426,11 +446,31 @@ module DiscourseAi
         private
 
         def format_possible_json_payload(payload)
-          begin
-            JSON.pretty_generate(JSON.parse(payload))
-          rescue JSON::ParserError
-            payload
+          JSON.pretty_generate(JSON.parse(payload))
+        rescue JSON::ParserError
+          payload
+        end
+
+        def track_failures(call_status)
+          return if call_status == :cancelled
+          return if llm_model.blank? || llm_model.seeded? || llm_model.new_record?
+          key = "ai_llm_status_fast_fail:#{llm_model.id}"
+
+          if call_status == :success
+            Discourse.redis.del(key)
+            return
           end
+
+          failures_count = Discourse.redis.incr(key)
+          Discourse.redis.expire(key, FAIL_TTL.to_i)
+
+          return if failures_count < FAIL_THRESHOLD
+
+          ProblemCheck::AiLlmStatus.fast_track_problem!(
+            llm_model,
+            failures_count,
+            FAIL_TTL / 1.hour,
+          )
         end
 
         def start_log(
@@ -452,7 +492,7 @@ module DiscourseAi
             feature_name: feature_name,
             llm_id: llm_model&.id,
             language_model: llm_model.name,
-            feature_context: feature_context.present? ? feature_context.as_json : nil,
+            feature_context: feature_context.presence&.as_json,
           )
         end
 
@@ -497,6 +537,7 @@ module DiscourseAi
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1
+          response_data = "" if response_data.nil?
 
           response_data
         end

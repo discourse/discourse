@@ -9,7 +9,7 @@ hu:
     overall_sentiment:
       yaxis: "Dátum"
     emotion_neutral:
-      title: "\U0001F610 Semleges"
+      title: "😐 Semleges"
   discourse_ai:
     tools:
       presets:
@@ -17,14 +17,51 @@ hu:
           name: "Egyéni"
     ai_bot:
       tool_summary:
+        edit_post: "Bejegyzés szerkesztése"
+        move_posts: "Bejegyzések áthelyezése"
         search: "Keresés"
         tags: "Címkék felsorolása"
         time: "Idő"
         summarize: "Összefoglalás"
+      tool_help:
+        delete_topic: "Téma törlése"
+      close_topic:
+        errors:
+          not_found: "A téma nem található."
+      unlist_topic:
+        errors:
+          not_found: "A téma nem található."
+      delete_topic:
+        errors:
+          not_found: "A téma nem található."
+      edit_tags:
+        errors:
+          not_found: "A téma nem található."
+      edit_category:
+        errors:
+          not_found: "A téma nem található."
+      set_topic_timer:
+        errors:
+          not_found: "A téma nem található."
+      set_slow_mode:
+        errors:
+          not_found: "A téma nem található."
+      move_posts:
+        errors:
+          not_found: "A téma nem található."
+      assign:
+        errors:
+          not_found: "A téma nem található."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Jóváhagyás"
+        reject:
+          title: "Elutasítás"
     sentiment:
       reports:
         post_emotion:
-          neutral: "Semleges \U0001F610"
+          neutral: "Semleges 😐"
         sentiment_analysis:
           neutral: "Semleges"
     ai_staff_action_logger:

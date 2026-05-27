@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module GitterProvider
       PROVIDER_NAME = "gitter"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_gitter_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [

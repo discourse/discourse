@@ -12,6 +12,18 @@ en:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+            filters:
+              ad_type: 
+                label: "Ad Type" 
+              house_ad_name:
+                label: "HouseAd Name"
+              ad_placement:
+                label: "Ad Placement"
+              user_type: 
+                label: "User Type"
+                
       adplugin:
         house_ads:
           title: "House Ads"
@@ -20,15 +32,28 @@ en:
           new_name: "New House Ad"
           save: "Save"
           delete: "Delete"
-          description: "Define your own ads and where they should be displayed."
-          get_started: "Start by creating a new ad."
+          confirm_delete: "Are you sure you want to delete this ad?"
+          html: "HTML"
+          categories: "Categories"
+          routes: "Routes"
+          groups: "Groups"
+          description: "Create and manage your own ads to display across your site in various positions."
+          get_started: "No house ads have been created yet."
           filter_placeholder: "Select ads..."
           more_settings: "More Settings"
           show_to_anons: "Show to anonymous users"
           show_to_logged_in_users: "Show to logged in users"
           category_chooser_description: "Choose the categories where this ad should be displayed or leave empty to show the ad everywhere. The `no_ads_for_categories` site setting has priority over this setting."
+          category_chooser_description_with_routes: "Choose the categories where this ad should be displayed. Leave this and route selections empty to show the ad everywhere. The `no_ads_for_categories` site setting has priority over this setting."
+          route_chooser_description: "Choose the pages/routes where this ad should be displayed. Leave this and category selections empty to show the ad everywhere."
           group_chooser_description: "Choose the groups that can view this ad or leave empty to show the ad to all signed in users."
           preview: "Preview"
+          back: "House Ads"
+          name: "Name"
+          edit: "Edit"
+          tabs:
+            ads: "Ads"
+            settings: "Settings"
 
           topic_list_top:
             title: "Topic list top ads"
@@ -45,3 +70,6 @@ en:
           topic_list_between:
             title: "Between topics"
             description: "Ads to show in between topics, after every N topics."
+          nested_roots_between:
+            title: "Between nested roots"
+            description: "Ads to show in between root replies in the nested replies view, after every N roots."

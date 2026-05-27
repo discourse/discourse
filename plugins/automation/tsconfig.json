@@ -1,9 +1,6 @@
 {
   "extends": "discourse/tsconfig-plugin",
-  "include": [
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
-  ],
+  "include": ["./assets/javascripts/**/*", "./test/javascripts/**/*"],
   "compilerOptions": {
     "paths": {
       "discourse/plugins/automation/*": ["./assets/javascripts/*"]

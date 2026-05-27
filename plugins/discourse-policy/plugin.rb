@@ -33,6 +33,7 @@ after_initialize do
   require_relative "lib/extensions/user_notifications_extension"
   require_relative "lib/extensions/user_option_extension"
   require_relative "lib/policy_mailer"
+  require_relative "lib/post_validator"
 
   Discourse::Application.routes.append { mount DiscoursePolicy::Engine, at: "/policy" }
 
@@ -45,16 +46,32 @@ after_initialize do
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
+  deprecate_setting(
+    "policy_restrict_to_staff_posts",
+    "create_policy_allowed_groups",
+    false,
+    "3.7.0",
+  )
+
   add_to_serializer(:user_option, :policy_email_frequency) { object.policy_email_frequency }
 
   register_email_unsubscriber("policy_email", EmailControllerHelper::PolicyEmailUnsubscriber)
 
   TopicView.default_post_custom_fields << DiscoursePolicy::HAS_POLICY
 
+  validate(:post, :validate_policy) do
+    return unless raw_changed?
+
+    validator = DiscoursePolicy::PostValidator.new(self)
+    return unless validator.validate_post
+
+    true
+  end
+
   on(:post_process_cooked) do |doc, post|
     has_group = false
 
-    if !SiteSetting.policy_restrict_to_staff_posts || post&.user&.staff?
+    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
       if policy = doc.search(".policy")&.first
         post_policy = post.post_policy || post.build_post_policy
 
@@ -89,7 +106,7 @@ after_initialize do
         post_policy.post_policy_groups = new_relations
 
         renew_days = policy["data-renew"]
-        if (renew_days.to_i) > 0 || PostPolicy.renew_intervals.keys.include?(renew_days)
+        if renew_days.to_i > 0 || PostPolicy.renew_intervals.keys.include?(renew_days)
           post_policy.renew_days =
             PostPolicy.renew_intervals.keys.include?(renew_days) ? nil : renew_days
           post_policy.renew_interval = post_policy.renew_days.present? ? nil : renew_days
@@ -123,7 +140,9 @@ after_initialize do
             if post_policy.add_users_to_group.present?
               previously_accepted_users = post_policy.accepted_policy_users
 
-              Group.find_by(id: post_policy.add_users_to_group)&.remove(previously_accepted_users)
+              Group.find_by(id: post_policy.add_users_to_group)&.bulk_remove(
+                previously_accepted_users.pluck(:user_id),
+              )
             end
           end
         end
@@ -136,7 +155,11 @@ after_initialize do
         post_policy.private = policy["data-private"] == "true"
 
         if policy["data-add-users-to-group"].present?
-          post_policy.add_users_to_group = Group.find_by_name(policy["data-add-users-to-group"])&.id
+          add_to_group = Group.find_by_name(policy["data-add-users-to-group"])
+          post_policy.add_users_to_group =
+            if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
+              add_to_group.id
+            end
         end
 
         if has_group
@@ -154,6 +177,10 @@ after_initialize do
       post.save_custom_fields
       PostPolicy.where(post_id: post.id).destroy_all
     end
+  end
+
+  add_to_serializer(:current_user, :can_create_policy) do
+    object.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
   end
 
   add_report("unaccepted-policies") do |report|

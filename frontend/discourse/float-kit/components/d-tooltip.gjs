@@ -6,9 +6,9 @@ import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import { TOOLTIP } from "discourse/float-kit/lib/constants";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DTooltip extends Component {
   @service tooltip;
@@ -50,7 +50,7 @@ export default class DTooltip extends Component {
   <template>
     <span
       {{this.registerTrigger this.allowedProperties}}
-      class={{concatClass
+      class={{dConcatClass
         "fk-d-tooltip__trigger"
         (if this.tooltipInstance.expanded "-expanded")
       }}
@@ -62,26 +62,24 @@ export default class DTooltip extends Component {
       ...attributes
     >
       <span class="fk-d-tooltip__trigger-container">
-        {{#if (has-block "trigger")}}
+        {{~#if (has-block "trigger")~}}
           {{yield this.componentArgs to="trigger"}}
-        {{else}}
+        {{~else~}}
           {{#if @icon}}
             <span class="fk-d-tooltip__icon">
-              {{~icon @icon~}}
+              {{~dIcon @icon~}}
             </span>
           {{/if}}
           {{#if @label}}
             <span class="fk-d-tooltip__label">{{@label}}</span>
           {{/if}}
-        {{/if}}
-      </span>
-    </span>
-
-    {{#if this.tooltipInstance.expanded}}
+        {{~/if~}}
+      </span></span>
+    {{~#if this.tooltipInstance.expanded~}}
       <DFloatBody
         @instance={{this.tooltipInstance}}
         @trapTab={{and this.options.interactive this.options.trapTab}}
-        @mainClass={{concatClass
+        @mainClass={{dConcatClass
           "fk-d-tooltip__content"
           (concat this.options.identifier "-content")
         }}
@@ -102,6 +100,6 @@ export default class DTooltip extends Component {
           {{this.options.content}}
         {{/if}}
       </DFloatBody>
-    {{/if}}
+    {{~/if~}}
   </template>
 }

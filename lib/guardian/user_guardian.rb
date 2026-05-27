@@ -7,7 +7,7 @@ module UserGuardian
   end
 
   def can_pick_avatar?(user_avatar, upload)
-    return false unless self.user
+    return false unless user
     return true if is_admin?
     # can always pick blank avatar
     return true if !upload
@@ -32,8 +32,10 @@ module UserGuardian
   def can_edit_email?(user)
     return false if SiteSetting.auth_overrides_email?
     return false unless SiteSetting.email_editable?
-    return true if is_staff?
+    return true if is_admin?
     return false if is_anonymous?
+    return false if is_moderator? && !is_me?(user)
+
     can_edit?(user)
   end
 
@@ -50,12 +52,16 @@ module UserGuardian
     is_me?(user) || is_admin?
   end
 
+  def can_see_bookmarks?(user)
+    is_me?(user) || is_admin?
+  end
+
   def can_silence_user?(user)
     user && is_staff? && not(user.staff?)
   end
 
   def can_unsilence_user?(user)
-    user && is_staff?
+    user && is_staff? && (!user.staff? || is_admin?)
   end
 
   def can_delete_user?(user)
@@ -120,6 +126,16 @@ module UserGuardian
     is_me?(user) || is_staff?
   end
 
+  def can_see_user_status?(user)
+    return false if user.blank?
+
+    if user.silenced?
+      is_me?(user) || is_staff?
+    else
+      true
+    end
+  end
+
   def can_disable_second_factor?(user)
     user && can_administer_user?(user)
   end
@@ -167,12 +183,10 @@ module UserGuardian
     is_staff_or_is_me = is_staff? || is_me?(user)
     cache_key = is_staff_or_is_me ? :staff_or_me : :other
 
-    @allowed_user_field_ids[cache_key] ||= begin
-      if is_staff_or_is_me
-        UserField.pluck(:id)
-      else
-        UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
-      end
+    @allowed_user_field_ids[cache_key] ||= if is_staff_or_is_me
+      UserField.pluck(:id)
+    else
+      UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
     end
   end
 

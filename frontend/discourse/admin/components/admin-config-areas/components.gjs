@@ -1,22 +1,17 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import InstallComponentModal from "discourse/admin/components/modal/install-theme";
 import { COMPONENTS } from "discourse/admin/models/theme";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
@@ -24,6 +19,13 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const STATUS_FILTER_OPTIONS = [
@@ -55,8 +57,8 @@ const STATUS_FILTER_OPTIONS = [
 
 export default class AdminConfigAreasComponents extends Component {
   @service modal;
-  @service router;
   @service toasts;
+  @service router;
 
   @tracked loading = true;
   @tracked components = [];
@@ -233,7 +235,10 @@ export default class AdminConfigAreasComponents extends Component {
           @loading={{this.loading}}
         >
           <:content>
-            <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
+            <DLoadMore
+              @action={{this.loadMore}}
+              @rootMargin="0px 0px 250px 0px"
+            >
               <PluginOutlet
                 @name="admin-config-area-components-above-table"
                 @outletArgs={{lazyHash components=this.components}}
@@ -262,12 +267,12 @@ export default class AdminConfigAreasComponents extends Component {
                   {{/each}}
                 </tbody>
               </table>
-              <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
-            </LoadMore>
+              <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
+            </DLoadMore>
           </:content>
         </AdminFilterControls>
       {{/if}}
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#unless this.hasComponents}}
           <AdminConfigAreaEmptyList
             @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
@@ -277,7 +282,7 @@ export default class AdminConfigAreasComponents extends Component {
             />
           </AdminConfigAreaEmptyList>
         {{/unless}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }
@@ -285,7 +290,6 @@ export default class AdminConfigAreasComponents extends Component {
 class ComponentRow extends Component {
   @service toasts;
   @service dialog;
-  @service router;
 
   @tracked enabled = this.args.component.enabled;
   @tracked hasUpdates = this.args.component.remote_theme?.commits_behind > 0;
@@ -336,14 +340,6 @@ class ComponentRow extends Component {
     return (
       this.args.component.description ??
       (remoteUrl && descriptionForRemoteUrl(remoteUrl))
-    );
-  }
-
-  get editUrl() {
-    return this.router.urlFor(
-      "adminCustomizeThemes.show",
-      "themes",
-      this.args.component.id
     );
   }
 
@@ -473,9 +469,13 @@ class ComponentRow extends Component {
         {{if this.hasUpdates 'has-update'}}"
     >
       <td class="d-table__cell --overview">
-        <a class="d-table__overview-name" href={{this.editUrl}}>
-          {{@component.name}}
-        </a>
+        <LinkTo
+          class="d-table__overview-link"
+          @route="adminCustomizeThemes.show"
+          @models={{array "themes" @component.id}}
+        >
+          <div class="d-table__overview-name">{{@component.name}}</div>
+        </LinkTo>
         {{#if @component.remote_theme.authors}}
           <div
             class="d-table__overview-author admin-config-components__author-name"
@@ -493,7 +493,7 @@ class ComponentRow extends Component {
               <a href={{@component.remote_theme.about_url}}>{{i18n
                   "admin.config_areas.themes_and_components.components.learn_more"
                 }}
-                {{icon "up-right-from-square"}}
+                {{dIcon "up-right-from-square"}}
               </a>
             {{/if}}
           </div>
@@ -550,10 +550,11 @@ class ComponentRow extends Component {
             @identifier="component-menu"
             @title={{i18n "admin.config_areas.flags.more_options.title"}}
             @icon="ellipsis"
-            @class="btn-default admin-config-components__more-actions"
+            @class="admin-config-components__more-actions"
+            @triggerClass="btn-default"
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
                     class="btn-transparent admin-config-components__preview"
@@ -609,7 +610,7 @@ class ComponentRow extends Component {
                     @action={{this.delete}}
                   />
                 </dropdown.item>
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </div>

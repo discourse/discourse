@@ -12,15 +12,32 @@ RSpec.describe "SMTP Settings Integration" do
     ActionMailer::Base.delivery_method = @original_action_mailer_delivery_method
   end
 
+  it "should disable starttls_auto when tls is enabled" do
+    global_setting :smtp_address, "localhost"
+    global_setting :smtp_port, 465
+    global_setting :smtp_force_tls, true
+
+    expect(GlobalSetting.smtp_settings[:enable_starttls_auto]).to be_falsey
+  end
+
+  it "should leave starttls_auto enabled when tls is not enabled" do
+    global_setting :smtp_address, "localhost"
+    global_setting :smtp_port, 587
+    global_setting :smtp_force_tls, false
+
+    expect(GlobalSetting.smtp_settings[:enable_starttls_auto]).to be_truthy
+  end
+
   it "should attempt to send out an email without raising any SMTP argument errors" do
-    global_setting :smtp_address, "1.2.3.4"
+    global_setting :smtp_address, "192.0.2.1"
     global_setting :smtp_port, 12_345
     global_setting :smtp_open_timeout, 0.00001
 
     ActionMailer::Base.smtp_settings = GlobalSetting.smtp_settings
 
     message = TestMailer.send_test("some_email")
-
-    expect do Email::Sender.new(message, :test_message).send end.to raise_error(Net::OpenTimeout)
+    expect do Email::Sender.new(message, :test_message).send end.to raise_error { |err|
+      expect(err).to be_a(Net::OpenTimeout).or be_a(Errno::ENETUNREACH).or be_a(Errno::ECONNREFUSED)
+    }
   end
 end

@@ -32,7 +32,16 @@ class Admin::SiteSettingsController < Admin::AdminController
       settings = [{ setting_name: id, value: params[id], backfill: }]
     end
 
-    SiteSetting::Update.call(params: { settings: }, guardian:) do
+    SiteSetting::Update.call(
+      guardian:,
+      params: {
+        settings:,
+      },
+      options: {
+        # TODO: remove once the site setting is no longer hidden
+        allow_changing_hidden: %i[enable_site_owner_onboarding],
+      },
+    ) do
       on_success { head :no_content }
       on_exceptions { |e| raise Discourse::InvalidParameters, e }
       on_failed_policy(:settings_are_not_deprecated) do |policy|
@@ -54,6 +63,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     params.require(:site_setting_id)
     id = params[:site_setting_id]
     raise Discourse::NotFound unless id.start_with?("default_")
+    raise Discourse::NotFound unless SiteSetting.has_setting?(id)
     new_value = value_or_default(params[id])
 
     raise_access_hidden_setting(id)

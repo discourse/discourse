@@ -62,14 +62,42 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(s3_object).to receive(:acl).and_return(acl_object)
     allow(acl_object).to receive(:put).with(acl: "public-read").and_return(true)
 
+    post_upload_ref_relation = instance_double(ActiveRecord::Relation)
+    post_subquery = instance_double(ActiveRecord::Relation)
+    chat_upload_ref_relation = instance_double(ActiveRecord::Relation)
+    chat_subquery = instance_double(ActiveRecord::Relation)
+
     allow(UploadReference).to receive(:where).with(
       upload_id: upload.id,
       target_type: "Post",
-    ).and_return(instance_double(ActiveRecord::Relation, pluck: [post.id]))
+    ).and_return(post_upload_ref_relation)
+    allow(post_upload_ref_relation).to receive(:select).with(:target_id).and_return(post_subquery)
 
-    allow(Post).to receive(:where).with(id: [post.id]).and_return(post_relation)
+    allow(UploadReference).to receive(:where).with(
+      upload_id: upload.id,
+      target_type: "ChatMessage",
+    ).and_return(chat_upload_ref_relation)
+    allow(chat_upload_ref_relation).to receive(:select).with(:target_id).and_return(chat_subquery)
+    allow(chat_subquery).to receive(:exists?).and_return(false)
+
+    allow(Post).to receive(:where) do |args|
+      # Accept either array of IDs or subquery relation
+      if args[:id].is_a?(Array)
+        post_relation if args[:id] == [post.id]
+      elsif args[:id] == post_subquery
+        post_relation
+      end
+    end.and_return(post_relation)
     allow(post_relation).to receive(:find_each).and_yield(post)
     allow(post).to receive(:rebake!)
+
+    # Stub Chat::Message queries for chat message video conversion support
+    chat_message_relation = instance_double(ActiveRecord::Relation)
+    if defined?(Chat::Message)
+      allow(Chat::Message).to receive(:where).with(id: []).and_return(chat_message_relation)
+      allow(chat_message_relation).to receive(:includes).and_return(chat_message_relation)
+      allow(chat_message_relation).to receive(:find_each)
+    end
     allow(Rails.logger).to receive(:error)
     allow(Rails.logger).to receive(:warn)
     allow(Rails.logger).to receive(:info)
@@ -198,27 +226,19 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       end
     end
 
-    context "when using IAM profile" do
-      before do
-        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(true)
-        allow(SiteSetting).to receive(:s3_access_key_id).and_return("")
-        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("")
-        upload.update!(
-          url: "//#{s3_bucket}.s3.#{s3_region}.amazonaws.com/uploads/default/original/test.mp4",
-          original_filename: "test.mp4",
-        )
-        allow(mediaconvert_job).to receive(:id).and_return(job_id)
-        allow(mediaconvert_client).to receive(:create_job).and_return(mediaconvert_job_response)
-      end
+    it "uses S3Helper.s3_credentials for client credentials" do
+      upload.update!(
+        url: "//#{s3_bucket}.s3.#{s3_region}.amazonaws.com/uploads/default/original/test.mp4",
+        original_filename: "test.mp4",
+      )
+      allow(mediaconvert_job).to receive(:id).and_return(job_id)
+      allow(mediaconvert_client).to receive(:create_job).and_return(mediaconvert_job_response)
 
-      it "creates MediaConvert client without explicit credentials" do
-        expected_client_options = { region: s3_region, endpoint: "https://mediaconvert.endpoint" }
+      allow(S3Helper).to receive(:s3_credentials).with(SiteSetting).and_call_original
 
-        adapter.convert
+      adapter.convert
 
-        expect(Aws::MediaConvert::Client).to have_received(:new).with(expected_client_options)
-        expect(adapter.convert).to be true
-      end
+      expect(S3Helper).to have_received(:s3_credentials).with(SiteSetting)
     end
   end
 
@@ -544,60 +564,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
           expect(options[:env][:error_message]).to eq("Test error")
         end
         expect(adapter.handle_completion(job_id, new_sha1)).to be false
-      end
-    end
-  end
-
-  describe "#create_basic_client" do
-    context "when using IAM profile" do
-      before do
-        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(true)
-        allow(SiteSetting).to receive(:s3_access_key_id).and_return("")
-        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("")
-      end
-
-      it "creates client without endpoint when endpoint is nil" do
-        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
-
-        adapter.send(:create_basic_client, endpoint: nil)
-
-        expect(Aws::MediaConvert::Client).to have_received(:new).with({ region: s3_region })
-      end
-
-      it "creates client without endpoint when endpoint is empty string" do
-        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
-
-        adapter.send(:create_basic_client, endpoint: "")
-
-        expect(Aws::MediaConvert::Client).to have_received(:new).with({ region: s3_region })
-      end
-
-      it "creates client with endpoint when endpoint is present" do
-        endpoint = "https://mediaconvert.us-west-2.amazonaws.com"
-        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
-
-        adapter.send(:create_basic_client, endpoint: endpoint)
-
-        expect(Aws::MediaConvert::Client).to have_received(:new).with(
-          { region: s3_region, endpoint: endpoint },
-        )
-      end
-    end
-
-    context "when not using IAM profile" do
-      before do
-        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(false)
-        allow(SiteSetting).to receive(:s3_access_key_id).and_return("test-key")
-        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("test-secret")
-      end
-
-      it "creates client with credentials" do
-        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
-
-        adapter.send(:create_basic_client, endpoint: nil)
-
-        # Verify that credentials are included in the client creation
-        expect(Aws::MediaConvert::Client).to have_received(:new)
       end
     end
   end

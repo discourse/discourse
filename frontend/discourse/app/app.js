@@ -2,6 +2,7 @@ import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./ui-kit-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
 import dialogHolderCompatModules from "discourse/dialog-holder/dialog-holder-compat-modules";
@@ -18,11 +19,13 @@ import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-inje
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
+import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
+import { importSync } from "@embroider/macros";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildResolver } from "discourse/resolver";
 
@@ -30,7 +33,7 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  async lookup(moduleName) {
+  lookup(moduleName) {
     return require(moduleName);
   },
 };
@@ -49,14 +52,51 @@ async function loadThemeFromModulePreload(link) {
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
       String(error)
     );
+
+    if (DEBUG && (isRailsTesting() || isTesting())) {
+      throw new Error(error);
+    }
+
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }
 
-export async function loadThemes() {
+async function loadPluginFromModulePreload(link) {
+  const pluginName = link.dataset.pluginName;
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/plugins/${pluginName}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      error
+    );
+
+    if (DEBUG) {
+      if (isRailsTesting() || isTesting()) {
+        throw new Error(error);
+      }
+
+      let { addError } = importSync("discourse/static/development-error");
+      addError(error, link.dataset.pluginName, link.href);
+    }
+  }
+}
+
+export async function loadThemesAndPlugins() {
   const promises = [
-    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-  ].map(loadThemeFromModulePreload);
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+    ].map(loadThemeFromModulePreload),
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
+    ].map(loadPluginFromModulePreload),
+  ];
+
   await Promise.all(promises);
 }
 

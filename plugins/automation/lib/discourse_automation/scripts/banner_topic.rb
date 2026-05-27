@@ -17,6 +17,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::BANNER_TOPIC) 
 
     username = fields.dig("user", "value") || Discourse.system_user.username
     next unless user = User.find_by(username: username)
+    next unless Guardian.new(user).can_banner_topic?(topic)
 
     topic.make_banner!(user, banner_until)
   end

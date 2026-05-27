@@ -14,12 +14,12 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     await render(
       <template>
         <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Menu as |menu|>
+          <form.Field @type="menu" @name="foo" @title="Foo" as |field|>
+            <field.Control as |menu|>
               <menu.Item @value="item-1">Item 1</menu.Item>
               <menu.Item @value="item-2">Item 2</menu.Item>
               <menu.Item @value="item-3">Item 3</menu.Item>
-            </field.Menu>
+            </field.Control>
           </form.Field>
         </Form>
       </template>
@@ -39,13 +39,37 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-            <field.Menu />
+          <form.Field
+            @type="menu"
+            @name="foo"
+            @title="Foo"
+            @disabled={{true}}
+            as |field|
+          >
+            <field.Control />
           </form.Field>
         </Form>
       </template>
     );
 
     assert.dom(".form-kit__control-menu-trigger").hasAttribute("disabled");
+  });
+
+  test("@selection", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @type="menu" @name="foo" @title="Foo" as |field|>
+            <field.Control @selection="Current item" as |menu|>
+              <menu.Item @value="item-1">Item 1</menu.Item>
+            </field.Control>
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__control-menu-trigger .d-button-label")
+      .hasText("Current item");
   });
 });

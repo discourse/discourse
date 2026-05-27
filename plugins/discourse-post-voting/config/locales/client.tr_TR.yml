@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Gönderi Oylaması
   post_voting:
     reviewables:
       comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
@@ -30,8 +26,10 @@ tr_TR:
         label: "Gönderi oylaması konusu oluşturun"
       composer_actions:
         create_as_post_voting:
+          label: "Gönderi oylamasını aç/kapat"
           desc: "Konu oylanabilir gönderilerle oluşturulacak"
         remove_as_post_voting:
+          label: "Gönderi oylamasını kaldır"
           desc: "Konu normal formatta oluşturulacak"
     vote:
       already_voted: "Her soru için yalnızca bir kez oy kullanabilirsiniz."

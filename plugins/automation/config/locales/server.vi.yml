@@ -8,7 +8,7 @@ vi:
   discourse_automation:
     triggerables:
       user_promoted:
-        description: Khi người dùng được thăng cấp từ cấp độ tin cậy này sang cấp độ tin cậy khác
+        description: Khi người dùng được thăng cấp từ độ tin cậy này sang độ tin cậy khác
       topic:
         title: Chủ đề
     scriptables:

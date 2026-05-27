@@ -1,16 +1,16 @@
 import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
 import SelectedNameComponent from "discourse/select-kit/components/selected-name";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("selected-category")
 export default class SelectedCategory extends SelectedNameComponent {
   @computed("item")
   get badge() {
-    return htmlSafe(
+    return trustHTML(
       categoryBadgeHTML(this.item, {
         allowUncategorized: true,
         link: false,
@@ -29,7 +29,7 @@ export default class SelectedCategory extends SelectedNameComponent {
     >
       <div class="body">
         {{this.badge}}
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
       </div>
     </div>
   </template>

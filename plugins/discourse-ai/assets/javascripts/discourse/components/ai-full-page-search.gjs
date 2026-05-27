@@ -1,19 +1,19 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import bodyClass from "discourse/helpers/body-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import AiIndicatorWave from "./ai-indicator-wave";
 
 const AI_RESULTS_TOGGLED = "full-page-search:ai-results-toggled";
 
@@ -27,7 +27,7 @@ export default class AiFullPageSearch extends Component {
   @tracked sortOrder = this.args.sortOrder;
   @tracked autoEnabledForZeroResults = false;
   @tracked shouldAutoEnableWhenAiReady = false;
-  initialSearchTerm = this.args.searchTerm;
+  @tracked hasCompletedSearch = false;
 
   constructor() {
     super(...arguments);
@@ -56,8 +56,8 @@ export default class AiFullPageSearch extends Component {
       return;
     }
 
-    this.initialSearchTerm = this.args.searchTerm;
     this.searching = true;
+    this.hasCompletedSearch = false;
     this.autoEnabledForZeroResults = false;
     this.shouldAutoEnableWhenAiReady = false;
     this.resetAiResults();
@@ -78,6 +78,7 @@ export default class AiFullPageSearch extends Component {
       this.args.addSearchResults(this.AiResults, "topic_id");
       this.appEvents.trigger(AI_RESULTS_TOGGLED, {
         enabled: true,
+        autoEnabled: true,
       });
     }
     // AI results not ready yet, auto-enable when ready
@@ -123,73 +124,60 @@ export default class AiFullPageSearch extends Component {
       );
     }
 
-    // Auto-enabled and showing results:
-    if (
-      this.autoEnabledForZeroResults &&
-      this.showingAiResults &&
-      this.AiResults.length > 0
-    ) {
-      return i18n(
-        "discourse_ai.embeddings.semantic_search_results.zero_results_expanded",
-        {
-          count: this.AiResults.length,
-        }
-      );
-    }
-
-    // Search loading:
-    if (this.searching) {
-      return i18n("discourse_ai.embeddings.semantic_search_loading");
-    }
-
-    // We have results and we are showing them
-    if (this.AiResults.length && this.showingAiResults) {
-      return i18n("discourse_ai.embeddings.semantic_search_results.toggle", {
-        count: this.AiResults.length,
-      });
-    }
-
-    // We have results but are hiding them
-    if (this.AiResults.length && !this.showingAiResults) {
-      return i18n(
-        "discourse_ai.embeddings.semantic_search_results.toggle_hidden",
-        {
-          count: this.AiResults.length,
-        }
-      );
-    }
-
-    // Typing to search:
-    if (
-      this.AiResults.length === 0 &&
-      this.searchTerm !== this.initialSearchTerm
-    ) {
-      return i18n("discourse_ai.embeddings.semantic_search_results.new");
-    }
-
-    // No results:
-    if (this.AiResults.length === 0) {
-      return i18n("discourse_ai.embeddings.semantic_search_results.none");
-    }
-  }
-
-  get settled() {
-    return (
-      this.validSearchOrder &&
-      !this.searching &&
-      this.searchTerm === this.initialSearchTerm
-    );
+    return i18n("discourse_ai.embeddings.semantic_search_results.toggle");
   }
 
   get noResults() {
-    return this.settled && this.AiResults.length === 0;
+    return (
+      this.hasCompletedSearch &&
+      !this.searching &&
+      this.validSearchOrder &&
+      this.AiResults.length === 0
+    );
+  }
+
+  get tooltipIdentifier() {
+    if (!this.validSearchOrder) {
+      return "semantic-search-invalid-sort";
+    }
+    if (!this.hasCompletedSearch && !this.searching) {
+      return "semantic-search-not-submitted";
+    }
+    if (this.noResults) {
+      return "semantic-search-no-results";
+    }
+    if (this.autoEnabledForZeroResults && this.showingAiResults) {
+      return "semantic-search-zero-results";
+    }
+    return null;
+  }
+
+  get tooltipContent() {
+    if (!this.validSearchOrder) {
+      return i18n(
+        "discourse_ai.embeddings.semantic_search_tooltips.invalid_sort"
+      );
+    }
+    if (!this.hasCompletedSearch && !this.searching) {
+      return i18n(
+        "discourse_ai.embeddings.semantic_search_tooltips.not_submitted"
+      );
+    }
+    if (this.noResults) {
+      return i18n(
+        "discourse_ai.embeddings.semantic_search_tooltips.no_results"
+      );
+    }
+    if (this.autoEnabledForZeroResults && this.showingAiResults) {
+      return i18n(
+        "discourse_ai.embeddings.semantic_search_results.zero_results_expanded",
+        { count: this.AiResults.length }
+      );
+    }
+    return null;
   }
 
   get searchTerm() {
-    if (this.initialSearchTerm !== this.args.searchTerm) {
-      this.initialSearchTerm = undefined;
-    }
-
     return this.args.searchTerm;
   }
 
@@ -211,19 +199,13 @@ export default class AiFullPageSearch extends Component {
     }
   }
 
-  get tooltipText() {
-    return i18n(
-      `discourse_ai.embeddings.semantic_search_tooltips.${
-        this.validSearchOrder ? "results_explanation" : "invalid_sort"
-      }`
-    );
-  }
-
   @action
   toggleAiResults() {
     this.appEvents.trigger(AI_RESULTS_TOGGLED, {
       enabled: !this.showingAiResults,
+      autoEnabled: this.hasZeroRegularResults,
     });
+
     if (this.showingAiResults) {
       this.args.addSearchResults([], "topic_id");
       this.autoEnabledForZeroResults = false;
@@ -271,12 +253,14 @@ export default class AiFullPageSearch extends Component {
           this.args.addSearchResults(this.AiResults, "topic_id");
           this.appEvents.trigger(AI_RESULTS_TOGGLED, {
             enabled: true,
+            autoEnabled: true,
           });
         }
       })
       .catch(popupAjaxError)
       .finally(() => {
         this.searching = false;
+        this.hasCompletedSearch = true;
       });
   }
 
@@ -289,49 +273,77 @@ export default class AiFullPageSearch extends Component {
         this.onSearch();
       } else {
         this.showingAiResults = false;
+        this.hasCompletedSearch = false;
         this.resetAiResults();
       }
     }
   }
 
   <template>
+    {{bodyClass (if this.searching "ai-semantic-search-loading")}}
     <div
       {{didUpdate this.sortChanged @sortOrder}}
       class="semantic-search__container search-results"
       role="region"
     >
       <div class="semantic-search__results">
-        <div
-          class={{concatClass "semantic-search__searching" this.searchClass}}
-        >
-          <DToggleSwitch
-            disabled={{this.disableToggleSwitch}}
-            @state={{this.showingAiResults}}
-            class="semantic-search__results-toggle"
-            {{on "click" this.toggleAiResults}}
-          />
-
-          <div class="semantic-search__searching-text">
-            {{icon "discourse-sparkles"}}
-            {{this.searchStateText}}
-          </div>
-
-          {{#if this.validSearchOrder}}
-            <AiIndicatorWave @loading={{this.searching}} />
-          {{/if}}
-
-          <DTooltip
-            @identifier="semantic-search-tooltip"
-            class="semantic-search__tooltip"
-          >
+        {{#if this.tooltipIdentifier}}
+          <DTooltip @identifier={{this.tooltipIdentifier}}>
             <:trigger>
-              {{icon "far-circle-question"}}
+              <div
+                class={{dConcatClass
+                  "semantic-search__searching"
+                  this.searchClass
+                }}
+              >
+                <DToggleSwitch
+                  disabled={{this.disableToggleSwitch}}
+                  @state={{this.showingAiResults}}
+                  class="semantic-search__results-toggle"
+                  {{on "click" this.toggleAiResults}}
+                />
+                <div class="semantic-search__searching-text">
+                  {{this.searchStateText}}
+                  {{#if this.searching}}
+                    <div class="spinner small"></div>
+                  {{else if this.hasCompletedSearch}}
+                    <span
+                      class={{dConcatClass
+                        "badge-notification"
+                        (if this.AiResults.length "--has-results")
+                      }}
+                    >{{this.AiResults.length}}</span>
+                  {{/if}}
+                </div>
+              </div>
             </:trigger>
-            <:content>
-              {{this.tooltipText}}
-            </:content>
+            <:content>{{this.tooltipContent}}</:content>
           </DTooltip>
-        </div>
+        {{else}}
+          <div
+            class={{dConcatClass "semantic-search__searching" this.searchClass}}
+          >
+            <DToggleSwitch
+              disabled={{this.disableToggleSwitch}}
+              @state={{this.showingAiResults}}
+              class="semantic-search__results-toggle"
+              {{on "click" this.toggleAiResults}}
+            />
+            <div class="semantic-search__searching-text">
+              {{this.searchStateText}}
+              {{#if this.searching}}
+                <div class="spinner small"></div>
+              {{else if this.hasCompletedSearch}}
+                <span
+                  class={{dConcatClass
+                    "badge-notification"
+                    (if this.AiResults.length "--has-results")
+                  }}
+                >{{this.AiResults.length}}</span>
+              {{/if}}
+            </div>
+          </div>
+        {{/if}}
       </div>
     </div>
   </template>

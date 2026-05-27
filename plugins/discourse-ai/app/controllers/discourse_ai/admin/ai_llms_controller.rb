@@ -26,6 +26,12 @@ module DiscourseAi
                      DiscourseAi::Completions::Llm.tokenizer_names.map { |tn|
                        { id: tn, name: tn.split("::").last }
                      },
+                   ai_secrets:
+                     ActiveModel::ArraySerializer.new(
+                       AiSecret.all.order(:name),
+                       each_serializer: AiSecretSerializer,
+                       root: false,
+                     ).as_json,
                  },
                }
       end
@@ -130,8 +136,7 @@ module DiscourseAi
         }
 
         # Clean up companion users
-        llm_model.enabled_chat_bot = false
-        llm_model.toggle_companion_user
+        llm_model.cleanup_companion_user
 
         if llm_model.destroy
           log_llm_model_deletion(model_details)
@@ -142,13 +147,15 @@ module DiscourseAi
       end
 
       def test
-        RateLimiter.new(current_user, "llm_test_#{current_user.id}", 3, 1.minute).performed!
+        RateLimiter.new(current_user, "llm_test_#{current_user.id}", 6, 1.minute).performed!
+
+        validator = DiscourseAi::Configuration::LlmValidator.new
 
         # For seeded models, test the existing model directly since provider/url/api_key are hidden
         if params.dig(:ai_llm, :id).present?
           existing_model = LlmModel.find_by(id: params[:ai_llm][:id])
           if existing_model&.seeded?
-            DiscourseAi::Configuration::LlmValidator.new.run_test(existing_model)
+            validator.run_test(existing_model)
             return render json: { success: true }
           end
         end
@@ -157,13 +164,13 @@ module DiscourseAi
         llm_model = LlmModel.new(ai_llm_params.merge(display_name: "LLM test"))
 
         if llm_model.valid?
-          DiscourseAi::Configuration::LlmValidator.new.run_test(llm_model)
+          validator.run_test(llm_model)
           render json: { success: true }
         else
           render json: { success: false, validation_errors: llm_model.errors.full_messages }
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed => e
-        render json: { success: false, error: e.message }
+        render json: { success: false, error: e.message, failed_mode: validator&.last_failed_mode }
       end
 
       private
@@ -211,11 +218,13 @@ module DiscourseAi
             :max_prompt_tokens,
             :max_output_tokens,
             :api_key,
-            :enabled_chat_bot,
+            :ai_secret_id,
             :vision_enabled,
             :input_cost,
             :cached_input_cost,
+            :cache_write_cost,
             :output_cost,
+            allowed_attachment_types: [],
           )
 
         provider = updating ? updating.provider : permitted[:provider]
@@ -231,16 +240,41 @@ module DiscourseAi
 
           if received_prov_params.present?
             received_prov_params.each do |pname, value|
-              if extra_field_names[pname.to_sym] == :checkbox
+              field_def = extra_field_names[pname.to_sym]
+              is_checkbox =
+                field_def == :checkbox || (field_def.is_a?(Hash) && field_def[:type] == :checkbox)
+              if is_checkbox
                 received_prov_params[pname] = ActiveModel::Type::Boolean.new.cast(value)
               end
             end
 
-            permitted[:provider_params] = received_prov_params.permit!
+            sanitize_dependent_params!(received_prov_params, extra_field_names)
+
+            permitted[:provider_params] = received_prov_params.permit(*extra_field_names.keys)
           end
         end
 
         permitted
+      end
+
+      def sanitize_dependent_params!(prov_params, field_definitions)
+        prov_params.each do |pname, _value|
+          field_def = field_definitions[pname.to_sym]
+          next unless field_def.is_a?(Hash) && field_def[:depends_on]
+
+          deps = Array(field_def[:depends_on])
+          parent_inactive =
+            deps.any? do |dep|
+              parent_val = prov_params[dep.to_s]
+              parent_val.nil? || parent_val == false || parent_val == "false" ||
+                parent_val == "default" || parent_val == ""
+            end
+
+          if parent_inactive
+            default = field_def[:default]
+            prov_params[pname] = default || nil
+          end
+        end
       end
 
       def ai_llm_logger_fields
@@ -258,8 +292,6 @@ module DiscourseAi
           max_prompt_tokens: {
           },
           max_output_tokens: {
-          },
-          enabled_chat_bot: {
           },
           vision_enabled: {
           },

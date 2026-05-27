@@ -1,4 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
+import { isScopedSearch } from "../lib/search-discoveries-context";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
@@ -6,12 +7,13 @@ export default apiInitializer((api) => {
 
   if (
     !settings.ai_discover_enabled ||
-    !currentUser?.can_use_ai_discover_persona
+    (!currentUser?.can_use_ai_discover_agent &&
+      !currentUser?.can_use_ai_discover_agent)
   ) {
     return;
   }
 
-  api.addSaveableUserOptionField("ai_search_discoveries");
+  api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
 
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"
@@ -24,9 +26,8 @@ export default apiInitializer((api) => {
 
     const query = searchMenu.search.activeGlobalSearchTerm;
 
-    // We only trigger discover when searching on all topics.
     if (
-      searchMenu.search?.searchContext?.type ||
+      isScopedSearch(searchMenu.search) ||
       discobotDiscoveries.lastQuery === query
     ) {
       return true;
@@ -49,8 +50,7 @@ export default apiInitializer((api) => {
       return true;
     }
 
-    // We only trigger discover when searching on all topics.
-    if (search?.searchContext?.type) {
+    if (isScopedSearch(search)) {
       return true;
     }
 

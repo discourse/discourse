@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import { renderAvatar } from "discourse/helpers/user-avatar";
+import { trustHTML } from "@ember/template";
 import { userPath } from "discourse/lib/url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 
 export default class ChatUserAvatar extends Component {
   @service chatStateManager;
   @service chat;
 
   get avatar() {
-    return htmlSafe(
+    return trustHTML(
       renderAvatar(this.args.user, { imageSize: this.avatarSize })
     );
   }
@@ -49,7 +49,7 @@ export default class ChatUserAvatar extends Component {
 
   <template>
     <div
-      class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
+      class={{dConcatClass "chat-user-avatar" (if this.isOnline "is-online")}}
       data-username={{@user.username}}
     >
       {{#if this.interactive}}
@@ -57,7 +57,6 @@ export default class ChatUserAvatar extends Component {
           class="chat-user-avatar__container"
           href={{this.userPath}}
           data-user-card={{@user.username}}
-          data-auto-update-card={{this.isFullPageActive}}
         >
           {{this.avatar}}
         </a>

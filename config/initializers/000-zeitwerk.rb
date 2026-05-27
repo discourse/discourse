@@ -43,6 +43,10 @@ Rails.autoloaders.each do |autoloader|
     "json" => "JSON",
     "ssrf_detector" => "SSRFDetector",
     "http" => "HTTP",
+    "oauth_client_registration" => "OAuthClientRegistration",
+    "oauth_discovery" => "OAuthDiscovery",
+    "oauth_flow" => "OAuthFlow",
+    "oauth_token_store" => "OAuthTokenStore",
     "gc_stat_instrumenter" => "GCStatInstrumenter",
     "chat_sdk" => "ChatSDK",
     "ip" => "IP",
@@ -53,6 +57,6 @@ Rails.autoloaders.main.ignore(
   "lib/generators",
   "lib/freedom_patches",
   "lib/i18n/backend",
-  "lib/unicorn_logstash_patch.rb",
+  "lib/release_utils",
   "lib/pitchfork_logstash_patch.rb",
 )

@@ -13,4 +13,11 @@ te:
           settings: "అమరికలు"
           save: "సేవ్ చేయండి"
           delete: "తొలగించండి"
+          html: "HTML"
+          categories: "వర్గాలు"
+          groups: "సమూహాలు"
           preview: "ప్రివ్యూ"
+          name: "పేరు"
+          edit: "సవరించండి"
+          tabs:
+            settings: "అమరికలు"

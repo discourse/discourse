@@ -9,9 +9,10 @@
     &-label {
       display: flex;
       gap: 0.5em;
-      font-weight: normal !important;
       margin: 0;
+      font-weight: normal !important;
       color: var(--primary);
+      font-size: var(--font-down-1-rem);
 
       .form-kit__field[data-disabled] & {
         cursor: not-allowed;
@@ -27,5 +28,9 @@
 
   &__control-checkbox-description {
     color: var(--primary-medium);
+
+    &:empty {
+      display: none;
+    }
   }
 }

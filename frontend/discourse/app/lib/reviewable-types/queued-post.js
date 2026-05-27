@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ReviewableTypeBase from "discourse/lib/reviewable-types/base";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -16,13 +16,15 @@ export default class extends ReviewableTypeBase {
     }
     title = emojiUnescape(title);
     if (this.reviewable.is_new_topic) {
-      return htmlSafe(title);
-    } else {
-      return htmlSafe(
+      return trustHTML(title);
+    } else if (title) {
+      return trustHTML(
         i18n("user_menu.reviewable.new_post_in_topic", {
           title,
         })
       );
+    } else {
+      return i18n("user_menu.reviewable.new_post_in_deleted_topic");
     }
   }
 

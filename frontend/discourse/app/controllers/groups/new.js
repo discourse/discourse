@@ -1,23 +1,27 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class GroupsNewController extends Controller {
   @service router;
+  @service site;
   @service groupAutomaticMembersDialog;
 
   saving = null;
 
-  @discourseComputed("model.ownerUsernames")
-  splitOwnerUsernames(owners) {
-    return owners && owners.length ? owners.split(",") : [];
+  @computed("model.ownerUsernames")
+  get splitOwnerUsernames() {
+    return this.model?.ownerUsernames && this.model?.ownerUsernames?.length
+      ? this.model?.ownerUsernames?.split(",")
+      : [];
   }
 
-  @discourseComputed("model.usernames")
-  splitUsernames(usernames) {
-    return usernames && usernames.length ? usernames.split(",") : [];
+  @computed("model.usernames")
+  get splitUsernames() {
+    return this.model?.usernames && this.model?.usernames?.length
+      ? this.model?.usernames?.split(",")
+      : [];
   }
 
   @action
@@ -38,6 +42,14 @@ export default class GroupsNewController extends Controller {
     group
       .create()
       .then(() => {
+        this.site.groups.push({
+          id: group.id,
+          name: group.name,
+          flair_url: group.flair_url,
+          flair_bg_color: group.flair_bg_color,
+          flair_color: group.flair_color,
+          automatic: false,
+        });
         this.router.transitionTo("group.members", group.name);
       })
       .catch(popupAjaxError)

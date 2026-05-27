@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class BasicVoterSerializer < ApplicationSerializer
-  attributes :id, :username, :name, :avatar_template, :direction
+class BasicVoterSerializer < BasicUserSerializer
+  attributes :direction
 
   def direction
     object.direction

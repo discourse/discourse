@@ -2,16 +2,12 @@
 
 module DiscourseGamification
   class DayVisited < Scorable
-    def self.score_multiplier
-      SiteSetting.day_visited_score_value
-    end
-
-    def self.query
+    def self.query(leaderboard: nil)
       <<~SQL
         SELECT
           uv.user_id AS user_id,
           date_trunc('day', uv.visited_at) AS date,
-          COUNT(*) * #{score_multiplier} AS points
+          COUNT(*) * #{score_multiplier(leaderboard:)} AS points
         FROM
           user_visits AS uv
         WHERE

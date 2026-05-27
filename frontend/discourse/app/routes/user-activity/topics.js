@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
@@ -29,7 +29,7 @@ export default class UserActivityTopics extends UserTopicListRoute {
     let title, body;
     if (this.isCurrentUser(user)) {
       title = i18n("user_activity.no_topics_title");
-      body = htmlSafe(
+      body = trustHTML(
         i18n("user_activity.no_topics_body", {
           searchUrl: getURL("/search"),
         })

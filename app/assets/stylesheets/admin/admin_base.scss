@@ -86,12 +86,6 @@ $mobile-breakpoint: 700px;
 .admin-contents {
   position: relative;
 
-  .nav-stacked {
-    @media screen and (width <= 700px) {
-      margin: 0;
-    }
-  }
-
   .row::before,
   .row::after {
     display: table;
@@ -100,14 +94,6 @@ $mobile-breakpoint: 700px;
 
   .row::after {
     clear: both;
-  }
-
-  &.admin-site-settings-category {
-    overflow: hidden;
-
-    @media (width <= 500px) {
-      background-color: var(--primary-very-low);
-    }
   }
 }
 
@@ -122,6 +108,10 @@ $mobile-breakpoint: 700px;
   td,
   th {
     padding: 8px;
+  }
+
+  td {
+    overflow-wrap: break-word;
   }
 
   tr.selected {
@@ -348,15 +338,15 @@ $mobile-breakpoint: 700px;
       }
     }
 
-    .go-back {
-      margin-top: 1em;
-    }
-
     .desc {
       padding-top: 3px;
       font-size: var(--font-down-1);
       line-height: var(--line-height-large);
       color: var(--primary-medium);
+    }
+
+    .go-back {
+      margin-top: 1em;
     }
 
     .outdated {
@@ -375,6 +365,48 @@ $mobile-breakpoint: 700px;
 
   p.warning {
     color: var(--danger);
+  }
+}
+
+.interpolation-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  padding-top: 0.5em;
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    padding: 0.15em 0.5em;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: transparent;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-family: var(--d-font-family--monospace);
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
+
+    &:hover {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low);
+    }
+
+    &.is-used {
+      color: var(--success);
+      border-color: var(--success-low);
+      background: var(--success-low);
+    }
+
+    &.is-invalid {
+      color: var(--danger);
+      border-color: var(--danger-low);
+      background: var(--danger-low);
+      cursor: default;
+    }
   }
 }
 
@@ -662,14 +694,13 @@ $mobile-breakpoint: 700px;
 .admin-controls {
   display: flex;
   align-items: center;
-  background: var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 
   .admin-actions {
     margin-left: auto;
   }
 
   nav {
-    background-color: var(--primary-low);
     width: 100%;
     display: inline-flex;
     position: relative;
@@ -738,9 +769,8 @@ $mobile-breakpoint: 700px;
   }
 
   .controls {
-    background: var(--primary-low);
     width: 100%;
-    padding: 10px;
+    padding-bottom: var(--space-2);
     display: flex;
     align-items: center;
 
@@ -751,10 +781,6 @@ $mobile-breakpoint: 700px;
       > div {
         margin-right: 0.5em;
       }
-    }
-
-    @include viewport.until(sm) {
-      margin: 0 -10px;
     }
 
     input {
@@ -776,21 +802,6 @@ $mobile-breakpoint: 700px;
           margin-right: 0.5em;
         }
       }
-    }
-  }
-
-  .menu-toggle {
-    border-color: var(--primary-medium);
-    border-radius: 3px;
-    background: transparent;
-    color: var(--primary);
-
-    &:hover {
-      background-color: var(--primary-low-mid);
-    }
-
-    .not-mobile-device & {
-      display: none;
     }
   }
 
@@ -844,24 +855,13 @@ $mobile-breakpoint: 700px;
 .admin-nav {
   width: 18%;
   box-sizing: border-box;
-  position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
 
-  @media (max-width: $mobile-breakpoint) {
-    position: absolute;
-    z-index: z("base") - 1;
-    width: 250px;
-  }
-
-  @media (width <= 500px) {
-    width: 50%;
+  @include viewport.until(sm) {
+    display: none;
   }
 
   .nav-stacked {
-    background-color: inherit;
-
-    a.active {
-      color: var(--primary);
-    }
+    margin: 0;
   }
 
   .admin-site-settings-category-nav__item:hover {
@@ -873,33 +873,59 @@ $mobile-breakpoint: 700px;
   background-color: var(--secondary);
   margin-left: 0;
   border-left: solid 1px var(--content-border-color);
-  padding: 30px 0 90px 30px;
+  padding: 30px 0 0 30px;
   width: 82%;
   box-sizing: border-box;
 
-  @media (max-width: $mobile-breakpoint) {
+  @include viewport.until(sm) {
     width: 100%;
     border: none;
-  }
-}
-
-.admin-detail.mobile-open {
-  @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: translateX(250px);
-  }
-
-  @media (width <= 500px) {
-    transition: transform 0.3s ease;
-    transform: translateX(50%);
-  }
-}
-
-.admin-detail.mobile-closed {
-  @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: translateX(0);
     padding: 30px 20px;
+  }
+}
+
+.fk-d-menu-modal.admin-site-settings-category-nav-content,
+.fk-d-menu-modal.admin-watched-words-action-nav-content {
+  justify-content: flex-start;
+
+  .d-modal__container {
+    width: 80vw;
+    max-width: 300px;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+
+    &.is-entering {
+      animation: admin-nav-slide-in 250ms ease;
+    }
+
+    &.is-exiting {
+      animation: admin-nav-slide-out 250ms ease;
+    }
+  }
+
+  .fk-d-menu-modal__grip {
+    display: none;
+  }
+}
+
+@keyframes admin-nav-slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes admin-nav-slide-out {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
   }
 }
 
@@ -1238,22 +1264,6 @@ a.inline-editable-field {
   cursor: pointer;
 }
 
-.desktop-view .emoji-value-list {
-  .value {
-    .shift-up-value-btn,
-    .shift-down-value-btn {
-      display: none;
-    }
-
-    &:hover {
-      .shift-up-value-btn,
-      .shift-down-value-btn {
-        display: block;
-      }
-    }
-  }
-}
-
 // Styles for subtabs in admin
 @import "admin/dashboard";
 @import "admin/sidebar";
@@ -1275,6 +1285,8 @@ a.inline-editable-field {
 @import "admin/site-settings";
 @import "admin/admin_config_area";
 @import "admin/search";
+@import "admin/admin_dashboard";
+@import "admin/admin-dashboard-skeleton";
 @import "admin/admin_table";
 @import "admin/admin_filter";
 @import "admin/admin_filter_controls";
@@ -1298,3 +1310,5 @@ a.inline-editable-field {
 @import "admin/admin_config_color_palettes";
 @import "admin/admin_config_components";
 @import "admin/upcoming-changes";
+@import "admin/discourse_id";
+@import "admin/admin_new_category_setup";

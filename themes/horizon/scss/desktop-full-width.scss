@@ -32,7 +32,7 @@ $sidebar-width: 17em;
 }
 
 .d-header #site-text-logo {
-  font-size: clamp(var(--font-0), 2.5vw, var(--font-up-2));
+  font-size: clamp(var(--font-0), 2.5vw, var(--font-up-1));
 
   .has-sidebar-page & {
     white-space: wrap;
@@ -43,8 +43,6 @@ $sidebar-width: 17em;
 }
 
 #main-outlet-wrapper {
-  padding: 0;
-
   body.has-sidebar-page & {
     .sidebar-wrapper {
       width: var(--d-sidebar-width);
@@ -155,12 +153,6 @@ $sidebar-width: 17em;
 
   .before-header-panel-outlet {
     grid-area: extra-info;
-  }
-
-  .d-header-mode {
-    .bootstrap-mode {
-      display: none;
-    }
   }
 
   .home-logo-wrapper-outlet {

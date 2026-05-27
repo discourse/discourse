@@ -85,3 +85,6 @@ e41897a3066199f3b7f4c019fb638615dfe1f007
 
 # remove route-template usage
 88d4e242ead238b353f441533a0c4b8ce3fa1f7b
+
+# MT: Switch to nested module style across migrations/ (#38564)
+89f26da39d8c977c3dde7ef7e0a5c3f2a4b58e44

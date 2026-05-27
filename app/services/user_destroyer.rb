@@ -29,6 +29,8 @@ class UserDestroyer
       UserSecurityKey.where(user_id: user.id).delete_all
       Bookmark.where(user_id: user.id).delete_all
       Draft.where(user_id: user.id).delete_all
+      reviewable_ids = Reviewable.where(created_by_id: user.id).select(:id)
+      ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
       ReviewableClaimedTopic.where(user_id: user.id).delete_all
 
@@ -55,11 +57,13 @@ class UserDestroyer
       )
 
       # keep track of emails used
-      user_emails = user.user_emails.pluck(:email)
+      emails =
+        user.user_emails.pluck(:email) |
+          UserAssociatedAccount.where(user_id: user.id).pluck(Arel.sql("info->>'email'")).compact
 
       if result = user.destroy
         if opts[:block_email]
-          user_emails.each do |email|
+          emails.each do |email|
             ScreenedEmail.block(email, ip_address: result.ip_address)&.record_match!
           end
         end
@@ -87,7 +91,7 @@ class UserDestroyer
           end
 
         Invite
-          .where(email: user_emails)
+          .where(email: emails)
           .each do |invite|
             # invited_users will be removed by dependent destroy association when user is destroyed
             invite.invited_groups.destroy_all
@@ -106,7 +110,10 @@ class UserDestroyer
           else
             deleted_by = @actor
           end
-          StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
+          StaffActionLogger.new(deleted_by).log_user_deletion(
+            user,
+            opts.slice(:context, :reviewable_id),
+          )
           if opts.slice(:context).blank?
             Rails.logger.warn("User destroyed without context from: #{caller_locations(14, 1)[0]}")
           end
@@ -116,7 +123,7 @@ class UserDestroyer
     end
 
     # After the user is deleted, remove the reviewable unless request comes from reviewable
-    return result if opts[:from_reviewable]
+    return result if opts[:reviewable_id]
     reviewable = ReviewableUser.pending.find_by(target: user)
     reviewable.perform(@actor, :delete_user) if reviewable
 
@@ -161,6 +168,7 @@ class UserDestroyer
           @actor.staff? ? @actor : Discourse.system_user,
           post,
           context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
+          reviewable_id: opts[:reviewable_id],
         ).destroy
       end
 

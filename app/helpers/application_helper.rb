@@ -71,6 +71,12 @@ module ApplicationHelper
     ContentSecurityPolicy.nonce_placeholder(response.headers)
   end
 
+  def track_view_session_id_placeholder
+    response.headers[
+      ::Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER
+    ] ||= "[[track_view_session_id_placeholder_#{SecureRandom.hex}]]"
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != "/" && current_user
       sk = "shared_session_key"
@@ -88,6 +94,16 @@ module ApplicationHelper
 
   def is_gzip_req?
     request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
+  end
+
+  def generate_import_map(plugin_assets)
+    imports =
+      plugin_assets
+        .filter { it[:importmap_name] }
+        .map { [it[:importmap_name], script_asset_path(it[:name])] }
+        .to_h
+
+    JSON.pretty_generate({ imports: }).html_safe
   end
 
   def script_asset_path(script)
@@ -113,16 +129,17 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      # assets needed for theme testing are not compressed because they take a fair
-      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
-      # vast majority of sites will never need them, so it makes more sense to serve
-      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
-      # seconds.
-      if !script.start_with?("discourse/tests/")
-        if is_brotli_req?
-          path = path.gsub(/\.([^.]+)\z/, '.br.\1')
-        elsif is_gzip_req?
-          path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
+      if is_brotli_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/br/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.br.\1')
+        end
+      elsif is_gzip_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/gz/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     end
@@ -130,7 +147,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
+  def preload_script(script, attrs: {})
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -142,20 +159,24 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script)
+        preload_script_url(path, entrypoint: script, attrs: attrs)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false)
+  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+
+    extra_attrs =
+      attrs&.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }&.join(" ")
+    extra_attrs = " #{extra_attrs}" if extra_attrs.present?
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute}#{extra_attrs} #{nonce_attribute}></script>
     HTML
   end
 
@@ -175,10 +196,6 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    unless SiteSetting.viewport_based_mobile_mode
-      list << (mobile_view? ? "mobile-view" : "desktop-view")
-      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -322,7 +339,16 @@ module ApplicationHelper
 
     generate_twitter_card_metadata(result, opts)
 
-    result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
+    if opts[:image].present?
+      result << tag(:meta, property: "og:image", content: opts[:image])
+      if opts[:image_width].present? && opts[:image_height].present?
+        result << tag(:meta, property: "og:image:width", content: opts[:image_width])
+        result << tag(:meta, property: "og:image:height", content: opts[:image_height])
+      end
+      if opts[:image_type].present?
+        result << tag(:meta, property: "og:image:type", content: opts[:image_type])
+      end
+    end
 
     %i[url title description].each do |property|
       if opts[property].present?
@@ -345,9 +371,17 @@ module ApplicationHelper
 
     if opts[:read_time] && opts[:read_time] > 0 && opts[:like_count] && opts[:like_count] > 0
       result << tag(:meta, name: "twitter:label1", value: I18n.t("reading_time"))
-      result << tag(:meta, name: "twitter:data1", value: "#{opts[:read_time]} mins 🕑")
+      result << tag(
+        :meta,
+        name: "twitter:data1",
+        value: I18n.t("reading_time_minutes", count: opts[:read_time]),
+      )
       result << tag(:meta, name: "twitter:label2", value: I18n.t("likes"))
-      result << tag(:meta, name: "twitter:data2", value: "#{opts[:like_count]} ❤")
+      result << tag(
+        :meta,
+        name: "twitter:data2",
+        value: I18n.t("likes_count", count: opts[:like_count]),
+      )
     end
 
     if opts[:published_time]
@@ -360,7 +394,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url = (opts[:x_summary_large_image].presence || opts[:image])
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -395,38 +429,52 @@ module ApplicationHelper
     end
   end
 
+  def discourse_pageview_tracking_meta_tags
+    if !SiteSetting.trigger_browser_pageview_events &&
+         !SiteSetting.use_beacon_for_browser_page_views &&
+         !SiteSetting.persist_browser_pageview_events
+      return ""
+    end
+
+    tags = +""
+    tags << tag.meta(
+      name: "discourse-track-view-session-id",
+      content: track_view_session_id_placeholder,
+    )
+    if SiteSetting.use_beacon_for_browser_page_views
+      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+    tags.html_safe
+  end
+
   def gsub_emoji_to_unicode(str)
     Emoji.gsub_emoji_to_unicode(str)
   end
 
   def application_logo_url
     @application_logo_url ||=
-      begin
-        if mobile_view?
-          if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-            SiteSetting.site_mobile_logo_dark_url
-          elsif SiteSetting.site_mobile_logo_url.present?
-            SiteSetting.site_mobile_logo_url
-          end
+      if mobile_device?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
+      else
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
         else
-          if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-            SiteSetting.site_logo_dark_url
-          else
-            SiteSetting.site_logo_url
-          end
+          SiteSetting.site_logo_url
         end
       end
   end
 
   def application_logo_dark_url
     @application_logo_dark_url ||=
-      begin
-        if dark_scheme_id != -1
-          if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-            SiteSetting.site_mobile_logo_dark_url
-          elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
-            SiteSetting.site_logo_dark_url
-          end
+      if dark_scheme_id != -1
+        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
         end
       end
   end
@@ -439,8 +487,8 @@ module ApplicationHelper
     "#{Discourse.base_path}/login"
   end
 
-  def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
+  def mobile_device?
+    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def crawler_layout?
@@ -453,16 +501,12 @@ module ApplicationHelper
     else
       return false if !current_user && SiteSetting.login_required?
 
-      crawler_layout? || !mobile_view? || !modern_mobile_device?
+      crawler_layout? || !mobile_device? || !modern_mobile_device?
     end
   end
 
   def modern_mobile_device?
     MobileDetection.modern_mobile_device?(request.user_agent)
-  end
-
-  def mobile_device?
-    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -482,10 +526,60 @@ module ApplicationHelper
     end
   end
 
-  def include_splash_screen?
-    # A bit basic for now but will be expanded later
-    SiteSetting.splash_screen
+  def custom_splash_screen_enabled?
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
   end
+
+  def splash_screen_image_animated?
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg.present? && @splash_screen_image_svg.match?(/@keyframes\s/)
+  end
+
+  def splash_screen_inline_svg
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg&.html_safe
+  end
+
+  def splash_screen_image_data_uri(dark: false)
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    return nil if @splash_screen_image_svg.blank?
+
+    # Replace CSS variable references with actual theme colors
+    svg_with_colors = @splash_screen_image_svg.dup
+
+    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+    primary = "##{public_send(color_method, "primary")}"
+    secondary = "##{public_send(color_method, "secondary")}"
+    tertiary = "##{public_send(color_method, "tertiary")}"
+
+    svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
+    svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
+    svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
+
+    # Use base64 encoding for better compatibility with complex SVGs
+    "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
+  end
+
+  private
+
+  def build_splash_screen_image
+    @splash_screen_image_svg = nil
+
+    upload = SiteSetting.splash_screen_image
+    return unless upload.is_a?(Upload)
+
+    @splash_screen_image_svg =
+      Discourse
+        .cache
+        .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
+          upload.content.presence
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
+        end
+  end
+
+  public
 
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
@@ -531,9 +625,17 @@ module ApplicationHelper
           template_path =~ Regexp.new("/connectors/(.*)/.*\.html\.erb$")
           outlet_name = Regexp.last_match(1)
           connectors[outlet_name] ||= []
-          connectors[outlet_name] << template_path.sub(plugins_prefix, "").delete_suffix(
-            ".html.erb",
-          )
+
+          connectors[outlet_name] << begin
+            ActionView::Template.new(
+              File.read(template_path),
+              "discourse_plugin_outlet__#{name}",
+              ActionView::Template.handler_for_extension("erb"),
+              locals: [],
+              format: :html,
+              virtual_path: template_path,
+            )
+          end
         end
     end
   private_constant :SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES
@@ -542,8 +644,6 @@ module ApplicationHelper
     return "" if !GlobalSetting.load_plugins?
     return "" if !SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES.key?(name)
 
-    lookup_context.append_view_paths(SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES)
-
     SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES[name]
       .map { |template| render template:, locals: }
       .join
@@ -551,14 +651,12 @@ module ApplicationHelper
   end
 
   def topic_featured_link_domain(link)
-    begin
-      uri = UrlHelper.encode_and_parse(link)
-      uri = URI.parse("http://#{uri}") if uri.scheme.nil?
-      host = uri.host.downcase
-      host.start_with?("www.") ? host[4..-1] : host
-    rescue StandardError
-      ""
-    end
+    uri = UrlHelper.encode_and_parse(link)
+    uri = URI.parse("http://#{uri}") if uri.scheme.nil?
+    host = uri.host.downcase
+    host.start_with?("www.") ? host[4..-1] : host
+  rescue StandardError
+    ""
   end
 
   def theme_id
@@ -583,7 +681,11 @@ module ApplicationHelper
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    return user_scheme_id if user_scheme_id
+    if user_scheme_id
+      return user_scheme_id unless theme_limits_color_schemes?
+      return user_scheme_id if ColorScheme.exists?(id: user_scheme_id, theme_id: theme_id)
+    end
+
     return if theme_id.blank?
 
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
@@ -596,8 +698,23 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
-    user_dark_scheme_id ||
-      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
+    if user_dark_scheme_id
+      return user_dark_scheme_id unless theme_limits_color_schemes?
+      return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
+    end
+
+    theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+    dark_id = theme&.dark_color_scheme_id
+    return dark_id if dark_id.present?
+    return theme&.color_scheme_id if theme_limits_color_schemes?
+    -1
+  end
+
+  def theme_limits_color_schemes?
+    return @theme_limits_color_schemes if defined?(@theme_limits_color_schemes)
+    @theme_limits_color_schemes =
+      theme_id.present? &&
+        ThemeModifierSet.exists?(theme_id: theme_id, only_theme_color_schemes: true)
   end
 
   def current_homepage
@@ -607,6 +724,52 @@ module ApplicationHelper
   def build_plugin_html(name, **kwargs)
     return "" unless allow_plugins?
     DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
+  end
+
+  def crawler_topic_container_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_container_schema,
+        { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" },
+        topic,
+      ),
+    )
+  end
+
+  def crawler_topic_main_entity_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic),
+    ).presence
+  end
+
+  def crawler_post_schema_hash(post, topic)
+    @crawler_post_schema_hash ||= {}
+    @crawler_post_schema_hash[post.id] ||= begin
+      default = {
+        itemprop: "comment",
+        itemscope: true,
+        itemtype: "http://schema.org/Comment",
+      } unless post.is_first_post?
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default || {}, post, topic)
+    end
+  end
+
+  def crawler_post_schema(post, topic)
+    tag.attributes(crawler_post_schema_hash(post, topic))
+  end
+
+  def crawler_post_schema_overridden?(post, topic)
+    hash = crawler_post_schema_hash(post, topic)
+    itemprop = hash[:itemprop]
+    (itemprop.present? && itemprop != "comment") || hash[:data].present?
+  end
+
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
+  end
+
+  def crawler_post_schema_skip?(post, topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
   end
 
   # If there is plugin HTML return that, otherwise yield to the template
@@ -622,7 +785,7 @@ module ApplicationHelper
   def theme_lookup(name)
     Theme.lookup_field(
       theme_id,
-      mobile_view? ? :mobile : :desktop,
+      mobile_device? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
       csp_nonce: csp_nonce_placeholder,
@@ -670,11 +833,7 @@ module ApplicationHelper
 
     name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
 
-    manager.stylesheet_link_tag(
-      name,
-      opts[:media] || "all",
-      self.method(:add_resource_preload_list),
-    )
+    manager.stylesheet_link_tag(name, opts[:media] || "all", method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -771,7 +930,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "light" if cookie.present?
 
-    !!(current_user&.user_option&.light_mode_forced?)
+    !!current_user&.user_option&.light_mode_forced?
   end
 
   def forced_dark_mode?
@@ -780,7 +939,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "dark" if cookie.present?
 
-    !!(current_user&.user_option&.dark_mode_forced?)
+    !!current_user&.user_option&.dark_mode_forced?
   end
 
   def light_color_hex_for_name(name)
@@ -850,8 +1009,18 @@ module ApplicationHelper
       setup_data[:mb_last_file_change_id] = MessageBus.last_id("/file-change")
     end
 
-    if Rails.env.test? && ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-      setup_data[:capybara_playwright_debug_client_settled] = true
+    if Rails.env.test?
+      if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+        setup_data[:capybara_playwright_debug_client_settled] = true
+      end
+
+      # Allow controlling deprecation behavior in tests via environment variable
+      # Used to enforce or disable deprecation throwing for specific test runs
+      if ENV["EMBER_RAISE_ON_DEPRECATION"] == "1"
+        setup_data[:raise_on_deprecation] = true
+      elsif ENV["EMBER_RAISE_ON_DEPRECATION"] == "0"
+        setup_data[:raise_on_deprecation] = false
+      end
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

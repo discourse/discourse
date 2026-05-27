@@ -6,8 +6,8 @@ module DiscourseAi
       requires_plugin PLUGIN_NAME
 
       def indexing_status_check
-        if params[:target_type] == "AiPersona"
-          @target = AiPersona.find(params[:target_id])
+        if params[:target_type] == "AiAgent"
+          @target = AiAgent.find(params[:target_id])
         elsif params[:target_type] == "AiTool"
           @target = AiTool.find(params[:target_id])
         else

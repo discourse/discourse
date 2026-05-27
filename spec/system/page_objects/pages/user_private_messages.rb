@@ -35,7 +35,7 @@ module PageObjects
         inbox_dropdown.has_option?(".dropdown-menu__item", count)
       end
 
-      def click_unseen_private_mesage(topic_id)
+      def click_unseen_private_message(topic_id)
         find("tr[data-topic-id='#{topic_id}'] a[data-topic-id='#{topic_id}']").click
       end
     end

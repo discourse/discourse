@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Page", type: :system do
+describe "Admin User Page" do
   fab!(:current_user, :admin)
 
   let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }
@@ -32,7 +32,7 @@ describe "Admin User Page", type: :system do
     end
   end
 
-  context "when visting a regular user's page" do
+  context "when visiting a regular user's page" do
     fab!(:user) { Fabricate(:user, ip_address: "93.123.44.90") }
     fab!(:similar_user) { Fabricate(:user, ip_address: user.ip_address) }
     fab!(:another_mod) { Fabricate(:moderator, ip_address: user.ip_address) }
@@ -59,6 +59,151 @@ describe "Admin User Page", type: :system do
     it "displays username in the title" do
       expect(page).to have_css(".display-row.username")
       expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
+    end
+
+    describe "the upcoming changes section" do
+      fab!(:group1) { Fabricate(:group, name: "test_group_1") }
+      fab!(:group2) { Fabricate(:group, name: "test_group_2") }
+
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "feature,all_members",
+              status: :beta,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+      end
+
+      def open_upcoming_changes
+        admin_user_page.open_upcoming_changes_modal
+      end
+
+      context "when the change is enabled for everyone" do
+        before { SiteSetting.enable_upload_debug_mode = true }
+
+        it "displays the upcoming change with enabled status and correct reason" do
+          admin_user_page.visit(user)
+          open_upcoming_changes
+          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+            "enabled_for_everyone",
+          )
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to have_no_specific_groups
+        end
+      end
+
+      context "when the change is disabled for everyone" do
+        before { SiteSetting.enable_upload_debug_mode = false }
+
+        it "displays the upcoming change with disabled status and correct reason" do
+          admin_user_page.visit(user)
+          open_upcoming_changes
+          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+            "enabled_for_no_one",
+          )
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to have_no_specific_groups
+        end
+      end
+
+      context "when the change is enabled for specific groups" do
+        before do
+          SiteSetting.enable_upload_debug_mode = true
+          Fabricate(
+            :site_setting_group,
+            name: "enable_upload_debug_mode",
+            group_ids: "#{group1.id}|#{group2.id}",
+          )
+        end
+
+        context "when the user belongs to one of those groups" do
+          before { group1.add(user) }
+
+          it "displays the upcoming change with enabled status, correct reason, and specific groups" do
+            admin_user_page.visit(user)
+            open_upcoming_changes
+            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+              "in_specific_groups",
+            )
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to have_specific_groups(["test_group_1"])
+          end
+        end
+
+        context "when the user belongs to multiple groups" do
+          before do
+            group1.add(user)
+            group2.add(user)
+          end
+
+          it "displays the upcoming change with all groups" do
+            admin_user_page.visit(user)
+            open_upcoming_changes
+            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+              "in_specific_groups",
+            )
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to have_specific_groups(%w[test_group_1 test_group_2])
+          end
+        end
+
+        context "when the user does not belong to any of those groups" do
+          it "displays the upcoming change with disabled status, correct reason, and no specific groups" do
+            admin_user_page.visit(user)
+            open_upcoming_changes
+            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+              "not_in_specific_groups",
+            )
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to have_no_specific_groups
+          end
+        end
+      end
+
+      it "does not show conceptual upcoming changes" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "feature,all_members",
+              status: :beta,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+            about_page_extra_groups_show_description: {
+              impact: "feature,all_members",
+              status: :conceptual,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+
+        admin_user_page.visit(user)
+        open_upcoming_changes
+        expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+        expect(admin_user_page).to have_no_upcoming_change(
+          "about_page_extra_groups_show_description",
+        )
+      end
     end
 
     describe "the suspend user modal" do
@@ -124,6 +269,43 @@ describe "Admin User Page", type: :system do
         admin_user_page.click_unsilence_button
         expect(page).not_to have_css(".silence-info")
       end
+    end
+  end
+
+  describe "custom groups" do
+    fab!(:user)
+    fab!(:group)
+
+    it "saves and displays the added group" do
+      admin_user_page.visit(user)
+
+      group_chooser = admin_user_page.custom_groups_chooser
+      group_chooser.expand
+      group_chooser.select_row_by_value(group.id)
+
+      expect(admin_user_page).to have_custom_groups_save_button
+      admin_user_page.save_custom_groups
+      expect(admin_user_page).to have_no_custom_groups_save_button
+      expect(admin_user_page).to have_custom_group(group.name)
+
+      expect(GroupUser.exists?(user:, group:)).to eq(true)
+    end
+
+    it "saves and removes the group from the list" do
+      group.add(user)
+      admin_user_page.visit(user)
+      expect(admin_user_page).to have_custom_group(group.name)
+
+      group_chooser = admin_user_page.custom_groups_chooser
+      group_chooser.expand
+      group_chooser.unselect_by_name(group.name)
+
+      expect(admin_user_page).to have_custom_groups_save_button
+      admin_user_page.save_custom_groups
+      expect(admin_user_page).to have_no_custom_groups_save_button
+      expect(admin_user_page).to have_no_custom_group(group.name)
+
+      expect(GroupUser.exists?(user:, group:)).to eq(false)
     end
   end
 

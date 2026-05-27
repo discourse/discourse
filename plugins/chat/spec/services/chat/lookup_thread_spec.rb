@@ -51,6 +51,18 @@ RSpec.describe Chat::LookupThread do
       it { is_expected.to fail_a_policy(:invalid_access) }
     end
 
+    context "when the original message is deleted" do
+      before { thread.original_message.trash! }
+
+      it { is_expected.to fail_a_policy(:original_message_not_deleted) }
+
+      context "when user is a moderator" do
+        before { current_user.update!(moderator: true) }
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when threading is not enabled for the channel" do
       before { channel.update!(threading_enabled: false) }
 

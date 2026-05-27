@@ -1,7 +1,6 @@
 import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
-import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -16,8 +15,8 @@ export const REPLACEMENTS = {
   "d-regular": "far-bell",
   "d-watching": "discourse-bell-exclamation",
   "d-watching-first": "discourse-bell-one",
-  "d-drop-expanded": "caret-down",
-  "d-drop-collapsed": "caret-right",
+  "d-drop-expanded": "angle-down",
+  "d-drop-collapsed": "angle-right",
   "d-unliked": "far-heart",
   "d-liked": "heart",
   "d-post-share": "link",
@@ -93,15 +92,6 @@ export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
 
-/**
- * @deprecated The widget rendering system has been decommissioned.
- * - If you need to create DOM nodes directly, use `iconElement` instead.
- * - If you need to render icons in a template, use the `{{icon}}` helper.
- */
-export function iconNode() {
-  warnWidgetsDecommissioned();
-}
-
 export function iconElement(id, params) {
   return renderIcon("element", id, params);
 }
@@ -120,13 +110,11 @@ export function registerIconRenderer(renderer) {
 }
 
 function iconClasses(icon, params) {
-  // "notification." is invalid syntax for classes, use replacement instead
+  // dots are invalid syntax for classes, use replacement instead
   const dClass =
-    icon.replacementId && icon.id.includes("notification.")
-      ? icon.replacementId
-      : icon.id;
+    icon.replacementId && icon.id.includes(".") ? icon.replacementId : icon.id;
 
-  let classNames = `fa d-icon d-icon-${dClass} svg-icon`;
+  let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
   if (params && params["class"]) {
     classNames += " " + params["class"];
@@ -165,7 +153,7 @@ registerIconRenderer({
 
   string(icon, params) {
     const id = escape(handleIconId(icon));
-    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string'`;
+    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string' width='1em' height='1em'`;
 
     if (params["aria-label"]) {
       html += ` aria-hidden='false' aria-label='${escape(params["aria-label"])}'`;
@@ -185,7 +173,6 @@ registerIconRenderer({
     if (params.translatedtitle) {
       deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
         since: "2.9.0.beta6",
-        dropFrom: "2.10.0.beta1",
         id: "discourse.icon-renderer-translatedtitle",
       });
       params.translatedTitle = params.translatedtitle;
@@ -205,6 +192,8 @@ registerIconRenderer({
 
     const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");
     svgElement.setAttribute("class", classes);
+    svgElement.setAttribute("width", "1em");
+    svgElement.setAttribute("height", "1em");
     svgElement.setAttribute("aria-hidden", true);
 
     const useElement = document.createElementNS(SVG_NAMESPACE, "use");

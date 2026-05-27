@@ -50,7 +50,13 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def valid_values
-    object.choices
+    choices = object.choices
+    labels = choice_labels
+
+    choices.map do |choice|
+      label = labels[choice.to_s]
+      label ? { name: label, value: choice } : choice
+    end
   end
 
   def include_valid_values?
@@ -91,5 +97,21 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def include_json_schema?
     object.type == ThemeSetting.types[:string] && object.json_schema.present?
+  end
+
+  private
+
+  def choice_labels
+    labels = {}
+    key_prefix = "theme_metadata.settings.#{setting}.choices."
+
+    object.theme.internal_translations.each do |translation|
+      if translation.key.start_with?(key_prefix)
+        choice_key = translation.key.delete_prefix(key_prefix)
+        labels[choice_key] = translation.value
+      end
+    end
+
+    labels
   end
 end

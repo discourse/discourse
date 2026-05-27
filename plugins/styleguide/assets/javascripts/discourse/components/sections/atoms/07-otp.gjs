@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DOTP from "discourse/components/d-otp";
+import DOtp from "discourse/ui-kit/d-otp";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class OTP extends Component {
@@ -24,9 +24,25 @@ export default class OTP extends Component {
     }
   }
 
+  get codeSample1() {
+    return `import DOTP from "discourse/components/d-otp";
+
+<template>
+  <DOTP @onFill={{this.filled}} @onChange={{this.changed}} />
+</template>`;
+  }
+
+  get codeSample2() {
+    return `import DOTP from "discourse/components/d-otp";
+
+<template>
+  <DOTP @slots={{4}} />
+</template>`;
+  }
+
   <template>
-    <StyleguideExample @title="d-otp">
-      <DOTP @onFill={{this.filled}} @onChange={{this.changed}} />
+    <StyleguideExample @title="DOTP" @code={{this.codeSample1}}>
+      <DOtp @onFill={{this.filled}} @onChange={{this.changed}} />
 
       {{#if this.changedOutput}}
         <output>
@@ -41,8 +57,8 @@ export default class OTP extends Component {
       {{/if}}
     </StyleguideExample>
 
-    <StyleguideExample @title="@slots={{4}}">
-      <DOTP @slots={{4}} />
+    <StyleguideExample @title="DOTP @slots={{4}}" @code={{this.codeSample2}}>
+      <DOtp @slots={{4}} />
     </StyleguideExample>
   </template>
 }

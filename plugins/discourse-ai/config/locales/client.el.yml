@@ -10,7 +10,7 @@ el:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Επιτρέπει την αναζήτηση AI"
       site_settings:
         categories:
@@ -60,10 +60,13 @@ el:
               label: "Κατηγορίες"
             tags:
               label: "Ετικέτες"
-        llm_tool_triage:
+            debug_mode:
+              label: "Λειτουργία Αποσφαλμάτωσης"
+              description: "Ενεργοποιήστε τη λειτουργία αποσφαλμάτωσης για να δείτε την ακατέργαστη είσοδο και έξοδο του LLM"
+        ai_tool_action:
           fields:
-            model:
-              label: "Μοντέλο"
+            tool:
+              description: "Το εργαλείο AI που θα εκτελείται όταν πυροδοτείται ο αυτοματισμός"
         llm_triage:
           fields:
             category:
@@ -72,35 +75,62 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
+              description: "Ακατέργαστο κείμενο της έτοιμης απάντησης που θα δημοσιευτεί στο θέμα"
             flag_type:
               label: "Τύπος αναφοράς"
               description: "Τύπος σημαίας που θα εφαρμοστεί στην ανάρτηση (ανεπιθύμητο ή απλώς αναγγελία για έλεγχο)"
             flag_post:
               label: "Αναφορά ανάρτησης"
               description: "Αναφέρει την ανάρτηση (είτε ως ανεπιθύμητη είτε για έλεγχο)"
+            notify_author_pm:
+              label: "Ειδοποίηση συντάκτη μέσω ΠΜ"
+              description: "Αποστολή προσωπικού μηνύματος στον συντάκτη της ανάρτησης όταν η ανάρτησή του μπει στην ουρά και διαγραφεί"
+            notify_author_pm_user:
+              label: "Αποστολέας ΠΜ"
+              description: "Χρήστης που θα στείλει το ΠΜ (προεπιλογή είναι το σύστημα)"
+            notify_author_pm_message:
+              label: "Περιεχόμενο ΠΜ"
+              description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      bot_chats:
+        tab_label: "Συνομιλίες bot"
+      llm_selector:
+        none: "Κανένα"
       features:
-        back: "Πίσω"
+        settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
         disabled: "(απενεργοποιημένο)"
         groups: "Ομάδες:"
-        no_persona: "Δεν έχει οριστεί"
+        no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
-        edit: "Επεξεργασία"
+        edit: "Ρυθμίσεις"
         expand_list:
           one: "(%{count} περισσότερο)"
           other: "(%{count} περισσότερα)"
         collapse_list: "(δείξε λιγότερα)"
+        nav:
+          enabled: "Ενεργοποιημένα"
+          not_enabled: "Μη ενεργοποιημένα"
         filters:
           all: "Όλα"
+          no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
+        no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
           name: "Αναζήτηση"
+        ai_helper:
+          setting_groups:
+            access_permissions: "Πρόσβαση & Δικαιώματα"
+            automation: "Αυτοματισμός"
+        translation:
+          post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
         spam:
           name: "Ανεπιθύμητα"
       modals:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        admin_actions:
+          localization_settings: "Ρυθμίσεις τοπικοποίησης"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"
@@ -118,6 +148,7 @@ el:
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"
+        false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"
         save_button: "Αποθήκευση αλλαγών"
         test_modal:
@@ -128,49 +159,85 @@ el:
         model: "Μοντέλο"
         username: "Όνομα Χρήστη"
         total_requests: "Σύνολο αιτήσεων"
+        total: "Σύνολο"
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
-      ai_persona:
-        back: "Πίσω"
+      ai_agent:
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         description: "Περιγραφή"
+        mentionable: Να επιτρέπονται επισημάνσεις
         user: Χρήστης
+        allow_chat_direct_messages: "Να επιτρέπονται τα άμεσα μηνύματα συνομιλίας"
+        allow_chat_channel_mentions: "Να επιτρέπονται επισημάνσεις καναλιών συνομιλίας"
+        allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
+        mcp_tools_modal:
+          select_all: "Επιλογή όλων"
+          clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
+        features_list:
+          one: "Λειτουργία:"
+          other: "Λειτουργίες:"
       rag:
         uploads:
           title: "Μεταφορτώσεις"
           uploading: "Επιφόρτωση..."
       tools:
-        back: "Πίσω"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
+        no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
         name: "Όνομα"
         description: "Περιγραφή"
         summary: "Περίληψη"
         save: "Αποθήκευση"
         remove_parameter: "Αφαίρεση"
         parameter_required: "Απαιτείται"
+        credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
-        delete: "Σβήσιμο"
+        test: "Δοκιμή"
+        delete: "Διαγραφή"
+      secrets:
+        short_title: "Διαπιστευτήρια"
+        name: "Όνομα"
+        secret: "Τιμή"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Διαγραφή"
+        embedding: "Ενσωμάτωση"
+      mcp_servers:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Συνδεδεμένος"
+        oauth_connect: "Συνδεθείτε"
+        oauth_hide_details: "Απόκρυψη λεπτομερειών"
+        enabled: "Ενεργοποιημένα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Διαγραφή"
+        tools_modal:
+          required: "Απαιτείται"
       llms:
+        no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        back: "Πίσω"
-        delete: Σβήσιμο
+        delete: Διαγραφή
         quotas:
           group: "Ομάδα"
           max_usages: "Μέγιστες χρήσεις"
@@ -202,15 +269,16 @@ el:
           copy: "Αντιγραφή"
           copied: "Αντιγράφηκε!"
           cancel: "Άκυρο"
+          insert_footnote: "Προσθήκη υποσημείωσης"
         thumbnail_suggestions:
           select: "Επιλογή"
           selected: "Επιλεγμένα"
+          try_again: "Δοκίμασε ξανά"
         image_caption:
           save_caption: "Αποθήκευση"
       embeddings:
-        back: "Πίσω"
         save: "Αποθήκευση"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         edit: "Επεξεργασία"
         tests:
           success: "Επιτυχία!"
@@ -219,8 +287,16 @@ el:
           google: "Google"
           fake: "Προσαρμοσμένο"
       ai_bot:
+        title: "AI bot"
         llm: "Μοντέλο"
+        try_again: "Δοκιμάστε ξανά"
+        shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
+        shortcut_link: "AI bot"
+        debug_ai: "Προβολή ακατέργαστου AI αιτήματος και απάντησης"
         debug_ai_modal:
+          title: "Προβολή αλληλεπίδρασης AI"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
@@ -230,9 +306,14 @@ el:
         share_modal:
           copy: "Αντιγραφή"
         conversations:
+          placeholder: "Κάντε μια ερώτηση..."
+          messages_sidebar_title: "Συζητήσεις"
+          open_conversation_menu: "Άνοιγμα μενού συζήτησης"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"
+          scroll_to_bottom: "Κύλιση προς τα κάτω"
+          editing_post: "Γίνεται επεξεργασία ανάρτησης"
       sentiments:
         sentiment_analysis:
           filter_types:
@@ -251,3 +332,9 @@ el:
         tooltip:
           actions:
             disable: "Απενεργοποίηση"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Αναφερόμενη από AI ανάρτηση"
+        reviewable_ai_chat_message:
+          title: "Αναφερόμενο από AI μήνυμα συνομιλίας"

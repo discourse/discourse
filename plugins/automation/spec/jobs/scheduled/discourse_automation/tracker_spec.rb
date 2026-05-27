@@ -115,9 +115,9 @@ describe Jobs::DiscourseAutomation::Tracker do
       automation.pending_pms.create!(
         title: "Il pleure dans mon cœur Comme il pleut sur la ville;",
         raw: "Quelle est cette langueur Qui pénètre mon cœur ?",
-        sender: "system",
+        sender_id: Discourse.system_user.id,
+        target_user_ids: [Discourse.system_user.id],
         execute_at: Time.now,
-        target_usernames: ["system"],
       )
     end
 
@@ -150,6 +150,30 @@ describe Jobs::DiscourseAutomation::Tracker do
           threads.each(&:join)
         end
       end.to change { Topic.private_messages_for_user(Discourse.system_user).count }.by(1)
+    end
+
+    context "when target user changes username after pending PM creation" do
+      fab!(:target_user) { Fabricate(:user, username: "original_name") }
+
+      let!(:pending_pm_with_rename) do
+        automation.pending_pms.create!(
+          title: "Test PM",
+          raw: "Test content",
+          sender_id: Discourse.system_user.id,
+          target_user_ids: [target_user.id],
+          execute_at: 2.hours.ago,
+        )
+      end
+
+      it "sends the PM using the user's current username" do
+        target_user.update!(username: "new_name")
+
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change {
+          Topic.private_messages_for_user(target_user).count
+        }.by(1)
+
+        expect(Topic.last.allowed_users).to include(target_user)
+      end
     end
   end
 end

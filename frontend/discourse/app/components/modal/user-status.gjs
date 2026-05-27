@@ -1,26 +1,26 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import UserStatusPicker from "discourse/components/user-status-picker";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
+import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import { i18n } from "discourse-i18n";
 
 export default class UserStatusModal extends Component {
   @service currentUser;
   @service dialog;
 
-  status = new TrackedObject({ ...this.args.model.status });
+  status = trackedObject({ ...this.args.model.status });
   timeShortcuts = this.#buildTimeShortcuts();
   _itsatrap = new ItsATrap();
 
@@ -123,7 +123,7 @@ export default class UserStatusModal extends Component {
             {{i18n "user_status.remove_status"}}
           </label>
 
-          <TimeShortcutPicker
+          <DTimeShortcutPicker
             @timeShortcuts={{this.timeShortcuts}}
             @hiddenOptions={{this.hiddenTimeShortcutOptions}}
             @customLabels={{this.customTimeShortcutLabels}}

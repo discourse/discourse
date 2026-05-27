@@ -1,58 +1,57 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class CategoriesOnly extends Component {
   showMuted = false;
 
-  @discourseComputed("showMutedCategories", "filteredCategories.length")
-  mutedToggleIcon(showMutedCategories, filteredCategoriesLength) {
-    if (filteredCategoriesLength === 0) {
+  @computed("showMutedCategories", "filteredCategories.length")
+  get mutedToggleIcon() {
+    if (this.filteredCategories?.length === 0) {
       return;
     }
 
-    if (showMutedCategories) {
+    if (this.showMutedCategories) {
       return "minus";
     }
 
     return "plus";
   }
 
-  @discourseComputed("showMuted", "filteredCategories.length")
-  showMutedCategories(showMuted, filteredCategoriesLength) {
-    return showMuted || filteredCategoriesLength === 0;
+  @computed("showMuted", "filteredCategories.length")
+  get showMutedCategories() {
+    return this.showMuted || this.filteredCategories?.length === 0;
   }
 
-  @discourseComputed("categories", "categories.length")
-  filteredCategories(categories, categoriesLength) {
-    if (!categories || categoriesLength === 0) {
+  @computed("categories", "categories.length")
+  get filteredCategories() {
+    if (!this.categories || this.categories?.length === 0) {
       return [];
     }
 
-    return categories.filter((cat) => !cat.isHidden);
+    return this.categories.filter((cat) => !cat.isHidden);
   }
 
-  @discourseComputed("categories", "categories.length")
-  mutedCategories(categories, categoriesLength) {
-    if (!categories || categoriesLength === 0) {
+  @computed("categories", "categories.length")
+  get mutedCategories() {
+    if (!this.categories || this.categories?.length === 0) {
       return [];
     }
 
     // hide in single category pages
-    if (categories[0].parent_category_id) {
+    if (this.categories[0].parent_category_id) {
       return [];
     }
 
-    return categories.filter((category) => category.hasMuted);
+    return this.categories.filter((category) => category.hasMuted);
   }
 
   @action
@@ -84,14 +83,16 @@ export default class CategoriesOnly extends Component {
             </div>
           {{else}}
             <table class="category-list {{if this.showTopics 'with-topics'}}">
-              <thead>
+              <thead class="category-list-header">
                 <tr>
-                  <th class="category"><span
+                  <th class="category topic-list-data default"><span
                       role="heading"
                       aria-level="2"
                       id="categories-only-category"
                     >{{i18n "categories.category"}}</span></th>
-                  <th class="topics">{{i18n "categories.topics"}}</th>
+                  <th class="topics topic-list-data num">{{i18n
+                      "categories.topics"
+                    }}</th>
                   {{#if this.showTopics}}
                     <th class="latest">{{i18n "categories.latest"}}</th>
                   {{/if}}
@@ -120,7 +121,7 @@ export default class CategoriesOnly extends Component {
                   "categories.muted"
                 }}</h3>
               {{#if this.mutedToggleIcon}}
-                {{icon this.mutedToggleIcon}}
+                {{dIcon this.mutedToggleIcon}}
               {{/if}}
             </a>
             {{#if this.site.mobileView}}

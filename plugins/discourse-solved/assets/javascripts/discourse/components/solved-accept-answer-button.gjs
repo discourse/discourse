@@ -2,9 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import setAcceptedSolution from "../lib/set-accepted-solution";
 
 export default class SolvedAcceptAnswerButton extends Component {
   static hidden(args) {
@@ -62,7 +63,7 @@ async function acceptPost(post) {
       data: { id: post.id },
     });
 
-    topic.setAcceptedSolution(acceptedAnswer);
+    setAcceptedSolution(topic, acceptedAnswer);
   } catch (e) {
     popupAjaxError(e);
   }

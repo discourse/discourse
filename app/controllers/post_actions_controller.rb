@@ -14,7 +14,7 @@ class PostActionsController < ApplicationController
         current_user,
         @post,
         @post_action_type_id,
-        is_warning: params[:is_warning],
+        is_warning: ActiveModel::Type::Boolean.new.cast(params[:is_warning]),
         message: params[:message],
         take_action: params[:take_action] == "true",
         flag_topic: params[:flag_topic] == "true",
@@ -48,7 +48,11 @@ class PostActionsController < ApplicationController
     if result.failed?
       render_json_error(result)
     else
-      render_post_json(result.post, add_raw: false)
+      if !guardian.can_see_post?(result.post)
+        head :no_content
+      else
+        render_post_json(result.post, add_raw: false)
+      end
     end
   end
 

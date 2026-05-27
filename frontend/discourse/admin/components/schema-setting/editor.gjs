@@ -3,15 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { isArray } from "@ember/array";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import Category from "discourse/models/category";
 import { gt, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class SchemaSettingNewEditor extends Component {
@@ -21,9 +22,9 @@ export default class SchemaSettingNewEditor extends Component {
   @tracked activeIndex = 0;
   @tracked saveButtonDisabled = false;
   @tracked validationErrorMessage;
-  @trackedArray activeDataPaths = [];
-  @trackedArray activeSchemaPaths = [];
-  @trackedArray history = [];
+  @autoTrackedArray activeDataPaths = [];
+  @autoTrackedArray activeSchemaPaths = [];
+  @autoTrackedArray history = [];
 
   inputFieldObserver = new Map();
   data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));
@@ -55,8 +56,12 @@ export default class SchemaSettingNewEditor extends Component {
     if (schema.properties[schema.identifier]?.type === "categories") {
       title = this.activeData[index][schema.identifier]
         ?.map((categoryId) => {
-          return this.args.setting.metadata.categories[categoryId].name;
+          return (
+            this.args.setting.metadata?.categories?.[categoryId]?.name ||
+            Category.findById(categoryId)?.name
+          );
         })
+        .filter(Boolean)
         .join(", ");
     } else {
       title = object[schema.identifier];
@@ -326,9 +331,7 @@ export default class SchemaSettingNewEditor extends Component {
 
     // If input is an array, convert it to a TrackedArray and recursively convert its items
     if (isArray(input)) {
-      return new TrackedArray(
-        input.map((item) => this.#trackNestedArrays(item))
-      );
+      return trackedArray(input.map((item) => this.#trackNestedArrays(item)));
     }
 
     // If input is an object, recursively convert its values

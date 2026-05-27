@@ -6,8 +6,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel } from "@ember/runloop";
-import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 class Block {
   @tracked show = false;
@@ -31,8 +31,8 @@ export default class AiBlinkingAnimation extends Component {
 
   @action
   setupAnimation() {
-    this.blocks.firstObject.show = true;
-    this.blocks.firstObject.shown = true;
+    this.blocks[0].show = true;
+    this.blocks[0].shown = true;
   }
 
   @action
@@ -72,8 +72,8 @@ export default class AiBlinkingAnimation extends Component {
         this.#nextBlock(block).show = true;
         this.#nextBlock(block).shown = true;
 
-        if (this.blocks.lastObject === block) {
-          this.blocks.firstObject.blinking = true;
+        if (this.blocks.at(-1) === block) {
+          this.blocks[0].blinking = true;
         }
       },
       250
@@ -88,10 +88,10 @@ export default class AiBlinkingAnimation extends Component {
   }
 
   #nextBlock(currentBlock) {
-    if (currentBlock === this.blocks.lastObject) {
-      return this.blocks.firstObject;
+    if (currentBlock === this.blocks.at(-1)) {
+      return this.blocks[0];
     } else {
-      return this.blocks.objectAt(this.blocks.indexOf(currentBlock) + 1);
+      return this.blocks[this.blocks.indexOf(currentBlock) + 1];
     }
   }
 
@@ -99,7 +99,7 @@ export default class AiBlinkingAnimation extends Component {
     <ul class="ai-blinking-animation" {{didInsert this.setupAnimation}}>
       {{#each this.blocks as |block|}}
         <li
-          class={{concatClass
+          class={{dConcatClass
             "ai-blinking-animation__list-item"
             (if block.show "show")
             (if block.shown "is-shown")

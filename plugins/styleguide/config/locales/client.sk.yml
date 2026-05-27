@@ -59,8 +59,6 @@ sk:
           title: "Navigácia"
         categories_list:
           title: "Zoznam kategórií"
-        topic_link:
-          title: "Odkaz na tému"
         topic_list_item:
           title: "Položka zoznamu tém"
         topic_statuses:
@@ -69,8 +67,6 @@ sk:
           title: "Zoznam tém"
         basic_topic_list:
           title: "Základný zoznam tém"
-        footer_message:
-          title: "Správa v päte"
         signup_cta:
           title: "Tlačidlo pre registráciu"
         topic_timer_info:

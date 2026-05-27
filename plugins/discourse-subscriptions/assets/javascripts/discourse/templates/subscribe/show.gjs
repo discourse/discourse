@@ -1,8 +1,8 @@
 import { Input } from "@ember/component";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import { trustHTML } from "@ember/template";
+import DButton from "discourse/ui-kit/d-button";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import LoginRequired from "../../components/login-required";
 import PaymentOptions from "../../components/payment-options";
@@ -21,7 +21,7 @@ export default <template>
       <hr />
 
       <p>
-        {{htmlSafe @controller.model.product.description}}
+        {{trustHTML @controller.model.product.description}}
       </p>
     </div>
 
@@ -43,7 +43,7 @@ export default <template>
         <SubscribeCard @cardElement={{@controller.cardElement}} />
 
         {{#if @controller.loading}}
-          {{loadingSpinner}}
+          {{dLoadingSpinner}}
         {{else if @controller.isAnonymous}}
           <LoginRequired />
         {{else}}

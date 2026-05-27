@@ -1,9 +1,22 @@
 # frozen_string_literal: true
 
+require "open3"
+require "securerandom"
+require "tmpdir"
+
 class TemporaryDb
-  PG_TEMP_PATH = "/tmp/pg_schema_tmp"
-  PG_CONF = "#{PG_TEMP_PATH}/postgresql.conf"
-  PG_SOCK_PATH = "#{PG_TEMP_PATH}/sockets"
+  PG_TEMP_PREFIX = "pg_schema_tmp"
+  VERSIONS = 10..30 # arbitrary upper limit to avoid updating this code for a long time
+  STARTUP_TIMEOUT_SECONDS = 60
+  DEFAULT_PG_SYSTEM_USER = "postgres"
+
+  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER, versions: VERSIONS)
+    @pg_temp_path = File.join(Dir.tmpdir, "#{PG_TEMP_PREFIX}_#{SecureRandom.hex(6)}")
+    @pg_conf = "#{@pg_temp_path}/postgresql.conf"
+    @pg_sock_path = "#{@pg_temp_path}/sockets"
+    @pg_system_user = pg_system_user
+    @versions = versions
+  end
 
   def port_available?(port)
     TCPServer.open(port).close
@@ -15,31 +28,52 @@ class TemporaryDb
   def pg_bin_path
     return @pg_bin_path if @pg_bin_path
 
-    %w[13 12 11 10].each do |v|
+    # Debian/Ubuntu: /usr/lib/postgresql/{version}/bin
+    @versions.reverse_each do |v|
       bin_path = "/usr/lib/postgresql/#{v}/bin"
-      if File.exist?("#{bin_path}/pg_ctl")
-        @pg_bin_path = bin_path
-        break
-      end
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
-    if !@pg_bin_path
+
+    # RHEL/Fedora (PGDG): /usr/pgsql-{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/usr/pgsql-#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # macOS Postgres.app: /Applications/Postgres.app/Contents/Versions/{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/Applications/Postgres.app/Contents/Versions/#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # macOS MacPorts: /opt/local/lib/postgresql{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/local/lib/postgresql#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # macOS homebrew: /opt/homebrew/opt/postgresql@{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/homebrew/opt/postgresql@#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # Unversioned fallbacks — skipped when the caller pinned a version range.
+    if @versions == VERSIONS
       bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
-      @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+
+      # Fallback: check if pg_ctl is on PATH (e.g. Fedora system packages install to /usr/bin)
+      pg_ctl = `which pg_ctl 2>/dev/null`.strip
+      return @pg_bin_path = File.dirname(pg_ctl) if pg_ctl.present?
     end
-    if !@pg_bin_path
-      puts "Can not find postgres bin path"
-      exit 1
-    end
-    @pg_bin_path
+
+    raise "Cannot find pg_ctl for PostgreSQL #{@versions.first}–#{@versions.last}. " \
+            "Install one of those server packages (e.g. `postgresql-#{@versions.first}` on Debian/Ubuntu)."
   end
 
   def initdb_path
-    return @initdb_path if @initdb_path
-
-    @initdb_path = `which initdb 2> /dev/null`.strip
-    @initdb_path = "#{pg_bin_path}/initdb" if @initdb_path.length == 0
-
-    @initdb_path
+    @initdb_path ||= "#{pg_bin_path}/initdb"
   end
 
   def find_free_port(range)
@@ -51,40 +85,39 @@ class TemporaryDb
   end
 
   def pg_ctl_path
-    return @pg_ctl_path if @pg_ctl_path
-
-    @pg_ctl_path = `which pg_ctl 2> /dev/null`.strip
-    @pg_ctl_path = "#{pg_bin_path}/pg_ctl" if @pg_ctl_path.length == 0
-
-    @pg_ctl_path
+    @pg_ctl_path ||= "#{pg_bin_path}/pg_ctl"
   end
 
   def start
-    FileUtils.rm_rf PG_TEMP_PATH
-    `#{initdb_path} -D '#{PG_TEMP_PATH}' --auth-host=trust --locale=en_US.UTF-8 -E UTF8 2> /dev/null`
-
-    FileUtils.mkdir PG_SOCK_PATH
-    conf = File.read(PG_CONF)
-    File.write(PG_CONF, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{PG_SOCK_PATH}'")
+    init_data_directory
+    configure_ports
 
     puts "Starting postgres on port: #{pg_port}"
+    @previous_discourse_pg_port = ENV["DISCOURSE_PG_PORT"]
     ENV["DISCOURSE_PG_PORT"] = pg_port.to_s
 
-    Thread.new { `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' start` }
-
-    puts "Waiting for PG server to start..."
-    sleep 0.1 while !`#{pg_ctl_path} -D '#{PG_TEMP_PATH}' status`.include?("server is running")
+    start_server
     @started = true
 
-    `createuser -h localhost -p #{pg_port} -s -D -w discourse 2> /dev/null`
-    `createdb -h localhost -p #{pg_port} discourse`
+    create_database
 
     puts "PG server is ready and DB is loaded"
+  rescue StandardError
+    restore_discourse_pg_port
+    raise
   end
 
   def stop
     @started = false
-    `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' stop`
+    args = [pg_ctl_path, "-D", @pg_temp_path, "stop"]
+    args = ["sudo", "-u", @pg_system_user, *args] if running_as_root?
+    Open3.capture3(*args)
+  ensure
+    restore_discourse_pg_port
+  end
+
+  def connection_hash
+    { adapter: "postgresql", database: "discourse", port: pg_port, host: "localhost" }
   end
 
   def with_env(&block)
@@ -93,12 +126,15 @@ class TemporaryDb
     old_port = ENV["PGPORT"]
     old_dev_db = ENV["DISCOURSE_DEV_DB"]
     old_rails_db = ENV["RAILS_DB"]
+    old_path = ENV["PATH"]
 
     ENV["PGHOST"] = "localhost"
     ENV["PGUSER"] = "discourse"
     ENV["PGPORT"] = pg_port.to_s
     ENV["DISCOURSE_DEV_DB"] = "discourse"
     ENV["RAILS_DB"] = "discourse"
+    # Make sure subprocess `pg_dump`/`psql` match the pinned server version.
+    ENV["PATH"] = "#{pg_bin_path}:#{old_path}"
 
     yield
   ensure
@@ -107,21 +143,17 @@ class TemporaryDb
     ENV["PGPORT"] = old_port
     ENV["DISCOURSE_DEV_DB"] = old_dev_db
     ENV["RAILS_DB"] = old_rails_db
+    ENV["PATH"] = old_path
   end
 
   def remove
     raise "Error: the database must be stopped before it can be removed" if @started
-    FileUtils.rm_rf PG_TEMP_PATH
+    FileUtils.rm_rf @pg_temp_path
   end
 
   def migrate
     raise "Error: the database must be started before it can be migrated." if !@started
-    ActiveRecord::Base.establish_connection(
-      adapter: "postgresql",
-      database: "discourse",
-      port: pg_port,
-      host: "localhost",
-    )
+    ActiveRecord::Base.establish_connection(connection_hash)
 
     puts "Running migrations on blank database!"
 
@@ -135,5 +167,81 @@ class TemporaryDb
   ensure
     $stdout.reopen(old_stdout) if old_stdout
     $stderr.reopen(old_stderr) if old_stderr
+  end
+
+  private
+
+  def init_data_directory
+    FileUtils.rm_rf @pg_temp_path
+    run_command!(
+      initdb_path,
+      "-D",
+      @pg_temp_path,
+      "--auth-host=trust",
+      "--locale=en_US.UTF-8",
+      "-E",
+      "UTF8",
+      "--username=discourse",
+      error_prefix: "Failed to initialize postgres data directory",
+    )
+  end
+
+  def configure_ports
+    FileUtils.mkdir(@pg_sock_path)
+    FileUtils.chown(@pg_system_user, nil, @pg_sock_path) if running_as_root?
+    conf = File.read(@pg_conf)
+    File.write(@pg_conf, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{@pg_sock_path}'")
+  end
+
+  def start_server
+    log_file = File.join(@pg_temp_path, "server.log")
+    run_command!(
+      pg_ctl_path,
+      "-D",
+      @pg_temp_path,
+      "-l",
+      log_file,
+      "-w",
+      "-t",
+      STARTUP_TIMEOUT_SECONDS.to_s,
+      "start",
+      error_prefix: "Failed to start postgres within #{STARTUP_TIMEOUT_SECONDS}s",
+    )
+  end
+
+  def create_database
+    run_command!(
+      "createdb",
+      "-h",
+      "localhost",
+      "-p",
+      pg_port.to_s,
+      "-U",
+      "discourse",
+      "discourse",
+      error_prefix: "Failed to create temporary postgres database",
+    )
+  end
+
+  def run_command!(*args, error_prefix:)
+    args = ["sudo", "-u", @pg_system_user, *args] if running_as_root?
+    stdout, stderr, status = Open3.capture3(*args)
+    return if status.success?
+
+    details = stderr.to_s.strip
+    details = stdout.to_s.strip if details.empty?
+    details = "unknown error" if details.empty?
+    raise "#{error_prefix}: #{details}"
+  rescue Errno::ENOENT => e
+    raise "#{error_prefix}: #{e.message}"
+  end
+
+  def running_as_root?
+    Process.uid == 0
+  end
+
+  def restore_discourse_pg_port
+    ENV["DISCOURSE_PG_PORT"] = @previous_discourse_pg_port
+    @previous_discourse_pg_port = nil
   end
 end

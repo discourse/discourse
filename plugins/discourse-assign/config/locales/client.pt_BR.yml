@@ -41,7 +41,6 @@ pt_BR:
       assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Atribuiu #%{post_number} a %{username}"
       assign_post_to_multiple: "#%{post_number} para %{username}"
-      assigned_to_w_ellipsis: "Atribuído(a) a..."
       unassign:
         title: "Remover atribuição"
         title_w_ellipsis: "Remover atribuição..."
@@ -130,8 +129,8 @@ pt_BR:
       web_hooks:
         assign_event:
           group_name: "Eventos de atribuição"
-          assigned: "Quando um(a) usuário(a) atribuir um tópico"
-          unassigned: "Quando um(a) usuário(a) cancelar a atribuição de um tópico"
+          assigned: "Quando um(a) usuário(a) atribui um tópico"
+          unassigned: "Quando um(a) usuário(a) cancela a atribuição de um tópico"
     search:
       advanced:
         in:
@@ -139,10 +138,6 @@ pt_BR:
           unassigned: "tiveram atribuição removida"
         assigned:
           label: "Atribuído(a) a"
-    topics:
-      bulk:
-        unassign: "Remover atribuição de tópicos"
-        assign: "Atribuir tópicos"
     discourse_automation:
       scriptables:
         random_assign:

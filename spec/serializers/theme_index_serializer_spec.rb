@@ -10,7 +10,7 @@ RSpec.describe ThemeIndexSerializer do
       :theme_field,
       theme:,
       target_id: Theme.targets[:common],
-      name: "screenshot",
+      name: "screenshot_light",
       upload_id: screenshot_upload.id,
       type_id: ThemeField.types[:theme_screenshot_upload_var],
     )
@@ -26,8 +26,8 @@ RSpec.describe ThemeIndexSerializer do
     expect(json[:user_selectable]).to eq(true)
   end
 
-  it "includes screenshot_url attribute" do
-    expect(json[:screenshot_url]).to eq(screenshot_upload.url)
+  it "includes screenshot_light_url attribute" do
+    expect(json[:screenshot_light_url]).to eq(screenshot_upload.url)
   end
 
   it "includes color_scheme relationship when present" do

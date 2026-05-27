@@ -17,6 +17,7 @@ class WebHookEventType < ActiveRecord::Base
   USER_PROMOTED = 16
   TOPIC_VOTING = 17
   CHAT_MESSAGE = 18
+  CALENDAR_EVENT = 19
 
   enum :group,
        {
@@ -37,6 +38,7 @@ class WebHookEventType < ActiveRecord::Base
          voting: 14,
          chat: 15,
          custom: 16,
+         calendar: 17,
        },
        scopes: false
 
@@ -88,6 +90,9 @@ class WebHookEventType < ActiveRecord::Base
     chat_message_edited: 1802,
     chat_message_trashed: 1803,
     chat_message_restored: 1804,
+    calendar_event_created: 1901,
+    calendar_event_updated: 1902,
+    calendar_event_destroyed: 1903,
   }
 
   has_and_belongs_to_many :web_hooks
@@ -119,7 +124,17 @@ class WebHookEventType < ActiveRecord::Base
         ],
       )
     end
-    self.where.not(id: ids_to_exclude)
+    unless defined?(SiteSetting.discourse_post_event_enabled) &&
+             SiteSetting.discourse_post_event_enabled
+      ids_to_exclude.concat(
+        [
+          TYPES[:calendar_event_created],
+          TYPES[:calendar_event_updated],
+          TYPES[:calendar_event_destroyed],
+        ],
+      )
+    end
+    where.not(id: ids_to_exclude)
   end
 end
 
@@ -128,6 +143,6 @@ end
 # Table name: web_hook_event_types
 #
 #  id    :integer          not null, primary key
-#  name  :string           not null
 #  group :integer
+#  name  :string           not null
 #

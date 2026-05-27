@@ -63,7 +63,7 @@
     }
 
     .chat-composer.is-disabled & {
-      background: var(--primary-low);
+      background: var(--d-input-bg-color--disabled);
 
       &:hover {
         cursor: not-allowed;
@@ -115,11 +115,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-  }
-
-  &__unreliable-network {
-    color: var(--danger);
-    padding: 0 0.5em;
   }
 }
 

@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Godtatte løsninger"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "godtatt"
+          topic_solved_notification: "løst"
     solved:
       title: "Løst"
       allow_accepted_answers: "Tillat enmeeier og personale å markere et svar som løsning"
@@ -23,6 +31,9 @@ nb_NO:
       topic_status_filter:
         all: "alle"
         solved: "løst"
+      move_post_cancel: "Avbryt"
+      confirm_solved_removal_confirm: "Bekreft"
+      confirm_solved_removal_cancel: "Avbryt"
     topic_statuses:
       solved:
         help: "Dette emnet har en løsning"

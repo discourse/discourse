@@ -27,6 +27,12 @@ lv:
         text:
           label: Teksts
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Sadaļas
+            tags:
+              label: Birkas
         user_badge_granted:
           fields:
             badge:

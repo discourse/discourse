@@ -3,6 +3,12 @@
   .setting {
     padding-bottom: 20px;
 
+    &.icon {
+      .setting-value .multi-select .formatted-selection {
+        display: none;
+      }
+    }
+
     .setting-label {
       float: left;
       width: 17.6576%;
@@ -56,24 +62,9 @@
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
-
-      .image-uploader {
-        display: flex;
-        flex-direction: column;
-
-        .image-upload-controls {
-          display: flex;
-          gap: 0.5em;
-          margin: 0 0 0.5em;
-        }
-      }
-
-      .uploaded-image-preview {
-        background-color: var(--primary-medium);
-      }
     }
 
-    .setting-theme-warning {
+    .setting-override-warning {
       font-size: var(--font-down-1);
       color: var(--primary-medium);
 

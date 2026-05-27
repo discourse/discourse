@@ -21,8 +21,8 @@ class GroupSmtpMailer < ActionMailer::Base
       enable_starttls_auto: from_group.smtp_ssl_mode == Group.smtp_ssl_modes[:starttls],
       enable_ssl: from_group.smtp_ssl_mode == Group.smtp_ssl_modes[:ssl_tls],
       return_response: true,
-      open_timeout: GlobalSetting.group_smtp_open_timeout,
-      read_timeout: GlobalSetting.group_smtp_read_timeout,
+      open_timeout: GlobalSetting.group_smtp_open_timeout.to_f,
+      read_timeout: GlobalSetting.group_smtp_read_timeout.to_f,
     }
 
     group_name = from_group.name_full_preferred
@@ -49,7 +49,7 @@ class GroupSmtpMailer < ActionMailer::Base
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.smtp_from_address,
-      from_alias: I18n.t("email_from_without_site", group_name: group_name),
+      from_alias: group_name,
       html_override: html_override(post),
       cc: cc_addresses,
       bcc: bcc_addresses,

@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
-describe "Solved", type: :system do
+describe "Solved" do
   fab!(:admin)
   fab!(:solver, :user)
   fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }
   fab!(:topic) { Fabricate(:post, user: admin).topic }
-  fab!(:solver_post) { Fabricate(:post, topic:, user: solver, cooked: "The answer is 42") }
+  fab!(:solver_post) do
+    long_cooked =
+      "<p>The answer is 42.</p>" + ("<p>Some additional context for the answer.</p>" * 10)
+    Fabricate(:post, topic:, user: solver, cooked: long_cooked)
+  end
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   UNACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-unaccepted"
   ACCEPTED_BUTTON_SELECTOR = ".post-action-menu__solved-accepted"
   ACCEPTED_ANSWER_QUOTE_SELECTOR = "aside.accepted-answer.quote"
-  SOLVER_INFO_SELECTOR = ".title .accepted-answer--solver"
-  ACCEPTER_INFO_SELECTOR = ".title .accepted-answer--accepter"
-  QUOTE_TOGGLE_SELECTOR = "aside.accepted-answer.quote button.quote-toggle"
+  SOLVER_INFO_SELECTOR = ".d-solved-answer__footer .d-solved-answer__solver"
+  ACCEPTER_INFO_SELECTOR = ".d-solved-answer__footer .d-solved-answer__accepter"
+  QUOTE_TOGGLE_SELECTOR = "aside.accepted-answer.quote button.d-solved-answer__toggle"
 
   before do
     SiteSetting.solved_enabled = true
@@ -54,7 +58,68 @@ describe "Solved", type: :system do
     Fabricate(:solved_topic, topic:, answer_post: solver_post, accepter:)
     sign_in(solver)
     visit "/my/activity/solved"
-    expect(page.find(".post-list")).to have_content(solver_post.cooked)
+    expect(page.find(".post-list")).to have_content("The answer is 42")
+  end
+
+  describe "solution excerpt expand toggle" do
+    it "shows the toggle when the answer overflows the preview" do
+      Fabricate(:solved_topic, topic:, answer_post: solver_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_css(QUOTE_TOGGLE_SELECTOR)
+    end
+
+    it "hides the toggle when the answer fits within the preview" do
+      short_post = Fabricate(:post, topic:, user: solver, cooked: "<p>The answer is 42.</p>")
+      Fabricate(:solved_topic, topic:, answer_post: short_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_css(ACCEPTED_ANSWER_QUOTE_SELECTOR)
+      expect(topic_page).to have_no_css(QUOTE_TOGGLE_SELECTOR)
+    end
+  end
+
+  describe "solution excerpt formatting" do
+    it "preserves code blocks in the solution excerpt" do
+      raw = <<~RAW
+        Here's the solution:
+
+        ```ruby
+        def hello
+          puts "world"
+        end
+        ```
+
+        Hope this helps!
+      RAW
+      code_solution_post = Fabricate(:post, topic:, user: admin, raw:)
+      Fabricate(:solved_topic, topic:, answer_post: code_solution_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      within("#{ACCEPTED_ANSWER_QUOTE_SELECTOR} blockquote") do
+        expect(page).to have_css("pre code.lang-ruby")
+        expect(page).to have_content("def hello")
+        expect(page).to have_content('puts "world"')
+      end
+    end
+
+    it "preserves images in the solution excerpt" do
+      upload = Fabricate(:upload)
+      raw = "Check this image: ![test image](#{upload.short_url})"
+      image_solution_post = Fabricate(:post, topic:, user: admin, raw:)
+      Fabricate(:solved_topic, topic:, answer_post: image_solution_post, accepter:)
+
+      sign_in(accepter)
+      topic_page.visit_topic(topic)
+
+      within("#{ACCEPTED_ANSWER_QUOTE_SELECTOR} blockquote") { expect(page).to have_css("img") }
+    end
   end
 
   private
@@ -87,10 +152,8 @@ describe "Solved", type: :system do
   end
 
   def verify_solver_and_accepter_info
-    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content("Solved by #{solver.name}")
-    expect(topic_page.find(ACCEPTER_INFO_SELECTOR)).to have_content(
-      "Marked as solved by #{accepter.name}",
-    )
+    expect(topic_page.find(SOLVER_INFO_SELECTOR)).to have_content(solver.name)
+    expect(topic_page.find(ACCEPTER_INFO_SELECTOR)).to have_content(accepter.name)
   end
 
   def verify_solution_info_present

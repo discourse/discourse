@@ -15,10 +15,13 @@ class Patreon::PatreonWebhookController < ApplicationController
     pledges:create
     pledges:update
     pledges:delete
+    members:create
+    members:update
+    members:delete
     members:pledge:create
     members:pledge:update
     members:pledge:delete
-  ]
+  ].freeze
 
   def index
     if unknown_trigger?
@@ -37,7 +40,8 @@ class Patreon::PatreonWebhookController < ApplicationController
     end
 
     pledge_data = JSON.parse(request.body.read)
-    patreon_id = Patreon::Pledge.get_patreon_id(pledge_data)
+    adapter = Patreon::ApiVersion.adapter_for_payload(pledge_data)
+    patreon_id = Patreon::Pledge.get_patreon_id(pledge_data, adapter: adapter)
 
     if SiteSetting.patreon_verbose_log
       Rails.logger.warn(
@@ -46,12 +50,12 @@ class Patreon::PatreonWebhookController < ApplicationController
     end
 
     case event
-    when "pledges:create", "members:pledge:create"
-      Patreon::Pledge.create!(pledge_data)
-    when "pledges:update", "members:pledge:update"
-      Patreon::Pledge.update!(pledge_data)
-    when "pledges:delete", "members:pledge:delete"
-      Patreon::Pledge.delete!(pledge_data)
+    when /create$/
+      Patreon::Pledge.create!(pledge_data, adapter: adapter)
+    when /update$/
+      Patreon::Pledge.update!(pledge_data, adapter: adapter)
+    when /delete$/
+      Patreon::Pledge.delete!(pledge_data, adapter: adapter)
     end
 
     Jobs.enqueue(:sync_patron_groups, patreon_id: patreon_id)
@@ -70,10 +74,15 @@ class Patreon::PatreonWebhookController < ApplicationController
   private
 
   def valid_signature?
+    secret = SiteSetting.patreon_webhook_secret
+    return false if secret.blank?
+
     signature = request.headers["X-Patreon-Signature"]
     digest = OpenSSL::Digest.new("MD5")
 
-    signature ==
-      OpenSSL::HMAC.hexdigest(digest, SiteSetting.patreon_webhook_secret, request.raw_post)
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature.to_s,
+      OpenSSL::HMAC.hexdigest(digest, secret, request.raw_post),
+    )
   end
 end

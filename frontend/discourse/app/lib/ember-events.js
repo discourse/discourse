@@ -55,6 +55,7 @@ export function normalizeEmberEventHandling(app) {
  */
 function eliminateClassicEventDelegation() {
   EventDispatcher.reopen({
+    // eslint-disable-next-line ember/avoid-leaking-state-in-ember-objects
     events: {},
   });
 }
@@ -156,28 +157,18 @@ function rewireClassicComponentEvents(app) {
 }
 
 /**
- * Rewires the `action` modifier to use `addEventListener` directly instead of
- * relying upon classic event delegation.
- *
- * This relies upon a deep override of Ember's rendering internals. If possible,
- * consider eliminating usage of `action` as a modifier instead.
+ * Registers Discourse's custom `action` modifier in the container so that
+ * `{{action}}` in templates resolves to our `addEventListener`-based
+ * implementation instead of Ember's removed built-in.
  *
  * @param {ApplicationInstance} appInstance
  */
 function rewireActionModifier(appInstance) {
-  // This is a deep runtime override, since neither the runtime resolver nor the
-  // built-in `action` modifier seem to be available otherwise.
-  //
-  // TODO: Investigate if a cleaner override is possible.
-  const renderer = appInstance.lookup("renderer:-dom");
-  const lookupModifier = renderer._runtimeResolver.lookupModifier;
-  renderer._runtimeResolver.lookupModifier = (name, owner) => {
-    if (name === "action") {
-      return actionModifier;
-    } else {
-      return lookupModifier(name, owner);
-    }
-  };
+  // Ember's built-in `action` modifier was removed in Ember 6.0 (RFC #1006). When the Glimmer VM encounters
+  // `{{action}}` in a template, it calls `ResolverImpl.lookupModifier("action", owner)`. That method first checks
+  // `BUILTIN_MODIFIERS` (which no longer includes "action"), then falls back to `owner.factoryFor("modifier:action")`.
+  // By registering our custom modifier in the container, it gets picked up by that fallback path.
+  appInstance.register("modifier:action", actionModifier);
 }
 
 function setupComponentEventListeners(component, allEventMethods) {
@@ -186,6 +177,14 @@ function setupComponentEventListeners(component, allEventMethods) {
 
   for (const method of Object.keys(allEventMethods)) {
     if (component.has(method)) {
+      if (!element) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `You can not define "${method}" function(s) to handle DOM events in the '${component}' tagless component since it doesn't have any DOM element.`
+        );
+        continue;
+      }
+
       const event = allEventMethods[method];
 
       if (eventListeners === undefined) {

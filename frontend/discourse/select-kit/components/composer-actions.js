@@ -1,10 +1,8 @@
-import { action } from "@ember/object";
-import { equal, gt } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -37,6 +35,7 @@ export function _clearSnapshots() {
   showFullTitle: false,
   preventHeaderFocus: true,
   customStyle: true,
+  btnCustomClasses: "composer-actions-btn",
 })
 export default class ComposerActions extends DropdownSelectBoxComponent {
   @service dialog;
@@ -44,33 +43,34 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   seq = 0;
 
-  @equal("action", EDIT) isEditing;
-  @gt("topic.slow_mode_seconds", 0) isInSlowMode;
+  @computed("action")
+  get isEditing() {
+    return this.action === EDIT;
+  }
 
-  @discourseComputed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
-  iconForComposerAction(
-    isEditing,
-    composerAction,
-    whisper,
-    noBump,
-    isInSlowMode
-  ) {
-    if (composerAction === CREATE_TOPIC) {
+  @computed("topic.slow_mode_seconds")
+  get isInSlowMode() {
+    return this.topic?.slow_mode_seconds > 0;
+  }
+
+  @computed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
+  get iconForComposerAction() {
+    if (this.action === CREATE_TOPIC) {
       return "plus";
-    } else if (composerAction === PRIVATE_MESSAGE) {
+    } else if (this.action === PRIVATE_MESSAGE) {
       return "envelope";
-    } else if (composerAction === CREATE_SHARED_DRAFT) {
+    } else if (this.action === CREATE_SHARED_DRAFT) {
       return "far-clipboard";
-    } else if (whisper) {
+    } else if (this.whisper) {
       return "far-eye-slash";
-    } else if (noBump) {
+    } else if (this.noBump) {
       return "anchor";
-    } else if (isInSlowMode) {
+    } else if (this.isInSlowMode) {
       return "hourglass-start";
-    } else if (isEditing) {
+    } else if (this.isEditing) {
       return "pencil";
     } else {
-      return "share";
+      return "reply";
     }
   }
 
@@ -114,8 +114,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     return {};
   }
 
-  @discourseComputed("seq")
-  content() {
+  @computed("seq")
+  get content() {
     let items = [];
 
     if (
@@ -169,7 +169,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
           postUsername: _postSnapshot.username,
         }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_post",
       });
     }
@@ -186,7 +186,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       items.push({
         name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_topic",
       });
     }
@@ -287,9 +287,10 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     });
   }
 
-  _replyFromExisting(options, post, topic) {
-    this.composer.closeComposer();
-    this.composer.open({
+  async _replyFromExisting(options, post, topic) {
+    await this.composer.destroyDraft();
+    this.composer.close();
+    await this.composer.open({
       ...options,
       prependText: this._continuedFromText(post, topic),
     });

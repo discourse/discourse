@@ -16,9 +16,14 @@ export default class FloatKitApplyFloatingUi extends Modifier {
     this.options = options ?? {};
 
     if (this.options.autoUpdate) {
-      this.cleanup = autoUpdate(trigger, element, this.update, {
-        ancestorScroll: options.updateOnScroll,
-      });
+      this.cleanup = autoUpdate(
+        trigger,
+        element,
+        this.update,
+        typeof this.options.autoUpdate === "object"
+          ? this.options.autoUpdate
+          : {}
+      );
     } else {
       this.update();
     }
@@ -26,6 +31,10 @@ export default class FloatKitApplyFloatingUi extends Modifier {
 
   @bind
   async update() {
+    if (this.instance.trigger?.isConnected === false) {
+      return;
+    }
+
     await updatePosition(
       this.instance.trigger,
       this.instance.content,

@@ -6,7 +6,26 @@
 
 pl_PL:
   site_settings:
-    data_explorer_enabled: "Włącz eksploratora danych w /admin/plugins/explorer"
+    data_explorer_enabled: "Włącz eksplorator danych"
+    data_explorer_ai_queries_enabled: "Włącz generowanie zapytań AI w Eksploratorze danych"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "Generator zapytań Eksploratora danych"
+          description: "Generuje zapytania SQL dla Eksploratora danych z języka naturalnego"
+      tool_help:
+        run_sql: "Uruchamia zapytanie SQL i zwraca wyniki"
+      tool_summary:
+        run_sql: "Uruchamianie zapytania SQL"
+      tool_description:
+        run_sql: "Uruchomiono zapytanie SQL"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "Agent AI nie jest skonfigurowany. Sprawdź ustawienia funkcji AI."
+      error_no_sql_returned: "Sztuczna inteligencja nie zwróciła prawidłowego zapytania SQL. Spróbuj ponownie lub wpisz zapytanie ręcznie."
+    errors:
+      tool_not_allowed: "Nie masz uprawnień do korzystania z tego narzędzia"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -17,11 +36,12 @@ pl_PL:
         title: Zaplanuj post w temacie z wynikami eksploratora danych
         description: Otrzymuj zaplanowane raporty publikowane w określonym temacie
   data_explorer:
+    admin_dashboard_label: "Eksplorator danych"
     report_generator:
       private_message:
         title: "Zaplanowany raport dla %{query_name}"
         body: |
-          Cześć %{recipient_name}, Twój raport eksploratora danych jest gotowy.
+          Cześć, %{recipient_name}. Twój raport eksploratora danych jest gotowy.
 
           Nazwa zapytania:
           %{query_name}
@@ -29,7 +49,7 @@ pl_PL:
           Oto wyniki:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Wyświetl zapytanie w eksploratorze danych</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Wyświetl zapytanie w eksploratorze danych</a>
 
           Raport utworzony o %{created_at} (%{timezone})
       post:
@@ -39,7 +59,7 @@ pl_PL:
           Oto wyniki:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Wyświetl zapytanie w eksploratorze danych</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Wyświetl zapytanie w eksploratorze danych</a>
 
           Raport utworzony o %{created_at} (%{timezone})
       upload_appendix: "Dodatek: [%{filename}|załącznik](%{short_url})"

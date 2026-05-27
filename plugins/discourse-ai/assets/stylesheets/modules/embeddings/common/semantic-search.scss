@@ -1,24 +1,14 @@
 @use "lib/viewport";
 
 .semantic-search__container {
-  margin: 1rem 0 0 0;
-
-  .has-sidebar-page & {
-    @include viewport.until(lg) {
-      border-top: 1px solid var(--primary-low);
-    }
-  }
-
-  body:not(.has-sidebar-page) & {
-    @include viewport.until(md) {
-      border-top: 1px solid var(--primary-low);
-    }
-  }
-
   .semantic-search__results {
     display: flex;
     flex-direction: column;
     align-items: baseline;
+
+    @include viewport.until(sm) {
+      margin-top: var(--space-4);
+    }
 
     .ai-indicator-wave {
       color: var(--primary-medium);
@@ -44,8 +34,14 @@
       }
 
       &__searching-text {
-        display: inline-block;
         margin-left: 8px;
+        display: flex;
+        gap: var(--space-1);
+        align-items: center;
+
+        .badge-notification {
+          top: unset;
+        }
       }
 
       &__tooltip {
@@ -60,10 +56,13 @@
   }
 }
 
+body.ai-semantic-search-loading .no-results-container {
+  // avoid temporary flash of 0 results
+  display: none;
+}
+
 .search-results {
   .fps-result {
-    padding: 0.5rem;
-
     .ai-result__icon {
       display: none;
     }
@@ -80,6 +79,56 @@
       color: var(--tertiary);
     }
   }
+}
+
+.semantic-search__searching-text {
+  .badge-notification.--has-results {
+    background: var(--tertiary);
+  }
+}
+
+.search-filters .advanced-filters {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+
+  @include viewport.until(sm) {
+    grid-template-columns: 1fr;
+  }
+
+  .advanced-filters__toggle {
+    grid-column: 1;
+  }
+
+  .semantic-search__container {
+    justify-self: end;
+
+    @include viewport.until(sm) {
+      justify-self: start;
+    }
+  }
+
+  .search-advanced-filters {
+    grid-column: 1 / -1;
+  }
+}
+
+.ai-search-results-notice,
+.ai-quick-search-notice {
+  display: flex;
+  gap: var(--space-2);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.ai-search-results-notice {
+  padding: var(--space-2) 0;
+  margin-bottom: var(--space-2);
+}
+
+.ai-quick-search-notice {
+  padding: var(--space-2) var(--space-4);
+  margin-top: var(--space-1);
 }
 
 // Hides other buttons and only shows loader

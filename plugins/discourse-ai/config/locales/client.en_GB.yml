@@ -15,8 +15,10 @@ en_GB:
     discourse_ai:
       usage:
         summary: "Summary"
-      ai_persona:
+      ai_agent:
         description: "Description"
       tools:
         description: "Description"
         summary: "Summary"
+      mcp_servers:
+        description: "Description"

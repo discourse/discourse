@@ -85,4 +85,11 @@ export const templateFormFields = [
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
   },
+  {
+    type: "composer",
+    structure: `- type: composer
+  id: ${i18n("admin.form_templates.field_placeholders.id")}
+  attributes:
+    label: "${i18n("admin.form_templates.field_placeholders.label")}"`,
+  },
 ];

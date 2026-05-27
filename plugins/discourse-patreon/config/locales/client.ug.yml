@@ -13,4 +13,7 @@ ug:
       delete: 'ئۆچۈر'
       save: 'ساقلا'
       field:
+        id: "كىملىك"
         email: "ئېلخەت"
+        amount_cents: "سومما (سېنت)"
+        rewards: "مۇكاپات"

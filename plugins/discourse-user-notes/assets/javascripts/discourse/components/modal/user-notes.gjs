@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import UserNote from "../user-note";
 
@@ -14,14 +13,8 @@ export default class UserNotesModal extends Component {
   @service dialog;
   @service store;
 
-  @tracked userId = this.args.model.userId;
-  postId = this.args.model.postId;
-  callback = this.args.model.callback;
-
   #refreshCount() {
-    if (this.callback) {
-      this.callback(this.args.model.note.length);
-    }
+    this.args.model.callback?.(this.args.model.note.length);
   }
 
   get subtitle() {
@@ -48,15 +41,14 @@ export default class UserNotesModal extends Component {
   @action
   async onSubmit(data) {
     const note = this.store.createRecord("user-note");
-    const userId = parseInt(this.userId, 10);
 
     const args = {
       raw: data.content,
-      user_id: userId,
+      user_id: parseInt(this.args.model.userId, 10),
     };
 
-    if (this.postId) {
-      args.post_id = parseInt(this.postId, 10);
+    if (this.args.model.postId) {
+      args.post_id = parseInt(this.args.model.postId, 10);
     }
 
     try {
@@ -102,9 +94,10 @@ export default class UserNotesModal extends Component {
           @title={{i18n "user_notes.attach_note_description"}}
           @format="full"
           @validation="required:trim"
+          @type="textarea"
           as |field|
         >
-          <field.Textarea />
+          <field.Control />
         </form.Field>
 
         <form.Actions>

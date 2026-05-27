@@ -6,6 +6,7 @@ function setupAuthData(data) {
   data = {
     auth_provider: "test",
     email: "blah@example.com",
+    username: "testuser",
     can_edit_username: true,
     can_edit_name: true,
     ...data,
@@ -48,6 +49,75 @@ acceptance("Create Account - external auth", function (needs) {
       .doesNotExist("it does not show the fields");
   });
 });
+
+acceptance(
+  "Create Account - external auth without username suggestion",
+  function (needs) {
+    needs.hooks.beforeEach(function () {
+      setupAuthData({ username: null });
+    });
+    needs.hooks.afterEach(function () {
+      document.getElementById("data-authentication").remove();
+    });
+
+    test("when skip is enabled but username is missing, shows form", async function (assert) {
+      this.siteSettings.auth_skip_create_confirm = true;
+      await visit("/");
+
+      assert.dom(".signup-fullpage").exists("it shows the signup page");
+
+      assert
+        .dom("#new-account-username")
+        .exists("it shows the fields so user can provide username");
+    });
+  }
+);
+
+acceptance(
+  "Create Account - external auth with full name required but not from provider",
+  function (needs) {
+    needs.hooks.beforeEach(function () {
+      setupAuthData({ name: "Testuser", name_from_provider: false });
+    });
+    needs.hooks.afterEach(function () {
+      document.getElementById("data-authentication").remove();
+    });
+
+    needs.site({ full_name_required_for_signup: true });
+
+    test("when skip is enabled but name is required and not from provider, shows form", async function (assert) {
+      this.siteSettings.auth_skip_create_confirm = true;
+      await visit("/");
+
+      assert.dom(".signup-fullpage").exists("it shows the signup page");
+      assert.dom("#new-account-name").exists("it shows the name field");
+    });
+  }
+);
+
+acceptance(
+  "Create Account - external auth with full name required and from provider",
+  function (needs) {
+    needs.hooks.beforeEach(function () {
+      setupAuthData({ name: "John Doe", name_from_provider: true });
+    });
+    needs.hooks.afterEach(function () {
+      document.getElementById("data-authentication").remove();
+    });
+
+    needs.site({ full_name_required_for_signup: true });
+
+    test("when skip is enabled and name is from provider, skips form", async function (assert) {
+      this.siteSettings.auth_skip_create_confirm = true;
+      await visit("/");
+
+      assert.dom(".signup-fullpage").exists("it shows the signup page");
+      assert
+        .dom("#new-account-username")
+        .doesNotExist("it does not show the fields");
+    });
+  }
+);
 
 acceptance("Create account - with associate link", function (needs) {
   needs.hooks.beforeEach(function () {

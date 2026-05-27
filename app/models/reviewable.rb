@@ -34,7 +34,6 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :reviewable_action_logs, -> { order(created_at: :asc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -53,7 +52,7 @@ class Reviewable < ActiveRecord::Base
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
 
   after_commit(on: %i[create update]) do
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+    Jobs.enqueue(:notify_reviewable, reviewable_id: id) if pending?
   end
 
   # Can be used if several actions are equivalent
@@ -84,7 +83,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.sti_names
-    self.types.map(&:sti_name)
+    types.map(&:sti_name)
   end
 
   def self.source_for(type)
@@ -228,7 +227,11 @@ class Reviewable < ActiveRecord::Base
     rs.reason = reason.to_s if reason
     rs.save!
 
-    update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
+    update(
+      score: score + rs.score,
+      latest_score: rs.created_at,
+      force_review: self.force_review || force_review,
+    )
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
     # Flags are cached for performance reasons.
@@ -330,7 +333,7 @@ class Reviewable < ActiveRecord::Base
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
 
-    (params[:payload] || {}).each { |k, v| self.payload[k] = v }
+    (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
 
     result = false
@@ -351,14 +354,10 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
+    perform_method = :"perform_#{aliases[action_id] || action_id}"
     guardian = args[:guardian] || Guardian.new(performed_by)
 
     validate_action!(guardian, action_id, perform_method, args)
-
-    # Bundle needs to be determined before the action is performed, as bundles
-    # are dynamic based on the state of the reviewable.
-    action_bundle_id = get_action_bundle_id(guardian, action_id, args)
 
     result = nil
     update_count = false
@@ -368,38 +367,9 @@ class Reviewable < ActiveRecord::Base
 
       raise ActiveRecord::Rollback unless result.success?
 
-      if result.transition_to
-        reviewable_action_logs.create!(
-          action_key: action_id.to_s,
-          status: result.transition_to,
-          performed_by: performed_by,
-          bundle: action_bundle_id,
-        )
-      end
-
-      if !guardian.can_see_reviewable_ui_refresh? || SiteSetting.reviewable_old_moderator_actions
-        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
-        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
-
-        recalculate_score if result.recalculate_score
-      else
-        Review::CalculateFinalStatusFromLogs.call(
-          params: {
-            reviewable_id: id,
-            guardian: guardian,
-            args: args,
-          },
-        ) do
-          on_success do |status:|
-            unless status == :pending
-              update_count = transition_to(status, performed_by)
-              update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
-
-              recalculate_score if result.recalculate_score
-            end
-          end
-        end
-      end
+      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+      update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+      recalculate_score if result.recalculate_score
     end
 
     result.after_commit.call if result && result.after_commit
@@ -408,7 +378,7 @@ class Reviewable < ActiveRecord::Base
       if update_count || result.remove_reviewable_ids.present?
         Jobs.enqueue(
           :notify_reviewable,
-          reviewable_id: self.id,
+          reviewable_id: id,
           performing_username: performed_by.username,
           updated_reviewable_ids: result.remove_reviewable_ids,
         )
@@ -462,8 +432,16 @@ class Reviewable < ActiveRecord::Base
           .includes(
             { created_by: :user_stat },
             :topic,
-            :target,
-            :target_created_by,
+            {
+              target: [
+                :user_stat,
+                :primary_email,
+                { topic: :category },
+                :user_histories,
+                :user_custom_fields,
+              ],
+            },
+            { target_created_by: [:user_custom_fields] },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
@@ -492,7 +470,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.unseen_reviewable_count(user)
-    self.unseen_list_for(user).count
+    unseen_list_for(user).count
   end
 
   def self.list_for(
@@ -653,11 +631,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   def basic_serializer
-    TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
+    TYPE_TO_BASIC_SERIALIZER[type.to_sym] || BasicReviewableSerializer
   end
 
   def type_class
-    Reviewable.sti_class_for(self.type)
+    Reviewable.sti_class_for(type)
   end
 
   def self.lookup_serializer_for(type)
@@ -672,7 +650,6 @@ class Reviewable < ActiveRecord::Base
     @@serializers[type] ||= lookup_serializer_for(type)
   end
 
-  # @TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated, it now lives in ReviewableActionBuilder.
   def create_result(status, transition_to = nil)
     result = PerformResult.new(self, status)
     result.transition_to = transition_to
@@ -751,7 +728,7 @@ class Reviewable < ActiveRecord::Base
     result =
       DB.query(
         sql,
-        id: self.id,
+        id: id,
         pending: ReviewableScore.statuses[:pending],
         agreed: ReviewableScore.statuses[:agreed],
       )
@@ -779,10 +756,9 @@ class Reviewable < ActiveRecord::Base
 
     DiscourseEvent.trigger(:reviewable_score_updated, self)
 
-    self.score
+    score
   end
 
-  # TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated.
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
@@ -794,6 +770,7 @@ class Reviewable < ActiveRecord::Base
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
+      a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
     end
 
@@ -815,14 +792,14 @@ class Reviewable < ActiveRecord::Base
         DB.query_single(
           "UPDATE reviewables SET version = version + 1 WHERE id = :id AND version = :version RETURNING version",
           version: version,
-          id: self.id,
+          id: id,
         )
     else
       # We didn't supply a version to update safely, so just increase it
       version_result =
         DB.query_single(
           "UPDATE reviewables SET version = version + 1 WHERE id = :id RETURNING version",
-          id: self.id,
+          id: id,
         )
     end
 
@@ -884,25 +861,6 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def get_action_bundle_id(guardian, action_id, args)
-    action_aliases = [
-      action_id,
-      aliases.to_a.select { |k, v| v == action_id }.map(&:first),
-    ].flatten.map(&:to_s)
-
-    actions = actions_for(guardian, args)
-    bundle_id = nil
-    actions.bundles.each do |bundle|
-      if bundle.actions.any? { |a| action_aliases.include?(a.server_action.to_s) }
-        bundle_id = bundle.bundle_id
-        break
-      end
-    end
-
-    # For old UI actions that aren't in the new separated bundles, use a default bundle
-    bundle_id ||= "legacy-actions"
-  end
-
   def update_flag_stats(status:, user_ids:)
     return if %i[agreed disagreed ignored].exclude?(status)
 
@@ -930,26 +888,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

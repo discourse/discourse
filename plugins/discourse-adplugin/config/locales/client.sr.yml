@@ -13,3 +13,9 @@ sr:
           settings: "Podešavanje"
           save: "Sačuvaj"
           delete: "Obriši"
+          categories: "Kategorije"
+          groups: "Grupe"
+          name: "Ime foruma"
+          edit: "Izmeni"
+          tabs:
+            settings: "Podešavanje"

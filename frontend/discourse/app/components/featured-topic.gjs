@@ -1,13 +1,13 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
 } from "@ember-decorators/component";
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import TopicStatus from "./topic-status";
 
 @classNameBindings(":featured-topic")
@@ -25,7 +25,7 @@ export default class FeaturedTopic extends Component {
 
   <template>
     <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
-    <a href={{this.topic.lastUnreadUrl}} class="title">{{htmlSafe
+    <a href={{this.topic.lastUnreadUrl}} class="title">{{trustHTML
         this.topic.fancyTitle
       }}</a>
     <TopicPostBadges
@@ -34,7 +34,7 @@ export default class FeaturedTopic extends Component {
       @url={{this.topic.lastUnreadUrl}}
     />
 
-    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{ageWithTooltip
+    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{dAgeWithTooltip
         this.topic.last_posted_at
       }}</a>
   </template>

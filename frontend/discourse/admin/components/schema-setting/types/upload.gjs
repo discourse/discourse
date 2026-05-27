@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
@@ -27,7 +28,7 @@ export default class SchemaSettingTypeUpload extends Component {
       @onUploadDeleted={{this.uploadDeleted}}
       @additionalParams={{hash for_site_setting=true}}
       @type="site_setting"
-      @id={{concat "schema-field-upload-" @setting.setting}}
+      @id={{concat "schema-field-upload-" @setting.setting "-" @name}}
       @allowVideo={{true}}
     />
 

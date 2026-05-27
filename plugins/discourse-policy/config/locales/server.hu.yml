@@ -8,6 +8,7 @@ hu:
   site_settings:
     policy_enabled: "Engedélyezi a házirendeket?"
     policy_restrict_to_staff_posts: "Az irányelvek csak a munkatársak bejegyzéseiben jelenhetnek meg."
+    create_policy_allowed_groups: "Csoporttagság szükséges irányelvek posztokhoz való hozzáadásához."
     policy_easy_revoke: "Az elfogadás és a visszavonás gombok egyidejű megjelenítése"
   discourse_policy:
     errors:

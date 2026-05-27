@@ -91,6 +91,35 @@ RSpec.describe UserSummary do
     expect(summary.top_categories.first[:post_count]).to eq(1)
   end
 
+  describe "#bookmark_count" do
+    fab!(:user)
+    fab!(:post_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:post)) }
+    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic)) }
+
+    let(:summary) { UserSummary.new(user, Guardian.new(user)) }
+
+    before do
+      Fabricate(:topic_user, user:, topic: post_bookmark.bookmarkable.topic)
+      Fabricate(:topic_user, user:, topic: topic_bookmark.bookmarkable)
+    end
+
+    it "counts accessible bookmarks" do
+      expect(summary.bookmark_count).to eq(2)
+    end
+
+    it "excludes bookmarks in inaccessible categories" do
+      post_bookmark.bookmarkable.topic.update!(
+        category: Fabricate(:private_category, group: Fabricate(:group)),
+      )
+      expect(summary.bookmark_count).to eq(1)
+    end
+
+    it "excludes bookmarks for deleted topics" do
+      post_bookmark.bookmarkable.topic.trash!
+      expect(summary.bookmark_count).to eq(1)
+    end
+  end
+
   it "returns the most replied to users" do
     topic1 = create_post.topic
     topic1_post = create_post(topic: topic1)
@@ -106,8 +135,11 @@ RSpec.describe UserSummary do
     # Don't include replies to whispers
     topic3 = create_post(user: topic1.user).topic
     topic3_post = create_post(topic: topic3, post_type: Post.types[:whisper])
-    topic3_reply =
-      create_post(topic: topic3, reply_to_post_number: topic3_post.post_number, user: topic3.user)
+    topic3_reply = create_post(topic: topic3, user: topic1.user)
+    topic3_reply.update_columns(
+      reply_to_post_number: topic3_post.post_number,
+      post_type: Post.types[:whisper],
+    )
 
     # Don't include replies to private messages
     replied_to_user = Fabricate(:user)

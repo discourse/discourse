@@ -84,32 +84,6 @@ class TopicUser < ActiveRecord::Base
       )
     end
 
-    def unwatch_categories!(user, category_ids)
-      track_threshold = user.user_option.auto_track_topics_after_msecs
-
-      sql = <<~SQL
-        UPDATE topic_users tu
-        SET notification_level = CASE
-          WHEN t.user_id = :user_id THEN :watching
-          WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
-          ELSE :regular
-        end
-        FROM topics t
-        WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
-      SQL
-
-      DB.exec(
-        sql,
-        watching: notification_levels[:watching],
-        tracking: notification_levels[:tracking],
-        regular: notification_levels[:regular],
-        muted: notification_levels[:muted],
-        category_ids: category_ids,
-        user_id: user.id,
-        track_threshold: track_threshold,
-      )
-    end
-
     # Find the information specific to a user in a forum topic
     def lookup_for(user, topics)
       # If the user isn't logged in, there's no last read posts
@@ -572,22 +546,22 @@ end
 #
 # Table name: topic_users
 #
-#  user_id                  :integer          not null
-#  topic_id                 :integer          not null
-#  posted                   :boolean          default(FALSE), not null
+#  id                       :integer          not null, primary key
+#  bookmarked               :boolean          default(FALSE)
+#  cleared_pinned_at        :datetime
+#  first_visited_at         :datetime
+#  last_emailed_post_number :integer
+#  last_posted_at           :datetime
 #  last_read_post_number    :integer
 #  last_visited_at          :datetime
-#  first_visited_at         :datetime
+#  liked                    :boolean          default(FALSE)
 #  notification_level       :integer          default(1), not null
 #  notifications_changed_at :datetime
-#  notifications_reason_id  :integer
+#  posted                   :boolean          default(FALSE), not null
 #  total_msecs_viewed       :integer          default(0), not null
-#  cleared_pinned_at        :datetime
-#  id                       :integer          not null, primary key
-#  last_emailed_post_number :integer
-#  liked                    :boolean          default(FALSE)
-#  bookmarked               :boolean          default(FALSE)
-#  last_posted_at           :datetime
+#  notifications_reason_id  :integer
+#  topic_id                 :integer          not null
+#  user_id                  :integer          not null
 #
 # Indexes
 #

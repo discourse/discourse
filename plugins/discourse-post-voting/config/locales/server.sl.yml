@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 sl:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        agree_and_suspend:
+          description: "Strinjam se z prijavo in suspendiraj uporabnika."
+        agree_and_silence:
+          description: "Potrdi prijavo in utišaj uporabnika"
+        ignore:
+          title: "Ne upoštevaj prijavo"
   post_action_types:
     vote:
       title: "Glasuj"
@@ -18,8 +27,8 @@ sl:
           agree_and_silence:
             title: "Utišaj uporabnika"
             description: "Potrdi prijavo in utišaj uporabnika"
-          disagree:
-            title: "Se ne strinjam"
+          ignore:
+            title: "Ne upoštevaj prijavo"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

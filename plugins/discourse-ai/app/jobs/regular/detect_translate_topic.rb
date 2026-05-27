@@ -17,21 +17,24 @@ module Jobs
       end
 
       topic = Topic.find_by(id: args[:topic_id])
-      if topic.blank? || topic.title.blank? || topic.deleted_at.present? || topic.user_id <= 0
-        return
-      end
+      return if topic.blank? || topic.title.blank? || topic.deleted_at.present?
 
       force = args[:force] || false
+      return if topic.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
 
       if force
         # no restrictions
-      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
-        return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
-      else
-        if topic.archetype == Archetype.private_message &&
-             !TopicAllowedGroup.exists?(topic_id: topic.id)
+      elsif topic.archetype == Archetype.private_message
+        case SiteSetting.ai_translation_personal_messages
+        when "all"
+          # allow
+        when "group"
+          return unless TopicAllowedGroup.exists?(topic_id: topic.id)
+        else
           return
         end
+      else
+        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
       end
 
       if (detected_locale = topic.locale).blank?
@@ -45,12 +48,23 @@ module Jobs
       end
 
       return if detected_locale.blank?
-      locales = SiteSetting.content_localization_supported_locales.split("|")
+      locales = DiscourseAi::Translation.locales
       return if locales.blank?
+
+      existing_base_locales =
+        TopicLocalization
+          .where(topic_id: topic.id)
+          .pluck(:locale)
+          .map { |l| l.split("_").first }
+          .to_set
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        next if topic.localizations.matching_locale(locale).exists?
+        base_locale = locale.split("_").first
+        exists = existing_base_locales.include?(base_locale)
+
+        has_quota = DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
+        next if !force && exists && !has_quota
 
         begin
           DiscourseAi::Translation::TopicLocalizer.localize(topic, locale)

@@ -13,34 +13,6 @@ RSpec.describe TopicUser do
     TopicUser.notification_levels[:tracking]
   end
 
-  describe "#unwatch_categories!" do
-    it "correctly unwatches categories" do
-      op_topic = Fabricate(:topic)
-      another_topic = Fabricate(:topic)
-      tracked_topic = Fabricate(:topic)
-
-      user = op_topic.user
-
-      TopicUser.change(user.id, op_topic, notification_level: watching)
-      TopicUser.change(user.id, another_topic, notification_level: watching)
-      TopicUser.change(
-        user.id,
-        tracked_topic,
-        notification_level: watching,
-        total_msecs_viewed: SiteSetting.default_other_auto_track_topics_after_msecs + 1,
-      )
-
-      TopicUser.unwatch_categories!(user, [Fabricate(:category).id, Fabricate(:category).id])
-      expect(TopicUser.get(another_topic, user).notification_level).to eq(watching)
-
-      TopicUser.unwatch_categories!(user, [op_topic.category_id])
-
-      expect(TopicUser.get(op_topic, user).notification_level).to eq(watching)
-      expect(TopicUser.get(another_topic, user).notification_level).to eq(regular)
-      expect(TopicUser.get(tracked_topic, user).notification_level).to eq(tracking)
-    end
-  end
-
   describe "#notification_levels" do
     context "when verifying enum sequence" do
       let(:notification_levels) { TopicUser.notification_levels }
@@ -599,31 +571,29 @@ RSpec.describe TopicUser do
   end
 
   it "correctly triggers an event on first visit" do
-    begin
-      tracked_user = Fabricate(:user)
-      post = create_post
+    tracked_user = Fabricate(:user)
+    post = create_post
 
-      called = 0
-      visits = []
-      user_first_visit = ->(topic_id, user_id) do
-        visits << "#{topic_id}-#{user_id}"
-        called += 1
-      end
-
-      DiscourseEvent.on(:topic_first_visited_by_user, &user_first_visit)
-
-      expect(called).to eq(0)
-
-      TopicUser.change(tracked_user, post.topic.id, total_msecs_viewed: 1)
-
-      expect(visits).to eq(["#{post.topic.id}-#{tracked_user.id}"])
-      expect(called).to eq(1)
-
-      TopicUser.change(tracked_user, post.topic.id, total_msecs_viewed: 2)
-
-      expect(called).to eq(1)
-    ensure
-      DiscourseEvent.off(:topic_first_visited_by_user, &user_first_visit)
+    called = 0
+    visits = []
+    user_first_visit = ->(topic_id, user_id) do
+      visits << "#{topic_id}-#{user_id}"
+      called += 1
     end
+
+    DiscourseEvent.on(:topic_first_visited_by_user, &user_first_visit)
+
+    expect(called).to eq(0)
+
+    TopicUser.change(tracked_user, post.topic.id, total_msecs_viewed: 1)
+
+    expect(visits).to eq(["#{post.topic.id}-#{tracked_user.id}"])
+    expect(called).to eq(1)
+
+    TopicUser.change(tracked_user, post.topic.id, total_msecs_viewed: 2)
+
+    expect(called).to eq(1)
+  ensure
+    DiscourseEvent.off(:topic_first_visited_by_user, &user_first_visit)
   end
 end

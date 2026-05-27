@@ -1286,6 +1286,15 @@ RSpec.describe Post do
         Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
       expect(post.has_host_spam?).to eq(false)
     end
+
+    it "does not allowlist domains that merely end with an allowed domain" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      SiteSetting.allowed_spam_host_domains = "example.com"
+      user = Fabricate(:user, trust_level: 0)
+      post = Fabricate(:post, raw: "check out http://attacker-example.com/page", user: user)
+      post.acting_user.trust_level = 0
+      expect(post.has_host_spam?).to eq(true)
+    end
   end
 
   it "has custom fields" do
@@ -1358,11 +1367,35 @@ RSpec.describe Post do
       expect(post.topic.excerpt).to eq("test")
     end
 
+    it "updates the category description when rebaking a category description topic" do
+      category = Fabricate(:category_with_definition)
+      first_post = category.topic.first_post
+      first_post.revise(first_post.user, { raw: "Original description" })
+      expect(category.reload.description).to include("Original description")
+
+      first_post.update_column(:raw, "Updated description")
+      first_post.rebake!
+
+      expect(category.reload.description).to include("Updated description")
+    end
+
     it "works with posts in deleted topics" do
       post = create_post
       post.topic.trash!
       post.reload
       post.rebake!
+    end
+
+    it "does not publish to clients when invalidating oneboxes" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(invalidate_oneboxes: true)
+    end
+
+    it "does not publish to clients when skip_publish_rebaked_changes is true" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(skip_publish_rebaked_changes: true)
     end
 
     it "uses inline onebox cache by default" do
@@ -1654,6 +1687,52 @@ RSpec.describe Post do
       expect do post_2.unhide! end.to change { post_2.user.user_stat.reload.post_count }.from(0).to(
         1,
       )
+    end
+
+    it "allows staff to unhide posts containing media added by staff even if the author cannot embed" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post.reload
+
+      post.acting_user = moderator
+      expect { post.unhide! }.not_to raise_error
+      expect(post.reload.hidden).to eq(false)
+    end
+
+    it "prevents unhiding posts with embedded media when author lacks permission" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post = Post.find(post.id)
+
+      expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     context "in a topic with multiple replies" do
@@ -2449,7 +2528,7 @@ RSpec.describe Post do
       Fabricate(:post_localization, post: post, locale: "zh_CN")
 
       expect(post.has_localization?(:zh_CN)).to eq(true)
-      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?(:zh_CN)).to eq(true)
       expect(post.has_localization?("zh-CN")).to eq(true)
 
       expect(post.has_localization?("z")).to eq(false)
@@ -2509,6 +2588,65 @@ RSpec.describe Post do
       post.save!
 
       expect(post.reload.locale).to eq(nil)
+    end
+  end
+
+  describe "#reply_notification_target" do
+    fab!(:op_user, :user)
+    fab!(:topic) { Fabricate(:topic, user: op_user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, user: op_user, post_number: 1) }
+
+    it "returns the parent post's user when reply_to_post_number is set" do
+      replier = Fabricate(:user)
+      target_user = Fabricate(:user)
+      target_post = Fabricate(:post, topic: topic, user: target_user, post_number: 2)
+      reply = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: 2)
+
+      expect(reply.reply_notification_target).to eq(target_user)
+    end
+
+    it "returns nil for a root post in a flat topic" do
+      replier = Fabricate(:user)
+      root = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: nil)
+
+      expect(root.reply_notification_target).to be_nil
+    end
+
+    context "when the topic is in nested view" do
+      before do
+        SiteSetting.nested_replies_enabled = true
+        Fabricate(:nested_topic, topic: topic)
+      end
+
+      it "redirects a root post to the topic's first-post author" do
+        replier = Fabricate(:user)
+        root = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: nil)
+
+        expect(root.reply_notification_target).to eq(op_user)
+      end
+
+      it "returns nil when the OP posts a root themselves" do
+        root = Fabricate(:post, topic: topic, user: op_user, reply_to_post_number: nil)
+
+        expect(root.reply_notification_target).to be_nil
+      end
+
+      it "still resolves to the parent author for a non-root reply" do
+        replier = Fabricate(:user)
+        target_user = Fabricate(:user)
+        Fabricate(:post, topic: topic, user: target_user, post_number: 2)
+        reply = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: 2)
+
+        expect(reply.reply_notification_target).to eq(target_user)
+      end
+
+      it "returns nil when the first post has been deleted" do
+        first_post.trash!
+        replier = Fabricate(:user)
+        root = Fabricate(:post, topic: topic, user: replier, reply_to_post_number: nil)
+
+        expect(root.reply_notification_target).to be_nil
+      end
     end
   end
 end

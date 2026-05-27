@@ -1,75 +1,128 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Data Explorer"
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Explorer"
+          description: "AI-powered query generation for Data Explorer"
+          query_generation: "Query Generation"
     errors:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
         dirty: "You must save the query before running."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "No results"
+      manage_reports_hint:
+        title: "Create a Data Explorer query"
+        description: "Write a custom SQL query to surface anything specific to your community."
     explorer:
+      default_query: "Default"
+      default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
+      queries: "Queries"
+      query_created: "Query created!"
+      mode:
+        label: "Query authoring mode"
+        manual: "Write SQL"
+        ai: "Generate with AI"
       or: "or"
       admins_only: "The data explorer is only available to admins."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
-      create: "Create New"
+      create: "Create"
       create_placeholder: "Query name..."
       description_placeholder: "Enter a description here"
+      ai:
+        description_title: "Generate with AI"
+        description_hint: "Describe what you want in plain language. We'll generate the SQL, name, and description for you."
+        description_placeholder: "e.g. Show me signups across time"
+        regenerate_placeholder: "e.g. Update the query to limit to 50 results"
+        prompt_label: "Prompt"
+        generate: "Generate"
+        regenerate: "Re-generate"
+        generating: "Generating query with AI..."
+        generation_timeout: "AI query generation timed out. You can write the SQL manually."
+        generation_error: "Something went wrong generating the query."
+        save_query: "Save query"
+        write_manually: "Write SQL manually"
+        sql_label: "SQL"
+        optional: "optional"
       import:
         label: "Import"
-        modal: "Import A Query"
         unparseable_json: "Unparseable JSON file."
         wrong_json: "Wrong JSON file. A JSON file should contain a 'query' object, which should at least have an 'sql' property."
       help:
         label: "Help"
         modal_title: "Data Explorer Help"
-        auto_resolution: "<h2>Automatic Entity Resolution</h2>
+        auto_resolution: "<h2>Automatic entity resolution</h2>
           <p>When your query returns an entity id, Data Explorer may automatically substitute it with
           the entity name and other useful information in query results. Automatic resolution is available for
           <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>
           and <i><b>badge_id</b></i>. To try this out run this query:</p>
           <pre><code>SELECT user_id\nFROM posts</code></pre>"
-        custom_params: "<h2>Creating Custom Parameters</h2>
+        custom_params: "<h2>Creating custom parameters</h2>
           <p>To create custom parameters for your queries, put this at the top of your query and follow the format:</p>
           <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre>
           <p><i>Note: the first line with [params] is required, along with two dashes preceding it and every
           custom parameter you want to declare.</i></p>"
-        default_values: "<h3>Default Values</h3>
+        default_values: "<h3>Default values</h3>
           <p>You can declare parameters with or without default values. Default values will show up in a text field
           below the query editor, which you can edit to your needs. Parameters declared without default values will
           still generate a text field, but will be empty and highlighted red.</p>
           <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
-        data_types: "<h3>Data Types</h3>
+        data_types: "<h3>Data types</h3>
           <p>Here are common data types you can use:</p>
           <ul>
           <li><b>integer</b> - signed four-byte Integer</li>
           <li><b>text</b> - variable-length character string</li>
           <li><b>boolean</b> – true/false</li>
           <li><b>date</b> - calendar date (year, month, day)</li>
+          <li><b>current_user_id</b> - ID of the user running the query (auto-injected, useful for group reports)</li>
           </ul>
           <p>For more information on data types, visit
           <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>this website</a>.</p>"
       schema:
         title: "Database Schema"
         filter: "Search..."
+        search_tables: "Search tables"
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
       types:
         bool:
           yes: "Yes"
           no: "No"
           null_: "Null"
-      export: "Export"
       view_json: "View JSON"
-      save: "Save Changes"
-      saverun: "Save Changes and Run"
+      save: "Save changes"
+      saverun: "Save changes and run"
       run: "Run"
-      undo: "Discard Changes"
-      edit: "Edit"
+      undo: "Discard changes"
       delete: "Delete"
-      recover: "Undelete Query"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Table"
-      show_graph: "Graph"
+      recover: "Undelete query"
+      sql_label: "SQL"
+      run_with_explain: "Run with query plan"
+      run_options: "More run options"
+      view:
+        label: "Result view"
+      chart_empty:
+        no_rows: "No rows to chart."
+        no_numeric: "This query has no numeric columns to chart."
+        no_numeric_with_columns: "This query has no numeric columns to chart (ignored: %{columns})."
+        view_as_table: "View as table"
+      chart_footnote:
+        ignored: "Columns not charted: %{columns}"
+      export_as:
+        label: "Export as…"
+        results_json: "Results (JSON)"
+        results_csv: "Results (CSV)"
+        query_json: "Query definition (JSON)"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
+      cached_result_notice: "Showing cached results from %{relative_time}."
       result_count:
         one: "%{count} result."
         other: "%{count} results."
@@ -84,8 +137,7 @@ en:
       query_time: "Last run"
       query_user: "Created by"
       column: "Column %{number}"
-      explain_label: "Include query plan?"
-      save_params: "Set Defaults"
+      save_params: "Set defaults"
       reset_params: "Reset"
       search_placeholder: "Search..."
       no_search_results: "Sorry, we couldn't find any results matching your text."
@@ -94,15 +146,15 @@ en:
           invalid: "Invalid"
           no_such_category: "No such category"
           no_such_group: "No such group"
-          invalid_date: "%{date} is a invalid date"
-          invalid_time: "%{time} is a invalid time"
+          invalid_date: "%{date} is an invalid date"
+          invalid_time: "%{time} is an invalid time"
     group:
       reports: "Reports"
     admin:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
     discourse_automation:
       scriptables:

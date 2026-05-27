@@ -9,3 +9,5 @@ hu:
     login:
       amazon:
         name: "Amazon"
+        title: "Bejelentkezés Amazonnal"
+        message: "Hitelesítés Amazonnal történő bejelentkezéssel (győződjön meg arról, hogy a felugró ablakok blokkolása nincs engedélyezve)"

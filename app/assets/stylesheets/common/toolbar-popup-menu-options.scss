@@ -10,6 +10,41 @@
     }
   }
 
+  .fk-d-menu__inner-content {
+    flex-direction: column;
+
+    --fade-height: 2.5em;
+
+    &::before,
+    &::after {
+      content: "";
+      position: sticky;
+      display: block;
+      flex-shrink: 0;
+      height: var(--fade-height);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    &::before {
+      top: 0;
+      margin-bottom: calc(var(--fade-height) * -1);
+      background: linear-gradient(to top, transparent, var(--secondary));
+    }
+
+    &::after {
+      bottom: 0;
+      margin-top: calc(var(--fade-height) * -1);
+      background: linear-gradient(to bottom, transparent, var(--secondary));
+    }
+  }
+
+  &.--scroll-top .fk-d-menu__inner-content::before,
+  &.--scroll-bottom .fk-d-menu__inner-content::after {
+    opacity: 1;
+  }
+
   .fullscreen-composer & {
     z-index: z("header") + 1;
   }
@@ -20,8 +55,12 @@
   }
 
   .shortcut {
+    line-height: 1;
+    vertical-align: middle;
+
     &.--apple {
       letter-spacing: 0.25em;
+      padding-right: 0.35em;
     }
 
     @include viewport.until(sm) {
@@ -30,7 +69,15 @@
   }
 }
 
-.toolbar-menu__options-content {
+.fk-d-menu[class*="toolbar-menu"] .dropdown-menu__header {
+  padding: var(--space-2) 0.35em;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1-rem);
+}
+
+.toolbar-menu__options-content,
+.toolbar-menu__list-content,
+.toolbar-menu__heading-content {
   .dropdown-menu {
     .btn {
       &.--active {
@@ -46,6 +93,7 @@
       flex: 1;
       justify-content: space-between;
       align-items: center;
+      min-width: 0; // shrink if needed
 
       &__active-icon {
         visibility: hidden;
@@ -58,16 +106,10 @@
   }
 }
 
-.toolbar-menu__heading-content {
+.toolbar-menu__heading-content,
+.toolbar-menu__list-content {
   .dropdown-menu {
     .btn {
-      &.--active {
-        .d-button-label__active-icon {
-          visibility: visible;
-          margin-left: auto;
-        }
-      }
-
       &:hover,
       &:focus,
       &:focus-visible {
@@ -106,7 +148,11 @@
         font-size: var(--font-down-1-rem);
       }
     }
+  }
+}
 
+.toolbar-menu__heading-content {
+  .dropdown-menu {
     .btn[data-name="heading-1"] {
       .d-button-label__text,
       .d-icon[class*="d-icon-discourse"] {

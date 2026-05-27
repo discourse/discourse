@@ -15,8 +15,10 @@ class ThemeSerializer < BasicThemeSerializer
              :enabled?,
              :disabled_at,
              :theme_fields,
-             :screenshot_url,
-             :system
+             :screenshot_dark_url,
+             :screenshot_light_url,
+             :system,
+             :only_theme_color_schemes
 
   has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
   has_one :user, serializer: UserNameSerializer, embed: :object
@@ -103,5 +105,9 @@ class ThemeSerializer < BasicThemeSerializer
 
   def system
     object.system?
+  end
+
+  def only_theme_color_schemes
+    object.theme_modifier_set&.only_theme_color_schemes || false
   end
 end

@@ -9,11 +9,11 @@ import { service } from "@ember/service";
 import AdminFormRow from "discourse/admin/components/admin-form-row";
 import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasApiKeysShow extends Component {
@@ -21,7 +21,6 @@ export default class AdminConfigAreasApiKeysShow extends Component {
   @service router;
 
   @tracked editingDescription = false;
-  @tracked scopes = this.args.apiKey.api_key_scopes;
   newDescription = "";
 
   @action
@@ -112,10 +111,12 @@ export default class AdminConfigAreasApiKeysShow extends Component {
             <DButton
               @action={{this.saveDescription}}
               @label="admin.api_keys.save"
+              class="btn-default"
             />
             <DButton
               @action={{this.toggleEditDescription}}
               @label="admin.api_keys.cancel"
+              class="btn-default"
             />
           {{else}}
             <DButton
@@ -130,7 +131,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       <AdminFormRow @label="admin.api.user">
         {{#if @apiKey.user}}
           <LinkTo @route="adminUser" @model={{@apiKey.user}}>
-            {{avatar @apiKey.user imageSize="small"}}
+            {{dAvatar @apiKey.user imageSize="small"}}
             {{@apiKey.user.username}}
           </LinkTo>
         {{else}}
@@ -139,16 +140,16 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.created">
-        {{formatDate @apiKey.created_at leaveAgo="true"}}
+        {{dFormatDate @apiKey.created_at leaveAgo="true"}}
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.updated">
-        {{formatDate @apiKey.updated_at leaveAgo="true"}}
+        {{dFormatDate @apiKey.updated_at leaveAgo="true"}}
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.last_used">
         {{#if @apiKey.last_used_at}}
-          {{formatDate @apiKey.last_used_at leaveAgo="true"}}
+          {{dFormatDate @apiKey.last_used_at leaveAgo="true"}}
         {{else}}
           {{i18n "admin.api.never_used"}}
         {{/if}}
@@ -156,7 +157,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
 
       <AdminFormRow @label="admin.api.revoked">
         {{#if @apiKey.revoked_at}}
-          {{formatDate @apiKey.revoked_at leaveAgo="true"}}
+          {{dFormatDate @apiKey.revoked_at leaveAgo="true"}}
         {{else}}
           <span>{{i18n "no_value"}}</span>
         {{/if}}
@@ -165,6 +166,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
             <DButton
               @action={{fn this.undoRevokeKey @apiKey}}
               @label="admin.api.undo_revoke"
+              class="btn-default"
             />
             <DButton
               @action={{fn this.deleteKey @apiKey}}
@@ -223,8 +225,12 @@ export default class AdminConfigAreasApiKeysShow extends Component {
                   {{#each scope.parameters as |p|}}
                     <div>
                       <b>{{p}}:</b>
-                      {{#if (get scope.allowed_parameters p)}}
-                        {{get scope.allowed_parameters p}}
+                      {{#if scope.allowed_parameters}}
+                        {{#if (get scope.allowed_parameters p)}}
+                          {{get scope.allowed_parameters p}}
+                        {{else}}
+                          {{i18n "admin.api.scopes.any_parameter"}}
+                        {{/if}}
                       {{else}}
                         {{i18n "admin.api.scopes.any_parameter"}}
                       {{/if}}

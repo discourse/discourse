@@ -21,20 +21,23 @@ RSpec.describe Admin::GroupsController do
     end
 
     context "when logged in as an admin" do
+      let(:group) { Group.last }
+
       before { sign_in(admin) }
 
-      it "should work" do
+      it "creates a group with the specified attributes" do
         post "/admin/groups.json", params: group_params
 
-        expect(response.status).to eq(200)
+        expect(response).to have_http_status(:ok)
 
-        group = Group.last
-
-        expect(group.name).to eq("testing")
+        expect(group).to have_attributes(
+          name: "testing",
+          allow_membership_requests: true,
+          membership_request_template: "Testing",
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+        expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user)
         expect(group.users).to contain_exactly(admin, user)
-        expect(group.allow_membership_requests).to eq(true)
-        expect(group.membership_request_template).to eq("Testing")
-        expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
       end
 
       context "with custom_fields" do
@@ -492,13 +495,32 @@ RSpec.describe Admin::GroupsController do
       context "with moderators_manage_groups enabled" do
         before { SiteSetting.moderators_manage_groups = true }
 
-        include_examples "automatic membership count inaccessible"
+        it "returns count of users whose emails match the domain" do
+          Fabricate(:user, email: "user1@somedomain.org")
+
+          put "/admin/groups/automatic_membership_count.json",
+              params: {
+                automatic_membership_email_domains: "somedomain.org",
+                id: group.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(1)
+        end
       end
 
       context "with moderators_manage_groups disabled" do
         before { SiteSetting.moderators_manage_groups = false }
 
-        include_examples "automatic membership count inaccessible"
+        it "denies access with a 403 response" do
+          put "/admin/groups/automatic_membership_count.json",
+              params: {
+                automatic_membership_email_domains: "somedomain.org",
+                id: group.id,
+              }
+
+          expect(response.status).to eq(403)
+        end
       end
     end
 

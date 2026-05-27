@@ -5,9 +5,9 @@ module Migrations
     def self.all
       @all_converters ||=
         begin
-          base_path = File.join(::Migrations.root_path, "lib", "converters", "base")
-          core_paths = Dir[File.join(::Migrations.root_path, "lib", "converters", "*")]
-          private_paths = Dir[File.join(::Migrations.root_path, "private", "converters", "*")]
+          base_path = File.join(Migrations.root_path, "lib", "converters", "base")
+          core_paths = Dir[File.join(Migrations.root_path, "lib", "converters", "*")]
+          private_paths = Dir[File.join(Migrations.root_path, "private", "converters", "*")]
           all_paths = core_paths - [base_path] + private_paths
 
           all_paths.each_with_object({}) do |path, hash|
@@ -28,12 +28,12 @@ module Migrations
     end
 
     def self.names
-      self.all.keys.sort
+      all.keys.sort
     end
 
     def self.path_of(converter_name)
       converter_name = converter_name.downcase
-      path = self.all[converter_name]
+      path = all[converter_name]
       raise "Could not find a converter named '#{converter_name}'" unless path
       path
     end

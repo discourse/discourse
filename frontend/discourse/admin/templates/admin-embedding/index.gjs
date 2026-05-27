@@ -1,14 +1,32 @@
-import { htmlSafe } from "@ember/template";
+import { on } from "@ember/modifier";
+import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import EmbeddableHost from "discourse/admin/components/embeddable-host";
-import HighlightedCode from "discourse/admin/components/highlighted-code";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{#if @controller.embedding.embeddable_hosts}}
+    <div class="admin-embedding-index__full-app-toggle">
+      <DToggleSwitch
+        @state={{@controller.fullAppMode}}
+        aria-label={{i18n "admin.embedding.full_app_mode"}}
+        {{on "click" @controller.toggleFullAppMode}}
+      />
+      <div class="admin-embedding-index__full-app-toggle-text">
+        <span class="admin-embedding-index__full-app-toggle-label">
+          {{i18n "admin.embedding.full_app_mode"}}
+        </span>
+        <span class="admin-embedding-index__full-app-toggle-description">
+          {{i18n "admin.embedding.full_app_mode_description"}}
+        </span>
+      </div>
+    </div>
+
     {{#if @controller.showEmbeddingCode}}
       <AdminConfigAreaCard
         @heading="admin.embedding.configuration_snippet"
@@ -17,8 +35,8 @@ export default <template>
         class="admin-embedding-index__code"
       >
         <:content>
-          {{htmlSafe (i18n "admin.embedding.sample")}}
-          <HighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
+          {{trustHTML (i18n "admin.embedding.sample")}}
+          <DHighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
         </:content>
       </AdminConfigAreaCard>
     {{/if}}

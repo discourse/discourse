@@ -1,12 +1,12 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
-import uniqueId from "discourse/helpers/unique-id";
 import { eq } from "discourse/truth-helpers";
+import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 import { i18n } from "discourse-i18n";
 
-export default class FKControlQuestion extends Component {
+export default class FKControlQuestion extends FKBaseControl {
   static controlType = "question";
 
   @action
@@ -16,7 +16,7 @@ export default class FKControlQuestion extends Component {
 
   <template>
     <div class="form-kit__inline-radio">
-      {{#let (uniqueId) as |uuid|}}
+      {{#let (dUniqueId) as |uuid|}}
         <FKLabel @fieldId={{uuid}} class="form-kit__control-radio-label --yes">
           <input
             name={{@field.name}}
@@ -25,6 +25,7 @@ export default class FKControlQuestion extends Component {
             checked={{eq @field.value true}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
+            aria-describedby={{@field.describedBy}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -38,7 +39,7 @@ export default class FKControlQuestion extends Component {
         </FKLabel>
       {{/let}}
 
-      {{#let (uniqueId) as |uuid|}}
+      {{#let (dUniqueId) as |uuid|}}
         <FKLabel @fieldId={{uuid}} class="form-kit__control-radio-label --no">
           <input
             name={{@field.name}}
@@ -47,6 +48,7 @@ export default class FKControlQuestion extends Component {
             checked={{eq @field.value false}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
+            aria-describedby={{@field.describedBy}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}

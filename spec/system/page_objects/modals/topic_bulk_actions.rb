@@ -4,8 +4,8 @@ module PageObjects
     class TopicBulkActions < PageObjects::Modals::Base
       MODAL_SELECTOR = ".topic-bulk-actions-modal"
 
-      def tag_selector
-        PageObjects::Components::SelectKit.new(".tag-chooser")
+      def category_selector
+        PageObjects::Components::SelectKit.new(".category-chooser")
       end
 
       def click_bulk_topics_confirm
@@ -34,9 +34,41 @@ module PageObjects
         end
       end
 
+      def pin_in_category_date_selector
+        PageObjects::Components::SelectKit.new(
+          "#{MODAL_SELECTOR} .feature-section:first-of-type .future-date-input-selector",
+        )
+      end
+
+      def click_pin_in_category
+        find("#{MODAL_SELECTOR} .feature-section:first-of-type .btn-primary").click
+      end
+
+      def pin_globally_date_selector
+        PageObjects::Components::SelectKit.new(
+          "#{MODAL_SELECTOR} .feature-section:last-of-type .future-date-input-selector",
+        )
+      end
+
+      def click_pin_globally
+        find("#{MODAL_SELECTOR} .feature-section:last-of-type .btn-primary").click
+      end
+
+      def has_pin_stats_text?(text)
+        page.has_css?("#{MODAL_SELECTOR} .feature-section", text: text, normalize_ws: true)
+      end
+
       def has_no_category_badge?(category)
         within(MODAL_SELECTOR) do
           has_no_css?(PageObjects::Components::CategoryBadge.new.category_selector(category))
+        end
+      end
+
+      def has_errors?(text = nil)
+        if text
+          has_css?("#{MODAL_SELECTOR}__errors", text: text)
+        else
+          has_css?("#{MODAL_SELECTOR}__errors")
         end
       end
     end

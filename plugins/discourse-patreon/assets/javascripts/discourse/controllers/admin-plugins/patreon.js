@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import FilterRule from "discourse/plugins/discourse-patreon/discourse/models/filter-rule";
@@ -17,8 +17,8 @@ export default class AdminPluginsPatreonController extends Controller {
     return `$${reward.amount_cents / 100} - ${reward.title}`;
   }
 
-  @discourseComputed("rewards")
-  rewardsNames() {
+  @computed("rewards")
+  get rewardsNames() {
     return Object.values(this.rewards)
       .filter((r) => r.id >= 0)
       .map((r) => this.prettyPrintReward(r));
@@ -54,7 +54,7 @@ export default class AdminPluginsPatreonController extends Controller {
           obj.set("rewards", rewards);
           obj.set("rewards_ids", rule.rewards_ids);
         } else {
-          model.pushObject(
+          model.push(
             FilterRule.create({
               group: rule.get("group.name"),
               rewards,
@@ -76,7 +76,7 @@ export default class AdminPluginsPatreonController extends Controller {
     })
       .then(() => {
         let obj = model.find((x) => x.get("group_id") === rule.get("group_id"));
-        model.removeObject(obj);
+        removeValueFromArray(model, obj);
       })
       .catch(popupAjaxError);
   }

@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -21,16 +21,18 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     await render(
       <template>
         <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Icon />
+          <form.Field @type="icon" @name="foo" @title="Foo" as |field|>
+            <field.Control />
           </form.Field>
         </Form>
       </template>
     );
 
-    await formKit().field("foo").select("pencil");
-    await formKit().submit();
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor("[data-icon-id='pencil']");
+    await click("[data-icon-id='pencil']");
 
+    await formKit().submit();
     assert.deepEqual(data.foo, "pencil");
     assert.form().field("foo").hasValue("pencil");
   });
@@ -39,13 +41,21 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-            <field.Icon />
+          <form.Field
+            @type="icon"
+            @name="foo"
+            @title="Foo"
+            @disabled={{true}}
+            as |field|
+          >
+            <field.Control />
           </form.Field>
         </Form>
       </template>
     );
 
-    assert.dom(".form-kit__control-icon.is-disabled").exists();
+    assert
+      .dom(".form-kit__control-icon .d-icon-grid-picker-trigger")
+      .isDisabled();
   });
 });

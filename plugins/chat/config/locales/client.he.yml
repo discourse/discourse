@@ -46,6 +46,13 @@ he:
           many: "%{formatted_number} הודעות צ׳אט"
           other: "%{formatted_number} הודעות צ׳אט"
     chat:
+      edit_category:
+        tab_title: "צ׳אט"
+        channel: "ערוץ"
+        description: "תיאור"
+        actions: "פעולות"
+        settings: "הגדרות"
+        no_channels: "אין ערוצי צ׳אט המשויכים לקטגוריה הזאת"
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים
       back_to_forum: "פורום"
@@ -60,6 +67,15 @@ he:
       cancel: "ביטול"
       cancel_reply: "ביטול תגובה"
       chat_channels: "ערוצים"
+      pinned_messages:
+        title: "הודעות נעוצות"
+        close: "סגירת הודעות נעוצות"
+        pinned_by_you: "ננעץ על ידיך"
+        pinned_by_user: "ננעץ על ידי %{username}"
+      no_pinned_messages: "אין הודעות נעוצות בערוץ הזה."
+      pin_message: "נעיצת הודעה"
+      unpin_message: "שליפת הודעה"
+      pinned: "נעוץ"
       browse_all_channels: "עיון בכל הערוצים"
       see_in: "לראות ב־"
       move_to_channel:
@@ -80,6 +96,7 @@ he:
         title: "הגדרות ערוץ"
         edit: "עריכה"
         add: "הוספה"
+        star_channel: "סימון ערוץ בכוכב"
         close_channel: "סגירת ערוץ"
         open_channel: "פתיחת ערוץ"
         archive_channel: "העברת ערוץ לארכיון"
@@ -87,6 +104,8 @@ he:
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
         leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
+        notification_settings: "הגדרות התראה"
+        notification_settings_context: "התראות"
         join: "הצטרפות"
         leave: "עזוב"
         save_label:
@@ -149,10 +168,8 @@ he:
       send_shortcut:
         enter:
           label: "שליחה עם Enter"
-          description: "שורה חדשה עם Shift + Enter"
         meta_enter:
           label: "שליחה עם %{meta_key} + Enter"
-          description: "שורה חדשה עם Enter"
       enable: "הפעלת צ׳אט"
       flag: "סימון"
       emoji: "הוספת אמוג׳י"
@@ -257,10 +274,9 @@ he:
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
         title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
-        description: "לחסום שליחה של התראות בדחיפה שאינן לגבי הצ׳אט"
+      personalization_title: "התאמה אישית"
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
-        description: "לא לשלוח התראות על אזכורים לכל הערוץ (‎@here ו־‎@all)"
       show_thread_title_prompts:
         title: "הצג הנחיות לכותרת השרשור"
         description: "הצג הנחיות להגדרת כותרת לשרשורים חדשים"
@@ -289,7 +305,6 @@ he:
       retry_staged_message:
         title: "שגיאת רשת"
         action: "לשלוח שוב?"
-      unreliable_network: "הרשת אינה אמינה, ייתכן ששליחת הודעות ושמירת טיוטה לא תפעלנה"
       bookmark_message: "סימנייה"
       bookmark_message_edit: "עריכת סימנייה"
       restore: "שחזור הודעה שנמחקה"
@@ -392,6 +407,8 @@ he:
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
         slug: מזהה ייצוגי של הערוץ (רשות)
+        emoji: אמוג׳י של הערוץ (רשות)
+        reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
         input_placeholder: הוספת תיאור
@@ -466,6 +483,9 @@ he:
         types:
           category: "קטגוריה"
           topic: "נושא"
+        emoji:
+          label: "אמוג׳י של הערוץ (רשות)"
+          reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"
         message_in_channel: "ערוץ"
@@ -536,6 +556,7 @@ he:
           confirm_export: "מייצא את כל ההודעות מכל הערוצים ושולח אליך את התוצאה בהודעה אישית. לייצא?"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       search:
+        short_title: חיפוש
         title: חיפוש בצ׳אט
         aria_label: "מעבר לחיפוש בצ׳אט"
         no_results: "לא נמצאו תוצאות"
@@ -627,17 +648,11 @@ he:
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
         indefinitely_short: "ללא הגבלת זמן"
-        indefinitely_long: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ לעד."
         short:
           one: "יום"
           two: "יומיים"
           many: "%{count} יום"
           other: "%{count} ימים"
-        long:
-          one: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך יום."
-          two: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך יומיים."
-          many: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך %{count} יום."
-          other: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך %{count} ימים."
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."
@@ -775,7 +790,6 @@ he:
           composer_bold: "%{shortcut} מודגש (עורך בלבד)"
           composer_italic: "%{shortcut} נטוי (עורך בלבד)"
           composer_code: "%{shortcut} קוד (עורך בלבד)"
-          drawer_open: "%{shortcut} פתיחת מגירת הצ׳אט"
           drawer_close: "%{shortcut} סגירת מגירת הצ׳אט"
           mark_all_channels_read: "%{shortcut} סימון כל הערוצים כנקראו"
     topic_statuses:

@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -298,11 +298,14 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".post-language").hasText(
+    assert.dom(".post-language").includesText(
       i18n("post.original_language", {
         language: "English (US)",
       })
     );
+    assert
+      .dom(".post-language")
+      .includesText(i18n("post.ai_translation_disclaimer"));
   });
 
   test("outdated localization", async function (assert) {
@@ -316,11 +319,14 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".post-language").hasText(
+    assert.dom(".post-language").includesText(
       i18n("post.original_language_and_outdated", {
         language: "English (US)",
       })
     );
+    assert
+      .dom(".post-language")
+      .includesText(i18n("post.ai_translation_disclaimer"));
   });
 
   test("read indicator", async function (assert) {
@@ -337,6 +343,24 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.dom(".read-state").exists();
+  });
+
+  test("language indicator appears after localization properties are updated", async function (assert) {
+    this.siteSettings.available_locales = [{ value: "ja", name: "Japanese" }];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".post-language")
+      .doesNotExist("language indicator not shown initially");
+
+    this.post.is_localized = true;
+    this.post.language = "ja";
+    await settled();
+
+    assert
+      .dom(".post-language")
+      .exists("language indicator appears after update");
   });
 
   test("reply directly above (suppressed)", async function (assert) {
@@ -462,6 +486,47 @@ module("Integration | Component | Post", function (hooks) {
       .doesNotExist("clicking outside clears the popup");
   });
 
+  test("plugin post admin buttons render their tooltips", async function (assert) {
+    this.currentUser.admin = true;
+
+    withPluginApi((api) => {
+      api.addPostAdminMenuButton(() => {
+        return {
+          className: "extra-button-title",
+          icon: "heart",
+          translatedLabel: "Button with title",
+          title: "post.controls.rebake_description",
+          action: () => {},
+        };
+      });
+
+      api.addPostAdminMenuButton(() => {
+        return {
+          className: "extra-button-translated-title",
+          icon: "star",
+          translatedLabel: "Button with translated title",
+          translatedTitle: "A translated tooltip",
+          action: () => {},
+        };
+      });
+    });
+
+    await renderComponent(this.post);
+
+    await click(".post-menu-area .show-post-admin-menu");
+
+    assert
+      .dom(
+        "[data-content][data-identifier='admin-post-menu'] .extra-button-title"
+      )
+      .hasAttribute("title", i18n("post.controls.rebake_description"));
+    assert
+      .dom(
+        "[data-content][data-identifier='admin-post-menu'] .extra-button-translated-title"
+      )
+      .hasAttribute("title", "A translated tooltip");
+  });
+
   test("permanently delete topic", async function (assert) {
     this.currentUser.admin = true;
 
@@ -572,7 +637,7 @@ module("Integration | Component | Post", function (hooks) {
   });
 
   test("change owner", async function (assert) {
-    this.currentUser.admin = true;
+    this.currentUser.can_change_post_owner = true;
 
     await renderComponent(this.post, {
       changePostOwner: () => assert.step("change post owner called"),

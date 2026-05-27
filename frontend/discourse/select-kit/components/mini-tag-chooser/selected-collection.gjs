@@ -1,15 +1,27 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import discourseTag from "discourse/helpers/discourse-tag";
+import DButton from "discourse/ui-kit/d-button";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 
 @tagName("")
 export default class SelectedCollection extends Component {
-  @reads("collection.content.selectedTags.[]") selectedTags;
+  @tracked _selectedTagsOverride;
+
+  @computed("collection.content.selectedTags.[]")
+  get selectedTags() {
+    if (this._selectedTagsOverride !== undefined) {
+      return this._selectedTagsOverride;
+    }
+    return this.collection?.content?.selectedTags;
+  }
+
+  set selectedTags(value) {
+    this._selectedTagsOverride = value;
+  }
 
   @computed("selectedTags.[]", "selectKit.filter")
   get tags() {
@@ -43,7 +55,7 @@ export default class SelectedCollection extends Component {
             tabindex="0"
             class={{tag.classNames}}
           >
-            {{discourseTag tag.value noHref=true}}
+            {{dDiscourseTag tag.value noHref=true}}
           </DButton>
         {{/each}}
       </div>

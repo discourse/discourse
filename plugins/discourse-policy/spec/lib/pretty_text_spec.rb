@@ -13,7 +13,7 @@ describe PrettyText do
       [/policy]
     MD
 
-    cooked = (<<~HTML).strip
+    cooked = <<~HTML.strip
       <div class="policy" data-accept="banana" data-group="team" data-reminder="weekly" data-renew-start="2010-01-01" data-revoke="apple" data-version="1">
       <p>I always open <strong>doors</strong>!</p>
       </div>
@@ -29,7 +29,7 @@ describe PrettyText do
       [/policy]
     MD
 
-    cooked = (<<~HTML).strip
+    cooked = <<~HTML.strip
       <div class="policy" data-accept="banana" data-groups="team,staff" data-reminder="weekly" data-renew-start="2010-01-01" data-revoke="apple" data-version="1">
       <p>I always open <strong>doors</strong>!</p>
       </div>
@@ -39,7 +39,7 @@ describe PrettyText do
   end
 
   it "sets the custom attribute on posts with policies" do
-    SiteSetting.policy_restrict_to_staff_posts = false
+    SiteSetting.create_policy_allowed_groups = "1|2|10"
 
     raw = <<~MD
       [policy group=staff reminder=weekly]
@@ -60,7 +60,7 @@ describe PrettyText do
   end
 
   it "allows policy to expire for end users on demand" do
-    SiteSetting.policy_restrict_to_staff_posts = false
+    SiteSetting.create_policy_allowed_groups = "1|2|10"
 
     freeze_time
 
@@ -85,7 +85,7 @@ describe PrettyText do
   end
 
   it "resets list of accepted users if version is bumped" do
-    SiteSetting.policy_restrict_to_staff_posts = false
+    SiteSetting.create_policy_allowed_groups = "1|2|10"
 
     freeze_time
 

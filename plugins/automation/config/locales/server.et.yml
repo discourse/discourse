@@ -16,3 +16,5 @@ et:
         title: Sulge teema
       append_last_checked_by:
         button_text: Tehtud
+      set_topic_timer:
+        title: "Määra teema taimer"

@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Reports::ListQuery do
-  describe ".call" do
-    subject(:result) { described_class.call }
+  fab!(:admin)
+  fab!(:moderator)
 
-    fab!(:current_user, :admin)
+  let(:admin_guardian) { admin.guardian }
+  let(:moderator_guardian) { moderator.guardian }
+
+  describe ".call" do
+    subject(:result) { described_class.call(guardian: admin_guardian) }
 
     let(:result_page_view_report_types) do
       result.filter { |r| r[:type].starts_with?("page_view") }.map { |r| r[:type] }
@@ -24,9 +28,10 @@ RSpec.describe Reports::ListQuery do
     end
 
     it "sorts reports by title" do
-      expect(result.map { |r| r[:title] }[0..5]).to eq(
+      expect(result.map { |r| r[:title] }[0..6]).to eq(
         [
-          I18n.t("reports.staff_logins.title"),
+          I18n.t("reports.activity_by_category.title"),
+          I18n.t("reports.admin_logins.title"),
           I18n.t("reports.page_view_anon_browser_reqs.title"),
           I18n.t("reports.associated_accounts_by_provider.title"),
           I18n.t("reports.bookmarks.title"),
@@ -48,6 +53,7 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_reqs
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
+            page_view_embed_reqs
           ],
         )
       end
@@ -80,8 +86,96 @@ RSpec.describe Reports::ListQuery do
             page_view_anon_browser_reqs
             page_view_logged_in_browser_reqs
             page_view_legacy_total_reqs
+            page_view_embed_reqs
           ],
         )
+      end
+    end
+
+    context "when the user is an admin" do
+      subject(:result) { described_class.call(guardian: admin_guardian) }
+
+      it "includes admin-only reports" do
+        expect(result.map { |r| r[:type] }).to include(*Report::ADMIN_ONLY_REPORTS)
+      end
+    end
+
+    context "when the user is not an admin" do
+      subject(:result) { described_class.call(guardian: moderator_guardian) }
+
+      it "excludes admin-only reports" do
+        expect(result.map { |r| r[:type] }).not_to include(*Report::ADMIN_ONLY_REPORTS)
+      end
+    end
+
+    context "when reporting_improvements is enabled" do
+      before { SiteSetting.reporting_improvements = true }
+
+      it "sorts reports by title" do
+        expect(result.map { |r| r[:title] }[0..5]).to eq(
+          [
+            I18n.t("reports.activity_by_category.title"),
+            I18n.t("reports.admin_logins.title"),
+            I18n.t("reports.page_view_anon_browser_reqs.title"),
+            I18n.t("reports.dau_by_mau.title"),
+            I18n.t("reports.daily_engaged_users.title"),
+            I18n.t("reports.emails.title"),
+          ],
+        )
+      end
+
+      it "excludes legacy reports" do
+        report_types = result.map { |r| r[:type] }
+        expect(report_types).not_to include(*Report::LEGACY_REPORTS)
+      end
+
+      it "does not include plugin name for core reports" do
+        topics_report = result.find { |r| r[:type] == "topics" }
+        expect(topics_report[:plugin]).to be_nil
+      end
+
+      context "with a plugin report" do
+        let(:plugin) { Plugin::Instance.new }
+
+        before do
+          Report.add_report("test_plugin_report") { |report| }
+          Discourse.plugins_by_name["test-plugin"] = plugin
+
+          I18n.backend.store_translations(
+            :en,
+            { reports: { test_plugin_report: { title: "Test Plugin Report" } } },
+          )
+        end
+
+        after do
+          if Report.singleton_class.method_defined?(:report_test_plugin_report)
+            Report.singleton_class.remove_method(:report_test_plugin_report)
+          end
+          Discourse.plugins_by_name.delete("test-plugin")
+        end
+
+        it "is not visible when the source plugin is disabled" do
+          plugin.stubs(:enabled?).returns(false)
+
+          formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
+          formatted.stubs(:resolve_plugin_name).returns("test-plugin")
+
+          expect(formatted.visible?(guardian: admin_guardian)).to eq(false)
+        end
+
+        it "is visible when the source plugin is enabled" do
+          plugin.stubs(:enabled?).returns(true)
+          plugin.stubs(:humanized_name).returns("Test Plugin")
+
+          formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
+          formatted.stubs(:resolve_plugin_name).returns("test-plugin")
+
+          expect(formatted.visible?(guardian: admin_guardian)).to eq(true)
+
+          result = formatted.to_h
+          expect(result[:plugin]).to eq("test-plugin")
+          expect(result[:plugin_display_name]).to eq("Test Plugin")
+        end
       end
     end
   end

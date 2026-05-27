@@ -281,64 +281,60 @@ module ExternalUploadHelpers
   private
 
   def complete_external_upload_via_manager(external_upload_stub)
+    for_site_setting = params[:for_site_setting]&.to_s == "true"
     opts = {
       for_private_message: params[:for_private_message]&.to_s == "true",
-      for_site_setting: params[:for_site_setting]&.to_s == "true",
+      for_site_setting:,
+      site_setting_name: for_site_setting ? params[:site_setting_name] : nil,
       pasted: params[:pasted]&.to_s == "true",
     }
 
     external_upload_manager = ExternalUploadManager.new(external_upload_stub, opts)
     hijack do
-      begin
-        upload = external_upload_manager.transform!
+      upload = external_upload_manager.transform!
 
-        if upload.errors.empty?
-          response_serialized = self.class.serialize_upload(upload)
-          external_upload_stub.destroy!
-          render json: response_serialized, status: :ok
-        else
-          render_json_error(upload.errors.to_hash.values.flatten, status: 422)
-        end
-      rescue ExternalUploadManager::SizeMismatchError => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.size_mismatch_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue ExternalUploadManager::ChecksumMismatchError => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.checksum_mismatch_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue ExternalUploadManager::CannotPromoteError => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.cannot_promote_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.download_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue => err
-        Discourse.warn_exception(
-          err,
-          message: "Complete external upload failed unexpectedly for user #{current_user.id}",
-        )
-
-        render_json_error(I18n.t("upload.failed"), status: 422)
+      if upload.errors.empty?
+        response_serialized = self.class.serialize_upload(upload)
+        external_upload_stub.destroy!
+        render json: response_serialized, status: :ok
+      else
+        render_json_error(upload.errors.to_hash.values.flatten, status: 422)
       end
+    rescue ExternalUploadManager::SizeMismatchError => err
+      render_json_error(
+        debug_upload_error(
+          err,
+          I18n.t("upload.size_mismatch_failure", additional_detail: err.message),
+        ),
+        status: 422,
+      )
+    rescue ExternalUploadManager::ChecksumMismatchError => err
+      render_json_error(
+        debug_upload_error(
+          err,
+          I18n.t("upload.checksum_mismatch_failure", additional_detail: err.message),
+        ),
+        status: 422,
+      )
+    rescue ExternalUploadManager::CannotPromoteError => err
+      render_json_error(
+        debug_upload_error(
+          err,
+          I18n.t("upload.cannot_promote_failure", additional_detail: err.message),
+        ),
+        status: 422,
+      )
+    rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
+      render_json_error(
+        debug_upload_error(err, I18n.t("upload.download_failure", additional_detail: err.message)),
+        status: 422,
+      )
+    rescue => err
+      Rails.logger.error(
+        "Complete external upload failed unexpectedly for user #{current_user.id}: #{err.class} #{err.message}\n#{err.backtrace.join("\n")}",
+      )
+
+      render_json_error(I18n.t("upload.failed"), status: 422)
     end
   end
 

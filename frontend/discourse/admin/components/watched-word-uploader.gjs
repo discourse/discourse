@@ -1,15 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
+import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@classNames("watched-words-uploader")
+@tagName("")
 export default class WatchedWordUploader extends Component {
   @service dialog;
 
@@ -28,18 +28,27 @@ export default class WatchedWordUploader extends Component {
     },
   });
 
-  @alias("uppyUpload.uploading") addDisabled;
-
   <template>
-    <label class="btn btn-default {{if this.addDisabled 'disabled'}}">
-      {{icon "upload"}}
-      {{i18n "admin.watched_words.form.upload"}}
-      <input
-        {{didInsert this.uppyUpload.setup}}
-        class="hidden-upload-field"
-        disabled={{this.addDisabled}}
-        type="file"
-      />
-    </label>
+    <div class="watched-words-uploader" ...attributes>
+      <label class="btn btn-default {{if this.addDisabled 'disabled'}}">
+        {{dIcon "upload"}}
+        {{i18n "admin.watched_words.form.upload"}}
+        <input
+          {{didInsert this.uppyUpload.setup}}
+          class="hidden-upload-field"
+          disabled={{this.addDisabled}}
+          type="file"
+        />
+      </label>
+    </div>
   </template>
+
+  @computed("uppyUpload.uploading")
+  get addDisabled() {
+    return this.uppyUpload?.uploading;
+  }
+
+  set addDisabled(value) {
+    set(this, "uppyUpload.uploading", value);
+  }
 }

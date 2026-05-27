@@ -46,10 +46,7 @@ module DiscourseAi
           if summary
             @existing_summary = summary
 
-            if summary.original_content_sha != latest_sha ||
-                 content_to_summarize.any? { |cts| cts[:last_version_at] > summary.updated_at }
-              summary.mark_as_outdated
-            end
+            summary.mark_as_outdated if outdated_summary?(summary)
           end
         end
         @existing_summary
@@ -75,7 +72,7 @@ module DiscourseAi
         midpoint = graphemes.size / 2
 
         first_half = graphemes.slice(0, midpoint)&.join || ""
-        reversed_second_half = (graphemes.slice(midpoint, graphemes.size - midpoint) || []).join
+        second_half = (graphemes.slice(midpoint, graphemes.size - midpoint) || []).join
 
         truncation_length = 500
         tokenizer = llm_model.tokenizer_class
@@ -86,14 +83,11 @@ module DiscourseAi
             truncation_length,
             strict: SiteSetting.ai_strict_token_counting,
           ).to_s,
-          tokenizer
-            .truncate(
-              reversed_second_half,
-              truncation_length,
-              strict: SiteSetting.ai_strict_token_counting,
-            )
-            .to_s
-            .reverse,
+          tokenizer.truncate(
+            second_half,
+            truncation_length,
+            strict: SiteSetting.ai_strict_token_counting,
+          ).to_s,
         ].join(" ")
 
         item
@@ -113,6 +107,18 @@ module DiscourseAi
 
       def latest_sha
         @latest_sha ||= AiSummary.build_sha(content_to_summarize.map { |c| c[:id] }.join)
+      end
+
+      def outdated_summary?(summary)
+        if (fingerprint = strategy.summary_fingerprint)
+          return true if summary.original_content_sha != fingerprint[:original_content_sha]
+          return true if fingerprint[:latest_version_at]&.> summary.updated_at
+
+          return false
+        end
+
+        summary.original_content_sha != latest_sha ||
+          content_to_summarize.any? { |cts| cts[:last_version_at] > summary.updated_at }
       end
 
       # @param items { Array<Hash> } - Content to summarize. Structure will be: { poster: who wrote the content, id: a way to order content, text: content }
@@ -145,7 +151,7 @@ module DiscourseAi
         end
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: user,
             skip_show_thinking: true,
             feature_name: strategy.feature,
@@ -158,7 +164,7 @@ module DiscourseAi
         buffer_blk =
           Proc.new do |partial, _, type|
             if type == :structured_output
-              json_summary_schema_key = bot.persona.response_format&.first.to_h
+              json_summary_schema_key = bot.agent.response_format&.first.to_h
               partial_summary =
                 partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
 

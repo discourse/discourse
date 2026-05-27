@@ -6,7 +6,7 @@ import SidebarSectionForm from "discourse/components/modal/sidebar-section-form"
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import SectionLink from "discourse/lib/sidebar/section-link";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { unicodeSlugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -16,7 +16,7 @@ export default class Section {
   @service router;
 
   @tracked dragCss;
-  @trackedArray links;
+  @autoTrackedArray links;
 
   constructor({ section, owner }) {
     setOwner(this, owner);

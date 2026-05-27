@@ -5,7 +5,7 @@ import DiscoursePostEventInvitee from "discourse/plugins/discourse-calendar/disc
 import DiscoursePostEventInvitees from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-invitees";
 
 /**
- * Discoure post event API service. Provides methods to interact with the discourse post event API.
+ * Discourse post event API service. Provides methods to interact with the discourse post event API.
  *
  * @module DiscoursePostEventApi
  * @implements {@ember/service}
@@ -67,6 +67,7 @@ export default class DiscoursePostEventApi extends Service {
     event.sampleInvitees.forEach((invitee) => {
       if (invitee.id === event.watchingInvitee.id) {
         invitee.status = event.watchingInvitee.status;
+        invitee.recurring = event.watchingInvitee.recurring;
       }
     });
 

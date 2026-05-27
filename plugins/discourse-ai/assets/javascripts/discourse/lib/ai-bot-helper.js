@@ -3,7 +3,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import ShareFullTopicModal from "../components/modal/share-full-topic-modal";
 
-const MAX_PERSONA_USER_ID = -1200;
+const MAX_AGENT_USER_ID = -1200;
 
 let enabledChatBotMap = null;
 
@@ -38,12 +38,12 @@ export function getBotType(user) {
   if (!bot) {
     return;
   }
-  return bot.is_persona ? "persona" : "llm";
+  return bot.is_agent ? "agent" : "llm";
 }
 
 export function isPostFromAiBot(post, currentUser) {
   return (
-    post.user_id <= MAX_PERSONA_USER_ID ||
+    post.user_id <= MAX_AGENT_USER_ID ||
     !!currentUser?.ai_enabled_chat_bots?.some(
       (bot) => post.username === bot.username
     )

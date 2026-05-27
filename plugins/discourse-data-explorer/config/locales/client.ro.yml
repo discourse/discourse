@@ -6,8 +6,19 @@
 
 ro:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Fără rezultate"
+      manage_reports_hint:
+        title: "Creează o interogare pentru Exploratorul de date"
+        description: "Scrie o interogare SQL personalizată pentru a scoate la iveală orice aspect specific comunității tale."
     explorer:
+      default_query: "Implicit"
       or: "sau"
+      create: "Creează"
+      ai:
+        generate: "Generare"
+        optional: "opțional"
       import:
         label: "Importă"
       help:
@@ -18,9 +29,8 @@ ro:
         bool:
           yes: "Da"
           no: "Nu"
-      export: "Exportă"
       save: "Salvează modificări"
-      edit: "Editează"
+      undo: "Renunță la modificări"
       delete: "Șterge"
       query_groups: "Grupuri"
       report_name: "Raport"

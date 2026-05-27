@@ -6,6 +6,7 @@ en:
           poll: "Discourse Poll"
   js:
     poll:
+      title: "Poll"
       dynamic:
         enabled_hint: "Options can be added or removed."
       voters:

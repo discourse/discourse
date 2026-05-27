@@ -4,9 +4,16 @@ module DiscourseWebauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"
   ACCEPTABLE_AUTHENTICATION_TYPE = "webauthn.get"
 
-  # -7   - ES256
-  # -257 - RS256 (Windows Hello supported alg.)
-  SUPPORTED_ALGORITHMS = COSE::Algorithm.registered_algorithm_ids.freeze
+  SUPPORTED_ALGORITHMS = [
+    -7, # ES256
+    -8, # EdDSA
+    -35, # ES384
+    -36, # ES512
+    -37, # PS256
+    -38, # PS384
+    -39, # PS512
+    -257, # RS256 (via freedom patch)
+  ].freeze
   VALID_ATTESTATION_FORMATS = %w[none packed fido-u2f].freeze
   CHALLENGE_EXPIRY = 5.minutes
 
@@ -85,13 +92,16 @@ module DiscourseWebauthn
     server_session.delete(session_challenge_key(user))
   end
 
-  def self.allowed_credentials(user, server_session)
-    return {} if !user.security_keys_enabled?
+  def self.allowed_credentials(user, server_session, include_passkeys: false)
+    has_security_keys = user.security_keys_enabled?
+    has_passkeys = include_passkeys && user.passkeys_for_2fa_enabled?
+    return {} if !has_security_keys && !has_passkeys
 
-    {
-      allowed_credential_ids: user.second_factor_security_key_credential_ids,
-      challenge: challenge(user, server_session),
-    }
+    credential_ids = []
+    credential_ids.concat(user.second_factor_security_key_credential_ids) if has_security_keys
+    credential_ids.concat(user.passkey_credential_ids) if has_passkeys
+
+    { allowed_credential_ids: credential_ids, challenge: challenge(user, server_session) }
   end
 
   def self.challenge(user, server_session)

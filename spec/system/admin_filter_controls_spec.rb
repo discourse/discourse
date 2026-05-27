@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AdminFilterControls", type: :system do
+describe "AdminFilterControls" do
   fab!(:admin)
 
   let(:filter_controls) do
@@ -10,13 +10,10 @@ describe "AdminFilterControls", type: :system do
   before do
     sign_in(admin)
 
-    poll_plugin =
-      Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "poll", "plugin.rb"))
+    poll_plugin = Plugin::Instance.parse_from_source(Rails.root.join("plugins/poll/plugin.rb").to_s)
 
     spoiler_alert_plugin =
-      Plugin::Instance.parse_from_source(
-        File.join(Rails.root, "plugins", "spoiler-alert", "plugin.rb"),
-      )
+      Plugin::Instance.parse_from_source(Rails.root.join("plugins/spoiler-alert/plugin.rb").to_s)
 
     Discourse.stubs(:plugins_sorted_by_name).returns([poll_plugin, spoiler_alert_plugin])
   end
@@ -59,23 +56,29 @@ describe "AdminFilterControls", type: :system do
 
       expect(page).to have_css(".admin-filter-controls")
 
+      expect(filter_controls).to have_no_no_results_reset_button
       filter_controls.type_in_search("xyznonexistent")
       expect(page).to have_css(".admin-plugins-list__row", count: 0)
+      expect(filter_controls).to have_no_results_reset_button
+
+      filter_controls.click_no_results_reset_button
+      expect(filter_controls.search_input_value).to eq("")
+      expect(page).to have_css(".admin-plugins-list__row", count: 2)
+    end
+
+    it "also shows reset button when there are results and active filters" do
+      page.visit("/admin/plugins")
+
+      expect(page).to have_css(".admin-filter-controls")
+
+      expect(filter_controls).to have_no_reset_button
+      filter_controls.type_in_search("poll")
+      expect(page).to have_css(".admin-plugins-list__row", count: 1)
       expect(filter_controls).to have_reset_button
 
       filter_controls.click_reset_button
       expect(filter_controls.search_input_value).to eq("")
       expect(page).to have_css(".admin-plugins-list__row", count: 2)
-    end
-
-    it "does not show reset button when there are results" do
-      page.visit("/admin/plugins")
-
-      expect(page).to have_css(".admin-filter-controls")
-
-      filter_controls.type_in_search("poll")
-      expect(page).to have_css(".admin-plugins-list__row", count: 1)
-      expect(filter_controls).to have_no_reset_button
     end
   end
 

@@ -5,19 +5,13 @@ class ThemeTranslationManager
   attr_reader :key, :default, :theme
 
   def self.list_from_hash(locale:, hash:, theme:, parent_keys: [])
-    list = []
     hash
       .map do |key, value|
         this_key_array = parent_keys + [key]
         if value.is_a?(Hash)
-          self.list_from_hash(
-            locale: locale,
-            hash: value,
-            theme: theme,
-            parent_keys: this_key_array,
-          )
+          list_from_hash(locale: locale, hash: value, theme: theme, parent_keys: this_key_array)
         else
-          self.new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
+          new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
         end
       end
       .flatten
@@ -61,12 +55,11 @@ class ThemeTranslationManager
   end
 
   def create_record!(value)
-    record =
-      ThemeTranslationOverride.create!(
-        locale: @locale,
-        translation_key: @key,
-        theme: @theme,
-        value: value,
-      )
+    ThemeTranslationOverride.create!(
+      locale: @locale,
+      translation_key: @key,
+      theme: @theme,
+      value: value,
+    )
   end
 end

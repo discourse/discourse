@@ -23,7 +23,7 @@ describe DiscourseAi::AiHelper::EntryPoint do
       parsed["current_user"]["ai_helper_prompts"].find { |prompt| prompt["name"] == "translate" }
 
     expect(translate_prompt["translated_name"]).to eq(
-      I18n.t("discourse_ai.ai_helper.prompts.translate", language: "English (US)"),
+      I18n.t("discourse_ai.ai_helper.prompts.translate", language: "English"),
     )
 
     I18n.with_locale("fr") do

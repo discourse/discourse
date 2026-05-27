@@ -64,7 +64,7 @@ describe DiscoursePolicy do
     context "with add_users_to_group present" do
       fab!(:group2, :group)
       fab!(:post) { Fabricate(:post, user: moderator) }
-      fab!(:policy666) do
+      fab!(:post_policy) do
         policy = Fabricate(:post_policy, post: post, add_users_to_group: group2.id)
         PostPolicyGroup.create!(post_policy_id: policy.id, group_id: group.id)
         policy
@@ -72,19 +72,125 @@ describe DiscoursePolicy do
 
       before { group.add(user1) }
 
-      it "removes all users from the group upon version change" do
+      it "persists the group that accepting users are added to when the post author can manage it" do
+        group2.add_owner(moderator)
         updated_policy = <<~MD
-          [policy group=#{group.name} version=2 add_users_to_group=#{group2.id}]
+          [policy group=#{group.name} add-users-to-group=#{group2.name}]
             Here's the new policy
           [/policy]
         MD
 
         post.update!(raw: updated_policy)
         post.rebake!
-        post.post_policy.reload
+        post_policy.reload
+
+        expect(post_policy.add_users_to_group).to eq(group2.id)
+      end
+
+      it "does not persist the group that accepting users are added to when the post author cannot manage it" do
+        auto_group = Group.find(Group::AUTO_GROUPS[:admins])
+
+        updated_policy = <<~MD
+          [policy group=#{group.name} add-users-to-group=#{auto_group.name}]
+            Here's the new policy
+          [/policy]
+        MD
+
+        post.update!(raw: updated_policy)
+        post.rebake!
+        post_policy.reload
+
+        expect(post_policy.add_users_to_group).to be_nil
+      end
+
+      it "does not persist the group that accepting users are added to when it does not exist" do
+        updated_policy = <<~MD
+          [policy group=#{group.name} add-users-to-group=nonexistent_group_xyz]
+            Here's the new policy
+          [/policy]
+        MD
+
+        post.update!(raw: updated_policy)
+        post.rebake!
+        post_policy.reload
+
+        expect(post_policy.add_users_to_group).to be_nil
+      end
+
+      it "removes all users from the group upon version change" do
+        updated_policy = <<~MD
+          [policy group=#{group.name} version=2 add-users-to-group=#{group2.name}]
+            Here's the new policy
+          [/policy]
+        MD
+
+        post.update!(raw: updated_policy)
+        post.rebake!
+        post_policy.reload
 
         expect(group2.users).to contain_exactly
       end
+    end
+  end
+
+  describe "policy validation" do
+    fab!(:policy_group, :group)
+    fab!(:moderator)
+    fab!(:acting_user, :user)
+
+    let(:policy_raw) { <<~MD }
+        [policy group=#{policy_group.name}]
+        I agree
+        [/policy]
+      MD
+
+    before do
+      Jobs.run_immediately!
+      SiteSetting.create_policy_allowed_groups = "#{policy_group.id}"
+    end
+
+    it "blocks unauthorized users from modifying policy blocks" do
+      policy_group.add(moderator)
+      post = create_post(raw: "Original content", user: moderator)
+
+      result = post.revise(acting_user, { raw: policy_raw })
+
+      expect(result).to eq(false)
+      expect(post.errors[:base]).to include(I18n.t("discourse_policy.errors.no_policy_permission"))
+    end
+  end
+
+  describe "current user serializer extensions" do
+    let(:serializer) { CurrentUserSerializer.new(user1, scope: Guardian.new(user1)) }
+
+    fab!(:group)
+
+    before { SiteSetting.create_policy_allowed_groups = "1|2|#{group.id}" }
+
+    it "returns false when user is not in a policy creation group" do
+      expect(serializer.can_create_policy).to be_falsey
+    end
+
+    it "returns true when user is in a policy creation group" do
+      group.add(user1)
+
+      expect(serializer.can_create_policy).to be_truthy
+    end
+  end
+
+  describe "deprecated settings" do
+    let(:fake_logger) { FakeLogger.new }
+
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+    it "logs deprecation warning" do
+      SiteSetting.policy_restrict_to_staff_posts
+
+      expect(fake_logger.warnings[0]).to include(
+        "DEPRECATION NOTICE: `SiteSetting.policy_restrict_to_staff_posts` has been deprecated. Please use `SiteSetting.create_policy_allowed_groups` instead. (removal in Discourse 3.7.0)",
+      )
     end
   end
 end

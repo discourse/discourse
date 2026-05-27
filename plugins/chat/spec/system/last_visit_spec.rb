@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Last visit", type: :system do
+RSpec.describe "Last visit" do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: false) }
   fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: false) }
 
@@ -9,7 +9,7 @@ RSpec.describe "Last visit", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap

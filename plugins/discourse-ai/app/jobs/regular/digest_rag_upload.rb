@@ -8,15 +8,10 @@ module Jobs
 
     # TODO(roman): Add a way to automatically recover from errors, resulting in unindexed uploads.
     def execute(args)
-      return if (upload = Upload.find_by(id: args[:upload_id])).nil?
-
-      target_type = args[:target_type]
-      target_id = args[:target_id]
-
-      return if !target_type || !target_id
-
-      target = target_type.constantize.find_by(id: target_id)
-      return if !target
+      return unless upload = Upload.find_by(id: args[:upload_id])
+      return unless target_type = args[:target_type]
+      return unless target_id = args[:target_id]
+      return unless target = target_type.constantize.find_by(id: target_id)
 
       vector_rep = DiscourseAi::Embeddings::Vector.instance
 
@@ -24,11 +19,11 @@ module Jobs
       chunk_tokens = target.rag_chunk_tokens
       overlap_tokens = target.rag_chunk_overlap_tokens
 
-      fragment_ids = RagDocumentFragment.where(target: target, upload: upload).pluck(:id)
+      fragment_ids = RagDocumentFragment.where(target:, upload:).pluck(:id)
 
       # Check if this is the first time we process this upload.
       if fragment_ids.empty?
-        document = get_uploaded_file(upload: upload, target: target)
+        document = get_uploaded_file(upload:, target:)
         return if document.nil?
 
         RagDocumentFragment.publish_status(upload, { total: 0, indexed: 0, left: 0 })
@@ -39,16 +34,16 @@ module Jobs
         ActiveRecord::Base.transaction do
           chunk_document(
             file: document,
-            tokenizer: tokenizer,
-            chunk_tokens: chunk_tokens,
-            overlap_tokens: overlap_tokens,
+            tokenizer:,
+            chunk_tokens:,
+            overlap_tokens:,
           ) do |chunk, metadata|
             fragment_ids << RagDocumentFragment.create!(
-              target: target,
+              target:,
               fragment: chunk,
               fragment_number: idx + 1,
-              upload: upload,
-              metadata: metadata,
+              upload:,
+              metadata:,
             ).id
 
             idx += 1
@@ -64,6 +59,8 @@ module Jobs
       fragment_ids.each_slice(50) do |slice|
         Jobs.enqueue(:generate_rag_embeddings, fragment_ids: slice)
       end
+    ensure
+      @file&.close
     end
 
     private
@@ -169,6 +166,7 @@ module Jobs
                 "The setting ai_rag_images_enabled is false, can not index images",
               )
       end
+
       if upload.extension == "pdf"
         return(
           DiscourseAi::Utils::PdfToText.as_fake_file(
@@ -190,12 +188,14 @@ module Jobs
       end
 
       store = Discourse.store
+
       @file ||=
         if store.external?
           # Upload#filesize could be approximate.
           # add two extra Mbs to make sure that we'll be able to download the upload.
           max_filesize = upload.filesize + 2.megabytes
-          store.download(upload, max_file_size_kb: max_filesize)
+          path = store.download(upload, max_file_size_kb: max_filesize)
+          File.open(path) if path
         else
           File.open(store.path_for(upload))
         end

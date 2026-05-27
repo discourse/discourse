@@ -37,8 +37,7 @@ class ReviewablePost < Reviewable
     super
   end
 
-  # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     if post.trashed? && guardian.can_recover_post?(post)
       build_action(actions, :approve_and_restore, icon: "check")
     elsif post.hidden?
@@ -49,18 +48,34 @@ class ReviewablePost < Reviewable
 
     reject =
       actions.add_bundle(
-        "#{id}-reject",
+        "#{id}-reject-post",
         icon: "xmark",
-        label: "reviewables.actions.reject.bundle_title",
+        label: "reviewables.actions.reject_post_bundle.title",
       )
 
+    can_penalize = guardian.can_suspend?(target_created_by)
+
     if post.trashed?
-      build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
+      if can_penalize
+        build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
+      else
+        actions.add(:reject_and_keep_deleted, bundle: reject) do |a|
+          a.icon = "trash-can"
+          a.label = "reviewables.actions.reject_and_keep_deleted_standalone.title"
+        end
+      end
     elsif guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
+      if can_penalize
+        build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
+      else
+        actions.add(:reject_and_delete, bundle: reject) do |a|
+          a.icon = "trash-can"
+          a.label = "reviewables.actions.reject_and_delete_standalone.title"
+        end
+      end
     end
 
-    if guardian.can_suspend?(target_created_by)
+    if can_penalize
       build_action(
         actions,
         :reject_and_suspend,
@@ -78,13 +93,6 @@ class ReviewablePost < Reviewable
     end
   end
 
-  # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
-  def build_new_separated_actions
-    build_post_actions_bundle
-    build_user_actions_bundle
-  end
-
-  # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
   def perform_approve(performed_by, _args)
     create_result(:success, :approved, [created_by_id], false)
   end
@@ -100,13 +108,14 @@ class ReviewablePost < Reviewable
   end
 
   def perform_approve_and_unhide(performed_by, _args)
+    post.acting_user = performed_by
     post.unhide!
 
     create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_reject_and_delete(performed_by, _args)
-    PostDestroyer.new(performed_by, post, reviewable: self).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: id).destroy
 
     create_result(:success, :rejected, [created_by_id], false)
   end
@@ -114,12 +123,11 @@ class ReviewablePost < Reviewable
   def perform_reject_and_suspend(performed_by, _args)
     create_result(:success, :rejected, [created_by_id], false)
   end
-  # TODO (reviewable-refresh): Remove combined actions above when fully migrated to new UI
 
   private
 
   def post
-    @post ||= (target || Post.with_deleted.find_by(id: target_id))
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 end
 
@@ -128,26 +136,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

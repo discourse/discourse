@@ -93,6 +93,107 @@ RSpec.describe GroupActionLogger do
     end
   end
 
+  describe "#bulk_log_add_users_to_group" do
+    fab!(:user2, :user)
+
+    it "creates a record for each user" do
+      expect { logger.bulk_log_add_users_to_group([user.id, user2.id]) }.to change {
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group]).count
+      }.by(2)
+
+      records =
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group], group: group).last(2)
+
+      expect(records.map(&:acting_user)).to all(eq(group_owner))
+      expect(records.map(&:target_user)).to contain_exactly(user, user2)
+    end
+
+    it "does nothing when target_users is empty" do
+      expect { logger.bulk_log_add_users_to_group([]) }.not_to change { GroupHistory.count }
+    end
+
+    it "forwards the subject when present" do
+      logger.bulk_log_add_users_to_group([user.id], "added_users")
+
+      expect(GroupHistory.last.subject).to eq("added_users")
+    end
+  end
+
+  describe "#bulk_log_remove_users_from_group" do
+    fab!(:user2, :user)
+
+    it "creates a record for each user" do
+      expect { logger.bulk_log_remove_users_from_group([user.id, user2.id]) }.to change {
+        GroupHistory.where(action: GroupHistory.actions[:remove_user_from_group]).count
+      }.by(2)
+
+      records =
+        GroupHistory.where(
+          action: GroupHistory.actions[:remove_user_from_group],
+          group: group,
+        ).last(2)
+
+      expect(records.map(&:acting_user)).to all(eq(group_owner))
+      expect(records.map(&:target_user)).to contain_exactly(user, user2)
+    end
+
+    it "does nothing when target_users is empty" do
+      expect { logger.bulk_log_remove_users_from_group([]) }.not_to change { GroupHistory.count }
+    end
+
+    it "forwards the subject when present" do
+      logger.bulk_log_remove_users_from_group([user.id], "remove_users")
+
+      expect(GroupHistory.last.subject).to eq("remove_users")
+    end
+  end
+
+  describe "#log_group_creation" do
+    subject(:log_creation) { logger.log_group_creation }
+
+    let(:owner_history) do
+      GroupHistory.where(group:, action: GroupHistory.actions[:make_user_group_owner])
+    end
+    let(:member_history) do
+      GroupHistory.where(group:, action: GroupHistory.actions[:add_user_to_group])
+    end
+
+    context "when group has only an owner" do
+      it "logs make_user_group_owner for the owner" do
+        expect { log_creation }.to change { owner_history.count }.by(1)
+        expect(owner_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+        )
+      end
+
+      it "logs add_user_to_group for the owner" do
+        expect { log_creation }.to change { member_history.count }.by(1)
+        expect(member_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+        )
+      end
+    end
+
+    context "when group has an owner and a member" do
+      before { group.add(user) }
+
+      it "logs make_user_group_owner only for the owner" do
+        expect { log_creation }.to change { owner_history.count }.by(1)
+        expect(owner_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+        )
+      end
+
+      it "logs add_user_to_group for both owner and member" do
+        expect { log_creation }.to change { member_history.count }.by(2)
+        expect(member_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+          an_object_having_attributes(acting_user: group_owner, target_user: user),
+        )
+      end
+    end
+  end
+
   describe "#log_change_group_settings" do
     it "should create the right record" do
       group.update!(public_admission: true, created_at: Time.zone.now)

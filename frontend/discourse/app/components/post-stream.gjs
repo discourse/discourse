@@ -4,16 +4,15 @@ import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
-import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { and, not } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import Post from "./post";
 import PostGap from "./post/gap";
 import PostLoadMoreAccessible from "./post/load-more-accessible";
@@ -35,6 +34,7 @@ export default class PostStream extends Component {
   @tracked cloakAbove;
   @tracked cloakBelow;
   @tracked keyboardSelection;
+  @tracked suppressLoadAbove = false;
 
   viewportTracker = new PostStreamViewportTracker();
 
@@ -163,39 +163,60 @@ export default class PostStream extends Component {
 
   @action
   loadMoreAbove(post) {
+    const anchorElement =
+      this.viewportTracker.postsOnScreen[post.post_number]?.element;
+
+    // anchorTop is captured by the captureAnchor callback, which is called
+    // inside prependMore after the fetch completes (when the loading spinner is
+    // visible) but before new posts are inserted into the DOM.
+    let anchorTop;
+
     this.args.topVisibleChanged({
       post,
+      captureAnchor: () => {
+        anchorTop = anchorElement?.getBoundingClientRect().top;
+        // Suppress the load-more sentinel until the scroll compensation completes.
+        // Without this, the sentinel could re-appear between loadingAbove=false
+        // (spinner removed) and scrollBy (position compensated), triggering
+        // another load before the user's viewport is restored.
+        if (anchorTop != null) {
+          this.suppressLoadAbove = true;
+        }
+      },
       refresh: () => {
-        const refreshedElem =
-          this.viewportTracker.postsOnScreen[post.post_number]?.element;
-
-        if (!refreshedElem) {
+        if (anchorTop == null) {
           return;
         }
 
-        // The getOffsetTop function calculates the total offset distance of an element from the top of the document.
-        // Unlike `element.offsetTop` which only returns the offset relative to its nearest positioned ancestor, this
-        // function recursively accumulates the offsetTop of an element and all of its offset parents(ancestors).
-        // This ensures the total distance is measured from the very top of the document, accounting for any nested
-        // elements and their respective offsets.
-        const getOffsetTop = (element) => {
-          if (!element) {
-            return 0;
-          }
-          return element.offsetTop + getOffsetTop(element.offsetParent);
-        };
+        // Chrome and Firefox natively support scroll anchoring (overflow-anchor)
+        // which should keep the viewport stable when posts are prepended above.
+        // From the major Browsers, currently only Safari won't support it.
+        // We compensate manually as a fallback — the code is browser-agnostic
+        // because themes or plugins can inadvertently break native anchoring by
+        // styling elements in the post-stream, and the shift check ensures this
+        // is a no-op when anchoring works correctly.
+        const shift = anchorElement.getBoundingClientRect().top - anchorTop;
+        if (shift !== 0) {
+          window.scrollBy(0, shift);
+        }
 
-        window.scrollTo({
-          top: getOffsetTop(refreshedElem) - offsetCalculator(),
-        });
-
-        // This seems weird, but somewhat infrequently a rerender
-        // will cause the browser to scroll to the top of the document
-        // in Chrome. This makes sure the scroll works correctly if that
-        // happens.
+        // The primary scrollBy above compensates for newly prepended posts,
+        // but `prependMore` also sets `loadingAbove = false` which removes
+        // the loading spinner. Since Ember renders that change asynchronously,
+        // the spinner is still in the DOM during the primary compensation.
+        // Once Ember removes it in the next render pass, the layout shifts
+        // again. This afterRender pass catches that secondary shift.
         schedule("afterRender", () => {
-          window.scrollTo({
-            top: getOffsetTop(refreshedElem) - offsetCalculator(),
+          const renderShift =
+            anchorElement.getBoundingClientRect().top - anchorTop;
+          if (renderShift !== 0) {
+            window.scrollBy(0, renderShift);
+          }
+          // Defer re-enabling the load-more sentinel to the next run loop
+          // turn so that all pending renders (new posts, spinner removal)
+          // have fully settled in the DOM before the sentinel can retrigger.
+          next(() => {
+            this.suppressLoadAbove = false;
           });
         });
       },
@@ -225,10 +246,26 @@ export default class PostStream extends Component {
   @action
   updateKeyboardSelectedPostNumber({ selectedArticle: element }) {
     next(() => {
+      const postNumber = parseInt(element.dataset.postNumber, 10);
       this.keyboardSelection = {
         topicId: this.args.topic.id,
-        postNumber: parseInt(element.dataset.postNumber, 10),
+        postNumber,
       };
+
+      // When keyboard navigation reaches a boundary post, trigger loading
+      // more posts in that direction. Double-loading is prevented by the
+      // existing canPrependMore/canAppendMore guards in the model.
+      if (
+        this.firstAvailablePost?.post_number === postNumber &&
+        this.args.postStream.canPrependMore
+      ) {
+        this.loadMoreAbove(this.firstAvailablePost);
+      } else if (
+        this.lastAvailablePost?.post_number === postNumber &&
+        this.args.postStream.canAppendMore
+      ) {
+        this.loadMoreBelow(this.lastAvailablePost);
+      }
     });
   }
 
@@ -251,7 +288,7 @@ export default class PostStream extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
+    <DConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
       class="post-stream"
       {{this.viewportTracker.setup
@@ -263,11 +300,15 @@ export default class PostStream extends Component {
         topicId=@topic.id
       }}
     >
-      {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
+      {{#if @postStream.canPrependMore}}
         <PostLoadMoreAccessible
           @action={{fn this.loadMoreAbove this.firstAvailablePost}}
           @canLoadMore={{@postStream.canPrependMore}}
           @direction="above"
+          @enabled={{and
+            (not @postStream.loadingAbove)
+            (not this.suppressLoadAbove)
+          }}
           @existingPostNumbers={{this.existingPostNumbers}}
           @firstAvailablePost={{this.firstAvailablePost}}
           @lastAvailablePost={{this.lastAvailablePost}}
@@ -308,15 +349,15 @@ export default class PostStream extends Component {
               (concat "post_" post.post_number)
               as |PostComponent cloakingData keyboardSelected postId|
             }}
+              {{! eslint-disable ember/template-no-duplicate-id }}
               <PostComponent
                 id={{postId}}
-                class={{concatClass
+                class={{dConcatClass
                   (if cloakingData.active "post-stream--cloaked")
                   (if keyboardSelected "selected")
                 }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
-                {{! template-lint-disable no-duplicate-id }}
                 @elementId={{postId}}
                 @post={{post}}
                 @prevPost={{previousPost}}
@@ -380,31 +421,30 @@ export default class PostStream extends Component {
         {{/let}}
       {{/each}}
 
-      {{#unless @postStream.loadingBelow}}
-        {{#if @postStream.canAppendMore}}
-          <PostLoadMoreAccessible
-            @action={{fn this.loadMoreBelow this.lastAvailablePost}}
-            @canLoadMore={{@postStream.canAppendMore}}
-            @direction="below"
-            @existingPostNumbers={{this.existingPostNumbers}}
-            @firstAvailablePost={{this.firstAvailablePost}}
-            @lastAvailablePost={{this.lastAvailablePost}}
-            @postStream={{@postStream}}
-          />
-        {{else}}
-          <div
-            class="post-stream__bottom-boundary"
-            {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
-          ></div>
-          {{! this plugin outlet is only inserted when the real bottom of the post-stream is rendered
+      {{#if @postStream.canAppendMore}}
+        <PostLoadMoreAccessible
+          @action={{fn this.loadMoreBelow this.lastAvailablePost}}
+          @canLoadMore={{@postStream.canAppendMore}}
+          @direction="below"
+          @enabled={{not @postStream.loadingBelow}}
+          @existingPostNumbers={{this.existingPostNumbers}}
+          @firstAvailablePost={{this.firstAvailablePost}}
+          @lastAvailablePost={{this.lastAvailablePost}}
+          @postStream={{@postStream}}
+        />
+      {{else if (not @postStream.loadingBelow)}}
+        <div
+          class="post-stream__bottom-boundary"
+          {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
+        ></div>
+        {{! this plugin outlet is only inserted when the real bottom of the post-stream is rendered
            this is useful for plugins that want to render something at the bottom of the post-stream
            e.g. a "no more posts" message }}
-          <PluginOutlet
-            @name="post-stream-bottom"
-            @outletArgs={{lazyHash posts=this.posts topic=@topic}}
-          />
-        {{/if}}
-      {{/unless}}
+        <PluginOutlet
+          @name="post-stream-bottom"
+          @outletArgs={{lazyHash posts=this.posts topic=@topic}}
+        />
+      {{/if}}
 
       {{#if this.shouldShowFilteredNotice}}
         <PostFilteredNotice
@@ -415,6 +455,6 @@ export default class PostStream extends Component {
         />
       {{/if}}
     </div>
-    <ConditionalLoadingSpinner @condition={{@postStream.loadingBelow}} />
+    <DConditionalLoadingSpinner @condition={{@postStream.loadingBelow}} />
   </template>
 }

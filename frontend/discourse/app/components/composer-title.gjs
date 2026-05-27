@@ -1,29 +1,38 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
-import { alias, or } from "@ember/object/computed";
+import EmberObject, { computed, set } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PopupInputTip from "discourse/components/popup-input-tip";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @classNames("title-input")
 export default class ComposerTitle extends Component {
-  @alias("composer.canEditTopicFeaturedLink") watchForLink;
-  @or("composer.loading", "composer.disableTitleInput") disabled;
-
   isTitleFocused = false;
+
+  @computed("composer.canEditTopicFeaturedLink")
+  get watchForLink() {
+    return this.composer?.canEditTopicFeaturedLink;
+  }
+
+  set watchForLink(value) {
+    set(this, "composer.canEditTopicFeaturedLink", value);
+  }
+
+  @computed("composer.loading", "composer.disableTitleInput")
+  get disabled() {
+    return this.composer?.loading || this.composer?.disableTitleInput;
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);
@@ -54,31 +63,27 @@ export default class ComposerTitle extends Component {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "composer.titleLength",
     "composer.missingTitleCharacters",
     "composer.minimumTitleLength",
     "lastValidatedAt",
     "isTitleFocused"
   )
-  validation(
-    titleLength,
-    missingTitleChars,
-    minimumTitleLength,
-    lastValidatedAt,
-    isTitleFocused
-  ) {
+  get validation() {
     let reason;
-    if (isTitleFocused) {
+    if (this.isTitleFocused) {
       return;
     }
-    if (titleLength < 1) {
+    if (this.composer?.titleLength < 1) {
       reason = i18n("composer.error.title_missing");
-    } else if (missingTitleChars > 0) {
+    } else if (this.composer?.missingTitleCharacters > 0) {
       reason = i18n("composer.error.title_too_short", {
-        count: minimumTitleLength,
+        count: this.composer?.minimumTitleLength,
       });
-    } else if (titleLength > this.siteSettings.max_topic_title_length) {
+    } else if (
+      this.composer?.titleLength > this.siteSettings.max_topic_title_length
+    ) {
       reason = i18n("composer.error.title_too_long", {
         count: this.siteSettings.max_topic_title_length,
       });
@@ -88,16 +93,16 @@ export default class ComposerTitle extends Component {
       return EmberObject.create({
         failed: true,
         reason,
-        lastShownAt: lastValidatedAt,
+        lastShownAt: this.lastValidatedAt,
       });
     }
   }
 
-  @discourseComputed("watchForLink")
-  titleMaxLength(watchForLink) {
+  @computed("watchForLink")
+  get titleMaxLength() {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
-    return watchForLink ? null : this.siteSettings.max_topic_title_length;
+    return this.watchForLink ? null : this.siteSettings.max_topic_title_length;
   }
 
   @observes("composer.titleLength", "watchForLink")
@@ -223,12 +228,20 @@ export default class ComposerTitle extends Component {
     }
   }
 
-  @discourseComputed("composer.title", "composer.titleLength")
-  isAbsoluteUrl(title, titleLength) {
+  @computed("composer.title", "composer.titleLength")
+  get isAbsoluteUrl() {
     return (
-      titleLength > 0 &&
-      /^(https?:)?\/\/[\w\.\-]+/i.test(title) &&
-      !/\s/.test(title)
+      this.composer?.titleLength > 0 &&
+      /^(https?:)?\/\/[\w\.\-]+/i.test(this.composer?.title) &&
+      !/\s/.test(this.composer?.title)
+    );
+  }
+
+  @computed("composer.categoryTitlePlaceholder", "composer.titlePlaceholder")
+  get titleAriaLabel() {
+    return (
+      this.composer.categoryTitlePlaceholder ||
+      i18n(this.composer.titlePlaceholder)
     );
   }
 
@@ -241,12 +254,13 @@ export default class ComposerTitle extends Component {
   }
 
   <template>
-    <TextField
+    <DTextField
       @value={{this.composer.title}}
       @id="reply-title"
       @maxLength={{this.titleMaxLength}}
       @placeholderKey={{this.composer.titlePlaceholder}}
-      @aria-label={{i18n this.composer.titlePlaceholder}}
+      @placeholder={{this.composer.categoryTitlePlaceholder}}
+      @aria-label={{this.titleAriaLabel}}
       @disabled={{this.disabled}}
       @autocomplete="off"
     />
@@ -257,6 +271,6 @@ export default class ComposerTitle extends Component {
       @outletArgs={{lazyHash composer=this.composer}}
     />
 
-    <PopupInputTip @validation={{this.validation}} />
+    <DPopupInputTip @validation={{this.validation}} />
   </template>
 }

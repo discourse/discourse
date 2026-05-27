@@ -3,6 +3,11 @@
 directory "plugins"
 
 desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
+
+task "plugin:list_official" do
+  Plugin::Metadata::OFFICIAL_PLUGINS.each { |name| STDOUT.puts name }
+end
+
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
@@ -78,7 +83,7 @@ def update_plugin(plugin)
     end
   end
 
-  `git -C '#{plugin_path}' fetch origin --tags --force`
+  `git -C '#{plugin_path}' fetch origin --tags --force --prune --quiet`
 
   upstream_branch =
     `git -C '#{plugin_path}' for-each-ref --format='%(upstream:short)' $(git -C '#{plugin_path}' symbolic-ref -q HEAD)`.strip
@@ -95,7 +100,7 @@ def update_plugin(plugin)
       `git -C '#{plugin_path}' branch -m master main`
     end
 
-    `git -C '#{plugin_path}' branch -u origin/main main`
+    `git -C '#{plugin_path}' branch -q -u origin/main main`
   end
 
   update_status = system("git -C '#{plugin_path}' pull --quiet --no-rebase")
@@ -190,6 +195,9 @@ def spec(plugin, files, parallel: false, argv: nil)
   params << "--fail-fast" if ENV["RSPEC_FAILFAST"]
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
   params << argv if argv
+
+  # if plugin contains a comma, it's a list. we need to surround it with brackets
+  plugin = "{#{plugin}}" if plugin.include?(",")
 
   # reject system specs as they are slow and need dedicated setup
   if files.empty?

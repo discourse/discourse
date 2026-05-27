@@ -110,25 +110,6 @@ module("Unit | Utility | UppyChecksum Plugin", function (hooks) {
     }
   );
 
-  test("it does nothing if the browser is IE11", function (assert) {
-    const capabilities = { isIE11: true };
-    const fakeUppy = new FakeUppy();
-    const plugin = new UppyChecksum(fakeUppy, {
-      capabilities,
-    });
-    plugin.install();
-
-    const fileId =
-      "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764";
-    return plugin.uppy.preprocessors[0]([fileId]).then(() => {
-      assert.strictEqual(
-        plugin.uppy.emitted.length,
-        1,
-        "only the complete event was fired by the checksum plugin because it skipped the file"
-      );
-    });
-  });
-
   withCrypto("it does nothing if the file is > 100MB", function (assert) {
     const capabilities = {};
     const fakeUppy = new FakeUppy();

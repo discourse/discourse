@@ -273,19 +273,6 @@ RSpec.describe Upload do
     expect(upload.thumbnail_width).to eq(nil)
   end
 
-  it "returns error when image resolution is to big" do
-    SiteSetting.max_image_megapixels = 10
-    upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
-    expect(upload.persisted?).to eq(false)
-    expect(upload.errors.messages[:base].first).to eq(
-      I18n.t(
-        "upload.images.larger_than_x_megapixels",
-        max_image_megapixels: 10,
-        original_filename: upload.original_filename,
-      ),
-    )
-  end
-
   it "extracts file extension" do
     created_upload = UploadCreator.new(image, image_filename).create_for(user_id)
     expect(created_upload.extension).to eq("png")
@@ -346,14 +333,12 @@ RSpec.describe Upload do
     end
 
     it "works when using a cdn" do
-      begin
-        original_asset_host = Rails.configuration.action_controller.asset_host
-        Rails.configuration.action_controller.asset_host = "http://my.cdn.com"
+      original_asset_host = Rails.configuration.action_controller.asset_host
+      Rails.configuration.action_controller.asset_host = "http://my.cdn.com"
 
-        expect(Upload.get_from_url(URI.join("http://my.cdn.com", upload.url).to_s)).to eq(upload)
-      ensure
-        Rails.configuration.action_controller.asset_host = original_asset_host
-      end
+      expect(Upload.get_from_url(URI.join("http://my.cdn.com", upload.url).to_s)).to eq(upload)
+    ensure
+      Rails.configuration.action_controller.asset_host = original_asset_host
     end
 
     it "should return the right upload when using the full URL" do
@@ -406,17 +391,15 @@ RSpec.describe Upload do
       end
 
       it "should return the right upload when using one CDN for both s3 and assets" do
-        begin
-          original_asset_host = Rails.configuration.action_controller.asset_host
-          cdn_url = "http://my.cdn.com"
-          Rails.configuration.action_controller.asset_host = cdn_url
-          SiteSetting.s3_cdn_url = cdn_url
-          upload
+        original_asset_host = Rails.configuration.action_controller.asset_host
+        cdn_url = "http://my.cdn.com"
+        Rails.configuration.action_controller.asset_host = cdn_url
+        SiteSetting.s3_cdn_url = cdn_url
+        upload
 
-          expect(Upload.get_from_url(URI.join(cdn_url, path).to_s)).to eq(upload)
-        ensure
-          Rails.configuration.action_controller.asset_host = original_asset_host
-        end
+        expect(Upload.get_from_url(URI.join(cdn_url, path).to_s)).to eq(upload)
+      ensure
+        Rails.configuration.action_controller.asset_host = original_asset_host
       end
     end
   end
@@ -449,16 +432,14 @@ RSpec.describe Upload do
     end
 
     it "works when using a CDN" do
-      begin
-        original_asset_host = Rails.configuration.action_controller.asset_host
-        Rails.configuration.action_controller.asset_host = "http://my.cdn.com"
+      original_asset_host = Rails.configuration.action_controller.asset_host
+      Rails.configuration.action_controller.asset_host = "http://my.cdn.com"
 
-        expect(
-          Upload.get_from_urls([URI.join("http://my.cdn.com", upload.url).to_s]),
-        ).to contain_exactly(upload)
-      ensure
-        Rails.configuration.action_controller.asset_host = original_asset_host
-      end
+      expect(
+        Upload.get_from_urls([URI.join("http://my.cdn.com", upload.url).to_s]),
+      ).to contain_exactly(upload)
+    ensure
+      Rails.configuration.action_controller.asset_host = original_asset_host
     end
 
     it "works with full URLs" do
@@ -737,6 +718,101 @@ RSpec.describe Upload do
         end
       end
     end
+
+    context "with optimized videos" do
+      before do
+        extensions = SiteSetting.authorized_extensions.split("|")
+        SiteSetting.authorized_extensions = (extensions | %w[mp4 mov avi mkv]).join("|")
+        enable_secure_uploads
+      end
+
+      it "syncs optimized video secure status when original upload secure status changes from false to true" do
+        original_upload = Fabricate(:upload, secure: false)
+        optimized_video = Fabricate(:optimized_video, upload: original_upload)
+        optimized_upload = optimized_video.optimized_upload
+        optimized_upload.update!(secure: false)
+
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload)
+
+        original_upload.update!(access_control_post: Fabricate(:private_message_post))
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(true)
+        expect(optimized_upload.reload.secure).to eq(true)
+      end
+
+      it "syncs optimized video secure status when original upload secure status changes from true to false" do
+        original_upload =
+          Fabricate(:upload, secure: true, access_control_post: Fabricate(:private_message_post))
+        optimized_video = Fabricate(:optimized_video, upload: original_upload)
+        optimized_upload = optimized_video.optimized_upload
+        optimized_upload.update!(secure: true)
+
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload)
+
+        original_upload.update!(access_control_post: Fabricate(:post))
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(false)
+        expect(optimized_upload.reload.secure).to eq(false)
+      end
+
+      it "does not update optimized video secure status if it already matches" do
+        original_upload =
+          Fabricate(:upload, secure: true, access_control_post: Fabricate(:private_message_post))
+        optimized_video = Fabricate(:optimized_video, upload: original_upload)
+        optimized_upload = optimized_video.optimized_upload
+        optimized_upload.update!(secure: true)
+
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(original_upload)
+          .never
+
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(true)
+        expect(optimized_upload.reload.secure).to eq(true)
+      end
+
+      it "syncs multiple optimized videos when original upload secure status changes" do
+        original_upload = Fabricate(:upload, secure: false)
+        optimized_video1 =
+          Fabricate(:optimized_video, upload: original_upload, adapter: "aws_mediaconvert")
+        optimized_video2 =
+          Fabricate(:optimized_video, upload: original_upload, adapter: "other_adapter")
+        optimized_upload1 = optimized_video1.optimized_upload
+        optimized_upload2 = optimized_video2.optimized_upload
+        optimized_upload1.update!(secure: false)
+        optimized_upload2.update!(secure: false)
+
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload1)
+        FileStore::S3Store
+          .any_instance
+          .expects(:update_upload_access_control)
+          .with(optimized_upload2)
+
+        original_upload.update!(access_control_post: Fabricate(:private_message_post))
+        original_upload.update_secure_status
+
+        expect(original_upload.reload.secure).to eq(true)
+        expect(optimized_upload1.reload.secure).to eq(true)
+        expect(optimized_upload2.reload.secure).to eq(true)
+      end
+    end
   end
 
   describe ".extract_upload_ids" do
@@ -762,6 +838,13 @@ RSpec.describe Upload do
       base62 = Upload.base62_sha1(upload.sha1).delete_prefix("0")
       ids = Upload.extract_upload_ids("This URL /#{base62} is an upload")
       expect(ids).to contain_exactly(upload.id)
+    end
+  end
+
+  describe ".sha1_from_base62_encoded" do
+    it "rejects base62 strings that are too long" do
+      long_base62 = "A" * 1000
+      expect(Upload.sha1_from_base62_encoded(long_base62)).to be_nil
     end
   end
 
@@ -938,7 +1021,7 @@ RSpec.describe Upload do
 
     it "correctly handles error when file is too large to download" do
       white_image.stubs(:local?).returns(false)
-      FileStore::LocalStore.any_instance.stubs(:download).returns(nil).once
+      FileHelper.stubs(:download).returns(nil)
 
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
@@ -947,11 +1030,7 @@ RSpec.describe Upload do
 
     it "correctly handles error when file has HTTP error" do
       white_image.stubs(:local?).returns(false)
-      FileStore::LocalStore
-        .any_instance
-        .stubs(:download)
-        .raises(OpenURI::HTTPError.new("Error", nil))
-        .once
+      FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("Error", nil))
 
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")

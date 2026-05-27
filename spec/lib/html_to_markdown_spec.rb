@@ -67,7 +67,7 @@ RSpec.describe HtmlToMarkdown do
 
   it "removes tags that aren't allowed" do
     html = <<~HTML
-      <custom>Text withing custom <span>tag</span></custom>
+      <custom>Text within custom <span>tag</span></custom>
       <div>Text within allowed tag</div>
     HTML
 

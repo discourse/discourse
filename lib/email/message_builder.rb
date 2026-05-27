@@ -20,6 +20,14 @@ module Email
         hostname: Discourse.current_hostname,
       }.merge!(@opts)
 
+      if @opts[:recipient_user].present?
+        @template_args[:recipient_username] = @opts[:recipient_user].username
+      end
+
+      if @opts[:template].present? && I18n.exists?("#{@opts[:template]}.preview")
+        @template_args[:email_preview] ||= I18n.t("#{@opts[:template]}.preview", @template_args)
+      end
+
       return if @template_args[:url].blank?
 
       @template_args[:header_instructions] ||= I18n.t(
@@ -131,7 +139,13 @@ module Email
         subject = @opts[:add_re_to_subject] ? I18n.t("subject_re") : ""
         subject = "#{subject}#{@template_args[:topic_title]}"
       elsif @opts[:template]
-        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
+        subject_key = "#{@opts[:template]}.subject_template"
+
+        if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
+          subject_key += "_improved"
+        end
+
+        subject = I18n.t(subject_key, @template_args)
       else
         subject = @opts[:subject]
       end
@@ -148,6 +162,13 @@ module Email
         html_override.gsub!("%{unsubscribe_instructions}", unsubscribe_instructions)
       else
         html_override.gsub!("%{unsubscribe_instructions}", "")
+      end
+
+      if @template_args[:email_preview].present?
+        email_preview = PrettyText.cook(@template_args[:email_preview], sanitize: false).html_safe
+        html_override.gsub!("%{email_preview}", email_preview)
+      else
+        html_override.gsub!("%{email_preview}", "")
       end
 
       if @template_args[:header_instructions].present?
@@ -233,6 +254,10 @@ module Email
 
     def header_args
       result = {}
+
+      if @template_args[:email_preview].present?
+        result["X-Discourse-Email-Preview"] = @template_args[:email_preview]
+      end
 
       if @opts[:add_unsubscribe_link]
         if unsubscribe_url = @template_args[:unsubscribe_url].presence

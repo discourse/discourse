@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export const BUTTON_ACTION_MODE_DELETE = "delete";
 export const BUTTON_ACTION_MODE_DELETE_TOPIC = "delete-topic";
@@ -128,6 +128,7 @@ export default class PostMenuDeleteButton extends Component {
       @icon={{this.icon}}
       @label={{if @showLabel this.label}}
       @title={{this.title}}
+      @ariaLabel={{this.title}}
     />
   </template>
 }

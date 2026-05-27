@@ -8,39 +8,52 @@ const GENERAL_ATTRIBUTES = [
 ];
 
 export default class AdminDashboard extends EmberObject {
-  static fetch() {
-    return ajax("/admin/dashboard.json").then((json) => {
-      const model = AdminDashboard.create();
-      model.setProperties({
-        version_check: json.version_check,
-      });
+  static async fetch({ startDate, endDate, version } = {}) {
+    const data = {};
+    if (startDate) {
+      data.start_date = moment(startDate).format("YYYY-MM-DD");
+    }
+    if (endDate) {
+      data.end_date = moment(endDate).format("YYYY-MM-DD");
+    }
+    if (version) {
+      data.version = version;
+    }
 
-      return model;
+    const json = await ajax("/admin/dashboard.json", { data });
+    const model = AdminDashboard.create();
+
+    model.setProperties({
+      version_check: json.version_check,
+      sections: json.sections,
+      configuration: json.configuration,
     });
+
+    return model;
   }
 
-  static fetchGeneral() {
-    return ajax("/admin/dashboard/general.json").then((json) => {
-      const model = AdminDashboard.create();
+  static async fetchGeneral() {
+    const json = await ajax("/admin/dashboard/general.json");
+    const model = AdminDashboard.create();
 
-      const attributes = {};
-      GENERAL_ATTRIBUTES.forEach((a) => (attributes[a] = json[a]));
+    const attributes = {};
+    GENERAL_ATTRIBUTES.forEach((a) => (attributes[a] = json[a]));
 
-      model.setProperties({
-        reports: json.reports,
-        attributes,
-        loaded: true,
-      });
-
-      return model;
+    model.setProperties({
+      reports: json.reports,
+      attributes,
+      loaded: true,
     });
+
+    return model;
   }
 
-  static fetchProblems() {
-    return ajax("/admin/dashboard/problems.json").then((json) => {
-      const model = AdminDashboard.create(json);
-      model.set("loaded", true);
-      return model;
-    });
+  static async fetchProblems() {
+    const json = await ajax("/admin/dashboard/problems.json", { type: "POST" });
+    const model = AdminDashboard.create(json);
+
+    model.set("loaded", true);
+
+    return model;
   }
 }

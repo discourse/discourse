@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Bookmarking posts and topics", type: :system do
+describe "Bookmarking posts and topics" do
   fab!(:topic)
   fab!(:topic_2, :topic)
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
@@ -67,10 +67,6 @@ describe "Bookmarking posts and topics", type: :system do
     bookmark_menu.click_menu_option("custom")
     expect(bookmark_modal).to be_open
 
-    # NOTE: (martin) Not sure why, but I need to click this twice for the panel to open :/
-    bookmark_modal.open_options_panel
-    bookmark_modal.open_options_panel
-
     expect(bookmark_modal).to have_auto_delete_preference(
       Bookmark.auto_delete_preferences[:on_owner_reply],
     )
@@ -79,7 +75,6 @@ describe "Bookmarking posts and topics", type: :system do
     expect(topic_page).to have_post_bookmarked(post_2, with_reminder: false)
     topic_page.click_post_action_button(post_2, :bookmark)
     bookmark_menu.click_menu_option("edit")
-    expect(bookmark_modal).to have_open_options_panel
     expect(bookmark_modal).to have_auto_delete_preference(
       Bookmark.auto_delete_preferences[:clear_reminder],
     )
@@ -119,6 +114,21 @@ describe "Bookmarking posts and topics", type: :system do
       )
     end
 
+    it "updates the topic status and footer button when using the keyboard shortcut" do
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_no_topic_status_bookmark
+      expect(topic_page).to have_no_bookmarks(topic)
+
+      send_keys("b")
+      expect(bookmark_modal).to be_open
+      send_keys(:enter)
+      expect(bookmark_modal).to be_closed
+
+      expect(topic_page).to have_topic_status_bookmark
+      expect(topic_page).to have_topic_bookmarked(topic)
+      expect(Bookmark.exists?(bookmarkable: topic, user: current_user)).to eq(true)
+    end
+
     it "bookmark button is topic specific" do
       topic_page.visit_topic(topic_2)
       topic_page.click_topic_bookmark_button
@@ -127,6 +137,78 @@ describe "Bookmarking posts and topics", type: :system do
       # transition to another topic w/o refreshing the page
       find("a[href='/t/#{topic.id}']").click
       expect(topic_page).to have_no_bookmarks(topic)
+    end
+  end
+
+  describe "topic footer bookmark button with post bookmarks" do
+    it "shows post bookmark with submenu for a single post bookmark" do
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 1),
+      )
+
+      bookmark_menu.click_topic_bookmark_button
+      expect(bookmark_menu).to have_post_bookmark_option(post_2.post_number)
+      expect(bookmark_menu).to have_bookmark_topic_option
+    end
+
+    it "shows plural label, correct tooltip, and grouped menu for multiple bookmarks" do
+      Fabricate(:bookmark, bookmarkable: topic, user: current_user)
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 2),
+      )
+      expect(bookmark_menu).to have_topic_bookmark_button_title(
+        I18n.t("js.bookmarked.edit_bookmark", count: 2),
+      )
+
+      bookmark_menu.click_topic_bookmark_button
+      expect(bookmark_menu).to have_post_bookmark_option(post_2.post_number)
+      expect(bookmark_menu).to have_edit_topic_bookmark_option
+      expect(bookmark_menu).to have_delete_topic_bookmark_option
+      expect(bookmark_menu).to have_clear_all_option
+    end
+
+    it "navigates to the bookmarked post via submenu" do
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      bookmark_menu.click_topic_bookmark_button
+      bookmark_menu.click_post_bookmark(post_2.post_number)
+      expect(bookmark_menu).to have_post_submenu
+      bookmark_menu.click_post_submenu_option("jump")
+
+      expect(page).to have_current_path(%r{/t/.*#{topic.id}/#{post_2.post_number}})
+    end
+
+    it "deletes a single post bookmark via submenu" do
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      bookmark_menu.click_topic_bookmark_button
+      bookmark_menu.click_post_bookmark(post_2.post_number)
+      expect(bookmark_menu).to have_post_submenu
+      bookmark_menu.click_post_submenu_option("delete")
+
+      expect(topic_page).to have_no_bookmarks(topic)
+      expect(Bookmark.where(user: current_user, bookmarkable: post_2)).not_to exist
+    end
+
+    it "live updates footer button when bookmarking a post" do
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_no_bookmarks(topic)
+
+      topic_page.expand_post_actions(post)
+      topic_page.click_post_action_button(post, :bookmark)
+      expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
+
+      expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 1),
+      )
     end
   end
 
@@ -144,7 +226,6 @@ describe "Bookmarking posts and topics", type: :system do
     it "prefills the name of the bookmark and the custom reminder date and time" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("edit")
-      expect(bookmark_modal).to have_open_options_panel
       expect(bookmark_modal.name.value).to eq("test name")
       expect(bookmark_modal.existing_reminder_alert).to have_content(
         bookmark_modal.existing_reminder_alert_message(bookmark),

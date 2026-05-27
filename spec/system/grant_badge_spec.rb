@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Granting Badges", type: :system do
+describe "Granting Badges" do
   before { SiteSetting.enable_badges = true }
 
   context "when in topic" do

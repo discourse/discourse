@@ -61,8 +61,8 @@ module DiscourseAi
       Congratulations, you've now seen a small sample of what Discourse's Markdown can do! For more intricate formatting, consider exploring the advanced styling options. Remember that the key to great formatting is not just the available tools, but also the **clarity** and **readability** it brings to your readers.
     TEXT
 
-        def self.can_contact?(model_provider)
-          model_provider == "fake"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "fake"
         end
 
         def self.with_fake_content(content)
@@ -123,7 +123,8 @@ module DiscourseAi
           feature_context: nil,
           partial_tool_calls: false,
           output_thinking: false,
-          cancel_manager: nil
+          cancel_manager: nil,
+          execution_context: nil
         )
           last_call = { dialect: dialect, user: user, model_params: model_params }
           self.class.last_call = last_call
@@ -138,6 +139,14 @@ module DiscourseAi
           if block_given?
             if content.is_a?(DiscourseAi::Completions::ToolCall)
               yield(content, -> {})
+            elsif content.is_a?(Array) &&
+                  content.all? { |item| item.is_a?(DiscourseAi::Completions::ToolCall) }
+              cancel = false
+              cancel_proc = -> { cancel = true }
+              content.each do |tool_call|
+                break if cancel
+                yield(tool_call, cancel_proc)
+              end
             else
               split_indices = (1...content.length).to_a.sample(self.class.chunk_count - 1).sort
               indexes = [0, *split_indices, content.length]

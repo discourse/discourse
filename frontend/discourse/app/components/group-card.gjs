@@ -1,12 +1,12 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
-import AvatarFlair from "discourse/components/avatar-flair";
+import { trustHTML } from "@ember/template";
 import GroupInfo from "discourse/components/group-info";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const GroupCard = <template>
@@ -20,7 +20,7 @@ const GroupCard = <template>
       <div class="group-info-wrapper">
         {{#if @group.flair_url}}
           <span class="group-avatar-flair">
-            <AvatarFlair
+            <DAvatarFlair
               @flairName={{@group.name}}
               @flairUrl={{@group.flair_url}}
               @flairBgColor={{@group.flair_bg_color}}
@@ -31,40 +31,39 @@ const GroupCard = <template>
 
         <span class="group-info">
           <GroupInfo @group={{@group}} />
-          <div class="group-user-count">{{icon
+          <div class="group-user-count">{{dIcon
               "user"
             }}{{@group.user_count}}</div>
         </span>
       </div>
 
-      <div class="group-description">{{htmlSafe @group.bio_excerpt}}</div>
+      <div class="group-description">{{trustHTML @group.bio_excerpt}}</div>
 
       <div class="group-membership">
         <GroupMembershipButton
-          @tagName=""
           @model={{@group}}
           @showLogin={{routeAction "showLogin"}}
         >
           {{#if @group.is_group_owner}}
             <span class="is-group-owner">
-              {{icon "shield-halved"}}
+              {{dIcon "shield-halved"}}
               {{i18n "groups.index.is_group_owner"}}
             </span>
           {{else if @group.is_group_user}}
             <span class="is-group-member">
-              {{icon "check"}}
+              {{dIcon "check"}}
               {{i18n "groups.index.is_group_user"}}
             </span>
           {{else if @group.public_admission}}
             {{i18n "groups.index.public"}}
           {{else if @group.isPrivate}}
-            {{icon "far-eye-slash"}}
+            {{dIcon "far-eye-slash"}}
             {{i18n "groups.index.private"}}
           {{else}}
             {{#if @group.automatic}}
               {{i18n "groups.index.automatic"}}
             {{else}}
-              {{icon "ban"}}
+              {{dIcon "ban"}}
               {{i18n "groups.index.closed"}}
             {{/if}}
           {{/if}}

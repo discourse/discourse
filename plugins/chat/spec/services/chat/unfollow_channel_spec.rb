@@ -31,6 +31,14 @@ RSpec.describe Chat::UnfollowChannel do
         it "unfollows the channel" do
           expect { result }.to change { membership.reload.following }.from(true).to(false)
         end
+
+        context "when channel is starred" do
+          before { membership.update!(starred: true) }
+
+          it "unstars the channel" do
+            expect { result }.to change { membership.reload.starred }.from(true).to(false)
+          end
+        end
       end
 
       context "with no existing membership" do

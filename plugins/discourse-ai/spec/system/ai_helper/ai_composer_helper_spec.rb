@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Composer helper", type: :system do
+RSpec.describe "AI Composer helper" do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:non_member_group, :group)
   fab!(:embedding_definition)
 
-  fab!(:custom_prompts_persona) do
-    Fabricate(:ai_persona, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+  fab!(:custom_prompts_agent) do
+    Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
   end
 
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
-    SiteSetting.ai_helper_custom_prompt_persona = custom_prompts_persona.id
+    SiteSetting.ai_helper_custom_prompt_agent = custom_prompts_agent.id
     SiteSetting.ai_helper_enabled = true
     Jobs.run_immediately!
     sign_in(user)
@@ -86,27 +86,7 @@ RSpec.describe "AI Composer helper", type: :system do
         expect(ai_helper_menu).to have_custom_prompt_button_enabled
       end
 
-      xit "replaces the composed message with AI generated content" do
-        # TODO: @keegan - this is a flake
-        # Failure/Error: super
-
-        # Playwright::TimeoutError:
-        # Timeout 11000ms exceeded.
-        # Call log:
-        # - attempting click action
-        # -     2 × waiting for element to be visible, enabled and stable
-        # -       - element is not enabled
-        # -     - retrying click action
-        # -     - waiting 20ms
-        # -     2 × waiting for element to be visible, enabled and stable
-        # -       - element is not enabled
-        # -     - retrying click action
-        # -       - waiting 100ms
-        # -     21 × waiting for element to be visible, enabled and stable
-        # -        - element is not enabled
-        # -      - retrying click action
-        # -        - waiting 500ms
-
+      it "replaces the composed message with AI generated content" do
         trigger_composer_helper(input)
         ai_helper_menu.fill_custom_prompt(custom_prompt_input)
 
@@ -121,7 +101,7 @@ RSpec.describe "AI Composer helper", type: :system do
 
     context "when not a member of custom prompt group" do
       let(:mode) { DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT }
-      before { custom_prompts_persona.update!(allowed_group_ids: [non_member_group.id]) }
+      before { custom_prompts_agent.update!(allowed_group_ids: [non_member_group.id]) }
 
       it "does not show custom prompt option" do
         trigger_composer_helper(input)
@@ -198,6 +178,57 @@ RSpec.describe "AI Composer helper", type: :system do
           diff_modal.confirm_changes
           wait_for { composer.composer_input.value == proofread_text }
           expect(composer.composer_input.value).to eq(proofread_text)
+        end
+      end
+
+      it "replaces selected formatted content from rich editor as markdown" do
+        visit("/latest")
+        page.find("#create-topic").click
+
+        composer.toggle_rich_editor
+        expect(composer).to have_rich_editor_active
+
+        composer.focus
+        composer.type_content("This is **bld text** and *itlic text* with `cde`.")
+
+        composer.select_all
+
+        composer.click_toolbar_button("ai-helper-trigger")
+        expect(ai_helper_menu).to have_context_menu
+
+        proofread_text = "This is **bold text** and *italic text* with `code`."
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([proofread_text]) do
+          ai_helper_menu.select_helper_model(mode)
+          diff_modal.confirm_changes
+
+          composer.toggle_rich_editor
+          expect(composer).to have_no_rich_editor_active
+
+          wait_for { composer.composer_input.value == proofread_text }
+          expect(composer.composer_input.value).to eq(proofread_text)
+        end
+      end
+
+      it "applies confirmed changes directly in the rich text editor" do
+        visit("/latest")
+        page.find("#create-topic").click
+
+        composer.toggle_rich_editor
+        expect(composer).to have_rich_editor_active
+
+        composer.focus
+        composer.type_content(input)
+
+        composer.click_toolbar_button("ai-helper-trigger")
+        expect(ai_helper_menu).to have_context_menu
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([proofread_text]) do
+          ai_helper_menu.select_helper_model(mode)
+          expect(diff_modal).to have_diff("spain", "Spain,")
+          diff_modal.confirm_changes
+          expect(composer.rich_editor).to have_css("p", text: proofread_text)
+          expect(composer.rich_editor).to have_no_text(input)
         end
       end
     end
@@ -304,6 +335,19 @@ RSpec.describe "AI Composer helper", type: :system do
 
       expect(page).to have_css(".category-chooser summary[data-name='#{suggestion}']")
     end
+
+    it "shows an error toast and closes the dropdown when no suggestions are returned" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns([])
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+      ai_suggestion_dropdown.click_suggest_category_button
+
+      expect(ai_suggestion_dropdown).to have_no_dropdown
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
   end
 
   context "when suggesting the tags with AI tag suggester" do
@@ -316,9 +360,8 @@ RSpec.describe "AI Composer helper", type: :system do
       response =
         Tag
           .take(7)
-          .pluck(:name)
-          .map { |s| { name: s, score: rand(0.0...45.0) } }
-          .sort { |h| h[:score] }
+          .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
+          .sort_by { |h| h[:score] }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       visit("/latest")
@@ -339,19 +382,64 @@ RSpec.describe "AI Composer helper", type: :system do
       response =
         Tag
           .take(7)
-          .pluck(:name)
-          .map { |s| { name: s, score: rand(0.0...45.0) } }
-          .sort { |h| h[:score] }
+          .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
+          .sort_by { |h| h[:score] }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       topic_page.visit_topic(topic)
       page.find(".edit-topic", visible: false).click
       page.find(".ai-tag-suggester-trigger").click
-      tag1_css = ".ai-tag-suggester-content btn[data-name='#{video.name}']"
-      tag2_css = ".ai-tag-suggester-content btn[data-name='#{music.name}']"
+      tag1_css = ".ai-suggestions-menu button[data-name='#{video.name}']"
+      tag2_css = ".ai-suggestions-menu button[data-name='#{music.name}']"
 
       expect(page).to have_no_css(tag1_css)
       expect(page).to have_no_css(tag2_css)
+    end
+
+    it "shows filtered suggestions when topic already has tags" do
+      response =
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      page.find(".ai-tag-suggester-trigger").click
+
+      wait_for { ai_suggestion_dropdown.has_dropdown? }
+
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{video.name}']")
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{music.name}']")
+    end
+
+    it "removes applied tag suggestions from the dropdown" do
+      response = [cloud, feedback, review].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      ai_suggestion_dropdown.click_suggest_tags_button
+      wait_for { ai_suggestion_dropdown.has_dropdown? }
+
+      ai_suggestion_dropdown.select_suggestion_by_name(cloud.name)
+
+      expect(page).to have_css(".mini-tag-chooser summary[data-name='#{cloud.name}']")
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{cloud.name}']")
+    end
+
+    it "shows an error toast when no suggestions are returned" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      ai_suggestion_dropdown.click_suggest_tags_button
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
     end
   end
 

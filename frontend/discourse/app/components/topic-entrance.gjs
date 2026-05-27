@@ -1,16 +1,16 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function entranceDate(dt, showTime) {
@@ -47,31 +47,32 @@ export default class TopicEntrance extends Component {
   _originalActiveElement = null;
   _activeButton = null;
 
-  @discourseComputed("topic.created_at")
-  createdDate(createdAt) {
-    return new Date(createdAt);
+  @computed("topic.created_at")
+  get createdDate() {
+    return new Date(this.topic?.created_at);
   }
 
-  @discourseComputed("topic.bumped_at")
-  bumpedDate(bumpedAt) {
-    return new Date(bumpedAt);
+  @computed("topic.bumped_at")
+  get bumpedDate() {
+    return new Date(this.topic?.bumped_at);
   }
 
-  @discourseComputed("createdDate", "bumpedDate")
-  showTime(createdDate, bumpedDate) {
+  @computed("createdDate", "bumpedDate")
+  get showTime() {
     return (
-      bumpedDate.getTime() - createdDate.getTime() < 1000 * 60 * 60 * 24 * 2
+      this.bumpedDate.getTime() - this.createdDate.getTime() <
+      1000 * 60 * 60 * 24 * 2
     );
   }
 
-  @discourseComputed("createdDate", "showTime")
-  topDate(createdDate, showTime) {
-    return entranceDate(createdDate, showTime);
+  @computed("createdDate", "showTime")
+  get topDate() {
+    return entranceDate(this.createdDate, this.showTime);
   }
 
-  @discourseComputed("bumpedDate", "showTime")
-  bottomDate(bumpedDate, showTime) {
-    return entranceDate(bumpedDate, showTime);
+  @computed("bumpedDate", "showTime")
+  get bottomDate() {
+    return entranceDate(this.bumpedDate, this.showTime);
   }
 
   @on("didInsertElement")
@@ -212,8 +213,8 @@ export default class TopicEntrance extends Component {
       title={{i18n "topic_entrance.jump_top_button_title"}}
       class="btn-default full jump-top"
     >
-      {{icon "backward-step"}}
-      {{htmlSafe this.topDate}}
+      {{dIcon "backward-step"}}
+      {{trustHTML this.topDate}}
     </DButton>
 
     <DButton
@@ -225,8 +226,8 @@ export default class TopicEntrance extends Component {
       title={{i18n "topic_entrance.jump_bottom_button_title"}}
       class="btn-default full jump-bottom"
     >
-      {{htmlSafe this.bottomDate}}
-      {{icon "forward-step"}}
+      {{trustHTML this.bottomDate}}
+      {{dIcon "forward-step"}}
     </DButton>
   </template>
 }

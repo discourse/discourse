@@ -19,251 +19,13 @@ module DiscourseAi
 
       class << self
         def presets
-          @presets ||=
-            begin
-              [
-                {
-                  id: "anthropic",
-                  models: [
-                    {
-                      name: "claude-opus-4-5",
-                      tokens: 200_000,
-                      display_name: "Claude 4.5 Sonnet",
-                      input_cost: 5,
-                      cached_input_cost: 0.50,
-                      cache_write_cost: 10,
-                      output_cost: 15,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "claude-sonnet-4-5",
-                      tokens: 200_000,
-                      display_name: "Claude 4.5 Sonnet",
-                      input_cost: 3,
-                      cached_input_cost: 0.30,
-                      cache_write_cost: 3.75,
-                      output_cost: 15,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "claude-haiku-4-5",
-                      tokens: 200_000,
-                      display_name: "Claude 4.5 Haiku",
-                      input_cost: 1,
-                      output_cost: 5,
-                      cached_input_cost: 0.1,
-                      cache_write_cost: 1.25,
-                      vision_enabled: true,
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer,
-                  endpoint: "https://api.anthropic.com/v1/messages",
-                  provider: "anthropic",
-                },
-                {
-                  id: "google",
-                  models: [
-                    {
-                      name: "gemini-3-pro",
-                      tokens: 800_000,
-                      endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview",
-                      display_name: "Gemini 3 Pro",
-                      input_cost: 2,
-                      output_cost: 12,
-                      cached_input_cost: 0.2,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "gemini-2.5-pro",
-                      tokens: 800_000,
-                      endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro",
-                      display_name: "Gemini 2.5 Pro",
-                      input_cost: 1.25,
-                      output_cost: 10.0,
-                      cached_input_cost: 0.125,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "gemini-2.5-flash",
-                      tokens: 800_000,
-                      endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash",
-                      display_name: "Gemini 2.5 Flash",
-                      input_cost: 0.30,
-                      output_cost: 2.50,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "gemini-2.5-flash-lite",
-                      tokens: 800_000,
-                      endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite",
-                      display_name: "Gemini 2.5 Flash Lite",
-                      input_cost: 0.1,
-                      output_cost: 0.4,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "gemini-2.5-flash-image-preview",
-                      tokens: 800_000,
-                      endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview",
-                      display_name: "Gemini 2.5 Flash Image",
-                      vision_enabled: true,
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
-                  provider: "google",
-                },
-                {
-                  id: "open_ai",
-                  models: [
-                    {
-                      name: "gpt-5.1",
-                      tokens: 400_000,
-                      display_name: "GPT-5.1",
-                      input_cost: 1.25,
-                      cached_input_cost: 0.125,
-                      output_cost: 10,
-                      max_output_tokens: 128_000,
-                      endpoint: "https://api.openai.com/v1/responses",
-                      vision_enabled: true,
-                      provider_params: {
-                        enable_responses_api: true,
-                      },
-                    },
-                    {
-                      name: "gpt-5-mini",
-                      tokens: 400_000,
-                      display_name: "GPT-5 Mini",
-                      input_cost: 0.25,
-                      cached_input_cost: 0.025,
-                      output_cost: 2.0,
-                      max_output_tokens: 128_000,
-                      endpoint: "https://api.openai.com/v1/responses",
-                      provider_params: {
-                        enable_responses_api: true,
-                      },
-                    },
-                    {
-                      name: "gpt-5-nano",
-                      tokens: 400_000,
-                      display_name: "GPT-5 Nano",
-                      input_cost: 0.05,
-                      cached_input_cost: 0.005,
-                      output_cost: 0.40,
-                      max_output_tokens: 128_000,
-                      endpoint: "https://api.openai.com/v1/responses",
-                      provider_params: {
-                        enable_responses_api: true,
-                      },
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
-                  endpoint: "https://api.openai.com/v1/chat/completions",
-                  provider: "open_ai",
-                },
-                {
-                  id: "samba_nova",
-                  models: [
-                    {
-                      name: "Meta-Llama-3.3-70B-Instruct",
-                      tokens: 131_072,
-                      display_name: "Llama 3.3 70B",
-                      input_cost: 0.60,
-                      output_cost: 1.20,
-                    },
-                    {
-                      name: "Meta-Llama-3.1-8B-Instruct",
-                      tokens: 16_384,
-                      display_name: "Llama 3.1 8B",
-                      input_cost: 0.1,
-                      output_cost: 0.20,
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::Llama3Tokenizer,
-                  endpoint: "https://api.sambanova.ai/v1/chat/completions",
-                  provider: "samba_nova",
-                },
-                {
-                  id: "mistral",
-                  models: [
-                    {
-                      name: "mistral-large-latest",
-                      tokens: 128_000,
-                      display_name: "Mistral Large",
-                    },
-                    {
-                      name: "pixtral-large-latest",
-                      tokens: 128_000,
-                      display_name: "Pixtral Large",
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::MistralTokenizer,
-                  endpoint: "https://api.mistral.ai/v1/chat/completions",
-                  provider: "mistral",
-                },
-                {
-                  id: "open_router",
-                  models: [
-                    {
-                      name: "x-ai/grok-4",
-                      tokens: 131_072,
-                      display_name: "xAI Grok 4",
-                      input_cost: 3,
-                      output_cost: 15,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "deepseek/deepseek-r1-0528:free",
-                      tokens: 163_000,
-                      display_name: "DeepSeek R1 0528 - free",
-                    },
-                    {
-                      name: "meta-llama/llama-3.3-70b-instruct",
-                      tokens: 131_072,
-                      display_name: "Llama 3.3 70B Instruct",
-                      input_cost: 0.05,
-                      output_cost: 0.25,
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
-                  endpoint: "https://openrouter.ai/api/v1/chat/completions",
-                  provider: "open_router",
-                },
-                {
-                  id: "groq",
-                  models: [
-                    {
-                      name: "openai/gpt-oss-120b",
-                      tokens: 131_072,
-                      display_name: "GPT-OSS 120B",
-                      input_cost: 0.15,
-                      output_cost: 0.75,
-                      max_output_tokens: 65_536,
-                    },
-                    {
-                      name: "openai/gpt-oss-20b",
-                      display_name: "GPT-OSS 20B",
-                      tokens: 131_072,
-                      input_cost: 0.1,
-                      output_cost: 0.5,
-                      max_output_tokens: 65_536,
-                    },
-                  ],
-                  tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
-                  endpoint: "https://api.groq.com/openai/v1/chat/completions",
-                  provider: "groq",
-                },
-              ]
-            end
+          LlmPresets.all
         end
 
         def provider_names
           providers = %w[
             aws_bedrock
+            aws_bedrock_converse
             anthropic
             vllm
             hugging_face
@@ -349,8 +111,7 @@ module DiscourseAi
             return new(dialect_klass, nil, llm_model, gateway: @canned_response)
           end
 
-          model_provider = llm_model.provider
-          gateway_klass = DiscourseAi::Completions::Endpoints::Base.endpoint_for(model_provider)
+          gateway_klass = DiscourseAi::Completions::Endpoints::Base.endpoint_for(llm_model)
 
           new(dialect_klass, gateway_klass, llm_model)
         end
@@ -375,6 +136,7 @@ module DiscourseAi
       # @param output_thinking { Boolean - Optional } - If true, the completion will return the thinking output for thinking models.
       # @param response_format { Hash - Optional } - JSON schema passed to the API as the desired structured output.
       # @param [Experimental] extra_model_params { Hash - Optional } - Other params that are not available accross models. e.g. response_format JSON schema.
+      # @param execution_context { DiscourseAi::Completions::ExecutionContext - Optional } - Explicit per-call context for token tracking and audit logging.
       #
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
       #
@@ -395,6 +157,7 @@ module DiscourseAi
         response_format: nil,
         extra_model_params: nil,
         cancel_manager: nil,
+        execution_context: nil,
         &partial_read_blk
       )
         self.class.record_prompt(
@@ -416,8 +179,10 @@ module DiscourseAi
 
         model_params = { max_tokens: max_tokens, stop_sequences: stop_sequences }
 
-        model_params[:temperature] = temperature if temperature
-        model_params[:top_p] = top_p if top_p
+        if SiteSetting.ai_llm_temperature_top_p_enabled
+          model_params[:temperature] = temperature if temperature
+          model_params[:top_p] = top_p if top_p
+        end
 
         # internals expect symbolized keys, so we normalize here
         response_format =
@@ -455,6 +220,7 @@ module DiscourseAi
           partial_tool_calls: partial_tool_calls,
           output_thinking: output_thinking,
           cancel_manager: cancel_manager,
+          execution_context:,
           &partial_read_blk
         )
       end

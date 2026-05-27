@@ -36,7 +36,7 @@ class DiscourseAutomation::Destroy
   def log_action(automation:, guardian:)
     StaffActionLogger.new(guardian.user).log_custom(
       "delete_automation",
-      **automation.slice(:id, :name, :script, :trigger),
+      automation.slice(:id, :name, :script, :trigger).compact_blank,
     )
   end
 

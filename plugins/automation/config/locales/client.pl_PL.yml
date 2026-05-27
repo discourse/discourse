@@ -5,11 +5,20 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Wyzwalanie automatyzacji za pomocą API"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: utwórz automatyzację
+            update_automation: aktualizuj automatyzację
             delete_automation: usuń automatyzację
     discourse_automation:
       title: Automatyzacja
@@ -60,13 +69,19 @@ pl_PL:
             label: Treść
           delay:
             label: Opóźnienie (minuty)
-          prefers_encrypt:
-            label: Szyfruje PW, jeśli jest to dostępne
         group:
           label: Grupa
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorie
+              description: Aktywuj tylko wtedy, gdy oflagowany temat znajduje się w tych kategoriach
+            tags:
+              label: Tagi
+              description: Aktywuj tylko wtedy, gdy oflagowany temat zawiera którykolwiek z tych tagów
         not_found: Nie można znaleźć wyzwalacza `%{trigger}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         user_badge_granted:
           fields:
@@ -175,13 +190,13 @@ pl_PL:
               description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy dokładnie do kategorii określonych powyżej.
             restricted_archetype:
               label: Typ tematu
-              description: Opcjonalnie, zezwól na wyzwalanie tylko w tematach lub wiadomościach osobistych.
+              description: Opcjonalnie, zezwól na wyzwalanie tylko w tematach lub prywatnych wiadomościach.
             restricted_groups:
               label: Ograniczone grupy
               description: Opcjonalne, uruchomi się tylko wtedy, gdy użytkownik postu należy do jednej z tych grup
             restricted_inbox_groups:
               label: Ograniczone grupy skrzynek odbiorczych
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy tematem posta jest wiadomość prywatna w jednej ze skrzynek odbiorczych grupy
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy tematem wpisu jest prywatna wiadomość w jednej ze skrzynek odbiorczych grupy
             excluded_groups:
               label: Wykluczone grupy
               description: Opcjonalnie, pomiń wyzwalacz, jeśli użytkownik postu należy do którejkolwiek z tych grup
@@ -202,9 +217,6 @@ pl_PL:
               description: "Opcjonalnie, ogranicz wyzwalanie tylko do postów z tymi funkcjami"
           created: Utworzono
           edited: Edytowany
-          topics: Wszystkie tematy
-          personal_messages: Wiadomości osobiste
-          public_topics: Tematy publiczne (wyklucz wszystkie bezpieczne kategorie)
           with_images: Obrazy
           with_links: Linki
           with_code: Kod
@@ -277,6 +289,14 @@ pl_PL:
               label: Tagi
               description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Szablon wiadomości e-mail
+              description: Obsługuje symbole zastępcze automatyzacji
+            recipients:
+              label: Odbiorcy
+              description: Użytkownicy lub adresy e-mail, na które należy wysyłać powiadomienia
         not_found: Nie można znaleźć skryptu `%{script}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         zapier_webhook:
           fields:
@@ -424,6 +444,13 @@ pl_PL:
           fields:
             custom_field_name:
               label: "Nazwa niestandardowego pola użytkownika"
+        set_topic_timer:
+          title: Ustaw minutnik tematu
+          fields:
+            type:
+              label: Typ minutnika
+            duration:
+              label: Czas trwania minutnika
       unnamed_automation: "Automatyzacja bez nazwy"
       models:
         script:
@@ -436,6 +463,11 @@ pl_PL:
           runs_today: "%{count} dzisiaj"
           runs_this_week: "%{count} w tym tygodniu"
           runs_this_month: "%{count} w tym miesiącu"
+          recent_errors:
+            one: "%{count} błąd ostatnio"
+            few: "%{count} błędy ostatnio"
+            many: "%{count} błędów ostatnio"
+            other: "%{count} błędów ostatnio"
           runs:
             label: Uruchomiona
           name:

@@ -1,13 +1,13 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
-import { isiPad } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 
 @classNameBindings(
@@ -24,21 +24,29 @@ import Composer from "discourse/models/composer";
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
+  @service appEvents;
+  @service capabilities;
+
   elementId = "reply-control";
 
-  @discourseComputed("composer.action")
-  prefixedComposerAction(action) {
-    return action ? `composer-action-${dasherize(action)}` : "";
+  @computed("composer.action")
+  get prefixedComposerAction() {
+    return this.composer?.action
+      ? `composer-action-${dasherize(this.composer?.action)}`
+      : "";
   }
 
-  @discourseComputed("currentUser.primary_group_name")
-  currentUserPrimaryGroupClass(primaryGroupName) {
-    return primaryGroupName && `group-${primaryGroupName}`;
+  @computed("currentUser.primary_group_name")
+  get currentUserPrimaryGroupClass() {
+    return (
+      this.currentUser?.primary_group_name &&
+      `group-${this.currentUser?.primary_group_name}`
+    );
   }
 
-  @discourseComputed("composer.composeState")
-  composeState(composeState) {
-    return composeState || Composer.CLOSED;
+  @computed("composer.composeState")
+  get composeState() {
+    return this.composer?.composeState || Composer.CLOSED;
   }
 
   keyUp() {
@@ -65,6 +73,13 @@ export default class ComposerBody extends Component {
     });
   }
 
+  @observes("composeState")
+  _onComposerOpen() {
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
+    }
+  }
+
   composerResized() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -76,16 +91,16 @@ export default class ComposerBody extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    const triggerOpen = () => {
-      if (this.get("composer.composeState") === Composer.OPEN) {
-        this.appEvents.trigger("composer:opened");
-      }
-    };
-    triggerOpen();
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
+    }
 
     this.element.addEventListener("transitionend", (event) => {
-      if (event.propertyName === "height") {
-        triggerOpen();
+      if (
+        event.propertyName === "height" ||
+        event.propertyName === "max-width"
+      ) {
+        this.composerResized();
       }
     });
   }
@@ -105,7 +120,7 @@ export default class ComposerBody extends Component {
       this.cancelled();
     } else if (
       e.key === "Enter" &&
-      (e.ctrlKey || e.metaKey || (isiPad() && e.altKey))
+      (e.ctrlKey || e.metaKey || (this.capabilities.isIpadOS && e.altKey))
     ) {
       // Ctrl+Enter or Cmd+Enter
       // iPad physical keyboard does not offer Command or Ctrl detection

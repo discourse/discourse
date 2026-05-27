@@ -75,7 +75,7 @@ function withGroupMessagesSetup(needs) {
 
   needs.pretender((server, helper) => {
     server.get("/tags/personal_messages/:username.json", () => {
-      return helper.response({ tags: [{ id: "tag1" }] });
+      return helper.response({ tags: [{ id: 1, name: "tag1" }] });
     });
 
     server.get("/t/13.json", () => {
@@ -908,8 +908,8 @@ acceptance(
 
       const tags = selectKit("#reply-control .mini-tag-chooser");
       await tags.expand();
-      await tags.selectRowByValue("monkey");
-      await tags.selectRowByValue("gazelle");
+      await tags.selectRowByName("monkey");
+      await tags.selectRowByName("gazelle");
 
       await click("#reply-control .save-or-cancel button");
 

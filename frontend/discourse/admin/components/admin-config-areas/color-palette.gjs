@@ -6,12 +6,12 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import ColorPaletteEditor from "discourse/admin/components/color-palette-editor";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasColorPalette extends Component {
@@ -261,7 +261,7 @@ export default class AdminConfigAreasColorPalette extends Component {
     <div class="admin-config-area__primary-content">
       <div class="admin-config-color-palettes__back">
         <LinkTo @route="adminConfig.colorPalettes">
-          {{icon "angle-left"}}
+          {{dIcon "angle-left"}}
           {{i18n "admin.customize.colors.back_to_colors"}}
         </LinkTo>
       </div>
@@ -282,10 +282,11 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @validation="required"
                 @format="full"
                 @onSet={{this.handleNameChange}}
+                @type="input"
                 as |field|
               >
                 <div class="admin-config-color-palettes__name-control">
-                  <field.Input />
+                  <field.Control />
                   <DButton
                     class="btn-primary admin-config-color-palettes__save-name"
                     @icon="check"
@@ -329,7 +330,7 @@ export default class AdminConfigAreasColorPalette extends Component {
           </div>
           {{#if this.installedWithTheme}}
             <div class="admin-config-color-palettes__theme-owner">
-              {{icon "circle-info"}}
+              {{dIcon "circle-info"}}
               <span>{{i18n "admin.customize.theme_owner"}}
                 <LinkTo
                   @route="adminCustomizeThemes.show"
@@ -359,9 +360,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                   }}
                   @format="full"
                   @onSet={{this.handleDefaultLightOnThemeChange}}
+                  @type="toggle"
                   as |field|
                 >
-                  <field.Toggle />
+                  <field.Control />
                 </form.Field>
               </form.Row>
               <form.Row>
@@ -377,9 +379,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                   }}
                   @format="full"
                   @onSet={{this.handleDefaultDarkOnThemeChange}}
+                  @type="toggle"
                   as |field|
                 >
-                  <field.Toggle />
+                  <field.Control />
                 </form.Field>
               </form.Row>
               <form.Row>
@@ -394,9 +397,10 @@ export default class AdminConfigAreasColorPalette extends Component {
                   }}
                   @format="full"
                   @onSet={{this.handleUserSelectableChange}}
+                  @type="toggle"
                   as |field|
                 >
-                  <field.Toggle />
+                  <field.Control />
                 </form.Field>
               </form.Row>
             </:content>
@@ -410,14 +414,15 @@ export default class AdminConfigAreasColorPalette extends Component {
                 @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
                 @showTitle={{false}}
                 @format="full"
+                @type="custom"
                 as |field|
               >
-                <field.Custom>
+                <field.Control>
                   <ColorPaletteEditor
                     @colors={{transientData.colors}}
                     @onColorChange={{this.onColorChange}}
                   />
-                </field.Custom>
+                </field.Control>
               </form.Field>
             </:content>
           </AdminConfigAreaCard>

@@ -15,14 +15,15 @@ Propshaft::Helper.prepend(
       begin
         super
       rescue Propshaft::MissingAssetError => e
-        if Rails.env.development?
+        if Rails.env.test?
+          # Assets might not be compiled in test mode. Just return a fake path
+          "/assets/#{path.sub(".", "-aaaaaaaa.")}"
+        elsif Rails.env.development?
           # Ember-cli might've replaced the assets
           Rails.application.assets.load_path.send(:clear_cache)
           attempts += 1
           retry if attempts < 3
-        elsif Rails.env.test?
-          # Assets might not be compiled in test mode. Just return a fake path
-          "/assets/#{path.sub(".", "-aaaaaaaa.")}"
+          raise e
         else
           raise e
         end
@@ -33,6 +34,14 @@ Propshaft::Helper.prepend(
 
 Propshaft::Compiler::SourceMappingUrls.prepend(
   Module.new do
+    def compile(asset, input)
+      if asset.logical_path.to_s.include?(".digested.")
+        input
+      else
+        super
+      end
+    end
+
     def source_mapping_url(*args)
       # Propshaft insists on converting sourcemap URLs to absolute paths. We want to keep
       # relative paths so that we can serve assets from different subdirectories without needing

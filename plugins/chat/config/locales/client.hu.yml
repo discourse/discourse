@@ -44,6 +44,15 @@ hu:
           one: "%{formatted_number} csevegőüzenet"
           other: "%{formatted_number} csevegőüzenet"
     chat:
+      edit_category:
+        tab_title: "Csevegés"
+        channel: "Csatorna"
+        description: "Leírás"
+        actions: "Műveletek"
+        settings: "Beállítások"
+        no_channels: "Nincsenek ehhez a kategóriához tartozó csevegőcsatornák."
+        no_channels_body: "Kategóriánként több csatorna is létrehozható, amelyeket a kategória biztonsági beállításai alapján ugyanazok a tagok érhetnek el. <a href='%{chatBrowseUrl}'>Hozzon létre egy csevegőcsatornát</a>."
+        include_subcategories: "Alkategória-csatornák belefoglalása"
       text_copied: Szöveg vágólapra másolva
       link_copied: Hivatkozás vágólapra másolva
       back_to_forum: "Fórum"
@@ -58,8 +67,21 @@ hu:
       cancel: "Mégse"
       cancel_reply: "Válasz elvetése"
       chat_channels: "Csatornák"
+      starred: "Csillagozott"
+      starred_channels: "Csillagozott csatornák"
+      starred_channels_empty: "Még nem csillagozott meg egyetlen csatornát sem. Csillagozd meg a csatornákat, hogy itt lásd őket a gyors hozzáférés érdekében."
+      pinned_messages:
+        title: "Rögzített üzenetek"
+        close: "Rögzített üzenetek bezárása"
+        pinned_by_you: "Általad rögzített"
+        pinned_by_user: "%{username} által rögzítve"
+      no_pinned_messages: "Nincs rögzített üzenet ebben a csatornában."
+      pin_message: "Üzenet rögzítése"
+      unpin_message: "Üzenet rögzítésének feloldása"
+      pinned: "Kiemelt"
       browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
+      open_channel_menu: "Csatornamenü megnyitása"
       move_to_channel:
         title: "Üzenetek áthelyezése a csatornába"
         instructions:
@@ -74,13 +96,19 @@ hu:
         title: "Csatornabeállítások"
         edit: "Szerkesztés"
         add: "Hozzáadás"
+        star_channel: "Csillagcsatorna"
+        unstar_channel: "Csillag eltávolítása a csatornáról"
         close_channel: "Csatorna bezárása"
         open_channel: "Csatorna megnyitása"
+        open_channel_disabled_archived: "Az archivált csatornák nem nyithatók meg újra."
+        open_channel_disabled_read_only: "Az írásvédett csatornák nem nyithatók meg újra."
         archive_channel: "Csatorna archiválása"
         delete_channel: "Csatorna törlése"
         join_channel: "Csatlakozás a csatornához"
         leave_channel: "Csatorna elhagyása"
         leave_groupchat_info: "Ha kilép ebből a csoportos csevegésből, többé nem lesz hozzáférése hozzá, és nem fog vele kapcsolatos értesítéseket kapni. Az újbóli csatlakozáshoz a csoportos csevegés egyik tagjának újbóli meghívására lesz szüksége."
+        notification_settings: "Értesítési beállítások"
+        notification_settings_context: "Értesítések"
         join: "Belépés"
         leave: "Elhagyás"
         save_label:
@@ -128,6 +156,7 @@ hu:
       email_frequency:
         description: "Csak akkor küldünk e-mailt, ha az elmúlt 15 percben nem láttuk."
         never: "Soha"
+        title: "E-mailt kérek, ha közvetlen csevegési üzenetet vagy csoportos csevegést kapok"
         when_away: "Csak ha távol van"
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
@@ -138,12 +167,11 @@ hu:
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
       send_shortcut:
+        title: "Parancsikon küldése"
         enter:
           label: "Küldés Enterrel"
-          description: "Új sor Shift + Enterrel"
         meta_enter:
           label: "Küldés %{meta_key} + Enterrel"
-          description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"
@@ -185,12 +213,12 @@ hu:
       no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
+      chat_notifications_title: "Csevegési értesítések"
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"
-        description: "Az összes nem csevegési leküldéses értesítés elküldésének letiltása"
+      personalization_title: "Személyre szabás"
       ignore_channel_wide_mention:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
-        description: "Ne küldjön értesítést a csatornaszintű említésekről (@here és @all)"
       show_thread_title_prompts:
         title: "Szál címének megjelenítése"
         description: "Javaslatok az új szálak címének megadásához."
@@ -219,7 +247,6 @@ hu:
       retry_staged_message:
         title: "Hálózati hiba"
         action: "Újraküldi?"
-      unreliable_network: "A hálózat nem megbízható, az üzenetek küldése és a piszkozat mentése lehet, hogy nem működik."
       bookmark_message: "Könyvjelző"
       bookmark_message_edit: "Könyvjelző szerkesztése"
       restore: "Törölt üzenet helyreállítása"
@@ -274,6 +301,10 @@ hu:
         yesterday: Tegnap
       search_view:
         filter_placeholder: Üzenetek keresése
+        message_result_label: "Csevegésüzenet innen: %{username}: %{preview} %{threadInfo}"
+        in_thread: "%{title} témában"
+        sr_instructions: "Az üzenet megnyitásához nyomja meg az Enter vagy a Space billentyűt. A találatok közötti navigáláshoz használja a Tab billentyűt."
+        results_list_label: "Csevegési üzenetek keresési eredményei"
       members_view:
         filter_placeholder: Tagok keresése
         add_member: Tag hozzáadása
@@ -316,6 +347,8 @@ hu:
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
         slug: Csatornaazonosító (nem kötelező)
+        emoji: Csatorna emoji (opcionális)
+        reset_emoji: Emoji visszaállítása
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása
@@ -380,6 +413,9 @@ hu:
         types:
           category: "Kategória"
           topic: "Téma"
+        emoji:
+          label: "Csatorna emoji (opcionális)"
+          reset: "Emoji visszaállítása"
       reviewable:
         type: "Csevegőüzenet"
         message_in_channel: "Csatorna"
@@ -422,6 +458,7 @@ hu:
         follow: "Belépés"
         followed: "Csatlakozott"
         mute: "Csatorna némítása"
+        unmute: "Csatorna némításának feloldása"
         threading_enabled: "Bekapcsolva"
         threading_disabled: "Kikapcsolva"
         muted_on: "Be"
@@ -446,6 +483,9 @@ hu:
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
       search:
+        short_title: Keresés
+        title: Csevegés keresése
+        aria_label: "Váltás csevegéskeresésre"
         no_results: "Nincs találat"
         sort:
           relevance: "Relevancia"
@@ -526,14 +566,15 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
+        chat_settings: "Csevegési beállítások"
         indefinitely_short: "határozatlan ideig"
-        indefinitely_long: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket határozatlan ideig megőrizzék."
+        indefinitely_long: "A %{chatSettingsLink} beállítása szerint a csatornaüzenetek határozatlan ideig megőrzésre kerülnek."
         short:
           one: "%{count} nap"
           other: "%{count} nap"
         long:
-          one: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket %{count} napig megőrizzék."
-          other: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket %{count} napig megőrizzék."
+          one: "A %{chatSettingsLink} beállítása szerint a csatornaüzenetek %{count} napig megőrzésre kerülnek."
+          other: "A %{chatSettingsLink} beállítása szerint a csatornaüzenetek %{count} napig megőrzésre kerülnek."
       flags:
         off_topic: "Ez az üzenet nem tartozik a csatorna címében meghatározott jelenlegi vitához, és valószínűleg máshová kellene áthelyezni."
         inappropriate: "Ez az üzenet olyan elemeket tartalmaz, amelyet egy értelmes ember sértőnek, gorombának vagy <a href=\"%{basePath}/guidelines\">a közösségi irányelveket</a> megszegőnek tartana."
@@ -665,7 +706,7 @@ hu:
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"
           composer_italic: "%{shortcut} Dőlt (csak a szerkesztőben)"
           composer_code: "%{shortcut} Kód (csak a szerkesztőben)"
-          drawer_open: "%{shortcut} Csevegési fiók megnyitása"
+          drawer_toggle: "%{shortcut} Csevegőfiók be- és kikapcsolása"
           drawer_close: "%{shortcut} Csevegési fiók bezárása"
           mark_all_channels_read: "%{shortcut} Összes csatorna megjelölése olvasottként"
     topic_statuses:

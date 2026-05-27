@@ -111,8 +111,8 @@ el:
   name: Greek
   nativeName: ελληνικά
 en:
-  name: English (US)
-  nativeName: English (US)
+  name: English
+  nativeName: English
 en_GB:
   name: English (UK)
   nativeName: English (UK)
@@ -353,7 +353,7 @@ nl:
 nn:
   name: Norwegian Nynorsk
   nativeName: Norsk nynorsk
-'no':
+"no":
   name: Norwegian
   nativeName: Norsk
 nr:

@@ -122,6 +122,12 @@
         "chat_watched_thread": {
           "type": "integer"
         },
+        "upcoming_change_available": {
+          "type": "integer"
+        },
+        "upcoming_change_automatically_promoted": {
+          "type": "integer"
+        },
         "assigned": {
           "type": "integer"
         },
@@ -138,6 +144,15 @@
           "type": "integer"
         },
         "circles_activity": {
+          "type": "integer"
+        },
+        "boost": {
+          "type": "integer"
+        },
+        "suggested_edit_created": {
+          "type": "integer"
+        },
+        "suggested_edit_accepted": {
           "type": "integer"
         }
       },
@@ -474,13 +489,28 @@
     "top_tags": {
       "type": "array",
       "items": {
-
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "slug"]
       }
     },
     "wizard_required": {
       "type": "boolean"
     },
     "can_associate_groups": {
+      "type": "boolean"
+    },
+    "email_configured": {
       "type": "boolean"
     },
     "topic_featured_link_allowed_category_ids": {
@@ -516,6 +546,9 @@
                 "integer",
                 "null"
               ]
+            },
+            "only_theme_color_schemes": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -687,6 +720,12 @@
                 "null"
               ]
             },
+            "topic_title_placeholder": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "has_children": {
               "type": "boolean"
             },
@@ -832,6 +871,7 @@
             "permission",
             "notification_level",
             "topic_template",
+            "topic_title_placeholder",
             "has_children",
             "subcategory_count",
             "sort_order",
@@ -951,6 +991,7 @@
     "user_fields",
     "auth_providers",
     "full_name_required_for_signup",
-    "full_name_visible_in_signup"
+    "full_name_visible_in_signup",
+    "email_configured"
   ]
 }

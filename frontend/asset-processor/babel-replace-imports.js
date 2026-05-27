@@ -1,3 +1,4 @@
+import { federatedExportNameFor } from "./federated-modules-helper";
 import rollupVirtualImports from "./rollup-virtual-imports";
 
 export default function (babel) {
@@ -12,6 +13,43 @@ export default function (babel) {
           rollupVirtualImports[moduleName] ||
           moduleName.startsWith("discourse/theme-")
         ) {
+          return;
+        }
+
+        if (moduleName.startsWith("discourse/plugins/")) {
+          const parts = moduleName.split("/");
+          path.node.source = t.stringLiteral(`discourse/plugins/${parts[2]}`);
+
+          const getFederatedExportName = (exportedName) => {
+            const localModuleName = parts.slice(3).join("/");
+            return federatedExportNameFor(localModuleName, exportedName);
+          };
+
+          const newImportSpecifiers = path.node.specifiers.map((specifier) => {
+            if (specifier.type === "ImportDefaultSpecifier") {
+              const federatedExportName = getFederatedExportName("default");
+
+              return t.importSpecifier(
+                t.identifier(specifier.local.name),
+                t.identifier(federatedExportName)
+              );
+            } else if (specifier.type === "ImportNamespaceSpecifier") {
+              const federatedExportName = getFederatedExportName("*");
+              return t.importSpecifier(
+                t.identifier(specifier.local.name),
+                t.identifier(federatedExportName)
+              );
+            } else {
+              const federatedExportName = getFederatedExportName(
+                specifier.imported.name
+              );
+              return t.importSpecifier(
+                t.identifier(specifier.local.name),
+                t.identifier(federatedExportName)
+              );
+            }
+          });
+          path.node.specifiers = newImportSpecifiers;
           return;
         }
 
@@ -36,17 +74,15 @@ export default function (babel) {
 
         const replacements = [];
 
-        const moduleBrokerLookup = t.awaitExpression(
-          t.callExpression(
+        const moduleBrokerLookup = t.callExpression(
+          t.memberExpression(
             t.memberExpression(
-              t.memberExpression(
-                t.identifier("window"),
-                t.identifier("moduleBroker")
-              ),
-              t.identifier("lookup")
+              t.identifier("window"),
+              t.identifier("moduleBroker")
             ),
-            [t.stringLiteral(moduleName)]
-          )
+            t.identifier("lookup")
+          ),
+          [t.stringLiteral(moduleName)]
         );
 
         if (properties.length) {

@@ -27,6 +27,17 @@ RSpec.describe Admin::SiteSettingsController do
           response.parsed_body["site_settings"].find { |s| s["setting"] == "max_category_nesting" },
         ).to be_nil
       end
+
+      it "does not return settings from non-configurable plugins" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        get "/admin/site_settings.json"
+
+        expect(response.status).to eq(200)
+        site_setting_names =
+          response.parsed_body["site_settings"].map { |setting| setting["setting"] }
+        expect(site_setting_names).not_to include("plugin_setting")
+      end
     end
 
     shared_examples "site settings inaccessible" do
@@ -57,6 +68,12 @@ RSpec.describe Admin::SiteSettingsController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
+      it "returns 404 when site_setting_id is not a valid site setting" do
+        put "/admin/site_settings/default_scopes/user_count.json", params: { default_scopes: "" }
+
+        expect(response.status).to eq(404)
+      end
 
       it "should return correct user count for default categories change" do
         category_id = Fabricate(:category).id
@@ -310,7 +327,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.selectable_avatars).to eq([])
       end
 
-      xit "sanitizes integer values" do
+      it "sanitizes integer values" do
         put "/admin/site_settings/suggested_topics.json", params: { suggested_topics: "1,000" }
 
         expect(response.status).to eq(204)

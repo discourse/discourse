@@ -4,8 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import DButton from "discourse/components/d-button";
+import { isExistingIconId } from "discourse/lib/icon-library";
 import { emojiUrlFor } from "discourse/lib/text";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class ReactionsReactionButton extends Component {
@@ -36,12 +37,27 @@ export default class ReactionsReactionButton extends Component {
 
     this.args.cancelCollapse();
 
+    // Anonymous users haven't authenticated yet — they can still pick a
+    // reaction, it gets deferred until login. Archived topics reject
+    // reactions server-side; closed topics still accept them.
+    if (!this.currentUser) {
+      if (this.args.post.topic?.archived) {
+        return;
+      }
+      this.args.toggleReactions(event);
+      return;
+    }
+
     const likeAction = this.args.post.likeAction;
+    if (!likeAction?.canToggle) {
+      return;
+    }
+
     const currentUserReaction = this.args.post.current_user_reaction;
     if (
       currentUserReaction &&
       !currentUserReaction.can_undo &&
-      (!likeAction || isBlank(likeAction.can_undo))
+      isBlank(likeAction.can_undo)
     ) {
       return;
     }
@@ -57,6 +73,31 @@ export default class ReactionsReactionButton extends Component {
 
     this.args.cancelExpand();
     this.args.scheduleCollapse("collapseReactionsPicker");
+  }
+
+  get likedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-liked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-liked";
+    }
+
+    return icon;
+  }
+
+  get unlikedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-unliked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-unliked";
+    }
+
+    // Not all icons have a far- version, so we need to check if it exists.
+    if (isExistingIconId(`far-${icon}`)) {
+      return `far-${icon}`;
+    }
+
+    return icon;
   }
 
   get title() {
@@ -106,7 +147,7 @@ export default class ReactionsReactionButton extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="discourse-reactions-reaction-button"
       {{on "click" this.click}}
@@ -118,7 +159,7 @@ export default class ReactionsReactionButton extends Component {
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
           @translatedTitle={{this.title}}
-          @icon={{this.siteSettings.discourse_reactions_like_icon}}
+          @icon={{this.likedIcon}}
         />
       {{else if @post.current_user_reaction}}
         <DButton
@@ -135,10 +176,7 @@ export default class ReactionsReactionButton extends Component {
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
           @translatedTitle={{this.title}}
-          @icon={{concat
-            "far-"
-            this.siteSettings.discourse_reactions_like_icon
-          }}
+          @icon={{this.unlikedIcon}}
         />
       {{/if}}
     </div>

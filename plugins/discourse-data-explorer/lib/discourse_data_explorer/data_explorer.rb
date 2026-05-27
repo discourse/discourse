@@ -28,7 +28,7 @@ module DiscourseDataExplorer
 
       query_args = {}
       begin
-        query_args = query.cast_params req_params
+        query_args = query.cast_params(req_params, opts)
       rescue ValidationError => e
         return { error: e, duration_nanos: 0 }
       end
@@ -43,17 +43,18 @@ module DiscourseDataExplorer
           DB.exec "SET LOCAL statement_timeout = 10000"
 
           # SQL comments are for the benefits of the slow queries log
-          sql = <<-SQL
-  /*
-  * DiscourseDataExplorer Query
-  * Query: /admin/plugins/explorer/queries/#{query.id}
-  * Started by: #{opts[:current_user]}
-  */
-  WITH query AS (
-  #{query.sql}
-  ) SELECT * FROM query
-  LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
-  SQL
+          started_by = opts[:current_user]&.username
+          sql = <<~SQL
+            /*
+            * DiscourseDataExplorer Query
+            * Query: /admin/plugins/discourse-data-explorer/queries/#{query.id}
+            #{"* Started by: #{started_by}" if started_by}
+            */
+            WITH query AS (
+            #{query.sql}
+            ) SELECT * FROM query
+            LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
+          SQL
 
           time_start = Time.now
 
@@ -109,8 +110,18 @@ module DiscourseDataExplorer
         },
         post: {
           class: Post,
-          fields: %i[id topic_id post_number cooked user_id],
-          include: [:user],
+          fields: %i[
+            id
+            topic_id
+            post_number
+            cooked
+            user_id
+            post_type
+            deleted_at
+            deleted_by_id
+            hidden
+          ],
+          include: [:user, { topic: :category }],
           serializer: SmallPostWithExcerptSerializer,
         },
         topic: {
@@ -150,7 +161,7 @@ module DiscourseDataExplorer
           .compact
     end
 
-    def self.add_extra_data(pg_result)
+    def self.add_extra_data(pg_result, guardian: nil)
       needed_classes = {}
       ret = {}
       col_map = {}
@@ -187,6 +198,7 @@ module DiscourseDataExplorer
         column_nums.each { |col_n| ids.merge(pg_result.column_values(col_n)) }
         ids.delete nil
         ids.map! &:to_i
+        ids = ids.take(SiteSetting.data_explorer_query_result_limit)
 
         object_class = support_info[:class]
         all_objs = object_class
@@ -194,12 +206,26 @@ module DiscourseDataExplorer
         all_objs =
           all_objs
             .select(support_info[:fields])
-            .where(id: ids.to_a.sort)
+            .where(id: ids.sort)
             .includes(support_info[:include])
             .order(:id)
 
+        if guardian
+          all_objs =
+            case cls
+            when :post
+              all_objs.select { |post| guardian.can_see_post?(post) }
+            when :topic
+              allowed_topic_ids = guardian.can_see_topic_ids(topic_ids: ids)
+              all_objs.where(id: allowed_topic_ids)
+            else
+              all_objs
+            end
+        end
+
         opts = { each_serializer: support_info[:serializer] }
         opts[:only] = support_info[:only] if support_info[:only]
+        opts[:scope] = guardian if guardian
         ret[cls] = ActiveModel::ArraySerializer.new(all_objs, **opts)
       end
       [ret, col_map]
@@ -350,7 +376,6 @@ module DiscourseDataExplorer
         "groups.default_notification_level": GroupUser.notification_levels,
         "group_histories.action": GroupHistory.actions,
         "group_users.notification_level": GroupUser.notification_levels,
-        "imap_sync_logs.level": ImapSyncLog.levels,
         "invites.emailed_status": Invite.emailed_status_types,
         "notifications.notification_type": Notification.types,
         "polls.results": Poll.results,

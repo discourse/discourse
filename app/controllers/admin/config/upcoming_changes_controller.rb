@@ -4,7 +4,9 @@ class Admin::Config::UpcomingChangesController < Admin::AdminController
   def index
     return if !request.xhr?
 
-    UpcomingChanges::List.call(service_params) do
+    filter_statuses = params[:filter_statuses]&.split(",") || []
+
+    UpcomingChanges::List.call(service_params.merge(options: { filter_statuses: })) do
       on_success { |upcoming_changes:| render(json: upcoming_changes) }
       on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
     end

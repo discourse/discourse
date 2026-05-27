@@ -8,11 +8,16 @@ class ColorSchemeSerializer < ApplicationSerializer
              :theme_id,
              :theme_name,
              :user_selectable,
-             :is_builtin_default
+             :is_builtin_default,
+             :is_dark
   has_many :colors, serializer: ColorSchemeColorSerializer, embed: :objects
 
   def theme_name
     object.theme&.name
+  end
+
+  def is_dark
+    object.is_dark?
   end
 
   def colors

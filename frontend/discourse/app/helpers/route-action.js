@@ -1,5 +1,4 @@
 /* eslint-disable ember/no-private-routing-service */
-import { A } from "@ember/array";
 import Helper from "@ember/component/helper";
 import { assert, runInDebug } from "@ember/debug";
 import { computed, get } from "@ember/object";
@@ -13,14 +12,14 @@ function getCurrentRouteInfos(router) {
 }
 
 function getRoutes(router) {
-  return A(getCurrentRouteInfos(router))
+  return getCurrentRouteInfos(router)
     .map((item) => item._route)
     .reverse();
 }
 
 function getRouteWithAction(router, actionName) {
   let action;
-  let handler = A(getRoutes(router)).find((route) => {
+  let handler = getRoutes(router).find((route) => {
     let actions = route.actions || route._actions;
     action = actions[actionName];
 

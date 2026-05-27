@@ -6,6 +6,11 @@
 
 te:
   js:
+    blocks:
+      ghost:
+        status: "స్థితి"
+        in_location: "లో"
+        failed: "విఫలం"
     number:
       format:
         separator: "."
@@ -190,7 +195,6 @@ te:
     software_update_prompt:
       message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
       dismiss: "రద్దుచేయండి"
-    bootstrap_mode: "ప్రారంభించడం"
     back_button: "వెనుకకు"
     welcome_banner:
       header:
@@ -259,8 +263,6 @@ te:
     tos: "సేవా నిబంధనలు"
     rules: "నియమాలు"
     conduct: "ప్రవర్తనా నియమావళిని"
-    mobile_view: "మొబైల్ సందర్శనం"
-    desktop_view: "డెస్క్ టాప్ సందర్శనం"
     now: "ఇప్పుడే"
     read_more: "మరింత చదవండి"
     more: "మరింత"
@@ -290,6 +292,11 @@ te:
       title: "కొత్త & చదవని విషయాలు"
       pill: "సూచించినవి"
       pm_title: "సూచించిన సందేశాలు"
+    admin_onboarding_banner:
+      select_theme:
+        enabled: "ప్రారంభించబడింది"
+      start_posting:
+        back: "వెనుకకు"
     about:
       edit: "ఈ పేజీని సవరించండి"
       simple_title: "మా సంఘం గురించి"
@@ -324,8 +331,6 @@ te:
           all_time: "ఎప్పటికీ"
     bookmarked:
       title: "బుక్‌మార్క్"
-      edit_bookmark: "బుక్‌మార్క్‌ని సవరించండి"
-      clear_bookmarks: "బుక్‌మార్క్‌లను క్లియర్ చేయండి"
       help:
         bookmark: "ఈ విషయాన్ని బుక్‌మార్క్ చేయడానికి క్లిక్ చేయండి"
         edit_bookmark: "ఈ విషయంలోని పోస్ట్‌పై బుక్‌మార్క్‌ని సవరించడానికి క్లిక్ చేయండి"
@@ -339,12 +344,12 @@ te:
       clear_reminder: "రిమైండర్‌ను క్లియర్ చేయండి"
       edit: "బుక్‌మార్క్‌ని సవరించండి"
       not_bookmarked: "ఈ పోస్ట్‌ను బుక్‌మార్క్ చేయండి"
+      topic_bookmark: "విషయం"
       remove_reminder_keep_bookmark: "రిమైండర్‌ని తీసివేసి, బుక్‌మార్క్ ఉంచండి"
       created_with_reminder: "మీరు ఈ పోస్ట్‌ను రిమైండర్‌తో బుక్‌మార్క్ చేసారు %{date}. %{name}"
       created_with_reminder_generic: "మీరు దీన్ని రిమైండర్‌తో బుక్‌మార్క్ చేసారు %{date}. %{name}"
       delete: "బుక్‌మార్క్‌ను తొలగించండి"
       confirm_delete: "మీరు ఖచ్చితంగా ఈ బుక్‌మార్క్‌ని తొలగించాలనుకుంటున్నారా? రిమైండర్ కూడా తొలగించబడుతుంది."
-      confirm_clear: "మీరు ఈ విషయం నుండి మీ అన్ని బుక్‌మార్క్‌లను ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?"
       save: "సేవ్ చేయండి"
       no_timezone: 'మీరు ఇంకా సమయ మండలిని సిద్ధం చేయలేదు. మీరు రిమైండర్‌లను సిద్ధం చేయలేరు. <a href="%{basePath}/my/preferences/profile">మీ ప్రొఫైల్లో సెటప్ చేయండి</a>.'
       invalid_custom_datetime: "మీరు అందించిన తేదీ మరియు సమయం చెల్లదు, దయచేసి మళ్లీ ప్రయత్నించండి."
@@ -386,6 +391,9 @@ te:
       remove_confirmation: "మీరు ఖచ్చితంగా ఈ చిత్తుప్రతిని తొలగించాలనుకుంటున్నారా?"
       new_topic: "కొత్త విషయం చిత్తుప్రతి"
       new_private_message: "కొత్త వ్యక్తిగత సందేశ చిత్తుప్రతి"
+    embed_mode:
+      signin_flow:
+        cancel: "రద్దుచేయండి"
     topic_count_all:
       one: "%{count} కొత్త విషయం చూడండి"
       other: "%{count} కొత్త విషయాలను చూడండి"
@@ -449,7 +457,6 @@ te:
       in_reply_to: "సమాధానముగా"
       explain:
         why: "ఈ అంశం క్యూలో ఎందుకు నిలిచిందో వివరించండి"
-        title: "సమీక్షించదగిన స్కోరింగ్"
         formula: "ఫార్ములా"
         subtotal: "ఉపమొత్తం"
         total: "మొత్తం"
@@ -463,10 +470,8 @@ te:
           title: "ఫిర్యాదులు చారిత్రాత్మకంగా అంగీకరించబడిన సభ్యులకు బోనస్ ఇవ్వబడుతుంది."
         trust_level_bonus:
           name: "విశ్వసనీయ స్థాయి"
-          title: "అధిక విశ్వసనీయ స్థాయి సభ్యులు సృష్టించిన సమీక్షించదగిన అంశాలు అధిక స్కోర్‌ను కలిగి ఉంటాయి."
         type_bonus:
           name: "టైప్ బోనస్"
-          title: "కొన్ని సమీక్షించదగిన రకాలను వారికి అధిక ప్రాధాన్యతనిచ్చేలా సిబ్బంది బోనస్ను కేటాయించవచ్చు."
       revise_and_reject_post:
         title: "సవరించండి"
         reason: "కారణం"
@@ -475,7 +480,6 @@ te:
         custom_reason: "కారణం గురించి స్పష్టమైన వివరణ ఇవ్వండి"
         other_reason: "ఇతర..."
         optional: "ఐచ్ఛికం"
-      stale_help: "ఈ సమీక్షించదగినది <b>%{username}</b> ద్వారా పరిష్కరించబడింది."
       claim_help:
         optional: "ఇతరులు దీన్ని సమీక్షించకుండా నిరోధించడానికి మీరు ఈ అంశాన్ని దావా చేయవచ్చు."
         required: "మీరు అంశాలను సమీక్షించే ముందు వాటిని తప్పనిసరిగా దావా చేయాలి."
@@ -500,7 +504,6 @@ te:
       title: "సమీక్ష"
       topic: "విషయం:"
       filtered_topic: "మీరు ఒకే విషయంలో సమీక్షించదగిన కంటెంట్‌కు ఫిల్టర్ చేసారు."
-      filtered_user: "సభ్యుడు"
       filtered_reviewed_by: "ద్వారా సమీక్షించబడింది"
       show_all_topics: "అన్ని విషయలను చూపించండి"
       deleted_post: "(పోస్ట్ తొలగించబడింది)"
@@ -625,6 +628,8 @@ te:
           noun: "సభ్యుడు"
         reviewable_post:
           title: "పోస్ట్"
+          noun: "పోస్ట్"
+        reviewable_ai_post:
           noun: "పోస్ట్"
       user_label: "సభ్యుడు"
       notes:
@@ -779,9 +784,7 @@ te:
           notification: నోటిఫికేషన్
         email:
           title: "ఈమెయిల్"
-          status: "IMAP ద్వారా %{old_emails} / %{total_emails} ఇమెయిల్‌లు సమకాలీకరించబడ్డాయి."
           enable_smtp: "SMTPని ప్రారంభించండి"
-          enable_imap: "IMAPని ప్రారంభించండి"
           test_settings: "అమరికలను పరీక్షించండి"
           save_settings: "అమరికలను సేవ్ చేయండి"
           last_updated: "చివరిగా నవీకరించబడింది:"
@@ -790,14 +793,7 @@ te:
           smtp_settings_valid: "SMTP అమరికలు చెల్లుబాటు అయ్యేవి."
           smtp_title: "SMTP"
           smtp_instructions: "మీరు సమూహం కోసం SMTPని ప్రారంభించినప్పుడు, సమూహం యొక్క ఇన్‌బాక్స్ నుండి పంపబడిన అన్ని అవుట్‌బౌండ్ ఇమెయిల్‌లు మీ ఫోరమ్ ద్వారా పంపబడిన ఇతర ఇమెయిల్‌ల కోసం కాన్ఫిగర్ చేయబడిన మెయిల్ సర్వర్‌కు బదులుగా ఇక్కడ పేర్కొన్న SMTP సెట్టింగ్‌ల ద్వారా పంపబడతాయి."
-          imap_title: "IMAP"
-          imap_additional_settings: "అదనపు అమరికలు"
-          imap_instructions: 'మీరు సమూహం కోసం IMAPని ప్రారంభించినప్పుడు, ఇమెయిల్‌లు సమూహం ఇన్‌బాక్స్, అందించిన IMAP సర్వర్ మరియు మెయిల్‌బాక్స్ మధ్య సమకాలీకరించబడతాయి. IMAPని ప్రారంభించే ముందు SMTP తప్పనిసరిగా చెల్లుబాటు అయ్యే మరియు పరీక్షించబడిన ఆధారాలతో ప్రారంభించబడాలి. SMTP కోసం ఉపయోగించే ఇమెయిల్ వినియోగదారు పేరు మరియు పాస్‌వర్డ్ IMAP కోసం ఉపయోగించబడుతుంది. మరింత సమాచారం కోసం <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">డిస్కోర్స్ మెటా పై ఫీచర్ ప్రకటన చూడండి</a>.'
-          imap_alpha_warning: "హెచ్చరిక: ఇది పరీక్షించబడని ఫీచర్. అధికారికంగా Gmail మాత్రమే ఖచ్చితంగా పని చేస్తోంది. మీ స్వంత పూచీతో ఉపయోగించండి!"
-          imap_settings_valid: "IMAP సెట్టింగ్‌లు చెల్లుబాటు అయ్యేవి."
-          smtp_disable_confirm: "మీరు SMTPని నిలిపివేస్తే, అన్ని SMTP మరియు IMAP సెట్టింగ్‌లు రీసెట్ చేయబడతాయి మరియు అనుబంధిత కార్యాచరణ నిలిపివేయబడుతుంది. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-          imap_disable_confirm: "మీరు IMAPని నిలిపివేస్తే, అన్ని IMAP సెట్టింగ్‌లు రీసెట్ చేయబడతాయి మరియు అనుబంధిత కార్యాచరణ నిలిపివేయబడుతుంది. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-          imap_mailbox_not_selected: "మీరు ఈ IMAP కాన్ఫిగరేషన్ కోసం తప్పనిసరిగా మెయిల్‌బాక్స్‌ని ఎంచుకోవాలి లేదా మెయిల్‌బాక్స్‌లు ఏవీ సమకాలీకరించబడవు!"
+          additional_settings: "అదనపు అమరికలు"
           prefill:
             title: "సెట్టింగ్‌లతో ముందుగా పూరించండి:"
             gmail: "జి మెయిల్"
@@ -807,9 +803,6 @@ te:
             title: "ఆధారాలు"
             smtp_server: "SMTP సర్వర్"
             smtp_port: "SMTP పోర్ట్"
-            imap_server: "IMAP సర్వర్"
-            imap_port: "IMAP పోర్ట్"
-            imap_ssl: "IMAP కోసం SSLని ఉపయోగించండి"
             username: "సభ్యనామం"
             password: "సంకేతపదం"
           settings:
@@ -818,10 +811,6 @@ te:
             allow_unknown_sender_topic_replies_hint: "సమూహ విషయాలకు ప్రత్యుత్తరం ఇవ్వడానికి తెలియని పంపినవారిని అనుమతించండి. ఇది ప్రారంభించబడకపోతే, విషయానికి ఇప్పటికే ఆహ్వానించబడని ఇమెయిల్ చిరునామాల నుండి ప్రత్యుత్తరాలు కొత్త విషయాన్ని సృష్టిస్తాయి."
             from_alias: "అలియాస్ నుండి"
             from_alias_hint: "సమూహ SMTP ఇమెయిల్‌లను పంపేటప్పుడు చిరునామా నుండి ఉపయోగించే మారుపేరు. మెయిల్ ప్రొవైడర్లందరూ దీనికి మద్దతు ఇవ్వకపోవచ్చని గమనించండి. దయచేసి మీ మెయిల్ ప్రొవైడర్ డాక్యుమెంటేషన్‌ను సంప్రదించండి."
-          mailboxes:
-            synchronized: "సమకాలీకరించబడిన మెయిల్‌బాక్స్"
-            none_found: "ఈ ఇమెయిల్ ఖాతాలో మెయిల్‌బాక్స్‌లు ఏవీ కనుగొనబడలేదు."
-            disabled: "నిలిపివేయబడింది"
         membership:
           title: సభ్యత్వం
           access: యాక్సెస్
@@ -1034,7 +1023,6 @@ te:
         one: "వర్గాలు (%{count} మరిన్ని)…"
         other: "వర్గాలు (%{count} మరిన్ని)…"
     ip_lookup:
-      title: IP చిరునామా శోధన
       hostname: హోస్ట్ పేరు
       location: ప్రాంతం
       location_not_found: (తెలీని)
@@ -1072,6 +1060,9 @@ te:
       new_private_message: "కొత్త సందేశం"
       private_message: "సందేశం"
       private_messages: "సందేశాలు"
+      upcoming_changes:
+        for_user:
+          enabled: "ప్రారంభించబడిందా?"
       user_notifications:
         filters:
           filter_by: "ద్వారా ఫిల్టర్"
@@ -1092,7 +1083,6 @@ te:
         normal_option: "సాధారణ"
         normal_option_title: "ఈ సభ్యుడు మీకు ప్రత్యుత్తరం ఇచ్చినా, మిమ్మల్ని కోట్ చేసినా లేదా మీ గురించి ప్రస్తావించినా మీకు తెలియజేయబడుతుంది."
       notification_schedule:
-        title: "నోటిఫికేషన్ షెడ్యూల్"
         label: "అనుకూల నోటిఫికేషన్ షెడ్యూల్‌ని ప్రారంభించండి"
         tip: "ఈ గంటల వెలుపల మీ నోటిఫికేషన్లు పాజ్ చేయబడతాయి."
         midnight: "అర్ధరాత్రి"
@@ -1133,13 +1123,8 @@ te:
       notifications: "నోటిఫికేషన్‌లు"
       statistics: "గణాంకాలు"
       desktop_notifications:
-        label: "ప్రత్యక్ష నోటిఫికేషన్‌లు"
         not_supported: "ఈ బ్రౌజర్‌లో నోటిఫికేషన్‌లకు మద్దతు లేదు. క్షమించండి."
-        perm_default: "నోటిఫికేషన్‌లను ఆన్ చేయండి"
-        perm_denied_btn: "అనుమతి నిరాకరించబడింది"
         perm_denied_expl: "మీరు నోటిఫికేషన్‌ల కోసం అనుమతిని నిరాకరించారు. మీ బ్రౌజర్ సెట్టింగ్‌ల ద్వారా నోటిఫికేషన్‌లను అనుమతించండి."
-        disable: "నోటిఫికేషన్‌లను నిలిపివేయండి"
-        enable: "నోటిఫికేషన్‌లను ప్రారంభించండి"
         each_browser_note: "గమనిక: మీరు ఉపయోగించే ప్రతి బ్రౌజర్‌లో మీరు ఈ సెట్టింగ్‌ని మార్చాలి. మీరు ఈ సెట్టింగ్‌తో సంబంధం లేకుండా మెను నుండి నోటిఫికేషన్‌లను పాజ్ చేస్తే అన్ని నోటిఫికేషన్‌లు నిలిపివేయబడతాయి."
         consent_prompt: "వ్యక్తులు మీ పోస్ట్‌లకు ప్రత్యుత్తరం ఇచ్చినప్పుడు మీకు ప్రత్యక్ష నోటిఫికేషన్‌లు కావాలా?"
       dismiss: "రద్దుచేయండి"
@@ -1267,9 +1252,6 @@ te:
         flags_given:
           one: '<span class="%{className}">%{count}</span> సహాయక ఫిర్యాదు'
           other: '<span class="%{className}">%{count}</span> సహాయక ఫిర్యాదులు'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> ఫిర్యాదులు ఉన్న పోస్ట్'
-          other: '<span class="%{className}">%{count}</span> ఫిర్యాదులు ఉన్న పోస్ట్‌లు'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> తొలగించిన పోస్ట్'
           other: '<span class="%{className}">%{count}</span> తొలగించబడిన పోస్ట్‌లు'
@@ -1318,7 +1300,9 @@ te:
         tags: "ట్యాగులు"
         interface: "ప్రదర్శన"
         apps: "యాప్‌లు"
-        navigation_menu: "నావిగేషన్ మెను"
+      calendar_subscriptions:
+        copied: "కాపీ చేయబడింది!"
+        add_to_google: "గూగుల్ క్యాలెండర్"
       change_password:
         success: "(ఈమెయిల్ పంపిన)"
         in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"
@@ -1860,6 +1844,7 @@ te:
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
+      required: అవసరం
       errors:
         required: "అవసరం"
         invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
@@ -2158,6 +2143,8 @@ te:
       medium_dark_tone: మధ్యస్థ ముదురు చర్మపు రంగు
       dark_tone: ముదురు చర్మపు రంగు
       default: అనుకూల ఎమోజీలు
+    filter_input:
+      clear: "ఫిల్టర్‌ని క్లియర్ చేయండి"
     shared_drafts:
       title: "షేర్ చేసిన చిత్తుప్రతులు"
       notice: "షేర్ చేయబడిన చిత్తుప్రతులను ప్రచురించగల వారికి మాత్రమే ఈ విషయం కనిపిస్తుంది."
@@ -2267,6 +2254,10 @@ te:
       upload_title: "ఎగుమతించు"
       upload_description: "ఎగుమతి వివరణ ఇక్కడ రాయండి"
       list_item: "జాబితా అంశం"
+      wrap_modal:
+        attribute_key: "కీ"
+        attribute_value: "విలువ"
+        apply: "దరఖాస్తు చేసుకోండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
       modal_ok: "సరే"
@@ -2312,9 +2303,12 @@ te:
       ignore: "విస్మరించండి"
       image_alt_text:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
+      image: "బొమ్మ"
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
       link_toolbar:
+        link_copied: "లింక్ కాపీ చేయబడింది!"
+      onebox_toolbar:
         link_copied: "లింక్ కాపీ చేయబడింది!"
     notifications:
       tooltip:
@@ -2434,7 +2428,6 @@ te:
         membership_request_consolidated: "కొత్త సభ్యత్వ అభ్యర్థనలు"
         reaction: "కొత్త స్పందన"
         votes_released: "ఓటు విడుదలైంది"
-        new_features: "కొత్త డిస్కోర్స్ ఫీచర్‌లు విడుదల చేయబడ్డాయి!"
         admin_problems: "మీ సైట్ డాష్‌బోర్డ్‌లో కొత్త సలహా"
     upload_selector:
       delete: "తొలగించు"
@@ -2562,8 +2555,7 @@ te:
         max_views:
           placeholder: గరిష్ట
           aria_label: గరిష్ట వీక్షణల ద్వారా ఫిల్టర్ చేయండి
-        additional_options:
-          label: "పోస్ట్ కౌంట్ మరియు విషయం వీక్షణల వారీగా ఫిల్టర్ చేయండి"
+    header_panel: "హెడర్"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
@@ -2625,10 +2617,10 @@ te:
         confirm: "నిర్ధారించండి"
         select_all: "అన్ని ఎంచుకోండి"
         clear_all: "అన్నీ క్లియర్ చేయండి"
-        unlist_topics: "విషయాలను జాబితా నుండి తీసివేయండి"
-        relist_topics: "విషయాలను మళ్లీ జాబితా చేయండి"
         reset_bump_dates: "బంప్ తేదీలను రీసెట్ చేయండి"
-        delete: "విషయాలను తొలగించండి"
+        delete_topics_count:
+          one: "విషయాన్ని తొలగించండి"
+          other: "విషయాలను తొలగించండి"
         dismiss: "రద్దుచేయండి"
         dismiss_read: "చదవనివన్నీ తీసివేయండి"
         dismiss_read_with_selected:
@@ -2658,33 +2650,20 @@ te:
           other: "కొత్త విషయాలను తీసివేయండి (%{count})"
         toggle: "విషయాల బహుళ ఎంపికలు అటుఇటుచేయి"
         actions: "బహుళ చర్యలు"
-        change_category: "వర్గాన్ని సెట్ చేయండి…"
-        close_topics: "విషయాలు మూయు"
-        archive_topics: "విషయాలు కట్టకట్టు"
         move_messages_to_inbox: "ఇన్‌బాక్స్‌కి తరలించండి"
-        notification_level: "నోటిఫికేషన్‌లు…"
         change_notification_level: "నోటిఫికేషన్ స్థాయిని మార్చండి"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
-        selected:
-          one: "మీరు <b>%{count}</b> విషయం ఎంచుకున్నారు."
-          other: " మీరు <b>%{count}</b> విషయాలు ఎంచుకున్నారు."
         selected_count:
           one: "%{count} ఎంచుకోబడింది"
           other: "%{count} ఎంచుకోబడింది"
-        change_tags: "ట్యాగ్‌లను భర్తీ చేయండి"
-        append_tags: "ట్యాగ్లను జోడించండి"
-        choose_new_tags: "ఈ విషయాలకి కొత్త ట్యాగ్‌లను ఎంచుకోండి:"
-        choose_append_tags: "ఈ విషయాలకి జోడించడానికి కొత్త ట్యాగ్‌లను ఎంచుకోండి:"
-        changed_tags: "ఆ విషయాల ట్యాగ్‌లు మార్చబడ్డాయి."
-        remove_tags: "అన్ని ట్యాగ్‌లను తీసివేయండి"
-        confirm_remove_tags:
-          one: "ఈ విషయం నుండి అన్ని ట్యాగ్‌లు తీసివేయబడతాయి. ఖచ్చితమనే?"
-          other: "ఈ %{count} విషయాలు నుండి అన్ని ట్యాగ్‌లు తీసివేయబడతాయి. ఖచ్చితమనే?"
         progress:
           one: "పురోగతి: <strong>%{count}</strong> విషయం"
           other: "పురోగతి: <strong>%{count}</strong> విషయాలు"
         performing: "సమూహ కార్యకలాపాలను అమలు చేస్తోంది, దయచేసి వేచి ఉండండి…"
         completed: "సమూహ కార్యకలాపాలు విజయవంతంగా పూర్తయ్యాయి!"
+        error_topic_count:
+          one: "%{count} విషయం"
+          other: "%{count} విషయాలు"
       none:
         unread: "మీరు చదవని విషయాలు లేవు"
         unseen: "మీకు కనిపించని విషయాలేవీ లేవు."
@@ -2697,19 +2676,6 @@ te:
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
         hot: "ఏవి అగ్ర విషయాలూ లేవు."
         filter: "విషయాలూ లేవు."
-      bottom:
-        latest: "ఇంకా కొత్త విషయాలు లేవు."
-        posted: "ఇంకా రాసిన విషయాలు లేవు."
-        read: "ఇంకా చదవని విషయాలు లేవు."
-        new: "కొత్త విషయాలు లేవు."
-        unread: "ఇంకా చదవని విషయాలు లేవు."
-        unseen: "ఇంక చదవని విషయాలు లేవు."
-        category: "ఇంకా %{category} విషయాలు లేవు."
-        tag: "ఇంకా %{tag} విషయాలు లేవు."
-        top: "ఇంకా అగ్ర విషయాలు లేవు."
-        hot: "ఇంక అగ్ర విషయాలు లేవు."
-        bookmarks: "బుక్‌మార్క్ చేయబడిన విషయాలు ఏవీ లేవు."
-        filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       dismiss:
         name: "రద్దుచేయండి"
@@ -2720,25 +2686,33 @@ te:
         name: "ఆర్కైవ్ చెయ్యండి"
       move_messages_to_inbox:
         name: "ఇన్‌బాక్స్‌కి తరలించండి"
-      remove_tags:
-        name: "ట్యాగ్‌లను తీసివేయండి"
-      append_tags:
-        name: "ట్యాగ్లను జోడించండి"
-      replace_tags:
-        name: "ట్యాగ్‌లను భర్తీ చేయండి"
       delete_topics:
         name: "తొలగించండి"
       update_category:
         name: "వర్గాన్ని నవీకరించండి"
-        description: "ఎంచుకున్న విషయాలకి కొత్త వర్గాన్ని ఎంచుకోండి"
+      convert_to_public_topic:
+        name: "పబ్లిక్ విషయం చేయండి…"
+      convert_to_private_message:
+        name: "వ్యక్తిగత సందేశం చేయండి"
       reset_bump_dates:
         name: "బంప్ తేదీలను రీసెట్ చేయండి"
-        description: "విషయం బంప్ తేదీని చివరిగా సృష్టించిన పోస్ట్ తేదీకి రీసెట్ చేయండి, ఇది విషయం జాబితాలో ఆర్డర్ చేయడంపై ప్రభావం చూపుతుంది"
-      defer:
-        description: "విషయాలను చదవనివిగా గుర్తించండి"
       update_notifications:
         name: "నోటిఫికేషన్‌లను నవీకరించండి"
-        description: "నోటిఫికేషన్ స్థాయిని అనుసరించడం, ట్రాకింగ్ చేయడం, సాధారణం లేదా మ్యూట్ చేయబడిన స్థితికి మార్చండి"
+    nested_replies:
+      sort:
+        label: "క్రమబద్ధీకరించండి"
+        top: "అగ్ర"
+        new: "కొత్త"
+      load_more_children:
+        one: "మరో జవాబు ఉంది"
+        other: "ఇంకా %{count} జవాబులు ఉన్నాయి"
+      collapsed_replies:
+        one: "%{count} ప్రత్యుత్తరం"
+        other: "%{count} ప్రత్యుత్తరాలు"
+      collapse: "కుదించండి"
+      no_replies: "ఇంకా ప్రత్యుత్తరాలు లేవు."
+      ignored_post_placeholder: "[విస్మరించబడిన]"
+      pinned_reply: "పిన్ చేయబడింది"
     topic:
       filter_to:
         one: "విషయంలో %{count} పోస్ట్"
@@ -2823,9 +2797,6 @@ te:
         }
       created_at: "సృష్టించబడింది: %{date}"
       bumped_at: "తాజాది: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a> లేదా <a href='%{basePath}/latest'>తాజా విషయాలను వీక్షించండి</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a>, <a href='%{basePath}/latest'>తాజా అంశాలను వీక్షించండి</a> లేదా అగ్ర విషయాలను చూడండి:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>అన్ని ట్యాగ్‌లను బ్రౌజ్ చేయండి</a> లేదా <a href='%{basePath}/latest'>తాజా విషయాలను వీక్షించండి</a>."
       suggest_create_topic: <a href>కొత్త సంభాషణను ప్రారంభించడానికి</a> సిద్ధంగా ఉన్నారా?
       jump_reply: "పోస్ట్ యొక్క అసలు స్థానానికి వెళ్లండి"
       jump_reply_aria: "@%{username}యొక్క పోస్ట్‌ అసలు స్థానం కి వెళ్లండి"
@@ -2852,8 +2823,6 @@ te:
           12_hours: "12 గంటలు"
           24_hours: "24 గంటలు"
           custom: "అనుకూల వ్యవధి"
-      slow_mode_notice:
-        duration: "దయచేసి ఈ విషయంలోని పోస్ట్‌ల మధ్య %{duration} వేచి ఉండండి"
       topic_status_update:
         title: "టాపిక్ టైమర్"
         save: "టైమర్‌ని సెట్ చేయండి"
@@ -3177,7 +3146,7 @@ te:
       quote_edit: "సవరించండి"
       quote_edit_shortcut: "సవరించండి (లేదా e నొక్కండి)"
       quote_copy: "కోట్‌ని కాపీ చేయండి"
-      quote_copied_to_clibboard: "కోట్ క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
+      quote_copied_to_clipboard: "కోట్ క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
       quote_share: "షేర్ చేయండి"
       edit_reason: "కారణం:"
       post_number: "పోస్ట్ %{number}"
@@ -3222,6 +3191,10 @@ te:
       has_likes_title_you:
         one: "మీరు మరియు %{count} ఇతర వ్యక్తి ఈ పోస్ట్‌ను ఇష్టపడ్డారు"
         other: "మీరు మరియు %{count} ఇతర వ్యక్తులు ఈ పోస్ట్‌ను ఇష్టపడ్డారు"
+      likes_popup:
+        title:
+          one: "%{count} ఇష్టం"
+          other: "%{count} ఇష్టాలు"
       filtered_replies_hint:
         one: "ఈ పోస్ట్ మరియు దాని ప్రత్యుత్తరాన్ని వీక్షించండి"
         other: "ఈ పోస్ట్ మరియు దాని %{count} ప్రత్యుత్తరాలను వీక్షించండి"
@@ -3236,7 +3209,7 @@ te:
           edit: "సవరించండి"
           delete: "తొలగించండి"
         post_language_selector:
-          none: "ఏదీ లేదు"
+          none: "సెట్ చేయబడలేదు"
       errors:
         create: "క్షమించండి, మీ పోస్ట్‌ని సృష్టించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
         edit: "క్షమించండి, మీ పోస్ట్‌ని సవరించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
@@ -3294,8 +3267,6 @@ te:
           just_the_post: "లేదు, ఈ పోస్ట్ మాత్రమే"
         admin: "పోస్ట్ అడ్మిన్ చర్యలు"
         admin_action: "నిర్వాహకుడు"
-        permanently_delete: "శాశ్వతంగా తొలగించండి"
-        permanently_delete_confirmation: "మీరు ఖచ్చితంగా ఈ పోస్ట్‌ను శాశ్వతంగా తొలగించాలనుకుంటున్నారా? మీరు దాన్ని తిరిగి పొందలేరు."
         wiki: "వికీని చేయండి"
         unwiki: "వికీని తీసివేయండి"
         convert_to_moderator: "సిబ్బంది రంగును జోడించండి"
@@ -3394,7 +3365,6 @@ te:
         name_placeholder: "ఈ బుక్మార్క్ దేని కోసం?"
         name_input_label: "బుక్‌మార్క్ పేరు"
         set_reminder: "నాకు గుర్తు చేయండి"
-        options: "ఎంపికలు"
         actions:
           delete_bookmark:
             name: "బుక్‌మార్క్‌ను తొలగించండి"
@@ -3431,6 +3401,8 @@ te:
       back: "తిరిగి వర్గానికి"
       general: "సాధారణ"
       settings: "అమరికలు"
+      moderation: "మోడరేషన్"
+      advanced: "అధునాతన"
       topic_template: "టెంప్లేట్"
       tags: "ట్యాగులు"
       localization:
@@ -3455,6 +3427,8 @@ te:
       creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
       save_error: వర్గాన్ని సేవ్ చేయడంలో లోపం ఏర్పడింది.
       description: "వివరణ"
+      icon: "చిహ్నం"
+      emoji: "ఇమోజి"
       background_color: "రంగు"
       color_validations:
         cant_be_empty: "ఖాళీ ఉండకూడదు"
@@ -3464,11 +3438,12 @@ te:
         options:
           icon: "చిహ్నం"
           emoji: "ఇమోజి"
-      name_placeholder: "గరిష్టం ఒకటి లేదా రెండు పదాలు"
       color_placeholder: "ఏదేనీ జాల రంగు"
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
       delete_error: "ఈ వర్గం తొలగించేప్పుడు దొషం."
       no_description: "ఈ వర్గానికి వివరణ రాయండి"
+      description_expand: "మరిన్ని చూపించండి"
+      description_collapse: "తక్కువ చూపించండి"
       already_used: "ఈ రంగు వేరే వర్గం వాడింది"
       security: "సెక్యూరిటీ"
       security_add_group: "సమూహాన్ని జోడించండి"
@@ -3478,15 +3453,12 @@ te:
         reply: "ప్రత్యుత్తరం"
         create: "సృష్టించండి"
         no_groups_selected: "ఏ సమూహాలకు యాక్సెస్ మంజూరు చేయబడలేదు; ఈ వర్గం సిబ్బందికి మాత్రమే కనిపిస్తుంది."
-        everyone_has_access: 'ఈ వర్గం పబ్లిక్, ప్రతి ఒక్కరూ పోస్ట్‌లను చూడగలరు, ప్రత్యుత్తరం ఇవ్వగలరు మరియు సృష్టించగలరు. అనుమతులను పరిమితం చేయడానికి, "అందరూ" సమూహానికి మంజూరు చేయబడిన ఒకటి లేదా అంతకంటే ఎక్కువ అనుమతులను తీసివేయండి.'
         toggle_reply: "ప్రత్యుత్తర అనుమతిని టోగుల్ చేయండి"
         toggle_full: "అనుమతి సృష్టిని టోగుల్ చేయండి"
-        inherited: 'ఈ అనుమతి "అందరి నుండి" సంక్రమించబడింది'
-      special_warning: "హెచ్చరిక: ఈ వర్గం ప్రీ-సీడ్ వర్గం మరియు భద్రతా సెట్టింగ్‌లు సవరించబడవు. మీరు ఈ వర్గాన్ని ఉపయోగించకూడదనుకుంటే, దాన్ని మళ్లీ ఉపయోగించకుండా తొలగించండి."
       uncategorized_security_warning: "ఈ వర్గం ప్రత్యేకమైనది. ఇది వర్గం లేని విషయాల కోసం హోల్డింగ్ ఏరియాగా ఉద్దేశించబడింది; ఇది భద్రతా సెట్టింగ్‌లను కలిగి ఉండదు."
       uncategorized_general_warning: 'ఈ వర్గం ప్రత్యేకమైనది. వర్గాన్ని ఎంచుకోని కొత్త విషయాల కోసం ఇది డిఫాల్ట్ వర్గంగా ఉపయోగించబడుతుంది. మీరు ఈ ప్రవర్తనను నిరోధించి, వర్గ ఎంపికను నిర్బంధించాలనుకుంటే, <a href="%{settingLink}">దయచేసి ఇక్కడ సెట్టింగ్‌ని నిలిపివేయండి</a>. మీరు పేరు లేదా వివరణను మార్చాలనుకుంటే, <a href="%{customizeLink}">అనుకూలీకరించండి / వచన కంటెంట్</a>కి వెళ్లండి.'
       pending_permission_change_alert: "మీరు ఈ వర్గానికి %{group} ని జోడించలేదు; వాటిని జోడించడానికి ఈ బటన్‌ను క్లిక్ చేయండి."
-      images: "చిత్రాలు"
+      images: "స్వరూపం"
       email_in: "అనుకూల ఇన్‌కమింగ్ ఇమెయిల్ చిరునామా:"
       email_in_tooltip: "మీరు | తో బహుళ ఇమెయిల్ చిరునామాలను వేరు చేయవచ్చు."
       email_in_allow_strangers: "ఎటువంటి ఖాతాలు లేని అనామక సభ్యుల నుండి వచ్చే ఈమెయిల్లు అంగీకరించు"
@@ -3504,10 +3476,17 @@ te:
       review_group_name: "సమూహం పేరు"
       require_topic_approval: "అన్ని కొత్త విషయాలకు మోడరేటర్ ఆమోదం అవసరం"
       require_reply_approval: "అన్ని కొత్త ప్రత్యుత్తరాలకు మోడరేటర్ ఆమోదం అవసరం"
+      posting_review_modes:
+        everyone: "అందరూ"
       this_year: "ఈ సంవత్సరం"
       position: "వర్గాల పేజీలో స్థానం:"
       position_disabled: "కార్యాచరణ క్రమంలో వర్గాలు ప్రదర్శించబడతాయి. జాబితాలలోని వర్గాల క్రమాన్ని నియంత్రించడానికి, <a href='%{url}'>'స్థిర వర్గం స్థానాలు'</a> సెట్టింగ్‌ని ప్రారంభించండి."
       minimum_required_tags: "విషయంలో కనీస ట్యాగ్‌ల సంఖ్య అవసరం:"
+      none_subcategory_text: "ఏదీ లేదు"
+      visibility:
+        title: "దృశ్యమానత"
+        public: "బహిరంగం"
+        group_restricted: "అంతరంగికం"
       num_auto_bump_daily: "ప్రతిరోజూ స్వయంచాలకంగా బంప్ చేయడానికి ఓపెన్ విషయాల సంఖ్య:"
       auto_bump_cooldown_days: "అదే విషయాన్ని మళ్లీ బంప్ చేయడానికి కనీసం రోజుల అంతరం:"
       navigate_to_first_post_after_read: "విషయాలు చదివిన తర్వాత మొదటి పోస్ట్‌కి నావిగేట్ చేయండి"
@@ -3769,6 +3748,7 @@ te:
         this_month: "ఈ నెల"
         this_week: "వారం"
         today: "ఈ రోజు"
+        custom: "అనురూప"
     permission_types:
       full: "సృష్టించడం / ప్రత్యుత్తరం ఇవ్వడం / చూడడం"
       create_post: "ప్రత్యుత్తరం ఇవ్వండి / చూడండి"
@@ -3791,84 +3771,54 @@ te:
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "కీబోర్డు షార్ట్ కట్లు"
       short_title: "షార్ట్కట్లు"
+      description_header: "వివరణ"
+      key_header: "కీ"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "వెళ్లండి"
-        home: "%{shortcut} మొదటి పేజీ"
-        latest: "%{shortcut} తాజా"
-        new: "%{shortcut} కొత్త"
-        unread: "%{shortcut} చదవనవి"
-        categories: "%{shortcut} వర్గాలు"
-        top: "%{shortcut} పేజీ ఎగువకు వెళ్లండి"
-        bookmarks: "%{shortcut} బుక్‌మార్క్‌లు"
-        profile: "%{shortcut} ప్రొఫైల్"
-        messages: "%{shortcut} సందేశాలు"
-        drafts: "%{shortcut} చిత్తుప్రతులు"
-        next: "%{shortcut} తదుపరి విషయం"
-        previous: "%{shortcut} మునుపటి విషయం"
+        home: "మొదటి పేజీ"
+        latest: "తాజా"
+        new: "కొత్త"
+        unread: "చదవని"
+        unseen: "చూడనవి"
+        categories: "వర్గాలు"
+        top: "అగ్ర"
+        bookmarks: "బుక్‌మార్క్‌లు"
+        profile: "ప్రొఫైల్"
+        messages: "సందేశాలు"
+        drafts: "చిత్తుప్రతులు"
       navigation:
         title: "నావిగేషన్"
-        jump: "%{shortcut} పోస్ట్ #కి వెళ్లండి"
-        back: "%{shortcut} వెనుకకు"
-        up_down: "%{shortcut} ఎంపికను తరలించండి &uarr; &darr;"
-        open: "%{shortcut} ఎంచుకున్న విషయం తెరవండి"
-        next_prev: "%{shortcut} తదుపరి/మునుపటి విభాగం"
-        go_to_unread_post: "%{shortcut} మొదటి చదవని పోస్ట్‌కి వెళ్లండి"
+        back: "వెనుకకు"
+        up_down: "ఎంపికను తరలించండి &uarr; &darr;"
       application:
         title: "అనువర్తనం"
-        notifications: "%{shortcut} చదవని నోటిఫికేషన్‌లు"
-        user_profile_menu: "%{shortcut} సభ్యుడు మెనుని తెరవండి"
-        show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
-        search: "%{shortcut} శోధన"
-        filter_sidebar: "%{shortcut} ఫిల్టర్ సైడ్‌బార్"
-        help: "%{shortcut} కీబోర్డ్ సహాయాన్ని తెరవండి"
-        log_out: "%{shortcut} లాగ్ అవుట్"
+        search: "వెతుకు"
+        log_out: "లాగవుట్"
       composing:
         title: "కంపోజింగ్"
-        return: "%{shortcut} కంపోజర్ కి తిరిగి వెళ్ళండి"
-        fullscreen: "%{shortcut} పూర్తి స్క్రీన్ కంపోజర్"
-        insert_current_time: "%{shortcut} ప్రస్తుత సమయాన్ని చొప్పించండి"
+        preformatted: "ముందే అలంకరించిన వచనం"
+        blockquote: "బ్లాక్ కోట్"
       bookmarks:
         title: "బుక్మార్క్ చేయటం"
-        enter: "%{shortcut} సేవ్ చేసి మూసివేయండి"
-        later_today: "%{shortcut} తర్వాత, ఈరోజు"
-        later_this_week: "%{shortcut} తర్వాత, ఈ వారం"
-        tomorrow: "%{shortcut} రేపు"
-        next_week: "%{shortcut} వచ్చే వారం"
-        next_month: "%{shortcut} వచ్చే నెల"
-        next_business_week: "%{shortcut} వచ్చే వారం ప్రారంభం"
-        next_business_day: "%{shortcut} తదుపరి పనిదినం"
-        custom: "%{shortcut} అనుకూల తేదీ మరియు సమయం"
-        none: "%{shortcut} రిమైండర్ లేదు"
-        delete: "%{shortcut} బుక్‌మార్క్‌ను తొలగించండి"
+        later_today: "తరువాత, ఈ రోజు"
+        later_this_week: "తరువాత, ఈ వారం"
+        tomorrow: "రేపు"
+        next_week: "వచ్చే వారం"
+        next_month: "వచ్చే నెల"
+        next_business_day: "తదుపరి వ్యాపార రోజు"
+        custom: "అనుకూల తేదీ & సమయం"
+        delete: "బుక్‌మార్క్‌ను తొలగించండి"
       actions:
         title: "చర్యలు"
-        bookmark_topic: "%{shortcut} బుక్‌మార్క్ విషయాన్ని టోగుల్ చేయండి"
-        pin_unpin_topic: "%{shortcut} విషయం పిన్/అన్‌పిన్ చేయండి"
-        share_topic: "%{shortcut} విషయాన్ని షేర్ చేయండి"
-        share_post: "%{shortcut} పోస్ట్‌ను షేర్ చేయండి"
-        reply_as_new_topic: "%{shortcut} లింక్ చేయబడిన విషయంగా ప్రత్యుత్తరం ఇవ్వండి"
-        reply_topic: "%{shortcut} విషయానికి ప్రత్యుత్తరం ఇవ్వండి"
-        reply_post: "%{shortcut} పోస్ట్‌కి ప్రత్యుత్తరం ఇవ్వండి"
-        quote_post: "%{shortcut} కోట్ పోస్ట్"
-        like: "%{shortcut} పోస్ట్‌ను లైక్ చేయండి"
-        flag: "%{shortcut} పోస్ట్‌పై ఫిర్యాదు నమోదు"
-        bookmark: "%{shortcut} బుక్‌మార్క్ పోస్ట్"
-        edit: "%{shortcut} పోస్ట్‌ను సవరించండి"
-        delete: "%{shortcut} పోస్ట్‌ను తొలగించండి"
-        mark_muted: "%{shortcut} విషయాన్ని మ్యూట్ చేయండి"
-        mark_regular: "%{shortcut} సాధారణ (డిఫాల్ట్) విషయం"
-        mark_tracking: "%{shortcut} విషయాన్ని ట్రాక్ చేయండి"
-        mark_watching: "%{shortcut} విషయాన్ని అనుసరించండి"
-        print: "%{shortcut} ప్రింట్ విషయం"
-        topic_admin_actions: "%{shortcut} విషయం అడ్మిన్ చర్యలను తెరవండి"
+        reply_as_new_topic: "లింక్ చేయబడిన విషయంగా ప్రత్యుత్తరం ఇవ్వండి"
+        reply_topic: "విషయానికి ప్రత్యుత్తరం ఇవ్వండి"
+        delete: "పోస్ట్ తొలగించండి"
       search_menu:
         title: "శోధన మెను"
-        prev_next: "%{shortcut} ఎంపికను పైకి క్రిందికి తరలించండి"
-        insert_url: "%{shortcut} ఓపెన్ కంపోజర్‌లో ఎంపికను చొప్పించండి"
-        full_page_search: "%{shortcut} పూర్తి పేజీ శోధనను ప్రారంభిస్తుంది"
       admin:
         title: "నిర్వాహకుడు"
-        search_prev_next: "%{shortcut} ఎంపికను పైకి క్రిందికి తరలించండి"
     badges:
       earned_n_times:
         one: "ఈ బ్యాడ్జ్ %{count} సారి సంపాదించారు"
@@ -3962,7 +3912,17 @@ te:
         one: "దీని పర్యాయపదం కూడా తొలగించబడుతుంది."
         other: "దీని %{count} పర్యాయపదాలు కూడా తొలగించబడతాయి."
       edit_tag: "ట్యాగ్ పేరు మరియు వివరణను సవరించండి"
-      description: "వివరణ (గరిష్టంగా 1000 అక్షరాలు)"
+      description: "వివరణ"
+      settings:
+        title: "అమరికలు"
+        general: "సాధారణ"
+        back: "వెనుకకు"
+        name: "పేరు"
+        slug: "స్లగ్"
+        name_placeholder: "ట్యాగ్ పేరు"
+      localization:
+        name: "పేరు"
+        description: "వివరణ"
       sort_by: "క్రమబద్ధీకరించండి:"
       sort_by_count: "గణన ద్వారా"
       sort_by_name: "పేరు"
@@ -3972,6 +3932,7 @@ te:
       upload_description: "పెద్దమొత్తంలో ట్యాగ్‌లను సృష్టించడానికి csv ఫైల్‌ను అప్‌లోడ్ చేయండి"
       upload_instructions: "పంక్తికి ఒకటి, ఐచ్ఛికంగా 'tag_name,tag_group' ఆకృతిలో ట్యాగ్ సమూహంతో."
       upload_successful: "ట్యాగ్‌లు విజయవంతంగా అప్‌లోడ్ చేయబడ్డాయి"
+      bulk_create_button: "సృష్టించండి"
       delete_unused_confirmation:
         one: "%{count} ట్యాగ్ తొలగించబడుతుంది: %{tags}"
         other: "%{count} ట్యాగ్‌లు తొలగించబడతాయి: %{tags}"
@@ -4115,7 +4076,6 @@ te:
       tags_form_modal:
         title: "ట్యాగ్‌ల నావిగేషన్‌ను సవరించండి"
         filter_placeholder: "ఫిల్టర్ ట్యాగ్‌లు"
-        no_tags: "ఇచ్చిన పదానికి సరిపోలే ట్యాగ్‌లు ఏవీ లేవు."
         subtitle:
           text: "మరియు మేము ఈ సైట్ యొక్క అగ్ర ట్యాగ్‌లను స్వయంచాలకంగా చూపుతాము"
       edit_navigation_modal_form:
@@ -4349,7 +4309,6 @@ te:
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
-    reset_filter: "రీసెట్ చేయండి"
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
@@ -4361,6 +4320,9 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         sidebar_title: "నివేదికలు"
+        group_traffic: "ట్రాఫిక్"
+        group_members: "సభ్యులు"
+        group_other: "ఇతర"
       config_sections:
         account:
           title: "ఖాతా"
@@ -4383,14 +4345,20 @@ te:
         enabled: "ప్రారంభించబడింది"
         select_groups: "సమూహాలను ఎంచుకోండి…"
         preview: "ప్రివ్యూ"
+        enabled_for_options:
+          everyone: "అందరూ"
         impact_roles:
           moderators: "నిర్వాహకులు"
           staff: "సిబ్బంది"
+        impact_types:
+          other_type: "ఇతర"
         filter:
           all: "అన్నీ"
           enabled: "ప్రారంభించబడింది"
           disabled: "నిలిపివేయబడింది"
           impact_type_other: "ఇతర"
+          impact_role_moderators: "నిర్వాహకులు"
+          impact_role_staff: "సిబ్బంది"
       config:
         about:
           title: "మీ సైట్ గురించి"
@@ -4408,6 +4376,8 @@ te:
           sub_pages:
             common_settings:
               title: "అమరికలు"
+        discourse_id:
+          learn_more: "మరింత తెలుసుకోండి"
         logo:
           form:
             logo:
@@ -4426,6 +4396,8 @@ te:
           form:
             location:
               label: "ప్రాంతం"
+            text_section:
+              locale_label: "భాష"
             header_anonymous:
               placeholder: "%{site_name} కు సుస్వాగతం!"
         navigation:
@@ -4453,8 +4425,14 @@ te:
           sub_pages:
             logs:
               title: "లాగులు"
+        problem_checks:
+          status: "స్థితి"
+          ignore: "విస్మరించండి"
         reports:
           title: "నివేదికలు"
+          sub_pages:
+            settings:
+              title: "అమరికలు"
         badges:
           title: "బ్యాడ్జీలు"
         permalinks:
@@ -4497,13 +4475,6 @@ te:
         default_value: "అప్రమేయ"
       search:
         title: "వెతుకు"
-        result_types:
-          theme:
-            one: "థీమ్"
-            other: "థీమ్స్"
-          component:
-            one: "భాగం"
-            other: "భాగాలు"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
@@ -4517,9 +4488,8 @@ te:
         installed_version: "ప్రతిష్టించబడింది"
         latest_version: "తాజా"
         problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
-        dismiss_notice: "రద్దుచేయండి"
+        dismiss_notice: "విస్మరించండి"
         new_features:
-          previous_announcements: "మీరు మునుపటి కొత్త ఫీచర్ ప్రకటనలను <a href='%{url}' target='_blank'>డిస్కోర్స్ మెటా</a>లో చూడవచ్చు"
           learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "రిఫ్రెష్ చేయండి"
@@ -4560,6 +4530,37 @@ te:
         too_many_requests: మీరు ఈ చర్యను చాలా సార్లు చేసారు. దయచేసి మళ్లీ ప్రయత్నించే ముందు వేచి ఉండండి.
         not_found_error: క్షమించండి, ఈ నివేదిక ఉనికిలో లేదు
         custom_date_range: అనుకూల తేదీ పరిధి
+        sections:
+          reports:
+            title: "నివేదికలు"
+          engagement:
+            activity_by_category:
+              category: "వర్గం"
+              topics: "విషయాలు"
+              posts: "పోస్ట్‌లు"
+              share: "షేర్ చేయండి"
+            whos_posting:
+              all_categories: "అన్ని వర్గాలు"
+              staff: "సిబ్బంది"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "కొత్త"
+                "1": "ప్రాథమిక"
+                "2": "సభ్యుడు"
+                "3": "రెగ్యులరు"
+                "4": "లీడరు"
+        reports_section:
+          modal:
+            enabled_heading: "ప్రారంభించబడింది"
+            all_heading: "అన్ని నివేదికలు"
+            apply: "దరఖాస్తు చేసుకోండి"
+        site_traffic:
+          series:
+            anonymous: "అనామక"
+            crawlers: "క్రాలర్లు"
+        period:
+          last_3_months: "గత 3 నెలలు"
+          custom: "అనురూప"
         reports:
           trend_title: "%{percent} మార్పు. ప్రస్తుతం %{current}, మునుపటి వ్యవధిలో %{prev} ."
           today: "ఈరోజు"
@@ -4572,7 +4573,7 @@ te:
           all: "అన్ని"
           view_table: "పట్టిక"
           view_graph: "గ్రాఫ్"
-          refresh_report: "రిపోర్టు తాజాపరుచండి"
+          refresh_report: "రిఫ్రెష్ చేయండి"
           daily: రోజువారీ
           monthly: నెలవారీ
           weekly: వారానికోసారి
@@ -4586,7 +4587,9 @@ te:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">శోధన లాగ్‌లు</a>'
             disabled: 'ట్రెండింగ్ శోధన నివేదిక నిలిపివేయబడింది. డేటాను సేకరించడానికి <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">శోధన పాదాల లాగ్ ను ప్రారంభించండి</a> .'
-          average_chart_label: సగటు
+          sort_button: "%{column} ద్వారా క్రమబద్ధీకరించండి"
+          sort_ascending: "ఆరోహణ"
+          sort_descending: "అవరోహణ"
           filters:
             file_extension:
               label: ఫైల్ ఎక్స్టెన్షన్
@@ -4678,6 +4681,7 @@ te:
         save: "సేవ్ చేయండి"
         cancel: "రద్దుచేయండి"
         continue: "కొనసాగించండి"
+        copy_key: "నకలు"
         revoke: "ఉపసంహరించుకోండి"
         revoked: "రద్దు చేయబడింది"
       api:
@@ -5121,8 +5125,6 @@ te:
         delete: "తొలగించండి"
         delete_confirm: 'మీరు "%{theme_name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
         bulk_delete: "ఖచితమేనా?"
-        bulk_themes_delete_confirm: "ఇది క్రింది థీమ్‌లను అన్‌ఇన్‌స్టాల్ చేస్తుంది, వాటిని మీ సైట్‌లోని ఏ సభ్యులు ఉపయోగించలేరు:"
-        bulk_components_delete_confirm: "ఇది క్రింది భాగాలను అన్‌ఇన్‌స్టాల్ చేస్తుంది, వాటిని మీ సైట్‌లోని ఏ సభ్యులు ఉపయోగించలేరు:"
         color: "రంగు"
         opacity: "అపారదర్శకత"
         copy: "నకిలీ చేయండి"
@@ -5227,7 +5229,6 @@ te:
           import_web_tip: "థీమ్ కలిగి ఉన్న రిపోజిటరీ"
           direct_install_tip: "మీరు ఖచ్చితంగా దిగువ జాబితా చేయబడిన రిపోజిటరీ నుండి <strong>%{name}</strong> ని ఇన్‌స్టాల్ చేయాలనుకుంటున్నారా?"
           import_web_advanced: "అధునాతన…"
-          import_file_tip: "థీమ్‌ని కలిగి ఉన్న .tar.gz, .zip లేదా .dcstyle.json ఫైల్"
           is_private: "థీమ్ ప్రైవేట్ గిట్ రిపోజిటరీలో ఉంది"
           finish_install: "థీమ్ సంస్థాపనను ముగించండి"
           last_attempt: "ఇన్‌స్టాలేషన్ ప్రక్రియ పూర్తి కాలేదు, చివరి ప్రయత్నం:"
@@ -5448,6 +5449,7 @@ te:
         topic_id: "విషయపు ఐడీ"
         post_id: "పోస్ట్ ఐడీ"
         category_id: "వర్గం ID"
+        reviewable_id: "సమీక్ష"
         delete: "తొలగించండి"
         edit: "సవరించండి"
         save: "సేవ్ చేయండి"
@@ -5879,7 +5881,6 @@ te:
           button: "అన్ని పోస్ట్‌లను తొలగించండి"
           progress:
             title: "పోస్ట్‌లను తొలగించడంలో పురోగతి"
-            description: "పోస్ట్‌లను తొలగిస్తోంది…"
           confirmation:
             title: "@%{username} ద్వారా అన్ని పోస్ట్‌లను తొలగించండి"
             description: |
@@ -6044,6 +6045,7 @@ te:
           enabled: "శోధించదగినది"
         field_types:
           text: "వచనం"
+          date: "తేదీ"
           confirm: "ఖాయము"
           dropdown: "డ్రాప్డౌన్"
           multiselect: "బహుళ ఎంపిక"
@@ -6092,6 +6094,7 @@ te:
           empty: "ఇంకా చిత్రాలు లేవు. దయచేసి ఒకదాన్ని అప్‌లోడ్ చేయండి."
           upload:
             label: "అప్‌లోడ్ చేయండి"
+        download_file: "దిగుమతి"
         selectable_avatars:
           title: "సభ్యులు ఎంచుకోగల అవతార్ల జాబితా"
         table_column_heading:
@@ -6172,6 +6175,8 @@ te:
         no_user_badges: "%{name} కి ఎలాంటి బ్యాడ్జ్‌లు మంజూరు కాలేదు."
         no_badges: మంజూరు చేయగల బ్యాడ్జ్‌లు లేవు.
         none_selected: "ప్రారంభించడానికి బ్యాడ్జ్‌ని ఎంచుకోండి"
+        sections:
+          settings: అమరికలు
         allow_title: బ్యాడ్జ్ను శీర్షికగా ఉపయోగించడానికి అనుమతించండి
         multiple_grant: అనేక సార్లు మంజూరు చేయవచ్చు
         visibility_heading: దృశ్యమానత
@@ -6296,56 +6301,3 @@ te:
           categories: "వర్గాలు"
           topics: "విషయాలు"
           replace: "భర్తీ చేయండి"
-  wizard_js:
-    wizard:
-      jump_in: "లోపలికి దూకండి!"
-      finish: "సెటప్ నిష్క్రమించండి"
-      back: "వెనుకకు"
-      next: "తదుపరి"
-      configure_more: "మరిన్ని కాన్ఫిగర్ చేయండి…"
-      step-text: "దశ"
-      step: "%{total} లో %{current}"
-      upload: "ఫైల్‌ని అప్‌లోడ్ చేయండి"
-      uploading: "అప్‌లోడ్ చేయబడుతోంది…"
-      upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
-      staff_count:
-        one: "మీ సంఘంలో %{count} సిబ్బంది (మీరు) ఉన్నారు."
-        other: "మీ సంఘం మీతో సహా %{count} సిబ్బందిని కలిగి ఉంది."
-      invites:
-        add_user: "జోడించండి"
-        none_added: "మీరు ఏ సిబ్బందిని ఆహ్వానించలేదు. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-        roles:
-          admin: "నిర్వాహకుడు"
-          moderator: "నిర్వాహకుడు"
-          regular: "సాధారణ సభ్యుడు"
-      homepage_choices:
-        custom:
-          label: "అనురూప"
-        style_type:
-          categories: "వర్గం"
-          topics: "విషయం"
-      top_menu_items:
-        new: "కొత్త "
-        unread: "చదవని"
-        top: "అగ్ర"
-        latest: "తాజా"
-        hot: "హాట్"
-        categories: "వర్గాలు"
-        unseen: "చూడనవి"
-        read: "చదివిన"
-        bookmarks: "బుక్‌మార్క్‌లు"
-      previews:
-        share_button: "షేర్ చేయండి"
-        reply_button: "ప్రత్యుత్తరం ఇవ్వండి"
-        topic_preview: "విషయం ప్రివ్యూ"
-        homepage_preview: "మొదటి పేజీ ప్రివ్యూ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "అన్ని వర్గాలు"
-        category_names:
-          site_feedback: "సైట్ పై అభిప్రాయం"
-        table_headers:
-          topic: "విషయం"
-          replies: "ప్రత్యుత్తరాలు"
-          views: "వీక్షణలు"
-          activity: "కలాపం"

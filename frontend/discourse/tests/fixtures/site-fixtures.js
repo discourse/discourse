@@ -1,6 +1,6 @@
 import { NOTIFICATION_TYPES } from "./concerns/notification-types";
 
-export default {
+const siteFixtures = {
   "site.json": {
     site: {
       default_archetype: "regular",
@@ -848,3 +848,5 @@ export default {
     },
   },
 };
+
+export default siteFixtures;

@@ -25,16 +25,18 @@ class PostRevisionSerializer < ApplicationSerializer
              :body_changes,
              :title_changes,
              :user_changes,
+             :reply_to_post_number_changes,
              :tags_changes,
              :category_id_changes,
-             :can_edit
+             :can_edit,
+             :diff_error
 
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
   def self.add_compared_field(field)
-    changes_name = "#{field}_changes".to_sym
+    changes_name = :"#{field}_changes"
 
-    self.attributes changes_name
+    attributes changes_name
     define_method(changes_name) { { previous: previous[field], current: current[field] } }
 
     define_method("include_#{changes_name}?") { previous[field] != current[field] }
@@ -102,6 +104,10 @@ class PostRevisionSerializer < ApplicationSerializer
     user.name
   end
 
+  def include_acting_user_name?
+    SiteSetting.enable_names?
+  end
+
   def avatar_template
     user.avatar_template
   end
@@ -127,6 +133,9 @@ class PostRevisionSerializer < ApplicationSerializer
       side_by_side: cooked_diff.side_by_side_html,
       side_by_side_markdown: raw_diff.side_by_side_markdown,
     }
+  rescue ONPDiff::DiffLimitExceeded
+    @diff_error = true
+    nil
   end
 
   def title_changes
@@ -139,6 +148,17 @@ class PostRevisionSerializer < ApplicationSerializer
     diff = DiscourseDiff.new(prev, cur)
 
     { inline: diff.inline_html, side_by_side: diff.side_by_side_html }
+  rescue ONPDiff::DiffLimitExceeded
+    @diff_error = true
+    nil
+  end
+
+  def diff_error
+    @diff_error || false
+  end
+
+  def include_diff_error?
+    @diff_error
   end
 
   def include_title_changes?
@@ -169,6 +189,17 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def include_user_changes?
     previous["user_id"] != current["user_id"]
+  end
+
+  def reply_to_post_number_changes
+    {
+      previous: reply_to_info(previous["reply_to_post_number"]),
+      current: reply_to_info(current["reply_to_post_number"]),
+    }
+  end
+
+  def include_reply_to_post_number_changes?
+    previous["reply_to_post_number"] != current["reply_to_post_number"]
   end
 
   def tags_changes
@@ -228,6 +259,7 @@ class PostRevisionSerializer < ApplicationSerializer
       "post_type" => [post.post_type],
       "user_id" => [post.user_id],
       "locale" => [post.locale],
+      "reply_to_post_number" => [post.reply_to_post_number],
     }
 
     # Retrieve any `tracked_topic_fields`
@@ -303,5 +335,23 @@ class PostRevisionSerializer < ApplicationSerializer
   def filter_category_id(category_id)
     return if category_id.blank?
     Category.secured(scope).find_by(id: category_id)&.id
+  end
+
+  def reply_to_info(post_number)
+    return nil if post_number.blank?
+
+    target = Post.where(topic_id: topic.id, post_number: post_number).first
+    info = { post_number: post_number }
+
+    # Only enrich with the target's author if the current viewer can see
+    # that post. Deleted posts, whispers, and posts in restricted
+    # categories must not leak their author through the revision history.
+    if target && scope.can_see?(target) && target.user
+      info[:username] = target.user.username_lower
+      info[:display_username] = target.user.username
+      info[:avatar_template] = target.user.avatar_template
+    end
+
+    info
   end
 end

@@ -11,8 +11,6 @@ bg:
       actions:
         agree_and_suspend:
           title: "Преустанови потребител"
-        disagree:
-          title: "Не съм съгласен "
     channel:
       dm_title:
         single_user: "%{username}"
@@ -28,6 +26,9 @@ bg:
     popup:
       chat_mention:
         direct: '%{username} ви спомена в "%{channel}"'
+    actions:
+      chat_reply:
+        title: Отговорете
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

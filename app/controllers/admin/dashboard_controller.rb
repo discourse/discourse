@@ -1,14 +1,33 @@
 # frozen_string_literal: true
 
 class Admin::DashboardController < Admin::StaffController
-  def index
-    data = AdminDashboardIndexData.fetch_cached_stats
+  BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
-    if SiteSetting.version_checks?
-      data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+  before_action :ensure_admin,
+                only: %i[available_reports update_reports_section update_configuration]
+
+  def index
+    if dashboard_improvements?
+      visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
+      data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
+      if current_user.admin?
+        data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
+      end
+    else
+      data = AdminDashboardIndexData.fetch_cached_stats
+
+      if SiteSetting.version_checks?
+        data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+      end
     end
 
     render json: data
+  end
+
+  def update_configuration
+    sections = params.permit(sections: %i[id visible])[:sections] || []
+    AdminDashboardSectionConfiguration.update(sections, actor: current_user)
+    head :no_content
   end
 
   def moderation
@@ -44,13 +63,17 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     new_features = DiscourseUpdates.new_features(force_refresh:)
+    new_features_with_permanent_uc =
+      DiscourseUpdates.merge_new_features_with_upcoming_changes(
+        new_features&.map { |item| item.symbolize_keys } || [],
+      )
 
-    if current_user.admin? && most_recent = new_features&.first
-      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent["created_at"])
+    if current_user.admin? && most_recent = new_features_with_permanent_uc&.first
+      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent[:created_at])
     end
 
     data = {
-      new_features: new_features,
+      new_features: new_features_with_permanent_uc,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
       release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
     }
@@ -72,9 +95,92 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def update_reports_section
+    AdminDashboard::Reports::LayoutUpdater.call(
+      items: parse_reports_items_payload,
+      guardian: guardian,
+    )
+    head :no_content
+  end
+
+  def available_reports
+    search = params[:search]
+    enabled = AdminDashboard::Reports::Section.build(guardian: guardian, search: search)[:items]
+    listing = AdminDashboard::Reports::Listing.call(cursor: params[:cursor], search: search)
+
+    render json: {
+             providers: listing[:providers],
+             enabled: enabled,
+             available: listing[:items],
+             has_more: listing[:has_more],
+             cursor: listing[:cursor],
+           }
+  end
+
+  def bulk_reports
+    permitted_filters = params.permit(filters: BULK_REPORTS_FILTER_KEYS).fetch(:filters, nil)
+    filters = permitted_filters.present? ? permitted_filters.to_h.symbolize_keys : {}
+
+    hijack do
+      render_json_dump(
+        AdminDashboard::Reports::BulkFetch.call(
+          items: parse_reports_items_payload,
+          filters: filters,
+          guardian: guardian,
+        ),
+      )
+    end
+  end
+
   private
+
+  def section_data(id)
+    case id
+    when "highlights"
+      AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
+    when "traffic"
+      AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
+    when "engagement"
+      AdminDashboardEngagement.build(
+        start_date: params[:start_date],
+        end_date: params[:end_date],
+        current_user: current_user,
+      )
+    when "reports"
+      AdminDashboard::Reports::Section.build(guardian: guardian)
+    end
+  end
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+  end
+
+  def ensure_dashboard_improvements_enabled
+    raise Discourse::NotFound if !dashboard_improvements?
+  end
+
+  def dashboard_improvements?
+    if params[:version] == "alt"
+      !SiteSetting.dashboard_improvements
+    else
+      SiteSetting.dashboard_improvements
+    end
+  end
+
+  def parse_reports_items_payload
+    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
+    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
+      raise Discourse::InvalidParameters.new(:items)
+    end
+
+    params
+      .permit(items: %i[source identifier])
+      .fetch(:items, [])
+      .map do |entry|
+        source = entry[:source]
+        identifier = entry[:identifier]
+        raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
+        { source: source.to_s, identifier: identifier.to_s }
+      end
   end
 end

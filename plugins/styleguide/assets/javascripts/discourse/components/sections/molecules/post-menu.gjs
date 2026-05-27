@@ -1,14 +1,35 @@
-import MountWidget from "discourse/components/mount-widget";
+import Component from "@glimmer/component";
+import PostMenu from "discourse/components/post/menu";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const PostMenu = <template>
-  <StyleguideExample @title="post-menu">
-    <MountWidget
-      @widget="post-menu"
-      @args={{@dummy.transformedPost}}
-      @model={{@dummy.postModel}}
-    />
-  </StyleguideExample>
-</template>;
+export default class CharCounterMolecule extends Component {
+  get sampleCode() {
+    return `
+import PostMenu from "discourse/components/post/menu";
 
-export default PostMenu;
+<template>
+  <PostMenu
+    @post={{@dummy.transformedPost}}
+    @canCreatePost={{true}}
+    @showFlags={{true}}
+    @showLogin={{true}}
+    @showReadIndicator={{true}}
+    @toggleLike={{true}}
+  />
+</template>
+    `;
+  }
+
+  <template>
+    <StyleguideExample @title="<PostMenu>" @code={{this.sampleCode}}>
+      <PostMenu
+        @post={{@dummy.transformedPost}}
+        @canCreatePost={{true}}
+        @showFlags={{true}}
+        @showLogin={{true}}
+        @showReadIndicator={{true}}
+        @toggleLike={{true}}
+      />
+    </StyleguideExample>
+  </template>
+}

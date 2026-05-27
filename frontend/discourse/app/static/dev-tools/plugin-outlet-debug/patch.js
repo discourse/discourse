@@ -1,5 +1,6 @@
 import curryComponent from "ember-curry-component";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { _setIncludeDeprecatedArgsProperty } from "discourse/lib/outlet-args";
 import { _setOutletDebugCallback } from "discourse/lib/plugin-connectors";
 import devToolsState from "../state";
 import OutletInfoComponent from "./outlet-info";
@@ -9,23 +10,29 @@ const SKIP_EXISTING_FOR_OUTLETS = [
 ];
 
 export function patchConnectors() {
-  _setOutletDebugCallback((outletName, existing) => {
-    existing ||= [];
+  // Enable including raw deprecatedArgs in outletArgsWithDeprecations
+  // so ArgsTable can display deprecation info without separate prop passing
+  _setIncludeDeprecatedArgsProperty(true);
 
-    if (!devToolsState.pluginOutletDebug) {
-      return existing;
+  _setOutletDebugCallback(
+    (outletName, existing, { outletArgs, aliases, deprecated } = {}) => {
+      existing ||= [];
+
+      if (!devToolsState.pluginOutletDebug) {
+        return existing;
+      }
+
+      if (SKIP_EXISTING_FOR_OUTLETS.includes(outletName)) {
+        existing = [];
+      }
+
+      const componentClass = curryComponent(
+        OutletInfoComponent,
+        { outletName, outletArgs, aliases, deprecated },
+        getOwnerWithFallback()
+      );
+
+      return [{ componentClass }, ...existing];
     }
-
-    if (SKIP_EXISTING_FOR_OUTLETS.includes(outletName)) {
-      existing = [];
-    }
-
-    const componentClass = curryComponent(
-      OutletInfoComponent,
-      { outletName },
-      getOwnerWithFallback()
-    );
-
-    return [{ componentClass }, ...existing];
-  });
+  );
 }

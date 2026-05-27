@@ -13,7 +13,7 @@ import { i18n } from "discourse-i18n";
 
 @classNames("tags-admin-dropdown")
 @selectKitOptions({
-  icons: ["wrench", "caret-down"],
+  icons: ["wrench", "angle-down"],
   showFullTitle: false,
 })
 @pluginApiIdentifiers("tags-admin-dropdown")

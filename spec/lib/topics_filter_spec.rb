@@ -40,6 +40,8 @@ RSpec.describe TopicsFilter do
         in:
         in:pinned
         in:bookmarked
+        bookmarked-before:
+        bookmarked-after:
         in:watching
         in:tracking
         in:muted
@@ -191,6 +193,32 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("group:group1+group2")
             .pluck(:id)
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
+      end
+
+      it "group:group1 should not return topics where the only post from a group member is deleted" do
+        topic = Fabricate(:topic)
+        post = Fabricate(:post, topic:, user: u1)
+        post.update_column(:deleted_at, Time.zone.now)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1")
+            .pluck(:id)
+        expect(ids).not_to include(topic.id)
+      end
+
+      it "group:group1+group2 should not return topics where a group member's only post is deleted" do
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
+        Fabricate(:post, topic:, user: u2)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1+group2")
+            .pluck(:id)
+        expect(ids).not_to include(topic.id)
       end
 
       context "with whispers" do
@@ -427,7 +455,7 @@ RSpec.describe TopicsFilter do
 
       TopicUser.notification_levels.keys.each do |notification_level|
         describe "when query string is `in:#{notification_level}`" do
-          fab!("user_#{notification_level}_topic".to_sym) do
+          fab!(:"user_#{notification_level}_topic") do
             Fabricate(:topic).tap do |topic|
               TopicUser.change(
                 user.id,
@@ -452,7 +480,7 @@ RSpec.describe TopicsFilter do
                 .new(guardian: Guardian.new(user))
                 .filter_from_query_string("in:#{notification_level}")
                 .pluck(:id),
-            ).to contain_exactly(self.public_send("user_#{notification_level}_topic").id)
+            ).to contain_exactly(public_send("user_#{notification_level}_topic").id)
           end
         end
       end
@@ -1203,6 +1231,40 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
       fab!(:topic_with_group_only_tag) { Fabricate(:topic, tags: [group_only_tag]) }
+      fab!(:tag_synonym) { Fabricate(:tag, name: "synonym1", target_tag_id: tag.id) }
+
+      describe "when filtering by a tag synonym" do
+        it "should return topics tagged with the target tag when query string is `tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+
+        it "should return topics tagged with the target tag or other tags when query string is `tags:synonym1,tag2`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:synonym1,#{tag2.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should exclude topics tagged with the target tag when query string is `-tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_without_tag.id,
+            topic_with_tag2.id,
+            topic_with_group_only_tag.id,
+          )
+        end
+      end
 
       it "should not filter any topics by tags when tagging is disabled" do
         SiteSetting.tagging_enabled = false
@@ -1239,6 +1301,18 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("tags:#{tag.name}+#{tag2.name}")
             .pluck(:id),
         ).to contain_exactly(topic_with_tag_and_tag2.id)
+      end
+
+      it "should return topics tagged with period-delimited tag names" do
+        tag_with_period = Fabricate(:tag, name: "node.js")
+        topic_with_period_tag = Fabricate(:topic, tags: [tag_with_period])
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tags:#{tag_with_period.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_period_tag.id)
       end
 
       it "should only return topics that are tagged with tag1 and tag2 when query string is `tags:tag1 tags:tag2`" do
@@ -1492,6 +1566,31 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
         end
       end
+
+      describe "when query string contains multiple tags with underscores" do
+        before do
+          tag.update!(name: "tag_one")
+          tag2.update!(name: "tag_two")
+        end
+
+        it "should return topics when filtering with comma-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one,tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should return topics when filtering with plus-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one+tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by tag_groups" do
@@ -1558,6 +1657,88 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("tag_group:#{staff_tag_group.name}")
             .pluck(:id),
         ).to eq([])
+      end
+    end
+
+    describe "when filtering by tag_groups with special characters" do
+      fab!(:tag) { Fabricate(:tag, name: "special-tag") }
+      fab!(:tag_group_with_spaces) do
+        Fabricate(:tag_group, name: "My Tag Group", tag_names: [tag.name])
+      end
+      fab!(:tag_group_with_ampersand) do
+        Fabricate(:tag_group, name: "News & Updates", tag_names: [tag.name])
+      end
+      fab!(:tag_group_with_parens) do
+        Fabricate(:tag_group, name: "Group (Test)", tag_names: [tag.name])
+      end
+      fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+      fab!(:topic_without_tag, :topic)
+
+      it "should filter by tag group name with spaces using double quotes" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"My Tag Group"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with spaces using single quotes" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:'My Tag Group'")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with ampersand" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"News & Updates"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with parentheses" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"Group (Test)"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should perform case-insensitive tag group lookup" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"MY TAG GROUP"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should handle exclude prefix with quoted tag group names" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('-tag_group:"My Tag Group"')
+            .pluck(:id),
+        ).to contain_exactly(topic_without_tag.id)
+      end
+
+      it "should maintain backward compatibility with unquoted tag group names" do
+        simple_tag = Fabricate(:tag, name: "simple-tag")
+        _simple_group = Fabricate(:tag_group, name: "simple", tag_names: [simple_tag.name])
+        topic_simple = Fabricate(:topic, tags: [simple_tag])
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:simple")
+            .pluck(:id),
+        ).to contain_exactly(topic_simple.id)
       end
     end
 
@@ -2162,6 +2343,170 @@ RSpec.describe TopicsFilter do
                        "latest-post",
                        :last_posted_at,
                        "last posted date"
+    end
+
+    describe "when filtering by bookmark date of topics" do
+      fab!(:topic_1, :topic)
+      fab!(:topic_2, :topic)
+      fab!(:topic_3, :topic)
+
+      it "returns no topics for anonymous users" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "returns topics bookmarked on or after the given date" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark1.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+        bookmark2.update_column(:created_at, Time.zone.local(2022, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "returns topics bookmarked on or before the given date" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark1.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+        bookmark2.update_column(:created_at, Time.zone.local(2022, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-before:2023-01-01")
+            .pluck(:id),
+        ).to contain_exactly(topic_2.id)
+      end
+
+      it "supports integer days-ago format" do
+        freeze_time do
+          bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+          bookmark1.update_column(:created_at, Time.zone.now)
+
+          bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+          bookmark2.update_column(:created_at, 3.days.ago)
+
+          expect(
+            TopicsFilter
+              .new(guardian: user.guardian)
+              .filter_from_query_string("bookmarked-after:1")
+              .pluck(:id),
+          ).to contain_exactly(topic_1.id)
+
+          expect(
+            TopicsFilter
+              .new(guardian: user.guardian)
+              .filter_from_query_string("bookmarked-before:1")
+              .where(id: [topic_1.id, topic_2.id])
+              .pluck(:id),
+          ).to contain_exactly(topic_2.id)
+        end
+      end
+
+      it "includes post bookmarks" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        post = Fabricate(:post, topic: topic_1)
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "does not return deleted topics even if they are bookmarked" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+        topic_1.destroy
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "does not return topics if their posts are deleted even if they are bookmarked" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        post = Fabricate(:post, topic: topic_1)
+        bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+        post.destroy
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "does not include other users' bookmarks" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        other_user = Fabricate(:user)
+        bookmark = Fabricate(:bookmark, user: other_user, bookmarkable: topic_1)
+        bookmark.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01")
+            .pluck(:id),
+        ).to eq([])
+      end
+
+      it "supports combined before and after for date range" do
+        freeze_time Time.zone.local(2024, 1, 15)
+
+        bookmark1 = Fabricate(:bookmark, user: user, bookmarkable: topic_1)
+        bookmark1.update_column(:created_at, Time.zone.local(2023, 6, 1))
+
+        bookmark2 = Fabricate(:bookmark, user: user, bookmarkable: topic_2)
+        bookmark2.update_column(:created_at, Time.zone.local(2022, 6, 1))
+
+        bookmark3 = Fabricate(:bookmark, user: user, bookmarkable: topic_3)
+        bookmark3.update_column(:created_at, Time.zone.local(2024, 1, 1))
+
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:2023-01-01 bookmarked-before:2023-12-31")
+            .pluck(:id),
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "ignores invalid date values" do
+        expect(
+          TopicsFilter
+            .new(guardian: user.guardian)
+            .filter_from_query_string("bookmarked-after:invalid-date")
+            .pluck(:id),
+        ).to include(topic_1.id, topic_2.id, topic_3.id)
+      end
     end
 
     describe "ordering topics filter" do

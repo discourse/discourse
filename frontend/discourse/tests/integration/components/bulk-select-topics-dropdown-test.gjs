@@ -58,15 +58,13 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     await click(".bulk-select-topics-dropdown-trigger");
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item")
-      .exists({ count: 7 });
+      .exists({ count: 5 });
 
     [
       "update-notifications",
       "reset-bump-dates",
       "close-topics",
-      "append-tags",
-      "replace-tags",
-      "remove-tags",
+      "manage-tags",
       "delete-topics",
     ].forEach((action) => {
       assert
@@ -140,11 +138,9 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     );
 
     await click(".bulk-select-topics-dropdown-trigger");
-    ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
-      assert
-        .dom(`.fk-d-menu__inner-content .dropdown-menu__item .${action}`)
-        .doesNotExist();
-    });
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
   });
 
   test("does not allow tagging actions if user cannot manage topic", async function (assert) {
@@ -157,11 +153,9 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     );
 
     await click(".bulk-select-topics-dropdown-trigger");
-    ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
-      assert
-        .dom(`.fk-d-menu__inner-content .dropdown-menu__item .${action}`)
-        .doesNotExist();
-    });
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
   });
 
   test("does not allow deleting topics if user is not staff", async function (assert) {
@@ -242,5 +236,69 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .archive-topics")
       .doesNotExist();
+  });
+
+  test("supports excluding built-in buttons and handling custom actions", async function (assert) {
+    this.currentUser.admin = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+    this.extraButtons = [
+      {
+        id: "custom-action",
+        icon: "trash-can",
+        name: "Custom Action",
+        visible: () => true,
+      },
+    ];
+    this.excludedButtonIds = ["delete-topics"];
+    this.onAction = (actionId) => assert.step(actionId);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown
+          @bulkSelectHelper={{this.bulkSelectHelper}}
+          @extraButtons={{this.extraButtons}}
+          @excludedButtonIds={{this.excludedButtonIds}}
+          @onAction={{this.onAction}}
+        />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
+      .doesNotExist();
+    await click(
+      ".fk-d-menu__inner-content .dropdown-menu__item .custom-action"
+    );
+    assert.verifySteps(["custom-action"]);
+  });
+
+  test("allows overriding built-in delete label with extra buttons", async function (assert) {
+    this.currentUser.admin = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+    this.extraButtons = [
+      {
+        id: "delete-topics",
+        icon: "trash-can",
+        name: "Delete Topics (override)",
+        visible: () => true,
+      },
+    ];
+    this.excludedButtonIds = ["delete-topics"];
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown
+          @bulkSelectHelper={{this.bulkSelectHelper}}
+          @extraButtons={{this.extraButtons}}
+          @excludedButtonIds={{this.excludedButtonIds}}
+        />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
+      .hasTextContaining("Delete Topics (override)");
   });
 });

@@ -1,9 +1,7 @@
-export default function hexToRGBA(hexCode, opacity) {
-  let hex = hexCode.replace("#", "");
+import { normalizeHex } from "discourse/lib/color-transformations";
 
-  if (hex.length === 3) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
+export default function hexToRGBA(hexCode, opacity) {
+  const hex = normalizeHex(hexCode);
 
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);

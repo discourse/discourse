@@ -45,6 +45,12 @@ RSpec.describe "tasks/uploads" do
       context "when secure upload is enabled" do
         before { SiteSetting.secure_uploads = true }
 
+        after do
+          if File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")
+            File.delete("secure_upload_analyse_and_update_posts_for_rebake.json")
+          end
+        end
+
         it "sets an access_control_post for each post upload, using the first linked post in the case of multiple links" do
           invoke_task
           expect(multi_post_upload_1.reload.access_control_post).to eq(post_1)
@@ -55,12 +61,6 @@ RSpec.describe "tasks/uploads" do
 
         context "when login_required" do
           before { SiteSetting.login_required = true }
-
-          after do
-            if File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")
-              File.delete("secure_upload_analyse_and_update_posts_for_rebake.json")
-            end
-          end
 
           it "sets everything attached to a post as secure" do
             invoke_task

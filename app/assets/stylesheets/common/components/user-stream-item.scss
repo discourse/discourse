@@ -1,4 +1,5 @@
-// Common styles for "user-stream-item" component
+@use "lib/viewport";
+
 .user-stream {
   // DEPRECATED:
   // The ".item" class should be removed because it's too generic.
@@ -164,6 +165,10 @@
     max-width: 400px;
 
     @include ellipsis;
+
+    @include viewport.until(sm) {
+      vertical-align: middle;
+    }
   }
 
   .edit-reason {
@@ -196,6 +201,12 @@
 
   .group-member-info {
     display: flex;
+
+    @include viewport.until(sm) {
+      .name {
+        vertical-align: inherit;
+      }
+    }
   }
 
   .user-stream-item .user-stream-item-draft-actions {

@@ -302,6 +302,24 @@ RSpec.describe Admin::BadgesController do
         ).to eq(true)
       end
 
+      it "does not allow changing the system flag on a system badge" do
+        editor_badge = Badge.find(Badge::Editor)
+
+        put "/admin/badges/#{editor_badge.id}.json", params: { system: "false" }
+
+        expect(response.status).to eq(200)
+        editor_badge.reload
+        expect(editor_badge.system?).to eq(true)
+      end
+
+      it "does not allow setting the system flag on a custom badge" do
+        put "/admin/badges/#{badge.id}.json", params: { system: "true" }
+
+        expect(response.status).to eq(200)
+        badge.reload
+        expect(badge.system?).to eq(false)
+      end
+
       it "does not allow query updates if badge_sql is disabled" do
         badge.query = "select 123"
         badge.save

@@ -54,11 +54,16 @@ module PageObjects
       end
 
       def open_chat_search
-        find(".chat-channel-search-btn").click
+        find("#c-footer-search").click
       end
 
       def open_channel(channel)
         channels_index.open_channel(channel)
+        has_no_css?(".chat-skeleton")
+      end
+
+      def open_channel_row(channel)
+        find("#{VISIBLE_DRAWER} .chat-channel-row[data-chat-channel-id='#{channel.id}']").click
         has_no_css?(".chat-skeleton")
       end
 
@@ -97,11 +102,11 @@ module PageObjects
       end
 
       def has_unread_user_threads?
-        has_css?(".chat-channel-row.--threads .c-unread-indicator")
+        has_css?("#c-footer-threads .c-unread-indicator")
       end
 
       def has_no_unread_user_threads?
-        has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
+        has_no_css?("#c-footer-threads .c-unread-indicator")
       end
 
       def click_channels
@@ -114,6 +119,10 @@ module PageObjects
 
       def click_user_threads
         find("#c-footer-threads").click
+      end
+
+      def click_starred_channels
+        find("#c-footer-starred").click
       end
 
       def maximize
@@ -149,6 +158,11 @@ module PageObjects
       def has_open_channels?
         has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .public-channels")
+      end
+
+      def has_open_starred_channels?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .starred-channels")
       end
 
       def has_open_direct_messages?

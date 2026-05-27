@@ -3,12 +3,14 @@ import { set } from "@ember/object";
 export default function (helpers) {
   const { response } = helpers;
 
-  let flag = {
+  const flag = {
     id: 6667,
     type: "ReviewableFlaggedPost",
+    status: 0,
     score: 3.0,
     target_created_by_id: 1,
     cooked: "<b>cooked content</b>",
+    created_at: "2019-01-14T19:49:53.571Z",
     reviewable_score_ids: [1, 2],
   };
 
@@ -26,6 +28,7 @@ export default function (helpers) {
           username: "newbie",
           email: "newbie@example.com",
           bundled_action_ids: ["approve", "reject", "reject_user"],
+          reviewable_score_ids: [],
         },
         {
           id: 4321,
@@ -38,6 +41,8 @@ export default function (helpers) {
             raw: "existing body\n\nhttp://somegoodurl.com",
             tags: ["hello", "world"],
           },
+          fancy_title: "<p>existing body</p>",
+          cooked: "<p>existing body</p>\n\n<p>http://somegoodurl.com</p>",
           version: 1,
           can_edit: true,
           editable_fields: [
@@ -47,6 +52,7 @@ export default function (helpers) {
             { id: "payload.tags", type: "tags" },
           ],
           bundled_action_ids: ["approve", "reject"],
+          reviewable_score_ids: [],
         },
         flag,
       ],
@@ -95,7 +101,22 @@ export default function (helpers) {
           require_reject_reason: true,
         },
       ],
-      reviewable_scores: [{ id: 1 }, { id: 2 }],
+      reviewable_scores: [
+        {
+          id: 1,
+          score_type: {
+            type: "spam",
+            title: "Spam",
+          },
+        },
+        {
+          id: 2,
+          score_type: {
+            type: "inappropriate",
+            title: "Inappropriate",
+          },
+        },
+      ],
       users: [{ id: 1, username: "eviltrout" }],
       meta: {
         total_rows_reviewables: 2,
@@ -223,6 +244,24 @@ export default function (helpers) {
   this.get("/review/:id", () => {
     return response(200, {
       reviewable: flag,
+      reviewable_scores: [
+        {
+          id: 1,
+          score_type: {
+            type: "spam",
+            title: "Spam",
+          },
+        },
+        {
+          id: 2,
+          score_type: {
+            type: "inappropriate",
+            title: "Inappropriate",
+          },
+        },
+      ],
+      users: [{ id: 1, username: "eviltrout" }],
+      __rest_serializer: "1",
     });
   });
 
@@ -240,6 +279,9 @@ export default function (helpers) {
     Object.entries(JSON.parse(request.requestBody).reviewable).forEach((t) => {
       set(result, t[0], t[1]);
     });
+    if (result.payload?.raw) {
+      result.cooked = `<p>${result.payload.raw}</p>`;
+    }
     return response(200, result);
   });
 }

@@ -4,10 +4,10 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import { trustHTML } from "@ember/template";
 import discourseLater from "discourse/lib/later";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { showShareConversationModal } from "../../lib/ai-bot-helper";
 import copyConversation from "../../lib/copy-conversation";
@@ -58,7 +58,7 @@ export default class ShareModal extends Component {
       context.push(`<p><b>${post.username}:</b></p>`);
       context.push(post.cooked);
     }
-    this.htmlContext = htmlSafe(context.join("\n"));
+    this.htmlContext = trustHTML(context.join("\n"));
   }
 
   @action

@@ -14,16 +14,27 @@ nl:
     chat_integration:
       menu_title: "Chatintegraties"
       settings: "Instellingen"
-      no_providers: "Je moet enkele providers inschakelen in de plug-ininstellingen"
+      nav:
+        providers: "Providers"
+        providers_description: "Chatproviderintegraties configureren"
+      add_provider: "Provider toevoegen"
+      more_providers: "Meer"
+      empty_state:
+        title: "Je chatplatform koppelen"
+        body: "Stuur meldingen van Discourse naar de chat van je team. Kies een provider om te beginnen."
+      channels_title: "Kanalen"
+      no_channels: "Er zijn nog geen kanalen geconfigureerd."
+      channel_actions: "Kanaalacties"
+      add_first_channel: "Voeg je eerste kanaal van %{provider} toe"
       channels_with_errors: "De laatste keer dat berichten werden gestuurd, werkten sommige kanalen niet voor deze provider. Klik op de foutpictogrammen voor meer informatie."
       channel_exception: "De laatste keer dat een bericht naar dit kanaal werd gestuurd, is een onbekende fout opgetreden."
       group_mention_template: "Vermeldingen van: @%{name}"
       group_message_template: "Berichten naar: @%{name}"
-      choose_group: "(kies een groep)"
-      all_categories: "(alle categorieën)"
-      all_tags: "(alle tags)"
+      choose_group: "(Kies een groep)"
+      all_categories: "(Alle categorieën)"
+      all_tags: "(Alle tags)"
       create_rule: "Regel maken"
-      create_channel: "Kanaal maken"
+      add_channel: "Kanaal toevoegen"
       delete_channel: "Verwijderen"
       test_channel: "Testen"
       edit_channel: "Bewerken"
@@ -59,7 +70,8 @@ nl:
           ok: "Geldig"
           fail: "Ongeldige notatie"
       edit_rule_modal:
-        title: Regel bewerken
+        edit_title: Regel bewerken
+        create_title: Regel maken
         save: Regel opslaan
         cancel: Annuleren
         provider: Provider
@@ -81,9 +93,11 @@ nl:
           param:
             identifier:
               title: Kanaal
-              help: "bijvoorbeeld #kanaal, @gebruikersnaam."
+              help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
+            auth_error: "Het verstrekte verificatietoken is ongeldig"
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
+            channel_not_found: "Het opgegeven kanaal bestaat niet op Slack"
         telegram:
           title: "Telegram"
           param:
@@ -104,7 +118,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Discord."
             webhook_url:
               title: Webhook-URL
-              help: De in je Discourse-serverinstellingen gemaakte webhook-URL
+              help: De gemaakte webhook-URL in je Discord-server instellingen moet de indeling https://discord.com/api/webhooks/<webhook-id>/<webhook-token> hebben
         guilded:
           title: "Guilded"
           param:
@@ -119,7 +133,7 @@ nl:
           param:
             identifier:
               title: Kanaal
-              help: "bijvoorbeeld #kanaal, @gebruikersnaam."
+              help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
             channel_not_found: "Het opgegeven kanaal bestaat niet op Mattermost"
         matrix:
@@ -130,6 +144,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Matrix."
             room_id:
               title: "Ruimte-ID"
+              help: "De 'privé-ID' voor de ruimte. Deze dient eruit te zien als !abcdefghijkl"
           errors:
             unknown_token: "Toegangstoken is ongeldig"
             unknown_room: "Ruimte-ID is ongeldig"
@@ -149,7 +164,7 @@ nl:
           param:
             identifier:
               title: Kanaal
-              help: "bijvoorbeeld #kanaal, @gebruikersnaam."
+              help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
             invalid_channel: "Dat kanaal bestaat niet op Rocket Chat"
         gitter:
@@ -157,16 +172,10 @@ nl:
           param:
             name:
               title: "Naam"
-              help: "De naam van een Gitter-ruimte, bijvoorbeeld gitterHQ/services."
+              help: "De naam van een Gitter-ruimte voor bijvoorbeeld gitterHQ/services"
             webhook_url:
               title: "Webhook-URL"
               help: "De opgegeven URL wanneer je een nieuwe integratie maakt in een Gitter-ruimte."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flowtoken"
-              help: "Het opgegeven flowtoken na het maken van een bron voor een flow waarin je berichten wilt sturen."
         groupme:
           title: "GroupMe"
           param:

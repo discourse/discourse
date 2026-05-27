@@ -66,6 +66,21 @@ export default class BaseCustomSidebarSectionLink {
   get contentCSSClass() {}
 
   /**
+   * @returns {Component} Component to render inside the link text span (gets ellipsized with text)
+   */
+  get contentComponent() {}
+
+  /**
+   * @returns {string} Text for the badge within the link
+   */
+  get badgeText() {}
+
+  /**
+   * @returns {Object} Arguments to pass to the content component
+   */
+  get contentComponentArgs() {}
+
+  /**
    * @returns {string} Prefix type for the link. Accepted value: icon, image, text
    */
   get prefixType() {}
@@ -106,6 +121,16 @@ export default class BaseCustomSidebarSectionLink {
   get suffixCSSClass() {}
 
   /**
+   * @returns {Component} Component to render as suffix (outside text span, not ellipsized)
+   */
+  get suffixComponent() {}
+
+  /**
+   * @returns {Object} Arguments to pass to the suffix component
+   */
+  get suffixArgs() {}
+
+  /**
    * @returns {string} Type of the hover button. Accepted value: icon
    */
   get hoverType() {}
@@ -124,6 +149,13 @@ export default class BaseCustomSidebarSectionLink {
    * @returns {string} Title attribute for the hover button
    */
   get hoverTitle() {}
+
+  /**
+   * @returns {{ navigation: string[] }} Keywords for the sidebar section link used for filtering
+   */
+  get keywords() {
+    return { navigation: [] };
+  }
 
   _notImplemented() {
     throw "not implemented";

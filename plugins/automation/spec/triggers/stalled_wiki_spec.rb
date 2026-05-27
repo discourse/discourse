@@ -185,7 +185,7 @@ describe "StalledWiki" do
       context "when trigger has been running recently" do
         before { freeze_time 2.hours.from_now }
 
-        it "doesn’t trigger again" do
+        it "doesn't trigger again" do
           post.revise(
             post_creator_1,
             { wiki: true },
@@ -197,6 +197,30 @@ describe "StalledWiki" do
 
           expect(list.length).to eq(0)
           expect(post.reload.custom_fields["stalled_wiki_triggered_at"]).to eq(10.minutes.ago.to_s)
+        end
+      end
+
+      context "when retriggered_after is not set" do
+        before do
+          automation.upsert_field!(
+            "retriggered_after",
+            "choices",
+            { value: nil },
+            target: "trigger",
+          )
+        end
+
+        it "doesn't trigger again for previously triggered posts" do
+          post.revise(
+            post_creator_1,
+            { wiki: true },
+            { force_new_version: true, revised_at: 1.month.ago },
+          )
+          post.upsert_custom_fields(stalled_wiki_triggered_at: 1.week.ago)
+
+          list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
+
+          expect(list.length).to eq(0)
         end
       end
     end

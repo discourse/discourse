@@ -41,7 +41,6 @@ export default function (customLookup = () => {}) {
   `,
     {
       since: "2.9.0.beta12",
-      dropFrom: "3.1.0.beta1",
       id: "discourse.create-store-helper",
     }
   );

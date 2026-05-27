@@ -31,7 +31,7 @@ export function resetRemovedChatComposerSecondaryActions() {
   removedSecondaryActions.clear();
 }
 
-export default class ChatemojiReactions {
+export default class ChatMessageInteractor {
   @service appEvents;
   @service chat;
   @service chatChannelComposer;
@@ -117,7 +117,8 @@ export default class ChatemojiReactions {
   get canInteractWithMessage() {
     return (
       !this.message?.deletedAt &&
-      this.message?.channel?.canModifyMessages(this.currentUser)
+      this.message?.channel?.canModifyMessages(this.currentUser) &&
+      this.message?.channel?.isFollowing
     );
   }
 
@@ -125,6 +126,7 @@ export default class ChatemojiReactions {
     return (
       this.message?.deletedAt &&
       (this.currentUser.staff ||
+        this.message?.channel?.canModerate ||
         (this.message?.user?.id === this.currentUser.id &&
           this.message?.deletedById === this.currentUser.id)) &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
@@ -153,6 +155,13 @@ export default class ChatemojiReactions {
       !this.message?.chatWebhookEvent &&
       !this.message?.deletedAt
     );
+  }
+
+  get canPinMessage() {
+    if (!this.siteSettings.chat_pinned_messages) {
+      return false;
+    }
+    return this.message.channel?.canManagePins;
   }
 
   get canRebakeMessage() {
@@ -212,6 +221,22 @@ export default class ChatemojiReactions {
         id: "select",
         name: i18n("chat.select"),
         icon: "list-check",
+      });
+    }
+
+    if (this.canPinMessage && !this.message.pinned) {
+      buttons.push({
+        id: "pin",
+        name: i18n("chat.pin_message"),
+        icon: "thumbtack",
+      });
+    }
+
+    if (this.canPinMessage && this.message.pinned) {
+      buttons.push({
+        id: "unpin",
+        name: i18n("chat.unpin_message"),
+        icon: "thumbtack",
       });
     }
 
@@ -417,6 +442,41 @@ export default class ChatemojiReactions {
     return this.chatApi
       .rebakeMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
+  }
+
+  @action
+  pin() {
+    this.message.pinned = true;
+    this.message.channel.pinnedMessagesCount++;
+    this.message.channel.pendingOptimisticPins.add(this.message.id);
+
+    return this.chatApi
+      .pinMessage(this.message.channel.id, this.message.id)
+      .catch((error) => {
+        this.message.pinned = false;
+        this.message.channel.pinnedMessagesCount--;
+        this.message.channel.pendingOptimisticPins.delete(this.message.id);
+        popupAjaxError(error);
+      });
+  }
+
+  @action
+  unpin() {
+    this.message.pinned = false;
+    this.message.channel.pinnedMessagesCount = Math.max(
+      0,
+      this.message.channel.pinnedMessagesCount - 1
+    );
+    this.message.channel.pendingOptimisticUnpins.add(this.message.id);
+
+    return this.chatApi
+      .unpinMessage(this.message.channel.id, this.message.id)
+      .catch((error) => {
+        this.message.pinned = true;
+        this.message.channel.pinnedMessagesCount++;
+        this.message.channel.pendingOptimisticUnpins.delete(this.message.id);
+        popupAjaxError(error);
+      });
   }
 
   @action

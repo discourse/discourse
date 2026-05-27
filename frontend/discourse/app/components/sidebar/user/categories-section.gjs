@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
@@ -17,8 +16,11 @@ export const REFRESH_COUNTS_APP_EVENT_NAME =
 
 export default class SidebarUserCategoriesSection extends CommonCategoriesSection {
   @service appEvents;
+  @service categoryTypeChooser;
   @service currentUser;
   @service modal;
+  @service navigationMenu;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -66,23 +68,45 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     return hasDefaultSidebarCategories(this.siteSettings);
   }
 
-  @action
-  showModal() {
-    this.modal.show(EditNavigationMenuCategoriesModal);
+  createCategory() {
+    this.categoryTypeChooser.createCategory();
+  }
+
+  @cached
+  get headerActions() {
+    const actions = [];
+
+    if (this.currentUser.can_create_category) {
+      actions.push({
+        id: "new-category",
+        action: () => this.createCategory(),
+        title: i18n("sidebar.sections.categories.header_action_new"),
+      });
+    }
+
+    actions.push({
+      id: "edit-categories",
+      action: () => this.modal.show(EditNavigationMenuCategoriesModal),
+      title: i18n(
+        `sidebar.sections.categories.header_action_edit_${this.navigationMenu.displayMode}`
+      ),
+    });
+
+    return actions;
+  }
+
+  get headerActionsIcon() {
+    return this.headerActions.length > 1 ? "ellipsis-vertical" : "pencil";
   }
 
   <template>
     <Section
       @sectionName="categories"
       @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
-      @headerActions={{array
-        (hash
-          action=this.showModal
-          title=(i18n "sidebar.sections.categories.header_action_title")
-        )
-      }}
-      @headerActionsIcon="pencil"
+      @headerActions={{this.headerActions}}
+      @headerActionsIcon={{this.headerActionsIcon}}
       @collapsable={{@collapsable}}
+      @toggleNavigationMenu={{@toggleNavigationMenu}}
     >
 
       {{#each this.sectionLinks as |sectionLink|}}

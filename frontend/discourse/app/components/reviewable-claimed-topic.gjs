@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ReviewableClaimedTopic extends Component {
   @service currentUser;
@@ -12,10 +12,6 @@ export default class ReviewableClaimedTopic extends Component {
 
   get enabled() {
     return this.siteSettings.reviewable_claiming !== "disabled";
-  }
-
-  get isRefresh() {
-    return this.siteSettings.reviewable_ui_refresh;
   }
 
   @action
@@ -49,23 +45,17 @@ export default class ReviewableClaimedTopic extends Component {
     {{#if this.enabled}}
       <div class="reviewable-claimed-topic">
         {{#if @claimedBy.user}}
-
           <DButton
             @icon="xmark"
             @action={{this.unclaim}}
-            @title={{unless this.isRefresh "review.unclaim.help"}}
-            @label={{if this.isRefresh "review.unclaim.help"}}
+            @label="review.unclaim.help"
             class="btn-default unclaim"
           />
         {{else}}
           <DButton
             @icon="user-plus"
-            @title={{if
-              this.isRefresh
-              "review.claim_help.optional"
-              "review.claim.title"
-            }}
-            @label={{if this.isRefresh "review.claim.title"}}
+            @title="review.claim_help.optional"
+            @label="review.claim.title"
             @action={{this.claim}}
             class="btn-default claim"
           />

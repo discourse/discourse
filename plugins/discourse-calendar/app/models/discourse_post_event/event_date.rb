@@ -10,14 +10,24 @@ module DiscoursePostEvent
     scope :expired, -> { where("ends_at IS NOT NULL AND ends_at < ?", Time.now) }
     scope :not_expired, -> { where("ends_at IS NULL OR ends_at > ?", Time.now) }
 
-    after_commit :upsert_topic_custom_field, on: %i[create]
+    scope :current_first, -> { order(Arel.sql(current_ordering_sql)) }
+
+    def self.current_ordering_sql
+      <<~SQL.squish
+        finished_at IS NOT NULL,
+        CASE WHEN finished_at IS NULL THEN starts_at ELSE updated_at END DESC,
+        id DESC
+      SQL
+    end
+
+    after_commit :upsert_topic_custom_field, on: %i[create update]
     def upsert_topic_custom_field
-      if self.event.post && self.event.post.is_first_post?
+      if event.post && event.post.is_first_post?
         TopicCustomField.upsert(
           {
-            topic_id: self.event.post.topic_id,
+            topic_id: event.post.topic_id,
             name: TOPIC_POST_EVENT_STARTS_AT,
-            value: self.starts_at,
+            value: starts_at,
             created_at: Time.now,
             updated_at: Time.now,
           },
@@ -26,13 +36,24 @@ module DiscoursePostEvent
 
         TopicCustomField.upsert(
           {
-            topic_id: self.event.post.topic_id,
+            topic_id: event.post.topic_id,
             name: TOPIC_POST_EVENT_ENDS_AT,
-            value: self.ends_at,
+            value: ends_at,
             created_at: Time.now,
             updated_at: Time.now,
           },
           unique_by: "idx_topic_custom_fields_topic_post_event_ends_at",
+        )
+
+        TopicCustomField.upsert(
+          {
+            topic_id: event.post.topic_id,
+            name: TOPIC_POST_EVENT_ALL_DAY,
+            value: event.all_day || false,
+            created_at: Time.now,
+            updated_at: Time.now,
+          },
+          unique_by: "idx_topic_custom_fields_topic_post_event_all_day",
         )
       end
     end
@@ -65,7 +86,7 @@ end
 # Indexes
 #
 #  idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq  (event_id,starts_at) UNIQUE
-#  index_discourse_calendar_post_event_dates_on_event_id_and_dates  (event_id,finished_at DESC,starts_at DESC)
 #  index_discourse_calendar_post_event_dates_on_event_id            (event_id)
+#  index_discourse_calendar_post_event_dates_on_event_id_and_dates  (event_id,finished_at,starts_at DESC,updated_at DESC,id DESC)
 #  index_discourse_calendar_post_event_dates_on_finished_at         (finished_at)
 #

@@ -1,12 +1,12 @@
+// @ts-check
+
 import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
 import {
   getChangedRanges,
   markInputRule,
 } from "discourse/static/prosemirror/lib/plugin-utils";
 
-const REPLACE_STEPS = [ReplaceStep, ReplaceAroundStep];
-
-/** @type {RichEditorExtension} */
+/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   markSpec: {
     link: {
@@ -53,10 +53,20 @@ const extension = {
     link: {
       mark: "link",
       getAttrs(tok, tokens, i) {
-        const nextContent = tokens[i + 1].content;
-        const attachment = nextContent.endsWith("|attachment");
-        if (attachment) {
-          tokens[i + 1].content = nextContent.slice(0, -11);
+        // Link text may span multiple tokens when it contains inline formatting.
+        let attachment = false;
+        for (let j = i + 1; j < tokens.length; j++) {
+          if (tokens[j].type === "link_close") {
+            break;
+          }
+          if (
+            tokens[j].type === "text" &&
+            tokens[j].content.endsWith("|attachment")
+          ) {
+            tokens[j].content = tokens[j].content.slice(0, -11);
+            attachment = true;
+            break;
+          }
         }
 
         return {
@@ -183,7 +193,10 @@ const extension = {
           .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
           .flatMap((tr) => tr.steps)
           .forEach((step) => {
-            if (REPLACE_STEPS.includes(step.constructor)) {
+            if (
+              step instanceof ReplaceStep ||
+              step instanceof ReplaceAroundStep
+            ) {
               transaction.step(step);
             }
           });

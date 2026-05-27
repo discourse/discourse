@@ -6,11 +6,14 @@ require "guardian/ensure_magic"
 require "guardian/group_guardian"
 require "guardian/invite_guardian"
 require "guardian/flag_guardian"
+require "guardian/permalink_guardian"
 require "guardian/post_guardian"
 require "guardian/post_revision_guardian"
 require "guardian/sidebar_guardian"
+require "guardian/staff_action_log_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
+require "guardian/upload_guardian"
 require "guardian/user_guardian"
 require "guardian/localization_guardian"
 
@@ -22,12 +25,15 @@ class Guardian
   include FlagGuardian
   include GroupGuardian
   include InviteGuardian
+  include PermalinkGuardian
   include PostGuardian
   include PostRevisionGuardian
   include LocalizationGuardian
   include SidebarGuardian
+  include StaffActionLogGuardian
   include TagGuardian
   include TopicGuardian
+  include UploadGuardian
   include UserGuardian
 
   class AnonymousUser
@@ -96,7 +102,7 @@ class Guardian
     end
 
     def in_any_groups?(group_ids)
-      false
+      group_ids.include?(Group::AUTO_GROUPS[:anonymous])
     end
   end
 
@@ -340,7 +346,7 @@ class Guardian
   alias can_deactivate? can_suspend?
 
   def can_unsuspend?(user)
-    user && is_staff?
+    user && is_staff? && (!user.staff? || is_admin?)
   end
 
   def can_revoke_admin?(admin)
@@ -481,11 +487,20 @@ class Guardian
       @user.in_any_groups?(SiteSetting.send_email_messages_allowed_groups_map)
   end
 
-  def can_export_entity?(entity, entity_id = nil)
+  def can_export_entity?(entity, entity_id = nil, args = nil)
     return false if anonymous?
     return true if is_admin?
-    return can_see_emails? if entity == "screened_email"
-    return entity != "user_list" if is_moderator? && (entity != "user_archive" || entity_id.nil?)
+    return can_see_emails? && can_see_ip? if entity == "screened_email"
+    return can_see_ip? if entity == "screened_ip"
+
+    if is_moderator? && (entity != "user_archive" || entity_id.nil?)
+      if entity == "report"
+        report_name = args&.[](:name) || args&.[]("name")
+        return true if report_name.blank?
+        return !Report.hidden?(report_name, guardian: self)
+      end
+      return %w[staff_action screened_url report user_archive].include?(entity)
+    end
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
@@ -607,10 +622,6 @@ class Guardian
   def can_lazy_load_categories?
     SiteSetting.lazy_load_categories_groups_map.include?(Group::AUTO_GROUPS[:everyone]) ||
       @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
-  end
-
-  def can_see_reviewable_ui_refresh?
-    @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
   end
 
   def is_me?(other)

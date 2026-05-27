@@ -41,7 +41,6 @@ es:
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Asignado #%{post_number} a %{username}"
       assign_post_to_multiple: "#%{post_number} a %{username}"
-      assigned_to_w_ellipsis: "Asignado a..."
       unassign:
         title: "Anular asignación"
         title_w_ellipsis: "Anular asignación..."
@@ -143,6 +142,14 @@ es:
       bulk:
         unassign: "Anular asignación de temas"
         assign: "Asignar temas"
+        assign_description: "Asigna todos los temas seleccionados a la siguiente categoría:"
+        unassign_description: "¿Quieres anular la selección de los temas seleccionados?"
+        confirm_assign_topics:
+          one: "Asginar %{count} tema"
+          other: "Asginar %{count} temas"
+        confirm_unassign_topics:
+          one: "Anular asignación de %{count} tema"
+          other: "Anular asignación de %{count} temas"
     discourse_automation:
       scriptables:
         random_assign:

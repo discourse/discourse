@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post small actions", type: :system do
+describe "Post small actions" do
   fab!(:admin)
   fab!(:topic)
   fab!(:first_post) do

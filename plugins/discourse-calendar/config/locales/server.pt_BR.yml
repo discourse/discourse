@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  category_types:
+    events:
+      name: "Eventos"
+      title: "eventos"
   reports:
     currently_away:
       title: Usuários ausentes no momento
+      description: "Usuários que estão atualmente de férias ou afastados, os quais podem ser filtrados por grupo."
       labels:
         username: Nome de usuário(a)
   discourse_automation:
@@ -49,7 +54,7 @@ pt_BR:
     all_day_event_start_time: "Os eventos que não têm uma hora de início especificada começarão neste momento. O formato é HH:mm. Para 6:00 da manhã, digite 06:00"
     all_day_event_end_time: "Os eventos que não têm uma hora de início especificada começarão neste momento. O formato é HH:mm. Para 6:00 da manhã, digite 18:00"
     all_day_event_time_error: "Hora inválida. O formato precisa ser HH:mm (ex: 08:00)."
-    calendar_categories: "Mostrar um calendário no topo de uma categoria. As configurações obrigatórias são categoryId e postId. eg: categoryId=6;postId=453\n Outras configurações válidas: tzPicker, fins de semana e defaultView."
+    calendar_categories: "Exibir um calendário no topo de uma categoria. O categoryId é obrigatório. Exemplo: categoryId=6;weekends=false;defaultView=year;\n Outras configurações válidas: weekends(true/false) e defaultView(day,week,month,year)."
     calendar_categories_outlet: "Permite mudar qual saída deve mostrar o calendário da categoria."
     working_days: "Dias úteis definidos. Você pode exibir a disponibilidade de um grupo utilizando a etiqueta \"timezones\" em uma postagem, por exemplo: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Hora de início das horas do dia útil."
@@ -61,7 +66,14 @@ pt_BR:
     calendar_automatic_holidays_enabled: "Definir automaticamente o status do feriado conforme a região do(a) usuário(a) (observação: você pode desativar feriados automáticos específicos nas configurações do plugin)"
     event_participation_buttons: "Lista botões de participação no evento que os(as) usuários(as) podem usar."
     sidebar_show_upcoming_events: "Mostre o link dos próximos eventos na barra lateral, em \"Mais\"."
+    calendar_first_day_of_week: "Escolher o primeiro dia da semana do calendário. As opções são sábado, domingo ou segunda-feira."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dia"
+        week: "Semana"
+        month: "Mês"
+        year: "Ano"
     invite_user_notification: "%{username} convidou para participar de %{description}"
     calendar_must_be_in_first_post: "A etiqueta do calendário só pode ser usada no primeiro post de um tópico."
     more_than_one_calendar: "Você não pode ter mais de um calendário em uma postagem."
@@ -76,7 +88,7 @@ pt_BR:
       ongoing_event_reminder: "%{title} está em andamento."
     errors:
       bulk_invite:
-        max_invitees: "Os primeiros %{max_invittes} convites foram enviados. Tente dividir o arquivo em partes menores."
+        max_invitees: "Os primeiros %{max_invitees} convites foram enviados. Tente dividir o arquivo em partes menores."
         error: "Houve um erro ao tentar enviar este arquivo. Tente novamente mais tarde."
       models:
         event:
@@ -86,6 +98,7 @@ pt_BR:
           raw_invitees:
             only_group: "Um evento aceita apenas nomes de grupos."
           ends_at_before_starts_at: "Um evento não pode terminar antes de começar."
+          max_attendees_reached: "Este evento está lotado."
           start_must_be_present_and_a_valid_date: "Um evento requer uma data de início válida."
           end_must_be_a_valid_date: "A data final deve ser uma data válida."
           invalid_recurrence: "A recorrência deve ser: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

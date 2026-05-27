@@ -199,7 +199,7 @@ module Jobs
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?
 
-      report = Report.find(@extra[:name], @extra)
+      report = Report.find(@extra[:name], @extra.merge(guardian: @current_user&.guardian))
 
       header = []
       titles = {}
@@ -221,10 +221,13 @@ module Jobs
       end
 
       if report.modes == [Report::MODES[:stacked_chart]]
+        hidden_labels = @extra[:hidden_labels].to_s.split(",").map(&:strip)
+
         header = [:x]
         data = {}
 
-        report.data.map do |series|
+        report.data.each do |series|
+          next if hidden_labels.include?(series[:req])
           header << series[:label]
           series[:data].each do |datapoint|
             data[datapoint[:x]] ||= { x: datapoint[:x] }
@@ -350,6 +353,7 @@ module Jobs
 
     def get_staff_action_fields(staff_action)
       staff_action_array = []
+      can_see_content = staff_action_log_guardian.can_see_staff_action_log_content?(staff_action)
 
       HEADER_ATTRS_FOR["staff_action"].each do |attr|
         data =
@@ -365,6 +369,8 @@ module Jobs
             else
               "#{user.username} #{staff_action.attributes[attr]}"
             end
+          elsif %w[details context].include?(attr) && !can_see_content
+            attr == "details" ? I18n.t("staff_action_logs.redacted") : nil
           else
             staff_action.attributes[attr]
           end
@@ -424,6 +430,10 @@ module Jobs
       end
 
       screened_url_array
+    end
+
+    def staff_action_log_guardian
+      @staff_action_log_guardian ||= Guardian.new(@current_user)
     end
 
     def notify_user(upload, export_title)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post event", type: :system do
+describe "Post event" do
   fab!(:admin)
   fab!(:user, :admin)
   fab!(:group)
@@ -18,34 +18,28 @@ describe "Post event", type: :system do
   end
 
   context "with location" do
+    let(:location) { "123 Main St, Brisbane, Australia http://example.com" }
+
     it "can save a location" do
-      post =
-        PostCreator.create(
-          admin,
-          title: "My test meetup event",
-          raw: "[event start='2222-02-22 14:22']\n[/event]",
-        )
+      title = "My test meetup event"
+      raw = "[event start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create(admin, title:, raw:)
 
       visit(post.topic.url)
       post_event_page.edit
-      post_event_form_page.fill_location("123 Main St, Brisbane, Australia http://example.com")
+      post_event_form_page.fill_location(location)
       post_event_form_page.submit
 
-      expect(post_event_page).to have_location(
-        "123 Main St, Brisbane, Australia http://example.com",
-      )
+      expect(post_event_page).to have_location(location)
       expect(page).to have_css(".event-location a[href='http://example.com']")
     end
   end
 
   context "with description" do
     it "can save a description" do
-      post =
-        PostCreator.create(
-          admin,
-          title: "My test meetup event",
-          raw: "[event start='2222-02-22 14:22']\n[/event]",
-        )
+      title = "My descriptive meetup event"
+      raw = "[event start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create(admin, title:, raw:)
 
       visit(post.topic.url)
       post_event_page.edit
@@ -57,59 +51,116 @@ describe "Post event", type: :system do
       expect(post_event_page).to have_description(
         %r{this is a test description\s+and a link http://example.com},
       )
-      expect(page).to have_css(".event-description a[href='http://example.com']")
     end
 
-    # this is a flake cause strftim is calculated on server and client may have a
-    # slightly different time
-    xit "correctly builds a multiline description", timezone: "Europe/Paris" do
+    it "shows the full description without a toggle in the topic view" do
+      title = "Event with full description"
+      description = "A short event description"
+      raw = "[event start='2222-02-22 14:22']\n#{description}\n[/event]"
+      post = PostCreator.create(admin, title:, raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_description(description)
+      expect(post_event_page).to have_no_description_toggle
+    end
+
+    it "correctly builds a multiline description" do
+      timezone = "Europe/Paris"
+      admin.user_option.update!(timezone:)
+
+      time = Time.new(2025, 6, 15, 14, 30, 0, "+02:00")
+      freeze_time(time)
+      page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+
       visit("/new-topic")
+      find(".toolbar-menu__options-trigger").click
+      click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
 
-      time = Time.now.strftime("%Y-%m-%d %H:%M")
+      # Toolbar inserts inline; fill the description in the preview editor and
+      # focus out to flush back to raw.
+      composer.preview.find(".composer-event__description-textarea").fill_in(with: "foo\nbar")
+      find(".d-editor-input").click
 
-      EXPECTED_BBCODE = <<~EVENT
-        [event start="#{time}" status="public" timezone="Europe/Paris"]
+      expect(composer).to have_value <<~EVENT.strip
+        [event start="2025-06-15 15:00" status="public" timezone="#{timezone}" end="2025-06-15 16:00" reminders="notification.15.minutes"]
         foo
         bar
         [/event]
       EVENT
+    end
+  end
 
+  context "with markdown-mode preview" do
+    it "inserts BBCode inline and renders the compact editor in the preview pane pre-populated" do
+      visit("/new-topic")
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
-      post_event_form_page.fill_description("foo\nbar").fill_timezone("Europe/Paris").submit
 
-      expect(composer).to have_value(EXPECTED_BBCODE.strip)
+      preview = composer.preview
+      expect(preview).to have_css(".composer-event-node")
+      expect(preview.find(".composer-event__date-input", match: :first).value).not_to(
+        be_empty,
+        "start date should be populated from the inserted BBCode",
+      )
+      expect(composer).to have_value(/\[event /)
+    end
+
+    it "preserves a multi-day end date when toggling all-day on" do
+      visit("/new-topic")
+      composer.fill_title("Multi-day all-day toggle")
+      composer.fill_content <<~MD
+        [event start='2024-06-01 10:00' end='2024-06-03 12:00' timezone='UTC' status='public']
+        [/event]
+      MD
+
+      preview = composer.preview
+      expect(preview).to have_css(".composer-event-node")
+
+      preview.find(".composer-event__all-day-toggle .d-toggle-switch__label").click
+      find(".d-editor-input").click
+
+      expect(composer).to have_value(/start="2024-06-01"/)
+      expect(composer).to have_value(/end="2024-06-03"/)
+    end
+
+    context "when showLocalTime is set and the event crosses midnight relative to the viewer",
+            timezone: "Australia/Brisbane" do
+      it "renders the preview badge in the event timezone, not the viewer's" do
+        # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
+        # so without showLocalTime the viewer would see "Sep 8" in the badge.
+        # With showLocalTime, the preview must stay anchored to the event timezone.
+        visit("/new-topic")
+        composer.fill_title("Local time preview test")
+        composer.fill_content <<~MD
+          [event start='2025-09-07 22:30' timezone='Europe/Paris' showLocalTime='true' status='public']
+          [/event]
+        MD
+
+        preview = composer.preview
+        expect(preview).to have_css(".composer-event__month", text: "SEP")
+        expect(preview).to have_css(".composer-event__day", text: "7")
+      end
     end
   end
 
   context "with max attendees" do
     it "updates the going button label from Full after toggling" do
-      post =
-        PostCreator.create(
-          admin,
-          title: "Max attendees event",
-          raw: "[event status='public' start='2222-02-22 14:22' max-attendees='1']\n[/event]",
-        )
+      going = I18n.t("js.discourse_post_event.models.invitee.status.going")
+      full = I18n.t("js.discourse_post_event.models.event.full")
+      raw = "[event status='public' start='2222-02-22 14:22' max-attendees='1']\n[/event]"
+      post = PostCreator.create(admin, title: "My test meetup event", raw:)
 
       visit(post.topic.url)
 
-      # First click: join the event; since max is 1, it reaches capacity and shows Full
+      # Wait for the component to settle before clicking
+      expect(page).to have_css(".going-button", text: going)
       post_event_page.going
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
+      expect(page).to have_css(".going-button", text: full)
 
-      # Second click: leave the event; label should no longer be Full
       post_event_page.going
-      expect(page).to have_no_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.event.full"),
-      )
-      expect(page).to have_css(
-        ".going-button",
-        text: I18n.t("js.discourse_post_event.models.invitee.status.going"),
-      )
+      expect(page).to have_css(".going-button", text: going)
+      expect(page).to have_no_css(".going-button", text: full)
     end
   end
 
@@ -121,6 +172,9 @@ describe "Post event", type: :system do
 
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      # Toolbar inserts inline; click gear to open the modal on advanced.
+      find(".d-editor-preview .composer-event__more-dropdown button").click
 
       tz_select =
         PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
@@ -136,13 +190,12 @@ describe "Post event", type: :system do
         pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
       end
 
-      post =
-        PostCreator.create(
-          admin,
-          title: "My test meetup event",
-          raw:
-            "[event showLocalTime='true' start='2025-09-07 17:30' start='2025-09-07 18:30' timezone='Europe/Paris']\n[/event]",
-        )
+      title = "My FR test meetup event"
+      raw = <<~MD
+        [event showLocalTime='true' start='2025-09-07 17:30' timezone='Europe/Paris']
+        [/event]
+      MD
+      post = PostCreator.create(admin, title:, raw:)
 
       visit(post.topic.url)
 
@@ -151,12 +204,9 @@ describe "Post event", type: :system do
     end
 
     it "shows correct date" do
-      post =
-        PostCreator.create(
-          admin,
-          title: "My test meetup event",
-          raw: "[event timezone='Japan' showLocalTime='true' start='2222-02-22 14:22']\n[/event]",
-        )
+      title = "My JP test meetup event"
+      raw = "[event timezone='Japan' showLocalTime='true' start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create(admin, title:, raw:)
 
       visit(post.topic.url)
 
@@ -165,12 +215,9 @@ describe "Post event", type: :system do
   end
 
   it "safely renders event name" do
-    post =
-      PostCreator.create(
-        admin,
-        title: "My test meetup event",
-        raw: "[event name=':cat: <script>alert(1);</script>' start='2222-02-22 00:00']\n[/event]",
-      )
+    title = "My XSS test meetup event"
+    raw = "[event name=':cat: <script>alert(1);</script>' start='2222-02-22 00:00']\n[/event]"
+    post = PostCreator.create(admin, title:, raw:)
 
     visit(post.topic.url)
 
@@ -181,7 +228,7 @@ describe "Post event", type: :system do
   it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
+    tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]
@@ -193,8 +240,11 @@ describe "Post event", type: :system do
 
     post_event_page.close
     post_event_page.open
-    post_event_page.going.open_more_menu
-    find(".show-all-participants").click
+
+    try_until_success { post_event_page.going }.open_more_menu do
+      locator(".show-all-participants").click
+    end
+
     find(".d-modal input.filter").fill_in(with: user.username)
     find(".d-modal .add-invitee").click
 
@@ -206,12 +256,10 @@ describe "Post event", type: :system do
   end
 
   it "does not show participants button when event is standalone" do
-    post =
-      PostCreator.create(
-        admin,
-        title: "My test meetup event",
-        raw: "[event name='cool-event' status='standalone' start='2222-02-22 00:00' ]\n[/event]",
-      )
+    title = "My standalone event"
+    raw = "[event name='standalone-event' status='standalone' start='2222-02-22 00:00']\n[/event]"
+    post = PostCreator.create(admin, title:, raw:)
+
     visit(post.topic.url)
     post_event_page.open_more_menu
 
@@ -219,12 +267,9 @@ describe "Post event", type: :system do
   end
 
   it "does not show 'send pm' button to the user who created the event" do
-    post =
-      PostCreator.create(
-        admin,
-        title: "My test meetup event",
-        raw: "[event name='cool-event' status='public' start='2222-02-22 00:00' ]\n[/event]",
-      )
+    title = "My test meetup event"
+    raw = "[event name='cool-event' status='public' start='2222-02-22 00:00']\n[/event]"
+    post = PostCreator.create(admin, title:, raw:)
 
     visit(post.topic.url)
     post_event_page.going.open_more_menu
@@ -232,14 +277,65 @@ describe "Post event", type: :system do
     expect(page).to have_no_css(".send-pm-to-creator")
   end
 
+  context "with the Going button" do
+    fab!(:rsvp_user, :user)
+
+    before { sign_in(rsvp_user) }
+
+    it "creates a recurring going invitee when picking 'this event and all following events'" do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going_all_following
+
+      expect(post_event_page).to have_going_status
+      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(invitee.recurring).to eq(true)
+    end
+
+    it "creates a non-recurring going invitee when picking 'this event'" do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going_this_event
+
+      expect(post_event_page).to have_going_status
+      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(invitee.recurring).to eq(false)
+    end
+
+    it "renders without a dropdown on non-recurring events" do
+      raw = "[event status='public' start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title: "My one-off meetup event", raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_going_button
+      expect(post_event_page).to have_no_going_menu
+    end
+
+    it "opens the menu when tapping the whole going button on mobile", mobile: true do
+      raw = "[event status='public' start='2222-02-22 14:22' recurrence='every_week']\n[/event]"
+      post = PostCreator.create!(admin, title: "My recurring meetup event", raw:)
+
+      visit(post.topic.url)
+      post_event_page.going
+
+      expect(page).to have_css(".discourse-post-event-going-menu-content")
+    end
+  end
+
   it "shows '-' for expired recurring events instead of dates" do
-    post =
-      PostCreator.create!(
-        admin,
-        title: "An expired recurring event",
-        raw:
-          "[event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']\n[/event]",
-      )
+    title = "An expired recurring event"
+    raw = <<~MD
+      [event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']
+      [/event]
+    MD
+    post = PostCreator.create!(admin, title:, raw:)
 
     visit(post.topic.url)
 
@@ -250,113 +346,97 @@ describe "Post event", type: :system do
   end
 
   context "with DST handling for recurring events" do
-    fab!(:viewer) do
+    fab!(:eu_viewer) do
       user = Fabricate(:user)
       user.user_option.update!(timezone: "Europe/Paris")
       user
     end
 
-    it "maintains wall clock time (11:00 AM) in event timezone across all DST transitions" do
-      # Before any DST
-      freeze_time(Time.new(2025, 10, 14, 10, 0, 0, "+02:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event across DST",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
+    fab!(:us_viewer) do
+      user = Fabricate(:user)
+      user.user_option.update!(timezone: "America/New_York")
+      user
+    end
 
-        event = DiscoursePostEvent::Event.find_by(post: post)
+    def verify_event_time(viewer:, time:, expected_month: nil, expected_day: nil, expected_time:)
+      freeze_time(time) do
+        title = "Weekly recurring event #{SecureRandom.hex(4)}"
+        raw = <<~MD
+          [event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']
+          [/event]
+        MD
+        post = PostCreator.create!(admin, title:, raw:)
+
+        event = DiscoursePostEvent::Event.find_by(post:)
         event.set_next_date
+
         sign_in(viewer)
+
+        # Freeze browser clock **after** sign_in (which may navigate/reset state)
+        # so moment() uses the same time as the server.
+        page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+
         visit(post.topic.url)
 
-        expect(page).to have_css(".event-date .month", text: "OCT")
-        expect(page).to have_css(".event-date .day", text: "15")
-        expect(page).to have_css(".discourse-local-date", text: "5:00 PM")
-      end
-
-      # Test 2: After Europe DST
-      freeze_time(Time.new(2025, 10, 28, 10, 0, 0, "+01:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 2",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
-
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(viewer)
-        visit(post.topic.url)
-
-        expect(page).to have_css(".event-date .month", text: "OCT")
-        expect(page).to have_css(".event-date .day", text: "29")
-        # This is the period where the time CHANGES for European viewers
-        expect(page).to have_css(".discourse-local-date", text: "4:00 PM")
-      end
-
-      # Test 3: After both DST transitions
-      freeze_time(Time.new(2025, 11, 4, 10, 0, 0, "+01:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 3",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
-
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(viewer)
-        visit(post.topic.url)
-
-        expect(page).to have_css(".event-date .month", text: "NOV")
-        expect(page).to have_css(".event-date .day", text: "5")
-        expect(page).to have_css(".discourse-local-date", text: "5:00 PM")
+        expect(page).to have_css(".event-date .month", text: expected_month) if expected_month
+        expect(page).to have_css(".event-date .day", text: expected_day) if expected_day
+        expect(page).to have_css(".discourse-local-date", text: expected_time)
       end
     end
 
-    it "event stays at wall clock time (11:00 AM) in its own timezone throughout DST" do
-      us_viewer = Fabricate(:user)
-      us_viewer.user_option.update!(timezone: "America/New_York")
-
-      # Before US DST ends
-      freeze_time(Time.new(2025, 10, 28, 10, 0, 0, "-04:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 4",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
-
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(us_viewer)
-        visit(post.topic.url)
-
-        expect(page).to have_css(".discourse-local-date", text: "11:00 AM")
+    context "when viewer is in Europe/Paris timezone", timezone: "Europe/Paris" do
+      it "shows correct time before any DST transition" do
+        # Oct 14, 2025 - Both Europe and US are in summer time
+        # 11:00 AM EDT = 15:00 UTC = 17:00 CEST = 5:00 PM
+        verify_event_time(
+          viewer: eu_viewer,
+          time: Time.new(2025, 10, 14, 10, 0, 0, "+02:00"),
+          expected_month: "OCT",
+          expected_day: "15",
+          expected_time: "5:00 PM",
+        )
       end
 
-      # After US DST ends
-      freeze_time(Time.new(2025, 11, 4, 10, 0, 0, "-05:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 5",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
+      it "shows correct time after Europe DST ends but before US DST ends" do
+        # Oct 28, 2025 - Europe CET (UTC+1), US still EDT (UTC-4)
+        # 11:00 AM EDT = 15:00 UTC = 16:00 CET = 4:00 PM
+        verify_event_time(
+          viewer: eu_viewer,
+          time: Time.new(2025, 10, 28, 10, 0, 0, "+01:00"),
+          expected_month: "OCT",
+          expected_day: "29",
+          expected_time: "4:00 PM",
+        )
+      end
 
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(us_viewer)
-        visit(post.topic.url)
+      it "shows correct time after both DST transitions" do
+        # Nov 4, 2025 - Europe CET (UTC+1), US EST (UTC-5)
+        # 11:00 AM EST = 16:00 UTC = 17:00 CET = 5:00 PM
+        verify_event_time(
+          viewer: eu_viewer,
+          time: Time.new(2025, 11, 4, 10, 0, 0, "+01:00"),
+          expected_month: "NOV",
+          expected_day: "5",
+          expected_time: "5:00 PM",
+        )
+      end
+    end
 
-        expect(page).to have_css(".discourse-local-date", text: "11:00 AM")
+    context "when viewer is in America/New_York timezone", timezone: "America/New_York" do
+      it "shows 11:00 AM before US DST ends" do
+        verify_event_time(
+          viewer: us_viewer,
+          time: Time.new(2025, 10, 28, 10, 0, 0, "-04:00"),
+          expected_time: "11:00 AM",
+        )
+      end
+
+      it "shows 11:00 AM after US DST ends" do
+        verify_event_time(
+          viewer: us_viewer,
+          time: Time.new(2025, 11, 4, 10, 0, 0, "-05:00"),
+          expected_time: "11:00 AM",
+        )
       end
     end
   end
@@ -366,14 +446,17 @@ describe "Post event", type: :system do
     composer.fill_title("Test event with updates")
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
-    find(".d-modal input[name=status][value=private]").click
+
+    # Toolbar inserts inline; click gear to open the modal on advanced.
+    find(".d-editor-preview .composer-event__more-dropdown button").click
+
+    form = PageObjects::Components::FormKit.new(".d-modal form")
+    form.field("eventType").select("private")
     find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     find(".d-modal .custom-field-input").fill_in(with: "custom value")
-    dropdown = PageObjects::Components::SelectKit.new(".available-recurrences")
-    dropdown.expand
-    dropdown.select_row_by_value("every_day")
+    form.field("recurrence").select("every_day")
     find(".d-modal .recurrence-until .date-picker").fill_in(with: "#{1.year.from_now.year}-12-30")
     find(".d-modal .btn-primary").click
     composer.submit
@@ -381,8 +464,10 @@ describe "Post event", type: :system do
     expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
+    find(".d-modal .d-modal__footer .advanced-settings").click
 
-    expect(find(".d-modal input[name=status][value=private]").checked?).to eq(true)
+    form = PageObjects::Components::FormKit.new(".d-modal form")
+    expect(form.field("eventType")).to have_value("private")
     expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
     expect(find(".d-modal .custom-field-input").value).to eq("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
@@ -413,6 +498,30 @@ describe "Post event", type: :system do
         .send_invites
 
       expect(bulk_invite_modal_page).to be_closed
+    end
+  end
+
+  context "with add to calendar from more menu" do
+    it "includes rrule for recurring events" do
+      admin.user_option.update!(default_calendar: "ics")
+
+      title = "Weekly standup"
+      raw = <<~MD
+        [event start='2222-02-22 14:00' recurrence='every_week']
+        [/event]
+      MD
+      post = PostCreator.create!(admin, title:, raw:)
+
+      visit(post.topic.url)
+
+      ics_content = nil
+      page.driver.with_playwright_page do |pw_page|
+        download = pw_page.expect_download { post_event_page.add_to_calendar }
+        ics_content = download.path.then { |path| File.read(path) }
+      end
+
+      expect(ics_content).to include("RRULE:")
+      expect(ics_content).to include("FREQ=WEEKLY")
     end
   end
 end

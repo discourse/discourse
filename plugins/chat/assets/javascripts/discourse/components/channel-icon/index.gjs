@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import { trustHTML } from "@ember/template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {
@@ -17,8 +16,16 @@ export default class ChatChannelIcon extends Component {
     );
   }
 
+  get groupIsDuoOnly() {
+    return (
+      this.args.channel.chatable.group &&
+      // User array does not include the current user
+      this.args.channel.chatable.users.length === 1
+    );
+  }
+
   get channelColorStyle() {
-    return htmlSafe(`color: #${this.args.channel.chatable.color}`);
+    return trustHTML(`color: #${this.args.channel.chatable.color}`);
   }
 
   get isThreadsList() {
@@ -27,59 +34,50 @@ export default class ChatChannelIcon extends Component {
 
   get categoryChannelIcon() {
     const { emoji } = this.args.channel;
-    return emoji ? replaceEmoji(`:${emoji}:`) : icon("d-chat");
+    return emoji ? dReplaceEmoji(`:${emoji}:`) : dIcon("d-chat");
   }
 
-  get directChannelIcon() {
-    const { emoji, membershipsCount } = this.args.channel;
-    return emoji ? replaceEmoji(`:${emoji}:`) : membershipsCount;
+  get channelEmojiCode() {
+    return `:${this.args.channel.emoji}:`;
   }
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
-      <div class="chat-channel-icon">
-        {{#if @channel.iconUploadUrl}}
-          <span class="chat-channel-icon --avatar --custom-icon">
-            <img src={{@channel.iconUploadUrl}} />
-          </span>
-        {{else if this.groupDirectMessage}}
-          <span
-            class={{concatClass
-              "chat-channel-icon"
-              (unless @channel.emoji "--users-count")
-            }}
-          >
-            {{this.directChannelIcon}}
-          </span>
-        {{else}}
+      {{#if this.groupDirectMessage}}
+        {{#if @channel.emoji}}
+          <div class="chat-channel-icon --emoji">
+            {{dReplaceEmoji this.channelEmojiCode}}
+          </div>
+        {{else if this.groupIsDuoOnly}}
           <div class="chat-channel-icon --avatar">
             <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
           </div>
+        {{else}}
+          <div class="chat-channel-icon --users-count">
+            {{@channel.membershipsCount}}
+          </div>
+        {{/if}}
+      {{else}}
+        <div class="chat-channel-icon --avatar">
+          <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
+        </div>
+      {{/if}}
+    {{else if @channel.isCategoryChannel}}
+      <div class="chat-channel-icon --icon" style={{this.channelColorStyle}}>
+        {{this.categoryChannelIcon}}
+        {{#if @channel.chatable.read_restricted}}
+          {{dIcon "lock" class="chat-channel-icon__restricted-category-icon"}}
         {{/if}}
       </div>
-    {{else if @channel.isCategoryChannel}}
-      <div class="chat-channel-icon">
-        <span
-          class="chat-channel-icon --category-badge"
-          style={{this.channelColorStyle}}
-        >
-          {{this.categoryChannelIcon}}
-          {{#if @channel.chatable.read_restricted}}
-            {{icon "lock" class="chat-channel-icon__restricted-category-icon"}}
-          {{/if}}
-        </span>
-      </div>
     {{else if this.isThreadsList}}
-      <div class="chat-channel-icon">
-        <div class="chat-channel-icon --avatar">
-          <ChatUserAvatar
-            @user={{@thread.preview.lastReplyUser}}
-            @interactive={{true}}
-            @showPresence={{false}}
-          />
-          <div class="avatar-flair --threads">
-            {{icon "discourse-threads"}}
-          </div>
+      <div class="chat-channel-icon --avatar">
+        <ChatUserAvatar
+          @user={{@thread.preview.lastReplyUser}}
+          @interactive={{true}}
+          @showPresence={{false}}
+        />
+        <div class="avatar-flair --threads">
+          {{dIcon "discourse-threads"}}
         </div>
       </div>
     {{/if}}

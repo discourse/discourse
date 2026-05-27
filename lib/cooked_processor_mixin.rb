@@ -205,7 +205,8 @@ module CookedProcessorMixin
     # we can't direct FastImage to our secure-uploads url because it bounces
     # anonymous requests with a 404 error
     if url && Upload.secure_uploads_url?(url)
-      absolute_url = Upload.signed_url_from_secure_uploads_url(absolute_url)
+      absolute_url =
+        Upload.signed_url_from_secure_uploads_url(absolute_url, include_content_disposition: false)
     end
 
     return unless is_valid_image_url?(absolute_url)
@@ -344,6 +345,9 @@ module CookedProcessorMixin
     if title = inline_onebox&.dig(:title)
       element.children = CGI.escapeHTML(title)
       element.add_class("inline-onebox")
+      if css_class = inline_onebox[:css_class]
+        element.add_class(css_class)
+      end
     end
 
     remove_inline_onebox_loading_class(element)
@@ -421,14 +425,11 @@ module CookedProcessorMixin
     src = img["src"]
     return if src.blank? || is_a_hyperlink?(img)
 
-    # SVG images can only use the zoom feature in the new lightbox
-    return if is_svg?(img) && !SiteSetting.experimental_lightbox
-
     upload = Upload.get_from_url(src)
 
     original_width, original_height = nil
 
-    if (upload.present?)
+    if upload.present?
       original_width = upload.width || 0
       original_height = upload.height || 0
     else

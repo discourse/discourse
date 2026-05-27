@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 RSpec.describe Jobs::RedeliverWebHookEvents do
   subject(:job) { described_class.new }
 
@@ -43,6 +41,20 @@ RSpec.describe Jobs::RedeliverWebHookEvents do
     expect(RedeliveringWebhookEvent.count).to eq(0)
     expect(messages.count).to eq(1)
     expect(messages.first.data).to include(type: "redelivered")
+  end
+
+  it "restricts the redelivery MessageBus publish to the staff group" do
+    stub_request(:post, web_hook.payload_url).to_return(status: 200, body: "", headers: {})
+
+    messages =
+      MessageBus.track_publish("/web_hook_events/#{web_hook.id}") do
+        job.execute(web_hook: web_hook, web_hook_event: web_hook_event1)
+      end
+
+    expect(RedeliveringWebhookEvent.count).to eq(0)
+    expect(messages.size).to eq(1)
+    expect(messages.first.data).to include(type: "redelivered")
+    expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:staff]])
   end
 
   context "when there is a redelivering_webhook_event in process" do

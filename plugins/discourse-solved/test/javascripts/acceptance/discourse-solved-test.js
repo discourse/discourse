@@ -21,12 +21,16 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
     );
 
     await visit("/t/with-excerpt/11");
-    assert.dom(".quote blockquote").hasText("this is an excerpt");
+
+    assert.dom(".quote.accepted-answer blockquote").exists();
+    assert
+      .dom(".quote.accepted-answer blockquote")
+      .hasText("this is an excerpt");
 
     await visit("/t/without-excerpt/12");
 
-    assert.dom(".quote blockquote").hasNoText();
-    assert.dom(".quote.title-only .title").exists();
+    assert.dom(".quote.accepted-answer.title-only").exists();
+    assert.dom(".quote.accepted-answer blockquote").doesNotExist();
   });
 
   test("Full page search displays solved status", async function (assert) {
@@ -41,6 +45,6 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
     await click(".search-cta");
 
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
-    assert.dom(".topic-statuses .solved").exists("shows the right icon");
+    assert.dom(".topic-statuses .--solved").exists("shows the right icon");
   });
 });

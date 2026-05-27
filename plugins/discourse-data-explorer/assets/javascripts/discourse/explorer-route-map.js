@@ -1,11 +1,10 @@
 export default {
-  resource: "admin.adminPlugins",
+  resource: "admin.adminPlugins.show",
   path: "/plugins",
   map() {
-    this.route("explorer", function () {
-      this.route("queries", function () {
-        this.route("details", { path: "/:query_id" });
-      });
+    this.route("explorer", { path: "queries" }, function () {
+      this.route("new");
+      this.route("edit", { path: "/:query_id" });
     });
   },
 };

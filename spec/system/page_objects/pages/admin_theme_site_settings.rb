@@ -32,7 +32,7 @@ module PageObjects
 
       def setting_row(setting_name)
         page.find(
-          ".d-admin-row__content.admin-theme-site-settings-row[data-setting-name='#{setting_name}']",
+          ".d-table__row.admin-theme-site-settings-row[data-setting-name='#{setting_name}']",
         )
       end
     end

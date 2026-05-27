@@ -16,10 +16,10 @@ class ReactionsExcludedFromLikeSiteSettingValidator
   def valid_emojis?(val)
     emojis = val.to_s.split("|")
     enabled_reaction_emojis = SiteSetting.discourse_reactions_enabled_reactions.to_s.split("|")
+    default_excluded = SiteSetting.defaults[:discourse_reactions_excluded_from_like].to_s.split("|")
     !emojis.include?(SiteSetting.discourse_reactions_reaction_for_like) &&
       emojis.all? do |emoji|
-        enabled_reaction_emojis.include?(emoji) ||
-          emoji == SiteSetting.defaults[:discourse_reactions_excluded_from_like]
+        enabled_reaction_emojis.include?(emoji) || default_excluded.include?(emoji)
       end
   end
 end

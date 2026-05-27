@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Channel - Info - Members page", type: :system do
+RSpec.describe "Channel - Info - Members page" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
   fab!(:current_user, :user)
@@ -42,18 +42,18 @@ RSpec.describe "Channel - Info - Members page", type: :system do
         Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
       end
 
-      xit "shows all members" do
+      it "loads more members on scroll" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_selector(".c-channel-members__list-item", count: 60)
+        expect(page).to have_css("li.c-channel-members__list-item.-member", minimum: 20)
+        initial_count = page.all("li.c-channel-members__list-item.-member").count
 
-        scroll_to(find(".c-channel-members__list-item:nth-child(60)"))
+        page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
-
-        scroll_to(find(".c-channel-members__list-item:nth-child(100)"))
-
-        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
+        expect(page).to have_css(
+          "li.c-channel-members__list-item.-member",
+          minimum: initial_count + 1,
+        )
       end
 
       context "with filter" do
@@ -70,11 +70,12 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       end
 
       context "with user status" do
-        xit "renders status next to name" do
+        it "renders status next to name" do
           SiteSetting.enable_user_status = true
           current_user.set_status!("walking the dog", "dog")
 
           chat_page.visit_channel_members(channel_1)
+          find(".c-channel-members__filter").fill_in(with: current_user.username)
 
           expect(page).to have_selector(
             ".-member .user-status-message img[alt='#{current_user.user_status.emoji}']",
@@ -155,14 +156,27 @@ RSpec.describe "Channel - Info - Members page", type: :system do
         ),
       )
 
-      ##
-      # TODO: The add member button is being shown because visiting the channel members page directly
-      # does not populate `this.args.channel.messagesManager.messages` so the add member button will always be
-      # shown.
-      # See https://github.com/discourse/discourse/blob/dce4eb718ba56d44284997def5dc0e674924e3d8/plugins/chat/assets/javascripts/discourse/components/chat/routes/channel-info-members.gjs#L150
-      #
-      # chat_page.visit_channel_members(channel_1)
-      # expect(chat_page).to have_no_add_member_button
+      chat_page.visit_channel_members(channel_1)
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "hides add member option when group chats are disabled for members" do
+      SiteSetting.chat_max_direct_message_users = 1
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_no_add_member_button
+    end
+
+    it "shows add member option when group chats are disabled but user is staff" do
+      SiteSetting.chat_max_direct_message_users = 1
+      current_user.update!(admin: true)
+
+      visit("/")
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_add_member_button
     end
   end
 

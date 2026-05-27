@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    discourse_rewind_enabled: "Włącz Discourse Rewind, aby w ciekawy sposób podsumować aktywność członków społeczności na koniec roku."
+  discourse_rewind:
+    report_failed: "Nie udało się wygenerować raportu Discourse Rewind."
+    invalid_year: "Rewind można przeprowadzić tylko w styczniu lub grudniu."
+    user_not_found: "Użytkownik nie został znaleziony lub nie można go wyświetlić."
+    reports_not_cached: "Raporty nie zostały jeszcze wygenerowane. Odśwież stronę."
+    report_not_found: "Raport nie został znaleziony."
+    cannot_share_when_profile_hidden: "Aby udostępnić Rewind musisz zezwolić innym na oglądanie Twojego profilu publicznego."

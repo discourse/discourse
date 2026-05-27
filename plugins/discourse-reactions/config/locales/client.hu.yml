@@ -15,8 +15,6 @@ hu:
       reactions_title: "Reakciók"
       state_panel:
         more_users: "és még további %{count}..."
-      reaction:
-        forbidden: "Ez a reakció túl régen lett létrehozva. Már nem lehet módosítani vagy eltávolítani."
       picker:
         react_with: "Reagálás erre a bejegyzésre ezzel: %{reaction}"
         cant_remove_reaction: "Nem lehet eltávolítani a reakciót"

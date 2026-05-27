@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Rss Polling - admin", type: :system do
+RSpec.describe "Rss Polling - admin" do
   fab!(:current_user, :admin)
   fab!(:category_1, :category)
   fab!(:tag_1, :tag)
@@ -26,12 +26,12 @@ RSpec.describe "Rss Polling - admin", type: :system do
     category.select_row_by_value(category_1.id)
     tag = PageObjects::Components::SelectKit.new(".rss-polling-feed-tag")
     tag.search(tag_1.name)
-    tag.select_row_by_value(tag_1.name)
+    tag.select_row_by_name(tag_1.name)
     find(".save-rss-polling-feed").click
 
     expect(DiscourseRssPolling::RssFeed.last).to have_attributes(
       url:,
-      author: current_user.username,
+      user_id: current_user.id,
       category_filter: "updates",
       category_id: category_1.id,
       tags: tag_1.name,

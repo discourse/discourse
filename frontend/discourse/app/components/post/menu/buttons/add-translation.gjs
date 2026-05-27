@@ -1,23 +1,20 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import PostTranslationsModal from "discourse/components/modal/post-translations";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import Composer from "discourse/models/composer";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class PostMenuAddTranslationButton extends Component {
   @service composer;
   @service modal;
-
-  @tracked showComposer = false;
 
   get showTranslationButton() {
     return this.args.post.can_localize_post;
@@ -80,12 +77,12 @@ export default class PostMenuAddTranslationButton extends Component {
         @identifier="post-action-menu-edit-translations"
         class="update-translations-menu"
         @title={{this.addTranslationsLabel}}
-        @icon="discourse-add-translation"
+        @icon="language"
         @onRegisterApi={{this.onRegisterApi}}
         @arrow={{false}}
       >
         <:content>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             <PluginOutlet
               @name="post-menu-translations-dropdown"
               @outletArgs={{lazyHash dropdown=dropdown post=@post}}
@@ -109,7 +106,7 @@ export default class PostMenuAddTranslationButton extends Component {
                 />
               </dropdown.item>
             </PluginOutlet>
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{/if}}

@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
-import draggable from "discourse/modifiers/draggable";
 import { and, not } from "discourse/truth-helpers";
+import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 
 export default class TopicTimelineScroller extends Component {
-  style = htmlSafe(`height: ${SCROLLER_HEIGHT}px`);
+  style = trustHTML(`height: ${SCROLLER_HEIGHT}px`);
 
   get repliesShort() {
     return i18n(`topic.timeline.replies_short`, {
@@ -25,7 +25,7 @@ export default class TopicTimelineScroller extends Component {
 
   <template>
     <div
-      {{draggable
+      {{dDraggable
         didStartDrag=@didStartDrag
         didEndDrag=@didEndDrag
         dragMove=@dragMove

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reviewables", type: :system do
+describe "Reviewables" do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
   fab!(:theme)
@@ -11,20 +11,6 @@ describe "Reviewables", type: :system do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(admin) }
-
-  describe "when there is a flagged post reviewable with a long post" do
-    fab!(:long_reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
-
-    it "should show a button to expand/collapse the post content" do
-      visit("/review")
-      expect(review_page).to have_post_body_collapsed
-      expect(review_page).to have_post_body_toggle
-      review_page.click_post_body_toggle
-      expect(review_page).to have_no_post_body_collapsed
-      review_page.click_post_body_toggle
-      expect(review_page).to have_post_body_collapsed
-    end
-  end
 
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
@@ -76,7 +62,9 @@ describe "Reviewables", type: :system do
       it "should show a toast when disagreeing with a flag flag" do
         visit("/review")
 
-        find(".post-disagree").click
+        select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")
+        select_kit.expand
+        select_kit.select_row_by_value("post-disagree")
 
         expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
       end
@@ -100,20 +88,6 @@ describe "Reviewables", type: :system do
 
       expect(page).to have_no_css(".approve-post.btn-default")
       expect(page).to have_no_css(".reject-post .btn-default")
-    end
-  end
-
-  describe "when there is a queued post reviewable with a long post" do
-    fab!(:long_queued_reviewable, :reviewable_queued_long_post)
-
-    it "should show a button to expand/collapse the post content" do
-      visit("/review")
-      expect(review_page).to have_post_body_collapsed
-      expect(review_page).to have_post_body_toggle
-      review_page.click_post_body_toggle
-      expect(review_page).to have_no_post_body_collapsed
-      review_page.click_post_body_toggle
-      expect(review_page).to have_post_body_collapsed
     end
   end
 
@@ -142,7 +116,6 @@ describe "Reviewables", type: :system do
       rejection_reason_modal.delete_user
 
       expect(review_page).to have_reviewable_with_rejected_status(reviewable)
-      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to eq([user_email])
@@ -161,10 +134,8 @@ describe "Reviewables", type: :system do
       rejection_reason_modal.delete_user
 
       expect(review_page).to have_reviewable_with_rejected_status(reviewable)
-      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
 
-      expect(review_page).to have_scrub_button(reviewable)
-      review_page.click_scrub_button(reviewable)
+      review_page.click_scrub_user_button
 
       expect(scrub_user_modal.scrub_button).to be_disabled
       scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
@@ -177,7 +148,6 @@ describe "Reviewables", type: :system do
         reviewable,
         reviewable.payload["scrubbed_at"],
       )
-      expect(review_page).to have_no_scrub_button(reviewable)
     end
   end
 
@@ -198,7 +168,6 @@ describe "Reviewables", type: :system do
 
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
-        expect(review_page).to have_reviewable_action_dropdown
         expect(review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
 
         review_page.select_bundled_action(queued_post_reviewable, "delete_user")
@@ -218,7 +187,7 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        review_page.select_bundled_action(queued_post_reviewable, "revise_and_reject_post")
 
         expect(revise_modal).to be_open
 
@@ -242,26 +211,6 @@ describe "Reviewables", type: :system do
         )
       end
 
-      it "claims the reviewable while revising, and unclaims it when cancelling" do
-        revise_modal = PageObjects::Modals::Base.new
-
-        review_page.visit_reviewable(queued_post_reviewable)
-
-        expect(queued_post_reviewable).to be_pending
-        expect(queued_post_reviewable.target_created_by).to be_present
-
-        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
-
-        expect(revise_modal).to be_open
-
-        expect(page).to have_css(".claimed-actions")
-
-        revise_modal.close
-
-        expect(revise_modal).to be_closed
-        expect(page).to have_no_css(".claimed-actions")
-      end
-
       it "allows selecting a custom reason for revise and reject" do
         revise_modal = PageObjects::Modals::Base.new
 
@@ -270,7 +219,7 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        review_page.select_bundled_action(queued_post_reviewable, "revise_and_reject_post")
         expect(revise_modal).to be_open
 
         reason_dropdown =
@@ -338,11 +287,7 @@ describe "Reviewables", type: :system do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:reviewable, :reviewable_queued_post)
 
-    before do
-      SiteSetting.reviewable_old_moderator_actions = false
-      SiteSetting.reviewable_ui_refresh = group.name
-      group.add(admin)
-    end
+    before { group.add(admin) }
 
     it "displays the custom guide topic link when configured" do
       SiteSetting.moderator_guide_topic = topic.id
@@ -362,6 +307,84 @@ describe "Reviewables", type: :system do
         "a.review-resources__link",
         text: I18n.t("js.review.help.community_moderation_guide"),
       )
+    end
+  end
+
+  describe "XSS prevention in queued post titles via server-side cooking" do
+    fab!(:untrusted_user) { Fabricate(:user, trust_level: 0) }
+
+    before do
+      SiteSetting.approve_post_count = 1
+      sign_in(admin)
+    end
+
+    it "prevents stored XSS in topic title when viewing review queue" do
+      xss_payload = '<img src=x onerror="alert(\'XSS\')">'
+      reviewable =
+        ReviewableQueuedPost.needs_review!(
+          target_created_by: untrusted_user,
+          created_by: untrusted_user,
+          payload: {
+            raw: "This is the post body",
+            title: xss_payload,
+          },
+        )
+
+      visit("/review")
+
+      # The title should be visible as text but not execute
+      expect(page).to have_no_css("img[src='x']")
+      expect(page).to have_no_css("img[onerror]")
+
+      # Verify the XSS payload is escaped in the HTML
+      title_element = page.find(".title-text", match: :first)
+      title_html = title_element.native.inner_html
+      expect(title_html).to include("&lt;img")
+      expect(title_html).to include("&gt;")
+      expect(title_html).not_to include("<img src=x onerror")
+    end
+
+    it "prevents stored XSS with script tags in topic title" do
+      xss_payload = '<script>alert("XSS")</script>Malicious Title'
+      reviewable =
+        ReviewableQueuedPost.needs_review!(
+          target_created_by: untrusted_user,
+          created_by: untrusted_user,
+          payload: {
+            raw: "This is the post body",
+            title: xss_payload,
+          },
+        )
+
+      visit("/review")
+
+      expect(page).to have_no_css("script")
+      title_element = page.find(".title-text", match: :first)
+      title_html = title_element.native.inner_html
+      expect(title_html).to include("&lt;script&gt;")
+      expect(title_html).not_to include("<script>alert")
+    end
+
+    it "escapes special characters in title" do
+      special_chars_title = "Test & <b>Bold</b> & \"Quotes\" & 'Apostrophes'"
+      reviewable =
+        ReviewableQueuedPost.needs_review!(
+          target_created_by: untrusted_user,
+          created_by: untrusted_user,
+          payload: {
+            raw: "This is the post body",
+            title: special_chars_title,
+          },
+        )
+
+      visit("/review")
+
+      # The <b> tag should not render as bold
+      expect(page).to have_no_css(".title-text b")
+      title_element = page.find(".title-text", match: :first)
+      title_html = title_element.native.inner_html
+      expect(title_html).to include("&amp;")
+      expect(title_html).to include("&lt;b&gt;")
     end
   end
 end

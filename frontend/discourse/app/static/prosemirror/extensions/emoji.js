@@ -152,6 +152,9 @@ const extension = {
           ") $"
       ),
       handler: (state, match, start, end) => {
+        if (!emojiOptions()?.enableEmojiShortcuts) {
+          return;
+        }
         const emojiStart = start + match[1].length;
         const emojiNode = state.schema.nodes.emoji.create({
           code: translations[match[2]],

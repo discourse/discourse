@@ -9,20 +9,25 @@ module PageObjects
       end
 
       def download_and_extract
-        click_link ".zip"
-        Downloads.wait_for_download
+        original_save_path = Capybara.save_path
+        Capybara.save_path = Downloads::FOLDER
 
         zip_name = find("a.attachment").text
         zip_path = File.join(Downloads::FOLDER, zip_name)
         @downloaded_files << zip_path
 
+        page.driver.with_playwright_page { |pw_page| pw_page.expect_download { click_link ".zip" } }
+        Downloads.wait_for(zip_path)
+
         csv_path = unzip(zip_path).first
         @downloaded_files << csv_path
         CSV.read(csv_path)
+      ensure
+        Capybara.save_path = original_save_path
       end
 
       def clear_downloads
-        @downloaded_files.each { |file| FileUtils.rm(file) }
+        @downloaded_files.each { |file| FileUtils.rm_f(file) }
         @downloaded_files = []
       end
 
@@ -36,9 +41,8 @@ module PageObjects
         paths = []
         Zip::File.open(file) do |zip_file|
           zip_file.each do |f|
-            path = File.join(Downloads::FOLDER, f.name)
-            zip_file.extract(f, path)
-            paths << path
+            f.extract(f.name, destination_directory: Downloads::FOLDER)
+            paths << File.join(Downloads::FOLDER, f.name)
           end
         end
 

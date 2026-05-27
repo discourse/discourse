@@ -21,6 +21,29 @@
 .ai-llm-editor {
   padding-left: 0.5em;
 
+  @include viewport.from(sm) {
+    .form-kit__field-input-number .form-kit__container-content {
+      min-width: 14em;
+    }
+  }
+
+  .form-kit__input-group {
+    gap: var(--space-3);
+
+    @include viewport.until(sm) {
+      flex-flow: column;
+      gap: var(--space-6);
+    }
+  }
+
+  @include viewport.until(sm) {
+    .form-kit__input,
+    .form-kit__input-group > :not(:first-child) .form-kit__control-input,
+    .form-kit__input-group > :not(:last-child) .form-kit__control-input {
+      border-radius: var(--d-input-border-radius);
+    }
+  }
+
   .ai-llm-editor-tests {
     &__failure {
       color: var(--danger);
@@ -47,9 +70,9 @@
 }
 
 .ai-tool-list-editor__current,
-.ai-persona-list-editor__current,
+.ai-agent-list-editor__current,
 .ai-llms-list-editor__configured {
-  .d-admin-table {
+  .d-table {
     @include viewport.from(md) {
       th,
       td {
@@ -136,5 +159,10 @@
 @include viewport.until(md) {
   .ai-llm-list__description {
     max-width: 80%;
+  }
+
+  .ai-secret-list-editor__table .ai-secret-list__usage {
+    flex-direction: column;
+    gap: var(--space-1);
   }
 }

@@ -6,6 +6,19 @@
 
 ur:
   js:
+    blocks:
+      ghost:
+        status: "حیثیت"
+        conditions: "شرائط"
+        arguments: "دلائل"
+        container_args: "کنٹینر آرگس"
+        in_location: "میں"
+        hidden: "مخفی"
+        failed: "ناکامی"
+    carousel:
+      go_to_slide: "سلائیڈ %{index}پر جائیں"
+      previous: "گزشتہ سلائیڈ"
+      next: "اگلی سلائیڈ"
     number:
       format:
         separator: "."
@@ -43,7 +56,7 @@ ur:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D، YYYY <br/>LT"
       wrap_ago: "%{date} قبل"
-      wrap_on: "%{date}پر"
+      wrap_on: "%{date} پر"
       tiny:
         half_a_minute: "ایک لحظہ قبل"
         less_than_x_seconds:
@@ -53,8 +66,8 @@ ur:
           one: "%{count} سیکنڈ"
           other: "%{count} سیکنڈ"
         less_than_x_minutes:
-          one: "< %{count}منٹ"
-          other: "< %{count}منٹ"
+          one: "< %{count} منٹ"
+          other: "< %{count} منٹ"
         x_minutes:
           one: "%{count} منٹ"
           other: "%{count} منٹ"
@@ -158,7 +171,7 @@ ur:
       el:
         name: یونانی
       en:
-        name: انگریزی (امریکی)
+        name: انگریزی
       en_GB:
         name: انگریزی (برطانیہ)
       es:
@@ -258,7 +271,7 @@ ur:
       user_left: "%{who} نے خود کو %{when} پر اس پیغام سے ہٹایا"
       removed_user: "%{who} نے %{when} پر حذف کیا"
       removed_group: "%{who} نے %{when} پر حذف کیا"
-      autobumped: "خود کار طریقے سے بَمپ کریں %{when}"
+      autobumped: "خود کار طریقے سے %{when} پر اوپر کریں"
       tags_changed: "ٹیگز کو %{when} پراپ ڈیٹ کیا گیا"
       category_changed: "زمرہ کو %{when} پر اپ ڈیٹ کیا گیا"
       autoclosed:
@@ -287,6 +300,7 @@ ur:
     skip_to_main_content: "مرکزی مواد پر جائیں"
     skip_links_label: "نیویگیشن لنکس چھوڑیں"
     skip_to_post: "پوسٹ پر جائیں %{post_number}"
+    skip_to_where_you_left_off: "وہاں جائیں جہاں چھوڑا تھا (پوسٹ %{post_number})"
     skip_to_where_you_left_off_last: "جہاں چھوڑا تھا آپ وہیں جاؤ (آخری جواب، پوسٹ %{post_number})"
     skip_to_last_reply: "آخری جواب پر جائیں۔"
     skip_to_top: "اوپر جائیں"
@@ -296,7 +310,6 @@ ur:
     software_update_prompt:
       message: "ہم نے اس سائٹ کو اپ ڈیٹ کر دیا ہے، اس کے آسانی سے کام کرنے کے لیے <span>براہ کرم ریفریش کریں</span>۔"
       dismiss: "بر خاست کریں"
-    bootstrap_mode: "شروعات"
     back_button: "واپس"
     welcome_banner:
       header:
@@ -378,8 +391,6 @@ ur:
     tos: "سروس کی شرائط"
     rules: "قوانین"
     conduct: "ضابطہ اخلاق"
-    mobile_view: "نمایش برائے موبائل"
-    desktop_view: "نمایش برائے کمپیوٹر"
     now: "ابھی ابھی"
     read_more: "مزید پڑھیں "
     more: "مزید "
@@ -410,6 +421,11 @@ ur:
       title: "نئے اور بغیر پڑھے موضوعات"
       pill: "تجویز کردہ"
       pm_title: "تجویز کردہ پیغامات"
+    admin_onboarding_banner:
+      select_theme:
+        enabled: "فعال شدہ"
+      start_posting:
+        back: "واپس"
     about:
       edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
@@ -491,8 +507,6 @@ ur:
           other: "%{count} سالوں پہلے تخلیق کیا گیا"
     bookmarked:
       title: "بُک مارک"
-      edit_bookmark: "بک مارک میں ترمیم کریں"
-      clear_bookmarks: "بک مارکس ختم کریں"
       help:
         bookmark: "اس موضوع کو بک مارک کرنے کے لیے کلک کریں"
         edit_bookmark: "اس موضوع میں کسی دھاگہ کے بک مارک میں ترمیم کرنے کے لیے کلک کریں"
@@ -511,12 +525,12 @@ ur:
       clear_reminder: "یاد دہانی مٹائیں"
       edit: "بک مارک میں ترمیم کریں"
       not_bookmarked: "اس دھاگے کو بک مارک کریں"
+      topic_bookmark: "ٹاپک"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
       created_with_reminder: "آپ نے اس دھاگے کو ایک یاد دہانی %{date}, %{name} کے ساتھ بک مارک کیا ہے۔"
       created_with_reminder_generic: "آپ نے اسے ایک %{date} %{name} یاد دہانی کے ساتھ بک مارک کیا ہے"
       delete: "بک مارک حذف کریں"
       confirm_delete: "کیا آپ واقعی اس بک مارک کو حذف کرنا چاہتے ہیں؟ یاد دہانی بھی حذف کردی جائے گی۔"
-      confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس موضوع سے اپنے تمام بک مارکس ہٹانا چاہتے ہیں؟"
       save: "محفوظ کریں"
       no_timezone: 'آپ نے ابھی تک خطہ کے وقت کا تعین نہیں کیا۔ آپ یاد دہانیوں کا نظم نہیں کر پائیں گے۔ <a href="%{basePath}/my/preferences/profile">اپنے پروفائل میں</a> ایک سیٹ اپ کریں۔'
       invalid_custom_datetime: "آپ کی فراہم کردہ تاریخ اور وقت غلط ہے ، براہ کرم دوبارہ کوشش کریں۔"
@@ -584,6 +598,10 @@ ur:
         other_drafts:
           one: "+%{count} دیگر مسودہ"
           other: "+%{count} دیگر مسودے"
+    embed_mode:
+      editing_post: "پوسٹ میں ترمیم جاری"
+      signin_flow:
+        cancel: "منسوخ کریں"
     topic_count_all:
       one: "%{count} نیا موضوع دیکھیں"
       other: "%{count} نئے موضوعات دیکھیں"
@@ -643,24 +661,19 @@ ur:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"
       back_to_queue: "قطار پر واپس جائیں"
+      editing_post: "پوسٹ میں ترمیم جاری…"
       order_by: "کے حساب سے آرڈر"
       date_filter: "کے درمیان پوسٹ کیا گیا"
       in_reply_to: "کے جواب میں"
       filtered_flagged_by: "نے فلَیگ کیا"
       unknown:
-        title:
-          one: "آپ کے پاس غیر فعال اضافی سہولتوں سے قابل جائزہ زیر التواء ہیں:"
-          other: "آپ کے پاس غیر فعال اضافی سہولتوں سے قابل جائزہ زیر التواء ہیں:"
         instruction: "جب تک آپ متعلقہ اضافی سہولت کو فعال نہیں کرتے ہیں تب تک وہ صحیح طریقے سے ظاہر نہیں ہو سکتی۔ براہ کرم اضافی سہولت کو فعال کریں اور صفحہ کو ریفریش کریں۔ متبادل کے طور پر، آپ ان کو نظر انداز کر سکتے ہیں۔ <a href='%{url}' target='_blank'>مزید جانیں...</a>"
         reviewable_unknown_source: "%{reviewableType} (نامعلوم اضافی سہولت)"
         reviewable_known_source: "%{reviewableType} ('%{pluginName}' اضافی سہولت سے)"
         ignore_all: "سب کو نظر انداز کریں"
         enable_plugins: "اضافی سہولتوں کو فعال کریں"
-        delete_confirm: "کیا آپ واقعی غیر فعال اضافی سہولتوں کے ذریعے بنائے گئے تمام جائزوں کو حذف کرنا چاہتے ہیں؟"
-        ignore_success: "غیر فعال اضافی سہولتوں کے ذریعہ بنائے گئے تمام جائزے حذف کردیئے گئے۔"
       explain:
         why: "وضاحت کریں کہ یہ شے آخر میں قطار میں کیوں داخل ہو گئی"
-        title: "قابل تجدید اسکورنگ"
         formula: "فارمولا"
         subtotal: "جزوی میزان"
         total: "حاصل جمع"
@@ -674,10 +687,8 @@ ur:
           title: "جن اراکین کے فلَیگز کے ساتھ تاریخی طور پر اتفاق کیا گیا ہو انہیں بَونَس دیا جاتا ہے۔"
         trust_level_bonus:
           name: "اعتماد کی سطح"
-          title: "اعلیٰ فعالیت کا درجہ رکھنے والے اراکین کے ذریعہ تخلیق کردہ قابلِ جائزہ متن کا اسکور زیادہ ہوتا ہے۔"
         type_bonus:
           name: "قِسم بَونَس"
-          title: "سٹاف کی طرف سے کچھ قابل تجدید اقسام کو بَونَس تفویض کیا جاسکتا ہے تاکہ ان کو اعلیٰ ترجیح بنایا جاسکے۔"
       revise_and_reject_post:
         title: "نظر ثانی"
         reason: "وجہ"
@@ -686,17 +697,16 @@ ur:
         custom_reason: "وجہ واضح طور پر بیان کریں"
         other_reason: "دیگر..."
         optional: "اختیاری"
-      stale_help: "اس نظر ثانی کا حل <b>%{username}</b>نے کیا ہے۔"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
-        required: "اشیاء کا جائزہ لینے سے پہلے آپ کا اُن کو کََلیم کرنا ضروری ہے۔"
-        claimed_by_you: "آپ نے اِس چیز کو کََلیم کر لیا ہے اور اِس کا جائزہ لے سکتے ہیں۔"
-        claimed_by_other: "اِس چیز کا صرف <b>%{username}</b> جائزہ لے سکتا ہے۔"
+        required: "اشیاء کا جائزہ لینے سے پہلے ان کا آپکی ملکیت ہونا ضروری ہے۔"
+        claimed_by_you: "یہ آپکی ملکیت ہے اور اس کا جائزہ لے سکتے ہیں۔"
+        claimed_by_other: "اس چیز کا صرف <b>%{username}</b> جائزہ لے سکتے ہیں۔"
         automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
       claim:
-        title: "اِس ٹاپک کو کََلیم کریں"
+        title: "اس موضوع کو کلیم کریں"
       unclaim:
-        help: "اس کََلیم کو ہٹائیں"
+        help: "اس کلیم کو ہٹائیں"
       awaiting_approval: "منظوری کا منتظر"
       delete: "حذف کریں"
       settings:
@@ -705,29 +715,30 @@ ur:
         title: "ترتیبات"
         priorities:
           title: "قابل تجدید ترجیحات"
-      moderation_history: "ماڈرَیشن ہِسٹری"
+      moderation_history: "منتظمی کی رواد"
       view_all: "سب دیکھیں"
       grouped_by_topic: "موضوع کے لحاظ سے مجموعہ"
-      none: "جائزہ لینے کے لئے کوئی اشیاء نہیں ہیں۔"
-      view_pending: "زیرِاِلتوَاء دیکھیں"
+      none: "جائزہ لینے کے لئے کچھ نہیں۔"
+      view_pending: "زیرِالتواء دیکھیں"
       topic_has_pending:
-        one: "اِس موضوع کی <b>%{count}</b> دھاگہ کی منظوری زیر التواء ہے"
-        other: "اِس موضوع کی <b>%{count}</b> دھاگوں کی منظوری زیر التواء ہے"
+        one: "اس موضوع کی <b>%{count}</b> دھاگہ کی منظوری زیر التواء ہے"
+        other: "اس موضوع کی <b>%{count}</b> دھاگوں کی منظوری زیر التواء ہے"
       title: "جائزہ لیں"
       topic: "موضوع:"
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
-      filtered_user: "رکن"
+      filtered_user: "نشان زدہ رکن"
       filtered_reviewed_by: "نے جائزہ لیا"
+      filtered_claimed_by: "نے نشان زدگی کو کلیم کیا"
       show_all_topics: "تمام موضوعات دکھائیں"
       deleted_post: "(دھاگہ مٹا دیا)"
       deleted_user: "(رکن مٹادیا گیا)"
       user:
-        bio: "بائیو"
+        bio: "سوانحِ حیات"
         website: "ویب سائٹ"
         username: "اسمِ صارف"
         email: "ای میل"
         name: "نام"
-        fields: "فیلڈز"
+        fields: "خانے"
         reject_reason: "وجہ"
         scrubbed_by: "نے ریکارڈصاف کر دیا"
         scrubbed_reason: "وجہ"
@@ -736,7 +747,7 @@ ur:
         scrub_record:
           button: ریکارڈ صاف
           confirm_title: ذاتی ڈیٹا کو ہٹا دیں
-          confirm_body: "کیا آپ واقعی اس جائزے کی قطارمیں ریکارڈ کو صاف کرنا چاہتے ہیں؟ تمام ذاتی معلومات (مثلاً رکن نام، ای میل، آئی پی ایڈریس) اس ریکارڈ سے مستقل طور پر ہٹا دی جائیں گی۔"
+          confirm_body: "کیا آپ واقعی اس جائزے کی قطارمیں ریکارڈ کو صاف کرنا چاہتے ہیں؟ تمام ذاتی معلومات (مثلاً اسم صارف، ای میل، آئی پی ایڈریس) اس ریکارڈ سے مستقل طور پر ہٹا دی جائیں گی۔"
           reason_title: "اس ریکارڈ کو صاف کرنے کی ایک وجہ درکار ہے۔"
           reason_placeholder: "وجہ..."
           confirm_button: "ہٹانے کی تصدیق کریں"
@@ -778,7 +789,7 @@ ur:
           all: "(تمام اقسام)"
         minimum_score: "کم از کم اسکور:"
         refresh: "رِیفریش"
-        status: "سٹیٹس"
+        status: "حیثیت"
         category: "زمرہ"
         score_type:
           title: "وجہ"
@@ -794,6 +805,8 @@ ur:
           low: "کم"
           medium: "درمیانی"
           high: "زیادہ"
+        active_filters: "فعال فلٹرز:"
+        clear_filter: "%{filter} ہٹائیں"
       conversation:
         view_full: "مکمل گفتگو دیکھیں"
       scores:
@@ -801,7 +814,7 @@ ur:
         score: "اسکور"
         date: "رپورٹ کی تاریخ"
         type: "وجہ"
-        status: "سٹیٹس"
+        status: "حیثیت"
         submitted_by: "کی طرف سے رپورٹ کردہ"
         reviewed_by: "نے جائزہ لیا"
         reviewed_timestamp: "جائزہ کی تاریخ"
@@ -836,73 +849,108 @@ ur:
         is_this_post: "کیا یہ %{reviewable_type} %{reviewable_human_score_types}ہے؟"
         delimiter: "یا"
         something_else_wrong: "کیا اس%{reviewable_type} میں کچھ گڑبڑ ہے ؟"
+        approve_user: "اس صارف کو منظور کریں؟"
+        suspect_user: "کیا یہ صارف سپیم ہے؟"
+        approve_post: "اس پوسٹ کو منظور کریں؟"
+        approve_topic: "اس موضوع کو منظور کریں؟"
       types:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
-          flagged_by: "کی طرف سے فلَیگ کردہ"
-          noun: "پوسٹ"
+          flagged_by: "کی طرف سے نشان دہی"
+          noun: "دھاگہ"
         reviewable_queued_topic:
           title: "قطار میں موضوع"
           noun: "موضوع"
         reviewable_queued_post:
-          title: "قطار شدہ پوسٹ"
+          title: "قطار شدہ دھاگہ"
           noun: "دھاگہ"
         reviewable_user:
           title: "رکن"
           noun: "رکن"
         reviewable_post:
           title: "دھاگہ"
-          noun: "پوسٹ"
-      flagged_as: "کے طور پرفلَیگ"
+          noun: "دھاگہ"
+        reviewable_ai_chat_message:
+          title: "اے آئی کا نشان زدہ گفتگو کا پیغام"
+          noun: "گفتگو کا پیغام"
+        reviewable_ai_post:
+          title: "اے آئی کی نشان زدہ دھاگہ"
+          noun: "دھاگہ"
+        reviewable_post_voting_comment:
+          title: "نشان زدہ تبصرہ"
+          noun: "تبصرہ"
+      flagged_as: "کے طور پرنشن زد"
+      post_flagged_as: "پوسٹ نشان زدہ ہوئی بطور"
+      chat_flagged_as: "گفتگو نشان زد ہوئی بطور"
+      queued_post_label: "قطار شدہ دھاگہ"
+      queued_topic_label: "قطار شدہ موضوع"
       user_label: "رکن"
-      assigned_to: "کو تفویض کیا گیا"
+      assigned_to: "تفویض کردہ دھاگہ منجانب"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
       timeline:
         target_created: "دھاگہ بنایا گیا"
         target_created_by: "%{relativeDate}پر %{username}نےدھاگہ بنایا"
+        target_deleted: "دھاگہ مٹا دیا"
+        target_deleted_by: "حذف کردہ پوسٹ منجانب %{username} · %{relativeDate}"
         flagged: "نشان دہی کی"
         flagged_as_by: "%{username} نے%{relativeDate}پر %{flagReason} کے طور پر فلیگ کیا گیا"
         claimed: "دعویٰ کیا"
-        claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
+        claimed_by: "%{username} نے %{relativeDate} پر دعویٰ کیا"
+        unclaimed_by: "غیر دعویٰ شدہ منجانب %{username} · %{relativeDate}"
         reviewed: "جائزہ لیا گیا"
-        reviewed_by: "%{username} نے%{relativeDate}پر جائزہ لیا"
+        approved_by: "منظور شدہ منجانب %{username} · %{relativeDate}"
+        rejected_by: "مسترد شدہ منجانب %{username} · %{relativeDate}"
+        ignored_by: "نظر انداز شدہ منجانب %{username} · %{relativeDate}"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
       notes:
+        add_note_description: "دیگر نگرانوں کو سیاق و سباق فراہم کرنے کے لیے ایک نوٹ شامل کریں۔"
         add_note_button: "نوٹ کا اضافہ"
         placeholder: "اپنا نوٹ یہاں لکھیں۔۔۔"
         chars_remaining: "%{count} حروف باقی ہیں"
         delete_note: "اس نوٹ کو حذف کریں"
         delete: "مٹائیں"
-      topic_label: "ٹاپک"
+      topic_label: "موضوع"
       queued_user: "قطار میں رکن"
       posted_in: "میں پوسٹ کیا گیا"
-      flagged_user: "نشان۔زدہ صارف"
-      review_user: "صارف"
-      need_help: "مدد۔ضرورت؟"
+      flagged_user: "نشان زدہ رکن"
+      review_user: "رکن"
+      need_help: "مدد کی ضرورت؟"
       copy_link: "رابطہ کاپی کریں"
+      copy_permalink_title: "اس قابل جائزہ آئٹم کا لنک کلپ بورڈ پرکاپی کریں"
       copy_link_feedback: "رابطہ کاپی ہو گیا"
       view_source: "ماخذ دیکھیں"
       insights:
         title: "تجزیے"
-        flag_volume: "نشان حجم"
+        flag_volume: "نشان زدگی کا حجم"
         flagged_by_users:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
+        similar_posts: "گزشتہ خلاف ورزیاں"
+        flagged_in_timeframe:
+          one: "%{count} مصدقہ نشان زدگی"
+          other: "%{count} مصدقہ نشان زدگیاں"
+        user_activity: "صارف کی معلومات"
         activities:
-          new_account: "نیا اکاؤنٹ"
+          joined_on: "شمولیتی تاریخ: %{joinDate}"
           trust_level: "فعالیت کا درجہ: %{trustLevelName}"
           posts:
             one: "%{count} دھاگہ"
             other: "%{count} دھاگے"
+        moderation_history:
+          label: "ماڈریشن ہسٹری"
+          silenced: "خاموش: %{count}"
+          suspended: "معطل: %{count}"
+          rejected_posts: "مسترد شدہ پوسٹس: %{count}"
         solution_marked: "حل ہوا"
         topic_has_solution: "اس موضوع میں حل ہے"
         visibility: "نموداری"
-        topic_unlisted: "یہ موضوع غیر فہرست ہے۔ صرف براہ راست رابطہ کے ذریعے قابل رسائی - عوامی نہیں۔"
+        topic_unlisted: "یہ موضوع غیر مندرج ہے اور صرف براہ راست ربط کے ذریعے قابل رسائی ہے۔"
       help:
+        community_moderation_guide: "اس کمیونٹی کی ماڈریشن گائیڈ"
         moderation_guide: "گفتگو کے اعتدال کی رہنمائی"
         flag_priorities: "رکن کی ساکھ اور نشان دہی کی ترجیحات کا انتظام"
         spam_detection: "سپیم کا پتہ لگانا"
@@ -963,7 +1011,7 @@ ur:
       last_custom: "آخری نظامی تاریخ وقت"
       custom: "حسب ضرورت تاریخ اور وقت"
       more_options: "مزید اختیارات۔۔۔"
-      select_timeframe: "ایک ٹائم فریم منتخب کریں"
+      select_timeframe: "ایک وقتی حد منتخب کریں"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> نے <a href='%{topicUrl}'>موضوع</a> پوسٹ کیا"
       you_posted_topic: "<a href='%{userUrl}'>آپ</a> نے <a href='%{topicUrl}'>موضوع</a> پوسٹ کیا"
@@ -986,44 +1034,44 @@ ur:
       likes_received: "ملا"
       topics_entered: "دیکھ لیا"
       topics_entered_long: "موضوعات دیکھے"
-      time_read: "وقت جو پڑھنے میں لگا"
+      time_read: "پڑھنے میں لگنے والا وقت"
       topic_count: "موضوعات"
       topic_count_long: "موضوعات بنائے"
       post_count: "جوابات"
       post_count_long: "جوابات دیے"
       no_results:
-        body: "کمیونٹی ممبران کی ایک فہرست جو ان کی سرگرمی دکھا رہے ہیں یہاں دکھائی جائے گی۔ ابھی کے لیے فہرست خالی ہے کیونکہ آپ کی کمیونٹی ابھی بھی بالکل نئی ہے!"
-        extra_body: "منتظمین اور نگران، <a href='%{basePath}/admin/users/'>ناظم اراکین</a>میں اراکین کو دیکھ اور ان کا نظم کر سکتے ہیں۔"
-      no_results_with_search: "کوئی نتائج نہیں پائے گئے۔"
-      days_visited: "زائرین کی تعداد"
+        body: "کمیونٹی ممبران کی ایک فہرست، جو ان کی سرگرمی دکھا رہے ہیں، یہاں دکھائی جائے گی۔ ابھی کے لیے فہرست خالی ہے کیونکہ آپ کی کمیونٹی ابھی بھی بالکل نئی ہے!"
+        extra_body: "منتظمین اور نگران، <a href='%{basePath}/admin/users/'>ناظم اراکین</a> میں اراکین کو دیکھ اور ان کا نظم کر سکتے ہیں۔"
+      no_results_with_search: "کوئی نتائج نہیں ملے۔"
+      days_visited: "دورے"
       days_visited_long: "زیارت کے دن"
-      posts_read: "پڑھ لیا گیا"
+      posts_read: "پڑھا"
       posts_read_long: "دھاگے پڑھے"
       last_updated: "آخری اپ ڈیٹ:"
       total_rows:
         one: "%{count} رکن"
         other: "%{count} اراکین"
       edit_columns:
-        title: "ڈائرکٹری کالموں میں ترمیم کریں"
+        title: "ڈائرکٹری کے کالموں میں ترمیم کریں"
         save: "محفوظ کریں"
-        reset_to_default: "دوبارہ پہلے جیسا کر دیں"
+        reset_to_default: "ڈیفالٹ پر ری سیٹ کریں"
       group:
         all: "تمام گروپس"
       sort:
-        label: "%{criteria}کے حساب سے ترتیب دیں"
+        label: "%{criteria} کے حساب سے ترتیب دیں"
     group_histories:
       actions:
-        change_group_setting: "گروپ کی سیٹِنگ تبدیل کریں"
-        add_user_to_group: "صارف شامل کریں"
-        remove_user_from_group: "صارف خارج کریں"
+        change_group_setting: "گروپ کی ترتیب تبدیل کریں"
+        add_user_to_group: "رکن شامل کریں"
+        remove_user_from_group: "رکن خارج کریں"
         make_user_group_owner: "مالک بنائیں"
         remove_user_as_group_owner: "مالک منسوخ کریں"
     groups:
-      member_added: "شامل کر دیا گیا"
-      member_requested: "درخواست کیا گیا"
+      member_added: "شامل کیا گیا"
+      member_requested: "بذریعہ درخواست"
       add_members:
         title: "اراکین کو %{group_name} میں شامل کریں"
-        description: "ان اراکین کی فہرست درج کریں جنہیں آپ گروپ میں مدعو کرنا چاہتے ہیں،کوما سے الگ الگ کردہ فہرست میں:"
+        description: "ان اراکین کی فہرست درج کریں جنہیں آپ گروپ میں مدعو کرنا چاہتے ہیں، کوما سے الگ الگ کردہ فہرست میں:"
         usernames_placeholder: "اسمِ صارفین"
         usernames_or_emails_placeholder: "اراکین کے نام یا ای میلز"
         notify_users: "اراکین کو مطلع کریں"
@@ -1051,11 +1099,10 @@ ur:
           title: تعامل
           posting: پوسٹ کرنا
           notification: اطلاع
+          self_lockout: "آپ گروپ کی روئیت کو تبدیل کرنے والے ہیں جس سے آپ کی اپنی رسائی ختم ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
         email:
           title: "ای میل"
-          status: "IMAP کے ذریعے ای میلز کو ہم آہنگ کیا %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP فعال کریں"
-          enable_imap: "IMAP فعال کریں"
           test_settings: "ترتیبات کو ٹیسٹ کریں"
           save_settings: "ترتیبات کو محفوظ کریں"
           last_updated: "آخری اپ ڈیٹ:"
@@ -1064,14 +1111,8 @@ ur:
           smtp_settings_valid: "SMTP ترتیبات درست ہیں۔"
           smtp_title: "SMTP"
           smtp_instructions: "جب آپ گروپ کے لیے SMTP کو فعال کرتے ہیں، تو گروپ کے ان باکس سے بھیجے گئے تمام آؤٹ باؤنڈ ای میلز آپ کے فورم کے ذریعے بھیجے گئے دیگر ای میلز کے لیے ترتیب کردہ میل سرور کے بجائے یہاں بیان کردہ SMTP سیٹنگز کے ذریعے بھیجے جائیں گے۔"
-          imap_title: "IMAP"
-          imap_additional_settings: "اضافی ترتیبات"
-          imap_instructions: 'جب آپ گروپ کے لیے IMAP کو فعال کرتے ہیں، تو ای میلز گروپ ان باکس اور فراہم کردہ IMAP سرور اور میل باکس کے درمیان مطابقت پذیر ہو جاتی ہیں۔ IMAP کو فعال کرنے سے پہلے SMTP کو درست اور جانچ شدہ اسناد کے ساتھ فعال کیا جانا چاہیے۔ SMTP کے لیے استعمال ہونے والا ای میل رکن نام اور پاس ورڈ IMAP کے لیے استعمال کیا جائے گا۔ مزید معلومات کے لیے ڈسکورس میٹا<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">فیچر کےاعلان پر دیکھیں </a>۔'
-          imap_alpha_warning: "انتباہ: یہ الفا اسٹیج کی خصوصیت ہے۔ صرف Gmail باضابطہ طور پر تعاون یافتہ ہے۔ اپنے خطرے پر استعمال کریں!"
-          imap_settings_valid: "SMTP ترتیبات درست ہیں۔"
-          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP اور IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_disable_confirm: "اگر آپ IMAP کو غیر فعال کرتے ہیں تو تمام IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
+          additional_settings: "اضافی ترتیبات"
+          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
             gmail: "Gmail"
@@ -1086,9 +1127,6 @@ ur:
             smtp_server: "SMTP سرور"
             smtp_port: "SMTP پورٹ"
             smtp_ssl_mode: "SSL موڈ"
-            imap_server: "IMAP سرور"
-            imap_port: "IMAP پورٹ"
-            imap_ssl: "IMAP کے لیے SSL استعمال کریں"
             username: "اسمِ صارف"
             password: "پاسورڈ"
           settings:
@@ -1097,10 +1135,6 @@ ur:
             allow_unknown_sender_topic_replies_hint: "نامعلوم بھیجنے والوں کو گروپ کے موضوعات کا جواب دینے کی اجازت دیتا ہے۔ اگر یہ فعال نہیں ہے تو، ای میل پتوں کے جوابات جو پہلے ہی موضوع پر مدعو نہیں کیے گئے ہیں ایک نیا موضوع بنائیں گے۔"
             from_alias: "عرف سے"
             from_alias_hint: "گروپ SMTP ای میلز بھیجتے وقت فرم ایڈریس کے طور پر استعمال کرنے کے لیے عرف نوٹ کریں کہ یہ تمام میل فراہم کنندگان کے ذریعہ تعاون یافتہ نہیں ہوسکتا ہے، براہ کرم اپنے میل فراہم کنندہ کی دستاویزات سے مشورہ کریں۔"
-          mailboxes:
-            synchronized: "مطابقت پذیر میل باکس"
-            none_found: "اس ای میل اکاؤنٹ میں کوئی میل باکس نہیں ملا۔"
-            disabled: "غیر فعال"
         membership:
           title: رکنیت
           access: رسائی
@@ -1108,38 +1142,38 @@ ur:
           title: زمرہ جات
           long_title: "زمرہ کی ڈیفالٹ اطلاعات"
           description: "جب اراکین کو اس گروپ میں شامل کیا جائے گا، تو ان کی زمرہ کی اطلاع کی ترتیبات ان ڈیفالٹس پر سیٹ کردی جائیں گی۔ اس کے بعد وہ انہیں تبدیل کرسکتے ہیں۔"
-          watched_categories_instructions: "ان موضوعات میں خود بخود تمام موضوعات دیکھیں۔ گروپ ممبران کو تمام نئے دھاگے اور موضوعات سے آگاہ کیا جائے گا ، اور نئے دھاگوں کی گنتی بھی موضوع کے ساتھ سامنے آئے گی۔"
+          watched_categories_instructions: "ان زمروں میں خود بخود تمام موضوعات دیکھیں۔ گروپ ممبران کو تمام نئے دھاگے اور موضوعات سے آگاہ کیا جائے گا ، اور نئے دھاگوں کی گنتی بھی موضوع کے ساتھ سامنے آئے گی۔"
           tracked_categories_instructions: "ان زمروں میں تمام موضوعات کو خود بخود ڈھونڈیں۔ موضوع کے ساتھ ہی نئے دھاگوں کی گنتی ظاہر ہوگی۔"
           watching_first_post_categories_instructions: "اراکین کو ان زمروں میں ہر نئے موضوع میں پہلے دھاگہ کے بارے میں مطلع کیا جائے گا۔"
-          regular_categories_instructions: "اگر ان زمرہ جات کو خاموش کردیا گیا ہے , تو وہ گروپ ممبروں کے لئے غیر خاموش ہوجائیں گے۔ اراکین کو مطلع کیا جائے گا اگر ان کا تذکرہ کیا گیا ہے یا کوئی ان کے جوابات دے گا۔"
+          regular_categories_instructions: "اگر ان زمروں کو خاموش کردیا گیا ہے، تو وہ گروپ ممبروں کے لئے غیر خاموش ہوجائیں گے۔ اراکین کو کسی کی طرف سے جواب یا تزکرہ ہونے پر مطلع کیا جائے گا۔"
           muted_categories_instructions: "اراکین کو ان زمروں میں نئے موضوعات کے بارے میں کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور وہ زمروں یا تازہ ترین موضوعات کے صفحات پر ظاہر نہیں ہوں گے۔"
         tags:
           title: ٹیگز
-          long_title: "ٹیگز ڈیفالٹ اطلاعات"
+          long_title: "ٹیگز کی ڈیفالٹ اطلاعات"
           description: "جب اراکین کو اس گروپ میں شامل کیا جائے گا، تو ان کے ٹیگز کی اطلاع کی ترتیبات ان ڈیفالٹس پر سیٹ کردی جائیں گی۔ اس کے بعد وہ انہیں تبدیل کرسکتے ہیں۔"
           watched_tags_instructions: "خود بخود تمام موضوعات ان ٹیگز کے ساتھ دیکھیں۔ گروپ ممبران کو تمام نئے دھاگے اور موضوعات سے آگاہ کیا جائے گا ، اور نئے دھاگے کی گنتی بھی موضوعات کے ساتھ سامنے آئے گی۔"
           tracked_tags_instructions: "خود بخود تمام موضوعات کو ان ٹیگز سے ڈھونڈیں۔ موضوع کے ساتھ ہی نئے دھاگوں کی گنتی ظاہر ہوگی۔"
           watching_first_post_tags_instructions: "اراکین کو ان ٹیگز کے ساتھ ہر نئے موضوع میں پہلے دھاگہ کے بارے میں مطلع کیا جائے گا۔"
-          regular_tags_instructions: "اگر یہ ٹیگ خاموش کردیئے گئے ہیں تو ، گروپ کے ممبروں کے لئے ان کو خاموش کردیا جائے گا۔ اراکین کو مطلع کیا جائے گا اگر ان کا تذکرہ کیا گیا ہے یا کوئی ان کے جوابات دے گا۔"
+          regular_tags_instructions: "اگر یہ ٹیگ خاموش کردیئے گئے ہیں تو، گروپ کے ممبروں کے لئے ان کو خاموش کردیا جائے گا۔ اراکین کو کسی کی طرف سے جواب یا تذکرہ پر مطلع کیا جائے گا۔"
           muted_tags_instructions: "اراکین کو ان ٹیگز کے ساتھ نئے موضوعات کے بارے میں کچھ نہیں بتایا جائے گا، اور وہ تازہ ترین میں نظر نہیں آئیں گے۔"
         logs:
           title: "لاگز"
           when: "کب"
           action: "عمل"
-          acting_user: "عمل کرنے والا صارف"
-          target_user: "ہدف صارف"
-          subject: "موضوع"
+          acting_user: "عمل کرنے والا رکن"
+          target_user: "ہدف پر رکن"
+          subject: "مضمون"
           details: "تفصیلات"
           from: "سے"
           to: "کیلئے"
       permissions:
         title: "اجازتیں"
-        none: "اس گروپ سے وابستہ کوئی کیٹگریز نہیں ہیں۔"
-        description: "اس گروپ کے ممبران ان کیٹگریز تک رسائی حاصل کرسکتے ہیں"
+        none: "اس گروپ سے وابستہ کوئی زمرے نہیں ہیں۔"
+        description: "اس گروپ کے ممبران ان زمروں تک رسائی حاصل کرسکتے ہیں"
       public_admission: "اراکین کو آزادی سے گروپ میں شمولیت اختیار کرنے کی اجازت دیں (گروپ کا عوامی طور پر ظاہر ہونا لاذم ہے)"
       public_exit: "اراکین کو آزادانہ طور پر گروپ چھوڑنے کی اجازت دیں"
       empty:
-        posts: "اس گروپ کے ممبران کی کوئی پوسٹ نہیں ہے"
+        posts: "اس گروپ کے ممبران کے کوئی دھاگے نہیں ہیں"
         members: "اس گروپ میں کوئی ممبر نہیں ہے"
         requests: "اس گروپ کے لیے رکنیت کی کوئی درخواست نہیں ہے"
         mentions: "اس گروپ کا کوئی ذکر نہیں ہے"
@@ -1160,7 +1194,7 @@ ur:
         reason: "گروپ مالکان کو بتائیے کہ آپ اس گروپ میں شامل ہونے کے کیوں مستحق ہیں"
       membership: "رکنیت"
       name: "نام"
-      group_name: "گروپ نام"
+      group_name: "گروپ کا نام"
       user_count: "اراکین"
       bio: "گروپ کے بارے میں"
       selector_placeholder: "اسمِ صارف درج کریں"
@@ -1197,6 +1231,8 @@ ur:
         make_owner_description: "اِس گروپ پر <b>%{username}</b> کو مالک بنائیں"
         remove_owner: "مالک کے طور پر ہٹائیں"
         remove_owner_description: "اِس گروپ پر سے <b>%{username}</b> کو مالک کے طور پر ہٹائیں"
+        remove_member_self_lockout: "خود کو اس گروپ سے ہٹانے سے اس کا انتظام کرنے کے لیے آپ کی رسائی منسوخ ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
+        remove_owner_self_lockout: "خود کو اس گروپ سے بطور اونر ہٹانے سے اس کا انتظام کرنے کے لیے آپ کی رسائی منسوخ ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
         make_primary: "پرائمری بنائیں"
         make_primary_description: "<b>%{username}</b> کا بنیادی گروپ بنائیں"
         remove_primary: "پرائمری حذف کریں"
@@ -1211,7 +1247,7 @@ ur:
         make_all_primary_description: "اس کو تمام منتخب کردہ اراکین کے لئے بنیادی گروپ بنائیں"
         remove_all_primary: "بطور بنیادی ہٹائیں"
         remove_all_primary_description: "اس گروپ کو بنیادی طور پر ہٹا دیں"
-        status: "سٹیٹس"
+        status: "حیثیت"
         owner: "مالِک"
         primary: "بنیادی"
         forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
@@ -1219,41 +1255,41 @@ ur:
       topics: "موضوعات"
       posts: "پوسٹ"
       aria_post_number: "%{title} - پوسٹ #%{postNumber}"
-      mentions: "ذکر"
+      mentions: "تذکرے"
       messages: "پیغامات"
-      notification_level: "گروپ پیغامات کیلئے اطلاعات کا پہلے سے طے شدہ لَیوَل"
+      notification_level: "گروپ پیغامات کے لیے اطلاع کی ڈیفالٹ سطح"
       alias_levels:
-        mentionable: "کون اِس گروپ کو @ذکر کرسکتا ہے؟"
+        mentionable: "کون اس گروپ کا @ذکر کرسکتا ہے؟"
         messageable: "کون اِس گروپ کو پیغام بھیج سکتا ہے؟"
-        nobody: "کوئی بھی نہیں"
+        nobody: "کوئی نہیں"
         only_admins: "صرف منتظمین"
         mods_and_admins: "صرف نگران اور منتظمین"
         members_mods_and_admins: "صرف گروپ کے اراکین، نگران اور منتظمین"
         owners_mods_and_admins: "صرف گروپ مالکان، نگران اور منتظمین"
-        everyone: "ہر کوئی"
+        everyone: "ہر ایک"
       notifications:
         watching:
-          title: "نظر رکھی ہوئی ہے"
-          description: "آپ کو ہر پیغام میں ہونے والی ہر نئی پوسٹ کے بارے میں مطلع کیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
+          title: "دیکھنا"
+          description: "آپ کو ہر پیغام میں، ہر نئے دھاگے کے بارے میں مطلع کیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
         watching_first_post:
-          title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+          title: "پہلے دھاگے کو دیکھنا"
           description: "آپ کو اِس گروپ میں نئے پیغامات کے بارے میں مطلع کیا جائے گا لیکن پیغامات کے جوابات پر نہیں۔"
         tracking:
-          title: "ٹریک کیا جا رہا"
-          description: "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
+          title: "ٹریک کرنا"
+          description: "اگر کوئی آپ کے @نام کا ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
         regular:
           title: "عمومی"
-          description: "اگر کوئی آپ کا @نام ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+          description: "اگر کوئی آپ کے @نام کا ذکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
-          title: "خاموش کِیا ہوا"
-          description: "آپ کو اِس گروپ کے پیغامات کے بارے میں کسی بھی چیز پر مطلع نہیں کیا جائے گا۔"
+          title: "خاموش ہے"
+          description: "آپ کو اِس گروپ کے کسی قسم کے پیغامات پر مطلع نہیں کیا جائے گا۔"
       flair_url: "اوتار پر صلاحیتی پہچان کی تصویر"
-      flair_upload_description: "تصاویر جو 20px . 20px سے چھوٹی نا ہوں کو استعمال کریں۔"
+      flair_upload_description: "چوکور تصاویر جو 20px X 20px سے کم نا ہوں، استعمال کریں۔"
       flair_bg_color: "اوتار پر صلاحیتی پہچان کے پسِ منظر کا رنگ"
-      flair_bg_color_placeholder: "(اختیاری) ہیکس رنگ نمبر"
+      flair_bg_color_placeholder: "(اختیاری) ہیکس رنگ کی قدر"
       flair_color: "اوتار پر صلاحیتی پہچان کا رنگ"
-      flair_color_placeholder: "(اختیاری) ہیکس رنگ نمبر"
-      flair_preview_icon: "آئکن کا جھلک دیکھیں"
+      flair_color_placeholder: "(اختیاری) ہیکس رنگ کی قدر"
+      flair_preview_icon: "آئکن کی جھلک دیکھیں"
       flair_preview_image: "تصویر کی جھلک دیکھیں"
       flair_type:
         icon: "ایک آئکن منتخب کریں"
@@ -1268,7 +1304,7 @@ ur:
     user_action_groups:
       "1": "پسندیدگیاں"
       "2": "پسندیدگیاں"
-      "3": "بُکمارکس"
+      "3": "بُک مارکس"
       "4": "موضوعات"
       "5": "جوابات"
       "6": "جوابات"
@@ -1277,13 +1313,13 @@ ur:
       "11": "ترامیم"
       "12": "بھیجی گئی اشیاء"
       "13": "اِن باکس"
-      "14": "زیرِاِلتوَاء"
+      "14": "زیراِلتواء"
       "15": "مسودات"
       "17": "رابطے"
     categories:
-      categories_label: "اقسام"
+      categories_label: "زمرہ جات"
       subcategories_label: "ذیلی زمرے"
-      no_subcategories: "کوئی ذیلی زمرہ جات نہیں"
+      no_subcategories: "کوئی ذیلی زمرے نہیں"
       remove_filter: "فِلٹر ہٹائیں"
       plus_more_count:
         one: "+%{count} مزید"
@@ -1324,13 +1360,16 @@ ur:
         one: "زمرہ جات (%{count} مزید)۔۔۔"
         other: "زمرہ جات (%{count} مزید)۔۔۔"
     ip_lookup:
-      title: IP ایڈریس کا سراغ
+      title: IP ایڈریس
       hostname: ہوسٹ کا نام
       location: محل وقوع
       location_not_found: (نامعلوم)
       organisation: ادارہ
       phone: فون
       other_accounts: "اسی IP ایڈریس والے دوسرے اکاؤنٹس:"
+      other_accounts_with_ip:
+        one: "اسی IP ایڈریس کے ساتھ %{count} دیگر اکاؤنٹ"
+        other: "اسی IP ایڈریس کے ساتھ %{count} دیگر اکاؤنٹس"
       delete_other_accounts:
         one: "%{count} حذف کریں"
         other: "%{count} حذف کریں"
@@ -1365,30 +1404,41 @@ ur:
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
+      upcoming_changes:
+        title: "آنے والی تبدیلیاں"
+        for_user:
+          upcoming_change: "آنے والی تبدیلی"
+          enabled: "فعال؟"
+          why: "کیوں؟"
+        why_reasons:
+          not_in_specific_groups: "صارف اس تبدیلی کے لیے درکار مخصوص گروپس میں نہیں ہے۔"
+          in_specific_groups: "صارف اس تبدیلی کے لیے درکار مخصوص گروپس میں شامل ہے"
+          enabled_for_everyone: "یہ تبدیلی تمام اراکین کے لیے فعال ہے"
+          enabled_for_no_one: "یہ تبدیلی تمام اراکین کے لیے غیر فعال ہے"
+        enable_available_notifications: "مجھے مطلع کریں جب کوئی آنے والی تبدیلی پیش نظارہ کے لیے دستیاب ہو۔"
       user_notifications:
         filters:
-          filter_by: "فلٹر بذریعہ"
+          filter_by: "فلٹر منجانب"
           all: "تمام"
-          read: "پڑھ لیا گیا"
+          read: "پڑھا"
           unread: "بغیر پڑھے"
           unseen: "ان دیکھا"
         ignore_duration_title: "رکن کو نظر انداز کریں"
         ignore_duration_username: "اسمِ صارف"
         ignore_duration_when: "دورانیہ:"
-        ignore_duration_save: "نظر انداز کریں"
+        ignore_duration_save: "نظر انداز"
         ignore_duration_note: "براہ کرم نوٹ کریں کہ نظر انداز کا دورانیہ ختم ہونے کے بعد تمام نظرانداز خود کار طریقے سے ہٹا دیے جاتے ہیں۔"
-        ignore_duration_time_frame_required: "براہ کرم ایک ٹائم فریم منتخب کریں"
-        ignore_no_users: "آپ کے پاس کوئی نظر انداز صارفین موجود نہیں۔"
-        ignore_option: "نظر انداز کردہ"
+        ignore_duration_time_frame_required: "براہ کرم ایک وقتی حد منتخب کریں"
+        ignore_no_users: "آپ کے پاس کوئی نظر انداز اراکین موجود نہیں۔"
+        ignore_option: "نظر انداز شدہ"
         ignore_option_title: "آپ کو اس رکن سے متعلق کوئی اطلاعات موصول نہیں ہوں گی اور ان کا تمام مواد چھپا دیا جائے گا۔"
         add_ignored_user: "شامل۔۔۔"
-        mute_option: "خاموش کِیا ہوا"
-        mute_option_title: "آپ کو اس رکن کی طرف سے کوئی اطلاعات، ذاتی پیغامات، یا چیٹ کے براہ راست پیغامات موصول نہیں ہوں گے۔"
+        mute_option: "خاموش ہے"
+        mute_option_title: "آپ کو اس رکن کی طرف سے کوئی اطلاعات، ذاتی پیغامات، یا گفتگو کے براہ راست پیغامات موصول نہیں ہوں گے۔"
         normal_option: "عمومی"
-        normal_option_title: " آپ کو مطلع کر دیا جائے گا اگر یہ صارف آپ کو جواب دیتا ہے، آپ کا اقتباس کرتا ہے، یا آپ کا ذکر کرتا ہے۔"
+        normal_option_title: "اس رکن کی طرف سے آپ کو جواب، اقتباس یا تذکرہ پر آپ کو مطلع کیا جائے گا۔"
       notification_schedule:
-        title: "اطلاع کا نظام الاوقات"
-        label: "حسب ضرورت نوٹیفکیشن نظام الاوقات کو فعال کریں"
+        label: "حسب ضرورت اطلاعات کے نظام الاوقات کو فعال کریں"
         tip: "ان گھنٹوں کے علاوہ آپ کی اطلاعات کو روک دیا جائے گا۔"
         midnight: "آدھی رات"
         none: "کوئی نہیں"
@@ -1431,13 +1481,8 @@ ur:
       notifications: "اطلاعات"
       statistics: "اعدادوشمار"
       desktop_notifications:
-        label: "لائیو اطلاعات"
         not_supported: "نوٹیفیکیشن اس براؤزر کے لیئے غیر معاون ہیں۔ معذرت۔"
-        perm_default: "اطلاعات چالو کریں"
-        perm_denied_btn: "اِجازت نہیں دی گئی"
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
-        disable: "اطلاعات غیر فعال کریں"
-        enable: "اطلاعات فعال کریں"
         each_browser_note: "نوٹ: آپ کو اپنے استعمال کردہ ہر براؤزر پر اس ترتیب کو تبدیل کرنا ہوگا۔ اگر آپ اس ترتیب سے قطع نظر رکن مینو سے اطلاعات کو روکتے ہیں تو تمام اطلاعات غیر فعال ہو جائیں گی۔"
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
@@ -1468,28 +1513,28 @@ ur:
       skip_new_user_tips:
         description: "نئے رکن آن بورڈنگ تجاویز اور تمغات کو چھوڑ دیں"
       reset_seen_user_tips: "رکن کی تجاویز دوبارہ دکھائیں"
-      theme_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ تھیم بنائیں"
-      color_scheme_default_on_all_devices: "میرے تمام آلات پر ڈیفالٹ کلر پیلیٹ اور موڈ سیٹ کریں۔"
-      color_scheme: "رنگ پیلیٹ"
+      theme_default_on_all_devices: "میرے تمام آلات پر اِس کو ڈیفالٹ تھیم بنائیں"
+      color_scheme_default_on_all_devices: "میرے تمام آلات پر ڈیفالٹ رنگوں کا مجموعہ اور موڈ سیٹ کریں۔"
+      color_scheme: "رنگوں کا مجموعہ"
       color_schemes:
         default_description: "تھیم ڈیفالٹ"
-        dark_instructions: "آپ اپنے آلے کے ڈارک موڈ کو ٹوگل کرکے ڈارک موڈ کلر پیلیٹ کا پیش منظر دیکھ سکتے ہیں۔"
-        undo: "رِی سَیٹ"
+        dark_instructions: "آپ اپنے آلے کے ڈارک موڈ کو ٹوگل کرکے ڈارک موڈ رنگوں کے مجموعہ کا پیش منظر دیکھ سکتے ہیں۔"
+        undo: "ری سیٹ"
         regular: "لائٹ موڈ"
         dark: "ڈارک موڈ"
         interface_mode: "موڈ"
         interface_mode_instructions: "'آٹو' آپ کے سسٹم کی ترجیحات کو لائٹ یا ڈارک موڈ کے لیے استعمال کرتا ہے۔"
         interface_modes:
-          auto: "خود بخود"
+          auto: "خودکار"
           light: "لائٹ"
           dark: "ڈارک"
         picker:
           active: "فعال"
-      dark_mode: "سیاہ موڈ"
-      text_size_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ ٹیکسٹ سائز بنائیں"
-      allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
-      external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے رابطے ایک نئے ٹیب میں کھولیں"
-      enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
+      dark_mode: "ڈارک موڈ"
+      text_size_default_on_all_devices: "میرے تمام آلات پر اِس کو ڈیفالٹ متن کا سائز بنائیں"
+      allow_private_messages: "دوسرے اراکین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
+      external_links_in_new_tab: "تمام بیرونی رابطے ایک نئے ٹیب میں کھولیں"
+      enable_quoting: "نمایاں کردہ متن کے لیے جواب میں اقتباس کو فعال کریں"
       enable_smart_lists: "کمپوزر میں لکھتے وقت سمارٹ لسٹوں کو فعال کریں"
       enable_defer: "موضوعات کو بغیر پڑھے کے بطور نشان زد کریں"
       enable_markdown_monospace_font: "کمپوزر کے مارک ڈاؤن موڈ میں مونو اسپیس فونٹ استعمال کریں۔"
@@ -1497,23 +1542,23 @@ ur:
         enable: "سائڈبار کو فعال کریں"
         options: "اختیارات"
         navigation_section: "نیویگیشن"
-        navigation_section_instruction: "جب نیویگیشن مینو میں موضوع کی فہرست میں نئے یا بغیر پڑھے ہوئے اشیاء ہوں۔۔۔"
+        navigation_section_instruction: "جب نیویگیشن مینو میں موضوع کی فہرست میں نئے یا بغیر پڑھے ہوئے موضوع ہوں۔۔۔"
         link_to_filtered_list_checkbox_description: "چھانٹی ہوئی فہرست سے جوڈیں"
         show_count_new_items_checkbox_description: "نئی اشیاکی گنتی دکھائیں"
-      change: "بدلیں"
+      change: "تبدیل"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک نگران ہے"
-      admin: "%{user} ایک ایڈمِن ہے"
+      admin: "%{user} ایک منتظم ہے"
       moderator_tooltip: "یہ رکن ایک نگران ہے"
-      admin_tooltip: "یہ صارف ایک ایڈمِن ہے"
-      silenced_tooltip: "یہ صارف خاموش کیا ہوا ہے"
-      suspended_notice: "یہ صارف %{date} تک معطل ہے۔"
-      suspended_permanently: "یہ صارف معطل ہے۔"
+      admin_tooltip: "یہ رکن ایک منتظم ہے"
+      silenced_tooltip: "یہ رکن خاموش ہے"
+      suspended_notice: "یہ رکن %{date} تک معطل ہے۔"
+      suspended_permanently: "یہ رکن معطل ہے۔"
       suspended_reason: "وجہ: "
-      silenced_notice: "اس رکن کو %{date}تک خاموش کر دیا ہے"
-      silenced_permanently: "یہ صارف خاموش کیا ہوا ہے."
+      silenced_notice: "یہ رکن %{date} تک خاموش ہے"
+      silenced_permanently: "یہ رکن خاموش ہے."
       silenced_reason: "وجہ: "
-      github_profile: "گِٹ ہَب"
+      github_profile: "گٹ ہب"
       email_activity_summary: "سرگرمی کا خلاصہ"
       mailing_list_mode:
         label: "میلنگ لسٹ کے موڈ"
@@ -1521,10 +1566,10 @@ ur:
         instructions: |
           یہ ترتیب سرگرمی کے خلاصے کی جگہ لے لیتی ہے۔<br />
           خاموش کردہ موضوعات اور زمرہ جات ان ای میلوں میں شامل نہیں۔
-        individual: "ہر نئی پوسٹ پر ایک ای میل بھیجیں"
-        individual_no_echo: "میری اپنی کے سوا، ہر نئی پوسٹ پر ایک ای میل بھیجیں"
-        many_per_day: "ہر نئی پوسٹ پر ایک ای میل بھیجیں (تقریباً %{dailyEmailEstimate} فی دن)"
-        few_per_day: "ہر نئی پوسٹ پر ایک ای میل بھیجیں (تقریبا 2 فی دن)"
+        individual: "ہر نئے دھاگے پر ایک ای میل بھیجیں"
+        individual_no_echo: "میرے اپنے دھاگے کے علاوہ، ہر نئے دھاگہ پر ایک ای میل بھیجیں"
+        many_per_day: "ہر نئے دھاگے پر ایک ای میل بھیجیں (تقریباً %{dailyEmailEstimate} فی دن)"
+        few_per_day: "ہر نئے دھاگے پر ایک ای میل بھیجیں (تقریبا 2 فی دن)"
         warning: "میلنگ لسٹ موڈ فعال ہے۔ ایمَیل نوٹیفیکیشن کی ترتیبات منسوخ ہوگئی ہیں۔"
       tag_settings: "ٹیگز"
       watched_tags: "دیکھا گیا"
@@ -1577,9 +1622,6 @@ ur:
         flags_given:
           one: '<span class="%{className}">%{count}</span> مددگارنشان دھی'
           other: '<span class="%{className}">%{count}</span> مددگارنشان دھییاں'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> نشان دھی پوسٹ'
-          other: '<span class="%{className}">%{count}</span>نشان دھی پوسٹس'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> حذف شدہ پوسٹ'
           other: '<span class="%{className}">%{count}</span> حذف شدہ پوسٹس'
@@ -1593,8 +1635,8 @@ ur:
           one: '<span class="%{className}">%{count}</span> تنبیہ'
           other: '<span class="%{className}">%{count}</span> انتباہات'
         rejected_posts:
-          one: '<span class="%{className}">%{count}</span> مسترد شدہ پوسٹ'
-          other: '<span class="%{className}">%{count}</span> مسترد شدہ پوسٹس'
+          one: '<span class="%{className}">%{count}</span> مسترد شدہ دھاگہ'
+          other: '<span class="%{className}">%{count}</span> مسترد شدہ دھاگے'
       messages:
         all: "تمام ان باکسز"
         inbox: "اِن باکس"
@@ -1608,7 +1650,7 @@ ur:
         new: "نیا"
         new_with_count:
           one: "نیا (%{count})"
-          other: "نیا (%{count})"
+          other: "نئے (%{count})"
         archive: "محفوظ شدہ"
         groups: "میرے گروپ"
         move_to_inbox: "اِنباکس میں منتقل کریں"
@@ -1617,8 +1659,8 @@ ur:
         tags: "ٹیگز"
         all_tags: "تمام ٹیگز"
         warnings: "آفیشل انتباہات"
-        read_more_in_group: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو %{groupLink}میں براؤز کریں۔"
-        read_more: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو <a href='%{basePath}/u/%{username}/messages'>ذاتی پیغامات</a>میں براؤز کریں۔"
+        read_more_in_group: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو %{groupLink} میں براؤز کریں۔"
+        read_more: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو <a href='%{basePath}/u/%{username}/messages'>ذاتی پیغامات</a> میں براؤز کریں۔"
         read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
@@ -1681,13 +1723,31 @@ ur:
         profile: "پروفائل"
         emails: "ای میلیں"
         notifications: "اطلاعات"
-        tracking: "ٹریک کیا جا رہا"
+        tracking: "ٹریک کرنا"
         categories: "زمرہ جات"
         users: "اراکین"
         tags: "ٹیگز"
         interface: "انٹرفیس"
-        apps: "اَیپس"
+        apps: "ایپس"
         navigation_menu: "نیویگیشن مینو"
+        upcoming_changes: "آنے والی تبدیلیاں"
+        calendar_subscriptions: "کیلنڈر"
+      calendar_subscriptions:
+        description: "اپنی پسندیدہ کیلنڈر ایپ (گوگل کیلنڈر، ایپل کیلنڈر، آؤٹ لک وغیرہ) کے ساتھ ہم آہنگ کرنے کے لیے سبسکرپشن یو آر ایلز بنائیں۔ یہ یو آر ایلز آپ کے اکاؤنٹ کے کیلنڈر ایونٹس (یاد دہانیوں، کیلنڈر ایونٹس وغیرہ) کے لیے نجی روابط ہیں۔ آپ کسی بھی وقت بنائے گئے سبسکرپشن یو آر ایلز کو منسوخ یا تجدید کر سکتے ہیں۔"
+        generate: "سبسکرپشن یو آر ایلز تیار کریں"
+        regenerate: "یو آر ایل دوبارہ تخلیق کریں"
+        regenerate_confirm: "اس سے آپ کی موجودہ کیلنڈر سبسکرپشن کے یو آر ایل کالعدم ہو جائیں گے۔ پرانے یو آر ایل استعمال کرنے والی کوئی بھی کیلنڈر ایپس اپ ڈیٹس وصول کرنا بند کر دیں گی۔ کیا آپ جاری رکھنا چاہتے ہیں؟"
+        revoke: "سبسکرپشن منسوخ کریں"
+        revoke_confirm: "یہ آپ کے کیلنڈر سبسکرپشن کے یو آر ایل منسوخ کر دے گا۔ جو بھی کیلنڈر ایپس انہیں استعمال کر رہی ہیں وہ اپ ڈیٹس وصول کرنا بند کر دیں گی۔ کیا آپ جاری رکھنا چاہتے ہیں؟"
+        urls_warning: "سبسکرپشن یو آر ایل تیار ہیں! انہیں اپنی کیلنڈر ایپ سے منسلک کرنے کے لیے نیچے دیے گئے بٹنوں پر کلک کریں۔ نوٹ: یہ یو آر ایل صرف ایک بار دکھائے جاتے ہیں۔"
+        bookmarks: "بُک مارک کی یاد دہانیاں"
+        bookmarks_description: "آپ کے بک مارکس یاد دہانی کی تاریخوں کے ساتھ"
+        copy: "یو آر ایل کاپی کریں"
+        copied: "کاپی کر لیا!"
+        add_to_google: "گوگل کیلنڈر"
+        add_to_outlook: "مائیکروسافٹ آؤٹ لک"
+        add_to_apple: "ایپل کیلنڈر"
+        active_subscription: "آپ کے پاس ایک فعال کیلنڈر سبسکرپشن ہے۔"
       change_password:
         success: "(ای میل بھیج دی گئی)"
         in_progress: "(ای میل بھیجی جا رہی ہے)"
@@ -1700,6 +1760,7 @@ ur:
         verify_identity: "جاری رکھنے کے لیے، براہ کرم اپنی شناخت کی تصدیق کریں۔"
         title: "پاسورڈ رِی سَیٹ"
         remove: "پاس ورڈ کو ہٹائیں"
+        remove_disabled: "پاس ورڈ کو ہٹانے سے پہلے اکاؤنٹ کو کم از کم ایک دوسرے لاگ ان طریقہ (مثلاً پاس کی یا منسلک بیرونی اکاؤنٹ) کی ضرورت ہے۔"
         remove_detail: "آپ کا اکاؤنٹ پاس ورڈ کے ساتھ مزید قابل رسائی نہیں رہے گا جب تک کہ آپ اسے دوبارہ ترتیب نہ دیں۔"
       second_factor_backup:
         title: "دو عنصری بیک اپ کوڈز"
@@ -1769,18 +1830,18 @@ ur:
           default_name: "بنیادی سیکیورٹی کیز"
           iphone_default_name: "آئی فون"
           android_default_name: "اینڈرائیڈ"
-          not_allowed_error: "سیکیورٹی کیز رجسٹریشن کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
-          already_added_error: "آپ نے پہلے ہی یہ سسیکیورٹی کیز رجسٹر کرلی ہے۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
+          not_allowed_error: "سیکیورٹی کلید کی رجسٹریشن کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
+          already_added_error: "آپ نے پہلے ہی یہ سسیکیورٹی کلید رجسٹر کرلی ہے۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
           edit: "فزیکل سیکیورٹی کلید میں ترمیم"
           save: "محفوظ کریں"
           edit_description: "فزیکل سیکیورٹی کلید کا نام"
-          name_required_error: "آپ کو اپنی سیکیورٹی کی کا نام دینا ضروری ہے۔"
+          name_required_error: "آپ کو اپنی سیکیورٹی کلید کا نام دینا ضروری ہے۔"
       passkeys:
         rename_passkey: "پاسکی کا نام تبدیل"
         add_passkey: "پاسکی شامل"
-        confirm_delete_passkey: "کیا آپ واقعی اس پاس کی کو حذف کرنا چاہتے ہیں؟"
+        confirm_delete_passkey: "کیا آپ واقعی اس پاسکی کو حذف کرنا چاہتے ہیں؟"
         passkey_successfully_created: "کامیابی! آپ کی نئی پاسکی بن گئی"
-        rename_passkey_instructions: "ایک پاس کلید کا نام چنیں جو آپ کے لیے آسانی سے اس کی شناخت کرے، مثال کے طور پر، اپنے پاس ورڈ مینیجر کا نام استعمال کریں۔"
+        rename_passkey_instructions: "ایک پاسکی کا نام چنیں جو آپ کے لیے آسانی سے اس کی شناخت کرے، مثال کے طور پر، اپنے پاس ورڈ مینیجر کا نام استعمال کریں۔"
         name:
           default: "مین پاسکی"
         save: "محفوظ کریں"
@@ -1789,12 +1850,12 @@ ur:
         added_date: "شامل کیا گیا %{date}"
         last_used_date: "آخری بار استعمال کیا گیا %{date}"
         never_used: "کبھی استعمال نہیں ہوا"
-        not_allowed_error: "پاس کی رجسٹریشن کا عمل یا تو وقت ختم ہو گیا، منسوخ کر دیا گیا یا اس کی اجازت نہیں ہے۔"
-        already_added_error: "آپ اس پاس کی کو پہلے ہی رجسٹر کر چکے ہیں۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
+        not_allowed_error: "پاسکی رجسٹریشن کا عمل یا تو وقت ختم ہو گیا، منسوخ کر دیا گیا یا اس کی اجازت نہیں ہے۔"
+        already_added_error: "آپ اس پاسکی کو پہلے ہی رجسٹر کر چکے ہیں۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
         confirm_button: "یا پاسکی کا استعمال"
       change_about:
-        title: "\"میرے بارے میں\" تبدیل کریں"
-        error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
+        title: "میرے بارے میں، کو تبدیل کریں"
+        error: "اِس کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
       change_username:
         title: "اسمِ صارف کی تبدیلی"
         confirm: "کیا آپ کو بالکل یقین ہے کہ آپ اپنا اسمِ صارف تبدیل کرنا چاہتے ہیں؟"
@@ -1906,24 +1967,24 @@ ur:
         not_available_no_suggestion: "دستیاب نہیں"
         too_short: "آپ کا اسمِ صارف بہت چھوٹا ہے"
         too_long: "آپ کا اسمِ صارف بہت طویل ہے"
-        checking: "رکن نام کی دستیابی کی جانچ ہو رہی۔۔۔"
+        checking: "اسم صارف کی دستیابی کی جانچ ہو رہی۔۔۔"
         prefilled: "ای میل اس رجسٹرڈ اسم صارف سے مماثل ہے"
-        required: "براہ کرم رکن نام درج کریں"
-        edit: "رکن نام میں ترمیم کریں"
+        required: "براہ کرم اسم صارف درج کریں"
+        edit: "اسم صارف میں ترمیم کریں"
       locale:
         title: "انٹرفیس کی زبان"
         instructions: "صارف کیلئے انٹرفیس کی زبان۔ یہ اُس وقت تبدیل ہو گی جب آپ وِیب سائٹ رِیفریش کریں ۔"
         default: "(ڈِیفالٹ)"
-        any: "کوئی بھی"
+        any: "کوئی"
       homepage:
         default: "(ڈِیفالٹ)"
       password_confirmation:
         title: "پاس ورڈ دوبارہ"
       invite_code:
-        title: "مدعو کوڈ کریں"
+        title: "دعوت کا کوڈ"
         instructions: "اکاؤنٹ کی رجسٹریشن کے لئے ایک دعوت نامہ کوڈ درکار ہوتا ہے"
       auth_tokens:
-        title: "حال ہی میں استعمال شدہ ڈِیوائیسِز"
+        title: "حال ہی میں استعمال شدہ آلات"
         short_description: "یہ ان آلات کی فہرست ہے جنہوں نے حال ہی میں آپ کے اکاؤنٹ میں لاگ ان کیا ہے۔"
         details: "تفصیلات"
         log_out_all: "تمام کو لاگ آُوٹ کریں"
@@ -1966,6 +2027,7 @@ ur:
         first_time_and_daily: "پہلی بار دھاگہ کو پسند کیا گیا اور روزانہ"
         first_time: "پہلی بار دھاگہ کو پسند کیا گیا"
         never: "کبھی نہیں"
+      notify_on_linked_posts: "جب کوئی میری کسی پوسٹ کا لنک شیئر کرے تو مطلع کریں"
       email_previous_replies:
         title: "ای میلز کے نیچے پچھلے جوابات شامل کریں"
         unless_emailed: "اگر ماضی میں بھیجا گیا ہو، تو نہیں"
@@ -2025,6 +2087,7 @@ ur:
         redeemed_tab_with_count: "فائدہ اٹھا لیا گیا (%{count})"
         invited_via: "دعوت نامہ"
         invited_via_link: "رابطہ %{key} (%{count} / %{max} مخلصی)"
+        generating_link: "لنک تیار ہو رہا ہے..."
         groups: "گروپس"
         topic: "موضوع"
         sent: "تخلیق کی گذار/آخری ارسال"
@@ -2091,6 +2154,7 @@ ur:
               other {# دنوں}
             } میں ختم ہو جائے گا۔
           edit_link_options: "رابطہ کے اختیارات میں ترمیم کریں یا ای میل کے ذریعے بھیجیں۔"
+          edit_link_options_only: "لنک کے اختیارات میں ترمیم کریں"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
           description: "تفصیل"
@@ -2161,8 +2225,8 @@ ur:
           one: "موضوع بنایا"
           other: "موضوعات بن گئے"
         post_count:
-          one: "بنائی گئی پوسٹ"
-          other: "بنائی گئیں پوسٹ"
+          one: "بنایا گیا دھاگہ"
+          other: "بنائے گئے دھاگے"
         likes_given:
           one: "دیا گیا"
           other: "دیا گیا"
@@ -2233,7 +2297,7 @@ ur:
       profile_link: "%{username}، پروفائل دیکھیں"
     user_status:
       save: "محفوظ کریں"
-      set_custom_status: "حسب ضرورت کیفیت"
+      set_custom_status: "حسب ضرورت حیثیت"
       what_are_you_doing: "آپ کیا کر رہے ہو؟"
       pause_notifications: "اطلاعات کو روکیں"
       remove_status: "حیثیت ہٹا دیں"
@@ -2287,10 +2351,14 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+    d_otp:
+      screen_reader:
+        one: نمبر درج کریں
+        other: '%{count} نمبرز درج کریں'
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
-      errors_summary_title: "اس فارم میں غلطیاں ہیں:"
+      required: درکار ہے
       dirty_form: "آپ نے اپنی تبدیلیاں جمع نہیں کروائیں! کیا آپ واقعی چھوڑنا چاہتے ہیں؟"
       errors:
         starts_with: "%{prefix}سے شروع ہونا چاہیے"
@@ -2723,7 +2791,13 @@ ur:
         title: "ترجمہ پوسٹ"
         select: "ترجمہ کا انتخاب"
         save: "ترجمہ محفوظ"
+        original_content: "اصل پوسٹ"
+        translation_preview: "ترجمہ کا پیش نظارہ"
+        original: "اصل"
+        translation: "ترجمہ"
+        no_translation_yet: "ترجمہ کا پیش نظارہ دیکھنے کے لیے ٹائپ کرنا شروع کریں..."
         placeholder: "پوسٹ کا ترجمہ یہاں درج کریں۔۔۔"
+        show_raw_markdown: "ادھورا دکھائیں"
       group_mentioned_limit:
         one: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} رکن سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
         other: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} اراکین سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
@@ -2835,6 +2909,19 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      apply_wrap_title: "رَیپ اپلائی کریں"
+      wrap_modal:
+        title: "ریپ میں ترمیم کریں"
+        name_label: "ریپ کا نام"
+        attributes_label: "خصوصیات"
+        add_attribute: "خصوصیت شامل کریں"
+        attribute_key: "کی"
+        attribute_value: "وَیلِیو"
+        remove_attribute: "خصوصیت ہٹا دیں"
+        apply: "لاگو کریں"
+        unwrap: "اَن ریپ کریں"
+        no_attributes: "ابھی تک کوئی خصوصیات شامل نہیں کی گئیں۔"
+      wrap_text: "ریپ کا مواد"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2891,6 +2978,7 @@ ur:
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
+          desc: "غیر اندراج شدہ عنوانات صرف براہ راست لنک سے قابل رسائی ہیں"
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -2901,6 +2989,14 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+        add_to_grid: "گرڈ میں شامل کریں"
+        move_outside_grid: "گرڈ سے باہر منتقل کریں"
+      image: "تصویر"
+      grid_label: "یہ ایک گرڈ کے طور پر دکھایا جائے گا"
+      grid_mode_grid: "گرڈ"
+      grid_mode_carousel: "کیروسل"
+      grid_mode_title: "تصویری گیلری کے انداز کو %{mode}پر سیٹ کریں"
+      remove_grid: "گرڈ کو ہٹائیں"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
@@ -2910,6 +3006,10 @@ ur:
         remove: "لنک ہٹانا"
         visit: "بیرونی ٹیب میں لنک کھولیں"
         link_copied: "لنک کاپی ہو گیا!"
+      onebox_toolbar:
+        copy: "رابطہ کاپی کریں"
+        link_copied: "رابطہ کاپی ہو گیا!"
+      unsupported_token: "رِچ ٹیکسٹ ایڈیٹر اس پوسٹ میں استعمال ہونے والی تمام خصوصیات کو سپورٹ نہیں کرتا ہے؛مارک ڈاؤن ایڈیٹر پر منتقل کیا جا رہا ہے۔"
     notifications:
       tooltip:
         regular:
@@ -2979,6 +3079,13 @@ ur:
       votes_released: "%{description} - مکمل"
       new_features: "نئی خصوصیات دستیاب ہیں!"
       admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
+      upcoming_changes:
+        available:
+          title: "آنے والی تبدیلیاں"
+          description: "'%{changeName}' پیش نظارہ کے لیے دستیاب ہے"
+        automatically_promoted:
+          title: "آنے والی تبدیلیاں"
+          description: "'%{changeName}' خود بخود فعال ہو گیا ہے"
       dismiss_confirmation:
         body:
           default:
@@ -3035,7 +3142,7 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
-        new_features: "ڈسکورس کی نئی خصوصیات جاری کر دی گئی ہیں!"
+        new_features: "ڈسکورس کی نئی خصوصیات جاری کر دی گئی ہیں"
         admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
     upload_selector:
       change: "تبدیل"
@@ -3127,6 +3234,7 @@ ur:
           aria_label: ٹیگز کا استعمال کرتے ہوئے فلٹر
         filters:
           label: صرف موضوعات/دھاگے لوٹائیں۔۔۔
+          all: پیغامات شامل کریں
           title: صرف عنوان سے ملتے ہوئے
           likes: جو میں نے لائیک کیے
           posted: جن میں میں نے پوسٹ کیا
@@ -3172,9 +3280,8 @@ ur:
         max_views:
           placeholder: زیادہ سے زیادہ
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
-        additional_options:
-          label: "دھاگے کی گنتی اور موضوع کے ملاحظات کے لحاظ سے فلٹر"
     hamburger_menu: "نیویگیشن مینو"
+    header_panel: "ہَیڈر"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -3237,11 +3344,17 @@ ur:
         confirm: "تصدیق کریں"
         select_all: "تمام منتخب کریں"
         clear_all: "تمام کو حزف کریں"
-        unlist_topics: "بغیر فہرست موضوعات"
-        relist_topics: "موضوعات دوبارہ فہرست کریں"
         reset_bump_dates: "ٹکرانے کی تاریخوں کی دوبارہ ترتیب"
         defer: "بغیر پڑھے نشان زد"
-        delete: "موضوعات حذف کریں"
+        delete_topics_count:
+          one: "موضوع حذف کریں"
+          other: "موضوعات حذف کریں"
+        delete_posts_count:
+          one: "پوسٹ حذف کریں"
+          other: "پوسٹس حذف کریں"
+        delete_posts_confirmation:
+          one: "کیا آپ واقعی %{count} پوسٹ حذف کرنا چاہتے ہیں؟"
+          other: "کیا آپ واقعی %{count} پوسٹس حذف کرنا چاہتے ہیں؟"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:
@@ -3271,37 +3384,21 @@ ur:
           other: "نیا (%{count}) برخاست"
         toggle: "موضوعات کے حجمی انتخاب کو ٹوگل کریں"
         actions: "حجمی عوامل"
-        change_category: "زمرہ سیٹ"
-        close_topics: "موضوع بند کریں"
-        archive_topics: "موضوع محفوظ"
         move_messages_to_inbox: "اِنباکس میں منتقل کریں"
         archive_messages: "آرکائیو میں منتقل"
-        notification_level: "اطلاعات۔۔۔"
         change_notification_level: "نوٹیفیکیشن لیول تبدیل کریں"
         choose_new_category: "موضوعات کیلئے نئے زمرہ کا انتخاب کریں:"
-        selected:
-          one: "آپ نے <b>%{count}</b> موضوع منتخب کیا۔"
-          other: "آپ نے <b>%{count}</b> موضوعات منتخب کیے۔"
-        selected_sole_category:
-          one: "آپ نے زمرہ سے <b>%{count}</b> موضوع منتخب کیا ہے:"
-          other: "آپ نے زمرہ سے <b>%{count}</b> موضوعات کا انتخاب کیا ہے:"
         selected_count:
           one: "%{count} کا انتخاب"
           other: "%{count} کا انتخاب"
-        change_tags: "ٹیگز بدلیں"
-        append_tags: "ٹیگز میں اضافہ کریں"
-        choose_new_tags: "ان موضوعات کیلئے نئے ٹیگز کا انتخاب کریں:"
-        choose_append_tags: "ان موضوعات پر اضافہ کرنے کیلئے نئے ٹیگز کا انتخاب کریں:"
-        changed_tags: "ان موضوعات کے ٹیگز تبدیل کر دیے گئے تھے۔"
-        remove_tags: "تمام ٹیگز ہٹا دیں"
-        confirm_remove_tags:
-          one: "اس موضوع سے تمام دھجیاں ہٹا دی جائیں گی۔ کیا آپ کو یقین ہے؟"
-          other: "تمام دھجیوں کو %{count} موضوعات سے ہٹا دیا جائے گا۔ کیا آپ کو یقین ہے؟"
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
+        error_topic_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوعات"
       none:
         unread: "آپ کے پاس کوئی بغیر پڑھے موضوع موجود نہیں۔"
         unseen: "آپ کے لیے کوئی ان دیکھے موضوعات نہیں ہیں۔"
@@ -3319,25 +3416,12 @@ ur:
           unread: "کچھ بھی بغیر پڑھا نہیں بچا... متاثر کن!"
           new_new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
           new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
-      bottom:
-        latest: "کوئی مزید تازہ ترین موضوع موجود نہیں۔"
-        posted: "کوئی مزید پوسٹ کیے گئے موضوعات موجود نہیں۔"
-        read: "کوئی مزید پڑھ لیے گئے موضوعات موجود نہیں۔"
-        new: "کوئی مزید نئے موضوعات موجود نہیں۔"
-        unread: "کوئی مزید بغیر پڑھے موضوعات موجود نہیں۔"
-        unseen: "مزید ان دیکھے موضوعات نہیں ہیں۔"
-        category: "مزید کوئی %{category} کے موضوعات موجود نہیں۔"
-        tag: "مزید کوئی %{tag} کے موضوعات موجود نہیں۔"
-        top: "مزید کوئی سرفہرست موضوعات موجود نہیں۔"
-        hot: "مزید گرما گرم موضوعات نہیں۔"
-        bookmarks: "مزید کوئی بک مارک کیے ہوئے موضوعات موجود نہیں۔"
-        filter: "مزید موضوعات نہیں۔"
+          generic: "یہاں دیکھنے کے لیے کچھ نہیں ہے...جلد ہی دوبارہ چیک کریں!"
     topic_bulk_actions:
       dismiss:
         name: "بر خاست کریں"
       close_topics:
         name: "بند کریں"
-        note: "نوٹ"
         optional: (اختیاری)
       archive_topics:
         name: "محفوظ شدہ"
@@ -3349,26 +3433,36 @@ ur:
         name: "غیر فہرست"
       relist_topics:
         name: "دوبارہ لگانا"
-      remove_tags:
-        name: "دھجیاں ہٹائیں"
-      append_tags:
-        name: "ٹیگز میں اضافہ کریں"
-      replace_tags:
-        name: "ٹیگز بدلیں"
       delete_topics:
         name: "مٹائیں"
       update_category:
         name: "تازہ ترین زمرہ"
-        description: "منتخب کردہ موضوعات کے لیے نئے زمرے کا انتخاب"
+      convert_to_public_topic:
+        name: "عوامی موضوع بنائیں۔۔۔"
+      convert_to_private_message:
+        name: "ذاتی پیغام بنائیں"
       reset_bump_dates:
         name: "ٹکرانے کی تاریخیں دوبارہ ترتیب دیں"
-        description: "موضوع کی ٹکرانے کی تاریخ کو آخری تخلیق کردہ پوسٹ کی تاریخ پر دوبارہ ترتیب دیں، جو موضوع کی فہرست میں ترتیب کو متاثر کرتی ہے۔"
       defer:
         name: "غیر پڑھا ہوا نشان زد"
-        description: "موضوعات کو بغیر پڑھے کے بطور نشان زد"
       update_notifications:
         name: "اطلاعات کو اپ ڈیٹ"
-        description: "نوٹیفکیشن لیول کو دیکھنا، ٹریکنگ، نارمل، یا خاموش میں بدلنا"
+    nested_replies:
+      sort:
+        label: "ترتیب بہ"
+        top: "سب سے اوپر"
+        new: "نیا"
+      load_more_children:
+        one: "%{count} مزید جواب"
+        other: "%{count}مزید جوابات"
+      collapsed_replies:
+        one: "%{count} جواب"
+        other: "%{count} جوابات"
+      collapse: "بند کریں"
+      no_replies: "ابھی تک کوئی جوابات نہیں۔"
+      deleted_post_placeholder: "[مٹائیں]"
+      ignored_post_placeholder: "[نظر انداز کردہ]"
+      pinned_reply: "پِن ہوا"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"
@@ -3459,16 +3553,16 @@ ur:
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"
       created_at: "پر بنا: %{date}"
       bumped_at: "تازہ ترین: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>تمام زمروں کو براؤز کریں</a> یا <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a>۔"
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>تمام زمروں کو براؤز کریں</a>, <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a> یا اوپر دیکھیں:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>تمام ٹیگز براؤز کریں</a> یا <a href='%{basePath}/latest'>تازہ ترین موضوعات دیکھیں</a>۔"
       browse_latest_topics: "تازہ ترین موضوعات کو براؤز کریں"
+      browse_new_replies: "نئے جوابات کو براؤز کریں"
+      browse_new_topics: "نئے موضوعات کو براؤز کریں"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply: "دھاگہ کے اصل مقام پر جائیں"
       jump_reply_aria: "@%{username}کے دھاگہ کو اس کی اصل جگہ پر لے جائیں"
       jump_reply_button: "دھاگہ پر جائیں"
       deleted: "موضوع مٹادیا گیا ہے"
       slow_mode_update:
+        title: "سست موڈ"
         select: "اراکین اس موضوع میں پوسٹ کر سکتے ہیں اس عرصہ میں صرف ایک بار :"
         description: "تیزی سے چلنے والی یا متنازعہ بحثوں میں سوچ بچار کو فروغ دینے کے لیے، اراکین کو اس موضوع پر دوبارہ پوسٹ کرنے سے پہلے انتظار کرنا چاہیے۔"
         enable: "فعال کریں"
@@ -3491,7 +3585,7 @@ ur:
           24_hours: "24 گھنٹے"
           custom: "اپنی مرضی کے مطابق مدت"
       slow_mode_notice:
-        duration: "براہ کرم اس عنوان میں پوسٹ کے درمیان %{duration}"
+        duration: "براہ کرم اس عنوان پر اپنی پوسٹس کے درمیان %{duration} کا انتظار کریں"
       topic_status_update:
         title: "موضوع ٹائمر"
         save: "ٹائمر مقرر کریں"
@@ -3521,6 +3615,8 @@ ur:
         title: "آخری دھاگہ کے بعد موضوع از خود بند ہونے والا ہے"
       auto_delete:
         title: "موضوع خودبخود حذف کریں"
+      auto_delete_after_last_post:
+        title: "آخری دھاگہ کے بعد موضوع از خود حذف ہونے والا ہے"
       auto_bump:
         title: "خود کار طریقے سے موضوع دھکا لگائیں"
       reminder:
@@ -3532,6 +3628,7 @@ ur:
         auto_close: "یہ موضوع خود کار طریقے سے بند کر دیا جائے گا %{timeLeft}۔"
         auto_publish_to_category: "یہ موضوع <a href=%{categoryUrl}>#%{categoryName}</a> میں شائع کر دیا جائے گا %{timeLeft}۔"
         auto_close_after_last_post: "یہ موضوع آخری جواب کے %{duration} بعد بند ہو جائے گا۔"
+        auto_delete_after_last_post: "یہ موضوع آخری جواب کے %{duration} بعد حذف ہو جائے گا۔"
         auto_delete: "یہ موضوع خودبخود مٹادیا جائے گا %{timeLeft}۔"
         auto_bump: "اس موضوع کو خود کار طریقے سے دھکا لگایا جائے گا %{timeLeft}۔"
         auto_reminder: "آپ کو اس موضوع کے بارے میں یاد دہانی کرائی جائے گی %{timeLeft}۔"
@@ -3627,6 +3724,8 @@ ur:
       reply:
         title: "جواب"
         help: "اس ٹاپک کا جواب لکھنا شروع کریں"
+      footer_buttons:
+        region_label: "موضوع کے ایکشنز"
       share:
         title: "موضوع کا اشتراک کریں"
         extended_title: "رابطہ شیئر کریں"
@@ -3806,6 +3905,12 @@ ur:
           one: آپ نے <b>%{count}</b> دھاگہ منتخب کیا۔
           other: "آپ نے <b>%{count}</b> دھاگے منتخب کیے۔"
       deleted_by_author_simple: "(موضوع مصنف نے مٹایا)"
+      localizations:
+        title_edit_warning:
+          message: "یہ ترجمہ شدہ موضوعاتی عنوان ہے۔<br><br>کیا آپ اس %{language} میں <b>اصل</b> زمرہ، ٹیگز، اور ٹائٹل کو حذف کرنا چاہتے ہیں یا خصوصی <b>ترجمہ</b>میں ترمیم کرنا چاہتے ہیں؟"
+          action_original: "اصل میں ترمیم کریں"
+          action_translation: "ترجمہ شدہ موضوعاتی عنوان میں ترمیم کریں"
+        editing_translation: "%{language} ترجمہ میں ترمیم کرتے ہوئے"
     post_list:
       title: "تازہ ترین پوسٹس"
       empty: "کوئی پوسٹس نہیں"
@@ -3813,14 +3918,17 @@ ur:
       bulk:
         select_all: "سبھی منتخب کریں"
         clear_all: "سبھی ہٹا دیں"
+        actions: "حجمی عوامل"
     post:
+      accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
       quote_reply_shortcut: "اقتباس (یا q دبائیں)"
       quote_edit: "ترمیم"
       quote_edit_shortcut: "ترمیم کریں (یا e دبائیں)"
       quote_copy: "اقتباس کاپی کریں"
-      quote_copied_to_clibboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
+      quote_copied_to_clipboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"
@@ -3874,6 +3982,10 @@ ur:
       sr_post_like_count_button:
         one: "%{count} شخص نے اِس پوسٹ کو لائیک کیا."
         other: "%{count} لوگوں نے اِس پوسٹ کو لائیک کیا."
+      likes_popup:
+        title:
+          one: "%{count} پسند"
+          other: "%{count} پسندیدگیاں"
       sr_post_read_count_button:
         one: "%{count} شخص نے اس پوسٹ کو پڑھا"
         other: "%{count} لوگوں نے اس پوسٹ کو پڑھا"
@@ -3893,7 +4005,9 @@ ur:
           edit: "ترمیم کریں"
           delete: "مٹائیں"
         add: "نیا ترجمہ شامل"
-        manage: "ترجمے کا انتظام کریں (%{count} موجودہ)"
+        manage:
+          one: "ترجمے کا انتظام کریں (%{count} موجودہ)"
+          other: "ترجمے کا انتظام کریں (%{count} موجودہ)"
         view:
           one: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
           other: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
@@ -3902,7 +4016,7 @@ ur:
           confirm_delete: "کیا آپ واقعی '%{languageCode}' کے ترجمے حذف کرنا چاہتے ہیں؟"
         success: "ترجمے کو کامیابی کے ساتھ اپ ڈیٹ کر دیا گیا"
         post_language_selector:
-          none: "کوئی نہیں"
+          none: "سیٹ نہیں"
         edit_warning:
           action_original: "اصل پوسٹ کی ترمیم"
           action_translation: "اس ترجمہ کی ترمیم"
@@ -3968,7 +4082,7 @@ ur:
         admin: "پوسٹ ایڈمن کے ایکشن"
         admin_action: "منتظم"
         permanently_delete: "مستقل طور پر حذف کریں"
-        permanently_delete_confirmation: "کیا آپ واقعی اس پوسٹ کو مستقل طور پر مٹانا چاہتے ہیں؟ آپ اسے بازیافت نہیں کر پائیں گے۔"
+        permanently_delete_confirm_phrase: "مستقل طور پر حذف کریں"
         wiki: "وِیکی بنائیں"
         unwiki: "وِیکی ختم کریں"
         convert_to_moderator: "عملہ کے رنگ شامل کریں"
@@ -4074,7 +4188,6 @@ ur:
         name_placeholder: "یہ بک مارک کس لیے ہے؟"
         name_input_label: "بک مارک نام"
         set_reminder: "مجھے یاد دلانا"
-        options: "اختیارات"
         actions:
           delete_bookmark:
             name: "بک مارک حذف کریں"
@@ -4113,6 +4226,8 @@ ur:
       back: "واپس زمرے میں"
       general: "عام"
       settings: "سیٹِنگ"
+      moderation: "ماڈریٹر کا کام"
+      advanced: "اعلی درجے کی"
       topic_template: "سانچہ"
       tags: "ٹیگز"
       localizations: "لوکلائزیشنز"
@@ -4137,14 +4252,20 @@ ur:
         delete: "مٹائیں"
         add: "مطلوبہ دہجی گروپ شامل کریں"
         placeholder: "دہجی گروپ کا انتخاب"
+        tag_group: "ٹیگ گروپ"
       topic_featured_link_allowed: "اس زمرہ میں نمایاں رابطوں کو اجازت دیں"
       create_long: "نیا زمرہ بنائیں"
+      unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
       slug_placeholder: "(اختیاری) URL کے لئے ڈیش دار الفاظ"
       creation_error: زمرہ بنانے کے دوران ایک خرابی کا سامنا کرنا پڑا۔
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
+      validations:
+        icon_required: "ایک آئکن منتخب کریں."
       description: "تفصیل"
       logo_description: "200px کم از کم سائز کے ساتھ تجویز کردہ 1:1 پہلو کا تناسب۔ اگر خالی چھوڑ دیا جائے تو کوئی تصویر نہیں دکھائی جائے گی۔"
-      style: "طرزیں"
+      style: "ظرز"
+      icon: "آئیکن"
+      emoji: "اِیمَوجی"
       background_color: "رنگ"
       foreground_color: "متن کا رنگ"
       color_validations:
@@ -4153,17 +4274,19 @@ ur:
         type: "ظرز"
         icon: "آئیکن"
         emoji: "اِیمَوجی"
+        square: "مربع"
         options:
           square: "مربع"
           icon: "آئیکن"
           emoji: "اِیمَوجی"
       color_used: "رنگ جواستعمال میں"
       predefined_colors: "پہلے سے طے شدہ رنگ کے اختیارات"
-      name_placeholder: "زیادہ سے زیادہ ایک یا دو الفاظ"
       color_placeholder: "کوئی بھی ویب رنگ"
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"
       delete_error: "اِس زمرہ کو مٹانے میں ایک خرابی کا سامنا کرنا پڑا۔"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
+      description_expand: "مزید دکھائیں"
+      description_collapse: "کم دکھائیں"
       already_used: "یہ رنگ دوسرے زمرہ کیلیے استعمال ہو چکا ہے۔"
       security: "سیکورٹی"
       security_add_group: "ایک گروپ شامل کریں"
@@ -4173,15 +4296,12 @@ ur:
         reply: "جواب"
         create: "بنائیں"
         no_groups_selected: "کسی گروپ کو رسائی نہیں دی گئی ہے؛ یہ زمرہ صرف عملے کو نظر آئے گا."
-        everyone_has_access: 'یہ زمرہ عوامی ہے، ہر کوئی دیکھ سکتا ہے، جواب دے سکتا ہے اور پوسٹس بنا سکتا ہے۔ اجازتوں کو محدود کرنے کے لیے، "ہر ایک" گروپ کو دی گئی اجازتوں میں سے ایک یا زیادہ کو ہٹا دیں۔'
         toggle_reply: "جواب کی اجازت ٹوگل کریں"
         toggle_full: "تخلیق کی اجازت کو ٹوگل کریں"
-        inherited: 'یہ اجازت "ہر ایک" سے وراثت میں ملی ہے'
-      special_warning: "انتباہ: یہ زمرہ ایک پہلے سے بنایا ہوا زمرہ ہے اور اِس کی سیکورٹی سیٹِنگ میں ترمیم نہیں کی جا سکتی۔ اگر آپ اِس زمرہ کو استعمال کرنے کی خواہش نہیں رکھتے، تو اِسے کسی اور حوالے سے استعمال کرنے کی بجائے، حذف کردیں۔"
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے موضوعات کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے موضوعات کے لیے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے جن میں کوئی زمرہ منتخب نہیں ہوتا ہے۔ اگر آپ اس رویے کو روکنا چاہتے ہیں اور زمرہ کے انتخاب پر مجبور کرنا چاہتے ہیں تو، <a href="%{settingLink}">براہ کرم یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل کو تبدیل کرنا چاہتے ہیں تو <a href="%{customizeLink}">Customize / Text Content</a>پر جائیں۔'
       pending_permission_change_alert: "آپ نے اِس زمرہ میں %{group} کو شامل نہیں کیا ہے؛ اِن کو شامل کرنے کیلئے اِس بٹن پر کلک کریں۔"
-      images: "تصاویر"
+      images: "ظاہری شکل"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_tooltip: "آپ متعدد ای میل پتوں کو | کردار کے ساتھ الگ کر سکتے ہیں۔"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام اراکین کی طرف سے اِی میلز کو قبول کریں"
@@ -4199,10 +4319,18 @@ ur:
       review_group_name: "گروپ نام"
       require_topic_approval: "تمام نئے موضوعات کیلئے نگرانوں کی منظوری لازمی کریں"
       require_reply_approval: "تمام نئے جوابات کیلئے نگرانوں کی منظوری لازمی کریں"
+      posting_review_modes:
+        everyone: "ہر کوئی"
+      posting_review_groups_placeholder: "گروپس منتخب کریں..."
       this_year: "اِس سال"
       position: "زمرہ جات کے صفحے پر پوزیشن:"
       position_disabled: "زمرہ جات کو سرگرمی کی ترتیب میں دکھایا جائے گا۔ فہرستوں میں زمرہ جات کی ترتیب کو کنٹرول کرنے کے لیے، <a href='%{url}'>'نسب شدہ زمرہ ترتیب'</a> سیٹنگ کو فعال کریں۔"
       minimum_required_tags: "ایک موضوع میں ضروری ٹیگز کی کم از کم تعداد:"
+      none_subcategory_text: "کوئی نہیں"
+      visibility:
+        title: "نموداری"
+        public: "عوامی"
+        group_restricted: "نجی"
       num_auto_bump_daily: "روزانہ خود کار طریقے سے بَمپ کرنے کیلئے کھلے موضوعات کی تعداد:"
       auto_bump_cooldown_days: "اسی موضوع کو دوبارہ آگے کرنے سے پہلے کم از کم دن:"
       navigate_to_first_post_after_read: "موضوعات پڑھنے کے بعد پہلے دھاگہ پر جائیں"
@@ -4230,7 +4358,7 @@ ur:
           low: "کم"
           high: "زیادہ"
       sort_options:
-        default: "پہلے سے طے شدہ"
+        default: "ڈِیفالٹ"
         likes: "پسندیدگیاں"
         views: "مشاهدات"
         posts: "دھاگے"
@@ -4455,7 +4583,7 @@ ur:
         title_with_count:
           one: "نیا (%{count})"
           other: "نئے (%{count})"
-        help: "پچھلے چند دنوں میں بنائے گئے ٹاپک"
+        help: "گزشتہ چند دنوں میں بنائے گئے موضوعات"
         all: "تمام"
         all_tooltip: "پچھلے چند دنوں میں تمام نئے موضوعات اور موضوعات کے جوابات دیے گئے"
         all_with_count: "تمام (%{count})"
@@ -4500,6 +4628,7 @@ ur:
         this_month: "ماہ"
         this_week: "ہفتہ"
         today: "آج"
+        custom: "اپنی مرضی کا"
     custom_homepage:
       admin_message: 'آپ کے تھیموں میں سے ایک نے "custom_homepage" ترمیم کرنے والے کو فعال کیا ہے لیکن یہ [custom-homepage] جوڈنے میں کچھ بھی آؤٹ پٹ نہیں کرتا ہے۔ (یہ پیغام صرف سائٹ کے منتظمین کو دکھایا گیا ہے۔)'
     browser_update: 'بدقسمتی سے، <a href="https://discourse.org/about#browser">آپ کا براؤزر غیر تعاون یافتہ ہے</a>۔ بھرپور مواد دیکھنے، لاگ ان کرنے اور جواب دینے کے لیے براہ کرم <a href="https://browsehappy.com">معاون براؤزر</a> پر سوئچ کریں۔'
@@ -4529,107 +4658,60 @@ ur:
       title: "کی بورڈ شارٹ کٹس"
       short_title: "آسان راستے"
       search_ctrl_f_tip: "اس پورے فورم میں تلاش کرنے کے لیے <kbd>/</kbd>دبائیں"
+      description_header: "تفصیل"
+      key_header: "کی"
+      search_aliases:
+        shift: "شفٹ"
       jump_to:
         title: "پر جائیں"
-        home: "%{shortcut} ہَوم"
-        latest: "%{shortcut} تازہ ترین"
-        new: "%{shortcut} نیا"
-        unread: "%{shortcut} بغیر پڑھے ہوئے"
-        categories: "%{shortcut} زمرہ جات"
-        top: "%{shortcut} ٹاپ"
-        bookmarks: "%{shortcut} بک مارکس"
-        profile: "%{shortcut} پروفائل"
-        messages: "%{shortcut} پیغامات"
-        drafts: "%{shortcut} مسودات"
-        next: "%{shortcut} اگلا موضوع"
-        previous: "%{shortcut} پچھلا موضوع"
+        home: "ہَوم"
+        latest: "تازہ ترین"
+        new: "نیا"
+        unread: "بغیر پڑھے"
+        unseen: "ان دیکھا"
+        categories: "زمرہ جات"
+        top: "سب سے اوپر"
+        bookmarks: "بُک مارکس"
+        profile: "پروفائل"
+        messages: "پیغامات"
+        drafts: "مسودات"
       navigation:
         title: "نیویگیشن"
-        jump: "%{shortcut} پوسٹ # پر جائیں"
-        back: "%{shortcut} واپس"
-        up_down: "%{shortcut} انتخاب منتقل کریں &uarr; &darr;"
-        open: "%{shortcut} منتخب کردہ ٹاپک کھولیں"
-        next_prev: "%{shortcut} اگلا/پچھلا سیکشن"
-        go_to_unread_post: "%{shortcut} پہلی غیر پڑھی پوسٹ پر جائیں"
+        back: "واپس"
+        up_down: "انتخاب منتقل کریں &uarr; &darr;"
       application:
         title: "ایپلیکیشن"
-        notifications: "%{shortcut} اطلاعات کھولیں"
-        hamburger_menu: "%{shortcut} نیویگیشن مینو کھولیں"
-        user_profile_menu: "%{shortcut} صارف مینو کھولیں"
-        show_incoming_updated_topics: "%{shortcut} اپ ڈیٹ کردہ موضوعات دکھائیں"
-        search: "%{shortcut} سرچ"
-        filter_sidebar: "%{shortcut} فلٹر سائڈبار"
-        help: "%{shortcut} کیبورڈ مدد کھولیں"
-        toggle_bulk_select: "%{shortcut} ٹوگل حجمی انتخاب"
-        dismiss: "%{shortcut} منتخب موضوعات کو مسترد"
-        x: "%{shortcut} ٹوگل انتخاب (حجمی طور پر)"
-        log_out: "%{shortcut} لاگ آوٹ"
+        search: "تلاش کریں"
+        log_out: "لاگ آُوٹ"
       composing:
         title: "کمپوز کرنا"
-        return: "%{shortcut} کمپوزر پر واپس جائیں"
-        minimize: "%{shortcut} کمپوزر کو چھوٹا کریں"
-        create_or_reply: "%{shortcut} موضوع بنائیں یا جواب پوسٹ کریں"
-        fullscreen: "%{shortcut} پوری اسکرین کمپوزر"
-        insert_current_time: "%{shortcut} موجودہ وقت شامل"
-        bold: "%{shortcut} بولڈ"
-        italic: "%{shortcut} ترچھا"
-        link: "%{shortcut} رابطہ شامل"
-        preformatted: "%{shortcut} پہلے سے فارمیٹ شدہ متن"
-        paragraph: "%{shortcut} پیراگراف"
-        heading_1: "%{shortcut} سرخی 1"
-        heading_2: "%{shortcut} سرخی 2"
-        heading_3: "%{shortcut} سرخی 3"
-        heading_4: "%{shortcut} سرخی 4"
-        toggle_direction: "%{shortcut} متن کی سمت ٹوگل"
-        ordered_list: "%{shortcut} ترتیب شدہ فہرست"
-        unordered_list: "%{shortcut} غیر ترتیب شدہ فہرست"
-        blockquote: "%{shortcut} بلاک کوٹ"
+        link: "رابطہ داخل کریں"
+        preformatted: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
+        paragraph: "پیراگراف"
+        blockquote: "بلاک کوٹ"
       bookmarks:
         title: "بک مارکنگ"
-        enter: "%{shortcut} محفوظ اور بند کریں۔"
-        later_today: "%{shortcut} آج بعد میں"
-        later_this_week: "%{shortcut} اس ہفتے کے آخر میں"
-        tomorrow: "%{shortcut} کل"
-        next_week: "%{shortcut} اگلے ہفتے"
-        next_month: "%{shortcut} اگلے ماہ"
-        next_business_week: "%{shortcut} اگلے ہفتے کا آغاز"
-        next_business_day: "%{shortcut} اگلے کاروباری دن"
-        custom: "%{shortcut} مرضی کے مطابق تاریخ اور وقت"
-        none: "%{shortcut} کوئی یاد دہانی نہیں"
-        delete: "%{shortcut} بک مارک حذف کریں"
+        enter: "محفوظ اور بند کریں۔"
+        later_today: "آج بعد میں"
+        later_this_week: "اِس ہفتے بعد میں"
+        tomorrow: "کَل"
+        next_week: "اگلے ہفتے"
+        next_month: "اگلے ماہ"
+        next_business_day: "اگلے کاروباری دن"
+        custom: "حسب ضرورت تاریخ اور وقت"
+        delete: "بک مارک حذف کریں"
       actions:
         title: "عمل"
-        bookmark_topic: "%{shortcut} بُک مارک ٹاپک ٹوگل کریں"
-        pin_unpin_topic: "%{shortcut} ٹاپک کو پِن کریں / سے پِن ہٹائیں"
-        share_topic: "%{shortcut} ٹاپک شیئر کریں"
-        share_post: "%{shortcut} پوسٹ شیئر کریں"
-        reply_as_new_topic: "%{shortcut} منسلک ٹاپک کے طور پر جواب دیں"
-        reply_topic: "%{shortcut} ٹاپک پر جواب دیں"
-        reply_post: "%{shortcut} پوسٹ کا جواب دیں"
-        quote_post: "%{shortcut} پوسٹ اقتباس کریں"
-        like: "%{shortcut} پوسٹ لائیک کریں"
-        flag: "%{shortcut} پوسٹ فلَیگ کریں"
-        bookmark: "%{shortcut} پوسٹ بُک مارک کریں"
-        edit: "%{shortcut} پوسٹ ترمیم کریں"
-        delete: "%{shortcut} دھاگہ حذف کریں"
-        mark_muted: "%{shortcut} ٹاپک خاموش کریں"
-        mark_regular: "%{shortcut} عام (پہلے سے طے شدہ) موضوع"
-        mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
-        mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
-        print: "%{shortcut} ٹاپک پرِنٹ کریں"
-        defer: "%{shortcut} عنوان کو بغیر پڑھے ہوئے کے بطور نشان زد کریں"
-        topic_admin_actions: "%{shortcut} عنوان منتظم ایکشنز کھولیں"
-        archive_private_message: "%{shortcut} آرکائیو ذاتی پیغام کو ٹوگل کریں"
+        reply_as_new_topic: "مُنسلِک موضوع کے طور پر جواب دیں"
+        reply_topic: "موضوع کو جواب"
+        delete: "پوسٹ کو حذف"
+        mark_tracking: "موضوع ڈھونڈیں"
+        mark_watching: "موضوع دیکھیں"
+        defer: "موضوع کو بغیر پڑھے کے بطور نشان زد کریں"
       search_menu:
         title: "تلاش کا مینیو"
-        prev_next: "%{shortcut} انتخاب کو اوپر اور نیچے منتقل کریں"
-        insert_url: "%{shortcut} کھلے کمپوزر میں انتخاب داخل کریں"
-        full_page_search: "%{shortcut} پورے صفحہ کی تلاش"
       admin:
         title: "منتظم"
-        search_prev_next: "%{shortcut} انتخاب کو اوپر اور نیچے منتقل کریں"
-        search_open: "%{shortcut} منتظم انٹرفیس کے لیے تلاش کھولیں"
-        search_full_page: "%{shortcut} پورے صفحہ منتظم کی تلاش کھولیں"
     badges:
       earned_n_times:
         one: "یہ تمغہ %{count} دفعہ حاصل کیا"
@@ -4679,6 +4761,7 @@ ur:
       add_to_calendar: "کیلنڈر میں شامل کریں"
       google: "گوگل کیلنڈر"
       ics: "ICS"
+      default_title: "طے شدہ ایونٹس"
     tagging:
       all_tags: "تمام دھجیاں"
       other_tags: "دیگر ٹیگز"
@@ -4725,7 +4808,19 @@ ur:
         other: "اس کے %{count} مترادفات بھی مٹا دیے جائیں گے۔"
       edit_tag: "ٹیگ نام اور تفصیل میں ترمیم کریں"
       edit: "ٹیگ میں ترمیم کریں"
-      description: "تفصیل (زیادہ سے زیادہ 1000 حروف)"
+      description: "تفصیل"
+      settings:
+        title: "سیٹِنگ"
+        general: "عام"
+        localizations: "لوکلائزیشنز"
+        back: "واپس"
+        name: "نام"
+        slug: "سلگ"
+        name_placeholder: "ٹیگ کا نام"
+      localization:
+        locale: "لوکیل"
+        name: "نام"
+        description: "تفصیل"
       sort_by: "ترتیب بہ:"
       sort_by_count: "شمار"
       sort_by_name: "نام"
@@ -4735,6 +4830,7 @@ ur:
       upload_description: "بَلک میں ٹیگز بنانے کیلئے ایک csv فائل اَپ لوڈ کریں"
       upload_instructions: "فی سطر ایک، اختیاری طور پر ایک ٹیگ گروپ کے ساتھ 'tag_name,tag_group' کے فارمیٹ میں۔"
       upload_successful: "ٹیگز کامیابی سے اپ لوڈ ہو گئے"
+      bulk_create_button: "بنائیں"
       delete_unused_confirmation:
         one: "%{count} ٹیگ کومٹادیا جائے گا: %{tags}"
         other: "%{count} ٹیگز کومٹادیا جائے گا: %{tags}"
@@ -4886,7 +4982,6 @@ ur:
       tags_form_modal:
         title: "دہجیوں کی نیویگیشن میں ترمیم کریں"
         filter_placeholder: "دہجیوں کو چھانیے"
-        no_tags: "دی گئی اصطلاح سے مماثل کوئی دہجی نہیں"
         subtitle:
           text: "اور ہم خود بخود اس سائٹ کے ٹاپ دہجیاں دکھائیں گے"
       edit_navigation_modal_form:
@@ -5027,6 +5122,7 @@ ur:
       back_to_forum: "واپس فورم پر"
       filter_links: "روابط کو چھاننا۔۔۔"
       no_results:
+        title: "کوئی نتائج نہیں"
         description_admin_search: "ہمیں '%{filter}' سے مماثل کوئی چیز نہیں ملی۔"
       collapse_all_sections: "تمام شعبوں کو سکیڑیں"
       expand_all_sections: "تمام شعبوں کو پھیلائیں"
@@ -5218,7 +5314,6 @@ ur:
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
-    reset_filter: "رِی سَیٹ"
     admin:
       title: "ڈِسکورس منتظم"
       moderator: "نگران"
@@ -5231,9 +5326,11 @@ ur:
           never: "کبھی نہیں"
       reports:
         title: "دستیاب رپورٹوں کی فہرست"
-        meta_doc: "رپورٹس ایک طاقتور ہتھیار ہیں جو آپ کو یہ سمجھنے میں مدد کرتی ہیں کہ آپ کی سائٹ پر کیا ہو رہا ہے۔ وہ آپ کو رجحانات، مسائل کی نشاندہی کرنے اور ڈیٹا کی بنیاد پر فیصلے کرنے میں مدد کر سکتی ہیں۔"
         sidebar_title: "رپورٹیں"
         back: "تمام رپورٹس پر واپس"
+        group_traffic: "ٹریفک"
+        group_members: "ممبران"
+        group_other: "دیگر"
       config_sections:
         account:
           title: "اکاؤنٹ"
@@ -5255,23 +5352,33 @@ ur:
         name: "نام"
         enabled: "فعال شدہ"
         select_groups: "گروپس کا انتخاب"
+        opt_in_groups_instructions: "آپٹ ان گروپس مخصوص صارفین کے ایک گروپ کو تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دینے کے لیے استعمال کیے جا سکتے ہیں۔ نوٹ کریں کہ جب تبدیلی مستحکم حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
         preview: "جھلک دیکھیں"
+        enabled_for_options:
+          everyone: "ہر کوئی"
+        statuses:
+          experimental: "تجرباتی"
         impact_roles:
           admins: "منتظمین"
           moderators: "نگران"
           staff: "عملہ"
+        impact_types:
+          other_type: "دیگر"
         filter:
           all: "تمام"
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
+          status_experimental: "تجرباتی"
+          impact_role_admins: "منتظمین"
+          impact_role_moderators: "نگران"
+          impact_role_staff: "عملہ"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
           header_description: "اس سائٹ اور اپنی ٹیم کے بارے میں یہاں معلومات فراہم کریں تاکہ لوگ جان سکیں کہ آپ کی کمیونٹی کیا ہے، اس کے پیچھے کون ہے، اور کوئی مسئلہ ہونے کی صورت میں آپ تک کیسے پہنچنا ہے۔ آپ کی سائٹ کے <a href='%{basePath}/about'>کے بارے میں صفحہ</a>پر دکھایا گیا ہے۔"
         developer:
           title: "ڈیولپر"
-          header_description: "شرح کی حدود، ضارب اور حسابات، سیف موڈ، اور دیگر جدید خصوصیات کو کنٹرول کرنے کے لیے ڈویلپر کی ترتیبات"
         experimental:
           title: "تجرباتی"
           header_description: "اپنی سائٹ کے لیے تجرباتی خصوصیات کو آن یا آف کریں، ان میں سے زیادہ تر کو گروپ کی بنیاد پر کنٹرول کیا جا سکتا ہے"
@@ -5295,12 +5402,19 @@ ur:
           title: "لوکلائزیشن"
           header_description: "اپنی کمیونٹی کی انٹرفیس زبان اور اپنے اراکین کے لیے لوکلائزیشن کے دیگر اختیارات کو ترتیب دیں"
           keywords: "علاقائی ترتیبات|زبان|خطہ کے وقت|یونی کوڈ|ایل ٹی آر"
+        upcoming_changes:
+          header_description: "ڈسکورس میں آنے والی تبدیلیوں کی فہرست جو آپ کی سائٹ کو متاثر کریں گی، اور تجرباتی خصوصیات جن میں آپ حصہ لے سکتے ہیں۔ آپ انہیں اثر، قسم اور حیثیت کے لحاظ سے فلٹر کر سکتے ہیں۔\n\nآپٹ-ان گروپس مخصوص صارفین کو کسی تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دیتے ہیں، تاہم جب کوئی تبدیلی مستقل حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
         login:
           title: "لاگ ان اور تصدیق"
           header_description: "کنفیگر کریں کہ اراکین کس طرح لاگ ان اور تصدیق کرتے ہیں، راز اور چابیاں، او آتھ2 فراہم کنندگان اور مزید"
           sub_pages:
             common_settings:
               title: "سیٹِنگ"
+            discourse_id:
+              title: "ڈسکورس آئی ڈی"
+        discourse_id:
+          title: "ڈسکورس آئی ڈی"
+          learn_more: "مزید جانیں"
         logo:
           title: "لوگو"
           header_description: "اپنی پوری سائٹ میں استعمال ہونے والے لوگو اور شبیہیں ترتیب دیں"
@@ -5316,7 +5430,6 @@ ur:
               help_text: "تجویز کردہ سائز 600 x 80 پکسلز ہے۔"
             large_icon:
               title: "مربع آئیکن"
-              description: "لوگو کی تصویر کا مربع ورژن انتظامیہ کے اوپر ظاہر ہوتا ہے اور یہ موبائل ہوم اسکرین ایپ کا لوگو بھی ہے۔"
               help_text: "تجویز کردہ سائز 512 x 512 پکسلز ہے۔"
             square_icon_dark:
               required: "ڈارک موڈ کے لیے ایک مختلف مربع آئیکن استعمال کریں؟"
@@ -5400,6 +5513,10 @@ ur:
               options:
                 above_topic_content: "اوپر موضوع کا مواد"
                 below_site_header: "سائٹ ہیڈر کے نیچے"
+            text_section:
+              locale_label: "زبان"
+            header_new_members:
+              placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_logged_in:
               placeholder: "دوبارہ خوش آمدید، %{preferred_display_name}!"
             header_anonymous:
@@ -5460,12 +5577,18 @@ ur:
             logs:
               title: "لاگز"
               header_description: "بیک اپ، بحالی اور اپ لوڈز کے لیے لاگز دیکھیں اور ان کا نظم کریں"
+        problem_checks:
+          status: "حیثیت"
+          last_run_at: "چلا آخری دفعہ"
+          ignore: "نظر انداز کریں"
+          more_options:
+            title: "مزید اختیارات"
         reports:
           title: "رپورٹیں"
           header_description: "رپورٹس ایک طاقتور ٹول ہیں جو آپ کو یہ سمجھنے میں مدد کرتی ہیں کہ آپ کی سائٹ پر کیا ہو رہا ہے۔ وہ آپ کو رجحانات کی نشاندہی کرنے، مسائل کی نشاندہی کرنے اور ڈیٹا کی بنیاد پر فیصلے کرنے میں مدد کر سکتے ہیں۔"
           sub_pages:
             settings:
-              title: "ڈیش بورڈ کی ترتیبات"
+              title: "سیٹِنگ"
         badges:
           title: "تمغات"
           header_description: "تمغات اراکین کو ان کی سرگرمیوں، شراکتوں اور کامیابیوں کو پہچاننے، توثیق کرنے اور کمیونٹی کے اندر مثبت رویے اور مشغولیت کی حوصلہ افزائی کے لیے انعام دیتے ہیں۔"
@@ -5592,7 +5715,7 @@ ur:
           header_description: "رسائی کی کنجیوں کا فیچر آپ کو ڈسکورس کے ساتھ نتھی کرتا ہے اور ڈسکورس کو دوسرے نظاموں کے ساتھ محفوظ طریقے سے جوڑنے اور کام خودکار بنانے کی سہولت دیتا ہے۔ منتظمین مخصوص اختیارات کے ساتھ کنجیاں بنا سکتے ہیں تاکہ وسائل اور حساس معلومات تک رسائی کو قابو میں رکھا جا سکے۔ یہ اختیارات کام کرنے کی صلاحیت کو محدود کرتی ہیں اور سیکیورٹی کو مزید بہتر بناتی ہیں"
           keywords: "رسائی کوڈ/اختیارات"
         webhooks:
-          title: "وَیب ھُوک٘س٘"
+          title: "ویب ہکس"
           header_description: "ویب ہُکس ڈسکورس کو یہ سہولت دیتے ہیں کہ جب آپ کی سائٹ پر کوئی خاص واقعہ پیش آئے تو وہ بیرونی سروسز کو اطلاع دے سکے۔ جب کوئی ویب ہُک متحرک ہوتا ہے تو فراہم کردہ یو آر ایل پر ایک درخواست بھیجی جاتی ہے"
           keywords: "سرگرمی/اصل معلومات/ویب پتہ"
         embedding:
@@ -5618,22 +5741,6 @@ ur:
         result_count:
           one: '%{count} نتیجہ برائے "%{filter}"'
           other: '%{count} نتائج برائے "%{filter}"'
-        result_types:
-          page:
-            one: "صفحه"
-            other: "صفحات"
-          report:
-            one: "گزارش"
-            other: "گزارشات"
-          setting:
-            one: "ترتیب"
-            other: "ترتیبات"
-          theme:
-            one: "تھیم"
-            other: "تِھیمز"
-          component:
-            one: "جزو"
-            other: "اجزاء"
       new_features:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
@@ -5652,29 +5759,11 @@ ur:
         installed_version: "انسٹال کیا ہوا"
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
-        dismiss_notice: "بر خاست کریں"
+        dismiss_notice: "نظر انداز کریں"
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"
-          previous_announcements: "آپ پچھلی نئی خصوصیات کے اعلانات <a href='%{url}' target='_blank'>Discourse Meta</a> پر دیکھ سکتے ہیں"
           learn_more: "مزید جانیں..."
-          experimental: "تجرباتی"
-          only_experiments: "صرف تجرباتی خصوصیات دکھائیں"
-          experiment_enabled: "آپ نے تجرباتی خصوصیت کو فعال کر دیا۔"
-          experiment_disabled: "آپ نے تجرباتی خصوصیت کو غیر فعال کر دیا۔"
-          feature_enabled: "آپ نے یہ خصوصیت فعال کر دی ہے"
-          feature_disabled: "آپ نے یہ خصوصیت غیر فعال کر دی ہے"
-          toggled_too_fast: "آپ نے سوئچ بہت تیزی سے تبدیل کیا ہے۔ براہِ کرم دوبارہ کوشش کرنے سے پہلے چند سیکنڈ انتظار کریں"
-          experiment_tooltip:
-            title_disabled: "اس تجرباتی خصوصیت کو آزمائیں"
-            title_enabled: "تجرباتی خصوصیت کو بند کریں"
-            content_disabled: "ہمارا نیا تیار کردہ فیچرآزمائیں! یہ ابھی تجرباتی مرحلے میں ہے، اس لیے ہم اسے کسی بھی وقت ہٹا سکتے ہیں۔ آپ جب چاہیں اس سے باہر نکل سکتے ہیں۔<br/><br/>اس کو تبدیل کرنے سے یہ فیچر تمام صارفین کے لیے فعال ہو جائے گا۔"
-            content_enabled: "اسے تبدیل کرنے سے یہ فیچر تمام صارفین کے لیے غیر فعال ہو جائے گا۔"
-          feature_tooltip:
-            title_disabled: "اس خصوصیت کو آزمائیں"
-            title_enabled: "خصوصیت کو بند کریں"
-            content_disabled: "اس نئی خصوصیت کو آزما کر دیکھیں! آپ جب چاہیں اسے غیر فعال کر سکتے ہیں۔ <br/><br/> اس کو تبدیل کرنے سے یہ خصوصیت تمام صارفین کے لیے فعال ہو جائے گی"
-            content_enabled: "اس کو تبدیل کرنے سے یہ خصوصیت تمام صارفین کے لیے غیر فعال ہو جائے گی"
         last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
@@ -5714,6 +5803,41 @@ ur:
         too_many_requests: آپ نے یہ کارروائی بہت زیادہ دفعہ کی ہے۔ براہ کرم دوبارہ کوشش کرنے سے قبل انتظار کریں۔
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
         custom_date_range: حسبِ ضرورت تاریخ کی حد
+        sections:
+          reports:
+            title: "گزارشات"
+          engagement:
+            activity_by_category:
+              category: "زُمرَہ"
+              topics: "موضوعات"
+              posts: "دھاگے"
+              share: "اشتراک"
+            whos_posting:
+              all_categories: "تمام زُمرَہ جات"
+              staff: "عملہ"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "نیا"
+                "1": "بنیادی"
+                "2": "ممبر"
+                "3": "رَیگولر"
+                "4": "لِیڈر"
+        reports_section:
+          modal:
+            enabled_heading: "فعال شدہ"
+            all_heading: "تمام رپورٹیں"
+            apply: "لاگو کریں"
+            move_up: "اوپر جائیں"
+            move_down: "نیچے جائیں"
+        site_traffic:
+          series:
+            anonymous: "گمنام"
+            crawlers: "کرالرز"
+        period:
+          last_7_days: "پچھلے 7 دن"
+          last_30_days: "پچھلے 30 دن"
+          last_3_months: "گزشتہ 3 ماہ"
+          custom: "اپنی مرضی کا"
         reports:
           trend_title: "%{percent} تبدیلی۔ فی الحال %{current}، پچھلے عرصے میں %{prev} تھا۔"
           percent_change_tooltip: "تبدیلی: %{percent}"
@@ -5737,7 +5861,7 @@ ur:
           all: "تمام"
           view_table: "ٹیبل"
           view_graph: "گراف"
-          refresh_report: "رپورٹ رِیفریش کریں"
+          refresh_report: "تازہ کریں"
           daily: روزانہ
           monthly: ماہانہ
           weekly: ہفتہ وار
@@ -5751,7 +5875,9 @@ ur:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
             disabled: 'ٹرینڈنگ سرچ رپورٹ غیر فعال ہے۔ ڈیٹا اکٹھا کرنے کے لیے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ سوالات</a> کو فعال کریں۔'
-          average_chart_label: اوسط
+          sort_button: "%{column}کے حساب سے ترتیب دیں"
+          sort_ascending: "ترتیب صعودی"
+          sort_descending: "ترتیب نزولی"
           filters:
             file_extension:
               label: فائل ایکسٹینشن
@@ -5854,6 +5980,7 @@ ur:
         save: "محفوظ کریں"
         cancel: "منسوخ"
         continue: "جاری رکھی"
+        copy_key: "کاپی"
         back: "اے پی آئی کلیدیں پر واپس جائیں"
         revoke: "منسوخ کریں"
         undo_revoke: "منسوخی واپس لیں"
@@ -5983,7 +6110,7 @@ ur:
             logs:
               messages: لاگز سے پیغامات کی فہرست حاصل کریں یا کوئی مخصوص لاگ پیغام دیکھیں
       web_hooks:
-        title: "وَیب ھُوک٘س٘"
+        title: "ویب ہکس"
         none: "آپ کے پاس ابھی تک کوئی ویب ہُک موجود نہیں ہے"
         instruction: "جب آپ کی ویب سائٹ میں مخصوص واقعات پیش آتے ہیں تو وَیب ھُوک٘س٘ ڈِسکورس کو بیرونی سروسوں کو مطلع کرنے کے قابل بناتے ہیں۔ جب وَیب ھُوک٘ کو متحرک کیا جائے گا، فراہم کیے گئے یو.آر.ایلز. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
         detailed_instruction: "جب منتخب کیا گیا واقعہ پیش آئے گا تو فراہم کیے گئے یو.آر.ایل. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
@@ -6125,27 +6252,39 @@ ur:
       community:
         title: "کمیونٹی"
         sidebar_link:
+          about_your_site: "آپ کی سائٹ کے بارے میں"
           badges: "تمغات"
+          login_and_authentication: "لاگ ان اور تصدیق"
           notifications: "اطلاعات"
           permalinks: "دائمی لِنکس"
+          trust_levels: "فعالیت کے درجات"
+          group_permissions: "گروپ کی اجازتیں"
           users: "اراکین"
           groups: "گروپس"
+          user_fields: "یوزر فیلڈز"
+          watched_words: "دیکھے ہوئے موضوعات"
           legal: "قانونی"
           moderation_flags:
             title: "ماڈریٹر کا کام"
       appearance:
         title: "ظاہری شکل"
         sidebar_link:
+          color_schemes: "رنگ تختی"
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes_and_components:
             title: "تھیمز اور اجزاء"
             keywords: "ایکسٹینشن"
+          site_texts: "سائٹ کے متون"
       email_settings:
         sidebar_link:
           appearance: "ظاہری شکل"
       security:
         title: "سیکورٹی"
+        sidebar_link:
+          staff_action_logs:
+            title: "اندراجات اور جانچ پڑتال"
+            keywords: "خرابی کے نوشتہ جات | عملے کی کارروائی | اسکرین شدہ ای میلز"
       section_landing_pages:
         account:
           title: "اکاؤنٹ"
@@ -6184,6 +6323,7 @@ ur:
           site_contact_group: "سائٹ پر رابطے کے لیے گروپ"
           site_contact_group_help: |
             وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔
+          your_organization: "آپ کی تنظیم"
           your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور پردہ داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
           company_name_placeholder: "ایکمی آرگنائزیشن"
@@ -6233,7 +6373,7 @@ ur:
             invalid_applies_to: "درکار"
             topic: "موضوعات"
             post: "پوسٹ`"
-            chat_message: "گپ شپ کے پیغامات"
+            chat_message: "گفتگو کے پیغامات"
             create_warning: "ایک بار کوئی کسٹم فلیگ استعمال ہو جائے تو اسے ڈس ایبل یا ایڈٹ تو کیا جا سکتا ہے مگر ڈیلیٹ نہیں کیا جا سکتا۔"
             edit_flag: "نشان دہی میں ترمیم"
             delete_flag: "نشان دہی حذف"
@@ -6444,8 +6584,6 @@ ur:
         delete: "حذف کریں"
         delete_confirm: 'کیا آپ واقعی "%{theme_name}" مٹانا چاہتے ہیں؟'
         bulk_delete: "کیا آپ پر یقین ہیں؟"
-        bulk_themes_delete_confirm: "اس سے درج ذیل تھیمز حذف ہو جائیں گی، وہ آپ کی سائٹ پر کسی بھی رکن کے لیے مزید استعمال کے قابل نہیں رہیں گی۔"
-        bulk_components_delete_confirm: "یہ مندرجہ ذیل اجزاء کو ان انسٹال کر دے گا، وہ آپ کی سائٹ پر کسی بھی رکن کے ذریعہ مزید استعمال کے قابل نہیں ہوں گے:"
         color: "رنگ"
         opacity: "دھندلاپن"
         copy: "نقل"
@@ -6528,6 +6666,7 @@ ur:
           convert_theme_tooltip: "اِس تِھیم کو کمپنَینٹ میں تبدیل کریں"
           inactive_themes: "غیر فعال تِھیمز:"
           set_default_theme: "بطور ڈیفالٹ سیٹ کریں"
+          default_theme: "ڈیفالٹ تھیم"
           setting_was_saved: "تھیم کی سیٹنگ محفوظ ہو گئی"
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
@@ -6563,7 +6702,6 @@ ur:
           add_all: "سب شامل کریں"
           import_web_tip: "رِیپَوزِٹَری میں موجود تِھیم"
           direct_install_tip: "کیا آپ واقعی ذیل میں درج ریپوزٹری سے <strong>%{name}</strong> انسٹال کرنا چاہتے ہیں؟"
-          import_file_tip: ".tar.gz، .zip، یا .dcstyle.json فائل میں موجود تِھیم"
           is_private: "تھِیم ایک ذاتی گِٹ رِیپَوزِٹَری میں ہے"
           last_attempt: "انسٹال کرنے کا پراسیس ختم نہیں ہوا، آخری بار کوشش کی گئی:"
           remote_branch: "برانچ کا نام (اختیاری)"
@@ -6589,6 +6727,7 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
+          check_for_updates: "اپ ڈیٹس کے لیے چیک کریں"
           updating: "اپڈیٹ ہو رہا ہے۔۔۔"
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
@@ -6797,6 +6936,7 @@ ur:
         topic_id: "ٹاپک ID"
         post_id: "پوسٹ ID"
         category_id: "زمرہ ID"
+        reviewable_id: "جائزہ لیں"
         delete: "حذف کریں"
         edit: "ترمیم کریں"
         save: "محفوظ کریں"
@@ -7037,7 +7177,7 @@ ur:
         not_found: "معذرت، وہ صارف نام ہمارے سِسٹم میں موجود نہیں ہے۔"
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
         active: "فعال"
-        status: "سٹیٹس"
+        status: "حیثیت"
         show_emails: "ای میلیں دکھائیں"
         bulk_actions:
           delete:
@@ -7158,6 +7298,12 @@ ur:
         approve_bulk_success: "کامیابی! تمام منتخب صارفین کو منظوری دے دی اور مطلع کر دیا گیا ہے۔"
         time_read: "پڑھنے کا وقت"
         post_edits_count: "دھاگے کی ترامیم"
+        upcoming_changes:
+          title: "صارف کی آنے والی تبدیلیاں"
+          view_modal: "فعال کی گئی تبدیلیاں دیکھیں"
+          description: "گروپوں میں ترمیم کرنے یا آنے والی تبدیلیوں کو فعال یا غیر فعال کرنے کے لیے، براہِ کرم <a href='%{basePath}/admin/config/upcoming-changes'>آنے والی تبدیلیوں کے کنفیگریشن صفحے پر</a> جائیں۔"
+          filter_placeholder: "آنے والی تبدیلیوں کو نام یا وضاحت کے لحاظ سے چھانٹیں"
+          filter_no_results: "آنے والی تبدیلیاں نہیں ملیں"
         exports:
           download:
             expires_in:
@@ -7209,6 +7355,7 @@ ur:
             transfer_and_delete: "منتقلی اور حذف کریں @%{username}"
             cancel: "منسوخ"
         merge_failed: "اراکین کو ضم کرتے وقت ایک خامی تھی۔"
+        delete_posts_forbidden_because_admin: "منتظمین کے تمام دھاگوں کو حذف نہیں کیا جا سکتا۔"
         delete_forbidden:
           one: "اگر اراکین کے دھاگے ہیں تو انہیں حذف کرنا ممکن نہیں۔ کسی رکن کو مٹانے سے پہلے تمام دھاگے حذف کریں۔ ( %{count} دن سے زیادہ پرانے دھاگوں کو حذف نہیں کیا جا سکتا۔)"
           other: "اگر اراکین کے دھاگے ہیں تو انہیں حذف کرنا ممکن نہیں۔ کسی رکن کو مٹانے سے پہلے تمام دھاگے حذف کریں۔ ( %{count} دن سے زیادہ پرانے دھاگوں کو حذف نہیں کیا جا سکتا۔)"
@@ -7320,6 +7467,7 @@ ur:
             title: "اختیاری"
         field_types:
           text: "ٹیکسٹ"
+          date: "تاریخ"
           confirm: "تصدیق"
           dropdown: "ڈراپ ڈاؤن"
           multiselect: "کثیر الانتخاب"
@@ -7360,10 +7508,11 @@ ur:
           empty: "ابھی تک کوئی تصویریں نہیں ہیں۔ براہ مہربانی ایک اَپ لوڈ کریں۔"
           upload:
             label: "اَپ لوڈ"
+        download_file: "ڈاؤن لوڈ"
         selectable_avatars:
           title: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں"
         table_column_heading:
-          status: "سٹیٹس"
+          status: "حیثیت"
         categories:
           all_results: "تمام"
           required: "درکار"
@@ -7405,17 +7554,8 @@ ur:
         file_types_list:
           add_image_types: "تصاویر"
           add_types_title: "ایکسٹینشنز کی اجازت دیں %{types}"
-        requires_confirmation_messages:
-          min_password_length:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          min_admin_password_length:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈز تبدیل کرنے والے تمام منتظمین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          password_unique_charactes:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
-          block_common_passwords:
-            prompt: "آپ اپنے پاس ورڈ کی پالیسی کو تبدیل کرنے والے ہیں۔ یہ اب سے اپنے پاس ورڈ تبدیل کرنے والے تمام اراکین کو متاثر کرے گا۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
       badges:
-        status: سٹیٹس
+        status: حیثیت
         title: تمغات
         page_description: تمغات اراکین کو ان کی سرگرمیوں، شراکتوں اور کامیابیوں کے لیے انعام دیتے ہیں تاکہ کمیونٹی کے اندر مثبت رویے اور مشغولیت کی شناخت، توثیق اور حوصلہ افزائی کی جا سکے۔
         new_badge: نیا تمغہ
@@ -7445,6 +7585,9 @@ ur:
         no_user_badges: "%{name} کو کوئی تمغہ نہیں دیا گیا۔"
         no_badges: دیئے کے لیے کوئی تمغہ موجود نہیں۔
         none_selected: "شروع کرنے کے لئے ایک تمغہ منتخب کریں"
+        sections:
+          query: ڈیٹا کمانڈ
+          settings: سیٹِنگ
         allow_title: عنوان کے طور پر تمغوں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         visibility_heading: نموداری
@@ -7570,69 +7713,3 @@ ur:
           categories: "زمرہ جات"
           topics: "موضوعات"
           replace: "بدلیں"
-  wizard_js:
-    wizard:
-      back: "واپس"
-      next: "اگلا"
-      step-text: "قدم"
-      step: "%{total} میں سے %{current}"
-      upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
-      staff_count:
-        one: "آپ کی کمیونٹی میں %{count} اسٹاف کا رکن ہے (آپ)۔"
-        other: "آپ کی کمیونٹی میں آپ سمیت، %{count} سٹاف کے ارکان ہیں۔"
-      invites:
-        add_user: "شامل کریں"
-        none_added: "آپ نے کسی بھی سٹاف کو مدعو نہیں کیا۔ کیا آپ واقعی آگے جانا چاہتے ہیں؟"
-        roles:
-          admin: "منتظم"
-          moderator: "ماڈریٹر"
-          regular: "رَیگولر صارف"
-      homepage_choices:
-        custom:
-          label: "اپنی مرضی کا"
-        style_type:
-          categories: "زمرہ"
-          topics: "موضوع"
-      top_menu_items:
-        new: "نئی"
-        unread: "بغیر پڑھے"
-        top: "سب سے اوپر"
-        latest: "تازہ ترین"
-        hot: "گرما گرم"
-        categories: "اقسام"
-        unseen: "ان دیکھا"
-        read: "پڑھیں"
-        bookmarks: "بُک مارکس"
-      previews:
-        topic_title: "آپ کون سی کتابیں پڑھ رہے؟"
-        share_button: "اشتراک"
-        reply_button: "جواب"
-        topic_preview: "موضوع دکھائیں"
-        homepage_preview: "ہوم پیج دکھائیں"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "تمام زمرہ جات"
-        topic_titles:
-          what_books: "آپ کون سی کتابیں پڑھ رہے؟"
-          what_movies: "آپ نے حال ہی میں کون سی فلمیں دیکھیں؟"
-          random_fact: "دن کی بے ترتیب حقیقت"
-          tv_show: "ایک ٹیلی ویژن شو تجویز کریں"
-          what_hobbies: "آپ کے کون سےشوق ہیں؟"
-          what_music: "اس وقت آپ کیا سن رہے ہیں؟"
-          funniest_thing: "سب سے دلچسپ چیز جو آپ نے آج دیکھی"
-          share_art: "اپنے فن کا اشتراک کریں!"
-        topic_ops:
-          what_books: |
-            ہم سب کو پڑھنا پسند ہے، آئیے اپنے موجودہ یا حالیہ مطالعات کا اشتراک اس موضوع کو استعمال کر کے کرتے کریں۔ میں تصور کا ایک پرستار ہوں اور میں صد بار لارڈ آف دی رنگز کو پڑھ رہا ہوں۔
-            آپ کے بارے میں کیا خیال ہے؟
-        category_descriptions:
-          news: "تازہ ترین خبروں اور واقعات پر تبادلہ خیال کریں۔"
-          site_feedback: "کمیونٹی کے بارے میں اپنے خیالات کا اشتراک کریں اور بہتری کی تجاویز دیں۔"
-        category_names:
-          news: "خبریں"
-          site_feedback: "سائٹ کیلئے رائے"
-        table_headers:
-          topic: "موضوع"
-          replies: "جوابات"
-          views: "مشاهدات"
-          activity: "سرگرمی"

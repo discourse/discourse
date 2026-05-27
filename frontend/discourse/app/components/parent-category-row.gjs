@@ -1,6 +1,6 @@
 import { array, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import CategoryUnread from "discourse/components/category-unread";
@@ -11,9 +11,10 @@ import SubCategoryRow from "discourse/components/sub-category-row";
 import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { gt } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {
@@ -53,7 +54,12 @@ export default class ParentCategoryRow extends CategoryListItem {
               {{#if this.category.description_excerpt}}
                 <tr class="category-description">
                   <td colspan="3">
-                    {{htmlSafe this.category.description_excerpt}}
+                    <DDecoratedHtml
+                      @html={{dDirSpan
+                        this.category.description_excerpt
+                        htmlSafe="true"
+                      }}
+                    />
                   </td>
                 </tr>
               {{/if}}
@@ -90,13 +96,13 @@ export default class ParentCategoryRow extends CategoryListItem {
           <footer class="clearfix category-topics-count">
             <div class="category-stat">
               <a href={{this.category.url}}>
-                {{htmlSafe this.category.statTotal}}
+                {{trustHTML this.category.statTotal}}
               </a>
             </div>
             {{#unless this.category.pickAll}}
               <div class="category-stat">
                 <a href={{this.category.url}}>
-                  {{htmlSafe this.category.stat}}
+                  {{trustHTML this.category.stat}}
                 </a>
               </div>
             {{/unless}}
@@ -141,7 +147,12 @@ export default class ParentCategoryRow extends CategoryListItem {
 
             {{#if this.category.description_excerpt}}
               <div class="category-description">
-                {{dirSpan this.category.description_excerpt htmlSafe="true"}}
+                <DDecoratedHtml
+                  @html={{dDirSpan
+                    this.category.description_excerpt
+                    htmlSafe="true"
+                  }}
+                />
               </div>
             {{/if}}
 
@@ -196,8 +207,8 @@ export default class ParentCategoryRow extends CategoryListItem {
             @name="category-list-topics-wrapper"
             @outletArgs={{lazyHash category=this.category}}
           >
-            <td class="topics">
-              <div title={{this.category.statTitle}}>{{htmlSafe
+            <td class="topics topic-list-data num">
+              <div title={{this.category.statTitle}}>{{trustHTML
                   this.category.stat
                 }}</div>
               <CategoryUnread

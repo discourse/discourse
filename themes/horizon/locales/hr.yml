@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 hr:
+  solved: "Riješeno"
+  posted: "objavljeno"
+  vote_count:
+    one: "%{count} glas"
+    few: "%{count} glasa"
+    other: "%{count} glasa"
+  like_count:
+    one: "%{count} lajk"
+    few: "%{count} lajka"
+    other: "%{count} lajkova"
+  reply_count:
+    one: "%{count} odgovor"
+    few: "%{count} odgovora"
+    other: "%{count} odgovora"

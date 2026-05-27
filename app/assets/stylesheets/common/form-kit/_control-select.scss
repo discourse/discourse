@@ -8,3 +8,10 @@
     height: 2.25em;
   }
 }
+
+.form-kit {
+  // standard select has 300px which requires constant specificty override; can be removed once everything is formkit
+  .select-kit.multi-select {
+    width: 100%;
+  }
+}

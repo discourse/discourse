@@ -5,5 +5,14 @@ plugins:
   policy_restrict_to_staff_posts:
     client: true
     default: true
+    hidden: true
+  create_policy_allowed_groups:
+    client: true
+    type: group_list
+    default: "1|2" # Admins + moderators.
+    mandatory_values: "1|2"
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   policy_easy_revoke:
     default: false

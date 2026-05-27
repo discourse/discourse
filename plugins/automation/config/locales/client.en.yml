@@ -1,9 +1,18 @@
 en:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Trigger an automation via the API"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: create automation
+            update_automation: update automation
             delete_automation: delete automation
     discourse_automation:
       title: Automation
@@ -52,13 +61,19 @@ en:
             label: Body
           delay:
             label: Delay (minutes)
-          prefers_encrypt:
-            label: Encrypts PM if available
         group:
           label: Group
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+              description: Only trigger when the flagged topic is in these categories
+            tags:
+              label: Tags
+              description: Only trigger when the flagged topic has any of these tags
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
         user_badge_granted:
           fields:
@@ -194,9 +209,9 @@ en:
               description: "Optional, limit triggering to only posts with these features"
           created: Created
           edited: Edited
-          topics: All Topics
-          personal_messages: Personal Messages
-          public_topics: Public Topics (exclude all secure categories)
+          topics: Topics (all categories)
+          personal_messages: Personal messages only
+          public_topics: Topics (public categories only)
           with_images: Images
           with_links: Links
           with_code: Code
@@ -269,6 +284,14 @@ en:
               label: Tags
               description: Optional, will trigger only if the post has any of these tags
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Email template
+              description: Supports automation placeholders
+            recipients:
+              label: Recipients
+              description: Users or email addresses to notify
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
           fields:
@@ -291,6 +314,12 @@ en:
             tags:
               label: Tags
               description: List of tags to add to the topic.
+            closed_automatically:
+              label: Automatically closed topics 
+              description: Add tags to automatically closed topics.
+            closed_manually:
+              label: Manually closed topics
+              description: Add tags to manually closed topics.
         post:
           fields:
             creator:
@@ -416,6 +445,13 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+        set_topic_timer:
+          title: Set Topic Timer
+          fields:
+            type: 
+              label: Timer Type
+            duration:
+              label: Timer Duration
       unnamed_automation: "Unnamed automation"
 
       models:
@@ -429,6 +465,9 @@ en:
           runs_today: "%{count} today"
           runs_this_week: "%{count} this week"
           runs_this_month: "%{count} this month"
+          recent_errors:
+            one: "%{count} error recently"
+            other: "%{count} errors recently"
           runs:
             label: Runs
           name:

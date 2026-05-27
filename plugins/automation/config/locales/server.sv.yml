@@ -74,3 +74,5 @@ sv:
         button_text: Klar
       add_user_to_group_through_custom_field:
         title: "Lägg till användare till grupp genom användaranpassat fält"
+      set_topic_timer:
+        title: "Ställ in ämnestimer"

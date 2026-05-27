@@ -1,113 +1,119 @@
 # frozen_string_literal: true
 
-RSpec.describe UploadValidator do
-  subject(:validator) { described_class.new }
+RSpec.describe UploadSettingValidator do
+  subject(:validator) { described_class.new(opts) }
 
-  describe "validate" do
-    fab!(:user)
-    let(:filename) { "discourse.csv" }
-    let(:csv_file) { file_from_fixtures(filename, "csv") }
+  let(:opts) { {} }
 
-    it "should create an invalid upload when the filename is blank" do
-      SiteSetting.authorized_extensions = "*"
-      created_upload = UploadCreator.new(csv_file, nil).create_for(user.id)
-      validator.validate(created_upload)
-      expect(created_upload).to_not be_valid
-      expect(created_upload.errors.full_messages.first).to include(
-        I18n.t("activerecord.errors.messages.blank"),
-      )
+  describe "#valid_value?" do
+    context "when value is blank" do
+      it "accepts nil" do
+        expect(validator.valid_value?(nil)).to eq(true)
+      end
+
+      it "accepts empty string" do
+        expect(validator.valid_value?("")).to eq(true)
+      end
     end
 
-    it "allows 'gz' as extension when uploading export file" do
-      SiteSetting.authorized_extensions = ""
+    context "when value is a valid upload id" do
+      fab!(:upload)
 
-      expect(
-        UploadCreator.new(csv_file, "#{filename}.zip", for_export: true).create_for(user.id),
-      ).to be_valid
+      it "returns true when no additional validation is required" do
+        expect(validator.valid_value?(upload.id)).to eq(true)
+      end
+
+      context "when the upload no longer exists" do
+        before { upload.destroy! }
+
+        it "returns false" do
+          expect(validator.valid_value?(upload.id)).to eq(false)
+        end
+      end
     end
+  end
 
-    it "allows uses max_export_file_size_kb when uploading export file" do
-      SiteSetting.max_attachment_size_kb = "0"
-      SiteSetting.authorized_extensions = "zip"
-
-      expect(
-        UploadCreator.new(csv_file, "#{filename}.zip", for_export: true).create_for(user.id),
-      ).to be_valid
+  describe "#error_message" do
+    it "returns invalid_upload as a generic message" do
+      expect(validator.error_message).to eq(I18n.t("site_settings.errors.invalid_upload"))
     end
+  end
 
-    describe "size validation" do
-      it "does not allow images that are too large" do
-        SiteSetting.max_image_size_kb = 1536
-        upload =
-          Fabricate.build(
-            :upload,
-            user: Fabricate(:admin),
-            original_filename: "test.png",
-            filesize: 2_097_152,
+  describe "svg upload" do
+    subject(:validator) { described_class.new(name: :splash_screen_image) }
+
+    describe "#valid_value?" do
+      fab!(:upload)
+
+      context "when upload content is missing or raises" do
+        before { allow_any_instance_of(Upload).to receive(:content).and_raise(StandardError) }
+
+        it "returns false" do
+          expect(validator.valid_value?(upload.id)).to eq(false)
+        end
+      end
+
+      context "when upload content is blank" do
+        before { allow_any_instance_of(Upload).to receive(:content).and_return(nil) }
+
+        it "returns false" do
+          expect(validator.valid_value?(upload.id)).to eq(false)
+        end
+      end
+
+      context "when content has no svg element" do
+        before { allow_any_instance_of(Upload).to receive(:content).and_return("<html></html>") }
+
+        it "returns false" do
+          expect(validator.valid_value?(upload.id)).to eq(false)
+        end
+      end
+
+      context "when SVG contains a script" do
+        before { allow_any_instance_of(Upload).to receive(:content).and_return(<<~CONTENT) }
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+    <circle cx="50" cy="50" r="40" stroke="#3498db" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="60 150">
+      <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <script>
+      console.log("Spinner loaded");
+    </script>
+  </svg>
+            CONTENT
+
+        it "returns false" do
+          expect(validator.valid_value?(upload.id)).to eq(false)
+        end
+      end
+
+      context "when SVG contains an event handler attribute" do
+        before do
+          allow_any_instance_of(Upload).to receive(:content).and_return(
+            '<svg><rect onclick="evil()"/></svg>',
           )
-        validator.validate(upload)
-        expect(upload.errors.full_messages.first).to eq(
-          "Filesize #{I18n.t("upload.images.too_large_humanized", max_size: "1.5 MB")}",
-        )
-      end
-    end
+        end
 
-    describe "when allow_staff_to_upload_any_file_in_pm is true" do
-      it "should allow uploads for pm" do
-        upload =
-          Fabricate.build(
-            :upload,
-            user: Fabricate(:admin),
-            original_filename: "test.ico",
-            for_private_message: true,
+        it "returns false" do
+          expect(validator.valid_value?(upload.id)).to eq(false)
+        end
+      end
+
+      context "when SVG is clean" do
+        before do
+          allow_any_instance_of(Upload).to receive(:content).and_return(
+            '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>',
           )
+        end
 
-        expect(validator.validate(upload)).to eq(true)
-      end
-
-      describe "for a normal user" do
-        it "should not allow uploads for pm" do
-          upload =
-            Fabricate.build(
-              :upload,
-              user: Fabricate(:user),
-              original_filename: "test.ico",
-              for_private_message: true,
-            )
-
-          expect(validator.validate(upload)).to eq(nil)
+        it "returns true" do
+          expect(validator.valid_value?(upload.id)).to eq(true)
         end
       end
     end
 
-    describe "upload for site settings" do
-      fab!(:user, :admin)
-
-      let(:upload) do
-        Fabricate.build(:upload, user: user, original_filename: "test.ico", for_site_setting: true)
-      end
-
-      before { SiteSetting.authorized_extensions = "png" }
-
-      describe "for admin user" do
-        it "should allow the upload" do
-          expect(validator.validate(upload)).to eq(true)
-        end
-
-        describe "when filename is invalid" do
-          it "should not allow the upload" do
-            upload.original_filename = "test.txt"
-            expect(validator.validate(upload)).to eq(nil)
-          end
-        end
-      end
-
-      describe "for normal user" do
-        fab!(:user)
-
-        it "should not allow the upload" do
-          expect(validator.validate(upload)).to eq(nil)
-        end
+    describe "#error_message" do
+      it "returns invalid_svg" do
+        expect(validator.error_message).to eq(I18n.t("site_settings.errors.invalid_svg"))
       end
     end
   end

@@ -34,12 +34,13 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      llm_selector:
+        none: "Ոչ մի"
       features:
-        back: "Ետ"
         disabled: "(անջատված)"
         groups: "Խմբեր:"
         no_groups: "Ոչ մի"
-        edit: "Խմբագրել"
+        edit: "Կարգավորումներ"
         expand_list:
           one: "(%{count} ավելի)"
           other: "(%{count} ավելի)"
@@ -78,8 +79,8 @@ hy:
         summary: "Ամփոփումը"
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
-      ai_persona:
-        back: "Ետ"
+        total: "Ամբողջ"
+      ai_agent:
         name: "Անուն"
         edit: "Խմբագրել"
         export: "Արտահանել"
@@ -100,7 +101,6 @@ hy:
           title: "Վերբեռնումներ"
           uploading: "Վերբեռնում..."
       tools:
-        back: "Ետ"
         export: "Արտահանել"
         import: "Ներմուծել"
         name: "Անուն"
@@ -110,13 +110,31 @@ hy:
         remove_parameter: "Հեռացնել"
         parameter_required: "Պարտադիր"
         edit: "Խմբագրել"
+        test: "Փորձարկել"
         delete: "Ջնջել"
+      secrets:
+        short_title: "Հավատարմագրեր"
+        name: "Անուն"
+        secret: "Արժեք"
+        save: "Պահպանել"
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+        embedding: "Զետեղում"
+      mcp_servers:
+        name: "Անուն"
+        description: "Նկարագրություն"
+        url: "URL"
+        oauth_connect: "Կապել"
+        save: "Պահպանել"
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+        tools_modal:
+          required: "Պարտադիր"
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"
         save: "Պահպանել"
         edit: "Խմբագրել"
-        back: "Ետ"
         delete: Ջնջել
         quotas:
           group: "Խմբավորել"
@@ -146,10 +164,11 @@ hy:
           copy: "Կրկնօրինակել"
           copied: "Պատճենված է!"
           cancel: "Չեղարկել"
+        thumbnail_suggestions:
+          try_again: "Կրկին Փորձել"
         image_caption:
           save_caption: "Պահպանել"
       embeddings:
-        back: "Ետ"
         save: "Պահպանել"
         delete: "Ջնջել"
         edit: "Խմբագրել"

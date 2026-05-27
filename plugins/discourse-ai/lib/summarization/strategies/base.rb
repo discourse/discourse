@@ -38,6 +38,15 @@ module DiscourseAi
           raise NotImplementedError
         end
 
+        # Optional lightweight fingerprint for stale cache checks.
+        # Return a hash with:
+        # - :original_content_sha (String)
+        # - :latest_version_at (Time | nil)
+        # or nil to fallback to full-content stale detection.
+        def summary_fingerprint
+          nil
+        end
+
         # We'll pass this as the feature_name when doing LLM calls.
         def feature
           "summarize"

@@ -49,15 +49,16 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
+    # Don't try to proxy avatars in tests. The timeout could block the single worker. (QUnit case)
+    return render_blank if disable_proxy?
+
     hijack do
-      begin
-        proxy_avatar(
-          "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
-          Time.new(1990, 01, 01),
-        )
-      rescue OpenURI::HTTPError
-        render_blank
-      end
+      proxy_avatar(
+        "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
+        Time.new(1990, 01, 01),
+      )
+    rescue OpenURI::HTTPError
+      render_blank
     end
   end
 
@@ -163,6 +164,9 @@ class UserAvatarsController < ApplicationController
   end
 
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
+  PROXY_CACHE_MAX_ENTRIES = 10_000
+  PROXY_CACHE_EVICT_COUNT = 1000
+
   def proxy_avatar(url, last_modified)
     url = (SiteSetting.force_https ? "https:" : "http:") + url if url[0..1] == "//"
 
@@ -184,12 +188,19 @@ class UserAvatarsController < ApplicationController
       return render_blank if tmp.nil?
 
       FileUtils.mv tmp.path, path
+      DiskCacheEviction.evict(
+        dir: PROXY_PATH,
+        max_entries: PROXY_CACHE_MAX_ENTRIES,
+        evict_count: PROXY_CACHE_EVICT_COUNT,
+      )
     end
 
     response.headers["Last-Modified"] = last_modified.httpdate
     response.headers["Content-Length"] = File.size(path).to_s
     immutable_for(1.year)
     send_file path, disposition: nil
+  rescue Errno::ENOENT, ActionController::MissingFile
+    render_blank
   end
 
   def redirect_s3_avatar(url)
@@ -208,15 +219,14 @@ class UserAvatarsController < ApplicationController
     send_file path, disposition: nil
   end
 
-  protected
-
-  # consider removal of hacks some time in 2019
-
   def get_optimized_image(upload, size)
     return if !upload
     return upload if upload.extension == "svg"
 
     upload.get_optimized_image(size, size)
-    # TODO decide if we want to detach here
+  end
+
+  def disable_proxy?
+    Rails.env.test?
   end
 end

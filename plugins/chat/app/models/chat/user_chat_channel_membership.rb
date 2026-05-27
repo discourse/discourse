@@ -17,6 +17,24 @@ module Chat
     def mark_read!(new_last_read_id = nil)
       update!(last_read_message_id: new_last_read_id || chat_channel.last_message_id)
     end
+
+    def has_unseen_pins?
+      pins = chat_channel.pinned_messages
+
+      if pins.loaded?
+        others = pins.reject { |pin| pin.pinned_by_id == user_id }
+        return false if others.empty?
+        return true if last_viewed_pins_at.nil?
+        others.any? { |pin| pin.created_at > last_viewed_pins_at }
+      else
+        others = pins.where.not(pinned_by_id: user_id)
+        if last_viewed_pins_at.nil?
+          others.exists?
+        else
+          others.where("created_at > ?", last_viewed_pins_at).exists?
+        end
+      end
+    end
   end
 end
 
@@ -25,20 +43,23 @@ end
 # Table name: user_chat_channel_memberships
 #
 #  id                                  :bigint           not null, primary key
-#  user_id                             :integer          not null
-#  chat_channel_id                     :bigint           not null
-#  last_read_message_id                :bigint
 #  following                           :boolean          default(FALSE), not null
-#  muted                               :boolean          default(FALSE), not null
-#  created_at                          :datetime         not null
-#  updated_at                          :datetime         not null
-#  last_unread_mention_when_emailed_id :bigint
 #  join_mode                           :integer          default("manual"), not null
 #  last_viewed_at                      :datetime         not null
+#  last_viewed_pins_at                 :datetime
+#  muted                               :boolean          default(FALSE), not null
 #  notification_level                  :integer          default("mention"), not null
+#  starred                             :boolean          default(FALSE), not null
+#  created_at                          :datetime         not null
+#  updated_at                          :datetime         not null
+#  chat_channel_id                     :bigint           not null
+#  last_read_message_id                :bigint
+#  last_unread_mention_when_emailed_id :bigint
+#  user_id                             :integer          not null
 #
 # Indexes
 #
-#  user_chat_channel_memberships_index   (user_id,chat_channel_id,notification_level,following)
-#  user_chat_channel_unique_memberships  (user_id,chat_channel_id) UNIQUE
+#  index_user_chat_channel_memberships_on_user_id_and_starred  (user_id,starred)
+#  user_chat_channel_memberships_index                         (user_id,chat_channel_id,notification_level,following)
+#  user_chat_channel_unique_memberships                        (user_id,chat_channel_id) UNIQUE
 #

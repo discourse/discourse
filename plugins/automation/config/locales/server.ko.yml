@@ -20,3 +20,5 @@ ko:
         title: 글 닫기
       append_last_checked_by:
         button_text: 완료
+      set_topic_timer:
+        title: "글 타이머 설정"

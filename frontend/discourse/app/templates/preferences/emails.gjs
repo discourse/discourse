@@ -1,10 +1,10 @@
 import { fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -140,7 +140,7 @@ export default <template>
           @checked={{@controller.model.user_option.mailing_list_mode}}
         />
         <div class="instructions">
-          {{htmlSafe (i18n "user.mailing_list_mode.instructions")}}
+          {{trustHTML (i18n "user.mailing_list_mode.instructions")}}
         </div>
         {{#if @controller.model.user_option.mailing_list_mode}}
           <div
@@ -178,7 +178,7 @@ export default <template>
       />
     </span>
 
-    <SaveControls
+    <DSaveControls
       @model={{@controller.model}}
       @action={{@controller.save}}
       @saved={{@controller.saved}}

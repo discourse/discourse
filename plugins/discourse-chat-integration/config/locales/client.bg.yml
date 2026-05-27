@@ -8,7 +8,9 @@ bg:
   js:
     chat_integration:
       settings: "Настройки"
-      all_categories: "(всички категории)"
+      more_providers: "Повече"
+      channels_title: "Канали"
+      all_categories: "(Всички категории)"
       delete_channel: "Изтрий"
       edit_channel: "Редактирай"
       test_modal:

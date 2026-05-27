@@ -8,7 +8,7 @@ module PageObjects
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
       RICH_EDITOR = ".d-editor-input.ProseMirror"
-      POST_LANGUAGE_SELECTOR = ".post-language-selector"
+      POST_LANGUAGE_SELECTOR = ".post-language-selector-trigger"
 
       def initialize(composer_id = COMPOSER_ID)
         @composer_id = composer_id
@@ -52,6 +52,10 @@ module PageObjects
         PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
       end
 
+      def list_menu
+        PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.list"))
+      end
+
       def focus
         find(composer_input_selector).click
         self
@@ -63,9 +67,7 @@ module PageObjects
       end
 
       def has_input_title?(value)
-        puts "reply title value"
-        puts find("#{@composer_id} input#reply-title").value
-        expect(find("#{@composer_id} input#reply-title").value).to eq(value)
+        has_field?("reply-title", with: value)
       end
 
       def fill_content(content)
@@ -103,7 +105,13 @@ module PageObjects
       end
 
       def has_value?(value)
-        expect(composer_input.value).to eq(value)
+        within(@composer_id) do
+          if value.nil?
+            has_no_field?(class: "d-editor-input")
+          else
+            has_field?(class: "d-editor-input", with: value)
+          end
+        end
       end
 
       def has_popup_content?(content)
@@ -152,12 +160,12 @@ module PageObjects
       end
 
       def locale
-        find("#{@composer_id} #{POST_LANGUAGE_SELECTOR}")
+        find("#{@composer_id} .d-editor-button-bar #{POST_LANGUAGE_SELECTOR}")
       end
 
       def set_locale(locale)
-        Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
-        find("#{POST_LANGUAGE_SELECTOR} button", text: locale).click
+        click_toolbar_button("post-language-selector-trigger")
+        within("#d-menu-portals", visible: false) { find("button", text: locale).click }
       end
 
       def switch_category(category_name)

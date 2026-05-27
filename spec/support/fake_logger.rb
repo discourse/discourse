@@ -14,6 +14,14 @@ class FakeLogger
     @severities = { 0 => :debugs, 1 => :infos, 2 => :warnings, 3 => :errors, 4 => :fatals }
   end
 
+  def all_messages_to_s
+    @debugs.each { |msg| puts "DEBUG: #{msg}" }
+    @infos.each { |msg| puts "INFO: #{msg}" }
+    @warnings.each { |msg| puts "WARN: #{msg}" }
+    @errors.each { |msg| puts "ERROR: #{msg}" }
+    @fatals.each { |msg| puts "FATAL: #{msg}" }
+  end
+
   def debug(message = nil)
     @debugs << message
   end

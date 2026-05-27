@@ -1,11 +1,11 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DatePicker from "discourse/components/date-picker";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import withEventValue from "discourse/helpers/with-event-value";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
 
-export default class FKControlCalendar extends Component {
+export default class FKControlCalendar extends FKBaseControl {
   static controlType = "calendar";
 
   @service site;
@@ -71,13 +71,16 @@ export default class FKControlCalendar extends Component {
 
   <template>
     {{#if this.expandedDatePicker}}
-      <DatePicker
+      <DDatePicker
         @value={{readonly @field.value}}
         @onSelect={{this.setDate}}
         @containerId={{this.containerId}}
         @minDate={{this.minDate}}
         @maxDate={{this.maxDate}}
         id={{@field.id}}
+        name={{@field.name}}
+        aria-invalid={{if @field.error "true"}}
+        aria-describedby={{@field.describedBy}}
         class="form-kit__control-calendar"
       />
       <div id={{this.containerId}} class="date-picker-container"></div>
@@ -89,6 +92,9 @@ export default class FKControlCalendar extends Component {
         class="form-kit__control-input form-kit__control-date"
         type="date"
         value={{this.date}}
+        id={{@field.id}}
+        name={{@field.name}}
+        aria-describedby={{@field.describedBy}}
         {{on "change" (withEventValue this.setDate)}}
       />
     {{/if}}

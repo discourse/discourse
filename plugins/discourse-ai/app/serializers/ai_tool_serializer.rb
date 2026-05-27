@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AiToolSerializer < ApplicationSerializer
-  attributes :options, :id, :name, :help
+  attributes :options, :id, :name, :help, :token_count
 
   def include_options?
     object.accepted_options.present?
@@ -17,6 +17,10 @@ class AiToolSerializer < ApplicationSerializer
 
   def help
     object.help
+  end
+
+  def token_count
+    DiscourseAi::Tokenizer::OpenAiCl100kTokenizer.size(object.signature.to_json)
   end
 
   def options

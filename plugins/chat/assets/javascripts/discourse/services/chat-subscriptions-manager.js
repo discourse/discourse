@@ -56,6 +56,7 @@ export default class ChatSubscriptionsManager extends Service {
     this._startNewChannelSubscription(messageBusIds.new_channel);
     this._startChannelArchiveStatusSubscription(messageBusIds.archive_status);
     this._startUserTrackingStateSubscription(messageBusIds.user_tracking_state);
+    this._startUserHasThreadsSubscription(messageBusIds.user_has_threads);
     this._startChannelsEditsSubscription(messageBusIds.channel_edits);
     this._startChannelsStatusChangesSubscription(messageBusIds.channel_status);
     this._startChannelsMetadataChangesSubscription(
@@ -67,6 +68,7 @@ export default class ChatSubscriptionsManager extends Service {
     this._stopNewChannelSubscription();
     this._stopChannelArchiveStatusSubscription();
     this._stopUserTrackingStateSubscription();
+    this._stopUserHasThreadsSubscription();
     this._stopChannelsEditsSubscription();
     this._stopChannelsStatusChangesSubscription();
     this._stopChannelsMetadataChangesSubscription();
@@ -324,6 +326,36 @@ export default class ChatSubscriptionsManager extends Service {
       `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
       this._onBulkUserTrackingStateUpdate
     );
+  }
+
+  _startUserHasThreadsSubscription(lastId) {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.messageBus.subscribe(
+      `/chat/user-has-threads/${this.currentUser.id}`,
+      this._onUserHasThreads,
+      lastId
+    );
+  }
+
+  _stopUserHasThreadsSubscription() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.messageBus.unsubscribe(
+      `/chat/user-has-threads/${this.currentUser.id}`,
+      this._onUserHasThreads
+    );
+  }
+
+  @bind
+  _onUserHasThreads(busData) {
+    if (busData.has_threads) {
+      this.chatChannelsManager.userHasThreads = true;
+    }
   }
 
   @bind

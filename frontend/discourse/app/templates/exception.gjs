@@ -1,10 +1,10 @@
-import { htmlSafe } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -14,7 +14,7 @@ export default <template>
   >
     <div class="container">
       {{#if (and @controller.errorHtml @controller.isForbidden)}}
-        <div class="not-found">{{htmlSafe @controller.errorHtml}}</div>
+        <div class="not-found">{{trustHTML @controller.errorHtml}}</div>
       {{else}}
         <div class="error-page">
           <div class="face">:(</div>
@@ -30,7 +30,7 @@ export default <template>
           {{/if}}
           <div class="desc">
             {{#if @controller.networkFixed}}
-              {{icon "circle-check"}}
+              {{dIcon "circle-check"}}
             {{/if}}
 
             {{@controller.desc}}
@@ -44,7 +44,7 @@ export default <template>
                 class={{buttonData.classes}}
               />
             {{/each}}
-            <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+            <DConditionalLoadingSpinner @condition={{@controller.loading}} />
           </div>
         </div>
       {{/if}}

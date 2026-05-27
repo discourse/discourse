@@ -72,6 +72,12 @@ module PageObjects
         save_setting(setting)
       end
 
+      def toggle_bool_setting(setting_name)
+        setting = find_setting(setting_name)
+        setting.find(".setting-value input[type='checkbox']").click
+        save_setting(setting)
+      end
+
       def change_number_setting(setting_name, value, save_changes = true)
         setting = find_setting(setting_name)
         setting.fill_in(with: value)
@@ -155,8 +161,38 @@ module PageObjects
           )
       end
 
+      def has_upcoming_change_default_warning?(setting_name, old_default:, new_default:)
+        find_setting(setting_name).find(".setting-upcoming-change-warning__text").has_text?(
+          "The default for this setting has changed from #{old_default} to #{new_default}",
+        ) &&
+          find_setting(setting_name).find(".setting-upcoming-change-warning__text").has_link?(
+            href: "/admin/config/upcoming-changes?changeNamesFilter=enable_upload_debug_mode",
+          )
+      end
+
       def has_disabled_input?(setting_name)
         find_setting(setting_name).has_css?("input[disabled]")
+      end
+
+      def has_visible_reorder_buttons?(setting_name)
+        has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :visible) &&
+          has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :visible)
+      end
+
+      def has_hidden_reorder_buttons?(setting_name)
+        has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :hidden) &&
+          has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :hidden)
+      end
+
+      def tag_list_setting(setting_name)
+        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .tag-chooser")
+      end
+
+      def has_tags_in_setting?(setting_name, tags)
+        tag_chooser = tag_list_setting(setting_name)
+        tag_names = tags.map(&:name).sort
+        selected_names = tag_chooser.value&.split(",")&.sort || []
+        tag_names == selected_names
       end
     end
   end

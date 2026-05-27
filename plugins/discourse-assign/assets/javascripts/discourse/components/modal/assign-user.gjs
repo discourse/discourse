@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 import AssignUserForm from "../assign-user-form";
 
 export default class AssignUser extends Component {
   @service taskActions;
 
-  model = new TrackedObject(this.args.model);
+  model = trackedObject(this.args.model);
 
   // `submit` property will be mutated by the `AssignUserForm` component
   formApi = {

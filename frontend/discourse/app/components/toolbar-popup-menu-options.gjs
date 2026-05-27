@@ -2,19 +2,51 @@ import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { iconHTML } from "discourse/lib/icon-library";
 import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class ToolbarPopupmenuOptions extends Component {
+export default class ToolbarPopupMenuOptions extends Component {
   @service capabilities;
+
+  trackScrollability = modifier((element) => {
+    const innerContent = element.closest(".fk-d-menu__inner-content");
+    const menuElement = innerContent?.parentElement;
+    if (!innerContent || !menuElement) {
+      return;
+    }
+
+    const checkScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = innerContent;
+      const hasOverflow = scrollHeight > clientHeight;
+      menuElement.classList.toggle(
+        "--scroll-top",
+        hasOverflow && scrollTop > 2
+      );
+      menuElement.classList.toggle(
+        "--scroll-bottom",
+        hasOverflow && scrollHeight - scrollTop - clientHeight > 2
+      );
+    };
+
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(innerContent);
+    innerContent.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
+
+    return () => {
+      observer.disconnect();
+      innerContent.removeEventListener("scroll", checkScroll);
+    };
+  });
 
   willDestroy() {
     super.willDestroy();
@@ -33,7 +65,7 @@ export default class ToolbarPopupmenuOptions extends Component {
   }
 
   #convertMenuOption(content) {
-    if (content.condition) {
+    if (content.condition !== false) {
       const label = this.#calculateLabel(content);
       const title = this.#calculateTitle(content);
 
@@ -103,7 +135,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       });
     }
 
-    return htmlSafe(htmlLabel);
+    return trustHTML(htmlLabel);
   }
 
   get convertedContent() {
@@ -130,6 +162,15 @@ export default class ToolbarPopupmenuOptions extends Component {
     return config.icon;
   }
 
+  get triggerLabel() {
+    const label = this.args.triggerLabel;
+    if (typeof label === "function") {
+      return label({ state: this.textManipulationState });
+    }
+
+    return label;
+  }
+
   <template>
     <DMenu
       @identifier={{concat "toolbar-menu__" @class}}
@@ -142,15 +183,23 @@ export default class ToolbarPopupmenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      @triggerClass={{concatClass "toolbar__button" @class}}
+      @triggerClass={{dConcatClass "toolbar__button" @class}}
       @class="toolbar-popup-menu-options"
       title={{@title}}
     >
       <:trigger>
-        {{icon (this.getIcon this.args)}}
+        {{dIcon (this.getIcon this.args)}}
+        {{#if this.triggerLabel}}
+          <span class="toolbar-popup-menu-options__trigger-label">
+            {{this.triggerLabel}}
+          </span>
+        {{/if}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu {{this.trackScrollability}} as |dropdown|>
+          {{#if @header}}
+            <li class="dropdown-menu__header">{{@header}}</li>
+          {{/if}}
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
               <DButton
@@ -159,12 +208,12 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @icon={{this.getIcon option}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
-                class={{concatClass (if (this.getActive option) "--active")}}
+                class={{dConcatClass (if (this.getActive option) "--active")}}
                 aria-keyshortcuts={{option.ariaKeyshortcuts}}
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

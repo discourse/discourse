@@ -76,7 +76,7 @@ after_initialize do
   add_to_serializer(:group_show, :can_show_assigned_tab?) { object.can_show_assigned_tab? }
 
   add_model_callback(UserCustomField, :before_save) do
-    self.value = self.value.to_i if self.name == frequency_field
+    self.value = value.to_i if name == frequency_field
   end
 
   add_class_method(:group, :assign_allowed_groups) do
@@ -98,25 +98,7 @@ after_initialize do
     ) < 0
   end
 
-  add_to_class(:group, :can_show_assigned_tab?) do
-    allowed_group_ids = SiteSetting.assign_allowed_on_groups.split("|")
-
-    group_has_disallowed_users =
-      DB.query_single(<<~SQL, allowed_group_ids: allowed_group_ids, current_group_id: self.id)[0]
-      SELECT EXISTS(
-        SELECT 1 FROM users
-        JOIN group_users current_group_users
-          ON current_group_users.user_id=users.id
-          AND current_group_users.group_id = :current_group_id
-        LEFT JOIN group_users allowed_group_users
-          ON allowed_group_users.user_id=users.id
-          AND allowed_group_users.group_id IN (:allowed_group_ids)
-        WHERE allowed_group_users.user_id IS NULL
-      )
-    SQL
-
-    !group_has_disallowed_users
-  end
+  add_to_class(:group, :can_show_assigned_tab?) { assignable_level > Group::ALIAS_LEVELS[:nobody] }
 
   add_to_class(:guardian, :can_assign?) { user && user.can_assign? }
 
@@ -213,9 +195,9 @@ after_initialize do
 
     topics.each do |topic|
       if assignments = assignments_map[topic.id]
-        topic_assignments, post_assignments = assignments.partition { _1.target_type == "Topic" }
+        topic_assignments, post_assignments = assignments.partition { it.target_type == "Topic" }
 
-        direct_assignment = topic_assignments.find { _1.target_id == topic.id }
+        direct_assignment = topic_assignments.find { it.target_id == topic.id }
 
         indirectly_assigned_to = {}
 
@@ -270,8 +252,8 @@ after_initialize do
 
     results.posts.each do |post|
       if topic_assignments = assignments[post.topic_id]
-        direct_assignment = topic_assignments.find { _1.target_type == "Topic" }
-        indirect_assignments = topic_assignments.select { _1.target_type == "Post" }
+        direct_assignment = topic_assignments.find { it.target_type == "Topic" }
+        indirect_assignments = topic_assignments.select { it.target_type == "Post" }
       end
 
       if indirect_assignments.present?
@@ -1009,6 +991,43 @@ after_initialize do
 
       script do |context, fields, automation|
         RandomAssignUtils.automation_script!(context, fields, automation)
+      end
+    end
+  end
+
+  if defined?(DiscourseSolved)
+    register_modifier(:assigns_reminder_assigned_topics_query) do |query|
+      next query if !SiteSetting.ignore_solved_topics_in_assigned_reminder
+      query.where.not(id: DiscourseSolved::SolvedTopic.select(:topic_id))
+    end
+
+    register_modifier(:assigned_count_for_user_query) do |query, user|
+      next query if !SiteSetting.ignore_solved_topics_in_assigned_reminder
+      next query if SiteSetting.assignment_status_on_solve.blank?
+      query.where.not(status: SiteSetting.assignment_status_on_solve)
+    end
+
+    on(:accepted_solution) do |post|
+      next if SiteSetting.assignment_status_on_solve.blank?
+      assignments = Assignment.includes(:target).where(topic: post.topic)
+      assignments.each do |assignment|
+        assigned_user = User.find_by(id: assignment.assigned_to_id)
+        Assigner.new(assignment.target, assigned_user).assign(
+          assigned_user,
+          status: SiteSetting.assignment_status_on_solve,
+        )
+      end
+    end
+
+    on(:unaccepted_solution) do |post|
+      next if SiteSetting.assignment_status_on_unsolve.blank?
+      assignments = Assignment.includes(:target).where(topic: post.topic)
+      assignments.each do |assignment|
+        assigned_user = User.find_by(id: assignment.assigned_to_id)
+        Assigner.new(assignment.target, assigned_user).assign(
+          assigned_user,
+          status: SiteSetting.assignment_status_on_unsolve,
+        )
       end
     end
   end

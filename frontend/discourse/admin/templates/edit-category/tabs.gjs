@@ -1,167 +1,146 @@
-import { htmlSafe } from "@ember/template";
-import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
-import EditCategoryImages from "discourse/admin/components/edit-category-images";
+import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import { trustHTML } from "@ember/template";
+import ChangesBanner from "discourse/admin/components/changes-banner";
 import EditCategoryLocalizations from "discourse/admin/components/edit-category-localizations";
-import EditCategorySecurity from "discourse/admin/components/edit-category-security";
-import EditCategorySettings from "discourse/admin/components/edit-category-settings";
-import EditCategoryTab from "discourse/admin/components/edit-category-tab";
-import EditCategoryTags from "discourse/admin/components/edit-category-tags";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
-import BreadCrumbs from "discourse/components/bread-crumbs";
-import DButton from "discourse/components/d-button";
+import UpsertCategoryAppearance from "discourse/admin/components/upsert-category/appearance";
+import UpsertCategoryGeneral from "discourse/admin/components/upsert-category/general";
+import UpsertCategoryModeration from "discourse/admin/components/upsert-category/moderation";
+import UpsertCategorySecurity from "discourse/admin/components/upsert-category/security";
+import UpsertCategorySettings from "discourse/admin/components/upsert-category/settings";
+import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags";
+import EditCategoryTabsHorizontal from "discourse/admin/templates/edit-category/tabs-horizontal";
+import EditCategoryTypeSchemaFields from "discourse/components/edit-category-type-schema-fields";
 import Form from "discourse/components/form";
-import { and, not } from "discourse/truth-helpers";
+import { bind } from "discourse/lib/decorators";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { or } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 
 const TAB_COMPONENTS = {
-  general: EditCategoryGeneral,
-  security: EditCategorySecurity,
-  settings: EditCategorySettings,
-  images: EditCategoryImages,
+  general: UpsertCategoryGeneral,
+  security: UpsertCategorySecurity,
+  settings: UpsertCategorySettings,
+  moderation: UpsertCategoryModeration,
+  images: UpsertCategoryAppearance,
   "topic-template": EditCategoryTopicTemplate,
-  tags: EditCategoryTags,
+  tags: UpsertCategoryTags,
   localizations: EditCategoryLocalizations,
 };
 
-function componentFor(name) {
-  name = name.replace("edit-category-", "");
+const UnknownCategoryType = <template>
+  <div class="edit-category-unknown-category-type">
+    <h3>{{i18n "category.unknown_category_type"}}</h3>
+    <p>{{i18n
+        "category.unknown_category_type_description"
+        categoryType=@categoryType
+      }}</p>
+  </div>
+</template>;
 
-  if (!TAB_COMPONENTS[name]) {
-    throw new Error(`No category-tab component found for tab name: ${name}`);
+export default class Tabs extends Component {
+  @bind
+  componentFor(name) {
+    name = name.replace("edit-category-", "");
+
+    if (TAB_COMPONENTS[name]) {
+      return TAB_COMPONENTS[name];
+    }
+
+    // Shows additional tabs manually registered by plugins
+    const pluginTab = registeredEditCategoryTabs.find((tab) => tab.id === name);
+    if (pluginTab) {
+      return pluginTab.component;
+    }
+
+    // Used to show category type specific tabs. Types may be registered by plugins.
+    if (this.args.controller.model.categoryTypes?.[name]) {
+      return EditCategoryTypeSchemaFields;
+    }
+
+    return UnknownCategoryType;
   }
-  return TAB_COMPONENTS[name];
-}
 
-export default <template>
-  <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
-    <div class="edit-category-title-bar">
-      <div class="edit-category-title">
-        <h2>{{@controller.title}}</h2>
-        {{#if @controller.model.id}}
-          <BreadCrumbs
-            @categories={{@controller.breadcrumbCategories}}
-            @category={{@controller.model}}
-            @noSubcategories={{@controller.model.noSubcategories}}
-            @editingCategory={{true}}
-            @editingCategoryTab={{@controller.selectedTab}}
-          />
-        {{/if}}
-      </div>
-      {{#if (and @controller.site.desktopView @controller.model.id)}}
-        <DButton
-          @action={{@controller.goBack}}
-          @label="category.back"
-          @icon="caret-left"
-          class="category-back"
-        />
-      {{/if}}
-    </div>
+  <template>
+    <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
+      <EditCategoryTabsHorizontal
+        @controller={{@controller}}
+        class="edit-category-page-header"
+      />
 
-    <div class="edit-category-nav">
-      <ul class="nav nav-stacked">
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="general"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="security"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="settings"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="images"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="topic-template"
-        />
-        {{#if @controller.siteSettings.tagging_enabled}}
-          <EditCategoryTab
-            @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
-            @params={{@controller.parentParams}}
-            @tab="tags"
-          />
-        {{/if}}
-
-        {{#if @controller.siteSettings.content_localization_enabled}}
-          <EditCategoryTab
-            @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
-            @params={{@controller.parentParams}}
-            @tab="localizations"
-          />
-        {{/if}}
-      </ul>
-    </div>
-
-    <Form
-      @data={{@controller.formData}}
-      @onDirtyCheck={{@controller.isLeavingForm}}
-      @onSubmit={{@controller.saveCategory}}
-      as |form transientData|
-    >
-      <form.Section
-        @title={{@controller.selectedTabTitle}}
-        class="edit-category-content"
+      <Form
+        @data={{@controller.formData}}
+        @onDirtyCheck={{@controller.isLeavingForm}}
+        @onSubmit={{@controller.saveCategory}}
+        @validate={{@controller.validateForm}}
+        @onRegisterApi={{@controller.onRegisterFormApi}}
+        @onReset={{@controller.onFormReset}}
+        as |form transientData|
       >
-        {{#each @controller.panels as |tabName|}}
-          {{#let (componentFor tabName) as |Tab|}}
+        <form.Section
+          class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
+        >
+          {{#let
+            (this.componentFor
+              (concat "edit-category-" @controller.selectedTab)
+            )
+            as |Tab|
+          }}
             <Tab
               @selectedTab={{@controller.selectedTab}}
+              @categoryType={{@controller.selectedTab}}
               @category={{@controller.model}}
               @registerValidator={{@controller.registerValidator}}
+              @registerAfterReset={{@controller.registerAfterReset}}
               @transientData={{transientData}}
               @form={{form}}
+              @setSelectedTab={{@controller.setSelectedTab}}
             />
           {{/let}}
-        {{/each}}
-      </form.Section>
+        </form.Section>
 
-      {{#if @controller.showDeleteReason}}
-        <form.Alert @type="warning" class="edit-category-delete-warning">
-          {{htmlSafe @controller.model.cannot_delete_reason}}
-        </form.Alert>
-      {{/if}}
-
-      <form.Actions class="edit-category-footer">
-        <form.Submit
-          @disabled={{not (@controller.canSaveForm transientData)}}
-          @label={{@controller.saveLabel}}
-          id="save-category"
-        />
-
-        {{#if @controller.model.can_delete}}
-          <form.Button
-            @disabled={{@controller.deleteDisabled}}
-            @action={{@controller.deleteCategory}}
-            @icon="trash-can"
-            @label="category.delete"
-            class="btn-danger"
-          />
-        {{else if @controller.model.id}}
-          <form.Button
-            @disabled={{@controller.deleteDisabled}}
-            @action={{@controller.toggleDeleteTooltip}}
-            @icon="circle-question"
-            @label="category.delete"
-            class="btn-default"
-          />
+        {{#if @controller.showDeleteReason}}
+          <form.Alert @type="warning" class="edit-category-delete-warning">
+            {{trustHTML @controller.model.cannot_delete_reason}}
+          </form.Alert>
         {{/if}}
-      </form.Actions>
-    </Form>
-  </div>
-</template>
+
+        {{#if (or @controller.model.can_delete @controller.model.id)}}
+          <form.Actions class="edit-category-footer">
+            {{#if @controller.model.can_delete}}
+              <form.Button
+                @action={{@controller.deleteCategory}}
+                @icon="trash-can"
+                @label="category.delete"
+                class="btn-danger btn-small"
+              />
+            {{else}}
+              <form.Button
+                @action={{@controller.toggleDeleteTooltip}}
+                @icon="circle-question"
+                @label="category.delete"
+                class="btn-default btn-small"
+              />
+            {{/if}}
+          </form.Actions>
+        {{/if}}
+      </Form>
+
+      {{#if (or @controller.model.isNew @controller.isFormDirty)}}
+        <ChangesBanner
+          @bannerLabel={{i18n "category.unsaved_changes"}}
+          @saveLabel={{if
+            @controller.model.id
+            (i18n "category.save")
+            (i18n "category.create_category")
+          }}
+          @saveButtonId="save-category"
+          @discardLabel={{i18n "form_kit.reset"}}
+          @save={{@controller.formApi.submit}}
+          @discard={{@controller.formApi.reset}}
+        />
+      {{/if}}
+    </div>
+  </template>
+}

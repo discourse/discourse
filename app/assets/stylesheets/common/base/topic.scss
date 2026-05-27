@@ -30,16 +30,8 @@
     overflow-anchor: none;
 
     .btn-toggle-localized-content.--active {
-      background-image: linear-gradient(
-        to bottom,
-        rgb(var(--primary-rgb), 0.6) 100%,
-        rgb(var(--primary-rgb), 0.6) 100%
-      );
-      color: var(--d-button-default-text-color--hover);
-
-      .d-icon {
-        color: var(--d-button-default-text-color--hover);
-      }
+      --d-button-default-icon-color: var(--tertiary);
+      --d-button-default-icon-color--hover: var(--primary-low);
     }
   }
 
@@ -185,6 +177,12 @@
   z-index: z("base");
   margin-bottom: 1em;
 
+  @include viewport.until(sm) {
+    z-index: z("base") + 1;
+    margin: 0;
+    padding: 0 0 1em;
+  }
+
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -197,10 +195,12 @@
       width: 100%;
     }
 
-    .fancy-title {
-      .d-icon-pencil {
-        font-size: var(--font-down-3);
-      }
+    .edit-topic__wrapper {
+      // managing whitespace to prevent the edit icon from wrapping to a new line
+      white-space: nowrap;
+      font-size: var(--font-down-3);
+      vertical-align: 0.125em;
+      margin-left: var(--space-1);
     }
 
     html.discourse-no-touch & {
@@ -271,6 +271,15 @@
       width: 100%;
       margin: 0;
     }
+
+    .editing-localization-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin: var(--space-1);
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
   }
 
   .edit-category__wrapper {
@@ -320,6 +329,15 @@
     display: flex;
     width: 100%;
     gap: 0.5em;
+  }
+
+  @include viewport.from(sm) {
+    .remove-featured-link {
+      float: right;
+      text-transform: lowercase;
+      color: var(--primary-med-or-secondary-med);
+      font-size: 0.857rem;
+    }
   }
 }
 
@@ -378,8 +396,13 @@
 }
 
 .post-links-container {
-  @include unselectable;
   clear: both;
+
+  @include unselectable;
+
+  @include viewport.from(sm) {
+    margin-left: var(--topic-body-width-padding);
+  }
 
   .post-links {
     margin-top: 1em;
@@ -450,7 +473,7 @@ a.topic-featured-link {
 
   .d-icon {
     font-size: var(--font-down-1);
-    margin-right: 0.25em;
+    margin-inline-end: 0.25em;
   }
 }
 
@@ -523,5 +546,27 @@ a[data-clicks]::after {
     @include viewport.until(sm) {
       margin-top: 20px;
     }
+  }
+}
+
+@include viewport.from(sm) {
+  .post-menu-area {
+    position: relative;
+    padding-left: var(--topic-body-width-padding);
+    margin: 20px 0;
+  }
+
+  #topic-filter {
+    background-color: var(--highlight-bg);
+    padding: 8px;
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    font-size: var(--font-0);
+    z-index: z("dropdown");
+  }
+
+  .onscreen-post .row {
+    display: flex; // children should never wrap
   }
 }

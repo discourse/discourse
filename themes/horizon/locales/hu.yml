@@ -5,5 +5,19 @@
 # https://translate.discourse.org/
 
 hu:
+  solved: "Megoldva"
+  unsolved: "Megoldatlan"
+  posted: "közzétett"
+  by_username: "szerző: @%{username}"
+  replied: "válaszolt"
+  vote_count:
+    one: "%{count} szavazat"
+    other: "%{count} szavazat"
+  like_count:
+    one: "%{count} kedvelés"
+    other: "%{count} kedvelés"
+  reply_count:
+    one: "%{count} válasz"
+    other: "%{count} válasz"
   theme_metadata:
     description: "Egy egyszerű, gyönyörű téma, amely javítja a Discourse webhelyek élményét."

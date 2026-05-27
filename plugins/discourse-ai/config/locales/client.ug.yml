@@ -10,7 +10,7 @@ ug:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
       site_settings:
         categories:
@@ -46,22 +46,28 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      llm_selector:
+        none: "يوق"
       features:
-        back: "كەينى"
         disabled: "(چەكلەندى)"
         groups: "گۇرۇپپا:"
-        no_persona: "تەڭشەلمىدى"
+        no_agent: "تەڭشەلمىدى"
         no_groups: "يوق"
-        edit: "تەھرىر"
+        edit: "تەڭشەك"
         expand_list:
           one: "(%{count} تېخىمۇ كۆپ)"
           other: "(%{count} تېخىمۇ كۆپ)"
         collapse_list: "(ئازراق كۆرسەت)"
+        nav:
+          enabled: "قوزغىتىلدى"
         filters:
           all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"
         search:
           name: "ئىزدە"
+        ai_helper:
+          setting_groups:
+            automation: "ئاپتوماتلاشتۇرۇش"
         spam:
           name: "ئەخلەت خەت"
       modals:
@@ -88,6 +94,7 @@ ug:
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
           result: "نەتىجە"
+          llm: "LLM"
           run: "سىناقنى ئىجرا قىل"
           spam: "ئەخلەت خەت"
       usage:
@@ -95,10 +102,10 @@ ug:
         summary: "خۇلاسە"
         username: "ئىشلەتكۈچى ئاتى"
         total_requests: "جەمئىي ئىلتىماس"
+        total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
-      ai_persona:
-        back: "كەينى"
+      ai_agent:
         name: "ئىسمى"
         edit: "تەھرىر"
         export: "چىقار"
@@ -106,6 +113,9 @@ ug:
         user: ئىشلەتكۈچى
         save: "ساقلا"
         enabled: "قوزغىتىلدى؟"
+        mcp_tools_modal:
+          select_all: "ھەممىنى تاللا"
+          clear_all: "ھەممىنى تازىلا"
         delete: "ئۆچۈر"
         response_format:
           open_modal: "تەھرىر"
@@ -113,12 +123,12 @@ ug:
             key_title: "ئاچقۇچ"
         filters:
           reset: "ئەسلىگە قايتۇر"
+        llms_list: "LLM:"
       rag:
         uploads:
           title: "يۈكلەنمە"
           uploading: "يۈكلەۋاتىدۇ..."
       tools:
-        back: "كەينى"
         export: "چىقار"
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
@@ -127,16 +137,40 @@ ug:
         save: "ساقلا"
         remove_parameter: "چىقىرىۋەت"
         parameter_required: "زۆرۈر"
+        credential_not_set: "(تەڭشەلمىدى)"
         edit: "تەھرىر"
-        test: "سىناقنى ئىجرا قىل"
+        test: "سىنا"
         delete: "ئۆچۈر"
         test_modal:
           run: "سىناقنى ئىجرا قىل"
+      secrets:
+        short_title: "ئىسپاتنامە"
+        name: "ئىسمى"
+        secret: "قىممەت"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        embedding: "سىڭدۈرمە"
+      mcp_servers:
+        name: "ئىسمى"
+        description: "چۈشەندۈرۈش"
+        url: "تور ئادرېسى"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "باغلاندى"
+        oauth_connect: "ئۇلا"
+        oauth_hide_details: "تەپسىلاتنى يوشۇر"
+        enabled: "قوزغىتىلدى"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        tools_modal:
+          required: "زۆرۈر"
       llms:
         display_name: "ئىسمى"
         save: "ساقلا"
         edit: "تەھرىر"
-        back: "كەينى"
         delete: ئۆچۈر
         quotas:
           group: "گۇرۇپپا"
@@ -173,10 +207,10 @@ ug:
         thumbnail_suggestions:
           select: "تاللا"
           selected: "تاللاندى"
+          try_again: "قايتا سىنا"
         image_caption:
           save_caption: "ساقلا"
       embeddings:
-        back: "كەينى"
         save: "ساقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"
@@ -198,7 +232,10 @@ ug:
         share_modal:
           copy: "كۆچۈر"
         conversations:
+          starred: "يۇلتۇزلانغان"
           today: "بۈگۈن"
+          scroll_to_bottom: "ئەڭ ئاستىغا دومىلات"
+          editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
       sentiments:
         sentiment_analysis:
           filter_types:

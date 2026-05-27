@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
@@ -8,13 +9,9 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import DButton from "discourse/components/d-button";
-import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -26,9 +23,13 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
-import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { eq, gt, includes, notEq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
@@ -60,13 +61,11 @@ export default class EmojiPicker extends Component {
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
-  @tracked emojis = null;
   @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked term = this.args.term;
 
   prevYPosition = 0;
-
   scrollableNode;
 
   setupSectionsNavScroll = modifierFn((element) => {
@@ -341,10 +340,18 @@ export default class EmojiPicker extends Component {
 
     next(() => {
       schedule("afterRender", () => {
-        const targetEmoji = document.querySelector(
+        const targetSection = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
-        targetEmoji.scrollIntoView({ block: "nearest" });
+
+        if (targetSection && this.scrollableNode) {
+          const titleContainer = targetSection.querySelector(
+            ".emoji-picker__section-title-container"
+          );
+          const titleHeight = titleContainer?.offsetHeight ?? 0;
+          this.scrollableNode.scrollTop = targetSection.offsetTop - titleHeight;
+        }
+
         this.scrollObserverEnabled = true;
       });
     });
@@ -440,11 +447,11 @@ export default class EmojiPicker extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable no-nested-interactive }}
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-nested-interactive }}
+
     <div
-      class={{concatClass "emoji-picker"}}
+      class={{dConcatClass "emoji-picker"}}
       {{didInsert this.loadEmojis}}
       {{didInsert (if @didInsert @didInsert (noop))}}
       {{on "keydown" this.trapKeyDownEvents}}
@@ -462,9 +469,9 @@ export default class EmojiPicker extends Component {
             close=@close
           }}
         >
-          <FilterInput
+          <DFilterInput
             {{preventScrollOnFocus}}
-            {{autoFocus}}
+            {{dAutoFocus}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}
@@ -490,7 +497,7 @@ export default class EmojiPicker extends Component {
           {{#each-in this.groups as |section emojis|}}
             {{#if emojis.length}}
               <DButton
-                class={{concatClass
+                class={{dConcatClass
                   "btn-flat"
                   "emoji-picker__section-btn"
                   (if (eq this.lastVisibleSection section) "active")
@@ -500,7 +507,7 @@ export default class EmojiPicker extends Component {
                 data-section={{section}}
               >
                 {{#if (eq section "favorites")}}
-                  {{replaceEmoji ":star:"}}
+                  {{dReplaceEmoji ":star:"}}
                 {{else}}
                   <img
                     width="18"
@@ -551,7 +558,7 @@ export default class EmojiPicker extends Component {
                     {{else}}
                       <p class="emoji-picker__no-results">
                         {{i18n "chat.emoji_picker.no_results"}}
-                        {{replaceEmoji ":crying_cat_face:"}}
+                        {{dReplaceEmoji ":crying_cat_face:"}}
                       </p>
                     {{/if}}
                   {{/each}}
@@ -560,7 +567,7 @@ export default class EmojiPicker extends Component {
                 {{#each-in this.groups as |section emojis|}}
                   {{#if emojis}}
                     <div
-                      class={{concatClass
+                      class={{dConcatClass
                         "emoji-picker__section"
                         (if (notEq this.filteredEmojis null) "hidden")
                       }}
@@ -572,6 +579,7 @@ export default class EmojiPicker extends Component {
                       }}
                     >
                       <div class="emoji-picker__section-title-container">
+                        {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
                         <h2 class="emoji-picker__section-title">
                           {{i18n
                             (concat "chat.emoji_picker." section)

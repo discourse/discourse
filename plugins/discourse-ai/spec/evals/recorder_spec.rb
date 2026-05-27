@@ -11,7 +11,8 @@ RSpec.describe DiscourseAi::Evals::Recorder do
       logger,
       "/tmp/example.json",
       structured_logger,
-      persona_key: persona_key,
+      total_targets: 1,
+      agent_key: agent_key,
       output: output,
     )
   end
@@ -20,7 +21,19 @@ RSpec.describe DiscourseAi::Evals::Recorder do
     instance_double("DiscourseAi::Evals::Eval", id: "example-eval", to_json: { foo: "bar" })
   end
   let(:logger) { instance_double(Logger, info: nil, error: nil) }
-  let(:persona_key) { "default" }
+  let(:agent_key) { "default" }
+  let(:formatter) do
+    instance_double(
+      DiscourseAi::Evals::ConsoleFormatter,
+      announce_start: nil,
+      record_result: nil,
+      record_skip: nil,
+      pause_progress_line: nil,
+      record_comparison_judged: nil,
+      record_comparison_expected: nil,
+      finalize: nil,
+    )
+  end
   let(:structured_logger) do
     instance_double(
       DiscourseAi::Evals::StructuredLogger,
@@ -37,9 +50,15 @@ RSpec.describe DiscourseAi::Evals::Recorder do
   let(:child_step) { {} }
   let(:output) { StringIO.new }
 
-  before do
-    allow(recorder).to receive(:attach_thread_loggers) # rubocop:disable RSpec/SubjectStub
-    allow(recorder).to receive(:detach_thread_loggers) # rubocop:disable RSpec/SubjectStub
+  before { allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter) }
+
+  describe "#execution_context" do
+    it "exposes recorder loggers through an explicit completion context" do
+      context = recorder.execution_context
+
+      expect(context.audit_logger).to eq(logger)
+      expect(context.structured_audit_logger).to eq(structured_logger)
+    end
   end
 
   describe "#running" do
@@ -47,14 +66,14 @@ RSpec.describe DiscourseAi::Evals::Recorder do
       recorder.running
 
       expect(structured_logger).to have_received(:start_root).with(
-        name: "Evaluating example-eval (persona: default)",
+        name: "Evaluating example-eval (agent: default)",
         args: {
           foo: "bar",
-          persona_key: "default",
+          agent_key: "default",
         },
       )
       expect(logger).to have_received(:info).with(
-        "Starting evaluation 'example-eval' (persona: default)",
+        "Starting evaluation 'example-eval' (agent: default)",
       )
     end
   end

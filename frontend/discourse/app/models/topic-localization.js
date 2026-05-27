@@ -2,6 +2,10 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 
 export default class TopicLocalization extends RestModel {
+  static fetch(topicId, locale) {
+    return ajax(`/topic_localizations/${topicId}/${locale}`);
+  }
+
   static createOrUpdate(topicId, locale, title) {
     return ajax("/topic_localizations/create_or_update", {
       type: "POST",

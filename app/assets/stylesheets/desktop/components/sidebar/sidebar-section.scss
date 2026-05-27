@@ -20,6 +20,6 @@
   }
 
   .sidebar-section-header-wrapper {
-    padding-right: calc(var(--d-sidebar-row-horizontal-padding) / 3);
+    padding-right: var(--d-sidebar-row-horizontal-padding);
   }
 }

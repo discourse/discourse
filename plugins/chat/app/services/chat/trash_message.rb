@@ -29,8 +29,11 @@ module Chat
     model :message
     policy :invalid_access
 
+    model :pinned_message, optional: true
+
     transaction do
       step :trash_message
+      step :destroy_pin
       step :destroy_notifications
       step :update_last_message_ids
       step :update_tracking_state
@@ -54,6 +57,14 @@ module Chat
 
     def trash_message(message:, guardian:)
       message.trash!(guardian.user)
+    end
+
+    def fetch_pinned_message(message:)
+      message.pinned_message
+    end
+
+    def destroy_pin(pinned_message:)
+      pinned_message&.destroy!
     end
 
     def destroy_notifications(message:)
@@ -82,9 +93,11 @@ module Chat
       message.chat_channel.update_last_message_id!
     end
 
-    def publish_events(guardian:, message:)
+    def publish_events(guardian:, message:, pinned_message:)
       DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_delete!(message.chat_channel, message)
+
+      Chat::Publisher.publish_unpin!(message.chat_channel, message, guardian.user) if pinned_message
 
       if message.thread.present?
         Chat::Publisher.publish_thread_original_message_metadata!(message.thread)

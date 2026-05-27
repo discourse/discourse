@@ -3,6 +3,8 @@ const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
 
+require("./patch-testem-output")();
+
 const SANDBOX_DISABLE_VALUES = ["1", "true"];
 const sandboxDisabled =
   process.env.CI ||
@@ -13,6 +15,7 @@ const sandboxDisabled =
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
+  deprecationCountsByOrigin = new Map();
 
   constructor() {
     super(...arguments);
@@ -29,9 +32,18 @@ class Reporter extends TapReporter {
 
   reportMetadata(tag, metadata) {
     if (tag === "increment-deprecation") {
-      const id = metadata.id;
+      const { id, origin } = metadata;
+
       const currentCount = this.deprecationCounts.get(id) || 0;
       this.deprecationCounts.set(id, currentCount + 1);
+
+      const originKey = origin || "unknown";
+      if (!this.deprecationCountsByOrigin.has(originKey)) {
+        this.deprecationCountsByOrigin.set(originKey, new Map());
+      }
+      const originMap = this.deprecationCountsByOrigin.get(originKey);
+      const originCount = originMap.get(id) || 0;
+      originMap.set(id, originCount + 1);
     } else if (tag === "summary-line") {
       this.out.write(`\n${metadata.message}\n`);
     } else {
@@ -49,13 +61,17 @@ class Reporter extends TapReporter {
 
   display(prefix, result) {
     if (this.willDisplay(result)) {
-      const string = displayUtils.resultString(
+      this.showBrowserVersion(prefix);
+
+      const rawString = displayUtils.resultString(
         this.id++,
         prefix,
         result,
         this.quietLogs,
         this.strictSpecCompliance
       );
+
+      const string = this.reformatTapLine(rawString, prefix);
 
       const color = this.colorForResult(result);
       const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
@@ -67,6 +83,43 @@ class Reporter extends TapReporter {
         this.out.write(color(string));
       }
     }
+  }
+
+  showBrowserVersion(prefix) {
+    if (!prefix) {
+      return;
+    }
+
+    this.shownBrowserVersions ??= new Set();
+    if (!this.shownBrowserVersions.has(prefix)) {
+      this.shownBrowserVersions.add(prefix);
+      this.out.write(colors.gray(`# Launcher: ${prefix}\n`));
+    }
+  }
+
+  reformatTapLine(rawString, prefix) {
+    const newlineIndex = rawString.indexOf("\n");
+    const firstLine =
+      newlineIndex >= 0 ? rawString.slice(0, newlineIndex) : rawString;
+    const rest = newlineIndex >= 0 ? rawString.slice(newlineIndex) : "";
+    let line = firstLine;
+
+    if (prefix) {
+      const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      line = line.replace(
+        new RegExp(
+          `^(ok|not ok|skip|todo) (\\d+) ${escaped} - (\\[\\d+ ms\\])`
+        ),
+        "$1 $2 $3"
+      );
+    }
+
+    line = line.replace(
+      /^(ok|not ok|skip|todo) (\d+) (\[\d+ ms\]) - Browser Id (\d+) - /,
+      "$1 $2 #$4 $3 - "
+    );
+
+    return line + rest;
   }
 
   colorForResult(result) {
@@ -84,8 +137,7 @@ class Reporter extends TapReporter {
       ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
     );
 
-    let msg = `| ${"id".padEnd(maxIdLength)} | count |\n`;
-    msg += `| ${"".padEnd(maxIdLength, "-")} | ----- |\n`;
+    let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
 
     for (const [id, count] of this.deprecationCounts.entries()) {
       const countString = count.toString();
@@ -95,23 +147,93 @@ class Reporter extends TapReporter {
     return msg;
   }
 
-  reportDeprecations() {
-    let deprecationMessage = "[Deprecation Counter] ";
-    if (this.deprecationCounts.size > 0) {
-      const table = this.generateDeprecationTable();
-      deprecationMessage += `Test run completed with deprecations:\n\n${table}`;
+  generateDeprecationsByOriginTable() {
+    const allDeprecationIds = this.collectAllDeprecationIds();
+    const maxIdLength = Math.max(
+      ...Array.from(allDeprecationIds).map((id) => id.length)
+    );
+    const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
+    const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
 
-      if (process.env.GITHUB_ACTIONS && process.env.GITHUB_STEP_SUMMARY) {
-        let jobSummary = `### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n`;
-        jobSummary += table;
-        jobSummary += `\n\n`;
+    let msg = this.buildTableHeader(
+      ["origin", "id", "count"],
+      [maxOriginLength, maxIdLength, 5]
+    );
 
-        fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
+    for (const origin of origins) {
+      const originMap = this.deprecationCountsByOrigin.get(origin);
+      const sortedIds = Array.from(originMap.keys()).sort();
+
+      for (const id of sortedIds) {
+        const count = originMap.get(id);
+        const countString = count.toString();
+        msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
       }
-    } else {
-      deprecationMessage += "No deprecations logged";
     }
+
+    return msg;
+  }
+
+  collectAllDeprecationIds() {
+    const allIds = new Set();
+    for (const originMap of this.deprecationCountsByOrigin.values()) {
+      for (const id of originMap.keys()) {
+        allIds.add(id);
+      }
+    }
+    return allIds;
+  }
+
+  buildTableHeader(columnNames, columnWidths) {
+    let header = "| ";
+    let separator = "| ";
+
+    for (let i = 0; i < columnNames.length; i++) {
+      const name = columnNames[i];
+      const width = columnWidths[i];
+      header += `${name.padEnd(width)} | `;
+      separator += `${"".padEnd(width, "-")} | `;
+    }
+
+    return header + "\n" + separator + "\n";
+  }
+
+  reportDeprecations() {
+    if (this.deprecationCounts.size === 0) {
+      this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
+      return;
+    }
+
+    const table = this.generateDeprecationTable();
+    let deprecationMessage =
+      "[Deprecation Counter] Test run completed with deprecations:\n\n" + table;
+
+    let originTable = null;
+    if (this.deprecationCountsByOrigin.size > 0) {
+      originTable = this.generateDeprecationsByOriginTable();
+      deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
+    }
+
+    this.writeGitHubSummary(table, originTable);
     this.out.write(`\n${deprecationMessage}\n\n`);
+  }
+
+  writeGitHubSummary(table, originTable) {
+    if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
+      return;
+    }
+
+    let jobSummary =
+      "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
+    jobSummary += table;
+
+    if (originTable) {
+      jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
+    }
+
+    jobSummary += "\n\n";
+
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
   }
 
   finish() {
@@ -148,6 +270,7 @@ module.exports = {
     maxHttpBufferSize: 1e8, // 100MB
   },
   browser_start_timeout: 120,
+  browser_disconnect_timeout: 30,
   browser_args: {
     Chromium: [
       // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
@@ -157,10 +280,11 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      "--remote-debugging-port=4201",
+      `--remote-debugging-port=${process.env.CI ? 0 : 4201}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--disable-background-networking",
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
@@ -170,10 +294,11 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      "--remote-debugging-port=4201",
+      `--remote-debugging-port=${process.env.CI ? 0 : 4201}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--disable-background-networking",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
@@ -206,7 +331,10 @@ if (pluginTestPages) {
 const themeTestPages = process.env.THEME_TEST_PAGES;
 
 if (themeTestPages) {
-  module.exports.test_page = themeTestPages.split(",");
+  // avoid double-slash in paths
+  module.exports.test_page = themeTestPages
+    .split(",")
+    .map((p) => p.replace(/^\//, ""));
   module.exports.proxies = {};
 
   // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
@@ -233,7 +361,13 @@ if (themeTestPages) {
 } else {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
-    "/assets/plugins/*_extra.js": {
+    "/assets/plugins/": {
+      target,
+    },
+    "/assets/js/plugins/": {
+      target,
+    },
+    "/assets/map/plugins/": {
       target,
     },
     "/plugins/": {

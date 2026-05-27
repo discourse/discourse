@@ -1,0 +1,12 @@
+{
+  "name": "discourse-developer-docs",
+  "private": true,
+  "scripts": {
+    "lint": "prettier --check '**/*.{md,json,mjs,yml}'",
+    "lint:fix": "prettier --write '**/*.{md,json,mjs,yml}'"
+  },
+  "devDependencies": {
+    "@discourse/lint-configs": "^3.0.1",
+    "prettier": "3.8.1"
+  }
+}

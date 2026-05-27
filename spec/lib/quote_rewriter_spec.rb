@@ -116,7 +116,7 @@ RSpec.describe QuoteRewriter do
         expect(
           quote_rewriter.rewrite_cooked_display_name(doc, "Jeff", "Mr. Atwood").to_html,
         ).to match_html(<<~HTML.strip)
-          <aside class="quote no-group" data-username="codinghorror" data-post="1" data-topic="#{quoted_post.topic.id}">
+          <aside class="quote no-group" data-username="codinghorror" data-display-name="Mr. Atwood" data-post="1" data-topic="#{quoted_post.topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> Mr. Atwood:</div>

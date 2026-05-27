@@ -1,12 +1,14 @@
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { module, test } from "qunit";
 import {
   addUniqueValuesToArray,
   addUniqueValueToArray,
+  arraySortedByProperties,
   removeValueFromArray,
   removeValuesFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
+import { isTrackedArray } from "discourse/lib/tracked-tools";
 
 module("Unit | Lib | array-tools", function () {
   module("addUniqueValueToArray()", function () {
@@ -39,7 +41,7 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("works with TrackedArray and preserves instance", function (assert) {
-      const tracked = new TrackedArray([1]);
+      const tracked = trackedArray([1]);
       const result = addUniqueValueToArray(tracked, 2);
 
       assert.strictEqual(
@@ -169,11 +171,11 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("preserves TrackedArray instance and appends only missing entries", function (assert) {
-      const tracked = new TrackedArray([1, 2]);
+      const tracked = trackedArray([1, 2]);
       const result = addUniqueValuesToArray(tracked, [2, 3, 4, 3]);
 
       assert.strictEqual(result, undefined, "function returns void");
-      assert.true(tracked instanceof TrackedArray, "still a TrackedArray");
+      assert.true(isTrackedArray(tracked), "still a TrackedArray");
       assert.deepEqual(
         Array.from(tracked),
         [1, 2, 3, 4],
@@ -300,7 +302,7 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("removes all occurrences from a TrackedArray", function (assert) {
-      const tracked = new TrackedArray([1, 2, 3, 2, 4]);
+      const tracked = trackedArray([1, 2, 3, 2, 4]);
       const result = removeValueFromArray(tracked, 2);
 
       assert.strictEqual(
@@ -397,7 +399,7 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("works with TrackedArray and maintains same instance", function (assert) {
-      const tracked = new TrackedArray([1, 2, 3, 4, 5, 2, 4]);
+      const tracked = trackedArray([1, 2, 3, 4, 5, 2, 4]);
       const result = removeValuesFromArray(tracked, [2, 4]);
 
       assert.strictEqual(result, tracked, "same TrackedArray instance");
@@ -427,6 +429,98 @@ module("Unit | Lib | array-tools", function () {
       const twice = removeValuesFromArray(once, [1, 2]);
       assert.strictEqual(twice, once, "same reference returned");
       assert.deepEqual(twice, [3], "second call is a no-op");
+    });
+  });
+
+  module("arraySortedByProperties()", function () {
+    test("sorts by a single ascending property", function (assert) {
+      const input = [{ name: "Charlie" }, { name: "Alice" }, { name: "Bob" }];
+      const result = arraySortedByProperties(input, ["name"]);
+
+      assert.deepEqual(
+        result.map((o) => o.name),
+        ["Alice", "Bob", "Charlie"]
+      );
+    });
+
+    test("sorts by a single descending property", function (assert) {
+      const input = [{ age: 10 }, { age: 30 }, { age: 20 }];
+      const result = arraySortedByProperties(input, ["age:desc"]);
+
+      assert.deepEqual(
+        result.map((o) => o.age),
+        [30, 20, 10]
+      );
+    });
+
+    test("sorts by multiple properties with mixed directions", function (assert) {
+      const input = [
+        { group: "B", score: 3 },
+        { group: "A", score: 1 },
+        { group: "A", score: 2 },
+        { group: "B", score: 1 },
+      ];
+      const result = arraySortedByProperties(input, [
+        "group:asc",
+        "score:desc",
+      ]);
+
+      assert.deepEqual(
+        result.map((o) => `${o.group}${o.score}`),
+        ["A2", "A1", "B3", "B1"]
+      );
+    });
+
+    test("supports dot-notation paths", function (assert) {
+      const input = [
+        { badge: { type_id: 3 } },
+        { badge: { type_id: 1 } },
+        { badge: { type_id: 2 } },
+      ];
+      const result = arraySortedByProperties(input, ["badge.type_id"]);
+
+      assert.deepEqual(
+        result.map((o) => o.badge.type_id),
+        [1, 2, 3]
+      );
+    });
+
+    test("returns empty array for non-array input", function (assert) {
+      assert.deepEqual(arraySortedByProperties(null, ["name"]), []);
+      assert.deepEqual(arraySortedByProperties(undefined, ["name"]), []);
+      assert.deepEqual(arraySortedByProperties("string", ["name"]), []);
+    });
+
+    test("does not mutate the original array", function (assert) {
+      const input = [{ v: 3 }, { v: 1 }, { v: 2 }];
+      const snapshot = input.map((o) => o.v);
+      arraySortedByProperties(input, ["v"]);
+
+      assert.deepEqual(
+        input.map((o) => o.v),
+        snapshot
+      );
+    });
+
+    test("handles empty sort definitions", function (assert) {
+      const input = [{ v: 3 }, { v: 1 }];
+      const result = arraySortedByProperties(input, []);
+
+      assert.deepEqual(
+        result.map((o) => o.v),
+        [3, 1],
+        "order is preserved when no sort definitions provided"
+      );
+    });
+
+    test("defaults to ascending when no direction specified", function (assert) {
+      const input = [{ v: 2 }, { v: 1 }, { v: 3 }];
+      const result = arraySortedByProperties(input, ["v"]);
+
+      assert.deepEqual(
+        result.map((o) => o.v),
+        [1, 2, 3]
+      );
     });
   });
 
@@ -518,10 +612,10 @@ module("Unit | Lib | array-tools", function () {
     });
 
     test("returns TrackedArray when input is TrackedArray", function (assert) {
-      const tracked = new TrackedArray([1, 2, 2, 3, 3, 3]);
+      const tracked = trackedArray([1, 2, 2, 3, 3, 3]);
       const result = uniqueItemsFromArray(tracked);
 
-      assert.true(result instanceof TrackedArray, "result is a TrackedArray");
+      assert.true(isTrackedArray(result), "result is a TrackedArray");
       assert.deepEqual(Array.from(result), [1, 2, 3], "deduplicated correctly");
       assert.notStrictEqual(
         result,

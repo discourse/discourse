@@ -1,18 +1,18 @@
-import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const TYPES = {
   text: "text",
   password: "password",
 };
 
-export default class FKControlInput extends Component {
+export default class FKControlPassword extends FKBaseControl {
   static controlType = "password";
 
   @tracked type = TYPES.password;
@@ -52,7 +52,7 @@ export default class FKControlInput extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "form-kit__control-password-wrapper"
         (if this.isFocused "is-focused")
       }}
@@ -62,6 +62,10 @@ export default class FKControlInput extends Component {
         value={{@field.value}}
         class="form-kit__control-password"
         disabled={{@field.disabled}}
+        id={{@field.id}}
+        name={{@field.name}}
+        aria-invalid={{if @field.error "true"}}
+        aria-describedby={{@field.describedBy}}
         ...attributes
         {{on "input" this.handleInput}}
         {{this.focusState}}

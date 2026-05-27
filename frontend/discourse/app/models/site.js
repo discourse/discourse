@@ -1,20 +1,22 @@
-import { cached } from "@glimmer/tracking";
-import EmberObject, { computed, get } from "@ember/object";
+import { cached, tracked } from "@glimmer/tracking";
+import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, sort } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
+import {
+  arraySortedByProperties,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -86,18 +88,30 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
-  @trackedArray categories = [];
-
-  @alias("is_readonly") isReadOnly;
-
-  @sort("categories", "topicCountDesc") categoriesByCount;
+  @tracked topicCountDesc = ["topic_count:desc"];
+  @autoTrackedArray categories = [];
+  @autoTrackedArray groups = [];
 
   #siteInitialized = false;
 
-  init() {
-    super.init(...arguments);
+  @computed("is_readonly")
+  get isReadOnly() {
+    return this.is_readonly;
+  }
 
-    this.topicCountDesc = ["topic_count:desc"];
+  set isReadOnly(value) {
+    set(this, "is_readonly", value);
+  }
+
+  get categoriesByCount() {
+    return arraySortedByProperties(this.categories, this.topicCountDesc);
+  }
+
+  get groupsById() {
+    const map = {};
+    Object.values(AUTO_GROUPS).forEach((g) => (map[g.id] = g));
+    this.groups?.forEach((g) => (map[g.id] = g));
+    return map;
   }
 
   @dependentKeyCompat
@@ -136,14 +150,10 @@ export default class Site extends RestModel {
       return true;
     }
 
-    if (this.siteSettings.viewport_based_mobile_mode) {
-      return withSilencedDeprecations(
-        "discourse.static-viewport-initialization",
-        () => !this.capabilities.viewport.sm
-      );
-    } else {
-      return Mobile.mobileView;
-    }
+    return withSilencedDeprecations(
+      "discourse.static-viewport-initialization",
+      () => !this.capabilities.viewport.sm
+    );
   }
 
   @dependentKeyCompat
@@ -177,22 +187,22 @@ export default class Site extends RestModel {
     return map;
   }
 
-  @discourseComputed("notification_types")
-  notificationLookup(notificationTypes) {
+  @computed("notification_types")
+  get notificationLookup() {
     const result = [];
-    Object.keys(notificationTypes).forEach(
-      (k) => (result[notificationTypes[k]] = k)
+    Object.keys(this.notification_types).forEach(
+      (k) => (result[this.notification_types[k]] = k)
     );
     return result;
   }
 
-  @discourseComputed("post_action_types.[]")
-  flagTypes() {
+  @computed("post_action_types.[]")
+  get flagTypes() {
     const postActionTypes = this.post_action_types;
     if (!postActionTypes) {
       return [];
     }
-    return new TrackedArray(postActionTypes.filter((type) => type.is_flag));
+    return trackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   collectUserFields(fields) {
@@ -203,7 +213,7 @@ export default class Site extends RestModel {
     if (!isEmpty(siteFields)) {
       return siteFields.map((f) => {
         let value = fields ? fields[f.id.toString()] : null;
-        value = value || htmlSafe("&mdash;");
+        value = value || trustHTML("&mdash;");
         return { name: f.name, value };
       });
     }
@@ -217,18 +227,18 @@ export default class Site extends RestModel {
   }
 
   // Returns it in the correct order, by setting
-  @discourseComputed("categories.[]")
-  categoriesList(categories) {
+  @computed("categories.[]")
+  get categoriesList() {
     return this.siteSettings.fixed_category_positions
-      ? categories
+      ? this.categories
       : this.sortedCategories;
   }
 
-  @discourseComputed("categories.[]", "categories.@each.notification_level")
-  trackedCategoriesList(categories) {
+  @computed("categories.[]", "categories.@each.notification_level")
+  get trackedCategoriesList() {
     const trackedCategories = [];
 
-    for (const category of categories) {
+    for (const category of this.categories) {
       if (category.isTracked) {
         if (
           this.siteSettings.allow_uncategorized_topics ||
@@ -250,6 +260,21 @@ export default class Site extends RestModel {
     return this.get("topicFlagByIdLookup.action" + id);
   }
 
+  #transformTags(tags) {
+    if (!tags) {
+      return [];
+    }
+    return tags.map((tag) => this.store.createRecord("tag", tag));
+  }
+
+  get topTags() {
+    return this.#transformTags(this.top_tags);
+  }
+
+  get categoryTopTags() {
+    return this.#transformTags(this.category_top_tags);
+  }
+
   removeCategory(id) {
     const categories = this.categories;
     const existingCategory = categories.find((c) => c.id === id);
@@ -269,16 +294,19 @@ export default class Site extends RestModel {
     const categoryId = get(newCategory, "id");
     const existingCategory = categories.find((c) => c.id === categoryId);
 
-    // Don't update null permissions
     if (newCategory.permission === null) {
       delete newCategory.permission;
     }
 
+    if (newCategory.has_children == null) {
+      delete newCategory.has_children;
+    }
+
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
+      existingCategory.setupCategoryTypes();
       return existingCategory;
     } else {
-      // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.push(newCategory);
       return newCategory;
@@ -294,7 +322,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          id: "discourse.globals.site",
+          id: "discourse.global.site",
         });
         warned = true;
       }

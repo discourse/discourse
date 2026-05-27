@@ -39,7 +39,7 @@ OmniAuth.config.on_failure do |env|
   when OAuth::Unauthorized
     # OAuth1 (i.e. Twitter) makes a web request during the setup phase
     # If it fails, Omniauth does not handle the error. Handle it here
-    env["omniauth.error.type"] = "request_error"
+    env["omniauth.error.type"] = "unauthorized"
   when JWT::InvalidIatError
     # Happens for openid-connect (including google) providers, when the server clock is wrong
     env["omniauth.error.type"] = "invalid_iat"

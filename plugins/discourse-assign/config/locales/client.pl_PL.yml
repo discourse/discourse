@@ -41,7 +41,6 @@ pl_PL:
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"
       assign_post_to: "Przypisano #%{post_number} do %{username}"
       assign_post_to_multiple: "#%{post_number} przez %{username}"
-      assigned_to_w_ellipsis: "Przypisano do..."
       unassign:
         title: "Cofnij przypisanie"
         title_w_ellipsis: "Cofnij przypisanie..."
@@ -130,8 +129,8 @@ pl_PL:
       web_hooks:
         assign_event:
           group_name: "Przypisz wydarzenia"
-          assigned: "Gdy użytkownik przypisze temat"
-          unassigned: "Gdy użytkownik cofa przypisanie tematu"
+          assigned: "Gdy użytkownik przypisuje temat"
+          unassigned: "Kiedy użytkownik anuluje przypisanie tematu"
     search:
       advanced:
         in:
@@ -142,7 +141,19 @@ pl_PL:
     topics:
       bulk:
         unassign: "Cofnij przypisanie tematów"
-        assign: "Przypisz tematy"
+        assign: "Przypisz temat"
+        assign_description: "Przypisz wybrane tematy następującemu użytkownikowi:"
+        unassign_description: "Czy chcesz usunąć zaznaczone tematy?"
+        confirm_assign_topics:
+          one: "Przypisz %{count} temat"
+          few: "Przypisz %{count} tematy"
+          many: "Przypisz %{count} tematów"
+          other: "Przypisz %{count} tematów"
+        confirm_unassign_topics:
+          one: "Usuń przypisanie %{count} tematu"
+          few: "Usuń przypisanie %{count} tematów"
+          many: "Usuń przypisanie %{count} tematów"
+          other: "Usuń przypisanie %{count} tematów"
     discourse_automation:
       scriptables:
         random_assign:

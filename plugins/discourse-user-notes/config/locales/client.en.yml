@@ -3,10 +3,10 @@ en:
     user_notes:
       title: "User notes"
       attach: "Add user note"
-      attach_note_description: "Add a note about this user. This note will be visible to staff only."
+      attach_note_description: "add a note about this user that only staff can see"
       remove: "Remove user note"
       show: "User notes (%{count})"
       delete_confirm: "Are you sure you want to delete that user note?"
       show_post: "Show post"
       show_flag: "Show flag"
-      copy_reviewable_note: "Copy note to %{username}'s profile?"
+      copy_reviewable_note: "Copy note to 'User Note' on %{username}'s profile?"

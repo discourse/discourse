@@ -9,7 +9,7 @@ et:
     overall_sentiment:
       yaxis: "Kuupäev"
     emotion_neutral:
-      title: "\U0001F610 Neutraalne"
+      title: "😐 Neutraalne"
   discourse_ai:
     tools:
       presets:
@@ -19,9 +19,43 @@ et:
       tool_summary:
         search: "Otsi"
         time: "Aeg"
+      close_topic:
+        errors:
+          not_found: "Teemat ei leitud."
+      unlist_topic:
+        errors:
+          not_found: "Teemat ei leitud."
+      delete_topic:
+        errors:
+          not_found: "Teemat ei leitud."
+      edit_tags:
+        errors:
+          not_found: "Teemat ei leitud."
+      edit_category:
+        errors:
+          not_found: "Teemat ei leitud."
+          category_not_found: "Kategooriat ei leitud."
+      set_topic_timer:
+        errors:
+          not_found: "Teemat ei leitud."
+      set_slow_mode:
+        errors:
+          not_found: "Teemat ei leitud."
+      move_posts:
+        errors:
+          not_found: "Teemat ei leitud."
+      assign:
+        errors:
+          not_found: "Teemat ei leitud."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Kinnita"
+        reject:
+          title: "Lükka tagasi"
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutraalne \U0001F610"
+          neutral: "Neutraalne 😐"
         sentiment_analysis:
           neutral: "Neutraalne"

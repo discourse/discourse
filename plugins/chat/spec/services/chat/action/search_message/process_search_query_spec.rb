@@ -16,7 +16,7 @@ RSpec.describe Chat::Action::SearchMessage::ProcessSearchQuery do
     channel.add(current_user)
     SearchIndexer.enable
     SiteSetting.chat_enabled = true
-    Chat::Message.all.each { SearchIndexer.index(_1, force: true) }
+    Chat::Message.all.each { SearchIndexer.index(it, force: true) }
   end
 
   context "with no filters" do

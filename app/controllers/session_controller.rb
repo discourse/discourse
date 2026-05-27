@@ -56,8 +56,8 @@ class SessionController < ApplicationController
     if result.second_factor_auth_skipped?
       data = result.data
       if data[:logout]
-        params[:return_url] = data[:return_sso_url]
-        destroy
+        PushNotificationPusher.clear_subscriptions(current_user) if current_user
+        destroy(trusted_return_url: data[:return_sso_url])
         return
       end
 
@@ -288,7 +288,7 @@ class SessionController < ApplicationController
       text = nil
 
       # If there's a problem with the email we can explain that
-      if (e.record.is_a?(User) && e.record.errors[:primary_email].present?)
+      if e.record.is_a?(User) && e.record.errors[:primary_email].present?
         if e.record.email.blank?
           text = I18n.t("discourse_connect.no_email")
         else
@@ -323,7 +323,7 @@ class SessionController < ApplicationController
     connect_verbose_warn do
       "Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}"
     end
-    log_on_user(user) if user.id != current_user&.id
+    log_on_user(user, replay_anonymous_action: true) if user.id != current_user&.id
   end
 
   def create
@@ -400,6 +400,15 @@ class SessionController < ApplicationController
 
     user = User.where(id: security_key.user_id, active: true).first
 
+    if login_not_approved_for?(user)
+      render json: login_not_approved
+      return
+    end
+
+    if payload = login_error_check(user)
+      return render json: payload
+    end
+
     if user.email_confirmed?
       login(user, passkey_login: true)
     else
@@ -470,7 +479,7 @@ class SessionController < ApplicationController
         return render json: payload
       else
         user.update_timezone_if_missing(params[:timezone])
-        log_on_user(user)
+        log_on_user(user, replay_anonymous_action: true)
         return render json: success_json
       end
     end
@@ -486,7 +495,7 @@ class SessionController < ApplicationController
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
-        log_on_user(user)
+        log_on_user(user, replay_anonymous_action: true)
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       else
@@ -525,12 +534,21 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      if user.security_keys_enabled?
+      passkeys_for_2fa = user.passkeys_for_2fa_enabled?
+      if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
-        json.merge!(DiscourseWebauthn.allowed_credentials(user, server_session))
-        json[:security_keys_enabled] = true
+        json.merge!(
+          DiscourseWebauthn.allowed_credentials(
+            user,
+            server_session,
+            include_passkeys: passkeys_for_2fa,
+          ),
+        )
+        json[:security_keys_enabled] = user.security_keys_enabled?
+        json[:passkeys_enabled] = passkeys_for_2fa
       else
         json[:security_keys_enabled] = false
+        json[:passkeys_enabled] = false
       end
       json[:description] = challenge[:description] if challenge[:description]
     else
@@ -667,8 +685,18 @@ class SessionController < ApplicationController
     end
   end
 
-  def destroy
-    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+  def destroy(trusted_return_url: nil)
+    return_url = params[:return_url].presence
+    if return_url
+      begin
+        uri = URI(return_url)
+        return_url = nil if uri.host.present? || uri.scheme.present? || !uri.path&.start_with?("/")
+      rescue URI::Error, ArgumentError
+        return_url = nil
+      end
+    end
+
+    redirect_url = trusted_return_url || return_url || SiteSetting.logout_redirect.presence
 
     redirect_url ||=
       if SiteSetting.login_required
@@ -691,8 +719,17 @@ class SessionController < ApplicationController
     # `redirect_url` might have been updated by a `before_session_destroy` listener
     redirect_url = data[:redirect_url]
 
+    push_subscription =
+      begin
+        if params[:push_subscription].is_a?(ActionController::Parameters)
+          params.require(:push_subscription).permit(:endpoint, keys: %i[p256dh auth])
+        end
+      rescue StandardError
+        nil # best-effort: malformed push_subscription should never block logout
+      end
+
     reset_session
-    log_off_user
+    log_off_user(push_subscription:)
 
     if request.xhr?
       render json: { redirect_url: }
@@ -812,7 +849,7 @@ class SessionController < ApplicationController
   def login(user, passkey_login: false, second_factor_auth_result: nil)
     session.delete(ACTIVATE_USER_KEY)
     user.update_timezone_if_missing(params[:timezone])
-    log_on_user(user)
+    log_on_user(user, replay_anonymous_action: true)
 
     if payload = cookies.delete(:sso_payload)
       confirmed_2fa_during_login =

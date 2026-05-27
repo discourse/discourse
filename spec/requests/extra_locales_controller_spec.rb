@@ -107,18 +107,20 @@ RSpec.describe ExtraLocalesController do
           expect(response.body).to_not include("server.some_key", "server.some_MF")
 
           ctx = MiniRacer::Context.new
-          ctx.eval("I18n = {};")
+          ctx.eval("var window = globalThis;")
           ctx.eval(response.body)
 
-          expect(ctx.eval("I18n._overrides['#{I18n.locale}']['js.some_key']")).to eq(
-            "client-side translation",
-          )
-          expect(ctx.eval("I18n._overrides['#{I18n.locale}']['js.client_MF'] === undefined")).to eq(
-            true,
-          )
-          expect(ctx.eval("I18n._overrides['#{I18n.locale}']['admin_js.another_key']")).to eq(
-            "admin client js",
-          )
+          expect(
+            ctx.eval("_discourse_locale_data.overrides['#{I18n.locale}']['js.some_key']"),
+          ).to eq("client-side translation")
+          expect(
+            ctx.eval(
+              "_discourse_locale_data.overrides['#{I18n.locale}']['js.client_MF'] === undefined",
+            ),
+          ).to eq(true)
+          expect(
+            ctx.eval("_discourse_locale_data.overrides['#{I18n.locale}']['admin_js.another_key']"),
+          ).to eq("admin client js")
         end
 
         it "returns overrides from fallback locale" do
@@ -150,10 +152,10 @@ RSpec.describe ExtraLocalesController do
           get ExtraLocalesController.url("overrides", locale: :fr)
 
           ctx = MiniRacer::Context.new
-          ctx.eval("I18n = {};")
+          ctx.eval("var window = globalThis;")
           ctx.eval(response.body)
 
-          overrides = ctx.eval("I18n._overrides")
+          overrides = ctx.eval("_discourse_locale_data.overrides")
           expect(overrides.keys).to contain_exactly("en", "fr")
           expect(overrides["en"]).to eq({ "js.only_en" => "only English" })
           expect(overrides["fr"]).to eq(

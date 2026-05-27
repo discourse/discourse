@@ -1,6 +1,6 @@
-import Component from "@glimmer/component";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 
-export default class FKControlCustom extends Component {
+export default class FKControlCustom extends FKBaseControl {
   static controlType = "custom";
 
   <template>

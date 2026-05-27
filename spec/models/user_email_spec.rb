@@ -48,6 +48,30 @@ RSpec.describe UserEmail do
       expect(user_email.normalized_email).to eq("ab@example.com")
       expect(user_email).to be_valid
     end
+
+    it "allows updating an email to a variant with the same normalized value" do
+      SiteSetting.normalize_emails = true
+
+      user_email = user.user_emails.create!(email: "a.b+c@example.com", primary: false)
+      expect(user_email.normalized_email).to eq("ab@example.com")
+
+      user_email.email = "a.b@example.com"
+      expect(user_email).to be_valid
+      expect(user_email.save).to eq(true)
+      expect(user_email.reload.email).to eq("a.b@example.com")
+    end
+
+    it "blocks updating to an email that normalizes to another user's email" do
+      SiteSetting.normalize_emails = true
+
+      other_user = Fabricate(:user)
+      other_user.user_emails.create!(email: "taken+alias@example.com", primary: false)
+
+      user_email = user.user_emails.create!(email: "available@example.com", primary: false)
+      user_email.email = "taken@example.com"
+      expect(user_email).not_to be_valid
+      expect(user_email.errors[:email]).to include(I18n.t("errors.messages.taken"))
+    end
   end
 
   describe "Indexes" do

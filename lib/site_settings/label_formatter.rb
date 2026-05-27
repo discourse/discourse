@@ -79,6 +79,7 @@ module SiteSettings
       ).freeze
 
     HUMANIZED_MIXED_CASE = [
+      %w[apple Apple],
       ["adobe analytics", "Adobe Analytics"],
       ["amazon web services", "Amazon Web Services"],
       %w[android Android],
@@ -89,16 +90,23 @@ module SiteSettings
       ["discourse discover", "Discourse Discover"],
       ["discourse narrative bot", "Discourse Narrative Bot"],
       %w[facebook Facebook],
+      %w[foundation Foundation],
       %w[github GitHub],
       %w[google Google],
       ["google analytics", "Google Analytics"],
       ["google tag manager", "Google Tag Manager"],
       %w[gravatar Gravatar],
       %w[gravatars Gravatars],
+      %w[gitter Gitter],
+      %w[horizon Horizon],
       %w[ios iOS],
       %w[japanese Japanese],
       %w[linkedin LinkedIn],
+      %w[meta Meta],
       %w[mediaconvert MediaConvert],
+      %w[microsoft Microsoft],
+      %w[matrix Matrix],
+      %w[mattermost Mattermost],
       %w[oauth2 OAuth2],
       ["openid connect", "OpenID Connect"],
       %w[openai OpenAI],
@@ -107,9 +115,15 @@ module SiteSettings
       %w[tiktok TikTok],
       %w[tos ToS],
       %w[twitter Twitter],
+      %w[telegram Telegram],
+      %w[teams Teams],
+      %w[rocketchat RocketChat],
+      %w[slack Slack],
       %w[vimeo Vimeo],
       %w[wordpress WordPress],
+      %w[webex WebEx],
       %w[youtube YouTube],
+      %w[zulip Zulip],
     ].freeze
 
     HUMANIZED_MIXED_CASE_REGEX =

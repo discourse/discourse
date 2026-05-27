@@ -1,25 +1,25 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
 import GoogleSearch from "discourse/components/google-search";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import SearchBulkSelectDropdown from "discourse/components/search-bulk-select-dropdown";
 import SearchResultEntries from "discourse/components/search-result-entries";
 import SearchTextField from "discourse/components/search-text-field";
-import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
-import categoryLink from "discourse/helpers/category-link";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -39,9 +39,7 @@ export default <template>
       <h1 class="search-page-heading">
         {{#if @controller.hasResults}}
           <div class="result-count" id="search-result-count" aria-live="polite">
-            {{#unless @controller.searching}}
-              {{htmlSafe @controller.resultCountLabel}}
-            {{/unless}}
+            {{trustHTML @controller.resultCountLabel}}
           </div>
         {{else}}
           <div class="search-page-heading__page-title">
@@ -112,6 +110,10 @@ export default <template>
               @search={{fn @controller.search (hash collapseFilters=true)}}
               @searchButtonDisabled={{@controller.searchButtonDisabled}}
               @expandFilters={{@controller.expandFilters}}
+              @sortOrder={{@controller.sortOrder}}
+              @searchType={{@controller.search_type}}
+              @addSearchResults={{@controller.addSearchResults}}
+              @model={{@controller.model}}
             />
           </PluginOutlet>
         </div>
@@ -154,12 +156,6 @@ export default <template>
                 @action={{@controller.toggleBulkSelect}}
                 class="btn-default bulk-select"
               />
-              {{#if @controller.bulkSelectHelper.selected}}
-                <TopicBulkSelectDropdown
-                  @bulkSelectHelper={{@controller.bulkSelectHelper}}
-                  @afterBulkActionComplete={{@controller.afterBulkActionComplete}}
-                />
-              {{/if}}
             {{/if}}
 
             {{#if @controller.bulkSelectEnabled}}
@@ -178,6 +174,14 @@ export default <template>
                   @action={{@controller.clearAll}}
                   @label="search.clear_all"
                   class="btn-default bulk-select-clear"
+                />
+              {{/if}}
+            {{/if}}
+            {{#if @controller.canBulkSelect}}
+              {{#if @controller.bulkSelectHelper.selected}}
+                <SearchBulkSelectDropdown
+                  @bulkSelectHelper={{@controller.bulkSelectHelper}}
+                  @afterBulkActionComplete={{@controller.afterBulkActionComplete}}
                 />
               {{/if}}
             {{/if}}
@@ -205,7 +209,7 @@ export default <template>
       />
 
       {{#if @controller.searching}}
-        {{loadingSpinner size="medium"}}
+        {{dLoadingSpinner size="medium"}}
       {{else}}
         <div
           class="search-results"
@@ -216,12 +220,20 @@ export default <template>
             (i18n "search.results")
           }}
         >
-          <LoadMore @action={{@controller.loadMore}}>
+          <DLoadMore @action={{@controller.loadMore}}>
             {{#if
               (or
                 @controller.usingDefaultSearchType @controller.customSearchType
               )
             }}
+              <PluginOutlet
+                @name="full-page-search-before-results"
+                @connectorTagName="div"
+                @outletArgs={{lazyHash
+                  model=@controller.model
+                  searchTerm=@controller.searchTerm
+                }}
+              />
               <SearchResultEntries
                 @posts={{@controller.searchResultPosts}}
                 @bulkSelectEnabled={{@controller.bulkSelectEnabled}}
@@ -231,7 +243,7 @@ export default <template>
                 @isPMOnly={{@controller.isPMOnly}}
               />
 
-              <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+              <DConditionalLoadingSpinner @condition={{@controller.loading}}>
                 {{#if @controller.error}}
                   <div class="warning">
                     {{@controller.error}}
@@ -283,9 +295,9 @@ export default <template>
                     {{/if}}
                   </h3>
                 {{/if}}
-              </ConditionalLoadingSpinner>
+              </DConditionalLoadingSpinner>
             {{else}}
-              <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+              <DConditionalLoadingSpinner @condition={{@controller.loading}}>
                 {{#if @controller.hasResults}}
                   {{#if @controller.model.categories.length}}
                     <h4 class="category-heading">
@@ -293,7 +305,7 @@ export default <template>
                     </h4>
                     <div class="category-items">
                       {{#each @controller.model.categories as |category|}}
-                        {{categoryLink
+                        {{dCategoryLink
                           category
                           extraClasses="fps-category-item"
                         }}
@@ -310,7 +322,7 @@ export default <template>
                       {{#each @controller.model.tags as |tag|}}
                         <div class="fps-tag-item">
                           <a href={{tag.url}}>
-                            {{tag.id}}
+                            {{tag.name}}
                           </a>
                         </div>
                       {{/each}}
@@ -320,8 +332,8 @@ export default <template>
                   {{#if @controller.model.users}}
                     <div class="user-items">
                       {{#each @controller.model.users as |user|}}
-                        <UserLink @user={{user}} class="fps-user-item">
-                          {{avatar user imageSize="large"}}
+                        <DUserLink @user={{user}} class="fps-user-item">
+                          {{dAvatar user imageSize="large"}}
 
                           <div class="user-titles">
                             {{#if user.name}}
@@ -334,7 +346,7 @@ export default <template>
                               {{user.username}}
                             </span>
                           </div>
-                        </UserLink>
+                        </DUserLink>
                       {{/each}}
                     </div>
                   {{/if}}
@@ -343,13 +355,13 @@ export default <template>
                     <h3>{{i18n "search.no_results"}}</h3>
                   {{/if}}
                 {{/if}}
-              </ConditionalLoadingSpinner>
+              </DConditionalLoadingSpinner>
             {{/if}}
             <PluginOutlet
               @name="full-page-search-below-results"
               @outletArgs={{lazyHash canLoadMore=@controller.canLoadMore}}
             />
-          </LoadMore>
+          </DLoadMore>
         </div>
       {{/if}}
     </div>

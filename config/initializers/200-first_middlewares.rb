@@ -7,8 +7,6 @@
 # We aren't manipulating the middleware stack directly because of
 # https://github.com/rails/rails/pull/27936
 
-require "middleware/processing_request"
-Rails.configuration.middleware.unshift(Middleware::ProcessingRequest)
 Rails.configuration.middleware.unshift(MessageBus::Rack::Middleware)
 
 # no reason to track this in development, that is 300+ redis calls saved per
@@ -20,6 +18,12 @@ if !Rails.env.development? || ENV["TRACK_REQUESTS"]
 
   MethodProfiler.ensure_discourse_instrumentation! if GlobalSetting.enable_performance_http_headers
 end
+
+require "middleware/overload_protections"
+Rails.configuration.middleware.unshift(Middleware::OverloadProtections)
+
+require "middleware/processing_request"
+Rails.configuration.middleware.unshift(Middleware::ProcessingRequest)
 
 if Rails.env.test?
   # In test mode we can't insert/remove middlewares
@@ -57,14 +61,12 @@ if Rails.env.test?
     def call(env)
       request = Rack::Request.new(env)
 
-      if (
-           @@block_requests ||
-             (
-               request.xhr? && self.class.current_example_location.present? &&
-                 self.class.current_example_location !=
-                   request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
-             )
-         )
+      if @@block_requests ||
+           (
+             request.xhr? && self.class.current_example_location.present? &&
+               self.class.current_example_location !=
+                 request.cookies[RSPEC_CURRENT_EXAMPLE_COOKIE_STRING]
+           )
         return [
           503,
           { "Content-Type" => "text/plain" },

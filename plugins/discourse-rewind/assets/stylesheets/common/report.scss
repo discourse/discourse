@@ -1,0 +1,40 @@
+.rewind-report-page {
+  display: flex;
+  justify-content: center;
+  padding: 1em;
+  box-sizing: border-box;
+  font-size: var(--font-up-2);
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  flex-direction: column;
+
+  @media (width <= 768px) {
+    padding: 0.75em;
+  }
+}
+
+.rewind-report {
+  display: flex;
+  flex-direction: column;
+}
+
+.rewind-report-container {
+  display: flex;
+  max-width: 100%;
+}
+
+.rewind-report-title {
+  align-self: start;
+  padding: 0.25em 1em 0.25em;
+  margin-bottom: -2px;
+  background: var(--rewind-black);
+  margin-left: 0;
+  position: relative;
+  font-size: var(--font-down-1);
+  text-align: left;
+  border-radius: 4px 4px 0 0;
+  border-top: 2px solid var(--rewind-green);
+  border-left: 2px solid var(--rewind-green);
+  border-right: 2px solid var(--rewind-green);
+}

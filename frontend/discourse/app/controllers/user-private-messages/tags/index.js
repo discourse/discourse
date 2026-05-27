@@ -6,13 +6,13 @@ export default class extends Controller {
   @tracked tagsForUser = null;
   @tracked sortedByCount = true;
   @tracked sortedByName = false;
-  @tracked sortProperties = ["count:desc", "id"];
+  @tracked sortProperties = ["count:desc", "name"];
 
   @action
   sortByCount(event) {
     event?.preventDefault();
 
-    this.sortProperties = ["count:desc", "id"];
+    this.sortProperties = ["count:desc", "name"];
     this.sortedByCount = true;
     this.sortedByName = false;
   }
@@ -21,7 +21,7 @@ export default class extends Controller {
   sortById(event) {
     event?.preventDefault();
 
-    this.sortProperties = ["id"];
+    this.sortProperties = ["name"];
     this.sortedByCount = false;
     this.sortedByName = true;
   }

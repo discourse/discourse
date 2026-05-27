@@ -52,6 +52,7 @@ sq:
   topic_category_changed: "Nga %{from} në %{to}"
   topic_tag_changed:
     added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
+    added: "Shtuar %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
   components:
@@ -132,7 +133,13 @@ sq:
   not_in_group:
     join_group: "Bashkoju grupit"
   reading_time: "Koha e leximit"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Pëlqime"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"
@@ -183,6 +190,7 @@ sq:
       admins: "admins"
       moderators: "moderatorët"
       staff: "stafi"
+      anonymous: "anonim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -412,10 +420,10 @@ sq:
       daily: "çdo ditë"
       weekly: "çdo javë"
   user_api_key:
-    title: "Lejo këtë aplikimi të ketë akses në faqe"
     authorize: "Autorizo"
+    deny: "Anulo"
     read: "lexuar"
-    description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
+    copied: "Kopjuar!"
     otp_confirmation:
       confirm_title: Vazhdo tek %{site_name}
     scopes:
@@ -442,12 +450,35 @@ sq:
         flag: Lloji
     visits:
       title: "Vizitat e përdoruesit"
-      xaxis: "Ditë"
+      xaxis:
+        mobile: "Mobile"
       yaxis: "Numri i vizitave"
     signups:
       xaxis: "Ditë"
     new_contributors:
       xaxis: "Day"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Topics"
+        posts: "Postime"
+        share: "Shpërndaje"
+    posters_by_member_type:
+      labels:
+        count: "Postime"
+        share: "Shpërndaje"
+      types:
+        staff: "Stafi"
+    trust_level_pipeline:
+      labels:
+        count: "Anëtarë"
+        share: "Shpërndaje"
+      levels:
+        "0": "I Ri"
+        "1": "Anëtar i Thjeshtë"
+        "2": "Anëtar"
+        "3": "I zakonshëm"
+        "4": "Udhëheqës"
     trust_level_growth:
       yaxis: "Day"
     consolidated_page_views:
@@ -464,6 +495,8 @@ sq:
     consolidated_page_views_browser_detection:
       yaxis: "Dit"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonim"
       yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
@@ -540,6 +573,12 @@ sq:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Tema"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizita"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizita"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -575,6 +614,8 @@ sq:
       xaxis: "Dit"
     page_view_logged_in_browser_reqs:
       xaxis: "Dit"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -616,7 +657,7 @@ sq:
       labels:
         user: User
         location: Vendndodhja
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Vendndodhja
@@ -741,8 +782,6 @@ sq:
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
@@ -780,13 +819,11 @@ sq:
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
-    min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
@@ -794,7 +831,6 @@ sq:
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
-    allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
@@ -802,7 +838,6 @@ sq:
     enable_user_directory: "Provide a directory of users for browsing"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
@@ -917,6 +952,7 @@ sq:
     queued_by_staff:
       title: "Postimi ka nevojë për aprovim"
     welcome_user:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -927,6 +963,7 @@ sq:
 
         Enjoy your stay!
     welcome_invite:
+      preview: "Mirë se vini tek %{site_name}!"
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:
       subject_template: "Backup completed successfully"
@@ -1142,11 +1179,14 @@ sq:
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
+      subject_template_improved: "Përmbledhja"
       click_here: "klikoni këtu"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:
       title: "Vendos Fjalëkalim"
+    admin_login:
+      subject_template_improved: "Identifikohu"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_new_email_via_admin:
@@ -1261,8 +1301,6 @@ sq:
     nice_share:
       name: Shpërndarje e mirë
       description: Ndau një postim me 25 vizitorë unikë
-      long_description: |
-        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 25 vizitorë të jashtëm. Faleminderit që keni përhapur fjalën rreth bisedave tona, dhe këtij komuniteti.
     good_share:
       name: Shpërndarje goxha e mirë
       description: Ndau një postim me 300 vizitorë unikë
@@ -1382,14 +1420,20 @@ sq:
       title: "Dërgo përsëri emailin e aktivizimit"
   wizard:
     step:
-      styling:
+      setup:
+        title: "Material Hyrës"
         fields:
-          styling_preview:
-            label: "Parashikimi"
-          homepage_style:
+          login_required:
             choices:
-              latest:
-                label: "Më të fundit"
+              public:
+                label: "Publike"
+              private:
+                label: "Private"
+  onebox:
+    github:
+      status_date:
+        approved: "aprovuar"
+        closed: "mbyllur"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1411,30 +1455,45 @@ sq:
         complete: "Postimi u fshi."
       delete_and_agree:
         complete: "Postimi u fshi."
-      disagree:
+      disagree_bundle:
         title: "Jo"
+      disagree:
         complete: "Shënimi u injorua."
       ignore:
         complete: "Shënimi u injorua."
       ignore_and_do_nothing:
         complete: "Shënimi u injorua."
       approve:
-        title: "Aprovo"
+        title: "Po"
         complete: "Postimi u miratua."
       approve_post:
+        title: "Po"
         complete: "Postimi u miratua."
       approve_post_closed:
+        title: "Po"
         complete: "Postimi u miratua."
+      reject_post_bundle:
+        title: "Jo"
       reject_post:
         complete: "Postimi u refuzua."
       approve_user:
+        title: "Po"
         complete: "Përdoruesi u miratua."
       reject_user:
+        title: "Jo"
         delete:
           title: "Fshij Anëtarin"
           complete: "Përdoruesi u fshi."
+      confirm_spam:
+        title: "Po"
+      not_spam:
+        title: "Jo"
       reject:
         title: "Refuzo"
+      approve_and_restore:
+        title: "Po"
+      approve_and_unhide:
+        title: "Po"
       delete_post:
         complete: "Postimi u fshi"
       delete_user:

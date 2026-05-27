@@ -37,6 +37,14 @@ export const ADMIN_NAV_MAP = [
         icon: "gear",
       },
       {
+        name: "admin_review",
+        route: "review",
+        label: "sidebar.sections.community.links.review.content",
+        description: "sidebar.sections.community.links.review.title",
+        icon: "flag",
+        moderator: true,
+      },
+      {
         name: "admin_whats_new",
         route: "admin.whatsNew",
         label: "admin.config.whats_new.title",
@@ -290,7 +298,7 @@ export const ADMIN_NAV_MAP = [
         icon: "paintbrush",
         keywords: "admin.config.themes_and_components.keywords",
         currentWhen:
-          "adminConfig.customize.themes adminConfig.customize.components adminConfig.customize.themeSiteSettings",
+          "adminConfig.customize.themes adminConfig.customize.components adminConfig.customize.themeSiteSettings adminCustomizeThemes.show.index",
         links: [
           {
             name: "admin_theme_site_settings",
@@ -536,6 +544,13 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.embedding.header_description",
         icon: "code",
         settings_area: "embedding",
+      },
+      {
+        name: "admin_problem_checks",
+        route: "adminProblemChecks",
+        label: "admin.config.problem_checks.title",
+        description: "admin.config.problem_checks.header_description",
+        icon: "heart",
       },
       {
         name: "admin_rate_limits",

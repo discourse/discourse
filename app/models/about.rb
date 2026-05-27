@@ -66,21 +66,33 @@ class About
 
   def moderators
     @moderators ||=
-      apply_excluded_groups(
-        User.where(moderator: true).human_users.order(last_seen_at: :desc),
-        ignore_groups: [Group::AUTO_GROUPS[:admins]],
-      )
+      if guardian.public_can_see_profiles?
+        apply_hidden_profile(
+          apply_excluded_groups(
+            User.where(moderator: true).human_users.order(last_seen_at: :desc),
+            ignore_groups: [Group::AUTO_GROUPS[:admins]],
+          ),
+        )
+      else
+        []
+      end
   end
 
   def admins
     @admins ||=
-      DiscoursePluginRegistry.apply_modifier(
-        :about_admins,
-        apply_excluded_groups(
-          User.where(admin: true).human_users.order(last_seen_at: :desc),
-          ignore_groups: [Group::AUTO_GROUPS[:moderators]],
-        ),
-      )
+      if guardian.public_can_see_profiles?
+        DiscoursePluginRegistry.apply_modifier(
+          :about_admins,
+          apply_hidden_profile(
+            apply_excluded_groups(
+              User.where(admin: true).human_users.order(last_seen_at: :desc),
+              ignore_groups: [Group::AUTO_GROUPS[:moderators]],
+            ),
+          ),
+        )
+      else
+        []
+      end
   end
 
   def stats
@@ -88,7 +100,9 @@ class About
   end
 
   def category_moderators
-    allowed_cats = Guardian.new(@user).allowed_category_ids
+    return [] unless guardian.public_can_see_profiles?
+
+    allowed_cats = guardian.allowed_category_ids
     return [] if allowed_cats.blank?
 
     cats_with_mods = Category.joins(:category_moderation_groups).distinct.pluck(:id)
@@ -98,6 +112,8 @@ class About
 
     per_cat_limit = category_mods_limit / category_ids.size
     per_cat_limit = 1 if per_cat_limit < 1
+
+    filter_hidden_profiles = !guardian.is_staff? && SiteSetting.allow_users_to_hide_profile
 
     results = DB.query(<<~SQL, category_ids:)
       WITH moderator_users AS (
@@ -111,7 +127,9 @@ class About
           ON cmg.group_id = gu.group_id
         INNER JOIN users u
           ON gu.user_id = u.id
+        #{"LEFT JOIN user_options uo ON uo.user_id = u.id" if filter_hidden_profiles}
         WHERE cmg.category_id IN (:category_ids)
+        #{"AND uo.hide_profile IS NOT TRUE" if filter_hidden_profiles}
       )
       SELECT id AS category_id, user_ids
       FROM categories
@@ -143,13 +161,24 @@ class About
 
   private
 
+  def guardian
+    @guardian ||= Guardian.new(@user)
+  end
+
+  def apply_hidden_profile(query)
+    return query if guardian.is_staff?
+    return query unless SiteSetting.allow_users_to_hide_profile
+
+    query.left_joins(:user_option).where("user_options.hide_profile IS NOT TRUE")
+  end
+
   def apply_excluded_groups(query, ignore_groups: [])
     group_ids = SiteSetting.about_page_hidden_groups_map - ignore_groups
     return query if group_ids.blank?
 
     query.joins(
       DB.sql_fragment(
-        "LEFT JOIN group_users ON group_id IN (:group_ids) AND user_id = users.id",
+        "LEFT JOIN group_users ON group_users.group_id IN (:group_ids) AND group_users.user_id = users.id",
         group_ids:,
       ),
     ).where("group_users.id": nil)

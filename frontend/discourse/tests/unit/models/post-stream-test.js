@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Post from "discourse/models/post";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -44,7 +45,9 @@ module("Unit | Model | post-stream", function (hooks) {
 
     assert.false(postStream.hasPosts, "there are no posts by default");
     assert.false(postStream.firstPostPresent, "the first post is not loaded");
+    assert.true(postStream.firstPostNotLoaded, "firstPostNotLoaded is true");
     assert.false(postStream.loadedAllPosts, "the last post is not loaded");
+    assert.true(postStream.lastPostNotLoaded, "lastPostNotLoaded is true");
     assert.strictEqual(postStream.posts.length, 0, "it has no posts initially");
 
     postStream.appendPost(
@@ -64,7 +67,15 @@ module("Unit | Model | post-stream", function (hooks) {
       store.createRecord("post", { id: 4, post_number: 4 })
     );
     assert.false(postStream.firstPostPresent, "the first post is still loaded");
+    assert.true(
+      postStream.firstPostNotLoaded,
+      "firstPostNotLoaded remains true"
+    );
     assert.true(postStream.loadedAllPosts, "the last post is now loaded");
+    assert.false(
+      postStream.lastPostNotLoaded,
+      "lastPostNotLoaded is now false"
+    );
     assert.strictEqual(
       postStream.posts.length,
       2,
@@ -101,8 +112,16 @@ module("Unit | Model | post-stream", function (hooks) {
       "the first post no longer loaded since the stream changed."
     );
     assert.true(
+      postStream.firstPostNotLoaded,
+      "firstPostNotLoaded is true after stream change"
+    );
+    assert.true(
       postStream.loadedAllPosts,
       "the last post is still the last post in the new stream"
+    );
+    assert.false(
+      postStream.lastPostNotLoaded,
+      "lastPostNotLoaded is still false after stream change"
     );
   });
 
@@ -187,6 +206,62 @@ module("Unit | Model | post-stream", function (hooks) {
     assert.containsInstance(postStream.posts, Post);
 
     assert.strictEqual(postStream.extra_property, 12);
+  });
+
+  test("updateFromJson - post-stream-update-from-json behavior transformer", function (assert) {
+    const postStream = buildStream.call(this, 1231);
+    let transformerCalled = false;
+    let receivedContext = null;
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-update-from-json",
+        ({ next, context }) => {
+          transformerCalled = true;
+          receivedContext = context;
+          next();
+        }
+      );
+    });
+
+    postStream.updateFromJson({
+      posts: [{ id: 1 }],
+      stream: [1],
+    });
+
+    assert.true(transformerCalled, "the transformer is called");
+    assert.strictEqual(
+      receivedContext.postStream,
+      postStream,
+      "the transformer receives the postStream as context"
+    );
+    assert.strictEqual(postStream.posts.length, 1, "posts are loaded normally");
+  });
+
+  test("updateFromJson - behavior transformer can modify stream after default behavior", function (assert) {
+    const postStream = buildStream.call(this, 1231);
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-update-from-json",
+        ({ next, context }) => {
+          next();
+          // Truncate stream to first element after default behavior runs
+          context.postStream.stream.length = 1;
+        }
+      );
+    });
+
+    postStream.updateFromJson({
+      posts: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      stream: [1, 2, 3],
+    });
+
+    assert.deepEqual(
+      [...postStream.stream],
+      [1],
+      "the transformer can modify the stream after next()"
+    );
   });
 
   test("removePosts", function (assert) {
@@ -1021,5 +1096,18 @@ module("Unit | Model | post-stream", function (hooks) {
     postStream.set("isMegaTopic", true);
 
     assert.strictEqual(postStream.progressIndexOfPostId(post), 5);
+  });
+
+  test("loadIntoIdentityMap re-throws non-403 errors", async function (assert) {
+    const postStream = buildStream.call(this, 9999);
+
+    pretender.get("/t/9999/posts.json", () => {
+      return response(500, { error: "Internal Server Error" });
+    });
+
+    await assert.rejects(
+      postStream.loadIntoIdentityMap([1]),
+      (error) => error.jqXHR && error.jqXHR.status === 500
+    );
   });
 });

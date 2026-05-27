@@ -1,6 +1,10 @@
 inherit_gem:
   rubocop-discourse: stree-compat.yml
 
+inherit_mode:
+  merge:
+    - Exclude
+
 # Still work to do in ensuring we don't link old files
 Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
   Enabled: false
@@ -43,3 +47,30 @@ RSpec/InstanceVariable:
   Enabled: true
   Include:
     - spec/models/**/*
+
+Style/RedundantFreeze:
+  Enabled: true
+
+Style/RedundantConditional:
+  Enabled: true
+
+Lint/DuplicateMagicComment:
+  Enabled: true
+
+Lint/IdentityComparison:
+  Enabled: true
+
+Lint/SymbolConversion:
+  Enabled: true
+
+Style/RedundantParentheses:
+  Enabled: true
+
+Style/RedundantBegin:
+  Enabled: true
+
+Rails/FilePath:
+  Enabled: true
+
+Style/RedundantSelf:
+  Enabled: true

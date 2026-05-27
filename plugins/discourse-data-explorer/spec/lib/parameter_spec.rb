@@ -113,6 +113,28 @@ RSpec.describe DiscourseDataExplorer::Parameter do
         expect(param("user_id", :user_id, nil, false).cast_to_ruby(user.email)).to eq(user.id)
       end
     end
+
+    describe "current_user_id type" do
+      fab!(:user)
+      let(:current_user_param) { param("me", :current_user_id, nil, false) }
+
+      it "returns the current user's id, ignoring user-provided values" do
+        expect(current_user_param.cast_to_ruby(nil, current_user: user)).to eq(user.id)
+        expect(current_user_param.cast_to_ruby("999999", current_user: user)).to eq(user.id)
+      end
+
+      it "raises an error when not nullable and no current user" do
+        expect { current_user_param.cast_to_ruby(nil, {}) }.to raise_error(
+          DiscourseDataExplorer::ValidationError,
+          /requires a logged in user/,
+        )
+      end
+
+      it "returns nil when nullable and no current user" do
+        nullable_param = param("me", :current_user_id, nil, true)
+        expect(nullable_param.cast_to_ruby(nil, {})).to eq(nil)
+      end
+    end
   end
 
   describe ".create_from_sql" do

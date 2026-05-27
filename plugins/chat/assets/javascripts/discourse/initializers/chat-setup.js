@@ -2,6 +2,7 @@ import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import { number } from "discourse/lib/formatter";
 import { replaceIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -94,6 +95,7 @@ class ChatSetupInit {
         label: "chat.upload",
         position: "dropdown",
         action: "uploadClicked",
+        synchronous: true,
         dependentKeys: ["canAttachUploads"],
         displayed() {
           return this.canAttachUploads;
@@ -141,7 +143,7 @@ class ChatSetupInit {
         });
       });
 
-      if (!this.chatService.userCanChat) {
+      if (!this.chatService.userCanChat || EmbedMode.enabled) {
         return;
       }
 

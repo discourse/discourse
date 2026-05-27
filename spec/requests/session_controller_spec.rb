@@ -504,7 +504,7 @@ RSpec.describe SessionController do
         end
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
-        it "doesnt allow logging in if the 2fa params are garbled" do
+        it "doesn't allow logging in if the 2fa params are garbled" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_method: UserSecondFactor.methods[:totp],
@@ -517,7 +517,7 @@ RSpec.describe SessionController do
           expect(response_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
         end
 
-        it "doesnt allow login if both of the 2fa params are blank" do
+        it "doesn't allow login if both of the 2fa params are blank" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_method: UserSecondFactor.methods[:totp],
@@ -586,6 +586,14 @@ RSpec.describe SessionController do
         expect(response.status).to eq(403)
         expect(response.body).to include("User #{user.username} is not active")
         expect(session[:current_user_id]).to be_blank
+      end
+
+      it "does not replay a queued anonymous action" do
+        AnonymousAction.expects(:consume).never
+
+        get "/session/#{user.username}/become"
+
+        expect(response).to be_redirect
       end
     end
   end
@@ -1664,6 +1672,18 @@ RSpec.describe SessionController do
         expect(response.cookies["_t"]).to be_blank
       end
 
+      it "clears all push subscriptions on SSO single-logout" do
+        sign_in(@user)
+        Fabricate(:push_subscription, user: @user)
+        Fabricate(:push_subscription, user: @user)
+
+        @sso.logout = true
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        expect(@user.push_subscriptions.reload).to be_empty
+      end
+
       it "successfully logs out and redirects user to return_sso_url when the user is not logged in" do
         @sso.logout = true
         get "/session/sso_provider",
@@ -1900,7 +1920,7 @@ RSpec.describe SessionController do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
       end
-      it "doesnt matter, logs in correctly" do
+      it "doesn't matter, logs in correctly" do
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
@@ -2606,6 +2626,82 @@ RSpec.describe SessionController do
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
     end
+
+    context "with return_url parameter" do
+      it "rejects absolute external URLs" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "https://evil.com/phishing",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects protocol-relative URLs" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "//evil.com/phishing",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects backslash variants that browsers may normalize to protocol-relative" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json", params: { return_url: "/\\evil.com" }, xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects javascript: scheme URLs" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "javascript:alert(1)",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+
+      it "rejects external URLs for non-XHR requests" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json", params: { return_url: "https://evil.com/phishing" }
+
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("http://test.localhost/")
+      end
+
+      it "allows valid relative paths" do
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json",
+               params: {
+                 return_url: "/t/some-topic/123",
+               },
+               xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/t/some-topic/123")
+      end
+
+      it "allows bare root path and takes precedence over logout_redirect" do
+        SiteSetting.logout_redirect = "/login"
+
+        user = sign_in(Fabricate(:user))
+        delete "/session/#{user.username}.json", params: { return_url: "/" }, xhr: true
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_url"]).to eq("/")
+      end
+    end
   end
 
   describe "#one_time_password" do
@@ -2902,6 +2998,50 @@ RSpec.describe SessionController do
         expect(json["current_user"]["id"]).to eq(user.id)
       end
     end
+
+    context "when logged in as an anonymous shadow user" do
+      fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      end
+
+      it "stops authenticating when the master account is suspended", :aggregate_failures do
+        shadow_user = AnonymousShadowCreator.get(master_user)
+        sign_in(shadow_user)
+
+        get "/session/current.json"
+        expect(response.status).to eq(200)
+
+        UserSuspender.new(
+          master_user,
+          suspended_till: 1.day.from_now,
+          reason: "spam",
+          by_user: admin,
+        ).suspend
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(404)
+        expect(response.body).to be_blank
+      end
+
+      it "stops authenticating when the master account is deactivated", :aggregate_failures do
+        shadow_user = AnonymousShadowCreator.get(master_user)
+        sign_in(shadow_user)
+
+        get "/session/current.json"
+        expect(response.status).to eq(200)
+
+        master_user.deactivate(admin)
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(404)
+        expect(response.body).to be_blank
+      end
+    end
   end
 
   describe "#second_factor_auth_show" do
@@ -2969,6 +3109,7 @@ RSpec.describe SessionController do
         expect(challenge_data["totp_enabled"]).to eq(true)
         expect(challenge_data["backup_enabled"]).to eq(false)
         expect(challenge_data["security_keys_enabled"]).to eq(false)
+        expect(challenge_data["passkeys_enabled"]).to eq(false)
         expect(challenge_data["allowed_methods"]).to contain_exactly(
           UserSecondFactor.methods[:totp],
           UserSecondFactor.methods[:security_key],
@@ -2998,6 +3139,52 @@ RSpec.describe SessionController do
           UserSecondFactor.methods[:security_key],
           UserSecondFactor.methods[:backup_codes],
         )
+      end
+
+      context "when the user has a passkey and allow_passkeys_for_2fa is enabled" do
+        before { SiteSetting.allow_passkeys_for_2fa = true }
+
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+        end
+
+        it "exposes the passkey credentials and a webauthn challenge" do
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+          get "/session/2fa.json", params: { nonce: nonce }
+
+          expect(response.status).to eq(200)
+          challenge_data = response.parsed_body
+          expect(challenge_data["passkeys_enabled"]).to eq(true)
+          expect(challenge_data["security_keys_enabled"]).to eq(false)
+          expect(challenge_data["allowed_credential_ids"]).to include(
+            valid_passkey_data[:credential_id],
+          )
+          expect(challenge_data["challenge"]).to be_present
+        end
+      end
+
+      context "when the user has a passkey and allow_passkeys_for_2fa is disabled" do
+        before { SiteSetting.allow_passkeys_for_2fa = false }
+
+        let!(:passkey) { Fabricate(:passkey_with_random_credential, user: user) }
+
+        it "does not expose the passkey" do
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+          get "/session/2fa.json", params: { nonce: nonce }
+
+          expect(response.status).to eq(200)
+          challenge_data = response.parsed_body
+          expect(challenge_data["passkeys_enabled"]).to eq(false)
+          expect(challenge_data["allowed_credential_ids"]).to be_blank
+        end
       end
     end
   end
@@ -3124,6 +3311,78 @@ RSpec.describe SessionController do
 
         post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
         expect(response.status).to eq(401)
+      end
+
+      context "with a passkey credential" do
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+        end
+
+        before do
+          user.create_or_fetch_secure_identifier
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+        end
+
+        it "satisfies 2fa when allow_passkeys_for_2fa is enabled" do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_token: valid_passkey_auth_data,
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["ok"]).to eq(true)
+        end
+
+        it "is rejected when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
+          simulate_localhost_passkey_challenge
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_token: valid_passkey_auth_data,
+               }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "rejects an assertion from a disabled passkey even when the user has another enabled passkey" do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+          passkey.update!(enabled: false)
+          Fabricate(:passkey_with_random_credential, user: user)
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_token: valid_passkey_auth_data,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["error"]).to eq(I18n.t("webauthn.validation.not_found_error"))
+        end
       end
     end
   end
@@ -3281,6 +3540,67 @@ RSpec.describe SessionController do
           expect(response.parsed_body["error"]).not_to be_present
 
           expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        it "does not log in a suspended user" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          user.update!(suspended_till: 2.days.from_now, suspended_at: Time.zone.now)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_present
+          expect(response.parsed_body["reason"]).to eq("suspended")
+          expect(session[:current_user_id]).to be_nil
+        end
+
+        it "does not log in a user from a screened IP address" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          ScreenedIpAddress.all.destroy_all
+          get "/"
+          Fabricate(:screened_ip_address, ip_address: request.remote_ip)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_present
+          expect(session[:current_user_id]).to be_nil
+        end
+
+        it "does not log in an unapproved user when must_approve_users is enabled" do
+          SiteSetting.must_approve_users = true
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          user.update_columns(approved: false)
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
+          expect(session[:current_user_id]).to be_nil
         end
 
         context "with a valid discourse connect provider" do

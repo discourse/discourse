@@ -342,6 +342,17 @@ RSpec.describe Topic do
     end
   end
 
+  describe "url" do
+    fab!(:topic)
+
+    it "omits blank slugs" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      expect(topic.url).to eq("#{Discourse.base_url}/t/#{topic.id}")
+    end
+  end
+
   describe "updating a title to be shorter" do
     let!(:topic) { Fabricate(:topic) }
 
@@ -771,7 +782,7 @@ RSpec.describe Topic do
         expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
       end
 
-      it "doesnt match numbered lists against numbers in Post#raw" do
+      it "doesn't match numbered lists against numbers in Post#raw" do
         post.update!(raw: <<~RAW)
         Internet Explorer 11+ Oct 2013 Google Chrome 32+ Jan 2014 Firefox 27+ Feb 2014 Safari 6.1+ Jul 2012 Safari, iOS 8+ Oct 2014
         RAW
@@ -942,9 +953,7 @@ RSpec.describe Topic do
 
           freeze_time(start + 5.minutes)
 
-          expect { topic.invite(topic.user, user1.username) }.not_to raise_error(
-            RateLimiter::LimitExceeded,
-          )
+          expect { topic.invite(topic.user, user1.username) }.not_to raise_error
         end
       end
     end
@@ -1255,6 +1264,14 @@ RSpec.describe Topic do
             expect(topic.allowed_groups.include?(admins)).to eq(true)
             expect(topic.remove_allowed_group(topic.user, "admins")).to eq(true)
             expect(topic.allowed_groups.include?(admins)).to eq(false)
+          end
+
+          it "sets has_messages to true on the invited group" do
+            group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone], has_messages: false)
+
+            topic.invite_group(topic.user, group)
+
+            expect(group.reload.has_messages).to eq(true)
           end
 
           def set_state!(group, user, state)
@@ -2123,6 +2140,40 @@ RSpec.describe Topic do
             }
           end
         end
+
+        describe "tracking state notifications" do
+          before { SiteSetting.experimental_topic_category_change_notification = true }
+          it "publishes category change when moving to a restricted category" do
+            restricted_category =
+              Fabricate(:category_with_definition, read_restricted: true, user: user)
+
+            messages =
+              MessageBus.track_publish { topic.change_category_to_id(restricted_category.id) }
+
+            delete_message = messages.find { |m| m.channel == "/delete" }
+            latest_message = messages.find { |m| m.channel == "/latest" }
+
+            expect(delete_message).to be_present
+            expect(delete_message.data["topic_id"]).to eq(topic.id)
+
+            expect(latest_message).to be_present
+            expect(latest_message.data["topic_id"]).to eq(topic.id)
+          end
+
+          it "publishes latest when moving between public categories" do
+            another_category =
+              Fabricate(:category_with_definition, read_restricted: false, user: user)
+
+            messages =
+              MessageBus.track_publish("/latest") do
+                topic.change_category_to_id(another_category.id)
+              end
+
+            expect(messages.length).to eq(1)
+            expect(messages.first.data["topic_id"]).to eq(topic.id)
+            expect(messages.first.data["payload"]["category_id"]).to eq(another_category.id)
+          end
+        end
       end
 
       context "when allow_uncategorized_topics is false" do
@@ -2338,9 +2389,23 @@ RSpec.describe Topic do
           TopicTimer.types[:publish_to_category],
           72,
           by_user: admin,
+          category_id: Fabricate(:category).id,
         )
 
       expect(topic_timer.execute_at).to eq_time(3.days.from_now)
+    end
+
+    it "raises an error for publish_to_category when category_id is not provided" do
+      freeze_time
+      persisted_topic = Fabricate(:topic)
+
+      expect {
+        persisted_topic.set_or_create_timer(
+          TopicTimer.types[:publish_to_category],
+          72,
+          by_user: admin,
+        )
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "does not update topic's topic status created_at it was already set to close" do
@@ -2415,6 +2480,14 @@ RSpec.describe Topic do
         )
 
         expect(Topic.for_digest(user, 1.year.ago)).to eq([])
+      end
+
+      it "doesn't return topics from ignored users" do
+        ignored_user = Fabricate(:user)
+        Fabricate(:topic, user: ignored_user, created_at: 1.minute.ago)
+        Fabricate(:ignored_user, user:, ignored_user:, expiring_at: 2.months.from_now)
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
       it "does return watched topics from muted categories" do
@@ -2605,6 +2678,19 @@ RSpec.describe Topic do
         private_category.topic,
         topic,
       )
+    end
+
+    it "excludes uncategorized topics when `include_uncategorized` kwarg is false" do
+      uncategorized_topic =
+        Fabricate(:topic, category_id: nil, archetype: Archetype.private_message)
+
+      categorized_topic = Fabricate(:topic, category: Fabricate(:category))
+
+      expect(uncategorized_topic.reload.category_id).to eq(nil)
+
+      result = Topic.secured(Guardian.new(user), include_uncategorized: false)
+
+      expect(result.pluck(:id)).to contain_exactly(categorized_topic.id)
     end
   end
 
@@ -2885,6 +2971,37 @@ RSpec.describe Topic do
           target_usernames: [user1.username, user2.username],
         )
       }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
+    context "with limit_admin_personal_messages_per_day" do
+      it "does not rate limit admins when set to 0" do
+        SiteSetting.limit_admin_personal_messages_per_day = 0
+
+        2.times do
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        end
+      end
+
+      it "rate limits admins when set to a non-zero value" do
+        SiteSetting.limit_admin_personal_messages_per_day = 1
+
+        create_post(
+          user: admin,
+          archetype: "private_message",
+          target_usernames: [user1.username, user2.username],
+        )
+        expect {
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
     end
   end
 
@@ -3305,6 +3422,38 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#remove_allowed_group" do
+    fab!(:pm_group, :group)
+
+    it "creates a small action post even when remover loses access via that group" do
+      pm_group.add(moderator)
+
+      private_topic =
+        Fabricate(
+          :private_message_topic,
+          title: "Private message with group",
+          user: admin,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: admin)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: pm_group)],
+        )
+      Fabricate(:post, topic: private_topic, user: admin)
+
+      # Verify moderator only has access via the group
+      expect(private_topic.allowed_users).not_to include(moderator)
+      expect(private_topic.allowed_group_users).to include(moderator)
+
+      expect(private_topic.remove_allowed_group(moderator, pm_group.name)).to eq(true)
+      expect(private_topic.allowed_groups).not_to include(pm_group)
+
+      # Moderator no longer has access
+      expect(private_topic.reload.all_allowed_users.where(id: moderator.id).exists?).to eq(false)
+
+      small_action = private_topic.posts.where(action_code: "removed_group").last
+      expect(small_action).to be_present
+      expect(small_action.user).to eq(moderator)
+    end
+  end
+
   describe "#featured_link_root_domain" do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -3373,6 +3522,48 @@ RSpec.describe Topic do
         post_type: Post.types[:moderator_action],
       )
       expect { topic.reset_bumped_at }.not_to change { topic.bumped_at }
+    end
+  end
+
+  describe ".reset_highest" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic:, post_number: 1) }
+    fab!(:second_post) { Fabricate(:post, topic:, post_number: 2) }
+    fab!(:third_post) { Fabricate(:post, topic:, post_number: 3) }
+
+    it "returns the highest post number" do
+      expect(Topic.reset_highest(topic.id)).to eq(3)
+    end
+
+    it "excludes deleted posts from the highest post number" do
+      third_post.update!(deleted_at: 1.hour.ago)
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+    end
+
+    it "excludes whisper posts from the highest post number" do
+      third_post.update!(post_type: Post.types[:whisper])
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+    end
+  end
+
+  describe "#update_statistics!" do
+    fab!(:topic)
+
+    it "updates the in-memory highest_post_number" do
+      Fabricate(:post, topic:, post_number: 1)
+      Fabricate(:post, topic:, post_number: 2)
+      Fabricate(:post, topic:, post_number: 3)
+
+      topic.update_column(:highest_post_number, 1)
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+
+      topic.update_statistics!
+
+      expect(topic.highest_post_number).to eq(3)
     end
   end
 
@@ -3495,7 +3686,7 @@ RSpec.describe Topic do
     fab!(:group) do
       Fabricate(
         :group,
-        smtp_server: "imap.gmail.com",
+        smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         email_username: "discourse@example.com",
         email_password: "discourse@example.com",
@@ -3581,12 +3772,12 @@ RSpec.describe Topic do
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload, force_destroy: true).destroy
@@ -3692,10 +3883,24 @@ RSpec.describe Topic do
       Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
 
       expect(topic.has_localization?(:zh_CN)).to eq(true)
-      expect(topic.has_localization?(:"zh_CN")).to eq(true)
+      expect(topic.has_localization?(:zh_CN)).to eq(true)
       expect(topic.has_localization?("zh-CN")).to eq(true)
 
       expect(topic.has_localization?("z")).to eq(false)
+    end
+
+    it "returns true for a regional match (ja matches ja_JP)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "ja_JP")
+
+      expect(topic.has_localization?("ja")).to eq(true)
+    end
+
+    it "returns true for a base locale match (pt_BR matches pt)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "pt")
+
+      expect(topic.has_localization?("pt_BR")).to eq(true)
     end
   end
 
@@ -3741,6 +3946,36 @@ RSpec.describe Topic do
 
       topic.update!(locale: "es")
       expect(topic.in_user_locale?).to eq(false)
+    end
+  end
+
+  describe "#nested_view?" do
+    fab!(:topic)
+
+    it "returns false when nested_replies_enabled is off" do
+      SiteSetting.nested_replies_enabled = false
+      SiteSetting.nested_replies_default = true
+      Fabricate(:nested_topic, topic: topic)
+      expect(topic.reload.nested_view?).to eq(false)
+    end
+
+    it "returns true when the topic has a nested_topic record and the feature is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      expect(topic.reload.nested_view?).to eq(true)
+    end
+
+    it "returns true when nested_replies_default is on, even without a nested_topic record" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      expect(topic.nested_view?).to eq(true)
+    end
+
+    it "returns false for private messages even when defaults are on" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic)
+      expect(pm.nested_view?).to eq(false)
     end
   end
 end

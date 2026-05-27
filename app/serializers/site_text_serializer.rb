@@ -7,7 +7,6 @@ class SiteTextSerializer < ApplicationSerializer
              :old_default,
              :new_default,
              :interpolation_keys,
-             :has_interpolation_keys?,
              :overridden?,
              :can_revert?
 
@@ -28,19 +27,15 @@ class SiteTextSerializer < ApplicationSerializer
   end
 
   def old_default
-    override.original_translation if override.present?
+    override.presence&.original_translation
   end
 
   def new_default
-    override.current_default if override.present?
+    override.presence&.current_default
   end
 
   def interpolation_keys
     object[:interpolation_keys]
-  end
-
-  def has_interpolation_keys?
-    object[:interpolation_keys].present?
   end
 
   def overridden?

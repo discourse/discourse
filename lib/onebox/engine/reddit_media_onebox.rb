@@ -4,51 +4,74 @@ module Onebox
   module Engine
     class RedditMediaOnebox
       include Engine
-      include StandardEmbed
 
       always_https
-      matches_domain("reddit.com", "www.reddit.com")
+      requires_iframe_origins "https://embed.reddit.com", "https://sh.reddit.com"
+      matches_domain(
+        "reddit.com",
+        "www.reddit.com",
+        "old.reddit.com",
+        "np.reddit.com",
+        "new.reddit.com",
+      )
+
+      def self.matches_path(path)
+        path.match?(%r{^/(?:r|user)/[^/]+/comments/[^/]+})
+      end
 
       def to_html
-        if raw[:type] == "image"
-          <<-HTML
-            <aside class="onebox reddit">
-              <header class="source">
-                <img src="#{raw[:favicon]}" class="site-icon" width="16" height="16">
-                <a href="#{raw[:url]}" target="_blank" rel="nofollow ugc noopener">#{raw[:site_name]}</a>
-              </header>
-              <article class="onebox-body">
-                <h3><a href="#{raw[:url]}" target="_blank" rel="nofollow ugc noopener">#{raw[:title]}</a></h3>
-                <div class="scale-images">
-                  <img src="#{raw[:image]}" class="scale-image"/>
-                </div>
-                <div class="description"><p>#{raw[:description]}</p></div>
-              </article>
-            </aside>
-          HTML
-        elsif raw[:type] =~ %r{^video[/\.]}
-          <<-HTML
-            <aside class="onebox reddit">
-              <header class="source">
-                <img src="#{raw[:favicon]}" class="site-icon" width="16" height="16">
-                <a href="#{raw[:url]}" target="_blank" rel="nofollow ugc noopener">#{raw[:site_name]}</a>
-              </header>
-              <article class="onebox-body">
-                <h3><a href="#{raw[:url]}" target="_blank" rel="nofollow ugc noopener">#{raw[:title]}</a></h3>
-                <div class="aspect-image-full-size">
-                  <a href="#{raw[:url]}" target="_blank" rel="nofollow ugc noopener" class="image-wrapper">
-                    <img src="#{raw[:image]}" class="scale-image"/>
-                    <span class="video-icon"></span>
-                  </a>
-                </div>
-                <div class="description"><p>#{raw[:description]}</p></div>
-              </article>
-            </aside>
-          HTML
-        else
-          html = Onebox::Engine::AllowlistedGenericOnebox.new(@url, @timeout).to_html
-          html.presence
+        <<~HTML
+          <iframe
+            class="reddit-onebox"
+            src="#{embed_url}"
+            width="640"
+            height="#{default_height}"
+            allowfullscreen
+          ></iframe>
+        HTML
+      end
+
+      def placeholder_html
+        Onebox::Helpers.generic_placeholder_html
+      end
+
+      private
+
+      def embed_url
+        @embed_url ||=
+          Onebox::Helpers.normalize_url_for_output(
+            URI::HTTPS.build(
+              host: "embed.reddit.com",
+              path: normalized_path,
+              query: URI.encode_www_form(embed_params),
+            ).to_s,
+          )
+      end
+
+      def normalized_path
+        return "#{uri.path}/" unless uri.path.end_with?("/")
+        uri.path
+      end
+
+      def embed_params
+        params = { embed: true, ref_source: "embed", ref: "share" }
+
+        if comment_path?
+          params[:showmedia] = false
+          params[:showmore] = false
+          params[:depth] = 1
+          params[:context] = 1
         end
+
+        params
+      end
+
+      def comment_path?
+        uri.path.match?(%r{^/(?:r|user)/[^/]+/comments/[^/]+/[^/]*/[^/]+/?$})
+      end
+
+      def default_height
+        comment_path? ? 300 : 500
       end
     end
   end

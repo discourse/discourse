@@ -2,7 +2,7 @@
 
 # NOTE: This spec covers core functionality, but it is much easier
 # to test plugin related things inside an actual plugin.
-describe "Admin Plugins List", type: :system do
+describe "Admin Plugins List" do
   fab!(:current_user, :admin)
   let(:admin_plugins_list_page) { PageObjects::Pages::AdminPluginsList.new }
 
@@ -12,7 +12,7 @@ describe "Admin Plugins List", type: :system do
   end
 
   let(:automation_plugin) do
-    Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "automation", "plugin.rb"))
+    Plugin::Instance.parse_from_source(Rails.root.join("plugins/automation/plugin.rb").to_s)
   end
 
   it "shows the list of plugins" do

@@ -79,8 +79,14 @@ describe DiscourseSubscriptions::Campaign do
     describe "refresh_data" do
       context "for all subscription purchases" do
         it "refreshes the campaign data properly" do
-          ::Stripe::Subscription.expects(:list).returns(data: [subscription], has_more: false)
-          ::Stripe::Invoice.expects(:list).returns(data: [invoice, invoice2], has_more: false)
+          ::Stripe::Subscription
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [subscription], has_more: false)
+          ::Stripe::Invoice
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [invoice, invoice2], has_more: false)
 
           DiscourseSubscriptions::Campaign.new.refresh_data
 
@@ -90,8 +96,14 @@ describe DiscourseSubscriptions::Campaign do
 
         it "checks if the goal is completed or not" do
           SiteSetting.discourse_subscriptions_campaign_goal = 5
-          ::Stripe::Subscription.expects(:list).returns(data: [subscription], has_more: false)
-          ::Stripe::Invoice.expects(:list).returns(data: [invoice], has_more: false)
+          ::Stripe::Subscription
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [subscription], has_more: false)
+          ::Stripe::Invoice
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [invoice], has_more: false)
 
           DiscourseSubscriptions::Campaign.new.refresh_data
           expect(Discourse.redis.get("subscriptions_goal_met_date")).to be_present
@@ -100,23 +112,41 @@ describe DiscourseSubscriptions::Campaign do
         it "checks if goal is < 90% met after being met" do
           SiteSetting.discourse_subscriptions_campaign_goal = 25
           Discourse.redis.set("subscriptions_goal_met_date", 10.days.ago)
-          ::Stripe::Subscription.expects(:list).returns(data: [subscription], has_more: false)
-          ::Stripe::Invoice.expects(:list).returns(data: [invoice], has_more: false)
+          ::Stripe::Subscription
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [subscription], has_more: false)
+          ::Stripe::Invoice
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [invoice], has_more: false)
 
           DiscourseSubscriptions::Campaign.new.refresh_data
           expect(Discourse.redis.get("subscriptions_goal_met_date")).to be_blank
         end
 
         it "handles invoices with nil lines gracefully" do
-          ::Stripe::Subscription.expects(:list).returns(data: [subscription], has_more: false)
-          ::Stripe::Invoice.expects(:list).returns(data: [invoice_with_nil_lines], has_more: false)
+          ::Stripe::Subscription
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [subscription], has_more: false)
+          ::Stripe::Invoice
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [invoice_with_nil_lines], has_more: false)
 
           expect { DiscourseSubscriptions::Campaign.new.refresh_data }.not_to raise_error
         end
 
         it "handles invoices with nil price gracefully" do
-          ::Stripe::Subscription.expects(:list).returns(data: [subscription], has_more: false)
-          ::Stripe::Invoice.expects(:list).returns(data: [invoice_with_nil_price], has_more: false)
+          ::Stripe::Subscription
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [subscription], has_more: false)
+          ::Stripe::Invoice
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [invoice_with_nil_price], has_more: false)
 
           expect { DiscourseSubscriptions::Campaign.new.refresh_data }.not_to raise_error
         end
@@ -150,11 +180,14 @@ describe DiscourseSubscriptions::Campaign do
         end
 
         it "refreshes campaign data with only the campaign product/subscriptions" do
-          ::Stripe::Subscription.expects(:list).returns(
-            data: [subscription, campaign_subscription],
-            has_more: false,
-          )
-          ::Stripe::Invoice.expects(:list).returns(data: [invoice], has_more: false)
+          ::Stripe::Subscription
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [subscription, campaign_subscription], has_more: false)
+          ::Stripe::Invoice
+            .expects(:list)
+            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .returns(data: [invoice], has_more: false)
 
           DiscourseSubscriptions::Campaign.new.refresh_data
 
@@ -166,15 +199,18 @@ describe DiscourseSubscriptions::Campaign do
   end
 
   describe "campaign is automatically created" do
+    before { SiteSetting.discourse_subscriptions_secret_key = "secret-key" }
+
     describe "create_campaign" do
       it "successfully creates the campaign group, product, and prices" do
-        ::Stripe::Product.expects(:create).returns(id: "prod_campaign")
-        ::Stripe::Price.expects(:create)
-        ::Stripe::Price.expects(:create)
-        ::Stripe::Price.expects(:create)
-        ::Stripe::Price.expects(:create)
-        ::Stripe::Price.expects(:create)
-        ::Stripe::Price.expects(:create)
+        ::Stripe::Product
+          .expects(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "prod_campaign")
+        ::Stripe::Price
+          .expects(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .times(6)
 
         DiscourseSubscriptions::Campaign.new.create_campaign
 

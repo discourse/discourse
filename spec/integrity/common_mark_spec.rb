@@ -32,6 +32,8 @@ RSpec.describe "CommonMark" do
           cooked.strip!
           cooked.gsub!(" class=\"lang-auto\"", "")
           cooked.gsub!(%r{<span class="hashtag-raw">(.*)</span>}, "\\1")
+          cooked.gsub!(%r{<span class="mention">(@[^<]*)</span>}, "\\1")
+          cooked.gsub!(' role="presentation"', "")
           cooked.gsub!(%r{<a name="(.*)" class="anchor" href="#\1*"( aria-label="[^"]*")?></a>}, "")
           # we support data-attributes which is not in the spec
           cooked.gsub!(" data-code-startline=\"3\"", "")

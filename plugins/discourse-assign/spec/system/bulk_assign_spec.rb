@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | Bulk Assign", type: :system do
+describe "Assign | Bulk Assign" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   let(:topic_list_header) { PageObjects::Components::TopicListHeader.new }
@@ -12,6 +12,7 @@ describe "Assign | Bulk Assign", type: :system do
   before do
     SiteSetting.assign_enabled = true
 
+    admin.update!(last_seen_at: 1.day.ago)
     sign_in(admin)
   end
 

@@ -9,8 +9,8 @@
     }
   }
 
-  .admin-report-chart .chart-canvas-container .chart-canvas {
-    height: 400px;
+  .admin-report-chart .chart-canvas-container {
+    height: clamp(200px, 50vh, 350px);
   }
 }
 

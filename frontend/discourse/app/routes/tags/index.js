@@ -1,9 +1,15 @@
 import { action } from "@ember/object";
+import DiscourseURL from "discourse/lib/url";
 import Tag from "discourse/models/tag";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class TagsIndex extends DiscourseRoute {
+  activate() {
+    super.activate(...arguments);
+    DiscourseURL.jumpToElement(document.location.hash.slice(1));
+  }
+
   model() {
     return this.store.findAll("tag").then((result) => {
       if (result.extras) {
@@ -27,12 +33,10 @@ export default class TagsIndex extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    this.controllerFor("tags.index").setProperties({
-      model,
-      sortProperties: this.siteSettings.tags_sort_alphabetically
-        ? ["id"]
-        : ["totalCount:desc", "id"],
-    });
+    const sortProperties = this.siteSettings.tags_sort_alphabetically
+      ? ["name"]
+      : ["totalCount:desc", "name"];
+    controller.setProperties({ model, sortProperties });
   }
 
   @action

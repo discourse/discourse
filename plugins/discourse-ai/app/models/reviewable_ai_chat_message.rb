@@ -17,7 +17,7 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   def chat_message
-    @chat_message ||= (target || Chat::Message.with_deleted.find_by(id: target_id))
+    @chat_message ||= target || Chat::Message.with_deleted.find_by(id: target_id)
   end
 
   def chat_message_creator
@@ -42,12 +42,10 @@ class ReviewableAiChatMessage < Reviewable
 
     if chat_message.deleted_at?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
-      build_action(actions, :agree_and_keep_deleted, icon: "thumbs-up", bundle: agree)
-      build_action(actions, :disagree_and_restore, icon: "thumbs-down")
+      build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree)
     else
-      build_action(actions, :agree_and_delete, icon: "far-eye-slash", bundle: agree)
-      build_action(actions, :agree_and_keep_message, icon: "thumbs-up", bundle: agree)
-      build_action(actions, :disagree, icon: "thumbs-down")
+      build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+      build_action(actions, :agree_and_keep_message, icon: "far-eye", bundle: agree)
     end
 
     if guardian.can_suspend?(chat_message_creator)
@@ -67,9 +65,24 @@ class ReviewableAiChatMessage < Reviewable
       )
     end
 
-    build_action(actions, :ignore, icon: "up-right-from-square")
+    disagree_bundle =
+      actions.add_bundle(
+        "#{id}-disagree",
+        icon: "far-eye",
+        label: "reviewables.actions.disagree_bundle.title",
+      )
 
-    build_action(actions, :delete_and_agree, icon: "far-trash-can") unless chat_message.deleted_at?
+    if chat_message.deleted_at?
+      build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
+    else
+      build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
+    end
+
+    build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
+
+    unless chat_message.deleted_at?
+      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
+    end
   end
 
   def perform_agree_and_keep_message(performed_by, args)
@@ -154,26 +167,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
-#  type                    :string           not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
-#  version                 :integer          default(0), not null
+#  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
+#  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
+#  version                 :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
-#  type_source             :string           default("unknown"), not null
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

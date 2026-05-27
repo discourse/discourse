@@ -2,19 +2,19 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
-import DatePicker from "discourse/components/date-picker";
+import DCalendarDateTimeInput from "discourse/ui-kit/d-calendar-date-time-input";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class StyleguideCalendarDateTimeInput extends Component {
-  @tracked dateFormat = "YYYY-MM-DD";
-  @tracked timeFormat = "HH:mm:ss";
   @tracked date = null;
   @tracked time = null;
   @tracked minDate = null;
+  dateFormat = "YYYY-MM-DD";
+  timeFormat = "HH:mm:ss";
 
   @action
   changeDate(date) {
@@ -26,10 +26,28 @@ export default class StyleguideCalendarDateTimeInput extends Component {
     this.time = time;
   }
 
+  get calendarDateTimeInputCode() {
+    return `
+import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
+
+<template>
+  <CalendarDateTimeInput
+    @datePickerId="styleguide"
+    @date={{this.date}}
+    @time={{this.time}}
+    @minDate={{this.minDate}}
+  />
+</template>
+    `;
+  }
+
   <template>
-    <StyleguideExample @title="<CalendarDateTimeInput>">
+    <StyleguideExample
+      @title="CalendarDateTimeInput"
+      @code={{this.calendarDateTimeInputCode}}
+    >
       <StyleguideComponent>
-        <CalendarDateTimeInput
+        <DCalendarDateTimeInput
           @datePickerId="styleguide"
           @date={{this.date}}
           @time={{this.time}}
@@ -43,11 +61,11 @@ export default class StyleguideCalendarDateTimeInput extends Component {
 
       <Controls>
         <Row @name="Min date">
-          <DatePicker @defaultDate="YYYY-MM-DD" @value={{this.minDate}} />
+          <DDatePicker @defaultDate="YYYY-MM-DD" @value={{this.minDate}} />
         </Row>
 
         <Row @name="Date">
-          <DatePicker @defaultDate="YYYY-MM-DD" @value={{this.date}} />
+          <DDatePicker @defaultDate="YYYY-MM-DD" @value={{this.date}} />
         </Row>
 
         <Row @name="Time">

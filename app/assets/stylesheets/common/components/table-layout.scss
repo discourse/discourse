@@ -138,6 +138,17 @@
     color: var(--primary);
   }
 
+  .d-table__overview-link {
+    color: var(--primary);
+
+    .d-table__overview-name {
+      &:hover,
+      &:focus {
+        color: var(--tertiary);
+      }
+    }
+  }
+
   a.d-table__overview-name {
     &:visited {
       color: currentcolor;

@@ -58,6 +58,14 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
 
+    it "ignores suspended users" do
+      suspect_user.update!(suspended_till: 1.year.from_now)
+
+      job.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
     it "ignores users created more than six months ago" do
       suspect_user.update!(created_at: 1.year.ago)
 

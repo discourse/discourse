@@ -7,14 +7,16 @@
 sr:
   js:
     explorer:
+      default_query: "Подразумевано"
       or: "ili"
+      create: "Kreiraj"
+      ai:
+        generate: "Generiši"
+        optional: "opciono"
       types:
         bool:
           yes: "Da"
           no: "Ne"
-      export: "Izvoz"
-      save: "Sačuvaj izmene"
-      edit: "Izmeni"
       delete: "Obriši"
       query_groups: "Grupe"
       query_description: "Opis"

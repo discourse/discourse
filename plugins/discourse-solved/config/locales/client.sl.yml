@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 sl:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Sprejete rešitve"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "sprejeto"
+          topic_solved_notification: "rešeno"
     solutions: "Rešitve"
     solved:
       title: "Rešeno"
@@ -35,9 +43,13 @@ sl:
       no_solved_topics_title: "Rešili niste še nobene teme"
       no_solved_topics_title_others: "%{username} še ni rešil nobene teme"
       no_solved_topics_body: "Ko podate koristen odgovor na temo, lahko lastnik teme ali osebje izbere vaš odgovor kot rešitev."
+      move_post_cancel: "Prekliči"
+      confirm_solved_removal_confirm: "Potrdi"
+      confirm_solved_removal_cancel: "Prekliči"
       no_answer:
         title: Ste dobili odgovor na vaše vprašanje?
         description: "Z izbiro gumba za potrditev pod ustrezno objavo izpostavite odgovor in s tem pomagajte drugim."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "vaša objava je bila označena kot rešitev"
     topic_statuses:

@@ -23,6 +23,7 @@ module TopicsHelper
 
   def localize_topic_view_content(topic_view)
     return if cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
+    return if current_user&.user_option&.show_original_content
 
     # locale param is appropriately set in the application controller
     # depending on site settings and presence of user

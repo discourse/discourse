@@ -13,6 +13,7 @@ module Jobs
           .distinct
           .activated
           .human_users
+          .not_suspended
           .where(approved: false)
           .joins(:user_profile, :user_stat)
           .where("users.created_at <= ? AND users.created_at >= ?", 1.day.ago, 6.months.ago)

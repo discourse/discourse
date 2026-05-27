@@ -1,31 +1,34 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import curryComponent from "ember-curry-component";
+import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
-import uniqueId from "discourse/helpers/unique-id";
+import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
 /**
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
   /**
-   * Type of the field.
-   * @type {string}
-   */
-  @tracked type;
-
-  /**
    * Unique identifier for the field.
    * @type {string}
    */
-  id = uniqueId();
+  id = dUniqueId();
 
   /**
    * Unique identifier for the field's error element.
    * @type {string}
    */
-  errorId = uniqueId();
+  errorId = dUniqueId();
+
+  #controlArgs = { field: this };
+
+  // Set by legacy controls in their constructor (during render),
+  // read by the applyControlType modifier (post-render)
+  _legacyControlType;
 
   /**
    * Initializes the FKFieldData component.
@@ -35,7 +38,7 @@ export default class FKFieldData extends Component {
   constructor() {
     super(...arguments);
 
-    if (!this.args.title?.length) {
+    if (!this.args.title?.toString?.()?.length) {
       throw new Error("@title is required on `<form.Field />`.");
     }
   }
@@ -89,6 +92,31 @@ export default class FKFieldData extends Component {
     return this.args.title;
   }
 
+  get hasExplicitType() {
+    return this.args.type !== undefined;
+  }
+
+  get type() {
+    return this.args.type ?? this._legacyControlType;
+  }
+
+  set type(value) {
+    this._legacyControlType = value;
+  }
+
+  /**
+   * Contextual component for the control set by `@type`.
+   * @type {Component}
+   */
+  @cached
+  get Control() {
+    return curryComponent(
+      resolveFieldControl(this.type, getOwner(this)),
+      this.#controlArgs,
+      getOwner(this)
+    );
+  }
+
   /**
    * Format of the field.
    * @type {string}
@@ -98,19 +126,13 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Format of the title.
+   * Format of the title and description (label area). Overrides @format
+   * for the title and description, leaving the field's content area at
+   * @format. Useful when long descriptions need more room than the input.
    * @type {string}
    */
-  get titleFormat() {
-    return this.args.titleFormat;
-  }
-
-  /**
-   * Format of the description.
-   * @type {string}
-   */
-  get descriptionFormat() {
-    return this.args.descriptionFormat;
+  get labelFormat() {
+    return this.args.labelFormat;
   }
 
   /**
@@ -139,11 +161,49 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Placeholder text for input fields.
+   * @type {string}
+   */
+  get placeholder() {
+    return this.args.placeholder;
+  }
+
+  /**
    * Help text of the field.
    * @type {string}
    */
   get helpText() {
     return this.args.helpText;
+  }
+
+  get error() {
+    return (this.args.errors ?? {})[this.name];
+  }
+
+  get descriptionId() {
+    return `${this.id}-description`;
+  }
+
+  get helpTextId() {
+    return `${this.id}-help-text`;
+  }
+
+  get describedBy() {
+    const ids = [];
+
+    if (this.description) {
+      ids.push(this.descriptionId);
+    }
+
+    if (this.helpText) {
+      ids.push(this.helpTextId);
+    }
+
+    if (this.error) {
+      ids.push(this.errorId);
+    }
+
+    return ids.length ? ids.join(" ") : undefined;
   }
 
   /**
@@ -153,6 +213,16 @@ export default class FKFieldData extends Component {
    */
   get showTitle() {
     return this.args.showTitle ?? true;
+  }
+
+  /**
+   * Indicates whether to show the `(optional)` marker next to the title when
+   * the field has no `required` validation rule.
+   * Defaults to `true`.
+   * @type {boolean}
+   */
+  get showOptional() {
+    return this.args.showOptional ?? true;
   }
 
   /**
@@ -184,6 +254,10 @@ export default class FKFieldData extends Component {
     }
 
     return name;
+  }
+
+  get normalizedName() {
+    return this.name.replace(/\./g, "-");
   }
 
   /**

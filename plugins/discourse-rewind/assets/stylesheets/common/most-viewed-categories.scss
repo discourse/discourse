@@ -1,0 +1,27 @@
+.--most-viewed-categories {
+  .rewind-report-container {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+
+  .rewind-report-title {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    border: none;
+    margin-bottom: 1em;
+  }
+
+  .rewind-card {
+    @include rewind-border;
+    width: max-content;
+    flex-grow: 1;
+    position: relative;
+  }
+}
+
+.most-viewed-categories__category {
+  font-family: var(--pixel-text);
+}

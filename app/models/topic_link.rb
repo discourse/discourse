@@ -46,8 +46,10 @@ class TopicLink < ActiveRecord::Base
              MIN(ftl.user_id) AS user_id,
              SUM(clicks) AS clicks
       FROM topic_links AS ftl
+      JOIN posts AS source_posts ON ftl.post_id = source_posts.id
       LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
       LEFT JOIN categories AS c ON c.id = ft.category_id
+      LEFT JOIN posts AS target_posts ON ftl.link_post_id = target_posts.id
       /*where*/
       GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
       ORDER BY clicks DESC, count(*) DESC
@@ -55,7 +57,13 @@ class TopicLink < ActiveRecord::Base
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
-    builder.where("ft.deleted_at IS NULL")
+    apply_source_post_visibility_filters(builder, guardian, source_post: "source_posts")
+    apply_link_visibility_filters(
+      builder,
+      link: "ftl",
+      target_topic: "ft",
+      target_posts: "target_posts",
+    )
     builder.where("ftl.extension IS NULL OR ftl.extension NOT IN ('png','jpg','gif')")
     builder.where(
       "COALESCE(ft.archetype, 'regular') <> :archetype",
@@ -86,12 +94,18 @@ class TopicLink < ActiveRecord::Base
               FROM topic_links l
               LEFT JOIN topics t ON t.id = l.link_topic_id
               LEFT JOIN categories AS c ON c.id = t.category_id
+              LEFT JOIN posts AS target_posts ON l.link_post_id = target_posts.id
               /*left_join*/
               /*where*/
               ORDER BY reflection ASC, clicks DESC",
       )
 
-    builder.where("t.deleted_at IS NULL")
+    apply_link_visibility_filters(
+      builder,
+      link: "l",
+      target_topic: "t",
+      target_posts: "target_posts",
+    )
     builder.where(
       "COALESCE(t.archetype, 'regular') <> :archetype",
       archetype: Archetype.private_message,
@@ -141,19 +155,17 @@ class TopicLink < ActiveRecord::Base
       .uniq { |_, p| p }
       .each do |link, parsed|
         TopicLink.transaction do
-          begin
-            url, reflected_id = self.ensure_entry_for(post, link, parsed)
-            current_urls << url unless url.nil?
-            reflected_ids << reflected_id unless reflected_id.nil?
-          rescue URI::Error
-            # if the URI is invalid, don't store it.
-          rescue ActionController::RoutingError
-            # If we can't find the route, no big deal
-          end
+          url, reflected_id = ensure_entry_for(post, link, parsed)
+          current_urls << url unless url.nil?
+          reflected_ids << reflected_id unless reflected_id.nil?
+        rescue URI::Error
+          # if the URI is invalid, don't store it.
+        rescue ActionController::RoutingError
+          # If we can't find the route, no big deal
         end
       end
 
-    self.cleanup_entries(post, current_urls, reflected_ids)
+    cleanup_entries(post, current_urls, reflected_ids)
   end
 
   def self.crawl_link_title(topic_link_id)
@@ -171,6 +183,7 @@ class TopicLink < ActiveRecord::Base
         .joins(:post, :user)
         .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
         .where(topic_id: topic.id, reflection: false)
+        .where(posts: { hidden: false })
         .last(200)
 
     lookup = {}
@@ -186,6 +199,25 @@ class TopicLink < ActiveRecord::Base
 
     lookup
   end
+
+  def self.apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
+    builder.where(<<~SQL)
+      #{target_topic}.deleted_at IS NULL
+      AND (#{link}.internal = false OR #{target_topic}.id IS NOT NULL)
+      AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
+    SQL
+  end
+  private_class_method :apply_link_visibility_filters
+
+  def self.apply_source_post_visibility_filters(builder, guardian, source_post:)
+    builder.where("#{source_post}.deleted_at IS NULL")
+    builder.where(
+      "#{source_post}.post_type IN (:visible_post_types)",
+      visible_post_types: Topic.visible_post_types(guardian.user),
+    )
+    builder.where("#{source_post}.hidden = false") unless guardian.is_staff?
+  end
+  private_class_method :apply_source_post_visibility_filters
 
   private
 
@@ -403,22 +435,22 @@ end
 # Table name: topic_links
 #
 #  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer
-#  user_id       :integer          not null
-#  url           :string           not null
+#  clicks        :integer          default(0), not null
+#  crawled_at    :datetime
 #  domain        :string(100)      not null
+#  extension     :string(10)
 #  internal      :boolean          default(FALSE), not null
-#  link_topic_id :integer
+#  quote         :boolean          default(FALSE), not null
+#  reflection    :boolean          default(FALSE)
+#  title         :string
+#  url           :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  reflection    :boolean          default(FALSE)
-#  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string
-#  crawled_at    :datetime
-#  quote         :boolean          default(FALSE), not null
-#  extension     :string(10)
+#  link_topic_id :integer
+#  post_id       :integer
+#  topic_id      :integer          not null
+#  user_id       :integer          not null
 #
 # Indexes
 #

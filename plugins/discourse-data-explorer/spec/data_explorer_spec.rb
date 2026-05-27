@@ -58,6 +58,57 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["id"]).to eq(topic2.id)
     end
 
+    describe "current_user_id parameter" do
+      fab!(:user)
+
+      it "injects the current user's id, ignoring user-provided values" do
+        sql = <<~SQL
+          -- [params]
+          -- current_user_id :me
+          SELECT id FROM users WHERE id = :me
+        SQL
+
+        query = DiscourseDataExplorer::Query.create!(name: "test", sql: sql)
+        other_user = Fabricate(:user)
+
+        result =
+          described_class.run_query(query, { "me" => other_user.id.to_s }, { current_user: user })
+
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result][0]["id"]).to eq(user.id)
+      end
+
+      it "returns an error when not nullable and no current user" do
+        sql = <<~SQL
+          -- [params]
+          -- current_user_id :me
+          SELECT id FROM users WHERE id = :me
+        SQL
+
+        query = DiscourseDataExplorer::Query.create!(name: "test", sql: sql)
+
+        result = described_class.run_query(query, {}, {})
+
+        expect(result[:error]).to be_a(DiscourseDataExplorer::ValidationError)
+        expect(result[:error].message).to include("requires a logged in user")
+      end
+
+      it "allows null when nullable and no current user" do
+        sql = <<~SQL
+          -- [params]
+          -- null current_user_id :me
+          SELECT COALESCE(:me, -1) AS user_id
+        SQL
+
+        query = DiscourseDataExplorer::Query.create!(name: "test", sql: sql)
+
+        result = described_class.run_query(query, {}, {})
+
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result][0]["user_id"]).to eq(-1)
+      end
+    end
+
     describe ".add_extra_data" do
       it "treats any column with payload in the name as 'json'" do
         Fabricate(:reviewable_queued_post)
@@ -86,6 +137,21 @@ describe DiscourseDataExplorer::DataExplorer do
         result = described_class.run_query(query)
         _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
         expect(colrender).to eq({ 1 => "json" })
+      end
+
+      it "limits relation resolution to the query result limit per relation type" do
+        SiteSetting.data_explorer_query_result_limit = 2
+        topics = Fabricate.times(4, :topic)
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: <<~SQL)
+              SELECT #{topics[0].id} AS topic_id, #{topics[2].id} AS related_topic_id
+              UNION ALL
+              SELECT #{topics[1].id} AS topic_id, #{topics[3].id} AS related_topic_id
+            SQL
+
+        pg_result = described_class.run_query(query)[:pg_result]
+        relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+
+        expect(relations[:topic].as_json.size).to eq(2)
       end
 
       describe "serializing models to serializer" do

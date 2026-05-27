@@ -30,6 +30,14 @@ module PageObjects
         page.has_css?(".generated-api-key")
       end
 
+      def has_copy_button?
+        page.has_css?(".generated-api-key__copy-btn")
+      end
+
+      def click_copy_key
+        page.find(".generated-api-key__copy-btn").click
+      end
+
       def add_api_key(description:)
         page.find(header_actions_selector, text: I18n.t("admin_js.admin.api_keys.add")).click
 
@@ -69,6 +77,18 @@ module PageObjects
         page.find("a.back-button").click
       end
 
+      def has_warning_banner?
+        page.has_css?(".generated-api-key-container .alert.alert-warning")
+      end
+
+      def has_scopes_displayed?
+        page.has_css?(scopes_table_selector)
+      end
+
+      def has_scope?(resource:, action:)
+        page.has_css?("#{scopes_table_selector} tr", text: /#{resource}.*#{action}/i)
+      end
+
       private
 
       def table_selector
@@ -89,6 +109,10 @@ module PageObjects
 
       def description_field_selector
         "input[name='description']"
+      end
+
+      def scopes_table_selector
+        ".scopes-table"
       end
     end
   end

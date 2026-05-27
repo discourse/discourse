@@ -88,10 +88,8 @@ class NewPostManager
 
     return :email_spam if manager.args[:email_spam]
 
-    if (
-         user.trust_level <= TrustLevel.levels[:basic] &&
-           (user.post_count + user.topic_count) < SiteSetting.approve_post_count
-       )
+    if user.trust_level <= TrustLevel.levels[:basic] &&
+         (user.post_count + user.topic_count) < SiteSetting.approve_post_count
       return :post_count
     end
 
@@ -99,10 +97,8 @@ class NewPostManager
       return :group
     end
 
-    if (
-         manager.args[:title].present? && !user.staged? &&
-           !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
-       )
+    if manager.args[:title].present? && !user.staged? &&
+         !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
       return :new_topics_unless_allowed_groups
     end
 
@@ -118,10 +114,8 @@ class NewPostManager
 
     return :category if post_needs_approval_in_its_category?(manager)
 
-    if (
-         manager.args[:image_sizes].present? &&
-           !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
-       )
+    if manager.args[:image_sizes].present? &&
+         !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
       return :contains_media
     end
 
@@ -129,15 +123,18 @@ class NewPostManager
   end
 
   def self.post_needs_approval_in_its_category?(manager)
-    if manager.args[:topic_id].present?
-      cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
-      return false unless cat
+    guardian = manager.user.guardian
 
-      topic = Topic.find(manager.args[:topic_id])
-      cat.require_reply_approval? && !manager.user.guardian.can_review_topic?(topic)
+    if manager.args[:topic_id].present?
+      topic = Topic.find_by(id: manager.args[:topic_id])
+      return false unless topic&.category
+
+      guardian.reply_posting_review_required?(topic.category) && !guardian.can_review_topic?(topic)
     elsif manager.args[:category].present?
-      cat = Category.find(manager.args[:category])
-      cat.require_topic_approval? && !manager.user.guardian.is_category_group_moderator?(cat)
+      category = Category.find(manager.args[:category])
+
+      guardian.topic_posting_review_required?(category) &&
+        !guardian.is_category_group_moderator?(category)
     else
       false
     end
@@ -206,13 +203,9 @@ class NewPostManager
 
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 ||
-      !(
-        SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0])
-      ) ||
-      !(
-        SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
-          Group::AUTO_GROUPS[:trust_level_0],
-        )
+      !SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0]) ||
+      !SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
+        Group::AUTO_GROUPS[:trust_level_0],
       ) || SiteSetting.approve_unless_staged ||
       WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
   end

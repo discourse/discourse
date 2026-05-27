@@ -1,14 +1,11 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
@@ -23,14 +20,19 @@ export default class SecurityController extends Controller {
   @service router;
   @service currentUser;
 
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
 
-  @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
-  canShowAllAuthTokens;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("model.user_auth_tokens.length")
+  get canShowAllAuthTokens() {
+    return this.model?.user_auth_tokens?.length > DEFAULT_AUTH_TOKENS_COUNT;
+  }
 
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
@@ -59,9 +61,9 @@ export default class SecurityController extends Controller {
     );
   }
 
-  @discourseComputed("model.is_anonymous")
-  canChangePassword(isAnonymous) {
-    if (isAnonymous) {
+  @computed("model.is_anonymous")
+  get canChangePassword() {
+    if (this.model?.is_anonymous) {
       return false;
     } else {
       return (
@@ -71,9 +73,9 @@ export default class SecurityController extends Controller {
     }
   }
 
-  @discourseComputed("showAllAuthTokens", "model.user_auth_tokens")
-  authTokens(showAllAuthTokens, tokens) {
-    tokens.sort((a, b) => {
+  @computed("showAllAuthTokens", "model.user_auth_tokens")
+  get authTokens() {
+    this.model?.user_auth_tokens?.sort((a, b) => {
       if (a.is_active) {
         return -1;
       } else if (b.is_active) {
@@ -83,9 +85,9 @@ export default class SecurityController extends Controller {
       }
     });
 
-    return showAllAuthTokens
-      ? tokens
-      : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
+    return this.showAllAuthTokens
+      ? this.model?.user_auth_tokens
+      : this.model?.user_auth_tokens?.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
   }
 
   @action
@@ -112,7 +114,7 @@ export default class SecurityController extends Controller {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "model.is_anonymous",
     "model.no_password",
     "siteSettings",
@@ -120,32 +122,25 @@ export default class SecurityController extends Controller {
     "model.associated_accounts",
     "model.can_remove_password"
   )
-  canRemovePassword(
-    isAnonymous,
-    noPassword,
-    siteSettings,
-    userPasskeys,
-    associatedAccounts,
-    canRemove
-  ) {
+  get canRemovePassword() {
     // Hint returned from staff-info controller that
     // works even if staff hasn't revealed e-mails.
-    if (canRemove) {
+    if (this.model?.can_remove_password) {
       return true;
     }
 
     if (
-      isAnonymous ||
-      noPassword ||
-      siteSettings.enable_discourse_connect ||
-      !siteSettings.enable_local_logins
+      this.model?.is_anonymous ||
+      this.model?.no_password ||
+      this.siteSettings.enable_discourse_connect ||
+      !this.siteSettings.enable_local_logins
     ) {
       return false;
     }
 
     return (
-      associatedAccounts?.length > 0 ||
-      (this.canUsePasskeys && userPasskeys?.length > 0)
+      this.model?.associated_accounts?.length > 0 ||
+      (this.canUsePasskeys && this.model?.user_passkeys?.length > 0)
     );
   }
 

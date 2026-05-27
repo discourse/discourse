@@ -8,6 +8,7 @@ module DiscourseZendeskPlugin
 
     def create
       topic = Topic.find(params[:topic_id])
+      guardian.ensure_can_see!(topic)
 
       if topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD].blank?
         create_ticket(topic.first_post)

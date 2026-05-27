@@ -1009,11 +1009,7 @@ RSpec.describe Email::Sender do
   end
 
   context "with Net::SMTPError" do
-    let(:message) do
-      message = Mail::Message.new(to: "eviltrout@test.domain", body: "test body")
-      stub_deliver_response(message)
-      message
-    end
+    let(:message) { Mail::Message.new(to: "eviltrout@test.domain", body: "test body") }
 
     let(:email_sender) { Email::Sender.new(message, :valid_type) }
 
@@ -1030,17 +1026,36 @@ RSpec.describe Email::Sender do
 
     it "logs the server response if available" do
       error = Net::SMTPUnknownError.new("550 Unknown SMTP response")
+      smtp_response = Net::SMTP::Response.new("550", "5.7.1 Relaying denied")
+      error.define_singleton_method(:response) { smtp_response }
+      message.expects(:deliver!).raises(error)
+
+      Rails
+        .logger
+        .expects(:error) do |log_message|
+          expect(log_message).to include("SMTP Error Net::SMTPUnknownError")
+          expect(log_message).to include("550 Unknown SMTP response")
+          expect(log_message).to include("response:")
+          expect(log_message).to include("5.7.1 Relaying denied")
+        end
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+
+    it "does not log unreadable object representation" do
+      error = Net::SMTPUnknownError.new("550 Unknown SMTP response")
+      smtp_response = Net::SMTP::Response.new("550", "5.7.1 Relaying denied")
       def error.response
-        "550 5.7.1 Relaying denied"
+        Net::SMTP::Response.new("550", "5.7.1 Relaying denied")
       end
       message.expects(:deliver!).raises(error)
 
       Rails
         .logger
-        .expects(:error)
-        .with(
-          "SMTP Error Net::SMTPUnknownError with message: 550 Unknown SMTP response response: 550 5.7.1 Relaying denied",
-        )
+        .expects(:error) do |log_message|
+          expect(log_message).not_to include("#<Net::SMTP::Response:")
+          expect(log_message).to include("550 5.7.1 Relaying denied")
+        end
 
       expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
     end
@@ -1055,6 +1070,86 @@ RSpec.describe Email::Sender do
         .with("SMTP Error Net::SMTPUnknownError with message: 550 Unknown SMTP response")
 
       expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+
+    it "handles truthy response that does not respond to .string" do
+      error = Net::SMTPUnknownError.new("some error")
+      def error.response
+        "not a response object"
+      end
+      message.expects(:deliver!).raises(error)
+
+      Rails
+        .logger
+        .expects(:error)
+        .with(
+          "SMTP Error Net::SMTPUnknownError with message: some error response: not a response object",
+        )
+
+      expect { email_sender.send }.to raise_error(Net::SMTPUnknownError)
+    end
+  end
+
+  context "with Net::SMTPFatalError" do
+    let(:message) { Mail::Message.new(to: "eviltrout@test.domain", body: "test body") }
+    let(:email_sender) { Email::Sender.new(message, :valid_type) }
+
+    it "stores the SMTP response string as custom reason" do
+      error = Net::SMTPFatalError.new("552-5.7.0 This message was blocked")
+      smtp_response =
+        Net::SMTP::Response.new(
+          "552",
+          "552-5.7.0 This message was blocked because its content presents a potential\n552 5.7.0 issue",
+        )
+      error.define_singleton_method(:response) { smtp_response }
+      message.expects(:deliver!).raises(error)
+
+      expect { email_sender.send }.to change(SkippedEmailLog, :count).by(1)
+
+      skipped_email_log = SkippedEmailLog.last
+      expect(skipped_email_log.reason_type).to eq(SkippedEmailLog.reason_types[:custom])
+      expect(skipped_email_log.custom_reason).to eq(
+        "552-5.7.0 This message was blocked because its content presents a potential\n552 5.7.0 issue",
+      )
+    end
+
+    context "when the email is related to a PM topic" do
+      fab!(:pm_creator, :user)
+      fab!(:pm_target, :user)
+      fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_creator, recipient: pm_target) }
+      fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_creator) }
+
+      before do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        message.header["X-Discourse-Post-Id"] = pm_post.id
+        message.header["X-Discourse-Topic-Id"] = pm_topic.id
+      end
+
+      it "creates a staff whisper with the SMTP failure details" do
+        error = Net::SMTPFatalError.new("552-5.7.0 This message was blocked")
+        smtp_response =
+          Net::SMTP::Response.new(
+            "552",
+            "552-5.7.0 This message was blocked because its content presents a potential\n552 5.7.0 issue",
+          )
+        error.define_singleton_method(:response) { smtp_response }
+        message.expects(:deliver!).raises(error)
+
+        expect { email_sender.send }.to change {
+          Post.where(topic_id: pm_topic.id, post_type: Post.types[:whisper]).count
+        }.by(1)
+
+        whisper = Post.where(topic_id: pm_topic.id, post_type: Post.types[:whisper]).last
+        expect(whisper.user).to eq(Discourse.system_user)
+        expect(whisper.raw).to eq(
+          I18n.t(
+            "system_messages.email_sending_failed",
+            email: "eviltrout@test.domain",
+            raw:
+              "552-5.7.0 This message was blocked because its content presents a potential\n552 5.7.0 issue",
+          ).strip,
+        )
+      end
     end
   end
 end

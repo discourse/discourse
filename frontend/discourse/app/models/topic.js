@@ -1,25 +1,27 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
-import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import { deepMerge } from "discourse/lib/object";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import {
+  autoTrackedArray,
+  defineTrackedProperty,
+} from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -29,6 +31,16 @@ import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 import Category from "./category";
+
+const pluginTrackedProperties = new Set();
+
+export function _addTrackedTopicProperty(propertyKey) {
+  pluginTrackedProperties.add(propertyKey);
+}
+
+export function clearAddedTrackedTopicProperties() {
+  pluginTrackedProperties.clear();
+}
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -94,10 +106,15 @@ export default class Topic extends RestModel {
     }
 
     const data = { ...props };
+
+    if (Array.isArray(data.tags)) {
+      data.tags = serializeTags(data.tags);
+    }
+
     if (opts.fastEdit) {
       data.keep_existing_draft = true;
     }
-    return ajax(topic.get("url"), {
+    return ajax(topic.get("updateUrl") || topic.get("url"), {
       type: "PUT",
       data: JSON.stringify(data),
       contentType: "application/json",
@@ -105,6 +122,9 @@ export default class Topic extends RestModel {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
+      if (result.tags) {
+        props.tags = result.tags;
+      }
       if (topic.is_shared_draft) {
         props.destination_category_id = props.category_id;
         delete props.category_id;
@@ -193,10 +213,17 @@ export default class Topic extends RestModel {
       }
     }
 
-    return ajax("/topics/bulk", {
+    const request = {
       type: "PUT",
       data,
-    });
+    };
+
+    if (options?.asJSON) {
+      request.contentType = "application/json";
+      request.data = JSON.stringify(data);
+    }
+
+    return ajax("/topics/bulk", request);
   }
 
   static bulkOperationByFilter(filter, operation, options, isTracked) {
@@ -246,7 +273,7 @@ export default class Topic extends RestModel {
       data.include_subcategories = include_subcategories;
     }
     if (tag) {
-      data.tag_id = tag.id;
+      data.tag_name = tag.name;
     }
     if (topicIds) {
       data.topic_ids = topicIds;
@@ -317,56 +344,137 @@ export default class Topic extends RestModel {
   @tracked posts_count;
   @tracked replies_to_post_number;
   @tracked suggested_topics;
-  @trackedArray bookmarks;
-  @trackedArray pending_posts;
+  @autoTrackedArray bookmarks;
+  @autoTrackedArray pending_posts;
 
   message = null;
-
-  @alias("lastPoster.user") lastPosterUser;
-  @alias("lastPoster.primary_group") lastPosterGroup;
-  @alias("details.allowed_groups") allowedGroups;
-  @notEmpty("deleted_at") deleted;
-  @fmt("url", "%@/print") printUrl;
-  @equal("archetype", "private_message") isPrivateMessage;
-  @equal("archetype", "banner") isBanner;
-  @alias("bookmarks.length") bookmarkCount;
-  @and("pinned", "category.isUncategorizedCategory") isPinnedUncategorized;
-  @notEmpty("excerpt") hasExcerpt;
-  @propertyEqual("last_read_post_number", "highest_post_number") readLastPost;
-  @and("pinned", "readLastPost") canClearPin;
-  @or("details.can_edit", "details.can_edit_tags") canEditTags;
 
   @tracked _details = this.store.createRecord("topicDetails", {
     id: this.id,
     topic: this,
   });
 
-  @discourseComputed("last_read_post_number", "highest_post_number")
-  visited(lastReadPostNumber, highestPostNumber) {
+  constructor() {
+    super(...arguments);
+
+    pluginTrackedProperties.forEach((propertyKey) => {
+      defineTrackedProperty(this, propertyKey);
+    });
+  }
+
+  @computed("lastPoster.user")
+  get lastPosterUser() {
+    return this.lastPoster?.user;
+  }
+
+  set lastPosterUser(value) {
+    set(this, "lastPoster.user", value);
+  }
+
+  @computed("lastPoster.primary_group")
+  get lastPosterGroup() {
+    return this.lastPoster?.primary_group;
+  }
+
+  set lastPosterGroup(value) {
+    set(this, "lastPoster.primary_group", value);
+  }
+
+  @computed("details.allowed_groups")
+  get allowedGroups() {
+    return this.details?.allowed_groups;
+  }
+
+  set allowedGroups(value) {
+    set(this, "details.allowed_groups", value);
+  }
+
+  @computed("deleted_at")
+  get deleted() {
+    return !isEmpty(this.deleted_at);
+  }
+
+  @computed("url")
+  get printUrl() {
+    return `${this.url}/print`;
+  }
+
+  @computed("archetype")
+  get isPrivateMessage() {
+    return this.archetype === "private_message";
+  }
+
+  @computed("archetype")
+  get isBanner() {
+    return this.archetype === "banner";
+  }
+
+  @computed("bookmarks.length")
+  get bookmarkCount() {
+    return this.bookmarks?.length;
+  }
+
+  set bookmarkCount(value) {
+    set(this, "bookmarks.length", value);
+  }
+
+  @computed("pinned", "category.isUncategorizedCategory")
+  get isPinnedUncategorized() {
+    return this.pinned && this.category?.isUncategorizedCategory;
+  }
+
+  @computed("excerpt")
+  get hasExcerpt() {
+    return !isEmpty(this.excerpt);
+  }
+
+  @dependentKeyCompat
+  get readLastPost() {
+    return deepEqual(this.last_read_post_number, this.highest_post_number);
+  }
+
+  @computed("pinned", "readLastPost")
+  get canClearPin() {
+    return this.pinned && this.readLastPost;
+  }
+
+  @computed("details.can_edit", "details.can_edit_tags")
+  get canEditTags() {
+    return this.details?.can_edit || this.details?.can_edit_tags;
+  }
+
+  @computed("last_read_post_number", "highest_post_number")
+  get visited() {
     // >= to handle case where there are deleted posts at the end of the topic
-    return lastReadPostNumber >= highestPostNumber;
+    return this.last_read_post_number >= this.highest_post_number;
   }
 
-  @discourseComputed("posters.firstObject")
-  creator(poster) {
-    return poster && poster.user;
+  @computed("posters.firstObject")
+  get creator() {
+    return this.posters?.firstObject && this.posters?.firstObject?.user;
   }
 
-  @discourseComputed("posters.[]")
-  lastPoster(posters) {
-    if (posters && posters.length > 0) {
-      const latest = posters.filter((p) => p.extras?.includes("latest"))[0];
-      return latest || posters.firstObject;
+  @computed("posters.[]")
+  get lastPoster() {
+    if (this.posters && this.posters?.length > 0) {
+      const latest = this.posters?.filter((p) =>
+        p.extras?.includes("latest")
+      )[0];
+      return latest || this.posters?.firstObject;
     }
   }
 
-  @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
-  featuredUsers(posters, participants, allowedUserCount) {
-    let users = posters;
+  @computed("posters.[]", "participants.[]", "allowed_user_count")
+  get featuredUsers() {
+    let users = this.posters;
     const maxUserCount = 5;
     const posterCount = users.length;
 
-    if (this.isPrivateMessage && participants && posterCount < maxUserCount) {
+    if (
+      this.isPrivateMessage &&
+      this.participants &&
+      posterCount < maxUserCount
+    ) {
       let pushOffset = 0;
       if (posterCount > 1) {
         const lastUser = users[posterCount - 1];
@@ -375,10 +483,10 @@ export default class Topic extends RestModel {
         }
       }
 
-      const poster_ids = posters
-        .map((p) => p.user && p.user.id)
-        .filter((id) => id);
-      participants.some((p) => {
+      const poster_ids = this.posters
+        ?.map((p) => p.user && p.user.id)
+        ?.filter((id) => id);
+      this.participants?.some((p) => {
         if (!poster_ids.includes(p.user_id)) {
           users.splice(users.length - pushOffset, 0, p);
           if (users.length === maxUserCount) {
@@ -389,70 +497,74 @@ export default class Topic extends RestModel {
       });
     }
 
-    if (this.isPrivateMessage && allowedUserCount > maxUserCount) {
+    if (this.isPrivateMessage && this.allowed_user_count > maxUserCount) {
       users.splice(maxUserCount - 2, 1); // remove second-last avatar
       users.push({
-        moreCount: `+${allowedUserCount - maxUserCount + 1}`,
+        moreCount: `+${this.allowed_user_count - maxUserCount + 1}`,
       });
     }
 
     return users;
   }
 
-  @discourseComputed("fancy_title")
-  fancyTitle(title) {
-    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
+  @computed("fancy_title")
+  get fancyTitle() {
+    return fancyTitle(
+      this.fancy_title,
+      this.siteSettings.support_mixed_text_direction
+    );
   }
 
   // returns createdAt if there's no bumped date
-  @discourseComputed("bumped_at", "createdAt")
-  bumpedAt(bumped_at, createdAt) {
-    if (bumped_at) {
-      return new Date(bumped_at);
+  @computed("bumped_at", "createdAt")
+  get bumpedAt() {
+    if (this.bumped_at) {
+      return new Date(this.bumped_at);
     } else {
-      return createdAt;
+      return this.createdAt;
     }
   }
 
-  @discourseComputed("bumpedAt", "createdAt")
-  bumpedAtTitle(bumpedAt, createdAt) {
+  @computed("bumpedAt", "createdAt")
+  get bumpedAtTitle() {
     const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
-    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
-      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
-      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+    if (moment(this.bumpedAt).isValid() && moment(this.createdAt).isValid()) {
+      const bumpedAtStr = moment(this.bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(this.createdAt).format(BUMPED_FORMAT);
 
       return bumpedAtStr !== createdAtStr
         ? `${i18n("topic.created_at", {
-            date: longDate(createdAt),
-          })}\n${i18n("topic.bumped_at", { date: longDate(bumpedAt) })}`
-        : i18n("topic.created_at", { date: longDate(createdAt) });
+            date: longDate(this.createdAt),
+          })}\n${i18n("topic.bumped_at", { date: longDate(this.bumpedAt) })}`
+        : i18n("topic.created_at", { date: longDate(this.createdAt) });
     }
   }
 
-  @discourseComputed("created_at")
-  createdAt(created_at) {
-    return new Date(created_at);
+  @computed("created_at")
+  get createdAt() {
+    return new Date(this.created_at);
   }
 
-  @discourseComputed
-  postStream() {
+  @computed
+  get postStream() {
     return this.store.createRecord("postStream", {
       id: this.id,
       topic: this,
     });
   }
 
-  @discourseComputed("tags")
-  visibleListTags(tags) {
-    if (!tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
-      return tags;
+  @computed("tags")
+  get visibleListTags() {
+    if (!this.tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
+      return this.tags;
     }
 
     const title = this.title.toLowerCase();
     const newTags = [];
 
-    tags.forEach(function (tag) {
-      if (!title.includes(tag.toLowerCase())) {
+    this.tags.forEach(function (tag) {
+      const tagName = typeof tag === "string" ? tag : tag.name;
+      if (!title.includes(tagName.toLowerCase())) {
         newTags.push(tag);
       }
     });
@@ -472,9 +584,9 @@ export default class Topic extends RestModel {
     return this.get("suggested_topics")?.map((data) => Topic.create(data));
   }
 
-  @discourseComputed("posts_count")
-  replyCount(postsCount) {
-    return postsCount - 1;
+  @computed("posts_count")
+  get replyCount() {
+    return this.posts_count - 1;
   }
 
   get details() {
@@ -491,13 +603,13 @@ export default class Topic extends RestModel {
     this._details = this.store.createRecord("topicDetails", value);
   }
 
-  @discourseComputed("visible")
-  invisible(visible) {
-    return visible !== undefined ? !visible : undefined;
+  @computed("visible")
+  get invisible() {
+    return this.visible !== undefined ? !this.visible : undefined;
   }
 
-  @discourseComputed("visibility_reason_id")
-  visibilityReasonTranslated() {
+  @computed("visibility_reason_id")
+  get visibilityReasonTranslated() {
     if (
       this.visibility_reason_id &&
       this.visibility_reason_id !== TOPIC_VISIBILITY_REASONS.unknown
@@ -511,9 +623,9 @@ export default class Topic extends RestModel {
     return "";
   }
 
-  @discourseComputed("id")
-  searchContext(id) {
-    return { type: "topic", id };
+  @computed("id")
+  get searchContext() {
+    return { type: "topic", id: this.id };
   }
 
   @computed("category_id", "site.categoriesById.[]")
@@ -525,21 +637,32 @@ export default class Topic extends RestModel {
     this.set("category_id", newCategory?.id);
   }
 
-  @discourseComputed("url")
-  shareUrl(url) {
-    return resolveShareUrl(url, this.currentUser);
+  @computed("url")
+  get shareUrl() {
+    return resolveShareUrl(this.url, this.currentUser);
   }
 
-  @discourseComputed("id", "slug")
-  url(id, slug) {
-    slug = slug || "";
+  @computed("id", "slug")
+  get updateUrl() {
+    let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
     }
-    return `${getURL("/t/")}${slug}/${id}`;
+    return `${getURL("/t/")}${slug}/${this.id}`;
   }
 
-  // Helper to build a Url with a post number
+  @computed("id", "slug", "is_nested_view", "_forcedFlat")
+  get url() {
+    let slug = this.slug || "";
+    if (slug.trim().length === 0) {
+      slug = "topic";
+    }
+    if (this.is_nested_view && !this._forcedFlat) {
+      return `${getURL("/n/")}${slug}/${this.id}`;
+    }
+    return `${getURL("/t/")}${slug}/${this.id}`;
+  }
+
   urlForPostNumber(postNumber) {
     let url = this.url;
     if (postNumber > 0) {
@@ -548,30 +671,43 @@ export default class Topic extends RestModel {
     return url;
   }
 
-  @discourseComputed("unread_posts", "new_posts")
-  totalUnread(unreadPosts, newPosts) {
+  @computed("unread_posts", "new_posts")
+  get totalUnread() {
     deprecated("The totalUnread property of the topic model is deprecated", {
       id: "discourse.topic.totalUnread",
     });
-    return unreadPosts || newPosts;
+    return this.unread_posts || this.new_posts;
   }
 
-  @discourseComputed("unread_posts", "new_posts")
-  displayNewPosts(unreadPosts, newPosts) {
+  @computed("unread_posts", "new_posts")
+  get displayNewPosts() {
     deprecated(
       "The displayNewPosts property of the topic model is deprecated",
       { id: "discourse.topic.totalUnread" }
     );
-    return unreadPosts || newPosts;
+    return this.unread_posts || this.new_posts;
   }
 
-  @discourseComputed("last_read_post_number", "url")
-  lastReadUrl(lastReadPostNumber) {
-    return this.urlForPostNumber(lastReadPostNumber);
+  @computed("last_read_post_number", "url", "is_nested_view", "_forcedFlat")
+  get lastReadUrl() {
+    if (this.is_nested_view && !this._forcedFlat) {
+      return this.url;
+    }
+    return this.urlForPostNumber(this.last_read_post_number);
   }
 
-  @discourseComputed("last_read_post_number", "highest_post_number", "url")
-  lastUnreadUrl(lastReadPostNumber, highestPostNumber) {
+  @computed(
+    "last_read_post_number",
+    "highest_post_number",
+    "url",
+    "is_nested_view",
+    "_forcedFlat"
+  )
+  get lastUnreadUrl() {
+    if (this.is_nested_view && !this._forcedFlat) {
+      return this.url;
+    }
+
     let customUrl = null;
     _customLastUnreadUrlCallbacks.some((cb) => {
       const result = cb(this);
@@ -586,58 +722,63 @@ export default class Topic extends RestModel {
     }
 
     if (
-      lastReadPostNumber >= highestPostNumber &&
+      this.last_read_post_number >= this.highest_post_number &&
       this.get("category.navigate_to_first_post_after_read")
     ) {
       return this.urlForPostNumber(1);
     }
 
-    let postNumber = lastReadPostNumber + 1;
-    if (postNumber > highestPostNumber) {
-      postNumber = highestPostNumber;
+    let postNumber = this.last_read_post_number + 1;
+    if (postNumber > this.highest_post_number) {
+      postNumber = this.highest_post_number;
     }
 
     return this.urlForPostNumber(postNumber);
   }
 
-  @discourseComputed("highest_post_number", "url")
-  lastPostUrl(highestPostNumber) {
-    return this.urlForPostNumber(highestPostNumber);
+  @computed("highest_post_number", "url", "is_nested_view", "_forcedFlat")
+  get lastPostUrl() {
+    if (this.is_nested_view && !this._forcedFlat) {
+      return this.url;
+    }
+    return this.urlForPostNumber(this.highest_post_number);
   }
 
-  @discourseComputed("url")
-  firstPostUrl() {
+  @computed("url")
+  get firstPostUrl() {
     return this.urlForPostNumber(1);
   }
 
-  @discourseComputed("url")
-  summaryUrl() {
+  @computed("url")
+  get summaryUrl() {
     const summaryQueryString = this.has_summary ? "?filter=summary" : "";
     return `${this.urlForPostNumber(1)}${summaryQueryString}`;
   }
 
-  @discourseComputed("last_poster.username")
-  lastPosterUrl(username) {
-    return userPath(username);
+  @computed("last_poster.username")
+  get lastPosterUrl() {
+    return userPath(this.last_poster?.username);
   }
 
-  @discourseComputed("views")
-  viewsHeat(v) {
-    if (v >= this.siteSettings.topic_views_heat_high) {
+  @computed("views")
+  get viewsHeat() {
+    if (this.views >= this.siteSettings.topic_views_heat_high) {
       return "heatmap-high";
     }
-    if (v >= this.siteSettings.topic_views_heat_medium) {
+    if (this.views >= this.siteSettings.topic_views_heat_medium) {
       return "heatmap-med";
     }
-    if (v >= this.siteSettings.topic_views_heat_low) {
+    if (this.views >= this.siteSettings.topic_views_heat_low) {
       return "heatmap-low";
     }
     return null;
   }
 
-  @discourseComputed("archetype")
-  archetypeObject(archetype) {
-    return Site.currentProp("archetypes").find((item) => item.id === archetype);
+  @computed("archetype")
+  get archetypeObject() {
+    return Site.currentProp("archetypes").find(
+      (item) => item.id === this.archetype
+    );
   }
 
   toggleStatus(property) {
@@ -649,7 +790,7 @@ export default class Topic extends RestModel {
     if (property === "closed") {
       this.incrementProperty("posts_count");
     }
-    return ajax(`${this.url}/status`, {
+    return ajax(`${this.updateUrl}/status`, {
       type: "PUT",
       data: {
         status: property,
@@ -876,14 +1017,14 @@ export default class Topic extends RestModel {
     });
   }
 
-  @discourseComputed("excerpt")
-  escapedExcerpt(excerpt) {
-    return emojiUnescape(excerpt);
+  @computed("excerpt")
+  get escapedExcerpt() {
+    return emojiUnescape(this.excerpt);
   }
 
-  @discourseComputed("excerpt")
-  excerptTruncated(excerpt) {
-    return excerpt && excerpt.slice(-8) === "&hellip;";
+  @computed("excerpt")
+  get excerptTruncated() {
+    return this.excerpt && this.excerpt.slice(-8) === "&hellip;";
   }
 
   archiveMessage() {
@@ -952,13 +1093,14 @@ export default class Topic extends RestModel {
   }
 
   updateTags(tags) {
-    if (!tags || tags.length === 0) {
-      tags = [""];
-    }
-
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags },
+      data: { tags: tags || [] },
+    }).then((result) => {
+      if (result?.tags) {
+        this.set("tags", result.tags);
+      }
+      return result;
     });
   }
 }

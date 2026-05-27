@@ -19,6 +19,8 @@ module Chat
       case type
       when "button"
         Chat::Blocks::Elements::ButtonSerializer
+      when "category"
+        Chat::Blocks::Elements::CategorySerializer
       else
         raise "no serializer for #{type}"
       end

@@ -3,13 +3,13 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelRow from "./chat-channel-row";
@@ -47,6 +47,14 @@ export default class ChannelsListDirect extends Component {
     return this.chatChannelsManager.directMessageChannels?.length === 0;
   }
 
+  get channelList() {
+    if (this.inSidebar) {
+      return this.chatChannelsManager.truncatedUnstarredDirectMessageChannels;
+    }
+    // In mobile/drawer, show all channels including starred, sorted by activity
+    return this.chatChannelsManager.truncatedDirectMessageChannelsByActivity;
+  }
+
   @action
   toggleChannelSection(section) {
     this.args.toggleSection(section);
@@ -80,7 +88,7 @@ export default class ChannelsListDirect extends Component {
             }}
             data-toggleable="direct-message-channels"
           >
-            {{icon "angle-up"}}
+            {{dIcon "angle-up"}}
           </span>
         {{/if}}
 
@@ -99,7 +107,7 @@ export default class ChannelsListDirect extends Component {
 
     <div
       id="direct-message-channels"
-      class={{concatClass
+      class={{dConcatClass
         "channels-list-container"
         "direct-message-channels"
         (if this.inSidebar "collapsible-sidebar-section")
@@ -107,7 +115,7 @@ export default class ChannelsListDirect extends Component {
       }}
     >
       {{#if this.directMessageChannelsEmpty}}
-        <EmptyState
+        <DEmptyState
           @identifier="empty-channels-list"
           @svgContent={{ChatZero}}
           @title={{i18n "chat.no_direct_message_channels"}}
@@ -118,10 +126,7 @@ export default class ChannelsListDirect extends Component {
           @ctaAction={{this.openNewMessageModal}}
         />
       {{else}}
-        {{#each
-          this.chatChannelsManager.truncatedDirectMessageChannels
-          as |channel|
-        }}
+        {{#each this.channelList as |channel|}}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash leaveButton=true}}
@@ -132,7 +137,6 @@ export default class ChannelsListDirect extends Component {
 
     <PluginOutlet
       @name="below-direct-chat-channels"
-      @tagName=""
       @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>

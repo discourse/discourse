@@ -35,10 +35,18 @@ RSpec.describe DiscourseChatIntegration::Provider::TeamsProvider do
     describe "with nil user.name" do
       before { post.user.update!(name: nil) }
 
-      it "handles nil username correctly" do
+      it "handles nil user name correctly" do
         message = described_class.get_message(post)
-        name = message[:sections].first[:facts].first[:name]
-        expect(name).to eq("")
+        name = message[:body][2][:columns][1][:items][0][:text]
+        expect(name).to eq("@#{post.user.username}")
+      end
+    end
+
+    describe "with present user.name" do
+      it "handles user name correctly" do
+        message = described_class.get_message(post)
+        name = message[:body][2][:columns][1][:items][0][:text]
+        expect(name).to eq("#{post.user.name} (@#{post.user.username})")
       end
     end
   end

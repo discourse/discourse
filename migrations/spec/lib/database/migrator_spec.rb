@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::Database::Migrator do
+RSpec.describe Migrations::Database::Migrator do
   def migrate(
     migrations_directory: nil,
     migrations_path: nil,
@@ -29,7 +29,7 @@ RSpec.describe ::Migrations::Database::Migrator do
   describe "#migrate" do
     it "works with the IntermediateDB schema" do
       migrate(
-        migrations_path: ::Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
         db_filename: "intermediate.db",
       ) do |db_path, storage_path|
         expect(Dir.children(storage_path)).to contain_exactly("intermediate.db")
@@ -42,7 +42,7 @@ RSpec.describe ::Migrations::Database::Migrator do
 
     it "works with the UploadsDB schema" do
       migrate(
-        migrations_path: ::Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
+        migrations_path: Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
         db_filename: "uploads.db",
       ) do |db_path, storage_path|
         expect(Dir.children(storage_path)).to contain_exactly("uploads.db")

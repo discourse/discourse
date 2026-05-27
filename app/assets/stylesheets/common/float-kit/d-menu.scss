@@ -14,15 +14,23 @@
   }
 
   &.-animated {
-    @include d-animation(float-down, 0.25s, ease);
+    @include d-animation(float-down, 250ms, ease);
+
+    &.-closing {
+      @include d-animation(dissolve-up, 125ms, ease);
+    }
 
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
 
     &[data-placement^="top"] {
-      @include d-animation(float-up, 0.25s, ease);
+      @include d-animation(float-up, 250ms, ease);
       transform-origin: bottom center;
+
+      &.-closing {
+        @include d-animation(dissolve-down, 125ms, ease);
+      }
     }
 
     &[data-placement^="right"] {
@@ -46,10 +54,6 @@
     box-shadow: var(--shadow-dropdown);
     overscroll-behavior: contain;
     overflow: auto;
-  }
-
-  .btn {
-    border-radius: 0;
   }
 
   .arrow {
@@ -88,17 +92,31 @@
 // should probably be renamed fk-d-menu__list
 .dropdown-menu {
   min-width: 200px;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-sidebar-vertical-gap);
+  padding: var(--space-1);
   margin: 0;
   list-style: none;
 
   &__item {
     .btn {
-      padding: 0.5em 1rem;
+      display: inline-flex;
+      gap: var(--d-sidebar-section-link-prefix-margin-right);
+      padding-inline: var(--d-sidebar-row-horizontal-padding);
       width: 100%;
       justify-content: flex-start;
       background: rgb(0, 0, 0, 0);
-      border-radius: 0;
+      border-radius: var(--d-border-radius);
+
+      &:not(
+        .notifications-tracking-btn,
+        .--with-description,
+        .pinned-options-btn
+      ) {
+        height: var(--d-sidebar-row-height);
+        padding-block: 0;
+      }
 
       &.-selected {
         background: var(--d-hover);
@@ -112,8 +130,12 @@
         }
       }
 
+      .svg-icon {
+        width: var(--d-sidebar-section-link-prefix-width);
+        margin-right: 0;
+      }
+
       &:hover,
-      &:focus,
       &:focus-visible {
         .discourse-no-touch & {
           background: var(--d-hover);

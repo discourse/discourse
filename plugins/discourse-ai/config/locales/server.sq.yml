@@ -15,5 +15,38 @@ sq:
         search: "Kërko"
         time: "Koha"
         summarize: "Përmblidhni"
+      close_topic:
+        errors:
+          not_found: "Tema nuk u gjet."
+      unlist_topic:
+        errors:
+          not_found: "Tema nuk u gjet."
+      delete_topic:
+        errors:
+          not_found: "Tema nuk u gjet."
+      edit_tags:
+        errors:
+          not_found: "Tema nuk u gjet."
+      edit_category:
+        errors:
+          not_found: "Tema nuk u gjet."
+      set_topic_timer:
+        errors:
+          not_found: "Tema nuk u gjet."
+      set_slow_mode:
+        errors:
+          not_found: "Tema nuk u gjet."
+      move_posts:
+        errors:
+          not_found: "Tema nuk u gjet."
+      assign:
+        errors:
+          not_found: "Tema nuk u gjet."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprovo"
+        reject:
+          title: "Refuzo"
     ai_staff_action_logger:
       removed: "u hoq"

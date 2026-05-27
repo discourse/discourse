@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { ORIGINS } from "discourse/plugins/chat/discourse/services/chat-channel-info-route-origin-manager";
 
 module(
-  "Discourse Chat | Unit | Service | chat-channel-info-route-origin-manager",
+  "Unit | Service | chat-channel-info-route-origin-manager",
   function (hooks) {
     setupTest(hooks);
 

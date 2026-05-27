@@ -8,10 +8,10 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-topic-voting
 
 register_asset "stylesheets/common/topic-voting.scss"
-register_asset "stylesheets/desktop/topic-voting.scss", :desktop
-register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
 register_svg_icon "check-to-slot"
+register_svg_icon "vote-up"
+register_svg_icon "vote-up-filled"
 
 enabled_site_setting :topic_voting_enabled
 
@@ -22,12 +22,20 @@ Discourse.anonymous_filters.push(:votes)
 
 module ::DiscourseTopicVoting
   PLUGIN_NAME = "discourse-topic-voting"
+  ENABLE_TOPIC_VOTING_SETTING = "enable_topic_voting"
+  VOTER_PREVIEW_LIMIT = 104
+  BADGE_NAMES = %w[Daydreamer Brainstormer Innovator Visionary].freeze
 end
 
+require_relative "lib/discourse_topic_voting/badge_queries"
 require_relative "lib/discourse_topic_voting/engine"
+require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
+
   reloadable_patch do
+    register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
     CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
     Category.prepend(DiscourseTopicVoting::CategoryExtension)
     ListController.prepend(DiscourseTopicVoting::ListControllerExtension)
@@ -61,7 +69,7 @@ after_initialize do
       if options[:state] == "my_votes"
         result =
           result.joins(
-            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
+            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id} AND topic_voting_votes.archive = FALSE",
           )
       end
     end
@@ -79,15 +87,8 @@ after_initialize do
     result
   end
 
-  register_category_custom_field_type("enable_topic_voting", :boolean)
-  add_to_serializer(:category, :custom_fields, respect_plugin_enabled: false) do
-    return object.custom_fields if !SiteSetting.topic_voting_enabled
-
-    object.custom_fields.merge(
-      enable_topic_voting:
-        DiscourseTopicVoting::CategorySetting.find_by(category_id: object.id).present?,
-    )
-  end
+  register_category_custom_field_type(DiscourseTopicVoting::ENABLE_TOPIC_VOTING_SETTING, :boolean)
+  register_preloaded_category_custom_fields DiscourseTopicVoting::ENABLE_TOPIC_VOTING_SETTING
 
   add_to_serializer(:topic_list_item, :vote_count, include_condition: -> { object.can_vote? }) do
     object.vote_count
@@ -117,18 +118,67 @@ after_initialize do
     )
   end
 
-  add_to_serializer(:current_user, :votes_exceeded) { object.reached_voting_limit? }
-  add_to_serializer(:current_user, :votes_count) { object.vote_count }
-  add_to_serializer(:current_user, :votes_left) { [object.vote_limit - object.vote_count, 0].max }
-  add_to_serializer(:current_user, :vote_limit) { object.vote_limit }
-
-  filter_order_votes = ->(scope, order_direction, _guardian) do
-    scope.joins(:topic_vote_count).order(
-      "COALESCE(topic_voting_topic_vote_count.votes_count, 0)::integer #{order_direction}",
-    )
+  register_modifier(:badge_granter_suppress_notification) do |suppress, badge, granted_at, _|
+    next true if DiscourseTopicVoting::BADGE_NAMES.include?(badge.name) && granted_at < 2.weeks.ago
+    suppress
   end
 
-  add_filter_custom_filter("order:votes", &filter_order_votes)
+  register_modifier(:topics_filter_options) do |results, _guardian|
+    results.concat(
+      [
+        {
+          name: "votes-min:",
+          description: I18n.t("topic_voting.filter.description.topic_votes_min"),
+          type: "number",
+        },
+        {
+          name: "votes-max:",
+          description: I18n.t("topic_voting.filter.description.topic_votes_max"),
+          type: "number",
+        },
+        {
+          name: "order:votes",
+          description: I18n.t("topic_voting.filter.description.order_topic_votes"),
+        },
+        {
+          name: "order:votes-asc",
+          description: I18n.t("topic_voting.filter.description.order_topic_votes_asc"),
+        },
+      ],
+    )
+
+    results
+  end
+
+  add_to_serializer(:current_user, :votes_exceeded) { object.reached_voting_limit? }
+  add_to_serializer(:current_user, :votes_count) { object.vote_count }
+  add_to_serializer(:current_user, :votes_left) { object.votes_left }
+  add_to_serializer(:current_user, :vote_limit) { object.vote_limit }
+
+  topic_votes_value_from = ->(values) do
+    value = values&.last
+    return if value.blank? || value !~ /\A\d+\z/
+
+    value.to_i
+  end
+
+  add_filter_custom_filter("votes-min") do |scope, filter_values, _guardian|
+    value = topic_votes_value_from.call(filter_values)
+    next scope if value.nil?
+
+    DiscourseTopicVoting::TopicVotesFilter.apply(scope, min_votes: value)
+  end
+
+  add_filter_custom_filter("votes-max") do |scope, filter_values, _guardian|
+    value = topic_votes_value_from.call(filter_values)
+    next scope if value.nil?
+
+    DiscourseTopicVoting::TopicVotesFilter.apply(scope, max_votes: value)
+  end
+
+  add_filter_custom_filter("order:votes") do |scope, order_direction, _guardian|
+    DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
+  end
 
   on(:topic_status_updated) do |topic, status, enabled|
     next if topic.trashed?
@@ -171,47 +221,10 @@ after_initialize do
     end
   end
 
-  on(:topic_merged) do |orig, dest|
-    moved_votes = 0
-    duplicated_votes = 0
+  on(:topic_merged) { |orig, dest| DiscourseTopicVoting::TopicMerger.merge(orig, dest) }
 
-    who_voted = orig.votes.map(&:user)
-    if who_voted.present? && orig.closed
-      who_voted.each do |user|
-        next if user.blank?
-
-        user_votes = user.topics_with_vote.pluck(:topic_id)
-        user_archived_votes = user.topics_with_archived_vote.pluck(:topic_id)
-
-        if user_votes.include?(orig.id) || user_archived_votes.include?(orig.id)
-          if user_votes.include?(dest.id) || user_archived_votes.include?(dest.id)
-            duplicated_votes += 1
-            user.votes.destroy_by(topic_id: orig.id)
-          else
-            user
-              .votes
-              .find_by(topic_id: orig.id, user_id: user.id)
-              .update!(topic_id: dest.id, archive: dest.closed)
-            moved_votes += 1
-          end
-        else
-          next
-        end
-      end
-    end
-
-    if moved_votes > 0
-      orig.update_vote_count
-      dest.update_vote_count
-
-      if moderator_post = orig.ordered_posts.where(action_code: "split_topic").last
-        moderator_post.raw << "\n\n#{I18n.t("topic_voting.votes_moved", count: moved_votes)}"
-        if duplicated_votes > 0
-          moderator_post.raw << " #{I18n.t("topic_voting.duplicated_votes", count: duplicated_votes)}"
-        end
-        moderator_post.save!
-      end
-    end
+  on(:merging_users) do |source_user, target_user|
+    DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
   end
 
   Discourse::Application.routes.prepend do
@@ -226,5 +239,14 @@ after_initialize do
         :constraints => {
           username: RouteFormat.username,
         }
+  end
+
+  register_anonymous_action("vote_topic") do |user, params|
+    DiscourseTopicVoting::Votes::Cast.call(
+      params: {
+        topic_id: params["topic_id"],
+      },
+      guardian: user.guardian,
+    )
   end
 end

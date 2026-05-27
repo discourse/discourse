@@ -152,4 +152,21 @@ RSpec.describe PrettyText do
       expect(excerpt).to eq("Wednesday, October 16, 2019 6:00 PM (UTC)")
     end
   end
+
+  describe "date normalization" do
+    it "normalizes dates without leading zeros in date-range" do
+      cooked =
+        PrettyText.cook('[date-range from=2024-3-9T09:00:00 to=2024-3-9T17:00:00 timezone="UTC"]')
+
+      expect(cooked).to include('data-date="2024-03-09"')
+      expect(cooked).not_to include('data-date="2024-3-9"')
+    end
+
+    it "normalizes dates without leading zeros in single date" do
+      cooked = PrettyText.cook("[date=2024-3-9]")
+
+      expect(cooked).to include('data-date="2024-03-09"')
+      expect(cooked).not_to include('data-date="2024-3-9"')
+    end
+  end
 end

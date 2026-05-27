@@ -43,7 +43,7 @@ To get your environment set up, follow one of the setup guides:
 - [Ubuntu/Debian](https://meta.discourse.org/t/14727)
 - [Windows](https://meta.discourse.org/t/75149)
 
-Before you get started, ensure you have the following minimum versions: [Ruby 3.3+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13](https://www.postgresql.org/download/), [Redis 7](https://redis.io/download).
+Before you get started, ensure you have the following minimum versions: [Ruby 3.4+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 15](https://www.postgresql.org/download/), [Redis 7](https://redis.io/download).
 
 For more information, check out [the Developer Documentation](https://meta.discourse.org/c/documentation/developer-guides/56).
 
@@ -98,7 +98,7 @@ We look forward to seeing your pull requests!
 
 We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
 
-Security fixes are listed in the [release notes](https://meta.discourse.org/tags/c/announcements/67/release-notes) for each version.
+Security fixes are listed in the [release notes](https://releases.discourse.org) for each version.
 
 ## The Discourse Team
 

@@ -34,16 +34,19 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      llm_selector:
+        none: "Ništa"
       features:
-        back: "Prethodno"
         disabled: "(neomogućen)"
         groups: "Grupa:"
         no_groups: "Ništa"
-        edit: "Izmijeni"
+        edit: "Postavke"
         expand_list:
           one: "(još %{count})"
           few: "(još %{count})"
           other: "(još %{count})"
+        nav:
+          enabled: "Omogućen"
         filters:
           all: "Sve"
           reset: "Resetovati"
@@ -77,8 +80,8 @@ bs_BA:
       usage:
         summary: "Sažetak"
         username: "Nadimak"
-      ai_persona:
-        back: "Prethodno"
+        total: "Suma"
+      ai_agent:
         name: "Ime"
         edit: "Izmijeni"
         export: "Izvoz"
@@ -99,7 +102,6 @@ bs_BA:
           title: "Uploads"
           uploading: "Učitavanje..."
       tools:
-        back: "Prethodno"
         export: "Izvoz"
         name: "Ime"
         description: "Opis"
@@ -109,11 +111,29 @@ bs_BA:
         parameter_required: "Required"
         edit: "Izmijeni"
         delete: "Delete"
+      secrets:
+        short_title: "Identifikacija"
+        name: "Ime"
+        secret: "Value"
+        save: "Sačuvaj"
+        edit: "Izmijeni"
+        delete: "Delete"
+        embedding: "Embedding"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_connect: "Poveži"
+        enabled: "Omogućen"
+        save: "Sačuvaj"
+        edit: "Izmijeni"
+        delete: "Delete"
+        tools_modal:
+          required: "Required"
       llms:
         display_name: "Ime"
         save: "Sačuvaj"
         edit: "Izmijeni"
-        back: "Prethodno"
         delete: Delete
         quotas:
           group: "Grupa"
@@ -136,10 +156,11 @@ bs_BA:
           copy: "Copy"
           copied: "Kopirano!"
           cancel: "Odustani"
+        thumbnail_suggestions:
+          try_again: "Pokušaj ponovo"
         image_caption:
           save_caption: "Sačuvaj"
       embeddings:
-        back: "Prethodno"
         save: "Sačuvaj"
         delete: "Delete"
         edit: "Izmijeni"

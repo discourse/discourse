@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User Profile Info Panel", system: true do
+RSpec.describe "User Profile Info Panel" do
   let(:user_page) { PageObjects::Pages::User.new }
 
   describe "trust level" do

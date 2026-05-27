@@ -6,11 +6,12 @@ RSpec.describe ReactionsExcludedFromLikeSiteSettingValidator do
     expect(described_class.new.valid_value?("clap")).to eq(true)
   end
 
-  it "does not allow any emojis not in discourse_reactions_enabled_reactions to be used except the default" do
+  it "does not allow any emojis not in discourse_reactions_enabled_reactions to be used except default exclusions" do
     SiteSetting.discourse_reactions_enabled_reactions = "laughing|open_mouth"
     expect(described_class.new.valid_value?("clap")).to eq(false)
     expect(described_class.new.valid_value?("laughing")).to eq(true)
     expect(described_class.new.valid_value?("-1")).to eq(true)
     expect(described_class.new.valid_value?("-1|laughing")).to eq(true)
+    expect(described_class.new.valid_value?("poop")).to eq(true)
   end
 end

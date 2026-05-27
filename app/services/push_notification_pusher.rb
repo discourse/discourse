@@ -29,6 +29,9 @@ class PushNotificationPusher
         url: payload[:post_url]&.sub(/\A#{Discourse.base_path}/, ""),
       }
 
+      message[:actions] = payload[:actions] if payload[:actions].present?
+      message[:action_data] = payload[:action_data] if payload[:action_data].present?
+
       subscriptions(user).each { |subscription| send_notification(user, subscription, message) }
     end
 
@@ -97,7 +100,7 @@ class PushNotificationPusher
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.find_by(user: user, data: subscription.to_json)&.destroy!
+    PushSubscription.where(user: user, data: subscription.to_json).delete_all
   end
 
   def self.get_badge
@@ -140,7 +143,7 @@ class PushNotificationPusher
     p256dh = parsed_data.dig("keys", "p256dh")
     auth = parsed_data.dig("keys", "auth")
 
-    if (endpoint.blank? || p256dh.blank? || auth.blank?)
+    if endpoint.blank? || p256dh.blank? || auth.blank?
       subscription.destroy!
       return
     end
@@ -178,6 +181,9 @@ class PushNotificationPusher
     rescue Timeout::Error => e
       handle_generic_error(subscription, e, user, endpoint, message)
     rescue OpenSSL::SSL::SSLError => e
+      handle_generic_error(subscription, e, user, endpoint, message)
+    rescue FinalDestination::SSRFDetector::LookupFailedError,
+           FinalDestination::SSRFDetector::DisallowedIpError => e
       handle_generic_error(subscription, e, user, endpoint, message)
     end
   end

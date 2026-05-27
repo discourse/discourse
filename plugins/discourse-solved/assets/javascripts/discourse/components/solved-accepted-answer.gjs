@@ -1,15 +1,26 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
-import PostQuotedContent from "discourse/components/post/quoted-content";
-import UserLink from "discourse/components/user-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import { trustHTML } from "@ember/template";
+import PostCookedHtml from "discourse/components/post/cooked-html";
+import DButton from "discourse/ui-kit/d-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
+
+const CHARS_PER_LINE = 90;
 
 export default class SolvedAcceptedAnswer extends Component {
   @service siteSettings;
+
+  @tracked expanded = false;
+  @tracked measured = false;
+  @tracked isOverflowing = false;
 
   get topic() {
     return this.args.post.topic;
@@ -27,12 +38,12 @@ export default class SolvedAcceptedAnswer extends Component {
     return !!this.acceptedAnswer.excerpt;
   }
 
-  get collapsedContent() {
+  get content() {
     if (!this.hasExcerpt) {
       return "";
     }
 
-    return htmlSafe(this.acceptedAnswer.excerpt);
+    return trustHTML(this.acceptedAnswer.excerpt);
   }
 
   get showMarkedBy() {
@@ -76,61 +87,140 @@ export default class SolvedAcceptedAnswer extends Component {
     return `${this.topic.url}/${postNumber}`;
   }
 
+  get maxHeightStyle() {
+    const chars = this.siteSettings.solved_quote_length;
+    if (chars <= 0) {
+      return null;
+    }
+
+    const lines = Math.max(1, Math.ceil(chars / CHARS_PER_LINE));
+    return trustHTML(`--solved-max-lines: ${lines}`);
+  }
+
+  get showToggle() {
+    return (
+      this.hasExcerpt && this.measured && (this.isOverflowing || this.expanded)
+    );
+  }
+
+  get overflowingAttr() {
+    return this.measured ? String(this.isOverflowing) : "true";
+  }
+
+  @action
+  toggleExpanded() {
+    this.expanded = !this.expanded;
+  }
+
+  @action
+  onClickTitle(event) {
+    if (event.target.closest("a") || event.target.closest(".quote-controls")) {
+      return;
+    }
+    this.toggleExpanded();
+  }
+
+  @action
+  checkOverflow(entries) {
+    const blockquote = entries?.[0]?.target;
+    if (!blockquote || this.expanded) {
+      return;
+    }
+    this.isOverflowing = blockquote.scrollHeight > blockquote.clientHeight + 1;
+    this.measured = true;
+  }
+
   <template>
     {{#if this.acceptedAnswer}}
-      <PostQuotedContent
-        class={{concatClass
-          "accepted-answer"
+      <aside
+        class={{dConcatClass
+          "quote accepted-answer d-solved-answer"
           (if this.hasExcerpt "accepted-answer--has-excerpt")
-          (unless this.collapsedContent "title-only")
+          (unless this.content "title-only")
         }}
-        @collapsedContent={{this.collapsedContent}}
-        @decoratorState={{@decoratorState}}
-        @id={{this.quoteId}}
-        @post={{@post}}
-        @quotedPostNumber={{this.acceptedAnswer.post_number}}
-        @quotedTopicId={{this.topic.id}}
-        @quotedUsername={{this.acceptedAnswer.username}}
+        style={{this.maxHeightStyle}}
+        {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
+        data-expanded="{{this.expanded}}"
+        {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
+        data-overflowing="{{this.overflowingAttr}}"
+        data-username={{this.acceptedAnswer.username}}
+        data-post={{this.acceptedAnswer.post_number}}
+        data-topic={{this.topic.id}}
       >
-        <:title>
-          <div class="accepted-answer--solver-accepter">
-            <div class="accepted-answer--solver">
-              {{#if this.showSolvedBy}}
-                {{icon "square-check" class="accepted"}}
-                <InterpolatedTranslation
-                  @key="solved.accepted_answer_solver_info"
-                  as |Placeholder|
-                >
-                  <Placeholder @name="user">
-                    <UserLink
-                      @username={{this.solverUsername}}
-                    >{{this.solverDisplayName}}</UserLink>
-                  </Placeholder>
-                  <Placeholder @name="post">
-                    <a href={{this.postPath}}>{{this.postNumber}}</a>
-                  </Placeholder>
-                </InterpolatedTranslation>
-                <br />
-              {{/if}}
-
-            </div>
-            <div class="accepted-answer--accepter">
-              {{#if this.showMarkedBy}}
-                <InterpolatedTranslation
-                  @key="solved.marked_solved_by"
-                  as |Placeholder|
-                >
-                  <Placeholder @name="user">
-                    <UserLink
-                      @username={{this.accepterUsername}}
-                    >{{this.accepterDisplayName}}</UserLink>
-                  </Placeholder>
-                </InterpolatedTranslation>
-              {{/if}}
-            </div>
+        <div class="d-solved-answer__header">
+          <h3 class="d-solved-answer__title">
+            {{dIcon "far-square-check"}}
+            {{i18n "solved.title"}}</h3>
+          <div class="d-solved-answer__controls">
+            {{#if this.showToggle}}
+              <DButton
+                class="btn-flat d-solved-answer__toggle"
+                @action={{this.toggleExpanded}}
+                @ariaControls={{this.quoteId}}
+                @ariaExpanded={{this.expanded}}
+                @ariaLabel={{if this.expanded "post.collapse" "expand"}}
+                @title={{if this.expanded "post.collapse" "expand"}}
+                @icon={{if this.expanded "chevron-up" "chevron-down"}}
+              />
+            {{/if}}
+            <DButton
+              class="btn-flat d-solved-answer__jump"
+              @href={{this.postPath}}
+              @title="post.follow_quote"
+              @ariaLabel="post.follow_quote"
+              @icon="arrow-down"
+            />
           </div>
-        </:title>
-      </PostQuotedContent>
+        </div>
+
+        {{#if this.content}}
+          <blockquote id={{this.quoteId}} {{dOnResize this.checkOverflow}}>
+            <PostCookedHtml
+              @post={{@post}}
+              @cooked={{this.content}}
+              @decoratorState={{@decoratorState}}
+            />
+          </blockquote>
+        {{/if}}
+
+        <div class="d-solved-answer__footer">
+          {{#if this.showSolvedBy}}
+            <DUserLink @username={{this.solverUsername}}>
+              {{dBoundAvatarTemplate
+                this.acceptedAnswer.avatar_template
+                "tiny"
+              }}
+            </DUserLink>
+            <DInterpolatedTranslation
+              @key="solved.accepted_answer_solver_info"
+              as |Placeholder|
+            >
+              <Placeholder @name="user" @class="d-solved-answer__solver">
+                {{this.solverDisplayName}}
+              </Placeholder>
+              <Placeholder @name="post">
+                <a
+                  class="d-solved-answer__post-link"
+                  href={{this.postPath}}
+                >{{this.postNumber}}</a>
+              </Placeholder>
+            </DInterpolatedTranslation>
+          {{/if}}
+          {{#if this.showMarkedBy}}
+            <span class="dot-separator"></span>
+
+            <DInterpolatedTranslation
+              @key="solved.marked_solved_by"
+              as |Placeholder|
+            >
+              <Placeholder @name="user" @class="d-solved-answer__accepter">
+                {{this.accepterDisplayName}}
+              </Placeholder>
+            </DInterpolatedTranslation>
+
+          {{/if}}
+        </div>
+      </aside>
     {{/if}}
   </template>
 }

@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -31,7 +32,9 @@ module("Integration | Component | ComposerEditor", function (hooks) {
     });
 
     const originalComposerService = this.owner.lookup("service:composer");
-    const composerMockClass = class ComposerMock extends originalComposerService.constructor {
+    const composerMockClass = class ComposerMock
+      extends originalComposerService.constructor
+    {
       cannotSeeMention() {
         expectation(...arguments);
       }

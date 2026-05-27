@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPostSerializer < ReviewableSerializer
-  attributes :reply_to_post_number
+  attributes :reply_to_post_number, :fancy_title, :cooked
 
   payload_attributes(
     :raw,
@@ -19,6 +19,20 @@ class ReviewableQueuedPostSerializer < ReviewableSerializer
     :via_email,
     :raw_email,
   )
+
+  def attributes
+    data = super
+    data[:payload]&.delete("raw_email") unless scope&.can_view_raw_emails?
+    data
+  end
+
+  def fancy_title
+    ERB::Util.html_escape(object.payload["title"]) if object.payload&.[]("title")
+  end
+
+  def cooked
+    PrettyText.cook(object.payload["raw"]) if object.payload&.[]("raw")
+  end
 
   def reply_to_post_number
     object.payload["reply_to_post_number"].to_i

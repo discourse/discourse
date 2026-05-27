@@ -1,12 +1,11 @@
-import EmberObject from "@ember/object";
+/* eslint-disable ember/no-observers */
+import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { equal } from "@ember/object/computed";
+import { trackedArray } from "@ember/reactive/collections";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
@@ -37,8 +36,8 @@ export default class Group extends RestModel {
     return ajax("/groups/check-name", { data: { group_name: name } });
   }
 
-  @trackedArray members = [];
-  @trackedArray requesters = [];
+  @autoTrackedArray members = [];
+  @autoTrackedArray requesters = [];
 
   user_count = 0;
   limit = null;
@@ -47,21 +46,26 @@ export default class Group extends RestModel {
   requestersLimit = null;
   requestersOffset = null;
 
-  @equal("mentionable_level", 99) canEveryoneMention;
-
-  @discourseComputed("automatic_membership_email_domains")
-  emailDomains(value) {
-    return isEmpty(value) ? "" : value;
+  @computed("mentionable_level")
+  get canEveryoneMention() {
+    return this.mentionable_level === 99;
   }
 
-  @discourseComputed("associated_group_ids")
-  associatedGroupIds(value) {
-    return isEmpty(value) ? [] : value;
+  @computed("automatic_membership_email_domains")
+  get emailDomains() {
+    return isEmpty(this.automatic_membership_email_domains)
+      ? ""
+      : this.automatic_membership_email_domains;
   }
 
-  @discourseComputed("automatic")
-  type(automatic) {
-    return automatic ? "automatic" : "custom";
+  @computed("associated_group_ids")
+  get associatedGroupIds() {
+    return isEmpty(this.associated_group_ids) ? [] : this.associated_group_ids;
+  }
+
+  @computed("automatic")
+  get type() {
+    return this.automatic ? "automatic" : "custom";
   }
 
   async reloadMembers(params, refresh) {
@@ -183,28 +187,28 @@ export default class Group extends RestModel {
     return this.reloadMembers({ filter: usernames.join(",") });
   }
 
-  @discourseComputed("display_name", "name")
-  displayName(groupDisplayName, name) {
-    return groupDisplayName || name;
+  @computed("display_name", "name")
+  get displayName() {
+    return this.display_name || this.name;
   }
 
-  @discourseComputed("flair_bg_color")
-  flairBackgroundHexColor(flairBgColor) {
-    return flairBgColor
-      ? flairBgColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+  @computed("flair_bg_color")
+  get flairBackgroundHexColor() {
+    return this.flair_bg_color
+      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   }
 
-  @discourseComputed("flair_color")
-  flairHexColor(flairColor) {
-    return flairColor
-      ? flairColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+  @computed("flair_color")
+  get flairHexColor() {
+    return this.flair_color
+      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   }
 
-  @discourseComputed("visibility_level")
-  isPrivate(visibilityLevel) {
-    return visibilityLevel > 1;
+  @computed("visibility_level")
+  get isPrivate() {
+    return this.visibility_level > 1;
   }
 
   @observes("isPrivate", "canEveryoneMention")
@@ -340,11 +344,6 @@ export default class Group extends RestModel {
       smtp_port: this.smtp_port,
       smtp_ssl_mode: this.smtp_ssl_mode,
       smtp_enabled: this.smtp_enabled,
-      imap_server: this.imap_server,
-      imap_port: this.imap_port,
-      imap_ssl: this.imap_ssl,
-      imap_mailbox_name: this.imap_mailbox_name,
-      imap_enabled: this.imap_enabled,
       email_username: this.email_username,
       email_from_alias: this.email_from_alias,
       email_password: this.email_password,
@@ -381,7 +380,10 @@ export default class Group extends RestModel {
         let tags = this.get(s + "_tags");
 
         if (tags) {
-          attrs[s + "_tags"] = tags.length > 0 ? tags : [""];
+          attrs[s + "_tags"] =
+            tags.length > 0
+              ? tags.map((t) => (typeof t === "object" ? t.name : t))
+              : [""];
         }
       }
     );
@@ -439,7 +441,7 @@ export default class Group extends RestModel {
       data: { offset, filters },
     }).then((results) => {
       return EmberObject.create({
-        logs: new TrackedArray(
+        logs: trackedArray(
           results["logs"].map((log) => GroupHistory.create(log))
         ),
         all_loaded: results["all_loaded"],
@@ -466,7 +468,7 @@ export default class Group extends RestModel {
       Site.current().updateCategory(category);
     });
 
-    return new TrackedArray(
+    return trackedArray(
       result.posts.map((p) => {
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);

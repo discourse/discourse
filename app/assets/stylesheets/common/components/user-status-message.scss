@@ -1,3 +1,13 @@
+.user-status-message {
+  .fk-d-tooltip__trigger-container {
+    align-items: center;
+  }
+
+  .user-status-message-description {
+    margin-left: 0.35em;
+  }
+}
+
 [data-content][data-identifier="user-status-message-tooltip"] {
   .fk-d-tooltip__inner-content {
     gap: 0.65em;
@@ -9,7 +19,6 @@
   }
 
   .user-status-message-description {
-    margin-left: 0.1rem;
     color: var(--primary-800);
   }
 

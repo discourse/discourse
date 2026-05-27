@@ -34,11 +34,12 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      llm_selector:
+        none: "Няма"
       features:
-        back: "Назад"
         disabled: "(адключана)"
         groups: "групы:"
-        edit: "Рэдагаваць"
+        edit: "Налады"
         filters:
           all: "усе"
           reset: "скінуць"
@@ -78,11 +79,11 @@ be:
         summary: "вынік"
         username: "Імя карыстальніка"
         total_requests: "Усяго запытаў"
-      ai_persona:
-        back: "Назад"
-        name: "Імя"
+        total: "Усяго"
+      ai_agent:
+        name: "Назва"
         edit: "Рэдагаваць"
-        export: "экспарт"
+        export: "Экспарт"
         description: "Апісанне"
         user: Карыстальнік
         save: "Захаваць"
@@ -90,13 +91,12 @@ be:
         response_format:
           open_modal: "Рэдагаваць"
         filters:
-          reset: "скінуць"
+          reset: "Скінуць"
       rag:
         uploads:
           title: "Загрузкі"
           uploading: "Запампоўванне ..."
       tools:
-        back: "Назад"
         export: "экспарт"
         name: "Імя"
         description: "Апісанне"
@@ -106,11 +106,26 @@ be:
         parameter_required: "абавязковыя"
         edit: "Рэдагаваць"
         delete: "Выдаліць"
+      secrets:
+        name: "Імя"
+        secret: "значэнне"
+        save: "Захаваць"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+        embedding: "узаемадзеянне"
+      mcp_servers:
+        name: "Назва"
+        description: "Апісанне"
+        url: "URL спасылка"
+        save: "Захаваць"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+        tools_modal:
+          required: "Абавязкова"
       llms:
         display_name: "Імя"
         save: "Захаваць"
         edit: "Рэдагаваць"
-        back: "Назад"
         delete: Выдаліць
         quotas:
           group: "Група"
@@ -129,10 +144,11 @@ be:
           close: "зачыніць"
           copy: "капіяваць"
           cancel: "Адмяніць"
+        thumbnail_suggestions:
+          try_again: "Паспрабаваць яшчэ раз"
         image_caption:
           save_caption: "Захаваць"
       embeddings:
-        back: "Назад"
         save: "Захаваць"
         delete: "Выдаліць"
         edit: "Рэдагаваць"

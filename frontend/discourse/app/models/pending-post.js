@@ -1,5 +1,5 @@
-import { reads } from "@ember/object/computed";
-import discourseComputed from "discourse/lib/decorators";
+import { tracked } from "@glimmer/tracking";
+import { computed } from "@ember/object";
 import { cook } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
@@ -8,9 +8,9 @@ import Category from "./category";
 export default class PendingPost extends RestModel {
   expandedExcerpt = null;
 
-  @reads("topic_url") postUrl;
-
   truncated = false;
+
+  @tracked _postUrlOverride;
 
   init() {
     super.init(...arguments);
@@ -19,13 +19,25 @@ export default class PendingPost extends RestModel {
     });
   }
 
-  @discourseComputed("username")
-  userUrl(username) {
-    return userPath(username.toLowerCase());
+  @computed("topic_url")
+  get postUrl() {
+    if (this._postUrlOverride !== undefined) {
+      return this._postUrlOverride;
+    }
+    return this.topic_url;
   }
 
-  @discourseComputed("category_id")
-  category() {
+  set postUrl(value) {
+    this._postUrlOverride = value;
+  }
+
+  @computed("username")
+  get userUrl() {
+    return userPath(this.username.toLowerCase());
+  }
+
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
   }
 }

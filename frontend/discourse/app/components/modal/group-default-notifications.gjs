@@ -1,20 +1,18 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class GroupDefaultNotifications extends Component {
   @action
   updateExistingUsers() {
-    this.args.model.setUpdateExistingUsers(true);
-    this.args.closeModal();
+    this.args.closeModal(true);
   }
 
   @action
   cancel() {
-    this.args.model.setUpdateExistingUsers(false);
-    this.args.closeModal();
+    this.args.closeModal(false);
   }
 
   <template>

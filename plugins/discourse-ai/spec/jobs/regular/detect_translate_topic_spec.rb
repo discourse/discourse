@@ -12,6 +12,7 @@ describe Jobs::DetectTranslateTopic do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
+    SiteSetting.ai_translation_excluded_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -55,9 +56,24 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
-  it "skips bot topics" do
+  it "skips bot topics by default" do
     topic.update!(user: Discourse.system_user)
     DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    job.execute({ topic_id: topic.id })
+  end
+
+  it "translates bot topics when force is true" do
+    topic.update!(user: Discourse.system_user)
+    DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).once
+
+    job.execute({ topic_id: topic.id, force: true })
+  end
+
+  it "translates bot topics when ai_translation_include_bot_content is true" do
+    SiteSetting.ai_translation_include_bot_content = true
+    topic.update!(user: Discourse.system_user)
+    DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).once
 
     job.execute({ topic_id: topic.id })
   end
@@ -78,21 +94,40 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
-  it "skips translating if the topic is already localized" do
-    topic.update(locale: "en")
-    Fabricate(:topic_localization, topic:, locale: "ja")
-    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+  context "when translation exists and retranslation quota hit" do
+    before do
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:has_relocalize_quota?)
+        .with(topic, "ja")
+        .returns(false)
+    end
 
-    job.execute({ topic_id: topic.id })
-  end
+    it "skips translating if the topic is already localized" do
+      topic.update(locale: "en")
+      Fabricate(:topic_localization, topic:, locale: "ja")
 
-  it "does not translate to language of similar variant" do
-    topic.update(locale: "en_GB")
-    Fabricate(:topic_localization, topic:, locale: "ja_JP")
+      DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
 
-    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+      job.execute({ topic_id: topic.id })
+    end
 
-    job.execute({ topic_id: topic.id })
+    it "does not translate to language of similar variant" do
+      topic.update(locale: "en_GB")
+      Fabricate(:topic_localization, topic:, locale: "ja_JP")
+
+      DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+      job.execute({ topic_id: topic.id })
+    end
+
+    it "translates when force is true" do
+      topic.update(locale: "en")
+      Fabricate(:topic_localization, topic:, locale: "ja")
+
+      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "ja").once
+
+      job.execute({ topic_id: topic.id, force: true })
+    end
   end
 
   it "handles translation errors gracefully" do
@@ -104,9 +139,11 @@ describe Jobs::DetectTranslateTopic do
     expect { job.execute({ topic_id: topic.id }) }.not_to raise_error
   end
 
-  describe "with public content and PM limitations" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+  describe "with excluded categories and PM scope" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
 
     fab!(:personal_pm_topic, :private_message_topic)
 
@@ -114,28 +151,44 @@ describe Jobs::DetectTranslateTopic do
       Fabricate(:group_private_message_topic, recipient_group: Fabricate(:group))
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is true" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    before { SiteSetting.ai_translation_excluded_categories = excluded_category.id.to_s }
 
-      it "skips topics from restricted categories and PMs" do
-        DiscourseAi::Translation::TopicLocaleDetector
-          .expects(:detect_locale)
-          .with(private_topic)
-          .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(private_topic, any_parameters)
-          .never
-        job.execute({ topic_id: private_topic.id })
+    it "skips topics in excluded categories" do
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(excluded_topic)
+        .never
 
-        # Skip personal PMs
+      job.execute({ topic_id: excluded_topic.id })
+    end
+
+    it "processes topics in included categories" do
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
+
+      job.execute({ topic_id: included_topic.id })
+    end
+
+    it "processes regular topics when excluded categories is empty" do
+      SiteSetting.ai_translation_excluded_categories = ""
+
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
+
+      job.execute({ topic_id: included_topic.id })
+    end
+
+    context "when pm_translation_scope is none" do
+      before { SiteSetting.ai_translation_personal_messages = "none" }
+
+      it "skips all PMs" do
         DiscourseAi::Translation::TopicLocaleDetector
           .expects(:detect_locale)
           .with(personal_pm_topic)
-          .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(personal_pm_topic, any_parameters)
           .never
         job.execute({ topic_id: personal_pm_topic.id })
 
@@ -143,25 +196,14 @@ describe Jobs::DetectTranslateTopic do
           .expects(:detect_locale)
           .with(group_pm_topic)
           .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(group_pm_topic, any_parameters)
-          .never
-
         job.execute({ topic_id: group_pm_topic.id })
       end
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is false" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
+    context "when pm_translation_scope is group" do
+      before { SiteSetting.ai_translation_personal_messages = "group" }
 
-      it "processes topics from private categories and group PMs but skips personal PMs" do
-        DiscourseAi::Translation::TopicLocaleDetector
-          .expects(:detect_locale)
-          .with(private_topic)
-          .once
-        job.execute({ topic_id: private_topic.id })
-
+      it "processes group PMs but skips personal PMs" do
         DiscourseAi::Translation::TopicLocaleDetector
           .expects(:detect_locale)
           .with(group_pm_topic)
@@ -172,10 +214,24 @@ describe Jobs::DetectTranslateTopic do
           .expects(:detect_locale)
           .with(personal_pm_topic)
           .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(personal_pm_topic, any_parameters)
-          .never
+        job.execute({ topic_id: personal_pm_topic.id })
+      end
+    end
+
+    context "when pm_translation_scope is all" do
+      before { SiteSetting.ai_translation_personal_messages = "all" }
+
+      it "processes all PMs" do
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(group_pm_topic)
+          .once
+        job.execute({ topic_id: group_pm_topic.id })
+
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(personal_pm_topic)
+          .once
         job.execute({ topic_id: personal_pm_topic.id })
       end
     end
@@ -201,6 +257,8 @@ describe Jobs::DetectTranslateTopic do
     end
 
     it "publishes a MessageBus event to update the topic" do
+      SiteSetting.ai_translation_personal_messages = "all"
+
       allow(DiscourseAi::Translation::TopicLocaleDetector).to receive(:detect_locale).with(
         group_pm_topic,
       ).and_return("en")

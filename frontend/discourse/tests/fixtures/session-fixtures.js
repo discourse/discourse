@@ -1,7 +1,7 @@
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { deepFreeze } from "discourse/lib/object";
 
-export default {
+const sessionFixtures = {
   "/session/current.json": deepFreeze({
     current_user: {
       id: 19,
@@ -145,3 +145,5 @@ export default {
     },
   }),
 };
+
+export default sessionFixtures;

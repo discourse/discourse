@@ -15,15 +15,46 @@ RSpec.describe TopicViewSerializer do
     SiteSetting.ai_summarization_enabled = true
   end
 
+  def create_cached_summary(topic)
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+    content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
+
+    Fabricate(
+      :ai_summary,
+      target: topic,
+      original_content_sha: content_sha,
+      highest_target_number: topic.highest_post_number,
+    )
+  end
+
+  describe "#summarizable" do
+    let(:anon_topic_view) { TopicView.new(topic, nil) }
+    let(:anon_serializer) { described_class.new(anon_topic_view, scope: Guardian.new, root: false) }
+
+    it "is true for anons when a fresh cached summary exists" do
+      create_cached_summary(topic)
+
+      json = anon_serializer.as_json
+
+      expect(json[:summarizable]).to eq(true)
+    end
+
+    it "is false for anons when only an outdated cached summary exists" do
+      create_cached_summary(topic)
+      Fabricate(:post, topic: topic, post_number: 2)
+      topic.update!(highest_post_number: 2)
+
+      json = anon_serializer.as_json
+
+      expect(json[:summarizable]).to eq(false)
+    end
+  end
+
   describe "#ai_summary" do
     let!(:summary) do
-      AiSummary.store!(
-        DiscourseAi::Summarization::Strategies::TopicSummary.new(topic),
-        build(:llm_model),
-        "Test summary content",
-        [{ id: post_1.id }],
-        human: false,
-      )
+      create_cached_summary(topic).tap do |record|
+        record.update!(summarized_text: "Test summary content")
+      end
     end
 
     context "when serialize_ai_summary modifier is not enabled" do
@@ -64,6 +95,23 @@ RSpec.describe TopicViewSerializer do
         expect(json[:ai_summary][:outdated]).to eq(false)
         expect(json[:ai_summary][:created_at]).to be_present
         expect(json[:ai_summary][:updated_at]).to be_present
+      end
+
+      it "includes ai_summary as outdated for users who can request summaries" do
+        leader = Fabricate(:leader)
+        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(leader)
+
+        Fabricate(:post, topic: topic, post_number: 2)
+        topic.update!(highest_post_number: 2)
+
+        leader_topic_view = TopicView.new(topic, leader)
+        leader_serializer =
+          described_class.new(leader_topic_view, scope: Guardian.new(leader), root: false)
+
+        json = leader_serializer.as_json
+
+        expect(json[:ai_summary]).to be_present
+        expect(json[:ai_summary][:outdated]).to eq(true)
       end
 
       it "does not include ai_summary when summarization is disabled" do

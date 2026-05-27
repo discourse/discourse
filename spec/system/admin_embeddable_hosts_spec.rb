@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin EmbeddableHost Management", type: :system do
+RSpec.describe "Admin EmbeddableHost Management" do
   fab!(:admin)
   fab!(:author, :admin)
   fab!(:author_2, :admin)
@@ -58,6 +58,29 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
     admin_embedding_page.confirm_delete
 
     expect(page).not_to have_css(".admin-embedding-index__code")
+  end
+
+  it "allows admin to toggle full app mode and updates the snippet" do
+    Fabricate(:embeddable_host)
+
+    admin_embedding_page.visit
+    admin_embedding_page.expand_snippet
+
+    expect(admin_embedding_page).to have_full_app_mode_disabled
+    expect(admin_embedding_page).to have_no_snippet_containing("fullApp")
+
+    admin_embedding_page.click_full_app_mode_toggle
+
+    expect(admin_embedding_page).to have_full_app_mode_enabled
+    expect(admin_embedding_page).to have_snippet_containing("fullApp")
+    expect(admin_embedding_page).to have_snippet_containing("embedHeight")
+    expect(SiteSetting.embed_full_app).to eq(true)
+
+    admin_embedding_page.click_full_app_mode_toggle
+
+    expect(admin_embedding_page).to have_full_app_mode_disabled
+    expect(admin_embedding_page).to have_no_snippet_containing("fullApp")
+    expect(SiteSetting.embed_full_app).to eq(false)
   end
 
   it "allows admin to save posts and topics settings" do

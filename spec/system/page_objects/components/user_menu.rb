@@ -38,6 +38,11 @@ module PageObjects
         self
       end
 
+      def click_notification_with_href(href_substring)
+        find(".user-menu .notification a[href*='#{href_substring}']").click
+        self
+      end
+
       def sign_out
         open
         click_profile_tab

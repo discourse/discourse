@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import PostVotingAnswerButton from "../components/post-voting-answer-button";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
@@ -40,14 +40,15 @@ function customizePost(api) {
     "model:post",
     (Superclass) =>
       class extends Superclass {
-        @trackedArray comments;
+        @autoTrackedArray comments;
       }
   );
 
   api.addTrackedPostProperties(
     "comments_count",
     "post_voting_user_voted_direction",
-    "post_voting_has_votes"
+    "post_voting_has_votes",
+    "post_voting_vote_count"
   );
 
   api.modifyClass(
@@ -57,12 +58,12 @@ function customizePost(api) {
         orderStreamByActivity() {
           this.cancelFilter();
           this.set("filter", ORDER_BY_ACTIVITY_FILTER);
-          return this.refreshAndJumpToSecondVisible();
+          return this.refresh({ refreshInPlace: true });
         }
 
         orderStreamByVotes() {
           this.cancelFilter();
-          return this.refreshAndJumpToSecondVisible();
+          return this.refresh({ refreshInPlace: true });
         }
       }
   );

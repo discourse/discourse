@@ -34,6 +34,12 @@ ko:
         text:
           label: 텍스트
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: 카테고리
+            tags:
+              label: 태그
         user_badge_granted:
           fields:
             badge:
@@ -140,6 +146,8 @@ ko:
               label: 토픽 ID
             user:
               label: 사용자
+        set_topic_timer:
+          title: 글 타이머 설정
       models:
         trigger:
           name:

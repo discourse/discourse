@@ -3,16 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import { debounce } from "discourse/lib/decorators";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import OneTable from "./explorer-schema/one-table";
 
 export default class ExplorerSchema extends Component {
   @tracked filter;
   @tracked loading;
-  @tracked hideSchema = this.args.hideSchema;
 
   get transformedSchema() {
     const schema = this.args.schema;
@@ -81,7 +81,6 @@ export default class ExplorerSchema extends Component {
         continue;
       }
 
-      // Check the table name vs the filter
       if (filter.source === key || filter.source + "s" === key) {
         tables.unshift({
           name: key,
@@ -89,14 +88,12 @@ export default class ExplorerSchema extends Component {
           open: haveFilter,
         });
       } else if (filter.test(key)) {
-        // whole table matches
         tables.push({
           name: key,
           columns: this.transformedSchema[key],
           open: haveFilter,
         });
       } else {
-        // filter the columns
         let filterCols = [];
         this.transformedSchema[key].forEach((col) => {
           if (filter.source === col.column_name) {
@@ -129,49 +126,27 @@ export default class ExplorerSchema extends Component {
     this.updateFilter(value);
   }
 
-  @action
-  collapseSchema() {
-    this.hideSchema = true;
-    this.args.updateHideSchema(true);
-  }
-
-  @action
-  expandSchema() {
-    this.hideSchema = false;
-    this.args.updateHideSchema(false);
-  }
-
   <template>
-    {{#if this.hideSchema}}
-      <DButton
-        @action={{this.expandSchema}}
-        @icon="chevron-left"
-        class="no-text unhide"
-      />
-    {{else}}
-      <div class="schema">
-        <div class="schema-search inline-form full-width">
-          <input
-            type="text"
-            {{on "input" (withEventValue this.filterChanged)}}
-          />
-          <DButton
-            @action={{this.collapseSchema}}
-            @icon="chevron-right"
-            class="no-text"
-          />
-        </div>
-
-        <div class="schema-container">
-          <ConditionalLoadingSpinner @condition={{this.loading}}>
-            <ul>
-              {{#each this.filteredTables as |table|}}
-                <OneTable @table={{table}} />
-              {{/each}}
-            </ul>
-          </ConditionalLoadingSpinner>
-        </div>
+    <div class="schema">
+      <div class="schema-search">
+        {{dIcon "magnifying-glass" class="schema-search__icon"}}
+        <input
+          type="text"
+          class="schema-search__input"
+          placeholder={{i18n "explorer.schema.search_tables"}}
+          {{on "input" (withEventValue this.filterChanged)}}
+        />
       </div>
-    {{/if}}
+
+      <div class="schema-container">
+        <DConditionalLoadingSpinner @condition={{this.loading}}>
+          <ul>
+            {{#each this.filteredTables as |table|}}
+              <OneTable @table={{table}} />
+            {{/each}}
+          </ul>
+        </DConditionalLoadingSpinner>
+      </div>
+    </div>
   </template>
 }

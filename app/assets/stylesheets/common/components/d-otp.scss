@@ -3,6 +3,11 @@
   align-items: center;
   position: relative;
   width: min-content;
+
+  .email-login & {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .d-otp-group {

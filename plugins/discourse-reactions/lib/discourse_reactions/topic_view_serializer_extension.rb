@@ -28,7 +28,20 @@ module DiscourseReactions::TopicViewSerializerExtension
   end
 
   def self.prepended(base)
-    def base.posts_reaction_users_count(post_ids)
+    def base.posts_reaction_users_count(post_ids, ignored_user_ids: [])
+      ignored_filter =
+        if ignored_user_ids.present?
+          "AND user_id NOT IN (:ignored_user_ids)"
+        else
+          ""
+        end
+      reaction_users_ignored_filter =
+        if ignored_user_ids.present?
+          "AND discourse_reactions_reaction_users.user_id NOT IN (:ignored_user_ids)"
+        else
+          ""
+        end
+
       posts_reaction_users_count_query =
         DB.query(
           <<~SQL,
@@ -37,15 +50,18 @@ module DiscourseReactions::TopicViewSerializerExtension
               WHERE post_id IN (:post_ids)
                 AND post_action_type_id = :like_id
                 AND deleted_at IS NULL
+                #{ignored_filter}
           UNION ALL
             SELECT discourse_reactions_reaction_users.user_id, posts.id from posts
               LEFT JOIN discourse_reactions_reactions ON discourse_reactions_reactions.post_id = posts.id
               LEFT JOIN discourse_reactions_reaction_users ON discourse_reactions_reaction_users.reaction_id = discourse_reactions_reactions.id
               WHERE posts.id IN (:post_ids)
+                #{reaction_users_ignored_filter}
         ) AS union_subquery WHERE union_subquery.post_ID IS NOT NULL GROUP BY union_subquery.post_id
       SQL
           post_ids: Array.wrap(post_ids),
           like_id: PostActionType::LIKE_POST_ACTION_ID,
+          ignored_user_ids: ignored_user_ids,
         )
 
       posts_reaction_users_count_query.each_with_object({}) do |row, hash|

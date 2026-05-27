@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { DEFAULT_TEXT_SIZES } from "discourse/admin/lib/constants";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
@@ -15,7 +15,7 @@ export default class SiteSettingChangeTracker extends Service {
   @service site;
   @service siteSettings;
 
-  @tracked dirtySiteSettings = new TrackedSet();
+  @tracked dirtySiteSettings = trackedSet();
 
   add(setting) {
     this.dirtySiteSettings.add(setting);

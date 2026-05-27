@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseSolved::AnswerController do
+RSpec.describe DiscourseSolved::AnswerController do
   fab!(:user)
   fab!(:staff_user, :admin)
   fab!(:category)
@@ -65,6 +65,7 @@ describe DiscourseSolved::AnswerController do
       end
     end
   end
+
   describe "#unaccept" do
     before do
       # Setup an accepted solution

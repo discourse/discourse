@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class UserTipContainer extends Component {
   @service userTips;
 
   get safeHtmlContent() {
-    return htmlSafe(this.args.data.contentHtml);
+    return trustHTML(this.args.data.contentHtml);
   }
 
   get showSkipButton() {
@@ -41,7 +41,7 @@ export default class UserTipContainer extends Component {
   <template>
     <div class="user-tip__container">
       <div class="user-tip__title">{{@data.titleText}}</div>
-      {{! template-lint-disable no-invalid-interactive }}
+      {{! eslint-disable ember/template-no-invalid-interactive }}
       <div class="user-tip__content" {{on "click" this.onClick}}>
         {{#if @data.contentHtml}}
           {{this.safeHtmlContent}}

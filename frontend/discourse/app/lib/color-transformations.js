@@ -1,10 +1,21 @@
 // replicates colors transformations from variables.scss
 // so we can generate transformed colors from color schemes in JS
-// currently only generates primary-low and tertiary-low
 
-// normalize hex color to 6 digits
-function normalizeHex(hex) {
-  hex = hex.replace("#", "");
+export function resolveColor(color) {
+  if (!color) {
+    return null;
+  }
+
+  const ctx = document.createElement("canvas").getContext("2d");
+  ctx.fillStyle = "#000001"; // Set to something other than black
+  ctx.fillStyle = color;
+
+  // If it's still #000001, the color was invalid
+  return ctx.fillStyle === "#000001" ? null : ctx.fillStyle;
+}
+
+export function normalizeHex(hex) {
+  hex = hex.replace(/^#/, "");
   if (hex.length === 3) {
     return hex
       .split("")
@@ -14,7 +25,10 @@ function normalizeHex(hex) {
   return hex;
 }
 
-// matches dc-color-brightness from variables.scss
+export function isValidHex(hex) {
+  return hex && /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex);
+}
+
 function colorBrightness(color) {
   const hex = normalizeHex(color);
   const r = parseInt(hex.substring(0, 2), 16);
@@ -24,7 +38,6 @@ function colorBrightness(color) {
   return r * 0.299 + g * 0.587 + b * 0.114;
 }
 
-// convert RGB to HSL
 function rgbToHsl(r, g, b) {
   r /= 255;
   g /= 255;
@@ -58,7 +71,6 @@ function rgbToHsl(r, g, b) {
   return [h, s, l];
 }
 
-// HSL to RGB
 function hslToRgb(h, s, l) {
   let r, g, b;
 
@@ -94,14 +106,13 @@ function hslToRgb(h, s, l) {
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
-// scale color lightness (approximates sass' scale-color)
+// approximates sass' scale-color
 function scaleColorLightness(color, lightness) {
   const hex = normalizeHex(color);
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
 
-  // convert to HSL
   const [h, s, l] = rgbToHsl(r, g, b);
 
   // scale lightness similar to sass
@@ -151,7 +162,6 @@ export function getPreviewColor(scheme, colorName) {
   return base;
 }
 
-// generate CSS custom properties
 export function getColorSchemeStyles(scheme) {
   const primaryLow = getPreviewColor(scheme, "primary");
   const tertiaryLow = getPreviewColor(scheme, "tertiary");

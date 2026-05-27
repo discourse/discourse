@@ -12,7 +12,6 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
   describe "#execute" do
     before do
       Discourse.redis.del("rss-polling-feed-polled:#{Digest::SHA1.hexdigest(feed_url)}")
-      stub_request(:head, feed_url).to_return(status: 200, body: "")
       stub_request(:get, feed_url).to_return(status: 200, body: raw_feed)
     end
 
@@ -108,7 +107,7 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
     end
 
     it "is not raising error if http request failed" do
-      stub_request(:get, feed_url).to_raise(Excon::Error::HTTPStatus)
+      stub_request(:get, feed_url).to_return(status: 500)
       job.execute(feed_url: feed_url, author_username: author.username)
     end
 
@@ -143,6 +142,60 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
       expect {
         job.execute(feed_url: feed_url, author_username: author.username)
       }.not_to raise_error
+    end
+
+    it "sends API credentials as headers instead of query parameters" do
+      authenticated_url = "#{feed_url}?api_key=test123&api_username=testuser"
+
+      Discourse.redis.del("rss-polling-feed-polled:#{Digest::SHA1.hexdigest(authenticated_url)}")
+
+      stub_request(:get, feed_url).with(
+        headers: {
+          "Api-Key" => "test123",
+          "Api-Username" => "testuser",
+        },
+      ).to_return(status: 200, body: file_from_fixtures("feed.rss", "feed"))
+
+      expect {
+        job.execute(feed_url: authenticated_url, author_username: author.username)
+      }.to change { author.topics.count }.by(1)
+    end
+
+    context "with user_id" do
+      it "creates a topic when given user_id" do
+        expect { job.execute(feed_url: feed_url, user_id: author.id) }.to change {
+          author.topics.count
+        }.by(1)
+      end
+
+      it "keeps working after the user is renamed" do
+        UsernameChanger.change(author, "renamed_account")
+
+        expect { job.execute(feed_url: feed_url, user_id: author.id) }.to change {
+          author.reload.topics.count
+        }.by(1)
+      end
+
+      it "falls back to the system user and logs when the referenced user no longer exists" do
+        deleted_id = author.id
+        author.destroy!
+
+        Rails.logger.expects(:warn).with(includes("not found")).at_least_once
+
+        expect { job.execute(feed_url: feed_url, user_id: deleted_id) }.to change {
+          Discourse.system_user.topics.count
+        }.by(1)
+      end
+    end
+
+    context "with an unknown author_username (legacy fallback)" do
+      it "falls back to the system user and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("not found")).at_least_once
+
+        expect { job.execute(feed_url: feed_url, author_username: "ghost_user") }.to change {
+          Discourse.system_user.topics.count
+        }.by(1)
+      end
     end
   end
 end

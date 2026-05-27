@@ -6,10 +6,13 @@ require "composer_messages_finder"
 describe ComposerMessagesFinder do
   describe ".check_topic_is_solved" do
     fab!(:user)
-    fab!(:topic)
+    fab!(:topic, :topic_with_op)
     fab!(:post) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
 
-    before { SiteSetting.disable_solved_education_message = false }
+    before do
+      SiteSetting.disable_solved_education_message = false
+      SiteSetting.allow_solved_on_all_topics = true
+    end
 
     it "does not show message without a topic id" do
       expect(
@@ -31,7 +34,12 @@ describe ComposerMessagesFinder do
 
       it "does not show message if disable_solved_education_message is true" do
         SiteSetting.disable_solved_education_message = true
-        DiscourseSolved.accept_answer!(post, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
         expect(
           described_class.new(
             user,
@@ -42,7 +50,12 @@ describe ComposerMessagesFinder do
       end
 
       it "shows message if the topic is solved" do
-        DiscourseSolved.accept_answer!(post, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
         message =
           described_class.new(
             user,

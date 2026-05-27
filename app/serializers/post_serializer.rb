@@ -12,9 +12,10 @@ class PostSerializer < BasicPostSerializer
     all_post_actions
     add_excerpt
     notice_created_by_users
+    ignored_user_like_counts
   ]
 
-  INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
+  INSTANCE_VARS.each { |v| public_send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -106,7 +107,7 @@ class PostSerializer < BasicPostSerializer
     super(object, opts)
 
     PostSerializer::INSTANCE_VARS.each do |name|
-      self.public_send("#{name}=", opts[name]) if opts.include? name
+      public_send("#{name}=", opts[name]) if opts.include? name
     end
   end
 
@@ -159,15 +160,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def moderator?
-    !!(object&.user&.moderator?)
+    !!object&.user&.moderator?
   end
 
   def admin?
-    !!(object&.user&.admin?)
+    !!object&.user&.admin?
   end
 
   def staff?
-    !!(object&.user&.staff?)
+    !!object&.user&.staff?
   end
 
   def group_moderator
@@ -176,12 +177,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_group_moderator?
     @group_moderator ||=
-      begin
-        if @topic_view
-          @topic_view.category_group_moderator_user_ids.include?(object.user_id)
-        else
-          object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
-        end
+      if @topic_view
+        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+      else
+        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
       end
   end
 
@@ -335,11 +334,13 @@ class PostSerializer < BasicPostSerializer
       @topic_view ? @topic_view.post_action_type_view : PostActionTypeView.new
 
     public_flag_types = @post_action_type_view.public_types
+    ignored_like_count = ignored_like_count_for_viewer
 
     @post_action_type_view.types.each do |sym, id|
-      count_col = "#{sym}_count".to_sym
+      count_col = :"#{sym}_count"
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
+      count = [count.to_i - ignored_like_count, 0].max if count && sym == :like
       summary = { id: id, count: count }
 
       if scope.post_can_act?(
@@ -382,11 +383,27 @@ class PostSerializer < BasicPostSerializer
 
       summary.delete(:count) if summary[:count].to_i.zero?
 
-      # Only include it if the user can do it or it has a count
-      result << summary if summary[:can_act] || summary[:count]
+      # Only include it if the user can do it, it has a count, or the user has acted
+      result << summary if summary[:can_act] || summary[:count] || summary[:acted]
     end
 
     result
+  end
+
+  def ignored_like_count_for_viewer
+    return 0 if scope.user.blank?
+    return @topic_view.ignored_user_like_counts[object.id].to_i if @topic_view
+    return @ignored_user_like_counts[object.id].to_i if @ignored_user_like_counts
+
+    ignored_ids = scope.user.ignored_user_ids
+    return 0 if ignored_ids.empty?
+
+    PostAction.where(
+      post_id: object.id,
+      user_id: ignored_ids,
+      post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      deleted_at: nil,
+    ).count
   end
 
   def include_draft_sequence?
@@ -631,7 +648,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_user_status?
-    SiteSetting.enable_user_status && object.user&.has_status?
+    SiteSetting.enable_user_status && object.user&.has_status? &&
+      scope&.can_see_user_status?(object.user)
   end
 
   def user_status
@@ -721,7 +739,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_custom_fields_object
-    (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
+    @topic_view&.user_custom_fields || @options[:user_custom_fields] || {}
   end
 
   def topic

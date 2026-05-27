@@ -34,4 +34,38 @@ describe DiscoursePostEvent::EventDate do
       end
     end
   end
+
+  describe "Topic custom fields" do
+    it "writes TopicEventAllDay custom field for all-day events" do
+      all_day_post = Fabricate(:post, topic: Fabricate(:topic, user: user))
+      event =
+        Fabricate(
+          :event,
+          post: all_day_post,
+          original_starts_at: "2020-04-25 00:00:00 UTC",
+          original_ends_at: "2020-04-27 00:00:00 UTC",
+          all_day: true,
+        )
+
+      custom_field =
+        TopicCustomField.find_by(
+          topic_id: all_day_post.topic_id,
+          name: DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY,
+        )
+
+      expect(custom_field).to be_present
+      expect(custom_field.value).to eq("t")
+    end
+
+    it "writes false for non-all-day events" do
+      custom_field =
+        TopicCustomField.find_by(
+          topic_id: first_post.topic_id,
+          name: DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY,
+        )
+
+      expect(custom_field).to be_present
+      expect(custom_field.value).to eq("f")
+    end
+  end
 end

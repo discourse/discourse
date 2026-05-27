@@ -6,5 +6,5 @@
 
 vi:
   site_settings:
-    presence_enabled: "Hiển thị người dùng đang trả lời chủ đề hoặc chỉnh sửa bài đăng?"
-    presence_max_users_shown: "Số lượng người dùng tối đa được hiển thị."
+    presence_enabled: "Hiển thị thành viên đang trả lời chủ đề hoặc chỉnh sửa tút?"
+    presence_max_users_shown: "Số lượng thành viên hiển thị tối đa."

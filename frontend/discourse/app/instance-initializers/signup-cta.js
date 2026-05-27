@@ -1,3 +1,4 @@
+import EmbedMode from "discourse/lib/embed-mode";
 import Session from "discourse/models/session";
 
 const ANON_TOPIC_IDS = 2;
@@ -27,6 +28,9 @@ export default {
       return;
     }
     if (login_required) {
+      return;
+    }
+    if (EmbedMode.enabled) {
       return;
     }
 

@@ -49,29 +49,29 @@ module("Integration | Helper | body-class and html-class", function (hooks) {
     await render(
       <template>
         {{#if state.condition}}
-          {{bodyClass "my-class" "persistant-class"}}
+          {{bodyClass "my-class" "persistent-class"}}
           {{htmlClass "my-class"}}
         {{else}}
-          {{bodyClass "persistant-class"}}
+          {{bodyClass "persistent-class"}}
         {{/if}}
       </template>
     );
     assert.dom(document.body).doesNotHaveClass("my-class");
     assert.dom(document.documentElement).doesNotHaveClass("my-class");
-    assert.dom(document.body).hasClass("persistant-class");
+    assert.dom(document.body).hasClass("persistent-class");
 
     state.condition = true;
     await settled();
 
     assert.dom(document.body).hasClass("my-class");
     assert.dom(document.documentElement).hasClass("my-class");
-    assert.dom(document.body).hasClass("persistant-class");
+    assert.dom(document.body).hasClass("persistent-class");
 
     state.condition = false;
     await settled();
 
     assert.dom(document.body).doesNotHaveClass("my-class");
     assert.dom(document.documentElement).doesNotHaveClass("my-class");
-    assert.dom(document.body).hasClass("persistant-class");
+    assert.dom(document.body).hasClass("persistent-class");
   });
 });

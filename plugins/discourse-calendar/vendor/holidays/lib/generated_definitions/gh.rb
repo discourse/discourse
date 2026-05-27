@@ -17,6 +17,8 @@ module Holidays
       1 => [{:mday => 1, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "New Year's Day", :regions => [:gh]},
             {:mday => 7, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Constitution Day", :regions => [:gh]}],
       3 => [{:mday => 6, :observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Independence Day", :regions => [:gh]},
+            {:mday => 20, :year_ranges => { :limited => [2026] },:observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Eid-ul-Fitr", :regions => [:gh]},
+            {:mday => 21, :year_ranges => { :limited => [2026] },:observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Shaqq Day", :regions => [:gh]},
             {:mday => 31, :year_ranges => { :limited => [2025] },:name => "Eid-ul-Fitr (Day 1)", :regions => [:gh]}],
       4 => [{:function => "eid_ul_fitr(year)", :function_arguments => [:year], :year_ranges => { :until => 2024 },:observed => "to_monday_if_weekend(date)", :observed_arguments => [:date], :name => "Eid-ul-Fitr", :regions => [:gh]},
             {:mday => 1, :year_ranges => { :limited => [2025] },:name => "Eid-ul-Fitr (Day 2)", :regions => [:gh]}],

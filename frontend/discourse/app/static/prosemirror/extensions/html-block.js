@@ -10,7 +10,9 @@ const extension = {
       defining: true,
       marks: "",
       selectable: true,
-      parseDOM: [{ tag: "pre.html-block", preserveWhitespace: "full" }],
+      parseDOM: [
+        { priority: 60, tag: "pre.html-block", preserveWhitespace: "full" },
+      ],
       toDOM() {
         return ["pre", { class: "html-block" }, ["code", 0]];
       },

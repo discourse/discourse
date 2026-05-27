@@ -30,6 +30,7 @@ class UsersController < ApplicationController
                    register_passkey
                    rename_passkey
                    delete_passkey
+                   update_security_key
                    feature_topic
                    clear_featured_topic
                    bookmarks
@@ -40,6 +41,12 @@ class UsersController < ApplicationController
                    reset_recent_searches
                    user_menu_bookmarks
                    user_menu_messages
+                   update_primary_email
+                   destroy_email
+                   badge_title
+                   remove_password
+                   private_message_topic_tracking_state
+                   toggle_anon
                  ]
 
   skip_before_action :check_xhr,
@@ -77,8 +84,8 @@ class UsersController < ApplicationController
                   create_second_factor_security_key
                   register_passkey
                   delete_passkey
+                  update_security_key
                 ]
-
   before_action :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -264,6 +271,11 @@ class UsersController < ApplicationController
 
   def username
     params.require(:new_username)
+
+    # Fast fail for usernames exceeding hardcoded max length
+    if params[:new_username].length > UsernameValidator::MAX_CHARS * 3
+      return render_json_error(I18n.t("user.username.long", count: SiteSetting.max_username_length))
+    end
 
     if clashing_with_existing_route?(params[:new_username]) ||
          (User.reserved_username?(params[:new_username]) && !current_user.admin?)
@@ -481,7 +493,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z_\-/]+\z}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z0-9_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -595,7 +607,7 @@ class UsersController < ApplicationController
   end
 
   def changing_case_of_own_username(target_user, username)
-    target_user && username.downcase == (target_user.username.downcase)
+    target_user && username.downcase == target_user.username.downcase
   end
 
   # Used for checking availability of a username and will return suggestions
@@ -706,11 +718,11 @@ class UsersController < ApplicationController
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
-      field_params = params[:user_fields] || {}
       fields = user.custom_fields
 
       user_fields.each do |f|
-        field_val = field_params[f.id.to_s]
+        field_val = clean_custom_field_values(f)
+        field_val = nil if field_val == "false"
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
@@ -987,7 +999,7 @@ class UsersController < ApplicationController
     message =
       if Guardian.new(@user).can_access_forum?
         # Log in the user
-        log_on_user(@user)
+        log_on_user(@user, replay_anonymous_action: true)
         "password_reset.success"
       else
         @requires_approval = true
@@ -1127,7 +1139,7 @@ class UsersController < ApplicationController
       # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
-        log_on_user(@user)
+        log_on_user(@user, replay_anonymous_action: true)
 
         # invites#perform_accept_invitation already sets destination_url, but
         # sometimes it is lost (user changes browser, uses incognito, etc)
@@ -1525,7 +1537,7 @@ class UsersController < ApplicationController
 
     %W[
       number_of_deleted_posts
-      number_of_flagged_posts
+      number_of_flags
       number_of_flags_given
       number_of_silencings
       number_of_suspensions
@@ -1896,7 +1908,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_see_bookmarks!(user)
     user_guardian = Guardian.new(user)
 
     respond_to do |format|
@@ -1922,12 +1934,21 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
+        @calendar_name =
+          I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
+
+        bookmark_query = Bookmark.with_reminders.where(user_id: user.id)
+
+        after_param = params[:after].presence || 3.months.ago.iso8601
+        after_date = after_param == "now" ? Time.current : after_param.to_datetime
+        bookmark_query = bookmark_query.where("reminder_at >= ?", after_date)
+
         @bookmark_reminders =
-          Bookmark
-            .with_reminders
-            .where(user_id: user.id)
+          bookmark_query
             .order(:reminder_at)
-            .map do |bookmark|
+            .filter_map do |bookmark|
+              next if !bookmark.registered_bookmarkable.can_see?(user_guardian, bookmark)
+
               bookmark.registered_bookmarkable.serializer.new(
                 bookmark,
                 scope: user_guardian,
@@ -2085,7 +2106,7 @@ class UsersController < ApplicationController
   end
 
   def clean_custom_field_values(field)
-    field_values = params[:user_fields][field.id.to_s]
+    field_values = params.dig(:user_fields, field.id.to_s)
 
     return field_values if field_values.nil? || field_values.empty?
 
@@ -2227,12 +2248,10 @@ class UsersController < ApplicationController
     allowed_actions = %w[show update destroy]
 
     http_verbs.any? do |verb|
-      begin
-        path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
-        allowed_actions.exclude?(path[:action])
-      rescue ActionController::RoutingError
-        false
-      end
+      path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
+      allowed_actions.exclude?(path[:action])
+    rescue ActionController::RoutingError
+      false
     end
   end
 

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
 import getURL from "discourse/lib/get-url";
@@ -13,7 +13,7 @@ const ParagraphWrapper = <template>
   <p class="reason">{{yield}}</p>
 </template>;
 const EmptyWrapper = <template>
-  {{! template-lint-disable no-yield-only}}{{yield}}
+  {{! eslint-disable ember/template-no-yield-only }}{{yield}}
 </template>;
 
 export default class TopicNotificationsButton extends Component {
@@ -83,7 +83,10 @@ export default class TopicNotificationsButton extends Component {
     } else if (!isEmpty(this.args.topic.tags)) {
       if (level === 3 && reason === 10) {
         // 3_10 watching tag
-        return !this.args.topic.tags.some((tag) => watchedTags.includes(tag));
+        return !this.args.topic.tags.some((tag) => {
+          const tagName = typeof tag === "string" ? tag : tag.name;
+          return watchedTags.includes(tagName);
+        });
       }
     }
 
@@ -126,7 +129,7 @@ export default class TopicNotificationsButton extends Component {
         />
 
         {{#if @expanded}}
-          <span class="text">{{htmlSafe this.reasonText}}</span>
+          <span class="text">{{trustHTML this.reasonText}}</span>
         {{/if}}
       </this.conditionalWrapper>
     </div>

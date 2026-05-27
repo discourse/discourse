@@ -1,14 +1,13 @@
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const SignupPageCta = <template>
   <div class="signup-page-cta">
     {{#if @disclaimerHtml}}
       <div class="signup-page-cta__disclaimer">
-        {{htmlSafe @disclaimerHtml}}
+        {{trustHTML @disclaimerHtml}}
       </div>
     {{/if}}
     <div class="signup-page-cta__buttons">
@@ -24,7 +23,7 @@ const SignupPageCta = <template>
           {{i18n "create_account.already_have_account"}}
         </span>
         <DButton
-          @action={{routeAction "showLogin"}}
+          @action={{@goToLogin}}
           @disabled={{@formSubmitted}}
           @label="log_in"
           class="btn-large btn-flat signup-page-cta__login"

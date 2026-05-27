@@ -21,6 +21,7 @@ export default class AdminSiteTextEditRoute extends Route {
       return locale.value === controller.locale;
     }).name;
 
+    controller.resetTextarea();
     controller.setProperties({
       siteText,
       saved: false,

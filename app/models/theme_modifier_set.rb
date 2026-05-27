@@ -6,7 +6,7 @@ class ThemeModifierSet < ActiveRecord::Base
   belongs_to :theme
 
   def self.modifiers
-    @modifiers ||= self.load_modifiers
+    @modifiers ||= load_modifiers
   end
 
   validate :type_validator
@@ -29,16 +29,19 @@ class ThemeModifierSet < ActiveRecord::Base
   after_save do
     SvgSprite.expire_cache if saved_change_to_svg_icons?
     CSP::Extension.clear_theme_extensions_cache! if saved_change_to_csp_extensions?
+    if saved_change_to_only_theme_color_schemes?
+      ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
+      ApplicationSerializer.expire_cache_fragment!("user_themes")
+    end
   end
 
   # Given the ids of multiple active themes / theme components, this function
   # will combine them into a 'resolved' behavior
   def self.resolve_modifier_for_themes(theme_ids, modifier_name)
-    return nil if !(config = self.modifiers[modifier_name])
+    return nil if !(config = modifiers[modifier_name])
 
     all_values =
-      self
-        .where(theme_id: theme_ids)
+      where(theme_id: theme_ids)
         .where.not(modifier_name => nil)
         .map { |s| s.public_send(modifier_name) }
     case config[:type]
@@ -141,16 +144,17 @@ end
 # Table name: theme_modifier_sets
 #
 #  id                            :bigint           not null, primary key
-#  theme_id                      :bigint           not null
-#  serialize_topic_excerpts      :boolean
 #  csp_extensions                :string           is an Array
-#  svg_icons                     :string           is an Array
-#  topic_thumbnail_sizes         :string           is an Array
 #  custom_homepage               :boolean
+#  only_theme_color_schemes      :boolean
 #  serialize_post_user_badges    :string           is an Array
-#  theme_setting_modifiers       :jsonb
-#  serialize_topic_op_likes_data :boolean
+#  serialize_topic_excerpts      :boolean
 #  serialize_topic_is_hot        :boolean
+#  serialize_topic_op_likes_data :boolean
+#  svg_icons                     :string           is an Array
+#  theme_setting_modifiers       :jsonb
+#  topic_thumbnail_sizes         :string           is an Array
+#  theme_id                      :bigint           not null
 #
 # Indexes
 #

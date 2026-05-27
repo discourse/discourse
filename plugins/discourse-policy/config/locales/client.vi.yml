@@ -23,6 +23,8 @@ vi:
           label: Gửi email?
       preferences:
         policy_emails:
+          away_description: Sẽ chỉ gửi email nếu bạn vắng mặt trong 10 phút khi trạng thái chính sách thay đổi, và chỉ khi bạn cũng đã chọn nhận email thông báo hoạt động mới.
           email_frequency_options:
             never: Không bao giờ
+            when_away: Khi vắng mặt
             always: Luôn luôn

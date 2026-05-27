@@ -1,22 +1,22 @@
 @use "lib/viewport";
 
-:root {
-  --d-review-reason-spam-text: light-dark(#7c3aed, #a78bfa);
-  --d-review-reason-off-topic-text: light-dark(#059669, #6ee7b7);
-  --d-review-reason-illegal-text: light-dark(#dc2626, #f87171);
-  --d-review-reason-inappropriate-text: light-dark(#ea580c, #fb923c);
-  --d-review-reason-other-text: light-dark(#4b5563, #9ca3af);
-  --d-review-reason-custom-text: light-dark(#c026d3, #e879f9);
-}
-
 .review-item {
+  --review-item-padding: var(--space-4);
   display: flex;
   flex-wrap: nowrap;
   gap: var(--space-4) 0;
   align-items: flex-start;
   margin-bottom: var(--space-8);
+  position: relative;
+  z-index: z("base");
+  border-radius: var(--d-border-radius);
+
+  &:has(.select-kit.is-expanded) {
+    z-index: z("dropdown");
+  }
 
   @include viewport.until(sm) {
+    --review-item-padding: var(--space-2);
     border: 1px solid var(--content-border-color);
     flex-direction: column;
   }
@@ -37,29 +37,39 @@
 
   .reviewable-created-date {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--secondary-high);
     white-space: nowrap;
     align-self: baseline;
     padding-block: var(--space-1);
     line-height: var(--line-height-small);
+
+    @include viewport.until(sm) {
+      justify-self: end;
+      padding-inline: 0.15em;
+    }
   }
 
   .reviewable-permalink-copy {
     position: relative;
     right: calc(var(--space-2) * -1);
     padding-block: 0.15em;
-    align-self: center;
+
+    @include viewport.until(sm) {
+      justify-self: end;
+    }
 
     .post-action-feedback-alert {
-      top: -1.25rem;
-      left: 60%;
+      top: -0.95rem;
+      left: 0;
     }
 
     .d-icon {
+      color: var(--secondary-high);
       margin-right: 0;
     }
 
     .post-action-feedback-svg {
+      fill: var(--success-medium);
       right: unset;
       left: -0.5em;
       top: 0.05em;
@@ -76,6 +86,25 @@
       box-sizing: border-box;
       width: 100%;
       padding-inline: var(--space-4);
+    }
+
+    .reviewable-action,
+    .reject-post summary {
+      background-color: var(--d-button-default-bg-color);
+      color: var(--d-button-default-text-color);
+
+      .d-icon {
+        color: var(--d-button-default-icon-color);
+      }
+
+      &:hover {
+        background-color: var(--d-button-default-bg-color--hover);
+        color: var(--d-button-default-text-color--hover);
+
+        .d-icon {
+          color: var(--d-button-default-icon-color--hover);
+        }
+      }
     }
 
     @include viewport.from(sm) {
@@ -111,8 +140,21 @@
     grid-template-columns: 1fr auto auto auto;
     gap: var(--space-2);
     align-items: start;
-    background-color: var(--primary-very-low);
-    padding: var(--space-5) var(--space-4);
+    background-color: var(--primary);
+    padding: var(--space-3) var(--review-item-padding);
+    color: var(--secondary);
+    border-radius: calc(var(--d-border-radius) - 1px)
+      calc(var(--d-border-radius) - 1px) 0 0;
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto;
+
+      .post-action-feedback-button {
+        height: auto;
+      }
+    }
   }
 
   &__label-badges {
@@ -120,6 +162,7 @@
     gap: var(--space-1);
     align-items: baseline;
     flex-wrap: wrap;
+    line-height: var(--line-height-small);
   }
 
   &__flag-label,
@@ -155,10 +198,14 @@
 
   &__meta-content {
     display: grid;
-    row-gap: var(--space-4);
-    column-gap: var(--space-4);
-    padding: var(--space-4);
+    gap: var(--space-4);
+    padding: var(--review-item-padding);
     grid-template-columns: auto 1fr;
+
+    @include viewport.until(sm) {
+      gap: var(--space-2);
+      grid-template-columns: auto;
+    }
 
     .reviewable-user & {
       grid-template-columns: 1fr;
@@ -195,7 +242,7 @@
 
   &__post {
     display: flex;
-    padding: var(--space-4);
+    padding: var(--review-item-padding);
 
     &-content-wrapper {
       width: 100%;
@@ -214,7 +261,7 @@
       transition: scrollbar-color 0.25s ease-in-out;
       transition-delay: 0.5s;
       background: var(--primary-very-low);
-      padding: var(--space-4);
+      padding: var(--review-item-padding);
       border-radius: var(--d-border-radius);
 
       .lightbox-wrapper img {
@@ -271,7 +318,7 @@
   }
 
   &__insights {
-    padding-inline: var(--space-4);
+    padding-inline: var(--review-item-padding);
 
     .nav-pills.action-list {
       margin-bottom: 0;
@@ -320,7 +367,7 @@
 
   .editable-fields {
     box-sizing: border-box;
-    padding: var(--space-4);
+    padding: var(--review-item-padding);
 
     .d-editor-button-bar {
       flex: 1 0 auto;
@@ -342,16 +389,27 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  padding: var(--space-1) var(--space-2);
   font-size: var(--font-down-1);
   line-height: 1;
-  background: var(--primary-low);
+  background-color: var(--secondary-high);
+  color: var(--primary);
+
+  @include viewport.until(sm) {
+    justify-self: start;
+  }
 
   &.--pending {
-    background-color: var(--primary-very-high);
+    background: var(--secondary-low);
+    color: var(--primary-low);
+  }
+
+  &.--rejected {
+    background-color: var(--danger);
     color: var(--secondary);
   }
 
+  &.--approved,
   &.--resolved {
     background-color: var(--success);
     color: var(--secondary);
@@ -362,31 +420,6 @@
   display: inline-flex;
   align-items: center;
   line-height: 1;
-
-  &.--spam {
-    color: var(--d-review-reason-spam-text);
-  }
-
-  &.--off-topic {
-    color: var(--d-review-reason-off-topic-text);
-  }
-
-  &.--illegal {
-    color: var(--d-review-reason-illegal-text);
-  }
-
-  &.--inappropriate {
-    color: var(--d-review-reason-inappropriate-text);
-  }
-
-  &.--other,
-  &.--needs-approval {
-    color: var(--d-review-reason-other-text);
-  }
-
-  &.--custom {
-    color: var(--d-review-reason-custom-text);
-  }
 }
 
 .review-item__flag-count {
@@ -430,6 +463,7 @@
   &__description {
     font-size: var(--font-down-1);
     color: var(--primary-high);
+    overflow-wrap: anywhere;
   }
 
   .reviewable-ip-lookup {
@@ -513,6 +547,10 @@
       padding-left: var(--space-2);
       padding-top: 0.2em;
       color: var(--primary-medium);
+
+      @include viewport.until(sm) {
+        width: 1rem;
+      }
     }
 
     &__content {
@@ -546,6 +584,7 @@
     &__description {
       color: var(--primary-high);
       font-size: var(--font-down-1);
+      overflow-wrap: anywhere;
 
       :first-child {
         margin-top: 0;

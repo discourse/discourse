@@ -77,6 +77,10 @@ export default class DiscobotDiscoveries extends Service {
       return;
     }
 
+    if (this.discoveryTimeout) {
+      cancel(this.discoveryTimeout);
+    }
+
     this.resetDiscovery();
 
     if (query?.length === 0) {
@@ -95,9 +99,14 @@ export default class DiscobotDiscoveries extends Service {
       this.lastQuery = query;
 
       await ajax("/discourse-ai/discoveries/reply", {
+        type: "POST",
         data: { query },
       });
     } catch {
+      if (this.lastQuery === query) {
+        this.lastQuery = "";
+      }
+
       this.timeoutDiscovery();
     }
   }

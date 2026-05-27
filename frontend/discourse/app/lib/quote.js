@@ -1,6 +1,7 @@
 import { helperContext } from "discourse/lib/helpers";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { stripQuotationMarks } from "discourse-markdown-it/features/bbcode-block";
 
 export const QUOTE_REGEXP =
   /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
@@ -22,7 +23,7 @@ export function buildQuote(post, contents, opts = {}) {
   const name = prioritizeNameFallback(fullName, opts.username || post.username);
 
   const params = [
-    name,
+    stripQuotationMarks(name),
     `post:${opts.post || post.post_number}`,
     `topic:${opts.topic || post.topic_id}`,
   ];

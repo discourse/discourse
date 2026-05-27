@@ -2,41 +2,57 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Data Explorer Plugin | New Query", function (needs) {
+acceptance("New Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/explorer/groups.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([]);
     });
 
-    server.get("/admin/plugins/explorer/schema.json", () => {
-      return helper.response({});
+    server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
+      return helper.response({
+        topics: [
+          {
+            column_name: "id",
+            data_type: "serial",
+            primary: true,
+          },
+        ],
+      });
     });
 
-    server.get("/admin/plugins/explorer/queries", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [],
       });
     });
 
-    server.post("/admin/plugins/explorer/queries", () => {
+    server.post("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         query: {
           id: -15,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS\n(SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,\n                                                    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)\nSELECT t.id AS topic_id,\n    t.category_id,\n    COUNT(p.id) AS reply_count\nFROM topics t\nJOIN posts p ON t.id = p.topic_id\nJOIN query_period qp ON p.created_at >= qp.period_start\nAND p.created_at <= qp.period_end\nWHERE t.archetype = 'regular'\nAND t.user_id > 0\nGROUP BY t.id\nORDER BY COUNT(p.id) DESC, t.score DESC\nLIMIT 100\n",
+          sql: "SELECT 1",
           name: "foo",
-          description:
-            "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          param_info: [
-            {
-              identifier: "months_ago",
-              type: "int",
-              default: "1",
-              nullable: false,
-            },
-          ],
+          description: "a test query",
+          param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [],
@@ -47,22 +63,14 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/explorer/queries/-15", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries/-15", () => {
       return helper.response({
         query: {
           id: -15,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS\n(SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,\n                                                    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)\nSELECT t.id AS topic_id,\n    t.category_id,\n    COUNT(p.id) AS reply_count\nFROM topics t\nJOIN posts p ON t.id = p.topic_id\nJOIN query_period qp ON p.created_at >= qp.period_start\nAND p.created_at <= qp.period_end\nWHERE t.archetype = 'regular'\nAND t.user_id > 0\nGROUP BY t.id\nORDER BY COUNT(p.id) DESC, t.score DESC\nLIMIT 100\n",
+          sql: "SELECT 1",
           name: "foo",
-          description:
-            "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          param_info: [
-            {
-              identifier: "months_ago",
-              type: "int",
-              default: "1",
-              nullable: false,
-            },
-          ],
+          description: "a test query",
+          param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [],
@@ -74,15 +82,32 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     });
   });
 
-  test("creates a new query", async function (assert) {
-    await visit("/admin/plugins/explorer");
+  test("renders the manual create form and transitions on submit", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries");
 
-    // select new query button
-    await click(".query-list button");
-    await fillIn(".query-create input", "foo");
-    // select create new query button
-    await click(".query-create button");
+    await click(".d-page-subheader .btn-primary");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/new"
+    );
 
-    assert.strictEqual(currentURL(), "/admin/plugins/explorer/queries/-15");
+    assert
+      .dom(".query-new__manual-form .right-panel .schema")
+      .exists("schema sidebar renders");
+    assert
+      .dom(".query-new__manual-form .editor-panel .ace-wrapper")
+      .exists("SQL editor renders alongside the schema sidebar");
+
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await fillIn(
+      ".query-new__manual-form [data-name='description'] textarea",
+      "a test query"
+    );
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/-15"
+    );
   });
 });

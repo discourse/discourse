@@ -3,7 +3,7 @@
 RSpec.describe UserSerializer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
 
-  before { user.user_stat.update!(post_count: 1) }
+  before { user.user_stat.update!(post_count: 1, topic_count: 2) }
 
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
@@ -173,10 +173,32 @@ RSpec.describe UserSerializer do
           notification_level: TagUser.notification_levels[:watching_first_post],
         )
 
-        expect(json[:muted_tags]).to eq([tag1.name])
-        expect(json[:tracked_tags]).to eq([tag2.name])
-        expect(json[:watched_tags]).to eq([tag3.name])
-        expect(json[:watching_first_post_tags]).to eq([tag4.name])
+        expect(json[:muted_tags]).to eq([{ id: tag1.id, name: tag1.name, slug: tag1.slug }])
+        expect(json[:tracked_tags]).to eq([{ id: tag2.id, name: tag2.name, slug: tag2.slug }])
+        expect(json[:watched_tags]).to eq([{ id: tag3.id, name: tag3.name, slug: tag3.slug }])
+        expect(json[:watching_first_post_tags]).to eq(
+          [{ id: tag4.id, name: tag4.name, slug: tag4.slug }],
+        )
+      end
+    end
+
+    context "with staff attributes" do
+      it "includes staff attributes for staff" do
+        json = UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+
+        expect(json[:post_count]).to eq(1)
+        expect(json[:topic_count]).to eq(2)
+        expect(json).to have_key(:can_be_deleted)
+        expect(json).to have_key(:can_delete_all_posts)
+      end
+
+      it "does not include staff attributes for non-staff" do
+        json = UserSerializer.new(user, scope: Guardian.new, root: false).as_json
+
+        expect(json).not_to have_key(:post_count)
+        expect(json).not_to have_key(:topic_count)
+        expect(json).not_to have_key(:can_be_deleted)
+        expect(json).not_to have_key(:can_delete_all_posts)
       end
     end
 
@@ -489,6 +511,72 @@ RSpec.describe UserSerializer do
       expect(json[:user_passkeys][0][:name]).to eq(passkey0.name)
       expect(json[:user_passkeys][0][:last_used]).to eq(passkey0.last_used)
       expect(json[:user_passkeys][1][:id]).to eq(passkey1.id)
+    end
+  end
+
+  context "with no_password" do
+    fab!(:passwordless_user) { Fabricate(:user, password: nil) }
+
+    it "is not included for anonymous viewers" do
+      json = UserSerializer.new(passwordless_user, scope: Guardian.new, root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is not included when viewed by another non-staff user" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is included when viewed by an admin" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:admin)),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is included when viewed by a moderator" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:moderator)),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is included when the user views their own profile and has no password" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(passwordless_user),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is not included when the user views their own profile but has a password" do
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is not included for staff when the target user has a password" do
+      json = UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
     end
   end
 

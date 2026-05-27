@@ -93,20 +93,16 @@ class ReviewableScoreSerializer < ApplicationSerializer
     words = watched_words_found
 
     if words.nil? || words.empty?
-      text =
-        I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
+      I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
     else
-      text =
-        I18n.t(
-          "reviewables.reasons.watched_word",
-          link: link,
-          words: words.join(", "),
-          count: words.length,
-          default: "watched_word",
-        )
+      I18n.t(
+        "reviewables.reasons.watched_word",
+        link: link,
+        words: words.map { |w| CGI.escapeHTML(w) }.join(", "),
+        count: words.length,
+        default: "watched_word",
+      )
     end
-
-    text
   end
 
   def watched_words_found

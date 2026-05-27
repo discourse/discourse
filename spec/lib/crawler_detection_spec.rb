@@ -2,7 +2,7 @@
 
 RSpec.describe CrawlerDetection do
   def crawler!(user_agent, via = nil)
-    raise "#{user_agent} should be a crawler!" if (!CrawlerDetection.crawler?(user_agent, via))
+    raise "#{user_agent} should be a crawler!" if !CrawlerDetection.crawler?(user_agent, via)
   end
 
   def not_crawler!(s)
@@ -155,6 +155,31 @@ RSpec.describe CrawlerDetection do
         expect(CrawlerDetection.allow_crawler?("Googlebot-Image/1.0")).to eq(false)
         expect(CrawlerDetection.allow_crawler?("Twitterbot")).to eq(false)
       end
+    end
+  end
+
+  describe ".crawler_ip?" do
+    it "returns false when the IP is blank" do
+      expect(CrawlerDetection.crawler_ip?(nil)).to eq(false)
+      expect(CrawlerDetection.crawler_ip?("")).to eq(false)
+    end
+
+    it "returns false when the resolved ASN is not in crawler_asns site setting" do
+      DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({ asn: 1 })
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
+    end
+
+    it "returns false when the resolved ASN is missing" do
+      DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({})
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
+    end
+
+    it "returns true when the resolved ASN is in crawler_asns site setting" do
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("1.2.3.4")
+        .returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(true)
     end
   end
 

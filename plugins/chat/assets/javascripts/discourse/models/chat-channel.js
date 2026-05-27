@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { getURLWithCDN } from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
@@ -73,9 +72,12 @@ export default class ChatChannel {
   @tracked threadingEnabled;
   @tracked draft;
   @tracked newestMessage;
+  @tracked pinnedMessagesCount;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
+  pendingOptimisticPins = new Set();
+  pendingOptimisticUnpins = new Set();
 
   @tracked _currentUserMembership;
   @tracked _lastMessage;
@@ -98,12 +100,10 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
-    this.iconUploadUrl = args.icon_upload_url
-      ? getURLWithCDN(args.icon_upload_url)
-      : null;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
+    this.pinnedMessagesCount = args.pinned_messages_count ?? 0;
 
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
@@ -111,6 +111,10 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCountSinceLastViewed() {
+    if (!this.threadingEnabled) {
+      return 0;
+    }
+
     return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
       (lastReplyCreatedAt) =>
         lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
@@ -118,7 +122,7 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCount() {
-    return this.threadsManager.unreadThreadCount;
+    return this.threadingEnabled ? this.threadsManager.unreadThreadCount : 0;
   }
 
   get lastUnreadThreadDate() {
@@ -132,6 +136,10 @@ export default class ChatChannel {
   }
 
   get watchedThreadsUnreadCount() {
+    if (!this.threadingEnabled) {
+      return 0;
+    }
+
     return this.threadsManager.threads.reduce((unreadCount, thread) => {
       return unreadCount + thread.tracking.watchedThreadsUnreadCount;
     }, 0);
@@ -165,12 +173,20 @@ export default class ChatChannel {
     return this.meta?.can_remove_members;
   }
 
+  get canManagePins() {
+    return this.meta?.can_manage_pins;
+  }
+
   get escapedTitle() {
     return escapeExpression(this.title);
   }
 
+  get displayTitle() {
+    return this.unicodeTitle ?? this.title;
+  }
+
   get escapedDescription() {
-    return escapeExpression(this.description);
+    return escapeExpression(this.description?.trim());
   }
 
   get slugifiedTitle() {
@@ -225,6 +241,14 @@ export default class ChatChannel {
         this.threadsManager.unreadThreadCount >
       0
     );
+  }
+
+  get hasPinnedMessages() {
+    return this.pinnedMessagesCount > 0;
+  }
+
+  get hasUnseenPins() {
+    return this.currentUserMembership?.hasUnseenPins ?? false;
   }
 
   async stageMessage(message) {

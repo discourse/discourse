@@ -2,12 +2,21 @@
 
 module DiscoursePostEvent
   class EventsController < DiscoursePostEventController
+    requires_login except: %i[index show]
     skip_before_action :check_xhr, only: [:index], if: :ics_request?
 
     def index
+      search_params = filtered_events_params.to_h
+
+      if ics_request?
+        search_params["after"] ||= 3.months.ago.iso8601
+        search_params["order"] ||= "asc"
+      end
+
       @events =
-        DiscoursePostEvent::EventFinder.search(current_user, filtered_events_params).includes(
+        DiscoursePostEvent::EventFinder.search(current_user, search_params).includes(
           :event_dates,
+          :image_upload,
           post: {
             topic: %i[tags category],
           },
@@ -15,6 +24,29 @@ module DiscoursePostEvent
 
       respond_to do |format|
         format.ics do
+          @calendar_name = calendar_name_for_ics
+
+          after_time = filtered_events_params[:after]&.to_datetime || Time.current
+          before_time = filtered_events_params[:before]&.to_datetime || 1.year.from_now
+
+          @ics_events =
+            @events.flat_map do |event|
+              if event.recurring?
+                expanded =
+                  DiscoursePostEvent::Action::ExpandOccurrences.call(
+                    event: event,
+                    after: after_time,
+                    before: before_time,
+                    limit: 52,
+                  )
+                expanded[:occurrences].map { |occ| { event: event, **occ } }
+              else
+                [{ event: event, starts_at: event.starts_at, ends_at: event.ends_at }]
+              end
+            end
+
+          @ics_events = @ics_events.sort_by { |e| e[:starts_at] || Time.current }.first(500)
+
           filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
         end
@@ -67,7 +99,7 @@ module DiscoursePostEvent
     end
 
     def show
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_see!(event.post)
 
       serializer = EventSerializer.new(event, scope: guardian)
@@ -75,10 +107,12 @@ module DiscoursePostEvent
     end
 
     def destroy
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_act_on_discourse_post_event!(event)
       event.publish_update!
-      event.destroy
+      payload = WebHook.build_calendar_event_payload(event)
+      event.destroy!
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event, payload)
       render json: success_json
     end
 
@@ -93,35 +127,33 @@ module DiscoursePostEvent
       raise Discourse::InvalidParameters.new(:file) if file.blank?
 
       hijack do
-        begin
-          invitees = []
+        invitees = []
 
-          CSV.foreach(file.tempfile) do |row|
-            invitees << { identifier: row[0], attendance: row[1] || "going" } if row[0].present?
-          end
+        CSV.foreach(file.tempfile) do |row|
+          invitees << { identifier: row[0], attendance: row[1] || "going" } if row[0].present?
+        end
 
-          if invitees.present?
-            Jobs.enqueue(
-              :discourse_post_event_bulk_invite,
-              event_id: event.id,
-              invitees: invitees,
-              current_user_id: current_user.id,
-            )
-            render json: success_json
-          else
-            render json:
-                     failed_json.merge(
-                       errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
-                     ),
-                   status: :unprocessable_entity
-          end
-        rescue StandardError
+        if invitees.present?
+          Jobs.enqueue(
+            :discourse_post_event_bulk_invite,
+            event_id: event.id,
+            invitees: invitees,
+            current_user_id: current_user.id,
+          )
+          render json: success_json
+        else
           render json:
                    failed_json.merge(
                      errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                    ),
                  status: :unprocessable_entity
         end
+      rescue StandardError
+        render json:
+                 failed_json.merge(
+                   errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
+                 ),
+               status: :unprocessable_entity
       end
     end
 
@@ -161,6 +193,8 @@ module DiscoursePostEvent
         :post_id,
         :category_id,
         :include_subcategories,
+        :include_interested,
+        :include_ongoing,
         :limit,
         :attending_user,
         :before,
@@ -171,12 +205,28 @@ module DiscoursePostEvent
 
     def format_time(event, time)
       return nil unless time
+      return time.utc.strftime("%Y-%m-%d") if event.all_day
 
       if event.show_local_time
         time.in_time_zone(event.timezone).strftime("%Y-%m-%dT%H:%M:%S")
       else
         time.in_time_zone(event.timezone).iso8601(3)
       end
+    end
+
+    def calendar_name_for_ics
+      translation_key =
+        if filtered_events_params[:attending_user].present? &&
+             current_user&.username_lower == filtered_events_params[:attending_user].downcase
+          "my_events_feed_name"
+        else
+          "all_events_feed_name"
+        end
+
+      I18n.t(
+        "discourse_calendar.calendar_subscriptions.#{translation_key}",
+        site_title: SiteSetting.title,
+      )
     end
   end
 end

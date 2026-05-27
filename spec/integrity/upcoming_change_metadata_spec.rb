@@ -1,0 +1,115 @@
+# frozen_string_literal: true
+
+def upcoming_change_setting_files
+  [
+    Rails.root.join("config/site_settings.yml").to_s,
+    *Dir["#{Rails.root.join("plugins/*/config/settings.yml")}"].sort,
+  ]
+end
+
+def each_upcoming_change_setting
+  upcoming_change_setting_files.each do |file|
+    SiteSettings::YamlLoader
+      .new(file)
+      .load do |category, setting_name, default, opts|
+        next if opts[:upcoming_change].blank?
+
+        setting = {
+          file: file.delete_prefix("#{Rails.root.join("")}"),
+          setting_name: setting_name,
+          default: default,
+          options: opts,
+          upcoming_change: opts[:upcoming_change],
+        }
+
+        yield setting
+      end
+  end
+end
+
+def upcoming_change_setting_label(setting)
+  "#{setting[:setting_name]} in #{setting[:file]}"
+end
+
+def valid_upcoming_change_impact_types
+  %w[feature other site_setting_default]
+end
+
+def valid_upcoming_change_impact_roles
+  %w[staff admins moderators all_members developers]
+end
+
+RSpec.describe "upcoming change metadata integrity checks" do
+  each_upcoming_change_setting do |setting|
+    label = upcoming_change_setting_label(setting)
+
+    it "#{label} is valid" do
+      metadata = setting[:upcoming_change]
+      allowed_keys = %i[status impact learn_more_url allow_enabled_for]
+      required_keys = %i[status impact]
+      unsupported_keys = metadata.keys - allowed_keys
+      missing_keys = required_keys - metadata.keys
+      valid_statuses = UpcomingChanges.statuses.keys
+      status = metadata[:status].to_sym
+      impact = metadata[:impact]
+      impact_parts = impact.is_a?(String) ? impact.split(",") : []
+      learn_more_url = metadata[:learn_more_url]
+      allow_enabled_for = metadata[:allow_enabled_for]
+
+      aggregate_failures do
+        expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
+        expect(setting[:options][:client]).to eq(true), "#{label} must set `client: true`"
+        expect(setting[:default]).to eq(false), "#{label} must set `default: false`"
+
+        expect(unsupported_keys).to be_empty,
+        "#{label} has unsupported upcoming_change keys: #{unsupported_keys.join(", ")}. Allowed keys: #{allowed_keys.join(", ")}"
+        expect(missing_keys).to be_empty,
+        "#{label} is missing required upcoming_change keys: #{missing_keys.join(", ")}"
+
+        expect(valid_statuses).to include(status),
+        "#{label} has invalid upcoming_change status #{status.inspect}. Valid statuses: #{valid_statuses.join(", ")}"
+
+        expect(impact_parts.length).to eq(2),
+        "#{label} must set upcoming_change.impact as `type,role`, got #{impact.inspect}"
+
+        if impact_parts.length == 2
+          impact_type, impact_role = impact_parts
+
+          expect(valid_upcoming_change_impact_types).to include(impact_type),
+          "#{label} has invalid upcoming_change impact type #{impact_type.inspect}. Valid types: #{valid_upcoming_change_impact_types.join(", ")}"
+          expect(valid_upcoming_change_impact_roles).to include(impact_role),
+          "#{label} has invalid upcoming_change impact role #{impact_role.inspect}. Valid roles: #{valid_upcoming_change_impact_roles.join(", ")}"
+        end
+
+        if status != :conceptual
+          aggregate_failures do
+            expect(learn_more_url).to be_present,
+            "#{label} must set `upcoming_change.learn_more_url` when status is not `conceptual`"
+
+            if learn_more_url.present?
+              expect(learn_more_url).to match(%r{\Ahttps://meta\.discourse\.org/t/-/\d+\z}),
+              "#{label} upcoming_change.learn_more_url must match https://meta.discourse.org/t/-/NNNN, do not include the topic slug"
+            end
+          end
+        end
+
+        if allow_enabled_for.present?
+          valid_values = %w[everyone staff specific_groups]
+          allow_strings = Array(allow_enabled_for).map(&:to_s)
+
+          expect(allow_enabled_for).to be_an(Array),
+          "#{label} `upcoming_change.allow_enabled_for` must be an array"
+          expect(allow_strings).not_to be_empty,
+          "#{label} `upcoming_change.allow_enabled_for` must not be empty"
+          expect(allow_strings - valid_values).to be_empty,
+          "#{label} `upcoming_change.allow_enabled_for` contains invalid values: #{(allow_strings - valid_values).join(", ")}. Valid values: #{valid_values.join(", ")}"
+
+          if allow_strings.include?("everyone")
+            expect(allow_strings).to eq(["everyone"]),
+            "#{label} `upcoming_change.allow_enabled_for` may not combine `everyone` with other values"
+          end
+        end
+      end
+    end
+  end
+end

@@ -144,6 +144,19 @@ module(
           "***[`Hello`](https://example.com)***",
         ],
       ],
+      "typography reverse": [
+        ["hello -- world", "<p>hello \u2013 world</p>", "hello -- world"],
+        ["hello --- world", "<p>hello \u2014 world</p>", "hello --- world"],
+        ["hello... world", "<p>hello\u2026 world</p>", "hello... world"],
+        ["+-5", "<p>\u00b15</p>", "+-5"],
+        ["(tm)", "<p>\u2122</p>", "(tm)"],
+        ["(pa)", "<p>\u00b6</p>", "(pa)"],
+        [
+          "`hello -- world`",
+          "<p><code>hello -- world</code></p>",
+          "`hello -- world`",
+        ],
+      ],
     };
 
     Object.entries(testCases).forEach(([name, tests]) => {

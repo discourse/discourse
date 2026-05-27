@@ -89,14 +89,6 @@ class ImportScripts::Base
   end
 
   def change_site_settings
-    if SiteSetting.bootstrap_mode_enabled
-      SiteSetting.default_trust_level = TrustLevel[0] if SiteSetting.default_trust_level ==
-        TrustLevel[1]
-      SiteSetting.default_email_digest_frequency =
-        10_080 if SiteSetting.default_email_digest_frequency == 1440
-      SiteSetting.bootstrap_mode_enabled = false
-    end
-
     @site_settings_during_import = get_site_settings_for_import
 
     @site_settings_during_import.each do |key, value|
@@ -225,25 +217,23 @@ class ImportScripts::Base
     return false if import_ids.empty?
 
     ActiveRecord::Base.transaction do
-      begin
-        connection = ActiveRecord::Base.connection.raw_connection
-        connection.exec("CREATE TEMP TABLE import_ids(val text PRIMARY KEY)")
+      connection = ActiveRecord::Base.connection.raw_connection
+      connection.exec("CREATE TEMP TABLE import_ids(val text PRIMARY KEY)")
 
-        import_id_clause =
-          import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+      import_id_clause =
+        import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
 
-        connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
+      connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
-        existing = "#{type.to_s.classify}CustomField".constantize
-        existing = existing.where(name: "import_id").joins("JOIN import_ids ON val = value").count
+      existing = "#{type.to_s.classify}CustomField".constantize
+      existing = existing.where(name: "import_id").joins("JOIN import_ids ON val = value").count
 
-        if existing == import_ids.length
-          puts "Skipping #{import_ids.length} already imported #{type}"
-          true
-        end
-      ensure
-        connection.exec("DROP TABLE import_ids") unless connection.nil?
+      if existing == import_ids.length
+        puts "Skipping #{import_ids.length} already imported #{type}"
+        true
       end
+    ensure
+      connection.exec("DROP TABLE import_ids") unless connection.nil?
     end
   end
 

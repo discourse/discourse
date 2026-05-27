@@ -14,6 +14,7 @@ class Report
     trust_level
     file_extension
     include_subcategories
+    hidden_labels
   ]
 
   MODES = {
@@ -35,6 +36,22 @@ class Report
     page_view_logged_in_reqs
   ]
 
+  ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
+  IP_ADDRESS_REPORTS = %w[suspicious_logins]
+  BROWSER_PAGEVIEW_REPORTS = %w[
+    top_countries_by_browser_pageviews
+    top_referrers_by_browser_pageviews
+  ]
+
+  def self.hidden?(type, guardian:)
+    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
+    return true if BROWSER_PAGEVIEW_REPORTS.include?(type)
+
+    hidden_reports =
+      SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
+    hidden_reports.include?(type)
+  end
+
   COLORS = {
     turquoise: "#1EB8D1",
     lime: "#9BC53D",
@@ -43,6 +60,31 @@ class Report
     brown: "#8A6916",
     yellow: "#FFCD56",
   }
+
+  LEGACY_REPORTS = %w[
+    associated_accounts_by_provider
+    bookmarks
+    consolidated_api_requests
+    flags
+    flags_status
+    likes
+    moderator_warning_private_messages
+    mobile_visits
+    notify_moderators_private_messages
+    notify_user_private_messages
+    post_edits
+    profile_views
+    reactions
+    suspicious_logins
+    system_private_messages
+    top_referrers
+    top_users_by_likes_received_from_inferior_trust_level
+    top_users_by_likes_received_from_a_variety_of_people
+    trust_level_growth
+    user_flagging_ratio
+    user_to_user_private_messages
+    web_hook_events_daily_aggregate
+  ]
 
   include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
@@ -66,14 +108,16 @@ class Report
   include Reports::Posts
   include Reports::ProfileViews
   include Reports::Signups
-  include Reports::StaffLogins
+  include Reports::AdminLogins
   include Reports::StorageStats
   include Reports::SuspiciousLogins
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
+  include Reports::TopCountriesByBrowserPageviews
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
+  include Reports::TopReferrersByBrowserPageviews
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
@@ -84,6 +128,9 @@ class Report
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
+  include Reports::TrustLevelPipeline
+  include Reports::PostersByMemberType
+  include Reports::ActivityByCategory
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
@@ -114,7 +161,12 @@ class Report
                 :primary_color,
                 :secondary_color,
                 :filters,
-                :available_filters
+                :available_filters,
+                :legacy,
+                :default_group_by,
+                :y_axis_title,
+                :current_user,
+                :guardian
 
   def self.default_days
     30
@@ -147,6 +199,8 @@ class Report
   end
 
   def self.cache_key(report)
+    guardian = report.guardian || report.current_user&.guardian
+
     [
       "reports",
       report.type,
@@ -156,6 +210,8 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
+      guardian&.user&.id || report.current_user&.id,
+      guardian&.can_see_ip?,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -199,11 +255,11 @@ class Report
   end
 
   def prev_start_date
-    self.start_date - (self.end_date - self.start_date)
+    start_date - (end_date - start_date)
   end
 
   def prev_end_date
-    self.start_date
+    start_date
   end
 
   def as_json(options = nil)
@@ -220,27 +276,30 @@ class Report
       data: data,
       start_date: start_date&.iso8601,
       end_date: end_date&.iso8601,
-      prev_data: self.prev_data,
+      prev_data: prev_data,
       prev_start_date: prev_start_date&.iso8601,
       prev_end_date: prev_end_date&.iso8601,
-      prev30Days: self.prev30Days,
-      dates_filtering: self.dates_filtering,
+      prev30Days: prev30Days,
+      dates_filtering: dates_filtering,
       report_key: Report.cache_key(self),
-      primary_color: self.primary_color,
-      secondary_color: self.secondary_color,
-      available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
+      primary_color: primary_color,
+      secondary_color: secondary_color,
+      available_filters: available_filters.map { |k, v| { id: k }.merge(v) },
       labels: labels || Report.default_labels,
-      average: self.average,
-      percent: self.percent,
-      higher_is_better: self.higher_is_better,
-      modes: self.modes,
+      average: average,
+      percent: percent,
+      higher_is_better: higher_is_better,
+      modes: modes,
     }.tap do |json|
-      json[:icon] = self.icon if self.icon
-      json[:error] = self.error if self.error
-      json[:total] = self.total if self.total
-      json[:prev_period] = self.prev_period if self.prev_period
-      json[:prev30Days] = self.prev30Days if self.prev30Days
-      json[:limit] = self.limit if self.limit
+      json[:legacy] = legacy if legacy
+      json[:icon] = icon if icon
+      json[:error] = error if error
+      json[:total] = total if total
+      json[:prev_period] = prev_period if prev_period
+      json[:prev30Days] = prev30Days if prev30Days
+      json[:limit] = limit if limit
+      json[:default_group_by] = default_group_by if default_group_by
+      json[:y_axis_title] = y_axis_title if y_axis_title
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
@@ -273,7 +332,13 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.guardian = opts[:guardian] if opts[:guardian]
+    report.current_user = opts[:current_user] if opts[:current_user]
+    report.current_user ||= report.guardian&.user
+    report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
+
+    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
 
     report
   end
@@ -362,7 +427,7 @@ class Report
     report.total = data.sum(:count)
 
     report.prev30Days =
-      data.where("date >= ? AND date < ?", (report.start_date - 31.days), report.start_date).sum(
+      data.where("date >= ? AND date < ?", report.start_date - 31.days, report.start_date).sum(
         :count,
       )
   end

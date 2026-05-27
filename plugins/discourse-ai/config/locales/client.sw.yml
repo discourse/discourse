@@ -34,12 +34,15 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      llm_selector:
+        none: "Hakuna"
       features:
-        back: "Iliyopita"
         disabled: "(imezuiwa)"
         groups: "Makundi:"
         no_groups: "Hakuna"
-        edit: "Hariri"
+        edit: "Mipangilio"
+        nav:
+          enabled: "Imeruhusiwa"
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
@@ -70,8 +73,8 @@ sw:
         summary: "Muhtasari"
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
-      ai_persona:
-        back: "Iliyopita"
+        total: "Jumla"
+      ai_agent:
         name: "Jina"
         edit: "Hariri"
         export: "Hamisha"
@@ -90,7 +93,6 @@ sw:
           title: "Upakiaji"
           uploading: "Inaongezwa"
       tools:
-        back: "Iliyopita"
         export: "Hamisha"
         import: "Imeingizwa kutoka sehemu nyingine"
         name: "Jina"
@@ -100,13 +102,31 @@ sw:
         remove_parameter: "Ondoa"
         parameter_required: "Muhimu na Inahitajika"
         edit: "Hariri"
+        test: "Majaribio"
         delete: "Futa"
+      secrets:
+        name: "Jina"
+        secret: "Thamani"
+        save: "Hifadhi"
+        edit: "Hariri"
+        delete: "Futa"
+        embedding: "Ambatanisha"
+      mcp_servers:
+        name: "Jina"
+        description: "Maelezo"
+        url: "Anwani ya mtandao"
+        oauth_connect: "Unganisha"
+        enabled: "Imeruhusiwa"
+        save: "Hifadhi"
+        edit: "Hariri"
+        delete: "Futa"
+        tools_modal:
+          required: "Muhimu na Inahitajika"
       llms:
         display_name: "Jina"
         provider: "Mkimu"
         save: "Hifadhi"
         edit: "Hariri"
-        back: "Iliyopita"
         delete: Futa
         quotas:
           group: "Kikundi"
@@ -126,10 +146,11 @@ sw:
           close: "Funga"
           copy: "Nakili"
           cancel: "Batili"
+        thumbnail_suggestions:
+          try_again: "Jaribu Tena"
         image_caption:
           save_caption: "Hifadhi"
       embeddings:
-        back: "Iliyopita"
         save: "Hifadhi"
         delete: "Futa"
         edit: "Hariri"

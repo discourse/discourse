@@ -48,6 +48,8 @@ et:
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
+  topic_tag_changed:
+    removed: "Eemaldatud %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
   components:
@@ -143,7 +145,13 @@ et:
   not_in_group:
     join_group: "Liitu grupiga"
   reading_time: "Lugemise aeg"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} minutit 🕑"
   likes: "Meeldimisi"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastus teema kohta."
     other: "Vabandame, kuid ajutiselt on uutel kasutajatel lubatud %{count} vastust teema kohta."
@@ -231,6 +239,7 @@ et:
       admins: "adminid"
       moderators: "moderaatorid"
       staff: "meeskond"
+      anonymous: "anonüümne"
       trust_level_0: "usaldustase_0"
       trust_level_1: "usaldustase_1"
       trust_level_2: "usaldustase_2"
@@ -505,10 +514,11 @@ et:
       every_month: "iga kuu"
       every_six_months: "iga kuue kuu tagant"
   user_api_key:
-    title: "Autoriseeri rakenduse ligipääs"
     authorize: "Autoriseeri"
+    deny: "Loobu"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
+    copied: "Kopeeritud!"
     otp_confirmation:
       confirm_title: Edasi saidile %{site_name}
     scopes:
@@ -547,12 +557,37 @@ et:
         poster: Postitaja
     visits:
       title: "Kasutajakülastused"
-      xaxis: "Päev"
+      xaxis:
+        desktop: "Töölaud"
+        mobile: "Mobiil"
       yaxis: "Külastajate arv"
     signups:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    activity_by_category:
+      labels:
+        category: "Kategooriad"
+        topics: "Teemasid"
+        posts: "Postitust"
+        share: "Jaga"
+    posters_by_member_type:
+      labels:
+        count: "Postitust"
+        share: "Jaga"
+      types:
+        staff: "Meeskond"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Liikmed"
+        share: "Jaga"
+      levels:
+        "0": "Uus"
+        "1": "Tavakasutaja"
+        "2": "Liige"
+        "3": "Püsiliige"
+        "4": "Vedaja"
     trust_level_growth:
       yaxis: "Päev"
     consolidated_page_views:
@@ -569,6 +604,8 @@ et:
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonüümne"
       yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
@@ -654,6 +691,12 @@ et:
         user: "Kasutaja"
         num_clicks: "Klikke"
         num_topics: "Teemasid"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
     top_traffic_sources:
       title: "Suurima liikluse allikad"
       xaxis: "Domeen"
@@ -691,6 +734,8 @@ et:
       xaxis: "Päev"
     page_view_logged_in_browser_reqs:
       xaxis: "Päev"
+    page_view_embed_reqs:
+      xaxis: "Päev"
     http_background_reqs:
       title: "Taustal"
       xaxis: "Päev"
@@ -725,7 +770,7 @@ et:
       labels:
         user: Kasutaja
         location: Asukoht
-    staff_logins:
+    admin_logins:
       labels:
         user: Kasutaja
         location: Asukoht
@@ -765,18 +810,14 @@ et:
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
     embed_post_limit: "Maksimaalne postituste arv, mida sängitada."
-    min_trust_to_create_tag: "Sildi lisamiseks nõutav minimaalne usaldustase."
     max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
     max_tag_length: "Sildis kasutatavate tähemärkide maksimaalne arv."
     max_tag_search_results: "Siltide otsimisel maksimaalselt kuvatavate tulemuste arv."
     max_tags_in_filter_list: "Filtri rippmenüüs kuvatavate siltide maksimaalne arv. Kuvatakse enimkasutatud sildid."
     tags_sort_alphabetically: "Kuva sildid tähestikulises järjekorras. Vaikimisi kuvatakse need populaarsuse järjekorras."
-    min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
-      min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
-      max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:
@@ -803,8 +844,10 @@ et:
     queued_by_staff:
       title: "Postitus vajab kinnitust"
     welcome_user:
+      preview: "Tere tulemast saidile %{site_name}!"
       subject_template: "Tere tulemast %{site_name}!"
     welcome_invite:
+      preview: "Tere tulemast saidile %{site_name}!"
       subject_template: "Tere tulemast %{site_name}!"
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"
@@ -848,6 +891,7 @@ et:
       popular_posts: "Populaarsed postitused"
       more_new: "Uus sinu jaoks"
       subject_template: "[%{email_prefix}] Kokkuvõte"
+      subject_template_improved: "Kokkuvõte"
       your_email_settings: "sinu e-posti seaded"
       click_here: "kliki siia"
     forgot_password:
@@ -855,6 +899,8 @@ et:
       subject_template: "[%{email_prefix}] Parooli taastamine"
     set_password:
       title: "Määra Parool"
+    admin_login:
+      subject_template_improved: "Sisselogimine"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:
@@ -1023,13 +1069,7 @@ et:
   wizard:
     title: "Discourse sätted"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Jane ajaviitenurgake"
-          site_description:
-            placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
-      privacy:
+      setup:
         fields:
           login_required:
             label: "Nähtavus"
@@ -1038,25 +1078,12 @@ et:
                 label: "Avalik"
               private:
                 label: "Privaatne"
-      styling:
-        fields:
-          styling_preview:
-            label: "Eelvaade"
-          homepage_style:
-            choices:
-              latest:
-                label: "Värskeimad"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      invites:
-        title: "Kutsu meeskonda"
-      finished:
-        title: "Sinu Discourse on valmis!"
   onebox:
     github:
       closed: "suletud"
+      status_date:
+        approved: "heakskiidetud"
+        closed: "suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1086,28 +1113,39 @@ et:
         complete: "Postitus kustutatud."
       delete_and_agree:
         complete: "Postitus kustutatud."
-      disagree:
+      disagree_bundle:
         title: "Ei"
       ignore:
         title: "Ignoreeri"
       ignore_and_do_nothing:
         title: "Ära tee midagi"
       approve:
-        title: "Kinnita"
+        title: "Jah"
+      approve_post:
+        title: "Jah"
+      approve_post_closed:
+        title: "Jah"
+      reject_post_bundle:
+        title: "Ei"
       approve_user:
-        title: "Kiida kasutaja heaks"
+        title: "Jah"
       reject_user:
+        title: "Ei"
         delete:
           title: "Kustuta kasutaja"
           complete: "Kasutaja kustutatud."
+      confirm_spam:
+        title: "Jah"
+      not_spam:
+        title: "Ei"
       reject:
         title: "Lükka tagasi"
-      no_action_post:
-        title: "Tegevust pole"
+      approve_and_restore:
+        title: "Jah"
+      approve_and_unhide:
+        title: "Jah"
       delete_post:
         complete: "Postitus kustutatud"
-      no_action_user:
-        title: "Tegevust pole"
       delete_user:
         complete: "Kasutaja kustutatud"
   fallback_username: "kasutaja"

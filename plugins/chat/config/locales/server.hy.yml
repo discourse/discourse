@@ -19,8 +19,8 @@ hy:
         agree_and_silence:
           title: "Լռեցնել Օգտատիրոջը"
           description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
-        disagree:
-          title: "Չընդունել"
+        ignore:
+          title: "Անտեսել դրոշակը"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -34,6 +34,9 @@ hy:
     popup:
       chat_mention:
         direct: '%{username} -ը նշել է Ձեզ այստեղ՝ "%{channel}"'
+    actions:
+      chat_reply:
+        title: Պատասխանել
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

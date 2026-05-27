@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Drawer - direct messages", type: :system do
+RSpec.describe "Drawer - direct messages" do
   fab!(:current_user, :user)
 
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
@@ -15,9 +15,5 @@ RSpec.describe "Drawer - direct messages", type: :system do
     drawer_page.open_chat_search
 
     expect(drawer_page).to have_open_chat_search
-
-    drawer_page.back
-
-    expect(drawer_page).to have_open_direct_messages
   end
 end

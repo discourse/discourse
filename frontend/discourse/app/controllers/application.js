@@ -1,29 +1,61 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
   @service footer;
-  // eslint-disable-next-line discourse/no-unused-services
-  @service router; // used in the route template
+  @service router;
+  @service scrollState;
   @service sidebarState;
+  @service siteSettings;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
 
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
-  showSiteHeader = true;
-
+  _showSiteHeader = true;
   @tracked _showSidebar;
+
+  get isCurrentAdminRoute() {
+    return this.router.currentRouteName?.startsWith("admin");
+  }
+
+  get upcomingChangeBodyClasses() {
+    if (!this.siteSettings.currentUserUpcomingChanges) {
+      return "";
+    }
+
+    const classes = [];
+
+    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
+      if (this.siteSettings[key]) {
+        classes.push(`uc-${dasherize(key)}`);
+      }
+    });
+
+    return classes.join(" ");
+  }
+
+  get showSiteHeader() {
+    if (EmbedMode.enabled) {
+      return false;
+    }
+    return this._showSiteHeader;
+  }
+
+  set showSiteHeader(value) {
+    this._showSiteHeader = value;
+  }
 
   // Some themes may need to override the default value provided by `calculateShowSidebar` using viewport properties.
   // Accessing the value in a getter prevents static viewport initialization warnings.
@@ -41,18 +73,26 @@ export default class ApplicationController extends Controller {
 
   set showFooter(value) {
     deprecated(
-      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hide-application-footer}} helper to an Ember template.",
+      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hideApplicationFooter}} helper to an Ember template.",
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;
+  }
+
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
+  }
+
+  get shouldHideScrollableContentBelow() {
+    return this.scrollState.shouldHideContentBelow;
   }
 
   get showPoweredBy() {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   }
 
-  @discourseComputed
-  canSignUp() {
+  @computed
+  get canSignUp() {
     return (
       !this.siteSettings.invite_only &&
       this.siteSettings.allow_new_registrations &&
@@ -60,18 +100,18 @@ export default class ApplicationController extends Controller {
     );
   }
 
-  @discourseComputed
-  canDisplaySidebar() {
+  @computed
+  get canDisplaySidebar() {
     return this.currentUser || !this.siteSettings.login_required;
   }
 
-  @discourseComputed
-  loginRequired() {
+  @computed
+  get loginRequired() {
     return this.siteSettings.login_required && !this.currentUser;
   }
 
-  @discourseComputed
-  showFooterNav() {
+  @computed
+  get showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   }
 
@@ -80,6 +120,10 @@ export default class ApplicationController extends Controller {
   }
 
   get sidebarEnabled() {
+    if (EmbedMode.enabled) {
+      return false;
+    }
+
     if (!this.canDisplaySidebar) {
       return false;
     }

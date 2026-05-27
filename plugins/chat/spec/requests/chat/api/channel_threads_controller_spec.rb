@@ -41,6 +41,50 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
       end
 
+      context "with user status enabled" do
+        before { SiteSetting.enable_user_status = true }
+
+        it "preloads user_options to avoid N+1 queries for original message mentions" do
+          thread.original_message.user.set_status!("status", "grinning")
+
+          3.times do
+            mentioned_user = Fabricate(:user)
+            mentioned_user.set_status!("status", "wave")
+            Fabricate(
+              :user_chat_mention,
+              chat_message: thread.original_message,
+              user: mentioned_user,
+            )
+          end
+
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+
+          queries =
+            track_sql_queries { get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}" }
+          user_option_queries = queries.select { |query| query.include?('"user_options"') }
+
+          expect(user_option_queries.size).to eq(2)
+        end
+      end
+
+      context "when the thread original message is deleted" do
+        before { thread.original_message.trash! }
+
+        it "returns 404" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+          expect(response.status).to eq(404)
+        end
+
+        context "when the current user is a moderator" do
+          before { current_user.update!(moderator: true) }
+
+          it "returns 200" do
+            get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+            expect(response.status).to eq(200)
+          end
+        end
+      end
+
       context "when the channel_id does not match the thread id" do
         fab!(:other_channel, :chat_channel)
 
@@ -276,6 +320,27 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
       context "when user cannot view the channel" do
         let(:channel_id) { Fabricate(:private_category_channel).id }
+
+        it "returns 403" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when user can only see a readonly category channel" do
+        fab!(:group) { Fabricate(:group, users: [current_user]) }
+        fab!(:category) do
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+        fab!(:channel_1) do
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
         it "returns 403" do
           post "/chat/api/channels/#{channel_id}/threads", params: params

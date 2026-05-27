@@ -4,13 +4,13 @@ import { Input } from "@ember/component";
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import avatar from "discourse/helpers/avatar";
-import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { not } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class AdminPenaltySimilarUsers extends Component {
@@ -59,7 +59,7 @@ export default class AdminPenaltySimilarUsers extends Component {
   <template>
     <div class="penalty-similar-users">
       <p class="alert alert-warning">
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "admin.user.other_matches"
             (hash count=@user.similar_users_count username=@user.username)
@@ -67,7 +67,7 @@ export default class AdminPenaltySimilarUsers extends Component {
         }}
       </p>
 
-      <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+      <DConditionalLoadingSpinner @condition={{this.isLoading}}>
         <table class="table">
           <thead>
             <tr>
@@ -91,17 +91,17 @@ export default class AdminPenaltySimilarUsers extends Component {
                     {{on "click" (fn this.selectUserId user.id)}}
                   />
                 </td>
-                <td>{{avatar user imageSize="small"}} {{user.username}}</td>
-                <td>{{formatDuration user.last_seen_age}}</td>
-                <td>{{number user.topics_entered}}</td>
-                <td>{{number user.posts_read_count}}</td>
-                <td>{{formatDuration user.time_read}}</td>
-                <td>{{formatDuration user.created_at_age}}</td>
+                <td>{{dAvatar user imageSize="small"}} {{user.username}}</td>
+                <td>{{dFormatDuration user.last_seen_age}}</td>
+                <td>{{dNumber user.topics_entered}}</td>
+                <td>{{dNumber user.posts_read_count}}</td>
+                <td>{{dFormatDuration user.time_read}}</td>
+                <td>{{dFormatDuration user.created_at_age}}</td>
               </tr>
             {{/each}}
           </tbody>
         </table>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }

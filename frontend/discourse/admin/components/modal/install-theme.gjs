@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -5,20 +6,20 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import InstallThemeItem from "discourse/admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import CopyButton from "discourse/components/copy-button";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
 import { POPULAR_THEMES } from "discourse/lib/popular-themes";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MIN_NAME_LENGTH = 4;
@@ -32,7 +33,6 @@ export default class InstallThemeModal extends Component {
 
   @tracked selection = this.args.model.selection || "popular";
   @tracked uploadUrl = this.args.model.uploadUrl;
-  @tracked uploadName = this.args.model.uploadName;
   @tracked selectedType = this.args.model.selectedType;
   @tracked advancedVisible = false;
   @tracked loading = false;
@@ -284,7 +284,7 @@ export default class InstallThemeModal extends Component {
   <template>
     <DModal
       @bodyClass="install-theme"
-      class="admin-install-theme-modal"
+      class="admin-install-theme-modal -large"
       @title={{i18n "admin.customize.theme.install"}}
       @closeModal={{@closeModal}}
     >
@@ -315,7 +315,7 @@ export default class InstallThemeModal extends Component {
           </div>
         {{/unless}}
         <div class="install-theme-content">
-          <ConditionalLoadingSection
+          <DConditionalLoadingSection
             @isLoading={{this.loading}}
             @title={{this.installingMessage}}
           >
@@ -323,6 +323,19 @@ export default class InstallThemeModal extends Component {
               <div class="popular-theme-items">
                 {{#each this.themes as |theme|}}
                   <div class="popular-theme-item" data-name={{theme.name}}>
+                    {{#if theme.screenshot_url}}
+                      <div class="popular-theme-screenshot">
+                        <img
+                          alt={{i18n
+                            "admin.customize.theme.screenshot"
+                            name=theme.name
+                          }}
+                          loading="lazy"
+                          src={{theme.screenshot_url}}
+                        />
+                      </div>
+                    {{/if}}
+
                     <div class="popular-theme-name">
                       <a
                         href={{theme.meta_url}}
@@ -330,7 +343,7 @@ export default class InstallThemeModal extends Component {
                         target="_blank"
                       >
                         {{#if theme.component}}
-                          {{icon
+                          {{dIcon
                             "puzzle-piece"
                             title="admin.customize.theme.component"
                           }}
@@ -347,7 +360,7 @@ export default class InstallThemeModal extends Component {
                         <span>{{i18n "admin.customize.theme.installed"}}</span>
                       {{else}}
                         <DButton
-                          class="btn-default btn-small"
+                          class="btn-primary"
                           @label="admin.customize.theme.install"
                           @disabled={{this.installDisabled}}
                           @icon="upload"
@@ -360,7 +373,7 @@ export default class InstallThemeModal extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                           >
-                            {{icon "desktop"}}
+                            {{dIcon "desktop"}}
                             {{i18n "admin.customize.theme.preview"}}
                           </a>
                         {{/if}}
@@ -376,7 +389,7 @@ export default class InstallThemeModal extends Component {
                   {{on "change" this.uploadLocaleFile}}
                   type="file"
                   id="file-input"
-                  accept=".dcstyle.json,application/json,.tar.gz,application/x-gzip,.zip,application/zip"
+                  accept=".tar.gz,application/x-gzip,.zip,application/zip"
                 />
                 <br />
                 <span class="description">
@@ -431,7 +444,7 @@ export default class InstallThemeModal extends Component {
                         value={{this.publicKey}}
                         {{didInsert this.generatePublicKey}}
                       />
-                      <CopyButton @selector="textarea.public-key-value" />
+                      <DCopyButton @selector="textarea.public-key-value" />
                     </div>
                   </div>
                 {{/if}}
@@ -463,17 +476,17 @@ export default class InstallThemeModal extends Component {
             {{#if this.directRepoInstall}}
               <div class="repo">
                 <div class="label">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "admin.customize.theme.direct_install_tip"
-                      name=this.uploadName
+                      name=@model.uploadName
                     )
                   }}
                 </div>
                 <pre><code>{{this.uploadUrl}}</code></pre>
               </div>
             {{/if}}
-          </ConditionalLoadingSection>
+          </DConditionalLoadingSection>
         </div>
       </:body>
       <:footer>

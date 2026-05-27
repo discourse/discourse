@@ -1,6 +1,6 @@
 import { NOTIFICATION_TYPES } from "./concerns/notification-types";
 
-export default {
+const notificationFixtures = {
   "/notifications": {
     notifications: [
       {
@@ -77,3 +77,5 @@ export default {
     ],
   },
 };
+
+export default notificationFixtures;

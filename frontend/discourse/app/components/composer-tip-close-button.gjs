@@ -1,4 +1,4 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const ComposerTipCloseButton = <template>
   <DButton
@@ -6,7 +6,7 @@ const ComposerTipCloseButton = <template>
     @icon="xmark"
     @label="composer.esc"
     @ariaLabel="composer.esc_label"
-    class="btn-transparent close"
+    class="close"
   />
 </template>;
 

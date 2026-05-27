@@ -61,7 +61,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Cohere do
   before { enable_current_plugin }
 
   it "is able to trigger a tool" do
-    body = (<<~TEXT).strip
+    body = <<~TEXT.strip
       {"is_finished":false,"event_type":"stream-start","generation_id":"1648206e-1fe4-4bb6-90cf-360dd55f575b"}
 {"is_finished":false,"event_type":"tool-calls-generation","text":"I will search for 'who is sam saffron' and relay the information to the user.","tool_calls":[{"name":"google","parameters":{"query":"who is sam saffron"}}]}
 {"is_finished":true,"event_type":"stream-end","response":{"response_id":"71d8c9e1-1138-4d70-80d1-10ddec41c989","text":"I will search for 'who is sam saffron' and relay the information to the user.","generation_id":"1648206e-1fe4-4bb6-90cf-360dd55f575b","chat_history":[{"role":"USER","message":"sam: who is sam saffron?"},{"role":"CHATBOT","message":"I will search for 'who is sam saffron' and relay the information to the user.","tool_calls":[{"name":"google","parameters":{"query":"who is sam saffron"}}]}],"finish_reason":"COMPLETE","meta":{"api_version":{"version":"1"},"billed_units":{"input_tokens":460,"output_tokens":27},"tokens":{"input_tokens":1227,"output_tokens":27}},"tool_calls":[{"name":"google","parameters":{"query":"who is sam saffron"}}]},"finish_reason":"COMPLETE"}
@@ -241,6 +241,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Cohere do
   end
 
   it "is able to perform non streaming completions" do
+    SiteSetting.ai_llm_temperature_top_p_enabled = true
     body = {
       response_id: "0a90275b-273d-4690-abce-8018edcec7d0",
       text: "You're welcome! How can I help you today?",

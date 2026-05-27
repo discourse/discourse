@@ -1,14 +1,14 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { computed } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
+import { deepEqual } from "discourse/lib/object";
 import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 
 @tagName("")
 export default class PollBreakdownOption extends Component {
@@ -22,10 +22,6 @@ export default class PollBreakdownOption extends Component {
   onMouseOver = null;
   onMouseOut = null;
 
-  @propertyEqual("highlightedOption", "index") highlighted;
-
-  @equal("displayMode", "percentage") showPercentage;
-
   constructor() {
     super(...arguments);
     loadChartJS().then((Chart) => {
@@ -33,31 +29,43 @@ export default class PollBreakdownOption extends Component {
     });
   }
 
-  @discourseComputed("option.votes", "totalVotes")
-  percent(votes, total) {
-    return I18n.toNumber((votes / total) * 100.0, { precision: 1 });
+  @computed("highlightedOption", "index")
+  get highlighted() {
+    return deepEqual(this.highlightedOption, this.index);
   }
 
-  @discourseComputed("optionsCount")
-  optionColors(optionsCount) {
-    return getColors(optionsCount);
+  @computed("displayMode")
+  get showPercentage() {
+    return this.displayMode === "percentage";
   }
 
-  @discourseComputed("highlighted")
-  colorBackgroundStyle(highlighted) {
-    if (highlighted) {
+  @computed("option.votes", "totalVotes")
+  get percent() {
+    return I18n.toNumber((this.option?.votes / this.totalVotes) * 100.0, {
+      precision: 1,
+    });
+  }
+
+  @computed("optionsCount")
+  get optionColors() {
+    return getColors(this.optionsCount);
+  }
+
+  @computed("highlighted")
+  get colorBackgroundStyle() {
+    if (this.highlighted) {
       // TODO: Use CSS variables (#10341)
-      return htmlSafe("background: rgba(0, 0, 0, 0.1);");
+      return trustHTML("background: rgba(0, 0, 0, 0.1);");
     }
   }
 
-  @discourseComputed("Chart", "highlighted", "optionColors", "index")
-  colorPreviewStyle(Chart, highlighted, optionColors, index) {
-    const color = highlighted
-      ? Chart?.helpers.getHoverColor(optionColors[index])
-      : optionColors[index];
+  @computed("Chart", "highlighted", "optionColors", "index")
+  get colorPreviewStyle() {
+    const color = this.highlighted
+      ? this.Chart?.helpers.getHoverColor(this.optionColors[this.index])
+      : this.optionColors[this.index];
 
-    return htmlSafe(`background: ${color};`);
+    return trustHTML(`background: ${color};`);
   }
 
   <template>
@@ -80,7 +88,10 @@ export default class PollBreakdownOption extends Component {
           {{@option.votes}}
         {{/if}}
       </span>
-      <span class="poll-breakdown-option-text">{{htmlSafe @option.html}}</span>
+      <span
+        class="poll-breakdown-option-text"
+        {{decoratePollOption @option.html}}
+      ></span>
     </li>
   </template>
 }

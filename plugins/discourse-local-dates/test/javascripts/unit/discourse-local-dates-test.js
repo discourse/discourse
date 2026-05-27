@@ -72,4 +72,54 @@ module("Unit | discourse-local-dates", function (hooks) {
       }
     );
   });
+
+  test("applyLocalDates disables calendar mode when custom format is specified", function (assert) {
+    const element = createElementFromHTML(
+      "<span " +
+        'data-date="2022-10-06" ' +
+        'data-time="17:21:00" ' +
+        'class="discourse-local-date" ' +
+        'data-format="LLL" ' +
+        'data-timezone="Asia/Singapore">' +
+        "</span>"
+    );
+
+    freezeTime(
+      { date: "2022-10-06T10:10:10", timezone: "Asia/Singapore" },
+      () => {
+        applyLocalDates([element], {
+          discourse_local_dates_enabled: true,
+        });
+
+        // With calendar mode, this would show "Today 5:21 PM"
+        // With calendar disabled (due to custom format), it shows full date
+        assert
+          .dom(".relative-time", element)
+          .hasText("October 6, 2022 5:21 PM");
+      }
+    );
+  });
+
+  test("applyLocalDates uses calendar mode when no custom format is specified", function (assert) {
+    const element = createElementFromHTML(
+      "<span " +
+        'data-date="2022-10-06" ' +
+        'data-time="17:21:00" ' +
+        'class="discourse-local-date" ' +
+        'data-timezone="Asia/Singapore">' +
+        "</span>"
+    );
+
+    freezeTime(
+      { date: "2022-10-06T10:10:10", timezone: "Asia/Singapore" },
+      () => {
+        applyLocalDates([element], {
+          discourse_local_dates_enabled: true,
+        });
+
+        // Without custom format, calendar mode is enabled, showing relative date
+        assert.dom(".relative-time", element).hasText("Today 5:21 PM");
+      }
+    );
+  });
 });

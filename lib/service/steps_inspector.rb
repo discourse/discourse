@@ -119,7 +119,7 @@ class Service::StepsInspector
     def steps
       [
         self,
-        *step.steps.map { Step.for(_1, result, nesting_level: nesting_level + 1, color:).steps },
+        *step.steps.map { Step.for(it, result, nesting_level: nesting_level + 1, color:).steps },
       ]
     end
 
@@ -160,7 +160,7 @@ class Service::StepsInspector
       [
         self,
         *step.steps.map do
-          Step.for(_1, result, nesting_level: nesting_level + 1, color: skipped_color).steps
+          Step.for(it, result, nesting_level: nesting_level + 1, color: skipped_color).steps
         end,
       ]
     end
@@ -187,10 +187,29 @@ class Service::StepsInspector
     end
   end
 
+  # @!visibility private
+  class Each < OnlyIf
+    def inspect
+      "#{"  " * nesting_level}\e[#{ansi_color}m[#{inspect_type}] #{name} (#{iteration_info})#{runtime}\e[0m #{skipped_emoji}".rstrip
+    end
+
+    private
+
+    def iteration_info
+      return "empty collection" if skipped?
+      "#{result[:index].to_i + 1}/#{step_result[:total].to_i}"
+    end
+
+    def skipped_emoji
+      return unless skipped?
+      emoji
+    end
+  end
+
   attr_reader :steps, :result
 
   def initialize(result)
-    @steps = result.__steps__.map { Step.for(_1, result).steps }.flatten
+    @steps = result.__steps__.map { Step.for(it, result).steps }.flatten
     @result = result
   end
 

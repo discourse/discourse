@@ -9,9 +9,9 @@ module DiscourseAi
       # including those without locale detected yet.
       def self.get
         categories = Category.all
-        if SiteSetting.ai_translation_backfill_limit_to_public_content
-          categories = categories.where(read_restricted: false)
-        end
+        excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
+        categories =
+          categories.where.not(id: excluded_category_ids) if excluded_category_ids.present?
         categories
       end
 

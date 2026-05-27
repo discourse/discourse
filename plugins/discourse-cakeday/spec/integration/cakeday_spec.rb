@@ -96,6 +96,19 @@ RSpec.describe "Anniversaries and Birthdays" do
           expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user3.id, user4.id)
         end
       end
+
+      it "handles Nuku'alofa timezone without SQL errors" do
+        # Nuku'alofa contains an apostrophe and must be converted to Pacific/Tongatapu
+        current_user.user_option.update!(timezone: "Nuku'alofa")
+        get "/cakeday/anniversaries.json", params: { filter: "today" }
+        expect(response.status).to eq(200)
+      end
+
+      it "falls back to UTC for unrecognized timezones" do
+        current_user.user_option.update_column(:timezone, "Invalid/Timezone")
+        get "/cakeday/anniversaries.json", params: { filter: "today" }
+        expect(response.status).to eq(200)
+      end
     end
 
     describe "when viewing birthdays" do

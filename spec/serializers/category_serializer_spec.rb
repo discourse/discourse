@@ -91,13 +91,26 @@ RSpec.describe CategorySerializer do
 
       expect(json[:group_permissions]).to eq(
         [
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
+          {
+            permission_type: CategoryGroup.permission_types[:readonly],
+            group_name: group.name,
+            group_id: group.id,
+          },
           {
             permission_type: CategoryGroup.permission_types[:full],
             group_name: private_group.name,
+            group_id: private_group.id,
           },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: "everyone" },
+          {
+            permission_type: CategoryGroup.permission_types[:full],
+            group_name: user_group.name,
+            group_id: user_group.id,
+          },
+          {
+            permission_type: CategoryGroup.permission_types[:readonly],
+            group_name: "everyone",
+            group_id: Group::AUTO_GROUPS[:everyone],
+          },
         ],
       )
     end
@@ -125,7 +138,7 @@ RSpec.describe CategorySerializer do
         category: category_with_localization,
         locale: "ja",
         name: "日本語名",
-        description: "日本語の説明",
+        description: "<p>最初の段落</p><p>二番目の段落</p>",
       )
     end
 
@@ -140,7 +153,7 @@ RSpec.describe CategorySerializer do
       expect(json[:description]).to eq("Original Description")
     end
 
-    it "returns translated name and description for SiteCategorySerializer when enabled" do
+    it "returns translated attributes for SiteCategorySerializer when enabled" do
       SiteSetting.content_localization_enabled = true
       user.update!(locale: "ja")
       I18n.with_locale("ja") do
@@ -151,7 +164,26 @@ RSpec.describe CategorySerializer do
             root: false,
           ).as_json
         expect(json[:name]).to eq("日本語名")
-        expect(json[:description]).to eq("日本語の説明")
+        expect(json[:description]).to eq("<p>最初の段落</p><p>二番目の段落</p>")
+        expect(json[:description_text]).to eq("&lt;p&gt;最初の段落&lt;/p&gt;&lt;p&gt;二番目の段落&lt;/p&gt;")
+        expect(json[:description_excerpt]).to eq("最初の段落 二番目の段落")
+      end
+    end
+
+    it "returns untranslated attributes for SiteCategorySerializer when disabled" do
+      SiteSetting.content_localization_enabled = false
+      user.update!(locale: "ja")
+      I18n.with_locale("ja") do
+        json =
+          SiteCategorySerializer.new(
+            category_with_localization,
+            scope: Guardian.new(user),
+            root: false,
+          ).as_json
+        expect(json[:name]).to eq("Original Name")
+        expect(json[:description]).to eq("Original Description")
+        expect(json[:description_text]).to eq(category_with_localization.description_text)
+        expect(json[:description_excerpt]).to eq(category_with_localization.description_excerpt)
       end
     end
 
@@ -164,6 +196,178 @@ RSpec.describe CategorySerializer do
         ).as_json
       expect(json[:name]).to eq("Original Name")
       expect(json[:description]).to eq("Original Description")
+    end
+  end
+
+  describe "#topic_posting_review_group_ids" do
+    it "returns group ids when groups exist" do
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+      )
+
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:topic_posting_review_group_ids]).to eq([group.id])
+    end
+
+    it "returns empty array when no groups are associated" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:topic_posting_review_group_ids]).to eq([])
+    end
+  end
+
+  describe "#reply_posting_review_group_ids" do
+    it "returns group ids when groups exist" do
+      category.update!(
+        reply_posting_review_mode: :no_one_except,
+        reply_posting_review_group_ids: [group.id],
+      )
+
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:reply_posting_review_group_ids]).to eq([group.id])
+    end
+
+    it "returns empty array when no groups are associated" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:reply_posting_review_group_ids]).to eq([])
+    end
+  end
+
+  describe "#require_topic_approval" do
+    it "returns false when topic approval is not required" do
+      category.require_topic_approval = false
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_topic_approval]).to eq(false)
+    end
+
+    it "returns true when topic approval is required" do
+      category.require_topic_approval = true
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_topic_approval]).to eq(true)
+    end
+  end
+
+  describe "#require_reply_approval" do
+    it "returns false when reply approval is not required" do
+      category.require_reply_approval = false
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_reply_approval]).to eq(false)
+    end
+
+    it "returns true when reply approval is required" do
+      category.require_reply_approval = true
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_reply_approval]).to eq(true)
+    end
+  end
+
+  describe "#category_types" do
+    it "returns the category types" do
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
+      expect(json[:category_types]).to eq(
+        { discussion: Categories::TypeRegistry.all[:discussion].metadata },
+      )
+    end
+  end
+
+  describe "#available_category_types" do
+    class MockCategoryType < ::Categories::Types::Base
+      type_id :mock_type
+
+      class << self
+        def category_matches?(category)
+          true
+        end
+
+        def find_matches
+          Category.none
+        end
+
+        def visible?
+          false
+        end
+      end
+    end
+
+    before { Categories::TypeRegistry.register(MockCategoryType) }
+
+    after { Categories::TypeRegistry.reset! }
+
+    it "returns the available visible category types" do
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
+      expect(json[:available_category_types]).to eq(
+        [Categories::TypeRegistry.all[:discussion].metadata],
+      )
+    end
+  end
+
+  describe "#category_type_settings" do
+    let(:type_a) do
+      Class.new(Categories::Types::Base) do
+        type_id :test_type_a
+
+        def self.category_matches?(_category)
+          true
+        end
+
+        def self.read_category_settings(_category)
+          { foo: "from_a" }
+        end
+      end
+    end
+
+    let(:type_b) do
+      Class.new(Categories::Types::Base) do
+        type_id :test_type_b
+
+        def self.category_matches?(_category)
+          true
+        end
+
+        def self.read_category_settings(_category)
+          { bar: "from_b" }
+        end
+      end
+    end
+
+    let(:non_matching_type) do
+      Class.new(Categories::Types::Base) do
+        type_id :test_type_off
+
+        def self.category_matches?(_category)
+          false
+        end
+
+        def self.read_category_settings(_category)
+          { baz: "should_not_appear" }
+        end
+      end
+    end
+
+    before do
+      Categories::TypeRegistry.stubs(:all).returns(a: type_a, b: type_b, off: non_matching_type)
+    end
+
+    it "merges values from each matching type and skips non-matching types" do
+      json = described_class.new(category, scope: admin.guardian, root: false).as_json
+
+      expect(json[:category_type_settings]).to eq(foo: "from_a", bar: "from_b")
     end
   end
 end

@@ -6,9 +6,12 @@ class Chat::Api::CategoryChatablesController < ApplicationController
   def permissions
     category = Category.find(params[:id])
 
+    guardian.ensure_can_see!(category)
+
     if category.read_restricted?
       permissions =
         Group
+          .visible_groups(guardian.user, nil, include_everyone: true)
           .joins(:category_groups)
           .where(category_groups: { category_id: category.id })
           .where(

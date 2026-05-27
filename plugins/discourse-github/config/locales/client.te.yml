@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 te:
+  js:
+    github:
+      pr_status:
+        draft: "చిత్తుప్రతి"
+        approved: "ఆమోదించబడింది"
+        closed: "మూసివేయబడినవి"

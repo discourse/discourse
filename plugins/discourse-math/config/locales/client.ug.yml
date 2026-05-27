@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    discourse_math:
+      edit_math: "فورمۇلا تەھرىر"
+      edit_modal:
+        title: "فورمۇلا تەھرىر"
+        label: "فورمۇلا"
+        apply: "قوللان"
+      composer:
+        insert_math: "فورمۇلا قىستۇر"
+      insert_modal:
+        title_inline: "ئىچكى فورمۇلا قىستۇر"
+        title_block: "بۆلەك فورمۇلا قىستۇر"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "قىستۇر"
+        block_mode: "بۆلەك ھالىتى (كۆرسىتىلگەن تەڭلىمە)"

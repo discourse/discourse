@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe "Content Localization" do
-  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
+  let(:toggle_localize_button_selector) { "button.btn-toggle-localized-content" }
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
   fab!(:site_local_user) { Fabricate(:user, locale: "en") }
@@ -65,6 +66,7 @@ describe "Content Localization" do
       SiteSetting.content_localization_allowed_groups =
         "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
       SiteSetting.content_localization_supported_locales = "en|ja"
+      japanese_user.user_option.update!(show_original_content: false)
     end
 
     it "shows the user's language based on their user locale" do
@@ -82,18 +84,57 @@ describe "Content Localization" do
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
 
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-        I18n.t("js.content_localization.toggle_localized.translated"),
-      )
-      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+      I18n.with_locale(:ja) do
+        expect(page.find(toggle_localize_button_selector)["title"]).to eq(
+          I18n.t("js.content_localization.toggle_localized.translated"),
+        )
+      end
+      page.find(toggle_localize_button_selector).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-        I18n.t("js.content_localization.toggle_localized.not_translated"),
-      )
-
+      I18n.with_locale(:ja) do
+        expect(page.find(toggle_localize_button_selector)["title"]).to eq(
+          I18n.t("js.content_localization.toggle_localized.not_translated"),
+        )
+      end
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
+    end
+
+    it "persists 'Show Original' preference for logged-in users across page loads" do
+      sign_in(japanese_user)
+
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+
+      page.find(toggle_localize_button_selector).click
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+      # preference persists after full page reload
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+    end
+
+    it "persists 'Show Original' preference from user preferences interface" do
+      sign_in(japanese_user)
+
+      visit("/u/#{japanese_user.username}/preferences/interface")
+      page.find(".pref-show-original-content input[type='checkbox']").click
+      page.find(".save-changes").click
+
+      I18n.with_locale(:ja) { expect(page).to have_content(I18n.t("js.saved")) }
+
+      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+
+      # preference persists after page reload
+      visit("/u/#{japanese_user.username}/preferences/interface")
+      expect(page).to have_css(".pref-show-original-content input[type='checkbox']:checked")
+
+      # and reflects on topic view
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
     end
 
     it "allows users to set their post's locale when posting" do
@@ -160,11 +201,67 @@ describe "Content Localization" do
         expect(topic_page.topic_title).to have_content("織田信長の生涯")
       end
 
+      fab!(:ja_topic) do
+        topic = Fabricate(:topic, title: "日本語で書かれたトピック", locale: "ja", user: admin)
+        Fabricate(:post, topic:, locale: "ja", raw: "日本語の投稿です")
+        topic
+      end
+      fab!(:ja_topic_en_localization) do
+        Fabricate(
+          :topic_localization,
+          topic: ja_topic,
+          locale: "en",
+          fancy_title: "A topic written in Japanese",
+        )
+      end
+
+      it "shows original title on topic list for anonymous users when topic locale matches browsing locale" do
+        visit("/?tl=ja")
+        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
+        expect(page).to have_no_css(
+          ".topic-list-body .raw-topic-link",
+          text: "A topic written in Japanese",
+        )
+
+        # navigate away and come back — locale should persist via cookie
+        visit("/")
+        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
+        expect(page).to have_no_css(
+          ".topic-list-body .raw-topic-link",
+          text: "A topic written in Japanese",
+        )
+      end
+
       it "ignores tl parameter for logged-in users" do
         sign_in(site_local_user)
         visit("/t/#{topic.id}?tl=ja")
 
         expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      end
+    end
+
+    context "when transitioning from anonymous to logged-in" do
+      let(:language_switcher) { PageObjects::Components::LanguageSwitcher.new }
+
+      before do
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "ignores the show-original cookie for logged-in users" do
+        visit("/")
+        language_switcher.select_language("ja")
+
+        visit("/t/#{topic.id}")
+        expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+
+        page.find(toggle_localize_button_selector).click
+        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+        sign_in(japanese_user)
+
+        visit("/t/#{topic.id}")
+        expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
       end
     end
 
@@ -208,7 +305,7 @@ describe "Content Localization" do
       context "for topic titles" do
         fab!(:untranslated_topic) { Fabricate(:post).topic }
 
-        it "shows title editor in composer when user can edit localizations" do
+        it "shows inline title editor when user can edit localizations" do
           sign_in(japanese_user)
 
           topic_page.visit_topic(untranslated_topic)
@@ -217,41 +314,79 @@ describe "Content Localization" do
           expect(topic_page).to have_no_topic_title_editor
 
           topic_page.visit_topic(topic)
-          # does not see regular title editor
-          # sent directly to translation composer to edit translation
+
           topic_page.click_topic_edit_title
-          expect(topic_page).to have_no_topic_title_editor
-          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+          expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_editing_localization_indicator
+          expect(page).to have_field("edit-title", with: topic_ja_localization.title)
         end
 
-        it "opens a dialog for choosing which title to edit for admins" do
-          admin.update(locale: "ja") # force the admin to view the jap localizations
+        it "opens a dialog for choosing which title to edit for admins when title is localized" do
+          admin.update(locale: "ja")
 
           sign_in(admin)
 
           topic_page.visit_topic(untranslated_topic)
           topic_page.click_topic_edit_title
           expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_no_editing_localization_indicator
+
+          topic_page.click_topic_title_cancel_edit
 
           topic_page.visit_topic(topic)
-          expect(topic_page).to have_topic_title(topic_ja_localization.fancy_title)
+          original_translated_title = topic_ja_localization.fancy_title
+          expect(topic_page).to have_topic_title(original_translated_title)
           topic_page.click_topic_edit_title
-          # does not see regular title editor
-          expect(topic_page).to have_no_topic_title_editor
-          # asked to use composer to edit original title
           expect(edit_localized_post_dialog).to be_open
 
+          # Viewing translation - Edit Original
           edit_localized_post_dialog.click_yes
-          expect(composer).to have_input_title(topic.title)
+          expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_no_editing_localization_indicator
+          expect(page).to have_field("edit-title", with: topic.title)
 
-          composer.close
-          expect(composer).to be_closed
+          # Viewing translation - Save original title change and displayed title should NOT update (still viewing translation)
+          find("#edit-title").fill_in(with: "New Original Title")
+          topic_page.click_topic_title_submit_edit
+          expect(topic_page).to have_topic_title(original_translated_title)
 
-          # use translation composer to edit localized title
+          # View original - displayed title should update to new original title
+          page.find(toggle_localize_button_selector).click
+          expect(topic_page).to have_topic_title("New Original Title")
+
+          # switch back to Japanese to test translation editing
+          page.find(toggle_localize_button_selector).click
+
+          # Viewing translation - Edit translation
           topic_page.click_topic_edit_title
           expect(edit_localized_post_dialog).to be_open
           edit_localized_post_dialog.click_no
-          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+          expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_editing_localization_indicator
+          expect(page).to have_field("edit-title", with: topic_ja_localization.title)
+
+          # Viewing translation - Save translation title change and displayed title should update immediately
+          find("#edit-title").fill_in(with: "New Japanese Title")
+          topic_page.click_topic_title_submit_edit
+          expect(topic_page).to have_topic_title("New Japanese Title")
+          page.refresh
+          expect(topic_page).to have_topic_title("New Japanese Title")
+        end
+
+        it "discards changes when cancelled" do
+          admin.update(locale: "ja")
+          sign_in(admin)
+
+          topic_page.visit_topic(topic)
+          original_title = topic_ja_localization.fancy_title
+
+          topic_page.click_topic_edit_title
+          edit_localized_post_dialog.click_no
+
+          find("#edit-title").fill_in(with: "Changed Title")
+          topic_page.click_topic_title_cancel_edit
+
+          expect(topic_page).to have_topic_title(original_title)
         end
       end
     end
@@ -281,7 +416,7 @@ describe "Content Localization" do
         expect(post_history_modal.current_locale).to have_content(
           I18n.t("js.post.revisions.locale.locale_removed"),
         )
-        expect(post_history_modal.previous_locale).to have_content("English (US)")
+        expect(post_history_modal.previous_locale).to have_content("English")
       end
     end
 
@@ -325,7 +460,7 @@ describe "Content Localization" do
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
 
         # toggle should show correct state of post content
-        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        page.find(toggle_localize_button_selector).click
         scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
 
@@ -359,10 +494,10 @@ describe "Content Localization" do
         topic_page.visit_topic(shady_topic)
         expect(page).to have_title(shady_topic_ja_localization.fancy_title)
 
-        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        page.find(toggle_localize_button_selector).click
         expect(page).to have_title(shady_topic.title)
 
-        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        page.find(toggle_localize_button_selector).click
         expect(page).to have_title(shady_topic_ja_localization.fancy_title)
 
         SiteSetting.content_localization_enabled = false
@@ -447,6 +582,127 @@ describe "Content Localization" do
         expect(post_1_obj).to have_cooked_content(jap_post.cooked)
       end
     end
+
+    context "for tags" do
+      let(:discovery) { PageObjects::Pages::Discovery.new }
+      let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+      let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
+
+      fab!(:tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+      fab!(:tag_localization) { Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略") }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic:, tag:) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.navigation_menu = "sidebar"
+        SiteSetting.default_navigation_menu_tags = tag.name
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "displays localized tag names in sidebar, topic list, tag dropdown, and topic view" do
+        sign_in(japanese_user)
+
+        visit("/")
+
+        expect(sidebar).to have_section_link("戦略")
+        expect(topic_list).to have_topic_tag(topic, "戦略")
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name("戦略")
+        discovery.tag_drop.collapse
+
+        topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
+        expect(page).to have_css(".title-wrapper .discourse-tag", text: "戦略")
+
+        switcher.expand
+        switcher.option("[data-menu-option-id='en']").click
+
+        visit("/")
+        expect(sidebar).to have_section_link("strategy")
+        expect(topic_list).to have_topic_tag(topic, "strategy")
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name("strategy")
+        discovery.tag_drop.collapse
+
+        topic_list.visit_topic_with_title("Life strategies from The Art of War")
+        expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
+      end
+
+      it "displays localized tag names in the composer tag chooser" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        sign_in(japanese_user)
+        visit("/new-topic")
+        expect(composer).to be_opened
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("戦")
+        expect(mini_tag_chooser).to have_option_name("戦略")
+      end
+
+      it "can create a topic with a localized tag" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        sign_in(admin)
+        admin.update!(locale: "ja")
+        visit("/new-topic")
+        expect(composer).to be_opened
+
+        composer.fill_title("テストトピック with localized tags")
+        composer.fill_content("このトピックにはローカライズされたタグが含まれています")
+
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("戦")
+        mini_tag_chooser.select_row_by_name("戦略")
+
+        composer.create
+
+        topic = Topic.where("title LIKE ?", "%テストトピック%").last
+        expect(topic).to be_present
+        expect(topic.tags).to include(tag)
+      end
+
+      it "can change category and tags on an existing topic with localized tags" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        tag2 = Fabricate(:tag, name: "planning", locale: "en")
+        Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "計画")
+        new_category = Fabricate(:category)
+        topic_page = PageObjects::Pages::Topic.new
+        edit_dialog = PageObjects::Components::Dialog.new
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        # Topic already has the "strategy" tag via topic_tag fab
+        sign_in(admin)
+        admin.update!(locale: "ja")
+        visit(topic.url)
+
+        topic_page.click_topic_edit_title
+        edit_dialog.click_yes # edit original
+
+        # Change category
+        category_chooser =
+          PageObjects::Components::SelectKit.new(".edit-category__wrapper .category-chooser")
+        category_chooser.expand
+        category_chooser.select_row_by_value(new_category.id)
+
+        # Add another localized tag
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("plan")
+        mini_tag_chooser.select_row_by_name("計画")
+
+        topic_page.click_topic_title_submit_edit
+
+        expect(topic_page).to have_no_css("#topic-title .submit-edit")
+        topic.reload
+        expect(topic.category).to eq(new_category)
+        expect(topic.tags).to include(tag, tag2)
+      end
+    end
   end
 
   context "with author localization" do
@@ -482,6 +738,7 @@ describe "Content Localization" do
       translation_composer.select_locale("Japanese (日本語)")
       translation_composer.fill_content("著者のオリジナル投稿")
       translation_composer.create
+      expect(translation_composer).to be_closed
 
       sign_in(japanese_user)
       topic_page.visit_topic(topic)
@@ -512,7 +769,7 @@ describe "Content Localization" do
 
       settings_page.visit("content_localization_supported_locales")
       expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "English (US), Japanese",
+        "English, Japanese",
       )
 
       settings_page.select_list_values("content_localization_supported_locales", %w[es])

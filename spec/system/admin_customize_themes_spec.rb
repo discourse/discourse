@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Themes", type: :system do
+describe "Admin Customize Themes" do
   fab!(:color_scheme) do
     Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
   end
@@ -10,10 +10,16 @@ describe "Admin Customize Themes", type: :system do
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
   let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
+    it "should keep sidebar navigation link active" do
+      theme_page.visit(theme)
+      expect(sidebar).to have_active_link("admin_themes_and_components")
+    end
+
     it "should allow admin to update the light color scheme of the theme" do
       theme_page.visit(theme)
 
@@ -113,7 +119,7 @@ describe "Admin Customize Themes", type: :system do
     expect(page).to have_no_css(".delete")
   end
 
-  it "hides unecessary sections and buttons for system themes" do
+  it "hides unnecessary sections and buttons for system themes" do
     theme.set_field(
       target: :extra_js,
       name: "discourse/api-initializers/test.js",
@@ -244,7 +250,7 @@ describe "Admin Customize Themes", type: :system do
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
 
-      expect(theme_translations_picker.component).to have_content("English (US)")
+      expect(theme_translations_picker.component).to have_content("English")
     end
   end
 
@@ -264,7 +270,7 @@ describe "Admin Customize Themes", type: :system do
     end
   end
 
-  context "when visting a component's page" do
+  context "when visiting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
     it "has a link to the components page" do
@@ -281,6 +287,43 @@ describe "Admin Customize Themes", type: :system do
       expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
         "#{theme.name}, Foundation, Horizon",
       )
+    end
+  end
+
+  describe "changing theme source" do
+    fab!(:git_theme) do
+      theme = Fabricate(:theme, name: "Git Theme")
+      theme.remote_theme =
+        RemoteTheme.create!(
+          remote_url: "https://github.com/discourse/example-theme.git",
+          branch: "main",
+          local_version: "abc123",
+          remote_version: "abc123",
+          commits_behind: 0,
+        )
+      theme.save!
+      theme
+    end
+
+    it "shows the change source button for git themes" do
+      theme_page.visit(git_theme)
+      expect(page).to have_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
+    end
+
+    it "opens the change source modal with pre-filled values" do
+      theme_page.visit(git_theme)
+      find("button", text: I18n.t("admin_js.admin.customize.theme.change_source.button")).click
+
+      expect(page).to have_css(".admin-change-theme-source-modal")
+      expect(find(".admin-change-theme-source-modal input.repo-url").value).to eq(
+        "https://github.com/discourse/example-theme.git",
+      )
+      expect(find(".admin-change-theme-source-modal input.branch").value).to eq("main")
+    end
+
+    it "does not show the change source button for local themes" do
+      theme_page.visit(theme)
+      expect(page).to have_no_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
     end
   end
 
@@ -338,6 +381,15 @@ describe "Admin Customize Themes", type: :system do
       sign_in(other_user)
       visit("/")
       expect(banner).to be_visible
+
+      # Wait for the `/client_settings` subscription's first poll finish.
+      try_until_success do
+        expect(
+          page.evaluate_script(
+            "window.MessageBus.callbacks.find(c => c.channel === '/client_settings')?.last_id",
+          ),
+        ).not_to eq(-1)
+      end
 
       using_session(:admin) do
         sign_in(admin)

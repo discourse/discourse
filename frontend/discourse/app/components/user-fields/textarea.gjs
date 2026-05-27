@@ -1,7 +1,7 @@
 import { Textarea } from "@ember/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
-import InputTip from "discourse/components/input-tip";
+import { trustHTML } from "@ember/template";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 
@@ -23,9 +23,9 @@ export default class UserFieldTextArea extends UserFieldBase {
           {{i18n "user_fields.optional"}}{{/unless~}}
       </label>
       {{#if this.validation.failed}}
-        <InputTip @validation={{this.validation}} />
+        <DInputTip @validation={{this.validation}} />
       {{else}}
-        <div class="instructions">{{htmlSafe this.field.description}}</div>
+        <div class="instructions">{{trustHTML this.field.description}}</div>
       {{/if}}
     </div>
   </template>

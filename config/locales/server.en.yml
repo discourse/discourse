@@ -9,17 +9,17 @@ en:
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       no_day: "%B %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -70,8 +70,8 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
-    too_many_urls: "Can't inline onebox more than 10 URLs in a single request."
-    concurrency_not_allowed: "Concurrent inline-oneboxing requests are not allowed. Please send one request at a time."
+    too_many_urls: "Can't convert more than 10 URLs to inline oneboxes in a single request."
+    concurrency_not_allowed: "Concurrent requests to convert URLs to inline oneboxes are not allowed. Please send one request at a time."
   components:
     enabled_filter: "Enabled"
     disabled_filter: "Disabled"
@@ -155,6 +155,9 @@ en:
 
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
+
+        humanize_not_valid_datetime_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid datetime."
+        not_valid_datetime_value: "must be a valid datetime"
 
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
@@ -283,6 +286,7 @@ en:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "The diff is too complex to compute safely. Please try smaller edits."
     messages:
       invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
@@ -370,7 +374,7 @@ en:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
-      x_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      x_summary_large_image_no_svg: "X summary images used for twitter:image metadata cannot be an .svg image."
       tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "This setting requires the 'allow anonymous mode' setting to be enabled first."
 
@@ -407,7 +411,7 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>This invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
+    existing_user_cannot_redeem: "This invitation isn't available for your email address. Sign in with another account, or ask for a new invitation."
     existing_user_already_redemeed: "You have already redeemed this invite link."
     user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
@@ -428,6 +432,7 @@ en:
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
     existing_user_success: "Invite redeemed successfully"
+    email_invites_disabled: "Sending invite emails is disabled"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -458,6 +463,8 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  topic_converter:
+    too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
@@ -476,7 +483,13 @@ en:
   delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
 
   action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
@@ -537,6 +550,9 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+  too_many_quotes:
+    one: "Sorry, you can only include one quote in a post."
+    other: "Sorry, you can only include %{count} quotes in a post."
   contains_blocked_word: "Sorry, you can't post the word '%{word}'; it's not allowed."
   contains_blocked_words: "Sorry, you can't post that. Not allowed: %{words}."
 
@@ -646,16 +662,20 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      cannot_add_emails: "Only usernames can be used to add members to this group. To invite by email, use the Invite button."
       counting_too_many_email_domains:
         one: "Maximum %{count} email domain can be counted at once"
         other: "Maximum %{count} email domains can be counted at once"
       no_invites_with_discourse_connect: "You can invite only registered users when DiscourseConnect is enabled"
       no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
+      update_existing_users_required: "This change affects %{count} existing group members. You must specify the 'update_existing_users' parameter (true or false) to indicate whether to apply the new notification defaults to existing members."
     default_names:
       everyone: "everyone"
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      anonymous: "anonymous"
+      logged_in_users: "logged_in_users"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -664,6 +684,8 @@ en:
     default_descriptions:
       everyone: "Automatic group including all members"
       staff: "Automatic group including admins and moderators"
+      anonymous: "Automatic pseudogroup representing unauthenticated visitors"
+      logged_in_users: "Automatic pseudogroup including every logged-in user"
       admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
       trust_level_0: "New members with limited abilities, who are learning community norms and functionality"
@@ -869,7 +891,11 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      groups_required_for_mode: "You must select at least one group for %{setting}."
       description_incomplete: "The category description post must have at least one paragraph."
+      description_too_long:
+        one: "Description is too long (maximum is %{count} character)."
+        other: "Description is too long (maximum is %{count} characters)."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -884,12 +910,22 @@ en:
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
+
+  category_types:
+    not_available: "Category type '%{type_name}' is not available"
+    discussion:
+      name: "Discussion"
+      title: "discussion"
+      description: "A standard category with all the essentials for conversation."
+
   trust_levels:
     admin: "Admin"
     staff: "Staff"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
 
   post:
+    errors:
+      invalid_reply_to: "The selected post isn't a valid reply target. It must be an earlier post in the same topic."
     image_placeholder:
       broken: "This image is broken"
       blocked_hotlinked_title: "Image hosted on another site. Click to open in a new tab."
@@ -902,7 +938,9 @@ en:
       one: "%{count} Like"
       other: "%{count} Likes"
     cannot_permanently_delete:
-      many_posts: "This topic has undeleted posts. Please permanently delete them before permanently deleting the topic."
+      many_posts:
+        one: "This topic still has %{count} post that needs to be permanently deleted before the topic itself can be permanently deleted."
+        other: "This topic still has %{count} posts that need to be permanently deleted before the topic itself can be permanently deleted."
       wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
@@ -1122,6 +1160,7 @@ en:
     too_many_drafts:
       title: "Too many drafts"
       description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
+    bulk_destroy_limit: "You can only delete up to %{limit} drafts at once."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -1130,15 +1169,14 @@ en:
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
-    imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
-    imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
     smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again. %{message}"
     smtp_server_busy_error: "The SMTP server is currently busy, try again later."
     smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
-    imap_unhandled_error: "There was an unhandled error when communicating with the IMAP server. %{message}"
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
+    invalid_host: "The provided host resolves to a disallowed IP address."
+    host_resolve_failed: "The provided host could not be resolved."
   webauthn:
     validation:
       invalid_type_error: "The webauthn type provided was invalid. Valid types are webauthn.get and webauthn.create."
@@ -1232,13 +1270,23 @@ en:
       every_month: "every month"
       every_six_months: "every six months"
 
+  calendar_subscriptions:
+    application_name: "Calendar Subscriptions"
+    bookmarks_feed_name: "%{site_title} - Bookmark reminders"
+
   user_api_key:
-    title: "Authorize application access"
+    title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
+    deny: "Cancel"
     read: "read"
     read_write: "read/write"
-    description: '"%{application_name}" is requesting the following access to your account:'
+    logged_in_as: "Logged in as"
+    permissions_header: 'This will allow "%{application_name}" to:'
+    redirect_warning: "Authorizing will redirect you to"
+    write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
+    copy_key: "Copy Key"
+    copied: "Copied!"
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
       confirm_title: Continue to %{site_name}
@@ -1317,9 +1365,11 @@ en:
       description: "List of flags' statuses including type of flag, poster, flagger, and time to resolution."
     visits:
       title: "User Visits"
-      xaxis: "Day"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobile"
       yaxis: "Number of visits"
-      description: "Number of signed-in user visits."
+      description: "Number of signed-in user visits by device type."
     signups:
       title: "Signups"
       xaxis: "Day"
@@ -1330,6 +1380,43 @@ en:
       xaxis: "Day"
       yaxis: "Number of new contributors"
       description: "Number of users who made their first post during this period."
+    activity_by_category:
+      title: "Activity by category"
+      description: "Topics, posts, and member participation per category in the selected period. Share is each category's percentage of total activity across the listed categories; Vs Prior is the change in share compared with the previous period of equal length."
+      labels:
+        category: "Category"
+        topics: "Topics"
+        posts: "Posts"
+        page_views: "Page views"
+        share: "Share"
+        vs_prior: "Vs Prior"
+    posters_by_member_type:
+      title: "Who's posting?"
+      description: "Posts authored in the selected period, bucketed by member type. \"New members\" signed up during the period, \"Returning\" signed up before it, and \"Staff\" are admins or moderators."
+      labels:
+        member_type: "Member type"
+        count: "Posts"
+        share: "Share"
+      types:
+        new_members: "New members"
+        returning: "Returning"
+        staff: "Staff"
+    trust_level_pipeline:
+      title: "Trust level pipeline"
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Trust level"
+        count: "Members"
+        share: "Share"
+        moves_in: "Moves in"
+        moves_out: "Moves out"
+      levels:
+        "0": "New"
+        "1": "Basic"
+        "2": "Member"
+        "3": "Regular"
+        "4": "Leader"
     trust_level_growth:
       title: "Trust Level growth"
       xaxis:
@@ -1375,18 +1462,19 @@ en:
     site_traffic:
       title: "Site traffic"
       xaxis:
-        page_view_anon_browser: "Pageviews (anonymous)"
-        page_view_logged_in_browser: "Pageviews (logged in)"
-        page_view_crawler: "Known crawlers"
+        page_view_anon_browser: "Anonymous"
+        page_view_logged_in_browser: "Logged in"
+        page_view_crawler: "Crawlers"
+        page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"
       description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
+      title: "DAU / MAU"
       xaxis: "Day"
       yaxis: "DAU/MAU"
-      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >20%."
+      description: "The share of monthly active members who returned in the last day. This percentage shows how regularly people come back; also called the community 'stickiness'. Aim for > 20%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
@@ -1494,6 +1582,18 @@ en:
         num_clicks: "Clicks"
         num_topics: "Topics"
       description: "Users listed by number of clicks on links they have shared."
+    top_countries_by_browser_pageviews:
+      title: "Top countries"
+      description: "Countries driving the most browser pageviews to your forum in the selected period."
+      labels:
+        country_code: "Country code"
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      title: "Top referrers"
+      description: "External sites referring the most browser pageviews to your forum in the selected period."
+      labels:
+        normalized_referrer: "Referrer"
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -1557,6 +1657,11 @@ en:
       xaxis: "Day"
       yaxis: "Logged In Browser Pageviews"
       description: "Number of pageviews by logged-in visitors using real browsers."
+    page_view_embed_reqs:
+      title: "Embedded pageviews"
+      xaxis: "Day"
+      yaxis: "Embedded pageviews"
+      description: "Number of pageviews served inside the full app embed iframe."
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -1618,7 +1723,7 @@ en:
         os: Operating System
         login_time: Login Time
       description: "Details of new logins that differ suspiciously from previous logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: User
@@ -1698,10 +1803,14 @@ en:
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
+      email_sending_failures:
+        one: "Email sending has failed once in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
+        other: "Email sending has failed %{count} times in the past 24 hours. Check the <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>skipped email logs</a> for SMTP error details."
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
+      qq_mail_smtp: "Your SMTP server (%{smtp_address}) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>."
       bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
       poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
       poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
@@ -1715,6 +1824,9 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
+    reports_section:
+      providers:
+        core_report: "Standard"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1804,7 +1916,6 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
-
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
@@ -1816,13 +1927,14 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A list of custom email headers"
-    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Customizing specific system email templates on Meta</a>."
+    simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
     enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the `enforce_second_factor` setting."
@@ -1896,8 +2008,9 @@ en:
     moderators_manage_categories: "Allow moderators to create and manage categories"
     moderators_manage_groups: "Allow moderators to create and manage groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
+    change_post_ownership_allowed_groups: "Allow users in these groups to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
+    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the <a href='%{base_path}/admin/logs/screened_ip_addresses'>Screened IPs list</a>."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
@@ -1906,12 +2019,13 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
+    llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    can_permanently_delete: "Allow admins to permanently destroy posts, topics, and post revisions. Permanently deleted data is completely removed from the database and cannot be recovered."
     suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -2004,16 +2118,17 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
+    allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and GitHub are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
     google_oauth2_client_secret: "Client secret of your Google application."
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
-    google_oauth2_hd_groups: "Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information see https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/226850\">this Meta topic</a>."
     google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
     google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
     google_oauth2_verbose_logging: "Log verbose Google OAuth2 related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2049,10 +2164,10 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; only uncheck this option if intend to configure permissions policies on the configured `s3_upload_bucket` and `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
+    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">this Meta topic</a> for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
-    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
+    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in <a href='%{base_path}/admin/site_settings/category/files'>Files settings</a>. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
     backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
     include_thumbnails_in_backups: "Include generated thumbnails in backups. Disabling this will make backups smaller, but requires a rebake of all posts after a restore."
 
@@ -2076,6 +2191,7 @@ en:
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
     max_personal_messages_per_day: "Maximum number of new personal message topics a user can create per day."
+    limit_admin_personal_messages_per_day: "Maximum number of new personal message topics an admin can create per day. Set to 0 for no limit."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
     max_topic_invitations_per_minute: "Maximum number of topic invitations a user can send per minute."
@@ -2092,7 +2208,7 @@ en:
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
-    categories_topics: "Number of topics to show in /categories page. If set to 0, it will automatically try to find a value to keep the two columns symmetrical (categories and topics)."
+    categories_topics: 'Number of topics to show on the /categories page. If set to 0, it will automatically set a value to keep the two columns symmetrical. Only relevant for "categories and latest/top topics" <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">category page styles</a>.'
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
@@ -2107,6 +2223,8 @@ en:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images, attachments, and backups."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
+    s3_role_arn: "The ARN of the IAM role to assume for S3 operations. When set alongside access keys, Discourse will use STS AssumeRole to obtain temporary credentials."
+    s3_role_session_name: "Optional session name used when assuming an IAM role for S3 operations. Appears in CloudTrail logs for auditing. Falls back to the server hostname if blank."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     s3_use_cdn_url_for_all_uploads: "Use CDN URL for all the files uploaded to s3 instead of only for images."
@@ -2138,6 +2256,9 @@ en:
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
+    composer_media_optimization_image_convert_enabled: "Enables client-side conversion of JXL, HEIC, and animated GIF images before upload. JXL and HEIC are converted to JPEG, animated GIFs larger than the threshold are converted to animated WEBP."
+    composer_media_optimization_image_wasm_decode_enabled: "Decode JPEG and PNG images in WASM inside the Web Worker instead of using browser canvas APIs. Avoids iOS canvas pixel limits and createImageBitmap flakiness, at the cost of a larger worker bundle."
+    composer_media_optimization_gif_conversion_threshold: "Minimum GIF file size in bytes to trigger client-side conversion to animated WEBP."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
     video_conversion_service: "The video conversion service to use for processing uploaded videos."
@@ -2177,40 +2298,27 @@ en:
     tl3_requires_likes_given: "The minimum number of likes that must be given in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
-    tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
     delete_all_posts_and_topics_allowed_groups: "Groups allowed to delete posts and topics created by other users. These groups will also be able to see deleted topics and posts."
     edit_all_topic_groups: "Allow users in this group to edit other users' topic titles, tags, and categories"
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
-    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
 
-    min_trust_to_edit_post: "The minimum trust level required to edit posts."
     edit_post_allowed_groups: "Groups that are allowed to edit posts. Admins and moderators can always edit posts."
 
-    min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
     self_wiki_allowed_groups: "Allow users in these groups to make their own posts wiki. Admins and moderators can always make their own posts wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
-    min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
     send_email_messages_allowed_groups: "Groups that are allowed to send personal messages via email. Admins and moderators can always send personal messages via email."
-    min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     flag_post_allowed_groups: "Groups that are allowed to flag posts. Admins and moderators can always flag posts."
-    min_trust_to_post_links: "The minimum trust level required to include links in posts"
     post_links_allowed_groups: "Groups that are allowed to include links in posts. Admins and moderators are always allowed to post links."
-    min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post. Admins and moderators can always embed media items."
-    min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     profile_background_allowed_groups: "Groups that are allowed to upload a profile background. Admins and moderators can always upload a profile background."
-    min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     user_card_background_allowed_groups: "Groups that are allowed to upload a user card background. Admins and moderators can always upload a user card background."
-    min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
     invite_allowed_groups: "Groups that are allowed to invite users. Admins and moderators can always invite users."
-    min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
     ignore_allowed_groups: "Groups that are allowed to ignore other users. Admins and moderators can always ignore other users."
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
@@ -2220,14 +2328,15 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
+    max_quotes_per_post: "Maximum number of quotes allowed in a single post. Set to 0 to disable the check."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
     enable_mentions: "Permits users to tag or reference each other in their posts using the '@' symbol."
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
-    min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    animated_topic_thumbnails: "Use the original animated image as the topic thumbnail instead of generating a static thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
@@ -2301,11 +2410,11 @@ en:
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
-    min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    fast_typing_threshold: "Minimum amount of time in milliseconds a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
+    min_first_post_typing_time: "Minimum amount of time a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
+    fast_typing_threshold: "Minimum amount of time a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
-    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
+    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use <a href='%{base_path}/admin/customize/watched_words/action/silence'>Silence Watched Words</a> instead."
     moderator_guide_topic: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
@@ -2323,8 +2432,8 @@ en:
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
-    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
-
+    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable outgoing emails for all users. Select 'non-staff' to disable emails for non-staff users only."
+    allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
     display_name_on_email_from: "Display full names on email from fields"
@@ -2344,6 +2453,7 @@ en:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
     mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
     postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2379,21 +2489,12 @@ en:
     pop3_polling_delete_from_server: "Delete emails from server. NOTE: If you disable this you should manually clean your mail inbox"
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
-    email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_allowed_groups: "Groups that are allowed to post new topics via email. Admins and moderators can always post new topics via email."
 
-    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
+    email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358' target='_blank'>this Meta topic</a> for instructions on how to configure this."
     email_in_spam_header: "Selects the specific email header to use for identifying spam. This option can be X-Spam-Flag, X-Spam-Status, or X-SES-Spam-Verdict, and the email is tagged as spam based on the header's value. For instance, if the chosen setting is X-Spam-Flag, an email with this header value set to YES would be classified as spam."
 
-    enable_imap: "Enable IMAP for synchronizing group messages."
-    enable_imap_write: "Enable two-way IMAP synchronization. If disabled, all write-operations on IMAP accounts are disabled."
-    enable_imap_idle: "Use IMAP IDLE mechanism to wait for new emails."
     enable_smtp: "Enable SMTP for sending notifications for group messages."
-
-    imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
-    imap_polling_old_emails: "The maximum number of old emails (processed) to be updated every time an IMAP box is polled (0 for all)."
-    imap_polling_new_emails: "The maximum number of new emails (unprocessed) to be updated every time an IMAP box is polled ."
-    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables notifications for imported posts)."
 
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
@@ -2405,12 +2506,12 @@ en:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
+    delete_all_posts_background_threshold: "The maximum number of posts that can be deleted at once with the Delete All Posts button before the deletion is processed in the background."
     delete_user_self_max_post_count: "The maximum number of posts a user can have while allowing self-service account deletion. Set to -1 to disable self-service account deletion."
     username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout (eg: https://example.com/logout)"
 
-    allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     uploaded_avatars_allowed_groups: "Specify groups allowed to upload custom profile pictures."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
@@ -2437,11 +2538,10 @@ en:
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_mode: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
     allow_likes_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. This setting requires the `allow anonymous mode` setting to be enabled."
-    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
-    hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+    hide_user_profiles_from_public: "Disable user cards and user profiles for anonymous users. Aggregated stats will still be available in the user directory."
     hide_new_user_profiles: "Hide trust level 1 or lower user profiles from the public and trust level 1 users until they post for the first time. This feature is disabled unconditionally on must_approve_users and invite_only sites."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
@@ -2452,9 +2552,9 @@ en:
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
-    hide_silencing_reasons: "Don't display silencing reasons publically on user profiles."
+    hide_silencing_reasons: "Don't display silencing reasons publicly on user profiles."
 
-    hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
+    hide_suspension_reasons: "Don't display suspension reasons publicly on user profiles."
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
@@ -2477,11 +2577,9 @@ en:
 
     dont_feed_the_trolls_threshold: "Number of flags from other users before being warned."
 
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
-
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
-    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recepient has not been seen more than n months ago."
+    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recipient has not been seen more than n months ago."
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
@@ -2546,14 +2644,15 @@ en:
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
+    embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
+    embed_full_app_signin_flow: "When full app mode is enabled, intercept logged-out actions inside the iframe with a guided flow that opens a top-level sign-in tab that auto-closes on success. Only enable this when the embed is same-site to the host page (e.g. `forum.example.com` on `blog.example.com`) or when `same site cookies` is set to `None` — otherwise the iframe will not receive the session cookie after sign-in."
+    suppress_third_party_analytics_in_embed: "Skip rendering third-party analytics scripts (Google Tag Manager, Google Analytics, Adobe Analytics) when Discourse is loaded inside a full app embed iframe. Prevents duplicate pageviews and tag firing when the host page already loads the same scripts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
 
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
-
-    bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in personal messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2567,11 +2666,10 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    enable_gifs: "Adds a button to easily search and insert GIFs in posts."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
-    approve_unless_trust_level: "Posts created by users below this trust level must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."
-    approve_new_topics_unless_trust_level: "New topics created by users below this trust level must be approved"
     approve_new_topics_unless_allowed_groups: "New topics created by users not in these groups must be approved. Topics created by admins and moderators are always approved."
     approve_unless_staged: "New topics and posts created by staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
@@ -2591,7 +2689,6 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
-    review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
     skip_review_media_groups: "Users who are not in any of these groups will have their posts sent to staff for review if the post contains embedded media. Posts created by admins and moderators are always allowed."
     blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
@@ -2656,9 +2753,6 @@ en:
     revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
-    min_trust_level_for_user_api_key: |
-      Trust level required for generation of user API keys.<br>
-      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     user_api_key_allowed_groups: |
       Group membership required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub.<br>
@@ -2669,7 +2763,6 @@ en:
     revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
-    min_trust_to_create_tag: "The minimum trust level required to create a tag."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
     edit_tags_allowed_groups: "Groups that are allowed to edit tags, tag descriptions, and tag synonyms."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
@@ -2682,7 +2775,6 @@ en:
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
     tag_style: "Define the visual appearance of tag badges on the site. This setting allows you to customize how tags are visually represented across all areas of the site, enhancing layout consistency and user accessibility."
     pm_tags_allowed_for_groups: "Allow members of included groups to tag any personal message"
-    min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     tag_topic_allowed_groups: "Groups that are allowed to tag topics. Admins and moderators can always tag topics."
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
@@ -2696,7 +2788,6 @@ en:
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
-    shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
     shared_drafts_allowed_groups: "Allow users in these groups to see and edit Shared Drafts."
 
     push_notifications_prompt: "Show a user consent banner for push notifications. This setting triggers a prompt asking users for permission to send them push notifications. It only appears when push notifications are not already enabled, are supported by the user's device, and the user has either made a post or is using a Progressive Web App (PWA). The prompt will not be shown again if the user has already dismissed it or granted/denied permission."
@@ -2718,8 +2809,9 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
+    admin_dashboard_sections: "Sections shown on the redesigned admin dashboard, in display order. Managed via the Configure menu on the dashboard."
 
-    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. This will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
+    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
     gravatar_base_url: "Specify the URL for accessing the Gravatar provider's API. This setting is critical for converting email addresses into Gravatar URLs where avatar images are stored."
     gravatar_login_url: "URL relative to `gravatar_base_url`, which provides the user with the login to the Gravatar service."
@@ -2731,28 +2823,30 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
-    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
+    site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
     welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
     welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
-    splash_screen: "Displays a temporary loading screen while site assets load"
+    splash_screen_image: "An SVG image to display on the splash screen while the site loads. Animated SVGs should only use CSS transform or opacity animations. Use unique names for CSS classes and keyframes. You can use var(--primary), var(--secondary), and var(--tertiary) to reference theme colors."
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
+    enable_form_templates: "Enable the form templates feature. With it, you can enforce a structured form with data validation as part of the topic creation flow."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
-    experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
-    experimental_impersonation: "Impersonate a user without having to log out of your admin account."
+    enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
+    enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
-    experimental_lightbox: "Use PhotoSwipe to lightbox larger images."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2765,23 +2859,40 @@ en:
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
-    content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
+    content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
-    enable_upcoming_changes: "Enable upcoming changes"
+    nested_replies_enabled: "Enable the nested replies view for topics."
+    nested_replies_default: "Use nested replies as the default view for all topics."
+    nested_replies_default_sort: "Default sort algorithm for nested replies view."
+    nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
+    nested_replies_toggle_mode_groups: "Groups that can toggle between nested and flat view."
+    nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per scheduled run."
+    nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
+    enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
+    floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
+    rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
+    modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
+    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
+    dashboard_improvements: "Improvements to navigation, design, and usability for the Discourse admin dashboard."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
+      invalid_datetime: "Invalid datetime format. Please ensure you've entered a valid date and time."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
+      invalid_svg: "The SVG image is invalid. It must contain an SVG element and no scripts or event handlers."
+      invalid_upload: "The upload is invalid or does not exist."
       invalid_topic: "There's no topic with that ID."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
@@ -2819,12 +2930,12 @@ en:
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
-      min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
-      min_group_name_length_exists: "You cannot set the minimum username length above the shortest group name (%{group_name})."
-      min_username_length_range: "You cannot set the minimum above the maximum."
-      max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
-      max_group_name_length_exists: "You cannot set the maximum username length below the longest group name (%{group_name})."
-      max_username_length_range: "You cannot set the maximum below the minimum."
+      min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
+      min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
+      min_username_length_range: "You cannot set 'min username length' above 'max username length'."
+      max_username_length_exists: "You cannot set 'max username length' below the longest username (%{username})."
+      max_group_name_length_exists: "You cannot set 'max username length' below the longest group name (%{group_name})."
+      max_username_length_range: "You cannot set the 'max username length' below 'min username length'."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:
@@ -2891,11 +3002,12 @@ en:
       exclude_tag: "Exclude topics with a specific tag"
       exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
       exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
-      tags_alias: "Alias for 'tag:' filter"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
       activity_after: "Show topics with last activity after a date (YYYY-MM-DD or days ago)"
+      bookmarked_before: "Show topics bookmarked before a date (YYYY-MM-DD or days ago)"
+      bookmarked_after: "Show topics bookmarked after a date (YYYY-MM-DD or days ago)"
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
@@ -3104,9 +3216,14 @@ en:
       csrf_detected: "Sorry, the authorization timed out, or you have switched browsers. Please try again."
       request_error: "Sorry, an error occurred when starting the authorization. Please try again."
       invalid_iat: "Sorry, we are unable to verify the authorization token due to server clock differences. Please try again."
+      unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
+
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
-    omniauth_confirm_title: "Log in using %{provider}"
+    omniauth_confirm_title: "Log in with %{provider}"
     omniauth_confirm_button: "Continue"
+    omniauth_confirm_description: "You will be redirected to %{provider} to sign in"
+    omniauth_confirm_provider_description: "Secure authentication"
+    omniauth_confirm_footer_html: "You will be signed into %{site}"
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     new_registrations_disabled_discourse_connect: "New account registrations are only allowed through Discourse Connect."
@@ -3158,6 +3275,7 @@ en:
         updating_user_ids: "Updating user ids…"
         deleting_source_user: "Deleting source user…"
   user:
+    anonymized: "[removed due to user anonymization]"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     deactivated_by_inactivity:
@@ -3195,6 +3313,7 @@ en:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
+      same_ip_address_user: "Same IP address as %{username}"
       inactive_user: "Inactive user"
       reviewable_reject_auto: "Auto handle queued reviewables"
       reviewable_reject: "Reviewable user rejected"
@@ -3306,6 +3425,7 @@ en:
   download_backup_mailer:
     title: "Download Backup Mailer"
     subject_template: "[%{email_prefix}] Site Backup Download"
+    subject_template_improved: "%{email_prefix}: Site backup download"
     text_body_template: |
       Here's the [site backup download](%{backup_file_path}) you requested.
 
@@ -3318,6 +3438,7 @@ en:
   admin_confirmation_mailer:
     title: "Admin Confirmation"
     subject_template: "[%{email_prefix}] Confirm new Admin Account"
+    subject_template_improved: "%{email_prefix}: Confirm new admin account"
     text_body_template: |
       Please confirm that you'd like to add **%{target_username} (%{target_email})** as an administrator for your forum.
 
@@ -3326,6 +3447,7 @@ en:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Email Deliverability Test"
+    subject_template_improved: "%{email_prefix}: Email deliverability test"
     text_body_template: |
       This is a test email from
 
@@ -3345,6 +3467,7 @@ en:
   new_version_mailer:
     title: "New Version Mailer"
     subject_template: "[%{email_prefix}] New Discourse version, update available"
+    subject_template_improved: "%{email_prefix}: New Discourse version, update available"
     text_body_template: |
       Hooray, a new version of [Discourse](https://www.discourse.org) is available!
 
@@ -3353,13 +3476,14 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
   new_version_mailer_with_notes:
     title: "New Version Mailer with Notes"
     subject_template: "[%{email_prefix}] update available"
+    subject_template_improved: "%{email_prefix}: Update available"
     text_body_template: |
       Hooray, a new version of [Discourse](https://www.discourse.org) is available!
 
@@ -3368,7 +3492,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3413,6 +3537,7 @@ en:
 
     post_hidden:
       title: "Post Hidden"
+      preview: "Post hidden due to flags by community members."
       subject_template: "Post hidden by community flags"
       text_body_template: |
         Hello,
@@ -3429,6 +3554,10 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
+    reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -3441,7 +3570,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3464,7 +3593,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3477,6 +3606,7 @@ en:
 
     post_hidden_again:
       title: "Post Hidden again"
+      preview: "Post hidden again by community members."
       subject_template: "Post hidden by community flags, staff notified"
       text_body_template: |
         Hello,
@@ -3571,6 +3701,7 @@ en:
 
     welcome_user:
       title: "Welcome User"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -3600,6 +3731,7 @@ en:
         With great power comes great responsibility. If you’re new to moderating, please refer to the [Moderation Guide](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welcome Invite"
+      preview: "Welcome to %{site_name}!"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
@@ -3740,6 +3872,7 @@ en:
     email_reject_insufficient_trust_level:
       title: "Email Reject insufficient Trust Level"
       subject_template: "[%{email_prefix}] Email issue -- Insufficient Trust Level"
+      subject_template_improved: "%{email_prefix}: Email issue -- insufficient trust level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3748,6 +3881,7 @@ en:
     email_reject_user_not_found:
       title: "Email Reject User Not Found"
       subject_template: "[%{email_prefix}] Email issue -- User Not Found"
+      subject_template_improved: "%{email_prefix}: Email issue -- user not found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3756,6 +3890,7 @@ en:
     email_reject_screened_email:
       title: "Email Reject Screened Email"
       subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      subject_template_improved: "%{email_prefix}: Email issue -- blocked email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3763,7 +3898,8 @@ en:
 
     email_reject_not_allowed_email:
       title: "Email Reject Not Allowed Email"
-      subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      subject_template: "[%{email_prefix}] Email issue -- blocked email"
+      subject_template_improved: "%{email_prefix}: Email issue -- blocked email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3772,6 +3908,7 @@ en:
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
       subject_template: "[%{email_prefix}] Email issue -- Inactive User"
+      subject_template_improved: "%{email_prefix}: Email issue -- inactive user"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3780,6 +3917,7 @@ en:
     email_reject_silenced_user:
       title: "Email Reject Silenced User"
       subject_template: "[%{email_prefix}] Email issue -- Silenced User"
+      subject_template_improved: "%{email_prefix}: Email issue -- silenced user"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3788,6 +3926,7 @@ en:
     email_reject_reply_user_not_matching:
       title: "Email Reject User Not Matching"
       subject_template: "[%{email_prefix}] Email issue -- Unexpected Reply Address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unexpected reply address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3796,6 +3935,7 @@ en:
     email_reject_empty:
       title: "Email Reject Empty"
       subject_template: "[%{email_prefix}] Email issue -- No Content"
+      subject_template_improved: "%{email_prefix}: Email issue -- no content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3806,6 +3946,7 @@ en:
     email_reject_parsing:
       title: "Email Reject Parsing"
       subject_template: "[%{email_prefix}] Email issue -- Content Unrecognized"
+      subject_template_improved: "%{email_prefix}: Email issue -- content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3814,6 +3955,7 @@ en:
     email_reject_invalid_access:
       title: "Email Reject Invalid Access"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3822,6 +3964,7 @@ en:
     email_reject_strangers_not_allowed:
       title: "Email Reject Strangers Not Allowed"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3830,6 +3973,7 @@ en:
     email_reject_invalid_post:
       title: "Email Reject Invalid Post"
       subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      subject_template_improved: "%{email_prefix}: Email issue -- posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3838,6 +3982,7 @@ en:
     email_reject_invalid_post_specified:
       title: "Email Reject Invalid Post Specified"
       subject_template: "[%{email_prefix}] Email issue -- Posting error"
+      subject_template_improved: "%{email_prefix}: Email issue -- posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3851,6 +3996,7 @@ en:
     email_reject_post_too_short:
       title: "Email Reject Post Too Short"
       subject_template: "[%{email_prefix}] Email issue -- Post too short"
+      subject_template_improved: "%{email_prefix}: Email issue -- post too short"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3859,6 +4005,7 @@ en:
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
       subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
+      subject_template_improved: "%{email_prefix}: Email issue -- invalid post action"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3867,6 +4014,7 @@ en:
     email_reject_reply_key:
       title: "Email Reject Reply Key"
       subject_template: "[%{email_prefix}] Email issue -- Unknown Reply Key"
+      subject_template_improved: "%{email_prefix}: Email issue -- unknown reply key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3875,6 +4023,7 @@ en:
     email_reject_bad_destination_address:
       title: "Email Reject Bad Destination Address"
       subject_template: "[%{email_prefix}] Email issue -- Unknown To: Address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unknown to: address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3891,6 +4040,7 @@ en:
     email_reject_old_destination:
       title: "Email Reject Old Destination"
       subject_template: "[%{email_prefix}] Email issue -- You are trying to reply to an old notification"
+      subject_template_improved: "%{email_prefix}: Email issue -- you are trying to reply to an old notification"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3899,6 +4049,7 @@ en:
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
       subject_template: "[%{email_prefix}] Email issue -- Topic Not Found"
+      subject_template_improved: "%{email_prefix}: Email issue -- topic not found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3907,6 +4058,7 @@ en:
     email_reject_topic_closed:
       title: "Email Reject Topic Closed"
       subject_template: "[%{email_prefix}] Email issue -- Topic Closed"
+      subject_template_improved: "%{email_prefix}: Email issue -- topic closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3915,6 +4067,7 @@ en:
     email_reject_auto_generated:
       title: "Email Reject Auto Generated"
       subject_template: "[%{email_prefix}] Email issue -- Auto Generated Reply"
+      subject_template_improved: "%{email_prefix}: Email issue -- auto generated reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3923,6 +4076,7 @@ en:
     email_reject_unrecognized_error:
       title: "Email Reject Unrecognized Error"
       subject_template: "[%{email_prefix}] Email issue -- Unrecognized Error"
+      subject_template_improved: "%{email_prefix}: Email issue -- unrecognized error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3931,6 +4085,7 @@ en:
     email_reject_attachment:
       title: "Email Attachment Rejected"
       subject_template: "[%{email_prefix}] Email issue -- Attachment Rejected"
+      subject_template_improved: "%{email_prefix}: Email issue -- attachment rejected"
       text_body_template: |
         Unfortunately some attachments in your email message to %{destination} (titled %{former_title}) were rejected.
 
@@ -3942,6 +4097,7 @@ en:
     email_reject_reply_not_allowed:
       title: "Email Reject Reply Not Allowed"
       subject_template: "[%{email_prefix}] Email issue -- Reply Not Allowed"
+      subject_template_improved: "%{email_prefix}: Email issue -- reply not allowed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3949,7 +4105,8 @@ en:
 
     email_reject_reply_to_digest:
       title: "Email Reject Reply To Summary"
-      subject_template: "[%{email_prefix}] Email issue -- Reply to Summary"
+      subject_template: "[%{email_prefix}] Email issue -- Reply To Summary"
+      subject_template_improved: "%{email_prefix}: Email issue -- reply to summary"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3960,6 +4117,7 @@ en:
     email_reject_too_many_recipients:
       title: "Email Reject Too Many Recipients"
       subject_template: "[%{email_prefix}] Email issue -- Too Many Recipients"
+      subject_template_improved: "%{email_prefix}: Email issue -- too many recipients"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -3970,6 +4128,7 @@ en:
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
+      subject_template_improved: "%{email_prefix}: Email issue -- POP authentication error"
       text_body_template: |
         Unfortunately, there was an authentication error while polling mails from the POP server.
 
@@ -3994,6 +4153,15 @@ en:
       %{raw}
       ```
 
+    email_sending_failed: |
+      Sending the message to %{email} failed.
+
+      ### Details
+
+      ``` text
+      %{raw}
+      ```
+
     ignored_users_summary:
       title: "Ignored User passed threshold"
       subject_template: "A user is being ignored by many other users"
@@ -4008,6 +4176,7 @@ en:
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
+      preview: "Posts temporarily hidden due to spam flags."
       subject_template: "New account on hold"
       text_body_template: |
         Hello,
@@ -4030,6 +4199,7 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenced by Staff"
+      preview: "Account temporarily placed on hold."
       subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
@@ -4079,6 +4249,7 @@ en:
 
     unsilenced:
       title: "Unsilenced"
+      preview: "Account no longer on hold."
       subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
@@ -4104,7 +4275,7 @@ en:
 
     new_user_of_the_month:
       title: "You're a New User of the Month!"
-      subject_template: "You're a New User of the Month!"
+      subject_template: "You're a new user of the month!"
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
@@ -4122,6 +4293,13 @@ en:
 
         Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
 
+    user_posts_deleted:
+      title: "User Posts Deleted"
+      subject_template: "All of %{user}'s posts have been deleted"
+      text_body_template:
+        one: "%{count} post from @%{user} has been deleted by @%{staff_user}."
+        other: "%{count} posts from @%{user} have been deleted by @%{staff_user}."
+
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
@@ -4135,8 +4313,6 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -4214,6 +4390,7 @@ en:
     user_invited_to_private_message_pm_group:
       title: "User Invited Group to PM"
       subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited @%{group_name} to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4224,6 +4401,7 @@ en:
     user_invited_to_private_message_pm:
       title: "User Invited to PM"
       subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4234,6 +4412,7 @@ en:
     user_invited_to_private_message_pm_staged:
       title: "User Invited to PM Staged"
       subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4244,6 +4423,7 @@ en:
     user_invited_to_topic:
       title: "User Invited to Topic"
       subject_template: "[%{email_prefix}] %{username} invited you to '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}: %{username} invited you to '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -4253,7 +4433,9 @@ en:
 
     user_replied:
       title: "User Replied"
+      preview: "Someone replied to your post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4266,6 +4448,7 @@ en:
     user_replied_pm:
       title: "User Replied PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4277,7 +4460,9 @@ en:
 
     user_quoted:
       title: "User Quoted"
+      preview: "Someone quoted you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4289,7 +4474,9 @@ en:
 
     user_linked:
       title: "User Linked"
+      preview: "Post linked in another topic."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4301,7 +4488,9 @@ en:
 
     user_mentioned:
       title: "User Mentioned"
+      preview: "Someone mentioned you in a post."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4314,6 +4503,7 @@ en:
     user_mentioned_pm:
       title: "User Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4326,6 +4516,7 @@ en:
     user_group_mentioned:
       title: "User Group Mentioned"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4338,6 +4529,7 @@ en:
     user_group_mentioned_pm:
       title: "User Group Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4350,6 +4542,7 @@ en:
     user_group_mentioned_pm_group:
       title: "User Group Mentioned PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4361,7 +4554,9 @@ en:
 
     user_posted:
       title: "User Posted"
+      preview: "Someone replied to a topic you are Watching."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4374,6 +4569,7 @@ en:
     user_watching_category_or_tag:
       title: "User Watching Category or Tag"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4386,6 +4582,7 @@ en:
     user_watching_first_post:
       title: "User Watching First Post"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4397,7 +4594,9 @@ en:
 
     user_posted_pm:
       title: "User Posted PM"
+      preview: "Someone sent you a PM."
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4417,6 +4616,7 @@ en:
     account_suspended:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
+      subject_template_improved: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum until %{suspended_till}.
 
@@ -4425,6 +4625,7 @@ en:
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
+      subject_template_improved: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum.
 
@@ -4433,6 +4634,7 @@ en:
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
+      subject_template_improved: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
 
@@ -4441,6 +4643,7 @@ en:
     account_silenced_forever:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
+      subject_template_improved: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum.
 
@@ -4449,6 +4652,7 @@ en:
     account_deleted:
       title: "Account Deleted"
       subject_template: "[%{email_prefix}] Your account has been deleted"
+      subject_template_improved: "Your account has been deleted"
       text_body_template: |
         Hello,
 
@@ -4461,6 +4665,7 @@ en:
     account_exists:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"
+      subject_template_improved: "Account already exists"
       text_body_template: |
         You just tried to create an account at %{site_name}, or tried to change the email of an account to %{email}. However, an account already exists for %{email}.
 
@@ -4473,6 +4678,7 @@ en:
     account_second_factor_disabled:
       title: "Two-Factor Authentication disabled"
       subject_template: "[%{email_prefix}] Two-Factor Authentication disabled"
+      subject_template_improved: "Two-Factor Authentication disabled"
       text_body_template: |
         Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
@@ -4493,6 +4699,7 @@ en:
       popular_posts: "Popular Posts"
       more_new: "New for you"
       subject_template: "[%{email_prefix}] Summary"
+      subject_template_improved: "Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
@@ -4523,7 +4730,9 @@ en:
 
     forgot_password:
       title: "Forgot Password"
+      preview: "Reset your password."
       subject_template: "[%{email_prefix}] Password reset"
+      subject_template_improved: "Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
@@ -4534,7 +4743,9 @@ en:
 
     email_login:
       title: "Log in via link"
+      preview: "Log in via link."
       subject_template: "[%{email_prefix}] Log in via link"
+      subject_template_improved: "Log in via link"
       text_body_template: |
         Here's your link to log in at [%{site_name}](%{base_url}).
 
@@ -4545,7 +4756,9 @@ en:
 
     set_password:
       title: "Set Password"
-      subject_template: "[%{email_prefix}] Set Password"
+      preview: "Set account password."
+      subject_template: "[%{email_prefix}] Set password"
+      subject_template_improved: "Set password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -4556,7 +4769,9 @@ en:
 
     admin_login:
       title: "Admin Login"
+      preview: "Admin login requested."
       subject_template: "[%{email_prefix}] Login"
+      subject_template_improved: "Login"
       text_body_template: |
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
 
@@ -4567,7 +4782,9 @@ en:
 
     account_created:
       title: "Account Created"
-      subject_template: "[%{email_prefix}] Your New Account"
+      preview: "New account created for you."
+      subject_template: "[%{email_prefix}] Your new account"
+      subject_template_improved: "Your new account"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -4577,6 +4794,7 @@ en:
     confirm_new_email:
       title: "Confirm New Email"
       subject_template: "[%{email_prefix}] Confirm your new email address"
+      subject_template_improved: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4587,6 +4805,7 @@ en:
     confirm_new_email_via_admin:
       title: "Confirm New Email"
       subject_template: "[%{email_prefix}] Confirm your new email address"
+      subject_template_improved: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4597,6 +4816,7 @@ en:
     confirm_old_email:
       title: "Confirm Old Email"
       subject_template: "[%{email_prefix}] Confirm your current email address"
+      subject_template_improved: "Confirm your current email address"
       text_body_template: |
         Before we can change your email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4609,6 +4829,7 @@ en:
     confirm_old_email_add:
       title: "Confirm Old Email (Add)"
       subject_template: "[%{email_prefix}] Confirm your current email address"
+      subject_template_improved: "Confirm your current email address"
       text_body_template: |
         Before we can add a new email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4620,7 +4841,9 @@ en:
 
     notify_old_email:
       title: "Notify Old Email"
+      preview: "Email address updated."
       subject_template: "[%{email_prefix}] Your email address has been changed"
+      subject_template_improved: "Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
         %{site_name} has been changed. If this was done in error, please contact
@@ -4633,6 +4856,7 @@ en:
     notify_old_email_add:
       title: "Notify Old Email (Add)"
       subject_template: "[%{email_prefix}] A new email address has been added"
+      subject_template_improved: "A new email address has been added"
       text_body_template: |
         This is an automated message to let you know that an email address for
         %{site_name} has been added. If this was done in error, please contact
@@ -4644,6 +4868,7 @@ en:
 
     signup_after_approval:
       title: "Signup After Approval"
+      preview: "New account approved."
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Welcome to %{site_name}!
@@ -4671,7 +4896,9 @@ en:
 
     signup:
       title: "Signup"
+      preview: "Confirm your account."
       subject_template: "[%{email_prefix}] Confirm your new account"
+      subject_template_improved: "Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4683,6 +4910,7 @@ en:
     activation_reminder:
       title: "Activation Reminder"
       subject_template: "[%{email_prefix}] Reminder to confirm your account"
+      subject_template_improved: "Reminder to confirm your account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4695,7 +4923,9 @@ en:
 
     suspicious_login:
       title: "New Login Alert"
-      subject_template: "[%{site_name}] New Login from %{location}"
+      preview: "Verify your device."
+      subject_template: "[%{site_name}] New login from %{location}"
+      subject_template_improved: "%{site_name}: New login from %{location}"
       text_body_template: |
         Hello,
 
@@ -4712,6 +4942,7 @@ en:
     post_approved:
       title: "Your post was approved"
       subject_template: "[%{site_name}] Your post was approved"
+      subject_template_improved: "%{site_name}: Your post was approved"
       text_body_template: |
         Hello,
 
@@ -4743,6 +4974,7 @@ en:
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+    images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     file_missing: "Sorry, you must provide a file to upload."
@@ -5471,22 +5703,38 @@ en:
 
   tags:
     title: "Tags"
+    groups:
+      errors:
+        empty_permissions: "Tag group must have at least one permission."
     restricted_tag_disallowed: 'You cannot apply the tag "%{tag}".'
     restricted_tag_remove_disallowed: 'You cannot remove the tag "%{tag}".'
     minimum_required_tags:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    bulk_create:
+      invalid_params: "Invalid parameters. Please provide an array of tag names."
+      invalid_name: "Invalid tag name."
+      tag_too_long:
+        one: "Tag is too long (max %{count} character)."
+        other: "Tag is too long (max %{count} characters)."
+      too_many_tags:
+        one: "Too many tags. You can create up to %{count} tag at once. For larger imports, use the CSV upload feature."
+        other: "Too many tags. You can create up to %{count} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
       in_this_category: '"%{tag_name}" cannot be used in this category'
+      not_allowed: '"%{tag_name}" cannot be used'
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
+      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
+      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'
@@ -5504,6 +5752,9 @@ en:
 
   finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
+    login_with_discourse_id: "Login with Discourse ID"
+    discourse_id_help: "Please log in with Discourse ID using the button below. <br/><br/>Make sure you use a Discourse ID account with a primary email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable."
+    discourse_id_error_help: "You have opted to skip setting up email for now. Unfortunately due to the error message above, the setup cannot continue. Please report this issue on <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Register"
       title: "Register Admin Account"
@@ -5515,6 +5766,10 @@ en:
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
+    discourse_id:
+      help: "We are now setting up Discourse ID for you."
+      no_allowed_emails: "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup."
+      global_notice: "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
 
   safe_mode:
     title: "Enter safe mode"
@@ -5526,6 +5781,10 @@ en:
     deprecation_error_label: Make Javascript deprecations raise an error
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
+  dev_mode:
+    title: "Developer Mode"
+    enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
+    enter: "Enter Developer Mode"
   wizard:
     title: "Discourse Setup"
     step:
@@ -5586,6 +5845,21 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
+      pr_title:
+        default: "Pull Request"
+        draft: "Draft Pull Request"
+        open: "Open Pull Request"
+        approved: "Approved Pull Request"
+        changes_requested: "Changes Requested"
+        merged: "Merged Pull Request"
+        closed: "Closed Pull Request"
+      status_date:
+        open: "opened"
+        draft: "drafted"
+        approved: "approved"
+        changes_requested: "changes requested"
+        merged: "merged"
+        closed: "closed"
 
   discourse_push_notifications:
     popup:
@@ -5602,6 +5876,7 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
+    redacted: "[content not visible]"
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"
@@ -5624,21 +5899,18 @@ en:
     api_post_delete: "Deleted via API"
     reminder_deleted: "Replaced by new reminder"
     user_associated_posts_deleted: "User was destroyed"
-    imap_email_deleted: "Email has been deleted on the IMAP server"
-    imap_email_marked_as_spam: "Email has been moved to spam on the IMAP server"
     auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
     seed_data_topic_updated: "Seed data topic updated"
     seed_data_topic_deleted: "Seed data topic deleted"
     upcoming_changes:
       log_manually_toggled: "Manually toggled by user"
       log_promoted: >
-        This upcoming change was automatically enabled because it reached the '%{change_status}' status, which meets or exceeds the defined promotion status of '%{promotion_status_threshold}' on your site.
-
-        See the <a href="%{base_url}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
+        This upcoming change reached '%{change_status}' status, so it was automatically enabled on your site. See the <a href="%{base_path}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
+    post_restored_by_author: "Post was restored by the author"
     priorities:
       low: "Low"
       medium: "Medium"
@@ -5705,19 +5977,19 @@ en:
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
         complete: "Post hidden, user has been notified."
       agree_and_edit:
-        title: "Agree and Edit Post"
+        title: "Edit post"
         description: "Agree with flag and open a composer window to edit the post."
         complete: "Flag acknowledged, you can now edit the post."
       delete:
         title: "Delete"
         complete: "Post deleted."
       delete_and_ignore:
-        title: "Ignore flag and delete post"
-        description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
+        title: "Delete post and ignore flag"
+        description: "Delete the post and ignore the flag by removing it from the queue; if the first post, delete the topic as well. "
         complete: "Post deleted."
       delete_and_ignore_replies:
-        title: "Ignore flag, delete post and replies"
-        description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
+        title: "Delete post and replies, ignore flag"
+        description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -5730,11 +6002,14 @@ en:
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
-        title: "No, restore post"
-        description: "Restore the post so that all users can see it."
+        title: "Restore post"
+        description: "Disagree with flag and restore post"
         complete: "Post restored."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Keep post"
+        description: "Disagree with flag"
         complete: "Flag ignored."
       discard_post:
         title: "Discard Post"
@@ -5744,37 +6019,45 @@ en:
         complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
+        description: "Remove it from the queue without taking action."
         complete: "Flag ignored."
       ignore_and_do_nothing:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
       approve:
-        title: "Approve"
+        title: "Yes"
         complete: "Post approved."
       approve_post:
-        title: "Approve Post"
+        title: "Yes"
         complete: "Post approved."
       approve_post_closed:
-        title: "Approve Post"
+        title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
       approve_user:
-        title: "Approve User"
+        title: "Yes"
         complete: "User approved."
       reject_user:
-        title: "Delete User…"
+        title: "No"
         delete:
           title: "Delete User"
-          description: "The user will be deleted from the forum."
+          description: "Delete user without blocking"
           complete: "User deleted."
         block:
           title: "Delete and Block User"
           description: "The user will be deleted, and we'll block their IP and email address."
           complete: "User deleted and blocked."
+      confirm_spam:
+        title: "Yes"
+      not_spam:
+        title: "No"
+        description: "Not spam, approve user"
       reject:
         title: "Reject"
         bundle_title: "Reject…"
@@ -5787,24 +6070,24 @@ en:
       reject_and_delete:
         title: "Reject and Delete the post"
         complete: "Post rejected and deleted."
+      reject_and_delete_standalone:
+        title: "No, delete post"
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      reject_and_keep_deleted_standalone:
+        title: "No, keep post deleted"
       scrub:
         title: Scrub record
       approve_and_restore:
-        title: "Approve and Restore post"
+        title: "Yes"
         complete: "Post approved and restored."
       approve_and_unhide:
-        title: "Approve and Unhide post"
+        title: "Yes"
         complete: "Post approved and unhidden"
       # New separated post actions
       post_actions:
         bundle_title: "What do you want to do with the post?"
-      no_action_post:
-        title: "No action"
-        description: "Take no action on the post"
-        complete: "No action taken on post"
       delete_post:
         title: "Delete post"
         description: "Delete this post"
@@ -5825,17 +6108,8 @@ en:
         title: "Edit post"
         description: "Edit this post content"
         complete: "Post edited"
-      convert_to_pm:
-        title: "Convert to PM"
-        description: "Convert this post to a personal message"
-        complete: "Post converted to personal message"
-      # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"
-      no_action_user:
-        title: "No action"
-        description: "Take no action against the user"
-        complete: "No action taken against user"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting"
@@ -5913,3 +6187,6 @@ en:
 
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"
+    errors:
+      not_configured: "Discourse ID is not configured. Please enable Discourse ID first."
+      regenerate_failed: "Failed to regenerate credentials. Please try again later."

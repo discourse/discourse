@@ -31,8 +31,6 @@ ko:
           title: "메시지 복원"
         agree_and_delete:
           title: "메시지 삭제"
-        disagree:
-          title: "동의하지 않음"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -60,6 +58,10 @@ ko:
         other: "회원 %{count}명"
     transcript:
       default_thread_title: "스레드"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: 댓글쓰기
   discourse_automation:
     scriptables:
       send_chat_message:

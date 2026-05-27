@@ -9,65 +9,61 @@ module DiscourseAi
         rval = Hash.new { |h, k| h[k] = [] }
 
         if SiteSetting.ai_bot_enabled
-          LlmModel
-            .where("enabled_chat_bot = ?", true)
-            .pluck(:id)
-            .each { |llm_id| rval[llm_id] << { type: :ai_bot } }
+          LlmModel.enabled_chat_bot_ids.each { |llm_id| rval[llm_id] << { type: :ai_bot } }
         end
 
         # this is unconditional, so it is clear that we always signal configuration
-        AiPersona
+        AiAgent
           .where.not(default_llm_id: nil)
           .pluck(:default_llm_id, :name, :id)
-          .each { |llm_id, name, id| rval[llm_id] << { type: :ai_persona, name: name, id: id } }
+          .each { |llm_id, name, id| rval[llm_id] << { type: :ai_agent, name: name, id: id } }
 
         if SiteSetting.ai_helper_enabled
           {
             "#{I18n.t("js.discourse_ai.features.ai_helper.proofread")}" =>
-              SiteSetting.ai_helper_proofreader_persona,
+              SiteSetting.ai_helper_proofreader_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.title_suggestions")}" =>
-              SiteSetting.ai_helper_title_suggestions_persona,
+              SiteSetting.ai_helper_title_suggestions_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.explain")}" =>
-              SiteSetting.ai_helper_explain_persona,
+              SiteSetting.ai_helper_explain_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.illustrate_post")}" =>
-              SiteSetting.ai_helper_post_illustrator_persona,
+              SiteSetting.ai_helper_post_illustrator_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.smart_dates")}" =>
-              SiteSetting.ai_helper_smart_dates_persona,
+              SiteSetting.ai_helper_smart_dates_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.translator")}" =>
-              SiteSetting.ai_helper_translator_persona,
+              SiteSetting.ai_helper_translator_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.markdown_tables")}" =>
-              SiteSetting.ai_helper_markdown_tables_persona,
+              SiteSetting.ai_helper_markdown_tables_agent,
             "#{I18n.t("js.discourse_ai.features.ai_helper.custom_prompt")}" =>
-              SiteSetting.ai_helper_custom_prompt_persona,
-          }.each do |helper_type, persona_id|
-            next if persona_id.blank?
+              SiteSetting.ai_helper_custom_prompt_agent,
+          }.each do |helper_type, agent_id|
+            next if agent_id.blank?
 
-            persona = AiPersona.find_by(id: persona_id)
-            next if persona.blank? || persona.default_llm_id.blank?
+            agent = AiAgent.find_by(id: agent_id)
+            next if agent.blank? || agent.default_llm_id.blank?
 
-            model_id = persona.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+            model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
             rval[model_id] << { type: :ai_helper, name: helper_type }
           end
         end
 
         if SiteSetting.ai_helper_enabled_features.split("|").include?("image_caption")
-          image_caption_persona = AiPersona.find_by(id: SiteSetting.ai_helper_image_caption_persona)
-          model_id = image_caption_persona.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+          image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent)
+          model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
           rval[model_id] << { type: :ai_helper_image_caption }
         end
 
         if SiteSetting.ai_summarization_enabled
-          summarization_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)
-          model_id = summarization_persona.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+          summarization_agent = AiAgent.find_by(id: SiteSetting.ai_summarization_agent)
+          model_id = summarization_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
           rval[model_id] << { type: :ai_summarization }
         end
 
         if SiteSetting.ai_embeddings_semantic_search_enabled
-          search_persona =
-            AiPersona.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_persona)
-          model_id = search_persona.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+          search_agent = AiAgent.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_agent)
+          model_id = search_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
           rval[model_id] << { type: :ai_embeddings_semantic_search }
         end
@@ -101,6 +97,8 @@ module DiscourseAi
 
       # returns an array of hashes (id: , name:, vision_enabled:)
       def self.values_for_serialization
+        return [] unless table_exists?
+
         DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT id, display_name AS name, vision_enabled
           FROM llm_models
@@ -108,10 +106,19 @@ module DiscourseAi
       end
 
       def self.values
+        return [] unless table_exists?
+
         DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT display_name AS name, id AS value
           FROM llm_models
         SQL
+      end
+
+      def self.table_exists?
+        DB.exec("SELECT 1 FROM llm_models LIMIT 0")
+        true
+      rescue StandardError
+        false
       end
     end
   end

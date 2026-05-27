@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class PostMenuShowMoreButton extends Component {
   static shouldRender(args) {
@@ -13,6 +13,7 @@ export default class PostMenuShowMoreButton extends Component {
       @action={{@buttonActions.showMoreActions}}
       @icon="ellipsis"
       @title="show_more"
+      @ariaLabel="show_more"
     />
   </template>
 }

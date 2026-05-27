@@ -26,16 +26,33 @@ class ThemeJavascriptCompiler
   def compile!
     if !@compiled
       @compiled = true
+      @input_tree =
+        @input_tree.to_h do |k, v|
+          if k.end_with?(".js.es6")
+            [k.sub(/\.js\.es6$/, ".js"), AssetProcessor.append_es6_deprecation(v, k)]
+          else
+            [k, v]
+          end
+        end
       @input_tree.freeze
 
       output =
         AssetProcessor.new.rollup(
-          @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
-          { themeId: @theme_id, settings: @settings, minify: @minify && !@@terser_disabled },
+          @input_tree,
+          {
+            themeId: @theme_id,
+            settings: @settings,
+            minify: @minify && !@@terser_disabled,
+            entrypoints: {
+              main: {
+                modules: @input_tree.keys,
+              },
+            },
+          },
         )
 
-      @content = output["code"]
-      @source_map = output["map"]
+      @content = output["main.js"]["code"]
+      @source_map = output["main.js"]["map"]
     end
     [@content, @source_map]
   rescue AssetProcessor::TranspileError => e

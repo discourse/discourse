@@ -14,6 +14,8 @@ require "zendesk_api"
 
 enabled_site_setting :zendesk_enabled
 
+register_svg_icon "headset"
+
 module ::DiscourseZendeskPlugin
   PLUGIN_NAME = "discourse-zendesk-plugin"
 

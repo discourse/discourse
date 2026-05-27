@@ -48,9 +48,7 @@ RSpec.describe TranslationOverride do
           ].each do |i18n_key|
             it "should validate keys for #{i18n_key}" do
               interpolation_key_names =
-                described_class::ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, _|
-                  keys.include?("user_notifications.user_")
-                end
+                described_class.custom_interpolation_keys("user_notifications.user_")
 
               string_with_interpolation_keys =
                 interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")

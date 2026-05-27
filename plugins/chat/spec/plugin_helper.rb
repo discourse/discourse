@@ -23,7 +23,8 @@ module ChatSystemHelpers
   def chat_system_user_bootstrap(user:, channel:)
     user.activate
     user.user_option.update!(chat_enabled: true)
-    Group.refresh_automatic_group!("trust_level_#{user.trust_level}".to_sym)
+    Group.refresh_automatic_group!(:trust_level_0)
+    Group.refresh_automatic_group!(:"trust_level_#{user.trust_level}")
     channel.add(user)
   end
 
@@ -79,6 +80,7 @@ module ChatSpecHelpers
         message_id: message.id,
         upload_ids: upload_ids,
         message: text,
+        channel_id: message.chat_channel_id,
       },
       options: {
         process_inline: true,

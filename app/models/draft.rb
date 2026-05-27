@@ -150,11 +150,9 @@ class Draft < ActiveRecord::Base
   end
 
   def parsed_data
-    begin
-      JSON.parse(data)
-    rescue JSON::ParserError
-      {}
-    end
+    JSON.parse(data)
+  rescue JSON::ParserError
+    {}
   end
 
   def topic_id
@@ -195,8 +193,8 @@ class Draft < ActiveRecord::Base
     topic_ids = drafts.map(&:topic_id)
     post_ids = drafts.map(&:post_id)
 
-    topics = self.allowed_draft_topics_for_user(user).where(id: topic_ids)
-    posts = self.allowed_draft_posts_for_user(user).where(id: post_ids)
+    topics = allowed_draft_topics_for_user(user).where(id: topic_ids)
+    posts = allowed_draft_posts_for_user(user).where(id: post_ids)
 
     drafts.each do |draft|
       draft.preload_topic(topics.detect { |t| t.id == draft.topic_id })
@@ -212,7 +210,7 @@ class Draft < ActiveRecord::Base
 
   def self.allowed_draft_posts_for_user(user)
     # .secured handles whispers, merge handles topic/pm visibility
-    Post.secured(Guardian.new(user)).joins(:topic).merge(self.allowed_draft_topics_for_user(user))
+    Post.secured(Guardian.new(user)).joins(:topic).merge(allowed_draft_topics_for_user(user))
   end
 
   def self.stream(opts = nil)
@@ -222,7 +220,20 @@ class Draft < ActiveRecord::Base
     offset = (opts[:offset] || 0).to_i
     limit = (opts[:limit] || 30).to_i
 
-    stream = Draft.where(user_id: user_id).order(updated_at: :desc).offset(offset).limit(limit)
+    stream =
+      Draft
+        .where(user_id: user_id)
+        .where(<<~SQL)
+          sequence >= COALESCE(
+            (SELECT sequence FROM draft_sequences
+             WHERE draft_sequences.user_id = drafts.user_id
+             AND draft_sequences.draft_key = drafts.draft_key),
+            0
+          )
+        SQL
+        .order(updated_at: :desc, id: :desc)
+        .offset(offset)
+        .limit(limit)
 
     # Preload posts and topics to avoid N+1 queries
     Draft.preload_data(stream, opts[:user])
@@ -330,7 +341,7 @@ class Draft < ActiveRecord::Base
   end
 
   def update_draft_count
-    UserStat.update_draft_count(self.user_id)
+    UserStat.update_draft_count(user_id)
   end
 end
 
@@ -339,14 +350,14 @@ end
 # Table name: drafts
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  draft_key  :string           not null
 #  data       :text             not null
+#  draft_key  :string           not null
+#  owner      :string
+#  revisions  :integer          default(1), not null
+#  sequence   :bigint           default(0), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  sequence   :bigint           default(0), not null
-#  revisions  :integer          default(1), not null
-#  owner      :string
+#  user_id    :integer          not null
 #
 # Indexes
 #

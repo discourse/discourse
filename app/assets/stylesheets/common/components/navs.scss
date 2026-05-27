@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // --------------------------------------------------
 // Navigation menus
 // --------------------------------------------------
@@ -30,6 +32,7 @@
     > a,
     button {
       position: relative;
+      border: 0;
       border-radius: var(--d-nav-pill-border-radius);
       padding: 0.65em 0.75em;
       color: var(--d-nav-color);
@@ -40,6 +43,12 @@
       align-items: center;
       background-color: var(--d-nav-bg-color);
       transition: var(--d-button-transition);
+      white-space: nowrap;
+
+      @include viewport.between(sm, lg) {
+        font-size: var(--font-0);
+        padding: var(--space-2) var(--space-3);
+      }
 
       .d-icon {
         margin-right: 5px;
@@ -91,10 +100,10 @@
     }
 
     &.active {
-      position: relative;
-      color: var(--primary);
+      color: var(--d-selected-text-color);
       background-color: var(--d-selected);
       font-weight: bold;
+      font-weight: var(--d-sidebar-active-font-weight);
     }
   }
 

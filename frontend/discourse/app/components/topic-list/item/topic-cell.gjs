@@ -1,31 +1,22 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
+import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import ParticipantGroups from "discourse/components/topic-list/participant-groups";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
-import { i18n } from "discourse-i18n";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 export default class TopicCell extends Component {
-  @service currentUser;
-
-  get newDotText() {
-    return this.currentUser?.trust_level > 0
-      ? ""
-      : i18n("filters.new.lower_title");
-  }
-
   get participantGroups() {
     if (!this.args.topic.get("participant_groups")) {
       return [];
@@ -84,11 +75,14 @@ export default class TopicCell extends Component {
           />
           {{~! no whitespace ~}}
           <UnreadIndicator @topic={{@topic}} />
-          {{~#if @showTopicPostBadges~}}
+          {{~#if @topic.is_nested_view~}}
+            {{~#if @topic.has_new_replies~}}
+              <NewRepliesDot @topic={{@topic}} />
+            {{~/if~}}
+          {{~else if @showTopicPostBadges~}}
             <TopicPostBadges
               @unreadPosts={{@topic.unread_posts}}
               @unseen={{@topic.unseen}}
-              @newDotText={{this.newDotText}}
               @url={{@topic.lastUnreadUrl}}
             />
           {{~/if~}}
@@ -104,21 +98,21 @@ export default class TopicCell extends Component {
           @name="topic-list-topic-cell-link-bottom-line"
           @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
         >
+          <PluginOutlet
+            @name="topic-list-before-category"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
           {{#unless @hideCategory}}
             {{#unless @topic.isPinnedUncategorized}}
-              <PluginOutlet
-                @name="topic-list-before-category"
-                @outletArgs={{lazyHash topic=@topic}}
-              />
-              {{categoryLink @topic.category}}
-              <PluginOutlet
-                @name="topic-list-after-category"
-                @outletArgs={{lazyHash topic=@topic}}
-              />
+              {{dCategoryLink @topic.category}}
             {{/unless}}
           {{/unless}}
+          <PluginOutlet
+            @name="topic-list-after-category"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
 
-          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
           {{#if this.participantGroups}}
             <ParticipantGroups @groups={{this.participantGroups}} />

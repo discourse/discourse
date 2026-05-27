@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,8 +9,8 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
@@ -48,8 +47,6 @@ export default class GlimmerHeader extends Component {
   @service site;
   @service appEvents;
   @service header;
-
-  @tracked skipSearchContext = this.site.mobileView;
 
   appEventsListeners = modifierFn(() => {
     this.appEvents.on(
@@ -163,7 +160,7 @@ export default class GlimmerHeader extends Component {
       const context = this.search.searchContext;
       let params = "";
       if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.skipSearchContext}`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.site.mobileView}`;
       }
 
       if (this.router.currentRouteName === "full-page-search") {
@@ -273,7 +270,7 @@ export default class GlimmerHeader extends Component {
           {{#if this.search.visible}}
             <SearchMenuWrapper
               {{this.handleFocus}}
-              {{closeOnClickOutside
+              {{dCloseOnClickOutside
                 this.toggleSearchMenu
                 (hash
                   targetSelector=".search-menu-panel"

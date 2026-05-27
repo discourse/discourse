@@ -9,9 +9,13 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   subject(:workbench) { described_class.new(output: output) }
 
   let(:output) { StringIO.new }
+  let(:formatter) do
+    instance_double(DiscourseAi::Evals::ConsoleFormatter, announce_start: nil, finalize: nil)
+  end
   let(:recorder) do
     instance_double(
       DiscourseAi::Evals::Recorder,
+      execution_context: nil,
       record_llm_skip: nil,
       record_llm_results: nil,
       finish: nil,
@@ -43,6 +47,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   let(:llm_supports_vision) { true }
 
   before do
+    allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
     allow(DiscourseAi::Evals::Recorder).to receive(:with_cassette).and_return(recorder)
     freeze_time
   end
@@ -54,18 +59,27 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         { raw: "output", raw_entries: ["output"], classified: [{ result: :pass }] },
       )
 
-      workbench.run(eval_cases: [eval_case], llms: [llm])
+      workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
       expect(DiscourseAi::Evals::Recorder).to have_received(:with_cassette).with(
         eval_case,
         output: output,
+        total_targets: 1,
+        agent_key: :default,
+        formatter: formatter,
+        announce_formatter: false,
+        finalize_formatter: false,
       )
       expect(recorder).to have_received(:record_llm_results).with(
         "gpt-4",
         [{ result: :pass }],
         Time.now.utc,
+        raw_entries: ["output"],
+        display_label: "gpt-4",
+        row_prefix: "example-eval",
       )
       expect(recorder).to have_received(:finish)
+      expect(formatter).to have_received(:finalize)
     end
 
     context "when the eval requires vision but the llm does not support it" do
@@ -73,11 +87,13 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       let(:llm_supports_vision) { false }
 
       it "skips the llm and records the reason" do
-        workbench.run(eval_cases: [eval_case], llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_skip).with(
           "gpt-4",
           "LLM does not support vision",
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
         expect(recorder).to have_received(:finish)
       end
@@ -88,12 +104,14 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         error = DiscourseAi::Evals::Eval::EvalError.new("boom", { foo: "bar" })
         allow(workbench).to receive(:execute_eval).and_raise(error) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_cases: [eval_case], llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
           [{ result: :fail, message: "boom", context: { foo: "bar" } }],
           Time.now.utc,
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
         expect(recorder).to have_received(:finish)
       end
@@ -103,12 +121,14 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       it "records the failure with the exception message" do
         allow(workbench).to receive(:execute_eval).and_raise(StandardError.new("kaboom")) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_cases: [eval_case], llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
           [{ message: "kaboom", result: :fail }],
           Time.now.utc,
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
       end
     end
@@ -121,10 +141,10 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
     before do
       enable_current_plugin
-      ensure_system_persona(DiscourseAi::Personas::Summarizer)
-      ensure_system_persona(DiscourseAi::Personas::ShortSummarizer)
-      ensure_system_persona(DiscourseAi::Personas::SpamDetector)
-      AiPersona.persona_cache.flush!
+      ensure_system_agent(DiscourseAi::Agents::Summarizer)
+      ensure_system_agent(DiscourseAi::Agents::ShortSummarizer)
+      ensure_system_agent(DiscourseAi::Agents::SpamDetector)
+      AiAgent.agent_cache.flush!
     end
 
     it "generates topic summaries using the summarization eval feature" do
@@ -147,6 +167,44 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         end
 
       expect(results[:classified].first[:result]).to eq(:pass)
+    end
+
+    it "always provides an execution_context to runners even when caller omits it" do
+      eval_case =
+        OpenStruct.new(
+          id: "ctx-check",
+          feature: "summarization:topic_summaries",
+          args: {
+            input: "Test post",
+          },
+          expected_output: nil,
+          expected_output_regex: nil,
+          expected_tool_call: nil,
+          judge: nil,
+          vision: false,
+        )
+
+      captured_context = nil
+      allow(DiscourseAi::Agents::Bot).to receive(
+        :as,
+      ).and_wrap_original do |original, *args, **kwargs|
+        original
+          .call(*args, **kwargs)
+          .tap do |bot|
+            allow(bot).to receive(
+              :reply,
+            ).and_wrap_original do |reply_method, *rargs, **rkwargs, &blk|
+              captured_context = rkwargs[:execution_context]
+              reply_method.call(*rargs, **rkwargs, &blk)
+            end
+          end
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Summary"]) do
+        workbench.execute_eval(eval_case, llm)
+      end
+
+      expect(captured_context).to be_a(DiscourseAi::Completions::ExecutionContext)
     end
 
     it "flags spam posts via the spam inspection eval feature" do
@@ -173,27 +231,27 @@ RSpec.describe DiscourseAi::Evals::Workbench do
     end
   end
 
-  def ensure_system_persona(persona_class)
-    persona_id = DiscourseAi::Personas::Persona.system_personas[persona_class]
-    base = persona_class.new
+  def ensure_system_agent(agent_class)
+    agent_id = DiscourseAi::Agents::Agent.system_agents[agent_class]
+    base = agent_class.new
 
-    AiPersona
-      .find_or_initialize_by(id: persona_id)
-      .tap do |persona|
-        persona.system = true
-        persona.enabled = true
-        persona.priority ||= false
-        persona.name ||= persona_class.name
-        persona.description ||= persona_class.description
-        persona.system_prompt = base.system_prompt
-        persona.allowed_group_ids = [Group::AUTO_GROUPS[:everyone]]
-        persona.response_format = base.response_format
-        persona.examples = base.examples
-        persona.temperature = base.respond_to?(:temperature) ? base.temperature : nil
-        persona.top_p = base.respond_to?(:top_p) ? base.top_p : nil
-        persona.show_thinking = true
-        persona.tools ||= []
-        persona.save!(validate: false)
+    AiAgent
+      .find_or_initialize_by(id: agent_id)
+      .tap do |agent|
+        agent.system = true
+        agent.enabled = true
+        agent.priority ||= false
+        agent.name ||= agent_class.name
+        agent.description ||= agent_class.description
+        agent.system_prompt = base.system_prompt
+        agent.allowed_group_ids = [Group::AUTO_GROUPS[:everyone]]
+        agent.response_format = base.response_format
+        agent.examples = base.examples
+        agent.temperature = base.respond_to?(:temperature) ? base.temperature : nil
+        agent.top_p = base.respond_to?(:top_p) ? base.top_p : nil
+        agent.show_thinking = true
+        agent.tools ||= []
+        agent.save!(validate: false)
       end
   end
 
@@ -245,6 +303,20 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
       expect(result[:result]).to eq(:fail)
       expect(result[:message]).to include("LLM Rating below threshold")
+    end
+  end
+
+  describe "#judge_input" do
+    it "forwards `name` and `description` from metadata so the judge sees them" do
+      input =
+        workbench.send(:judge_input, "SELECT 1", { name: "My Query", description: "Counts users" })
+
+      expect(input).to eq(result: "SELECT 1", name: "My Query", description: "Counts users")
+    end
+
+    it "returns the raw result when there is no metadata" do
+      expect(workbench.send(:judge_input, "SELECT 1", nil)).to eq("SELECT 1")
+      expect(workbench.send(:judge_input, "SELECT 1", {})).to eq("SELECT 1")
     end
   end
 end

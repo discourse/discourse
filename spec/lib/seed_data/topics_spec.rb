@@ -242,7 +242,11 @@ RSpec.describe SeedData::Topics do
       Post.last.revise(Fabricate(:admin), title: "Changed Topic Title", raw: "Hello world")
 
       expected_options = [
-        { id: "guidelines_topic_id", name: I18n.t("guidelines_topic.title"), selected: true },
+        {
+          id: "guidelines_topic_id",
+          name: I18n.t("guidelines_topic.guidelines_title"),
+          selected: true,
+        },
         { id: "welcome_topic_id", name: "Changed Topic Title", selected: false },
       ]
 

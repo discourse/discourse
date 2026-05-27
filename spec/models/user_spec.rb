@@ -7,6 +7,12 @@ RSpec.describe User do
 
   it_behaves_like "it has custom fields"
 
+  describe "#reload" do
+    it "accepts options like ActiveRecord's reload" do
+      expect { user.reload(lock: true) }.not_to raise_error
+    end
+  end
+
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
   end
@@ -24,6 +30,23 @@ RSpec.describe User do
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+    end
+
+    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+    end
+
+    it "returns true for the 'anonymous' auto group for anonymous users" do
+      expect(
+        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+      ).to eq(true)
+    end
+
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
       group.add(user)
@@ -37,6 +60,44 @@ RSpec.describe User do
       expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+
+    it "returns true if any of the group IDs are the 'logged_in_users' auto group" do
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+    end
+
+    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+    end
+
+    context "with granular_anonymous_and_logged_in_groups_permissions enabled" do
+      before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
+
+      it "stops returning true for the 'everyone' auto group" do
+        expect(user.in_any_groups?([Group::AUTO_GROUPS[:everyone]])).to eq(false)
+      end
+
+      it "still returns true for the 'logged_in_users' auto group" do
+        expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+      end
+
+      it "still returns true when the user is explicitly in a custom group" do
+        group.add(user)
+        user.reload
+        expect(user.in_any_groups?([group.id])).to eq(true)
+      end
+
+      it "still returns true for system user against staff/TL auto groups" do
+        GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+        Discourse.system_user.reload
+        expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+        expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(
+          true,
+        )
+      end
     end
   end
 
@@ -114,6 +175,50 @@ RSpec.describe User do
 
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
+      end
+
+      describe "the :default_navigation_categories modifier" do
+        fab!(:alternate_category, :category)
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :default_navigation_categories }
+
+        it "lets plugins override the category ids used to seed the sidebar" do
+          block =
+            Proc.new do |_default_categories, opts|
+              expect(opts[:user]).to be_a(User)
+              [alternate_category.id.to_s]
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(
+            SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(
+              :linkable_id,
+            ),
+          ).to contain_exactly(alternate_category.id)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
+
+        it "passes the user to the modifier so plugins can branch on user attributes" do
+          received_users = []
+          block =
+            Proc.new do |default_categories, opts|
+              received_users << opts[:user]
+              default_categories
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(received_users).to contain_exactly(user)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
       end
     end
 
@@ -450,7 +555,7 @@ RSpec.describe User do
         end
       end
 
-      context "when reseting user fields" do
+      context "when resetting user fields" do
         let!(:censored_word) do
           Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
         end
@@ -601,6 +706,50 @@ RSpec.describe User do
     end
   end
 
+  describe "anonymous shadow users" do
+    fab!(:admin)
+    fab!(:master_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+    before do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+    end
+
+    it "deactivates and logs out anonymous shadow users when deactivated", :aggregate_failures do
+      shadow_user = AnonymousShadowCreator.get(master_user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{shadow_user.id}") { master_user.deactivate(admin) }
+
+      expect(shadow_user.reload[:active]).to eq(false)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
+    end
+
+    it "suspends and logs out anonymous shadow users when suspended", :aggregate_failures do
+      freeze_time
+      shadow_user = AnonymousShadowCreator.get(master_user)
+      UserAuthToken.generate!(user_id: shadow_user.id)
+
+      messages =
+        MessageBus.track_publish("/logout/#{shadow_user.id}") do
+          master_user.update!(suspended_at: Time.zone.now, suspended_till: 1.day.from_now)
+        end
+
+      expect(shadow_user.reload[:suspended_till]).to be_within_one_second_of(1.day.from_now)
+      expect(shadow_user[:suspended_at]).to be_within_one_second_of(Time.zone.now)
+      expect(shadow_user.user_auth_tokens).to be_empty
+      expect(shadow_user.anonymous_user_master.reload.active).to eq(false)
+      expect(messages.size).to eq(1)
+      expect(messages[0].user_ids).to eq([shadow_user.id])
+      expect(messages[0].data).to eq(shadow_user.id)
+    end
+  end
+
   describe "delete posts in batches" do
     fab!(:post1, :post)
     fab!(:user) { post1.user }
@@ -627,6 +776,18 @@ RSpec.describe User do
       expect(Reviewable.where(created_by: user).count).to eq(0)
 
       posts.each { |p| expect(Topic.find_by(id: p.topic_id)).to be_nil if p.is_first_post? }
+    end
+
+    it "deletes reviewables that have notes" do
+      reviewable = Fabricate(:reviewable_queued_post, created_by: user)
+      Fabricate(:reviewable_note, reviewable: reviewable)
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(Post.where(id: post_ids)).to be_empty
+      expect(Reviewable.where(created_by: user).count).to eq(0)
+      expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
     it "does not allow non moderators to delete all posts" do
@@ -693,8 +854,9 @@ RSpec.describe User do
           user.update!(name: "Sam")
           expect(post.reload.baked_version).not_to be_nil
 
-          user.update!(uploaded_avatar_id: 100)
-          expect(post.reload.baked_version).to be_nil
+          expect_enqueued_with(job: :rebake_quoted_posts_for_user, args: { user_id: user.id }) do
+            user.update!(uploaded_avatar_id: 100)
+          end
         end
       end
     end
@@ -1411,6 +1573,44 @@ RSpec.describe User do
     end
   end
 
+  describe "#create_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a UserVisit and increments days_visited" do
+      expect { user.create_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1).and change { user.user_stat.reload.days_visited }.by(1)
+    end
+
+    it "does not increment days_visited when the insert raises" do
+      user.create_visit_record!(date)
+
+      expect {
+        expect { user.create_visit_record!(date) }.to raise_error(ActiveRecord::RecordNotUnique)
+      }.not_to change { user.user_stat.reload.days_visited }
+    end
+  end
+
+  describe "#update_visit_record!" do
+    fab!(:user)
+    let(:date) { Date.current }
+
+    it "creates a visit when none exists for the date" do
+      expect { user.update_visit_record!(date) }.to change {
+        user.user_visits.where(visited_at: date).count
+      }.by(1)
+    end
+
+    it "is a no-op when a visit already exists for the date" do
+      user.update_visit_record!(date)
+
+      expect { user.update_visit_record!(date) }.not_to change {
+        user.user_visits.where(visited_at: date).count
+      }
+    end
+  end
+
   describe "email_confirmed?" do
     fab!(:user)
 
@@ -1839,6 +2039,27 @@ RSpec.describe User do
         user.refresh_avatar
       end
     end
+
+    it "enqueues rebake job instead of blocking when avatar is updated" do
+      user = Fabricate(:user)
+      upload = Fabricate(:upload)
+
+      allow(Post).to receive(:rebake_all_quoted_posts)
+
+      expect_enqueued_with(job: :rebake_quoted_posts_for_user, args: { user_id: user.id }) do
+        user.update!(uploaded_avatar_id: upload.id)
+      end
+
+      expect(Post).not_to have_received(:rebake_all_quoted_posts)
+    end
+
+    it "does not enqueue rebake job when avatar is not changed" do
+      user = Fabricate(:user)
+
+      expect_not_enqueued_with(job: :rebake_quoted_posts_for_user) do
+        user.update!(name: "New Name")
+      end
+    end
   end
 
   describe "real users" do
@@ -2048,6 +2269,8 @@ RSpec.describe User do
     end
 
     it "get attributes from the group" do
+      Jobs.run_immediately!
+
       user =
         Fabricate.build(
           :user,
@@ -2136,19 +2359,24 @@ RSpec.describe User do
 
         expect(user.number_of_rejected_posts).to eq(0)
       end
+
+      it "returns 0 when user has no rejected posts" do
+        expect(user.number_of_rejected_posts).to eq(0)
+      end
     end
 
-    describe "#number_of_flagged_posts" do
-      it "counts flagged posts from the user" do
+    describe "#number_of_flags" do
+      it "counts all reviewables for the user" do
         Fabricate(:reviewable_flagged_post, target_created_by: user)
+        Fabricate(:reviewable_queued_post, target_created_by: user)
 
-        expect(user.number_of_flagged_posts).to eq(1)
+        expect(user.number_of_flags).to eq(2)
       end
 
-      it "ignores flagged posts from another user" do
+      it "ignores reviewables from another user" do
         Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
 
-        expect(user.number_of_flagged_posts).to eq(0)
+        expect(user.number_of_flags).to eq(0)
       end
     end
 
@@ -2158,6 +2386,20 @@ RSpec.describe User do
           Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
         end
         expect(user.number_of_silencings).to eq(3)
+
+        # ignores other users' history
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user])
+        expect(user.reload.number_of_silencings).to eq(3)
+      end
+
+      it "returns 0 when user has no silencings" do
+        expect(user.number_of_silencings).to eq(0)
+      end
+    end
+
+    describe "#number_of_suspensions" do
+      it "returns 0 when user has no suspensions" do
+        expect(user.number_of_suspensions).to eq(0)
       end
     end
   end
@@ -2356,6 +2598,7 @@ RSpec.describe User do
   describe ".clear_global_notice_if_needed" do
     fab!(:user)
     fab!(:admin)
+    let!(:inactive_user) { Fabricate(:user, active: false) }
 
     before do
       SiteSetting.has_login_hint = true
@@ -2374,10 +2617,17 @@ RSpec.describe User do
       expect(SiteSetting.global_notice).to eq("some notice")
     end
 
-    it "clears the notice when the admin is saved" do
+    it "clears the notice when an active admin is saved" do
       admin.save
       expect(SiteSetting.has_login_hint).to eq(false)
       expect(SiteSetting.global_notice).to eq("")
+    end
+
+    it "does not clear the notice when an inactive admin is saved" do
+      inactive_user.admin = true
+      inactive_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
     end
   end
 
@@ -2530,6 +2780,18 @@ RSpec.describe User do
 
       it "delegates the value from the main user record" do
         expect(anon.silenced_till).to be_within(1.second).of(main.silenced_till)
+      end
+
+      it "returns nil when the master user has been destroyed" do
+        main.destroy!
+        anon.reload
+        expect(anon.silenced_till).to be_nil
+      end
+
+      it "returns nil when the master user has been deleted without hooks" do
+        User.where(id: main.id).delete_all
+        anon.reload
+        expect(anon.silenced_till).to be_nil
       end
     end
   end
@@ -2850,8 +3112,6 @@ RSpec.describe User do
         user.update!(title: customized_badge_name)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
-
-      after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
     end
   end
 
@@ -3697,6 +3957,17 @@ RSpec.describe User do
   describe "#silence_reason" do
     before { user.update!(silenced_till: 1.day.from_now) }
 
+    it "returns only the first line when details contain a message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.silence_reason).to eq("short reason")
+    end
+
     it "returns sanitized silence reason" do
       Fabricate(
         :user_history,
@@ -3719,6 +3990,37 @@ RSpec.describe User do
       expect(user.silence_reason).to eq(
         "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
       )
+    end
+  end
+
+  describe "#full_silence_reason" do
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "returns the full silence reason including message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.full_silence_reason).to eq("short reason<br><br>private email body")
+    end
+
+    it "returns sanitized content" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.full_silence_reason).to eq("foo  bar")
+    end
+
+    it "returns nil when user is not silenced" do
+      user.update!(silenced_till: nil)
+      expect(user.full_silence_reason).to be_nil
     end
   end
 
@@ -3772,6 +4074,168 @@ RSpec.describe User do
       SiteSetting.allow_user_locale = false
       user.update!(locale: "fr")
       expect(user.effective_locale).to eq(SiteSetting.default_locale)
+    end
+  end
+
+  describe ".upcoming_change_stats" do
+    fab!(:target_user, :user)
+    fab!(:guardian_user, :user)
+    fab!(:admin_user, :admin)
+    fab!(:group1) { Fabricate(:group, name: "test_group_1") }
+    fab!(:group2) { Fabricate(:group, name: "test_group_2") }
+    fab!(:hidden_group) do
+      Fabricate(:group, name: "hidden_group", visibility_level: Group.visibility_levels[:owners])
+    end
+
+    let(:guardian) { Guardian.new(guardian_user) }
+    let(:admin_guardian) { Guardian.new(admin_user) }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "feature,all_members",
+            status: :beta,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
+        },
+      )
+    end
+
+    context "when the change is enabled for all users" do
+      before { SiteSetting.enable_upload_debug_mode = true }
+
+      it "returns enabled as true and reason as enabled_for_everyone" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:enabled_for_everyone],
+        )
+        expect(change_stat[:specific_groups]).to eq([])
+      end
+    end
+
+    context "when the change is enabled for no users" do
+      before { SiteSetting.enable_upload_debug_mode = false }
+
+      it "returns enabled as false and reason as enabled_for_no_one" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(false)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:enabled_for_no_one],
+        )
+        expect(change_stat[:specific_groups]).to eq([])
+      end
+    end
+
+    context "when the change is enabled for specific groups" do
+      before do
+        SiteSetting.enable_upload_debug_mode = true
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: "#{group1.id}|#{group2.id}",
+        )
+      end
+
+      context "when the target user belongs to one of those groups" do
+        before { group1.add(target_user) }
+
+        it "returns enabled as true and reason as in_specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+          expect(change_stat[:enabled]).to be(true)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to contain_exactly("test_group_1")
+        end
+      end
+
+      context "when the target user belongs to multiple groups" do
+        before do
+          group1.add(target_user)
+          group2.add(target_user)
+        end
+
+        it "returns enabled as true with all groups in specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+          expect(change_stat[:enabled]).to be(true)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "test_group_2")
+        end
+      end
+
+      context "when the target user does NOT belong to any of those groups" do
+        it "returns enabled as false and reason as not_in_specific_groups" do
+          stats = target_user.upcoming_change_stats(admin_guardian)
+          change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+          expect(change_stat[:enabled]).to be(false)
+          expect(change_stat[:reason]).to eq(
+            UpcomingChanges.user_enabled_reasons[:not_in_specific_groups],
+          )
+          expect(change_stat[:specific_groups]).to eq([])
+        end
+      end
+    end
+
+    context "when guardian user visibility is restricted" do
+      before do
+        SiteSetting.enable_upload_debug_mode = true
+        group1.add(target_user)
+        hidden_group.add(target_user)
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: "#{group1.id}|#{hidden_group.id}",
+        )
+      end
+
+      it "only shows groups the guardian user is allowed to see in specific_groups" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:reason]).to eq(
+          UpcomingChanges.user_enabled_reasons[:in_specific_groups],
+        )
+        expect(change_stat[:specific_groups]).to contain_exactly("test_group_1")
+        expect(change_stat[:specific_groups]).not_to include("hidden_group")
+      end
+
+      it "shows all groups when guardian is admin" do
+        stats = target_user.upcoming_change_stats(admin_guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:enabled]).to be(true)
+        expect(change_stat[:specific_groups]).to contain_exactly("test_group_1", "hidden_group")
+      end
+    end
+
+    describe "metadata fields" do
+      before { SiteSetting.enable_upload_debug_mode = true }
+
+      it "includes correct name, humanized_name, and description" do
+        stats = target_user.upcoming_change_stats(guardian)
+        change_stat = stats.find { |s| s[:name] == :enable_upload_debug_mode }
+
+        expect(change_stat[:name]).to eq(:enable_upload_debug_mode)
+        expect(change_stat[:humanized_name]).to eq(
+          SiteSetting.humanized_name(:enable_upload_debug_mode),
+        )
+        expect(change_stat[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+      end
     end
   end
 end

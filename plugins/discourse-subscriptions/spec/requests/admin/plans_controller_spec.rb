@@ -55,23 +55,32 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
   context "when authenticated" do
     let(:admin) { Fabricate(:admin) }
 
-    before { sign_in(admin) }
+    before do
+      SiteSetting.discourse_subscriptions_secret_key = "secret-key"
+      sign_in(admin)
+    end
 
     describe "index" do
       it "lists the plans" do
-        ::Stripe::Price.expects(:list).with(nil)
+        ::Stripe::Price.expects(:list).with(nil, DiscourseSubscriptions::Stripe.request_opts)
         get "/s/admin/plans.json"
       end
 
       it "lists the plans for the product" do
-        ::Stripe::Price.expects(:list).with({ product: "prod_id123" })
+        ::Stripe::Price.expects(:list).with(
+          { product: "prod_id123" },
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         get "/s/admin/plans.json", params: { product_id: "prod_id123" }
       end
     end
 
     describe "show" do
       it "shows a plan" do
-        ::Stripe::Price.expects(:retrieve).with("plan_12345").returns(currency: "aud")
+        ::Stripe::Price
+          .expects(:retrieve)
+          .with("plan_12345", DiscourseSubscriptions::Stripe.request_opts)
+          .returns(currency: "aud")
         get "/s/admin/plans/plan_12345.json"
         expect(response.status).to eq 200
       end
@@ -79,7 +88,7 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
       it "upcases the currency" do
         ::Stripe::Price
           .expects(:retrieve)
-          .with("plan_12345")
+          .with("plan_12345", DiscourseSubscriptions::Stripe.request_opts)
           .returns(currency: "aud", recurring: { interval: "year" })
         get "/s/admin/plans/plan_12345.json"
 
@@ -91,17 +100,26 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
 
     describe "create" do
       it "creates a plan with a nickname" do
-        ::Stripe::Price.expects(:create).with(has_entry(:nickname, "Veg"))
+        ::Stripe::Price.expects(:create).with(
+          has_entry(:nickname, "Veg"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json", params: { nickname: "Veg", metadata: { group_name: "" } }
       end
 
       it "creates a plan with a currency" do
-        ::Stripe::Price.expects(:create).with(has_entry(:currency, "AUD"))
+        ::Stripe::Price.expects(:create).with(
+          has_entry(:currency, "AUD"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json", params: { currency: "AUD", metadata: { group_name: "" } }
       end
 
       it "creates a plan with an interval" do
-        ::Stripe::Price.expects(:create).with(has_entry(recurring: { interval: "week" }))
+        ::Stripe::Price.expects(:create).with(
+          has_entry(recurring: { interval: "week" }),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json",
              params: {
                type: "recurring",
@@ -113,17 +131,26 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
       end
 
       it "creates a plan as a one-time purchase" do
-        ::Stripe::Price.expects(:create).with(Not(has_key(:recurring)))
+        ::Stripe::Price.expects(:create).with(
+          Not(has_key(:recurring)),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json", params: { metadata: { group_name: "" } }
       end
 
       it "creates a plan with an amount" do
-        ::Stripe::Price.expects(:create).with(has_entry(:unit_amount, "102"))
+        ::Stripe::Price.expects(:create).with(
+          has_entry(:unit_amount, "102"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json", params: { amount: "102", metadata: { group_name: "" } }
       end
 
       it "creates a plan with a product" do
-        ::Stripe::Price.expects(:create).with(has_entry(product: "prod_walterwhite"))
+        ::Stripe::Price.expects(:create).with(
+          has_entry(product: "prod_walterwhite"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json",
              params: {
                product: "prod_walterwhite",
@@ -134,7 +161,10 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
       end
 
       it "creates a plan with an active status" do
-        ::Stripe::Price.expects(:create).with(has_entry(:active, "false"))
+        ::Stripe::Price.expects(:create).with(
+          has_entry(:active, "false"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/plans.json", params: { active: "false", metadata: { group_name: "" } }
       end
 
@@ -154,7 +184,11 @@ RSpec.describe DiscourseSubscriptions::Admin::PlansController do
 
     describe "update" do
       it "updates a plan" do
-        ::Stripe::Price.expects(:update)
+        ::Stripe::Price.expects(:update).with(
+          "plan_12345",
+          anything,
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         patch "/s/admin/plans/plan_12345.json",
               params: {
                 trial_period_days: "14",

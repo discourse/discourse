@@ -11,6 +11,7 @@ class Post < ActiveRecord::Base
   include LimitedEdit
   include Localizable
   include HasPostUploadReferences
+  include HasNestedReplyStats
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
@@ -253,8 +254,8 @@ class Post < ActiveRecord::Base
   end
 
   def trash!(trashed_by = nil)
-    self.topic_links.each(&:destroy)
-    self.save_custom_fields if self.custom_fields.delete(Post::NOTICE)
+    topic_links.each(&:destroy)
+    save_custom_fields if custom_fields.delete(Post::NOTICE)
     super(trashed_by)
   end
 
@@ -263,6 +264,8 @@ class Post < ActiveRecord::Base
     recover_public_post_actions
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
+    extract_quoted_post_numbers
+    save_reply_relationships
     topic.category.update_latest if topic && topic.category_id && topic.category
   end
 
@@ -279,7 +282,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = Discourse.redis.get(unique_post_key)
-    post_id != (nil) && post_id.to_i != (id)
+    post_id != nil && post_id.to_i != id
   end
 
   def raw_hash
@@ -329,11 +332,11 @@ class Post < ActiveRecord::Base
     # this when cooking #hashtags to determine whether we should render
     # the found hashtag based on whether the user can access the category it
     # is referencing.
-    options[:user_id] = self.last_editor_id
+    options[:user_id] = last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
-    options[:post_id] = self.id
+    options[:post_id] = id
 
-    if self.should_secure_uploads?
+    if should_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -378,7 +381,7 @@ class Post < ActiveRecord::Base
   end
 
   def last_editor
-    self.last_editor_id ? (User.find_by_id(self.last_editor_id) || user) : user
+    last_editor_id ? (User.find_by_id(last_editor_id) || user) : user
   end
 
   def allowed_spam_hosts
@@ -397,7 +400,7 @@ class Post < ActiveRecord::Base
     hosts = linked_hosts.clone
     allowlisted = allowed_spam_hosts
 
-    hosts.reject! { |h| allowlisted.any? { |w| h.end_with?(w) } }
+    hosts.reject! { |h| allowlisted.any? { |w| h == w || h.end_with?(".#{w}") } }
 
     return hosts if hosts.length == 0
 
@@ -468,22 +471,22 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete(Post::NOTICE)
-    self.save_custom_fields
+    custom_fields.delete(Post::NOTICE)
+    save_custom_fields
   end
 
   def recover_public_post_actions
     PostAction
       .publics
       .with_deleted
-      .where(post_id: self.id, id: self.custom_fields["deleted_public_actions"])
+      .where(post_id: id, id: custom_fields["deleted_public_actions"])
       .find_each do |post_action|
         post_action.recover!
         post_action.save!
       end
 
-    self.custom_fields.delete("deleted_public_actions")
-    self.save_custom_fields
+    custom_fields.delete("deleted_public_actions")
+    save_custom_fields
   end
 
   def filter_quotes(parent_post = nil)
@@ -515,12 +518,18 @@ class Post < ActiveRecord::Base
       )
   end
 
+  # In a nested-view topic, a "root" reply (no reply_to_post_number) is
+  # treated as targeting post 1, so the OP gets the :replied notification.
+  # New callers that don't want this behavior should branch on the topic
+  # type before calling.
   def reply_notification_target
-    return if reply_to_post_number.blank?
+    target_post_number = reply_to_post_number
+    target_post_number = 1 if target_post_number.blank? && topic&.nested_view?
+    return if target_post_number.blank?
     Post.find_by(
       "topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
       topic_id: topic_id,
-      post_number: reply_to_post_number,
+      post_number: target_post_number,
       user_id: user_id,
     ).try(:user)
   end
@@ -557,6 +566,29 @@ class Post < ActiveRecord::Base
     topic.present? && topic.is_category_topic? && is_first_post?
   end
 
+  def sync_first_post_caches
+    return if post_number > 1
+    topic&.update_excerpt(excerpt_for_topic)
+    sync_category_description
+  end
+
+  def sync_category_description(category = nil)
+    category ||= Category.find_by(topic_id:)
+    return unless category
+
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("img").remove
+
+    if (html = doc.css("p").first&.inner_html&.strip)
+      new_description = html unless html.starts_with?(Category.post_template[..50])
+      return category if category.description == new_description
+      category.update_column(:description, new_description)
+      category.publish_category
+      Site.clear_cache
+      category
+    end
+  end
+
   def is_reply_by_email?
     via_email && post_number.present? && post_number > 1
   end
@@ -584,7 +616,7 @@ class Post < ActiveRecord::Base
   # consider how it interacts with UploadSecurity and the uploads.rake tasks.
   def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
-    topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
+    topic_including_deleted = Topic.with_deleted.find_by(id: topic_id)
     return false if topic_including_deleted.blank?
 
     # NOTE: This is to be used for plugins where adding a new public upload
@@ -636,7 +668,7 @@ class Post < ActiveRecord::Base
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
       if is_first_post? || !any_visible_posts_in_topic
-        self.topic.update_status(
+        topic.update_status(
           "visible",
           false,
           Discourse.system_user,
@@ -681,18 +713,18 @@ class Post < ActiveRecord::Base
 
   def unhide!
     Post.transaction do
-      self.update!(hidden: false)
+      update!(hidden: false)
       should_update_user_stat = true
 
       # NOTE: We have to consider `nil` a valid reason here because historically
       # topics didn't have a visibility_reason_id, if we didn't do this we would
       # break backwards compat since we cannot backfill data.
       hidden_because_of_op_flagging =
-        self.topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
-          self.topic.visibility_reason_id.nil?
+        topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
+          topic.visibility_reason_id.nil?
 
       if is_first_post? && hidden_because_of_op_flagging
-        self.topic.update_status(
+        topic.update_status(
           "visible",
           true,
           Discourse.system_user,
@@ -701,7 +733,7 @@ class Post < ActiveRecord::Base
         should_update_user_stat = false
       end
 
-      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
+      topic.reset_bumped_at(self) if is_last_reply? && !whisper?
 
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.
@@ -796,58 +828,63 @@ class Post < ActiveRecord::Base
       .limit(limit)
       .pluck(:id)
       .each do |id|
+        break if !limiter.can_perform?
+
+        post = Post.find(id)
+        post.rebake!(priority: priority)
+
         begin
-          break if !limiter.can_perform?
+          limiter.performed! if rate_limiter
+        rescue RateLimiter::LimitExceeded
+          break
+        end
+      rescue => e
+        problems << { post: post, ex: e }
 
-          post = Post.find(id)
-          post.rebake!(priority: priority)
+        attempts = post.custom_fields["rebake_attempts"].to_i
 
-          begin
-            limiter.performed! if rate_limiter
-          rescue RateLimiter::LimitExceeded
-            break
-          end
-        rescue => e
-          problems << { post: post, ex: e }
-
-          attempts = post.custom_fields["rebake_attempts"].to_i
-
-          if attempts > 3
-            post.update_columns(baked_version: BAKED_VERSION)
-            Discourse.warn_exception(
-              e,
-              message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
-            )
-          else
-            post.custom_fields["rebake_attempts"] = attempts + 1
-            post.save_custom_fields
-          end
+        if attempts > 3
+          post.update_columns(baked_version: BAKED_VERSION)
+          Discourse.warn_exception(
+            e,
+            message: "Can not rebake post# #{post.id} after 3 attempts, giving up",
+          )
+        else
+          post.custom_fields["rebake_attempts"] = attempts + 1
+          post.save_custom_fields
         end
       end
     problems
   end
 
-  def rebake!(invalidate_broken_images: false, invalidate_oneboxes: false, priority: nil)
-    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
+  def rebake!(
+    invalidate_broken_images: false,
+    invalidate_oneboxes: false,
+    priority: nil,
+    skip_publish_rebaked_changes: false
+  )
+    new_cooked = cook(raw, topic_id:, invalidate_oneboxes:)
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.zone.now, baked_version: BAKED_VERSION)
 
-    topic&.update_excerpt(excerpt_for_topic) if is_first_post?
+    sync_first_post_caches
 
     if invalidate_broken_images
       post_hotlinked_media.download_failed.destroy_all
       post_hotlinked_media.upload_create_failed.destroy_all
     end
 
-    # Extracts urls from the body
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
 
-    # make sure we trigger the post process
-    trigger_post_process(bypass_bump: true, priority: priority)
+    trigger_post_process(bypass_bump: true, priority:)
 
-    publish_change_to_clients!(:rebaked)
+    # Skip publishing if invalidating oneboxes - the ProcessPost job will
+    # publish :revised after fetching fresh oneboxes, avoiding an intermediate
+    # state where raw links are shown before oneboxes are loaded.
+    should_publish = !skip_publish_rebaked_changes && !invalidate_oneboxes
+    publish_change_to_clients!(:rebaked) if should_publish
 
     new_cooked != old_cooked
   end
@@ -860,7 +897,7 @@ class Post < ActiveRecord::Base
     old_user = user
     revise(
       actor,
-      { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
+      { raw: raw, user_id: new_user.id, edit_reason: edit_reason },
       bypass_bump: true,
       skip_revision: skip_revision,
       skip_validations: true,
@@ -924,10 +961,10 @@ class Post < ActiveRecord::Base
 
   def save_reply_relationships
     add_to_quoted_post_numbers(reply_to_post_number)
-    return if self.quoted_post_numbers.blank?
+    return if quoted_post_numbers.blank?
 
     # Create a reply relationship between quoted posts and this new post
-    self.quoted_post_numbers.each do |p|
+    quoted_post_numbers.each do |p|
       post = Post.find_by(topic_id: topic_id, post_number: p)
       create_reply_relationship_with(post)
     end
@@ -942,14 +979,14 @@ class Post < ActiveRecord::Base
   )
     args = {
       bypass_bump: bypass_bump,
-      cooking_options: self.cooking_options,
+      cooking_options: cooking_options,
       new_post: new_post,
-      post_id: self.id,
+      post_id: id,
       skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
 
-    args[:image_sizes] = image_sizes if self.image_sizes.present?
-    args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
+    args[:image_sizes] = image_sizes if image_sizes.present?
+    args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     args[:queue] = priority.to_s if priority && priority != :normal
 
     Jobs.enqueue(:process_post, args)
@@ -1083,7 +1120,7 @@ class Post < ActiveRecord::Base
 
   def update_uploads_secure_status(source:)
     if Discourse.store.external?
-      self.uploads.each { |upload| upload.update_secure_status(source: source) }
+      uploads.each { |upload| upload.update_secure_status(source: source) }
     end
   end
 
@@ -1156,7 +1193,7 @@ class Post < ActiveRecord::Base
   end
 
   def owned_uploads_via_access_control
-    Upload.where(access_control_post_id: self.id)
+    Upload.where(access_control_post_id: id)
   end
 
   def image_url
@@ -1165,10 +1202,10 @@ class Post < ActiveRecord::Base
   end
 
   def cannot_permanently_delete_reason(user)
-    if self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    if deleted_by_id == user&.id && deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left =
         RateLimiter.time_left(
-          Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i,
+          Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + deleted_at.to_i,
         )
       I18n.t("post.cannot_permanently_delete.wait_or_different_admin", time_left: time_left)
     end
@@ -1178,22 +1215,18 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
-  def has_localization?(locale = I18n.locale)
-    get_localization(locale).present?
-  end
-
   private
 
   def access_control_post_id_for_upload
-    self.id
+    id
   end
 
   def handle_video_thumbnail(thumbnail)
-    if self.is_first_post? && !self.topic.image_upload_id
-      self.topic.update_column(:image_upload_id, thumbnail.id)
+    if is_first_post? && !topic.image_upload_id
+      topic.update_column(:image_upload_id, thumbnail.id)
       extra_sizes =
         ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
-      self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+      topic.generate_thumbnails!(extra_sizes: extra_sizes)
     end
   end
 
@@ -1211,10 +1244,10 @@ class Post < ActiveRecord::Base
   end
 
   def create_reply_relationship_with(post)
-    return if post.nil? || self.deleted_at.present?
+    return if post.nil? || deleted_at.present?
     post_reply = post.post_replies.new(reply_post_id: id)
     if post_reply.save
-      if Topic.visible_post_types.include?(self.post_type)
+      if Topic.visible_post_types.include?(post_type)
         Post.where(id: post.id).update_all ["reply_count = reply_count + 1"]
       end
     end
@@ -1226,57 +1259,58 @@ end
 # Table name: posts
 #
 #  id                      :integer          not null, primary key
-#  user_id                 :integer
-#  topic_id                :integer          not null
-#  post_number             :integer          not null
-#  raw                     :text             not null
-#  cooked                  :text             not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  reply_to_post_number    :integer
-#  reply_count             :integer          default(0), not null
-#  quote_count             :integer          default(0), not null
-#  deleted_at              :datetime
-#  off_topic_count         :integer          default(0), not null
-#  like_count              :integer          default(0), not null
-#  incoming_link_count     :integer          default(0), not null
-#  bookmark_count          :integer          default(0), not null
-#  score                   :float
-#  reads                   :integer          default(0), not null
-#  post_type               :integer          default(1), not null
-#  sort_order              :integer
-#  last_editor_id          :integer
-#  hidden                  :boolean          default(FALSE), not null
-#  hidden_reason_id        :integer
-#  notify_moderators_count :integer          default(0), not null
-#  spam_count              :integer          default(0), not null
-#  illegal_count           :integer          default(0), not null
-#  inappropriate_count     :integer          default(0), not null
-#  last_version_at         :datetime         not null
-#  user_deleted            :boolean          default(FALSE), not null
-#  reply_to_user_id        :integer
-#  percent_rank            :float            default(1.0)
-#  notify_user_count       :integer          default(0), not null
-#  like_score              :integer          default(0), not null
-#  deleted_by_id           :integer
-#  edit_reason             :string
-#  word_count              :integer
-#  version                 :integer          default(1), not null
-#  cook_method             :integer          default(1), not null
-#  wiki                    :boolean          default(FALSE), not null
+#  action_code             :string
 #  baked_at                :datetime
 #  baked_version           :integer
+#  bookmark_count          :integer          default(0), not null
+#  cook_method             :integer          default(1), not null
+#  cooked                  :text             not null
+#  deleted_at              :datetime
+#  edit_reason             :string
+#  hidden                  :boolean          default(FALSE), not null
 #  hidden_at               :datetime
-#  self_edits              :integer          default(0), not null
-#  reply_quoted            :boolean          default(FALSE), not null
-#  via_email               :boolean          default(FALSE), not null
-#  raw_email               :text
-#  public_version          :integer          default(1), not null
-#  action_code             :string
-#  locked_by_id            :integer
-#  image_upload_id         :bigint
-#  outbound_message_id     :string
+#  illegal_count           :integer          default(0), not null
+#  inappropriate_count     :integer          default(0), not null
+#  incoming_link_count     :integer          default(0), not null
+#  last_version_at         :datetime         not null
+#  like_count              :integer          default(0), not null
+#  like_score              :integer          default(0), not null
 #  locale                  :string(20)
+#  notify_moderators_count :integer          default(0), not null
+#  notify_user_count       :integer          default(0), not null
+#  off_topic_count         :integer          default(0), not null
+#  percent_rank            :float            default(1.0)
+#  post_number             :integer          not null
+#  post_type               :integer          default(1), not null
+#  public_version          :integer          default(1), not null
+#  qa_vote_count           :integer          default(0)
+#  quote_count             :integer          default(0), not null
+#  raw                     :text             not null
+#  raw_email               :text
+#  reads                   :integer          default(0), not null
+#  reply_count             :integer          default(0), not null
+#  reply_quoted            :boolean          default(FALSE), not null
+#  reply_to_post_number    :integer
+#  score                   :float
+#  self_edits              :integer          default(0), not null
+#  sort_order              :integer
+#  spam_count              :integer          default(0), not null
+#  user_deleted            :boolean          default(FALSE), not null
+#  version                 :integer          default(1), not null
+#  via_email               :boolean          default(FALSE), not null
+#  wiki                    :boolean          default(FALSE), not null
+#  word_count              :integer
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  deleted_by_id           :integer
+#  hidden_reason_id        :integer
+#  image_upload_id         :bigint
+#  last_editor_id          :integer
+#  locked_by_id            :integer
+#  outbound_message_id     :string
+#  reply_to_user_id        :integer
+#  topic_id                :integer          not null
+#  user_id                 :integer
 #
 # Indexes
 #
@@ -1297,6 +1331,8 @@ end
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_reply_to_post_number       (topic_id,reply_to_post_number)
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
+#  index_posts_on_updated_at_for_locale_detection         (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_posts_on_updated_at_for_localization             (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_posts_on_user_id_and_created_at                  (user_id,created_at)
 #  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #

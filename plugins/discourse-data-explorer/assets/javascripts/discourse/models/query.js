@@ -21,7 +21,9 @@ export default class Query extends RestModel {
   }
 
   get downloadUrl() {
-    return getURL(`/admin/plugins/explorer/queries/${this.id}.json?export=1`);
+    return getURL(
+      `/admin/plugins/discourse-data-explorer/queries/${this.id}.json?export=1`
+    );
   }
 
   @computed("param_info", "updating")
@@ -72,9 +74,9 @@ export default class Query extends RestModel {
 
   createProperties() {
     if (this.sql) {
-      // Importing
+      // Importing or saving with SQL
       return this.updateProperties();
     }
-    return this.getProperties("name");
+    return this.getProperties("name", "description");
   }
 }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin About Config Area Page", type: :system do
+describe "Admin About Config Area Page" do
   fab!(:admin)
   fab!(:image_upload)
 
@@ -88,7 +88,6 @@ describe "Admin About Config Area Page", type: :system do
 
   describe "the general settings card" do
     it "can saves its fields to their corresponding site settings" do
-      SiteSetting.experimental_lightbox = false
       config_area.visit
 
       image_file = file_from_fixtures("logo.png", "images")
@@ -244,6 +243,7 @@ describe "Admin About Config Area Page", type: :system do
       config_area.group_listing_section.initial_members_input.fill_in("3")
       config_area.group_listing_section.order_input.select("alphabetically")
       config_area.group_listing_section.show_description_input.uncheck
+      expect(config_area.group_listing_section.show_description_input.value).to eq(false)
 
       config_area.group_listing_section.submit
       expect(config_area.group_listing_section).to have_saved_successfully

@@ -8,7 +8,8 @@ bs_BA:
   js:
     chat_integration:
       settings: "Postavke"
-      all_categories: "(sve kategorije)"
+      more_providers: "Više"
+      all_categories: "(Sve kategorije)"
       delete_channel: "Delete"
       edit_channel: "Izmijeni"
       test_modal:

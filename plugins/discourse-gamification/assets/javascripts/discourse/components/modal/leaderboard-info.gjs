@@ -1,6 +1,6 @@
-import { htmlSafe } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
+import { trustHTML } from "@ember/template";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const LeaderboardInfo = <template>
@@ -10,8 +10,8 @@ const LeaderboardInfo = <template>
     class="leaderboard-info-modal"
   >
     <:body>
-      {{icon "award"}}
-      {{htmlSafe (i18n "gamification.leaderboard.modal.text")}}
+      {{dIcon "award"}}
+      {{trustHTML (i18n "gamification.leaderboard.modal.text")}}
     </:body>
   </DModal>
 </template>;

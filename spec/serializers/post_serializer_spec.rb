@@ -34,6 +34,82 @@ RSpec.describe PostSerializer do
       expect(visible_actions_for(admin).sort).to eq(%i[like notify_user spam])
     end
 
+    it "subtracts likes from ignored users from the like count" do
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      regular_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      PostActionCreator.like(regular_liker, post)
+      Fabricate(:ignored_user, user: actor, ignored_user: ignored_liker)
+      post.reload
+
+      serializer = PostSerializer.new(post, scope: Guardian.new(actor), root: false)
+      like_summary = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(post.like_count).to eq(3)
+      expect(like_summary[:count]).to eq(2)
+    end
+
+    it "does not adjust the like count for anonymous viewers" do
+      ignorer = Fabricate(:user, refresh_auto_groups: true)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      Fabricate(:ignored_user, user: ignorer, ignored_user: ignored_liker)
+      post.reload
+
+      serializer = PostSerializer.new(post, scope: Guardian.new, root: false)
+      like_summary = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(like_summary[:count]).to eq(post.like_count)
+    end
+
+    it "batches ignored-like counts across posts in a topic view" do
+      other_post = Fabricate(:post, topic: post.topic)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      PostActionCreator.like(ignored_liker, other_post)
+      Fabricate(:ignored_user, user: actor, ignored_user: ignored_liker)
+
+      topic_view = TopicView.new(post.topic, actor)
+      queries =
+        track_sql_queries do
+          topic_view.posts.each do |p|
+            serializer = PostSerializer.new(p, scope: Guardian.new(actor), root: false)
+            serializer.topic_view = topic_view
+            serializer.actions_summary
+          end
+        end
+
+      per_post_count_queries =
+        queries.count { |sql| sql =~ /COUNT.*FROM "post_actions".*post_id" = \d/m }
+      expect(per_post_count_queries).to eq(0)
+    end
+
+    it "uses preloaded ignored-like counts outside a topic view" do
+      other_post = Fabricate(:post, topic: post.topic)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, post)
+      PostActionCreator.like(ignored_liker, other_post)
+      Fabricate(:ignored_user, user: actor, ignored_user: ignored_liker)
+
+      ignored_user_like_counts = PostAction.ignored_user_like_counts_for([post, other_post], actor)
+
+      queries =
+        track_sql_queries do
+          [post, other_post].each do |p|
+            PostSerializer.new(
+              p,
+              scope: Guardian.new(actor),
+              root: false,
+              ignored_user_like_counts: ignored_user_like_counts,
+            ).actions_summary
+          end
+        end
+
+      per_post_count_queries =
+        queries.count { |sql| sql =~ /COUNT.*FROM "post_actions".*post_id" = \d/m }
+      expect(per_post_count_queries).to eq(0)
+    end
+
     it "can't flag your own post to notify yourself" do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
       notify_user_action =
@@ -424,11 +500,51 @@ RSpec.describe PostSerializer do
       before { post_action.created_at = 20.minutes.ago }
 
       it "disallows anonymous users from unliking posts" do
-        # There are no other post actions available to anonymous users so the action_summary will be an empty array
-        expect(serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }).to eq(
-          nil,
-        )
+        like_actions_summary =
+          serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+        expect(like_actions_summary[:acted]).to eq(true)
+        expect(like_actions_summary[:can_act]).to be_nil
       end
+    end
+  end
+
+  context "when user has liked a post but like count is 0 and undo window passed" do
+    fab!(:user)
+    fab!(:poster, :user)
+    fab!(:topic) { Fabricate(:topic, user: poster) }
+    fab!(:post) { Fabricate(:post, topic:, user: poster, like_count: 0) }
+    fab!(:like_action) do
+      Fabricate(
+        :post_action,
+        user:,
+        post:,
+        post_action_type_id: PostActionType.types[:like],
+        created_at: 1.day.ago,
+      )
+    end
+
+    before { SiteSetting.post_undo_action_window_mins = 10 }
+
+    let(:serializer) do
+      PostSerializer.new(
+        post,
+        scope: Guardian.new(user),
+        root: false,
+        post_actions: {
+          PostActionType.types[:like] => like_action,
+        },
+      )
+    end
+
+    it "includes the like action in actions_summary with acted flag" do
+      like_actions_summary =
+        serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+      expect(like_actions_summary).to be_present
+      expect(like_actions_summary[:acted]).to eq(true)
+      expect(like_actions_summary[:can_act]).to be_nil
+      expect(like_actions_summary[:can_undo]).to be_nil
     end
   end
 
@@ -437,7 +553,7 @@ RSpec.describe PostSerializer do
     fab!(:user)
 
     let(:username) { "joffrey" }
-    let(:user1) { Fabricate(:user, user_status: user_status, username: username) }
+    let(:user1) { Fabricate(:user, user_status:, username:) }
     let(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
 
@@ -476,35 +592,39 @@ RSpec.describe PostSerializer do
 
   describe "#user_status" do
     fab!(:user_status)
-    fab!(:user) { Fabricate(:user, user_status: user_status) }
-    fab!(:post) { Fabricate(:post, user: user) }
-    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+    fab!(:user) { Fabricate(:user, user_status:) }
+    fab!(:post) { Fabricate(:post, user:) }
 
-    it "adds user status when enabled" do
-      SiteSetting.enable_user_status = true
+    def serialize_user_status(scope: Guardian.new(user))
+      described_class.new(post, scope:, root: false).as_json[:user_status]
+    end
 
-      json = serializer.as_json
+    context "when user status is disabled" do
+      before { SiteSetting.enable_user_status = false }
 
-      expect(json[:user_status]).to_not be_nil do |status|
-        expect(status.description).to eq(user_status.description)
-        expect(status.emoji).to eq(user_status.emoji)
+      it "doesn't include status" do
+        expect(serialize_user_status).to be_nil
       end
     end
 
-    it "doesn't add user status when disabled" do
-      SiteSetting.enable_user_status = false
-      json = serializer.as_json
-      expect(json.keys).not_to include :user_status
-    end
+    context "when user status is enabled" do
+      before { SiteSetting.enable_user_status = true }
 
-    it "doesn't add status if user doesn't have it" do
-      SiteSetting.enable_user_status = true
+      it "includes status" do
+        expect(serialize_user_status).to be_present
+      end
 
-      user.clear_status!
-      user.reload
-      json = serializer.as_json
+      it "doesn't include status if user doesn't have it set" do
+        user.clear_status!
+        user.reload
+        expect(serialize_user_status).to be_nil
+      end
 
-      expect(json.keys).not_to include :user_status
+      it "respects guardian's can_see_user_status?" do
+        user.update!(silenced_till: 1.year.from_now)
+        scope = Guardian.new(Fabricate(:user))
+        expect(serialize_user_status(scope:)).to be_nil
+      end
     end
   end
 

@@ -9,14 +9,10 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree({ "connectors/blah-2.hbs" => "{{var}}" })
       compiler.append_tree({ "javascripts/connectors/blah-3.hbs" => "{{var}}" })
 
+      expect(compiler.content.to_s).to include("compatModules[\"templates/connectors/blah-1\"]")
+      expect(compiler.content.to_s).to include("compatModules[\"templates/connectors/blah-2\"]")
       expect(compiler.content.to_s).to include(
-        "themeCompatModules[\"templates/connectors/blah-1\"]",
-      )
-      expect(compiler.content.to_s).to include(
-        "themeCompatModules[\"templates/connectors/blah-2\"]",
-      )
-      expect(compiler.content.to_s).to include(
-        "themeCompatModules[\"javascripts/templates/connectors/blah-3\"]",
+        "compatModules[\"javascripts/templates/connectors/blah-3\"]",
       )
     end
   end
@@ -31,9 +27,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "export default class MyComponent {};",
         },
       )
-      expect(compiler.content.to_s).to include(
-        'themeCompatModules["connectors/outlet/blah-1"]',
-      ).once
+      expect(compiler.content.to_s).to include('compatModules["connectors/outlet/blah-1"]').once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(compiler.content.to_s).to include("createTemplateFactory")
@@ -50,9 +44,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "templates/connectors/outlet/blah-1.js" => "export default {};",
         },
       )
-      expect(compiler.content.to_s).to include(
-        'themeCompatModules["connectors/outlet/blah-1"]',
-      ).once
+      expect(compiler.content.to_s).to include('compatModules["connectors/outlet/blah-1"]').once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(compiler.content.to_s).to include("createTemplateFactory")
@@ -69,9 +61,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "export default {};",
         },
       )
-      expect(compiler.content.to_s).to include(
-        'themeCompatModules["connectors/outlet/blah-1"]',
-      ).once
+      expect(compiler.content.to_s).to include('compatModules["connectors/outlet/blah-1"]').once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(compiler.content.to_s).to include("createTemplateFactory")
@@ -89,7 +79,7 @@ RSpec.describe ThemeJavascriptCompiler do
         },
       )
       expect(compiler.content.to_s).to include(
-        'themeCompatModules["discourse/connectors/outlet/blah-1"]',
+        'compatModules["discourse/connectors/outlet/blah-1"]',
       ).once
       expect(compiler.content.to_s).to include("discourse/templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
@@ -127,9 +117,9 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.content).to include('themeCompatModules["discourse/components/mycomponent"]')
+      expect(compiler.content).to include('compatModules["discourse/components/mycomponent"]')
       expect(compiler.content).to include(
-        'themeCompatModules["discourse/templates/components/mycomponent"]',
+        'compatModules["discourse/templates/components/mycomponent"]',
       )
     end
 
@@ -247,12 +237,31 @@ RSpec.describe ThemeJavascriptCompiler do
         }
       JS
 
-      expect(compiler.content).to include(
-        "themeCompatModules[\"discourse/components/my-component\"]",
-      )
+      expect(compiler.content).to include("compatModules[\"discourse/components/my-component\"]")
       expect(compiler.content).to include('value = "foo";')
       expect(compiler.content).to include("setComponentTemplate")
       expect(compiler.content).to include("createTemplateFactory")
+    end
+  end
+
+  describe ".js.es6 extension deprecation" do
+    it "appends a deprecation warning for .js.es6 files" do
+      compiler.append_tree(
+        { "discourse/components/my-component.js.es6" => "export default class MyComponent {}" },
+      )
+
+      expect(compiler.content).to include("discourse.es6-extension")
+      expect(compiler.content).to include(
+        "The file 'discourse/components/my-component.js.es6' uses the deprecated `.js.es6` extension. Use `.js` instead.",
+      )
+    end
+
+    it "does not add deprecation for regular .js files" do
+      compiler.append_tree(
+        { "discourse/components/my-component.js" => "export default class MyComponent {}" },
+      )
+
+      expect(compiler.content).not_to include("discourse.es6-extension")
     end
   end
 end

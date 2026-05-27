@@ -8,6 +8,7 @@ import {
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import {
   isPushNotificationsEnabled,
@@ -69,7 +70,9 @@ class SubscribeUserNotificationsInit {
 
     this.messageBus.subscribe("/client_settings", this.onClientSettings);
 
-    this.pmTopicTrackingState.startTracking();
+    if (!EmbedMode.enabled) {
+      this.pmTopicTrackingState.startTracking();
+    }
 
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
@@ -270,6 +273,12 @@ class SubscribeUserNotificationsInit {
     }
 
     this.siteSettings[data.name] = data.value;
+
+    if (
+      this.siteSettings.currentUserUpcomingChanges.hasOwnProperty(data.name)
+    ) {
+      this.siteSettings.currentUserUpcomingChanges[data.name] = data.value;
+    }
   }
 
   @bind

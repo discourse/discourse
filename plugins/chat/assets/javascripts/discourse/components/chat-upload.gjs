@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import { eq } from "discourse/truth-helpers";
 
@@ -57,12 +57,15 @@ export default class ChatUpload extends Component {
 
   get imageStyle() {
     if (this.args.upload.dominant_color && !this.loaded) {
-      return htmlSafe(`background-color: #${this.args.upload.dominant_color};`);
+      return trustHTML(
+        `background-color: #${this.args.upload.dominant_color};`
+      );
     }
   }
 
   get videoSourceUrl() {
-    const baseUrl = this.args.upload.url;
+    const baseUrl =
+      this.args.upload.optimized_video?.url ?? this.args.upload.url;
     return this.capabilities.isIOS || this.capabilities.isSafari
       ? `${baseUrl}#t=0.001`
       : baseUrl;

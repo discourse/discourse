@@ -1,4 +1,12 @@
 en:
+  js:
+    github:
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        merged: "Merged"
+        closed: "Closed"
   admin_js:
     admin:
       site_settings:

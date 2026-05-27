@@ -35,7 +35,10 @@ after_initialize do
     add_to_serializer(
       serializer,
       :cakedate,
-      include_condition: -> { scope.user.present? && object.user_option&.hide_profile != true },
+      include_condition: -> do
+        scope.user.present? &&
+          (object.user_option&.hide_profile != true || scope.user.id == object.id)
+      end,
     ) do
       timezone = scope.user.user_option&.timezone.presence || "UTC"
       object.created_at.in_time_zone(timezone).strftime("%Y-%m-%d")
@@ -46,7 +49,7 @@ after_initialize do
       :birthdate,
       include_condition: -> do
         SiteSetting.cakeday_birthday_enabled && scope.user.present? &&
-          object.user_option&.hide_profile != true
+          (object.user_option&.hide_profile != true || scope.user.id == object.id)
       end,
     ) { object.date_of_birth }
   end
@@ -58,7 +61,7 @@ after_initialize do
     :user_cakedate,
     include_condition: -> do
       scope.user.present? && object.user&.created_at.present? &&
-        object.user.user_option&.hide_profile != true
+        (object.user.user_option&.hide_profile != true || scope.user.id == object.user_id)
     end,
   ) do
     timezone = scope.user.user_option&.timezone.presence || "UTC"
@@ -70,7 +73,8 @@ after_initialize do
     :user_birthdate,
     include_condition: -> do
       SiteSetting.cakeday_birthday_enabled && scope.user.present? &&
-        object.user&.date_of_birth.present? && object.user.user_option&.hide_profile != true
+        object.user&.date_of_birth.present? &&
+        (object.user.user_option&.hide_profile != true || scope.user.id == object.user_id)
     end,
   ) { object.user.date_of_birth }
 end

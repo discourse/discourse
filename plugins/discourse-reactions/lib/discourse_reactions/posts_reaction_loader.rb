@@ -3,23 +3,11 @@
 module DiscourseReactions::PostsReactionLoader
   def posts_with_reactions
     if SiteSetting.discourse_reactions_enabled
+      return if object.preloaded_post_data(:reactions)
+
       posts = object.posts
-
-      ActiveRecord::Associations::Preloader.new(
-        records: posts,
-        associations: [:post_actions, { reactions: { reaction_users: :user } }],
-      ).call
-
-      post_ids = posts.map(&:id).uniq
-      posts_reaction_users_count = TopicViewSerializer.posts_reaction_users_count(post_ids)
-      post_actions_with_reaction_users =
-        DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-          post_ids,
-        )
-      posts.each do |post|
-        post.reaction_users_count = posts_reaction_users_count[post.id].to_i
-        post.post_actions_with_reaction_users = post_actions_with_reaction_users[post.id] || {}
-      end
+      user = object.respond_to?(:guardian) ? object.guardian.user : nil
+      DiscourseReactions::ReactionsSerializerHelpers.preload_post_reactions(posts, user)
     end
   end
 end

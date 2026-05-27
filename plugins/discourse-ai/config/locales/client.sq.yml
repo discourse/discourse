@@ -34,17 +34,20 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      llm_selector:
+        none: "Asnjë"
       features:
-        back: "Kthehu mbrapa"
         disabled: "(e çaktivizuar)"
         groups: "Grupet:"
-        no_persona: "Nuk është vendosur"
+        no_agent: "Nuk është vendosur"
         no_groups: "Asnjë"
-        edit: "Redaktoni"
+        edit: "Rregullimet"
         expand_list:
           one: "(%{count} tjetër)"
           other: "(%{count} të tjera)"
         collapse_list: "(shfaq më pak)"
+        nav:
+          enabled: "Aktivizuar"
         filters:
           all: "Të gjitha"
           reset: "Rivendosni"
@@ -78,10 +81,10 @@ sq:
         summary: "Përmbledhja"
         username: "Emri i përdoruesit"
         total_requests: "Total requests"
+        total: "Total"
         periods:
           custom: "Me porosi..."
-      ai_persona:
-        back: "Kthehu mbrapa"
+      ai_agent:
         name: "Emri"
         edit: "Redaktoni"
         export: "Eksporto"
@@ -99,7 +102,6 @@ sq:
         uploads:
           uploading: "Duke ngarkuar..."
       tools:
-        back: "Kthehu mbrapa"
         export: "Eksporto"
         import: "Importo"
         name: "Emri"
@@ -108,13 +110,32 @@ sq:
         save: "Ruani"
         remove_parameter: "Hiq"
         parameter_required: "E nevojshme"
+        credential_not_set: "(nuk është vendosur)"
         edit: "Redaktoni"
         delete: "Fshij"
+      secrets:
+        short_title: "Kredencialet"
+        name: "Emri"
+        secret: "Vlera"
+        save: "Ruani"
+        edit: "Redaktoni"
+        delete: "Fshij"
+        embedding: "Embedding"
+      mcp_servers:
+        name: "Emri"
+        description: "Përshkrimi"
+        url: "URL"
+        oauth_connect: "Lidhu"
+        enabled: "Aktivizuar"
+        save: "Ruani"
+        edit: "Redaktoni"
+        delete: "Fshij"
+        tools_modal:
+          required: "E nevojshme"
       llms:
         display_name: "Emri"
         save: "Ruani"
         edit: "Redaktoni"
-        back: "Kthehu mbrapa"
         delete: Fshij
         quotas:
           group: "Grupi"
@@ -147,10 +168,10 @@ sq:
           cancel: "Anulo"
         thumbnail_suggestions:
           select: "Zgjidhni"
+          try_again: "Provoni përsëri"
         image_caption:
           save_caption: "Ruani"
       embeddings:
-        back: "Kthehu mbrapa"
         save: "Ruani"
         delete: "Fshij"
         edit: "Redaktoni"

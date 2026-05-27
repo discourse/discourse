@@ -32,3 +32,5 @@ ro:
       random_assign:
         title: "Atribuire aleatorie"
         description: "Atribuie aleatoriu subiecte unui grup"
+      set_topic_timer:
+        title: "Setează cronometrul subiectului"

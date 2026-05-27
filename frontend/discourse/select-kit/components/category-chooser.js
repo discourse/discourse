@@ -1,13 +1,12 @@
 import { computed, set } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isNone } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import CategoryRow from "discourse/select-kit/components/category-row";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
@@ -22,12 +21,10 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   scopedCategoryId: null,
   prioritizedCategoryId: null,
   readOnlyCategoryId: null,
+  displayCategoryDescription: true,
 })
 @pluginApiIdentifiers(["category-chooser"])
 export default class CategoryChooser extends ComboBoxComponent {
-  @setting("allow_uncategorized_topics") allowUncategorized;
-  @setting("fixed_category_positions_on_create") fixedCategoryPositionsOnCreate;
-
   init() {
     super.init(...arguments);
 
@@ -44,6 +41,16 @@ export default class CategoryChooser extends ComboBoxComponent {
     }
   }
 
+  @computed("siteSettings.allow_uncategorized_topics")
+  get allowUncategorized() {
+    return this.siteSettings.allow_uncategorized_topics;
+  }
+
+  @computed("siteSettings.fixed_category_positions_on_create")
+  get fixedCategoryPositionsOnCreate() {
+    return this.siteSettings.fixed_category_positions_on_create;
+  }
+
   modifyComponentForRow() {
     return CategoryRow;
   }
@@ -54,10 +61,12 @@ export default class CategoryChooser extends ComboBoxComponent {
       const isString = typeof none === "string";
       return this.defaultItem(
         null,
-        htmlSafe(i18n(isString ? this.selectKit.options.none : "category.none"))
+        trustHTML(
+          i18n(isString ? this.selectKit.options.none : "category.none")
+        )
       );
     } else if (this.selectKit.options.readOnlyCategoryId) {
-      return this.defaultItem(null, htmlSafe(i18n("category.choose")));
+      return this.defaultItem(null, trustHTML(i18n("category.choose")));
     } else if (this.selectKit.options.allowUncategorized) {
       return Category.findUncategorized();
     } else {
@@ -66,7 +75,7 @@ export default class CategoryChooser extends ComboBoxComponent {
         10
       );
       if (!defaultCategoryId || defaultCategoryId < 0) {
-        return this.defaultItem(null, htmlSafe(i18n("category.choose")));
+        return this.defaultItem(null, trustHTML(i18n("category.choose")));
       }
     }
   }
@@ -78,7 +87,7 @@ export default class CategoryChooser extends ComboBoxComponent {
       set(
         content,
         "label",
-        htmlSafe(
+        trustHTML(
           categoryBadgeHTML(category, {
             link: false,
             hideParent: category ? !!category.parent_category_id : true,
@@ -150,7 +159,7 @@ export default class CategoryChooser extends ComboBoxComponent {
     prioritizedCategoryId = null,
   } = {}) {
     const categories = this.fixedCategoryPositionsOnCreate
-      ? Category.list()
+      ? Category.sortCategories(Category.list())
       : Category.listByActivity();
 
     let { readOnlyCategoryId } = this.selectKit.options;

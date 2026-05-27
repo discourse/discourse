@@ -136,20 +136,13 @@ module PageObjects
       end
 
       def has_who_liked_on_post?(post, count: nil)
-        if count
-          return(
-            has_css?(
-              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
-              count: count,
-            )
-          )
-        end
+        return has_css?(".post-users-popup .post-users-popup__item", count: count) if count
 
-        within_post(post) { has_css?(".who-liked.--expanded") }
+        has_css?(".post-users-popup")
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked.--expanded") }
+        has_no_css?(".post-users-popup")
       end
 
       def has_who_read_on_post?(post, count: nil)
@@ -185,9 +178,21 @@ module PageObjects
           element_klass += " .grant-badge"
         when :change_owner
           element_klass += " .change-owner"
+        when :permanently_delete
+          element_klass += " .permanently-delete"
         end
 
         find(element_klass).click
+      end
+
+      def permanently_delete_post(post)
+        expand_post_actions(post)
+        expand_post_admin_actions(post)
+        click_post_admin_action_button(post, :permanently_delete)
+      end
+
+      def open_post_history(post)
+        post_by_number(post).find(".post-info.edits").click
       end
 
       def click_topic_bookmark_button
@@ -198,9 +203,25 @@ module PageObjects
         find("#topic-title .fancy-title").click
       end
 
+      def click_topic_title_submit_edit
+        find("#topic-title .submit-edit").click
+      end
+
+      def click_topic_title_cancel_edit
+        find("#topic-title .cancel-edit").click
+      end
+
+      def has_editing_localization_indicator?
+        has_css?("#topic-title .editing-localization-indicator")
+      end
+
+      def has_no_editing_localization_indicator?
+        has_no_css?("#topic-title .editing-localization-indicator")
+      end
+
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
-          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
+          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit bookmark")
         end
       end
 
@@ -208,9 +229,54 @@ module PageObjects
         within_topic_footer_buttons { has_no_css?(".bookmark-menu-trigger.bookmarked") }
       end
 
+      def has_topic_status_bookmark?
+        has_css?("#topic-title .topic-status.--bookmarked")
+      end
+
+      def has_no_topic_status_bookmark?
+        has_no_css?("#topic-title .topic-status.--bookmarked")
+      end
+
       def click_reply_button
         within_topic_footer_buttons { find(".create").click }
         has_expanded_composer?
+      end
+
+      def click_floating_reply_button
+        find(".embed-floating-reply-button").click
+      end
+
+      def has_floating_reply_button?
+        has_css?(".embed-floating-reply-button")
+      end
+
+      def has_no_floating_reply_button?
+        has_no_css?(".embed-floating-reply-button")
+      end
+
+      def click_floating_timeline_button
+        find(".embed-floating-timeline-button").click
+      end
+
+      def has_floating_timeline_button?
+        has_css?(".embed-floating-timeline-button")
+      end
+
+      def has_no_floating_timeline_button?
+        has_no_css?(".embed-floating-timeline-button")
+      end
+
+      def has_docked_composer?
+        has_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def has_no_docked_composer?
+        has_no_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def click_embed_reply_button
+        within_topic_footer_buttons { find(".create").click }
+        self
       end
 
       def has_expanded_composer?
@@ -351,6 +417,11 @@ module PageObjects
 
       def has_filtered_notice_text?(text)
         find(".posts-filtered-notice").has_text?(text, exact: false)
+      end
+
+      def topic_tags
+        tags_selector = ".title-wrapper .topic-category .list-tags .discourse-tags .discourse-tag"
+        all(tags_selector).map(&:text)
       end
 
       private

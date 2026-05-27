@@ -5,7 +5,6 @@ Fabricator(:incoming_email) do
   subject { sequence(:subject) { |n| "Hello world #{n}" } }
   from_address { sequence(:from_address) { |n| "foo#{n}@example.com" } }
   to_addresses { sequence(:to_addresses) { |n| "someone#{n}@else.com" } }
-  imap_sync false
   created_via 0
 
   raw <<~EMAIL

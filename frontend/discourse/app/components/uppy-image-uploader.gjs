@@ -5,18 +5,17 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
-import $ from "jquery";
-import DButton from "discourse/components/d-button";
-import PickFilesButton from "discourse/components/pick-files-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DButton from "discourse/ui-kit/d-button";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 // Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo, previewSize
@@ -38,7 +37,7 @@ export default class UppyImageUploader extends Component {
       : { imagesOnly: true },
     uploadDropTargetOptions: () => ({
       target: document.querySelector(
-        `#${this.args.id} .uploaded-image-preview`
+        `#${this.args.id} .file-uploader__preview`
       ),
     }),
     uploadDone: (upload) => {
@@ -51,21 +50,13 @@ export default class UppyImageUploader extends Component {
     },
   });
 
-  applyLightbox = modifier(() =>
-    lightbox(
-      document.querySelector(`#${this.args.id}.image-uploader`),
-      this.siteSettings
-    )
-  );
+  applyLightbox = modifier((element) => {
+    lightbox(element.closest(".file-uploader"), this.siteSettings);
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
-
-    if (this.siteSettings.experimental_lightbox) {
-      window.pswp?.close();
-    } else {
-      $.magnificPopup?.instance.close();
-    }
+    window.pswp?.close();
   }
 
   get disabled() {
@@ -101,14 +92,14 @@ export default class UppyImageUploader extends Component {
 
   get placeholderStyle() {
     if (isEmpty(this.args.placeholderUrl)) {
-      return htmlSafe("");
+      return trustHTML("");
     }
-    return htmlSafe(`background-image: url(${this.args.placeholderUrl})`);
+    return trustHTML(`background-image: url(${this.args.placeholderUrl})`);
   }
 
   get imageCdnUrl() {
     if (isEmpty(this.args.imageUrl)) {
-      return htmlSafe("");
+      return trustHTML("");
     }
 
     return getURLWithCDN(this.args.imageUrl);
@@ -121,9 +112,9 @@ export default class UppyImageUploader extends Component {
   get backgroundStyle() {
     // Only apply background style for images, not videos
     if (this.isVideoFile) {
-      return htmlSafe("");
+      return trustHTML("");
     }
-    return htmlSafe(`background-image: url(${this.imageCdnUrl})`);
+    return trustHTML(`background-image: url(${this.imageCdnUrl})`);
   }
 
   get imageBaseName() {
@@ -134,7 +125,7 @@ export default class UppyImageUploader extends Component {
 
   get progressBarStyle() {
     let progress = this.uppyUpload.uploadProgress || 0;
-    return htmlSafe(`width: ${progress}%`);
+    return trustHTML(`width: ${progress}%`);
   }
 
   get acceptedFormats() {
@@ -146,8 +137,7 @@ export default class UppyImageUploader extends Component {
   }
 
   @action
-  toggleLightbox() {
-    // Only allow lightbox for images, not videos
+  async toggleLightbox() {
     if (this.isVideoFile) {
       return;
     }
@@ -158,12 +148,8 @@ export default class UppyImageUploader extends Component {
       return;
     }
 
-    if (this.siteSettings.experimental_lightbox) {
-      lightbox(lightboxImage, this.siteSettings);
-      lightboxImage.click();
-    } else {
-      $(lightboxImage).magnificPopup("open");
-    }
+    await lightbox(lightboxImage.closest(".file-uploader"), this.siteSettings);
+    lightboxImage.click();
   }
 
   @action
@@ -180,12 +166,12 @@ export default class UppyImageUploader extends Component {
   <template>
     <div
       id={{@id}}
-      class="image-uploader {{if @imageUrl 'has-image' 'no-image'}}"
+      class="file-uploader {{if @imageUrl 'has-image' 'no-image'}}"
       ...attributes
     >
       <div
-        class={{concatClass
-          "uploaded-image-preview input-xxlarge"
+        class={{dConcatClass
+          "file-uploader__preview input-xxlarge"
           this.previewSizeClass
         }}
         style={{this.backgroundStyle}}
@@ -241,7 +227,7 @@ export default class UppyImageUploader extends Component {
             </div>
           {{/if}}
         {{else}}
-          <div class="image-upload-controls">
+          <div class="file-uploader__controls">
             <label
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
@@ -251,8 +237,8 @@ export default class UppyImageUploader extends Component {
               tabindex="0"
               {{on "keydown" this.handleKeyboardActivation}}
             >
-              {{icon "upload"}}
-              <PickFilesButton
+              {{dIcon "upload"}}
+              <DPickFilesButton
                 @registerFileInput={{this.uppyUpload.setup}}
                 @fileInputDisabled={{this.disabled}}
                 @acceptedFormatsOverride={{this.acceptedFormats}}
@@ -262,7 +248,7 @@ export default class UppyImageUploader extends Component {
             </label>
 
             <div
-              class="progress-status
+              class="file-uploader__progress-status
                 {{unless this.uppyUpload.uploading 'hidden'}}"
             >
               <div
@@ -284,7 +270,7 @@ export default class UppyImageUploader extends Component {
       </div>
 
       {{#if @imageUrl}}
-        <div class="image-upload-controls">
+        <div class="file-uploader__controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
             title={{this.disabledReason}}
@@ -292,8 +278,8 @@ export default class UppyImageUploader extends Component {
             tabindex="0"
             {{on "keydown" this.handleKeyboardActivation}}
           >
-            {{icon "upload"}}
-            <PickFilesButton
+            {{dIcon "upload"}}
+            <DPickFilesButton
               @registerFileInput={{this.uppyUpload.setup}}
               @fileInputDisabled={{this.disabled}}
               @acceptedFormatsOverride={{this.acceptedFormats}}

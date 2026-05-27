@@ -7,18 +7,18 @@ if defined?(DiscourseAutomation)
 
     placeholder :post
 
-    triggerables %i[post_created_edited]
+    triggerables %i[post_created_edited stalled_topic]
 
     # TODO move to triggerables
     field :include_personal_messages, component: :boolean
 
     # Inputs
-    field :triage_persona,
+    field :triage_agent,
           component: :choices,
           required: true,
           extra: {
             content:
-              DiscourseAi::Automation.available_persona_choices(
+              DiscourseAi::Automation.available_agent_choices(
                 require_user: false,
                 require_default_llm: true,
               ),
@@ -42,11 +42,11 @@ if defined?(DiscourseAutomation)
           default: "review"
     field :canned_reply_user, component: :user
     field :canned_reply, component: :message
-    field :reply_persona,
+    field :reply_agent,
           component: :choices,
           extra: {
             content:
-              DiscourseAi::Automation.available_persona_choices(
+              DiscourseAi::Automation.available_agent_choices(
                 require_user: false,
                 require_default_llm: true,
               ),
@@ -58,18 +58,20 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields|
       post = context["post"]
-      next if post&.user&.bot?
+      post ||= context["topic"]&.posts&.find_by(post_number: 1)
+      next if post.blank?
+      next if post.user&.bot?
 
       if post.topic.private_message?
         include_personal_messages = fields.dig("include_personal_messages", "value")
         next if !include_personal_messages
       end
 
-      triage_persona_id = fields.dig("triage_persona", "value")
+      triage_agent_id = fields.dig("triage_agent", "value")
 
       canned_reply = fields.dig("canned_reply", "value")
       canned_reply_user = fields.dig("canned_reply_user", "value")
-      reply_persona_id = fields.dig("reply_persona", "value")
+      reply_agent_id = fields.dig("reply_agent", "value")
       whisper = fields.dig("whisper", "value")
       notify_author_pm = fields.dig("notify_author_pm", "value")
       notify_author_pm_user = fields.dig("notify_author_pm_user", "value")
@@ -132,20 +134,20 @@ if defined?(DiscourseAutomation)
 
         DiscourseAi::Automation::LlmTriage.handle(
           post: post,
-          triage_persona_id: triage_persona_id,
+          triage_agent_id: triage_agent_id,
           search_for_text: search_for_text,
           category_id: category_id,
           tags: tags,
           canned_reply: canned_reply,
           canned_reply_user: canned_reply_user,
-          reply_persona_id: reply_persona_id,
+          reply_agent_id: reply_agent_id,
           whisper: whisper,
           hide_topic: hide_topic,
           flag_post: flag_post,
           flag_type: flag_type.to_s.to_sym,
           max_post_tokens: max_post_tokens,
           stop_sequences: stop_sequences,
-          automation: self.automation,
+          automation: automation,
           max_output_tokens: max_output_tokens,
           action: context["action"],
           notify_author_pm: notify_author_pm,

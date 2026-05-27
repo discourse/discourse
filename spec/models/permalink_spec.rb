@@ -257,4 +257,42 @@ RSpec.describe Permalink do
       expect(permalink.target_url).to be_nil
     end
   end
+
+  describe "#internal? and #external?" do
+    it "returns internal for topic permalinks" do
+      permalink = Fabricate.build(:permalink, topic:)
+      expect(permalink.internal?).to eq(true)
+      expect(permalink.external?).to eq(false)
+    end
+
+    it "returns internal for post permalinks" do
+      permalink = Fabricate.build(:permalink, post:)
+      expect(permalink.internal?).to eq(true)
+      expect(permalink.external?).to eq(false)
+    end
+
+    it "returns internal for category permalinks" do
+      permalink = Fabricate.build(:permalink, category:)
+      expect(permalink.internal?).to eq(true)
+      expect(permalink.external?).to eq(false)
+    end
+
+    it "returns internal for tag permalinks" do
+      permalink = Fabricate.build(:permalink, tag:)
+      expect(permalink.internal?).to eq(true)
+      expect(permalink.external?).to eq(false)
+    end
+
+    it "returns internal for user permalinks" do
+      permalink = Fabricate.build(:permalink, user:)
+      expect(permalink.internal?).to eq(true)
+      expect(permalink.external?).to eq(false)
+    end
+
+    it "returns external for external URL permalinks" do
+      permalink = Fabricate.build(:permalink, external_url: "https://example.com")
+      expect(permalink.internal?).to eq(false)
+      expect(permalink.external?).to eq(true)
+    end
+  end
 end

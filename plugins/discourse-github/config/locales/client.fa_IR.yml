@@ -5,5 +5,12 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  js:
+    github:
+      pr_status:
+        draft: "درفت"
+        open: "باز"
+        approved: "پذیرفته شده"
+        closed: "بسته شده"
   replace_github_link:
     edit_reason: "پیوند گیت‌هاب با یک پیوند دائمی جایگزین شد"

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { bind } from "discourse/lib/decorators";
 
 const DO_NOT_RENDER_LIST = ["login"];
@@ -28,7 +28,7 @@ export default class ExperimentalScreen extends Component {
   }
 
   get distanceStyles() {
-    return htmlSafe(
+    return trustHTML(
       `--left-distance: ${this.left}px; --right-distance: ${this.right}px;`
     );
   }

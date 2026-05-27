@@ -3,11 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
@@ -18,6 +15,9 @@ import {
   NOT_BOOKMARKED,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkMenu extends Component {
@@ -42,6 +42,7 @@ export default class BookmarkMenu extends Component {
 
     const custom = this.timeShortcuts.custom();
     custom.label = "time_shortcut.more_options";
+    custom.icon = "far-calendar-plus";
     this.reminderAtOptions.push(custom);
   }
 
@@ -115,7 +116,7 @@ export default class BookmarkMenu extends Component {
     }
 
     if (this.existingBookmark) {
-      return i18n("bookmarked.edit_bookmark");
+      return i18n("bookmarked.edit_bookmark", { count: 1 });
     } else {
       return i18n("bookmarked.title");
     }
@@ -276,10 +277,10 @@ export default class BookmarkMenu extends Component {
       @arrow={{false}}
     >
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#unless this.showEditDeleteMenu}}
             <dropdown.item class="bookmark-menu__title">
-              {{icon "circle-check"}}
+              {{dIcon "circle-check"}}
               <span>{{i18n "bookmarks.bookmarked_success"}}</span>
             </dropdown.item>
           {{/unless}}
@@ -329,6 +330,7 @@ export default class BookmarkMenu extends Component {
 
           {{else}}
             <dropdown.item class="bookmark-menu__row-title">
+              {{dIcon "bell"}}
               {{i18n "bookmarks.also_set_reminder"}}
             </dropdown.item>
 
@@ -344,11 +346,12 @@ export default class BookmarkMenu extends Component {
                   @translatedTitle={{this.reminderShortcutTimeTitle option}}
                   @action={{fn this.onChooseReminderOption option}}
                   class="bookmark-menu__row-btn btn-transparent"
+                  @icon={{option.icon}}
                 />
               </dropdown.item>
             {{/each}}
           {{/if}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+      config:
+        login:
+          sub_pages:
+            oidc: "OIDC"
+  js:
+    login:
+      oidc:
+        name: "OpenID Connect"
+        title: "OpenID Connecttel"
+        message: "Hitelesítés OpenID Connecttel"

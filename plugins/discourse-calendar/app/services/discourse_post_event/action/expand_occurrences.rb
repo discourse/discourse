@@ -3,6 +3,8 @@
 module DiscoursePostEvent
   module Action
     class ExpandOccurrences < Service::ActionBase
+      MAX_LIMIT = 200
+
       option :event
       option :after
       option :before, optional: true
@@ -27,8 +29,9 @@ module DiscoursePostEvent
         occurrences = []
         current_time = after
         count = 0
+        capped_limit = limit.clamp(1, MAX_LIMIT)
 
-        while count < limit
+        while count < capped_limit
           occurrence = event.calculate_next_occurrence_from(current_time)
           break unless occurrence
 

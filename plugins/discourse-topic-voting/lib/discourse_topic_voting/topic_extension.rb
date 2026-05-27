@@ -20,21 +20,21 @@ module DiscourseTopicVoting
     end
 
     def vote_count
-      self.topic_vote_count&.votes_count.to_i
+      topic_vote_count&.votes_count.to_i
     end
 
     def user_voted?(user)
-      if self.current_user_voted
-        self.current_user_voted == 1
+      if current_user_voted
+        current_user_voted == 1
       else
         votes.map(&:user_id).include?(user.id)
       end
     end
 
     def update_vote_count
-      count = self.votes.count
+      count = votes.count
 
-      DB.exec(<<~SQL, topic_id: self.id, votes_count: count)
+      DB.exec(<<~SQL, topic_id: id, votes_count: count)
         INSERT INTO topic_voting_topic_vote_count
         (topic_id, votes_count, created_at, updated_at)
         VALUES
@@ -46,10 +46,10 @@ module DiscourseTopicVoting
       SQL
     end
 
-    def who_voted
+    def who_voted(limit: DiscourseTopicVoting::VOTER_PREVIEW_LIMIT)
       return if !SiteSetting.topic_voting_show_who_voted
 
-      self.votes.map(&:user)
+      votes.includes(:user).order(created_at: :desc).limit(limit).filter_map(&:user)
     end
   end
 end

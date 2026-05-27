@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import {
@@ -13,7 +13,6 @@ import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 @classNames("select-kit-header")
 @classNameBindings("isFocused")
 @attributeBindings(
-  "role",
   "tabindex",
   "selectedValue:data-value",
   "selectedNames:data-name",
@@ -23,14 +22,16 @@ import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 @selectKitPropUtils
 export default class SelectKitHeader extends Component {
   selectKit = null;
-  role = "listbox";
   tabindex = 0;
 
   @computed("value")
   get selectedValue() {
-    return this.value === this.getValue(this.selectKit.noneItem)
-      ? null
-      : makeArray(this.value).join(",");
+    if (this.value === this.getValue(this.selectKit.noneItem)) {
+      return null;
+    }
+    return makeArray(this.value)
+      .map((v) => this.getValue(v))
+      .join(",");
   }
 
   @computed("selectedContent.[]")

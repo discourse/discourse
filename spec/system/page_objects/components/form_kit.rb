@@ -31,25 +31,60 @@ module PageObjects
 
       def value
         case control_type
-        when /input-/, "password"
+        when "input", /input-/, "password"
           component.find("input").value
-        when "icon", "multi-select"
+        when "color"
+          component.find("input[type='text']").value
+        when "icon"
+          PageObjects::Components::DIconGridPicker.new(component).value
+        when "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
+        when "tag-chooser"
+          picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
+          picker.value
         when "checkbox"
-          component.find("input[type='checkbox']").checked?
+          component.find("input[type='checkbox']", visible: :all).checked?
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
           PageObjects::Components::DSelect.new(component.find("select")).value
+        when "radio-group"
+          component.find("input[type='radio']:checked", visible: :all).value
         when "composer", "textarea"
           component.find("textarea").value
         when "image"
-          url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
+          url = component.find(".file-uploader__preview a.lightbox", wait: 10)[:href]
           sha1 = url.match(/(\h{40})/).captures.first
           Upload.find_by(sha1:)
         when "toggle"
           component.find("button[role=\"switch\"]", visible: :all)["aria-checked"] == "true"
+        end
+      end
+
+      def uncheck
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return unless value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          uncheck("input[type='checkbox']", visible: :all)
+        end
+      end
+
+      def check
+        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+          return if value
+
+          component.find(".form-kit__control-checkbox-checkmark").click
+          return
+        end
+
+        within component do
+          check("input[type='checkbox']", visible: :all)
         end
       end
 
@@ -58,7 +93,7 @@ module PageObjects
           raise "'unchecked?' is only supported for control type: #{control_type}"
         end
 
-        expect(self.value).to eq(false)
+        expect(value).to eq(false)
       end
 
       def checked?
@@ -66,11 +101,11 @@ module PageObjects
           raise "'checked?' is only supported for control type: #{control_type}"
         end
 
-        expect(self.value).to eq(true)
+        expect(value).to eq(true)
       end
 
       def has_value?(expected_value)
-        expect(self.value).to eq(expected_value)
+        expect(value).to eq(expected_value)
       end
 
       def has_errors?(*messages)
@@ -100,7 +135,11 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          component.find("input[type='checkbox']").click
+          if SiteSetting.enable_new_checkbox_style
+            component.find(".form-kit__control-checkbox-checkmark").click
+          else
+            component.find("input[type='checkbox']").click
+          end
         when "password"
           component.find(".form-kit__control-password-toggle").click
         when "toggle"
@@ -112,8 +151,10 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input-text", "password", "input-date", "input-number"
+        when "input", /input-/, "password"
           component.find("input").fill_in(with: value)
+        when "color"
+          component.find("input[type='text']").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
         when "code"
@@ -126,17 +167,22 @@ module PageObjects
       def select(value)
         case control_type
         when "icon"
-          selector = component.find(".form-kit__control-icon")["id"]
-          picker = PageObjects::Components::SelectKit.new("#" + selector)
+          picker = PageObjects::Components::DIconGridPicker.new(component)
           picker.expand
-          picker.search(value)
-          picker.select_row_by_value(value)
+          picker.select_icon(value)
         when "multi-select"
           selector = component.find(".form-kit__control-custom > .multi-select")["id"]
           picker = PageObjects::Components::SelectKit.new("#" + selector)
           picker.expand
           picker.search(value)
           picker.select_row_by_name(value)
+          picker.collapse
+        when "tag-chooser"
+          picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
+          picker.expand
+          picker.search(value)
+          picker.select_row_by_name(value)
+          picker.collapse
         when "select"
           PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
             value,
@@ -151,11 +197,7 @@ module PageObjects
           radio = component.find("input[type='radio'][value='#{value}']")
           radio.click
         when "question"
-          if value == true
-            accept
-          else
-            refuse
-          end
+          value == true ? accept : refuse
         else
           raise "Unsupported control type: #{control_type}"
         end
@@ -180,10 +222,18 @@ module PageObjects
       def upload_image(image_path)
         if control_type == "image"
           attach_file(image_path) do
-            component.find(".image-upload-controls .btn.btn-default").click
+            component.find(".file-uploader__controls .btn.btn-default").click
           end
         else
           raise "'upload_image' is not supported for control type: #{control_type}"
+        end
+      end
+
+      def has_selected_names?(*names)
+        if control_type == "tag-chooser"
+          PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
+        else
+          raise "'has_selected_names?' is only supported for control type: tag-chooser"
         end
       end
 
@@ -193,6 +243,12 @@ module PageObjects
 
       def enabled?
         !disabled?
+      end
+
+      private
+
+      def tag_chooser_selector
+        "[data-name='#{component["data-name"]}'] .form-kit__control-tag-chooser"
       end
     end
 
@@ -220,6 +276,14 @@ module PageObjects
         end
       end
 
+      def collection_field(collection_name, collection_index, field_name)
+        FormKitField.new(
+          find(
+            ".form-kit__field[data-name='#{collection_name}.#{collection_index}.#{field_name}']",
+          ),
+        )
+      end
+
       def field(name)
         within component do
           FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
@@ -241,7 +305,11 @@ module PageObjects
       end
 
       def choose_conditional(name)
-        find(".form-kit__conditional-display .form-kit__control-radio[value='#{name}']").click
+        within component do
+          find("input.form-kit__control-radio[value='#{name}']", visible: :all).ancestor(
+            "label",
+          ).click
+        end
       end
     end
   end

@@ -224,6 +224,7 @@ sw:
       admins: "viongozi"
       moderators: "wasimamizi"
       staff: "wasaidizi"
+      anonymous: "asiyejulikana"
       trust_level_0: "kiwango_cha_uaminifu_0"
       trust_level_1: "kiwango_cha_uaminifu_1"
       trust_level_2: "kiwango_cha_uaminifu_2"
@@ -495,11 +496,10 @@ sw:
       daily: "kila siku"
       weekly: "kila wiki"
   user_api_key:
-    title: "Idhini ufikivu wa programu-tumizi"
     authorize: "Idhini"
+    deny: "Batili"
     read: "soma"
     read_write: "soma/andika"
-    description: '"%{application_name}" anaomba ufikivu ufuatao kwenye akaunti yako:'
     otp_confirmation:
       confirm_title: Endelea kwenye %{site_name}
     no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
@@ -531,7 +531,9 @@ sw:
         assigned: Imekabidhiwa
     visits:
       title: "Mtumiaji Ametembelea"
-      xaxis: "Siku"
+      xaxis:
+        desktop: "Eneo kazi la Kompyuta"
+        mobile: "Kifaa cha kiganjani"
       yaxis: "Idadi ya utembeleaji"
     signups:
       xaxis: "Siku"
@@ -539,6 +541,29 @@ sw:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
       yaxis: "Idadi ya wachangiaji wapya"
+    activity_by_category:
+      labels:
+        category: "Kikundi"
+        topics: "Mada"
+        posts: "Machapisho"
+        share: "Shirikisha"
+    posters_by_member_type:
+      labels:
+        count: "Machapisho"
+        share: "Shirikisha"
+      types:
+        staff: "Wasaidizi"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Wanachama"
+        share: "Shirikisha"
+      levels:
+        "0": "Mpya"
+        "1": "Kawaida"
+        "2": "Mwanachama"
+        "3": "Kawaida"
+        "4": "Kiongozi"
     trust_level_growth:
       yaxis: "Siku"
     consolidated_page_views:
@@ -555,6 +580,8 @@ sw:
     consolidated_page_views_browser_detection:
       yaxis: "Siku"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Asiyejulikana"
       yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
@@ -642,6 +669,12 @@ sw:
         user: "Mtumiaji"
         num_clicks: "Imebonyezwa"
         num_topics: "Mada"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
     top_traffic_sources:
       title: "Chanzo cha Msongamano Kwenye Mtandao"
       xaxis: "Kikoa"
@@ -681,6 +714,8 @@ sw:
     page_view_anon_browser_reqs:
       xaxis: "Siku"
     page_view_logged_in_browser_reqs:
+      xaxis: "Siku"
+    page_view_embed_reqs:
       xaxis: "Siku"
     http_background_reqs:
       title: "Mandharinyuma"
@@ -726,7 +761,7 @@ sw:
       labels:
         user: Mtumiaji
         location: Sehemu
-    staff_logins:
+    admin_logins:
       labels:
         user: Mtumiaji
         location: Sehemu
@@ -843,13 +878,7 @@ sw:
     tl3_promotion_min_duration: "Siku ambazo lazima zipite kwa mtumiaji aliyepanda cheo kufika kiwango cha 3 cha uaminifu kabla hajarudishwa kwenye kiwango cha 2 cha uaminifu."
     tl3_requires_likes_given: "Kiwango cha chini cha upendo unaotakiwa kutolewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
     tl3_requires_likes_received: "Kiwango cha chini cha upendo unaotakiwa kupokelewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
-    min_trust_to_create_topic: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kutengeneza mada mpya."
     allow_flagging_staff: "Kama ikiruhusiwa, watumiaji wanaweza kuweka bendera kwenye machapisho kutoka kwenye akaunti za wasaidizi."
-    min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
-    min_trust_to_edit_post: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuhariri machapisho."
-    min_trust_to_allow_self_wiki: "Kiwango cha chini cha uaminifu kinachohitajika na mtumiaji kuweza kufanya chapisho lake liwe wiki."
-    min_trust_to_flag_posts: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka bendera kwenye machapisho."
-    min_trust_to_post_links: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka viungo kwenye machapisho."
     newuser_max_links: "Viungo vingapi mtumiaji mpya anaweza kuongeza kwenye chapisho."
     newuser_max_attachments: "Viambatanisho vingapi mtumiaji mpya anaweza kuweka kwenye chapisho."
     newuser_max_mentions_per_post: "Namba ya taarifa za @jina mtumiaji mpya anaweza kutumia kwenye chapisho."
@@ -900,11 +929,9 @@ sw:
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
     default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
     default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
-    min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
     max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
     max_tag_length: "kiwango cha juu cha herufi zinazoweza kutumika kwenye lebo."
     max_tag_search_results: "Utafutaji wa lebo, utaonyesha kiwango hiki cha juu cha majibu."
-    min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
     errors:
       invalid_email: "Barua pepe batili."
@@ -920,8 +947,6 @@ sw:
       staged_users_disabled: "Kwanza ruhusu 'watumiaji walio staged' kabla ya kuruhusu mpangilio huu."
       reply_by_email_disabled: "Kwanza ruhusu 'jibu kupitia barua pepe' kabla ya kuruhusu mpangilio huu."
       enable_local_logins_disabled: "Kwanza ruhusu 'ruhusu programu-jalizi ' kabla ya kuruhusu mpangilio huu."
-      min_username_length_range: "Hauwezi ukaseti kiwango cha chini kiwe zaidi ya kiwango cha juu."
-      max_username_length_range: "Hauwezi ukaweka kiwango cha juu kiwe kidogo ya kiwango cha chini."
   search:
     within_post: "#%{post_number} za %{username}"
     types:
@@ -1125,6 +1150,7 @@ sw:
       title: "Chapisho Linahitaji Kibali"
     welcome_user:
       title: "Karibu Mtumiaji"
+      preview: "Karibu kwenye %{site_name}!"
       subject_template: "Karibu kwenye %{site_name}!"
       text_body_template: |
         Asante kwa jujiunga %{site_name}, na karibu!
@@ -1135,6 +1161,7 @@ sw:
         Karibu Sana!
     welcome_invite:
       title: "Muaiko wa Ukaribisho"
+      preview: "Karibu kwenye %{site_name}!"
       subject_template: "Karibu kwenye %{site_name}!"
       text_body_template: |
         Asante kwa kukubali mualiko kutoka kwa %{site_name} -- karibu!
@@ -1196,7 +1223,6 @@ sw:
         Jibu lako limetumwa kwa kutumia barua pepe iliyozuiliwa. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
     email_reject_not_allowed_email:
       title: "Barua Pepe Kataza Barua Pepe Hairuhusiwi "
-      subject_template: "[%{email_prefix}] Tatizo la Barua -- Barua Pepe Imezuiliwa"
       text_body_template: |
         Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
 
@@ -1359,6 +1385,7 @@ sw:
       subject_template: "Machapisho ya mtumiaji mpya %{username} yamezuiliwa kwa sababu ya viungo vinavyojirudia"
     unsilenced:
       title: "Hajanyamazishwa Tena"
+      preview: "Akaunti haijasimamishwa tena."
       subject_template: "Akaunti haijasimamishwa tena"
       text_body_template: |
         Habari,
@@ -1370,7 +1397,6 @@ sw:
       title: "Ukumbusho wa Watumiaji Waliosubirishwa"
     new_user_of_the_month:
       title: "Wewe ni Mtumiaji Mpya wa Mwezi!"
-      subject_template: "Wewe ni Mtumiaji Mpya wa Mwezi!"
       text_body_template: |
         Hongera, umepata tunzo ya **Mtumiaji Mpya wa Mwezi wa %{month_year}**. :trophy:
 
@@ -1590,6 +1616,7 @@ sw:
     account_exists:
       title: "Akaunti tayari ipo"
       subject_template: "[%{email_prefix}] Akaunti tayari ipo"
+      subject_template_improved: "Akaunti tayari ipo"
       text_body_template: |
         Umejaribu kutengeneza akaunti kwenye %{site_name}, au umejaribu kubadilisha barua pepe ya akaunti kuwa %{email}. Lakini, hiyo akaunti ya %{email} tayari ipo.
 
@@ -1609,6 +1636,7 @@ sw:
       popular_posts: "Machapisho Maarufu"
       more_new: "Mpya kwako"
       subject_template: "Muhtasari wa [%{email_prefix}]"
+      subject_template_improved: "Muhtasari"
       unsubscribe: "Muhtasari huu umetumwa kutoka kwa %{site_link} kama hatujakuona kwa mda fulani. Badilisha %{email_preferences_link}, au %{unsubscribe_link} kujiengua."
       your_email_settings: "mipangilio yako ya barua pepe"
       click_here: "bofya hapa"
@@ -1624,7 +1652,9 @@ sw:
         %{base_url}/u/nywila-wekaupya/%{email_token}
     email_login:
       title: "Ingia kupitia kiungo"
+      preview: "Ingia kupitia kiungo."
       subject_template: "Ingia kupitia kiungo [%{email_prefix}] "
+      subject_template_improved: "Ingia kupitia kiungo"
       text_body_template: |
         Hiki ni kiungo cha kuingia kwenye [%{site_name}](%{base_url}).
 
@@ -1634,7 +1664,6 @@ sw:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Tengeneza Nywila"
-      subject_template: "Weka Nywila [%{email_prefix}]"
       text_body_template: |
         Mtu anataka kutengeneza nywila ya akaunti yako[%{site_name}](%{base_url}). Au unaweza kuingia kwa kutumia njia nyingine (Google, Facebook au njia nyingine) kupitia barua pepe iliyothibitishwa.
 
@@ -1645,9 +1674,9 @@ sw:
     admin_login:
       title: "Ingia Kiongozi"
       subject_template: "[%{email_prefix}] Ingia"
+      subject_template_improved: "Ingia"
     account_created:
       title: "Akaunti Imetengenezwa"
-      subject_template: "[%{email_prefix}] Akaunti Yako Mpya"
       text_body_template: |
         Akaunti yako mpya imetengenezwa kwa ajili yako kwenye %{site_name}
 
@@ -1809,8 +1838,6 @@ sw:
     nice_share:
       name: Gawiza Zuri
       description: Gawizo la chapisho kwa watumiaji 25 wa kipekee
-      long_description: |
-        Beji hii inatolewa gawizo la kiungo kikibonyezwa na watu 25 kutoka nje. Asante kwa kusambaza neno kuhusu majadiliano, na jumuiya yetu!
     good_share:
       name: Gawizo Zuri
       description: Gawizo la chapisho kwa watu 300 wa kipekee
@@ -1950,13 +1977,7 @@ sw:
   wizard:
     title: "Mpangilio wa Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Sehemu ya Jeni ya Kuburudika"
-          site_description:
-            placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
-      privacy:
+      setup:
         fields:
           login_required:
             label: "Uonekanaji"
@@ -1965,30 +1986,14 @@ sw:
                 label: "Umma"
               private:
                 label: "Binafsi"
-      styling:
-        fields:
-          styling_preview:
-            label: "Kihakiki"
-          homepage_style:
-            choices:
-              latest:
-                label: "Hivi Karibuni"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
-      invites:
-        title: "Alika Wasaidizi"
-        description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."
-      finished:
-        title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
     github:
       closed: "imefungwa"
+      status_date:
+        approved: "wamekubaliwa"
+        closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
@@ -2015,21 +2020,36 @@ sw:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
       delete:
         title: "Futa"
-      disagree_and_restore:
-        description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
-      disagree:
+      disagree_bundle:
         title: "Hapana"
       ignore:
         title: "Puuzia"
       ignore_and_do_nothing:
         title: "Usifanye chochote"
       approve:
-        title: "Imethibitishwa"
+        title: "Ndio"
+      approve_post:
+        title: "Ndio"
+      approve_post_closed:
+        title: "Ndio"
+      reject_post_bundle:
+        title: "Hapana"
+      approve_user:
+        title: "Ndio"
       reject_user:
+        title: "Hapana"
         delete:
           title: "Futa Mtumiaji"
+      confirm_spam:
+        title: "Ndio"
+      not_spam:
+        title: "Hapana"
       reject:
         title: "Kataa"
+      approve_and_restore:
+        title: "Ndio"
+      approve_and_unhide:
+        title: "Ndio"
   fallback_username: "Mtumiaji"
   activemodel:
     errors:

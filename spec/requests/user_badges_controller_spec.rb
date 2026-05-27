@@ -186,6 +186,7 @@ RSpec.describe UserBadgesController do
 
   describe "#create" do
     it "requires username to be specified" do
+      sign_in(admin)
       post "/user_badges.json", params: { badge_id: badge.id }
       expect(response.status).to eq(400)
     end
@@ -313,6 +314,26 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(200)
     end
 
+    it "grants badge when a nested-view post link is given in reason" do
+      post = create_post
+      topic = post.topic
+      nested_url = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{post.post_number}"
+
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             reason: nested_url,
+           }
+
+      expect(response.status).to eq(200)
+      expect(UserBadge.exists?(badge_id: badge.id, post_id: post.id, granted_by: admin.id)).to eq(
+        true,
+      )
+    end
+
     describe "with relative_url_root" do
       it "grants badge when valid post/topic link is given in reason" do
         set_subfolder "/discuss"
@@ -381,6 +402,18 @@ RSpec.describe UserBadgesController do
         granted_by: Discourse.system_user,
         granted_at: Time.now,
       )
+    end
+
+    it "requires the user to be logged in" do
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_logged_in"))
+    end
+
+    it "returns 403 for anonymous users even with nonexistent user_badge_id" do
+      put "/user_badges/#{user_badge.id + 999}/toggle_favorite.json"
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_logged_in"))
     end
 
     it "checks that the user is authorized to favorite the badge" do

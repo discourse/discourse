@@ -517,7 +517,7 @@ RSpec.describe UsernameChanger do
 
           expect(post.cooked).to match_html(<<~HTML)
             <p>Lorem ipsum</p>
-            <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
+            <aside class="quote no-group" data-username="bar" data-display-name="Foo Bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
             <img alt="" width="24" height="24" src="//test.localhost/letter_avatar_proxy/v4/letter/b/b77776/48.png" class="avatar"> Foo Bar:</div>

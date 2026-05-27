@@ -273,8 +273,9 @@ class Auth::DefaultCurrentUserProvider
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
     user.unstage!
+
     make_developer_admin(user)
-    enable_bootstrap_mode(user)
+    bootstrap_first_admin(user)
 
     UserAuthToken.enforce_session_count_limit!(user.id)
 
@@ -294,6 +295,10 @@ class Auth::DefaultCurrentUserProvider
     # Clear memoization of `current_user` so we can get the acting user back in
     # the context of the same request.
     @env.delete(CURRENT_USER_KEY)
+  end
+
+  def impersonation_acting_user
+    @user_token.acting_user
   end
 
   def set_auth_cookie!(unhashed_auth_token, user, cookie_jar)
@@ -331,15 +336,14 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
-  def enable_bootstrap_mode(user)
-    return if SiteSetting.bootstrap_mode_enabled
+  def bootstrap_first_admin(user)
+    return if !user.admin || user.moderator || !user.last_seen_at.nil? || !user.is_singular_admin?
 
-    if user.admin && user.last_seen_at.nil? && user.is_singular_admin?
-      Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id)
-    end
+    user.grant_moderation!
+    StaffActionLogger.new(Discourse.system_user).log_grant_moderation(user)
   end
 
-  def log_off_user(session, cookie_jar)
+  def log_off_user(session, cookie_jar, push_subscription: nil)
     user = current_user
 
     if SiteSetting.log_out_strict && user
@@ -350,9 +354,11 @@ class Auth::DefaultCurrentUserProvider
         cookie_jar.delete("__profilin")
       end
 
+      PushNotificationPusher.clear_subscriptions(user)
       user.logged_out
     elsif user && @user_token
       @user_token.destroy
+      PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
       DiscourseEvent.trigger(:user_logged_out, user)
     end
 
@@ -363,12 +369,12 @@ class Auth::DefaultCurrentUserProvider
   # api has special rights return true if api was detected
   def is_api?
     current_user
-    !!(@env[API_KEY_ENV])
+    !!@env[API_KEY_ENV]
   end
 
   def is_user_api?
     current_user
-    !!(@env[USER_API_KEY_ENV])
+    !!@env[USER_API_KEY_ENV]
   end
 
   def has_auth_cookie?
@@ -479,12 +485,10 @@ class Auth::DefaultCurrentUserProvider
     return @auth_token if defined?(@auth_token)
 
     @auth_token =
-      begin
-        if v0 = self.class.find_v0_auth_cookie(@request)
-          v0
-        elsif v1 = self.class.find_v1_auth_cookie(@env)
-          v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
-        end
+      if v0 = self.class.find_v0_auth_cookie(@request)
+        v0
+      elsif v1 = self.class.find_v1_auth_cookie(@env)
+        v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
       end
   end
 end

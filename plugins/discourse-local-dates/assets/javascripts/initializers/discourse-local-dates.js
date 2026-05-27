@@ -1,6 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { dasherize } from "@ember/string";
+import { trustHTML } from "@ember/template";
 import { bbcodeAttributeDecode } from "discourse/lib/bbcode-attributes";
 import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -14,6 +15,7 @@ import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
+import generateCurrentDateMarkup from "../lib/generate-current-date-markup";
 import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
@@ -93,10 +95,12 @@ function buildOptionsFromElement(element, siteSettings) {
     .split("|")
     .filter(Boolean);
   opts.timezone = dataset.timezone;
-  opts.calendar = (dataset.calendar || "on") === "on";
   opts.displayedTimezone = dataset.displayedTimezone;
   opts.format = dataset.format || (opts.time ? "LLL" : "LL");
   opts.countdown = dataset.countdown;
+  opts.calendar = dataset.calendar
+    ? dataset.calendar === "on"
+    : !dataset.format;
   return opts;
 }
 
@@ -104,7 +108,7 @@ function buildOptionsFromMarkdownTag(element) {
   const opts = {};
 
   // siteSettings defaults as used by buildOptionsFromElement are purposefully
-  // ommitted to reproduce exactly what was on the original element
+  // omitted to reproduce exactly what was on the original element
   opts.time = element.attributes["data-time"];
   opts.date = element.attributes["data-date"];
   opts.recurring = element.attributes["data-recurring"];
@@ -176,10 +180,7 @@ function initializeDiscourseLocalDates(api) {
     alwaysShowShortcut: true,
     shortcutAction: (event) => {
       const timezone = api.getCurrentUser().user_option.timezone;
-      const time = moment().format("HH:mm:ss");
-      const date = moment().format("YYYY-MM-DD");
-
-      event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
+      event.addText(generateCurrentDateMarkup(timezone));
     },
   });
 
@@ -247,6 +248,7 @@ function buildHtmlPreview(element, siteSettings) {
 
   const htmlPreviews = localDateBuilder.previews.map((preview) => {
     const previewNode = document.createElement("div");
+    previewNode.dataset.timezone = dasherize(preview.timezone);
     previewNode.classList.add("preview");
     if (preview.current) {
       previewNode.classList.add("current");
@@ -407,7 +409,7 @@ class LocalDatesInit {
 
     return this.tooltip.show(event.target, {
       identifier: "local-date",
-      content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
+      content: trustHTML(buildHtmlPreview(event.target, this.siteSettings)),
     });
   }
 

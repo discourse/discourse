@@ -31,7 +31,8 @@ module DiscourseAi
           feature_context: nil,
           partial_tool_calls: false,
           output_thinking: false,
-          cancel_manager: nil
+          cancel_manager: nil,
+          execution_context: nil
         )
           @dialect = dialect
           @model_params = model_params
@@ -92,6 +93,9 @@ module DiscourseAi
 
         def aggregate_structured_response(response_enum)
           schema_properties = model_params[:response_format].dig(:json_schema, :schema, :properties)
+
+          return response_enum.first if schema_properties.blank?
+
           output = DiscourseAi::Completions::StructuredOutput.new(schema_properties)
 
           response_enum.each do |chunk|

@@ -24,6 +24,7 @@ class UserOptionSerializer < ApplicationSerializer
              :email_in_reply_to,
              :like_notification_frequency,
              :notify_on_linked_posts,
+             :enable_upcoming_change_available_notifications,
              :include_tl0_in_digests,
              :theme_ids,
              :theme_key_seq,
@@ -47,7 +48,8 @@ class UserOptionSerializer < ApplicationSerializer
              :watched_precedence_over_muted,
              :topics_unread_when_closed,
              :composition_mode,
-             :interface_color_mode
+             :interface_color_mode,
+             :show_original_content
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

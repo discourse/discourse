@@ -1,10 +1,11 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import TextField from "discourse/components/text-field";
+import { isValidHex } from "discourse/lib/color-transformations";
+import DTextField from "discourse/ui-kit/d-text-field";
 
 /**
   An input field for a color.
@@ -63,7 +64,7 @@ export default class ColorInput extends Component {
 
   @action
   onPickerInput(event) {
-    this.set("hexValue", event.target.value.replace("#", ""));
+    this.set("hexValue", event.target.value.replace(/^#/, ""));
   }
 
   @action
@@ -93,11 +94,11 @@ export default class ColorInput extends Component {
   }
 
   _valid(color = this.hexValue) {
-    return /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color);
+    return isValidHex(color);
   }
 
   <template>
-    {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<TextField
+    {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<DTextField
       @value={{this.hexValue}}
       @maxlength={{this.maxlength}}
       @input={{this.onHexInput}}

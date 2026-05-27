@@ -5,11 +5,20 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "تشغيل الأتمتة عبر API"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: إنشاء أتمتة
+            update_automation: تحديث الأتمتة
             delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة
@@ -62,13 +71,19 @@ ar:
             label: النص الأساسي
           delay:
             label: التأخير (بالدقائق)
-          prefers_encrypt:
-            label: يشفِّر الرسائل الشخصية إذا كانت متاحة
         group:
           label: المجموعة
         text:
           label: النص
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: الفئات
+              description: تُشغل فقط عندما يكون الموضوع المُبلّغ عنه ضمن هذه الفئات
+            tags:
+              label: الوسوم
+              description: تُشغل فقط عندما يحتوي الموضوع المُبلغ عنه على أي من هذه الوسوم
         not_found: تعذَّر العثور على المشغِّل `%{trigger}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         user_badge_granted:
           fields:
@@ -204,9 +219,6 @@ ar:
               description: "اختياري، يقتصر التفعيل على المنشورات التي تتضمن هذه الميزات فقط"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
-          topics: كل الموضوعات
-          personal_messages: الرسائل الشخصية
-          public_topics: الموضوعات العامة (استبعاد جميع الفئات الآمنة)
           with_images: الصور
           with_links: الروابط
           with_code: الرمز
@@ -279,6 +291,14 @@ ar:
               label: الوسوم
               description: اختياري، لن يتم تشغيله إلا إذا كان المنشور يحتوي على أي هذه الوسوم
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: قالب البريد الإلكتروني
+              description: يدعم عناصر نائبة للأتمتة
+            recipients:
+              label: المستلمون
+              description: المستخدمون أو عناوين البريد الإلكتروني لإرسال الإشعار إليهم
         not_found: تعذَّر العثور على البرنامج النصي `%{script}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         zapier_webhook:
           fields:
@@ -426,6 +446,13 @@ ar:
           fields:
             custom_field_name:
               label: "اسم الحقل المخصَّص للمستخدم"
+        set_topic_timer:
+          title: تعيين مؤقِّت للموضوع
+          fields:
+            type:
+              label: نوع المؤقت
+            duration:
+              label: مدة المؤقت
       unnamed_automation: "أتمتة دون اسم"
       models:
         script:
@@ -438,6 +465,13 @@ ar:
           runs_today: "%{count} اليوم"
           runs_this_week: "%{count} هذا الاسبوع"
           runs_this_month: "%{count} هذا الشهر"
+          recent_errors:
+            zero: "%{count} خطأ مؤخرًا"
+            one: "خطأ واحد مؤخرًا"
+            two: "خطآن مؤخرًا"
+            few: "%{count} أخطاء مؤخرًا"
+            many: "%{count} خطأ مؤخرًا"
+            other: "%{count} خطأ مؤخرًا"
           runs:
             label: عدد مرات التشغيل
           name:

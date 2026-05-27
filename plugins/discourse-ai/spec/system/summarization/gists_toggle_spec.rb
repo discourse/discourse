@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Gists Toggle Functionality", type: :system do
+describe "Gists Toggle Functionality" do
   fab!(:admin)
   fab!(:group)
   fab!(:topic_with_gist, :topic)
@@ -13,7 +13,7 @@ describe "Gists Toggle Functionality", type: :system do
     SiteSetting.ai_summary_gists_enabled = true
 
     group.add(admin)
-    assign_persona_to(:ai_summary_gists_persona, [group.id])
+    assign_agent_to(:ai_summary_gists_agent, [group.id])
     sign_in(admin)
   end
 
@@ -84,30 +84,6 @@ describe "Gists Toggle Functionality", type: :system do
 
       expect(page).to have_css("body.topic-list-layout-table-ai")
     end
-
-    it "PM and public topic toggles are independent from each other" do
-      visit("/latest")
-      find(".topic-list-layout-trigger").click
-      find(
-        ".dropdown-menu__item .d-button-label",
-        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.compact"),
-      ).click
-
-      visit("/u/#{admin.username}/messages/new")
-      find(".topic-list-layout-trigger").click
-      find(
-        ".dropdown-menu__item .d-button-label",
-        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
-      ).click
-
-      visit("/latest")
-      expect(page).to have_css("body.topic-list-layout-table")
-      expect(page).not_to have_css("body.topic-list-layout-table-ai")
-
-      visit("/u/#{admin.username}/messages/new")
-      expect(page).to have_css("body.topic-list-layout-table-ai")
-      expect(page).not_to have_css("body.topic-list-layout-table")
-    end
   end
 
   context "when no gists are available" do
@@ -135,7 +111,7 @@ describe "Gists Toggle Functionality", type: :system do
   end
 end
 
-describe "Gists Toggle Functionality - Mobile", type: :system, mobile: true do
+describe "Gists Toggle Functionality - Mobile", mobile: true do
   fab!(:admin)
   fab!(:group)
   fab!(:topic_with_gist, :topic)
@@ -148,7 +124,7 @@ describe "Gists Toggle Functionality - Mobile", type: :system, mobile: true do
     SiteSetting.ai_summary_gists_enabled = true
 
     group.add(admin)
-    assign_persona_to(:ai_summary_gists_persona, [group.id])
+    assign_agent_to(:ai_summary_gists_agent, [group.id])
     sign_in(admin)
   end
 

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat channel", type: :system do
+RSpec.describe "Chat channel" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
   before do
@@ -58,7 +58,7 @@ RSpec.describe "Chat channel", type: :system do
     end
   end
 
-  context "when first batch of messages doesnt fill page" do
+  context "when first batch of messages doesn't fill page" do
     before { Fabricate.times(30, :chat_message, user: current_user, chat_channel: channel_1) }
 
     it "autofills for more messages" do
@@ -94,19 +94,21 @@ RSpec.describe "Chat channel", type: :system do
       it "syncs the messages" do
         Jobs.run_immediately!
 
-        using_session(:tab_1) do
-          sign_in(current_user)
+        sign_in(current_user)
+        chat_page.visit_channel(channel_1)
+
+        original_window = current_window
+        new_tab = open_new_window(:tab)
+
+        within_window new_tab do
           chat_page.visit_channel(channel_1)
         end
 
-        using_session(:tab_2) do
-          sign_in(current_user)
-          chat_page.visit_channel(channel_1)
+        within_window original_window do
+          channel_page.send_message("test_message")
         end
 
-        using_session(:tab_1) { channel_page.send_message("test_message") }
-
-        using_session(:tab_2) do
+        within_window(new_tab) do
           expect(channel_page.messages).to have_message(text: "test_message")
         end
       end
@@ -159,14 +161,15 @@ RSpec.describe "Chat channel", type: :system do
   context "when a new message is created" do
     before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
-    it "doesn’t append the message when not at bottom" do
+    it "doesn’t scroll and keeps the scroll-to-bottom arrow when not at bottom" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
-      expect(channel_page.messages).to have_no_message(id: new_message.id)
+      expect(channel_page.messages).to have_message(id: new_message.id)
+      expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
     end
   end
 
@@ -194,7 +197,7 @@ RSpec.describe "Chat channel", type: :system do
 
       expect(page).to have_selector(".mention.--wide", text: "@here")
       expect(page).to have_selector(".mention.--wide", text: "@all")
-      expect(page).to have_selector(".mention.--current", text: "@#{current_user.username}")
+      expect(page).to have_selector(".mention", text: "@#{current_user.username}")
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
       expect(page).to have_selector(".mention.--bot", text: "@system")

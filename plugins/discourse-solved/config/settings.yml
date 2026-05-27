@@ -8,6 +8,11 @@ discourse_solved:
   allow_solved_on_all_topics:
     default: false
     client: true
+  allow_solved_in_groups:
+    type: group_list
+    default: ""
+    allow_any: false
+    refresh: true
   accept_all_solutions_trust_level:
     default: 4
     client: true
@@ -23,10 +28,10 @@ discourse_solved:
     validator: "AtLeastOneGroupValidator"
   empty_box_on_unsolved:
     default: false
-    client: true
+    hidden: true
   solved_quote_length:
-    default: 300
-    client: false
+    default: 700
+    client: true
   solved_topics_auto_close_hours:
     default: 0
     min: 0
@@ -36,14 +41,7 @@ discourse_solved:
     client: true
   notify_on_staff_accept_solved:
     default: false
-  ignore_solved_topics_in_assigned_reminder:
-    default: false
-  assignment_status_on_solve:
-    type: string
-    default: ""
-  assignment_status_on_unsolve:
-    type: string
-    default: ""
+    hidden: true
   disable_solved_education_message:
     default: false
   accept_solutions_topic_author:
@@ -59,4 +57,24 @@ discourse_solved:
   enable_solved_tags:
     type: tag_list
     default: ""
+    client: true
+  enable_support_category_type_setup:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "permanent"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/398338"
+  enable_solved_shared_issues:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402498"
+  discourse_solved_admin_dashboard_seeded:
+    default: false
+    hidden: true
 

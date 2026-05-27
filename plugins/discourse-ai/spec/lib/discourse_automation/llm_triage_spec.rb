@@ -11,7 +11,7 @@ describe DiscourseAi::Automation::LlmTriage do
   let(:automation) { Fabricate(:automation, script: "llm_triage", enabled: true) }
 
   fab!(:llm_model)
-  fab!(:ai_persona)
+  fab!(:ai_agent)
 
   def add_automation_field(name, value, type: "text")
     automation.fields.create!(
@@ -29,9 +29,9 @@ describe DiscourseAi::Automation::LlmTriage do
 
     SiteSetting.tagging_enabled = true
 
-    ai_persona.update!(default_llm: llm_model)
+    ai_agent.update!(default_llm: llm_model)
 
-    add_automation_field("triage_persona", ai_persona.id)
+    add_automation_field("triage_agent", ai_agent.id)
     add_automation_field("search_for_text", "bad")
     add_automation_field("category", category.id, type: "category")
     add_automation_field("tags", %w[aaa bbb], type: "tags")
@@ -78,8 +78,27 @@ describe DiscourseAi::Automation::LlmTriage do
     count = ai_log.raw_request_payload.scan("hello").size
     # we could use the exact count here but it can get fragile
     # as we change tokenizers, this will give us reasonable confidence
-    expect(count).to be <= (100)
-    expect(count).to be > (50)
+    expect(count).to be <= 100
+    expect(count).to be > 50
+  end
+
+  it "can trigger via stalled_topic with topic context" do
+    post = Fabricate(:post)
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      automation.running_in_background!
+      automation.trigger!(
+        "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+        "topic" => post.topic,
+        "placeholders" => {
+          "topic_url" => post.topic.url,
+        },
+      )
+    end
+
+    topic = post.topic.reload
+    expect(topic.category_id).to eq(category.id)
+    expect(topic.tags.pluck(:name)).to contain_exactly("aaa", "bbb")
   end
 
   it "does not triage PMs by default" do
@@ -95,7 +114,7 @@ describe DiscourseAi::Automation::LlmTriage do
     # PM
     reply_user.update!(admin: true)
     add_automation_field("include_personal_messages", true, type: :boolean)
-    ai_persona.update!(temperature: 0.2)
+    ai_agent.update!(temperature: 0.2)
     add_automation_field("max_output_tokens", "700")
     post = Fabricate(:post, topic: personal_message)
 
@@ -127,11 +146,11 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(last_post.raw).to eq post.raw
   end
 
-  it "can respond using an AI persona when configured" do
+  it "can respond using an AI agent when configured" do
     bot_user = Fabricate(:user, username: "ai_assistant")
-    ai_persona =
+    ai_agent =
       Fabricate(
-        :ai_persona,
+        :ai_agent,
         name: "Help Bot",
         description: "AI assistant for forum help",
         system_prompt: "You are a helpful forum assistant",
@@ -139,16 +158,16 @@ describe DiscourseAi::Automation::LlmTriage do
         user_id: bot_user.id,
       )
 
-    # Configure the automation to use the persona instead of canned reply
+    # Configure the automation to use the agent instead of canned reply
     add_automation_field("canned_reply", nil, type: "message") # Clear canned reply
-    add_automation_field("reply_persona", ai_persona.id, type: "choices")
+    add_automation_field("reply_agent", ai_agent.id, type: "choices")
     add_automation_field("whisper", true, type: "boolean")
 
     post = Fabricate(:post, raw: "I need help with a problem")
 
     ai_response = "I'll help you with your problem!"
 
-    # Set up the test to provide both the triage and the persona responses
+    # Set up the test to provide both the triage and the agent responses
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad", ai_response]) do
       automation.running_in_background!
       automation.trigger!({ "post" => post })
@@ -158,7 +177,7 @@ describe DiscourseAi::Automation::LlmTriage do
     topic = post.topic.reload
     last_post = topic.posts.order(:post_number).last
 
-    # Verify the AI persona's user created the post
+    # Verify the AI agent's user created the post
     expect(last_post.user_id).to eq(bot_user.id)
 
     # Verify the content matches the AI response
@@ -169,11 +188,11 @@ describe DiscourseAi::Automation::LlmTriage do
   end
 
   it "does not create replies when the action is edit" do
-    # Set up bot user and persona
+    # Set up bot user and agent
     bot_user = Fabricate(:user, username: "helper_bot")
-    ai_persona =
+    ai_agent =
       Fabricate(
-        :ai_persona,
+        :ai_agent,
         name: "Edit Helper",
         description: "AI assistant for editing",
         system_prompt: "You help with editing",
@@ -183,7 +202,7 @@ describe DiscourseAi::Automation::LlmTriage do
 
     # Configure the automation with both reply methods
     add_automation_field("canned_reply", "This is a canned reply", type: "message")
-    add_automation_field("reply_persona", ai_persona.id, type: "choices")
+    add_automation_field("reply_agent", ai_agent.id, type: "choices")
 
     # Create a post and capture its topic
     post = Fabricate(:post, raw: "This needs to be evaluated")
@@ -205,6 +224,40 @@ describe DiscourseAi::Automation::LlmTriage do
     # Verify no replies were created
     last_post = topic.posts.order(:post_number).last
     expect(last_post.id).to eq(post.id)
+  end
+
+  context "with post images" do
+    fab!(:upload)
+    fab!(:post) { Fabricate(:post, raw: "Here is an image") }
+
+    before { post.uploads << upload }
+
+    def user_message_content(prompts)
+      prompts.first.messages.find { |m| m[:type] == :user }[:content]
+    end
+
+    it "excludes images when vision is disabled" do
+      ai_agent.update!(vision_enabled: false)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |_, _, prompts|
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        expect(user_message_content(prompts)).to include(post.raw)
+      end
+    end
+
+    it "includes images when vision is enabled" do
+      ai_agent.update!(vision_enabled: true)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |_, _, prompts|
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        expect(user_message_content(prompts)).to contain_exactly(
+          include(post.raw),
+          { upload_id: upload.id },
+        )
+      end
+    end
   end
 
   context "when the scripts gets triggered repeteadly due to edits" do
@@ -240,6 +293,22 @@ describe DiscourseAi::Automation::LlmTriage do
       scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
 
       expect(scores.size).to eq(1)
+    end
+
+    it "makes the reviewable visible to moderators when using review flag types" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+        add_automation_field("flag_type", "review")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewablePost.find_by(target: post)
+      expect(reviewable.reviewable_by_moderator).to eq(true)
+
+      # Verify moderators can actually see it in their review list
+      moderator = Fabricate(:moderator)
+      expect(Reviewable.list_for(moderator)).to include(reviewable)
     end
   end
 end

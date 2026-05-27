@@ -50,7 +50,7 @@ module Compression
       remaining_size = available_size
 
       if ::File.exist?(entry_path)
-        raise ::Zip::DestinationFileExistsError, "Destination '#{entry_path}' already exists"
+        raise DestinationFileExistsError, "Destination '#{entry_path}' already exists"
       end # Change this later.
 
       ::File.open(entry_path, "wb") do |os|

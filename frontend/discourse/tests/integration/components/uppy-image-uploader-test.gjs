@@ -1,4 +1,4 @@
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -7,8 +7,6 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image", async function (assert) {
-    this.siteSettings.experimental_lightbox = false;
-
     await render(
       <template>
         <UppyImageUploader
@@ -28,8 +26,9 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       .doesNotExist("does not display the placeholder image");
 
     await click(".image-uploader-lightbox-btn");
+    await waitFor(".pswp--open");
 
-    assert.dom(".mfp-container").exists("displays the image lightbox");
+    assert.dom(".pswp").exists("displays the image lightbox");
   });
 
   test("without image", async function (assert) {
@@ -91,24 +90,24 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       };
     };
 
-    const leave1 = await dropImage("#uploader1 .uploaded-image-preview");
+    const leave1 = await dropImage("#uploader1 .file-uploader__preview");
 
     assert
-      .dom("#uploader1 .uploaded-image-preview")
+      .dom("#uploader1 .file-uploader__preview")
       .hasClass("uppy-is-drag-over");
     assert
-      .dom("#uploader2 .uploaded-image-preview")
+      .dom("#uploader2 .file-uploader__preview")
       .hasNoClass("uppy-is-drag-over");
 
     await leave1();
 
-    await dropImage("#uploader2 .uploaded-image-preview");
+    await dropImage("#uploader2 .file-uploader__preview");
 
     assert
-      .dom("#uploader2 .uploaded-image-preview")
+      .dom("#uploader2 .file-uploader__preview")
       .hasClass("uppy-is-drag-over");
     assert
-      .dom("#uploader1 .uploaded-image-preview")
+      .dom("#uploader1 .file-uploader__preview")
       .hasNoClass("uppy-is-drag-over");
   });
 

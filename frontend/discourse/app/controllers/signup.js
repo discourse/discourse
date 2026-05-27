@@ -1,20 +1,19 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
 import { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
@@ -35,12 +34,13 @@ export default class SignupPageController extends Controller {
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
+  @tracked serverAccountEmail;
+  @tracked serverEmailValidation;
+  @autoTrackedArray rejectedEmails = [];
 
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
-  /** @type Array */
-  rejectedEmails = A();
   prefilledUsername = null;
   maskPassword = true;
   emailValidationVisible = false;
@@ -67,9 +67,20 @@ export default class SignupPageController extends Controller {
     showValidationOnInit: false,
   });
 
-  @notEmpty("authOptions") hasAuthOptions;
-  @setting("enable_local_logins") canCreateLocal;
-  @setting("require_invite_code") requireInviteCode;
+  @computed("authOptions")
+  get hasAuthOptions() {
+    return !isEmpty(this.authOptions);
+  }
+
+  @computed("siteSettings.enable_local_logins")
+  get canCreateLocal() {
+    return this.siteSettings.enable_local_logins;
+  }
+
+  @computed("siteSettings.require_invite_code")
+  get requireInviteCode() {
+    return this.siteSettings.require_invite_code;
+  }
 
   @dependentKeyCompat
   get userFields() {
@@ -123,28 +134,30 @@ export default class SignupPageController extends Controller {
     }
   }
 
-  @discourseComputed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
-  showCreateForm(hasAuthOptions, canCreateLocal, skipConfirmation) {
-    return (hasAuthOptions || canCreateLocal) && !skipConfirmation;
+  @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+  get showCreateForm() {
+    return (
+      (this.hasAuthOptions || this.canCreateLocal) && !this.skipConfirmation
+    );
   }
 
-  @discourseComputed("site.desktopView", "hasAuthOptions")
-  showExternalLoginButtons(desktopView, hasAuthOptions) {
-    return desktopView && !hasAuthOptions;
+  @computed("site.desktopView", "hasAuthOptions")
+  get showExternalLoginButtons() {
+    return this.site?.desktopView && !this.hasAuthOptions;
   }
 
-  @discourseComputed("formSubmitted")
-  submitDisabled() {
+  @computed("formSubmitted")
+  get submitDisabled() {
     return this.formSubmitted;
   }
 
-  @discourseComputed("userFields", "hasAtLeastOneLoginButton", "hasAuthOptions")
-  bodyClasses(userFields, hasAtLeastOneLoginButton, hasAuthOptions) {
+  @computed("userFields", "hasAtLeastOneLoginButton", "hasAuthOptions")
+  get bodyClasses() {
     const classes = [];
-    if (userFields) {
+    if (this.userFields) {
       classes.push("has-user-fields");
     }
-    if (hasAtLeastOneLoginButton && !hasAuthOptions) {
+    if (this.hasAtLeastOneLoginButton && !this.hasAuthOptions) {
       classes.push("has-alt-auth");
     }
     if (!this.canCreateLocal) {
@@ -153,42 +166,40 @@ export default class SignupPageController extends Controller {
     return classes.join(" ");
   }
 
-  @discourseComputed("authOptions", "authOptions.can_edit_username")
-  usernameDisabled(authOptions, canEditUsername) {
-    return authOptions && !canEditUsername;
+  @computed("authOptions", "authOptions.can_edit_username")
+  get usernameDisabled() {
+    return this.authOptions && !this.authOptions?.can_edit_username;
   }
 
-  @discourseComputed(
-    "authOptions",
-    "authOptions.can_edit_name",
-    "authOptions.name"
-  )
-  nameDisabled(authOptions, canEditName, name) {
-    return authOptions && !canEditName && name && name.length > 0;
+  @computed("authOptions", "authOptions.can_edit_name", "authOptions.name")
+  get nameDisabled() {
+    return (
+      this.authOptions &&
+      !this.authOptions?.can_edit_name &&
+      this.authOptions?.name &&
+      this.authOptions?.name?.length > 0
+    );
   }
 
-  @discourseComputed
-  showFullname() {
+  @computed
+  get showFullname() {
     return this.site.full_name_visible_in_signup;
   }
 
-  @discourseComputed
-  fullnameRequired() {
+  @computed
+  get fullnameRequired() {
     return this.site.full_name_required_for_signup;
   }
 
-  @discourseComputed(
+  @computed(
     "emailValidation.ok",
     "emailValidation.reason",
     "emailValidationVisible"
   )
-  showEmailValidation(
-    emailValidationOk,
-    emailValidationReason,
-    emailValidationVisible
-  ) {
+  get showEmailValidation() {
     return (
-      emailValidationOk || (emailValidationReason && emailValidationVisible)
+      this.emailValidation?.ok ||
+      (this.emailValidation?.reason && this.emailValidationVisible)
     );
   }
 
@@ -207,8 +218,8 @@ export default class SignupPageController extends Controller {
     return isEmpty(this.authOptions?.auth_provider);
   }
 
-  @discourseComputed
-  disclaimerHtml() {
+  @computed
+  get disclaimerHtml() {
     if (this.site.tos_url && this.site.privacy_policy_url) {
       return i18n("create_account.disclaimer", {
         tos_link: this.site.tos_url,
@@ -218,41 +229,37 @@ export default class SignupPageController extends Controller {
   }
 
   // Check the email address
-  @discourseComputed(
-    "serverAccountEmail",
-    "serverEmailValidation",
-    "accountEmail",
-    "rejectedEmails.[]",
-    "forceValidationReason"
-  )
-  emailValidation(
-    serverAccountEmail,
-    serverEmailValidation,
-    email,
-    rejectedEmails,
-    forceValidationReason
-  ) {
+  @dependentKeyCompat
+  get emailValidation() {
     const failedAttrs = {
       failed: true,
       ok: false,
       element: document.querySelector("#new-account-email"),
     };
 
-    if (serverAccountEmail === email && serverEmailValidation) {
-      return serverEmailValidation;
+    if (
+      this.serverAccountEmail === this.accountEmail &&
+      this.serverEmailValidation
+    ) {
+      return this.serverEmailValidation;
     }
 
     // If blank, fail without a reason
-    if (isEmpty(email)) {
+    if (isEmpty(this.accountEmail)) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
           message: i18n("user.email.required"),
-          reason: forceValidationReason ? i18n("user.email.required") : null,
+          reason: this.forceValidationReason
+            ? i18n("user.email.required")
+            : null,
         })
       );
     }
 
-    if (rejectedEmails.includes(email) || !emailValid(email)) {
+    if (
+      this.rejectedEmails.includes(this.accountEmail) ||
+      !emailValid(this.accountEmail)
+    ) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
           reason: i18n("user.email.invalid"),
@@ -261,7 +268,7 @@ export default class SignupPageController extends Controller {
     }
 
     if (
-      this.authOptions?.email === email &&
+      this.authOptions?.email === this.accountEmail &&
       this.authOptions?.email_valid &&
       !isEmpty(this.authOptions?.auth_provider)
     ) {
@@ -377,19 +384,19 @@ export default class SignupPageController extends Controller {
   }
 
   // Determines whether at least one login button is enabled
-  @discourseComputed
-  hasAtLeastOneLoginButton() {
+  @computed
+  get hasAtLeastOneLoginButton() {
     return findAll().length > 0;
   }
 
-  @discourseComputed("authOptions", "hasAtLeastOneLoginButton")
-  showRightSide(authOptions, hasAtLeastOneLoginButton) {
-    return !authOptions && hasAtLeastOneLoginButton;
+  @computed("authOptions", "hasAtLeastOneLoginButton")
+  get showRightSide() {
+    return !this.authOptions && this.hasAtLeastOneLoginButton;
   }
 
-  @discourseComputed("authOptions")
-  progressBarStep(authOptions) {
-    return authOptions ? "activate" : "signup";
+  @computed("authOptions")
+  get progressBarStep() {
+    return this.authOptions ? "activate" : "signup";
   }
 
   fetchConfirmationValue() {
@@ -512,14 +519,14 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
-  associateHtml(url, provider) {
-    if (!url) {
+  @computed("authOptions.associate_url", "authOptions.auth_provider")
+  get associateHtml() {
+    if (!this.authOptions?.associate_url) {
       return;
     }
     return i18n("create_account.associate", {
-      associate_link: url,
-      provider: i18n(`login.${provider}.name`),
+      associate_link: this.authOptions?.associate_url,
+      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
     });
   }
 
@@ -540,6 +547,12 @@ export default class SignupPageController extends Controller {
   externalLogin(provider) {
     // we will automatically redirect to the external auth service
     this.login.externalLogin(provider, { signup: true });
+  }
+
+  @action
+  goToLogin() {
+    const loginName = this.accountEmail || this.accountUsername;
+    this.send("showLogin", { loginName });
   }
 
   @action

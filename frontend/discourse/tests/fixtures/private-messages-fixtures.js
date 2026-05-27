@@ -1,4 +1,4 @@
-export default {
+const privateMessagesFixtures = {
   "/topics/private-messages/eviltrout.json": {
     users: [
       {
@@ -76,3 +76,5 @@ export default {
     },
   },
 };
+
+export default privateMessagesFixtures;

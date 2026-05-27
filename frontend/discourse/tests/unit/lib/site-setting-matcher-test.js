@@ -68,4 +68,29 @@ module("Unit | Lib | SiteSettingMatcher", function (hooks) {
     assert.true(matchingMatcher.isFuzzyNameMatch);
     assert.strictEqual(matchingMatcher.matchStrength, -1); // Smallest number of gaps.
   });
+
+  test("#isFuzzyNameMatch requires contiguous stripped query or sufficient matchStrength", function (assert) {
+    const teamsEnabled = SiteSetting.create({
+      setting: "chat_integration_teams_enabled",
+      description: "x",
+    });
+    const telegram = SiteSetting.create({
+      setting: "chat_integration_telegram_access_token",
+      description: "x",
+    });
+
+    const query = "chat_integration_teams";
+    const good = new SiteSettingMatcher(query, teamsEnabled);
+    const tooWeak = new SiteSettingMatcher(query, telegram);
+
+    assert.true(
+      good.isFuzzyNameMatch,
+      "name contains the full stripped query consecutively"
+    );
+
+    assert.false(
+      tooWeak.isFuzzyNameMatch,
+      "order-only match on a different long token is dropped"
+    );
+  });
 });

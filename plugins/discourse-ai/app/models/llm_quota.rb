@@ -70,13 +70,13 @@ end
 # Table name: llm_quotas
 #
 #  id               :bigint           not null, primary key
-#  group_id         :bigint           not null
-#  llm_model_id     :bigint           not null
+#  duration_seconds :integer          not null
 #  max_tokens       :integer
 #  max_usages       :integer
-#  duration_seconds :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  group_id         :bigint           not null
+#  llm_model_id     :bigint           not null
 #
 # Indexes
 #

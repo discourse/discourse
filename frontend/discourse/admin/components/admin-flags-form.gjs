@@ -146,9 +146,10 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.config_areas.flags.form.name"}}
                 @validation="required|length:3,200"
                 @format="large"
+                @type="input"
                 as |field|
               >
-                <field.Input />
+                <field.Control />
               </form.Field>
 
               <form.Field
@@ -156,9 +157,10 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.config_areas.flags.form.description"}}
                 @validation="required|length:3,1000"
                 @format="large"
+                @type="textarea"
                 as |field|
               >
-                <field.Textarea @height={{60}} />
+                <field.Control @height={{60}} />
               </form.Field>
 
               <form.Field
@@ -167,9 +169,10 @@ export default class AdminFlagsForm extends Component {
                 @validation="required"
                 @validate={{this.validateAppliesTo}}
                 @format="large"
+                @type="custom"
                 as |field|
               >
-                <field.Custom>
+                <field.Control>
                   <MultiSelect
                     @id={{field.id}}
                     @value={{field.value}}
@@ -178,7 +181,7 @@ export default class AdminFlagsForm extends Component {
                     @options={{hash allowAny=false}}
                     class="admin-flag-form__applies-to"
                   />
-                </field.Custom>
+                </field.Control>
               </form.Field>
 
               <form.CheckboxGroup as |checkboxGroup|>
@@ -188,22 +191,24 @@ export default class AdminFlagsForm extends Component {
                     "admin.config_areas.flags.form.require_message"
                   }}
                   @format="full"
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox>
+                  <field.Control>
                     {{i18n
                       "admin.config_areas.flags.form.require_message_description"
                     }}
-                  </field.Checkbox>
+                  </field.Control>
                 </checkboxGroup.Field>
 
                 <checkboxGroup.Field
                   @name="enabled"
                   @title={{i18n "admin.config_areas.flags.form.enabled"}}
                   @format="full"
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox />
+                  <field.Control />
                 </checkboxGroup.Field>
 
                 <checkboxGroup.Field
@@ -212,9 +217,10 @@ export default class AdminFlagsForm extends Component {
                     "admin.config_areas.flags.form.auto_action_type"
                   }}
                   @format="full"
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox />
+                  <field.Control />
                 </checkboxGroup.Field>
               </form.CheckboxGroup>
 

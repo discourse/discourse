@@ -1,7 +1,7 @@
-import EmberObject from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { tracked } from "@glimmer/tracking";
+import EmberObject, { computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ScreenedIpAddress extends EmberObject {
@@ -13,16 +13,21 @@ export default class ScreenedIpAddress extends EmberObject {
     );
   }
 
-  @equal("action_name", "block") isBlocked;
+  @tracked action_name;
 
-  @discourseComputed("action_name")
-  actionName(actionName) {
-    return i18n(`admin.logs.screened_ips.actions.${actionName}`);
+  @dependentKeyCompat
+  get isBlocked() {
+    return this.action_name === "block";
   }
 
-  @discourseComputed("ip_address")
-  isRange(ipAddress) {
-    return ipAddress.indexOf("/") > 0;
+  @computed("action_name")
+  get actionName() {
+    return i18n(`admin.logs.screened_ips.actions.${this.action_name}`);
+  }
+
+  @computed("ip_address")
+  get isRange() {
+    return this.ip_address.indexOf("/") > 0;
   }
 
   save() {

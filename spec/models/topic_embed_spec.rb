@@ -165,6 +165,21 @@ RSpec.describe TopicEmbed do
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
+      it "falls back to the url when the title is blank" do
+        blank_title_url = "http://eviltrout.com/blank-title"
+        imported_post = TopicEmbed.import(user, blank_title_url, "", contents)
+
+        expect(imported_post.topic.title).to eq(blank_title_url)
+      end
+
+      it "preserves an existing title when a later import has a blank title" do
+        imported_post = TopicEmbed.import(user, url, title, contents)
+
+        TopicEmbed.import(user, url, "", "<p>updated content</p>")
+
+        expect(imported_post.topic.reload.title).to eq(title)
+      end
+
       shared_examples "topic is unlisted" do
         it "unlists the topic until someone replies" do
           Jobs.run_immediately!
@@ -730,6 +745,36 @@ RSpec.describe TopicEmbed do
         expect { TopicEmbed.import_remote(url2, { title: title, user: user }) }.to_not change {
           Topic.all.count
         }
+      end
+    end
+
+    context "when canonical URL points to a different domain" do
+      fab!(:user)
+      let(:title) { "Some article title" }
+      let(:original_url) { "http://staging.example.com/article/123" }
+      let(:canonical_url) { "http://production.example.com/article/123" }
+      let(:original_content) do
+        "<head><link rel=\"canonical\" href=\"#{canonical_url}\"></head><body>Article content</body>"
+      end
+      let(:canonical_content) do
+        "<title>#{title}</title><body>Article content from canonical</body>"
+      end
+
+      before do
+        stub_request(:get, original_url).to_return(status: 200, body: original_content)
+        stub_request(:head, canonical_url)
+        stub_request(:get, canonical_url).to_return(status: 200, body: canonical_content)
+      end
+
+      it "stores the original URL as embed_url so embeds can be found" do
+        Jobs.run_immediately!
+        post = TopicEmbed.import_remote(original_url, { title: title, user: user })
+
+        topic_embed = TopicEmbed.find_by(topic_id: post.topic_id)
+        expect(topic_embed.embed_url).to include("staging.example.com")
+
+        found_topic_id = TopicEmbed.topic_id_for_embed(original_url)
+        expect(found_topic_id).to eq(post.topic_id)
       end
     end
   end

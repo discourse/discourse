@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class Collapser extends Component {
@@ -30,20 +30,20 @@ export default class Collapser extends Component {
       {{#if this.collapsed}}
         <DButton
           @action={{this.open}}
-          @icon="caret-right"
+          @icon="angle-right"
           class="chat-message-collapser-button chat-message-collapser-closed"
         />
       {{else}}
         <DButton
           @action={{this.close}}
-          @icon="caret-down"
+          @icon="angle-down"
           class="chat-message-collapser-button chat-message-collapser-opened"
         />
       {{/if}}
     </div>
 
     <div
-      class={{concatClass
+      class={{dConcatClass
         "chat-message-collapser-body"
         (if this.collapsed "hidden")
       }}

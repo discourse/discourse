@@ -8,6 +8,7 @@ module AdPlugin
       topic_above_suggested: "",
       post_bottom: "",
       topic_list_between: "",
+      nested_roots_between: "",
     }
 
     def self.all
@@ -37,11 +38,17 @@ module AdPlugin
           settings.merge(
             after_nth_post: SiteSetting.house_ads_after_nth_post,
             after_nth_topic: SiteSetting.house_ads_after_nth_topic,
+            after_nth_root: SiteSetting.house_ads_after_nth_root,
             house_ads_frequency: SiteSetting.house_ads_frequency,
           ),
         creatives:
           ads.inject({}) do |h, ad|
-            h[ad.name] = { html: ad.html, category_ids: ad.category_ids }
+            h[ad.name] = {
+              id: ad.id,
+              html: ad.html,
+              category_ids: ad.category_ids,
+              routes: ad.routes.pluck(:route_name),
+            }
             h
           end,
       }

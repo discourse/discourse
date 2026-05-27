@@ -85,7 +85,6 @@ done
 [[ ! -z "$mount_plugin_symlinks" ]] && echo "Mounting symlinks for plugins: ${mount_plugin_symlinks}"
 
 # 8025 mailhog
-# 3000 puma... if you must (but unicorn is preferred)
 # 9292 unicorn
 # 9405 prometheus exporter
 

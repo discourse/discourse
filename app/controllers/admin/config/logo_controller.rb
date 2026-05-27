@@ -20,7 +20,10 @@ class Admin::Config::LogoController < Admin::AdminController
         digest_logo
         opengraph_image
         x_summary_large_image
-      ].map { |setting| { setting_name: setting, value: params[setting] } }
+      ].filter_map do |setting|
+        next if SiteSetting.hidden_settings.include?(setting)
+        { setting_name: setting, value: params[setting] }
+      end
 
     SiteSetting::Update.call(guardian:, params: { settings: }) do
       on_success { render json: success_json }

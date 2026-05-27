@@ -8,7 +8,10 @@ ug:
   js:
     admin:
       rss_polling:
+        feed: مەنبە تەڭشىكى
+        discourse: Discourse تەڭشەك
         author: يازغۇچى
         feed_url: تور ئادرېسى
         discourse_category: سەھىپە
         discourse_tags: بەلگە
+        feed_category_filter: سەھىپە سۈزگۈچ

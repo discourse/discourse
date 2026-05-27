@@ -44,8 +44,6 @@ ur:
     chat_integration_rocketchat_webhook_url: "راکٹ چیٹ انٹیگریشن ویب ھُوک کیلئے یو آر ایل"
     chat_integration_rocketchat_excerpt_length: "راکٹ چَیٹ پوسٹ کے اقتباس کا سائز"
     chat_integration_gitter_enabled: "گِیٹر کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
-    chat_integration_flowdock_enabled: "فلَوڈَوک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
-    chat_integration_flowdock_excerpt_length: "فلَوڈَوک پوسٹ کے اقتباس کا سائز"
     chat_integration_google_enabled: "'گوگل چیٹ' چیٹ انٹیگریشن فراہم کنندہ کو فعال کریں"
   chat_integration:
     all_categories: "(تمام زمرہ جات)"
@@ -66,10 +64,8 @@ ur:
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
-          error: "معذرت، اصول بناتے ہوے ایک خرابی کا سامنا کرنا پڑا۔"
         delete:
           success: "اصول کامیای سے حذف کر لیا گیا"
-          error: "معذرت، اصول حذف کرتے ہوے ایک خرابی کا سامنا کرنا پڑا۔ اصولوں کی فہرست کیلئے `discourse status/` رَن کریں۔"
         not_found:
           tag: "ٹیگ *%{name}* تلاش نہیں کیا جا سکا۔"
           category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
@@ -102,10 +98,8 @@ ur:
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
-          error: "معذرت، اصول بناتے ہوے ایک خرابی کا سامنا کرنا پڑا۔"
         delete:
           success: "اصول کامیای سے حذف کر لیا گیا"
-          error: "معذرت، اصول حذف کرتے ہوے ایک خرابی کا سامنا کرنا پڑا۔ اصولوں کی فہرست کیلئے <code>status/</code> رَن کریں۔"
         not_found:
           tag: "ٹیگ <b>%{name}</b> تلاش نہیں کیا جا سکا۔"
           category: "زُمرہ <b>%{name}</b> تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: <b>%{list}</b>"
@@ -136,10 +130,8 @@ ur:
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
-          error: "معذرت، اصول بناتے ہوے ایک خرابی کا سامنا کرنا پڑا۔"
         delete:
           success: "اصول کامیای سے حذف کر لیا گیا"
-          error: "معذرت، اصول حذف کرتے ہوے ایک خرابی کا سامنا کرنا پڑا۔ اصولوں کی فہرست کیلئے `discourse status/` رَن کریں۔"
         not_found:
           tag: "ٹیگ *%{name}* تلاش نہیں کیا جا سکا۔"
           category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
@@ -169,5 +161,3 @@ ur:
           ~~~اقتباس
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "پوسٹ کیا"

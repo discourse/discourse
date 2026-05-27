@@ -20,7 +20,7 @@ class DraftSequence < ActiveRecord::Base
         RETURNING sequence
       SQL
 
-    Draft.where(user_id: user_id).where(draft_key: key).where("sequence < ?", sequence).destroy_all
+    Draft.where(user_id: user_id, draft_key: key).destroy_all
 
     UserStat.update_draft_count(user_id)
 
@@ -51,9 +51,9 @@ end
 # Table name: draft_sequences
 #
 #  id        :integer          not null, primary key
-#  user_id   :integer          not null
 #  draft_key :string           not null
 #  sequence  :bigint           not null
+#  user_id   :integer          not null
 #
 # Indexes
 #

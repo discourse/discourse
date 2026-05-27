@@ -1,4 +1,4 @@
-export default {
+const discoveryFixtures = {
   "/latest.json": {
     users: [
       { id: 7204, username: "reyman64", avatar_template: "/images/avatar.png" },
@@ -6655,3 +6655,5 @@ export default {
     },
   },
 };
+
+export default discoveryFixtures;

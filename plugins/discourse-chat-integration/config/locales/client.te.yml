@@ -8,6 +8,7 @@ te:
   js:
     chat_integration:
       settings: "అమరికలు"
+      more_providers: "ఇంకా"
       all_categories: "(అన్ని వర్గాలు)"
       delete_channel: "తొలగించండి"
       test_channel: "పరీక్షించండి"

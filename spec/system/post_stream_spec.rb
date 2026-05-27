@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post stream", type: :system do
+describe "Post stream" do
   fab!(:user)
   fab!(:admin)
 
@@ -49,6 +49,31 @@ describe "Post stream", type: :system do
         post_number: reply.post_number,
         content: "This is an edited reply",
       )
+    end
+  end
+
+  context "when hiding scrollable content" do
+    let!(:topic) { Fabricate(:topic) }
+    let!(:posts) { Fabricate.times(60, :post, topic: topic) }
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+
+    before { sign_in(user) }
+
+    it "hides and shows content above the post stream based on loaded posts" do
+      topic_page.visit_topic(topic, post_number: 30)
+      expect(page).to have_css("[data-post-number='30']")
+      expect(page).to have_no_css("#main-container")
+
+      topic_page.visit_topic(topic, post_number: 1)
+      expect(page).to have_css("[data-post-number='1']")
+      expect(page).to have_css("#main-container")
+
+      topic_page.visit_topic(topic, post_number: 30)
+      expect(page).to have_css("[data-post-number='30']")
+      expect(page).to have_no_css("#main-container")
+
+      visit "/"
+      expect(page).to have_css("#main-container")
     end
   end
 

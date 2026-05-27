@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    enable_login_with_amazon: "Az Amazon-alapú bejelentkezés engedélyezése; használatához szükséges a login with amazon client id és a login with amazon client secret megadása."
+    login_with_amazon_client_id: "Bejelentkezés Amazon ügyfél-azonosítóval"
+    login_with_amazon_client_secret: "Bejelentkezés Amazon kliens titkos adatával"
+    login_with_amazon_scope: "Bejelentkezés Amazon OAuth2 hatókörökkel (szóközökkel elválasztva)"
+    login_with_amazon_overrides_email: "Felülírja a Discourse felhasználói fiókhoz tartozó e-mail címet."
+    login_with_amazon_user_can_connect: "Engedélyezze a meglévő felhasználóknak, hogy Amazon-fiókjukat összekapcsolják a beállításokban."
+    login_with_amazon_user_can_revoke: "Lehetővé teszi a felhasználók számára, hogy visszavonják a hozzájuk tartozó Amazon-fiókjukat a beállításokban."
+    errors:
+      login_with_amazon_client_id_is_blank: "A beállítás engedélyezése előtt be kell állítania a „bejelentkezés Amazon kliensazonosítóval” lehetőséget."
+      login_with_amazon_client_secret_is_blank: "A beállítás engedélyezése előtt be kell állítania a „bejelentkezés Amazon kliensazonosítóval” lehetőséget."

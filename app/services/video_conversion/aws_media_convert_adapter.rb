@@ -133,7 +133,7 @@ module VideoConversion
           create_optimized_video_record(output_path, new_sha1, filesize, url, etag: etag)
 
         if optimized_video
-          update_posts_with_optimized_video
+          update_posts_with_optimized_video(optimized_video)
           true
         else
           Rails.logger.error("Failed to create OptimizedVideo record for upload #{@upload.id}")
@@ -196,12 +196,33 @@ module VideoConversion
           [nil, nil]
         end
 
+        # Log ACL settings for debugging
+        if copy_options[:acl].present?
+          Rails.logger.debug(
+            "MediaConvert copied file with ACL: #{copy_options[:acl]} (secure: #{@upload.secure?}) for upload #{@upload.id}",
+          )
+        end
+
         [destination_path, etag]
       rescue Aws::S3::Errors::NotFound => e
         Rails.logger.error(
           "MediaConvert copy failed - source or destination not found: #{e.message} (source: #{temp_path}, destination: #{destination_path}) for upload #{@upload.id}",
         )
         [nil, nil]
+      rescue Aws::S3::Errors::AccessDenied, Aws::S3::Errors::Forbidden => e
+        # Copy failed due to permissions - this is critical
+        Discourse.warn_exception(
+          e,
+          message: "MediaConvert copy failed due to permissions - ACL may not be applied",
+          env: {
+            upload_id: @upload.id,
+            temp_path: temp_path,
+            destination_path: destination_path,
+            secure: @upload.secure?,
+            copy_options: copy_options,
+          },
+        )
+        raise
       rescue => e
         Rails.logger.error(
           "MediaConvert copy failed: #{e.class.name} - #{e.message} (source: #{temp_path}, destination: #{destination_path}) for upload #{@upload.id}",
@@ -211,14 +232,37 @@ module VideoConversion
     end
 
     def update_file_acl(s3_store, destination_path)
-      begin
-        s3_store.update_file_access_control(destination_path, @upload.secure?)
-      rescue Aws::S3::Errors::NotFound => e
-        Rails.logger.error(
-          "MediaConvert file not found when updating access control at #{destination_path} for upload #{@upload.id}: #{e.message}",
-        )
-        raise
-      end
+      s3_store.update_file_access_control(destination_path, @upload.secure?)
+    rescue Aws::S3::Errors::NotFound => e
+      Rails.logger.error(
+        "MediaConvert file not found when updating access control at #{destination_path} for upload #{@upload.id}: #{e.message}",
+      )
+      raise
+    rescue Aws::S3::Errors::AccessDenied, Aws::S3::Errors::Forbidden => e
+      # ACL update failed due to permissions - this is critical as it will cause 403s
+      Discourse.warn_exception(
+        e,
+        message: "MediaConvert ACL update failed due to permissions - file may be inaccessible",
+        env: {
+          upload_id: @upload.id,
+          destination_path: destination_path,
+          secure: @upload.secure?,
+        },
+      )
+      raise
+    rescue Aws::S3::Errors::ServiceError => e
+      # Catch other AWS S3 errors that might prevent ACL from being set
+      Discourse.warn_exception(
+        e,
+        message: "MediaConvert ACL update failed with AWS error",
+        env: {
+          upload_id: @upload.id,
+          destination_path: destination_path,
+          secure: @upload.secure?,
+          error_code: e.code,
+        },
+      )
+      raise
     end
 
     def remove_temp_file(s3_store, temp_path)
@@ -303,26 +347,10 @@ module VideoConversion
     def create_basic_client(endpoint: nil)
       client_options = { region: SiteSetting.s3_region }
       client_options[:endpoint] = endpoint if endpoint.present?
-
-      if !SiteSetting.s3_use_iam_profile
-        client_options[:credentials] = Aws::Credentials.new(
-          SiteSetting.s3_access_key_id,
-          SiteSetting.s3_secret_access_key,
-        )
-      end
+      creds = S3Helper.s3_credentials(SiteSetting)
+      client_options[:credentials] = creds if creds
 
       Aws::MediaConvert::Client.new(client_options)
-    end
-
-    def update_posts_with_optimized_video
-      post_ids = UploadReference.where(upload_id: @upload.id, target_type: "Post").pluck(:target_id)
-
-      Post
-        .where(id: post_ids)
-        .find_each do |post|
-          Rails.logger.info("Rebaking post #{post.id} to use optimized video")
-          post.rebake!
-        end
     end
 
     def s3_upload_bucket

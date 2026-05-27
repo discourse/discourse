@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -96,6 +96,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
                 href = "https://www.discourse.org";
                 title = "Homepage";
                 text = "Homepage";
+                hoverType = "icon";
+                hoverValue = "trash-can";
+                hoverAction = () => {};
+                hoverTitle = "href hover button title";
               })(),
             ];
             willDestroy = () => (sectionDestroy = "section test");
@@ -250,11 +254,23 @@ acceptance("Sidebar - Plugin API", function (needs) {
       );
 
     assert
-      .dom(".sidebar-section-link-hover button")
+      .dom(
+        ".sidebar-section-link[data-link-name='fun-channel'] .sidebar-section-link-hover button"
+      )
       .hasAttribute(
         "title",
         "hover button title attribute",
-        "displays hover button with correct title"
+        "displays hover button for route link"
+      );
+
+    assert
+      .dom(
+        ".sidebar-section-link[data-link-name='homepage'] .sidebar-section-link-hover button"
+      )
+      .hasAttribute(
+        "title",
+        "href hover button title",
+        "displays hover button for href link"
       );
 
     await click(".btn-sidebar-toggle");
@@ -565,9 +581,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
         updateCurrentUser({
           display_sidebar_tags: true,
           sidebar_tags: [
-            { name: "tag2", pm_only: false },
-            { name: "tag1", pm_only: false },
-            { name: "tag3", pm_only: false },
+            { id: 2, name: "tag2", slug: "tag2", pm_only: false },
+            { id: 1, name: "tag1", slug: "tag1", pm_only: false },
+            { id: 3, name: "tag3", slug: "tag3", pm_only: false },
           ],
         });
 
@@ -931,5 +947,59 @@ acceptance("Sidebar - Plugin API", function (needs) {
       searchLinkOffsetTop < sidebarScrollTop + sidebarHeight,
       "the link is into view"
     );
+  });
+
+  test("filtering does not crash when a custom sidebar section link has no keywords getter", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        return class extends BaseCustomSidebarPanel {
+          key = "filterable-panel";
+          switchButtonLabel = "Filterable panel";
+          switchButtonIcon = "d-chat";
+          switchButtonDefaultUrl = "/";
+          displayHeader = true;
+
+          get filterable() {
+            return true;
+          }
+        };
+      });
+
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-section";
+            text = "test section text";
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "test-link";
+                href = "/";
+                title = "Test Link";
+                text = "Test Link Text";
+              })(),
+            ];
+          };
+        },
+        "filterable-panel"
+      );
+
+      api.setSeparatedSidebarMode();
+      api.setSidebarPanel("filterable-panel");
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-filter__input")
+      .exists("filter input is visible for filterable panel");
+
+    // Use a filter that doesn't match the link text so keywords.navigation is accessed
+    await fillIn(".sidebar-filter__input", "nomatch");
+
+    assert
+      .dom(".sidebar-section-link-wrapper[data-list-item-name='test-link']")
+      .doesNotExist(
+        "section link is filtered out (no crash accessing keywords)"
+      );
   });
 });

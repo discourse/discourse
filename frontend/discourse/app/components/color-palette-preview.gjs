@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import SvgSingleColorPalettePlaceholder from "discourse/components/svg/single-color-palette-placeholder";
 import { getColorSchemeStyles } from "discourse/lib/color-transformations";
 
@@ -14,7 +14,7 @@ export default class ColorPalettePreview extends Component {
 
   get styles() {
     if (this.isBuiltInDefault) {
-      return htmlSafe(
+      return trustHTML(
         "--primary-low--preview: #e9e9e9; --tertiary-low--preview: #d1f0ff;"
       );
     }
@@ -42,7 +42,7 @@ export default class ColorPalettePreview extends Component {
       ? `${existingStyles} ${colorVariables};`
       : existingStyles;
 
-    return htmlSafe(allStyles);
+    return trustHTML(allStyles);
   }
 
   <template>

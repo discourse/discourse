@@ -1,15 +1,15 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { computed, get } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("")
 @selectKitPropUtils
@@ -21,12 +21,24 @@ export default class SelectedName extends Component {
   headerLabel = null;
   id = null;
 
-  @reads("headerLang") lang;
+  @tracked _langOverride;
 
   init() {
     super.init(...arguments);
 
     this.set("id", guidFor(this));
+  }
+
+  @computed("headerLang")
+  get lang() {
+    if (this._langOverride !== undefined) {
+      return this._langOverride;
+    }
+    return this.headerLang;
+  }
+
+  set lang(value) {
+    this._langOverride = value;
   }
 
   didReceiveAttrs() {
@@ -114,7 +126,7 @@ export default class SelectedName extends Component {
         {{/if}}
 
         {{#if (and this.renderIcon this.item.icon)}}
-          {{icon this.item.icon}}
+          {{dIcon this.item.icon}}
         {{/if}}
 
         <span class="name">
@@ -136,7 +148,7 @@ export default class SelectedName extends Component {
           lang={{this.lang}}
           class="select-kit-selected-name selected-name choice"
         >
-          {{icon this.item.icon}}
+          {{dIcon this.item.icon}}
         </div>
       {{/if}}
     {{/if}}

@@ -4,19 +4,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe, isHTMLSafe } from "@ember/template";
+import { isHTMLSafe, trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import {
@@ -30,6 +25,12 @@ import {
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { and, eq } from "discourse/truth-helpers";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class Item extends Component {
@@ -60,7 +61,19 @@ export default class Item extends Component {
   }
 
   get tagClassNames() {
-    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
+    return this.args.topic.tags?.map((tag) => {
+      const tagName = typeof tag === "string" ? tag : tag.name;
+      return `tag-${tagName}`;
+    });
+  }
+
+  get #transformerContext() {
+    return {
+      topic: this.args.topic,
+      index: this.args.index,
+      listContext: this.args.listContext,
+      category: this.args.category,
+    };
   }
 
   get expandPinned() {
@@ -80,7 +93,7 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-expand-pinned",
       expandPinned,
-      { topic: this.args.topic, mobileView: this.useMobileLayout }
+      { ...this.#transformerContext, mobileView: this.useMobileLayout }
     );
   }
 
@@ -161,7 +174,8 @@ export default class Item extends Component {
 
   @action
   click(event) {
-    if (this.args.bulkSelectEnabled) {
+    // when in bulk select mode, select/unselect the row (except when ctrl/meta+clicking)
+    if (this.args.bulkSelectEnabled && !wantsNewWindow(event)) {
       event.preventDefault();
 
       const topicNode = event.target.closest(".topic-list-item");
@@ -211,6 +225,7 @@ export default class Item extends Component {
       {
         event,
         topic: this.args.topic,
+        listContext: this.args.listContext,
         navigateToTopic: this.navigateToTopic,
       }
     );
@@ -218,13 +233,11 @@ export default class Item extends Component {
 
   @action
   keyDown(event) {
-    if (
-      event.key === "Enter" &&
-      (event.target.classList.contains("post-activity") ||
-        event.target.classList.contains("badge-posts"))
-    ) {
+    // We only handle cmd/meta+Enter to open topic in a new window here
+    // Simple Enter event for topic list is handled in keyboard-shortcuts (which triggers click() event)
+    if (event.key === "Enter" && wantsNewWindow(event)) {
       event.preventDefault();
-      this.navigateToTopic(this.args.topic, event.target.href);
+      window.open(this.args.topic.lastUnreadUrl, "_blank");
     }
   }
 
@@ -232,22 +245,24 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-mobile-layout",
       this.site.mobileView,
-      { topic: this.args.topic }
+      this.#transformerContext
     );
   }
 
   get additionalClasses() {
-    return applyValueTransformer("topic-list-item-class", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-    });
+    return applyValueTransformer(
+      "topic-list-item-class",
+      [],
+      this.#transformerContext
+    );
   }
 
   get style() {
-    const parts = applyValueTransformer("topic-list-item-style", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-    });
+    const parts = applyValueTransformer(
+      "topic-list-item-style",
+      [],
+      this.#transformerContext
+    );
 
     const safeParts = parts.filter(Boolean).filter((part) => {
       if (isHTMLSafe(part)) {
@@ -261,13 +276,13 @@ export default class Item extends Component {
     });
 
     if (safeParts.length) {
-      return htmlSafe(safeParts.join("\n"));
+      return trustHTML(safeParts.join("\n"));
     }
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <tr
-      {{! template-lint-disable no-invalid-interactive }}
       {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
@@ -275,7 +290,7 @@ export default class Item extends Component {
       data-topic-id={{@topic.id}}
       role={{this.role}}
       aria-level={{this.ariaLevel}}
-      class={{concatClass
+      class={{dConcatClass
         "topic-list-item"
         (if @topic.category (concat "category-" @topic.category.fullSlug))
         (if (eq @topic @lastVisitedTopic) "last-visit")
@@ -316,38 +331,34 @@ export default class Item extends Component {
       >
         {{#if this.useMobileLayout}}
           <td
-            class={{concatClass
+            class={{dConcatClass
               "topic-list-data"
               (if @bulkSelectEnabled "bulk-select-enabled")
             }}
           >
             <div class="pull-left">
               {{#if @bulkSelectEnabled}}
-                <label for="bulk-select-{{@topic.id}}">
-                  <input
-                    {{on "click" this.onBulkSelectToggle}}
-                    checked={{this.isSelected}}
-                    type="checkbox"
-                    id="bulk-select-{{@topic.id}}"
-                    class="bulk-select"
-                  />
-                </label>
+                <BulkSelectCheckbox
+                  @topic={{@topic}}
+                  @isSelected={{this.isSelected}}
+                  @onToggle={{this.onBulkSelectToggle}}
+                />
               {{else}}
                 <PluginOutlet
                   @name="topic-list-item-mobile-avatar"
                   @outletArgs={{lazyHash topic=@topic}}
                 >
-                  <UserLink
+                  <DUserLink
                     @ariaLabel={{i18n
                       "latest_poster_link"
                       username=@topic.lastPosterUser.username
                     }}
                     @username={{@topic.lastPosterUser.username}}
                   >
-                    {{avatar
+                    {{dAvatar
                       @topic.lastPosterUser
                       imageSize="large"
-                    }}</UserLink>
+                    }}</DUserLink>
                 </PluginOutlet>
               {{/if}}
             </div>
@@ -422,7 +433,7 @@ export default class Item extends Component {
                       @name="topic-list-before-category"
                       @outletArgs={{lazyHash topic=@topic}}
                     />
-                    {{categoryLink @topic.category}}
+                    {{dCategoryLink @topic.category}}
                     {{~! no whitespace ~}}
                     <PluginOutlet
                       @name="topic-list-after-category"
@@ -430,7 +441,7 @@ export default class Item extends Component {
                     />{{~! no whitespace ~}}
                   {{/unless}}
                   {{~! no whitespace ~}}
-                  {{discourseTags @topic mode="list"}}
+                  {{dDiscourseTags @topic mode="list"}}
                 </span>
 
                 <div class="num activity last">
@@ -439,7 +450,7 @@ export default class Item extends Component {
                     @outletArgs={{lazyHash topic=@topic}}
                   >
                     <span title={{@topic.bumpedAtTitle}} class="age activity">
-                      <a href={{@topic.lastPostUrl}}>{{formatDate
+                      <a href={{@topic.lastPostUrl}}>{{dFormatDate
                           @topic.bumpedAt
                           format="tiny"
                           noTitle="true"

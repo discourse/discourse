@@ -44,8 +44,6 @@ ca:
     chat_integration_rocketchat_webhook_url: "L'URL per al webhook d'integració de Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Longitud de l'extracte de publicació de Rocket Chat"
     chat_integration_gitter_enabled: "Habilita el proveïdor d'integració de xat de Gitter"
-    chat_integration_flowdock_enabled: "Habiliteu el proveïdor de la integració de xat de Flowdock"
-    chat_integration_flowdock_excerpt_length: "Longitud de l'extracte de publicació de Flowdock"
   chat_integration:
     all_categories: "(totes les categories)"
     deleted_category: "(categoria suprimida)"
@@ -65,10 +63,8 @@ ca:
         create:
           created: "Regla creada amb èxit"
           updated: "Regla actualitzada amb èxit"
-          error: "Ho sentim. Hi ha hagut un error en crear-se la regla."
         delete:
           success: "Regla suprimida amb èxit"
-          error: "Ho sentim, s'ha produït un error en esborrar aquesta regla. Executeu `/discourse status` per a veure una llista de regles."
         not_found:
           tag: "No es pot trobar l'etiqueta *%{name}*."
           category: "No es pot trobar la categoria *%{name}*. Categories disponibles: *%{list}*"
@@ -101,10 +97,8 @@ ca:
         create:
           created: "Regla creada amb èxit"
           updated: "Regla actualitzada amb èxit"
-          error: "Ho sentim. Hi ha hagut un error en crear-se la regla."
         delete:
           success: "Regla suprimida amb èxit"
-          error: "Ho sentim, s'ha produït un error en esborrar aquesta regla. Executa <code>/status</code> per a una llista de regles."
         not_found:
           tag: "No es pot trobar l'etiqueta <b>%{name}</b>."
           category: "No es pot trobar la categoria <b>%{name}</b>. Categories disponibles: <b>%{list}</b>"
@@ -135,10 +129,8 @@ ca:
         create:
           created: "Regla creada amb èxit"
           updated: "Regla actualitzada amb èxit"
-          error: "Ho sentim. Hi ha hagut un error en crear-se la regla."
         delete:
           success: "Regla suprimida amb èxit"
-          error: "Ho sentim, s'ha produït un error en esborrar aquesta regla. Executeu `/discourse status` per a veure una llista de regles."
         not_found:
           tag: "No es pot trobar l'etiqueta *%{name}*."
           category: "No es pot trobar la categoria *%{name}*. Categories disponibles: *%{list}*"
@@ -168,5 +160,3 @@ ca:
           ~~~citació
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "publicat"

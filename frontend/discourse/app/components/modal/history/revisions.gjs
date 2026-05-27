@@ -4,14 +4,15 @@ import EmberObject from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import Avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function tagClasses(tagChanges, state, className) {
@@ -23,6 +24,7 @@ function tagClasses(tagChanges, state, className) {
   }, {});
 }
 
+@tagName("")
 export default class Revisions extends Component {
   @service languageNameLookup;
 
@@ -64,12 +66,13 @@ export default class Revisions extends Component {
       id="revisions"
       data-post-id={{@model.post_id}}
       class={{@hiddenClasses}}
+      ...attributes
     >
       {{#if @model.locale_changes}}
         <div class="row revision__locale">
-          <div class="revision-content">
+          <div class="revision-content --previous">
             <div class={{if @model.locale_changes.previous "diff-del"}}>
-              {{icon "globe"}}
+              {{dIcon "globe"}}
               {{this.previousLocale}}
             </div>
           </div>
@@ -78,9 +81,9 @@ export default class Revisions extends Component {
             &rarr;&nbsp;
           {{/if}}
 
-          <div class="revision-content">
+          <div class="revision-content --current">
             <div class={{if @model.locale_changes.current "diff-ins"}}>
-              {{icon "globe"}}
+              {{dIcon "globe"}}
               {{this.currentLocale}}
             </div>
           </div>
@@ -88,22 +91,66 @@ export default class Revisions extends Component {
       {{/if}}
       {{#if @model.title_changes}}
         <div class="row">
-          <h2 class="revision__title">{{htmlSafe @titleDiff}}</h2>
+          <h2 class="revision__title">{{trustHTML @titleDiff}}</h2>
         </div>
       {{/if}}
       {{#if @mobileView}}
         {{#if @userChanges}}
           <div class="row">
-            {{Avatar @model.user_changes.previous.avatar_template "small"}}
+            {{dBoundAvatarTemplate
+              @model.user_changes.previous.avatar_template
+              "small"
+            }}
             {{@model.user_changes.previous.username}}
             &rarr;
-            {{Avatar @model.user_changes.current.avatar_template "small"}}
+            {{dBoundAvatarTemplate
+              @model.user_changes.current.avatar_template
+              "small"
+            }}
             {{@model.user_changes.current.username}}
+          </div>
+        {{/if}}
+        {{#if @model.reply_to_post_number_changes}}
+          <div class="row reply-to-changes">
+            {{dIcon "share"}}
+            {{#if @model.reply_to_post_number_changes.previous}}
+              #{{@model.reply_to_post_number_changes.previous.post_number}}
+              {{#if
+                @model.reply_to_post_number_changes.previous.avatar_template
+              }}
+                {{dBoundAvatarTemplate
+                  @model.reply_to_post_number_changes.previous.avatar_template
+                  "small"
+                }}
+                {{@model.reply_to_post_number_changes.previous.username}}
+              {{/if}}
+            {{else}}
+              <span class="diff-del">{{i18n
+                  "post.revisions.reply_to.none"
+                }}</span>
+            {{/if}}
+            &rarr;
+            {{#if @model.reply_to_post_number_changes.current}}
+              #{{@model.reply_to_post_number_changes.current.post_number}}
+              {{#if
+                @model.reply_to_post_number_changes.current.avatar_template
+              }}
+                {{dBoundAvatarTemplate
+                  @model.reply_to_post_number_changes.current.avatar_template
+                  "small"
+                }}
+                {{@model.reply_to_post_number_changes.current.username}}
+              {{/if}}
+            {{else}}
+              <span class="diff-ins">{{i18n
+                  "post.revisions.reply_to.none"
+                }}</span>
+            {{/if}}
           </div>
         {{/if}}
         {{#if @model.wiki_changes}}
           <div class="row">
-            {{icon
+            {{dIcon
               "far-pen-to-square"
               class=(if @model.wiki_changes.current "diff-ins" "diff-del")
             }}
@@ -111,7 +158,7 @@ export default class Revisions extends Component {
         {{/if}}
         {{#if @model.archetype_changes}}
           <div class="row">
-            {{icon
+            {{dIcon
               (if
                 (eq @model.archetype_changes.current "private_message")
                 "envelope"
@@ -123,23 +170,23 @@ export default class Revisions extends Component {
         {{#if (and @model.category_id_changes (not @model.archetype_changes))}}
           <div class="row">
             {{#if @previousCategory}}
-              {{htmlSafe @previousCategory}}
+              {{trustHTML @previousCategory}}
             {{else}}
-              {{icon "far-eye-slash" class="diff-del"}}
+              {{dIcon "far-eye-slash" class="diff-del"}}
             {{/if}}
             &rarr;
             {{#if @currentCategory}}
-              {{htmlSafe @currentCategory}}
+              {{trustHTML @currentCategory}}
             {{else}}
-              {{icon "far-eye-slash" class="diff-ins"}}
+              {{dIcon "far-eye-slash" class="diff-ins"}}
             {{/if}}
           </div>
         {{/if}}
       {{/if}}
       {{#if @model.tags_changes}}
         <div class="row -tag-revisions">
-          <span class="tag-revision__wrapper">
-            {{discourseTags
+          <span class="tag-revision__wrapper --previous">
+            {{dDiscourseTags
               this.fakePreviousTagsTopic
               tagClasses=this.previousTagClassesMap
             }}
@@ -149,8 +196,8 @@ export default class Revisions extends Component {
             &rarr;&nbsp;
           {{/if}}
 
-          <span class="tag-revision__wrapper">
-            {{discourseTags
+          <span class="tag-revision__wrapper --current">
+            {{dDiscourseTags
               this.fakeCurrentTagsTopic
               tagClasses=this.currentTagClassesMap
             }}
@@ -178,7 +225,7 @@ export default class Revisions extends Component {
         {{didUpdate @calculateBodyDiff @bodyDiffHTML}}
         class="row body-diff"
       >
-        {{htmlSafe @bodyDiff}}
+        {{trustHTML @bodyDiff}}
       </LinksRedirect>
     </div>
   </template>

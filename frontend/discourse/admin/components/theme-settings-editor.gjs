@@ -1,11 +1,12 @@
+/* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AceEditor from "discourse/components/ace-editor";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ThemeSettingsEditor extends Component {
@@ -220,7 +221,7 @@ export default class ThemeSettingsEditor extends Component {
 
         {{#each this.errors as |error|}}
           <div class="validation-error">
-            {{icon "xmark"}}
+            {{dIcon "xmark"}}
             <b>{{error.setting}}</b>:
             {{error.errorMessage}}
           </div>

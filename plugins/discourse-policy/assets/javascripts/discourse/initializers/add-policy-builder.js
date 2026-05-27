@@ -3,7 +3,6 @@ import PolicyBuilder from "../components/modal/policy-builder";
 
 function initializePolicyBuilder(api, container) {
   const currentUser = api.getCurrentUser();
-  const siteSettings = container.lookup("service:site-settings");
   const modal = container.lookup("service:modal");
 
   if (currentUser) {
@@ -20,8 +19,7 @@ function initializePolicyBuilder(api, container) {
           },
         });
       },
-      condition: () =>
-        !siteSettings.policy_restrict_to_staff_posts || currentUser.staff,
+      condition: () => currentUser.can_create_policy,
     });
   }
 }

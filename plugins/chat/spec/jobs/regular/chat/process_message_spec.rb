@@ -31,4 +31,70 @@ describe Jobs::Chat::ProcessMessage do
     chat_message.destroy
     expect { described_class.new.execute(chat_message_id: chat_message.id) }.not_to raise_exception
   end
+
+  it "extracts links from the message" do
+    described_class.new.execute(chat_message_id: chat_message.id)
+
+    link = Chat::MessageLink.find_by(chat_message_id: chat_message.id)
+    expect(link).to be_present
+    expect(link.url).to eq("https://discourse.org/team")
+  end
+
+  describe "invalidate_oneboxes" do
+    it "invalidates cached oneboxes and fetches fresh content" do
+      # Process the message once to populate the onebox cache
+      described_class.new.execute(chat_message_id: chat_message.id)
+      original_cooked = chat_message.reload.cooked
+      expect(original_cooked).to include("discourse.org")
+
+      # Update the stub to return different content
+      stub_request(:get, "https://discourse.org/team").to_return(
+        status: 200,
+        body: "<html><head><title>Updated Title</title></head></html>",
+      )
+
+      # Rebake with invalidate_oneboxes: true - this should fetch fresh content
+      described_class.new.execute(chat_message_id: chat_message.id, invalidate_oneboxes: true)
+      new_cooked = chat_message.reload.cooked
+      expect(new_cooked).to include("Updated Title")
+    end
+  end
+
+  describe "skip_notifications" do
+    fab!(:user)
+    fab!(:mentioned_user, :user)
+    fab!(:chat_channel)
+    fab!(:message_with_mention) do
+      Fabricate(:chat_message, chat_channel:, user:, message: "Hey @#{mentioned_user.username}!")
+    end
+
+    before do
+      chat_channel.add(user)
+      chat_channel.add(mentioned_user)
+    end
+
+    it "sends notifications by default" do
+      expect_enqueued_with(job: Jobs::Chat::NotifyMentioned) do
+        described_class.new.execute(chat_message_id: message_with_mention.id)
+      end
+    end
+
+    it "skips notifications when skip_notifications is true" do
+      expect_not_enqueued_with(job: Jobs::Chat::NotifyMentioned) do
+        described_class.new.execute(
+          chat_message_id: message_with_mention.id,
+          skip_notifications: true,
+        )
+      end
+    end
+
+    it "skips watching notifications when skip_notifications is true" do
+      expect_not_enqueued_with(job: Jobs::Chat::NotifyWatching) do
+        described_class.new.execute(
+          chat_message_id: message_with_mention.id,
+          skip_notifications: true,
+        )
+      end
+    end
+  end
 end

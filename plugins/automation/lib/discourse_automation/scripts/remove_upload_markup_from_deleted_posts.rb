@@ -16,9 +16,12 @@ DiscourseAutomation::Scriptable.add(
     edit_reason =
       I18n.t("discourse_automation.scriptables.remove_upload_markup_from_deleted_posts.edit_reason")
 
-    # it matches both ![alt|size](upload://key) and [small.pdf|attachment](upload://key.pdf) (Number Bytes)
+    # it matches:
+    #  ![alt|size](upload://key)
+    #  [small.pdf|attachment](upload://key.pdf) (Number Bytes)
+    #  ![](upload://key.png)
     upload_and_attachment_regex =
-      %r{!?\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)[^)]*\)(?:\s*\([^)]*\))?}
+      %r{!?\[([^\]|]*)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)[^)]*\)(?:\s*\([^)]*\))?}
 
     Post
       .with_deleted
@@ -29,6 +32,15 @@ DiscourseAutomation::Scriptable.add(
         "LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = 'uploads_removed_at'",
       )
       .where("post_custom_fields.post_id IS NULL")
+      .where(
+        "NOT EXISTS (
+          SELECT 1 FROM reviewables
+          WHERE reviewables.target_id = posts.id
+          AND reviewables.target_type = 'Post'
+          AND reviewables.status = ?
+        )",
+        Reviewable.statuses[:pending],
+      )
       .distinct
       .limit(DiscourseAutomation::REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE)
       .each do |post|

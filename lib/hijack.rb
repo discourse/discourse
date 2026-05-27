@@ -57,7 +57,7 @@ module Hijack
           # this trick avoids double render, also avoids any litter that the controller hooks
           # place on the response
           instance = controller_class.new
-          response = ActionDispatch::Response.new.tap { _1.request = request_copy }
+          response = ActionDispatch::Response.new.tap { it.request = request_copy }
           instance.set_response!(response)
           instance.set_request!(request_copy)
 
@@ -106,7 +106,7 @@ module Hijack
 
           io.write "\r\n"
           io.write body
-        rescue Errno::EPIPE, IOError
+        rescue Errno::EPIPE, Errno::ECONNRESET, IOError
           # happens if client terminated before we responded, ignore
           io = nil
         ensure

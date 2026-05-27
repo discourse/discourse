@@ -62,6 +62,20 @@ RSpec.describe Chat::AddUsersToChannel do
         )
       end
 
+      it "does not include users from groups the acting user cannot see" do
+        secret_group =
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:staff],
+            members_visibility_level: Group.visibility_levels[:staff],
+          )
+        secret_user = Fabricate(:user)
+        secret_group.add(secret_user)
+
+        params.merge!(groups: [secret_group.name])
+        expect(result.target_users.map(&:username)).not_to include(secret_user.username)
+      end
+
       context "with user count validation" do
         before { SiteSetting.chat_max_direct_message_users = 8 }
 
@@ -129,6 +143,16 @@ RSpec.describe Chat::AddUsersToChannel do
         it "only notifies the newly added users" do
           expect(result.added_user_ids).to eq users.last(2).map(&:id)
         end
+
+        it "respects membership settings for existing users" do
+          membership = channel.user_chat_channel_memberships.find_by(user: users.first)
+          membership.update!(
+            muted: true,
+            notification_level: ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention],
+          )
+
+          expect { result }.not_to change { membership.reload.attributes }
+        end
       end
     end
 
@@ -192,6 +216,63 @@ RSpec.describe Chat::AddUsersToChannel do
       fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
+    end
+
+    context "when the actor is not allowing anyone to message them" do
+      before do
+        channel.add(current_user)
+        current_user.user_option.update!(allow_private_messages: false)
+      end
+
+      it { is_expected.to fail_a_policy(:actor_allows_dms) }
+    end
+
+    context "when one of the target users is ignoring the current user" do
+      before do
+        channel.add(current_user)
+        IgnoredUser.create!(
+          user: users.first,
+          ignored_user: current_user,
+          expiring_at: 1.day.from_now,
+        )
+        params[:usernames] = [users.first.username]
+      end
+
+      it { is_expected.to fail_a_policy(:targets_allow_dms_from_user) }
+    end
+
+    context "when one of the target users is muting the current user" do
+      before do
+        channel.add(current_user)
+        MutedUser.create!(user: users.first, muted_user: current_user)
+        params[:usernames] = [users.first.username]
+      end
+
+      it { is_expected.to fail_a_policy(:targets_allow_dms_from_user) }
+    end
+
+    context "when the current user is ignoring one of the target users" do
+      before do
+        channel.add(current_user)
+        IgnoredUser.create!(
+          user: current_user,
+          ignored_user: users.first,
+          expiring_at: 1.day.from_now,
+        )
+        params[:usernames] = [users.first.username]
+      end
+
+      it { is_expected.to fail_a_policy(:targets_allow_dms_from_user) }
+    end
+
+    context "when the current user is muting one of the target users" do
+      before do
+        channel.add(current_user)
+        MutedUser.create!(user: current_user, muted_user: users.first)
+        params[:usernames] = [users.first.username]
+      end
+
+      it { is_expected.to fail_a_policy(:targets_allow_dms_from_user) }
     end
   end
 end

@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { later } from "@ember/runloop";
 import {
   click,
@@ -9,7 +10,6 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -23,6 +23,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 acceptance("User menu", function (needs) {
@@ -477,7 +478,7 @@ acceptance("User menu", function (needs) {
         "drafts link has the right label with count of the user's drafts"
       );
     assert
-      .dom("#quick-access-profile ul li.drafts a .d-icon-user_menu\\.drafts")
+      .dom("#quick-access-profile ul li.drafts a .d-icon-pencil")
       .exists("drafts link has the right icon");
 
     assert

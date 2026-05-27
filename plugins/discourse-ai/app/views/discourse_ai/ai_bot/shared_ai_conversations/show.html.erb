@@ -36,15 +36,15 @@
     <section>
       <header class="page-header">
         <h1><%= @shared_conversation.title %></h1>
-        <time datetime="<%= @shared_conversation.populated_context.first.created_at.iso8601 %>"><%= @shared_conversation.populated_context.first.created_at.strftime('%d %B %Y') %></time>
+        <time datetime="<%= @shared_conversation.populated_context.first.created_at.iso8601 %>"><%= I18n.l(@shared_conversation.populated_context.first.created_at, format: :date_only) %></time>
       </header>
 
       <% @shared_conversation.populated_context.each do |post| %>
         <article class="post">
           <header class="post__header">
             <span class="post__user"><%= post.user.username %></span>
-            <%if post.persona.present? %>
-              <span class="post__persona"><%= post.persona %></span>
+            <%if post.agent.present? %>
+              <span class="post__agent"><%= post.agent %></span>
             <% end %>
             <time class="post__date" datetime="<%= post.created_at.iso8601 %>"><%= post.created_at.strftime('%Y-%m-%d') %></time>
           </header>

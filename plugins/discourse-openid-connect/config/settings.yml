@@ -18,6 +18,9 @@ discourse_openid_connect:
   openid_connect_rp_initiated_logout_redirect:
     default: ""
     area: "oidc"
+  openid_connect_rp_initiated_logout_include_client_id:
+    default: false
+    area: "oidc"
   openid_connect_allow_association_change:
     default: false
     area: "oidc"
@@ -50,6 +53,22 @@ discourse_openid_connect:
   openid_connect_match_by_email:
     default: true
     area: "oidc"
+  openid_connect_groups_claim:
+    default: ""
+    area: "oidc"
+  openid_connect_user_field_mappings:
+    type: objects
+    default: []
+    area: "oidc"
+    schema:
+      name: mapping
+      properties:
+        claim:
+          type: string
+          required: true
+        user_field_id:
+          type: integer
+          required: true
   openid_connect_use_pkce:
     default: false
     area: "oidc"

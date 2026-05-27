@@ -8,6 +8,7 @@ ru:
   site_settings:
     policy_enabled: "Разрешить политику?"
     policy_restrict_to_staff_posts: "Политика может применяться только к записям персонала"
+    create_policy_allowed_groups: "Для добавления правил в сообщения требуется членство в группе."
     policy_easy_revoke: "Показывать одновременно кнопки «Принять» и «Отмена»"
   discourse_policy:
     errors:

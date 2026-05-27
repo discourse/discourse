@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Artifact with Data Attributes", type: :system do
+RSpec.describe "AI Artifact with Data Attributes" do
   fab!(:admin)
   fab!(:user)
   fab!(:author, :user)

@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    discourse_math:
+      edit_math: "Formule bewerken"
+      edit_modal:
+        title: "Formule bewerken"
+        label: "Formule"
+        apply: "Toepassen"
+      composer:
+        insert_math: "Formule invoegen"
+      insert_modal:
+        title_inline: "Inline formule invoegen"
+        title_block: "Blokformule invoegen"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Invoegen"
+        block_mode: "Blokmodus (weergegeven vergelijking)"

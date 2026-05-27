@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 sw:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Majibu yaliyokubaliwa"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "imeruhusiwa"
+          topic_solved_notification: "imetatuliwa"
     solved:
       title: "Imetatuliwa"
       allow_accepted_answers: "Ruhusu Muanzilishi wa Mada na Wasaidizi kuchagua jibu kama Suluhisho"
@@ -21,6 +29,8 @@ sw:
       topic_status_filter:
         all: "Zote"
         solved: "imetatuliwa"
+      move_post_cancel: "Batili"
+      confirm_solved_removal_cancel: "Batili"
     topic_statuses:
       solved:
         help: "Hii mada ina suluhisho"

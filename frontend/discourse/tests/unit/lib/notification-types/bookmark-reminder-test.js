@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { deepMerge } from "discourse/lib/object";
@@ -73,7 +73,7 @@ module("Unit | Notification Types | bookmark-reminder", function (hooks) {
     );
     assert.deepEqual(
       director.description,
-      htmlSafe("my fancy title!"),
+      trustHTML("my fancy title!"),
       "description is the fancy title by default"
     );
 

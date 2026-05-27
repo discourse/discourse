@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import EmberObject, { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -8,7 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -110,7 +109,6 @@ export default class TopicList extends RestModel {
       {
         id: "discourse.topic-list-find",
         since: "3.1.0.beta5",
-        dropFrom: "3.2.0.beta1",
       }
     );
 
@@ -126,9 +124,12 @@ export default class TopicList extends RestModel {
   @service session;
 
   @tracked loadingBefore = false;
-  @trackedArray topics;
+  @autoTrackedArray topics;
 
-  @notEmpty("more_topics_url") canLoadMore;
+  @computed("more_topics_url")
+  get canLoadMore() {
+    return !isEmpty(this.more_topics_url);
+  }
 
   forEachNew(topics, callback) {
     const topicIds = new Set();

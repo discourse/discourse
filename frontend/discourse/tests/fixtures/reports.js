@@ -1,4 +1,4 @@
-export default {
+const reportsFixtures = {
   "/admin/reports": {
     reports: [
       {
@@ -9,3 +9,5 @@ export default {
     ],
   },
 };
+
+export default reportsFixtures;

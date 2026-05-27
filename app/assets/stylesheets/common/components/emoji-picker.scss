@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .fk-d-menu[data-content][data-identifier="emoji-picker"] {
   z-index: z("modal", "dialog");
 
@@ -13,8 +15,15 @@
 }
 
 .emoji-picker-trigger {
+  gap: var(--space-2);
+
   .d-icon + .d-button-label {
     margin-left: 0.25em;
+  }
+
+  .d-icon.emoji-picker__caret {
+    font-size: var(--font-down-2);
+    margin-left: 0;
   }
 }
 
@@ -23,6 +32,10 @@
   flex-direction: column;
   height: 300px;
   width: 500px;
+
+  @include viewport.until(sm) {
+    height: auto;
+  }
 
   .spinner-container {
     height: 100%;
@@ -56,6 +69,10 @@
     background: var(--primary-very-low);
     display: flex;
     height: 50px;
+
+    @include viewport.until(sm) {
+      padding-top: 0.25rem;
+    }
   }
 
   &__filter {
@@ -83,6 +100,12 @@
     display: flex;
     flex-direction: row;
     height: 250px;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      padding-top: 1em;
+      box-sizing: border-box;
+    }
   }
 
   &__scrollable-content {
@@ -113,6 +136,17 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
     overscroll-behavior: contain;
+
+    @include viewport.until(sm) {
+      order: 1;
+      height: 50px;
+      width: 100%;
+      flex-direction: row;
+      display: flex;
+      box-sizing: border-box;
+      overflow-y: hidden;
+      overflow-x: auto;
+    }
   }
 
   &__sections-nav::-webkit-scrollbar {
@@ -244,5 +278,40 @@
   &__fitzpatrick-scale {
     display: flex;
     align-items: center;
+  }
+}
+
+@include viewport.until(sm) {
+  .fk-d-menu-modal.emoji-picker-content {
+    // specificity is important for the styles in this container
+    html:not(.keyboard-visible.mobile-view) & .d-modal__container {
+      height: calc(var(--composer-vh, 1dvh) * 100);
+      max-height: 100%;
+
+      .emoji-picker__content {
+        height: calc(
+          var(--composer-vh, 1dvh) * 100 - 50px - env(safe-area-inset-bottom)
+        );
+      }
+    }
+
+    html.keyboard-visible.mobile-view & .d-modal__container {
+      .emoji-picker__content {
+        height: calc(var(--composer-vh, 1dvh) * 100 - 50px);
+      }
+    }
+
+    .d-modal__body {
+      padding: 0;
+    }
+
+    .d-modal__container {
+      align-self: flex-start;
+    }
+
+    .emoji-picker__close-btn {
+      margin-left: 0.25em;
+      padding-left: 0.75em;
+    }
   }
 }

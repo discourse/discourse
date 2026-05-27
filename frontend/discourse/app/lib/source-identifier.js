@@ -1,4 +1,3 @@
-import { DEBUG } from "@glimmer/env";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -48,20 +47,7 @@ export default function identifySource(error) {
     }
   }
 
-  let plugin;
-
-  if (DEBUG) {
-    // Development (no fingerprinting)
-    plugin ??= stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
-
-    // Test files:
-    plugin ??= stack.match(/assets\/plugins\/test\/([\w-]+)_tests\.js/)?.[1];
-  }
-
-  // Production (with fingerprints)
-  plugin ??= stack.match(
-    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.(?:br|gz))?\.js/
-  )?.[1];
+  const plugin = stack.match(/assets\/(?:js|br|gz)\/plugins\/([\w-]+)_/)?.[1];
 
   if (plugin) {
     return {

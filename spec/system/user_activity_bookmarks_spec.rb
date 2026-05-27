@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User activity bookmarks", type: :system do
+describe "User activity bookmarks" do
   fab!(:current_user, :user)
   fab!(:bookmark_1) do
     Fabricate(

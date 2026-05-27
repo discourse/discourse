@@ -79,6 +79,9 @@ class PublishedPagesController < ApplicationController
   end
 
   def check_slug
+    ensure_logged_in
+    guardian.ensure_is_staff!
+
     pp = PublishedPage.new(topic: Topic.new, slug: params[:slug].strip)
 
     if pp.valid?

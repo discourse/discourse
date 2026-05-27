@@ -1,21 +1,22 @@
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import {
   click,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DButton from "discourse/components/d-button";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
-import element_ from "discourse/helpers/element";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -559,7 +560,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   test("@triggerComponent", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @triggerComponent={{element_ "span"}}>1</DMenu>
+        <DMenu @inline={{true}} @triggerComponent={{dElement "span"}}>1</DMenu>
       </template>
     );
 
@@ -585,6 +586,64 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu.-content").hasStyle({
       width: "200px",
     });
+  });
+
+  test("delayed-hover opens menu after delay", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "delayed-hover"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    assert.dom(".fk-d-menu").doesNotExist("menu not open before delay");
+
+    await settled();
+
+    assert.dom(".fk-d-menu").exists("menu opens after delay");
+  });
+
+  test("delayed-hover cancels when pointer leaves before delay", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "delayed-hover"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    await triggerEvent(".fk-d-menu__trigger", "pointerleave");
+
+    assert.dom(".fk-d-menu").doesNotExist("menu does not open after leave");
+  });
+
+  test("delayed-hover click during pending delay opens menu", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "delayed-hover" "click"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    await click(".fk-d-menu__trigger");
+
+    assert
+      .dom(".fk-d-menu")
+      .exists("menu opens via click during pending hover");
   });
 
   test("@matchTriggerMinWidth", async function (assert) {

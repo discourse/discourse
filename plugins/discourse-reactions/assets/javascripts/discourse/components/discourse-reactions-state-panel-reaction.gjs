@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import { gt } from "discourse/truth-helpers";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MAX_USERS_COUNT = 26;
@@ -36,6 +36,13 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
       : this.firstLineUsers.length;
   }
 
+  get groupAriaLabel() {
+    return i18n("discourse_reactions.state_panel.reaction_group", {
+      reaction: this.args.reaction.id,
+      count: this.args.reaction.count,
+    });
+  }
+
   get moreLabel() {
     if (this.args.isDisplayed && this.args.reaction.count > MAX_USERS_COUNT) {
       return i18n("discourse_reactions.state_panel.more_users", {
@@ -45,18 +52,20 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
-      class={{concatClass
+      class={{dConcatClass
         "discourse-reactions-state-panel-reaction"
         (if @isDisplayed "is-displayed")
       }}
+      role="listitem"
+      aria-label={{this.groupAriaLabel}}
       {{on "click" this.click}}
     >
       {{#if @users}}
-        <div class="reaction-wrapper">
+        <div class="reaction-wrapper" aria-hidden="true">
           <div class="emoji-wrapper">
-            {{emoji @reaction.id}}
+            {{dEmoji @reaction.id}}
           </div>
           <div class="count">
             {{@reaction.count}}
@@ -67,7 +76,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
           <div class="list list-columns-{{this.columnsCount}}">
             {{#each this.firstLineUsers key="username" as |user|}}
               <span>
-                <UserAvatar
+                <DUserAvatar
                   class="trigger-user-card"
                   @size="tiny"
                   @user={{user}}
@@ -76,15 +85,23 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
             {{/each}}
 
             {{#if (gt @users.length MIN_USERS_COUNT)}}
-              <button type="button" class="show-users">
-                {{icon (if @isDisplayed "chevron-up" "chevron-down")}}
+              <button
+                type="button"
+                class="show-users"
+                aria-label={{if
+                  @isDisplayed
+                  (i18n "discourse_reactions.state_panel.hide_users")
+                  (i18n "discourse_reactions.state_panel.show_users")
+                }}
+              >
+                {{dIcon (if @isDisplayed "chevron-up" "chevron-down")}}
               </button>
             {{/if}}
 
             {{#if @isDisplayed}}
               {{#each this.otherUsers key="username" as |user|}}
                 <span>
-                  <UserAvatar
+                  <DUserAvatar
                     class="trigger-user-card"
                     @size="tiny"
                     @user={{user}}

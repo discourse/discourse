@@ -12,7 +12,13 @@ module DiscourseAi
         log = AiApiAuditLog.find(params[:id])
         raise Discourse::NotFound if !log.topic
 
-        guardian.ensure_can_debug_ai_bot_conversation!(log.topic)
+        if log.post_id.present?
+          raise Discourse::NotFound if !log.post
+
+          guardian.ensure_can_debug_ai_bot_conversation!(log.post)
+        else
+          guardian.ensure_can_debug_ai_bot_conversation!(log.topic)
+        end
         render json: AiApiAuditLogSerializer.new(log, root: false), status: :ok
       end
 
@@ -22,16 +28,29 @@ module DiscourseAi
 
         posts =
           Post
+            .secured(guardian)
             .where("post_number <= ?", post.post_number)
             .where(topic_id: post.topic_id)
             .order("post_number DESC")
 
-        debug_info = AiApiAuditLog.where(post: posts).order(created_at: :desc).first
+        visible_post_ids = posts.select(:id)
+
+        debug_info =
+          AiApiAuditLog
+            .where(topic_id: post.topic_id)
+            .where("post_id IS NULL OR post_id IN (?)", visible_post_ids)
+            .order(created_at: :desc)
+            .first
 
         render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: :ok
       end
 
       def stop_streaming_response
+        raise Discourse::InvalidAccess unless SiteSetting.ai_bot_enabled
+        unless current_user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          raise Discourse::InvalidAccess
+        end
+
         post = Post.find(params[:post_id])
         guardian.ensure_can_see!(post)
 
@@ -40,11 +59,74 @@ module DiscourseAi
         render json: {}, status: :ok
       end
 
+      def retry_response
+        raise Discourse::InvalidAccess unless SiteSetting.ai_bot_enabled
+        unless current_user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          raise Discourse::InvalidAccess
+        end
+
+        post = Post.find(params[:post_id])
+        guardian.ensure_can_see!(post)
+
+        if !DiscourseAi::AiBot::EntryPoint.all_bot_ids.include?(post.user_id)
+          raise Discourse::InvalidParameters.new(:post_id)
+        end
+
+        prompt_post = find_prompt_post(post)
+        raise Discourse::NotFound if prompt_post.blank?
+
+        guardian.ensure_can_see!(prompt_post)
+
+        agent_id = retry_agent_id(post, prompt_post)
+        llm_model_id = post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
+
+        args = {
+          post_id: prompt_post.id,
+          bot_user_id: post.user_id,
+          agent_id: agent_id,
+          reply_post_id: post.id,
+        }
+
+        args[:llm_model_id] = llm_model_id.to_i if !llm_model_id.to_i.zero?
+
+        Jobs.enqueue(:create_ai_reply, args)
+
+        render json: success_json
+      end
+
       def show_bot_username
         bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(params[:username])
         raise Discourse::InvalidParameters.new(:username) if !bot_user
 
         render json: { bot_username: bot_user.username_lower }, status: :ok
+      end
+
+      private
+
+      def find_prompt_post(bot_reply_post)
+        bot_ids = DiscourseAi::AiBot::EntryPoint.all_bot_ids
+
+        bot_reply_post
+          .topic
+          .posts
+          .where("post_number < ?", bot_reply_post.post_number)
+          .where.not(user_id: bot_ids)
+          .reorder(post_number: :desc)
+          .first
+      end
+
+      def retry_agent_id(bot_reply_post, prompt_post)
+        agent_id = bot_reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].presence
+
+        agent_id ||= prompt_post.topic.custom_fields["ai_agent_id"].presence
+
+        if agent_id.blank?
+          agent_name = prompt_post.topic.custom_fields["ai_agent"].presence
+          agent_id = AiAgent.find_by(name: agent_name)&.id if agent_name.present?
+        end
+
+        agent_id ||= DiscourseAi::Agents::General.id
+        agent_id.to_i
       end
     end
   end

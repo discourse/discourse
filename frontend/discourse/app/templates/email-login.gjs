@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
 import SecondFactorForm from "discourse/components/second-factor-form";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
+import DButton from "discourse/ui-kit/d-button";
+import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -16,7 +16,7 @@ export default <template>
       <form>
         {{#if @controller.model.error}}
           <div class="error-info">
-            {{htmlSafe @controller.model.error}}
+            {{trustHTML @controller.model.error}}
           </div>
         {{/if}}
 
@@ -44,7 +44,7 @@ export default <template>
                   @totpEnabled={{@controller.model.totp_enabled}}
                   @isLogin={{true}}
                 >
-                  <SecondFactorInput
+                  <DSecondFactorInput
                     @onChange={{fn (mut @controller.secondFactorToken)}}
                     @secondFactorMethod={{@controller.secondFactorMethod}}
                     value={{@controller.secondFactorToken}}

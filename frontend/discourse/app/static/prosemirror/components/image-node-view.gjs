@@ -4,12 +4,18 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
+import { waitForPromise } from "@ember/test-waiters";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import icon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
+
+const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 
 const MIN_SCALE = 50;
 const MAX_SCALE = 100;
@@ -84,6 +90,7 @@ class ImageToolbar extends ToolbarBase {
 }
 
 export default class ImageNodeView extends Component {
+  @service("app-events") appEvents;
   @service menu;
   @service siteSettings;
 
@@ -91,16 +98,33 @@ export default class ImageNodeView extends Component {
   @tracked menuInstance;
   @tracked altMenuInstance;
   @tracked imageLoaded = false;
+  @tracked uploadProgress = 0;
+  #progressEvent;
 
   constructor() {
     super(...arguments);
+
+    if (this.isPlaceholder) {
+      const fileId = this.args.node.attrs.title;
+      this.args.dom.classList.add(...PLACEHOLDER_CLASSES);
+      this.args.dom.dataset.uploadId = fileId;
+      this.#progressEvent = `composer:upload-progress:${fileId}`;
+      this.appEvents.on(this.#progressEvent, this, this.onUploadProgress);
+    }
 
     this.args.onSetup?.(this);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.#progressEvent) {
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+    }
     this.closeMenus();
+  }
+
+  get isPlaceholder() {
+    return !!this.args.node.attrs.placeholder;
   }
 
   stopEvent(event) {
@@ -269,14 +293,18 @@ export default class ImageNodeView extends Component {
   selectNode() {
     this.image.classList.add("ProseMirror-selectednode");
 
-    this.showToolbar();
-    this.showAltText();
+    if (!this.isPlaceholder) {
+      this.showToolbar();
+      this.showAltText();
+    }
   }
 
   deselectNode() {
     this.image.classList.remove("ProseMirror-selectednode");
 
-    this.closeMenus();
+    if (!this.isPlaceholder) {
+      this.closeMenus();
+    }
   }
 
   closeMenus() {
@@ -312,7 +340,7 @@ export default class ImageNodeView extends Component {
 
     const scale = (this.args.node.attrs.scale ?? 100) / 100;
 
-    return htmlSafe(`width: ${width * scale}px`);
+    return trustHTML(`width: ${width * scale}px`);
   }
 
   get isInGrid() {
@@ -565,9 +593,40 @@ export default class ImageNodeView extends Component {
     view.dispatch(tr);
   }
 
+  onUploadProgress(percentage) {
+    this.uploadProgress = percentage;
+  }
+
+  @action
+  cancelUpload(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.appEvents.trigger("composer:cancel-upload", {
+      fileId: this.args.node.attrs.title,
+    });
+  }
+
   @action
   updateImageLoaded() {
     this.imageLoaded = true;
+  }
+
+  @action
+  async handleImageClick(event) {
+    if (this.image.classList.contains("ProseMirror-selectednode")) {
+      event?.preventDefault();
+      event?.stopPropagation();
+
+      await openLightbox(this.args.view.dom, this.image);
+
+      const pos = this.args.getPos();
+      if (pos !== null && pos >= 0) {
+        const tr = this.args.view.state.tr.setSelection(
+          NodeSelection.create(this.args.view.state.doc, pos)
+        );
+        this.args.view.dispatch(tr);
+      }
+    }
   }
 
   <template>
@@ -579,10 +638,97 @@ export default class ImageNodeView extends Component {
       height={{@node.attrs.height}}
       data-orig-src={{@node.attrs.originalSrc}}
       data-scale={{@node.attrs.scale}}
+      data-placeholder={{@node.attrs.placeholder}}
       data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
       style={{this.imageStyle}}
+      role="button"
       {{didInsert this.setupImage}}
       {{on "load" this.updateImageLoaded}}
+      {{on "click" this.handleImageClick}}
     />
+    {{#if this.isPlaceholder}}
+      <span class="upload-placeholder__overlay">
+        <span
+          class="upload-placeholder__progress"
+        >{{this.uploadProgress}}%</span>
+        <button
+          class="upload-placeholder__cancel btn-transparent no-text"
+          title={{i18n "cancel"}}
+          aria-label={{i18n "cancel"}}
+          contenteditable="false"
+          {{on "click" this.cancelUpload}}
+        >{{icon "xmark"}}</button>
+      </span>
+    {{/if}}
   </template>
+}
+
+async function openLightbox(editorElement, currentImage) {
+  const allImages = [
+    ...editorElement.querySelectorAll(".composer-image-node img"),
+  ];
+  const currentIndex = allImages.indexOf(currentImage);
+
+  const dataSource = allImages.map((img) => {
+    return {
+      src: img.src,
+      msrc: img.currentSrc || img.src,
+      width: img.naturalWidth || 800,
+      height: img.naturalHeight || 600,
+      alt: img.alt || "",
+      element: img,
+      thumbCropped: true,
+    };
+  });
+
+  const { default: PhotoSwipeLightbox } = await waitForPromise(
+    import("photoswipe/lightbox")
+  );
+  const isTestEnv = isTesting() || isRailsTesting();
+
+  const lightbox = new PhotoSwipeLightbox({
+    dataSource,
+    showHideAnimationType: isTestEnv ? "none" : "zoom",
+    closeTitle: i18n("lightbox.close"),
+    zoomTitle: i18n("lightbox.zoom"),
+    arrowPrevTitle: i18n("lightbox.previous"),
+    arrowNextTitle: i18n("lightbox.next"),
+    pswpModule: () => waitForPromise(import("photoswipe")),
+    tapAction: (pt, e) => {
+      if (e.target.classList.contains("pswp__img")) {
+        lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");
+      } else {
+        lightbox.pswp?.close();
+      }
+    },
+  });
+
+  lightbox.on("uiRegister", function () {
+    lightbox.pswp.ui.registerElement({
+      name: "caption",
+      order: 11,
+      isButton: false,
+      appendTo: "root",
+      html: "",
+      onInit: (caption, pswp) => {
+        const titleEl = document.createElement("div");
+        titleEl.className = "pswp__caption-title";
+        caption.appendChild(titleEl);
+
+        pswp.on("change", () => {
+          const slideData = pswp.getItemData(pswp.currIndex);
+          titleEl.textContent = slideData?.alt || "";
+        });
+      },
+    });
+  });
+
+  return new Promise((resolve) => {
+    lightbox.addFilter("thumbEl", (thumbEl, itemData) => itemData.element);
+    lightbox.on("close", resolve);
+    lightbox.on("closingAnimationEnd", () => lightbox.destroy());
+
+    lightbox.init();
+    lightbox.loadAndOpen(currentIndex);
+  });
 }

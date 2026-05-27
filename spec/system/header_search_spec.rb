@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Header Search - Responsive Behavior", type: :system do
+RSpec.describe "Header Search - Responsive Behavior" do
   fab!(:current_user, :user)
   let(:search_page) { PageObjects::Pages::Search.new }
 

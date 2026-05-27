@@ -38,6 +38,8 @@ ja:
           title: "フォントシステム"
         colors:
           title: "色"
+        dialog:
+          title: "ダイアログ"
         icons:
           title: "アイコン"
           full_list: "Font Awesome Icons の全リストを表示"
@@ -60,7 +62,7 @@ ja:
         categories_list:
           title: "カテゴリリスト"
         topic_link:
-          title: "トピックリンク"
+          title: "トピックのリンクとステータス"
         topic_list_item:
           title: "トピックリスト項目"
         topic_statuses:
@@ -69,8 +71,6 @@ ja:
           title: "トピックリスト"
         basic_topic_list:
           title: "基本トピックリスト"
-        footer_message:
-          title: "フッターメッセージ"
         signup_cta:
           title: "アカウント登録 CTA"
         topic_timer_info:
@@ -85,6 +85,8 @@ ja:
           title: "投稿リスト"
           empty_example: "<PostList /> 空の状態"
           populated_example: "<PostList /> 入力状態"
+        post_oneboxes:
+          title: "ワンボックス投稿"
         topic_map:
           title: "トピックマップ"
         site_header:
@@ -103,6 +105,8 @@ ja:
           title: "ヘッダーアイコン"
         spinners:
           title: "スピナー"
+        otp:
+          title: "OTP"
         empty_state:
           title: "エンプティステート"
         tooltips:

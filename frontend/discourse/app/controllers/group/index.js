@@ -1,14 +1,21 @@
+/* eslint-disable ember/no-observers */
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed, { debounce } from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
+import { debounce } from "discourse/lib/decorators";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { i18n } from "discourse-i18n";
 
 export default class GroupIndexController extends Controller {
-  @trackedArray bulkSelection = null;
+  @service currentUser;
+  @service dialog;
+
+  @autoTrackedArray bulkSelection = null;
 
   queryParams = ["order", "asc", "filter"];
   order = null;
@@ -61,18 +68,20 @@ export default class GroupIndexController extends Controller {
     });
   }
 
-  @discourseComputed("order", "asc", "filter")
-  memberParams(order, asc, filter) {
-    return { order, asc, filter };
+  @computed("order", "asc", "filter")
+  get memberParams() {
+    return { order: this.order, asc: this.asc, filter: this.filter };
   }
 
-  @discourseComputed("model")
-  canManageGroup(model) {
-    return this.currentUser?.canManageGroup(model) && !this.model.automatic;
+  @computed("model")
+  get canManageGroup() {
+    return (
+      this.currentUser?.canManageGroup(this.model) && !this.model.automatic
+    );
   }
 
-  @discourseComputed
-  filterPlaceholder() {
+  @computed
+  get filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";
     } else {
@@ -80,11 +89,11 @@ export default class GroupIndexController extends Controller {
     }
   }
 
-  @discourseComputed("filter", "members", "model.can_see_members")
-  emptyMessageKey(filter, members, canSeeMembers) {
-    if (!canSeeMembers) {
+  @computed("filter", "members", "model.can_see_members")
+  get emptyMessageKey() {
+    if (!this.model?.can_see_members) {
       return "groups.members.forbidden";
-    } else if (filter) {
+    } else if (this.filter) {
       return "groups.members.no_filter_matches";
     } else {
       return "groups.empty.members";
@@ -178,8 +187,35 @@ export default class GroupIndexController extends Controller {
     }
   }
 
+  _wouldLoseAccessOnRemoval(user) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    if (user.id !== this.currentUser.id) {
+      return false;
+    }
+
+    const group = this.model;
+
+    return (
+      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
+      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
+    );
+  }
+
   @action
-  removeMember(user) {
+  async removeMember(user) {
+    if (this._wouldLoseAccessOnRemoval(user)) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("groups.members.remove_member_self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.model.removeMember(user, this.memberParams);
   }
 
@@ -189,7 +225,17 @@ export default class GroupIndexController extends Controller {
   }
 
   @action
-  removeOwner(user) {
+  async removeOwner(user) {
+    if (this._wouldLoseAccessOnRemoval(user)) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("groups.members.remove_owner_self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.model.removeOwner(user);
   }
 

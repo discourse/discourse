@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-message", function (hooks) {
+module("Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Message with edits", async function (assert) {
@@ -85,6 +85,17 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     assert
       .dom(".chat-message-container.has-reply")
       .exists("has the correct css class");
+  });
+
+  test("Non-interactive message", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message();
+    await render(
+      <template>
+        <ChatMessage @message={{this.message}} @interactive={{false}} />
+      </template>
+    );
+
+    assert.dom(".chat-message-container.-not-interactive").exists();
   });
 
   test("Message with streaming", async function (assert) {

@@ -80,7 +80,7 @@ module DiscourseAi
         @pass_rating = judge_config[:pass_rating] || 10
       end
 
-      def evaluate(result)
+      def evaluate(result, execution_context: nil)
         prompt = build_prompt(result)
         response =
           judge_llm.to_llm.generate(
@@ -88,6 +88,7 @@ module DiscourseAi
             user: Discourse.system_user,
             temperature: 0,
             response_format: RESPONSE_FORMAT,
+            execution_context:,
           )
 
         parsed = parse_response(response)
@@ -106,7 +107,7 @@ module DiscourseAi
         end
       end
 
-      def compare(candidates)
+      def compare(candidates, execution_context: nil)
         prompt = build_comparison_prompt(candidates)
         response =
           judge_llm.to_llm.generate(
@@ -114,6 +115,7 @@ module DiscourseAi
             user: Discourse.system_user,
             temperature: 0,
             response_format: COMPARISON_RESPONSE_FORMAT,
+            execution_context:,
           )
 
         parsed = parse_comparison_response(response)

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    github:
+      pr_status:
+        draft: "草稿"
+        open: "開啟"
+        approved: "已同意"
+        closed: "已關閉"

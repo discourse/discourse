@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe "Sidebar navigation menu", type: :system do
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+RSpec.describe "Sidebar navigation menu" do
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:current_user, :user)
@@ -169,6 +169,20 @@ RSpec.describe "Sidebar navigation menu", type: :system do
           ),
         ).to have_content("alansmith, zoesmith")
       end
+
+      context "when the group DM has an emoji in the title" do
+        before { dm_channel_1.update!(name: "test :heart:") }
+
+        it "converts the emoji" do
+          visit("/")
+
+          expect(
+            sidebar_page.dms_section.find(
+              "a.sidebar-section-link:nth-child(1) .sidebar-section-link-content-text",
+            ),
+          ).to have_content("test ❤")
+        end
+      end
     end
 
     context "when username contains malicious content" do
@@ -177,6 +191,9 @@ RSpec.describe "Sidebar navigation menu", type: :system do
 
       before do
         other_user.username = "<script>alert('hello')</script>"
+        # Use an uploaded avatar to avoid a letter_avatar request with the
+        # malicious username (which contains `/` and breaks URL routing)
+        other_user.uploaded_avatar_id = Fabricate(:image_upload).id
         other_user.save!(validate: false)
       end
 

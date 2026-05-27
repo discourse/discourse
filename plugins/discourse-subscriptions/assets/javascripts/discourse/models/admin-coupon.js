@@ -1,6 +1,5 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class AdminCoupon extends EmberObject {
   static list() {
@@ -50,12 +49,12 @@ export default class AdminCoupon extends EmberObject {
     });
   }
 
-  @discourseComputed("coupon.amount_off", "coupon.percent_off")
-  discount(amount_off, percent_off) {
-    if (amount_off) {
-      return `${parseFloat(amount_off * 0.01).toFixed(2)}`;
-    } else if (percent_off) {
-      return `${percent_off}%`;
+  @computed("coupon.amount_off", "coupon.percent_off")
+  get discount() {
+    if (this.coupon?.amount_off) {
+      return `${parseFloat(this.coupon?.amount_off * 0.01).toFixed(2)}`;
+    } else if (this.coupon?.percent_off) {
+      return `${this.coupon?.percent_off}%`;
     }
   }
 }

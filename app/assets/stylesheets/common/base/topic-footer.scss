@@ -9,7 +9,8 @@
       var(--topic-body-width-padding) * 2
   );
 
-  html.anon & {
+  html.anon &,
+  .styleguide-anon & {
     align-items: end;
   }
 
@@ -51,9 +52,14 @@
     }
 
     .bookmark.bookmarked {
-      .d-icon-discourse-bookmark-clock,
-      .d-icon-bookmark {
+      .d-icon-discourse-bookmark-clock {
         color: var(--tertiary);
+      }
+
+      &:not(.--post-bookmarked-only) {
+        .d-icon-bookmark {
+          color: var(--tertiary);
+        }
       }
     }
 
@@ -117,6 +123,8 @@
 }
 
 .container.posts .topic-navigation {
+  --border-offset: -1px;
+
   @media screen and (width <= 924px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     display: flex;
@@ -125,6 +133,7 @@
     grid-area: posts;
     grid-row: 3;
     width: auto;
+    margin-top: var(--border-offset);
 
     .btn-toggle-localized-content,
     .topic-admin-menu-trigger {
@@ -133,8 +142,8 @@
       border: 1px solid var(--primary-low);
     }
 
-    .btn-toggle-localized-content {
-      height: 100%;
+    .topic-admin-menu-trigger + .btn-toggle-localized-content {
+      margin-left: var(--border-offset);
     }
   }
 }

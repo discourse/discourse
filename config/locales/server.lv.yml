@@ -64,6 +64,10 @@ lv:
       exclusion: ir rezervēts
   not_in_group:
     join_group: "Pievienoties grupai"
+  reading_time_minutes:
+    zero: "%{count} minūtes 🕑"
+    one: "%{count} minūtes 🕑"
+    other: "%{count} minūtes 🕑"
   likes: "Patīk"
   embed:
     start_discussion: "Sākt Diskusiju"
@@ -104,6 +108,7 @@ lv:
       admins: "administratori"
       moderators: "moderatori"
       staff: "personāls"
+      anonymous: "anonīmi"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -229,7 +234,9 @@ lv:
       every_month: "katru mēnesi"
       every_six_months: "katrus sešus mēnešus"
   user_api_key:
+    deny: "Atcelt"
     read: "izlasīts"
+    copied: "Nokopēts!"
     otp_confirmation:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{username}
@@ -255,11 +262,33 @@ lv:
       labels:
         flag: Tips
     visits:
-      xaxis: "Diena"
+      xaxis:
+        desktop: "Personālais dators"
+        mobile: "Mobilais"
     signups:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    activity_by_category:
+      labels:
+        category: "Sadaļa"
+        topics: "Tēmas"
+        posts: "Ieraksti"
+        share: "Dalīties"
+    posters_by_member_type:
+      labels:
+        count: "Ieraksti"
+        share: "Dalīties"
+      types:
+        staff: "Personāls"
+    trust_level_pipeline:
+      labels:
+        count: "Dalībnieki"
+        share: "Dalīties"
+      levels:
+        "0": "Jauns"
+        "2": "Biedrs"
+        "3": "Regulārs"
     trust_level_growth:
       yaxis: "Diena"
     consolidated_page_views:
@@ -275,6 +304,8 @@ lv:
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonīmi"
       yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
@@ -329,6 +360,12 @@ lv:
       labels:
         user: "Lietotājs"
         num_topics: "Tēmas"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
     top_traffic_sources:
       xaxis: "Domēns"
       num_topics: "Tēmas"
@@ -359,6 +396,8 @@ lv:
       xaxis: "Diena"
     page_view_logged_in_browser_reqs:
       xaxis: "Diena"
+    page_view_embed_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       xaxis: "Diena"
     http_2xx_reqs:
@@ -388,7 +427,7 @@ lv:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
-    staff_logins:
+    admin_logins:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
@@ -448,16 +487,21 @@ lv:
     queued_by_staff:
       title: "Ieraksts gaida apstiprinājumu"
     welcome_user:
+      preview: "Laipni lūdzam %{site_name}!"
       subject_template: "Laipni lūdzam %{site_name}!"
     welcome_invite:
+      preview: "Laipni lūdzam %{site_name}!"
       subject_template: "Laipni lūdzam %{site_name}!"
   user_notifications:
     digest:
       liked_received: "Saņemtās atzinības"
       new_users: "Jauni lietotāji"
       join_the_discussion: "Lasīt vairāk"
+      subject_template_improved: "Kopsavilkums"
     set_password:
       title: "Iestatīt paroli"
+    admin_login:
+      subject_template_improved: "Ielogoties"
   page_not_found:
     page_title: "Lapa nav atrasta"
     see_more: "Vairāk"
@@ -491,7 +535,7 @@ lv:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
   wizard:
     step:
-      privacy:
+      setup:
         fields:
           login_required:
             choices:
@@ -499,17 +543,12 @@ lv:
                 label: "Publisks"
               private:
                 label: "Privāts"
-      styling:
-        fields:
-          styling_preview:
-            label: "Priekšskatījums"
-          homepage_style:
-            choices:
-              latest:
-                label: "Pēdējais"
   onebox:
     github:
       closed: "slēgts"
+      status_date:
+        approved: "apstiprināt"
+        closed: "slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -541,18 +580,35 @@ lv:
         complete: "Ieraksts dzēsts."
       delete_and_agree:
         complete: "Ieraksts dzēsts."
-      disagree:
+      disagree_bundle:
         title: "Nē"
       ignore:
         title: "Ignorēt"
       approve:
-        title: "Apstiprināt"
+        title: "Jā"
+      approve_post:
+        title: "Jā"
+      approve_post_closed:
+        title: "Jā"
+      reject_post_bundle:
+        title: "Nē"
+      approve_user:
+        title: "Jā"
       reject_user:
+        title: "Nē"
         delete:
           title: "Dzēst lietotāju."
           complete: "Lietotājs dzēsts."
+      confirm_spam:
+        title: "Jā"
+      not_spam:
+        title: "Nē"
       reject:
         title: "Noraidīt"
+      approve_and_restore:
+        title: "Jā"
+      approve_and_unhide:
+        title: "Jā"
       delete_post:
         complete: "Ieraksts dzēsts"
       delete_user:

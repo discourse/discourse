@@ -16,6 +16,7 @@ import DaMessageField from "./fields/da-message-field";
 import DaPeriodField from "./fields/da-period-field";
 import DaPmsField from "./fields/da-pms-field";
 import DaPostField from "./fields/da-post-field";
+import DaRelativeTimeField from "./fields/da-relative-time-field";
 import DaTagsField from "./fields/da-tags-field";
 import DaTextField from "./fields/da-text-field";
 import DaTextListField from "./fields/da-text-list-field";
@@ -48,6 +49,7 @@ const FIELD_COMPONENTS = {
   email_group_user: DaEmailGroupUserField,
   custom_field: DaCustomField,
   custom_fields: DaCustomFields,
+  relative_time: DaRelativeTimeField,
 };
 
 export default class AutomationField extends Component {
@@ -94,6 +96,11 @@ export default class AutomationField extends Component {
   }
 
   get description() {
-    return I18n.lookup(this.translationKey);
+    if (
+      I18n.lookup(this.translationKey, { locale: "en" }) ||
+      I18n.lookup(this.translationKey)
+    ) {
+      return i18n(this.translationKey);
+    }
   }
 }

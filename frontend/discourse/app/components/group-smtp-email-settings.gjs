@@ -6,12 +6,12 @@ import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
-import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
 import { or } from "discourse/truth-helpers";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSmtpEmailSettings extends Component {
@@ -116,76 +116,82 @@ export default class GroupSmtpEmailSettings extends Component {
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_server"
+              @type="input"
               @title={{i18n "groups.manage.email.credentials.smtp_server"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_server"}}
               as |field|
             >
-              <field.Input />
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
               @name="email_username"
+              @type="input"
               @title={{i18n "groups.manage.email.credentials.username"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_username"}}
               as |field|
             >
-              <field.Input />
+              <field.Control />
             </form.Field>
           </row.Col>
 
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_port"
+              @type="input-number"
               @title={{i18n "groups.manage.email.credentials.smtp_port"}}
               @validation="required|integer"
               @onSet={{fn this.resetTestingSettings "smtp_port"}}
               as |field|
             >
-              <field.Input @type="number" />
+              <field.Control />
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
               @name="email_password"
+              @type="password"
               @title={{i18n "groups.manage.email.credentials.password"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "email_password"}}
               as |field|
             >
-              <field.Password />
+              <field.Control />
             </form.Field>
           </row.Col>
 
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_ssl_mode"
+              @type="select"
               @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
               @validation="required"
               @onSet={{fn this.resetTestingSettings "smtp_ssl_mode"}}
               as |field|
             >
-              <field.Select as |select|>
+              <field.Control as |select|>
                 {{#each this.sslModes as |sslMode|}}
                   <select.Option
                     @value={{sslMode.value}}
                   >{{sslMode.name}}</select.Option>
                 {{/each}}
-              </field.Select>
+              </field.Control>
             </form.Field>
           </row.Col>
           <row.Col @size={{6}}>
             <form.Field
               @name="email_from_alias"
+              @type="input"
               @title={{i18n "groups.manage.email.settings.from_alias"}}
               @description={{i18n
                 "groups.manage.email.settings.from_alias_hint"
               }}
               as |field|
             >
-              <field.Input />
+              <field.Control />
             </form.Field>
           </row.Col>
         </form.Row>
@@ -231,7 +237,7 @@ export default class GroupSmtpEmailSettings extends Component {
         <div class=".group-smtp-form__last-updated-details">
           <small>
             {{i18n "groups.manage.email.last_updated"}}
-            <strong>{{formatDate
+            <strong>{{dFormatDate
                 @group.smtp_updated_at
                 leaveAgo="true"
               }}</strong>

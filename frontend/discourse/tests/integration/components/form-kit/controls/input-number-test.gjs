@@ -16,8 +16,13 @@ module(
       await render(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Input @type="number" />
+            <form.Field
+              @type="input-number"
+              @name="foo"
+              @title="Foo"
+              as |field|
+            >
+              <field.Control step="any" lang="en" />
             </form.Field>
           </Form>
         </template>
@@ -34,17 +39,47 @@ module(
       assert.deepEqual(data.foo, 1);
     });
 
+    test("supports small decimal values", async function (assert) {
+      let data = { foo: "" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field
+              @type="input-number"
+              @name="foo"
+              @title="Foo"
+              as |field|
+            >
+
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      await fillIn("input", "0.00123");
+
+      assert.form().field("foo").hasValue("0.00123");
+
+      await formKit().submit();
+
+      assert.strictEqual(data.foo, 0.00123);
+    });
+
     test("validation of required", async function (assert) {
       await render(
         <template>
           <Form as |form|>
             <form.Field
+              @type="input-number"
               @name="foo"
               @title="Foo"
               @validation="required"
               as |field|
             >
-              <field.Input @type="number" />
+              <field.Control />
             </form.Field>
           </Form>
         </template>

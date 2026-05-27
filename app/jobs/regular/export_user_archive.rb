@@ -36,6 +36,7 @@ module Jobs
           like_count
           reply_count
           url
+          post_id
           created_at
         ],
         user_archive_profile: %w[location website bio views],
@@ -186,16 +187,14 @@ module Jobs
     end
 
     def provide_results(user_export, zip_filename, export_title, args)
-      begin
-        create_upload_for_user(user_export, zip_filename)
-      ensure
-        post = notify_user(user_export, export_title)
+      create_upload_for_user(user_export, zip_filename)
+    ensure
+      post = notify_user(user_export, export_title)
 
-        if user_export.present? && post.present?
-          topic = post.topic
-          user_export.update_columns(topic_id: topic.id)
-          topic.update_status("closed", true, Discourse.system_user)
-        end
+      if user_export.present? && post.present?
+        topic = post.topic
+        user_export.update_columns(topic_id: topic.id)
+        topic.update_status("closed", true, Discourse.system_user)
       end
     end
 
@@ -205,7 +204,7 @@ module Jobs
       Post
         .includes(topic: :category)
         .where(user_id: @archive_for_user.id)
-        .select(:topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
+        .select(:id, :topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
         .order(:created_at)
         .with_deleted
         .each { |user_archive| yield get_user_archive_fields(user_archive) }
@@ -396,25 +395,34 @@ module Jobs
 
     def likes_export
       return enum_for(:likes_export) unless block_given?
+
       PostAction
         .with_deleted
         .where(user_id: @archive_for_user.id)
         .where(post_action_type_id: post_action_type_view.types[:like])
-        .order(:created_at)
-        .each do |pa|
-          post = Post.with_deleted.find_by(id: pa.post_id)
-          yield(
-            [
-              pa.id,
-              pa.post_id,
-              post&.topic_id,
-              post&.post_number,
-              pa.created_at,
-              pa.updated_at,
-              pa.deleted_at,
-              self_or_other(pa.deleted_by_id),
-            ]
-          )
+        .in_batches(of: 1000) do |batch|
+          posts_by_id =
+            Post
+              .with_deleted
+              .where(id: batch.select(:post_id))
+              .select(:id, :topic_id, :post_number)
+              .index_by(&:id)
+
+          batch.each do |pa|
+            post = posts_by_id[pa.post_id]
+            yield(
+              [
+                pa.id,
+                pa.post_id,
+                post&.topic_id,
+                post&.post_number,
+                pa.created_at,
+                pa.updated_at,
+                pa.deleted_at,
+                self_or_other(pa.deleted_by_id),
+              ]
+            )
+          end
         end
     end
 
@@ -590,6 +598,7 @@ module Jobs
         "categories" => categories,
         "is_pm" => is_pm,
         "url" => url,
+        "post_id" => user_archive["id"],
       }
 
       user_archive.merge!(topic_hash)

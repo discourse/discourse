@@ -5,26 +5,27 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
-import DSelect from "discourse/components/d-select";
 import {
   BUMP_TYPE,
   CLOSE_AFTER_LAST_POST_STATUS_TYPE,
   CLOSE_STATUS_TYPE,
+  DELETE_AFTER_LAST_POST_STATUS_TYPE,
   DELETE_REPLIES_TYPE,
   DELETE_STATUS_TYPE,
   OPEN_STATUS_TYPE,
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/components/modal/edit-topic-timer";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
-import icon from "discourse/helpers/d-icon";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import DSelect from "discourse/ui-kit/d-select";
+import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class EditTopicTimerForm extends Component {
@@ -64,7 +65,15 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get useDuration() {
-    return this.autoCloseAfterLastPost || this.autoDeleteReplies;
+    return (
+      this.autoCloseAfterLastPost ||
+      this.autoDeleteAfterLastPost ||
+      this.autoDeleteReplies
+    );
+  }
+
+  get autoDeleteAfterLastPost() {
+    return this.statusType === DELETE_AFTER_LAST_POST_STATUS_TYPE;
   }
 
   get autoCloseAfterLastPost() {
@@ -87,6 +96,11 @@ export default class EditTopicTimerForm extends Component {
       this.args.topicTimer.based_on_last_post
     ) {
       return CLOSE_AFTER_LAST_POST_STATUS_TYPE;
+    } else if (
+      statusType === DELETE_STATUS_TYPE &&
+      this.args.topicTimer.based_on_last_post
+    ) {
+      return DELETE_AFTER_LAST_POST_STATUS_TYPE;
     } else {
       return statusType;
     }
@@ -142,6 +156,16 @@ export default class EditTopicTimerForm extends Component {
     }
   }
 
+  get willDeleteImmediately() {
+    if (this.autoDeleteAfterLastPost && this.args.topicTimer.duration_minutes) {
+      const deleteDate = moment(this.args.topic.last_posted_at).add(
+        this.args.topicTimer.duration_minutes,
+        "minutes"
+      );
+      return deleteDate < moment();
+    }
+  }
+
   get willCloseI18n() {
     if (this.autoCloseAfterLastPost) {
       const diff = Math.round(
@@ -149,6 +173,16 @@ export default class EditTopicTimerForm extends Component {
           (1000 * 60 * 60)
       );
       return i18n("topic.auto_close_immediate", { count: diff });
+    }
+  }
+
+  get willDeleteI18n() {
+    if (this.autoDeleteAfterLastPost) {
+      const diff = Math.round(
+        (new Date() - new Date(this.args.topic.last_posted_at)) /
+          (1000 * 60 * 60)
+      );
+      return i18n("topic.auto_delete_immediate", { count: diff });
     }
   }
 
@@ -161,7 +195,11 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get showTopicTimerInfo() {
-    if (!this.statusType || this.willCloseImmediately) {
+    if (
+      !this.statusType ||
+      this.willCloseImmediately ||
+      this.willDeleteImmediately
+    ) {
       return false;
     }
 
@@ -226,7 +264,7 @@ export default class EditTopicTimerForm extends Component {
         <label class="control-label">
           {{i18n "topic.topic_status_update.when"}}
         </label>
-        <TimeShortcutPicker
+        <DTimeShortcutPicker
           @timeShortcuts={{this.timeOptions}}
           @prefilledDatetime={{@topicTimer.execute_at}}
           @onTimeSelected={{this.onTimeSelected}}
@@ -240,7 +278,7 @@ export default class EditTopicTimerForm extends Component {
           <label class="control-label">
             {{i18n "topic.topic_status_update.duration"}}
           </label>
-          <RelativeTimePicker
+          <DRelativeTimePicker
             @onChange={{this.changeDuration}}
             @durationMinutes={{@topicTimer.duration_minutes}}
           />
@@ -249,8 +287,15 @@ export default class EditTopicTimerForm extends Component {
 
       {{#if this.willCloseImmediately}}
         <div class="warning">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           {{this.willCloseI18n}}
+        </div>
+      {{/if}}
+
+      {{#if this.willDeleteImmediately}}
+        <div class="warning">
+          {{dIcon "triangle-exclamation"}}
+          {{this.willDeleteI18n}}
         </div>
       {{/if}}
 

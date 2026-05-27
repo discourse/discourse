@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
@@ -9,7 +10,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
@@ -18,7 +19,7 @@ export default class AdminLogsScreenedIpAddressesController extends Controller {
   @tracked filter = null;
   @tracked loading = false;
   @tracked savedIpAddress = null;
-  @trackedArray model;
+  @autoTrackedArray model;
 
   @observes("filter")
   show() {

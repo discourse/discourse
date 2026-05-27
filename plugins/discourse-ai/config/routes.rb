@@ -28,10 +28,11 @@ DiscourseAi::Engine.routes.draw do
     get "post/:post_id/show-debug-info" => "bot#show_debug_info"
     get "show-debug-info/:id" => "bot#show_debug_info_by_id"
     post "post/:post_id/stop-streaming" => "bot#stop_streaming_response"
+    post "post/:post_id/retry" => "bot#retry_response"
   end
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
-    get "reply" => "discoveries#reply"
+    post "reply" => "discoveries#reply"
     post "continue-convo" => "discoveries#continue_convo"
   end
 
@@ -45,6 +46,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :ai_bot, path: "/ai-bot/conversations" do
     get "/" => "conversations#index"
+    put "/:topic_id/starred" => "conversations#update_starred"
   end
 
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
@@ -61,8 +63,10 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :summarization, path: "/summarization", defaults: { format: :json } do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
+    post "/t/:topic_id" => "summary#create", :constraints => { topic_id: /\d+/ }
     put "/regen_gist" => "summary#regen_gist"
-    get "/channels/:channel_id" => "chat_summary#show"
+    put "/regen_summary" => "summary#regen_summary"
+    post "/channels/:channel_id" => "chat_summary#show"
   end
 
   scope module: :sentiment, path: "/sentiment", defaults: { format: :json } do
@@ -73,6 +77,10 @@ DiscourseAi::Engine.routes.draw do
     post "/posts/:post_id" => "translation#translate"
     post "/topics/:topic_id" => "translation#schedule_topic"
   end
+
+  scope path: "/mcp/oauth", defaults: { format: :json } do
+    get "client-metadata" => "mcp_oauth#client_metadata"
+  end
 end
 
 Discourse::Application.routes.draw do
@@ -82,6 +90,10 @@ Discourse::Application.routes.draw do
       :constraints => StaffConstraint.new
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
+    get "/ai-personas", to: redirect("/admin/plugins/discourse-ai/ai-agents")
+    get "/ai-personas/new", to: redirect("/admin/plugins/discourse-ai/ai-agents/new")
+    get "/ai-personas/:id/edit", to: redirect("/admin/plugins/discourse-ai/ai-agents/%{id}/edit")
+
     resources :ai_artifacts,
               only: %i[index show create update destroy],
               path: "ai-artifacts",
@@ -90,12 +102,17 @@ Discourse::Application.routes.draw do
                 format: :json,
               }
 
-    resources :ai_personas,
+    resources :ai_agents,
               only: %i[index new create edit update destroy],
-              path: "ai-personas",
-              controller: "discourse_ai/admin/ai_personas"
+              path: "ai-agents",
+              controller: "discourse_ai/admin/ai_agents"
 
-    post "/ai-personas/stream-reply" => "discourse_ai/admin/ai_personas#stream_reply"
+    post "/ai-agents/stream-reply" => "discourse_ai/admin/ai_agents#stream_reply"
+    post "/ai-agents/:id/create-user", to: "discourse_ai/admin/ai_agents#create_user"
+    get "/ai-agents/:id/export", to: "discourse_ai/admin/ai_agents#export", format: :json
+    post "/ai-agents/import", to: "discourse_ai/admin/ai_agents#import"
+    put "/ai-agents/:id/files/remove", to: "discourse_ai/admin/ai_agents#remove_file"
+    get "/ai-agents/:id/files/status", to: "discourse_ai/admin/ai_agents#indexing_status_check"
 
     resources(
       :ai_tools,
@@ -107,13 +124,19 @@ Discourse::Application.routes.draw do
     post "/ai-tools/:id/test", to: "discourse_ai/admin/ai_tools#test"
     get "/ai-tools/:id/export", to: "discourse_ai/admin/ai_tools#export", format: :json
     post "/ai-tools/import", to: "discourse_ai/admin/ai_tools#import"
+    get "/ai-tools/mcp-servers/new", to: "discourse_ai/admin/ai_mcp_servers#new"
+    get "/ai-tools/mcp-servers/:id/edit", to: "discourse_ai/admin/ai_mcp_servers#edit"
 
-    post "/ai-personas/:id/create-user", to: "discourse_ai/admin/ai_personas#create_user"
-    get "/ai-personas/:id/export", to: "discourse_ai/admin/ai_personas#export", format: :json
-    post "/ai-personas/import", to: "discourse_ai/admin/ai_personas#import"
-
-    put "/ai-personas/:id/files/remove", to: "discourse_ai/admin/ai_personas#remove_file"
-    get "/ai-personas/:id/files/status", to: "discourse_ai/admin/ai_personas#indexing_status_check"
+    resources :ai_mcp_servers,
+              only: %i[index new create edit update destroy],
+              path: "ai-mcp-servers",
+              controller: "discourse_ai/admin/ai_mcp_servers"
+    post "/ai-mcp-servers/test", to: "discourse_ai/admin/ai_mcp_servers#test"
+    post "/ai-mcp-servers/:id/test", to: "discourse_ai/admin/ai_mcp_servers#test"
+    get "/ai-mcp-servers/:id/oauth/start", to: "discourse_ai/admin/ai_mcp_servers#oauth_start"
+    get "/ai-mcp-servers/oauth/callback", to: "discourse_ai/admin/ai_mcp_servers#oauth_callback"
+    delete "/ai-mcp-servers/:id/oauth/disconnect",
+           to: "discourse_ai/admin/ai_mcp_servers#oauth_disconnect"
 
     post "/rag-document-fragments/files/upload",
          to: "discourse_ai/admin/rag_document_fragments#upload_file"
@@ -128,12 +151,14 @@ Discourse::Application.routes.draw do
     post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
 
     get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
+    get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
+    post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
 
     resources :ai_llms,
               only: %i[index new create edit update destroy],
               path: "ai-llms",
               controller: "discourse_ai/admin/ai_llms" do
-      collection { get :test }
+      collection { post :test }
     end
 
     resources :ai_llm_quotas,
@@ -145,12 +170,17 @@ Discourse::Application.routes.draw do
               only: %i[index new create edit update destroy],
               path: "ai-embeddings",
               controller: "discourse_ai/admin/ai_embeddings" do
-      collection { get :test }
+      collection { post :test }
     end
 
     resources :ai_features,
               only: %i[index edit],
               path: "ai-features",
               controller: "discourse_ai/admin/ai_features"
+
+    resources :ai_secrets,
+              only: %i[index show new create edit update destroy],
+              path: "ai-secrets",
+              controller: "discourse_ai/admin/ai_secrets"
   end
 end

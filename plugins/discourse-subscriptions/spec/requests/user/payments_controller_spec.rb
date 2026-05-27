@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSubscriptions::User::PaymentsController do
-  before { SiteSetting.discourse_subscriptions_enabled = true }
+  before do
+    SiteSetting.discourse_subscriptions_enabled = true
+    SiteSetting.discourse_subscriptions_secret_key = "secret-key"
+  end
 
   it "is a subclass of ApplicationController" do
     expect(DiscourseSubscriptions::User::PaymentsController < ::ApplicationController).to eq(true)
@@ -29,7 +32,7 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
       created_time = Time.now
       ::Stripe::Invoice
         .expects(:list)
-        .with(customer: "c_345678")
+        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
         .returns(
           data: [
             { id: "inv_900007", lines: { data: [plan: { product: "prod_8675309" }] } },
@@ -40,7 +43,7 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
 
       ::Stripe::PaymentIntent
         .expects(:list)
-        .with(customer: "c_345678")
+        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
         .returns(
           data: [
             { id: "pi_900008", invoice: "inv_900008", created: created_time },
@@ -60,11 +63,14 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
     end
 
     it "gets pricing table one-off purchases" do
-      ::Stripe::Invoice.expects(:list).with(customer: "c_345678").returns(data: [])
+      ::Stripe::Invoice
+        .expects(:list)
+        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .returns(data: [])
 
       ::Stripe::PaymentIntent
         .expects(:list)
-        .with(customer: "c_345678")
+        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
         .returns(data: [{ id: "pi_900010", invoice: nil, created: Time.now }])
 
       get "/s/user/payments.json"
@@ -76,13 +82,22 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
 
     it "gets pricing table one-off purchases that show up as related guest payments" do
       SiteSetting.discourse_subscriptions_pricing_table_enabled = true
-      ::Stripe::Invoice.expects(:list).with(customer: "c_345678").returns(data: [])
+      ::Stripe::Invoice
+        .expects(:list)
+        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .returns(data: [])
 
-      ::Stripe::PaymentIntent.expects(:list).with(customer: "c_345678").returns(data: [])
+      ::Stripe::PaymentIntent
+        .expects(:list)
+        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .returns(data: [])
 
       ::Stripe::Charge
         .expects(:list)
-        .with(limit: 100, starting_after: nil, expand: ["data.payment_intent"])
+        .with(
+          { limit: 100, starting_after: nil, expand: ["data.payment_intent"] },
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         .returns(
           data: [
             {

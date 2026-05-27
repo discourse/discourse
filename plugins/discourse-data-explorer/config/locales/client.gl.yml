@@ -7,7 +7,12 @@
 gl:
   js:
     explorer:
+      default_query: "Predeterminado"
       or: "ou"
+      create: "Crear"
+      ai:
+        generate: "Xerar"
+        optional: "opcional"
       import:
         label: "Importar"
       help:
@@ -18,9 +23,6 @@ gl:
         bool:
           yes: "Si"
           no: "Non"
-      export: "Exportar"
-      save: "Gardar os cambios"
-      edit: "Editar"
       delete: "Eliminar"
       query_groups: "Grupos"
       query_description: "Descrición"

@@ -80,18 +80,12 @@ en:
     chat_integration_gitter_enabled: "Enable the Gitter chat integration provider"
 
     #######################################
-    ########## FLOWDOCK SETTINGS ##########
-    #######################################
-    chat_integration_flowdock_enabled: "Enable the Flowdock chat integration provider"
-    chat_integration_flowdock_excerpt_length: "Flowdock post excerpt length"
-
-    #######################################
     ########## GROUPME SETTINGS ##########
     #######################################
     chat_integration_groupme_enabled: "Enable the Groupme chat integration provider"
     chat_integration_groupme_excerpt_length: "Groupme post excerpt length"
-    chat_integration_groupme_bot_ids: "*required* Bot IDs, seperated by ',' if there are multiple"
-    chat_integration_groupme_instance_names: " *required* Name of the GroupMe chat, seperated by ',' if there are multiple (same order as Bot IDs)"
+    chat_integration_groupme_bot_ids: "*required* Bot IDs, separated by ',' if there are multiple"
+    chat_integration_groupme_instance_names: " *required* Name of the GroupMe chat, separated by ',' if there are multiple (same order as Bot IDs)"
 
     ###########################################
     ######## MICROSOFT TEAMS SETTINGS #########
@@ -119,7 +113,7 @@ en:
 
   dashboard:
     problem:
-      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/chat-integration'>the chat integration section</a> to find out more."
+      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/discourse-chat-integration'>the chat integration section</a> to find out more."
 
   discourse_automation:
     scriptables:
@@ -127,8 +121,8 @@ en:
         title: Send Slack message
       send_chat_integration_message:
         title: Send Chat-Integration message
-  chat_integration:
 
+  chat_integration:
     all_categories: "(all categories)"
     deleted_category: "(deleted category)"
     deleted_group: "(deleted group)"
@@ -136,11 +130,15 @@ en:
     group_mention_template: "mentions of: @%{name}"
     group_message_template: "messages to: @%{name}"
 
-
     topic_tag_changed:
       added_and_removed: "Added %{added} and removed %{removed}"
       added: "Added %{added}"
       removed: "Removed %{removed}"
+
+    errors:
+      provider_already_enabled: "Provider '%{name}' is already enabled"
+      provider_not_found: "Provider '%{name}' not found"
+      setting_update_failed: "Failed to update settings: %{errors}"
 
     provider:
 
@@ -159,10 +157,10 @@ en:
         create:
           created: "Rule created successfully"
           updated: "Rule updated successfully"
-          error: "Sorry, an error occured while creating that rule."
+          error: "Sorry, an error occurred while creating that rule."
         delete:
           success: "Rule deleted successfully"
-          error: "Sorry, an error occured while deleting that rule. Run `/discourse status` for a list of rules."
+          error: "Sorry, an error occurred while deleting that rule. Run `/discourse status` for a list of rules."
         not_found:
           tag: "The *%{name}* tag cannot be found."
           category: "The *%{name}* category cannot be found. Available categories: *%{list}*"
@@ -229,10 +227,10 @@ en:
         create:
           created: "Rule created successfully"
           updated: "Rule updated successfully"
-          error: "Sorry, an error occured while creating that rule."
+          error: "Sorry, an error occurred while creating that rule."
         delete:
           success: "Rule deleted successfully"
-          error: "Sorry, an error occured while deleting that rule. Run <code>/status</code> for a list of rules."
+          error: "Sorry, an error occurred while deleting that rule. Run <code>/status</code> for a list of rules."
         not_found:
           tag: "The <b>%{name}</b> tag cannot be found."
           category: "The <b>%{name}</b> category cannot be found. Available categories: <b>%{list}</b>"
@@ -271,10 +269,10 @@ en:
         create:
           created: "Rule created successfully"
           updated: "Rule updated successfully"
-          error: "Sorry, an error occured while creating that rule."
+          error: "Sorry, an error occurred while creating that rule."
         delete:
           success: "Rule deleted successfully"
-          error: "Sorry, an error occured while deleting that rule. Run `/discourse status` for a list of rules."
+          error: "Sorry, an error occurred while deleting that rule. Run `/discourse status` for a list of rules."
         not_found:
           tag: "The *%{name}* tag cannot be found."
           category: "The *%{name}* category cannot be found. Available categories: *%{list}*"
@@ -312,12 +310,6 @@ en:
                     ~~~quote
                     %{excerpt}
                     ~~~
-
-      #######################################
-      ########### FLOWDOCK STRINGS ##########
-      #######################################
-      flowdock:
-        message_title: "posted"
 
       #######################################
       ############ GOOGLE STRINGS ###########

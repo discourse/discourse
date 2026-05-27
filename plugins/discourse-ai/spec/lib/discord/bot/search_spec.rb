@@ -20,7 +20,7 @@ RSpec.describe DiscourseAi::Discord::Bot::Search do
 
   describe "#handle_interaction!" do
     it "creates a reply with search results" do
-      allow_any_instance_of(DiscourseAi::Personas::Tools::Search).to receive(:invoke).and_return(
+      allow_any_instance_of(DiscourseAi::Agents::Tools::Search).to receive(:invoke).and_return(
         { rows: [%w[Title /link]] },
       )
       search.handle_interaction!

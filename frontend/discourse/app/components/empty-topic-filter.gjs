@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import EmptyState from "discourse/components/empty-state";
+import { trustHTML } from "@ember/template";
 import SvgDocumentsCheckmark from "discourse/components/svg/documents-checkmark";
-import basePath from "discourse/helpers/base-path";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default class EmptyTopicFilter extends Component {
@@ -18,6 +18,8 @@ export default class EmptyTopicFilter extends Component {
       } else {
         return i18n("topics.none.education.new");
       }
+    } else {
+      return i18n("topics.none.education.generic");
     }
   }
 
@@ -60,19 +62,24 @@ export default class EmptyTopicFilter extends Component {
     return "discovery.latest";
   }
 
+  get tipText() {
+    if (this.args.unreadFilter || this.args.newFilter) {
+      return i18n("topics.none.education.topic_tracking_preferences", {
+        basePath: dBasePath(),
+      });
+    }
+    return "";
+  }
+
   <template>
-    <EmptyState
+    <DEmptyState
       @identifier="empty-topic-filter"
       @title={{this.educationText}}
       @ctaLabel={{this.ctaLabelWithAction.label}}
       @ctaRoute={{this.ctaRoute}}
       @ctaAction={{this.ctaLabelWithAction.action}}
       @tipIcon="circle-info"
-      @tipText={{htmlSafe
-        (i18n
-          "topics.none.education.topic_tracking_preferences" basePath=(basePath)
-        )
-      }}
+      @tipText={{trustHTML this.tipText}}
       @svgContent={{SvgDocumentsCheckmark}}
     />
   </template>

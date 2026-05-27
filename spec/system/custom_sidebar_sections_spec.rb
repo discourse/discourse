@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Custom sidebar sections", type: :system do
+describe "Custom sidebar sections" do
   fab!(:user)
   fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
@@ -176,6 +176,18 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
   end
 
+  it "allows typing in the icon picker filter input" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    picker = section_modal.first_link_icon_picker
+    picker.expand.type_filter("globe")
+
+    expect(picker.filter_input.value).to eq("globe")
+    expect(picker).to have_icon("globe")
+  end
+
   it "accessibility - when new row is added in custom section, first new input is focused" do
     sign_in user
     visit("/latest")
@@ -184,7 +196,9 @@ describe "Custom sidebar sections", type: :system do
     sidebar.click_add_link_button
 
     is_focused =
-      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+      page.evaluate_script(
+        "document.activeElement.classList.contains('d-icon-grid-picker-trigger')",
+      )
 
     expect(is_focused).to be true
   end
@@ -258,7 +272,7 @@ describe "Custom sidebar sections", type: :system do
 
     tags_link = find(".draggable[data-link-name='Sidebar Tags']")
     latest_link = find(".draggable[data-link-name='Sidebar Latest']")
-    tags_link.drag_to(latest_link, html5: true, delay: 0.4)
+    tags_link.drag_to(latest_link, delay: 0.4)
     section_modal.save
     expect(section_modal).to be_closed
 
@@ -405,6 +419,31 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section("Public section")
     expect(sidebar).to have_section_link("Sidebar Tags")
     expect(sidebar).to have_section_link("Sidebar Categories")
+  end
+
+  it "navigates to tag page when clicking a legacy category+tag link without tag_id" do
+    SiteSetting.tagging_enabled = true
+    category = Fabricate(:category)
+    tag = Fabricate(:tag)
+    Fabricate(:topic, category: category, tags: [tag])
+
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    sidebar_url =
+      Fabricate(
+        :sidebar_url,
+        name: "Tagged",
+        value: "/tags/c/#{category.slug}/#{category.id}/#{tag.name}?status=closed",
+      )
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_section_link("Tagged")
+
+    expect(page).to have_current_path(
+      "/tags/c/#{category.slug}/#{category.id}/#{tag.slug}/#{tag.id}?status=closed",
+    )
   end
 
   it "validates custom section fields" do

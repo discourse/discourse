@@ -200,6 +200,29 @@ acceptance(`Post inline mentions – user status tooltip`, function (needs) {
   });
 });
 
+acceptance(`Post inline mentions – text direction`, function (needs) {
+  needs.user();
+
+  const topicId = 130;
+  const mentionedUserId = 1;
+
+  test("mentions have unicode-bidi plaintext for correct RTL rendering", async function (assert) {
+    pretender.get(`/t/${topicId}.json`, () => {
+      return response(topicWithoutUserStatus(topicId, mentionedUserId));
+    });
+
+    await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
+
+    const mention = document.querySelector(".topic-post .cooked .mention");
+    const style = getComputedStyle(mention);
+    assert.strictEqual(
+      style.unicodeBidi,
+      "plaintext",
+      "@ symbol renders correctly in RTL contexts"
+    );
+  });
+});
+
 acceptance(`Post inline mentions as an anonymous user`, function (needs) {
   needs.settings({
     enable_user_status: true,

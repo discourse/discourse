@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import bodyClass from "discourse/helpers/body-class";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ComposerPeekModeToggle extends Component {
   @service composer;
@@ -13,7 +13,9 @@ export default class ComposerPeekModeToggle extends Component {
   peekModeActive = this.keyValueStore.getItem("peekModeActive") === "true";
 
   get bodyCssClass() {
-    return this.peekModeActive ? "peek-mode-active" : "";
+    return this.peekModeActive && !this.composer.isPreviewVisible
+      ? "peek-mode-active"
+      : "";
   }
 
   @action

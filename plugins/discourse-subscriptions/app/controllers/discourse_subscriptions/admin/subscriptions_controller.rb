@@ -7,53 +7,45 @@ module DiscourseSubscriptions
 
       include DiscourseSubscriptions::Stripe
       include DiscourseSubscriptions::Group
-      before_action :set_api_key
 
       PAGE_LIMIT = 10
 
       def index
-        begin
-          subscription_ids = Subscription.all.pluck(:external_id)
-          subscriptions = {
-            has_more: false,
-            data: [],
-            length: 0,
-            last_record: params[:last_record],
-          }
+        subscription_ids = Subscription.all.pluck(:external_id)
+        subscriptions = { has_more: false, data: [], length: 0, last_record: params[:last_record] }
 
-          if subscription_ids.present? && is_stripe_configured?
-            while subscriptions[:length] < PAGE_LIMIT
-              current_set = get_subscriptions(subscriptions[:last_record])
+        if subscription_ids.present? && is_stripe_configured?
+          while subscriptions[:length] < PAGE_LIMIT
+            current_set = get_subscriptions(subscriptions[:last_record])
 
-              until valid_subscriptions =
-                      find_valid_subscriptions(current_set[:data], subscription_ids)
-                current_set = get_subscriptions(current_set[:data].last)
-                break if current_set[:has_more] == false
-              end
-
-              subscriptions[:data] = subscriptions[:data].concat(valid_subscriptions.to_a)
-              subscriptions[:last_record] = current_set[:data].last[:id] if current_set[
-                :data
-              ].present?
-              subscriptions[:length] = subscriptions[:data].length
-              subscriptions[:has_more] = current_set[:has_more]
-              break if subscriptions[:has_more] == false
+            until valid_subscriptions =
+                    find_valid_subscriptions(current_set[:data], subscription_ids)
+              current_set = get_subscriptions(current_set[:data].last)
+              break if current_set[:has_more] == false
             end
-          elsif !is_stripe_configured?
-            subscriptions = nil
-          end
 
-          render_json_dump subscriptions
-        rescue ::Stripe::InvalidRequestError => e
-          render_json_error e.message
+            subscriptions[:data] = subscriptions[:data].concat(valid_subscriptions.to_a)
+            subscriptions[:last_record] = current_set[:data].last[:id] if current_set[
+              :data
+            ].present?
+            subscriptions[:length] = subscriptions[:data].length
+            subscriptions[:has_more] = current_set[:has_more]
+            break if subscriptions[:has_more] == false
+          end
+        elsif !is_stripe_configured?
+          subscriptions = nil
         end
+
+        render_json_dump subscriptions
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
       end
 
       def destroy
         params.require(:id)
         begin
-          refund_subscription(params[:id]) if params[:refund]
-          subscription = ::Stripe::Subscription.cancel(params[:id])
+          refund_subscription(params[:id]) if ActiveModel::Type::Boolean.new.cast(params[:refund])
+          subscription = ::Stripe::Subscription.cancel(params[:id], {}, stripe_request_opts)
 
           customer =
             Customer.find_by(
@@ -77,10 +69,13 @@ module DiscourseSubscriptions
 
       def get_subscriptions(start)
         ::Stripe::Subscription.list(
-          expand: ["data.plan.product"],
-          limit: PAGE_LIMIT,
-          starting_after: start,
-          status: "all",
+          {
+            expand: ["data.plan.product"],
+            limit: PAGE_LIMIT,
+            starting_after: start,
+            status: "all",
+          },
+          stripe_request_opts,
         )
       end
 
@@ -91,12 +86,15 @@ module DiscourseSubscriptions
 
       # this will only refund the most recent subscription payment
       def refund_subscription(subscription_id)
-        subscription = ::Stripe::Subscription.retrieve(subscription_id)
-        invoice = ::Stripe::Invoice.retrieve(subscription[:latest_invoice]) if subscription[
-          :latest_invoice
-        ]
+        subscription = ::Stripe::Subscription.retrieve(subscription_id, stripe_request_opts)
+        invoice =
+          ::Stripe::Invoice.retrieve(
+            subscription[:latest_invoice],
+            stripe_request_opts,
+          ) if subscription[:latest_invoice]
         payment_intent = invoice[:payment_intent] if invoice[:payment_intent]
-        refund = ::Stripe::Refund.create({ payment_intent: payment_intent })
+
+        ::Stripe::Refund.create({ payment_intent: payment_intent }, stripe_request_opts)
       end
     end
   end

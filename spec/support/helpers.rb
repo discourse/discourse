@@ -179,26 +179,43 @@ module Helpers
 
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
-    `cd #{repo_dir} && git init . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}`
-    `cd #{repo_dir} && git config user.email 'someone@cool.com'`
-    `cd #{repo_dir} && git config user.name 'The Cool One'`
-    `cd #{repo_dir} && git config commit.gpgsign 'false'`
+    system(
+      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}",
+      exception: true,
+    )
+    system("git -C #{repo_dir} config user.email 'someone@cool.com'", exception: true)
+    system("git -C #{repo_dir} config user.name 'The Cool One'", exception: true)
+    system("git -C #{repo_dir} config commit.gpgsign 'false'", exception: true)
     files.each do |name, data|
       FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
       File.write("#{repo_dir}/#{name}", data)
-      `cd #{repo_dir} && git add #{name}`
+      system("git -C #{repo_dir} add #{name}", exception: true)
     end
-    `cd #{repo_dir} && git commit -am 'first commit'`
+    system(
+      "git -C #{repo_dir} commit -q -am 'first commit'",
+      out: File::NULL,
+      err: File::NULL,
+      exception: false,
+    )
     repo_dir
+  end
+
+  def setup_remote_upstream(path)
+    system("git -C #{path} remote add origin #{path}/.git", exception: true)
+    system("git -C #{path} fetch -q", exception: true)
+    branch = `git -C #{path} rev-parse --abbrev-ref HEAD`.strip
+    raise "no branch in setup_remote_upstream" if branch.blank?
+    system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
+    system("git -C #{path} remote set-head origin #{branch}", exception: true)
   end
 
   def add_to_git_repo(repo_dir, files)
     files.each do |name, data|
       FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
       File.write("#{repo_dir}/#{name}", data)
-      `cd #{repo_dir} && git add #{name}`
+      system("git -C #{repo_dir} add #{name}", exception: true)
     end
-    `cd #{repo_dir} && git commit -am 'add #{files.size} files'`
+    system("git -C #{repo_dir} commit -q -am 'add #{files.size} files'", exception: true)
     repo_dir
   end
 
@@ -318,19 +335,10 @@ module Helpers
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
   end
 
-  def try_until_success(timeout: 3, frequency: 0.01)
-    start ||= Time.zone.now
-    backoff ||= frequency
-    yield
-  rescue RSpec::Expectations::ExpectationNotMetError
-    raise if Time.zone.now >= start + timeout.seconds
-    sleep backoff
-    backoff += frequency
-    retry
-  end
-
   def mock_upcoming_change_metadata(metadata)
-    @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
+    # Without ||= here nested blocks would further mutate the instance var so
+    # resetting in clear_mocked_upcoming_change_metadata would not work.
+    @original_upcoming_changes_metadata ||= SiteSetting.upcoming_change_metadata.dup
 
     # We do this because upcoming changes are ephemeral in site settings,
     # so we cannot rely on them for specs. Instead we can fake some metadata
@@ -342,9 +350,35 @@ module Helpers
   end
 
   def clear_mocked_upcoming_change_metadata
+    return if @original_upcoming_changes_metadata.nil?
+
     SiteSetting.instance_variable_set(
       :@upcoming_change_metadata,
       @original_upcoming_changes_metadata,
+    )
+  end
+
+  def mock_upcoming_change_default_overrides(overrides)
+    # Without ||= here nested blocks would further mutate the instance var so
+    # resetting in clear_mocked_upcoming_change_metadata would not work.
+    @original_upcoming_change_default_overrides ||=
+      SiteSetting.upcoming_change_default_overrides.dup
+
+    # We do this because upcoming changes are ephemeral in site settings,
+    # so we cannot rely on them for specs. Instead we can fake some metadata
+    # for an existing stable setting.
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides.merge(overrides),
+    )
+  end
+
+  def clear_mocked_upcoming_change_default_overrides
+    return if @original_upcoming_change_default_overrides.nil?
+
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides,
     )
   end
 

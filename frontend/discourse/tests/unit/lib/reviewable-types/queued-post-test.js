@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { emojiUnescape } from "discourse/lib/text";
@@ -35,7 +35,7 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     );
     assert.deepEqual(
       director.description,
-      htmlSafe(
+      trustHTML(
         i18n("user_menu.reviewable.new_post_in_topic", {
           title: `This is safe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
         })
@@ -47,12 +47,29 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     reviewable.payload_title = "This is unsafe title <a> :heart:";
     assert.deepEqual(
       director.description,
-      htmlSafe(
+      trustHTML(
         i18n("user_menu.reviewable.new_post_in_topic", {
           title: `This is unsafe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
         })
       ),
       "contains the payload title escaped and correctly unescapes emojis"
+    );
+  });
+
+  test("description falls back for deleted topic", function (assert) {
+    const reviewable = getReviewable({
+      topic_fancy_title: null,
+    });
+    delete reviewable.payload_title;
+    const director = createRenderDirector(
+      reviewable,
+      "ReviewableQueuedPost",
+      this.siteSettings
+    );
+    assert.deepEqual(
+      director.description,
+      i18n("user_menu.reviewable.new_post_in_deleted_topic"),
+      "shows deleted topic fallback when no title is available"
     );
   });
 });

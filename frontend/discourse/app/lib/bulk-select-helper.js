@@ -4,7 +4,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
 
 export default class BulkSelectHelper {
@@ -18,9 +18,14 @@ export default class BulkSelectHelper {
   @tracked autoAddBookmarksToBulkSelect = false;
   @tracked lastCheckedElementId = null;
 
-  @trackedArray selected = [];
+  @autoTrackedArray selected;
 
-  constructor(context) {
+  constructor(context, topics) {
+    if (topics) {
+      this.selected = topics;
+    } else {
+      this.selected = [];
+    }
     setOwner(this, getOwner(context));
   }
 
@@ -30,7 +35,27 @@ export default class BulkSelectHelper {
   }
 
   addTopics(topics) {
-    this.selected.concat(topics);
+    this.selected = this.selected.concat(topics);
+  }
+
+  setTopics(topics) {
+    this.selected = topics;
+  }
+
+  get onBulkSelectToggle() {
+    return this._onBulkSelectToggle;
+  }
+
+  set onBulkSelectToggle(callback) {
+    this._onBulkSelectToggle = callback;
+  }
+
+  get onResetNew() {
+    return this._onResetNew;
+  }
+
+  set onResetNew(callback) {
+    this._onResetNew = callback;
   }
 
   get selectedCategoryIds() {
@@ -40,6 +65,7 @@ export default class BulkSelectHelper {
   @action
   toggleBulkSelect(event) {
     event?.preventDefault();
+    this._onBulkSelectToggle?.(this.bulkSelectEnabled);
     this.bulkSelectEnabled = !this.bulkSelectEnabled;
     this.clear();
   }
@@ -72,6 +98,8 @@ export default class BulkSelectHelper {
 
       this.modal.close();
       this.router.refresh();
+      this.bulkSelectEnabled = false;
+      this.clear();
     });
   }
 }

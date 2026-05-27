@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 be:
+  js:
+    github:
+      pr_status:
+        approved: "Ухвалена"
+        closed: "Закрыта"

@@ -118,6 +118,37 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       [],
       "it returns no errors when the value is an integer"
     );
+
+    errors = await new Validator("", { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is an empty string"
+    );
+
+    errors = await new Validator(undefined, { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is undefined"
+    );
+
+    errors = await new Validator(null, { integer: {} }).validate();
+    assert.deepEqual(errors, [], "it returns no errors when the value is null");
+
+    errors = await new Validator("5", { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the string value represents an integer"
+    );
+
+    errors = await new Validator("5.5", { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.not_an_integer")],
+      "it returns an error when the string value represents a non-integer"
+    );
   });
 
   test("number", async function (assert) {
@@ -301,7 +332,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
   test("required", async function (assert) {
     let errors = await new Validator(" ", {
       required: { trim: true },
-    }).validate("input-text");
+    }).validate("input");
 
     assert.deepEqual(
       errors,
@@ -311,7 +342,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     errors = await new Validator(undefined, {
       required: {},
-    }).validate("input-text");
+    }).validate("input");
 
     assert.deepEqual(
       errors,
@@ -321,7 +352,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     errors = await new Validator(null, {
       required: {},
-    }).validate("input-text");
+    }).validate("input");
 
     assert.deepEqual(
       errors,
@@ -331,7 +362,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     errors = await new Validator(" ", {
       required: { trim: false },
-    }).validate("input-text");
+    }).validate("input");
 
     assert.deepEqual(
       errors,
@@ -378,6 +409,33 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       errors,
       [i18n("form_kit.errors.required")],
       "it returns an error when the value is undefined"
+    );
+
+    errors = await new Validator("true", {
+      required: {},
+    }).validate("checkbox");
+    assert.deepEqual(
+      errors,
+      [],
+      'it returns no errors when the checkbox value is the string "true"'
+    );
+
+    errors = await new Validator(false, {
+      required: {},
+    }).validate("checkbox");
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.required")],
+      "it returns an error when the checkbox value is false"
+    );
+
+    errors = await new Validator("false", {
+      required: {},
+    }).validate("checkbox");
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.required")],
+      'it returns an error when the checkbox value is the string "false"'
     );
 
     errors = await new Validator(undefined, {

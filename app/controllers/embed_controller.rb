@@ -78,7 +78,6 @@ class EmbedController < ApplicationController
 
   def comments
     embed_url = params[:embed_url]
-    embed_username = params[:discourse_username]
     embed_topic_id = params[:topic_id]&.to_i
 
     unless embed_topic_id || EmbeddableHost.url_allowed?(embed_url)
@@ -92,6 +91,14 @@ class EmbedController < ApplicationController
     end
 
     response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
+
+    if SiteSetting.embed_full_app && params[:full_app].present? && topic_id
+      topic = Topic.find_by(id: topic_id)
+      raise Discourse::NotFound if topic.blank? || !guardian.can_see?(topic)
+      redirect_to "#{topic.url}?embed_mode=true"
+      return
+    end
+
     if topic_id
       @topic_view =
         TopicView.new(
@@ -116,7 +123,6 @@ class EmbedController < ApplicationController
         :retrieve_topic,
         user_id: current_user.try(:id),
         embed_url: embed_url,
-        author_username: embed_username,
         referer: request.env["HTTP_REFERER"],
       )
       render "loading"
@@ -143,6 +149,8 @@ class EmbedController < ApplicationController
       topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
       topic_embeds.each do |te|
+        next if te.topic.present? && !guardian.can_see?(te.topic)
+
         url = te.embed_url
         url = "#{url}#discourse-comments" if params[:embed_url].exclude?(url)
         if te.topic.present?

@@ -64,7 +64,9 @@ class UploadCreator
 
     @image_info =
       begin
-        FastImage.new(@file)
+        image = FastImage.new(@file)
+        image.type # eager load to rescue errors early
+        image
       rescue StandardError
         nil
       end
@@ -167,7 +169,7 @@ class UploadCreator
       @upload.filesize = filesize
       @upload.sha1 =
         (
-          if (SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail)
+          if SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail
             unique_hash
           else
             sha1
@@ -289,7 +291,9 @@ class UploadCreator
   def extract_image_info!
     @image_info =
       begin
-        FastImage.new(@file)
+        image = FastImage.new(@file)
+        image.type # eager load to rescue errors early
+        image
       rescue StandardError
         nil
       end
@@ -483,6 +487,7 @@ class UploadCreator
         I18n.t(
           "upload.images.larger_than_x_megapixels",
           max_image_megapixels: SiteSetting.max_image_megapixels,
+          original_filename: @upload.original_filename,
         ),
       )
       true
@@ -512,6 +517,7 @@ class UploadCreator
         end
         use_el.remove_attribute("xlink:href")
       end
+
     File.write(@file.path, doc.to_s)
     @file.rewind
   end
@@ -647,6 +653,7 @@ class UploadCreator
     @upload.for_theme = true if @opts[:for_theme]
     @upload.for_export = true if @opts[:for_export]
     @upload.for_site_setting = true if @opts[:for_site_setting]
+    @upload.site_setting_name = @opts[:site_setting_name] if @opts[:site_setting_name]
     @upload.for_gravatar = true if @opts[:for_gravatar]
   end
 

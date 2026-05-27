@@ -9,7 +9,6 @@ export function minimumOffset() {
     "The minimumOffset() helper is deprecated, please use headerOffset() instead.",
     {
       since: "2.8.0.beta10",
-      dropFrom: "2.9.0.beta2",
       id: "discourse.offset-calculator.minimumOffset",
     }
   );

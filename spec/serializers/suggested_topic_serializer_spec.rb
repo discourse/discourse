@@ -56,12 +56,44 @@ RSpec.describe SuggestedTopicSerializer do
 
     it "returns hidden tag to staff" do
       json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq(
+        [{ id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug }],
+      )
     end
 
     it "does not return hidden tag to non-staff" do
       json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
       expect(json[:tags]).to eq([])
+    end
+  end
+
+  describe "#op_like_count" do
+    it "returns the first post's like count" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, like_count: 5)
+      topic.update!(first_post: post)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json[:op_like_count]).to eq(5)
+    end
+  end
+
+  describe "#is_nested_view" do
+    before { SiteSetting.nested_replies_enabled = true }
+
+    it "returns true when the topic uses nested replies" do
+      topic = Fabricate(:topic)
+      Fabricate(:nested_topic, topic: topic)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json[:is_nested_view]).to eq(true)
+    end
+
+    it "omits the attribute when the topic uses the flat view" do
+      topic = Fabricate(:topic)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json).not_to have_key(:is_nested_view)
     end
   end
 end

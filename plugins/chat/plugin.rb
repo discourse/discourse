@@ -16,7 +16,8 @@ register_asset "stylesheets/common/index.scss"
 register_asset "stylesheets/desktop/index.scss", :desktop
 register_asset "stylesheets/mobile/index.scss", :mobile
 
-register_svg_icon "comments"
+register_service_worker "service-worker/chat-service-worker-extensions.js"
+
 register_svg_icon "comment-slash"
 register_svg_icon "comment-dots"
 register_svg_icon "lock"
@@ -46,7 +47,7 @@ end
 require_relative "lib/chat/engine"
 
 after_initialize do
-  register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
+  register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
@@ -140,7 +141,8 @@ after_initialize do
     return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.can_direct_message? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat? &&
+      scope.recipient_allows_direct_messages?(object)
   end
 
   add_to_serializer(:hidden_profile, :can_chat_user) do
@@ -148,7 +150,8 @@ after_initialize do
     return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.can_direct_message? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat? &&
+      scope.recipient_allows_direct_messages?(object)
   end
 
   add_to_serializer(
@@ -205,7 +208,7 @@ after_initialize do
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
     Chat::ChannelFetcher.secured_public_channel_search(
-      self.scope,
+      scope,
       following: false,
       limit: 1,
       status: :open,
@@ -233,7 +236,7 @@ after_initialize do
       @has_chat_enabled =
         SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
     end,
-  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
+  ) { Chat::ChannelFetcher.unreads_total(scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
@@ -288,6 +291,12 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_quick_reactions_custom) do
     object.chat_quick_reactions_custom
   end
+
+  add_to_serializer(
+    :category,
+    :has_chat_channels,
+    include_condition: -> { SiteSetting.chat_enabled },
+  ) { object.category_channels.exists? }
 
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]

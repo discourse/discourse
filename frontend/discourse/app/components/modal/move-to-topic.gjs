@@ -4,22 +4,23 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ChooseMessage from "discourse/components/choose-message";
 import ChooseTopic from "discourse/components/choose-topic";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RadioButton from "discourse/components/radio-button";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { extractError } from "discourse/lib/ajax-error";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
@@ -148,14 +149,14 @@ export default class MoveToTopic extends Component {
         title: this.topicName,
         post_ids: this.args.model.selectedPostIds,
         category_id: this.categoryId,
-        tags: this.tags,
+        tag_ids: this.tags?.map((t) => t.id),
       };
     } else {
       mergeOptions = {};
       moveOptions = {
         title: this.topicName,
         post_ids: this.args.model.selectedPostIds,
-        tags: this.tags,
+        tag_ids: this.tags?.map((t) => t.id),
         archetype: "private_message",
       };
     }
@@ -180,8 +181,8 @@ export default class MoveToTopic extends Component {
       this.args.closeModal();
       this.args.model.toggleMultiSelect();
       DiscourseURL.routeTo(result.url);
-    } catch {
-      this.flash = i18n("topic.move_to.error");
+    } catch (e) {
+      this.flash = extractError(e, i18n("topic.move_to.error"));
     } finally {
       this.saving = false;
     }
@@ -221,7 +222,7 @@ export default class MoveToTopic extends Component {
           <div class="radios">
             {{#if this.canSplitToPM}}
               <label class="radio-label" for="move-to-new-message">
-                <RadioButton
+                <DRadioButton
                   id="move-to-new-message"
                   @name="move-to-entity"
                   @value="new_message"
@@ -232,7 +233,7 @@ export default class MoveToTopic extends Component {
             {{/if}}
 
             <label class="radio-label" for="move-to-existing-message">
-              <RadioButton
+              <DRadioButton
                 id="move-to-existing-message"
                 @name="move-to-entity"
                 @value="existing_message"
@@ -245,7 +246,7 @@ export default class MoveToTopic extends Component {
           {{#if this.canSplitTopic}}
             {{#if this.newMessage}}
               <p>
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topic.move_to_new_message.instructions"
                     count=@model.selectedPostsCount
@@ -256,7 +257,7 @@ export default class MoveToTopic extends Component {
                 <label>{{i18n
                     "topic.move_to_new_message.message_title"
                   }}</label>
-                <TextField
+                <DTextField
                   @value={{this.topicName}}
                   @placeholderKey="composer.title_placeholder"
                   id="split-topic-name"
@@ -272,7 +273,7 @@ export default class MoveToTopic extends Component {
 
           {{#if this.existingMessage}}
             <p>
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "topic.move_to_existing_message.instructions"
                   count=@model.selectedPostsCount
@@ -311,7 +312,7 @@ export default class MoveToTopic extends Component {
           <div class="radios">
             {{#if this.canSplitTopic}}
               <label class="radio-label" for="move-to-new-topic">
-                <RadioButton
+                <DRadioButton
                   id="move-to-new-topic"
                   @name="move-to-entity"
                   @value="new_topic"
@@ -322,7 +323,7 @@ export default class MoveToTopic extends Component {
             {{/if}}
 
             <label class="radio-label" for="move-to-existing-topic">
-              <RadioButton
+              <DRadioButton
                 id="move-to-existing-topic"
                 @name="move-to-entity"
                 @value="existing_topic"
@@ -333,7 +334,7 @@ export default class MoveToTopic extends Component {
 
             {{#if this.canSplitToPM}}
               <label class="radio-label" for="move-to-new-message">
-                <RadioButton
+                <DRadioButton
                   id="move-to-new-message"
                   @name="move-to-entity"
                   @value="new_message"
@@ -348,7 +349,7 @@ export default class MoveToTopic extends Component {
 
           {{#if this.existingTopic}}
             <p>
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "topic.merge_topic.instructions"
                   count=@model.selectedPostsCount
@@ -379,7 +380,7 @@ export default class MoveToTopic extends Component {
           {{#if this.canSplitTopic}}
             {{#if this.newTopic}}
               <p>
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topic.split_topic.instructions"
                     count=@model.selectedPostsCount
@@ -389,7 +390,7 @@ export default class MoveToTopic extends Component {
               <form class="split-new-topic-form">
                 <div class="control-group">
                   <label>{{i18n "topic.split_topic.topic_name"}}</label>
-                  <TextField
+                  <DTextField
                     @value={{this.topicName}}
                     @placeholderKey="composer.title_placeholder"
                     id="split-topic-name"
@@ -443,7 +444,7 @@ export default class MoveToTopic extends Component {
           {{#if this.canSplitTopic}}
             {{#if this.newMessage}}
               <p>
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "topic.move_to_new_message.instructions"
                     count=@model.selectedPostsCount
@@ -454,7 +455,7 @@ export default class MoveToTopic extends Component {
                 <label>{{i18n
                     "topic.move_to_new_message.message_title"
                   }}</label>
-                <TextField
+                <DTextField
                   @value={{this.topicName}}
                   @placeholderKey="composer.title_placeholder"
                   id="split-topic-name"

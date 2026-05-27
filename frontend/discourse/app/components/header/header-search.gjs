@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class HeaderSearch extends Component {
   @service siteSettings;
@@ -47,7 +47,7 @@ export default class HeaderSearch extends Component {
                   @icon="magnifying-glass"
                   @translatedLabel={{@buttonText}}
                   @title="search.open_advanced"
-                  class={{concatClass "btn search-icon" @buttonClass}}
+                  class={{dConcatClass "btn search-icon" @buttonClass}}
                   @href={{this.advancedSearchButtonHref}}
                 />
 

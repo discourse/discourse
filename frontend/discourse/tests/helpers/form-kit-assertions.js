@@ -42,10 +42,32 @@ class FieldHelper {
     this.context = context;
   }
 
+  get resolvedControlType() {
+    const type = this.element.dataset.controlType;
+
+    if (type !== "custom") {
+      return type;
+    }
+
+    if (this.element.querySelector(".form-kit__control-custom .multi-select")) {
+      return "multi-select";
+    }
+
+    if (
+      this.element.querySelector(
+        ".form-kit__control-custom .tag-chooser, .form-kit__control-custom .tag-group-chooser, .form-kit__control-tag-chooser"
+      )
+    ) {
+      return "tag-chooser";
+    }
+
+    return type;
+  }
+
   get value() {
     this.context.dom(this.element).exists(`field '${this.name}' exists`);
 
-    switch (this.element.dataset.controlType) {
+    switch (this.resolvedControlType) {
       case "image": {
         return this.element
           .querySelector(".form-kit__control-image a.lightbox")
@@ -57,14 +79,15 @@ class FieldHelper {
       }
       case "password":
         return this.element.querySelector(".form-kit__control-password").value;
+      case "input":
       case "input-number":
       case "input-text":
         return this.element.querySelector(".form-kit__control-input").value;
-      case "icon": {
-        return this.element.querySelector(
-          ".form-kit__control-icon .select-kit-header"
-        )?.dataset?.value;
-      }
+      case "icon":
+        return (
+          this.element.querySelector(".d-icon-grid-picker")?.dataset?.value ||
+          undefined
+        );
       case "question": {
         return (
           this.element.querySelector(".form-kit__control-radio:checked")
@@ -94,6 +117,10 @@ class FieldHelper {
       case "select": {
         return this.element.querySelector(".form-kit__control-select").value;
       }
+      case "color": {
+        return this.element.querySelector(".form-kit__control-color-input-hex")
+          .value;
+      }
       case "menu": {
         return this.element.querySelector(".form-kit__control-menu-trigger")
           .dataset.value;
@@ -106,6 +133,9 @@ class FieldHelper {
         throw new Error(
           `Calendar is a complex type, value can't be check from UI components`
         );
+      }
+      case "tag-chooser": {
+        return this.element.querySelector(".select-kit-header")?.dataset?.value;
       }
     }
   }

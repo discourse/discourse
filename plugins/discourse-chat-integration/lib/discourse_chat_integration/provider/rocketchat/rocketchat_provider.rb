@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::RocketchatProvider
   PROVIDER_NAME = "rocketchat"
+  POPULARITY_SCORE = 50
 
   PROVIDER_ENABLED_SETTING = :chat_integration_rocketchat_enabled
   CHANNEL_IDENTIFIER_KEY = "identifier"
@@ -18,7 +19,7 @@ module DiscourseChatIntegration::Provider::RocketchatProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"
@@ -80,7 +81,7 @@ module DiscourseChatIntegration::Provider::RocketchatProvider
     channel_id = channel.data["identifier"]
     message = rocketchat_message(post, channel_id)
 
-    self.send_via_webhook(message)
+    send_via_webhook(message)
   end
 
   def self.get_channel_by_name(name)

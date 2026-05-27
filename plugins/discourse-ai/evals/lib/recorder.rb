@@ -3,18 +3,27 @@
 require "fileutils"
 require "logger"
 require_relative "structured_logger"
+require_relative "console_formatter"
 
 module DiscourseAi
   module Evals
     class Recorder
-      def self.with_cassette(an_eval, persona_key: nil, output: $stdout)
+      def self.with_cassette(
+        an_eval,
+        agent_key: nil,
+        output: $stdout,
+        total_targets: 1,
+        formatter: nil,
+        announce_formatter: true,
+        finalize_formatter: true
+      )
         logs_dir = File.join(__dir__, "../log")
         FileUtils.mkdir_p(logs_dir)
 
         now = Time.now.strftime("%Y%m%d-%H%M%S")
-        normalized_key = normalize_persona_key(persona_key)
-        persona_segment = sanitized_persona_key(normalized_key)
-        base_filename = [an_eval.id, persona_segment, now].compact.join("-")
+        normalized_key = normalize_agent_key(agent_key)
+        agent_segment = sanitized_agent_key(normalized_key)
+        base_filename = [an_eval.id, agent_segment, now].compact.join("-")
         structured_log_filename = "#{base_filename}.json"
         log_filename = "#{base_filename}.log"
 
@@ -29,45 +38,92 @@ module DiscourseAi
           logger,
           log_path,
           structured_logger,
-          persona_key: normalized_key,
+          total_targets: total_targets,
+          formatter: formatter,
+          announce_formatter: announce_formatter,
+          finalize_formatter: finalize_formatter,
+          agent_key: normalized_key,
           output: output,
         ).tap { |recorder| recorder.running }
       end
 
-      def initialize(an_eval, logger, log_path, structured_logger, persona_key:, output: $stdout)
+      def initialize(
+        an_eval,
+        logger,
+        log_path,
+        structured_logger,
+        total_targets: 1,
+        formatter: nil,
+        announce_formatter: true,
+        finalize_formatter: true,
+        agent_key:,
+        output: $stdout
+      )
         @an_eval = an_eval
         @logger = logger
         @log_path = log_path
         @structured_logger = structured_logger
         @output = output
-        normalized = persona_key.to_s.strip
-        @persona_key = normalized.empty? ? "default" : normalized
+        @formatter =
+          formatter ||
+            DiscourseAi::Evals::ConsoleFormatter.new(
+              label: an_eval.id,
+              output: output,
+              total_targets: total_targets,
+              agent_key: agent_key,
+            )
+        @announce_formatter = announce_formatter
+        @finalize_formatter = finalize_formatter
+        normalized = agent_key.to_s.strip
+        @agent_key = normalized.empty? ? "default" : normalized
       end
 
       def running
-        attach_thread_loggers
-        logger.info("Starting evaluation '#{an_eval.id}' (persona: #{persona_key})")
+        logger.info("Starting evaluation '#{an_eval.id}' (agent: #{agent_key})")
+        formatter.announce_start if announce_formatter
         structured_logger.start_root(
-          name: "Evaluating #{an_eval.id} (persona: #{persona_key})",
-          args: an_eval.to_json.merge(persona_key: persona_key),
+          name: "Evaluating #{an_eval.id} (agent: #{agent_key})",
+          args: an_eval.to_json.merge(agent_key: agent_key),
         )
       end
 
-      def record_llm_skip(llm_name, reason)
+      def record_llm_skip(llm_name, reason, display_label: llm_name, row_prefix: nil)
         if !structured_logger.root_started?
           raise ArgumentError, "You didn't instantiated this object with #with_cassette"
         end
         logger.info("Skipping LLM: #{llm_name} - Reason: #{reason}")
+        formatter.record_skip(
+          display_label: display_label,
+          llm_label: llm_name,
+          reason: reason,
+          row_prefix: row_prefix,
+        )
       end
 
-      def record_llm_results(llm_name, results, start_time)
+      def record_llm_results(
+        llm_name,
+        results,
+        start_time,
+        raw_entries: nil,
+        display_label: nil,
+        row_prefix: nil
+      )
         if !structured_logger.root_started?
           raise ArgumentError, "You didn't instantiated this object with #with_cassette"
         end
 
+        display_label ||= llm_name
         llm_step = structured_logger.add_child_step(name: "Evaluating with LLM: #{llm_name}")
 
         logger.info("Evaluating with LLM: #{llm_name}")
+        formatter.record_result(
+          display_label: display_label,
+          llm_label: llm_name,
+          results: results,
+          raw_entries: raw_entries,
+          row_prefix: row_prefix,
+        )
+        formatter.pause_progress_line
 
         results.each do |result|
           if result[:result] == :fail
@@ -101,38 +157,28 @@ module DiscourseAi
         end
       end
 
-      def announce_comparison_judged(eval_case_id:, mode_label:, persona_key: nil, result:)
-        step = start_comparison_step(eval_case_id, mode_label, persona_key)
+      def announce_comparison_judged(
+        eval_case_id:,
+        mode_label:,
+        agent_key: nil,
+        result:,
+        candidates: []
+      )
+        step = start_comparison_step(eval_case_id, mode_label, agent_key)
 
-        output.puts
-        output.puts "#{comparison_header(eval_case_id, mode_label, persona_key)}\n"
-        logger.info(comparison_header(eval_case_id, mode_label, persona_key))
+        formatter.pause_progress_line
+        formatter.record_comparison_judged(
+          row_prefix: eval_case_id,
+          candidates: candidates,
+          result: result,
+        )
 
-        if result[:winner].present?
-          output.puts "Winner: #{result[:winner]}\n"
-          logger.info("Winner: #{result[:winner]}")
-          append_comparison_entry(step, "winner", result.slice(:winner, :winner_explanation))
-        elsif result[:winner_label].to_s.casecmp("tie").zero?
-          output.puts "Result: tie\n"
-          logger.info("Result: tie")
-          append_comparison_entry(step, "winner", result.slice(:winner_label, :winner_explanation))
-        else
-          output.puts "Result: no winner reported\n"
-          logger.info("Result: no winner reported")
-          append_comparison_entry(step, "winner", result.slice(:winner_label, :winner_explanation))
-        end
-        if result[:winner_explanation].present?
-          output.puts "Reason: #{result[:winner_explanation]}\n"
-        end
-        if result[:winner_explanation].present?
-          logger.info("Reason: #{result[:winner_explanation]}")
-        end
-
-        Array(result[:ratings]).each do |rating|
-          output.puts "  - #{rating[:candidate]}: #{rating[:rating]}/10 — #{rating[:explanation]}"
-          logger.info("  - #{rating[:candidate]}: #{rating[:rating]}/10 — #{rating[:explanation]}")
-          append_comparison_entry(step, "rating", rating)
-        end
+        append_comparison_entry(
+          step,
+          "winner",
+          result.slice(:winner, :winner_label, :winner_explanation),
+        )
+        Array(result[:ratings]).each { |rating| append_comparison_entry(step, "rating", rating) }
 
         finish_comparison_step(step)
       end
@@ -140,50 +186,38 @@ module DiscourseAi
       def announce_comparison_expected(
         eval_case_id:,
         mode_label:,
-        persona_key: nil,
+        agent_key: nil,
         winner:,
         status_line: nil,
-        failures: []
+        failures: [],
+        candidates: []
       )
-        step = start_comparison_step(eval_case_id, mode_label, persona_key)
+        step = start_comparison_step(eval_case_id, mode_label, agent_key)
 
-        output.puts
-        output.puts comparison_header(eval_case_id, mode_label, persona_key)
-        logger.info(comparison_header(eval_case_id, mode_label, persona_key))
+        formatter.pause_progress_line
+        formatter.record_comparison_expected(
+          row_prefix: eval_case_id,
+          candidates: candidates,
+          winner: winner,
+          failures: failures,
+          status_line: status_line,
+        )
 
-        if winner == :tie
-          output.puts "Result: tie\n"
-          logger.info("Result: tie")
-          append_comparison_entry(step, "winner", winner: "tie")
-        else
-          output.puts "Winner: #{winner}\n"
-          logger.info("Winner: #{winner}")
-          append_comparison_entry(step, "winner", winner: winner)
-        end
-
-        output.puts "  #{status_line}" if status_line.present?
-        logger.info("  #{status_line}") if status_line.present?
+        append_comparison_entry(step, "winner", winner: winner)
         append_comparison_entry(step, "status", status_line: status_line) if status_line.present?
-
-        failures.each do |failure|
-          output.puts "      #{failure[:label]} expected: #{failure[:expected].inspect}, actual: #{failure[:actual].inspect}"
-          logger.info(
-            "      #{failure[:label]} expected: #{failure[:expected].inspect}, actual: #{failure[:actual].inspect}",
-          )
-          append_comparison_entry(step, "failure", failure)
-        end
+        failures.each { |failure| append_comparison_entry(step, "failure", failure) }
 
         finish_comparison_step(step)
       end
 
-      def announce_comparison_aggregate(mode_label:, persona_key: nil, aggregate_scores:)
+      def announce_comparison_aggregate(mode_label:, agent_key: nil, aggregate_scores:)
         return if aggregate_scores.blank?
 
-        step = start_comparison_step(nil, mode_label, persona_key, summary: true)
+        step = start_comparison_step(nil, mode_label, agent_key, summary: true)
 
         output.puts
-        output.puts "#{comparison_header(nil, mode_label, persona_key, summary: true)}\n"
-        logger.info(comparison_header(nil, mode_label, persona_key, summary: true))
+        output.puts "#{comparison_header(nil, mode_label, agent_key, summary: true)}\n"
+        logger.info(comparison_header(nil, mode_label, agent_key, summary: true))
 
         aggregate_scores.each do |label, stats|
           output.puts "  - #{label}: #{stats[:passes]}/#{stats[:evals]} passed"
@@ -202,8 +236,7 @@ module DiscourseAi
 
       def finish
         structured_logger.finish_root(end_time: Time.now.utc)
-
-        detach_thread_loggers
+        formatter.finalize if finalize_formatter
 
         structured_logger.save
 
@@ -214,17 +247,33 @@ module DiscourseAi
         logger&.close
       end
 
+      def execution_context
+        @execution_context ||=
+          DiscourseAi::Completions::ExecutionContext.new(
+            audit_logger: logger,
+            structured_audit_logger: structured_logger,
+          )
+      end
+
       private
 
-      attr_reader :an_eval, :logger, :structured_logger, :output, :log_path, :persona_key
+      attr_reader :an_eval,
+                  :logger,
+                  :structured_logger,
+                  :output,
+                  :log_path,
+                  :agent_key,
+                  :formatter,
+                  :announce_formatter,
+                  :finalize_formatter
 
-      def self.normalize_persona_key(key)
+      def self.normalize_agent_key(key)
         stripped = key.to_s.strip
         stripped = "default" if stripped.empty?
         stripped
       end
 
-      def self.sanitized_persona_key(key)
+      def self.sanitized_agent_key(key)
         stripped = key.to_s.strip
         stripped = "default" if stripped.empty?
 
@@ -232,33 +281,18 @@ module DiscourseAi
         slug.empty? ? "default" : slug.downcase
       end
 
-      def attach_thread_loggers
-        @previous_thread_loggers = {
-          audit_log: Thread.current[:llm_audit_log],
-          structured_log: Thread.current[:llm_audit_structured_log],
-        }
-
-        Thread.current[:llm_audit_log] = logger
-        Thread.current[:llm_audit_structured_log] = structured_logger
-      end
-
-      def detach_thread_loggers
-        Thread.current[:llm_audit_log] = @previous_thread_loggers[:audit_log]
-        Thread.current[:llm_audit_structured_log] = @previous_thread_loggers[:structured_log]
-      end
-
-      def comparison_header(eval_case_id, mode_label, persona_key, summary: false)
+      def comparison_header(eval_case_id, mode_label, agent_key, summary: false)
         header = "=== Comparison (#{mode_label}"
-        header << ", persona: #{persona_key}" if persona_key
+        header << ", agent: #{agent_key}" if agent_key
         header << ")"
         header << " #{eval_case_id}" if eval_case_id && !summary
         header
       end
 
-      def start_comparison_step(eval_case_id, mode_label, persona_key, summary: false)
+      def start_comparison_step(eval_case_id, mode_label, agent_key, summary: false)
         ensure_root!
         name = "Comparison (#{mode_label}"
-        name += ", persona: #{persona_key}" if persona_key
+        name += ", agent: #{agent_key}" if agent_key
         name += ")"
         name += " #{eval_case_id}" if eval_case_id && !summary
         structured_logger.add_child_step(name: name)

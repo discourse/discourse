@@ -42,6 +42,9 @@ loaderShim("@ember/object/observers", () =>
   importSync("@ember/object/observers")
 );
 loaderShim("@ember/owner", () => importSync("@ember/owner"));
+loaderShim("@ember/reactive/collections", () =>
+  importSync("@ember/reactive/collections")
+);
 loaderShim("@ember/render-modifiers/modifiers/did-insert", () =>
   importSync("@ember/render-modifiers/modifiers/did-insert")
 );
@@ -61,26 +64,10 @@ loaderShim("@ember/utils", () => importSync("@ember/utils"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@glimmer/component", () => importSync("@glimmer/component"));
 loaderShim("@glimmer/tracking", () => importSync("@glimmer/tracking"));
-loaderShim("@messageformat/runtime", () =>
-  importSync("@messageformat/runtime")
-);
-loaderShim("@messageformat/runtime/lib/cardinals", () =>
-  importSync("@messageformat/runtime/lib/cardinals")
-);
-loaderShim("@messageformat/runtime/messages", () =>
-  importSync("@messageformat/runtime/messages")
-);
-loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/core", () => importSync("@uppy/core"));
 loaderShim("@uppy/drop-target", () => importSync("@uppy/drop-target"));
-loaderShim("@uppy/utils/lib/AbortController", () =>
-  importSync("@uppy/utils/lib/AbortController")
-);
-loaderShim("@uppy/utils/lib/delay", () => importSync("@uppy/utils/lib/delay"));
-loaderShim("@uppy/utils/lib/EventTracker", () =>
-  importSync("@uppy/utils/lib/EventTracker")
-);
+loaderShim("@uppy/utils", () => importSync("@uppy/utils"));
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
@@ -124,5 +111,19 @@ loaderShim("truth-helpers/helpers/not", () =>
 loaderShim("truth-helpers/helpers/or", () =>
   importSync("truth-helpers/helpers/or")
 );
-loaderShim("virtual-dom", () => importSync("discourse/widgets/virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
+loaderShim("discourse/lib/transformer/registry", () =>
+  importSync("discourse/lib/registry/transformers")
+);
+loaderShim("ember-this-fallback/deprecations-helper", () =>
+  importSync("./lib/ember-this-fallback/deprecations-helper")
+);
+loaderShim("ember-this-fallback/is-component", () =>
+  importSync("./lib/ember-this-fallback/is-component")
+);
+loaderShim("ember-this-fallback/this-fallback-helper", () =>
+  importSync("./lib/ember-this-fallback/this-fallback-helper")
+);
+loaderShim("ember-this-fallback/try-lookup-helper", () =>
+  importSync("./lib/ember-this-fallback/try-lookup-helper")
+);

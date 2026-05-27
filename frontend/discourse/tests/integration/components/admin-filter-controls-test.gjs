@@ -272,6 +272,33 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     assert.dom(".filter-input").hasValue("", "clears text input");
   });
 
+  test("shows reset button next to filter input when there are active filters that find results", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    await fillIn(".filter-input", "first");
+    assert
+      .dom(".admin-filter-controls__inputs .admin-filter-controls__reset")
+      .exists("shows reset button");
+  });
+
   test("respects minItemsForFilter parameter", async function (assert) {
     this.set("data", [SAMPLE_DATA[0]]);
 

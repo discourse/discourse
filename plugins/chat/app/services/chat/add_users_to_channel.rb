@@ -44,11 +44,15 @@ module Chat
       model :channel
       policy :can_add_users_to_channel
       model :target_users, optional: true
+      model :user_comm_screener
+      policy :actor_allows_dms
+      policy :targets_allow_dms_from_user,
+             class_name: Chat::DirectMessageChannel::Policy::CanCommunicateAllParties
       policy :satisfies_dms_max_users_limit,
              class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
 
       transaction do
-        step :upsert_memberships
+        step :create_memberships
         step :recompute_users_count
         step :notice_channel
       end
@@ -60,6 +64,14 @@ module Chat
       ::Chat::Channel.includes(:chatable).find_by(id: params.channel_id)
     end
 
+    def fetch_user_comm_screener(target_users:, guardian:)
+      UserCommScreener.new(acting_user: guardian.user, target_user_ids: target_users.map(&:id))
+    end
+
+    def actor_allows_dms(user_comm_screener:)
+      !user_comm_screener.actor_disallowing_all_pms?
+    end
+
     def can_add_users_to_channel(guardian:, channel:)
       return false if !guardian.user.admin? && !channel.joined_by?(guardian.user)
 
@@ -67,15 +79,24 @@ module Chat
     end
 
     def fetch_target_users(params:, channel:, guardian:)
+      target_groups =
+        if params.groups.present?
+          Group
+            .where(name: params.groups)
+            .visible_groups(guardian.user)
+            .members_visible_groups(guardian.user)
+            .pluck(:name)
+        end
+
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
         usernames: params.usernames,
-        groups: params.groups,
+        groups: target_groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
         dm_channel: channel.direct_message_channel?,
       ) + channel.chatable.users.where.not(id: guardian.user)
     end
 
-    def upsert_memberships(channel:, target_users:)
+    def create_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -97,7 +118,7 @@ module Chat
       end
 
       context[:added_user_ids] = ::Chat::UserChatChannelMembership
-        .upsert_all(
+        .insert_all(
           memberships,
           unique_by: %i[user_id chat_channel_id],
           returning: Arel.sql("user_id, (xmax = '0') as inserted"),
@@ -105,7 +126,7 @@ module Chat
         .select { |row| row["inserted"] }
         .map { |row| row["user_id"] }
 
-      ::Chat::DirectMessageUser.upsert_all(
+      ::Chat::DirectMessageUser.insert_all(
         context.added_user_ids.map do |id|
           {
             user_id: id,

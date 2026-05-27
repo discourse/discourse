@@ -110,11 +110,73 @@ RSpec.describe SharedAiConversation, type: :model do
       expect(artifact.public?).to be_falsey
     end
 
+    it "does not share artifacts publicly when refreshing the share fails" do
+      SiteSetting.ai_artifact_security = "lax"
+
+      conversation = described_class.share_conversation(user, topic)
+      conversation.update_column(:share_key, "")
+
+      artifact =
+        Fabricate(
+          :ai_artifact,
+          post: post1,
+          user: user,
+          metadata: {
+            public: false,
+            something: "good",
+          },
+        )
+
+      Fabricate(
+        :post,
+        topic: topic,
+        post_number: 3,
+        raw: "Here's an artifact",
+        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
+      )
+
+      described_class.share_conversation(user, topic)
+
+      expect(artifact.reload.metadata["something"]).to eq("good")
+      expect(artifact.public?).to be_falsey
+    end
+
     it "escapes HTML" do
       conversation = described_class.share_conversation(user, topic)
       onebox = conversation.onebox
       expect(onebox).not_to include("</marquee>")
       expect(onebox).to include("AI Conversation with Claude-2")
+    end
+
+    it "escapes HTML in the title to prevent XSS" do
+      conversation = described_class.share_conversation(user, topic)
+      xss_title = "<img src=x onerror=alert(1)>"
+      conversation.update!(title: xss_title)
+      onebox = conversation.onebox
+
+      expect(onebox).not_to include(xss_title)
+      expect(onebox).to include(ERB::Util.html_escape(xss_title))
+    end
+  end
+
+  describe "#onebox" do
+    it "escapes title and username" do
+      malicious_username = %(user"><img src=x onerror=alert(1)>)
+      malicious_title = %(title</a><script>alert("x")</script>)
+      user.update_columns(username: malicious_username, username_lower: malicious_username.downcase)
+      topic.update_column(:title, malicious_title)
+
+      Fabricate(:post, topic: topic, user: user, post_number: 3, raw: "safe post")
+
+      conversation = described_class.share_conversation(user, topic)
+
+      onebox = conversation.onebox
+
+      expect(onebox).to include("user&quot;&gt;&lt;img src=x onerror=alert(1)&gt;")
+      expect(onebox).to include("title&lt;/a&gt;&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;")
+
+      expect(onebox).not_to include("<img src=x onerror=alert(1)>")
+      expect(onebox).not_to include(%(<script>alert("x")</script>))
     end
   end
 end

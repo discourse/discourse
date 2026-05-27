@@ -6,21 +6,31 @@
 
 da:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Udforsker"
     errors:
       explorer:
         no_semicolons: "Fjern semikoloner fra forespørgslen."
         dirty: "Du skal gemme forespørgslen, før du kører den."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Ingen resultater"
     explorer:
+      default_query: "Standard"
       or: "eller"
       admins_only: "Data explorer er kun tilgængelige for administratorer."
       allow_groups: "Tillad grupper at få adgang til denne forespørgsel"
       title: "Data Udforsker"
-      create: "Opret Ny"
+      create: "Opret"
       create_placeholder: "Navn på forespørgsel..."
       description_placeholder: "Indtast en beskrivelse her"
+      ai:
+        generate: "Generér"
+        optional: "valgfri"
       import:
         label: "Importer"
-        modal: "Importer en forespørgsel"
       help:
         label: "Hjælp"
         modal_title: "Hjælp til Data Udforsker"
@@ -32,18 +42,9 @@ da:
           yes: "Ja"
           no: "Nej"
           null_: "Null"
-      export: "Eksporter"
       save: "Gem ændringer"
-      saverun: "Gem ændringer og kør"
       run: "Kør"
-      undo: "Kassér Ændringer"
-      edit: "Rediger"
       delete: "Slet"
-      recover: "Fortryd sletning af forespørgsel"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabel"
-      show_graph: "Graf"
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."

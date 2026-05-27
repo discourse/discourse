@@ -1,19 +1,22 @@
 import { fn } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const GetARoomComposerMessage = <template>
   <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
 
-  {{htmlSafe @message.body}}
+  <div class="composer-popup__content">
 
-  <DButton
-    @label="user.private_message"
-    @icon="envelope"
-    @action={{fn @switchPM @message}}
-    class="btn-primary"
-  />
+    {{trustHTML @message.body}}
+
+    <DButton
+      @label="user.private_message"
+      @icon="envelope"
+      @action={{fn @switchPM @message}}
+      class="btn-primary"
+    />
+  </div>
 </template>;
 
 export default GetARoomComposerMessage;

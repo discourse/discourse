@@ -12,6 +12,8 @@ tr_TR:
     github_linkback_access_token: 'Geri bağlantıyı gönderecek kullanıcı için ve rozet vermek üzere taahhütleri/katkıları saymak için geçerli bir erişim token''ı. Nasıl token alınacağına ilişkin talimatlar için <a href="https://meta.discourse.org/t/99895">burayı</a> inceleyin.'
     github_linkback_maximum_links: "Tek bir gönderiden oluşturulacak maksimum geri bağlantı sayısı. Bir gönderi daha fazla bağlantı içeriyorsa hiçbiri oluşturulmaz."
     github_permalinks_enabled: "GitHub kalıcı bağlantılarının üzerine yazmayı etkinleştirin"
+    github_pr_status_enabled: "Onebox'larda GitHub çekme isteği durumunu göster (taslak, açık, onaylanmış, birleştirilmiş, kapatılmış)"
+    github_webhook_secret: "GitHub webhook imza doğrulaması için gizli jeton. Bu değeri GitHub webhook ayarlarınızda yapılandırın."
     github_permalinks_exclude: "Kalıcı bağlantı üzerine yazma işlemlerinin dışında bırakılması gereken dosya adı veya dizin. Yalnızca dosya adı veya tam yol sağlayın: kullanıcı/havuz/isteğe bağlı dizin/dosya adı"
     github_badges_enabled: "GitHub rozetlerini etkinleştirin"
     github_badges_repos: "Katkılar ve taahhütler için taranacak GitHub depolarının URL'leri"

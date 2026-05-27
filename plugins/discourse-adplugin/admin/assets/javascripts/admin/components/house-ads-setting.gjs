@@ -1,27 +1,38 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
+import { action, computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n as computedI18n, propertyNotEqual } from "discourse/lib/computed";
+import { deepEqual } from "discourse/lib/object";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
-@classNames("house-ads-setting")
+@tagName("")
 export default class HouseAdsSetting extends Component {
   adValue = "";
   saving = false;
   savingStatus = "";
 
-  @computedI18n("name", "admin.adplugin.house_ads.%@.title") title;
-  @computedI18n("name", "admin.adplugin.house_ads.%@.description") help;
-  @propertyNotEqual("adValue", "value") changed;
-
   init() {
     super.init(...arguments);
     this.set("adValue", this.get("value"));
+  }
+
+  @computed("name")
+  get title() {
+    return i18n(`admin.adplugin.house_ads.${this.name}.title`);
+  }
+
+  @computed("name")
+  get help() {
+    return i18n(`admin.adplugin.house_ads.${this.name}.description`);
+  }
+
+  @computed("adValue", "value")
+  get changed() {
+    return !deepEqual(this.adValue, this.value);
   }
 
   @action
@@ -37,7 +48,7 @@ export default class HouseAdsSetting extends Component {
 
     try {
       await ajax(
-        `/admin/plugins/pluginad/house_settings/${this.get("name")}.json`,
+        `/admin/plugins/discourse-adplugin/house-settings/${this.get("name")}`,
         {
           type: "PUT",
           data: { value: this.get("adValue") },
@@ -65,14 +76,16 @@ export default class HouseAdsSetting extends Component {
   }
 
   <template>
-    <label for={{this.name}}>{{this.title}}</label>
-    <TextField @value={{this.adValue}} @classNames="house-ads-text-input" />
-    <div class="setting-controls">
-      {{#if this.changed}}
-        <DButton class="ok" @action={{this.save}} @icon="check" />
-        <DButton class="cancel" @action={{this.cancel}} @icon="xmark" />
-      {{/if}}
+    <div class="house-ads-setting" ...attributes>
+      <label for={{this.name}}>{{this.title}}</label>
+      <DTextField @value={{this.adValue}} @classNames="house-ads-text-input" />
+      <div class="setting-controls">
+        {{#if this.changed}}
+          <DButton class="ok" @action={{this.save}} @icon="check" />
+          <DButton class="cancel" @action={{this.cancel}} @icon="xmark" />
+        {{/if}}
+      </div>
+      <p class="help">{{this.help}}</p>
     </div>
-    <p class="help">{{this.help}}</p>
   </template>
 }

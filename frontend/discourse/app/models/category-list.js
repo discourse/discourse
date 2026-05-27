@@ -5,7 +5,7 @@ import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
 import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import PreloadStore from "discourse/lib/preload-store";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -162,7 +162,7 @@ export default class CategoryList extends LegacyArrayLikeObject {
   @tracked isLoading = false;
   @tracked page = 1;
   @tracked parentCategory;
-  @trackedArray topics;
+  @autoTrackedArray topics;
   store;
 
   /**

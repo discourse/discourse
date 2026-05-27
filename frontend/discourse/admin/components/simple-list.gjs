@@ -3,11 +3,11 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
+import { trackedArray } from "@ember/reactive/collections";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { gt, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 // args: onChange, inputDelimiter, values, allowAny, choices
@@ -16,7 +16,7 @@ export default class SimpleList extends Component {
 
   @cached
   get collection() {
-    return new TrackedArray(
+    return trackedArray(
       this.args.values
         ?.split(this.args.inputDelimiter || "\n")
         .filter(Boolean) || []
@@ -144,7 +144,7 @@ export default class SimpleList extends Component {
             @action={{fn this.addValue this.newValue}}
             @disabled={{not this.newValue}}
             @icon="plus"
-            class="add-value-btn btn-small"
+            class="add-value-btn btn-default btn-small"
           />
         {{/if}}
       </div>

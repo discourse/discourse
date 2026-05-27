@@ -4,6 +4,7 @@ require "cache"
 require "open3"
 require "plugin/instance"
 require "version"
+require "version_compatibility"
 require "git_utils"
 
 module Discourse
@@ -85,8 +86,8 @@ module Discourse
       rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
 
       File.open(temp_destination, "w") do |fd|
         fd.write(contents)
@@ -104,9 +105,14 @@ module Discourse
       rescue Errno::ENOENT, Errno::EINVAL
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
       execute_command("ln", "-s", source, temp_destination)
+
+      # Remove existing symlink first to prevent FileUtils.mv from moving
+      # the temp file inside the symlinked directory instead of replacing it
+      File.delete(destination) if File.symlink?(destination)
+
       FileUtils.mv(temp_destination, destination)
 
       nil
@@ -337,7 +343,7 @@ module Discourse
     @plugins = []
     @plugins_by_name = {}
     Plugin::Instance
-      .find_all("#{Rails.root}/plugins")
+      .find_all("#{Rails.root.join("plugins")}")
       .each do |p|
         v = p.metadata.required_version || Discourse::VERSION::STRING
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
@@ -393,6 +399,10 @@ module Discourse
     plugins.find_all { |p| !p.metadata.official? }
   end
 
+  def self.preinstalled_plugins
+    plugins.find_all(&:preinstalled?)
+  end
+
   def self.find_plugins(args)
     plugins.select do |plugin|
       next if args[:include_official] == false && plugin.metadata.official?
@@ -420,7 +430,7 @@ module Discourse
   end
 
   def self.find_plugin_css_assets(args)
-    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
+    plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -443,23 +453,69 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins =
-      self
-        .find_plugins(args)
-        .select do |plugin|
-          plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
-        end
+      find_plugins(args).select do |plugin|
+        plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
+      end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
-    plugins.flat_map do |plugin|
-      assets = []
-      assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
-      assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
-      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
-        assets << "plugins/#{plugin.directory_name}_admin"
+    assets = []
+
+    plugins.each do |plugin|
+      if plugin.js_asset_exists?
+        if logical_path = Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main")
+          assets << {
+            name: logical_path,
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
+            plugin: plugin,
+            type_module: true,
+            importmap_name: "discourse/plugins/#{plugin.name}",
+          }
+        end
       end
-      assets
+
+      if plugin.extra_js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}_extra",
+          plugin: plugin,
+          type_module: false,
+        }
+      end
+
+      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
+        if logical_path =
+             Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin")
+          assets << {
+            name: logical_path,
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
+            plugin: plugin,
+            type_module: true,
+          }
+        end
+      end
+
+      if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
+           plugin.test_js_asset_exists?
+        if logical_path = Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
+          assets << {
+            name: logical_path,
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
+            plugin: plugin,
+            type_module: true,
+          }
+        end
+      end
     end
+
+    assets.each do |asset|
+      asset[:plugin_attributes] = {
+        "data-official": !!asset[:plugin].metadata&.official?,
+        "data-preinstalled": asset[:plugin].preinstalled?,
+        "data-plugin-name": asset[:plugin].name,
+      }
+    end
+
+    assets
   end
 
   def self.assets_digest
@@ -531,12 +587,10 @@ module Discourse
 
   def self.cache
     @cache ||=
-      begin
-        if GlobalSetting.skip_redis?
-          ActiveSupport::Cache::MemoryStore.new
-        else
-          Cache.new
-        end
+      if GlobalSetting.skip_redis?
+        ActiveSupport::Cache::MemoryStore.new
+      else
+        Cache.new
       end
   end
 
@@ -617,6 +671,10 @@ module Discourse
     nil
   rescue ActionController::RoutingError
     nil
+  end
+
+  def self.beacon_pv_tracking_path
+    "#{Discourse.base_path}/srv/pv"
   end
 
   class << self
@@ -882,7 +940,7 @@ module Discourse
       User.find_by(
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
-    user ||= (system_user || User.admins.real.order(:id).first)
+    user ||= system_user || User.admins.real.order(:id).first
   end
 
   SYSTEM_USER_ID = -1
@@ -927,22 +985,30 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    # V8 does not support forking, make sure all contexts are disposed
-    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+    if GlobalSetting.mini_racer_single_threaded
+      ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
+    else
+      # V8 does not support forking, make sure all contexts are disposed
+      ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+    end
 
     # get rid of rubbish so we don't share it
     Process.warmup
   end
 
-  def self.after_unicorn_worker_fork
+  # Called in web worker processes after fork to apply worker-specific
+  # database variable overrides (e.g. a stricter statement_timeout for
+  # web requests than for sidekiq jobs). Configured via GlobalSettings
+  # with the `unicorn_worker_db_variables_` prefix.
+  def self.apply_worker_db_variables_overrides
     variables_overrides = {}
-    unicorn_worker_db_variables_prefix = "unicorn_worker_db_variables_"
+    prefix = "unicorn_worker_db_variables_"
 
     GlobalSetting.provider.keys.each do |key|
-      if key.start_with?(unicorn_worker_db_variables_prefix)
-        variables_overrides[
-          key.to_s.sub(unicorn_worker_db_variables_prefix, "").downcase.to_sym
-        ] = GlobalSetting.public_send(key)
+      if key.start_with?(prefix)
+        variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
+          key,
+        )
       end
     end
 
@@ -967,10 +1033,10 @@ module Discourse
     Logster.store.redis.reconnect
     Sidekiq.redis_pool.reload(&:close)
 
-    # in case v8 was initialized we want to make sure it is nil
-    PrettyText.reset_context
-
-    AssetProcessor.reset_context if defined?(AssetProcessor)
+    if !GlobalSetting.mini_racer_single_threaded
+      PrettyText.reset_context
+      AssetProcessor.reset_context
+    end
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop
@@ -1050,7 +1116,7 @@ module Discourse
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
-    warning = ["Deprecation notice:", warning]
+    warning = ["DEPRECATION NOTICE:", warning]
     warning << "(deprecated since Discourse #{since})" if since
     warning << "(removal in Discourse #{drop_from})" if drop_from
     warning << "\nAt #{location}"
@@ -1078,12 +1144,12 @@ module Discourse
 
   SIDEKIQ_NAMESPACE = "sidekiq"
 
-  def self.sidekiq_redis_config(old: false)
+  def self.sidekiq_redis_config
     GlobalSetting
       .redis_config
       .dup
       .except(:client_implementation, :custom)
-      .tap { |config| config.merge!(db: config[:db].to_i + 1) unless old }
+      .tap { |config| config.merge!(db: config[:db].to_i + 1) }
   end
 
   def self.static_doc_topic_ids
@@ -1123,11 +1189,9 @@ module Discourse
   def self.reset_active_record_cache
     ActiveRecord::Base.connection.query_cache.clear
     (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      begin
-        table.classify.constantize.reset_column_information
-      rescue StandardError
-        nil
-      end
+      table.classify.constantize.reset_column_information
+    rescue StandardError
+      nil
     end
     nil
   end
@@ -1151,11 +1215,9 @@ module Discourse
 
       # load up all models and schema
       (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-        begin
-          table.classify.constantize.first
-        rescue StandardError
-          nil
-        end
+        table.classify.constantize.first
+      rescue StandardError
+        nil
       end
 
       # ensure we have a full schema cache in case we missed something above
@@ -1187,11 +1249,10 @@ module Discourse
     [
       Thread.new do
         # router warm up
-        begin
-          Rails.application.routes.recognize_path("abc")
-        rescue StandardError
-          nil
-        end
+
+        Rails.application.routes.recognize_path("abc")
+      rescue StandardError
+        nil
       end,
       Thread.new do
         # preload discourse version
@@ -1207,6 +1268,12 @@ module Discourse
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberCli.script_chunks },
+      Thread.new do
+        if GlobalSetting.mini_racer_single_threaded
+          PrettyText.cook("warm up **pretty text**")
+          AssetProcessor.v8
+        end
+      end,
     ].each(&:join)
   ensure
     @preloaded_rails = true

@@ -2,10 +2,9 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import EmberObject, { action } from "@ember/object";
-import { not } from "@ember/object/computed";
+import EmberObject, { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { classNameBindings } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
 import { ajax } from "discourse/lib/ajax";
@@ -16,16 +15,25 @@ import {
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { trackedArray } from "../lib/tracked-tools";
+import { autoTrackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
 
-@classNameBindings(":composer-popup-container", "hidden")
+export function resetComposerMessagesCache() {
+  _messagesCache = {};
+}
+
+function containsEducationMessage(messages) {
+  return messages?.content?.some((msg) => msg.id === "education");
+}
+
+@tagName("")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;
-  @trackedArray similarTopics = null;
-  @trackedArray messages = null;
+  @autoTrackedArray similarTopics = null;
+  @autoTrackedArray messages = null;
 
   checkedMessages = false;
   messagesByTemplate = null;
@@ -33,10 +41,13 @@ export default class ComposerMessages extends Component {
   usersNotSeen = null;
   recipientNames = [];
 
-  @not("composer.viewOpenOrFullscreen") hidden;
-
   _lastSimilaritySearch = null;
   _similarTopicsMessage = null;
+
+  @computed("composer.viewOpenOrFullscreen")
+  get hidden() {
+    return !this.composer?.viewOpenOrFullscreen;
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);
@@ -104,9 +115,12 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    for (const msg of this.queuedForTyping) {
+    const queuedMessages = [...this.queuedForTyping];
+    this.queuedForTyping.length = 0;
+
+    for (const msg of queuedMessages) {
       if (this.composer.whisper && msg.hide_if_whisper) {
-        return;
+        continue;
       }
 
       this.popup(msg);
@@ -273,7 +287,10 @@ export default class ComposerMessages extends Component {
     const cacheKey = `${args.composer_action}${args.topic_id}${args.post_id}`;
 
     let messages;
-    if (_messagesCache.cacheKey === cacheKey) {
+    if (
+      _messagesCache.cacheKey === cacheKey &&
+      !containsEducationMessage(_messagesCache.messages)
+    ) {
       messages = _messagesCache.messages;
     } else {
       messages = await this.composer.store.find("composer-message", args);
@@ -281,7 +298,11 @@ export default class ComposerMessages extends Component {
         return;
       }
 
-      _messagesCache = { messages, cacheKey };
+      if (containsEducationMessage(messages)) {
+        _messagesCache = {};
+      } else {
+        _messagesCache = { messages, cacheKey };
+      }
     }
 
     // Checking composer messages on replies can give us a list of links to check for
@@ -349,19 +370,27 @@ export default class ComposerMessages extends Component {
   }
 
   <template>
-    {{#each this.messages as |message|}}
-      <ComposerMessage
-        @message={{message}}
-        @closeMessage={{this.closeMessage}}
-        @shareModal={{fn (mut this.showShareModal) true}}
-        @switchPM={{this.switchPM}}
-      />
-      {{#if this.showShareModal}}
-        <ShareTopic
-          @closeModal={{fn (mut this.showShareModal) false}}
-          @model={{this.shareModalData}}
+    <div
+      class={{dConcatClass
+        "composer-popup-container"
+        (if this.hidden "hidden")
+      }}
+      ...attributes
+    >
+      {{#each this.messages as |message|}}
+        <ComposerMessage
+          @message={{message}}
+          @closeMessage={{this.closeMessage}}
+          @shareModal={{fn (mut this.showShareModal) true}}
+          @switchPM={{this.switchPM}}
         />
-      {{/if}}
-    {{/each}}
+        {{#if this.showShareModal}}
+          <ShareTopic
+            @closeModal={{fn (mut this.showShareModal) false}}
+            @model={{this.shareModalData}}
+          />
+        {{/if}}
+      {{/each}}
+    </div>
   </template>
 }

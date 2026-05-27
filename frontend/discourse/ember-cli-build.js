@@ -3,7 +3,6 @@
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
-const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
@@ -19,6 +18,7 @@ const {
   CustomizeChunkUrlPlugin,
 } = require("./lib/webpack-customize-chunk-url-plugin");
 const { BroccoliMergeFiles } = require("broccoli-merge-files");
+const { mkdirSync } = require("fs");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -50,7 +50,9 @@ function compatModulesFor(name) {
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../..");
-  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+  mkdirSync(path.join(discourseRoot, "app/assets/generated"), {
+    recursive: true,
+  });
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
@@ -109,7 +111,7 @@ module.exports = function (defaults) {
           compatModulesFor("dialog-holder"),
         ]),
         {
-          watching: ["../discourse-markdown-it"],
+          watching: ["../discourse-markdown-it", "../../app/assets/generated"],
         }
       ),
     },
@@ -122,26 +124,14 @@ module.exports = function (defaults) {
     discourseRoot + "/frontend/discourse/public/assets/scripts/module-shims.js"
   );
 
-  const discoursePluginsTree = app.project
-    .findAddonByName("discourse-plugins")
-    .generatePluginsTree(app.tests);
-
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
-  const pluginTrees = applyTerser(discoursePluginsTree);
-
-  if (process.env.SKIP_CORE_BUILD) {
-    return pluginTrees;
-  }
-
   let extraPublicTrees = [
-    parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     applyTerser(generateScriptsTree(app)),
-    pluginTrees,
   ];
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
@@ -191,6 +181,7 @@ module.exports = function (defaults) {
         entry: {
           "assets/media-optimization-bundle.js": {
             import: "./static/media-optimization-bundle",
+            chunkLoading: "import-scripts",
             runtime: false,
           },
         },

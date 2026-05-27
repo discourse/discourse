@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    login:
+      lti:
+        name: "LTI"
+        title: "LTI ئىشلىتىدۇ"

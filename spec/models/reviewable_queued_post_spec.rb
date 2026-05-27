@@ -3,6 +3,7 @@
 RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:category)
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:admin)
 
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
@@ -101,6 +102,15 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           result = reviewable.perform(moderator, :approve_post)
           expect(result.success?).to eq(true)
         end
+
+        it "logs a staff action linked to the reviewable" do
+          expect { reviewable.perform(moderator, :approve_post) }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:post_approved],
+              reviewable_id: reviewable.id,
+            ).count
+          }.by(1)
+        end
       end
 
       context "with reject_post" do
@@ -122,6 +132,15 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect { reviewable.perform(moderator, :reject_post) }.to raise_error(
             Reviewable::InvalidAction,
           )
+        end
+
+        it "logs a staff action linked to the reviewable" do
+          expect { reviewable.perform(moderator, :reject_post) }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:post_rejected],
+              reviewable_id: reviewable.id,
+            ).count
+          }.by(1)
         end
       end
 
@@ -163,6 +182,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             feedback: args[:revise_feedback],
             original_post: reviewable.payload["raw"],
             site_name: SiteSetting.title,
+            edit_instructions:
+              I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_post"),
           }
           expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
           expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
@@ -172,6 +193,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
               translation_params,
             ).chomp,
           )
+          expect(topic.first_post.raw).to include("reply to this message")
         end
 
         it "supports sending a custom revise reason" do
@@ -189,6 +211,21 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
           expect(topic.first_post.raw).not_to include("Other...")
           expect(topic.first_post.raw).to include("Boring")
+        end
+
+        context "when no site contact user is configured" do
+          before do
+            SiteSetting.site_contact_group_name = ""
+            SiteSetting.site_contact_username = ""
+          end
+
+          it "omits reply instructions from the PM" do
+            args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+            reviewable.perform(moderator, :revise_and_reject_post, args)
+
+            topic = Topic.where(archetype: Archetype.private_message).last
+            expect(topic.first_post.raw).not_to include("reply to this message")
+          end
         end
 
         context "when the topic is nil in the case of a new topic being created" do
@@ -215,6 +252,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
               feedback: args[:revise_feedback],
               original_post: reviewable.payload["raw"],
               site_name: SiteSetting.title,
+              edit_instructions:
+                I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_topic"),
             }
             expect(topic.first_post.raw.chomp).to eq(
               I18n.t(
@@ -278,6 +317,17 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(create_options[:archetype]).to eq("regular")
     end
 
+    it "normalizes tag objects to strings in create_options" do
+      reviewable.payload["tags"] = [
+        { "id" => 1, "name" => "tag-one", "count" => 5 },
+        { "id" => 2, "name" => "tag-two", "count" => 10 },
+      ]
+
+      create_options = reviewable.create_options
+
+      expect(create_options[:tags]).to eq(%w[tag-one tag-two])
+    end
+
     it "creates the post and topic when approved" do
       topic_count, post_count = Topic.count, Post.count
       result = reviewable.perform(moderator, :approve_post)
@@ -306,6 +356,21 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(result.created_post_topic).to be_valid
       expect(reviewable.topic_id).to eq(result.created_post_topic.id)
       expect(result.created_post_topic.tags.pluck(:name)).to match_array(reviewable.payload["tags"])
+    end
+
+    it "approves successfully when tags are stored as objects instead of strings" do
+      tag1 = Fabricate(:tag, name: "tag-one")
+      tag2 = Fabricate(:tag, name: "tag-two")
+      reviewable.payload["tags"] = [
+        { "id" => tag1.id, "name" => "tag-one", "count" => 5 },
+        { "id" => tag2.id, "name" => "tag-two", "count" => 10 },
+      ]
+      reviewable.save!
+
+      result = reviewable.perform(moderator, :approve_post)
+
+      expect(result.success?).to eq(true)
+      expect(result.created_post_topic.tags.pluck(:name)).to contain_exactly("tag-one", "tag-two")
     end
 
     it "does not create the post and topic when rejected" do
@@ -367,106 +432,22 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           reviewable.update!(score: 10)
         end
       end
-    end
-  end
 
-  describe "separated actions UI" do
-    fab!(:admin)
-    fab!(:user)
-    let(:reviewable) { Fabricate(:reviewable_queued_post, target_created_by: user) }
-
-    context "when reviewable_ui_refresh feature is enabled" do
-      before do
-        SiteSetting.reviewable_old_moderator_actions = false
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-      end
-
-      it "creates separate bundles for post and user actions" do
+      it "uses bundle structure" do
         actions = reviewable.actions_for(Guardian.new(admin))
         bundle_ids = actions.bundles.map(&:id)
 
-        expect(bundle_ids).to include("#{reviewable.id}-post-actions")
-        expect(bundle_ids).to include("#{reviewable.id}-user-actions")
-      end
-
-      it "includes post actions in the post bundle" do
-        actions = reviewable.actions_for(Guardian.new(admin))
-
-        expect(actions.has?(:approve_post)).to eq(true)
-        expect(actions.has?(:reject_post)).to eq(true)
-        expect(actions.has?(:revise_and_reject_post)).to eq(true)
-      end
-
-      it "includes user actions in the user bundle" do
-        actions = reviewable.actions_for(Guardian.new(admin))
-
-        expect(actions.has?(:no_action_user)).to eq(true)
-        expect(actions.has?(:silence_user)).to eq(true)
-        expect(actions.has?(:suspend_user)).to eq(true)
-        expect(actions.has?(:delete_user)).to eq(true)
-        expect(actions.has?(:delete_and_block_user)).to eq(true)
-      end
-
-      it "includes a minimal user bundle when target_created_by is nil" do
-        reviewable.update!(target_created_by: nil)
-        actions = reviewable.actions_for(Guardian.new(admin))
-
-        expect(actions.has?(:no_action_user)).to eq(true)
-        expect(actions.has?(:silence_user)).to eq(false)
-        expect(actions.has?(:suspend_user)).to eq(false)
-        expect(actions.has?(:delete_user)).to eq(false)
-        expect(actions.has?(:delete_and_block_user)).to eq(false)
-      end
-
-      describe "perform methods" do
-        it "performs no_action_user successfully" do
-          result = reviewable.perform(admin, :no_action_user)
-          expect(result.success?).to eq(true)
-        end
-
-        it "performs silence_user successfully" do
-          expect(user.silenced?).to eq(false)
-          result = reviewable.perform(admin, :silence_user)
-          expect(result.success?).to eq(true)
-        end
-
-        it "performs suspend_user successfully" do
-          expect(user.suspended?).to eq(false)
-          result = reviewable.perform(admin, :suspend_user)
-          expect(result.success?).to eq(true)
-        end
-
-        it "performs delete_and_block_user successfully" do
-          result = reviewable.perform(admin, :delete_and_block_user)
-          expect(result.success?).to eq(true)
-          expect(User.find_by(id: user.id)).to be_nil
-        end
-      end
-    end
-
-    # TODO (reviewable-refresh): Remove the tests below when the legacy combined actions are removed
-    context "when reviewable_ui_refresh feature is disabled" do
-      before do
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(
-          false,
-        )
-      end
-
-      it "uses legacy bundle structure" do
-        actions = reviewable.actions_for(Guardian.new(admin))
-        bundle_ids = actions.bundles.map(&:id)
-
-        expect(bundle_ids).to include("#{reviewable.id}-reject")
+        expect(bundle_ids).to include("#{reviewable.id}-reject-post")
         expect(bundle_ids).not_to include("#{reviewable.id}-post-actions")
         expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
       end
 
-      it "includes legacy actions" do
+      it "includes actions" do
         actions = reviewable.actions_for(Guardian.new(admin))
         action_ids = actions.to_a.map(&:id).map(&:to_s)
 
         expect(action_ids).to include("approve_post")
-        expect(action_ids).to include("discard_post")
+        expect(action_ids).to include("reject_post")
         expect(action_ids).to include("revise_and_reject_post")
         expect(action_ids).to include("delete_user")
         expect(action_ids).to include("delete_user_block")

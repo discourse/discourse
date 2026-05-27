@@ -30,8 +30,8 @@ ur:
         agree_and_silence:
           title: "صارف خاموش کریں"
           description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
-        disagree:
-          title: "اختلاف کریں"
+        ignore:
+          title: "فلَیگ نظر انداز کریں"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -48,18 +48,15 @@ ur:
         direct: '%{username} نے آپ کا تذکرہ "%{channel}" میں کیا'
       direct_message_chat_mention:
         direct: "%{username} نے نجی چیٹ میں آپ کا تذکرہ کیا"
+    actions:
+      chat_reply:
+        title: جواب
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_title: '"%{channel_name}" میں ایک گپ شپ کے پیغام کو عملے کی توجہ کی ضرورت ہے۔'
       chat_pm_body: "%{link}\n\n%{message}"
-  user_notifications:
-    chat_summary:
-      subject:
-        watched_threads:
-          one: "[%{site_name}] %{channel} اور %{count} دیگر میں نئے دھاگوں کے پیغامات"
-          other: "[%{site_name}] %{channel} اور %{count} دیگر میں نئے دھاگوں کے پیغامات"
   unsubscribe:
     chat_summary:
       never: کبھی نہیں

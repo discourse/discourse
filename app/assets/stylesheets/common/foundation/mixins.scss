@@ -137,11 +137,6 @@ $hpad: 0.65em;
 }
 
 // Stuff we repeat
-@mixin post-aside {
-  border-left: 5px solid var(--primary-300);
-  background-color: var(--blend-primary-secondary-5);
-}
-
 @mixin d-animation($name, $duration, $easing: ease) {
   animation: $name $duration $easing forwards;
 
@@ -257,6 +252,7 @@ $hpad: 0.65em;
   text-decoration: none;
   text-wrap: nowrap;
   line-height: 1;
+  unicode-bidi: plaintext;
 
   &[data-valid="false"] {
     background: unset;
@@ -269,10 +265,6 @@ $hpad: 0.65em;
 
   &.--wide {
     background: var(--highlight-low-or-medium);
-  }
-
-  &.--current {
-    background: var(--tertiary-400);
   }
 }
 
@@ -320,4 +312,53 @@ $hpad: 0.65em;
   white-space: nowrap;
   display: inline-block;
   margin: 0.15em;
+}
+
+@mixin topic-list-icons {
+  .d-icon-thumbtack {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .d-icon-thumbtack.unpinned {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  a.title {
+    color: var(--primary);
+  }
+
+  .d-icon-bookmark {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+@mixin hide-posters {
+  width: 2em;
+  text-align: center;
+
+  a:first-child .avatar.latest:not(.single) {
+    top: 0;
+    left: 0;
+  }
+
+  a:not(.latest) {
+    display: none;
+  }
+
+  a.latest {
+    width: 100%;
+
+    img {
+      margin: 0 auto;
+    }
+  }
+}
+
+@mixin dot-separator($size: 0.35em) {
+  width: $size;
+  height: $size;
+  margin-inline: var(--space-1);
+  border-radius: 6.25em;
+  background: var(--primary-low-mid);
+  flex-shrink: 0;
 }

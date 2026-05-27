@@ -35,20 +35,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import PostListBulkControls from "discourse/components/post-list/bulk-controls";
 import PostListItem from "discourse/components/post-list/item";
-import concatClass from "discourse/helpers/concat-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { addUniqueValuesToArray } from "../../lib/array-tools";
 
 export default class PostList extends Component {
   @tracked loading = false;
   @tracked canLoadMore = true;
-  @tracked emptyText = this.args.emptyText || i18n("post_list.empty");
+
+  get emptyText() {
+    return this.args.emptyText || i18n("post_list.empty");
+  }
+
+  get isLoadingContent() {
+    return this.loading || this.args.isLoading;
+  }
 
   @action
   async loadMore() {
@@ -82,7 +89,7 @@ export default class PostList extends Component {
       {{hideApplicationFooter}}
     {{/if}}
 
-    <LoadMore @action={{this.loadMore}}>
+    <DLoadMore @action={{this.loadMore}}>
       {{#if @bulkSelectEnabled}}
         {{#if @bulkSelectHelper.hasSelection}}
           <PostListBulkControls
@@ -93,7 +100,7 @@ export default class PostList extends Component {
       {{/if}}
 
       <div
-        class={{concatClass
+        class={{dConcatClass
           "post-list"
           (if @bulkSelectEnabled "post-list--bulk-select")
         }}
@@ -128,10 +135,12 @@ export default class PostList extends Component {
             </:belowPostItem>
           </PostListItem>
         {{else}}
-          <div class="post-list__empty-text">{{this.emptyText}}</div>
+          {{#unless this.isLoadingContent}}
+            <div class="post-list__empty-text">{{this.emptyText}}</div>
+          {{/unless}}
         {{/each}}
       </div>
-      <ConditionalLoadingSpinner @condition={{this.loading}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner @condition={{this.loading}} />
+    </DLoadMore>
   </template>
 }

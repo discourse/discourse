@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ToggleChannelMembershipButton extends Component {
@@ -76,7 +76,9 @@ export default class ToggleChannelMembershipButton extends Component {
     this.isLoading = true;
 
     try {
-      if (this.args.channel.chatable.group) {
+      // For DM channels (including group DMs), use non-destructive unfollow
+      // unless explicitly requested to be destructive (e.g., from settings page)
+      if (this.args.channel.chatable.group && this.options.leaveDestructive) {
         await this.chatApi.leaveChannel(this.args.channel.id);
       } else {
         await this.chat.unfollowChannel(this.args.channel);
@@ -98,7 +100,7 @@ export default class ToggleChannelMembershipButton extends Component {
         @translatedTitle={{this.options.leaveTitle}}
         @icon={{this.options.leaveIcon}}
         @disabled={{this.isLoading}}
-        class={{concatClass
+        class={{dConcatClass
           "toggle-channel-membership-button -leave"
           this.options.leaveClass
         }}
@@ -122,7 +124,7 @@ export default class ToggleChannelMembershipButton extends Component {
           @translatedTitle={{this.options.joinTitle}}
           @icon={{this.options.joinIcon}}
           @disabled={{this.isLoading}}
-          class={{concatClass
+          class={{dConcatClass
             "toggle-channel-membership-button -join"
             this.options.joinClass
           }}

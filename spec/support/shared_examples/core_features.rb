@@ -113,10 +113,8 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       it "likes a post" do
         click_on(topics.first.title)
-        within(".double-button") do
-          find(".toggle-like").click
-          expect(page).to have_content("1")
-        end
+        find(".toggle-like").click
+        expect(page).to have_css(".post-action-menu__like-count", text: "1")
       end
     end
   end
@@ -159,7 +157,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       before do
         SearchIndexer.enable
-        topics.each { SearchIndexer.index(_1, force: true) }
+        topics.each { SearchIndexer.index(it, force: true) }
         Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       end
 
@@ -210,6 +208,32 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
             expect(search_page).to have_search_result
           end
+        end
+      end
+    end
+  end
+
+  describe "plugin javascript assets" do
+    it "has expected javascript asset" do
+      enabled_plugins = Discourse.plugins.filter(&:enabled?)
+
+      visit "/"
+      expect(page).to have_css("div.discourse-root", visible: :all) # Themes might hide it
+
+      plugin_script_tags =
+        page
+          .all(
+            "script[data-plugin-name], link[rel=modulepreload][data-plugin-name]",
+            visible: :all,
+            minimum: 0,
+          )
+          .map { |tag| tag["data-plugin-name"] }
+
+      enabled_plugins.each do |plugin|
+        if plugin.js_asset_exists?
+          expect(plugin_script_tags).to include(plugin.name)
+        else
+          expect(plugin_script_tags).not_to include(plugin.name)
         end
       end
     end

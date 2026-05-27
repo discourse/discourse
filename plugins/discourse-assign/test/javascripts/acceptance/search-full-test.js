@@ -1,9 +1,9 @@
-import { fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Discourse Assign | Search - Full Page", function (needs) {
+acceptance("Search - Full Page", function (needs) {
   needs.settings({ assign_enabled: true });
   needs.user({ can_assign: true });
   needs.pretender((server, helper) => {
@@ -21,9 +21,12 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
   });
 
   test("update in:assigned filter through advanced search ui", async function (assert) {
-    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    const inSelector = selectKit(
+      ".search-advanced-options .select-kit#search-in-options"
+    );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await inSelector.expand();
@@ -37,9 +40,12 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
   });
 
   test("update in:unassigned filter through advanced search ui", async function (assert) {
-    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    const inSelector = selectKit(
+      ".search-advanced-options .select-kit#search-in-options"
+    );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await inSelector.expand();
@@ -56,6 +62,7 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     const assignedField = selectKit(".assigned-advanced-search .select-kit");
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await assignedField.expand();

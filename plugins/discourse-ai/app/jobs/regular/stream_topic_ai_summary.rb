@@ -9,9 +9,14 @@ module Jobs
       return unless user = User.find_by(id: args[:user_id])
 
       strategy = DiscourseAi::Summarization.topic_summary(topic)
-      return if strategy.nil? || !Guardian.new(user).can_see_summary?(topic)
+      return if strategy.nil?
+
+      summarization_service = DiscourseAi::TopicSummarization.new(strategy, user)
+      cached_summary = summarization_service.cached_summary
 
       guardian = Guardian.new(user)
+      return if !guardian.can_see_summary?(topic, cached_summary: cached_summary)
+
       return unless guardian.can_see?(topic)
 
       skip_age_check = !!args[:skip_age_check]
@@ -21,19 +26,17 @@ module Jobs
 
       begin
         summary =
-          DiscourseAi::TopicSummarization
-            .new(strategy, user)
-            .summarize(skip_age_check: skip_age_check) do |partial_summary|
-              streamed_summary << partial_summary
+          summarization_service.summarize(skip_age_check: skip_age_check) do |partial_summary|
+            streamed_summary << partial_summary
 
-              # Throttle updates.
-              if (Time.now - start > 0.3) || Rails.env.test?
-                payload = { done: false, ai_topic_summary: { summarized_text: streamed_summary } }
+            # Throttle updates.
+            if (Time.now - start > 0.3) || Rails.env.test?
+              payload = { done: false, ai_topic_summary: { summarized_text: streamed_summary } }
 
-                publish_update(topic, user, payload)
-                start = Time.now
-              end
+              publish_update(topic, user, payload)
+              start = Time.now
             end
+          end
 
         publish_update(
           topic,

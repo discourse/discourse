@@ -126,8 +126,9 @@ acceptance("History Modal - not found", function (needs) {
   test("try to view a nonexistent revision", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("article[data-post-id='398'] .edits button");
-    assert.dom(".dialog-body").exists();
-    await click(".dialog-footer .btn-primary");
+
+    assert.dom(".alert-error").exists();
+    await click(".modal-close");
 
     assert
       .dom("article[data-post-id='398'] .edits button")

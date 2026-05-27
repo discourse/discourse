@@ -12,6 +12,8 @@ pt_BR:
           poll: "Enquete do Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Opções podem ser adicionadas ou removidas"
       voters:
         one: "votante"
         other: "votantes"
@@ -148,6 +150,8 @@ pt_BR:
           step: Intervalo
         poll_public:
           label: Exibir quem votou
+        poll_dynamic:
+          label: Permitir adicionar ou remover opções após a publicação
         poll_title:
           label: Título (opcional)
         poll_options:

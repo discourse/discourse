@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "私密"
+          public: "公開"
+      reports:
+        reading_time:
+          title: 閱讀時間
+        chat_usage:
+          messages: 訊息
+          author: 你
+          author_others: "%{username}"
+          status_online: "● 線上"
+        invites:
+          title: 邀請
+          invitee_posts: 已發表的貼文
+          invitee_likes: 給出的讚
+        new_user_interactions:
+          likes_given: 給出的讚
+          mentions: 提及
+        writing_analysis:
+          menu_other: 其他

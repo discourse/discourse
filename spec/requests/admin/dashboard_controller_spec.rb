@@ -95,6 +95,441 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
     end
+
+    context "when anonymous" do
+      it "denies access with a 404 response" do
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    describe "sections payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
+        Discourse.cache.clear
+        sign_in(admin)
+      end
+
+      let(:section_payloads) do
+        response.parsed_body["sections"].index_by { |section| section["id"] }
+      end
+
+      context "with highlights_data" do
+        let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
+
+        it "returns the highlights payload for the selected dates" do
+          Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
+          Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
+          Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
+
+          get "/admin/dashboard.json", params: { start_date: "2026-04-01", end_date: "2026-04-28" }
+
+          expect(response.status).to eq(200)
+          expect(highlights_data).to eq(
+            "kpis" => [
+              {
+                "type" => "new_signups",
+                "value" => 2,
+                "previous_value" => 1,
+                "percent_change" => 100.0,
+                "report_type" => "signups",
+                "report_query" => {
+                  "start_date" => "2026-04-01",
+                  "end_date" => "2026-04-28",
+                },
+              },
+              {
+                "type" => "dau_mau",
+                "value" => nil,
+                "previous_value" => nil,
+                "percent_change" => nil,
+                "report_type" => "dau_by_mau",
+                "report_query" => {
+                  "start_date" => "2026-04-01",
+                  "end_date" => "2026-04-28",
+                },
+              },
+              {
+                "type" => "new_contributors",
+                "value" => nil,
+                "previous_value" => 0,
+                "percent_change" => nil,
+                "report_type" => "new_contributors",
+                "report_query" => {
+                  "start_date" => "2026-04-01",
+                  "end_date" => "2026-04-28",
+                },
+              },
+            ],
+          )
+        end
+      end
+
+      context "with traffic_data" do
+        before { SiteSetting.persist_browser_pageview_events = false }
+
+        let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
+
+        it "returns the site traffic payload for the selected dates" do
+          SiteSetting.use_legacy_pageviews = false
+          SiteSetting.embed_topics_list = true
+
+          Fabricate(:embeddable_host)
+          Fabricate(:logged_in_browser_application_request, date: "2026-04-28", count: 1)
+          Fabricate(:anonymous_browser_application_request, date: "2026-04-29", count: 2)
+
+          Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
+          Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 20)
+
+          Fabricate(:embedded_application_request, date: "2026-05-02", count: 4)
+          Fabricate(:crawler_application_request, date: "2026-05-03", count: 3)
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+
+          expect(traffic_data).to eq(
+            "kpis" => {
+              "browser_pageviews" => {
+                "value" => 30,
+                "percent_change" => 900,
+                "comparison_period" => {
+                  "start_date" => "2026-04-28",
+                  "end_date" => "2026-04-30",
+                },
+              },
+              "logged_in_share" => {
+                "value" => 33,
+              },
+            },
+            "pageview_series" => [
+              {
+                "req" => "page_view_logged_in_browser",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_logged_in_browser"),
+                "color" => "#4B3CE0",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 10 },
+                  { "x" => "2026-05-02", "y" => 0 },
+                  { "x" => "2026-05-03", "y" => 0 },
+                ],
+              },
+              {
+                "req" => "page_view_anon_browser",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_anon_browser"),
+                "color" => "#9C8DEC",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 0 },
+                  { "x" => "2026-05-02", "y" => 20 },
+                  { "x" => "2026-05-03", "y" => 0 },
+                ],
+              },
+              {
+                "req" => "page_view_embed",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_embed"),
+                "color" => "#E6E1F8",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 0 },
+                  { "x" => "2026-05-02", "y" => 4 },
+                  { "x" => "2026-05-03", "y" => 0 },
+                ],
+              },
+              {
+                "req" => "page_view_crawler",
+                "label" => I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
+                "color" => "#D5CDF7",
+                "data" => [
+                  { "x" => "2026-05-01", "y" => 0 },
+                  { "x" => "2026-05-02", "y" => 0 },
+                  { "x" => "2026-05-03", "y" => 3 },
+                ],
+              },
+            ],
+          )
+        end
+      end
+
+      it "is omitted when dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
+      end
+
+      it "is returned when version=alt and dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+
+        get "/admin/dashboard.json", params: { version: "alt" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_present
+        expect(response.parsed_body["configuration"]).to be_present
+      end
+
+      it "is omitted when version=alt and dashboard_improvements is enabled" do
+        get "/admin/dashboard.json", params: { version: "alt" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
+      end
+
+      it "falls back to default dates when date params are malformed" do
+        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
+
+        expect(response.status).to eq(200)
+        expect(section_payloads.keys).to contain_exactly(
+          "highlights",
+          "reports",
+          "traffic",
+          "engagement",
+        )
+        expect(section_payloads.dig("highlights", "data")).to be_present
+        expect(section_payloads.dig("traffic", "data")).to be_present
+      end
+
+      it "returns the sections as an ordered array of {id, data}" do
+        SiteSetting.admin_dashboard_sections = "reports|highlights"
+
+        get "/admin/dashboard.json"
+
+        ids = response.parsed_body["sections"].map { |s| s["id"] }
+        expect(ids).to eq(%w[reports highlights])
+      end
+
+      it "omits hidden sections from the data payload" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+
+        get "/admin/dashboard.json"
+
+        ids = response.parsed_body["sections"].map { |s| s["id"] }
+        expect(ids).not_to include("traffic", "engagement")
+      end
+
+      it "includes built engagement data when the section is enabled" do
+        SiteSetting.admin_dashboard_sections = "highlights|engagement"
+        get "/admin/dashboard.json"
+
+        engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
+        expect(engagement["data"]).to include("kpis", "headline")
+      end
+
+      describe "reports section data" do
+        before { AdminDashboardReport.delete_all }
+
+        def reports_data
+          response.parsed_body["sections"].find { |s| s["id"] == "reports" }&.dig("data")
+        end
+
+        it "returns an empty items list when no rows exist" do
+          get "/admin/dashboard.json"
+
+          expect(response.status).to eq(200)
+          expect(reports_data["items"]).to eq([])
+          expect(reports_data).to have_key("show_labels")
+        end
+
+        it "serializes configured rows resolved via the registered providers" do
+          AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+
+          get "/admin/dashboard.json"
+
+          items = reports_data["items"]
+          expect(items.size).to eq(1)
+          expect(items.first).to include("source" => "core_report", "identifier" => "signups")
+          expect(items.first["title"]).to be_present
+        end
+      end
+
+      it "denies non-staff users" do
+        sign_in(user)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+
+      it "allows moderators and returns the sections payload" do
+        sign_in(moderator)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).to include(
+          "highlights",
+          "traffic",
+        )
+      end
+
+      it "omits version_check when the flag is on" do
+        SiteSetting.version_checks = true
+        DiscourseUpdates.expects(:check_version).never
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("version_check")
+      end
+
+      it "still includes version_check when the flag is off" do
+        SiteSetting.dashboard_improvements = false
+        SiteSetting.version_checks = true
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to have_key("version_check")
+      end
+    end
+
+    describe "configuration payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      it "is included for admins and lists every known section with a visibility flag" do
+        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        configuration = response.parsed_body["configuration"]
+        expect(configuration).to be_present
+
+        ids = configuration["sections"].map { |s| s["id"] }
+        expect(ids).to match_array(%w[highlights reports traffic engagement])
+
+        visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
+        expect(visible).to eq(%w[highlights reports])
+      end
+
+      it "is omitted for moderators" do
+        sign_in(moderator)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("configuration")
+      end
+
+      it "is omitted when dashboard_improvements is disabled" do
+        SiteSetting.dashboard_improvements = false
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body).not_to have_key("configuration")
+      end
+    end
+  end
+
+  describe "#update_configuration" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
+    end
+
+    it "returns 204 and writes the site setting for admins" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "reports", visible: true },
+              { id: "highlights", visible: true },
+              { id: "traffic", visible: false },
+            ],
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("reports|highlights")
+    end
+
+    it "drops unknown section ids silently" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "frobnitz", visible: true }, { id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("highlights")
+    end
+
+    it "coerces non-boolean visible values" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "highlights", visible: "true" },
+              { id: "reports", visible: "false" },
+              { id: "engagement", visible: "1" },
+            ],
+          }
+
+      expect(SiteSetting.admin_dashboard_sections).to eq("highlights|engagement")
+    end
+
+    it "treats an empty sections array as hide-everything" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json", params: { sections: [] }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("")
+    end
+
+    it "treats a missing sections key the same as an empty array" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json"
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.admin_dashboard_sections).to eq("")
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for anonymous users" do
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "reflects the new configuration for moderators on a subsequent GET" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [{ id: "highlights", visible: true }],
+          }
+
+      sign_in(moderator)
+
+      get "/admin/dashboard.json"
+
+      ids = response.parsed_body["sections"].map { |s| s["id"] }
+      expect(ids).to eq(["highlights"])
+    end
   end
 
   describe "#problems" do
@@ -102,10 +537,9 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
-
       context "when there are no problems" do
         it "returns an empty array" do
-          get "/admin/dashboard/problems.json"
+          post "/admin/dashboard/problems.json"
 
           expect(response.status).to eq(200)
           json = response.parsed_body
@@ -120,7 +554,7 @@ RSpec.describe Admin::DashboardController do
         end
 
         it "returns an array of strings" do
-          get "/admin/dashboard/problems.json"
+          post "/admin/dashboard/problems.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["problems"].size).to eq(2)
@@ -137,7 +571,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns a list of problems" do
-        get "/admin/dashboard/problems.json"
+        post "/admin/dashboard/problems.json"
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -149,7 +583,7 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(user) }
 
       it "denies access with a 404 response" do
-        get "/admin/dashboard/problems.json"
+        post "/admin/dashboard/problems.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -160,6 +594,8 @@ RSpec.describe Admin::DashboardController do
   describe "#new_features" do
     after { DiscourseUpdates.clean_state }
 
+    before { UpcomingChanges.stubs(:permanent_upcoming_changes).returns([]) }
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -167,7 +603,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["new_features"]).to eq(nil)
+        expect(json["new_features"]).to eq([])
       end
 
       it "fails gracefully for invalid JSON" do
@@ -175,7 +611,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["new_features"]).to eq(nil)
+        expect(json["new_features"]).to eq([])
       end
 
       it "includes new features when available" do
@@ -204,7 +640,7 @@ RSpec.describe Admin::DashboardController do
         json = response.parsed_body
         expect(json["new_features"].length).to eq(2)
 
-        DiscourseUpdates.stubs(:new_features_payload).returns(
+        DiscourseUpdates.stubs(:new_features_response_json).returns(
           [
             {
               "id" => "3",
@@ -279,6 +715,57 @@ RSpec.describe Admin::DashboardController do
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
       end
+
+      context "when a permanent upcoming change exists and the feed is empty" do
+        before do
+          UpcomingChanges.unstub(:permanent_upcoming_changes)
+          UpcomingChanges.stubs(:permanent_upcoming_changes).returns(
+            [
+              {
+                setting: :enable_upload_debug_mode,
+                humanized_name: SiteSetting.humanized_names(:enable_upload_debug_mode),
+                description: SiteSetting.description(:enable_upload_debug_mode),
+                upcoming_change: {
+                  learn_more_url: "https://meta.discourse.org/t/-/1234",
+                  image: {
+                    url:
+                      "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+                  },
+                },
+              },
+            ],
+          )
+          UpcomingChanges.stubs(:image_exists?).returns(true)
+          UpcomingChanges.stubs(:image_data).returns(
+            {
+              url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+              width: 244,
+              height: 66,
+              file_path: file_from_fixtures("logo.png", "images").path,
+            },
+          )
+        end
+
+        it "includes the permanent upcoming change in the whats-new payload" do
+          freeze_time do
+            get "/admin/whats-new.json"
+            expect(response.status).to eq(200)
+            json = response.parsed_body
+            feature =
+              json["new_features"].find do |row|
+                row["upcoming_change_setting_name"] == "enable_upload_debug_mode"
+              end
+            expect(feature).to be_present
+            expect(feature["title"]).to eq(SiteSetting.humanized_names(:enable_upload_debug_mode))
+            expect(feature["description"]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+            expect(feature["link"]).to eq("https://meta.discourse.org/t/-/1234")
+            expect(feature["screenshot_url"]).to eq(
+              "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+            )
+            expect(Time.parse(feature["created_at"])).to eq_time(Time.zone.now)
+          end
+        end
+      end
     end
 
     context "when logged in as a moderator" do
@@ -316,6 +803,428 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+  end
+
+  describe "#bulk_reports" do
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "fake_source"
+        def self.fetch_many(identifiers, guardian:, filters: {})
+          identifiers.each_with_object({}) do |id, h|
+            h[id.to_s] = { id: id.to_s, filters: filters }
+          end
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a non-admin" do
+      before { sign_in(user) }
+
+      it "denies access" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "returns items in the order they were requested" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "fake_source", identifier: "a" },
+                 { source: "fake_source", identifier: "b" },
+                 { source: "fake_source", identifier: "c" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"]
+        expect(items.map { |i| i["identifier"] }).to eq(%w[a b c])
+        expect(items.map { |i| i["source"] }).to eq(%w[fake_source fake_source fake_source])
+      end
+
+      it "returns each requested item's data, keyed by identifier" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "fake_source", identifier: "a" },
+                 { source: "fake_source", identifier: "b" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"]
+        expect(items.map { |i| [i["identifier"], i["data"]["id"]] }).to eq([%w[a a], %w[b b]])
+      end
+
+      it "returns data: nil for items whose source has no registered provider" do
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [{ source: "totally_unregistered", identifier: "x" }],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"]
+        expect(items.size).to eq(1)
+        expect(items.first["data"]).to be_nil
+        expect(items.first["source"]).to eq("totally_unregistered")
+      end
+
+      it "returns data shaped by the dashboard filters" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [{ source: "fake_source", identifier: "x" }],
+               filters: {
+                 start_date: "2026-01-01",
+                 end_date: "2026-01-31",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        data = response.parsed_body["items"].first["data"]
+        expect(data["filters"]).to include("start_date" => "2026-01-01", "end_date" => "2026-01-31")
+      end
+
+      it "rejects requests with more than AdminDashboardReport::VISIBLE_CAP items" do
+        items =
+          (AdminDashboardReport::VISIBLE_CAP + 1).times.map do |i|
+            { source: "x", identifier: i.to_s }
+          end
+        post "/admin/dashboard/reports/bulk.json", params: { items: items }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects items missing source or identifier" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: [{ source: "fake_source" }] }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects requests with a non-array items field" do
+        post "/admin/dashboard/reports/bulk.json", params: { items: "not_an_array" }
+        expect(response.status).to eq(400)
+      end
+    end
+  end
+
+  describe "#available_reports" do
+    before { AdminDashboardReport.delete_all }
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "a_fake_source"
+        def self.label = "Fake"
+
+        def self.universe
+          %w[a b c].map do |id|
+            AdminDashboard::Reports::ResolvedReport.new(
+              source: source_name,
+              identifier: id,
+              title: "Fakey #{id}",
+              description: "Desc #{id}",
+              label: label,
+              url: "/fake/#{id}",
+            )
+          end
+        end
+
+        def self.list_all(search: nil, offset: 0, limit: nil)
+          items = universe
+          if search.present?
+            items = items.select { |item| item.title.downcase.include?(search.downcase) }
+          end
+          sliced = limit ? items[offset, limit] : items[offset..]
+          Array(sliced)
+        end
+
+        def self.resolve_many(identifiers, guardian:)
+          universe
+            .select { |item| identifiers.map(&:to_s).include?(item.identifier) }
+            .index_by(&:identifier)
+        end
+      end
+    end
+
+    let(:wide_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "a_wide_source"
+        def self.label = "Wide"
+
+        def self.list_all(search: nil, offset: 0, limit: nil)
+          items =
+            (1..40).map do |index|
+              AdminDashboard::Reports::ResolvedReport.new(
+                source: source_name,
+                identifier: "row_#{index}",
+                title: "Wideprefix Row #{index}",
+                description: nil,
+                label: label,
+                url: nil,
+              )
+            end
+          if search.present?
+            items = items.select { |item| item.title.downcase.include?(search.downcase) }
+          end
+          sliced = limit ? items[offset, limit] : items[offset..]
+          Array(sliced)
+        end
+
+        def self.resolve_many(_identifiers, guardian:)
+          {}
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        [fake_provider, wide_provider].include?(entry[:value])
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        get "/admin/dashboard/reports/available.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a moderator" do
+      before { sign_in(Fabricate(:moderator)) }
+
+      it "denies access" do
+        get "/admin/dashboard/reports/available.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "returns enabled, available, and providers" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "b", position: 0)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Fakey" }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["providers"].map { |provider| provider["source"] }).to include("a_fake_source")
+        fake_summary = body["providers"].find { |provider| provider["source"] == "a_fake_source" }
+        expect(fake_summary["label"]).to eq("Fake")
+
+        expect(body["enabled"].map { |item| item["identifier"] }).to eq(["b"])
+        expect(body["enabled"].first["label"]).to eq("Fake")
+
+        fake_available = body["available"].select { |item| item["source"] == "a_fake_source" }
+        expect(fake_available.map { |item| item["identifier"] }).to contain_exactly("a", "b", "c")
+      end
+
+      it "includes already-enabled identifiers in the all list" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "a", position: 0)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "b", position: 1)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Fakey" }
+        body = response.parsed_body
+        fake_available = body["available"].select { |item| item["source"] == "a_fake_source" }
+        expect(fake_available.map { |item| item["identifier"] }).to contain_exactly("a", "b", "c")
+      end
+
+      it "paginates 30 items per response and emits a cursor when more exist" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Wideprefix" }
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        wide = body["available"].select { |item| item["source"] == "a_wide_source" }
+        expect(wide.size).to eq(AdminDashboard::Reports::Listing::PAGE_SIZE)
+        expect(wide.first["identifier"]).to eq("row_1")
+        expect(body["has_more"]).to eq(true)
+        expect(body["cursor"]).to eq("a_wide_source:30")
+      end
+
+      it "returns the next batch when the cursor from a previous response is sent back" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+        get "/admin/dashboard/reports/available.json",
+            params: {
+              search: "Wideprefix",
+              cursor: "a_wide_source:30",
+            }
+        body = response.parsed_body
+        wide = body["available"].select { |item| item["source"] == "a_wide_source" }
+
+        expect(wide.map { |item| item["identifier"] }).to eq((31..40).map { |n| "row_#{n}" })
+        expect(body["has_more"]).to eq(false)
+        expect(body["cursor"]).to be_nil
+      end
+
+      it "ignores a cursor whose source is not registered" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+        get "/admin/dashboard/reports/available.json", params: { cursor: "ghost_source:0" }
+
+        expect(response.parsed_body["available"]).to be_empty
+        expect(response.parsed_body["has_more"]).to eq(false)
+        expect(response.parsed_body["cursor"]).to be_nil
+      end
+
+      it "crosses provider boundaries via cursor instead of asking each provider at the same offset" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
+
+        get "/admin/dashboard/reports/available.json", params: { cursor: "a_fake_source:0" }
+        body = response.parsed_body
+        sources = body["available"].map { |item| item["source"] }
+
+        expect(sources.first(3)).to eq(%w[a_fake_source a_fake_source a_fake_source])
+        expect(sources.last).to eq("a_wide_source")
+        expect(body["has_more"]).to eq(true)
+        expect(body["cursor"]).to start_with("a_wide_source:")
+      end
+
+      it "filters by the search param" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Fakey a" }
+        body = response.parsed_body
+        fake_available = body["available"].select { |item| item["source"] == "a_fake_source" }
+        expect(fake_available.map { |item| item["identifier"] }).to eq(["a"])
+      end
+    end
+  end
+
+  describe "#update_reports_section" do
+    before { AdminDashboardReport.delete_all }
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "fake_source"
+        def self.label = "Fake"
+        def self.accessible_ids(identifiers, guardian:)
+          identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a moderator" do
+      before { sign_in(Fabricate(:moderator)) }
+
+      it "denies access" do
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "replaces the current layout with the supplied items in order" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "fake_source", identifier: "old", position: 0)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                { source: "fake_source", identifier: "new_a" },
+                { source: "fake_source", identifier: "new_b" },
+              ],
+            }
+
+        expect(response.status).to eq(204)
+        rows = AdminDashboardReport.order(:position).pluck(:identifier, :position)
+        expect(rows).to eq([["new_a", 0], ["new_b", 1]])
+      end
+
+      it "accepts an empty layout (removes everything)" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        AdminDashboardReport.create!(source: "fake_source", identifier: "y", position: 0)
+
+        put "/admin/dashboard/reports/layout.json", params: { items: [] }
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.count).to eq(0)
+      end
+
+      it "rejects more than VISIBLE_CAP items" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        items =
+          (AdminDashboardReport::VISIBLE_CAP + 1).times.map do |i|
+            { source: "fake_source", identifier: "id#{i}" }
+          end
+        put "/admin/dashboard/reports/layout.json", params: { items: items }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects items missing source or identifier" do
+        put "/admin/dashboard/reports/layout.json", params: { items: [{ source: "fake_source" }] }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects a non-array items field" do
+        put "/admin/dashboard/reports/layout.json", params: { items: "not_an_array" }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects items whose source has no registered provider" do
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "totally_unregistered", identifier: "x" }],
+            }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects items the guardian cannot access" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "forbidden" }],
+            }
+
+        expect(response.status).to eq(403)
+        expect(AdminDashboardReport.count).to eq(0)
       end
     end
   end

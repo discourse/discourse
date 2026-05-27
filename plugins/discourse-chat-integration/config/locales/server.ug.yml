@@ -18,5 +18,3 @@ ug:
             added_and_removed: "%{added} قوشۇلدى ۋە %{removed} چىقىرىۋېتىلدى"
             added: "%{added} قوشۇلدى"
             removed: "%{removed} چىقىرىۋېتىلدى"
-      flowdock:
-        message_title: "يوللانغان ۋاقىت"

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 th:
+  js:
+    github:
+      pr_status:
+        draft: "แบบร่าง"
+        open: "เปิด"
+        approved: "อนุมัติ"
+        closed: "ปิด"

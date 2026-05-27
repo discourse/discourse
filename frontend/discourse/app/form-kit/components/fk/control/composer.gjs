@@ -1,11 +1,11 @@
-import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
-import DEditor from "discourse/components/d-editor";
-import concatClass from "discourse/helpers/concat-class";
+import { trustHTML } from "@ember/template";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
+import DEditor from "discourse/ui-kit/d-editor";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-export default class FKControlComposer extends Component {
+export default class FKControlComposer extends FKBaseControl {
   static controlType = "composer";
 
   @action
@@ -18,7 +18,7 @@ export default class FKControlComposer extends Component {
       return;
     }
 
-    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
+    return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
   <template>
@@ -26,7 +26,8 @@ export default class FKControlComposer extends Component {
       @value={{readonly @field.value}}
       @change={{this.handleInput}}
       @disabled={{@field.disabled}}
-      class={{concatClass
+      @forceEditorMode={{@forceEditorMode}}
+      class={{dConcatClass
         "form-kit__control-composer"
         (if @preview "--preview")
       }}

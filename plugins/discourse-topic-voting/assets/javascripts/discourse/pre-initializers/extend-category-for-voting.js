@@ -1,8 +1,17 @@
 import { tracked } from "@glimmer/tracking";
+import { computed, get } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
 function initialize(api) {
+  Category.reopen({
+    enable_topic_voting: computed("custom_fields.enable_topic_voting", {
+      get() {
+        return get(this.custom_fields, "enable_topic_voting") === true;
+      },
+    }),
+  });
   api.addPostClassesCallback((post) => {
     if (post.post_number === 1 && post.can_vote) {
       return ["voting-post"];
@@ -11,7 +20,9 @@ function initialize(api) {
   api.addTrackedPostProperties("can_vote");
   api.addTagsHtmlCallback(
     (topic) => {
-      if (!topic.can_vote) {
+      const router = api.container.lookup("service:router");
+
+      if (!topic.can_vote || router.currentRouteName?.startsWith("topic.")) {
         return;
       }
 
@@ -50,6 +61,7 @@ function initialize(api) {
     (Superclass) =>
       class extends Superclass {
         @tracked votes_exceeded;
+        @tracked vote_limit;
         @tracked votes_left;
       }
   );

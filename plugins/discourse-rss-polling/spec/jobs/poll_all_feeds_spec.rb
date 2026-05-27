@@ -3,39 +3,37 @@
 RSpec.describe Jobs::DiscourseRssPolling::PollAllFeeds do
   subject(:job) { described_class.new }
 
+  fab!(:user_a) { Fabricate(:user, username: "feed_user_a") }
+  fab!(:user_b) { Fabricate(:user, username: "feed_user_b") }
+
   before { SiteSetting.rss_polling_enabled = true }
 
   describe "#execute" do
     before do
-      DiscourseRssPolling::RssFeed.create!(url: "https://www.example.com/feed", author: "system")
-      DiscourseRssPolling::RssFeed.create!(
-        url: "https://blog.discourse.org/feed/",
-        author: "discourse",
-      )
+      Fabricate(:rss_feed, url: "https://www.example.com/feed", user: user_a)
+      Fabricate(:rss_feed, url: "https://blog.discourse.org/feed/", user: user_b)
 
       Jobs.run_later!
       Discourse.redis.del("rss-polling-feeds-polled")
     end
 
-    it "queues correct PollFeed jobs" do
+    it "queues a PollFeed job per feed with the right user_id" do
       Sidekiq::Testing.fake! do
         expect { job.execute({}) }.to change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }.by(2)
 
-        enqueued_jobs_args =
-          Jobs::DiscourseRssPolling::PollFeed.jobs.last(2).map { |job| job["args"][0] }
+        enqueued = Jobs::DiscourseRssPolling::PollFeed.jobs.last(2).map { |j| j["args"][0] }
 
-        expect(enqueued_jobs_args[0]["feed_url"]).to eq("https://www.example.com/feed")
-        expect(enqueued_jobs_args[0]["author_username"]).to eq("system")
-
-        expect(enqueued_jobs_args[1]["feed_url"]).to eq("https://blog.discourse.org/feed/")
-        expect(enqueued_jobs_args[1]["author_username"]).to eq("discourse")
+        expect(enqueued).to contain_exactly(
+          hash_including("feed_url" => "https://www.example.com/feed", "user_id" => user_a.id),
+          hash_including("feed_url" => "https://blog.discourse.org/feed/", "user_id" => user_b.id),
+        )
       end
     end
 
     it "is rate limited" do
       Sidekiq::Testing.fake! do
         expect { job.execute({}) }.to change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }.by(2)
-        expect { job.execute({}) }.to_not change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }
+        expect { job.execute({}) }.not_to change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }
       end
     end
 

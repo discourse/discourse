@@ -6,17 +6,24 @@
 
 ug:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "نەتىجە يوق"
     explorer:
+      default_query: "كۆڭۈلدىكى"
       or: "ياكى"
+      create: "قۇر"
+      ai:
+        generate: "ھاسىللا"
+        optional: "تاللاشچان"
       help:
         label: "ياردەم"
       types:
         bool:
           yes: "ھەئە"
           no: "ياق"
-      export: "چىقار"
       save: "ئۆزگەرتىشنى ساقلا"
-      edit: "تەھرىر"
+      undo: "ئۆزگەرتىشنى تاشلىۋەت"
       delete: "ئۆچۈر"
       result_count:
         one: "%{count} نەتىجە."

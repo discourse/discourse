@@ -1,9 +1,9 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -91,22 +91,22 @@ export default class WebHook extends RestModel {
     return Group.findAll({ term, ignore_automatic: false });
   }
 
-  @discourseComputed("wildcard_web_hook", "web_hook_event_types.[]")
-  description(isWildcardWebHook, types) {
+  @computed("wildcard_web_hook", "web_hook_event_types.[]")
+  get description() {
     let desc = "";
 
-    types.forEach((type) => {
+    this.web_hook_event_types?.forEach((type) => {
       const name = `${type.name.toLowerCase()}_event`;
       desc += desc !== "" ? `, ${name}` : name;
     });
 
-    return isWildcardWebHook ? "*" : desc;
+    return this.wildcard_web_hook ? "*" : desc;
   }
 
   createProperties() {
     const types = this.web_hook_event_types;
     const categoryIds = this.categories.map((c) => c.id);
-    const tagNames = this.tag_names;
+    const tags = this.tags;
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
     // we use an array to populate the datasource above.
@@ -125,7 +125,9 @@ export default class WebHook extends RestModel {
         ? [null]
         : types.map((type) => type.id),
       category_ids: isEmpty(categoryIds) ? [null] : categoryIds,
-      tag_names: isEmpty(tagNames) ? [null] : tagNames,
+      tag_ids: isEmpty(tags)
+        ? [null]
+        : tags.map((t) => (typeof t === "object" ? t.id : t)),
       group_ids:
         isEmpty(groupNames) || isEmpty(groupNames[0])
           ? [null]

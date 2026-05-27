@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import {
   click,
   fillIn,
@@ -304,6 +305,8 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await fillIn("#confirm-phrase", "Disa");
     assert.dom(".btn-danger").isDisabled();
     await fillIn("#confirm-phrase", "Disable");
+    assert.dom(".btn-danger").isEnabled();
+    await fillIn("#confirm-phrase", "disable");
     assert.dom(".btn-danger").isEnabled();
   });
 

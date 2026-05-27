@@ -56,16 +56,42 @@ module PageObjects
         page.find(".sidebar-section-content a.sidebar-section-link").click
       end
 
-      def persona_selector
-        PageObjects::Components::SelectKit.new(".persona-llm-selector__persona-dropdown")
+      def agent_selector
+        PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
       end
 
       def llm_selector
-        PageObjects::Components::SelectKit.new(".persona-llm-selector__llm-dropdown")
+        PageObjects::Components::SelectKit.new(".agent-llm-selector__llm-dropdown")
       end
 
       def has_sidebar_back_link?
         page.has_css?(".sidebar-sections__back-to-forum")
+      end
+
+      def starred_section
+        page.find("#sidebar-section-content-starred-conversations")
+      end
+
+      def today_section
+        page.find("#sidebar-section-content-today")
+      end
+
+      def conversation_link(topic)
+        page.find("li[data-list-item-name='ai-conversation-#{topic.id}']")
+      end
+
+      def has_starred_conversations_section?
+        page.has_css?("#sidebar-section-content-starred-conversations")
+      end
+
+      def has_no_starred_conversations_section?
+        page.has_no_css?("#sidebar-section-content-starred-conversations")
+      end
+
+      def toggle_star_for_conversation(topic)
+        conversation_link(topic).hover
+        conversation_link(topic).find(".sidebar-section-hover-button").click
+        page.find(".ai-conversation-sidebar-link-menu__star-conversation").click
       end
 
       def has_no_sidebar_back_link?

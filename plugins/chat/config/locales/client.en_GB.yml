@@ -7,6 +7,8 @@
 en_GB:
   js:
     chat:
+      edit_category:
+        description: "Description"
       about_view:
         description: Description
       composer:

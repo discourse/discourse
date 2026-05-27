@@ -13,11 +13,10 @@ require "uri"
 @iterations = 500
 @best_of = 1
 @mem_stats = false
-@unicorn = false
 @dump_heap = false
 @concurrency = 1
 @skip_asset_bundle = false
-@unicorn_workers = 3
+@workers = 3
 
 opts =
   OptionParser.new do |o|
@@ -42,11 +41,9 @@ opts =
       "--concurrency [NUM]",
       "Run benchmark with this number of concurrent requests (default: 1)",
     ) { |i| @concurrency = i.to_i }
-    o.on(
-      "-w",
-      "--unicorn_workers [NUM]",
-      "Run benchmark with this number of unicorn workers (default: 3)",
-    ) { |i| @unicorn_workers = i.to_i }
+    o.on("-w", "--workers [NUM]", "Run benchmark with this number of workers (default: 3)") do |i|
+      @workers = i.to_i
+    end
     o.on("-s", "--skip-bundle-assets", "Skip bundling assets") { @skip_asset_bundle = true }
 
     o.on(
@@ -207,21 +204,14 @@ begin
   end
 
   ENV["UNICORN_PORT"] = @port.to_s
-  ENV["UNICORN_WORKERS"] = @unicorn_workers.to_s
+  ENV["UNICORN_WORKERS"] = @workers.to_s
 
   FileUtils.mkdir_p(File.join("tmp", "pids"))
-  pid = spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+  pid = spawn("bundle exec pitchfork -c config/pitchfork.conf.rb")
 
-  while (
-          unicorn_master_pid =
-            `ps aux | grep "unicorn master" | grep -v "grep" | awk '{print $2}'`.strip.to_i
-        ) == 0
-    sleep 1
-  end
+  sleep 1 while `pgrep -f "pitchfork.*monitor"`.strip.empty?
 
-  while `pgrep -P #{unicorn_master_pid}`.split("\n").map(&:to_i).size != @unicorn_workers.to_i
-    sleep 1
-  end
+  sleep 1 while `pgrep -f "pitchfork.*worker\\["`.lines.size < @workers
 
   puts "Starting benchmark..."
 
@@ -285,7 +275,7 @@ begin
 
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
-  puts "Unicorn: (workers: #{@unicorn_workers})"
+  puts "Pitchfork: (workers: #{@workers})"
   puts "Include env: #{@include_env}"
   puts "Iterations: #{@iterations}, Best of: #{@best_of}"
   puts "Concurrency: #{@concurrency}"
@@ -324,15 +314,6 @@ begin
       "rss_kb" => mem["rss_kb"],
       "pss_kb" => mem["pss_kb"],
     ).merge(facts)
-
-  if @unicorn
-    child_pids = `ps --ppid #{pid} | awk '{ print $1; }' | grep -v PID`.split("\n")
-    child_pids.each do |child|
-      mem = get_mem(child)
-      results["rss_kb_#{child}"] = mem["rss_kb"]
-      results["pss_kb_#{child}"] = mem["pss_kb"]
-    end
-  end
 
   puts results.to_yaml
 

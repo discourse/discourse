@@ -10,11 +10,17 @@ it:
       site_settings:
         categories:
           discourse_solved: "Risoluzione Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluzioni accettate"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "accettata"
+          topic_solved_notification: "risolto"
     solutions: "Soluzioni"
     solved:
       title: "Risolti"
@@ -38,11 +44,17 @@ it:
       no_solved_topics_title: "Non hai ancora risolto nessun argomento"
       no_solved_topics_title_others: "%{username} non ha ancora risolto nessun argomento"
       no_solved_topics_body: "Quando fornisci una risposta utile a un argomento, la tua risposta potrà essere selezionata come soluzione dal proprietario dell'argomento o dallo staff."
+      move_post_cancel: "Annulla"
+      confirm_solved_removal_confirm: "Conferma"
+      confirm_solved_removal_cancel: "Annulla"
       no_answer:
         title: La tua domanda ha avuto risposta?
         description: "Evidenzia la risposta e aiuta gli altri utilizzando il pulsante della soluzione sotto la risposta corretta."
+      topic_solved_notification: "<p> <span>%{username}</span> %{description} </p>"
       notification:
         title: "il tuo messaggio è stato contrassegnato come soluzione"
+      category_type_support:
+        title: "Sostienici"
     topic_statuses:
       solved:
         help: "Questo argomento ha una soluzione"

@@ -3,6 +3,11 @@
     width: 100%;
   }
 
+  .form-kit__control-textarea {
+    max-width: 100%;
+    min-width: 100%;
+  }
+
   .posted-by {
     width: 40px;
     float: left;
@@ -45,6 +50,10 @@
 
   .show-reviewable {
     margin-right: 0.5em;
+  }
+
+  .show-post {
+    margin-bottom: var(--space-4);
   }
 }
 
@@ -91,5 +100,9 @@
 }
 
 .add-user-note {
-  border-top: 1px solid rgb(var(--primary-low-rgb), 0.5);
+  border-top: 1px solid var(--content-border-color);
+
+  &:hover {
+    border-top: 1px solid var(--content-border-color);
+  }
 }

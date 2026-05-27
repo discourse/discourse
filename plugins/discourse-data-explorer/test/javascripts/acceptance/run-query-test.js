@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance("Data Explorer Plugin | Run Query", function (needs) {
+acceptance("Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
@@ -17,7 +17,23 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/explorer/groups.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([
         {
           id: 1,
@@ -58,7 +74,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       ]);
     });
 
-    server.get("/admin/plugins/explorer/schema.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
       return helper.response({
         anonymous_users: [
           {
@@ -92,7 +108,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/explorer/queries", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [
           {
@@ -104,6 +120,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
             group_ids: [],
             last_run_at: "2021-02-11T08:29:59.337Z",
             user_id: -1,
+            is_default: true,
           },
           {
             id: 2,
@@ -113,12 +130,13 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
             group_ids: [],
             last_run_at: "2023-05-04T22:16:23.858Z",
             user_id: 1,
+            is_default: false,
           },
         ],
       });
     });
 
-    server.get("/admin/plugins/explorer/queries/-6", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries/-6", () => {
       return helper.response({
         query: {
           id: -6,
@@ -140,11 +158,12 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
+          is_default: true,
         },
       });
     });
 
-    server.get("/admin/plugins/explorer/queries/2", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries/2", () => {
       return helper.response({
         query: {
           id: 2,
@@ -162,7 +181,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       });
     });
 
-    server.post("/admin/plugins/explorer/queries/-6/run", () => {
+    server.post("/admin/plugins/discourse-data-explorer/queries/-6/run", () => {
       return helper.response({
         success: true,
         errors: [],
@@ -198,7 +217,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       });
     });
 
-    server.post("/admin/plugins/explorer/queries/2/run", () => {
+    server.post("/admin/plugins/discourse-data-explorer/queries/2/run", () => {
       return helper.response({
         success: true,
         errors: [],
@@ -268,7 +287,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("runs query and renders data and a chart", async function (assert) {
-    await visit("/admin/plugins/explorer/queries/-6");
+    await visit("/admin/plugins/discourse-data-explorer/queries/-6");
 
     assert
       .dom("div.name h1")
@@ -277,28 +296,28 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     assert.dom("div.query-edit").exists("the query code was rendered");
 
     assert
-      .dom("form.query-run button span")
+      .dom(".query-run-split__primary span")
       .hasText(i18n("explorer.run"), "the run button was rendered");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
+
+    assert.dom("canvas").exists("the chart was rendered by default");
+
+    await click(".query-results-modes input[value='table']");
 
     assert
       .dom("div.query-results table tbody tr")
       .exists({ count: 2 }, "the table with query results was rendered");
 
     assert
-      .dom("div.result-info button:nth-child(3) span")
-      .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
-
-    await click("div.result-info button:nth-child(3)");
-
-    assert.dom("canvas").exists("the chart was rendered");
+      .dom(".query-results-modes")
+      .exists("the chart/table toggle buttons were rendered");
   });
 
   test("runs query and is able to download the results", async function (assert) {
-    await visit("/admin/plugins/explorer/queries/-6");
+    await visit("/admin/plugins/discourse-data-explorer/queries/-6");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
 
     const createElement = document.createElement.bind(document);
     const appendChild = document.body.appendChild.bind(document.body);
@@ -341,7 +360,8 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         }
       });
 
-    await click("div.result-info button:nth-child(1)");
+    await click(".query-action-bar__right .query-result-download-buttons");
+    await click(".query-result-export__results-json");
 
     await finishedForm;
 
@@ -367,17 +387,22 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("runs query and renders 0, false, and NULL values correctly", async function (assert) {
-    await visit("/admin/plugins/explorer/queries/2");
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
 
     assert
       .dom("div.name h1 span")
       .hasText("What about 0?", "the query name was rendered");
 
     assert
-      .dom("form.query-run button span")
+      .dom(".query-run-split__primary span")
       .hasText(i18n("explorer.run"), "the run button was rendered");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
+
+    // Default view is chart for chartable data; switch to table to inspect cells.
+    if (document.querySelector(".query-results-modes input[value='table']")) {
+      await click(".query-results-modes input[value='table']");
+    }
 
     assert
       .dom("div.query-results tbody td:nth-child(1)")
@@ -393,11 +418,9 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   test("automatically runs query when run query parameter is present", async function (assert) {
-    await visit("/admin/plugins/explorer/queries/2?run");
+    await visit("/admin/plugins/discourse-data-explorer/queries/2?run");
 
-    assert
-      .dom("div.query-results table tbody tr")
-      .exists({ count: 1 }, "query results should be displayed");
+    assert.dom("div.query-results").exists("query results should be displayed");
   });
 
   test("automatically runs query when run query parameter is present on group report route", async function (assert) {

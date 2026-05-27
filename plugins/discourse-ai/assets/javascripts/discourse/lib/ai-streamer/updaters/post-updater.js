@@ -1,7 +1,7 @@
 import loadMorphlex from "discourse/lib/load-morphlex";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { cook } from "discourse/lib/text";
-import { addProgressDot } from "../progress-handlers";
+import { addProgressDecoration } from "../progress-handlers";
 import StreamUpdater from "./stream-updater";
 
 export default class PostUpdater extends StreamUpdater {
@@ -53,7 +53,7 @@ export default class PostUpdater extends StreamUpdater {
     cookedElement.innerHTML = cooked;
 
     if (!done) {
-      addProgressDot(cookedElement);
+      addProgressDecoration(cookedElement);
     }
 
     await this.setCooked(cookedElement.innerHTML, done);

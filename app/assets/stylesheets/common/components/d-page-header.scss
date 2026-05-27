@@ -4,6 +4,7 @@ $mobile-breakpoint: 700px;
 .d-page-subheader {
   &__title-row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: stretch;
     margin-bottom: var(--space-2);
@@ -17,7 +18,8 @@ $mobile-breakpoint: 700px;
       font-size: var(--font-up-2);
     }
 
-    .d-page-header__actions {
+    .d-page-header__actions,
+    .d-page-subheader__actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -72,6 +74,16 @@ $mobile-breakpoint: 700px;
           margin-bottom: 0;
         }
       }
+    }
+  }
+
+  &__drawer {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-2);
+
+    &:not(:has(*)) {
+      display: none;
     }
   }
 }

@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 0
 
       - name: Bundler cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -75,7 +75,7 @@ jobs:
           bin/rake "release_note:plugins:generate[ ${{ steps.dates.outputs.from }} , ${{ steps.dates.outputs.to }} , ./tmp/all-the-plugins/official/* , discourse ]" | tee tmp/notes/plugins.txt
 
       - name: Export files
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: release-notes
           path: ./tmp/notes/*.txt

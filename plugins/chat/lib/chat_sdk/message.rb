@@ -35,7 +35,7 @@ module ChatSDK
     #
     # @see #create
     def self.create_with_stream(**params, &block)
-      self.create(**params, streaming: true, strip_whitespaces: false, &block)
+      create(**params, streaming: true, strip_whitespaces: false, &block)
     end
 
     # Streams to a specific chat message.
@@ -187,6 +187,7 @@ module ChatSDK
         params: {
           message_id: message.id,
           message: message.message + raw,
+          channel_id: message.chat_channel_id,
         },
         options: {
           strip_whitespaces: false,

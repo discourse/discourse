@@ -1,29 +1,18 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActivityCell from "discourse/components/topic-list/item/activity-cell";
 import TopicStatus from "discourse/components/topic-status";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -36,6 +25,17 @@ import {
 } from "discourse/lib/click-track";
 import BulkSelectBookmarksDropdown from "discourse/select-kit/components/bulk-select-bookmarks-dropdown";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 import { i18n } from "discourse-i18n";
 
 @classNames("bookmark-list-wrapper")
@@ -209,76 +209,78 @@ export default class BookmarkList extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
-      <LoadMore @action={{this.loadMore}}>
+    <DConditionalLoadingSpinner @condition={{this.loading}}>
+      <DLoadMore @action={{this.loadMore}}>
         <table class="topic-list bookmark-list">
           <thead class="topic-list-header">
-            {{#if this.site.desktopView}}
-              <PluginOutlet @name="bookmark-list-table-header">
-                {{#if this.bulkSelectEnabled}}
-                  <th class="bulk-select topic-list-data">
-                    <DButton
-                      @action={{this.toggleBulkSelect}}
-                      class="bulk-select btn-flat"
-                      @icon="list-check"
-                      @title="bookmarks.bulk.toggle"
-                    />
-                  </th>
-                {{/if}}
-                <th class="topic-list-data">
-
+            <tr>
+              {{#if this.site.desktopView}}
+                <PluginOutlet @name="bookmark-list-table-header">
                   {{#if this.bulkSelectEnabled}}
-                    <span class="bulk-select-topics">
-                      {{~#if this.canDoBulkActions}}
-                        <div class="bulk-select-bookmarks-dropdown">
-                          <span class="bulk-select-bookmark-dropdown__count">
-                            {{i18n
-                              "bookmarks.bulk.selected_count"
-                              count=this.selectedCount
-                            }}
-                          </span>
-                          <BulkSelectBookmarksDropdown
-                            @bulkSelectHelper={{this.bulkSelectHelper}}
-                          />
-                        </div>
+                    <th class="bulk-select topic-list-data">
+                      <DButton
+                        @action={{this.toggleBulkSelect}}
+                        class="bulk-select btn-flat"
+                        @icon="list-check"
+                        @title="bookmarks.bulk.toggle"
+                      />
+                    </th>
+                  {{/if}}
+                  <th class="topic-list-data">
 
-                      {{/if~}}
+                    {{#if this.bulkSelectEnabled}}
+                      <span class="bulk-select-topics">
+                        {{~#if this.canDoBulkActions}}
+                          <div class="bulk-select-bookmarks-dropdown">
+                            <span class="bulk-select-bookmark-dropdown__count">
+                              {{i18n
+                                "bookmarks.bulk.selected_count"
+                                count=this.selectedCount
+                              }}
+                            </span>
+                            <BulkSelectBookmarksDropdown
+                              @bulkSelectHelper={{this.bulkSelectHelper}}
+                            />
+                          </div>
+
+                        {{/if~}}
+                        <DButton
+                          @action={{this.selectAll}}
+                          class="btn btn-default bulk-select-all"
+                          @label="bookmarks.bulk.select_all"
+                        />
+                        <DButton
+                          @action={{this.clearAll}}
+                          class="btn btn-default bulk-clear-all"
+                          @label="bookmarks.bulk.clear_all"
+                        />
+                      </span>
+                    {{else}}
                       <DButton
-                        @action={{this.selectAll}}
-                        class="btn btn-default bulk-select-all"
-                        @label="bookmarks.bulk.select_all"
+                        @action={{this.toggleBulkSelect}}
+                        class="btn-flat bulk-select"
+                        @icon="list-check"
+                        @title="bookmarks.bulk.toggle"
                       />
-                      <DButton
-                        @action={{this.clearAll}}
-                        class="btn btn-default bulk-clear-all"
-                        @label="bookmarks.bulk.clear_all"
-                      />
-                    </span>
-                  {{else}}
-                    <DButton
-                      @action={{this.toggleBulkSelect}}
-                      class="btn-flat bulk-select"
-                      @icon="list-check"
-                      @title="bookmarks.bulk.toggle"
-                    />
-                    {{i18n "topic.title"}}
-                  {{/if~}}
-                </th>
-                <th class="topic-list-data">&nbsp;</th>
-                <th class="post-metadata topic-list-data">{{i18n
-                    "post.bookmarks.updated"
-                  }}</th>
-                <th class="post-metadata topic-list-data">{{i18n
-                    "activity"
-                  }}</th>
-                <th>&nbsp;</th>
-              </PluginOutlet>
-            {{/if}}
+                      {{i18n "topic.title"}}
+                    {{/if~}}
+                  </th>
+                  <th class="topic-list-data">&nbsp;</th>
+                  <th class="post-metadata topic-list-data">{{i18n
+                      "post.bookmarks.updated"
+                    }}</th>
+                  <th class="post-metadata topic-list-data">{{i18n
+                      "activity"
+                    }}</th>
+                  <th>&nbsp;</th>
+                </PluginOutlet>
+              {{/if}}
+            </tr>
           </thead>
           <tbody class="topic-list-body">
             {{#each this.content as |bookmark|}}
               <tr
-                class={{concatClass
+                class={{dConcatClass
                   "topic-list-item bookmark-list-item"
                   (if bookmark.excerpt "excerpt-expanded" "")
                   (if bookmark.hasMetadata "has-metadata" "")
@@ -313,12 +315,12 @@ export default class BookmarkList extends Component {
                                 'bookmark-expired-reminder'
                               }}"
                           >
-                            {{icon "far-clock"}}{{bookmark.formattedReminder}}
+                            {{dIcon "far-clock"}}{{bookmark.formattedReminder}}
                           </span>
                         {{/if}}
                         {{#if bookmark.name}}
                           <span class="bookmark-metadata-item">
-                            {{icon "circle-info"}}<span>{{replaceEmoji
+                            {{dIcon "circle-info"}}<span>{{dReplaceEmoji
                                 bookmark.name
                               }}</span>
                           </span>
@@ -327,11 +329,11 @@ export default class BookmarkList extends Component {
                     {{/if}}
                     <div class="bookmark-status-with-link">
                       {{#if bookmark.pinned}}
-                        {{icon "thumbtack" class="bookmark-pinned"}}
+                        {{dIcon "thumbtack" class="bookmark-pinned"}}
                       {{/if}}
                       {{#if bookmark.bookmarkableTopicAlike}}
                         <TopicStatus @topic={{bookmark.topicStatus}} />
-                        {{topicLink bookmark.topicForList}}
+                        {{dTopicLink bookmark.topicForList}}
                       {{else}}
                         <a
                           href={{bookmark.bookmarkable_url}}
@@ -346,8 +348,8 @@ export default class BookmarkList extends Component {
                   </span>
                   {{#if bookmark.bookmarkableTopicAlike}}
                     <div class="link-bottom-line">
-                      {{categoryLink bookmark.category}}
-                      {{discourseTags
+                      {{dCategoryLink bookmark.category}}
+                      {{dDiscourseTags
                         bookmark
                         mode="list"
                         tagsForUser=this.tagsForUser
@@ -366,7 +368,7 @@ export default class BookmarkList extends Component {
                       data-user-card={{bookmark.user.username}}
                       class="avatar"
                     >
-                      {{avatar
+                      {{dAvatar
                         bookmark.bookmarkableUser
                         avatarTemplatePath="avatar_template"
                         usernamePath="username"
@@ -376,12 +378,12 @@ export default class BookmarkList extends Component {
                     </a>
                   {{/if}}
 
-                  {{! template-lint-disable no-invalid-interactive }}
+                  {{! eslint-disable ember/template-no-invalid-interactive }}
                   {{#if bookmark.excerpt}}
                     <p
                       class="post-excerpt"
                       {{on "click" this.screenExcerptForExternalLink}}
-                    >{{htmlSafe bookmark.excerpt}}</p>
+                    >{{trustHTML bookmark.excerpt}}</p>
                   {{/if}}
                 </td>
                 {{#if this.site.desktopView}}
@@ -392,7 +394,7 @@ export default class BookmarkList extends Component {
                         data-user-card={{bookmark.user.username}}
                         class="avatar"
                       >
-                        {{avatar
+                        {{dAvatar
                           bookmark.user
                           avatarTemplatePath="avatar_template"
                           usernamePath="username"
@@ -404,7 +406,7 @@ export default class BookmarkList extends Component {
                   </td>
                   <td
                     class="post-metadata topic-list-data updated-at"
-                  >{{formatDate bookmark.updated_at format="tiny"}}</td>
+                  >{{dFormatDate bookmark.updated_at format="tiny"}}</td>
                   <ActivityCell class="post-metadata" @topic={{bookmark}} />
                 {{/if}}
                 <td class="topic-list-data">
@@ -420,8 +422,8 @@ export default class BookmarkList extends Component {
             {{/each}}
           </tbody>
         </table>
-        <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
-      </LoadMore>
-    </ConditionalLoadingSpinner>
+        <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
+      </DLoadMore>
+    </DConditionalLoadingSpinner>
   </template>
 }

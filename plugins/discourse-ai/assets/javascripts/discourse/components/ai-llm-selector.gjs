@@ -8,9 +8,9 @@ const AiLlmSelector = <template>
     @onChange={{@onChange}}
     @options={{hash
       filterable=true
-      none="discourse_ai.ai_persona.no_llm_selected"
+      none="discourse_ai.ai_agent.no_llm_selected"
     }}
-    class={{@class}}
+    ...attributes
   />
 </template>;
 

@@ -5,10 +5,10 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
+import { trustHTML } from "@ember/template";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { not } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class TagChooserField extends Component {
@@ -16,22 +16,35 @@ export default class TagChooserField extends Component {
   @service dialog;
 
   get formattedChoices() {
-    return this.args.choices.map((choice) => ({
-      name: choice,
-      display: this.args.attributes.tag_choices[choice]
-        ? this.args.attributes.tag_choices[choice]
-        : choice.replace(/-/g, " ").toUpperCase(),
+    if (!this.args.choices) {
+      return [];
+    }
+
+    const tagChoices = this.args.attributes?.tag_choices || {};
+
+    return this.args.choices.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      display: tagChoices[tag.name]
+        ? tagChoices[tag.name]
+        : (tag.name || "").replace(/-/g, " ").toUpperCase(),
     }));
+  }
+
+  _tagId(tag) {
+    return typeof tag === "object" ? tag.id : null;
   }
 
   get filteredSelectedValues() {
     return this.tags.filter((tag) =>
-      this.formattedChoices.some((choice) => choice.name === tag)
+      this.formattedChoices.some((choice) => choice.id === this._tagId(tag))
     );
   }
 
   get selectedTags() {
-    return this.tags.filter((tag) => this.args.choices.includes(tag));
+    return this.tags.filter((tag) =>
+      this.args.choices.some((choice) => choice.id === this._tagId(tag))
+    );
   }
 
   @action
@@ -50,14 +63,17 @@ export default class TagChooserField extends Component {
         })
       );
 
-      const selectedTags = [
-        ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
+      const selectedTagIds = this.selectedTags.map((t) => this._tagId(t));
+      const filteredTags = [
+        ...this.tags.filter(
+          (tag) => !selectedTagIds.includes(this._tagId(tag))
+        ),
       ];
 
       // the next is needed because we already updated the tags in the same runloop
       // when the user selected a tag in the composer directly
       next(() => {
-        set(this.composer.model, "tags", selectedTags);
+        set(this.composer.model, "tags", filteredTags);
         this.args.onChange([]);
       });
     } else {
@@ -83,7 +99,7 @@ export default class TagChooserField extends Component {
     const getFallbackValue = (optionValue) =>
       optionValue.toLowerCase().replace(/\s+/g, "-");
     let choiceMap = null;
-    const tagChoices = this.args.attributes.tag_choices;
+    const tagChoices = this.args.attributes?.tag_choices;
 
     if (tagChoices) {
       choiceMap = new Map(
@@ -103,26 +119,34 @@ export default class TagChooserField extends Component {
 
   @action
   handleInput(event) {
-    const selectedValues = this.handleSelectedValues(event);
-    const validChoices = this.formattedChoices.map((choice) => choice.name);
-    const selectedTags = selectedValues.filter((tag) =>
-      validChoices.includes(tag)
+    const selectedTagNames = this.handleSelectedValues(event);
+    const validTagNames = this.formattedChoices.map((choice) => choice.name);
+    const filteredTagNames = selectedTagNames.filter((name) =>
+      validTagNames.includes(name)
+    );
+    const existingSelectedTagIds = this.selectedTags.map((t) => this._tagId(t));
+
+    const selectedTags = filteredTagNames.map((name) =>
+      this.formattedChoices.find((choice) => choice.name === name)
     );
 
     set(
       this.composer.model,
       "tags",
       uniqueItemsFromArray([
-        ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
+        ...this.tags.filter(
+          (tag) => !existingSelectedTagIds.includes(this._tagId(tag))
+        ),
         ...selectedTags,
       ])
     );
   }
 
   @action
-  isSelected(option) {
-    option = option.toLowerCase().replace(/\s+/g, "-");
-    return this.filteredSelectedValues.includes(option);
+  isSelected(tagId) {
+    return this.filteredSelectedValues.some(
+      (tag) => this._tagId(tag) === tagId
+    );
   }
 
   <template>
@@ -137,14 +161,14 @@ export default class TagChooserField extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
 
@@ -166,7 +190,7 @@ export default class TagChooserField extends Component {
         {{#each this.formattedChoices as |choice|}}
           <option
             value={{choice.display}}
-            selected={{this.isSelected choice.name}}
+            selected={{this.isSelected choice.id}}
           >{{choice.display}}</option>
         {{/each}}
       </select>

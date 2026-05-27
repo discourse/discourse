@@ -106,7 +106,7 @@ class TopicList
     group_ids = []
     @topics.each do |ft|
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
-      group_ids |= (ft.allowed_group_ids || [])
+      group_ids |= ft.allowed_group_ids || []
     end
 
     user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
@@ -145,6 +145,8 @@ class TopicList
 
     topic_preloader_associations << :localizations if SiteSetting.content_localization_enabled
 
+    topic_preloader_associations << :first_post
+
     DiscoursePluginRegistry.topic_preloader_associations.each do |a|
       fields = a[:fields]
       condition = a[:condition]
@@ -177,12 +179,10 @@ class TopicList
 
   def category_user_lookup
     @category_user_lookup ||=
-      begin
-        if @current_user
-          CategoryUser.lookup_for(@current_user, @topics.map(&:category_id).uniq)
-        else
-          []
-        end
+      if @current_user
+        CategoryUser.lookup_for(@current_user, @topics.map(&:category_id).uniq)
+      else
+        []
       end
   end
 end

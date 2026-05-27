@@ -33,19 +33,19 @@ class HashtagAutocompleteService
   end
 
   def self.enabled_data_sources
-    self.data_sources.filter(&:enabled?)
+    data_sources.filter(&:enabled?)
   end
 
   def self.data_source_types
-    self.enabled_data_sources.map(&:type)
+    enabled_data_sources.map(&:type)
   end
 
   def self.data_source_icon_map
-    self.enabled_data_sources.map { |ds| [ds.type, ds.icon] }.to_h
+    enabled_data_sources.map { |ds| [ds.type, ds.icon] }.to_h
   end
 
   def self.data_source_from_type(type)
-    self.enabled_data_sources.find { |ds| ds.type == type }
+    enabled_data_sources.find { |ds| ds.type == type }
   end
 
   def self.find_priorities_for_context(context)
@@ -126,20 +126,20 @@ class HashtagAutocompleteService
 
     def to_h
       opts = {
-        relative_url: self.relative_url,
-        text: self.text,
-        description: self.description,
-        icon: self.icon,
-        colors: self.colors,
-        type: self.type,
-        ref: self.ref,
-        slug: self.slug,
-        id: self.id,
+        relative_url: relative_url,
+        text: text,
+        description: description,
+        icon: icon,
+        colors: colors,
+        type: type,
+        ref: ref,
+        slug: slug,
+        id: id,
       }
 
-      if self.style_type.present?
-        opts[:style_type] = self.style_type
-        opts[:emoji] = self.emoji
+      if style_type.present?
+        opts[:style_type] = style_type
+        opts[:emoji] = emoji
       end
 
       opts
@@ -262,11 +262,7 @@ class HashtagAutocompleteService
   #                        bother searching subsequent types if the first types in
   #                        the array already reach the limit.
   # @returns {Array} The results as HashtagItems
-  def search(
-    term,
-    types_in_priority_order,
-    limit: SiteSetting.experimental_hashtag_search_result_limit
-  )
+  def search(term, types_in_priority_order, limit: 20)
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
     limit = [limit, SEARCH_MAX_LIMIT].min
     types_in_priority_order =

@@ -102,6 +102,18 @@ module("Unit | Utility | sanitizer", function (hooks) {
     );
 
     cooked(
+      '<iframe src="https://www.example.com/wild/preview/%2e%2e/other"></iframe>',
+      "",
+      "disallows iframe with URL-encoded path traversal"
+    );
+
+    cooked(
+      '<iframe src="https://www.example.com/wild/preview/%2E%2E/other"></iframe>',
+      "",
+      "disallows iframe with uppercase URL-encoded path traversal"
+    );
+
+    cooked(
       `BEFORE\n\n<iframe src=http://example.com>\n\nINSIDE\n\n</iframe>\n\nAFTER`,
       `<p>BEFORE</p>\n\n<p>AFTER</p>`,
       "strips unauthorized iframes - unallowed src"

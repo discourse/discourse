@@ -38,6 +38,12 @@
         "slug": {
           "type": "string"
         },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "topic_count": {
           "type": "integer"
         },
@@ -87,6 +93,12 @@
           "type": "boolean"
         },
         "topic_template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "topic_title_placeholder": {
           "type": [
             "string",
             "null"
@@ -208,6 +220,18 @@
                 "boolean",
                 "null"
               ]
+            },
+            "nested_replies_default": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "topic_posting_review_mode": {
+              "type": "string"
+            },
+            "reply_posting_review_mode": {
+              "type": "string"
             }
           }
         },
@@ -257,11 +281,15 @@
                 },
                 "group_name": {
                   "type": "string"
+                },
+                "group_id": {
+                  "type": "integer"
                 }
               },
               "required": [
                 "permission_type",
-                "group_name"
+                "group_name",
+                "group_id"
               ]
             }
         },
@@ -292,6 +320,18 @@
         "search_priority": {
           "type": "integer"
         },
+        "topic_posting_review_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "reply_posting_review_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
         "uploaded_logo": {
           "type": [
             "string",
@@ -315,6 +355,55 @@
             "string",
             "null"
           ]
+        },
+        "category_types": {
+          "type": "object"
+        },
+        "category_type_settings": {
+          "type": "object"
+        },
+        "available_category_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "visible": {
+                "type": "boolean"
+              },
+              "configuration_schema": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "title",
+              "description",
+              "icon",
+              "available",
+              "visible",
+              "configuration_schema"
+            ]
+          }
         }
       },
       "required": [
@@ -335,6 +424,7 @@
         "notification_level",
         "can_edit",
         "topic_template",
+        "topic_title_placeholder",
         "form_template_ids",
         "has_children",
         "subcategory_count",
@@ -365,6 +455,8 @@
         "allow_badges",
         "topic_featured_link_allowed",
         "search_priority",
+        "topic_posting_review_group_ids",
+        "reply_posting_review_group_ids",
         "uploaded_logo",
         "uploaded_logo_dark",
         "uploaded_background",

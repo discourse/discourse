@@ -101,20 +101,55 @@ RSpec.describe ApplicationHelper do
         expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
-      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
-        link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
-        expect(link).to include(
-          %r{https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery-\w{8}.js},
-        )
-      end
-
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
           %r{https://s3-asset-cdn.example.com/assets/start-discourse-\w{8}.js},
         )
       end
+    end
+
+    it "includes extra attrs when provided" do
+      result =
+        helper.preload_script(
+          "plugins/my-plugin",
+          attrs: {
+            "data-plugin-name": "my-plugin",
+            "data-preinstalled": "true",
+            "data-official": "true",
+          },
+        )
+      expect(result).to include('data-plugin-name="my-plugin"')
+      expect(result).to include('data-preinstalled="true"')
+      expect(result).to include('data-official="true"')
+    end
+
+    it "does not include extra attrs when none are provided" do
+      result = helper.preload_script("start-discourse")
+      expect(result).not_to include("data-plugin-name")
+      expect(result).not_to include("data-preinstalled")
+      expect(result).not_to include("data-official")
+    end
+
+    it "escapes attr values" do
+      result =
+        helper.preload_script("plugins/test", attrs: { "data-plugin-name": "<script>xss</script>" })
+      expect(result).not_to include("<script>xss</script>")
+      expect(result).to include("&lt;script&gt;xss&lt;/script&gt;")
+    end
+
+    it "renders preinstalled and official as false for non-preinstalled plugins" do
+      result =
+        helper.preload_script(
+          "plugins/my-plugin",
+          attrs: {
+            "data-plugin-name": "my-plugin",
+            "data-preinstalled": "false",
+            "data-official": "false",
+          },
+        )
+      expect(result).to include('data-preinstalled="false"')
+      expect(result).to include('data-official="false"')
     end
   end
 
@@ -222,7 +257,7 @@ RSpec.describe ApplicationHelper do
       end
 
       context "when on desktop" do
-        before { session[:mobile_view] = "0" }
+        before { helper.stubs(:mobile_device?).returns(false) }
 
         context "when logo_dark is not set" do
           it "will return site_logo_url instead" do
@@ -240,7 +275,7 @@ RSpec.describe ApplicationHelper do
       end
 
       context "when on mobile" do
-        before { session[:mobile_view] = "1" }
+        before { helper.stubs(:mobile_device?).returns(true) }
 
         context "when mobile_logo_dark is not set" do
           it "will return site_mobile_logo_url instead" do
@@ -316,153 +351,75 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  describe "#mobile_view?" do
-    context "when enable_mobile_theme is true" do
-      before { SiteSetting.enable_mobile_theme = true }
-
-      it "is true if mobile_view is '1' in the session" do
-        session[:mobile_view] = "1"
-        expect(helper.mobile_view?).to eq(true)
-      end
-
-      it "is false if mobile_view is '0' in the session" do
-        session[:mobile_view] = "0"
-        expect(helper.mobile_view?).to eq(false)
-      end
-
-      context "when mobile_view session is cleared" do
-        before { params[:mobile_view] = "auto" }
-
-        it "is false if user agent is not mobile" do
-          session[:mobile_view] = "1"
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-
-        it "is true for iPhone" do
-          session[:mobile_view] = "0"
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-      end
-
-      context "when mobile_view is not set" do
-        it "is false if user agent is not mobile" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-
-        it "is true for iPhone" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-
-        it "is true for Android Samsung Galaxy" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-G925F Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/4.0 Chrome/44.0.2403.133 Mobile Safari/537.36",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-
-        it "is true for Android Google Nexus 5X" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 6.0; Nexus 5X Build/MDB08I) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.43 Mobile Safari/537.36",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-
-        it "is false for iPad" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B14 3 Safari/601.1",
-            )
-          expect(helper.mobile_view?).to eq(false)
-        end
-
-        it "is false for Nexus 10 tablet" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 10 Build/LMY49G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-
-        it "is false for Nexus 7 tablet" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MMB29Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-      end
+  describe "#mobile_device?" do
+    it "is false if user agent is not mobile" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
+        )
+      expect(helper.mobile_device?).to be_falsey
     end
 
-    context "when enable_mobile_theme is false" do
-      before { SiteSetting.enable_mobile_theme = false }
+    it "is true for iPhone" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1",
+        )
+      expect(helper.mobile_device?).to eq(true)
+    end
 
-      it "is false if mobile_view is '1' in the session" do
-        session[:mobile_view] = "1"
-        expect(helper.mobile_view?).to eq(false)
-      end
+    it "is true for Android Samsung Galaxy" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-G925F Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/4.0 Chrome/44.0.2403.133 Mobile Safari/537.36",
+        )
+      expect(helper.mobile_device?).to eq(true)
+    end
 
-      it "is false if mobile_view is '0' in the session" do
-        session[:mobile_view] = "0"
-        expect(helper.mobile_view?).to eq(false)
-      end
+    it "is true for Android Google Nexus 5X" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 6.0; Nexus 5X Build/MDB08I) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.43 Mobile Safari/537.36",
+        )
+      expect(helper.mobile_device?).to eq(true)
+    end
 
-      context "when mobile_view is not set" do
-        it "is false if user agent is not mobile" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to eq(false)
-        end
+    it "is false for iPad" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B14 3 Safari/601.1",
+        )
+      expect(helper.mobile_device?).to eq(false)
+    end
 
-        it "is false for iPhone" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPhone; U; ru; CPU iPhone OS 4_2_1 like Mac OS X; ru) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8C148a Safari/6533.18.5",
-            )
-          expect(helper.mobile_view?).to eq(false)
-        end
-      end
+    it "is false for Nexus 10 tablet" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 10 Build/LMY49G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
+        )
+      expect(helper.mobile_device?).to be_falsey
+    end
+
+    it "is false for Nexus 7 tablet" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MMB29Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
+        )
+      expect(helper.mobile_device?).to be_falsey
     end
   end
 
@@ -666,6 +623,33 @@ RSpec.describe ApplicationHelper do
       end
     end
 
+    context "with opengraph image dimensions" do
+      it "includes og:image:width and og:image:height when provided" do
+        result =
+          helper.crawlable_meta_data(image: "some-image.png", image_width: 1024, image_height: 768)
+        expect(result).to include('<meta property="og:image:width" content="1024" />')
+        expect(result).to include('<meta property="og:image:height" content="768" />')
+      end
+
+      it "does not include og:image dimensions when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:width")
+        expect(result).not_to include("og:image:height")
+      end
+    end
+
+    context "with opengraph image type" do
+      it "includes og:image:type when provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png", image_type: "image/png")
+        expect(result).to include('<meta property="og:image:type" content="image/png" />')
+      end
+
+      it "does not include og:image:type when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:type")
+      end
+    end
+
     context "with breadcrumbs" do
       subject(:metadata) { helper.crawlable_meta_data(breadcrumbs: breadcrumbs) }
 
@@ -716,6 +700,38 @@ RSpec.describe ApplicationHelper do
         expect(result).to include(
           "<meta property=\"og:site_name\" content=\"#{SiteSetting.title}\" />",
         )
+      end
+    end
+
+    context "with reading time and likes" do
+      it "uses translated strings for reading time and likes" do
+        result = helper.crawlable_meta_data(read_time: 5, like_count: 10)
+
+        expect(result).to include(
+          "<meta name=\"twitter:label1\" value=\"#{I18n.t("reading_time")}\" />",
+        )
+        expect(result).to include(
+          "<meta name=\"twitter:data1\" value=\"#{I18n.t("reading_time_minutes", count: 5)}\" />",
+        )
+        expect(result).to include("<meta name=\"twitter:label2\" value=\"#{I18n.t("likes")}\" />")
+        expect(result).to include(
+          "<meta name=\"twitter:data2\" value=\"#{I18n.t("likes_count", count: 10)}\" />",
+        )
+      end
+
+      it "handles singular reading time correctly" do
+        result = helper.crawlable_meta_data(read_time: 1, like_count: 1)
+
+        expect(result).to include("1 min 🕑")
+        expect(result).not_to include("1 mins")
+      end
+
+      it "does not include twitter card labels when read_time or like_count is missing" do
+        result = helper.crawlable_meta_data(read_time: 5)
+        expect(result).not_to include("twitter:label1")
+
+        result = helper.crawlable_meta_data(like_count: 10)
+        expect(result).not_to include("twitter:label1")
       end
     end
   end
@@ -1205,6 +1221,33 @@ RSpec.describe ApplicationHelper do
         helper.request.cookies["forced_color_mode"] = nil
         expect(helper.forced_dark_mode?).to eq(false)
       end
+    end
+  end
+
+  describe "#crawler_topic_container_schema" do
+    fab!(:topic)
+
+    it "returns DiscussionForumPosting schema attributes by default" do
+      result = helper.crawler_topic_container_schema(topic)
+      expect(result).to include("itemscope")
+      expect(result).to include('itemtype="http://schema.org/DiscussionForumPosting"')
+    end
+  end
+
+  describe "#crawler_post_schema" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "returns empty string for the first post" do
+      expect(helper.crawler_post_schema(first_post, topic)).to eq("")
+    end
+
+    it "returns Comment schema attributes for reply posts" do
+      result = helper.crawler_post_schema(reply, topic)
+      expect(result).to include('itemprop="comment"')
+      expect(result).to include("itemscope")
+      expect(result).to include('itemtype="http://schema.org/Comment"')
     end
   end
 end

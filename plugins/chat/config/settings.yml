@@ -2,6 +2,14 @@ chat:
   chat_enabled:
     default: true
     client: true
+  chat_pinned_messages:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "stable"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/397571"
   enable_public_channels:
     default: true
     client: true
@@ -90,6 +98,10 @@ chat:
     default: true
     client: true
     validator: "Chat::AllowUploadsValidator"
+  chat_show_copy_button_on_codeblocks:
+    client: true
+    default: true
+    hidden: true
   max_chat_auto_joined_users:
     min: 0
     default: 10000
@@ -102,6 +114,17 @@ chat:
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
     area: "group_permissions"
+  chat_pinning_messages_allowed_groups:
+    default: "1|2" # @admins, @moderators
+    mandatory_values: "1|2" # @admins, @moderators
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
+    depends_on:
+      - "chat_pinned_messages"
+    depends_behavior: "hidden"
   chat_message_flag_allowed_groups:
     default: "1|2|11" # @admins, @moderators, @trust_level_1
     mandatory_values: "1|2" # @admins, @moderators

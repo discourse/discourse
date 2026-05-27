@@ -12,6 +12,7 @@ class User::Silence
     attribute :post_id, :integer
     attribute :post_action, :string
     attribute :post_edit, :string
+    attribute :reviewable_id, :integer
 
     validates :user_id, presence: true
     validates :reason, presence: true, length: { maximum: 300 }
@@ -43,7 +44,7 @@ class User::Silence
   end
 
   def can_silence_all_users(guardian:, users:)
-    users.all? { guardian.can_silence_user?(_1) }
+    users.all? { guardian.can_silence_user?(it) }
   end
 
   def silence(guardian:, users:, params:)

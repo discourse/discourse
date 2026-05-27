@@ -11,7 +11,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import aiHelperPrompts from "../fixtures/ai-helper-prompts";
 
-acceptance("AI Helper - Post Helper Menu", function (needs) {
+acceptance("Post Helper Menu", function (needs) {
   needs.settings({
     discourse_ai_enabled: true,
     ai_helper_enabled: true,

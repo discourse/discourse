@@ -199,7 +199,10 @@ class BadgeGranter
       User.joins(:user_badges).where(user_badges: { badge_id: badge.id }).where(title: badge.name)
     users =
       users.or(
-        User.joins(:user_badges).where(title: custom_badge_names),
+        User
+          .joins(:user_badges)
+          .where(user_badges: { badge_id: badge.id })
+          .where(title: custom_badge_names),
       ) unless custom_badge_names.empty?
     users.update_all(title: nil)
 
@@ -222,7 +225,7 @@ class BadgeGranter
       payload = { type: "TrustLevelChange", user_ids: [user.id] }
     when Badge::Trigger::PostAction
       action = opt[:post_action]
-      payload = { type: "PostAction", post_ids: [action.post_id, action.related_post_id].compact! }
+      payload = { type: "PostAction", post_ids: [action.post_id, action.related_post_id].compact }
     end
 
     Discourse.redis.lpush queue_key, payload.to_json if payload
@@ -248,7 +251,11 @@ class BadgeGranter
 
       next if post_ids.blank? && user_ids.blank?
 
-      find_by_type(type).each { |badge| backfill(badge, post_ids: post_ids, user_ids: user_ids) }
+      find_by_type(type).each do |badge|
+        backfill(badge, post_ids:, user_ids:)
+      rescue => e
+        Rails.logger.warn("Failed to backfill '#{badge.name}' badge: #{e.message}")
+      end
     end
   end
 
@@ -416,7 +423,9 @@ class BadgeGranter
             #{badge.query}
           ) q ON q.user_id = ub.user_id
           #{post_clause}
-          WHERE ub.badge_id = :id AND q.user_id IS NULL
+          WHERE ub.badge_id = :id
+            AND q.user_id IS NULL
+            AND ub.granted_by_id = #{Discourse::SYSTEM_USER_ID}
         )
         RETURNING user_badges.user_id
       SQL
@@ -561,6 +570,12 @@ class BadgeGranter
     is_old_bronze_badge = badge.badge_type_id == BadgeType::Bronze && granted_at < 2.days.ago
     skip_beginner_badge = skip_new_user_tips && badge.for_beginners?
 
-    is_old_bronze_badge || skip_beginner_badge
+    DiscoursePluginRegistry.apply_modifier(
+      :badge_granter_suppress_notification,
+      is_old_bronze_badge || skip_beginner_badge,
+      badge,
+      granted_at,
+      skip_new_user_tips,
+    )
   end
 end

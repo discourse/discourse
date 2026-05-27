@@ -5,16 +5,18 @@ import { i18n } from "discourse-i18n";
 
 const SimilarTopicsComposerMessage = <template>
   <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
+  <div class="composer-popup__content">
 
-  <h3>{{i18n "composer.similar_topics"}}</h3>
+    <h3>{{i18n "composer.similar_topics"}}</h3>
 
-  <ul class="topics">
-    {{#each @message.similarTopics as |topic|}}
-      <div class="similar-topic">
-        <Topic @result={{topic}} @withTopicUrl={{true}} />
-      </div>
-    {{/each}}
-  </ul>
+    <ul class="topics">
+      {{#each @message.similarTopics as |topic|}}
+        <div class="similar-topic">
+          <Topic @result={{topic}} @withTopicUrl={{true}} />
+        </div>
+      {{/each}}
+    </ul>
+  </div>
 </template>;
 
 export default SimilarTopicsComposerMessage;

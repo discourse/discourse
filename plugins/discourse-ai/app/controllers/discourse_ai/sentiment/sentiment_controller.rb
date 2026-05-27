@@ -15,6 +15,7 @@ module DiscourseAi
         start_date = params[:start_date].presence
         end_date = params[:end_date]
         threshold = SENTIMENT_THRESHOLD
+        model_name = DiscourseAi::Sentiment::PostClassification.active_model_name_for(:sentiment)
 
         raise Discourse::InvalidParameters if %i[category tag].exclude?(group_by)
 
@@ -61,9 +62,11 @@ module DiscourseAi
             #{grouping_clause} = :group_value AND
             t.archetype = 'regular' AND
             p.user_id > 0 AND
-            cr.model_used = 'cardiffnlp/twitter-roberta-base-sentiment-latest' AND
+            cr.model_used = :model_name AND
             ((:start_date IS NULL OR p.created_at > :start_date) AND (:end_date IS NULL OR p.created_at < :end_date))
             AND p.deleted_at IS NULL
+            AND t.deleted_at IS NULL
+            AND (t.category_id IS NULL OR t.category_id IN (:allowed_category_ids))
           ORDER BY p.created_at DESC
           LIMIT :limit OFFSET :offset
         SQL
@@ -73,6 +76,8 @@ module DiscourseAi
             threshold: threshold,
             limit: limit + 1,
             offset: offset,
+            allowed_category_ids: guardian.allowed_category_ids,
+            model_name: model_name,
           )
 
         has_more = posts.length > limit

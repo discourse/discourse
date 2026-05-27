@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import deprecated from "discourse/lib/deprecated";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 
@@ -8,5 +8,5 @@ export default function formatAge(dt) {
     id: "discourse.format-age",
   });
 
-  return htmlSafe(autoUpdatingRelativeAge(new Date(dt)));
+  return trustHTML(autoUpdatingRelativeAge(new Date(dt)));
 }

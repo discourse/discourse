@@ -30,3 +30,5 @@ fa_IR:
         button_text: انجام شد
       add_user_to_group_through_custom_field:
         title: "افزودن کاربر به گروه از طریق فیلد سفارشی کاربر"
+      set_topic_timer:
+        title: "تنظیم تایمر موضوع"

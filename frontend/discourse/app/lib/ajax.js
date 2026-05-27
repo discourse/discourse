@@ -1,7 +1,10 @@
+/* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import $ from "jquery";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 import userPresent from "discourse/lib/user-presence";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -9,6 +12,9 @@ import User from "discourse/models/user";
 
 let _trackView = false;
 let _topicId = null;
+let _trackingSessionId = null;
+let _trackingUrl = null;
+let _trackingReferrer = null;
 let _transientHeader = null;
 let _logoffCallback;
 
@@ -20,12 +26,22 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview() {
+export function trackNextAjaxAsPageview(
+  trackingSessionId,
+  trackingUrl,
+  trackingReferrer
+) {
   _trackView = true;
+  _trackingSessionId = trackingSessionId;
+  _trackingUrl = trackingUrl;
+  _trackingReferrer = trackingReferrer;
 }
 
 export function resetAjax() {
   _trackView = false;
+  _trackingSessionId = null;
+  _trackingUrl = null;
+  _trackingReferrer = null;
 }
 
 export function setLogoffCallback(cb) {
@@ -35,13 +51,17 @@ export function setLogoffCallback(cb) {
 export function handleLogoff(xhr) {
   if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && _logoffCallback) {
     _logoffCallback();
+    return true;
   }
+  return false;
 }
 
 function handleRedirect(xhr) {
   if (xhr && xhr.getResponseHeader("Discourse-Xhr-Redirect")) {
-    window.location = xhr.responseText;
+    DiscourseURL.redirectAbsolute(xhr.responseText, { replace: true });
+    return true;
   }
+  return false;
 }
 
 let activeCsrfRequest;
@@ -104,10 +124,29 @@ export function ajax() {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
 
+      if (EmbedMode.enabled) {
+        args.headers["Discourse-Track-View-Embed"] = "true";
+      }
+
+      if (_trackingSessionId) {
+        args.headers["Discourse-Track-View-Session-Id"] = _trackingSessionId;
+        _trackingSessionId = null;
+      }
+
+      if (_trackingUrl) {
+        args.headers["Discourse-Track-View-Url"] = _trackingUrl;
+        _trackingUrl = null;
+      }
+
+      if (_trackingReferrer) {
+        args.headers["Discourse-Track-View-Referrer"] = _trackingReferrer;
+        _trackingReferrer = null;
+      }
+
       if (_topicId) {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
+        _topicId = null;
       }
-      _topicId = null;
     }
 
     if (userPresent()) {
@@ -115,8 +154,9 @@ export function ajax() {
     }
 
     args.success = (data, textStatus, xhr) => {
-      handleRedirect(xhr);
-      handleLogoff(xhr);
+      if (handleRedirect(xhr) || handleLogoff(xhr)) {
+        return resolve();
+      }
 
       run(() => {
         Site.currentProp(
@@ -142,7 +182,9 @@ export function ajax() {
         return;
       }
 
-      handleLogoff(xhr);
+      if (handleRedirect(xhr) || handleLogoff(xhr)) {
+        return resolve();
+      }
 
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
@@ -152,7 +194,11 @@ export function ajax() {
 
       // If it's a parser error, don't reject
       if (xhr.status === 200) {
-        return args.success(xhr);
+        return args.success(
+          xhr.responseJSON ?? xhr.responseText,
+          textStatus,
+          xhr
+        );
       }
 
       // Fill in some extra info

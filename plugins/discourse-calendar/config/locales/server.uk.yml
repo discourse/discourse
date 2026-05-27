@@ -5,9 +5,17 @@
 # https://translate.discourse.org/
 
 uk:
+  category_types:
+    events:
+      name: "Події"
+      title: "події"
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Читати стрічку подій календаря"
   reports:
     currently_away:
       title: Користувачі зараз відсутні
+      description: "Користувачі, які зараз у відпустці або у відпустці, яких можна фільтрувати за групами."
       labels:
         username: Імʼя користувача
   discourse_automation:
@@ -49,7 +57,7 @@ uk:
     all_day_event_start_time: "Події, у яких не вказано час початку, почнуться в цей час. Формат HH:мм. На 6:00 ранку введіть 06:00"
     all_day_event_end_time: "Події, у яких не вказано час закінчення, закінчуються в цей час. Формат HH:мм. Для 18:00 введіть 18:00"
     all_day_event_time_error: "Неправильний час. Формат має бути HH:mm (наприклад: 08:00)."
-    calendar_categories: "Відображати календар у верхній частині категорії. Обов’язковими параметрами є categoryId і postId. наприклад: categoryId=6;postId=453\n Інші дійсні налаштування: tzPicker, вихідні та defaultView."
+    calendar_categories: "Відображати календар у верхній частині категорії. categoryId обов’язковий. Наприклад: categoryId=6;weekends=false;defaultView=year;\n Інші дійсні налаштування: weekends(true/false) та defaultView(day,week,month,year)."
     calendar_categories_outlet: "Дозволяє змінити точку, де повинен відображатись календар категорій."
     working_days: "Встановіть робочі дні. Ви можете відобразити доступність групи за допомогою тегу `timezones` у повідомленні, наприклад: `[timezones group=admins]`[timezones]"
     working_day_start_hour: "Час початку робочого дня."
@@ -62,7 +70,17 @@ uk:
     event_participation_buttons: "Список кнопок участі у заходах, які можуть використовувати користувачі."
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
+    enable_events_category_type_setup: "Вмикає опцію типу категорії «Події» під час налаштування створення категорії. Зверніть увагу, що для цього має бути ввімкнено опцію «увімкнути спрощене створення категорій»."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "День"
+        week: "Тиждень"
+        month: "Місяць"
+        year: "Рік"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Усі події"
+      my_events_feed_name: "%{site_title} - Мої події"
     invite_user_notification: "%{username} запросили Вас на: %{description}"
     calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
     more_than_one_calendar: "Ви не можете мати більше одного календаря в публікації."
@@ -77,7 +95,7 @@ uk:
       ongoing_event_reminder: "%{title} триває."
     errors:
       bulk_invite:
-        max_invitees: "Створено перші %{max_invittes} запрошених. Спробуйте розбити файл на менші частини."
+        max_invitees: "Створено перші %{max_invitees} запрошених. Спробуйте розбити файл на менші частини."
         error: "Під час завантаження цього файлу сталася помилка. Будь ласка, спробуйте пізніше."
       models:
         event:

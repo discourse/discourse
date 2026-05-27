@@ -3,11 +3,13 @@
 DiscourseDataExplorer::Engine.routes.draw do
   root to: "query#index"
   get "queries" => "query#index"
-  get "queries/:id" => "query#show"
+  get "queries/new" => "query#index"
+  get "queries/:id" => "query#show", :constraints => { id: /-?\d+/ }
 
   scope "/", defaults: { format: :json } do
     get "schema" => "query#schema"
     get "groups" => "query#groups"
+    post "queries/generate" => "query#generate_with_ai"
     post "queries" => "query#create"
     put "queries/:id" => "query#update"
     delete "queries/:id" => "query#destroy"
@@ -26,5 +28,26 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
-  mount DiscourseDataExplorer::Engine, at: "/admin/plugins/explorer"
+  mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
+  get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
+  get "/admin/plugins/explorer/queries" =>
+        redirect("/admin/plugins/discourse-data-explorer/queries")
+  get "/admin/plugins/explorer/queries/:id" =>
+        redirect("/admin/plugins/discourse-data-explorer/queries/%{id}")
+
+  # Legacy /admin/plugins/explorer/ API routes - route directly to controller
+  # since redirects don't preserve POST/PUT/DELETE request bodies
+  scope "/", defaults: { format: :json } do
+    get "/admin/plugins/explorer/schema" => "discourse_data_explorer/query#schema"
+    get "/admin/plugins/explorer/groups" => "discourse_data_explorer/query#groups"
+    post "/admin/plugins/explorer/queries/generate" =>
+           "discourse_data_explorer/query#generate_with_ai"
+    post "/admin/plugins/explorer/queries" => "discourse_data_explorer/query#create"
+    put "/admin/plugins/explorer/queries/:id" => "discourse_data_explorer/query#update"
+    delete "/admin/plugins/explorer/queries/:id" => "discourse_data_explorer/query#destroy"
+    post "/admin/plugins/explorer/queries/:id/run" => "discourse_data_explorer/query#run",
+         :constraints => {
+           format: /(json|csv)/,
+         }
+  end
 end

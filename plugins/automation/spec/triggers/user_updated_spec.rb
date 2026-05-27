@@ -69,7 +69,7 @@ describe "UserUpdated" do
       automation.upsert_field!("once_per_user", "boolean", { value: true }, target: "trigger")
     end
 
-    it "doesnt trigger if automation already triggered" do
+    it "doesn't trigger if automation already triggered" do
       UserUpdater.new(user, user).update(location: "Korea", bio_raw: "good")
 
       output =

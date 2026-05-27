@@ -20,4 +20,11 @@ export default class ChatGuardian extends Service {
   canUseChat() {
     return this.currentUser?.has_chat_enabled && this.siteSettings.chat_enabled;
   }
+
+  canUseGroupChat() {
+    return (
+      this.currentUser?.staff ||
+      this.siteSettings.chat_max_direct_message_users > 1
+    );
+  }
 }

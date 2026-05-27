@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { i18n } from "discourse-i18n";
@@ -22,14 +21,16 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   /** @type {moment.Moment | null} */
   endDate = null;
 
-  @discourseComputed("filters.action_name")
-  actionFilter(name) {
-    return name ? i18n("admin.logs.staff_actions.actions." + name) : null;
+  @computed("filters.action_name")
+  get actionFilter() {
+    return this.filters?.action_name
+      ? i18n("admin.logs.staff_actions.actions." + this.filters?.action_name)
+      : null;
   }
 
-  @discourseComputed("filters")
-  filtersExists(filters) {
-    return filters && Object.keys(filters).length > 0;
+  @computed("filters")
+  get filtersExists() {
+    return this.filters && Object.keys(this.filters).length > 0;
   }
 
   _refresh() {

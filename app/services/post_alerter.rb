@@ -29,6 +29,7 @@ class PostAlerter
         post_number: post.post_number,
         topic_title: post.topic.title,
         topic_id: post.topic.id,
+        post_id: post.id,
         excerpt:
           excerpt ||
             post.excerpt(
@@ -83,45 +84,17 @@ class PostAlerter
       return
     end
 
+    return unless user.push_subscriptions.exists? || UserApiKey.push_clients_for(user).any?
+
     push_window = SiteSetting.push_notification_time_window_mins
     if push_window > 0 && user.seen_since?(push_window.minutes.ago)
       delay = (push_window - (Time.now - user.last_seen_at) / 60)
     end
 
-    if user.push_subscriptions.exists?
-      if delay.present?
-        Jobs.enqueue_in(delay.minutes, :send_push_notification, user_id: user.id, payload: payload)
-      else
-        Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
-      end
-    end
-
-    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") &&
-         SiteSetting.allowed_user_api_push_urls.present?
-      clients =
-        user
-          .user_api_keys
-          .joins(:scopes, :client)
-          .where("user_api_key_scopes.name IN ('push', 'notifications')")
-          .where("push_url IS NOT NULL AND push_url <> ''")
-          .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
-          .where("revoked_at IS NULL")
-          .order("user_api_key_clients.client_id ASC")
-          .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
-
-      return if clients.length == 0
-
-      if delay.present?
-        Jobs.enqueue_in(
-          delay.minutes,
-          :push_notification,
-          clients: clients,
-          payload: payload,
-          user_id: user.id,
-        )
-      else
-        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
-      end
+    if delay.present?
+      Jobs.enqueue_in(delay.minutes, :deliver_push_notification, user_id: user.id, payload: payload)
+    else
+      Jobs.enqueue(:deliver_push_notification, user_id: user.id, payload: payload)
     end
   end
 
@@ -338,11 +311,14 @@ class PostAlerter
     users = users.where.not(id: notified.map(&:id)) if notified.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    received_notifications = []
     each_user_in_batches(users) do |user|
-      create_notification(user, Notification.types[:watching_first_post], post)
+      if create_notification(user, Notification.types[:watching_first_post], post).present?
+        received_notifications << user
+      end
     end
 
-    users
+    received_notifications
   end
 
   def sync_group_mentions(post, mentioned_groups)
@@ -402,12 +378,46 @@ class PostAlerter
     unread_posts(user, topic).count
   end
 
-  def destroy_notifications(user, types, topic)
+  # Bucket membership is the scope here — we don't re-apply the watching/reply_to
+  # filters that #unread_posts uses, since a recipient is by definition the
+  # parent author (or OP for bucket 1).
+  def unread_posts_in_bucket(user, topic, bucket_post_number)
+    last_read =
+      TopicUser.where(user_id: user.id, topic_id: topic.id).pick(:last_read_post_number) || 0
+
+    scope =
+      Post.secured(Guardian.new(user)).where(topic_id: topic.id).where("post_number > ?", last_read)
+
+    if bucket_post_number == Notification::TOPIC_ROOT_BUCKET
+      # Post 1 is the root itself, not a reply to it.
+      scope.where("reply_to_post_number IS NULL OR reply_to_post_number = 1").where(
+        "post_number > 1",
+      )
+    else
+      scope.where(reply_to_post_number: bucket_post_number)
+    end
+  end
+
+  def first_unread_post_in_bucket(user, topic, bucket_post_number)
+    unread_posts_in_bucket(user, topic, bucket_post_number).order("post_number").first
+  end
+
+  def unread_count_in_bucket(user, topic, bucket_post_number)
+    unread_posts_in_bucket(user, topic, bucket_post_number).count
+  end
+
+  def destroy_notifications(user, types, topic, bucket_post_number: nil)
     return if user.blank?
     return unless Guardian.new(user).can_see?(topic)
 
     User.transaction do
-      user.notifications.where(notification_type: types, topic_id: topic.id).destroy_all
+      scope = user.notifications.where(notification_type: types, topic_id: topic.id)
+      if bucket_post_number
+        # Compare as text — `data` is stored as text and a future malformed
+        # value (e.g. empty string) would raise on a `::int` cast.
+        scope = scope.where("data::jsonb ->> 'reply_to_post_number' = ?", bucket_post_number.to_s)
+      end
+      scope.destroy_all
 
       # Reload so notification counts sync up correctly
       user.reload
@@ -461,7 +471,7 @@ class PostAlerter
         Notification.consolidate_or_create!(
           notification_type: Notification.types[:group_message_summary],
           user_id: user.id,
-          read: user.id === acting_user_id ? true : false,
+          read: user.id === acting_user_id,
           data: {
             group_id: stat[:group_id],
             group_name: stat[:group_name],
@@ -567,6 +577,9 @@ class PostAlerter
       end
     end
 
+    # Keyed on the *incoming* post's number. A consolidated nested-bucket row
+    # stores the bucket's first-unread post number, so it won't collide here —
+    # the COLLAPSED branch below destroys + recreates the bucket row.
     existing_notifications =
       user
         .notifications
@@ -596,9 +609,23 @@ class PostAlerter
     end
 
     collapsed = false
+    bucket_post_number = nil
+    consolidated_count = nil
 
     if COLLAPSED_NOTIFICATION_TYPES.include?(type)
-      destroy_notifications(user, COLLAPSED_NOTIFICATION_TYPES, topic)
+      if type == Notification.types[:replied] && topic.nested_view?
+        bucket_post_number = post.reply_to_post_number || Notification::TOPIC_ROOT_BUCKET
+        destroy_notifications(
+          user,
+          [Notification.types[:replied]],
+          topic,
+          bucket_post_number: bucket_post_number,
+        )
+      else
+        types = COLLAPSED_NOTIFICATION_TYPES
+        types -= [Notification.types[:replied]] if topic.nested_view?
+        destroy_notifications(user, types, topic)
+      end
       collapsed = true
     end
 
@@ -606,9 +633,15 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      post = first_unread_post(user, topic) || post
-      count = unread_count(user, topic)
+      if bucket_post_number
+        post = first_unread_post_in_bucket(user, topic, bucket_post_number) || post
+        count = unread_count_in_bucket(user, topic, bucket_post_number)
+      else
+        post = first_unread_post(user, topic) || post
+        count = unread_count(user, topic)
+      end
       if count > 1
+        consolidated_count = count
         I18n.with_locale(user.effective_locale) do
           opts[:display_username] = I18n.t("embed.replies", count: count)
         end
@@ -633,6 +666,11 @@ class PostAlerter
       revision_number: opts[:revision_number],
       display_username: opts[:display_username] || post.user.username,
     }
+
+    if bucket_post_number
+      notification_data[:reply_to_post_number] = bucket_post_number
+      notification_data[:consolidated_count] = consolidated_count if consolidated_count
+    end
 
     if display_name = opts[:display_name] || post.user.name
       notification_data[:display_name] = display_name
@@ -717,14 +755,11 @@ class PostAlerter
   end
 
   def expand_here_mention(post, exclude_ids: nil)
-    posts = Post.where(topic_id: post.topic_id)
-    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
+    post_type = [Post.types[:regular], Post.types[:moderator_action]]
+    post_type << Post.types[:whisper] if post.user.staff?
 
-    if post.user.staff?
-      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
-    else
-      posts = posts.where(post_type: Post.types[:regular])
-    end
+    posts = Post.where(topic_id: post.topic_id, post_type:)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
 
     User.real.where(id: posts.select(:user_id)).limit(SiteSetting.max_here_mentioned)
   end
@@ -798,9 +833,7 @@ class PostAlerter
     warn_if_not_sidekiq
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each { |u| create_notification(u, Notification.types[type], post, opts) }
-
-    users
+    users.select { |u| create_notification(u, Notification.types[type], post, opts).present? }
   end
 
   def pm_watching_users(post)
@@ -816,9 +849,8 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # To simplify things and to avoid IMAP double sync issues, and to cut down
-    # on emails sent via SMTP, any topic_allowed_users (except those who are
-    # not_allowed?) for a group that has SMTP enabled will have their notification
+    # To simplify things and to cut down on emails sent via SMTP, any topic_allowed_users
+    # (except those who are not_allowed?) for a group that has SMTP enabled will have their notification
     # email combined into one and sent via a single group SMTP email with CC addresses.
     emails_to_skip_send = email_using_group_smtp_if_configured(post)
 
@@ -843,7 +875,7 @@ class PostAlerter
     # flow will not be sent via group SMTP if it is enabled.
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |user|
+    users.select do |user|
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         create_pm_notification(user, post, emails_to_skip_send)
@@ -894,9 +926,12 @@ class PostAlerter
       post
         .topic
         .topic_allowed_users
-        .includes(:user)
+        .includes(user: :user_option)
         .order(:created_at)
-        .reject { |tau| not_allowed?(tau.user, post) }
+        .reject do |tau|
+          not_allowed?(tau.user, post) ||
+            tau.user.user_option.email_messages_level == UserOption.email_level_types[:never]
+        end
     return emails_to_skip_send if topic_allowed_users_by_age.empty?
 
     # This should usually be the OP of the topic, unless they are the one
@@ -1044,6 +1079,7 @@ class PostAlerter
           .pluck(:user_id),
       )
 
+    received_notifications = []
     each_user_in_batches(notify) do |user|
       calculated_type =
         if !new_record && already_seen_user_ids.include?(user.id)
@@ -1056,10 +1092,12 @@ class PostAlerter
       opts = {}
       opts[:display_username] = post.last_editor.username if calculated_type ==
         Notification.types[:edited]
-      create_notification(user, calculated_type, post, opts)
+      if create_notification(user, calculated_type, post, opts).present?
+        received_notifications << user
+      end
     end
 
-    notify
+    received_notifications
   end
 
   def warn_if_not_sidekiq

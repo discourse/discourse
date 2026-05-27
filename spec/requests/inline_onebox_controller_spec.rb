@@ -132,5 +132,32 @@ RSpec.describe InlineOneboxController do
         expect(onebox["title"]).to eq(topic.title)
       end
     end
+
+    context "with shared draft topic" do
+      fab!(:shared_drafts_category, :category)
+      fab!(:destination_category, :category)
+      fab!(:shared_draft_topic) { Fabricate(:topic, category: shared_drafts_category) }
+      fab!(:shared_draft_post) { Fabricate(:post, topic: shared_draft_topic) }
+      fab!(:shared_draft) do
+        Fabricate(:shared_draft, topic: shared_draft_topic, category: destination_category)
+      end
+
+      before do
+        SiteSetting.shared_drafts_category = shared_drafts_category.id
+        SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
+      end
+
+      it "does not leak shared draft topic titles via user-controlled category_id" do
+        get "/inline-onebox.json",
+            params: {
+              urls: [shared_draft_topic.url],
+              category_id: shared_drafts_category.id,
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["inline-oneboxes"][0]).to be_blank
+      end
+    end
   end
 end

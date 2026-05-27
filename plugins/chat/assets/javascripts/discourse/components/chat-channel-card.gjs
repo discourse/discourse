@@ -1,22 +1,22 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import { trustHTML } from "@ember/template";
 import { gt } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
-const ChatChannelCard = <template>
+<template>
   {{#if @channel}}
     <div
-      class={{concatClass
+      class={{dConcatClass
         "chat-channel-card"
         (if @channel.isClosed "--closed")
         (if @channel.isArchived "--archived")
       }}
-      style={{htmlSafe
+      style={{trustHTML
         (concat "--chat-channel-card-border: #" @channel.chatable.color)
       }}
       data-channel-id={{@channel.id}}
@@ -28,17 +28,17 @@ const ChatChannelCard = <template>
           class="chat-channel-card__name-container"
         >
           <span class="chat-channel-card__name">
-            {{replaceEmoji @channel.title}}
+            {{dReplaceEmoji @channel.title}}
           </span>
           {{#if @channel.chatable.read_restricted}}
-            {{icon "lock" class="chat-channel-card__read-restricted"}}
+            {{dIcon "lock" class="chat-channel-card__read-restricted"}}
           {{/if}}
           {{#if @channel.currentUserMembership.muted}}
             <span
               class="chat-channel-card__muted"
               aria-label={{i18n "chat.muted"}}
               title={{i18n "chat.muted"}}
-            >{{icon "d-muted"}}</span>
+            >{{dIcon "d-muted"}}</span>
           {{/if}}
         </LinkTo>
       </div>
@@ -79,11 +79,9 @@ const ChatChannelCard = <template>
 
       {{#if @channel.description}}
         <div class="chat-channel-card__description">
-          {{replaceEmoji @channel.description}}
+          {{dReplaceEmoji @channel.description}}
         </div>
       {{/if}}
     </div>
   {{/if}}
-</template>;
-
-export default ChatChannelCard;
+</template>

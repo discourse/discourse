@@ -18,6 +18,17 @@ he:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "סוג הפרסומת"
+            house_ad_name:
+              label: "שם מודעת הבית"
+            ad_placement:
+              label: "מקום הפרסומת"
+            user_type:
+              label: "סוג משתמש"
       adplugin:
         house_ads:
           title: "מודעות הבית"
@@ -26,8 +37,9 @@ he:
           new_name: "מודעת בית חדשה"
           save: "שמירה"
           delete: "מחיקה"
-          description: "הגדרת פרסומות משלך והיכן הן תוצגנה."
-          get_started: "ניתן להתחיל ביצירת פרסומת חדשה."
+          html: "HTML"
+          categories: "קטגוריות"
+          groups: "קבוצות"
           filter_placeholder: "בחירת פרסומות…"
           more_settings: "הגדרות נוספות"
           show_to_anons: "הצגה למשתמשים אלמוניים"
@@ -35,6 +47,11 @@ he:
           category_chooser_description: "נא לבחור את הקטגוריות בהן תופיע המודעה הזאת או להשאיר ריק כדי להציג את ההודעה איפשהו. להגדרת האתר `no_ads_for_categories` (אין מודעות בקטגוריות) יש עדיפות על פני ההגדרה הזאת."
           group_chooser_description: "נא לבחור קבוצות שיכולות לצפות במודעה הזאת או להשאיר ריק כדי להציג את המודעה לכל המשתמשים שנכנסים למערכת."
           preview: "תצוגה מקדימה"
+          back: "מודעות הבית"
+          name: "שם"
+          edit: "עריכה"
+          tabs:
+            settings: "הגדרות"
           topic_list_top:
             title: "פרסומות בראש רשימת הנושאים"
             description: "פרסומות שתופענה בראש עמוד רשימת הנושים."

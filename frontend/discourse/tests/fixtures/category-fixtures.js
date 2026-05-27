@@ -1,4 +1,4 @@
-export default {
+const categoryFixtures = {
   "/c/1/show.json": {
     category: {
       id: 1,
@@ -32,12 +32,29 @@ export default {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
-      group_permissions: [{ permission_type: 1, group_name: "everyone" }],
+      search_priority: 0,
+      group_permissions: [
+        { permission_type: 1, group_name: "everyone", group_id: 0 },
+      ],
       position: 25,
       cannot_delete_reason:
         "Can't delete this category because it has 2030 topics. Oldest topic is <a href=\"https://localhost:3000/t/when-a-new-post-appears-in-a-topic-the-bookmark-isn-t-updated/39\">When a new post appears in a topic, the bookmark isn't updated</a>.",
       allow_badges: true,
       custom_fields: {},
+      category_types: {
+        discussion: {
+          id: "discussion",
+          name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
+          configuration_schema: {}
+        },
+      ],
     },
   },
   "/c/11/show.json": {
@@ -92,7 +109,9 @@ export default {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
-      group_permissions: [{ permission_type: 1, group_name: "everyone" }],
+      group_permissions: [
+        { permission_type: 1, group_name: "everyone", group_id: 0 },
+      ],
       email_in: null,
       email_in_allow_strangers: false,
       mailinglist_mirror: false,
@@ -109,6 +128,20 @@ export default {
       uploaded_background_dark: null,
       required_tag_groups: [{ min_count: 1, name: "TagGroup1" }],
       category_localizations: [],
+      category_types: {
+        discussion: {
+          id: "discussion",
+          name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
+          configuration_schema: {}
+        },
+      ],
     },
   },
   "/c/2481/show.json": {
@@ -121,7 +154,25 @@ export default {
       slug: "restricted-group",
       read_restricted: true,
       permission: null,
-      group_permissions: [{ permission_type: 1, group_name: "moderators" }],
+      group_permissions: [
+        { permission_type: 1, group_name: "moderators", group_id: 2 },
+      ],
+      category_types: {
+        discussion: {
+          id: "discussion",
+          name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
+          configuration_schema: {}
+        },
+      ],
     },
   },
 };
+
+export default categoryFixtures;

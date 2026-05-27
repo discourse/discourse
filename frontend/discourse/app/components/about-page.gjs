@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const pluginActivitiesFuncs = [];
@@ -240,7 +240,7 @@ export default class AboutPage extends Component {
     {{#if this.currentUser.admin}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
-          {{icon "pencil"}}
+          {{dIcon "pencil"}}
           <span>{{i18n "about.edit"}}</span>
         </LinkTo>
       </p>
@@ -251,7 +251,7 @@ export default class AboutPage extends Component {
           <img class="about__banner-img" src={{@model.banner_image}} />
         </div>
       {{/if}}
-      <h3>{{@model.title}}</h3>
+      <h1>{{@model.title}}</h1>
       <p class="short-description">{{@model.description}}</p>
       <PluginOutlet
         @name="about-after-description"
@@ -265,7 +265,7 @@ export default class AboutPage extends Component {
           {{#each this.stats as |stat|}}
             {{#if stat.display}}
               <span class="about__stats-item {{stat.class}}">
-                {{icon stat.icon}}
+                {{dIcon stat.icon}}
                 <span>{{stat.text}}</span>
               </span>
             {{/if}}
@@ -273,13 +273,13 @@ export default class AboutPage extends Component {
         </div>
 
         {{#if @model.extended_site_description}}
-          <h3>{{i18n "about.simple_title"}}</h3>
-          <div>{{htmlSafe @model.extended_site_description}}</div>
+          <h2>{{i18n "about.simple_title"}}</h2>
+          <div>{{trustHTML @model.extended_site_description}}</div>
         {{/if}}
 
         {{#if @model.admins.length}}
           <section class="about__admins">
-            <h3>{{i18n "about.our_admins"}}</h3>
+            <h2>{{i18n "about.our_admins"}}</h2>
             <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
@@ -291,7 +291,7 @@ export default class AboutPage extends Component {
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
-            <h3>{{i18n "about.our_moderators"}}</h3>
+            <h2>{{i18n "about.our_moderators"}}</h2>
             <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
@@ -306,16 +306,16 @@ export default class AboutPage extends Component {
       </div>
 
       <div class="about__right-side">
-        <h3>{{i18n "about.contact"}}</h3>
+        <h2>{{i18n "about.contact"}}</h2>
         {{#if this.contactInfo}}
-          <p class="about__contact-info">{{htmlSafe this.contactInfo}}</p>
+          <p class="about__contact-info">{{trustHTML this.contactInfo}}</p>
         {{/if}}
         <p>{{i18n "about.report_inappropriate_content"}}</p>
-        <h3>{{i18n "about.site_activity"}}</h3>
+        <h2>{{i18n "about.site_activity"}}</h2>
         <div class="about__activities">
           {{#each this.siteActivities as |activity|}}
             <div class="about__activities-item {{activity.class}}">
-              <span class="about__activities-item-icon">{{icon
+              <span class="about__activities-item-icon">{{dIcon
                   activity.icon
                 }}</span>
               <span class="about__activities-item-type">

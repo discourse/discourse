@@ -1,6 +1,5 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class UserPayment extends EmberObject {
   static findAll() {
@@ -11,8 +10,8 @@ export default class UserPayment extends EmberObject {
     );
   }
 
-  @discourseComputed("amount")
-  amountDollars(amount) {
-    return parseFloat(amount / 100).toFixed(2);
+  @computed("amount")
+  get amountDollars() {
+    return parseFloat(this.amount / 100).toFixed(2);
   }
 }

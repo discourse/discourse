@@ -1,9 +1,10 @@
+/* eslint-disable ember/no-jquery */
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -19,7 +20,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -72,7 +73,7 @@ export default class TextareaTextManipulation {
   placeholder;
 
   /** @type {import("discourse/lib/composer/text-manipulation").ToolbarState} */
-  state = new TrackedObject();
+  state = trackedObject();
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
@@ -346,6 +347,15 @@ export default class TextareaTextManipulation {
     this._insertAt(start, end, text);
     this.textarea.setSelectionRange(start + text.length, start + text.length);
     schedule("afterRender", this, this.blurAndFocus);
+  }
+
+  applyLink(url) {
+    const sel = this.getSelected();
+    if (sel.start === sel.end) {
+      return;
+    }
+    this._insertAt(sel.start, sel.end, `[${sel.value}](${url})`);
+    this.blurAndFocus();
   }
 
   addText(sel, text, options) {
@@ -738,7 +748,7 @@ export default class TextareaTextManipulation {
   @bind
   emojiSelected(code) {
     let selected = this.getSelected();
-    const captures = selected.pre.match(/\B:(\w*)$/);
+    const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
     if (isEmpty(captures)) {
       if (selected.pre.match(/\S$/)) {
@@ -844,7 +854,7 @@ export default class TextareaTextManipulation {
         excludeHeadInSelection: true,
       });
     } else {
-      // Remove heading when the Paragrah level (0) is selected.
+      // Remove heading when the Paragraph level (0) is selected.
       const currentHeadingLevel = sel.lineVal.search(/[^#]/);
       if (currentHeadingLevel >= 0) {
         // When you apply the list with the same head chars, then they
@@ -898,7 +908,7 @@ export default class TextareaTextManipulation {
       putCursorAtEnd(this.textarea);
     } else {
       // in some browsers, the focus() called by putCursorAtEnd doesn't bubble the event to set
-      // isEditorFoused=true and bring the focus indicator to the wrapper, unless we do it on next tick
+      // isEditorFocused=true and bring the focus indicator to the wrapper, unless we do it on next tick
       next(() => putCursorAtEnd(this.textarea));
     }
   }
@@ -989,7 +999,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
       this.autocompleteHandler,

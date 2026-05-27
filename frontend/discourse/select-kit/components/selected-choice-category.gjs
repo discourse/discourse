@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import SelectedChoiceComponent from "discourse/select-kit/components/selected-choice";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 
 @tagName("")
 export default class SelectedChoiceCategory extends SelectedChoiceComponent {
@@ -10,7 +10,7 @@ export default class SelectedChoiceCategory extends SelectedChoiceComponent {
 
   @computed("item")
   get badge() {
-    return htmlSafe(
+    return trustHTML(
       categoryBadgeHTML(this.item, {
         allowUncategorized: true,
         link: false,

@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
-import CookText from "discourse/components/cook-text";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
+import { trustHTML } from "@ember/template";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default class DEditorOriginalTranslationPreview extends Component {
@@ -39,9 +39,13 @@ export default class DEditorOriginalTranslationPreview extends Component {
         <span class="d-editor-translation-preview-header__title">
           {{#if this.showOriginal}}
             {{i18n "composer.translations.original_content"}}
-            <span class="d-editor-translation-preview-wrapper__original-locale">
-              {{this.originalLocale}}
-            </span>
+            {{#if this.originalLocale}}
+              <span
+                class="d-editor-translation-preview-wrapper__original-locale"
+              >
+                {{this.originalLocale}}
+              </span>
+            {{/if}}
             <div class="d-editor-translation-preview-header__raw-toggle">
               <DToggleSwitch
                 @state={{this.showRawMarkdown}}
@@ -82,14 +86,14 @@ export default class DEditorOriginalTranslationPreview extends Component {
             {{/if}}
           {{else}}
             {{#if @model.cookedPost}}
-              {{htmlSafe @model.cookedPost}}
+              {{trustHTML @model.cookedPost}}
             {{else if @model.rawPost}}
-              <CookText @rawText={{@model.rawPost}} />
+              <DCookText @rawText={{@model.rawPost}} />
             {{/if}}
           {{/if}}
         {{else}}
           {{#if this.translationText}}
-            <CookText @rawText={{this.translationText}} />
+            <DCookText @rawText={{this.translationText}} />
           {{else}}
             <div class="d-editor-translation-preview-empty">
               {{i18n "composer.translations.no_translation_yet"}}

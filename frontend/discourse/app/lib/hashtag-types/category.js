@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { iconHTML } from "discourse/lib/icon-library";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import HashtagTypeBase from "./base";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
@@ -44,12 +44,14 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     }
 
     let style;
-    if (parentColor) {
-      style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
+    if (categoryOrHashtag.style_type === "square") {
+      if (parentColor) {
+        style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
+      } else {
+        style = `background-color: #${color};`;
+      }
     } else if (categoryOrHashtag.style_type === "icon") {
       style = `color: #${color};`;
-    } else if (categoryOrHashtag.style_type === "square") {
-      style = `background-color: #${color};`;
     } else {
       return [];
     }
@@ -65,7 +67,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       style = iconHTML(hashtag.icon);
     }
     if (hashtag.style_type === "emoji" && hashtag.emoji) {
-      style = replaceEmoji(`:${hashtag.emoji}:`);
+      style = dReplaceEmoji(`:${hashtag.emoji}:`);
     }
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;

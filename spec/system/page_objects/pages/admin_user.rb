@@ -52,8 +52,95 @@ module PageObjects
         find(".btn-danger.unsilence-user").click
       end
 
+      def custom_groups_chooser
+        PageObjects::Components::SelectKit.new(".admin-user__custom-groups .group-chooser")
+      end
+
+      def save_custom_groups
+        find(".admin-user__custom-groups .ok").click
+      end
+
+      def has_custom_groups_save_button?
+        has_css?(".admin-user__custom-groups .ok")
+      end
+
+      def has_no_custom_groups_save_button?
+        has_no_css?(".admin-user__custom-groups .ok")
+      end
+
+      def has_custom_group?(name)
+        has_css?(".admin-user__custom-groups .formatted-selection", text: name)
+      end
+
+      def has_no_custom_group?(name)
+        has_no_css?(".admin-user__custom-groups .formatted-selection", text: name)
+      end
+
       def similar_users_warning
         find(".penalty-similar-users .alert-warning")["innerHTML"]
+      end
+
+      def open_upcoming_changes_modal
+        find(".upcoming-changes-info .btn-default").click
+      end
+
+      class UpcomingChangeRow < PageObjects::Components::Base
+        attr_reader :element
+
+        def initialize(element)
+          @element = element
+        end
+
+        def enabled?
+          expect(element.find(".upcoming-change-enabled-status")).to have_css(
+            ".emoji[alt='white_check_mark']",
+          )
+        end
+
+        def disabled?
+          expect(element.find(".upcoming-change-enabled-status")).to have_css(
+            ".emoji[alt='cross_mark']",
+          )
+        end
+
+        def has_reason?(reason_key)
+          expected_text = I18n.t("js.user.upcoming_changes.why_reasons.#{reason_key}")
+          expect(element.find(".upcoming-change-reason")).to have_content(expected_text)
+        end
+
+        def specific_groups
+          within element.find(".upcoming-change-groups") do
+            all("a").map(&:text).sort
+          end
+        end
+
+        def has_specific_groups?(group_names)
+          specific_groups == group_names.sort
+        end
+
+        def has_no_specific_groups?
+          expect(element).to have_no_css(".upcoming-change-groups")
+        end
+      end
+
+      def has_upcoming_change?(change_name)
+        has_css?(
+          ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+        )
+      end
+
+      def has_no_upcoming_change?(change_name)
+        has_no_css?(
+          ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+        )
+      end
+
+      def upcoming_change(change_name)
+        row =
+          find(
+            ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+          )
+        UpcomingChangeRow.new(row)
       end
     end
   end

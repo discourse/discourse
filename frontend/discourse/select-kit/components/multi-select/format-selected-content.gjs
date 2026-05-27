@@ -15,7 +15,7 @@ export default class FormatSelectedContent extends Component {
   get formattedContent() {
     if (this.content) {
       return makeArray(this.content)
-        .map((c) => this.getName(c))
+        .map((c) => this.getName(c)?.trim())
         .join(", ");
     } else {
       return this.getName(this.selectKit.noneItem);

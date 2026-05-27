@@ -32,22 +32,22 @@ module(
       "multiple choice poll": [
         "[poll type=multiple min=1 max=2]\n* Option 1\n* Option 2\n* Option 3\n[/poll]",
         `<div class="poll" data-poll-type="multiple" data-poll-max="2" data-poll-min="1"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li><li><p>Option 3</p></li></ul>${voters}</div>`,
-        '[poll type="multiple" max="2" min="1"]\n* Option 1\n* Option 2\n* Option 3\n\n[/poll]\n\n',
+        "[poll type=multiple max=2 min=1]\n* Option 1\n* Option 2\n* Option 3\n\n[/poll]\n\n",
       ],
       "public poll": [
         "[poll public=true]\n* Option 1\n* Option 2\n[/poll]",
         `<div class="poll" data-poll-public="true"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
-        '[poll public="true"]\n* Option 1\n* Option 2\n\n[/poll]\n\n',
+        "[poll public=true]\n* Option 1\n* Option 2\n\n[/poll]\n\n",
       ],
       "poll with name, results, close date, groups": [
         "[poll name=PollName chartType=pie results=always anonymous=true close=2021-01-01 groups=group1,group2]\n* Option 1\n* Option 2\n[/poll]",
         `<div class="poll" data-poll-results="always" data-poll-name="PollName" data-poll-chart-type="pie" data-poll-close="2021-01-01" data-poll-groups="group1,group2"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
-        '[poll results="always" name="PollName" chartType="pie" close="2021-01-01" groups="group1,group2"]\n* Option 1\n* Option 2\n\n[/poll]\n\n',
+        "[poll results=always name=PollName chartType=pie close=2021-01-01 groups=group1,group2]\n* Option 1\n* Option 2\n\n[/poll]\n\n",
       ],
       "poll with bar chart type": [
         "[poll chartType=bar]\n* Option 1\n* Option 2\n[/poll]",
         `<div class="poll" data-poll-chart-type="bar"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
-        '[poll chartType="bar"]\n* Option 1\n* Option 2\n\n[/poll]\n\n',
+        "[poll chartType=bar]\n* Option 1\n* Option 2\n\n[/poll]\n\n",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {

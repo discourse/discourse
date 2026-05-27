@@ -1,14 +1,14 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("ul")
 @classNames("mobile-nav")
@@ -85,8 +85,8 @@ export default class MobileNav extends Component {
       {{#if this.selectedHtml}}
         <li>
           <a href {{on "click" this.toggleExpanded}} class="expander">
-            <span class="selection">{{htmlSafe this.selectedHtml}}</span>
-            {{icon "caret-down"}}
+            <span class="selection">{{trustHTML this.selectedHtml}}</span>
+            {{dIcon "angle-down"}}
           </a>
         </li>
       {{/if}}

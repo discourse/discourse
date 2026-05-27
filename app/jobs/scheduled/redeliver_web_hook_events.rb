@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 module Jobs
   class RedeliverWebHookEvents < ::Jobs::Scheduled
     every 1.minute
@@ -58,6 +56,7 @@ module Jobs
           type: type,
           web_hook_event: AdminWebHookEventSerializer.new(web_hook_event, root: false).as_json,
         },
+        group_ids: [Group::AUTO_GROUPS[:staff]],
       )
     end
   end

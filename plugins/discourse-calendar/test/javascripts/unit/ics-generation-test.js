@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { module, test } from "qunit";
 import {
   bbcodeAttributeDecode,

@@ -1,14 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../../lib/ai-errors";
 import {
   MIN_CHARACTER_COUNT,
   showSuggestionsError,
@@ -17,52 +21,35 @@ import {
 export default class AiTitleSuggester extends Component {
   @tracked loading = false;
   @tracked suggestions = null;
-  @tracked untriggers = [];
   @tracked triggerIcon = "discourse-sparkles";
-  @tracked content = null;
+  dMenu;
+
+  get content() {
+    return this.args.composer?.reply;
+  }
 
   get showSuggestionButton() {
-    const composerFields = document.querySelector(".composer-fields");
-    const editTopicTitleField = document.querySelector(".edit-topic-title");
-
-    this.content = this.args.composer?.reply;
     const showTrigger =
       this.content?.length > MIN_CHARACTER_COUNT ||
       this.args.topicState === "edit";
 
-    if (composerFields) {
-      if (showTrigger) {
-        composerFields.classList.add("showing-ai-suggestions");
-      } else {
-        composerFields.classList.remove("showing-ai-suggestions");
-      }
-    }
-
-    if (editTopicTitleField) {
-      if (showTrigger) {
-        editTopicTitleField.classList.add("showing-ai-suggestions");
-      } else {
-        editTopicTitleField.classList.remove("showing-ai-suggestions");
-      }
-    }
+    document
+      .querySelector(".composer-fields")
+      ?.classList.toggle("showing-ai-suggestions", showTrigger);
+    document
+      .querySelector(".edit-topic-title")
+      ?.classList.toggle("showing-ai-suggestions", showTrigger);
 
     return showTrigger;
   }
 
   get showDropdown() {
-    if (this.suggestions?.length <= 0) {
-      this.dMenu.close();
-    }
     return !this.loading && this.suggestions?.length > 0;
   }
 
   @action
   async loadSuggestions() {
-    if (
-      this.suggestions &&
-      this.suggestions?.length > 0 &&
-      !this.dMenu.expanded
-    ) {
+    if (this.suggestions?.length > 0 && !this.dMenu.expanded) {
       return this.suggestions;
     }
 
@@ -79,20 +66,21 @@ export default class AiTitleSuggester extends Component {
     try {
       const { suggestions } = await ajax(
         "/discourse-ai/ai-helper/suggest_title",
-        {
-          method: "POST",
-          data,
-        }
+        { method: "POST", data }
       );
 
       this.suggestions = suggestions;
 
-      if (this.suggestions?.length <= 0) {
+      if (suggestions?.length === 0) {
         showSuggestionsError(this, this.loadSuggestions.bind(this));
         return;
       }
     } catch (error) {
-      popupAjaxError(error);
+      if (isAiCreditLimitError(error)) {
+        popupAiCreditLimitError(error);
+      } else {
+        popupAjaxError(error);
+      }
     } finally {
       this.loading = false;
       this.triggerIcon = "rotate";
@@ -103,7 +91,7 @@ export default class AiTitleSuggester extends Component {
 
   @action
   applySuggestion(suggestion) {
-    const model = this.args.composer ? this.args.composer : this.args.buffered;
+    const model = this.args.composer || this.args.buffered;
     if (!model) {
       return;
     }
@@ -142,25 +130,24 @@ export default class AiTitleSuggester extends Component {
         @contentClass="ai-suggestions-menu"
         @onRegisterApi={{this.onRegisterApi}}
         @modalForMobile={{true}}
-        @untriggers={{this.untriggers}}
+        @untriggers={{array}}
         {{on "click" this.loadSuggestions}}
       >
         <:content>
           {{#if this.showDropdown}}
-            <DropdownMenu as |dropdown|>
+            <DDropdownMenu as |dropdown|>
               {{#each this.suggestions as |suggestion index|}}
                 <dropdown.item>
                   <DButton
+                    @translatedLabel={{suggestion}}
+                    @action={{fn this.applySuggestion suggestion}}
                     data-name={{suggestion}}
                     data-value={{index}}
                     title={{suggestion}}
-                    @action={{fn this.applySuggestion suggestion}}
-                  >
-                    {{suggestion}}
-                  </DButton>
+                  />
                 </dropdown.item>
               {{/each}}
-            </DropdownMenu>
+            </DDropdownMenu>
           {{/if}}
         </:content>
       </DMenu>

@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import evenRound from "discourse/plugins/poll/lib/even-round";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 import PollVoters from "./poll-voters";
 
 export default class PollResultsStandardComponent extends Component {
@@ -92,13 +93,16 @@ export default class PollResultsStandardComponent extends Component {
                     }}</span>
                 {{/if}}
               {{/unless}}
-              <span class="option-text">{{htmlSafe option.html}}</span>
+              <span
+                class="option-text"
+                {{decoratePollOption option.html}}
+              ></span>
             </p>
             {{#unless @isRankedChoice}}
               <div class="bar-back">
                 <div
                   class="bar"
-                  style={{htmlSafe (concat "width:" option.percentage "%")}}
+                  style={{trustHTML (concat "width:" option.percentage "%")}}
                 />
               </div>
             {{/unless}}

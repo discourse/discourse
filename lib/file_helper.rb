@@ -180,12 +180,22 @@ class FileHelper
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif]
+    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif heic heif jxl]
   end
 
   def self.inline_images
     # SVG cannot safely be shown as a document
     @@inline_images ||= supported_images - %w[svg]
+  end
+
+  # files which are safe to serve inline (no script execution risk)
+  def self.inline_safe_files
+    @@inline_safe_files ||= inline_images | Set.new(%w[pdf]) | supported_video | supported_audio
+  end
+
+  def self.is_inline_safe?(filename)
+    return false if filename.blank?
+    filename.downcase.end_with?(*inline_safe_files.map { |ext| ".#{ext}" })
   end
 
   def self.supported_audio

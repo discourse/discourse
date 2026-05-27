@@ -82,13 +82,13 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root}/frontend"
-    d_node_modules = "#{Rails.root}/frontend/discourse/node_modules"
-    md_node_modules = "#{Rails.root}/frontend/discourse-markdown-it/node_modules"
+    root_path = "#{Rails.root.join("frontend")}"
+    d_node_modules = "#{Rails.root.join("frontend/discourse/node_modules")}"
+    md_node_modules = "#{Rails.root.join("frontend/discourse-markdown-it/node_modules")}"
     ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
     ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
     ctx.load("#{md_node_modules}/xss/dist/xss.js")
-    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
+    ctx.load("#{Rails.root.join("lib/pretty_text/vendor-shims.js")}")
 
     ctx_load_directory(
       ctx: ctx,
@@ -119,7 +119,7 @@ module PrettyText
       )
     end
 
-    ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
+    ctx.load("#{Rails.root.join("lib/pretty_text/shims.js")}")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 
     Discourse.plugins.each do |plugin|
@@ -140,6 +140,8 @@ module PrettyText
 
     DiscoursePluginRegistry.vendored_pretty_text.each { |vpt| ctx.eval(File.read(vpt)) }
 
+    ctx.low_memory_notification # GC to free up memory used during init
+
     ctx
   end
 
@@ -156,7 +158,10 @@ module PrettyText
   end
 
   def self.reset_translations
-    v8.eval("__resetTranslationTree()")
+    @mutex.synchronize do
+      v8.eval("__resetTranslationTree()")
+      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    end
   end
 
   def self.reset_context
@@ -195,12 +200,19 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
+      allowed_iframes =
+        DiscoursePluginRegistry.apply_modifier(
+          :pretty_text_allowed_iframes,
+          SiteSetting.allowed_iframes.split("|"),
+        )
+
       # note, any additional options added to __optInput here must be
       # also be added to the buildOptions function in pretty-text.js,
       # otherwise they will be discarded
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        __optInput.allowedIframes = #{allowed_iframes.to_json};
         #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
@@ -218,9 +230,9 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor, engine: :js).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace, engine: :js).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link, engine: :js).to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
       JS
@@ -247,7 +259,7 @@ module PrettyText
       buffer << "__pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);"
 
       # Be careful disabling sanitization. We allow for custom emails
-      buffer << ("__pt.disableSanitizer();") if opts[:sanitize] == false
+      buffer << "__pt.disableSanitizer();" if opts[:sanitize] == false
 
       opts = context.eval(buffer)
 
@@ -493,7 +505,12 @@ module PrettyText
     return "" if html.blank?
 
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
-    doc = Nokogiri::HTML5.fragment(html)
+    doc =
+      begin
+        Nokogiri::HTML5.fragment(html)
+      rescue ArgumentError
+        return ""
+      end
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
@@ -522,23 +539,21 @@ module PrettyText
     doc
       .css("a[href]")
       .each do |a|
-        begin
-          href = a["href"].to_s
-          next if href.blank?
-          next if href.start_with?("mailto:")
-          next if href.start_with?(Discourse.base_url)
-          next if URI(href).host.present?
+        href = a["href"].to_s
+        next if href.blank?
+        next if href.start_with?("mailto:")
+        next if href.start_with?(Discourse.base_url)
+        next if URI(href).host.present?
 
-          a["href"] = (
-            if href.start_with?(Discourse.base_path)
-              "#{Discourse.base_url_no_prefix}#{href}"
-            else
-              "#{Discourse.base_url}#{href}"
-            end
-          )
-        rescue URI::Error
-          # leave it
-        end
+        a["href"] = (
+          if href.start_with?(Discourse.base_path)
+            "#{Discourse.base_url_no_prefix}#{href}"
+          else
+            "#{Discourse.base_url}#{href}"
+          end
+        )
+      rescue URI::Error
+        # leave it
       end
   end
 
@@ -692,7 +707,10 @@ module PrettyText
 
   def self.protect
     rval = nil
-    @mutex.synchronize { rval = yield }
+    @mutex.synchronize do
+      rval = yield
+      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    end
     rval
   end
 

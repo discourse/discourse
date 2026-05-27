@@ -14,7 +14,7 @@ module("Unit | Utility | icon-library", function (hooks) {
     assert.strictEqual(icon.tagName, "svg");
     assert.strictEqual(
       icon.className.baseVal,
-      "fa d-icon d-icon-bars svg-icon svg-node"
+      "fa d-icon d-icon-bars svg-icon fa-width-auto svg-node"
     );
   });
 
@@ -24,6 +24,21 @@ module("Unit | Utility | icon-library", function (hooks) {
 
     const iconC = convertIconClass("  fab fa-facebook  ");
     assert.false(iconHTML(iconC).includes("  "), "trims whitespace");
+  });
+
+  test("uses replacement id for class when icon id contains dots", function (assert) {
+    let html = iconHTML("user_menu.replies");
+    assert.true(html.includes("d-icon-reply"), "uses replacement id for class");
+    assert.false(
+      html.includes("d-icon-user_menu.replies"),
+      "does not use dotted id for class"
+    );
+
+    html = iconHTML("notification.replied");
+    assert.true(
+      html.includes("d-icon-reply"),
+      "uses replacement id for notification icons"
+    );
   });
 
   test("escape icon names, classes, titles and aria-label", function (assert) {

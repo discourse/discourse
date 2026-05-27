@@ -294,6 +294,7 @@ acceptance("Glimmer Topic Timeline", function (needs) {
           can_edit_staff_notes: true,
           can_toggle_topic_visibility: true,
           can_pin_unpin_topic: true,
+          can_banner_topic: true,
           can_moderate_category: true,
           can_remove_self_id: 7,
           participants: [

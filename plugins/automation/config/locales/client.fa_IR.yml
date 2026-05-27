@@ -34,6 +34,12 @@ fa_IR:
         text:
           label: متن
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: دسته‌بندی‌ها
+            tags:
+              label: برچسب‌ها
         user_badge_granted:
           fields:
             badge:
@@ -180,6 +186,8 @@ fa_IR:
           fields:
             custom_field_name:
               label: "نام فیلد سفارشی کاربر"
+        set_topic_timer:
+          title: تنظیم تایمر موضوع
       models:
         script:
           name:

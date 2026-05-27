@@ -6,11 +6,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import { tagName } from "@ember-decorators/component";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -18,14 +16,17 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 class Section {
   @tracked title;
-  @trackedArray links;
-  @trackedArray secondaryLinks;
+  @autoTrackedArray links;
+  @autoTrackedArray secondaryLinks;
 
   constructor({
     title,
@@ -218,6 +219,7 @@ class SectionLink {
   }
 }
 
+@tagName("")
 export default class SidebarSectionForm extends Component {
   @service dialog;
   @service router;
@@ -392,7 +394,7 @@ export default class SidebarSectionForm extends Component {
   @afterRender
   focusNewRowInput(id) {
     document
-      .querySelector(`[data-row-id="${id}"] .icon-picker summary`)
+      .querySelector(`[data-row-id="${id}"] .d-icon-grid-picker-trigger`)
       .focus();
   }
 
@@ -568,6 +570,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <label>{{i18n
                     "sidebar.sections.custom.links.icon.label"
                   }}</label>
@@ -578,6 +581,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <label>{{i18n
                     "sidebar.sections.custom.links.name.label"
                   }}</label>
@@ -588,6 +592,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <label>{{i18n
                     "sidebar.sections.custom.links.value.label"
                   }}</label>
@@ -656,7 +661,7 @@ export default class SidebarSectionForm extends Component {
                   class="always-public-tooltip"
                 >
                   <:trigger>
-                    {{icon "square-check"}}
+                    {{dIcon "square-check"}}
                     <span>{{i18n "sidebar.sections.custom.public"}}</span>
                   </:trigger>
                 </DTooltip>

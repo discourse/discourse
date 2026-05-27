@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { escape } from "pretty-text/sanitizer";
 import discourseDebounce from "discourse/lib/debounce";
@@ -36,6 +37,7 @@ export default {
             format: "svg",
             engine,
           });
+
           $container.html(svgChart);
         } catch (e) {
           const $error = $(

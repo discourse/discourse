@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Security", type: :system do
+describe "Edit Category Security" do
   fab!(:current_user, :admin)
   fab!(:group)
   fab!(:category)

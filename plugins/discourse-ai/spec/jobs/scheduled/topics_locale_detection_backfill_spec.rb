@@ -6,16 +6,13 @@ describe Jobs::TopicsLocaleDetectionBackfill do
   fab!(:topic) { Fabricate(:topic, locale: nil) }
 
   before do
-    fake_llm = assign_fake_provider_to(:ai_default_llm_model)
-
-    # Update the locale detector persona (ID -27) with the fake LLM
-    locale_detector = AiPersona.find_by(id: -27)
-    locale_detector.update!(default_llm_id: fake_llm.id) if locale_detector
+    assign_fake_provider_to(:ai_default_llm_model)
 
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.ai_translation_excluded_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -45,8 +42,8 @@ describe Jobs::TopicsLocaleDetectionBackfill do
   end
 
   it "detects most recently updated topics first" do
-    topic_2 = Fabricate(:topic, locale: nil)
-    topic_3 = Fabricate(:topic, locale: nil)
+    topic_2 = Fabricate(:topic, locale: nil, category: topic.category)
+    topic_3 = Fabricate(:topic, locale: nil, category: topic.category)
 
     topic.update!(updated_at: 3.days.ago)
     topic_2.update!(updated_at: 2.days.ago)
@@ -85,29 +82,31 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     job.execute({ limit: 10 })
   end
 
-  describe "with public content limitation" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_cat_topic) { Fabricate(:topic, category: private_category, locale: nil) }
+  describe "with excluded categories" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category, locale: nil) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category, locale: nil) }
 
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
     fab!(:pm_topic, :private_message_topic)
 
-    fab!(:public_topic) { Fabricate(:topic, locale: nil) }
-
     before do
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).at_least_once
-
-      SiteSetting.ai_translation_backfill_limit_to_public_content = true
+      SiteSetting.ai_translation_excluded_categories =
+        Category.where.not(id: included_category.id).pluck(:id).join("|")
+      SiteSetting.ai_translation_personal_messages = "none"
     end
 
-    it "only processes topics from public categories" do
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(public_topic).once
-
+    it "does not process topics from excluded categories" do
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
-        .with(private_cat_topic)
+        .with(included_topic)
+        .once
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(excluded_topic)
         .never
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
@@ -118,18 +117,21 @@ describe Jobs::TopicsLocaleDetectionBackfill do
       job.execute({ limit: 10 })
     end
 
-    it "processes public category topics, group PMs, and private category topics when setting is disabled" do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+    it "processes included category topics and group PMs when pm_translation_scope is group" do
+      SiteSetting.ai_translation_personal_messages = "group"
 
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(public_topic).once
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
         .with(group_pm_topic)
         .once
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
-        .with(private_cat_topic)
-        .once
+        .with(excluded_topic)
+        .never
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(pm_topic).never
 
       job.execute({ limit: 10 })
@@ -137,8 +139,12 @@ describe Jobs::TopicsLocaleDetectionBackfill do
   end
 
   describe "with max age limit" do
-    fab!(:old_topic) { Fabricate(:topic, locale: nil, created_at: 10.days.ago) }
-    fab!(:new_topic) { Fabricate(:topic, locale: nil, created_at: 2.days.ago) }
+    fab!(:old_topic) do
+      Fabricate(:topic, locale: nil, created_at: 10.days.ago, category: topic.category)
+    end
+    fab!(:new_topic) do
+      Fabricate(:topic, locale: nil, created_at: 2.days.ago, category: topic.category)
+    end
 
     before do
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).at_least_once

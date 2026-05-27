@@ -13,6 +13,7 @@ describe DiscourseAi::Translation::CategoryLocalizer do
     allow(DiscourseAi::Translation::PostRawTranslator).to receive(:new).with(
       text: opts[:text],
       target_locale: opts[:target_locale],
+      llm_model: be_nil,
     ).and_return(mock)
     allow(mock).to receive(:translate).and_return(opts[:translated])
   end
@@ -22,6 +23,7 @@ describe DiscourseAi::Translation::CategoryLocalizer do
     allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new).with(
       text: opts[:text],
       target_locale: opts[:target_locale],
+      llm_model: be_nil,
     ).and_return(mock)
     allow(mock).to receive(:translate).and_return(opts[:translated])
   end

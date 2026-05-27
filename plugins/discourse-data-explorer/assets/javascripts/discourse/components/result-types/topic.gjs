@@ -1,9 +1,9 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 const Topic = <template>
   {{#if @ctx.topic}}
     <a href="{{@ctx.baseuri}}/t/{{@ctx.topic.slug}}/{{@ctx.topic.id}}">
-      {{htmlSafe @ctx.topic.fancy_title}}
+      {{trustHTML @ctx.topic.fancy_title}}
     </a>
     ({{@ctx.topic.posts_count}})
   {{else}}

@@ -20,6 +20,14 @@ module PageObjects
         self
       end
 
+      def theme_dropdown
+        PageObjects::Components::SelectKit.new("[data-setting-name='user-theme'] .combo-box")
+      end
+
+      def text_size_dropdown
+        PageObjects::Components::SelectKit.new("[data-setting-name='user-text-size'] .combo-box")
+      end
+
       def light_scheme_dropdown
         PageObjects::Components::SelectKit.new(".light-color-scheme .select-kit")
       end

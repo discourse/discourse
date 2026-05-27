@@ -24,21 +24,11 @@ module PageObjects
       end
 
       def click_categories_header_button
-        page.click_button(
-          I18n.t("js.sidebar.sections.categories.header_action_title"),
-          class: "sidebar-section-header-button",
-        )
+        page.find("[data-section-name='categories'] .sidebar-section-header-button").click
       end
 
       def click_topics_link
         find(".sidebar-section-link[data-link-name='everything']").click
-      end
-
-      def click_toggle_to_desktop_view_button
-        page.click_button(
-          I18n.t("js.desktop_view"),
-          class: "sidebar-footer-actions-toggle-mobile-view",
-        )
       end
 
       def click_outside

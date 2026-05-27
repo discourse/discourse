@@ -41,7 +41,6 @@ nl:
       assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} toegewezen aan %{username}"
       assign_post_to_multiple: "#%{post_number} aan %{username}"
-      assigned_to_w_ellipsis: "Toegewezen aan..."
       unassign:
         title: "Toewijzing opheffen"
         title_w_ellipsis: "Toewijzing opheffen..."
@@ -143,6 +142,14 @@ nl:
       bulk:
         unassign: "Toewijzing van topics opheffen"
         assign: "Topics toewijzen"
+        assign_description: "Wijs de geselecteerde topics toe aan de volgende gebruiker:"
+        unassign_description: "Wil je de toewijzing van de geselecteerde topics opheffen?"
+        confirm_assign_topics:
+          one: "%{count} topic toewijzen"
+          other: "%{count} topics toewijzen"
+        confirm_unassign_topics:
+          one: "Toewijzing van %{count} topic opheffen"
+          other: "Toewijzing van %{count} topics opheffen"
     discourse_automation:
       scriptables:
         random_assign:

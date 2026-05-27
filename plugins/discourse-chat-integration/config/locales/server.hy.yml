@@ -43,8 +43,6 @@ hy:
     chat_integration_rocketchat_webhook_url: "Rocket Chat ինտեգրման webhook -ի URL -ը"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat գրառման հատվածի երկարություն"
     chat_integration_gitter_enabled: "Միացրեք Gitter զրույցի-ինտեգրումների մատակարարը"
-    chat_integration_flowdock_enabled: "Միացրեք Flowdock զրույցի-ինտեգրումների մատակարարը"
-    chat_integration_flowdock_excerpt_length: "Flowdock գրառման հատվածի երկարություն"
   chat_integration:
     all_categories: "(Բոլոր կատեգորիաները)"
     deleted_category: "(ջնջված կատեգորիա)"
@@ -66,10 +64,8 @@ hy:
         create:
           created: "Կանոնը հաջողությամբ ստեղված է"
           updated: "Կանոնը հաջողությամբ թարմացված է"
-          error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
         delete:
           success: "Կանոնը հաջողությամբ ջնջվել է"
-          error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք `/discourse status` կանոնների ցանկի համար:"
         not_found:
           tag: " *%{name}* թեգը չի գտնվել:"
           category: "*%{name}* կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ *%{list}*"
@@ -102,10 +98,8 @@ hy:
         create:
           created: "Կանոնը հաջողությամբ ստեղված է"
           updated: "Կանոնը հաջողությամբ թարմացված է"
-          error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
         delete:
           success: "Կանոնը հաջողությամբ ջնջվել է"
-          error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք <code>/status</code> կանոնների ցանկի համար:"
         not_found:
           tag: "<b>%{name}</b> թեգը չի գտնվել:"
           category: "<b>%{name}</b> կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ <b>%{list}</b>"
@@ -136,10 +130,8 @@ hy:
         create:
           created: "Կանոնը հաջողությամբ ստեղված է"
           updated: "Կանոնը հաջողությամբ թարմացված է"
-          error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
         delete:
           success: "Կանոնը հաջողությամբ ջնջվել է"
-          error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք `/discourse status` կանոնների ցանկի համար:"
         not_found:
           tag: " *%{name}* թեգը չի գտնվել:"
           category: "*%{name}* կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ *%{list}*"
@@ -169,5 +161,3 @@ hy:
           ~~~մեջբերում
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "հրապարակված"

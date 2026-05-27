@@ -2,6 +2,9 @@
 
 class Users::DiscourseIdController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:revoke]
+  skip_before_action :redirect_to_login_if_required,
+                     :redirect_to_profile_if_required,
+                     only: [:revoke]
 
   def revoke
     RateLimiter.new(nil, "discourse_id_revoke_#{params[:identifier]}", 5, 1.minute).performed!

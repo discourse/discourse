@@ -5,11 +5,28 @@ class Chat::Api::ChannelsController < Chat::ApiController
   CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
   def index
-    permitted = params.permit(:filter, :limit, :offset, :status)
+    permitted =
+      params.permit(
+        :filter,
+        :limit,
+        :offset,
+        :status,
+        :chatable_id,
+        :chatable_type,
+        :include_subcategories,
+      )
 
     options = { filter: permitted[:filter], limit: (permitted[:limit] || 25).to_i }
     options[:offset] = permitted[:offset].to_i
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
+    options[:chatable_id] = permitted[:chatable_id]
+    options[:chatable_type] = permitted[:chatable_type]
+
+    if options[:chatable_type] == "Category"
+      options[:include_subcategories] = ActiveModel::Type::Boolean.new.cast(
+        permitted[:include_subcategories],
+      )
+    end
 
     memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
     channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
@@ -63,6 +80,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_create_channel_in_category) { raise Discourse::InvalidAccess }
       on_failed_policy(:category_channel_does_not_exist) do
         raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
       end
@@ -91,7 +109,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def update
     params_to_edit = editable_params(params, channel_from_params)
-    params_to_edit.each { |k, v| params_to_edit[k] = nil if params_to_edit[k].blank? }
+    params_to_edit.each { |k, v| params_to_edit[k] = nil if v.is_a?(String) && v.blank? }
     if ActiveRecord::Type::Boolean.new.deserialize(params_to_edit[:auto_join_users])
       auto_join_limiter(channel_from_params).performed!
     end

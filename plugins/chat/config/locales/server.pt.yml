@@ -52,8 +52,6 @@ pt:
           title: "Utilizador Suspenso"
         agree_and_silence:
           title: "Silenciar Usuário"
-        disagree:
-          title: "Discordar"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -65,6 +63,9 @@ pt:
     popup:
       chat_mention:
         direct: '%{username} mencionou-o em "%{channel}"'
+    actions:
+      chat_reply:
+        title: Responder
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

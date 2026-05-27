@@ -1,10 +1,13 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class PostMenuAdminButton extends Component {
-  static shouldRender(args) {
+  static shouldRender(args, context) {
     return (
-      args.post.canManage || args.post.can_wiki || args.post.canEditStaffNotes
+      args.post.canManage ||
+      args.post.can_wiki ||
+      args.post.canEditStaffNotes ||
+      context.currentUser?.canChangePostOwner
     );
   }
 
@@ -17,6 +20,7 @@ export default class PostMenuAdminButton extends Component {
       @icon="wrench"
       @label={{if @showLabel "post.controls.admin_action"}}
       @title="post.controls.admin"
+      @ariaLabel="post.controls.admin"
     />
   </template>
 }

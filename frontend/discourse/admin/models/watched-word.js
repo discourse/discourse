@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
@@ -20,26 +20,29 @@ export default class WatchedWord extends EmberObject {
       return EmberObject.create({
         nameKey,
         name: i18n("admin.watched_words.actions." + nameKey),
-        words: new TrackedArray(actions[nameKey]),
+        words: trackedArray(actions[nameKey]),
         compiledRegularExpression: list.compiled_regular_expressions[nameKey],
       });
     });
   }
 
   save() {
+    const data = {
+      words: this.words,
+      replacement: this.replacement,
+      action_key: this.action,
+      case_sensitive: this.isCaseSensitive,
+      html: this.isHtml,
+      replacement_tags: this.replacementTags,
+    };
+
     return ajax(
       "/admin/customize/watched_words" +
         (this.id ? "/" + this.id : "") +
         ".json",
       {
         type: this.id ? "PUT" : "POST",
-        data: {
-          words: this.words,
-          replacement: this.replacement,
-          action_key: this.action,
-          case_sensitive: this.isCaseSensitive,
-          html: this.isHtml,
-        },
+        data,
         dataType: "json",
       }
     );

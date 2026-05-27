@@ -86,7 +86,7 @@ class DiscourseDiff
       i += 1
     end
 
-    "<div class=\"revision-content\">#{left.join}</div><div class=\"revision-content\">#{right.join}</div>"
+    "<div class=\"revision-content --previous\">#{left.join}</div><div class=\"revision-content --current\">#{right.join}</div>"
   end
 
   def side_by_side_markdown
@@ -96,8 +96,8 @@ class DiscourseDiff
       table << "<tr>"
       op_code = line_by_line_diff[i][1]
       if op_code == :common
-        table << "<td>#{line_by_line_diff[i][0]}</td>"
-        table << "<td>#{line_by_line_diff[i][0]}</td>"
+        table << "<td class=\"--previous\">#{line_by_line_diff[i][0]}</td>"
+        table << "<td class=\"--current\">#{line_by_line_diff[i][0]}</td>"
       else
         if op_code == :delete
           opposite_op_code = :add
@@ -120,16 +120,16 @@ class DiscourseDiff
           end
           diff = ONPDiff.new(before_tokens, after_tokens).short_diff
           deleted, inserted = generate_side_by_side_markdown(diff)
-          table << "<td class=\"diff-del\">#{deleted.join}</td>"
-          table << "<td class=\"diff-ins\">#{inserted.join}</td>"
+          table << "<td class=\"--previous diff-del\">#{deleted.join}</td>"
+          table << "<td class=\"--current diff-ins\">#{inserted.join}</td>"
           i += 1
         else
           if op_code == :delete
-            table << "<td class=\"diff-del\">#{line_by_line_diff[i][0]}</td>"
-            table << "<td></td>"
+            table << "<td class=\"--previous diff-del\">#{line_by_line_diff[i][0]}</td>"
+            table << "<td class=\"--current\"></td>"
           else
-            table << "<td></td>"
-            table << "<td class=\"diff-ins\">#{line_by_line_diff[i][0]}</td>"
+            table << "<td class=\"--previous\"></td>"
+            table << "<td class=\"--current diff-ins\">#{line_by_line_diff[i][0]}</td>"
           end
         end
       end

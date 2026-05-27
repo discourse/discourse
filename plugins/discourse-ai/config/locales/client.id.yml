@@ -71,10 +71,6 @@ id:
               label: "Temperatur"
             top_p:
               label: "Top P"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Model"
         llm_triage:
           fields:
             search_for_text:
@@ -88,15 +84,18 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      llm_selector:
+        none: "Tidak ada"
       features:
-        back: "Kembali"
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
-        edit: "Ubah"
+        edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"
+        nav:
+          enabled: "Diaktifkan"
         filters:
           all: "Semua"
           reset: "Reset"
@@ -122,23 +121,21 @@ id:
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
+          system_prompt: "Perintah Sistem"
           spam: "Spam"
       usage:
         summary: "Ringkasan"
         model: "Model"
         username: "Nama Pengguna"
+        total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
-      ai_persona:
-        back: "Kembali"
+      ai_agent:
         name: "Nama"
         edit: "Ubah"
         export: "Ekspor"
         description: "Deskripsi"
-        mentionable_help: Jika diaktifkan, pengguna di grup yang diizinkan dapat menyebut pengguna ini di posting, AI akan merespons sebagai persona ini.
         user: Pengguna
-        question_consolidator_llm: Model Bahasa untuk Konsolidator Pertanyaan
-        question_consolidator_llm_help: Model bahasa yang digunakan untuk konsolidator pertanyaan, Anda dapat memilih model yang kurang kuat untuk menghemat biaya.
         save: "Simpan"
         enabled: "Diaktifkan?"
         allowed_groups: "Grup yang diizinkan"
@@ -153,7 +150,6 @@ id:
         uploads:
           uploading: "Mengunggah..."
       tools:
-        back: "Kembali"
         export: "Ekspor"
         name: "Nama"
         description: "Deskripsi"
@@ -162,11 +158,26 @@ id:
         remove_parameter: "Hapus"
         edit: "Ubah"
         delete: "Hapus"
+      secrets:
+        short_title: "Kredensial"
+        name: "Nama"
+        save: "Simpan"
+        edit: "Ubah"
+        delete: "Hapus"
+      mcp_servers:
+        name: "Nama"
+        description: "Deskripsi"
+        oauth_statuses:
+          connected: "Terhubung"
+        oauth_connect: "Hubungkan"
+        enabled: "Diaktifkan"
+        save: "Simpan"
+        edit: "Ubah"
+        delete: "Hapus"
       llms:
         display_name: "Nama"
         save: "Simpan"
         edit: "Ubah"
-        back: "Kembali"
         delete: Hapus
         quotas:
           duration: "Durasi"
@@ -207,6 +218,7 @@ id:
         thumbnail_suggestions:
           select: "Pilih"
           selected: "Dipilih"
+          try_again: "Coba Lagi"
         image_caption:
           button_label: "Keterangan dengan AI"
           generating: "Menghasilkan keterangan..."
@@ -216,7 +228,6 @@ id:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"
       embeddings:
-        back: "Kembali"
         save: "Simpan"
         delete: "Hapus"
         edit: "Ubah"
@@ -227,11 +238,6 @@ id:
         providers:
           google: "Google"
         semantic_search: "Topik (Semantik)"
-        semantic_search_loading: "Mencari hasil lebih banyak menggunakan AI"
-        semantic_search_results:
-          toggle: "Menampilkan %{count} hasil yang ditemukan menggunakan AI"
-          toggle_hidden: "Menyembunyikan %{count} hasil yang ditemukan menggunakan AI"
-          none: "Maaf, pencarian AI kami tidak menemukan topik yang cocok"
         ai_generated_result: "Hasil pencarian ditemukan menggunakan AI"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"

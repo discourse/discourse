@@ -83,7 +83,7 @@ $highlight-high: dark-light-diff(
 ) !default; // TO BE REMOVED IF POSS
 
 // danger
-$danger-low: dark-light-diff($danger, $secondary, 85%, -64%) !default;
+$danger-low: dark-light-diff($danger, $secondary, 90%, -68%) !default;
 $danger-low-mid: dark-light-diff(
   rgba($danger, 0.7),
   $secondary,
@@ -103,6 +103,9 @@ $love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
 
 // wiki
 $wiki: green !default;
+
+// selected
+$selected-hover: dark-light-diff($selected, $secondary, 20%, 20%) !default;
 
 // blended variants
 $blend-primary-secondary-5: blend-two-colors($primary, $secondary, 5%) !default;
@@ -175,7 +178,7 @@ $hljs-string: dark-light-choose(#54790d, #b5bd68) !default;
 
 // shadow opacity variables
 $shadow-opacity-modal: dark-light-choose(0.6, 1) !default;
-$shadow-opacity-composer: dark-light-choose(0.12, 0.35) !default;
+$shadow-opacity-composer: dark-light-choose(0.22, 0.45) !default;
 $shadow-opacity-menu-panel: dark-light-choose(0.15, 0.35) !default;
 $shadow-opacity-card: dark-light-choose(0.15, 0.5) !default;
 $shadow-opacity-dropdown: dark-light-choose(0.1, 0.25) !default;

@@ -7,14 +7,15 @@
 be:
   js:
     explorer:
+      default_query: "Прадвызначаная"
       or: "або"
+      create: "стварыць"
+      ai:
+        generate: "згенераваць"
       types:
         bool:
           yes: "Так"
           no: "Не"
-      export: "экспарт"
-      save: "Захаваць"
-      edit: "Рэдагаваць"
       delete: "Выдаліць"
       query_groups: "групы"
       query_description: "Апісанне"

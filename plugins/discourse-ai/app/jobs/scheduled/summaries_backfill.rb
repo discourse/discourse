@@ -28,7 +28,7 @@ module Jobs
         backfill_candidates(gist_t)
           .limit(current_budget(gist_t))
           .each do |topic|
-            strategy = DiscourseAi::Summarization.topic_gist(topic)
+            strategy = DiscourseAi::Summarization.topic_gist(topic, llm_model: llm_model)
             try_summarize(strategy, system_user, topic)
           end
       end
@@ -37,7 +37,7 @@ module Jobs
       backfill_candidates(complete_t)
         .limit(current_budget(complete_t))
         .each do |topic|
-          strategy = DiscourseAi::Summarization.topic_summary(topic)
+          strategy = DiscourseAi::Summarization.topic_summary(topic, llm_model: llm_model)
           try_summarize(strategy, system_user, topic)
         end
     end
@@ -99,10 +99,10 @@ module Jobs
     end
 
     def find_llm_model
-      persona_klass = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
-      return nil if persona_klass.blank?
+      agent_klass = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)
+      return nil if agent_klass.blank?
 
-      DiscourseAi::Summarization.find_summarization_model(persona_klass)
+      DiscourseAi::Summarization.find_summarization_model(agent_klass)
     end
   end
 end

@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { selectedRange } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import AiPostHelperMenu from "../../components/ai-post-helper-menu";
 import { showPostAIHelper } from "../../lib/show-ai-helper";
 
@@ -15,9 +15,7 @@ export default class AiPostHelperTrigger extends Component {
   @service menu;
 
   @tracked postHighlighted = false;
-  @tracked currentMenu = this.menu.getByIdentifier(
-    "post-text-selection-toolbar"
-  );
+  currentMenu = this.menu.getByIdentifier("post-text-selection-toolbar");
 
   // capture the state at the moment the toolbar is rendered
   // so we ensure change of state (selection change for example)
@@ -127,7 +125,7 @@ export default class AiPostHelperTrigger extends Component {
       data: this.menuData,
       placement: "top-start",
       fallbackPlacements: ["bottom-start"],
-      updateOnScroll: false,
+      autoUpdate: { ancestorScroll: false },
       onClose: () => {
         this.removeHighlightedText();
       },

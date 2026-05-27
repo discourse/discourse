@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { removeAccents } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
@@ -150,6 +151,8 @@ export default class FilterSuggestions {
         return await suggester.getCategorySuggestions();
       case "tag":
         return await suggester.getTagSuggestions();
+      case "tag_group":
+        return await suggester.getTagGroupSuggestions();
       case "username":
         return await suggester.getUserSuggestions();
       case "group":
@@ -176,7 +179,9 @@ class FilterParser {
   }
 
   parse() {
-    const words = this.text.split(/\s+/).filter(Boolean);
+    // Split on whitespace, but preserve quoted strings
+    const quotedPattern = /"[^"]*"|'[^']*'|[^\s]+/g;
+    const words = (this.text.match(quotedPattern) || []).filter(Boolean);
     this.endsWithSpace = this.text.endsWith(" ");
     return words.map((word) => this.parseWord(word));
   }
@@ -302,16 +307,17 @@ class FilterTypeValueSuggester {
 
   async getCategorySuggestions() {
     const categories = this.context.site?.categories || [];
-    const searchLower = this.searchTerm.toLowerCase();
+    const normalize = (str) => removeAccents(str.toLowerCase());
+    const searchNormalized = normalize(this.searchTerm);
 
     return categories
       .filter((cat) => {
-        const name = cat.name.toLowerCase();
-        const slug = cat.slug.toLowerCase();
+        const name = normalize(cat.name);
+        const slug = normalize(cat.slug);
         return (
-          !searchLower ||
-          name.includes(searchLower) ||
-          slug.includes(searchLower)
+          !searchNormalized ||
+          name.includes(searchNormalized) ||
+          slug.includes(searchNormalized)
         );
       })
       .slice(0, 10)
@@ -340,6 +346,47 @@ class FilterTypeValueSuggester {
       return results;
     } catch {
       return [];
+    }
+  }
+
+  async getTagGroupSuggestions() {
+    try {
+      const response = await ajax("/tag_groups/filter/search.json", {
+        data: { q: this.searchTerm || "", limit: 10 },
+      });
+
+      return response.results.map((tagGroup) => {
+        const quotedName = this.quoteIfNeeded(tagGroup.name);
+
+        return {
+          name: this.buildSuggestionName(quotedName),
+          description: tagGroup.tag_names?.join(", ") || "",
+          term: quotedName,
+          isSuggestion: true,
+        };
+      });
+    } catch {
+      return [];
+    }
+  }
+
+  quoteIfNeeded(name) {
+    const needsQuoting = /[\s&\-()'""]/.test(name);
+    if (!needsQuoting) {
+      return name;
+    }
+
+    const hasDoubleQuote = name.includes('"');
+    const hasSingleQuote = name.includes("'");
+
+    if (hasDoubleQuote && !hasSingleQuote) {
+      return `'${name}'`;
+    } else if (hasSingleQuote && !hasDoubleQuote) {
+      return `"${name}"`;
+    } else if (hasDoubleQuote && hasSingleQuote) {
+      return `'${name.replace(/'/g, "\\'")}'`;
+    } else {
+      return `"${name}"`;
     }
   }
 

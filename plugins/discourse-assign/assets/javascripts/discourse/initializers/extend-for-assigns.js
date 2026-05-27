@@ -1,21 +1,24 @@
-import { action } from "@ember/object";
+import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { htmlSafe } from "@ember/template";
-import { renderAvatar } from "discourse/helpers/user-avatar";
-import discourseComputed from "discourse/lib/decorators";
+import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
 import AssignButton from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import PostAssignmentsDisplay from "../components/post-assignments-display";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
-import { assignedToGroupPath, assignedToUserPath } from "../lib/url";
+import {
+  assignedToGroupPath,
+  assignedToPostPath,
+  assignedToUserPath,
+} from "../lib/url";
 import { extendTopicModel } from "../models/topic";
 
 const DEPENDENT_KEYS = [
@@ -108,17 +111,17 @@ function registerTopicFooterButtons(api) {
       const label = i18n("discourse_assign.assigned_to");
 
       if (user) {
-        return htmlSafe(
-          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${
+        return trustHTML(
+          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${escapeExpression(
             user.username
-          }</span></span>&nbsp;${renderAvatar(user, {
+          )}</span></span>&nbsp;${renderAvatar(user, {
             imageSize: "small",
             ignoreTitle: true,
           })}`
         );
       } else if (group) {
-        return htmlSafe(
-          `<span class="unassign-label">${label}</span> @${group.name}`
+        return trustHTML(
+          `<span class="unassign-label">${label}</span> @${escapeExpression(group.name)}`
         );
       }
     },
@@ -147,7 +150,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.unassign.title");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -191,7 +194,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.reassign.to_self");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -237,7 +240,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.reassign.title_w_ellipsis");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -319,14 +322,14 @@ function initialize(api) {
     "model:bookmark",
     (Superclass) =>
       class extends Superclass {
-        @discourseComputed("assigned_to_user")
-        assignedToUserPath(assignedToUser) {
-          return assignedToUserPath(assignedToUser);
+        @computed("assigned_to_user")
+        get assignedToUserPath() {
+          return assignedToUserPath(this.assigned_to_user);
         }
 
-        @discourseComputed("assigned_to_group")
-        assignedToGroupPath(assignedToGroup) {
-          return assignedToGroupPath(assignedToGroup);
+        @computed("assigned_to_group")
+        get assignedToGroupPath() {
+          return assignedToGroupPath(this.assigned_to_group);
         }
       }
   );
@@ -395,9 +398,11 @@ function initialize(api) {
     const createTagHtml = ({ assignee, note }) => {
       let assignedPath;
       if (assignee.assignedToPostId) {
-        assignedPath = `/p/${assignee.assignedToPostId}`;
+        assignedPath = assignedToPostPath(assignee.assignedToPostId);
+      } else if (assignee.username) {
+        assignedPath = assignedToUserPath(assignee);
       } else {
-        assignedPath = `/t/${topic.id}`;
+        assignedPath = assignedToGroupPath(assignee);
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
@@ -409,13 +414,11 @@ function initialize(api) {
 
       const tagName = params.tagName || "a";
       const href =
-        tagName === "a"
-          ? `href="${getURL(assignedPath)}" data-auto-route="true"`
-          : "";
+        tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
 
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
         note
-      )}">${name}</span></${tagName}>`;
+      )}">${escapeExpression(name)}</span></${tagName}>`;
     };
 
     // is there's one assignment just return the tag
@@ -487,7 +490,9 @@ function initialize(api) {
               }
 
               if (data.post_id) {
+                topic.indirectly_assigned_to ||= {};
                 if (data.type === "assigned") {
+                  topic.indirectly_assigned_to[data.post_id] ||= {};
                   topic.indirectly_assigned_to[data.post_id].assigned_to =
                     data.assigned_to;
                 } else if (data.type === "unassigned") {
@@ -524,17 +529,7 @@ function initialize(api) {
     "group-plus"
   );
 
-  api.modifyClass(
-    "controller:preferences/notifications",
-    (Superclass) =>
-      class extends Superclass {
-        @action
-        save() {
-          this.saveAttrNames.push("custom_fields");
-          super.save(...arguments);
-        }
-      }
-  );
+  api.addSaveableCustomFields("notifications");
 
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
@@ -702,13 +697,17 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      api.addSaveableUserOptionField("notification_level_when_assigned");
+      api.addSaveableUserOption("notification_level_when_assigned", {
+        page: "tracking",
+      });
 
       api.addBulkActionButton({
         id: "assign-topics",
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
+        description: "topics.bulk.assign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
           setComponent(BulkActionsAssignUser);
         },
@@ -720,6 +719,8 @@ export default {
         label: "topics.bulk.unassign",
         icon: "user-xmark",
         class: "btn-default unassign-topics",
+        description: "topics.bulk.unassign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },

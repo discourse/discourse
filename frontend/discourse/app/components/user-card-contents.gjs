@@ -1,10 +1,10 @@
+/* eslint-disable ember/no-observers */
 import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
 import {
   attributeBindings,
@@ -13,22 +13,12 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
-import HtmlWithLinks from "discourse/components/html-with-links";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserBadge from "discourse/components/user-badge";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -36,6 +26,14 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
+import DHtmlWithLinks from "discourse/ui-kit/d-html-with-links";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 @classNames("user-card")
@@ -55,36 +53,103 @@ export default class UserCardContents extends CardContentsBase {
   mentionSelector = "a.mention";
   ariaLabel = i18n("user.card");
 
-  @setting("allow_profile_backgrounds") allowBackgrounds;
-  @setting("enable_badges") showBadges;
-  @setting("display_local_time_in_user_card") showUserLocalTime;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
-  @alias("topic.postStream") postStream;
-
-  @gte("topicPostCount", 2) enoughPostsForFiltering;
-
-  @and("viewingTopic", "postStream.hasNoFilters", "enoughPostsForFiltering")
-  showFilter;
-
-  @gt("postStream.userFilters.length", 0) hasUserFilters;
-  @gt("moreBadgesCount", 0) showMoreBadges;
-  @and("viewingAdmin", "showName", "user.canBeDeleted") showDelete;
-  @not("user.isBasic") linkWebsite;
-  @or("user.suspend_reason", "user.silence_reason") isRestricted;
-  @or("isRestricted", "user.bio_excerpt") isRestrictedOrHasBio;
-  @and("user.staged", "canCheckEmails") showCheckEmail;
-
   user = null;
 
   // If inside a topic
   topicPostCount = null;
 
-  @and(
+  @computed("siteSettings.allow_profile_backgrounds")
+  get allowBackgrounds() {
+    return this.siteSettings.allow_profile_backgrounds;
+  }
+
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
+
+  @computed("siteSettings.display_local_time_in_user_card")
+  get showUserLocalTime() {
+    return this.siteSettings.display_local_time_in_user_card;
+  }
+
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
+  @computed("topicPostCount")
+  get enoughPostsForFiltering() {
+    return this.topicPostCount >= 2;
+  }
+
+  @computed(
+    "viewingTopic",
+    "postStream.hasNoFilters",
+    "enoughPostsForFiltering"
+  )
+  get showFilter() {
+    return (
+      this.viewingTopic &&
+      this.postStream?.hasNoFilters &&
+      this.enoughPostsForFiltering
+    );
+  }
+
+  @computed("postStream.userFilters.length")
+  get hasUserFilters() {
+    return this.postStream?.userFilters?.length > 0;
+  }
+
+  @computed("moreBadgesCount")
+  get showMoreBadges() {
+    return this.moreBadgesCount > 0;
+  }
+
+  @computed("viewingAdmin", "showName", "user.canBeDeleted")
+  get showDelete() {
+    return this.viewingAdmin && this.showName && this.user?.canBeDeleted;
+  }
+
+  @computed("user.isBasic")
+  get linkWebsite() {
+    return !this.user?.isBasic;
+  }
+
+  @computed("user.suspend_reason", "user.silence_reason")
+  get isRestricted() {
+    return this.user?.suspend_reason || this.user?.silence_reason;
+  }
+
+  @computed("isRestricted", "user.bio_excerpt")
+  get isRestrictedOrHasBio() {
+    return this.isRestricted || this.user?.bio_excerpt;
+  }
+
+  @computed("user.staged", "canCheckEmails")
+  get showCheckEmail() {
+    return this.user?.staged && this.canCheckEmails;
+  }
+
+  @computed(
     "user.featured_topic",
     "siteSettings.allow_featured_topic_on_user_profiles"
   )
-  showFeaturedTopic;
+  get showFeaturedTopic() {
+    return (
+      this.user?.featured_topic &&
+      this.siteSettings?.allow_featured_topic_on_user_profiles
+    );
+  }
 
   @computed("user.name", "user.username")
   get showName() {
@@ -113,61 +178,61 @@ export default class UserCardContents extends CardContentsBase {
     ).canCheckEmails;
   }
 
-  @discourseComputed("user")
-  hasLocaleOrWebsite(user) {
-    return user.location || user.website_name || this.userTimezone;
+  @computed("user")
+  get hasLocaleOrWebsite() {
+    return this.user.location || this.user.website_name || this.userTimezone;
   }
 
-  @discourseComputed("user.status")
-  hasStatus() {
+  @computed("user.status")
+  get hasStatus() {
     return this.siteSettings.enable_user_status && this.user.status;
   }
 
-  @discourseComputed("user.status.emoji")
-  userStatusEmoji(emoji) {
-    return emojiUnescape(escapeExpression(`:${emoji}:`));
+  @computed("user.status.emoji")
+  get userStatusEmoji() {
+    return emojiUnescape(escapeExpression(`:${this.user?.status?.emoji}:`));
   }
 
-  @discourseComputed("user.staff")
-  staff(isStaff) {
-    return isStaff ? "staff" : "";
+  @computed("user.staff")
+  get staff() {
+    return this.user?.staff ? "staff" : "";
   }
 
-  @discourseComputed("user.trust_level")
-  newUser(trustLevel) {
-    return trustLevel === 0 ? "new-user" : "";
+  @computed("user.trust_level")
+  get newUser() {
+    return this.user?.trust_level === 0 ? "new-user" : "";
   }
 
-  @discourseComputed("user.name")
-  nameFirst(name) {
-    return prioritizeNameInUx(name);
+  @computed("user.name")
+  get nameFirst() {
+    return prioritizeNameInUx(this.user?.name);
   }
 
-  @discourseComputed("user")
-  userTimezone(user) {
+  @computed("user")
+  get userTimezone() {
     if (!this.showUserLocalTime) {
       return;
     }
-    return user.get("user_option.timezone");
+    return this.user.get("user_option.timezone");
   }
 
-  @discourseComputed("userTimezone")
-  formattedUserLocalTime(timezone) {
-    return moment.tz(timezone).format(i18n("dates.time"));
+  @computed("userTimezone")
+  get formattedUserLocalTime() {
+    return moment.tz(this.userTimezone).format(i18n("dates.time"));
   }
 
-  @discourseComputed("username")
-  usernameClass(username) {
-    return username ? `user-card-${username}` : "";
+  @computed("username")
+  get usernameClass() {
+    return this.username ? `user-card-${this.username}` : "";
   }
 
-  @discourseComputed("topicPostCount")
-  filterPostsLabel(count) {
-    return i18n("topic.filter_to", { count });
+  @computed("topicPostCount")
+  get filterPostsLabel() {
+    return i18n("topic.filter_to", { count: this.topicPostCount });
   }
 
-  @discourseComputed("user.user_fields.@each.value")
-  publicUserFields() {
+  @computed("user.user_fields.@each.value")
+  get publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
     if (!isEmpty(siteUserFields)) {
       const userFields = this.get("user.user_fields");
@@ -183,36 +248,39 @@ export default class UserCardContents extends CardContentsBase {
     }
   }
 
-  @discourseComputed("user.trust_level")
-  removeNoFollow(trustLevel) {
-    return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
+  @computed("user.trust_level")
+  get removeNoFollow() {
+    return this.user?.trust_level > 2 && !this.siteSettings.tl3_links_no_follow;
   }
 
-  @discourseComputed("user.badge_count", "user.featured_user_badges.length")
-  moreBadgesCount(badgeCount, badgeLength) {
-    return badgeCount - badgeLength;
+  @computed("user.badge_count", "user.featured_user_badges.length")
+  get moreBadgesCount() {
+    return this.user?.badge_count - this.user?.featured_user_badges?.length;
   }
 
-  @discourseComputed("user.time_read", "user.recent_time_read")
-  showRecentTimeRead(timeRead, recentTimeRead) {
-    return timeRead !== recentTimeRead && recentTimeRead !== 0;
+  @computed("user.time_read", "user.recent_time_read")
+  get showRecentTimeRead() {
+    return (
+      this.user?.time_read !== this.user?.recent_time_read &&
+      this.user?.recent_time_read !== 0
+    );
   }
 
-  @discourseComputed("user.recent_time_read")
-  recentTimeRead(recentTimeReadSeconds) {
-    return durationTiny(recentTimeReadSeconds);
+  @computed("user.recent_time_read")
+  get recentTimeRead() {
+    return durationTiny(this.user?.recent_time_read);
   }
 
-  @discourseComputed("showRecentTimeRead", "user.time_read", "recentTimeRead")
-  timeReadTooltip(showRecent, timeRead, recentTimeRead) {
-    if (showRecent) {
+  @computed("showRecentTimeRead", "user.time_read", "recentTimeRead")
+  get timeReadTooltip() {
+    if (this.showRecentTimeRead) {
       return i18n("time_read_recently_tooltip", {
-        time_read: durationTiny(timeRead),
-        recent_time_read: recentTimeRead,
+        time_read: durationTiny(this.user?.time_read),
+        recent_time_read: this.recentTimeRead,
       });
     } else {
       return i18n("time_read_tooltip", {
-        time_read: durationTiny(timeRead),
+        time_read: durationTiny(this.user?.time_read),
       });
     }
   }
@@ -232,14 +300,14 @@ export default class UserCardContents extends CardContentsBase {
     this.element.style.backgroundImage = bg;
   }
 
-  @discourseComputed("user.primary_group_name")
-  primaryGroup(primaryGroup) {
-    return `group-${primaryGroup}`;
+  @computed("user.primary_group_name")
+  get primaryGroup() {
+    return `group-${this.user?.primary_group_name}`;
   }
 
-  @discourseComputed("user.profile_hidden", "user.inactive")
-  contentHidden(profileHidden, inactive) {
-    return profileHidden || inactive;
+  @computed("user.profile_hidden", "user.inactive")
+  get contentHidden() {
+    return this.user?.profile_hidden || this.user?.inactive;
   }
 
   @onEvent("didInsertElement")
@@ -389,7 +457,7 @@ export default class UserCardContents extends CardContentsBase {
             >
               <div class="user-card-avatar" aria-hidden="true">
                 {{#if this.contentHidden}}
-                  <span class="card-huge-avatar">{{boundAvatar
+                  <span class="card-huge-avatar">{{dBoundAvatar
                       this.user
                       "huge"
                     }}</span>
@@ -399,18 +467,18 @@ export default class UserCardContents extends CardContentsBase {
                     class="card-huge-avatar"
                     tabindex="-1"
                   >
-                    {{boundAvatar this.user "huge"}}
+                    {{dBoundAvatar this.user "huge"}}
                     {{#if this.isOwnCard}}
                       <span class="own-avatar-pencil">
                         <span class="own-avatar-pencil--icon">
-                          {{icon "pencil"}}
+                          {{dIcon "pencil"}}
                         </span>
                       </span>
                     {{/if}}
                   </a>
                 {{/if}}
 
-                <UserAvatarFlair @user={{this.user}} />
+                <DUserAvatarFlair @user={{this.user}} />
 
                 <div>
                   <PluginOutlet
@@ -485,11 +553,11 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.hasStatus}}
                   <div class="user-status">
-                    {{htmlSafe this.userStatusEmoji}}
+                    {{trustHTML this.userStatusEmoji}}
                     <span class="user-status__description">
                       {{this.user.status.description}}
                     </span>
-                    {{formatDate this.user.status.ends_at format="tiny"}}
+                    {{dFormatDate this.user.status.ends_at format="tiny"}}
                   </div>
                 {{/if}}
                 <div>
@@ -582,7 +650,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.suspend_reason}}
                 <div class="suspended">
                   <div class="suspension-date">
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{#if this.user.suspendedForever}}
                       {{i18n "user.suspended_permanently"}}
                     {{else}}
@@ -596,7 +664,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="suspension-reason-title">{{i18n
                         "user.suspended_reason"
                       }}</span>
-                    <span class="suspension-reason-description">{{htmlSafe
+                    <span class="suspension-reason-description">{{trustHTML
                         this.user.suspend_reason
                       }}</span>
                   </div>
@@ -605,7 +673,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.silence_reason}}
                 <div class="silenced">
                   <div class="silence-date">
-                    {{icon "microphone-slash"}}
+                    {{dIcon "microphone-slash"}}
                     {{#if this.user.silencedForever}}
                       {{i18n "user.silenced_permanently"}}
                     {{else}}
@@ -619,7 +687,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="silence-reason-title">{{i18n
                         "user.silenced_reason"
                       }}</span>
-                    <span class="silence-reason-description">{{htmlSafe
+                    <span class="silence-reason-description">{{trustHTML
                         this.user.silence_reason
                       }}</span>
                   </div>
@@ -627,9 +695,9 @@ export default class UserCardContents extends CardContentsBase {
               {{/if}}
               {{#unless this.isRestricted}}
                 <div class="bio">
-                  <HtmlWithLinks>
-                    {{htmlSafe this.user.bio_excerpt}}
-                  </HtmlWithLinks>
+                  <DHtmlWithLinks>
+                    {{trustHTML this.user.bio_excerpt}}
+                  </DHtmlWithLinks>
                 </div>
               {{/unless}}
             </div>
@@ -645,8 +713,8 @@ export default class UserCardContents extends CardContentsBase {
                     this.user.featured_topic.slug
                     this.user.featured_topic.id
                   }}
-                >{{replaceEmoji
-                    (htmlSafe this.user.featured_topic.fancy_title)
+                >{{dReplaceEmoji
+                    (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
               </div>
             </div>
@@ -657,9 +725,9 @@ export default class UserCardContents extends CardContentsBase {
               <div class="location-and-website">
                 {{#if this.user.website_name}}
                   <span class="website-name">
-                    {{icon "globe"}}
+                    {{dIcon "globe"}}
                     {{#if this.linkWebsite}}
-                      {{! template-lint-disable link-rel-noopener }}
+                      {{! eslint-disable ember/template-link-rel-noopener }}
                       <a
                         href={{this.user.website}}
                         rel="noopener {{unless
@@ -668,7 +736,7 @@ export default class UserCardContents extends CardContentsBase {
                         }}"
                         target="_blank"
                       >{{this.user.website_name}}</a>
-                      {{! template-lint-enable link-rel-noopener }}
+                      {{! eslint-enable ember/template-link-rel-noopener }}
                     {{else}}
                       <span
                         title={{this.user.website}}
@@ -678,13 +746,13 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.user.location}}
                   <span class="location">
-                    {{icon "location-dot"}}
+                    {{dIcon "location-dot"}}
                     <span>{{this.user.location}}</span>
                   </span>
                 {{/if}}
                 {{#if this.showUserLocalTime}}
                   <span class="local-time" title={{i18n "local_time"}}>
-                    {{icon "far-clock"}}
+                    {{dIcon "far-clock"}}
                     <span>{{this.formattedUserLocalTime}}</span>
                   </span>
                 {{/if}}
@@ -705,21 +773,21 @@ export default class UserCardContents extends CardContentsBase {
                 {{#if this.user.last_posted_at}}
                   <div class="metadata__last-posted">
                     <span class="desc">{{i18n "last_post"}}</span>
-                    {{formatDate
+                    {{dFormatDate
                       this.user.last_posted_at
                       leaveAgo="true"
                     }}</div>
                 {{/if}}
                 <div class="metadata__user-created">
                   <span class="desc">{{i18n "joined"}}</span>
-                  {{formatDate this.user.created_at leaveAgo="true"}}</div>
+                  {{dFormatDate this.user.created_at leaveAgo="true"}}</div>
                 {{#if this.user.time_read}}
                   <div
                     class="metadata__time-read"
                     title={{this.timeReadTooltip}}
                   >
                     <span class="desc">{{i18n "time_read"}}</span>
-                    {{formatDuration this.user.time_read}}
+                    {{dFormatDuration this.user.time_read}}
                     {{#if this.showRecentTimeRead}}
                       <span>
                         ({{i18n
@@ -732,7 +800,7 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.showCheckEmail}}
                   <div class="metadata__email">
-                    {{icon "envelope" title="user.email.title"}}
+                    {{dIcon "envelope" title="user.email.title"}}
                     {{#if this.user.email}}
                       {{this.user.email}}
                     {{else}}

@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
@@ -8,6 +8,7 @@ import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import SwipeEvents from "discourse/lib/swipe-events";
@@ -30,6 +31,8 @@ export default class TopicNavigation extends Component {
   canRender = true;
   _lastTopicId = null;
   _swipeEvents = null;
+  _desktopListenersActive = false;
+  _mobileListenersActive = false;
 
   didUpdateAttrs() {
     super.didUpdateAttrs(...arguments);
@@ -50,7 +53,7 @@ export default class TopicNavigation extends Component {
 
     if (this.info.topicProgressExpanded) {
       this.info.set("renderTimeline", true);
-    } else if (this.site.mobileView) {
+    } else if (this.site.mobileView || EmbedMode.enabled) {
       this.info.set("renderTimeline", false);
     } else {
       const composerHeight =
@@ -117,6 +120,11 @@ export default class TopicNavigation extends Component {
   composerClosed() {
     this.set("composerOpen", false);
     this._checkSize();
+  }
+
+  @bind
+  _toggleExpansion() {
+    this.info.toggleProperty("topicProgressExpanded");
   }
 
   _collapseFullscreen(postId, delay = 500) {
@@ -229,9 +237,11 @@ export default class TopicNavigation extends Component {
     this.appEvents
       .on("topic:current-post-scrolled", this, this._topicScrolled)
       .on("topic:jump-to-post", this, this._collapseFullscreen)
-      .on("topic:keyboard-trigger", this, this.keyboardTrigger);
+      .on("topic:keyboard-trigger", this, this.keyboardTrigger)
+      .on("topic:toggle-progress-expansion", this, this._toggleExpansion);
 
     if (this.site.desktopView) {
+      this._desktopListenersActive = true;
       this.mediaQuery = matchMedia(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
       this.mediaQuery.addEventListener("change", this._checkSize);
       this.appEvents.on("composer:opened", this, this.composerOpened);
@@ -244,6 +254,7 @@ export default class TopicNavigation extends Component {
     this._checkSize();
     this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {
+      this._mobileListenersActive = true;
       this._swipeEvents.addTouchListeners();
       this.element.addEventListener("swipestart", this.onSwipeStart);
       this.element.addEventListener("swipeend", this.onSwipeEnd);
@@ -258,11 +269,12 @@ export default class TopicNavigation extends Component {
     this.appEvents
       .off("topic:current-post-scrolled", this, this._topicScrolled)
       .off("topic:jump-to-post", this, this._collapseFullscreen)
-      .off("topic:keyboard-trigger", this, this.keyboardTrigger);
+      .off("topic:keyboard-trigger", this, this.keyboardTrigger)
+      .off("topic:toggle-progress-expansion", this, this._toggleExpansion);
 
     $(window).off("click.hide-fullscreen");
 
-    if (this.site.desktopView) {
+    if (this._desktopListenersActive) {
       this.mediaQuery.removeEventListener("change", this._checkSize);
       this.appEvents.off("composer:opened", this, this.composerOpened);
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
@@ -270,7 +282,8 @@ export default class TopicNavigation extends Component {
       this.appEvents.off("composer:preview-toggled", this._checkSize);
       $("#reply-control").off("div-resized", this._checkSize);
     }
-    if (this.site.mobileView) {
+
+    if (this._mobileListenersActive) {
       this.element.removeEventListener("swipestart", this.onSwipeStart);
       this.element.removeEventListener("swipeend", this.onSwipeEnd);
       this.element.removeEventListener("swipecancel", this.onSwipeCancel);

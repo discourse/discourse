@@ -6,15 +6,15 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AiBlinkingAnimation from "./ai-blinking-animation";
 import AiIndicatorWave from "./ai-indicator-wave";
@@ -30,7 +30,6 @@ export default class AiSearchDiscoveries extends Component {
 
   @tracked loadingConversationTopic = false;
   @tracked fullDiscoveryToggled = false;
-  @tracked discoveryPreviewLength = this.args.discoveryPreviewLength || 150;
 
   constructor() {
     super(...arguments);
@@ -73,6 +72,10 @@ export default class AiSearchDiscoveries extends Component {
     );
   }
 
+  get discoveryPreviewLength() {
+    return this.args.discoveryPreviewLength || 150;
+  }
+
   get query() {
     return this.args?.searchTerm || this.search.activeGlobalSearchTerm;
   }
@@ -105,8 +108,8 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get canContinueConversation() {
-    const personas = this.currentUser?.ai_enabled_personas;
-    if (!personas) {
+    const agents = this.currentUser?.ai_enabled_agents;
+    if (!agents) {
       return false;
     }
 
@@ -114,16 +117,15 @@ export default class AiSearchDiscoveries extends Component {
       return false;
     }
 
-    const discoverPersona = personas.find(
-      (persona) =>
-        persona.id === parseInt(this.siteSettings?.ai_discover_persona, 10)
+    const discoverAgent = agents.find(
+      (agent) => agent.id === parseInt(this.siteSettings?.ai_discover_agent, 10)
     );
-    const discoverPersonaHasBot = discoverPersona?.username;
+    const discoverAgentHasBot = discoverAgent?.username;
 
     return (
       this.discobotDiscoveries.discovery?.length > 0 &&
       !this.discobotDiscoveries.isStreaming &&
-      discoverPersonaHasBot
+      discoverAgentHasBot
     );
   }
 
@@ -169,7 +171,6 @@ export default class AiSearchDiscoveries extends Component {
   @action
   async continueConversation() {
     const data = {
-      user_id: this.currentUser.id,
       query: this.query,
       context: this.discobotDiscoveries.discovery,
     };
@@ -217,9 +218,9 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else}}
-          {{! template-lint-disable no-invalid-interactive }}
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <article
-            class={{concatClass
+            class={{dConcatClass
               "ai-search-discoveries__discovery"
               (if this.renderPreviewOnly "preview")
               (if this.discobotDiscoveries.isStreaming "streaming")
@@ -227,7 +228,7 @@ export default class AiSearchDiscoveries extends Component {
             }}
             {{on "click" this.handleDiscoveryClick}}
           >
-            <CookText
+            <DCookText
               @rawText={{this.discobotDiscoveries.streamedText}}
               class="cooked"
             />

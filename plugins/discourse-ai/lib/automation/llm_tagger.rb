@@ -5,7 +5,7 @@ module DiscourseAi
     module LlmTagger
       def self.handle(
         post:,
-        tagger_persona_id:,
+        tagger_agent_id:,
         tag_mode: "manual",
         available_tags: [],
         confidence_threshold:,
@@ -18,8 +18,8 @@ module DiscourseAi
         # Skip if manual mode but no tags provided
         return if tag_mode == "manual" && available_tags.empty?
 
-        tagger_persona = AiPersona.find(tagger_persona_id)
-        model_id = tagger_persona.default_llm_id || SiteSetting.ai_default_llm_model
+        tagger_agent = AiAgent.find(tagger_agent_id)
+        model_id = tagger_agent.default_llm_id || SiteSetting.ai_default_llm_model
         return if model_id.blank?
         model = LlmModel.find(model_id)
 
@@ -47,22 +47,30 @@ module DiscourseAi
         end
 
         all_upload_ids = topic_posts.flat_map(&:upload_ids).compact.uniq
-        if all_upload_ids.present?
+        upload_ids =
+          DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
+            all_upload_ids,
+            include_image_uploads: tagger_agent.vision_enabled,
+            include_document_uploads: model.allowed_attachment_types.present?,
+            allowed_attachment_types: model.allowed_attachment_types,
+            guardian: Guardian.new(post.user),
+          )
+        if upload_ids.present?
           input = [input]
-          input.concat(all_upload_ids.map { |upload_id| { upload_id: upload_id } })
+          input.concat(upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
         bot =
-          DiscourseAi::Personas::Bot.as(
+          DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            persona: tagger_persona.class_instance.new,
+            agent: tagger_agent.class_instance.new,
             model: model,
           )
 
-        persona_response_format = tagger_persona.response_format
+        agent_response_format = tagger_agent.response_format
 
         bot_ctx =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: Discourse.system_user,
             skip_show_thinking: true,
             feature_name: "llm_tagger",
@@ -76,7 +84,7 @@ module DiscourseAi
           },
         }
 
-        llm_args[:response_format] = persona_response_format if persona_response_format.present?
+        llm_args[:response_format] = agent_response_format if agent_response_format.present?
 
         result = +""
         bot.reply(bot_ctx, llm_args: llm_args) do |partial, _, type|

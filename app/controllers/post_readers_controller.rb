@@ -5,6 +5,7 @@ class PostReadersController < ApplicationController
 
   def index
     post = Post.includes(topic: %i[topic_allowed_groups topic_allowed_users]).find(params[:id])
+    guardian.ensure_can_see!(post)
     ensure_can_see_readers!(post)
 
     readers =

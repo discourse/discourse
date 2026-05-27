@@ -3,7 +3,17 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
   def self.base_attrs
-    %i[topic_id post_id context subject ip_address previous_value new_value]
+    %i[
+      topic_id
+      post_id
+      category_id
+      context
+      subject
+      ip_address
+      previous_value
+      new_value
+      reviewable_id
+    ]
   end
 
   def initialize(admin)
@@ -91,6 +101,29 @@ class StaffActionLogger
       params(opts).merge(
         action: UserHistory.actions[opts[:permanent] ? :delete_post_permanently : :delete_post],
         post_id: deleted_post.id,
+        details: details.join("\n"),
+      ),
+    )
+  end
+
+  def log_post_recover(post)
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+
+    user = post.user ? "#{post.user.username} (#{post.user.name})" : "(deleted user)"
+    topic = post.topic || Topic.with_deleted.find_by(id: post.topic_id)
+
+    details = [
+      "id: #{post.id}",
+      "created_at: #{post.created_at}",
+      "user: #{user}",
+      "raw: #{truncate(post.raw)}",
+    ]
+
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:recover_post],
+        topic_id: topic&.id,
+        post_id: post.id,
         details: details.join("\n"),
       ),
     )
@@ -271,6 +304,17 @@ class StaffActionLogger
         subject: setting_name,
         previous_value: previous_value ? "true" : "false",
         new_value: new_value ? "true" : "false",
+      ),
+    )
+  end
+
+  def log_upcoming_change_available(setting_name, opts = {})
+    raise Discourse::InvalidParameters.new(:setting_name) if setting_name.blank?
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:upcoming_change_available],
+        subject: setting_name,
+        details: SiteSetting.humanized_name(setting_name),
       ),
     )
   end
@@ -877,7 +921,13 @@ class StaffActionLogger
     ]
 
     UserHistory.create!(
-      params(opts).merge(action: UserHistory.actions[:post_rejected], details: details.join("\n")),
+      params(opts).merge(
+        action: UserHistory.actions[:post_rejected],
+        details: details.join("\n"),
+        topic_id: topic&.id,
+        category_id: reviewable.category_id,
+        reviewable_id: reviewable.id,
+      ),
     )
   end
 
@@ -1169,7 +1219,12 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
+    {
+      acting_user_id: @admin.id,
+      context: opts[:context],
+      details: opts[:details],
+      reviewable_id: opts[:reviewable_id],
+    }
   end
 
   def validate_category(category)

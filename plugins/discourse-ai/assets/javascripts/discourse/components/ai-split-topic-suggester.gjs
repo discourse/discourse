@@ -4,20 +4,19 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
-import categoryBadge from "discourse/helpers/category-badge";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;
 
   @tracked suggestions = [];
   @tracked loading = false;
-  @tracked icon = "discourse-sparkles";
 
   SUGGESTION_TYPES = {
     title: "suggest_title",
@@ -57,6 +56,7 @@ export default class AiSplitTopicSuggester extends Component {
         } else if (this.args.mode === this.SUGGESTION_TYPES.tag) {
           this.suggestions = result.assistant.map((s) => {
             return {
+              id: s.id,
               name: s.name,
               count: s.count,
             };
@@ -140,7 +140,7 @@ export default class AiSplitTopicSuggester extends Component {
                 role="button"
                 {{on "click" (fn this.applySuggestion suggestion menu)}}
               >
-                {{categoryBadge suggestion}}
+                {{dCategoryBadge suggestion}}
                 <span class="topic-count">x
                   {{suggestion.totalTopicCount}}</span>
               </li>
@@ -148,7 +148,7 @@ export default class AiSplitTopicSuggester extends Component {
               <li data-name={{suggestion.name}} data-value={{index}}>
                 <DButton
                   @translatedLabel={{suggestion.name}}
-                  @action={{fn this.applySuggestion suggestion.name menu}}
+                  @action={{fn this.applySuggestion suggestion menu}}
                 >
                   <span class="topic-count">x{{suggestion.count}}</span>
                 </DButton>

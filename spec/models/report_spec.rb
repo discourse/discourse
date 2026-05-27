@@ -158,6 +158,47 @@ RSpec.describe Report do
         expect(report.prev30Days).to eq(2)
       end
     end
+
+    context "when reporting_improvements is enabled" do
+      before { SiteSetting.reporting_improvements = true }
+
+      fab!(:user)
+      fab!(:user_2, :user)
+
+      it "returns a stacked chart with desktop and mobile series" do
+        freeze_time_safe
+        user.user_visits.create!(visited_at: 1.day.ago, mobile: false)
+        user_2.user_visits.create!(visited_at: 1.day.ago, mobile: true)
+        user.user_visits.create!(visited_at: 2.days.ago, mobile: false)
+
+        expect(report.modes).to eq([Report::MODES[:stacked_chart]])
+        expect(report.default_group_by).to eq("weekly")
+        expect(report.data.length).to eq(2)
+        expect(report.data[0][:req]).to eq("desktop")
+        expect(report.data[1][:req]).to eq("mobile")
+        expect(report.data[0][:data].length).to eq(2)
+        expect(report.data[1][:data].length).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(0)
+      end
+
+      it "filters by group" do
+        freeze_time_safe
+        group = Fabricate(:group)
+        group.add(user)
+
+        user.user_visits.create!(visited_at: 1.day.ago, mobile: false)
+        user_2.user_visits.create!(visited_at: 1.day.ago, mobile: true)
+
+        filtered_report = Report.find("visits", filters: { group: group.id })
+
+        desktop_data = filtered_report.data[0][:data]
+        mobile_data = filtered_report.data[1][:data]
+
+        expect(desktop_data.length).to eq(1)
+        expect(mobile_data.length).to eq(0)
+      end
+    end
   end
 
   describe "mobile visits report" do
@@ -810,6 +851,63 @@ RSpec.describe Report do
         expect(report_with_two_edits.data.count).to be(2)
       end
     end
+
+    context "with private message edits" do
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:editor, :user)
+      fab!(:pm_post, :private_message_post)
+
+      before { pm_post.revise(editor, { raw: "updated private message body" }) }
+
+      it "excludes PM edits for moderators" do
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data).to be_empty
+      end
+
+      it "excludes PM edits when current_user is nil" do
+        report = Report.find("post_edits")
+        expect(report.data).to be_empty
+      end
+
+      it "includes PM edits for admins" do
+        report = Report.find("post_edits", current_user: admin)
+        expect(report.data.count).to eq(1)
+      end
+    end
+
+    context "with secure category edits" do
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:editor, :user)
+      fab!(:group)
+      fab!(:secure_category) do
+        category = Fabricate(:category)
+        category.set_permissions(group => :full)
+        category.save!
+        category
+      end
+      fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
+      fab!(:secure_post) { Fabricate(:post, topic: secure_topic) }
+
+      before { secure_post.revise(editor, { raw: "updated secure post body" }) }
+
+      it "excludes secure category edits for moderators without access" do
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data).to be_empty
+      end
+
+      it "includes secure category edits for admins" do
+        report = Report.find("post_edits", current_user: admin)
+        expect(report.data.count).to eq(1)
+      end
+
+      it "includes secure category edits for moderators with group access" do
+        group.add(moderator)
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data.count).to eq(1)
+      end
+    end
   end
 
   describe "moderator activity" do
@@ -1254,7 +1352,7 @@ RSpec.describe Report do
     end
   end
 
-  describe "report_staff_logins" do
+  describe "report_admin_logins" do
     let(:joffrey) { Fabricate(:admin, username: "joffrey") }
     let(:robin) { Fabricate(:admin, username: "robin") }
     let(:james) { Fabricate(:user, username: "james") }
@@ -1265,7 +1363,7 @@ RSpec.describe Report do
 
         ip = [81, 2, 69, 142]
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS
           .any_instance
           .stubs(:getname)
@@ -1287,7 +1385,7 @@ RSpec.describe Report do
         )
         UserAuthToken.log(action: "generate", user_id: james.id)
 
-        report = Report.find("staff_logins")
+        report = Report.find("admin_logins")
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("joffrey")
@@ -1506,6 +1604,59 @@ RSpec.describe Report do
         expect(page_view_logged_in_browser_report[:data].sum { |d| d[:y] }).to eql(6)
         expect(page_view_anon_browser_report[:data].sum { |d| d[:y] }).to eql(1)
         expect(page_view_other_report[:data].sum { |d| d[:y] }).to eql(3)
+      end
+    end
+  end
+
+  describe "site_traffic" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find("site_traffic") }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each { |report| expect(report[:data]).to be_empty }
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        CachedCounting.reset
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "exposes embedded pageviews as their own series without polluting other series" do
+        Fabricate(:embeddable_host)
+
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        3.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        embed_series = reports.data.find { |r| r[:req] == "page_view_embed" }
+        other_series = reports.data.find { |r| r[:req] == "page_view_other" }
+
+        expect(embed_series[:data][0][:y]).to eq(4)
+        expect(other_series[:data][0][:y]).to eq(2)
+      end
+
+      it "omits the embedded pageviews series when no embeddable host is configured" do
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        expect(reports.data.map { |r| r[:req] }).not_to include("page_view_embed")
       end
     end
   end
@@ -1947,6 +2098,100 @@ RSpec.describe Report do
             total_views: 29,
           )
         end
+      end
+    end
+  end
+
+  describe ".hidden?" do
+    fab!(:report_admin, :admin)
+    fab!(:report_moderator, :moderator)
+
+    let(:admin_guardian) { report_admin.guardian }
+    let(:moderator_guardian) { report_moderator.guardian }
+
+    context "when the user is an admin" do
+      it "returns false for regular reports" do
+        expect(Report.hidden?("topics", guardian: admin_guardian)).to eq(false)
+      end
+
+      it "returns false for admin-only reports" do
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
+        end
+      end
+
+      it "returns false for IP reports" do
+        SiteSetting.moderators_view_ips = false
+
+        Report::IP_ADDRESS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
+        end
+      end
+    end
+
+    context "when the user is not an admin" do
+      it "returns false for regular reports" do
+        expect(Report.hidden?("topics", guardian: moderator_guardian)).to eq(false)
+      end
+
+      it "returns true for admin-only reports" do
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+        end
+      end
+
+      it "returns false for IP reports when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+
+        Report::IP_ADDRESS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
+        end
+      end
+
+      it "returns false for IP reports when IP viewing is enabled" do
+        SiteSetting.moderators_view_ips = true
+
+        Report::IP_ADDRESS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
+        end
+      end
+    end
+
+    context "when use_legacy_pageviews is true" do
+      before { SiteSetting.use_legacy_pageviews = true }
+
+      it "hides pageview reports" do
+        Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
+        end
+      end
+
+      it "does not hide legacy pageview reports" do
+        Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
+        end
+      end
+    end
+
+    context "when use_legacy_pageviews is false" do
+      before { SiteSetting.use_legacy_pageviews = false }
+
+      it "does not hide pageview reports" do
+        Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
+        end
+      end
+
+      it "hides legacy pageview reports" do
+        Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
+        end
+      end
+    end
+
+    it "always hides browser pageview reports" do
+      Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+        expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
       end
     end
   end

@@ -28,10 +28,12 @@ module Chat
 
     params do
       attribute :message_id, :string
+      attribute :channel_id, :integer
       attribute :message, :string
       attribute :upload_ids, :array
 
       validates :message_id, presence: true
+      validates :channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
 
       after_validation do
@@ -69,21 +71,23 @@ module Chat
     end
 
     def fetch_message(params:)
-      ::Chat::Message.includes(
-        :chat_mentions,
-        :bookmarks,
-        :chat_webhook_event,
-        :uploads,
-        :revisions,
-        reactions: [:user],
-        thread: [:channel, last_message: [:user]],
-        chat_channel: [
-          :last_message,
-          :chat_channel_archive,
-          chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
-        ],
-        user: :user_status,
-      ).find_by(id: params.message_id)
+      ::Chat::Message
+        .includes(
+          :chat_mentions,
+          :bookmarks,
+          :chat_webhook_event,
+          :revisions,
+          reactions: [:user],
+          thread: [:channel, last_message: [:user]],
+          chat_channel: [
+            :last_message,
+            :chat_channel_archive,
+            chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
+          ],
+          user: :user_status,
+        )
+        .includes(uploads: { optimized_videos: :optimized_upload })
+        .find_by(id: params.message_id, chat_channel_id: params.channel_id)
     end
 
     def fetch_membership(guardian:, message:)

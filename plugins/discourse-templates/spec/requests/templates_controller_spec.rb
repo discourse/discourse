@@ -389,5 +389,22 @@ describe DiscourseTemplates::TemplatesController do
         expect(parsed["templates"][0]["usages"]).to eq(1)
       end
     end
+
+    context "when a regular user tries to use a template in a restricted category" do
+      before do
+        SiteSetting.discourse_templates_categories = templates_parent_category.id.to_s
+        sign_in(user)
+      end
+
+      it "returns 403 for a template the user cannot see" do
+        post "/discourse_templates/#{template_item4.id}/use"
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 200 for a template the user can see" do
+        post "/discourse_templates/#{template_item0.id}/use"
+        expect(response.status).to eq(200)
+      end
+    end
   end
 end

@@ -33,7 +33,7 @@ module Chat
     end
 
     def include_original_message?
-      @opts[:include_thread_original_message].presence || true
+      @opts[:include_thread_original_message] != false
     end
 
     def meta

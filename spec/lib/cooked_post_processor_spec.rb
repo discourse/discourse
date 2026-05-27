@@ -248,6 +248,45 @@ RSpec.describe CookedPostProcessor do
           expect(cpp.html).to_not have_tag("a[rel='noopener nofollow ugc']")
         end
       end
+
+      describe "engine-supplied css_class" do
+        let(:url) { "https://example.com/foo" }
+        let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "Look at #{url} today") }
+        let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+        before do
+          allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+            title: "engine title",
+            css_class: "--gh-status-merged",
+          )
+        end
+
+        after { InlineOneboxer.invalidate(url) }
+
+        it "adds the css_class alongside inline-onebox" do
+          cpp.post_process
+
+          link = Nokogiri::HTML5.fragment(cpp.html).at_css(%(a[href="#{url}"]))
+          expect(link["class"]).to eq("inline-onebox --gh-status-merged")
+          expect(link.text).to eq("engine title")
+        end
+
+        it "escapes HTML in engine-supplied title and css_class" do
+          allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+            title: %(<script>alert("xss")</script>),
+            css_class: %(broken" onerror="alert(1)),
+          )
+
+          cpp.post_process
+
+          doc = Nokogiri::HTML5.fragment(cpp.html)
+          link = doc.at_css(%(a[href="#{url}"]))
+
+          expect(link.text).to eq(%(<script>alert("xss")</script>))
+          expect(link["onerror"]).to be_nil
+          expect(doc.css("script")).to be_empty
+        end
+      end
     end
 
     context "when processing images" do
@@ -551,9 +590,13 @@ RSpec.describe CookedPostProcessor do
             )
           end
 
+          let(:secure_uploads_url) do
+            "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png"
+          end
+
           let(:cooked_html) { <<~HTML }
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
-            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="#{secure_uploads_url}" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.png?dl=1" title="large.png"><img src="#{secure_uploads_url}" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">#{upload.width}×#{upload.height} 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
 
@@ -570,10 +613,7 @@ RSpec.describe CookedPostProcessor do
               post.link_post_uploads
             end
 
-            # TODO fix this spec, it is sometimes getting CDN links when it runs concurrently
-            xit "handles secure images with the correct lightbox link href" do
-              FastImage.expects(:size).returns([1750, 2000])
-              OptimizedImage.expects(:resize).returns(true)
+            it "handles secure images with the correct lightbox link href" do
               cpp.post_process
 
               expect(cpp.html).to match_html cooked_html
@@ -1497,9 +1537,9 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "#post_process_oneboxes with square image" do
-    it "generates a onebox-avatar class" do
-      url = "https://square-image.com/onebox"
+    fab!(:post) { Fabricate(:post, raw: "https://square-image.com/onebox") }
 
+    it "generates a onebox-avatar class" do
       body = <<~HTML
       <html>
       <head>
@@ -1510,16 +1550,14 @@ RSpec.describe CookedPostProcessor do
       </html>
       HTML
 
-      stub_request(:head, url)
-      stub_request(:get, url).to_return(body: body)
+      stub_request(:head, post.raw)
+      stub_request(:get, post.raw).to_return(body: body)
 
       # not an ideal stub but shipping the whole image to fast image can add
       # a lot of cost to this test
       stub_image_size(width: 200, height: 200)
 
-      post = Fabricate.build(:post, raw: url)
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-
       cpp.post_process_oneboxes
 
       expect(cpp.doc.to_s).not_to include("aspect-image")

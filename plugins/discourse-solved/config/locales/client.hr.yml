@@ -10,6 +10,7 @@ hr:
       alt:
         solved:
           accepted_notification: "prihvaćen"
+          topic_solved_notification: "riješeno"
     solved:
       title: "Riješeno"
       allow_accepted_answers: "Dopusti vlasniku teme i osoblju da označi odgovor kao rješenje"
@@ -25,6 +26,9 @@ hr:
         all: "sve"
         solved: "riješeno"
       no_solved_topics_title_others: "%{username} još nije riješio/la nijednu temu"
+      move_post_cancel: "Odustani"
+      confirm_solved_removal_confirm: "Potvrdi"
+      confirm_solved_removal_cancel: "Odustani"
       no_answer:
         title: Je li odgovoreno na vaše pitanje?
         description: "Označite odgovor i pomozite drugima pomoću gumba za rješenje ispod točnog odgovora."

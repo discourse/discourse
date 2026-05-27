@@ -8,6 +8,7 @@ tr_TR:
   site_settings:
     policy_enabled: "Politikalara izin verilsin mi?"
     policy_restrict_to_staff_posts: "Politikalar yalnızca personel gönderilerinde görünebilir"
+    create_policy_allowed_groups: "Gönderilere politika eklemek için grup üyeliği gereklidir"
     policy_easy_revoke: "Kabul et ve iptal et düğmelerini aynı anda göster"
   discourse_policy:
     errors:

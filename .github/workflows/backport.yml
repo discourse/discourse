@@ -1,0 +1,52 @@
+name: Backport
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  backport:
+    if: |
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '@discoursebot backport') &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Add reaction to comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method POST \
+            /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions \
+            -f content='+1'
+
+      - name: Post start comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "Backport started. [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Discourse CI"
+          git config --global user.email "ci@ci.invalid"
+
+      - name: Perform backport
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: ruby script/backport.rb

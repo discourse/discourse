@@ -18,8 +18,6 @@ et:
           title: "Peata kasutaja"
         agree_and_silence:
           title: "Vaigista kasutaja"
-        disagree:
-          title: "Ei nõustu"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -29,6 +27,9 @@ et:
     popup:
       chat_mention:
         direct: '%{username} mainis Sind teemas "%{channel}"'
+    actions:
+      chat_reply:
+        title: Vasta
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

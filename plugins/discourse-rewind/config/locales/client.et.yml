@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privaatne"
+          public: "Avalik"
+      reports:
+        reading_time:
+          title: Lugemise aeg
+        chat_usage:
+          messages: sõnumid
+          author: Sina
+          author_others: "%{username}"
+        invites:
+          title: kutsed
+          invitee_posts: Postitusi loodud
+          invitee_likes: Meeldimisi antud
+        new_user_interactions:
+          likes_given: Meeldimisi antud
+          mentions: Mainimised
+        writing_analysis:
+          menu_other: Muu

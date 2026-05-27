@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "capabilities service", type: :system do
+describe "capabilities service" do
   describe "viewport helpers" do
     it "works" do
       def matches(name)
@@ -8,7 +8,6 @@ describe "capabilities service", type: :system do
       end
 
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(matches("sm")).to eq(true)
       expect(matches("lg")).to eq(true)

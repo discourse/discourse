@@ -7,7 +7,7 @@ module Holidays
   # All the definitions are available at https://github.com/holidays/holidays
   module NORTHAMERICA # :nodoc:
     def self.defined_regions
-      [:ca, :ca_qc, :ca_ab, :ca_sk, :ca_on, :ca_bc, :ca_nb, :ca_mb, :ca_ns, :ca_pe, :ca_nl, :ca_nt, :ca_nu, :ca_yt, :mx, :mx_pue, :us_la, :us_ct, :us_de, :us_ga, :us_hi, :us_in, :us_ky, :us_nj, :us_nc, :us_nd, :us_pr, :us_tn, :us, :us_il, :us_vt, :us_ak, :us_ca, :us_dc, :us_me, :us_ma, :us_al, :us_ms, :us_ne, :us_mo, :us_sc, :us_wv, :us_ut, :us_ri, :us_nv, :us_nm, :us_md, :us_fl, :us_ia, :us_ks, :us_mi, :us_mn, :us_nh, :us_ok, :us_or, :us_pa, :us_tx, :us_va, :us_wa, :us_ar, :us_wi]
+      [:ca, :ca_qc, :ca_ab, :ca_sk, :ca_on, :ca_bc, :ca_nb, :ca_mb, :ca_ns, :ca_pe, :ca_nl, :ca_nt, :ca_nu, :ca_yt, :mx, :mx_pue, :us_la, :us_ct, :us_de, :us_ga, :us_hi, :us_in, :us_ky, :us_nj, :us_nc, :us_nd, :us_pr, :us_tn, :us, :us_il, :us_vt, :us_ak, :us_ca, :us_dc, :us_me, :us_ma, :us_al, :us_ms, :us_ne, :us_mo, :us_sc, :us_wv, :us_ut, :us_ri, :us_nv, :us_ny, :us_nm, :us_md, :us_fl, :us_ia, :us_ks, :us_mi, :us_mn, :us_nh, :us_ok, :us_or, :us_pa, :us_tx, :us_va, :us_wa, :us_ar, :us_wi]
     end
 
     def self.holidays_by_month
@@ -91,6 +91,7 @@ module Holidays
             {:mday => 1, :type => :informal, :name => "Todos los Santos", :regions => [:mx]},
             {:mday => 2, :type => :informal, :name => "Los Fieles Difuntos", :regions => [:mx]},
             {:wday => 1, :week => 3, :name => "Día de la Revolución", :regions => [:mx]},
+            {:mday => 3, :name => "Election Day", :regions => [:us_il, :us_la, :us_ny]},
             {:mday => 11, :observed => "to_weekday_if_weekend(date)", :observed_arguments => [:date], :name => "Veterans Day", :regions => [:us]},
             {:wday => 4, :week => 4, :name => "Thanksgiving", :regions => [:us]},
             {:function => "day_after_thanksgiving(year)", :function_arguments => [:year], :name => "Family Day", :regions => [:us_nv]},
@@ -105,9 +106,9 @@ module Holidays
             {:mday => 24, :type => :informal, :name => "Nochebuena", :regions => [:mx]},
             {:mday => 25, :name => "Navidad", :regions => [:mx]},
             {:mday => 28, :type => :informal, :name => "Los Santos Inocentes", :regions => [:mx]},
-            {:mday => 24, :name => "Christmas Eve Day", :regions => [:us_ar, :us_mi, :us_nc, :us_sc, :us_tx, :us_wi]},
+            {:mday => 24, :name => "Christmas Eve Day", :regions => [:us_ar, :us_ks, :us_mi, :us_nc, :us_sc, :us_tx, :us_wi]},
             {:mday => 25, :observed => "to_weekday_if_weekend(date)", :observed_arguments => [:date], :name => "Christmas Day", :regions => [:us]},
-            {:mday => 26, :name => "Day after Christmas", :regions => [:us_nc, :us_sc, :us_tx]},
+            {:mday => 28, :name => "Day after Christmas", :regions => [:us_nc, :us_sc, :us_tx]},
             {:mday => 31, :name => "New Year's Eve", :regions => [:us_mi, :us_wi]}],
       4 => [{:mday => 30, :type => :informal, :name => "Día del Niño", :regions => [:mx]},
             {:mday => 16, :observed => "to_weekday_if_weekend(date)", :observed_arguments => [:date], :name => "Emancipation Day", :regions => [:us_dc]},

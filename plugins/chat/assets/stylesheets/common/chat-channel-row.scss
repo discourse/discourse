@@ -46,7 +46,7 @@
     }
 
     .d-icon-lock {
-      background-color: var(--primary-low);
+      background-color: var(--primary-very-low);
     }
   }
 
@@ -73,6 +73,24 @@
     align-items: center;
     flex-grow: 1;
     overflow: hidden;
+  }
+
+  &__name-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    overflow: hidden;
+  }
+
+  &__starred-icon {
+    display: flex;
+    align-items: center;
+    color: var(--primary-low-mid);
+    flex-shrink: 0;
+
+    .d-icon {
+      font-size: var(--font-down-2);
+    }
   }
 
   .chat-channel {

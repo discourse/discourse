@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class PostLocalizationUpdater
-  def self.update(post_id:, locale:, raw:, user:)
-    Guardian.new(user).ensure_can_localize_post!(post_id)
+  def self.update(post:, locale:, raw:, user:)
+    Guardian.new(user).ensure_can_localize_post!(post)
 
-    localization = PostLocalization.find_by(post_id: post_id, locale: locale)
+    localization = PostLocalization.find_by(post_id: post.id, locale: locale)
     raise Discourse::NotFound unless localization
-    post = localization.post
-    raise Discourse::NotFound unless post
 
     return localization if localization.raw == raw
 

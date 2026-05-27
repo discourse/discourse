@@ -5,95 +5,8 @@ module Plugin
 end
 
 class Plugin::Metadata
-  OFFICIAL_PLUGINS =
-    Set.new(
-      %w[
-        discourse-adplugin
-        discourse-affiliate
-        discourse-ai
-        discourse-akismet
-        discourse-algolia
-        discourse-apple-auth
-        discourse-assign
-        discourse-auto-deactivate
-        discourse-bbcode
-        discourse-bbcode-color
-        discourse-cakeday
-        discourse-calendar
-        discourse-categories-suppressed
-        discourse-category-experts
-        discourse-characters-required
-        discourse-chat-integration
-        discourse-code-review
-        discourse-data-explorer
-        discourse-details
-        discourse-doc-categories
-        discourse-docs
-        discourse-follow
-        discourse-fontawesome-pro
-        discourse-gamification
-        discourse-geoblocking
-        discourse-github
-        discourse-gradle-issue
-        discourse-graphviz
-        discourse-group-tracker
-        discourse-hcaptcha
-        discourse-invite-tokens
-        discourse-jira
-        discourse-lazy-videos
-        discourse-local-dates
-        discourse-login-with-amazon
-        discourse-logster-transporter
-        discourse-lti
-        discourse-math
-        discourse-microsoft-auth
-        discourse-narrative-bot
-        discourse-newsletter-integration
-        discourse-no-bump
-        discourse-oauth2-basic
-        discourse-openid-connect
-        discourse-patreon
-        discourse-perspective-api
-        discourse-policy
-        discourse-post-voting
-        discourse-presence
-        discourse-prometheus
-        discourse-prometheus-alert-receiver
-        discourse-push-notifications
-        discourse-reactions
-        discourse-restricted-replies
-        discourse-rss-polling
-        discourse-salesforce
-        discourse-saml
-        discourse-saved-searches
-        discourse-signatures
-        discourse-solved
-        discourse-staff-alias
-        discourse-steam-login
-        discourse-subscriptions
-        discourse-tag-by-group
-        discourse-teambuild
-        discourse-templates
-        discourse-tooltips
-        discourse-topic-voting
-        discourse-translator
-        discourse-user-card-badges
-        discourse-user-notes
-        discourse-vk-auth
-        discourse-whos-online
-        discourse-yearly-review
-        discourse-zendesk-plugin
-        discourse-zoom
-        automation
-        chat
-        checklist
-        docker_manager
-        footnote
-        poll
-        spoiler-alert
-        styleguide
-      ],
-    )
+  # from config/official_plugins.json
+  OFFICIAL_PLUGINS = Set.new(JSON.load_file(Rails.root.join("config/official_plugins.json").to_s))
 
   FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
   attr_accessor(*FIELDS)
@@ -117,7 +30,7 @@ class Plugin::Metadata
   end
 
   def self.parse(text)
-    metadata = self.new
+    metadata = new
     text.each_line { |line| break unless metadata.parse_line(line) }
     metadata
   end
@@ -137,10 +50,7 @@ class Plugin::Metadata
       attribute = attribute.strip.gsub(/ /, "_").to_sym
 
       if FIELDS.include?(attribute)
-        self.public_send(
-          "#{attribute}=",
-          value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000),
-        )
+        public_send("#{attribute}=", value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000))
       end
     end
 

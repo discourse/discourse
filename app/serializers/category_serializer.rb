@@ -7,14 +7,18 @@ class CategorySerializer < SiteCategorySerializer
     attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
                :require_reply_approval,
-               :require_topic_approval
+               :require_topic_approval,
+               :nested_replies_default,
+               :topic_posting_review_mode,
+               :reply_posting_review_mode
   end
 
   class CategoryLocalizationSerializer < ApplicationSerializer
     attributes :id, :locale, :name, :description
   end
 
-  attributes :read_restricted,
+  attributes :locale,
+             :read_restricted,
              :available_groups,
              :auto_close_hours,
              :auto_close_based_on_last_post,
@@ -33,10 +37,15 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :moderating_group_ids,
+             :topic_posting_review_group_ids,
+             :reply_posting_review_group_ids,
              :default_slow_mode_seconds,
              :style_type,
              :emoji,
-             :icon
+             :icon,
+             :category_types,
+             :category_type_settings,
+             :available_category_types
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
   has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
@@ -58,12 +67,19 @@ class CategorySerializer < SiteCategorySerializer
             .joins(:group)
             .includes(:group)
             .merge(Group.visible_groups(scope&.user, "groups.name ASC", include_everyone: true))
-            .map { |cg| { permission_type: cg.permission_type, group_name: cg.group.name } }
+            .map do |cg|
+              {
+                permission_type: cg.permission_type,
+                group_name: cg.group.name,
+                group_id: cg.group_id,
+              }
+            end
 
         if perms.length == 0 && !object.read_restricted
           perms << {
             permission_type: CategoryGroup.permission_types[:full],
             group_name: Group[:everyone]&.name.presence || :everyone,
+            group_id: Group::AUTO_GROUPS[:everyone],
           }
         end
 
@@ -71,12 +87,16 @@ class CategorySerializer < SiteCategorySerializer
       end
   end
 
+  def can_edit_category?
+    scope && scope.can_edit?(object)
+  end
+
   def include_group_permissions?
-    scope&.can_edit?(object)
+    can_edit_category?
   end
 
   def include_available_groups?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def available_groups
@@ -104,15 +124,15 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_cannot_delete_reason?
-    !include_can_delete? && scope && scope.can_edit?(object)
+    !include_can_delete? && can_edit_category?
   end
 
   def include_email_in?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def include_email_in_allow_strangers?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def include_notification_level?
@@ -140,5 +160,35 @@ class CategorySerializer < SiteCategorySerializer
 
   def description
     category_description
+  end
+
+  def include_category_types?
+    can_edit_category?
+  end
+
+  def category_types
+    object.category_types
+  end
+
+  def include_category_type_settings?
+    can_edit_category?
+  end
+
+  def category_type_settings
+    Categories::TypeRegistry
+      .all
+      .values
+      .reduce({}) do |result, type_klass|
+        next result unless type_klass.category_matches?(object)
+        result.merge(type_klass.read_category_settings(object))
+      end
+  end
+
+  def include_available_category_types?
+    can_edit_category?
+  end
+
+  def available_category_types
+    Categories::TypeRegistry.list(only_visible: true)
   end
 end

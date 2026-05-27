@@ -7,6 +7,7 @@
 uk:
   discourse_subscriptions:
     customer_not_found: Клієнт не знайдений
+    subscription_not_found: Підписку не знайдено
     card:
       declined: Картку відхилено
       invalid: Картка недійсна

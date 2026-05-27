@@ -5,6 +5,7 @@ module DiscourseAi
       UNKNOWN_FEATURE = "unknown"
       USER_LIMIT = 50
       LLM_MODEL_JOIN = "LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id"
+      LLM_MODEL_ID_PATTERN = /^-?\d+$/
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
@@ -51,24 +52,28 @@ module DiscourseAi
       end
 
       def total_input_spending
-        model_costs.sum { |row| row.input_cost.to_f * row.total_request_tokens.to_i / 1_000_000.0 }
+        spending_component_total(:input)
       end
 
       def total_output_spending
-        model_costs.sum do |row|
-          row.output_cost.to_f * row.total_response_tokens.to_i / 1_000_000.0
-        end
+        spending_component_total(:output)
       end
 
       def total_cache_read_spending
-        model_costs.sum do |row|
-          row.cached_input_cost.to_f * row.total_cache_read_tokens.to_i / 1_000_000.0
-        end
+        spending_component_total(:cache_read)
       end
 
       def total_cache_write_spending
+        spending_component_total(:cache_write)
+      end
+
+      def spending_component_total(component)
+        info = LlmModel::COST_COMPONENTS.fetch(component)
+        cost_attr = info[:cost]
+        tokens_attr = "total_#{info[:tokens]}"
+
         model_costs.sum do |row|
-          row.cache_write_cost.to_f * row.total_cache_write_tokens.to_i / 1_000_000.0
+          row.public_send(cost_attr).to_f * row.public_send(tokens_attr).to_i / 1_000_000.0
         end
       end
 
@@ -168,6 +173,28 @@ module DiscourseAi
           )
       end
 
+      def feature_model_breakdown
+        base_query
+          .joins(LLM_MODEL_JOIN)
+          .group(
+            :feature_name,
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model)",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model)",
+            "llm_models.input_cost",
+            "llm_models.output_cost",
+            "llm_models.cached_input_cost",
+            "llm_models.cache_write_cost",
+          )
+          .order("feature_name, usage_count DESC")
+          .select(
+            "CASE WHEN COALESCE(feature_name, '') = '' THEN '#{UNKNOWN_FEATURE}' ELSE feature_name END as feature_name",
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model) as llm_id",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model) as llm_label",
+            "SUM(usage_count) as usage_count",
+            *token_count_and_total_columns,
+          )
+      end
+
       def tokens_per_hour
         tokens_by_period(:hour)
       end
@@ -190,7 +217,7 @@ module DiscourseAi
       end
 
       def filter_by_model(model_identifier)
-        if model_identifier.to_s.match?(/^\d+$/)
+        if model_identifier.to_s.match?(LLM_MODEL_ID_PATTERN)
           model = LlmModel.find_by(id: model_identifier)
           if model
             @base_query =
@@ -219,13 +246,12 @@ module DiscourseAi
       end
 
       def token_count_and_total_columns
-        [
-          *token_total_columns,
-          "SUM(COALESCE(request_tokens, 0) * COALESCE(llm_models.input_cost, 0))  / 1000000.0 as input_spending",
-          "SUM(COALESCE(response_tokens, 0) * COALESCE(llm_models.output_cost, 0)) / 1000000.0 as output_spending",
-          "SUM(COALESCE(cache_read_tokens, 0) * COALESCE(llm_models.cached_input_cost, 0)) / 1000000.0 as cache_read_spending",
-          "SUM(COALESCE(cache_write_tokens, 0) * COALESCE(llm_models.cache_write_cost, 0)) / 1000000.0 as cache_write_spending",
-        ]
+        spending_columns =
+          LlmModel::COST_COMPONENTS.keys.map do |component|
+            expr = LlmModel.spending_component_sql(component, :ai_api_request_stats)
+            "SUM(#{expr}) / 1000000.0 as #{component}_spending"
+          end
+        [*token_total_columns, *spending_columns]
       end
     end
   end

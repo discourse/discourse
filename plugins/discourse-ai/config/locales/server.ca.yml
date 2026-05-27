@@ -9,7 +9,7 @@ ca:
     overall_sentiment:
       yaxis: "Data"
     emotion_neutral:
-      title: "\U0001F610 Neutre"
+      title: "😐 Neutre"
   discourse_ai:
     tools:
       presets:
@@ -19,10 +19,44 @@ ca:
       tool_summary:
         search: "Cerca"
         time: "Hora"
+      close_topic:
+        errors:
+          not_found: "Tema no trobat."
+      unlist_topic:
+        errors:
+          not_found: "Tema no trobat."
+      delete_topic:
+        errors:
+          not_found: "Tema no trobat."
+      edit_tags:
+        errors:
+          not_found: "Tema no trobat."
+      edit_category:
+        errors:
+          not_found: "Tema no trobat."
+          category_not_found: "Categoria no trobada."
+      set_topic_timer:
+        errors:
+          not_found: "Tema no trobat."
+      set_slow_mode:
+        errors:
+          not_found: "Tema no trobat."
+      move_posts:
+        errors:
+          not_found: "Tema no trobat."
+      assign:
+        errors:
+          not_found: "Tema no trobat."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprova"
+        reject:
+          title: "Rebutja"
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutre \U0001F610"
+          neutral: "Neutre 😐"
         sentiment_analysis:
           neutral: "Neutre"
     ai_staff_action_logger:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Form Templates", type: :system do
+describe "Edit Category Form Templates" do
   fab!(:color_scheme)
   fab!(:theme)
   fab!(:admin)
@@ -12,7 +12,7 @@ describe "Edit Category Form Templates", type: :system do
   let(:category_page) { PageObjects::Pages::Category.new }
 
   before do
-    SiteSetting.experimental_form_templates = true
+    SiteSetting.enable_form_templates = true
     sign_in(admin)
   end
 

@@ -4,16 +4,16 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import concatClass from "discourse/helpers/concat-class";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
@@ -28,10 +28,9 @@ export default class ModalDiffModal extends Component {
 
   @tracked loading = false;
   @tracked finalResult = "";
-  @tracked escapedSelectedText = escapeExpression(this.args.model.selectedText);
-  @tracked diffStreamer = new DiffStreamer(this.args.model.selectedText);
   @tracked suggestion = "";
-  @tracked
+  escapedSelectedText = escapeExpression(this.args.model.selectedText);
+  diffStreamer = new DiffStreamer(this.args.model.selectedText);
   smoothStreamer = new SmoothStreamer(
     () => this.suggestion,
     (newValue) => (this.suggestion = newValue)
@@ -110,8 +109,8 @@ export default class ModalDiffModal extends Component {
   updateResult(result) {
     if (isAiCreditLimitError(result)) {
       this.loading = false;
+      this.cleanupAndClose();
       popupAiCreditLimitError(result);
-      this.cleanup();
       return;
     }
 
@@ -150,6 +149,7 @@ export default class ModalDiffModal extends Component {
       this.progressChannel = result.progress_channel;
     } catch (e) {
       if (isAiCreditLimitError(e)) {
+        this.cleanupAndClose();
         popupAiCreditLimitError(e);
       } else {
         popupAjaxError(e);
@@ -183,6 +183,7 @@ export default class ModalDiffModal extends Component {
 
   @action
   cleanupAndClose() {
+    this.cleanup();
     this.#resetState();
     this.loading = false;
     this.args.closeModal();
@@ -211,7 +212,7 @@ export default class ModalDiffModal extends Component {
       <:body>
         <div {{willDestroy this.cleanup}} class="text-preview">
           <div
-            class={{concatClass
+            class={{dConcatClass
               "composer-ai-helper-modal__suggestion"
               "streamable-content"
               (if this.isStreaming "streaming")
@@ -221,10 +222,10 @@ export default class ModalDiffModal extends Component {
             }}
           >
             {{~#if @model.showResultAsDiff~}}
-              <span class="diff-inner">{{htmlSafe this.diffResult}}</span>
+              <span class="diff-inner">{{trustHTML this.diffResult}}</span>
             {{else}}
               {{#if (or this.loading this.smoothStreamer.isStreaming)}}
-                <CookText
+                <DCookText
                   @rawText={{this.smoothStreamerResult}}
                   class="cooked"
                 />
@@ -233,7 +234,7 @@ export default class ModalDiffModal extends Component {
                   {{~this.escapedSelectedText~}}
                 </div>
                 <div class="composer-ai-helper-modal__new-value">
-                  <CookText
+                  <DCookText
                     @rawText={{this.smoothStreamerResult}}
                     class="cooked"
                   />

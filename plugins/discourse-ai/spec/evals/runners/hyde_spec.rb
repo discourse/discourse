@@ -5,13 +5,19 @@ require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Hyde do
   fab!(:llm, :fake_model)
+  let(:execution_context) { DiscourseAi::Completions::ExecutionContext.new }
 
   before { stub_runner_bot(response: "Hypothetical post") }
 
   describe "#run" do
     it "returns a payload for a single query" do
       runner = described_class.new("hyde")
-      result = runner.run(OpenStruct.new(args: { query: "How to theme Discourse" }), llm)
+      result =
+        runner.run(
+          OpenStruct.new(args: { query: "How to theme Discourse" }),
+          llm,
+          execution_context: execution_context,
+        )
 
       expect(result[:raw]).to eq("Hypothetical post")
       expect(result[:metadata]).to include(query: "How to theme Discourse")
@@ -27,6 +33,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Hyde do
             },
           ),
           llm,
+          execution_context: execution_context,
         )
 
       expect(results.length).to eq(2)
@@ -37,10 +44,9 @@ RSpec.describe DiscourseAi::Evals::Runners::Hyde do
     it "raises when the query is missing" do
       runner = described_class.new("hyde")
 
-      expect { runner.run(OpenStruct.new(args: {}), llm) }.to raise_error(
-        ArgumentError,
-        /require :query/,
-      )
+      expect {
+        runner.run(OpenStruct.new(args: {}), llm, execution_context: execution_context)
+      }.to raise_error(ArgumentError, /require :query/)
     end
   end
 end

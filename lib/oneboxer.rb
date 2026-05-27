@@ -2,7 +2,7 @@
 
 require "uri"
 
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
+Dir["#{Rails.root.join("lib/onebox/engine/*_onebox.rb")}"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
@@ -28,7 +28,13 @@ module Oneboxer
       "http://www.dropbox.com",
       "http://store.steampowered.com",
       "http://vimeo.com",
+      "https://reddit.com",
+      "https://www.reddit.com",
+      "https://old.reddit.com",
+      "https://np.reddit.com",
+      "https://new.reddit.com",
       "https://www.youtube.com",
+      "https://youtu.be",
       "https://twitter.com",
       "https://x.com",
       Discourse.base_url,
@@ -119,6 +125,13 @@ module Oneboxer
   def self.invalidate(url)
     Discourse.cache.delete(onebox_cache_key(url))
     Discourse.cache.delete(onebox_failed_cache_key(url))
+  end
+
+  def self.inline_data_for(url)
+    engine_class = engine(url)
+    return if engine_class.nil? || !engine_class.method_defined?(:inline_data)
+
+    engine_class.new(url).inline_data
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -364,6 +377,8 @@ module Oneboxer
 
     if current_category.blank? || current_category.id != topic.category_id
       return unless Guardian.new.can_see_topic?(topic)
+    else
+      return unless Guardian.new(current_user).can_see_topic?(topic)
     end
 
     topic
@@ -417,6 +432,7 @@ module Oneboxer
     username = route[:username] || ""
 
     if user = User.find_by(username_lower: username.downcase)
+      return if SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
       name = user.name if SiteSetting.enable_names
 
       args = {
@@ -588,7 +604,7 @@ module Oneboxer
   def self.template(template_name)
     @template_cache ||= {}
     @template_cache[template_name] ||= begin
-      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      full_path = "#{Rails.root.join("lib/onebox/templates/#{template_name}.mustache")}"
       File.read(full_path)
     end
   end

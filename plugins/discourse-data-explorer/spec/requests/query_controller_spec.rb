@@ -28,25 +28,25 @@ describe DiscourseDataExplorer::QueryController do
       before { SiteSetting.data_explorer_enabled = false }
 
       it "denies every request" do
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(404)
 
-        get "/admin/plugins/explorer/schema.json"
+        get "/admin/plugins/discourse-data-explorer/schema.json"
         expect(response.status).to eq(404)
 
-        get "/admin/plugins/explorer/queries/3.json"
+        get "/admin/plugins/discourse-data-explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        post "/admin/plugins/explorer/queries.json", params: { id: 3 }
+        post "/admin/plugins/discourse-data-explorer/queries.json", params: { id: 3 }
         expect(response.status).to eq(404)
 
-        post "/admin/plugins/explorer/queries/3/run.json"
+        post "/admin/plugins/discourse-data-explorer/queries/3/run.json"
         expect(response.status).to eq(404)
 
-        put "/admin/plugins/explorer/queries/3.json"
+        put "/admin/plugins/discourse-data-explorer/queries/3.json"
         expect(response.status).to eq(404)
 
-        delete "/admin/plugins/explorer/queries/3.json"
+        delete "/admin/plugins/discourse-data-explorer/queries/3.json"
         expect(response.status).to eq(404)
       end
     end
@@ -54,16 +54,20 @@ describe DiscourseDataExplorer::QueryController do
     describe "#index" do
       it "behaves nicely with no user created queries" do
         DiscourseDataExplorer::Query.destroy_all
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
-      it "shows all available queries in alphabetical order" do
+      it "shows all available queries sorted by name when requested" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "B")
         make_query("SELECT 1 as value", name: "A")
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              order: "name",
+              ascending: "true",
+            }
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 2,
@@ -77,11 +81,41 @@ describe DiscourseDataExplorer::QueryController do
         make_query("SELECT 1 as value", name: "A", hidden: false)
         make_query("SELECT 1 as value", name: "B", hidden: true)
         make_query("SELECT 1 as value", name: "C", hidden: true)
-        get "/admin/plugins/explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 1,
         )
+      end
+
+      it "merges default query data with persisted last_run_at and groups" do
+        freeze_time
+
+        post "/admin/plugins/discourse-data-explorer/queries/-1/run.json"
+        expect(response.status).to eq(200)
+
+        # Run persists the default query in the local DB; update it to assert index merges it
+        group = Fabricate(:group)
+        persisted = DiscourseDataExplorer::Query.find_by(id: -1)
+        persisted.update!(last_run_at: 3.days.ago, groups: [group])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+        expect(response.status).to eq(200)
+
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
+        default_in_response = response_json["queries"].find { |q| q["id"] == -1 }
+        expect(default_in_response).to be_present
+        expect(Time.parse(default_in_response["last_run_at"])).to eq_time(3.days.ago)
+        expect(default_in_response["group_ids"]).to eq([group.id])
+      end
+
+      it "doesn't show double-ups of default queries" do
+        post "/admin/plugins/discourse-data-explorer/queries/-1/run.json"
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
     end
 
@@ -91,7 +125,7 @@ describe DiscourseDataExplorer::QueryController do
 
       it "allows group to access system query" do
         query = DiscourseDataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}.json",
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
             params: {
               "query" => {
                 "name" => query.name,
@@ -110,7 +144,7 @@ describe DiscourseDataExplorer::QueryController do
 
       it "returns a proper json error for invalid updates" do
         query = DiscourseDataExplorer::Query.find(-4)
-        put "/admin/plugins/explorer/queries/#{query.id}",
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
             params: {
               "query" => {
                 "name" => "",
@@ -123,10 +157,26 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#destroy" do
+      it "returns 404 when query does not exist" do
+        delete "/admin/plugins/discourse-data-explorer/queries/999999.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "hides the query" do
+        query = make_query("SELECT 1 as value")
+
+        delete "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(query.reload.hidden).to eq(true)
+      end
+    end
+
     describe "#run" do
       def run_query(id, params = {}, explain = false)
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/explorer/queries/#{id}/run.json",
+        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
              params: {
                params: params.to_json,
                explain: explain,
@@ -193,7 +243,7 @@ describe DiscourseDataExplorer::QueryController do
         SQL
 
         # Test with hash format
-        post "/admin/plugins/explorer/queries/#{query.id}/run.json",
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
              params: {
                params: {
                  foo: 42,
@@ -210,7 +260,11 @@ describe DiscourseDataExplorer::QueryController do
       it "can accept empty hash for parameters" do
         query = make_query "SELECT 23 as my_value"
 
-        post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { params: {} }
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               params: {
+               },
+             }
         expect(response.status).to eq(200)
         expect(response_json["success"]).to eq(true)
         expect(response_json["columns"]).to eq(["my_value"])
@@ -219,7 +273,7 @@ describe DiscourseDataExplorer::QueryController do
 
       context "when rate limited" do
         def unlimited_request(query_id, headers = {})
-          post "/admin/plugins/explorer/queries/#{query_id}/run.json",
+          post "/admin/plugins/discourse-data-explorer/queries/#{query_id}/run.json",
                params: {
                  params: {}.to_json,
                },
@@ -229,7 +283,7 @@ describe DiscourseDataExplorer::QueryController do
         end
 
         def limited_request(query_id, headers = {})
-          post "/admin/plugins/explorer/queries/#{query_id}/run.json",
+          post "/admin/plugins/discourse-data-explorer/queries/#{query_id}/run.json",
                params: {
                  params: {}.to_json,
                },
@@ -418,7 +472,10 @@ describe DiscourseDataExplorer::QueryController do
 
       it "can export data in CSV format" do
         query = make_query("SELECT 23 as my_value")
-        post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { download: 1 }
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               download: 1,
+             }
         expect(response.status).to eq(200)
       end
 
@@ -438,45 +495,213 @@ describe DiscourseDataExplorer::QueryController do
           run_query query.id
           expect(response_json["rows"].count).to eq(2)
 
-          post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: 1 }
+          post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+               params: {
+                 limit: 1,
+               }
           expect(response_json["rows"].count).to eq(1)
 
-          post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { limit: "ALL" }
-          expect(response_json["rows"].count).to eq(3)
+          post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+               params: {
+                 limit: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT + 1,
+               }
+          expect(response.status).to eq(400)
         end
 
         it "should limit the results in CSV download" do
-          begin
-            original_const = DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT
-            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
-
-            query = make_query <<~SQL
+          query = make_query <<~SQL
             SELECT id FROM posts
-            SQL
+          SQL
 
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv", params: { download: 1 }
+          stub_const(DiscourseDataExplorer, "QUERY_RESULT_MAX_LIMIT", 2) do
+            post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
+                 params: {
+                   download: 1,
+                 }
             expect(response.body.split("\n").count).to eq(3)
 
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv",
+            post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
                    limit: 1,
                  }
             expect(response.body.split("\n").count).to eq(2)
 
-            # The value `ALL` is not supported in csv exports.
-            post "/admin/plugins/explorer/queries/#{query.id}/run.csv",
+            post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
-                   limit: "ALL",
+                   limit: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT + 1,
                  }
-            expect(response.body.split("\n").count).to eq(1)
-          ensure
-            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", original_const)
+            expect(response.body.split("\n").count).to eq(3)
           end
         end
+      end
+    end
+
+    describe "result caching" do
+      def run_query(id, params = {})
+        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
+        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
+             params: {
+               params: params.to_json,
+             }
+      end
+
+      it "caches results after running a query" do
+        query = make_query("SELECT 23 as my_value")
+
+        run_query query.id
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_present
+        expect(cached["rows"]).to eq([[23]])
+      end
+
+      it "returns cached results in show response" do
+        query = make_query("SELECT 23 as my_value")
+        run_query query.id
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_present
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[23]])
+        expect(response_json["query"]["cached_result"]["cached_at"]).to be_present
+      end
+
+      it "returns no cached_result on cache miss" do
+        query = make_query("SELECT 1")
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_nil
+      end
+
+      it "uses URL params for cache lookup" do
+        query = make_query("-- [params]\n-- int :val = 1\n\nSELECT :val as my_value")
+
+        run_query query.id, val: 5
+        run_query query.id, val: 10
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              params: { val: "5" }.to_json,
+            }
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[5]])
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              params: { val: "10" }.to_json,
+            }
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[10]])
+      end
+
+      it "does not cache results with explain" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               explain: "true",
+             }
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_nil
+      end
+
+      it "does not cache queries with internal params" do
+        query = make_query("-- [params]\n-- current_user_id :me\n\nSELECT :me as user_id")
+
+        run_query query.id
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_nil
+      end
+
+      it "invalidates cache when SQL changes" do
+        query = make_query("SELECT 1 as old_value")
+        run_query query.id
+
+        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: query.name,
+                sql: "SELECT 2 as new_value",
+                group_ids: [],
+              },
+            }
+        expect(response.status).to eq(200)
+
+        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_nil
+      end
+
+      it "does not invalidate cache when only name changes" do
+        query = make_query("SELECT 1")
+        run_query query.id
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: "New name",
+                sql: query.sql,
+                group_ids: [],
+              },
+            }
+        expect(response.status).to eq(200)
+
+        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+      end
+
+      it "returns cached result on reload when run with no explicit params" do
+        query = make_query("-- [params]\n-- int :val = 1\n\nSELECT :val as my_value")
+
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response_json["query"]["cached_result"]).to be_present
+      end
+
+      it "does not cache results when a non-default limit is used" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               limit: 1,
+             }
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_nil
+      end
+
+      it "handles malformed params in show without error" do
+        query = make_query("SELECT 1")
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              params: "not-valid-json",
+            }
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["id"]).to eq(query.id)
+      end
+
+      it "rejects malformed params in run" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               params: "not-valid-json",
+             }
+        expect(response.status).to eq(422)
+      end
+
+      it "rejects malformed params in download" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               download: 1,
+               params: "not-valid-json",
+             }
+        expect(response.status).to eq(422)
       end
     end
   end
@@ -504,7 +729,7 @@ describe DiscourseDataExplorer::QueryController do
 
     it "cannot access admin endpoints" do
       query = make_query("SELECT 1 as value")
-      post "/admin/plugins/explorer/queries/#{query.id}/run.json"
+      post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json"
       expect(response.status).to eq(403)
     end
 
@@ -555,6 +780,60 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["columns"]).to eq(["value"])
         expect(response.parsed_body["rows"]).to eq([[1828]])
+      end
+
+      it "does not include post relations the user cannot see" do
+        private_post =
+          Fabricate(
+            :private_message_post,
+            raw: "Ssshh! This hidden data explorer excerpt must not leak.",
+          )
+        visible_post = Fabricate(:post, raw: "Visible data explorer excerpt may render.")
+        guardian = user.guardian
+        expect(guardian.can_see_post?(private_post)).to eq(false)
+        expect(guardian.can_see_post?(visible_post)).to eq(true)
+
+        query_sql = <<~SQL
+          SELECT #{private_post.id} AS post_id
+          UNION ALL
+          SELECT #{visible_post.id} AS post_id
+        SQL
+        query = make_query(query_sql, { name: "Posts" }, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+
+        expect(response.status).to eq(200)
+        post_relations = response.parsed_body["relations"]["post"]
+        expect(post_relations).to contain_exactly(include("id" => visible_post.id))
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(private_post.raw)
+      end
+
+      it "does not include topic relations the user cannot see" do
+        private_topic =
+          Fabricate(
+            :private_message_topic,
+            title: "Ssshh this hidden data explorer topic must not leak",
+          )
+        visible_topic = Fabricate(:topic, title: "Visible data explorer topic may render")
+        guardian = user.guardian
+        expect(guardian.can_see_topic?(private_topic)).to eq(false)
+        expect(guardian.can_see_topic?(visible_topic)).to eq(true)
+
+        query_sql = <<~SQL
+          SELECT #{private_topic.id} AS topic_id
+          UNION ALL
+          SELECT #{visible_topic.id} AS topic_id
+        SQL
+        query = make_query(query_sql, { name: "Topics" }, [group.id.to_s])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json"
+
+        expect(response.status).to eq(200)
+        topic_relations = response.parsed_body["relations"]["topic"]
+        expect(topic_relations).to contain_exactly(include("id" => visible_topic.id))
+        expect(response.body).to include(visible_topic.title)
+        expect(response.body).not_to include(private_topic.title)
       end
 
       it "can accept parameters as a hash" do
@@ -647,6 +926,178 @@ describe DiscourseDataExplorer::QueryController do
 
         get "/data-explorer/queries/#{query.id}/run.json"
         expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when the query has no group assignments" do
+        query = make_query("SELECT 1 as value", {}, [])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "legacy /admin/plugins/explorer/ routes" do
+    fab!(:admin)
+
+    before { sign_in(admin) }
+
+    it "redirects GET /admin/plugins/explorer/queries to /admin/plugins/discourse-data-explorer/queries" do
+      get "/admin/plugins/explorer/queries"
+      expect(response).to redirect_to("/admin/plugins/discourse-data-explorer/queries")
+    end
+
+    it "redirects GET /admin/plugins/explorer/queries/:id to /admin/plugins/discourse-data-explorer/queries/:id" do
+      query = make_query("SELECT 1 as value")
+      get "/admin/plugins/explorer/queries/#{query.id}"
+      expect(response).to redirect_to("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+    end
+
+    it "serves GET /admin/plugins/explorer/schema.json" do
+      get "/admin/plugins/explorer/schema.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to be_a(Hash)
+      expect(response.parsed_body.keys).to include("posts")
+    end
+
+    it "serves GET /admin/plugins/explorer/groups.json" do
+      get "/admin/plugins/explorer/groups.json"
+      expect(response.status).to eq(200)
+    end
+
+    it "serves POST /admin/plugins/explorer/queries.json" do
+      post "/admin/plugins/explorer/queries.json",
+           params: {
+             query: {
+               name: "Legacy route test",
+               description: "Testing legacy route",
+               sql: "SELECT 1",
+             },
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["query"]["name"]).to eq("Legacy route test")
+    end
+
+    it "serves PUT /admin/plugins/explorer/queries/:id.json" do
+      query = make_query("SELECT 1 as value")
+      put "/admin/plugins/explorer/queries/#{query.id}.json",
+          params: {
+            query: {
+              name: "Updated via legacy route",
+              sql: query.sql,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(query.reload.name).to eq("Updated via legacy route")
+    end
+
+    it "serves DELETE /admin/plugins/explorer/queries/:id.json" do
+      query = make_query("SELECT 1 as value")
+      delete "/admin/plugins/explorer/queries/#{query.id}.json"
+      expect(response.status).to eq(200)
+      expect(query.reload.hidden).to eq(true)
+    end
+
+    it "serves POST /admin/plugins/explorer/queries/:id/run.json" do
+      query = make_query("SELECT 42 as legacy_value")
+      post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { params: {}.to_json }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(response.parsed_body["columns"]).to eq(["legacy_value"])
+      expect(response.parsed_body["rows"]).to eq([[42]])
+    end
+
+    it "serves POST /admin/plugins/explorer/queries/:id/run without .json suffix or Accept header" do
+      query = make_query("SELECT 42 as legacy_value")
+      post "/admin/plugins/explorer/queries/#{query.id}/run",
+           params: {
+             params: {}.to_json,
+           },
+           headers: {
+             "Accept" => "",
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(response.parsed_body["columns"]).to eq(["legacy_value"])
+      expect(response.parsed_body["rows"]).to eq([[42]])
+    end
+  end
+
+  describe "Admin" do
+    fab!(:admin)
+
+    before do
+      sign_in(admin)
+      SiteSetting.data_explorer_enabled = true
+    end
+
+    describe "#generate_with_ai" do
+      before { SiteSetting.data_explorer_ai_queries_enabled = true }
+
+      it "returns 404 when AI queries are disabled" do
+        SiteSetting.data_explorer_ai_queries_enabled = false
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+             }
+        expect(response.status).to eq(404)
+      end
+
+      it "requires ai_description parameter" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json"
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects ai_description over 2000 characters" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "a" * 2001,
+             }
+        expect(response.status).to eq(400)
+      end
+
+      it "enqueues a generation job and returns generation_id" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+             }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        generation_id = json["generation_id"]
+        expect(generation_id).to be_present
+        expect(json["status"]).to eq("generating")
+
+        job = Jobs::GenerateDeQueryWithAi.jobs.last
+        expect(job["args"].first["generation_id"]).to eq(generation_id)
+        expect(job["args"].first["user_id"]).to eq(admin.id)
+        expect(job["args"].first["ai_description"]).to eq("show me users")
+      end
+
+      it "passes existing_sql when provided" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "refine this query",
+               existing_sql: "SELECT 1",
+             }
+
+        expect(response.status).to eq(200)
+
+        job = Jobs::GenerateDeQueryWithAi.jobs.last
+        expect(job["args"].first["existing_sql"]).to eq("SELECT 1")
+      end
+
+      it "rate limits requests" do
+        RateLimiter.enable
+
+        11.times do
+          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+               params: {
+                 ai_description: "show me users",
+               }
+        end
+
+        expect(response.status).to eq(429)
       end
     end
   end

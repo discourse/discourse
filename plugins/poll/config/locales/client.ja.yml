@@ -12,6 +12,8 @@ ja:
           poll: "Discourse 投票"
   js:
     poll:
+      dynamic:
+        enabled_hint: "オプションは追加または削除できます。"
       voters:
         other: "投票者数"
       total_votes:
@@ -140,6 +142,8 @@ ja:
           step: 間隔
         poll_public:
           label: 投票者を表示する
+        poll_dynamic:
+          label: 投稿後にオプションを追加または削除することを許可する
         poll_title:
           label: タイトル (オプション)
         poll_options:

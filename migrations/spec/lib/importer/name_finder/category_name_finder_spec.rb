@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Migrations::Importer::CategoryNameFinder do
+RSpec.describe Migrations::Importer::CategoryNameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
-  let(:discourse_db) { ::Migrations::Importer::DiscourseDB.new }
-  let(:shared_data) { ::Migrations::Importer::SharedData.new(discourse_db) }
+  let(:discourse_db) { Migrations::Importer::DiscourseDB.new }
+  let(:shared_data) { Migrations::Importer::SharedData.new(discourse_db) }
 
   let(:categories) do
     [
@@ -26,7 +26,7 @@ RSpec.describe ::Migrations::Importer::CategoryNameFinder do
     categories.map { |category| [category[:parent_id], category[:name].downcase] }
   end
   let(:categories_query_result) do
-    ::Migrations::Importer::DiscourseDB::QueryResult.new(rows: category_rows, column_count: 2)
+    Migrations::Importer::DiscourseDB::QueryResult.new(rows: category_rows, column_count: 2)
   end
 
   before do

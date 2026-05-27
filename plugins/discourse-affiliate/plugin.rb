@@ -9,6 +9,8 @@
 
 enabled_site_setting :affiliate_enabled
 
+register_svg_icon "handshake"
+
 after_initialize do
   require_relative "lib/affiliate_processor"
 

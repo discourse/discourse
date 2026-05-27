@@ -1,11 +1,11 @@
-import { alias } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
-import { classNameBindings, classNames } from "@ember-decorators/component";
+import { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
 
@@ -244,18 +244,31 @@ function loadGoogle() {
   return _promise;
 }
 
-@classNameBindings("adUnitClass")
-@classNames("google-dfp-ad")
+@tagName("")
 export default class GoogleDfpAd extends AdComponent {
   loadedGoogletag = false;
   lastAdRefresh = null;
 
-  @alias("size.width") width;
+  @computed("size.width")
+  get width() {
+    return this.size?.width;
+  }
 
-  @alias("size.height") height;
+  set width(value) {
+    set(this, "size.width", value);
+  }
 
-  @discourseComputed
-  size() {
+  @computed("size.height")
+  get height() {
+    return this.size?.height;
+  }
+
+  set height(value) {
+    set(this, "size.height", value);
+  }
+
+  @computed
+  get size() {
     return getWidthAndHeight(
       this.get("placement"),
       this.siteSettings,
@@ -263,49 +276,52 @@ export default class GoogleDfpAd extends AdComponent {
     );
   }
 
-  @discourseComputed(
+  @computed(
     "siteSettings.dfp_publisher_id",
     "siteSettings.dfp_publisher_id_mobile",
     "site.mobileView"
   )
-  publisherId(globalId, mobileId, isMobile) {
-    if (isMobile) {
-      return mobileId || globalId;
+  get publisherId() {
+    if (this.site?.mobileView) {
+      return (
+        this.siteSettings?.dfp_publisher_id_mobile ||
+        this.siteSettings?.dfp_publisher_id
+      );
     } else {
-      return globalId;
+      return this.siteSettings?.dfp_publisher_id;
     }
   }
 
-  @discourseComputed("placement", "postNumber")
-  divId(placement, postNumber) {
+  @computed("placement", "postNumber")
+  get divId() {
     let slotNum = getNextSlotNum();
-    if (postNumber) {
-      return `div-gpt-ad-${slotNum}-${placement}-${postNumber}`;
+    if (this.postNumber) {
+      return `div-gpt-ad-${slotNum}-${this.placement}-${this.postNumber}`;
     } else {
-      return `div-gpt-ad-${slotNum}-${placement}`;
+      return `div-gpt-ad-${slotNum}-${this.placement}`;
     }
   }
 
-  @discourseComputed("placement", "showAd")
-  adUnitClass(placement, showAd) {
-    return showAd ? `dfp-ad-${placement}` : "";
+  @computed("placement", "showAd")
+  get adUnitClass() {
+    return this.showAd ? `dfp-ad-${this.placement}` : "";
   }
 
-  @discourseComputed("width", "height")
-  adWrapperStyle(w, h) {
-    if (w !== "fluid") {
-      return htmlSafe(`width: ${w}px; height: ${h}px;`);
+  @computed("width", "height")
+  get adWrapperStyle() {
+    if (this.width !== "fluid") {
+      return trustHTML(`width: ${this.width}px; height: ${this.height}px;`);
     }
   }
 
-  @discourseComputed("width")
-  adTitleStyleMobile(w) {
-    if (w !== "fluid") {
-      return htmlSafe(`width: ${w}px;`);
+  @computed("width")
+  get adTitleStyleMobile() {
+    if (this.width !== "fluid") {
+      return trustHTML(`width: ${this.width}px;`);
     }
   }
 
-  @discourseComputed(
+  @computed(
     "publisherId",
     "showDfpAds",
     "showToGroups",
@@ -313,26 +329,19 @@ export default class GoogleDfpAd extends AdComponent {
     "showOnCurrentPage",
     "size"
   )
-  showAd(
-    publisherId,
-    showDfpAds,
-    showToGroups,
-    showAfterPost,
-    showOnCurrentPage,
-    size
-  ) {
+  get showAd() {
     return (
-      publisherId &&
-      showDfpAds &&
-      showToGroups &&
-      showAfterPost &&
-      showOnCurrentPage &&
-      size
+      this.publisherId &&
+      this.showDfpAds &&
+      this.showToGroups &&
+      this.showAfterPost &&
+      this.showOnCurrentPage &&
+      this.size
     );
   }
 
-  @discourseComputed
-  showDfpAds() {
+  @computed
+  get showDfpAds() {
     if (!this.currentUser) {
       return true;
     }
@@ -340,9 +349,9 @@ export default class GoogleDfpAd extends AdComponent {
     return this.currentUser.show_dfp_ads;
   }
 
-  @discourseComputed("postNumber")
-  showAfterPost(postNumber) {
-    if (!postNumber) {
+  @computed("postNumber")
+  get showAfterPost() {
+    if (!this.postNumber) {
       return true;
     }
 
@@ -417,6 +426,16 @@ export default class GoogleDfpAd extends AdComponent {
     });
   }
 
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.dfp,
+        ad_plugin_house_ad_id: null,
+        placement: this.placement,
+      },
+    };
+  }
+
   willRender() {
     super.willRender(...arguments);
 
@@ -431,27 +450,29 @@ export default class GoogleDfpAd extends AdComponent {
   }
 
   <template>
-    {{#if this.showAd}}
-      {{#if this.site.mobileView}}
-        <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
-          >{{i18n "adplugin.advertisement_label"}}</h2></div>
-        <div
-          id={{this.divId}}
-          style={{this.adWrapperStyle}}
-          class="dfp-ad-unit"
-          align="center"
-        ></div>
-      {{else}}
-        <div class="google-dfp-ad-label"><h2>{{i18n
-              "adplugin.advertisement_label"
-            }}</h2></div>
-        <div
-          id={{this.divId}}
-          style={{this.adWrapperStyle}}
-          class="dfp-ad-unit"
-          align="center"
-        ></div>
+    <div class={{dConcatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
+      {{#if this.showAd}}
+        {{#if this.site.mobileView}}
+          <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
+            >{{i18n "adplugin.advertisement_label"}}</h2></div>
+          <div
+            id={{this.divId}}
+            style={{this.adWrapperStyle}}
+            class="dfp-ad-unit"
+            align="center"
+          ></div>
+        {{else}}
+          <div class="google-dfp-ad-label"><h2>{{i18n
+                "adplugin.advertisement_label"
+              }}</h2></div>
+          <div
+            id={{this.divId}}
+            style={{this.adWrapperStyle}}
+            class="dfp-ad-unit"
+            align="center"
+          ></div>
+        {{/if}}
       {{/if}}
-    {{/if}}
+    </div>
   </template>
 }

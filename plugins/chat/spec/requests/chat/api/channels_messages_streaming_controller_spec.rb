@@ -32,7 +32,7 @@ RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
       end
     end
 
-    context "when the message doesnt exist" do
+    context "when the message doesn't exist" do
       it "returns a 404 error" do
         delete "/chat/api/channels/#{channel_1.id}/messages/-999/streaming"
 

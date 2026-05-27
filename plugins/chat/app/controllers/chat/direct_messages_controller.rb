@@ -8,7 +8,7 @@ module Chat
 
       direct_message = Chat::DirectMessage.for_user_ids(users.map(&:id).uniq)
       if direct_message
-        chat_channel = Chat::Channel.find_by(chatable_id: direct_message)
+        chat_channel = direct_message.direct_message_channel
         render_serialized(
           chat_channel,
           Chat::ChannelSerializer,

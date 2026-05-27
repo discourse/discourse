@@ -77,7 +77,7 @@ module Email
             img["width"] = img["height"] = 20
           else
             # use dimensions of original iPhone screen for 'too big, let device rescale'
-            if img["width"].to_i > (320) || img["height"].to_i > (480)
+            if img["width"].to_i > 320 || img["height"].to_i > 480
               img["width"] = img["height"] = "auto"
             end
           end
@@ -159,6 +159,44 @@ module Email
       )
       style(".onebox-avatar-inline", ONEBOX_INLINE_AVATAR_STYLE)
 
+      # User onebox: convert to table layout for email clients
+      @fragment
+        .css(".user-onebox")
+        .each do |onebox|
+          img = onebox.at_css(".aspect-image img")
+          next unless img
+
+          img["width"] = "80"
+          img["height"] = "80"
+          img["style"] = "width: 80px; height: 80px; display: block;"
+
+          h3 = onebox.at_css("h3")
+          h3["style"] = "font-size: 1.17em; margin: 0;" if h3
+
+          info_div = h3&.next_element
+          if info_div
+            info_div.css(".full-name, .location").each { |el| add_styles(el, "margin-right: 10px") }
+          end
+
+          joined = onebox.at_css(".user-onebox--joined")
+          joined["style"] = "color: #919191;" if joined
+
+          top_content = [h3, info_div, onebox.at_css("p")].compact.map(&:to_html).join
+          joined_html = joined ? joined.to_html : ""
+
+          onebox.inner_html = <<~HTML
+            <table cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td rowspan="2" valign="top" style="width: 90px;">#{img.to_html}</td>
+                <td valign="top">#{top_content}</td>
+              </tr>
+              <tr>
+                <td valign="bottom">#{joined_html}</td>
+              </tr>
+            </table>
+          HTML
+        end
+
       @fragment.css(".github-body-container .excerpt").remove
 
       @fragment.css("aside.quote blockquote > p").each { |p| p["style"] = "padding: 0;" }
@@ -188,27 +226,24 @@ module Email
       @fragment
         .css("iframe")
         .each do |i|
-          begin
-            # sometimes, iframes are blocklisted...
-            if i["src"].blank?
-              i.remove
-              next
-            end
-
-            src_uri =
-              i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i["src"])
-            # If an iframe is protocol relative, use SSL when displaying it
-            display_src =
-              "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
-            i.replace(
-              Nokogiri::HTML5.fragment(
-                "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
-              ),
-            )
-          rescue URI::Error
-            # If the URL is weird, remove the iframe
+          # sometimes, iframes are blocklisted...
+          if i["src"].blank?
             i.remove
+            next
           end
+
+          src_uri = i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i["src"])
+          # If an iframe is protocol relative, use SSL when displaying it
+          display_src =
+            "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
+          i.replace(
+            Nokogiri::HTML5.fragment(
+              "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
+            ),
+          )
+        rescue URI::Error
+          # If the URL is weird, remove the iframe
+          i.remove
         end
     end
 
@@ -263,6 +298,7 @@ module Email
         "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%",
       )
 
+      style(".email-preview", "display: none;")
       style(".previous-discussion", "font-size: 17px; color: #444; margin-bottom:10px;")
       style(
         ".notification-date",
@@ -300,7 +336,12 @@ module Email
       plugin_styles
       dark_mode_styles
 
-      style(".post-excerpt img", "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
+      style(
+        ".post-excerpt img:not(.emoji)",
+        "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;",
+      )
+
+      style(".post-excerpt img.emoji", "max-height: 20px; vertical-align: middle;")
 
       format_custom
     end
@@ -380,7 +421,7 @@ module Email
       style
         .split(";")
         .select(&:present?)
-        .map { _1.split(":", 2).map(&:strip) }
+        .map { it.split(":", 2).map(&:strip) }
         .each do |k, v|
           next if k.blank? || v.blank?
           next if styles[k]&.end_with?("!important") && !v.end_with?("!important")
@@ -442,11 +483,9 @@ module Email
       @fragment
         .css("a")
         .each do |link|
-          begin
-            link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
-          rescue URI::Error
-            # leave it
-          end
+          link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
+        rescue URI::Error
+          # leave it
         end
     end
 
@@ -530,7 +569,7 @@ module Email
             .css("a")
             .each do |inner|
               # we want the first footer link to be specially highlighted as IMPORTANT
-              if footernum == (0) && linknum == (0)
+              if footernum == 0 && linknum == 0
                 bg_color = SiteSetting.email_accent_bg_color
                 inner[
                   "style"

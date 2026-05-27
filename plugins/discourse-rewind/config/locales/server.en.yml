@@ -1,0 +1,10 @@
+en:
+  site_settings:
+    discourse_rewind_enabled: "Enable Discourse Rewind for a fun end-of-year summary for members' activity in the community."
+  discourse_rewind:
+    report_failed: "Failed to generate Discourse Rewind report."
+    invalid_year: "Rewind can only be generated in January or December."
+    user_not_found: "User not found or cannot be viewed."
+    reports_not_cached: "Reports have not been generated yet. Please refresh the page."
+    report_not_found: "Report not found."
+    cannot_share_when_profile_hidden: "In order to share Rewind you must allow others to view your public profile."

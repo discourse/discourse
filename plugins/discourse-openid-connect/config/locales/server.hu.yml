@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    openid_connect_enabled: Engedélyezze az OpenID Connect hitelesítést. A felhasználói felület szövegeit <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>itt</a> szabhatja testre.
+    openid_connect_discovery_document: "OpenID Connect felfedezési dokumentum URL-je. Általában a 'https://your.domain/.well-known/openid-configuration' útvonalon található."
+    openid_connect_client_id: "OpenID Connect ügyfélazonosító"
+    openid_connect_client_secret: "OpenID Connect kliens titkos kódja"
+    openid_connect_authorize_scope: "Az autorizációs (hitelesítési) végpontnak elküldött hatókörök (scopes). Ennek tartalmaznia kell az 'openid' értéket."
+    openid_connect_rp_initiated_logout: "Kijelentkezés után a felhasználó átirányítása az end_session_endpoint végpontra. Ezt a funkciót az identitásszolgáltatónak támogatnia kell, és szerepelnie kell a felfedezési (discovery) dokumentumban."
+    openid_connect_rp_initiated_logout_redirect: "(opcionális) A kijelentkezési végpontnak átadott post_logout_redirect_uri. Ha megadásra kerül, regisztrálva kell lennie az identitásszolgáltatónál."
+    openid_connect_rp_initiated_logout_include_client_id: "(opcionális) A client_id (openid_connect_client_id beállítás) hozzáfűzése lekérdezési paraméterként (query parameter) a kijelentkezési végponthoz."
+    openid_connect_token_scope: "A token végpont lekérésekor elküldött hatókörök (scopes). A hivatalos specifikáció ezt nem teszi kötelezővé."
+    openid_connect_error_redirects: "Ha a visszahívási (callback) hiba oka tartalmazza az első paramétert, a felhasználó a második paraméterben megadott URL-re lesz átirányítva."
+    openid_connect_allow_association_change: "Lehetővé teszi a felhasználók számára, hogy leválasszák, majd újra összekapcsolják Discourse-fiókjukat az OpenID Connect szolgáltatóval."
+    openid_connect_verbose_logging: "Részletes OpenID Connect hitelesítési adatok naplózása a /logs mappába. Normál használat mellett hagyja kikapcsolva."
+    openid_connect_authorize_parameters: "Azok az URL-paraméterek, amelyek bekerülnek az /auth/oidc útvonalról az IdP autorizációs végpontjára történő átirányításba."
+    openid_connect_overrides_email: "Minden bejelentkezéskor felülírja a felhasználó e-mail-címét az OpenID Connect értékével. Ugyanúgy működik, mint az auth_overrides_email beállítás, de kifejezetten az OpenID Connect bejelentkezésekre vonatkozik."
+    openid_connect_claims: "Explicit módon határozza meg az igényeket azon szolgáltatókhoz, amelyek nem küldenek vissza adatokat a hatókörök alapján. (JSON)"
+    openid_connect_match_by_email: "E-mail-cím használata az OpenID Connect hitelesítések és a meglévő Discourse felhasználói fiókok összekapcsolásához."
+    openid_connect_use_pkce: "A PKCE (Proof Key for Code Exchange) engedélyezése az OpenID Connect hitelesítéshez."
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: Nem sikerült lekérni a konfigurációt az identitásszolgáltatótól. Kérjük, próbálja újra.

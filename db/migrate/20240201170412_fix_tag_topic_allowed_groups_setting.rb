@@ -21,7 +21,7 @@ class FixTagTopicAllowedGroupsSetting < ActiveRecord::Migration[7.0]
         corresponding_group = "1|3|1#{configured_trust_level}"
       end
 
-      # Just in case this happend in the previous migration.
+      # Just in case this happened in the previous migration.
       corresponding_group =
         case configured_groups
         when "1admin"

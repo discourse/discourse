@@ -23,7 +23,7 @@ class DiscourseLogstashLogger < Logger
   #
   # @return [Logger] A new logger instance with the specified log device and type.
   def self.logger(logdev:, type:, customize_event: nil, level: Logger::INFO)
-    logger = self.new(logdev)
+    logger = new(logdev)
     logger.type = type
     logger.customize_event = customize_event if customize_event
     logger.level = level
@@ -74,9 +74,8 @@ class DiscourseLogstashLogger < Logger
     # Only log backtrace and env for Logger::WARN and above.
     # Backtrace is just noise for anything below that.
     if severity >= Logger::WARN
-      if (backtrace = opts&.dig(:backtrace)).present?
-        event["backtrace"] = backtrace
-      end
+      backtrace = opts&.dig(:backtrace)
+      event["backtrace"] = backtrace if backtrace && !backtrace.empty?
 
       # `web-exception` is a log message triggered by logster.
       # The exception class and message are extracted from the message based on the format logged by logster in
@@ -100,7 +99,8 @@ class DiscourseLogstashLogger < Logger
 
       if progname == "sidekiq-exception"
         event["job.class"] = opts.dig(:context, :job)
-        event["job.opts"] = opts.dig(:context, :opts)&.stringify_keys&.to_s
+        job_opts = opts.dig(:context, :opts)
+        event["job.opts"] = job_opts.transform_keys(&:to_s).to_s if job_opts
         event["job.problem_db"] = opts.dig(:context, :problem_db)
         event["exception.class"] = opts[:exception_class]
         event["exception.message"] = opts[:exception_message]

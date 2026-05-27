@@ -6,6 +6,11 @@
 
 th:
   js:
+    blocks:
+      ghost:
+        status: "สถานะ"
+        hidden: "ถูกซ่อน"
+        failed: "ล้มเหลว"
     number:
       format:
         separator: "."
@@ -208,8 +213,6 @@ th:
     tos: "เงื่อนไขการบริการ"
     rules: "กฎ"
     conduct: "กฎเกณฑ์และเงื่อนไข"
-    mobile_view: "ดูแบบอุปกรณ์เคลื่อนที่"
-    desktop_view: "ดูแบบเดสก์ท็อป"
     now: "ขณะนี้"
     read_more: "อ่านเพิ่มเติม"
     more: "เพิ่มเติม"
@@ -233,6 +236,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
+    admin_onboarding_banner:
+      start_posting:
+        back: "กลับ"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"
@@ -253,8 +259,6 @@ th:
           today: "วันนี้"
     bookmarked:
       title: "บุ๊กมาร์ก"
-      edit_bookmark: "แก้ไขบุ๊กมาร์ก"
-      clear_bookmarks: "ล้างบุ๊กมาร์ก"
       help:
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
@@ -263,9 +267,9 @@ th:
       create: "สร้างบุ๊กมาร์ก"
       edit: "แก้ไขบุ๊กมาร์ก"
       not_bookmarked: "บุ๊กมาร์กโพสต์นี้"
+      topic_bookmark: "หัวข้อ"
       delete: "ลบบุ๊กมาร์ก"
       confirm_delete: "คุณแน่ใจหรือไม่ว่าต้องการลบบุ๊กมาร์กนี้ การเตือนความจำจะถูกลบออกด้วย"
-      confirm_clear: "คุณแน่ใจหรือว่าต้องการล้างบุ๊กมาร์กทั้งหมดจากกระทู้นี้"
       save: "บันทึก"
       invalid_custom_datetime: "วันและเวลาที่คุณกรอกไม่ถูกต้อง กรุณาลองอีกครั้ง"
       list_permission_denied: "คุณไม่ได้รับอนุญาตให้ดูบุ๊กมาร์กของผู้ใช้งานนี้"
@@ -291,6 +295,9 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
+    embed_mode:
+      signin_flow:
+        cancel: "ยกเลิก"
     topic_count_all:
       other: "ดู%{count}กระทู้ใหม่"
     topic_count_categories:
@@ -353,7 +360,6 @@ th:
         other: "กระทู้นี้มี<b>%{count}</b>โพสต์ที่กำลังรอการอนุมัติ"
       title: "รีวิว"
       topic: "กระทู้:"
-      filtered_user: "ผู้ใช้"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -437,7 +443,11 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+        reviewable_ai_post:
+          noun: "โพส"
       user_label: "ผู้ใช้"
+      timeline:
+        target_deleted: "โพสต์ถูกลบ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"
@@ -549,8 +559,6 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
-          mailboxes:
-            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -698,7 +706,6 @@ th:
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
     ip_lookup:
-      title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
       location: สถานที่
       location_not_found: (ไม่ทราบ)
@@ -725,6 +732,9 @@ th:
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
+      upcoming_changes:
+        for_user:
+          enabled: "เปิดใช้"
       user_notifications:
         filters:
           filter_by: "กรองโดย"
@@ -769,13 +779,8 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
-        label: "การแจ้งเตือนทันที"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
-        perm_default: "เปิดการแจ้งเตือน"
-        perm_denied_btn: "ไม่มีสิทธิ์เข้าถึง"
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
-        disable: "ปิดการแจ้งเตือน"
-        enable: "เปิดการแจ้งเตือน"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
@@ -868,6 +873,8 @@ th:
         users: "ผู้ใช้"
         tags: "แท็ก"
         apps: "แอป"
+      calendar_subscriptions:
+        copied: "คัดลอกแล้ว!"
       change_password:
         success: "(อีเมลถูกส่งแล้ว)"
         in_progress: "(กำลังส่งอีเมล)"
@@ -1188,6 +1195,7 @@ th:
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     form_kit:
       optional: ทางเลือก
+      required: ต้องการ
       errors:
         required: "ต้องการ"
     close: "ปิด"
@@ -1423,6 +1431,9 @@ th:
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
+      wrap_modal:
+        attribute_value: "ค่า"
+        apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -1446,6 +1457,7 @@ th:
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
       ignore: "ไม่สนใจ"
+      image: "รูปภาพ"
     notifications:
       tooltip:
         regular:
@@ -1591,6 +1603,7 @@ th:
             after: หลังจาก
         views:
           label: ดู
+    header_panel: "Header"
     new_item: "ใหม่"
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
@@ -1607,8 +1620,8 @@ th:
       bulk:
         select_all: "เลือกทั้งหมด"
         clear_all: "ล้างทั้งหมด"
-        unlist_topics: "กระทู้ที่ไม่ได้แสดง"
-        delete: "ลบกระทู้"
+        delete_topics_count:
+          other: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
         dismiss_button: "ซ่อน..."
@@ -1617,15 +1630,10 @@ th:
         dismiss_new: "ซ่อนใหม่"
         toggle: "สลับการเลือกกระทู้จำนวนมาก"
         actions: "การดำเนินการจำนวนมาก"
-        close_topics: "ปิดกระทู้"
-        archive_topics: "คลังกระทู้"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
-        selected:
-          other: "คุณได้เลือก <b>%{count}</b> กระทู้"
-        change_tags: "แทนที่แท็ก"
-        choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
-        changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
+        error_topic_count:
+          other: "%{count}กระทู้"
       none:
         unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
         new: "คุณไม่มีกระทู้ใหม่"
@@ -1634,16 +1642,6 @@ th:
         bookmarks: "คุณยังไม่ได้บุ๊กมาร์กกระทู้ใดๆเลย"
         category: "ไม่มีกระทู้ในหมวด %{category}"
         top: "ไม่มีกระทู้ยอดนิยม"
-      bottom:
-        latest: "ไม่มีกระทู้ล่าสุดอีกแล้ว"
-        posted: "ไม่มีกระทู้ที่โพสต์อีกแล้ว"
-        read: "ไม่มีกระทู้ที่อ่านแล้วอีก"
-        new: "ไม่มีกระทู้ใหม่อีกแล้ว"
-        unread: "ไม่มีกระทู้ที่ยังไม่อ่านอีกแล้ว"
-        category: "ไม่มีกระทู้อื่นอีกใน %{category}"
-        tag: "ไม่มีกระทู้อื่นอีกใน %{tag}"
-        top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
-        bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       dismiss:
         name: "ซ่อน"
@@ -1654,10 +1652,22 @@ th:
         name: "คลัง"
       move_messages_to_inbox:
         name: "ย้ายไปกล่องขาเข้า"
-      replace_tags:
-        name: "แทนที่แท็ก"
       delete_topics:
         name: "ลบ"
+      convert_to_private_message:
+        name: "สร้างข้อความส่วนตัว"
+    nested_replies:
+      sort:
+        label: "เรียงโดย"
+        top: "บน"
+        new: "ใหม่"
+      collapsed_replies:
+        other: "%{count} ตอบ"
+      collapse: "ย่อ"
+      no_replies: "ยังไม่มีคำตอบ"
+      deleted_post_placeholder: "[ลบ]"
+      ignored_post_placeholder: "[ละเว้นแล้ว]"
+      pinned_reply: "ปักหมุดแล้ว"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -1963,8 +1973,6 @@ th:
           actions: "การกระทำ"
           edit: "แก้ไข"
           delete: "ลบ"
-        post_language_selector:
-          none: "ไม่มี"
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
@@ -2051,7 +2059,6 @@ th:
         name: "ชื่อ"
         name_placeholder: "บุ๊กมาร์กนี้สำหรับสิ่งใด"
         set_reminder: "เตือนฉัน"
-        options: "ตัวเลือก"
         actions:
           delete_bookmark:
             name: "ลบบุ๊กมาร์ก"
@@ -2076,7 +2083,11 @@ th:
       create_long: "สร้างหมวดหมู่ใหม่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
+      validations:
+        icon_required: "เลือกไอคอน."
       description: "รายละเอียด"
+      icon: "ไอคอน"
+      emoji: "Emoji"
       background_color: "สี"
       styles:
         icon: "ไอคอน"
@@ -2084,7 +2095,6 @@ th:
         options:
           icon: "ไอคอน"
           emoji: "Emoji"
-      name_placeholder: "สูงสุดหนึ่งหรือสองคำ"
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
       no_description: "กรุณาเพิ่มรายละเอียดสำหรับหมวดหมู่นี้"
@@ -2096,14 +2106,19 @@ th:
         reply: "ตอบกลับ"
         create: "สร้าง"
       pending_permission_change_alert: "คุณยังไม่ได้เพิ่ม %{group} ไปยังหมวดหมู่นี้ คลิกปุ่มนี้เพื่อเพิ่ม"
-      images: "รูปภาพ"
       email_in: "ตั้งที่อยู่สำหรับอีเมลขาเข้า:"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
       review_group_name: "ชื่อกลุ่ม"
       require_topic_approval: "กระทู้ใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
+      posting_review_modes:
+        everyone: "ทุกคน"
       this_year: "ปีนี้"
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
+      none_subcategory_text: "ไม่มี"
+      visibility:
+        public: "สาธารณะ"
+        group_restricted: "ส่วนตัว"
       notifications:
         watching:
           title: "กำลังดู"
@@ -2283,64 +2298,45 @@ th:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
       title: "ปุ่มลัดของคีย์บอร์ด"
+      description_header: "รายละเอียด"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "ข้ามไปยัง"
-        home: "%{shortcut} หน้าแรก"
-        latest: "%{shortcut} ล่าสุด"
-        new: "%{shortcut} ใหม่"
-        unread: "%{shortcut} ยังไม่อ่าน"
-        categories: "%{shortcut} หมวดหมู่"
-        top: "%{shortcut} ด้านบน"
-        bookmarks: "%{shortcut} บุ๊กมาร์ก"
-        profile: "%{shortcut} โปรไฟล์"
-        messages: "%{shortcut} ข้อความ"
-        drafts: "%{shortcut}แบบร่าง"
+        home: "หน้าแรก"
+        latest: "ล่าสุด"
+        new: "ใหม่"
+        unread: "ยังไม่อ่าน"
+        categories: "หมวดหมู่"
+        top: "บน"
+        bookmarks: "บุ๊คมาร์ค"
+        profile: "โปรไฟล์"
+        messages: "ข้อความ"
+        drafts: "แบบร่าง"
       navigation:
         title: "การนำทาง"
-        jump: "%{shortcut} ไปยังโพสต์ #"
-        back: "%{shortcut} กลับ"
-        up_down: "%{shortcut} ย้ายส่วน &uarr; &darr;"
-        open: "%{shortcut} เปิดกระทู้ที่เลือก"
-        next_prev: "%{shortcut} หมวดถัดไป/ก่อนหน้า"
-        go_to_unread_post: "%{shortcut}ไปยังโพสต์แรกที่ยังไม่ได้อ่าน"
+        back: "กลับ"
+        up_down: "ย้ายส่วน &uarr; &darr;"
       application:
         title: "แอปพลิเคชัน"
-        notifications: "%{shortcut} เปิดการแจ้งเตือน"
-        user_profile_menu: "%{shortcut} เปิดเมนูผู้ใช้"
-        show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"
-        search: "%{shortcut}ค้นหา"
-        help: "%{shortcut} เปิดความช่วยเหลือของแป้นพิมพ์"
-        log_out: "%{shortcut} ออกจากระบบ"
+        search: "ค้นหา"
+        log_out: "ออกจากระบบ"
+      composing:
+        preformatted: "ข้อความก่อนจัดรูปแบบ"
+        blockquote: "ส่วนอ้างถึง"
       bookmarks:
         title: "บุ๊กมาร์ก"
-        enter: "%{shortcut}บันทึกและปิด"
-        later_today: "%{shortcut}ภายหลังในวันนี้"
-        later_this_week: "%{shortcut}ภายหลังในสัปดาห์นี้"
-        tomorrow: "%{shortcut}พรุ่งนี้"
-        next_week: "%{shortcut}สัปดาห์หน้า"
-        next_month: "%{shortcut}เดือนหน้า"
-        next_business_week: "%{shortcut}เริ่มสัปดาห์หน้า"
-        next_business_day: "%{shortcut}วันทำการถัดไป"
-        delete: "%{shortcut}ลบบุ๊กมาร์ก"
+        later_today: "ภายหลังในวันนี้"
+        later_this_week: "ภายหลังในสัปดาห์นี้"
+        tomorrow: "พรุ่งนี้"
+        next_week: "สัปดาห์หน้า"
+        next_month: "เดือนหน้า"
+        next_business_day: "ในวันทำการถัดไป"
+        custom: "วันและเวลาที่กำหนดเอง"
+        delete: "ลบบุ๊กมาร์ก"
       actions:
         title: "การกระทำ"
-        bookmark_topic: "%{shortcut} บุ๊คมาร์คหัวข้อ"
-        pin_unpin_topic: "%{shortcut} ปักหมุด/เลิกปักหมุดกระทู้"
-        share_topic: "%{shortcut} แบ่งปันกระทู้"
-        share_post: "%{shortcut} แบ่งปันโพสต์"
-        reply_as_new_topic: "%{shortcut} ตอบแบบหัวข้อที่ลิงค์ไว้"
-        reply_topic: "%{shortcut} ตอบไปยังกระทู้"
-        reply_post: "%{shortcut} ตอบไปยังโพสต์"
-        quote_post: "%{shortcut} อ้างถึงโพสต์"
-        like: "%{shortcut} ถูกใจโพสต์"
-        flag: "%{shortcut} ปักธงโพสต์"
-        bookmark: "%{shortcut} บุ๊กมาร์กโพสต์"
-        edit: "%{shortcut} แก้ไขโพสต์"
-        delete: "%{shortcut} ลบโพสต์"
-        mark_muted: "%{shortcut} ปิดการแจ้งเตือนกระทู้"
-        mark_tracking: "%{shortcut} ติดตามกระทู้"
-        mark_watching: "%{shortcut} ดูกระทู้"
-        print: "%{shortcut}พิมพ์กระทู้"
+        reply_topic: "ตอบกลับกระทู้"
       search_menu:
         title: "เมนูค้นหา"
       admin:
@@ -2382,11 +2378,22 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
+      description: "รายละเอียด"
+      settings:
+        title: "การตั้งค่า"
+        general: "ทั่วไป"
+        back: "กลับ"
+        name: "ชื่อ"
+        name_placeholder: "ชื่อแท็ก"
+      localization:
+        name: "ชื่อ"
+        description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"
       upload: "อัปโหลดแท็ก"
       upload_successful: "แท็กถูกอัปโหลดสำเร็จแล้ว"
+      bulk_create_button: "สร้าง"
       delete_unused_confirmation:
         other: "%{count}แท็กจะถูกลบ: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -2535,6 +2542,10 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      reports:
+        group_traffic: "การจราจร"
+        group_members: "สมาชิก"
+        group_other: "อื่นๆ"
       config_sections:
         account:
           title: "บัญชี"
@@ -2549,14 +2560,21 @@ th:
       upcoming_changes:
         name: "ชื่อ"
         preview: "แสดงตัวอย่าง"
+        enabled_for_options:
+          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
           staff: "ทีมงาน"
+        impact_types:
+          other_type: "อื่นๆ"
         filter:
           all: "ทั้งหมด"
           disabled: "ปิดใช้งานแล้ว"
           impact_type_other: "อื่นๆ"
+          impact_role_admins: "แอดมิน"
+          impact_role_moderators: "ผู้ดูแลระบบ"
+          impact_role_staff: "ทีมงาน"
       config:
         developer:
           title: "นักพัฒนา"
@@ -2570,6 +2588,8 @@ th:
           sub_pages:
             common_settings:
               title: "การตั้งค่า"
+        discourse_id:
+          learn_more: "เรียนรู้เพิ่มเติม"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -2601,6 +2621,13 @@ th:
           title: "กลุ่ม"
         backups:
           title: "สำรอง"
+        problem_checks:
+          status: "สถานะ"
+          ignore: "ไม่สนใจ"
+        reports:
+          sub_pages:
+            settings:
+              title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
         permalinks:
@@ -2629,11 +2656,6 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
-        result_types:
-          setting:
-            other: "การตั้งค่า"
-          theme:
-            other: "ธีม"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2642,7 +2664,7 @@ th:
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
-        dismiss_notice: "ซ่อน"
+        dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
         last_checked: "ตรวจล่าสุด"
@@ -2664,6 +2686,30 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        sections:
+          engagement:
+            activity_by_category:
+              category: "หมวดหมู่"
+              topics: "หัวข้อ"
+              posts: "โพส"
+              share: "แบ่งปัน"
+            whos_posting:
+              all_categories: "หมวดหมู่ทั้งหมด"
+              staff: "ทีมงาน"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "ใหม่"
+                "2": "สมาชิก"
+                "3": "ทั่วไป"
+        reports_section:
+          modal:
+            apply: "นำไปใช้"
+        site_traffic:
+          series:
+            anonymous: "ไม่ระบุชื่อ"
+        period:
+          last_7_days: "7 วันที่ผ่านมา"
+          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
@@ -2675,7 +2721,7 @@ th:
           all: "ทั้งหมด"
           view_table: "ตาราง"
           view_graph: "กราฟ"
-          refresh_report: "โหลดรายงานใหม่"
+          refresh_report: "รีเฟรช"
           daily: รายวัน
           monthly: รายเดือน
           weekly: รายสัปดาห์
@@ -2739,6 +2785,7 @@ th:
         save: "บันทึก"
         cancel: "ยกเลิก"
         continue: "ดำเนินการต่อ"
+        copy_key: "คัดลอก"
         revoke: "เอาออก"
       api:
         user: "ผู้ใช้"
@@ -3021,6 +3068,7 @@ th:
         topic_id: "หมายเลขกระทู้"
         post_id: "หมายเลขโพสต์"
         category_id: "หมายเลขหมวดหมู่"
+        reviewable_id: "รีวิว"
         delete: "ลบ"
         edit: "แก้ไข"
         save: "บันทึก"
@@ -3285,6 +3333,7 @@ th:
           title: "แสดงในข้อมูลสาธารณะ"
         field_types:
           text: "ข้อความ"
+          date: "วันที่"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
@@ -3311,6 +3360,7 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        download_file: "ดาวน์โหลด"
         table_column_heading:
           status: "สถานะ"
         categories:
@@ -3365,6 +3415,8 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        sections:
+          settings: การตั้งค่า
         disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ
@@ -3428,40 +3480,3 @@ th:
         modal:
           categories: "หมวดหมู่"
           topics: "กระทู้"
-  wizard_js:
-    wizard:
-      back: "กลับ"
-      next: "ต่อไป"
-      upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
-      staff_count:
-        other: "ชุมชนของคุณมีทีมงาน %{count}คน รวมถึงคุณด้วย"
-      invites:
-        add_user: "เพิ่ม"
-        none_added: "คุณยังไม่ได้เชิญทีมงาน คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"
-        roles:
-          admin: "แอดมิน"
-          moderator: "ผู้ดูแล"
-          regular: "ผู้ใช้ทั่วไป"
-      homepage_choices:
-        style_type:
-          categories: "หมวดหมู่"
-          topics: "หัวข้อ"
-      top_menu_items:
-        new: "ใหม่"
-        unread: "ยังไม่อ่าน"
-        top: "บน"
-        latest: "ล่าสุด"
-        categories: "หมวดหมู่"
-        read: "อ่าน"
-        bookmarks: "บุ๊คมาร์ค"
-      previews:
-        share_button: "แบ่งปัน"
-        reply_button: "ตอบ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "ทุกหมวดหมู่"
-        table_headers:
-          topic: "หัวข้อ"
-          replies: "ตอบ"
-          views: "ดู"
-          activity: "กิจกรรม"

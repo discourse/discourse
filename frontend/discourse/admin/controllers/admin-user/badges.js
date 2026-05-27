@@ -1,16 +1,18 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { compare } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import AdminUser from "discourse/admin/models/admin-user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { removeValueFromArray } from "discourse/lib/array-tools";
+import {
+  arraySortedByProperties,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
 
@@ -20,14 +22,29 @@ export default class AdminUserBadgesController extends Controller {
 
   @tracked loading;
   @tracked selectedBadgeId;
-  @trackedArray badges;
-  @trackedArray expandedBadges = [];
-
-  @alias("adminUser.model") user;
-  @sort("model", "badgeSortOrder") sortedBadges;
-  @empty("availableBadges") noAvailableBadges;
+  @autoTrackedArray badges;
+  @autoTrackedArray expandedBadges = [];
 
   badgeSortOrder = ["granted_at:desc"];
+
+  @computed("adminUser.model")
+  get user() {
+    return this.adminUser?.model;
+  }
+
+  set user(value) {
+    set(this, "adminUser.model", value);
+  }
+
+  @computed("availableBadges.length")
+  get noAvailableBadges() {
+    return isEmpty(this.availableBadges);
+  }
+
+  @dependentKeyCompat
+  get sortedBadges() {
+    return arraySortedByProperties(this.model, this.badgeSortOrder);
+  }
 
   @dependentKeyCompat
   get allBadges() {

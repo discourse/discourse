@@ -30,6 +30,8 @@
 
   .nav-pills {
     margin: 0 0 2em;
+    gap: 0;
+    overflow: auto;
   }
 
   ul:not(.nav-pills),

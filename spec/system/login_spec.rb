@@ -128,9 +128,13 @@ shared_examples "login scenarios" do
 
     it "cannot browse annonymously" do
       visit "/"
+
+      screenshot_marker(label: "login-required")
       expect(page).to have_css(".login-welcome")
       expect(page).to have_css(".site-logo")
       find(".login-welcome .login-button").click
+
+      screenshot_marker(label: "login-form")
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login
@@ -288,7 +292,7 @@ shared_examples "login scenarios" do
         mock_google_auth
         visit("/user-api-key/new?#{args.to_query}")
 
-        expect(page).to have_css(".authorize-api-key .scopes")
+        expect(page).to have_css(".authorize-api-key__scopes")
       end
 
       it "redirects when navigating to login with redirect param" do
@@ -429,7 +433,7 @@ shared_examples "login scenarios" do
   end
 end
 
-describe "Login", type: :system do
+describe "Login" do
   context "when desktop" do
     include_examples "login scenarios"
   end

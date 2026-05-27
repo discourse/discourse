@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+
+describe "DFP External Ads" do
+  before { enable_current_plugin }
+
+  fab!(:user) { Fabricate(:user, trust_level: 1) }
+  fab!(:topic)
+
+  before do
+    SiteSetting.discourse_adplugin_enabled = true
+    SiteSetting.dfp_publisher_id = "test_publisher_123"
+    SiteSetting.dfp_through_trust_level = 2
+
+    # Create 20 posts so we ca` n test nth post ads
+    20.times { Fabricate(:post, topic: topic) }
+  end
+
+  describe "DFP ads with impression tracking" do
+    before do
+      SiteSetting.ad_plugin_enable_tracking = true
+      SiteSetting.dfp_topic_list_top_code = "topic_list_top_ad_unit"
+      SiteSetting.dfp_topic_list_top_ad_sizes = "728*90 - leaderboard"
+      10.times { Fabricate(:topic) }
+    end
+
+    it "records impression when DFP ad is viewed" do
+      sign_in(user)
+
+      count = AdPlugin::AdImpression.count
+
+      visit "/latest"
+      try_until_success { expect(AdPlugin::AdImpression.count).to eq(count + 1) }
+
+      impression = AdPlugin::AdImpression.last
+      expect(impression.ad_type).to eq("dfp")
+      expect(impression.house_ad).to be_nil
+      expect(impression.placement).to eq("topic-list-top")
+    end
+  end
+end

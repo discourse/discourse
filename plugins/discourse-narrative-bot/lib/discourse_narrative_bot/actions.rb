@@ -9,30 +9,30 @@ module DiscourseNarrativeBot
     end
 
     def discobot_username
-      self.discobot_user.username_lower
+      discobot_user.username_lower
     end
 
     private
 
     def reply_to(post, raw, opts = {}, post_alert_options = {})
-      defaut_post_alert_opts = { skip_send_email: true }.merge(post_alert_options)
+      default_post_alert_opts = { skip_send_email: true }.merge(post_alert_options)
 
       if post
         default_opts = {
           raw: raw,
           topic_id: post.topic_id,
           reply_to_post_number: post.post_number,
-          post_alert_options: defaut_post_alert_opts,
+          post_alert_options: default_post_alert_opts,
           skip_validations: true,
         }
 
-        new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
+        new_post = PostCreator.create!(discobot_user, default_opts.merge(opts))
         reset_rate_limits(post) if new_post
         new_post
       else
         PostCreator.create!(
-          self.discobot_user,
-          { post_alert_options: defaut_post_alert_opts, raw: raw, skip_validations: true }.merge(
+          discobot_user,
+          { post_alert_options: default_post_alert_opts, raw: raw, skip_validations: true }.merge(
             opts,
           ),
         )
@@ -81,7 +81,7 @@ module DiscourseNarrativeBot
       doc
         .css(".mention")
         .each do |mention|
-          if User.normalize_username(mention.text) == "@#{self.discobot_username}"
+          if User.normalize_username(mention.text) == "@#{discobot_username}"
             valid = true
             break
           end

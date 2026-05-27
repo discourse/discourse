@@ -1,3 +1,4 @@
+/* eslint-disable ember/route-path-style */
 export default function () {
   this.route("admin", function () {
     this.route("dashboard", { path: "/" }, function () {
@@ -156,6 +157,14 @@ export default function () {
     );
 
     this.route(
+      "adminProblemChecks",
+      { path: "/problem-checks", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
+      }
+    );
+
+    this.route(
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {
@@ -246,6 +255,7 @@ export default function () {
           });
           this.route("authenticators");
           this.route("discourseconnect");
+          this.route("discourse-id");
           // Lets plugins register routes via register_admin_config_login_route
           this.route("plugin-tab", {
             path: "/*wildcard",
@@ -433,7 +443,10 @@ export default function () {
     );
   });
 
-  this.route("newCategory", { path: "/new-category" });
+  this.route("newCategory", { path: "/new-category" }, function () {
+    this.route("setup");
+    this.route("tabs", { path: "/:tab" });
+  });
 
   this.route("editCategory", { path: "/c/*slug/edit" }, function () {
     this.route("tabs", { path: "/:tab" });

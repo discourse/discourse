@@ -5,11 +5,11 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { isiPad } from "discourse/lib/utilities";
-import observeIntersection from "discourse/modifiers/observe-intersection";
+import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 
 export default class TopicTitle extends Component {
   @service header;
+  @service capabilities;
 
   @action
   keyDown(e) {
@@ -18,7 +18,7 @@ export default class TopicTitle extends Component {
       this.args.cancelled();
     } else if (
       e.key === "Enter" &&
-      (e.ctrlKey || e.metaKey || (isiPad() && e.altKey))
+      (e.ctrlKey || e.metaKey || (this.capabilities.isIpadOS && e.altKey))
     ) {
       // Ctrl+Enter or Cmd+Enter
       // iPad physical keyboard does not offer Command or Ctrl detection
@@ -42,10 +42,10 @@ export default class TopicTitle extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       {{on "keydown" this.keyDown}}
-      {{observeIntersection this.handleIntersectionChange}}
+      {{dObserveIntersection this.handleIntersectionChange}}
       {{willDestroy this.handleTitleDestroy}}
       id="topic-title"
       class="container"

@@ -4,12 +4,12 @@
 
 class SystemMessage
   def self.create(recipient, type, params = {})
-    self.new(recipient).create(type, params)
+    new(recipient).create(type, params)
   end
 
   def self.create_from_system_user(recipient, type, params = {})
     params = params.merge(from_system: true)
-    self.new(recipient).create(type, params)
+    new(recipient).create(type, params)
   end
 
   def initialize(recipient)
@@ -23,6 +23,10 @@ class SystemMessage
     target_group_names = params.delete(:target_group_names)
 
     params = defaults.merge(params)
+
+    if I18n.exists?("system_messages.#{type}.preview", @recipient.effective_locale)
+      params[:email_preview] = I18n.t("system_messages.#{type}.preview", params)
+    end
 
     title =
       params[:message_title] ||
@@ -102,6 +106,7 @@ class SystemMessage
         end,
       site_password: "",
       base_url: Discourse.base_url,
+      email_preview: "",
     }
   end
 end

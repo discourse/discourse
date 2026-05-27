@@ -12,11 +12,15 @@ module DiscoursePostEvent
 
     def self.sync_chat_channel_members!(event)
       missing_members_sql = <<~SQL
-        SELECT user_id
-        FROM discourse_post_event_invitees
-        WHERE post_id = :post_id
-        AND status in (:statuses)
-        AND user_id NOT IN (
+        SELECT i.user_id
+        FROM discourse_post_event_invitees i
+        INNER JOIN users u ON u.id = i.user_id
+        WHERE i.post_id = :post_id
+        AND i.status IN (:statuses)
+        AND (u.suspended_till IS NULL OR u.suspended_till <= :now)
+        AND (u.silenced_till IS NULL OR u.silenced_till <= :now)
+        AND u.staged = false
+        AND i.user_id NOT IN (
           SELECT user_id
           FROM user_chat_channel_memberships
           WHERE chat_channel_id = :chat_channel_id
@@ -32,6 +36,7 @@ module DiscoursePostEvent
             DiscoursePostEvent::Invitee.statuses[:interested],
           ],
           chat_channel_id: event.chat_channel_id,
+          now: Time.zone.now,
         )
 
       if missing_user_ids.present?

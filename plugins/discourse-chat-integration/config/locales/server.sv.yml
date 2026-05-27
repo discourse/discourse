@@ -45,12 +45,8 @@ sv:
     chat_integration_rocketchat_webhook_url: "URL för Rocket Chats integrerings-webhook"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat-inläggsutdragets längd"
     chat_integration_gitter_enabled: "Aktivera chattintegreringsleverantör för Gitter"
-    chat_integration_flowdock_enabled: "Aktivera chattintegreringsleverantör för Flowdock"
-    chat_integration_flowdock_excerpt_length: "Flowdock-inläggsutdragets längd"
     chat_integration_groupme_enabled: "Aktivera chattintegreringsleverantör för Groupme"
     chat_integration_groupme_excerpt_length: "Groupme-inläggsutdragets längd"
-    chat_integration_groupme_bot_ids: "*krävs* Bot-id, avgränsade med ',' om det är flera"
-    chat_integration_groupme_instance_names: " *krävs* Namn på GroupMe-chatten, avgränsade med ',' om det är flera (samma ordning som Bot-ID)"
     chat_integration_teams_enabled: "Aktivera chattintegreringsleverantören för Microsoft Teams"
     chat_integration_teams_excerpt_length: "Microsoft Team-inläggsutdragets längd"
     chat_integration_webex_enabled: "Aktivera chattintegreringsleverantör för Webex Teams"
@@ -84,10 +80,8 @@ sv:
         create:
           created: "Regel har skapats"
           updated: "Regel har uppdaterats"
-          error: "Tyvärr uppstod det ett fel när den regeln skapades."
         delete:
           success: "Regel har tagits bort"
-          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör `/discourse status` för att visa en lista över regler."
         not_found:
           tag: "Taggen *%{name}* kan inte hittas."
           category: "Kategorin *%{name}* kan inte hittas. Tillgängliga kategorier: *%{list}*"
@@ -148,10 +142,8 @@ sv:
         create:
           created: "Regel har skapats"
           updated: "Regel har uppdaterats"
-          error: "Tyvärr uppstod det ett fel när den regeln skapades."
         delete:
           success: "Regel har tagits bort"
-          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör <code>/status</code> för en lista över regler."
         not_found:
           tag: "Taggen <b>%{name}</b> kan inte hittas."
           category: "Kategorin <b>%{name}</b> kan inte hittas. Tillgängliga kategorier: <b>%{list}</b>"
@@ -182,10 +174,8 @@ sv:
         create:
           created: "Regel har skapats"
           updated: "Regel har uppdaterats"
-          error: "Tyvärr uppstod det ett fel när den regeln skapades."
         delete:
           success: "Regel har tagits bort"
-          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör `/discourse status` för att visa en lista över regler."
         not_found:
           tag: "Taggen *%{name}* kan inte hittas."
           category: "Kategorin *%{name}* kan inte hittas. Tillgängliga kategorier: *%{list}*"
@@ -215,8 +205,6 @@ sv:
           ~~~citat
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "publicerade"
       google:
         new_post: "Nytt inlägg på %{site_title}"
         new_topic: "Nytt ämne på %{site_title}"

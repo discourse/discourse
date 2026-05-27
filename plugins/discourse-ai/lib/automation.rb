@@ -30,11 +30,20 @@ module DiscourseAi
     end
 
     def self.available_custom_tools
-      AiTool
-        .where(enabled: true)
-        .where("parameters = '[]'::jsonb")
-        .pluck(:id, :name, :description)
-        .map { |id, name, description| { id: id, translated_name: name, description: description } }
+      available_tools(
+        scope: AiTool.where(enabled: true).where("parameters = '[]'::jsonb"),
+        description_field: :description,
+      )
+    end
+
+    def self.available_tools_all
+      available_tools(description_field: :summary)
+    end
+
+    def self.available_tools(scope: AiTool.where(enabled: true), description_field: :description)
+      scope
+        .pluck(:id, :name, description_field)
+        .map { |id, name, desc| { id: id, translated_name: name, description: desc } }
     end
 
     def self.available_models
@@ -44,14 +53,14 @@ module DiscourseAi
       SQL
     end
 
-    def self.available_persona_choices(require_user: true, require_default_llm: true)
-      relation = AiPersona.includes(:user)
+    def self.available_agent_choices(require_user: true, require_default_llm: true)
+      relation = AiAgent.includes(:user)
       relation = relation.where.not(user_id: nil) if require_user
       relation = relation.where.not(default_llm: nil) if require_default_llm
-      relation.map do |persona|
-        phash = { id: persona.id, translated_name: persona.name, description: persona.name }
+      relation.map do |agent|
+        phash = { id: agent.id, translated_name: agent.name, description: agent.name }
 
-        phash[:description] += " (#{persona&.user&.username})" if require_user
+        phash[:description] += " (#{agent&.user&.username})" if require_user
 
         phash
       end

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -16,19 +17,12 @@ export default class AiComposerHelperMenu extends Component {
   @service currentUser;
   @service site;
 
-  @tracked newSelectedText;
-  @tracked diff;
   @tracked customPromptValue = "";
-  @tracked noContentError = false;
   prompts = [];
   promptTypes = {};
 
-  constructor() {
-    super(...arguments);
-
-    if (this.args.data.toolbarEvent.getText().length === 0) {
-      this.noContentError = true;
-    }
+  get noContentError() {
+    return this.args.data.toolbarEvent.getText().length === 0;
   }
 
   get helperOptions() {

@@ -1,18 +1,19 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;
@@ -35,6 +36,16 @@ export default class IpLookup extends Component {
     const total = Math.min(MAX_ACCOUNTS_TO_DELETE, totalOthers);
     const visible = Math.min(MAX_ACCOUNTS_TO_DELETE, otherAccountsLength);
     return Math.max(visible, total);
+  }
+
+  get sameIpData() {
+    return {
+      same_ip_user_id: this.args.userId,
+      user_id: this.args.userId,
+      ip_type: this.args.ipType || "last",
+      exclude: this.args.userId,
+      order: "trust_level DESC",
+    };
   }
 
   @action
@@ -60,18 +71,12 @@ export default class IpLookup extends Component {
       if (!this.otherAccounts && this.ipToLookup) {
         this.otherAccountsLoading = true;
 
-        const data = {
-          ip: this.ipToLookup,
-          exclude: this.args.userId,
-          order: "trust_level DESC",
-        };
-
         const result = await ajax("/admin/users/total-others-with-same-ip", {
-          data,
+          data: this.sameIpData,
         });
         this.totalOthersWithSameIP = result.total;
 
-        this.otherAccounts = await AdminUser.findAll("active", data);
+        this.otherAccounts = await AdminUser.findAll("active", this.sameIpData);
         this.otherAccountsLoading = false;
       }
     } catch (error) {
@@ -105,7 +110,7 @@ export default class IpLookup extends Component {
     try {
       await clipboardCopy(text.trim());
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("ip_lookup.copied"),
         },
@@ -127,11 +132,7 @@ export default class IpLookup extends Component {
         try {
           await ajax("/admin/users/delete-others-with-same-ip.json", {
             type: "DELETE",
-            data: {
-              ip: this.ipToLookup,
-              exclude: this.args.userId,
-              order: "trust_level DESC",
-            },
+            data: this.sameIpData,
           });
         } catch (err) {
           popupAjaxError(err);
@@ -159,7 +160,7 @@ export default class IpLookup extends Component {
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
       @isLoading={{this.loading}}
-      @class="btn-default"
+      @triggerClass="btn-default"
     >
       <:content>
         <div class="location-box">
@@ -209,7 +210,7 @@ export default class IpLookup extends Component {
                   <dd>{{this.location.organization}}</dd>
                 {{/if}}
               {{else}}
-                {{loadingSpinner size="small"}}
+                {{dLoadingSpinner size="small"}}
               {{/if}}
 
               <dt class="other-accounts">
@@ -233,7 +234,7 @@ export default class IpLookup extends Component {
                 {{/if}}
               </dt>
 
-              <ConditionalLoadingSpinner
+              <DConditionalLoadingSpinner
                 @size="small"
                 @condition={{this.otherAccountsLoading}}
               >
@@ -242,9 +243,9 @@ export default class IpLookup extends Component {
                     <IpLookupAccountsTable @accounts={{this.otherAccounts}} />
                   </dd>
                 {{/if}}
-              </ConditionalLoadingSpinner>
+              </DConditionalLoadingSpinner>
             </dl>
-            <div class="powered-by">{{htmlSafe
+            <div class="powered-by">{{trustHTML
                 (i18n "ip_lookup.powered_by")
               }}</div>
           </div>

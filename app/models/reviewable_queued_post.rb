@@ -13,9 +13,8 @@ class ReviewableQueuedPost < Reviewable
   end
 
   after_save do
-    if saved_change_to_payload? && self.status.to_sym == :pending &&
-         self.payload&.[]("raw").present?
-      upload_ids = Upload.extract_upload_ids(self.payload["raw"])
+    if saved_change_to_payload? && status.to_sym == :pending && payload&.[]("raw").present?
+      upload_ids = Upload.extract_upload_ids(payload["raw"])
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -38,8 +37,7 @@ class ReviewableQueuedPost < Reviewable
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
-  # TODO (reviewable-refresh): Remove this method once new UI is fully deployed
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?
         build_action(actions, :approve_post_closed, icon: "check", confirm: true)
@@ -49,47 +47,19 @@ class ReviewableQueuedPost < Reviewable
     end
 
     if pending?
-      if guardian.can_delete_user?(target_created_by)
-        reject_bundle =
-          actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
-
-        build_action(
-          actions,
-          :discard_post,
-          bundle: reject_bundle,
-          icon: "xmark",
-          button_class: "reject-post",
+      reject_bundle =
+        actions.add_bundle(
+          "#{id}-reject-post",
+          label: "reviewables.actions.reject_post_bundle.title",
         )
-        delete_user_actions(actions, reject_bundle)
-      else
-        build_action(actions, :reject_post, icon: "xmark")
-      end
 
-      build_action(actions, :revise_and_reject_post)
+      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+
+      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
     end
 
     build_action(actions, :delete) if guardian.can_delete?(self)
-  end
-
-  def build_new_separated_actions
-    # Because a queued post isn't a real post, we need to create our own post actions bundle
-    post_actions_bundle = build_post_actions_bundle
-
-    unless approved?
-      if topic&.closed?
-        build_action(actions, :approve_post, bundle: post_actions_bundle, confirm: true)
-      elsif target_created_by.present?
-        build_action(actions, :approve_post, bundle: post_actions_bundle)
-      end
-    end
-
-    if pending?
-      build_action(actions, :reject_post, bundle: post_actions_bundle)
-      build_action(actions, :revise_and_reject_post, bundle: post_actions_bundle)
-    end
-
-    # User actions bundle
-    build_user_actions_bundle if pending?
   end
 
   def build_editable_fields(fields, guardian, args)
@@ -114,6 +84,9 @@ class ReviewableQueuedPost < Reviewable
     result[:cooking_options].symbolize_keys! if result[:cooking_options]
     result[:topic_id] = topic_id if topic_id
     result[:category] = category_id if category_id
+    if result[:tags].is_a?(Array)
+      result[:tags] = result[:tags].map { |t| t.is_a?(Hash) ? t["name"] : t }
+    end
     result
   end
 
@@ -140,9 +113,13 @@ class ReviewableQueuedPost < Reviewable
     self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
-    UserSilencer.unsilence(target_created_by, performed_by) if target_created_by.silenced?
+    if target_created_by.silenced?
+      UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: id)
+    end
 
-    StaffActionLogger.new(performed_by).log_post_approved(created_post) if performed_by.staff?
+    if performed_by.staff?
+      StaffActionLogger.new(performed_by).log_post_approved(created_post, reviewable_id: id)
+    end
 
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:approved_post, self, created_post)
@@ -180,18 +157,34 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_revise_and_reject_post(performed_by, args)
+    has_contact_user = SiteSetting.site_contact_username.present?
+    is_new_topic = topic.blank?
+
+    edit_instructions_key =
+      if is_new_topic && has_contact_user
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_topic"
+      elsif is_new_topic
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_topic_no_reply"
+      elsif has_contact_user
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_post"
+      else
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_post_no_reply"
+      end
+
     pm_translation_args = {
-      topic_title: self.topic&.title || self.payload["title"],
-      topic_url: self.topic&.url,
+      topic_title: topic&.title || payload["title"],
+      topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
-      original_post: self.payload["raw"],
+      original_post: payload["raw"],
       site_name: SiteSetting.title,
+      edit_instructions: I18n.t(edit_instructions_key, locale: target_created_by.effective_locale),
     }
+
     SystemMessage.create(
-      self.target_created_by,
+      target_created_by,
       (
-        if self.topic.blank?
+        if is_new_topic
           :reviewable_queued_post_revise_and_reject_new_topic
         else
           :reviewable_queued_post_revise_and_reject
@@ -247,26 +240,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

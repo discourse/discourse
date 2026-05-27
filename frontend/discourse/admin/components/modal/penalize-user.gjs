@@ -1,18 +1,19 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class PenalizeUser extends Component {
@@ -23,16 +24,20 @@ export default class PenalizeUser extends Component {
   @tracked confirmClose = false;
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
-  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
+  @tracked readyToDeleteAll = false;
 
   constructor() {
     super(...arguments);
     if (this.postEdit && this.siteSettings.penalty_include_post_message) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }
+  }
+
+  get postEdit() {
+    return this.args.model.postEdit;
   }
 
   get modalTitle() {
@@ -72,7 +77,8 @@ export default class PenalizeUser extends Component {
       this.penalizing ||
       isEmpty(this.penalizeUntil) ||
       !this.reason ||
-      this.reason.length < 1
+      this.reason.length < 1 ||
+      (this.postAction === "delete_all" && !this.readyToDeleteAll)
     );
   }
 
@@ -97,6 +103,7 @@ export default class PenalizeUser extends Component {
         post_action: this.postAction,
         post_edit: this.postEdit,
         other_user_ids: this.otherUserIds,
+        reviewable_id: this.args.model.reviewableId,
       };
 
       if (this.args.model.penaltyType === "suspend") {
@@ -110,8 +117,12 @@ export default class PenalizeUser extends Component {
         console.error("Unknown penalty type:", this.args.model.penaltyType);
       }
       this.args.closeModal({ success: true });
-      if (this.successCallback) {
-        await this.successCallback(result);
+      if (this.args.model.successCallback) {
+        await this.args.model.successCallback({
+          ...result,
+          shouldDeleteAllPosts:
+            this.postAction === "delete_all" && this.readyToDeleteAll,
+        });
       }
     } catch (error) {
       this.flash = result ? extractError(result) : extractError(error);
@@ -138,6 +149,11 @@ export default class PenalizeUser extends Component {
     this.otherUserIds = userIds;
   }
 
+  @action
+  updateReadyToDeleteAll(flag) {
+    this.readyToDeleteAll = flag;
+  }
+
   <template>
     <DModal
       class="{{@model.penaltyType}}-user-modal"
@@ -149,7 +165,7 @@ export default class PenalizeUser extends Component {
         {{#if this.canPenalize}}
           <div class="penalty-duration-controls">
             {{#if (eq @model.penaltyType "suspend")}}
-              <FutureDateInput
+              <DFutureDateInput
                 @label="admin.user.suspend_duration"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
@@ -157,7 +173,7 @@ export default class PenalizeUser extends Component {
                 class="suspend-until"
               />
             {{else if (eq @model.penaltyType "silence")}}
-              <FutureDateInput
+              <DFutureDateInput
                 @label="admin.user.silence_duration"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
@@ -169,9 +185,9 @@ export default class PenalizeUser extends Component {
           {{#if (eq @model.penaltyType "suspend")}}
             <div class="penalty-reason-visibility">
               {{#if this.siteSettings.hide_suspension_reasons}}
-                {{htmlSafe (i18n "admin.user.suspend_reason_hidden_label")}}
+                {{trustHTML (i18n "admin.user.suspend_reason_hidden_label")}}
               {{else}}
-                {{htmlSafe (i18n "admin.user.suspend_reason_label")}}
+                {{trustHTML (i18n "admin.user.suspend_reason_label")}}
               {{/if}}
             </div>
           {{/if}}
@@ -185,6 +201,8 @@ export default class PenalizeUser extends Component {
               @postId={{@model.postId}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
+              @user={{@model.user}}
+              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
             />
           {{/if}}
           {{#if @model.user.similar_users_count}}
@@ -204,7 +222,7 @@ export default class PenalizeUser extends Component {
         {{/if}}
       </:body>
       <:footer>
-        <div class="penalty-history">{{htmlSafe this.penaltyHistory}}</div>
+        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
         <DButton
           class="btn-danger perform-penalize"
           @action={{this.penalizeUser}}

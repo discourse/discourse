@@ -113,12 +113,10 @@ describe Chat::ReviewQueue do
       end
 
       it "ignores the cooldown window when the message is edited" do
-        Chat::UpdateMessage.call(
-          guardian: Guardian.new(message.user),
-          params: {
-            message_id: message.id,
-            message: "I'm editing this message. Please flag it.",
-          },
+        update_message!(
+          message,
+          user: message.user,
+          text: "I'm editing this message. Please flag it.",
         )
 
         expect(second_flag_result).to include success: true
@@ -388,6 +386,18 @@ describe Chat::ReviewQueue do
           SiteSetting.chat_auto_silence_from_flags_duration = 1
           flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
           message_poster.update!(admin: true)
+
+          queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+          expect(message_poster.reload.silenced?).to eq(false)
+        end
+      end
+
+      context "when the target is a moderator" do
+        it "does not silence the user" do
+          SiteSetting.chat_auto_silence_from_flags_duration = 1
+          flagger.update!(trust_level: TrustLevel[4])
+          message_poster.update!(moderator: true)
 
           queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
 

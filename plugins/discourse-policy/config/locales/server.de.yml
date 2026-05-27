@@ -8,6 +8,7 @@ de:
   site_settings:
     policy_enabled: "Richtlinien zulassen?"
     policy_restrict_to_staff_posts: "Richtlinien dürfen nur in Team-Beiträgen erscheinen"
+    create_policy_allowed_groups: "Für das Hinzufügen von Richtlinien zu Beiträgen ist eine Gruppenmitgliedschaft erforderlich."
     policy_easy_revoke: "Die Schaltflächen „Akzeptieren“ und „Widerrufen“ gleichzeitig anzeigen"
   discourse_policy:
     errors:

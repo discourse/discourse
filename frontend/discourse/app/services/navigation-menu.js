@@ -13,4 +13,8 @@ export default class NavigationMenu extends Service {
   get isDesktopDropdownMode() {
     return this.site.desktopView && this.isHeaderDropdownMode;
   }
+
+  get displayMode() {
+    return this.isDesktopDropdownMode ? "header_dropdown" : "sidebar";
+  }
 }

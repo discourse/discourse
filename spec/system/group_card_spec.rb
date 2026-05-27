@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Group Card", type: :system do
+describe "Group Card" do
   fab!(:current_user, :user)
   fab!(:members) { Fabricate.times(12, :user) }
   fab!(:topic)
@@ -47,6 +47,19 @@ describe "Group Card", type: :system do
       expect(group_card).to have_highlighted_member_count_of(
         PageObjects::Components::GroupCard::MAX_MEMBER_HIGHLIGHT_COUNT,
       )
+    end
+  end
+
+  context "when on mobile", mobile: true do
+    it "shows and hides the card cloak when opening and closing the group card" do
+      topic_page.visit_topic(topic, post_number: post_with_mention.post_number)
+      topic_page.click_mention(post_with_mention, mention)
+
+      expect(page).to have_css(".card-cloak.--visible")
+
+      find(".card-cloak").click
+
+      expect(page).to have_no_css(".card-cloak.--visible")
     end
   end
 end

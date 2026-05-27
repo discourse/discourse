@@ -26,7 +26,11 @@ export default function interceptClick(e) {
     return;
   }
 
-  if (wantsNewWindow(e, target) || target.target === "_blank") {
+  if (target.target === "_blank") {
+    return;
+  }
+
+  if (wantsNewWindow(e)) {
     return;
   }
 

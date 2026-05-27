@@ -16,19 +16,19 @@ module DiscourseAi
           end
         end
 
-        plugin.on(:post_edited) do |post, topic_changed, revisor|
+        plugin.on(:post_edited) do |post, _, revisor|
           if DiscourseAi::Translation.enabled?
             grace = [SiteSetting.editing_grace_period.seconds, 5.minutes].max
 
-            if topic_changed
-              if revisor.topic_title_changed?
-                Jobs.enqueue_in(grace, :detect_translate_topic, topic_id: post.topic_id)
-              end
-            else
-              if revisor.should_create_new_version?
-                Jobs.enqueue_in(grace, :detect_translate_post, post_id: post.id)
-              end
+            title_changed = revisor.topic_title_changed?
+            raw_changed = revisor.raw_changed?
+            excerpt_changed = post.is_first_post? && raw_changed
+
+            if title_changed || excerpt_changed
+              Jobs.enqueue_in(grace, :detect_translate_topic, topic_id: post.topic_id)
             end
+
+            Jobs.enqueue_in(grace, :detect_translate_post, post_id: post.id) if raw_changed
           end
         end
       end

@@ -2,6 +2,10 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
+// Matches CORE_THEMES in app/models/theme.rb
+export const FOUNDATION_THEME_ID = -1;
+export const HORIZON_THEME_ID = -2;
+
 const keySelector = "meta[name=discourse_theme_id]";
 const COOKIE_NAME = "theme_ids";
 const COOKIE_EXPIRY_DAYS = 365;
@@ -77,6 +81,7 @@ export function listThemes(site) {
       id: t.theme_id,
       color_scheme_id: t.color_scheme_id,
       dark_color_scheme_id: t.dark_color_scheme_id,
+      only_theme_color_schemes: t.only_theme_color_schemes,
     });
   });
 

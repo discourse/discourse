@@ -7,7 +7,8 @@ module DiscourseAi
 
       requires_plugin PLUGIN_NAME
       requires_login
-      before_action :ensure_can_request_suggestions
+      before_action :ensure_can_request_composer_suggestions, except: :stream_suggestion
+      before_action :ensure_can_request_stream_suggestions, only: :stream_suggestion
       before_action :rate_limiter_performed!
 
       include SecureUploadEndpointHelpers
@@ -33,13 +34,16 @@ module DiscourseAi
           raise Discourse::InvalidParameters.new(:custom_prompt) if params[:custom_prompt].blank?
         end
 
+        assistant = DiscourseAi::AiHelper::Assistant.new
+        assistant.ensure_mode_access!(params[:mode], current_user)
+
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
           return suggest_thumbnails(input)
         end
 
         hijack do
           render json:
-                   DiscourseAi::AiHelper::Assistant.new.generate_and_send_prompt(
+                   assistant.generate_and_send_prompt(
                      params[:mode],
                      input,
                      current_user,
@@ -70,10 +74,12 @@ module DiscourseAi
                      current_user,
                    ),
                  status: :ok
+        rescue LlmCreditAllocation::CreditLimitExceeded => e
+          render_credit_limit_error(e)
+        rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
+          render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
+                            status: 502
         end
-      rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
-        render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
-                          status: 502
       end
 
       def suggest_category
@@ -117,7 +123,7 @@ module DiscourseAi
           if result.failure?
             failing_step = nil
             failing_step = "contract.default" if result[:"result.contract.default"]&.failure?
-            failing_step = "model.persona" if result[:"result.model.persona"]&.failure?
+            failing_step = "model.agent" if result[:"result.model.agent"]&.failure?
             failing_step = "policy.has_image_generation_tool" if result[
               :"result.policy.has_image_generation_tool"
             ]&.failure?
@@ -127,7 +133,7 @@ module DiscourseAi
               case failing_step
               when "contract.default"
                 422
-              when "model.persona"
+              when "model.agent"
                 404
               when "policy.has_image_generation_tool"
                 422
@@ -141,8 +147,8 @@ module DiscourseAi
               case failing_step
               when "contract.default"
                 "discourse_ai.ai_helper.errors.completion_request_failed"
-              when "model.persona"
-                "discourse_ai.ai_helper.errors.no_illustrator_persona"
+              when "model.agent"
+                "discourse_ai.ai_helper.errors.no_illustrator_agent"
               when "policy.has_image_generation_tool"
                 "discourse_ai.ai_helper.errors.no_image_generation_tool"
               when "model.llm_model"
@@ -155,6 +161,8 @@ module DiscourseAi
           else
             render json: { thumbnails: result[:thumbnails] }, status: :ok
           end
+        rescue LlmCreditAllocation::CreditLimitExceeded => e
+          render_credit_limit_error(e)
         end
       end
 
@@ -165,8 +173,12 @@ module DiscourseAi
         raise Discourse::InvalidParameters.new(:location) if !location
 
         raise Discourse::InvalidParameters.new(:mode) if params[:mode].blank?
+
+        assistant = DiscourseAi::AiHelper::Assistant.new
+
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
-          return suggest_thumbnails(input)
+          assistant.ensure_mode_access!(params[:mode], current_user)
+          return suggest_thumbnails(text)
         end
 
         if params[:mode] == DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT
@@ -176,6 +188,11 @@ module DiscourseAi
         # to stream we must have an appropriate client_id
         # otherwise we may end up streaming the data to the wrong client
         raise Discourse::InvalidParameters.new(:client_id) if params[:client_id].blank?
+
+        # The UI only renders modes from `current_user.ai_helper_prompts`, but a crafted
+        # API request can still hit this endpoint directly. Enforce the selected agent's
+        # group restrictions here before enqueueing async work.
+        assistant.ensure_mode_access!(params[:mode], current_user)
 
         channel_id = next_channel_id
         progress_channel = "discourse_ai_helper/stream_suggestions/#{channel_id}"
@@ -196,6 +213,7 @@ module DiscourseAi
           post = Post.includes(:topic).find_by(id: post_id)
 
           raise Discourse::InvalidParameters.new(:post_id) unless post
+          guardian.ensure_can_see!(post)
 
           Jobs.enqueue(
             :stream_post_helper,
@@ -234,9 +252,11 @@ module DiscourseAi
 
         check_secure_upload_permission(image) if image.secure?
         user = current_user
+        assistant = DiscourseAi::AiHelper::Assistant.new
+        assistant.ensure_mode_access!(DiscourseAi::AiHelper::Assistant::IMAGE_CAPTION, user)
 
         hijack do
-          caption = DiscourseAi::AiHelper::Assistant.new.generate_image_caption(image, user)
+          caption = assistant.generate_image_caption(image, user)
           render json: {
                    caption:
                      "#{caption} (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})",
@@ -280,13 +300,25 @@ module DiscourseAi
         ).performed!
       end
 
-      def ensure_can_request_suggestions
-        allowed_groups =
-          (
-            SiteSetting.composer_ai_helper_allowed_groups_map |
-              SiteSetting.post_ai_helper_allowed_groups_map
-          )
+      def ensure_can_request_composer_suggestions
+        ensure_user_is_in_any_allowed_group!(SiteSetting.composer_ai_helper_allowed_groups_map)
+      end
 
+      def ensure_can_request_stream_suggestions
+        location = params[:location]
+        raise Discourse::InvalidParameters.new(:location) if location.blank?
+
+        allowed_groups =
+          if location == "composer"
+            SiteSetting.composer_ai_helper_allowed_groups_map
+          else
+            SiteSetting.post_ai_helper_allowed_groups_map
+          end
+
+        ensure_user_is_in_any_allowed_group!(allowed_groups)
+      end
+
+      def ensure_user_is_in_any_allowed_group!(allowed_groups)
         raise Discourse::InvalidAccess if !current_user.in_any_groups?(allowed_groups)
       end
     end

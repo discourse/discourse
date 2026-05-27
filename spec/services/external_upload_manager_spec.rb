@@ -275,7 +275,11 @@ RSpec.describe ExternalUploadManager do
   end
 
   def stub_download_object_filehelper
-    signed_url = Discourse.store.signed_url_for_path(external_upload_stub.key)
+    signed_url =
+      Discourse.store.signed_url_for_path(
+        external_upload_stub.key,
+        include_content_disposition: false,
+      )
     uri = URI.parse(signed_url)
     signed_url = uri.to_s.gsub(uri.query, "")
     stub_request(:get, signed_url).with(query: hash_including({})).to_return(

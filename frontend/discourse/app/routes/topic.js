@@ -40,6 +40,7 @@ export default class TopicRoute extends DiscourseRoute {
   queryParams = {
     filter: { replace: true },
     username_filters: { replace: true },
+    flat: { replace: true },
   };
 
   buildRouteInfoMetadata() {
@@ -207,11 +208,11 @@ export default class TopicRoute extends DiscourseRoute {
   }
 
   @action
-  showGrantBadgeModal() {
+  showGrantBadgeModal(post = null) {
     const topicController = this.controllerFor("topic");
     this.modal.show(GrantBadgeModal, {
       model: {
-        selectedPost: topicController.selectedPosts[0],
+        selectedPost: post ?? topicController.selectedPosts[0],
       },
     });
   }
@@ -237,17 +238,18 @@ export default class TopicRoute extends DiscourseRoute {
   }
 
   @action
-  changeOwner() {
+  changeOwner(post = null) {
     const topicController = this.controllerFor("topic");
     this.modal.show(ChangeOwnerModal, {
       model: {
         deselectAll: topicController.deselectAll,
         multiSelect: topicController.multiSelect,
-        selectedPostsCount: topicController.selectedPostsCount,
-        selectedPostIds: topicController.selectedPostIds,
-        selectedPostUsername: topicController.selectedPostsUsername,
+        selectedPostsCount: post ? 1 : topicController.selectedPostsCount,
+        selectedPostIds: post ? [post.id] : topicController.selectedPostIds,
+        selectedPostUsername:
+          post?.username ?? topicController.selectedPostsUsername,
         toggleMultiSelect: topicController.toggleMultiSelect,
-        topic: this.modelFor("topic"),
+        topic: post?.topic ?? this.modelFor("topic"),
       },
     });
   }

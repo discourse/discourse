@@ -6,16 +6,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
   fab!(:post) { Fabricate(:post, locale: nil) }
 
   before do
-    fake_llm = assign_fake_provider_to(:ai_default_llm_model)
-
-    # Update the locale detector persona (ID -27) with the fake LLM
-    locale_detector = AiPersona.find_by(id: -27)
-    locale_detector.update!(default_llm_id: fake_llm.id) if locale_detector
+    assign_fake_provider_to(:ai_default_llm_model)
 
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.ai_translation_excluded_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -45,8 +42,8 @@ describe Jobs::PostsLocaleDetectionBackfill do
   end
 
   it "detects most recently updated posts first" do
-    post_2 = Fabricate(:post, locale: nil)
-    post_3 = Fabricate(:post, locale: nil)
+    post_2 = Fabricate(:post, locale: nil, topic: post.topic)
+    post_3 = Fabricate(:post, locale: nil, topic: post.topic)
 
     post.update!(updated_at: 3.days.ago)
     post_2.update!(updated_at: 2.days.ago)
@@ -100,10 +97,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
     job.execute({})
   end
 
-  describe "with public content limitation" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_cat_topic) { Fabricate(:topic, category: private_category) }
-    fab!(:private_cat_post) { Fabricate(:post, topic: private_cat_topic, locale: nil) }
+  describe "with excluded categories" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
+    fab!(:included_post) { Fabricate(:post, topic: included_topic, locale: nil) }
+    fab!(:excluded_post) { Fabricate(:post, topic: excluded_topic, locale: nil) }
 
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -112,28 +112,26 @@ describe Jobs::PostsLocaleDetectionBackfill do
     fab!(:pm_topic, :private_message_topic)
     fab!(:pm_post) { Fabricate(:post, topic: pm_topic, locale: nil) }
 
-    before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    before do
+      SiteSetting.ai_translation_excluded_categories =
+        Category.where.not(id: included_category.id).pluck(:id).join("|")
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
 
-    it "only processes posts from public categories" do
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).once
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(private_cat_post)
-        .never
+    it "does not process posts from excluded categories" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 
       job.execute({})
     end
 
-    it "processes all public content and group PMs and private categories when setting is disabled" do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+    it "processes included posts and group PMs when pm_translation_scope is group" do
+      SiteSetting.ai_translation_personal_messages = "group"
 
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).once
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(private_cat_post)
-        .once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).once
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 

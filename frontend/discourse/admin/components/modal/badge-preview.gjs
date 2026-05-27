@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
+import { trustHTML } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BadgePreview extends Component {
@@ -69,21 +69,21 @@ export default class BadgePreview extends Component {
         {{else}}
           <p class="grant-count">
             {{#if @model.badge.grant_count}}
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "admin.badges.preview.grant_count"
                   count=@model.badge.grant_count
                 )
               }}
             {{else}}
-              {{htmlSafe (i18n "admin.badges.preview.no_grant_count")}}
+              {{trustHTML (i18n "admin.badges.preview.no_grant_count")}}
             {{/if}}
           </p>
 
           {{#if this.countWarning}}
             <div class="count-warning">
               <p class="heading">
-                {{icon "triangle-exclamation"}}
+                {{dIcon "triangle-exclamation"}}
                 {{i18n "admin.badges.preview.bad_count_warning.header"}}
               </p>
               <p class="body">
@@ -98,14 +98,14 @@ export default class BadgePreview extends Component {
             </p>
             <ul>
               {{#each this.processedSample as |html|}}
-                <li>{{htmlSafe html}}</li>
+                <li>{{trustHTML html}}</li>
               {{/each}}
             </ul>
           {{/if}}
 
           {{#if this.hasQueryPlan}}
             <div class="badge-query-plan">
-              {{htmlSafe this.queryPlanHtml}}
+              {{trustHTML this.queryPlanHtml}}
             </div>
           {{/if}}
         {{/if}}

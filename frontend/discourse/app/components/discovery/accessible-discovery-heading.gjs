@@ -50,11 +50,13 @@ export default class AccessibleDiscoveryHeading extends Component {
     // tag intersections don't have additional filters
     if (type === "multi_tag") {
       return i18n("discovery.headings.multi_tag.default", {
-        tags: [tag?.id, ...(additionalTags || [])].filter(Boolean).join(" + "),
+        tags: [tag?.name, ...(additionalTags || [])]
+          .filter(Boolean)
+          .join(" + "),
       });
     }
 
-    if (tag?.id === "none" && !additionalTags?.length) {
+    if (tag?.name === "none" && !additionalTags?.length) {
       const noTagsType = category ? "category" : "all";
       const prefix = `discovery.headings.no_tags.${noTagsType}`;
       const specificKey = key ? `${prefix}.${key}` : null;
@@ -79,7 +81,7 @@ export default class AccessibleDiscoveryHeading extends Component {
 
     const params = {
       category: category?.name,
-      tag: tag?.id,
+      tag: tag?.name,
       filter: key,
     };
 

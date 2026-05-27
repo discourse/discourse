@@ -17,8 +17,11 @@ rescue LoadError
 end
 
 class BulkImport::Generic < BulkImport::Base
+  include HasSanitizableFields
+
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
+  MERGE_IMPORT = ENV["MERGE_IMPORT"].present?
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
 
@@ -26,6 +29,15 @@ class BulkImport::Generic < BulkImport::Base
     super()
     @source_db = create_connection(db_path)
     @uploads_db = create_connection(uploads_db_path) if uploads_db_path
+
+    if MERGE_IMPORT
+      row = @source_db.execute("SELECT value FROM config WHERE name = 'converting_from'").first
+      @import_prefix = row&.[]("value")
+      unless @import_prefix
+        raise "MERGE_IMPORT requires 'converting_from' in intermediate DB config table"
+      end
+      puts "MERGE_IMPORT mode enabled with source prefix: #{@import_prefix}"
+    end
   end
 
   def start
@@ -38,6 +50,11 @@ class BulkImport::Generic < BulkImport::Base
 
     puts "running 'import:ensure_consistency' rake task."
     Rake::Task["import:ensure_consistency"].invoke
+
+    # Force refresh directory items to sync user stats
+    # This is needed even when enable_user_directory is false
+    puts "", "Refreshing directory items and syncing user stats..."
+    refresh_directory_items
   end
 
   def execute
@@ -61,6 +78,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_histories
     import_user_notes
     import_user_note_counts
+    import_user_custom_fields
     import_user_followers
 
     import_user_avatars
@@ -81,6 +99,7 @@ class BulkImport::Generic < BulkImport::Base
     update_category_read_restricted
 
     import_topics
+    import_topic_custom_fields
     import_posts
     import_post_custom_fields
 
@@ -109,6 +128,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topic_users
     update_topic_users
+    import_bookmarks
 
     import_user_stats
 
@@ -142,6 +162,23 @@ class BulkImport::Generic < BulkImport::Base
 
     @source_db.close
     @uploads_db.close if @uploads_db
+  end
+
+  def refresh_directory_items
+    start_time = Time.now
+
+    # Force refresh all directory periods - this works even when
+    # enable_user_directory site setting is disabled
+    DirectoryItem.period_types.each_key do |period|
+      puts "  Refreshing directory items for period: #{period}"
+      DirectoryItem.refresh_period!(period, force: true)
+    end
+
+    UserStat.ensure_consistency!
+    Discourse.cache.clear
+    Site.clear_cache
+
+    puts "  Refreshed directory items in #{(Time.now - start_time).to_i} seconds."
   end
 
   def enable_required_plugins
@@ -248,10 +285,22 @@ class BulkImport::Generic < BulkImport::Base
         name: row["name"],
         description: row["description"],
         parent_category_id:
-          row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
+          (
+            if row["parent_category_id"]
+              category_id_from_imported_id(row["parent_category_id"])
+            else
+              nil
+            end
+          ),
         slug: row["slug"],
         uploaded_logo_id:
-          row["logo_upload_id"] ? upload_id_from_original_id(row["logo_upload_id"]) : nil,
+          (
+            if row["logo_upload_id"]
+              upload_id_from_original_id(row["logo_upload_id"])
+            else
+              nil
+            end
+          ),
         show_subcategory_list: row["show_subcategory_list"],
         subcategory_list_style: row["subcategory_list_style"],
         minimum_required_tags: row["minimum_required_tags"],
@@ -301,7 +350,7 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     field_names =
-      query("SELECT DISTINCT name FROM category_custom_fields") { _1.map { |row| row["name"] } }
+      query("SELECT DISTINCT name FROM category_custom_fields") { it.map { |row| row["name"] } }
     existing_category_custom_fields =
       CategoryCustomField.where(name: field_names).pluck(:category_id, :name).to_set
 
@@ -472,6 +521,7 @@ class BulkImport::Generic < BulkImport::Base
 
       {
         imported_id: row["id"],
+        existing_id: row["existing_id"],
         name: row["name"],
         full_name: row["full_name"],
         public_admission: row["public_admission"] || false,
@@ -504,7 +554,8 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
 
       next if user_id.nil?
-      next if existing_group_user_ids.include?([group_id, user_id])
+      next if group_id.nil?
+      next unless existing_group_user_ids.add?([group_id, user_id])
 
       { group_id: group_id, user_id: user_id, owner: row["owner"] }
     end
@@ -578,7 +629,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_emails(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
         username = username_from_id(user_id)
@@ -604,7 +655,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_profiles(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
         row["bio"] = nil
@@ -635,7 +686,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_options(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       {
         user_id: user_id,
@@ -731,7 +782,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_single_sign_on_records(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       sso_record = JSON.parse(row["sso_record"], symbolize_names: true)
       sso_record[:user_id] = user_id
@@ -788,13 +839,21 @@ class BulkImport::Generic < BulkImport::Base
       next if row["private_message"].blank? && category_id.nil?
 
       {
-        archetype: row["private_message"] ? Archetype.private_message : Archetype.default,
+        archetype:
+          (
+            if row["private_message"]
+              Archetype.private_message
+            else
+              Archetype.default
+            end
+          ),
         imported_id: row["id"],
         title: row["title"],
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
         category_id: category_id,
         closed: to_boolean(row["closed"]),
+        archived: to_boolean(row["archived"]),
         views: row["views"],
         subtype: row["subtype"],
         pinned_at: to_datetime(row["pinned_at"]),
@@ -804,6 +863,32 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     topics.close
+  end
+
+  def import_topic_custom_fields
+    puts "", "Importing topic custom fields..."
+
+    topic_custom_fields = query(<<~SQL)
+      SELECT *
+      FROM topic_custom_fields
+      ORDER BY topic_id, name
+    SQL
+
+    field_names =
+      query("SELECT DISTINCT name FROM topic_custom_fields") { it.map { |row| row["name"] } }
+    existing_topic_custom_fields =
+      TopicCustomField.where(name: field_names).pluck(:topic_id, :name).to_set
+
+    create_topic_custom_fields(topic_custom_fields) do |row|
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      next if topic_id.nil?
+
+      next unless existing_topic_custom_fields.add?([topic_id, row["name"]])
+
+      { topic_id: topic_id, name: row["name"], value: row["value"] }
+    end
+
+    topic_custom_fields.close
   end
 
   def import_topic_allowed_users
@@ -897,7 +982,13 @@ class BulkImport::Generic < BulkImport::Base
         raw: raw_with_placeholders_interpolated(row["raw"], row),
         like_count: row["like_count"],
         reply_to_post_number:
-          row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
+          (
+            if row["reply_to_post_id"]
+              post_number_from_imported_id(row["reply_to_post_id"])
+            else
+              nil
+            end
+          ),
       }
     end
 
@@ -925,12 +1016,15 @@ class BulkImport::Generic < BulkImport::Base
       SQL
 
       poll_details.each do |poll|
-        if (placeholder = poll_mapping[poll["id"]])
+        if (placeholder = poll_mapping.delete(poll["id"]))
           raw.gsub!(placeholder, poll_bbcode(poll))
         end
       end
 
       poll_details.close
+
+      # Remove placeholders for polls without options
+      poll_mapping.each_value { |placeholder| raw.gsub!(placeholder, "") }
     end
 
     if (mentions = placeholders&.fetch("mentions", nil))
@@ -1162,7 +1256,7 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     field_names =
-      query("SELECT DISTINCT name FROM post_custom_fields") { _1.map { |row| row["name"] } }
+      query("SELECT DISTINCT name FROM post_custom_fields") { it.map { |row| row["name"] } }
     existing_post_custom_fields =
       PostCustomField.where(name: field_names).pluck(:post_id, :name).to_set
 
@@ -1202,7 +1296,7 @@ class BulkImport::Generic < BulkImport::Base
         original_id: row["id"],
         post_id: post_id,
         name: poll_name(row),
-        closed_at: to_datetime(row["closed_at"]),
+        closed_at: to_datetime(row["close_at"]),
         type: row["type"],
         status: row["status"],
         results: row["results"],
@@ -1268,7 +1362,7 @@ class BulkImport::Generic < BulkImport::Base
       next unless poll_id
 
       option_ids = row["option_ids"].split(",")
-      option_ids.each { |option_id| next if poll_option_id_from_original_id(option_id).present? }
+      next if option_ids.all? { |oid| poll_option_id_from_original_id(oid).present? }
 
       {
         original_ids: option_ids,
@@ -1374,13 +1468,13 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY user_id, topic_id
     SQL
 
-    existing_topics = TopicUser.pluck(:topic_id).to_set
+    existing_topic_users = TopicUser.pluck(:topic_id, :user_id).to_set
 
     create_topic_users(topic_users) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
       next unless user_id && topic_id
-      next if existing_topics.include?(topic_id)
+      next if existing_topic_users.include?([topic_id, user_id])
 
       {
         user_id: user_id,
@@ -1497,6 +1591,85 @@ class BulkImport::Generic < BulkImport::Base
     puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
   end
 
+  def import_bookmarks
+    unless @source_db.get_first_value(
+             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='bookmarks'",
+           )
+      return
+    end
+
+    puts "", "Importing bookmarks..."
+
+    bookmarks = query(<<~SQL)
+      SELECT id, user_id, bookmarkable_id, bookmarkable_type, name,
+             reminder_at, reminder_set_at, reminder_last_sent_at,
+             auto_delete_preference, pinned, created_at, updated_at
+        FROM bookmarks
+       ORDER BY user_id, bookmarkable_id
+    SQL
+
+    existing_bookmarks = Bookmark.pluck(:user_id, :bookmarkable_type, :bookmarkable_id).to_set
+
+    create_bookmarks(bookmarks) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next unless user_id
+
+      bookmarkable_type = row["bookmarkable_type"].to_s
+      bookmarkable_id = row["bookmarkable_id"]
+
+      if bookmarkable_type == "Topic"
+        topic_id = topic_id_from_imported_id(bookmarkable_id)
+        next unless topic_id
+        next unless existing_bookmarks.add?([user_id, bookmarkable_type, topic_id])
+
+        {
+          user_id: user_id,
+          bookmarkable_id: topic_id,
+          bookmarkable_type: bookmarkable_type,
+          name: row["name"],
+          reminder_at: to_datetime(row["reminder_at"]),
+          reminder_set_at: to_datetime(row["reminder_set_at"]),
+          reminder_last_sent_at: to_datetime(row["reminder_last_sent_at"]),
+          auto_delete_preference: row["auto_delete_preference"]&.to_i,
+          pinned: row["pinned"].present? ? to_boolean(row["pinned"]) : false,
+          created_at: to_datetime(row["created_at"]),
+          updated_at: to_datetime(row["updated_at"]),
+        }
+      elsif bookmarkable_type == "Post"
+        post_id = post_id_from_imported_id(bookmarkable_id)
+        next unless post_id
+        next unless existing_bookmarks.add?([user_id, bookmarkable_type, post_id])
+
+        {
+          user_id: user_id,
+          bookmarkable_id: post_id,
+          bookmarkable_type: bookmarkable_type,
+          name: row["name"],
+          reminder_at: to_datetime(row["reminder_at"]),
+          reminder_set_at: to_datetime(row["reminder_set_at"]),
+          reminder_last_sent_at: to_datetime(row["reminder_last_sent_at"]),
+          auto_delete_preference: row["auto_delete_preference"]&.to_i,
+          pinned: row["pinned"].present? ? to_boolean(row["pinned"]) : false,
+          created_at: to_datetime(row["created_at"]),
+          updated_at: to_datetime(row["updated_at"]),
+        }
+      else
+        next
+      end
+    end
+
+    bookmarks.close
+
+    puts "  Updating topic_users.bookmarked from bookmarks..."
+    DB.exec(<<~SQL)
+      INSERT INTO topic_users (user_id, topic_id, bookmarked)
+      SELECT b.user_id, b.bookmarkable_id, TRUE
+        FROM bookmarks b
+       WHERE b.bookmarkable_type = 'Topic'
+      ON CONFLICT (user_id, topic_id) DO UPDATE SET bookmarked = TRUE
+    SQL
+  end
+
   def import_user_stats
     puts "", "Importing user stats..."
 
@@ -1606,13 +1779,15 @@ class BulkImport::Generic < BulkImport::Base
         FROM muted_users
     SQL
 
-    existing_user_ids = MutedUser.pluck(:user_id).to_set
+    existing_user_ids = MutedUser.pluck(:user_id, :muted_user_id).to_set
 
     create_muted_users(muted_users) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      muted_user_id = user_id_from_imported_id(row["muted_user_id"])
+      next unless user_id && muted_user_id
+      next if existing_user_ids.include?([user_id, muted_user_id])
 
-      { user_id: user_id, muted_user_id: user_id_from_imported_id(row["muted_user_id"]) }
+      { user_id: user_id, muted_user_id: muted_user_id }
     end
 
     muted_users.close
@@ -1723,6 +1898,57 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_note_counts.close
+  end
+
+  def import_user_custom_fields
+    puts "", "Importing user custom fields..."
+
+    rows = query(<<~SQL)
+      SELECT user_id, name, value, created_at
+        FROM user_custom_fields
+    SQL
+
+    existing_names = query(<<~SQL) { |rs| rs.map { |r| r["name"] } }
+        SELECT DISTINCT name FROM user_custom_fields
+      SQL
+
+    return if existing_names.empty?
+
+    existing = UserCustomField.where(name: existing_names).pluck(:user_id, :name).to_set
+
+    create_user_custom_fields(rows) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if !user_id
+      next if existing.include?([user_id, row["name"]])
+
+      {
+        user_id: user_id,
+        name: row["name"],
+        value: row["value"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    rows.close
+
+    puts "", "Cooking signature_cooked from signature_raw..."
+
+    sig_rows = query(<<~SQL)
+      SELECT user_id, value
+        FROM user_custom_fields
+       WHERE name = 'signature_raw'
+    SQL
+
+    cooked_existing = UserCustomField.where(name: "signature_cooked").pluck(:user_id).to_set
+
+    create_user_custom_fields(sig_rows) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if !user_id || cooked_existing.include?(user_id)
+      raw_sig = row["value"].to_s.strip
+      next if raw_sig.empty?
+      { user_id: user_id, name: "signature_cooked", value: PrettyText.cook(raw_sig) }
+    end
+    sig_rows.close
   end
 
   def import_user_followers
@@ -2029,10 +2255,14 @@ class BulkImport::Generic < BulkImport::Base
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
+      description = row["description"].presence&.truncate(1000)
       tag =
-        Tag.where("LOWER(name) = ?", cleaned_tag_name.downcase).first_or_create!(
-          name: cleaned_tag_name,
-        )
+        Tag
+          .where("LOWER(name) = ?", cleaned_tag_name.downcase)
+          .first_or_create!(name: cleaned_tag_name) { |t| t.description = description }
+      if description && tag.description != description
+        tag.update_columns(description: sanitize_field(description))
+      end
       @tag_mapping[row["id"]] = tag.id
 
       intermediate_group_ids = []
@@ -2216,6 +2446,7 @@ class BulkImport::Generic < BulkImport::Base
         INTO topic_voting_topic_vote_count (votes_count, topic_id, created_at, updated_at)
       SELECT votes_count, topic_id, NOW(), NOW()
         FROM missing_votes
+          ON CONFLICT DO NOTHING
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
@@ -2268,7 +2499,14 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
       next unless topic_id && user_id
 
-      acting_user_id = row["acting_user_id"] ? user_id_from_imported_id(row["acting_user_id"]) : nil
+      acting_user_id =
+        (
+          if row["acting_user_id"]
+            user_id_from_imported_id(row["acting_user_id"])
+          else
+            nil
+          end
+        )
 
       {
         action_type: action_type,
@@ -2427,14 +2665,14 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY tag_id, user_id
     SQL
 
-    existing_tag_users = TagUser.distinct.pluck(:user_id).to_set
+    existing_tag_users = TagUser.pluck(:tag_id, :user_id).to_set
 
     create_tag_users(tag_users) do |row|
       tag_id = @tag_mapping[row["tag_id"]]
       user_id = user_id_from_imported_id(row["user_id"])
 
       next unless tag_id && user_id
-      next if existing_tag_users.include?(user_id)
+      next if existing_tag_users.include?([tag_id, user_id])
 
       { tag_id: tag_id, user_id: user_id, notification_level: row["notification_level"] }
     end
@@ -2493,7 +2731,13 @@ class BulkImport::Generic < BulkImport::Base
         badge_grouping_id: @badge_group_mapping[row["badge_group"]],
         long_description: row["long_description"],
         image_upload_id:
-          row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
+          (
+            if row["image_upload_id"]
+              upload_id_from_original_id(row["image_upload_id"])
+            else
+              nil
+            end
+          ),
         query: row["query"],
         multiple_grant: to_boolean(row["multiple_grant"]),
         allow_title: to_boolean(row["allow_title"]),
@@ -2593,18 +2837,25 @@ class BulkImport::Generic < BulkImport::Base
                                     eu.created_at +
                                     ((year_num - EXTRACT(YEAR FROM eu.created_at)) || ' years')::interval
                                   ) < CURRENT_TIMESTAMP
-                             )
+                             ),
+        existing_max_seq AS (
+                              SELECT user_id, COALESCE(MAX(seq), -1) AS max_seq
+                              FROM user_badges
+                              WHERE badge_id = #{Badge::Anniversary}
+                              GROUP BY user_id
+                            )
       INSERT INTO user_badges (granted_at, created_at, granted_by_id, user_id, badge_id, seq)
       SELECT a.anniversary_date,
              CURRENT_TIMESTAMP,
              #{Discourse.system_user.id},
              a.user_id,
              #{Badge::Anniversary},
-             (ROW_NUMBER() OVER (PARTITION BY a.user_id ORDER BY a.anniversary_date) - 1) AS seq
+             COALESCE(ems.max_seq, -1) + ROW_NUMBER() OVER (PARTITION BY a.user_id ORDER BY a.anniversary_date) AS seq
       FROM anniversary_dates a
            JOIN eligible_users u ON a.user_id = u.id
            JOIN posts AS p ON p.user_id = u.id
            JOIN topics AS t ON p.topic_id = t.id
+           LEFT JOIN existing_max_seq ems ON ems.user_id = a.user_id
       WHERE p.deleted_at IS NULL
         AND NOT p.hidden
         AND p.created_at BETWEEN a.anniversary_date - '1 year'::interval AND a.anniversary_date
@@ -2618,7 +2869,8 @@ class BulkImport::Generic < BulkImport::Base
             AND ub.badge_id = #{Badge::Anniversary}
             AND ub.granted_at BETWEEN a.anniversary_date - '1 year'::interval AND a.anniversary_date
         )
-      GROUP BY a.user_id, a.anniversary_date
+      GROUP BY a.user_id, a.anniversary_date, ems.max_seq
+      ON CONFLICT DO NOTHING
     SQL
 
     UserBadge.update_featured_ranks!
@@ -2893,6 +3145,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       original_message_user_id = user_id_from_imported_id(row["original_message_user_id"])
 
+      next if chat_thread_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || original_message_user_id.blank?
 
       # Messages aren't imported yet. Use a placeholder `original_message_id` for now.
@@ -2968,6 +3221,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       user_id = user_id_from_imported_id(row["user_id"])
 
+      next if chat_message_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || user_id.blank?
       next if row["message"].blank? && row["upload_ids"].blank?
 

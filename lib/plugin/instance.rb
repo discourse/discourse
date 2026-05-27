@@ -71,6 +71,15 @@ class Plugin::Instance
     File.dirname(path)
   end
 
+  def resolved_dir
+    @resolved_dir ||=
+      if File.symlink?(root_dir)
+        File.expand_path(File.readlink(root_dir), "#{Rails.root.join("plugins")}")
+      else
+        root_dir
+      end
+  end
+
   def seed_data
     @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
@@ -85,16 +94,20 @@ class Plugin::Instance
   end
 
   def self.find_all(parent_path)
+    allowed = GlobalSetting.plugins_to_load
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
+      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
+        next if allowed && !allowed.include?(File.basename(File.dirname(path)))
+        plugins << parse_from_source(path)
+      end
     end
   end
 
   def self.parse_from_source(path)
     source = File.read(path)
     metadata = Plugin::Metadata.parse(source)
-    self.new(metadata, path)
+    new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -125,7 +138,7 @@ class Plugin::Instance
   end
 
   def full_admin_route
-    route = self.admin_route
+    route = admin_route
 
     if route.blank?
       return if !any_settings? || has_only_enabled_setting?
@@ -149,7 +162,13 @@ class Plugin::Instance
   end
 
   def plugin_settings
-    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
+    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == name }
+  end
+
+  def deprecate_setting(old_setting, new_setting, override, drom_from)
+    setting = [old_setting, new_setting, override, drom_from]
+    SiteSettings::DeprecatedSettings::SETTINGS << setting
+    SiteSetting.setup_deprecated_method(*setting)
   end
 
   def configurable?
@@ -168,11 +187,7 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def humanized_name
-    (setting_category_name || name)
-      .delete_prefix("Discourse ")
-      .delete_prefix("discourse-")
-      .gsub("-", " ")
-      .upcase_first
+    (setting_category_name || name).sub(/\Adiscourse[\s\-_]+/i, "").tr("-_", "  ").upcase_first
   end
 
   def add_to_serializer(
@@ -226,6 +241,12 @@ class Plugin::Instance
 
   def register_modifier(modifier_name, &blk)
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
+  end
+
+  # Register a handler for an action initiated by an anonymous user, to be
+  # replayed against their account after they authenticate. See AnonymousAction.
+  def register_anonymous_action(type, &block)
+    reloadable_patch { AnonymousAction.register(type, &block) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -396,6 +417,10 @@ class Plugin::Instance
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
     reloadable_patch { Site.preloaded_category_custom_fields << field }
+  end
+
+  def register_category_type(klass)
+    Categories::TypeRegistry.register(klass, plugin_identifier: metadata.name)
   end
 
   def register_problem_check(klass)
@@ -617,13 +642,18 @@ class Plugin::Instance
     "#{git_repo.url}/commit/#{commit_hash}"
   end
 
+  def preinstalled?
+    return @preinstalled if defined?(@preinstalled)
+    @preinstalled = !File.exist?(File.join(directory, ".git"))
+  end
+
   def git_repo
     @git_repo ||= GitRepo.new(directory, name)
   end
 
   def discourse_owned?
     return false if commit_hash.blank?
-    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    parsed_commit_url = UrlHelper.relaxed_parse(commit_url)
     return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
@@ -653,14 +683,12 @@ class Plugin::Instance
 
   def notify_after_initialize
     initializers.each do |callback|
-      begin
-        callback.call(self)
-      rescue ActiveRecord::StatementInvalid => e
-        # When running `db:migrate` for the first time on a new database,
-        # plugin initializers might try to use models.
-        # Tolerate it.
-        raise e unless e.message.try(:include?, "PG::UndefinedTable")
-      end
+      callback.call(self)
+    rescue ActiveRecord::StatementInvalid => e
+      # When running `db:migrate` for the first time on a new database,
+      # plugin initializers might try to use models.
+      # Tolerate it.
+      raise e unless e.message.try(:include?, "PG::UndefinedTable")
     end
   end
 
@@ -709,8 +737,8 @@ class Plugin::Instance
   end
 
   def listen_for(event_name)
-    return unless self.respond_to?(event_name)
-    DiscourseEvent.on(event_name, &self.method(event_name))
+    return unless respond_to?(event_name)
+    DiscourseEvent.on(event_name, &method(event_name))
   end
 
   def register_css(style)
@@ -823,7 +851,7 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-    self.instance_eval File.read(path), path
+    instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat(auto_assets)
     end
@@ -952,8 +980,7 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    # If assets/javascripts exists, ember-cli will output a .js file
-    File.exist?("#{File.dirname(@path)}/assets/javascripts")
+    Plugin::JsManager.js_asset_exists?(directory_name)
   end
 
   def extra_js_asset_exists?
@@ -961,8 +988,11 @@ class Plugin::Instance
   end
 
   def admin_js_asset_exists?
-    # If this directory exists, ember-cli will output a .js file
-    File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+    Plugin::JsManager.admin_js_asset_exists?(directory_name)
+  end
+
+  def test_js_asset_exists?
+    Plugin::JsManager.test_js_asset_exists?(directory_name)
   end
 
   # Receives an array with two elements:
@@ -1026,6 +1056,24 @@ class Plugin::Instance
   def add_api_parameter_route(methods: nil, actions: nil, formats: nil)
     DiscoursePluginRegistry.register_api_parameter_route(
       RouteMatcher.new(methods: methods, actions: actions, formats: formats),
+      self,
+    )
+  end
+
+  # Register an additional calendar subscription feed that appears in the user's
+  # calendar subscription preferences. Each feed needs a name (unique key),
+  # user API key scope name, and a lambda that builds the URL given (base_url, user, key).
+  #
+  # Example:
+  #   register_calendar_subscription_feed(
+  #     name: "all_events",
+  #     scope: "discourse-calendar:events_calendar",
+  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
+  #   )
+  def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
+    DiscoursePluginRegistry.register_calendar_subscription_feed(
+      { name: name, scope: scope, description_key: description_key, url: url },
       self,
     )
   end
@@ -1185,6 +1233,23 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 
+  # Registers a KPI tile in the admin dashboard "Highlights" section
+  # (gated by SiteSetting.dashboard_improvements). The KPI is rendered as a
+  # tile linking to /admin/reports/:report.
+  #
+  # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
+  #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to
+  #   namespace the percentage-formatting client-side.
+  # @param report [String] the underlying Report.find type.
+  # @param enabled [Proc] optional gate evaluated on every dashboard build.
+  #   Return false to omit the KPI without disabling the plugin entirely.
+  def register_admin_dashboard_highlight_kpi(type:, report:, enabled: nil)
+    DiscoursePluginRegistry.register_admin_dashboard_highlight_kpi(
+      { type: type, report: report, enabled: enabled },
+      self,
+    )
+  end
+
   ##
   # Used to register data sources for HashtagAutocompleteService to look
   # up results based on a #hashtag string.
@@ -1272,6 +1337,34 @@ class Plugin::Instance
   def register_bookmarkable(klass)
     return if Bookmark.registered_bookmarkable_from_type(klass.model.name).present?
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
+  end
+
+  ##
+  # Register a class that implements [AdminDashboard::Reports::SourceProvider],
+  # exposing a kind of report (built-in, Data Explorer query, etc.) for the
+  # customisable Reports section on the new admin dashboard. The class must
+  # inherit from AdminDashboard::Reports::SourceProvider and declare a unique
+  # `.source_name`; see the base class for the full contract.
+  def register_admin_dashboard_report_source(provider_class)
+    if !provider_class.is_a?(Class) || !(provider_class < ::AdminDashboard::Reports::SourceProvider)
+      raise ArgumentError,
+            "register_admin_dashboard_report_source expects a subclass of " \
+              "AdminDashboard::Reports::SourceProvider, got #{provider_class.inspect}"
+    end
+
+    existing =
+      ::AdminDashboard::Reports::Registry.providers.find do |klass|
+        klass.source_name.to_s == provider_class.source_name.to_s
+      end
+
+    return if existing == provider_class
+
+    if existing
+      raise ArgumentError,
+            "Source #{provider_class.source_name.inspect} is already registered by #{existing}"
+    end
+
+    DiscoursePluginRegistry.register_admin_dashboard_report_source(provider_class, self)
   end
 
   ##
@@ -1450,10 +1543,22 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
   end
 
+  def about_json_metadata
+    @about_json_metadata ||= JSON.parse(File.read("#{directory}/about.json"))
+  rescue Errno::ENOENT
+    nil
+  end
+
+  def test_required_plugins
+    if urls = about_json_metadata&.dig("tests", "requiredPlugins")
+      urls.map { |url| url.split("/").last.delete_suffix(".git") }
+    end
+  end
+
   protected
 
   def self.js_path
-    File.expand_path "#{Rails.root}/app/assets/generated"
+    File.expand_path "#{Rails.root.join("app/assets/generated")}"
   end
 
   def extra_js_file_path
@@ -1476,7 +1581,7 @@ class Plugin::Instance
   end
 
   def ensure_images_symlink!
-    link_from = "#{Rails.root}/app/assets/generated/#{directory_name}/images"
+    link_from = "#{Rails.root.join("app/assets/generated/#{directory_name}/images")}"
     link_target = "#{directory}/assets/images"
 
     if Dir.exist? link_target

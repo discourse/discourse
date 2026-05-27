@@ -22,7 +22,7 @@ RSpec.describe Chat::DirectMessagesController do
 
   describe "#index" do
     context "when user is not allowed to chat" do
-      before { SiteSetting.chat_allowed_groups = nil }
+      before { SiteSetting.chat_allowed_groups = "" }
 
       it "returns a forbidden error" do
         get "/chat/direct_messages.json", params: { usernames: user1.username }
@@ -34,6 +34,34 @@ RSpec.describe Chat::DirectMessagesController do
       it "returns a not found error" do
         get "/chat/direct_messages.json", params: { usernames: user1.username }
         expect(response.status).to eq(404)
+      end
+    end
+
+    context "when a category channel exists with the same chatable_id as the direct message" do
+      it "returns the direct message channel, not the category channel" do
+        category = Fabricate(:category, name: "Secret Category")
+        cat_channel =
+          Chat::CategoryChannel.create!(
+            chatable: category,
+            chatable_type: "Category",
+            name: "Secret Category",
+          )
+
+        dm = Chat::DirectMessage.create!
+        dm.direct_message_users.create!(user_id: user.id)
+        dm.direct_message_users.create!(user_id: user1.id)
+        dm_channel = Chat::DirectMessageChannel.create!(chatable: dm)
+
+        DB.exec(
+          "UPDATE chat_channels SET chatable_id = :target_id WHERE id = :channel_id",
+          target_id: dm.id,
+          channel_id: cat_channel.id,
+        )
+
+        get "/chat/direct_messages.json", params: { usernames: user1.username }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["channel"]["id"]).to eq(dm_channel.id)
+        expect(response.parsed_body["channel"]["chatable_type"]).to eq("DirectMessage")
       end
     end
 

@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-describe "Admin Site Texts Page", type: :system do
+describe "Admin Site Texts Page" do
   fab!(:admin)
 
   let(:site_texts_page) { PageObjects::Pages::AdminSiteTexts.new }
 
   before { sign_in(admin) }
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   it "can search for client text using the default locale" do
     site_texts_page.visit
@@ -127,5 +124,17 @@ describe "Admin Site Texts Page", type: :system do
     site_texts_page.click_replace_text_button
 
     expect(page.all(".modal label span").map(&:text)).to eq(["Uncategorized"])
+  end
+
+  it "can load more results" do
+    site_texts_page.visit
+    site_texts_page.search("e")
+
+    expect(page).to have_css(".site-text", minimum: 50)
+    initial_count = page.all(".site-text").count
+
+    page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+
+    expect(page).to have_css(".site-text", minimum: initial_count + 1)
   end
 end

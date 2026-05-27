@@ -5,6 +5,7 @@ import sinon from "sinon";
 import {
   PageLinkFormatter,
   SettingLinkFormatter,
+  UpcomingChangeLinkFormatter,
 } from "discourse/admin/services/admin-search-data-source";
 import PreloadStore from "discourse/lib/preload-store";
 import {
@@ -194,10 +195,39 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     assert.deepEqual(results[0].label, "About your site > Title");
   });
 
+  test("search - matches 3-character keywords like acronyms", async function (assert) {
+    this.subject.componentDataSourceItems = [];
+    this.subject.reportDataSourceItems = [];
+    this.subject.themeDataSourceItems = [];
+    this.subject.settingDataSourceItems = [];
+    this.subject.pageDataSourceItems = [
+      {
+        description: "Tools and MCP servers",
+        icon: "gear",
+        keywords: "mcp mcp server model context protocol",
+        label: "Plugins > Tools",
+        type: "page",
+        url: "/admin/plugins/discourse-ai/ai-tools",
+      },
+      {
+        description: "Unrelated page",
+        icon: "gear",
+        keywords: "something else entirely",
+        label: "Other Page",
+        type: "page",
+        url: "/admin/other",
+      },
+    ];
+    let results = this.subject.search("mcp");
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].label, "Plugins > Tools");
+  });
+
   test("search - prioritize pages", async function (assert) {
     this.subject.componentDataSourceItems = [];
     this.subject.reportDataSourceItems = [];
     this.subject.themeDataSourceItems = [];
+    this.subject.upcomingChangeDataSourceItems = [];
     this.subject.pageDataSourceItems = [
       {
         description: "first page",
@@ -482,6 +512,35 @@ module(
         "/admin/plugins/chat?filter=enable_chat",
         "url uses the category and setting"
       );
+    });
+  }
+);
+
+module(
+  "Unit | Service | AdminSearchDataSource | UpcomingChangeLinkFormatter",
+  function () {
+    test("format returns correct label, description, url, keywords, type, and icon", function (assert) {
+      const upcomingChange = {
+        humanized_name: "New upload limits",
+        description: "Upload limits are changing to improve security",
+        setting: "max_upload_size",
+      };
+
+      const result = new UpcomingChangeLinkFormatter(upcomingChange).format();
+
+      assert.strictEqual(result.label, "New upload limits");
+      assert.strictEqual(
+        result.description,
+        "Upload limits are changing to improve security"
+      );
+      assert.strictEqual(
+        result.url,
+        "/admin/config/upcoming-changes?changeNamesFilter=max_upload_size"
+      );
+      assert.strictEqual(result.type, "upcoming_change");
+      assert.strictEqual(result.icon, "flask");
+      assert.true(result.keywords.includes("new upload limits"));
+      assert.true(result.keywords.includes("max_upload_size"));
     });
   }
 );

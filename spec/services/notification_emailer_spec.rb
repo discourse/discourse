@@ -90,6 +90,16 @@ RSpec.describe NotificationEmailer do
       end
     end
 
+    context "with a moderator action post" do
+      it "enqueues a job" do
+        Post.any_instance.expects(:post_type).returns(Post.types[:moderator_action])
+
+        expect_enqueued_with(job: :user_email, args: { type: type }) do
+          NotificationEmailer.process_notification(notification, no_delay: no_delay)
+        end
+      end
+    end
+
     context "with a small action" do
       it "doesn't enqueue a job" do
         Post.any_instance.expects(:post_type).returns(Post.types[:small_action])

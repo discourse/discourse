@@ -19,6 +19,12 @@ module Jobs
       raise Discourse::InvalidParameters.new(:limit) if limit.nil?
       return if limit <= 0
 
+      short_text_llm_model =
+        find_llm_model_for_agent(SiteSetting.ai_translation_short_text_translator_agent)
+      post_raw_llm_model =
+        find_llm_model_for_agent(SiteSetting.ai_translation_post_raw_translator_agent)
+      return if short_text_llm_model.blank? && post_raw_llm_model.blank?
+
       categories =
         DiscourseAi::Translation::CategoryCandidates
           .get
@@ -28,7 +34,7 @@ module Jobs
       return if categories.empty?
 
       remaining_limit = limit
-      locales = SiteSetting.content_localization_supported_locales.split("|")
+      locales = DiscourseAi::Translation.locales
       categories.each do |category|
         break if remaining_limit <= 0
 
@@ -39,7 +45,12 @@ module Jobs
           next if LocaleNormalizer.is_same?(locale, category.locale)
 
           begin
-            DiscourseAi::Translation::CategoryLocalizer.localize(category, locale)
+            DiscourseAi::Translation::CategoryLocalizer.localize(
+              category,
+              locale,
+              short_text_llm_model:,
+              post_raw_llm_model:,
+            )
           rescue FinalDestination::SSRFDetector::LookupFailedError
             # do nothing, there are too many sporadic lookup failures
           rescue => e
@@ -55,6 +66,17 @@ module Jobs
           CategoryLocalization.find_by(category_id: category.id, locale: category.locale).destroy
         end
       end
+    end
+
+    private
+
+    def find_llm_model_for_agent(agent_id)
+      return nil if agent_id.blank?
+
+      agent_klass = AiAgent.find_by_id_from_cache(agent_id)
+      return nil if agent_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

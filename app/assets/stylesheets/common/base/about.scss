@@ -7,11 +7,15 @@
     gap: 2em;
     max-width: 1100px;
 
+    h2 {
+      font-size: var(--font-up-1);
+    }
+
     .--custom-group {
       max-width: unset;
       margin-top: 3em;
 
-      h3 {
+      h2 {
         a {
           color: var(--primary);
 
@@ -40,6 +44,10 @@
 
   &__header {
     max-width: 1100px;
+
+    h1 {
+      font-size: var(--font-up-1);
+    }
   }
 
   &__left-side {
@@ -113,7 +121,7 @@
   &__moderators {
     margin-top: 3em;
 
-    h3 {
+    h2 {
       margin-bottom: 1em;
     }
   }

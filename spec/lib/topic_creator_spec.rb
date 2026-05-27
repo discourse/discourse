@@ -28,7 +28,7 @@ RSpec.describe TopicCreator do
     context "with topic success cases" do
       before do
         TopicCreator.any_instance.expects(:save_topic).returns(true)
-        TopicCreator.any_instance.expects(:watch_topic).returns(true)
+        TopicCreator.any_instance.expects(:apply_pm_recipient_notification_levels).returns(true)
         SiteSetting.allow_duplicate_topic_titles = true
       end
 
@@ -122,11 +122,36 @@ RSpec.describe TopicCreator do
       end
 
       context "with regular tags" do
-        it "user can add tags to topic" do
+        it "can add tag names to topic" do
           topic =
             TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name]))
           expect(topic).to be_valid
           expect(topic.tags.length).to eq(1)
+        end
+
+        it "can add tags to topic" do
+          topic =
+            TopicCreator.create(
+              user,
+              Guardian.new(user),
+              valid_attrs.merge(
+                tags: [{ id: tag1.id, name: tag1.name }, { id: tag2.id, name: tag2.name }],
+              ),
+            )
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(tag1, tag2)
+        end
+
+        it "can create new tags" do
+          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+          topic =
+            TopicCreator.create(
+              user,
+              Guardian.new(user),
+              valid_attrs.merge(tags: [{ id: tag1.id, name: tag1.name }, { name: "brand-new" }]),
+            )
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(have_attributes(name: "brand-new"), tag1)
         end
       end
 
@@ -525,7 +550,7 @@ RSpec.describe TopicCreator do
       context "with success cases" do
         before do
           TopicCreator.any_instance.expects(:save_topic).returns(true)
-          TopicCreator.any_instance.expects(:watch_topic).returns(true)
+          TopicCreator.any_instance.expects(:apply_pm_recipient_notification_levels).returns(true)
           SiteSetting.allow_duplicate_topic_titles = true
           SiteSetting.enable_staged_users = true
         end
@@ -709,6 +734,127 @@ RSpec.describe TopicCreator do
           )
         end
       end
+    end
+
+    context "with nested-view topics" do
+      before do
+        SiteSetting.nested_replies_enabled = true
+        SiteSetting.nested_replies_default = true
+      end
+
+      it "sets the OP to Tracking instead of Watching" do
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs)
+        topic_user = TopicUser.find_by(user_id: user.id, topic_id: topic.id)
+
+        expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
+        expect(topic_user.notifications_reason_id).to eq(
+          TopicUser.notification_reasons[:created_topic],
+        )
+      end
+
+      it "still sets the OP to Watching when the topic is flat" do
+        SiteSetting.nested_replies_default = false
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs)
+        topic_user = TopicUser.find_by(user_id: user.id, topic_id: topic.id)
+
+        expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:watching])
+      end
+
+      it "still sets the OP to Watching when the nested feature is disabled" do
+        SiteSetting.nested_replies_enabled = false
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs)
+        topic_user = TopicUser.find_by(user_id: user.id, topic_id: topic.id)
+
+        expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:watching])
+      end
+
+      context "when going through the full post-creation flow (TopicCreator + PostCreator)" do
+        # These tests use create_post which goes through PostCreator -> TopicCreator,
+        # exercising the same auto_notification step that runs in production.
+
+        it "respects notification_level_when_replying when the user has set it to Watching" do
+          user.user_option.update!(
+            notification_level_when_replying: TopicUser.notification_levels[:watching],
+          )
+
+          post = create_post(user: user)
+
+          topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+          expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:watching])
+        end
+
+        it "respects notification_level_when_replying when the user has set it to Regular" do
+          user.user_option.update!(
+            notification_level_when_replying: TopicUser.notification_levels[:regular],
+          )
+
+          post = create_post(user: user)
+
+          topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+          # auto_notification's guard prevents downgrading below the level
+          # TopicCreator already set, so the user stays at Tracking. This is
+          # the same behavior as flat topics with replying=:regular.
+          expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
+        end
+
+        # Pin existing behavior: TagUser.auto_watch fires from Topic#after_save
+        # (when tags_changed), which runs *before* set_author_notification_level
+        # creates the TopicUser row, so the UPDATE matches no rows and the
+        # OP keeps the level TopicCreator set. Same shape applies for
+        # CategoryUser.auto_watch (only fires on category change). If we ever
+        # want a watched-tag/category to override the nested-OP-Tracking
+        # default, we'd need an explicit honor-tag-or-category step in
+        # set_author_notification_level. Calling that out as a known limit.
+        it "does NOT auto-bump the OP from Tracking to Watching for a watched tag" do
+          SiteSetting.tagging_enabled = true
+          tag = Fabricate(:tag, name: "watched-by-user")
+          TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+
+          post = create_post(user: user, tags: [tag.name])
+
+          topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+          expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
+        end
+
+        it "does NOT auto-bump the OP from Tracking to Watching for a watched category" do
+          category = Fabricate(:category)
+          CategoryUser.set_notification_level_for_category(
+            user,
+            CategoryUser.notification_levels[:watching],
+            category.id,
+          )
+
+          post = create_post(user: user, category: category.id)
+
+          topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+          expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
+        end
+      end
+    end
+  end
+
+  describe "private message with target_user_ids" do
+    it "creates a PM targeting users by ID" do
+      topic =
+        TopicCreator.create(
+          admin,
+          Guardian.new(admin),
+          pm_valid_attrs.except(:target_usernames).merge(target_user_ids: [moderator.id]),
+        )
+
+      expect(topic).to be_valid
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(topic.topic_allowed_users.map(&:user_id)).to include(moderator.id)
+    end
+
+    it "raises when both target_usernames and target_user_ids are provided" do
+      expect {
+        TopicCreator.create(
+          admin,
+          Guardian.new(admin),
+          pm_valid_attrs.merge(target_user_ids: [moderator.id]),
+        )
+      }.to raise_error(ArgumentError, /Cannot specify both/)
     end
   end
 end

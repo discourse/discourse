@@ -8,8 +8,9 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-adplugin
 
 register_asset "stylesheets/adplugin.scss"
+register_svg_icon "rectangle-ad"
 
-add_admin_route "admin.adplugin.house_ads.title", "houseAds"
+add_admin_route "admin.adplugin.house_ads.title", "discourse-adplugin", use_new_show_route: true
 
 enabled_site_setting :discourse_adplugin_enabled
 
@@ -18,24 +19,52 @@ module ::AdPlugin
 end
 
 require_relative "lib/adplugin/engine"
+require_relative "lib/ad_plugin/ad_type"
 
 after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
   require_relative "app/controllers/ad_plugin/house_ads_controller"
   require_relative "app/controllers/adstxt_controller"
+  require_relative "app/controllers/ad_plugin/ad_impressions_controller"
+  require_relative "app/serializers/ad_plugin/house_ad_serializer"
+
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
+  require_relative "app/models/ad_plugin/ad_impression"
+  require_relative "app/models/concerns/reports/ad_plugin"
   require_relative "lib/adplugin/guardian_extensions"
 
-  reloadable_patch { Guardian.prepend AdPlugin::GuardianExtensions }
+  reloadable_patch do
+    Guardian.prepend AdPlugin::GuardianExtensions
+    Report.include(Reports::AdPlugin)
+  end
 
   Discourse::Application.routes.append do
     get "/ads.txt" => "adstxt#index"
+
+    post "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    patch "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
+
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
+
+    # HTML routes for admin SPA (full page refresh support)
+    scope "/admin/plugins/discourse-adplugin", constraints: AdminConstraint.new do
+      get "/house-ads" => "ad_plugin/house_ads#index", :format => false
+      get "/house-ads/:id" => "ad_plugin/house_ads#show", :format => false
+      put "/house-ads/:id" => "ad_plugin/house_ads#update", :format => false
+      delete "/house-ads/:id" => "ad_plugin/house_ads#destroy", :format => false
+      post "/house-ads" => "ad_plugin/house_ads#create", :format => false
+      put "/house-settings/:id" => "ad_plugin/house_ad_settings#update", :format => false
+    end
   end
 
   add_to_serializer :site, :house_creatives do
     AdPlugin::HouseAdSetting.settings_and_ads(for_anons: scope.anonymous?, scope: scope)
+  end
+
+  add_to_serializer :site, :ad_types do
+    AdPlugin::AdType.types
   end
 
   add_to_serializer :topic_view, :tags_disable_ads do

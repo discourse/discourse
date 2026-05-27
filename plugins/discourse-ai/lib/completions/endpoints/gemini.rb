@@ -4,8 +4,8 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Gemini < Base
-        def self.can_contact?(model_provider)
-          model_provider == "google"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "google"
         end
 
         def default_options
@@ -33,7 +33,16 @@ module DiscourseAi
 
           model_params[:topP] = model_params.delete(:top_p) if model_params[:top_p]
 
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
+          thinking_enabled =
+            %w[minimal low medium high].include?(llm_model.lookup_custom_param("thinking_level")) ||
+              llm_model.lookup_custom_param("enable_thinking")
+
+          if thinking_enabled
+            model_params.delete(:temperature)
+          elsif llm_model.lookup_custom_param("disable_temperature")
+            model_params.delete(:temperature)
+          end
+
           model_params.delete(:topP) if llm_model.lookup_custom_param("disable_top_p")
 
           model_params
@@ -101,7 +110,10 @@ module DiscourseAi
             end
           end
 
-          if llm_model.lookup_custom_param("enable_thinking")
+          thinking_level = llm_model.lookup_custom_param("thinking_level")
+          if %w[minimal low medium high].include?(thinking_level)
+            payload[:generationConfig][:thinkingConfig] = { thinkingLevel: thinking_level }
+          elsif llm_model.lookup_custom_param("enable_thinking")
             thinking_tokens = llm_model.lookup_custom_param("thinking_tokens").to_i
             thinking_tokens = thinking_tokens.clamp(0, 24_576)
             payload[:generationConfig][:thinkingConfig] = { thinkingBudget: thinking_tokens }
@@ -174,7 +186,7 @@ module DiscourseAi
                 .compact
 
             if keep_last
-              @buffer = +(keep_last)
+              @buffer = +keep_last
             else
               @buffer = +""
             end
@@ -210,7 +222,9 @@ module DiscourseAi
                 nil
               end
             end
-          end
+            # we could get a nil here cause part can be nil
+            # interface expects an array
+          end || []
         end
 
         def decode_chunk(chunk)

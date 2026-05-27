@@ -2,6 +2,11 @@
 
 .fc {
   padding-bottom: 5px;
+
+  .fc-button .fc-icon {
+    font-size: 1.2em;
+    line-height: 0.8;
+  }
 }
 
 .fc-button,
@@ -12,6 +17,10 @@
 .fc-button:focus {
   background: var(--d-button-default-bg-color--hover) !important;
   color: var(--d-button-default-text-color--hover) !important;
+}
+
+.fc-button:not([disabled]):hover {
+  --fc-button-text-color: var(--d-button-default-text-color--hover) !important;
 }
 
 .fc-button-active {
@@ -47,12 +56,22 @@
 .fc-header-toolbar {
   .fc-button,
   .fc-toolbar-title {
-    font-size: var(--font-down-1) !important;
+    font-size: var(--font-0);
+
+    @include viewport.from(md) {
+      font-size: var(--font-down-1);
+    }
   }
 }
 
 .fc-event-past {
   opacity: 0.3;
+}
+
+.fc-recurring-event .fc-event-title .d-icon {
+  margin-right: 0.25em;
+  font-size: var(--font-down-2);
+  opacity: 0.8;
 }
 
 .fc-dayGridMonth-view {
@@ -74,15 +93,12 @@
 @include viewport.until(md) {
   .fc-header-toolbar {
     display: flex;
-    flex-direction: column;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .fc-toolbar-chunk {
-    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 
   .post-calendar {

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Form Templates", type: :system do
+describe "Admin Customize Form Templates" do
   let(:form_template_page) { PageObjects::Pages::FormTemplate.new }
   let(:ace_editor) { PageObjects::Components::AceEditor.new }
 
@@ -9,7 +9,7 @@ describe "Admin Customize Form Templates", type: :system do
   fab!(:category)
 
   before do
-    SiteSetting.experimental_form_templates = true
+    SiteSetting.enable_form_templates = true
     sign_in(admin)
   end
 

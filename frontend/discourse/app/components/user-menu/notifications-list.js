@@ -1,9 +1,11 @@
 import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
 import { MAX_NOTIFICATIONS_LIMIT_PARAMS } from "discourse/lib/constants";
+import discourseDebounce from "discourse/lib/debounce";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import {
@@ -36,6 +38,29 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service siteSettings;
   @service site;
   @service modal;
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on(
+      "notifications:changed",
+      this,
+      this._onNotificationsChanged
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this._refreshTimer);
+    this.appEvents.off(
+      "notifications:changed",
+      this,
+      this._onNotificationsChanged
+    );
+  }
+
+  _onNotificationsChanged() {
+    this._refreshTimer = discourseDebounce(this, this.refreshList, 500);
+  }
 
   get filterByTypes() {
     return this.args.filterByTypes;

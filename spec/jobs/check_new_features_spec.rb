@@ -16,13 +16,33 @@ RSpec.describe Jobs::CheckNewFeatures do
   end
 
   def stub_new_features_endpoint(*features)
-    stub_request(:get, DiscourseUpdates.new_features_endpoint).to_return(
+    stub_request(:get, DiscourseUpdates.new_features_full_endpoint_url).to_return(
       status: 200,
       body: JSON.dump(features),
       headers: {
         "Content-Type" => "application/json",
       },
     )
+  end
+
+  let(:permanent_upcoming_changes) do
+    [
+      {
+        setting: :enable_upload_debug_mode,
+        humanized_name: SiteSetting.humanized_names(:enable_upload_debug_mode),
+        description: SiteSetting.description(:enable_upload_debug_mode),
+        upcoming_change: {
+          learn_more_url: "https://meta.discourse.org/t/-/1234",
+          image: {
+            url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+          },
+        },
+      },
+    ]
+  end
+
+  def stub_permanent_upcoming_changes!(changes)
+    UpcomingChanges.stubs(:permanent_upcoming_changes).returns(changes)
   end
 
   fab!(:admin1, :admin)
@@ -41,9 +61,11 @@ RSpec.describe Jobs::CheckNewFeatures do
   end
 
   before do
+    Migration::Helpers.stubs(:new_site?).returns(false)
     DiscourseUpdates.stubs(:current_version).returns("2.8.1.beta13")
     freeze_time
     stub_new_features_endpoint(feature1, feature2, pending_feature)
+    UpcomingChanges.stubs(:permanent_upcoming_changes).returns([])
   end
 
   after { DiscourseUpdates.clean_state }
@@ -80,6 +102,219 @@ RSpec.describe Jobs::CheckNewFeatures do
         .where(notification_type: Notification.types[:new_features], read: false)
         .count,
     ).to eq(1)
+  end
+
+  context "when the site is brand new (< 1 hour old)" do
+    before { Migration::Helpers.stubs(:new_site?).returns(true) }
+
+    it "suppresses the back-catalog notification and seeds last_viewed_feature_date" do
+      Notification.destroy_all
+
+      described_class.new.execute({})
+
+      expect(
+        admin1.notifications.where(notification_type: Notification.types[:new_features]),
+      ).to be_empty
+      expect(
+        admin2.notifications.where(notification_type: Notification.types[:new_features]),
+      ).to be_empty
+
+      # pending_feature is filtered out by version (beta14 > current beta13), so
+      # feature2 is the newest visible item.
+      newest_at = Time.zone.parse(feature2[:created_at])
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id)).to be_within_one_second_of(
+        newest_at,
+      )
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id)).to be_within_one_second_of(
+        newest_at,
+      )
+    end
+
+    it "still notifies once a newer feature lands after the site is established" do
+      Notification.destroy_all
+
+      described_class.new.execute({})
+
+      Migration::Helpers.stubs(:new_site?).returns(false)
+      newer_feature =
+        build_feature_hash(id: 99, created_at: 1.hour.from_now, discourse_version: "2.8.1.beta13")
+      stub_new_features_endpoint(newer_feature, feature1, feature2, pending_feature)
+
+      described_class.new.execute({})
+
+      expect(
+        admin1
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+      expect(
+        admin2
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+    end
+  end
+
+  context "when a permanent upcoming change is merged into an empty new-features feed" do
+    before do
+      stub_permanent_upcoming_changes!(permanent_upcoming_changes)
+      UpcomingChanges.stubs(:image_exists?).returns(true)
+      UpcomingChanges.stubs(:image_data).returns(
+        {
+          url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+          width: 244,
+          height: 66,
+          file_path: file_from_fixtures("logo.png", "images").path,
+        },
+      )
+      stub_new_features_endpoint(feature1)
+    end
+
+    it "notifies admins and bumps last_viewed_feature_date from the status_changed time" do
+      Notification.destroy_all
+
+      status_changed_at = 1.day.ago
+      event =
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: "enable_upload_debug_mode",
+          event_data: {
+            "previous_value" => "stable",
+            "new_value" => "permanent",
+          },
+          created_at: status_changed_at,
+        )
+      Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
+
+      described_class.new.execute({})
+
+      expect(
+        admin1
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+      expect(
+        admin2
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+
+      status_changed_at_db = event.reload.created_at
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id)).to be_within_one_second_of(
+        status_changed_at_db,
+      )
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id)).to be_within_one_second_of(
+        status_changed_at_db,
+      )
+    end
+  end
+
+  context "when persisted feed is older than a permanent upcoming change" do
+    let(:feature_stale) do
+      build_feature_hash(id: 99, created_at: 3.days.ago, discourse_version: "2.8.1.beta12")
+    end
+
+    let(:feature_newer_than_uc) do
+      build_feature_hash(id: 100, created_at: 1.day.ago, discourse_version: "2.8.1.beta13")
+    end
+
+    before do
+      stub_permanent_upcoming_changes!(permanent_upcoming_changes)
+      UpcomingChanges.stubs(:image_exists?).returns(true)
+      UpcomingChanges.stubs(:image_data).returns(
+        {
+          url: "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
+          width: 244,
+          height: 66,
+          file_path: file_from_fixtures("logo.png", "images").path,
+        },
+      )
+      stub_new_features_endpoint(feature_stale)
+    end
+
+    it "seeds last_viewed to the UC when the fetch adds nothing newer, without notifying" do
+      Notification.destroy_all
+
+      uc_became_permanent_at = 2.days.ago
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "enable_upload_debug_mode",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+        },
+        created_at: uc_became_permanent_at,
+      )
+      Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
+
+      DiscourseUpdates.update_new_features([feature_stale].to_json)
+
+      described_class.new.execute({})
+
+      expect(
+        admin1.notifications.where(
+          notification_type: Notification.types[:new_features],
+          read: false,
+        ),
+      ).to be_empty
+      expect(
+        admin2.notifications.where(
+          notification_type: Notification.types[:new_features],
+          read: false,
+        ),
+      ).to be_empty
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id)).to be_within_one_second_of(
+        uc_became_permanent_at,
+      )
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id)).to be_within_one_second_of(
+        uc_became_permanent_at,
+      )
+    end
+
+    it "notifies and bumps last_viewed to a new feed item newer than the UC" do
+      Notification.destroy_all
+
+      uc_became_permanent_at = 2.days.ago
+      UpcomingChangeEvent.create!(
+        event_type: :status_changed,
+        upcoming_change_name: "enable_upload_debug_mode",
+        event_data: {
+          "previous_value" => "stable",
+          "new_value" => "permanent",
+        },
+        created_at: uc_became_permanent_at,
+      )
+      Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
+
+      DiscourseUpdates.update_new_features([feature_stale].to_json)
+      stub_new_features_endpoint(feature_newer_than_uc, feature_stale)
+
+      described_class.new.execute({})
+
+      expect(
+        admin1
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+      expect(
+        admin2
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+      newer_time = Time.zone.parse(feature_newer_than_uc[:created_at])
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id)).to be_within_one_second_of(
+        newer_time,
+      )
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id)).to be_within_one_second_of(
+        newer_time,
+      )
+    end
   end
 
   it "consolidates new features notifications" do

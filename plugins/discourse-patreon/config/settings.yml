@@ -6,6 +6,12 @@ discourse_patreon:
     default: false
     client: true
     validator: 'PatreonLoginEnabledValidator'
+  patreon_api_version:
+    default: "1"
+    type: enum
+    choices:
+      - "1"
+      - "2"
   patreon_client_id:
     default: ''
   patreon_client_secret:

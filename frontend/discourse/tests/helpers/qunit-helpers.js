@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import {
   find,
@@ -13,6 +14,8 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -20,8 +23,8 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
-import { resetHtmlDecorators } from "discourse/components/decorated-html";
+import { resetComposerMessagesCache } from "discourse/components/composer-messages";
+import { clearPluginDocumentTitleCounters } from "discourse/components/d-document";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
@@ -32,6 +35,7 @@ import { resetQuickSearchRandomTips } from "discourse/components/search-menu/res
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
@@ -42,6 +46,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -51,6 +56,7 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
+import { resetOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
@@ -86,6 +92,7 @@ import { clearNavItems } from "discourse/models/nav-item";
 import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
+import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
@@ -98,9 +105,15 @@ import {
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
+  resetBlockRegistryForTesting,
+  resetDebugCallbacks,
+} from "discourse/tests/helpers/block-testing";
+import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
+import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
+import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -201,6 +214,7 @@ export function testCleanup(container, app) {
   User.resetCurrent();
   resetMobile();
   resetAdditionalReportModes();
+  resetAdminDashboardReportRenderers();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -223,9 +237,11 @@ export function testCleanup(container, app) {
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();
+  resetComposerMessagesCache();
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
+  clearPluginDocumentTitleCounters();
   cleanUpHashtagTypeClasses();
   resetLastEditNotificationClick();
   clearAuthMethods();
@@ -261,10 +277,17 @@ export function testCleanup(container, app) {
   clearAboutPageActivities();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
+  clearRegisteredEditCategoryTabs();
+  resetOnBeforeCategoryTypesChange();
   clearAddedTrackedPostProperties();
+  clearAddedTrackedTopicProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
+  resetCustomUserNavMessagesDropdownRows();
+  _resetOutletLayoutsForTesting();
+  resetBlockRegistryForTesting();
+  resetDebugCallbacks();
 }
 
 function cleanupCssGeneratorTags() {
@@ -329,24 +352,10 @@ export function addPretenderCallback(name, fn) {
   }
 }
 
-export function acceptance(name, optionsOrCallback) {
+export function acceptance(name, callback) {
   name = `Acceptance: ${name}`;
 
-  let callback;
   let options = {};
-  if (typeof optionsOrCallback === "function") {
-    callback = optionsOrCallback;
-  } else if (typeof optionsOrCallback === "object") {
-    deprecated(
-      `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      {
-        since: "2.6.0",
-        dropFrom: "2.9.0.beta1",
-        id: "discourse.qunit.acceptance-function",
-      }
-    );
-    options = optionsOrCallback;
-  }
 
   addPretenderCallback(name, options.pretend);
 
@@ -573,6 +582,18 @@ export function chromeTest(name, testCase) {
 
 export function firefoxTest(name, testCase) {
   conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
+}
+
+export function silenceConsoleErrorsMatching(substring) {
+  const stub = sinon.stub(console, "error").callsFake((...args) => {
+    if (typeof args[0] === "string" && args[0].includes(substring)) {
+      return;
+    }
+
+    stub.wrappedMethod.apply(console, args);
+  });
+
+  return stub;
 }
 
 export function createFile(name, type = "image/png", blobData = null) {

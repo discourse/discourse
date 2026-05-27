@@ -5,7 +5,7 @@ import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKObject from "discourse/form-kit/components/fk/object";
-import element from "discourse/helpers/element";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 export default class FKCollection extends Component {
   @action
@@ -61,21 +61,23 @@ export default class FKCollection extends Component {
   }
 
   <template>
-    {{#let (element this.tagName) as |Wrapper|}}
-      <Wrapper class="form-kit__collection">
-        {{#each this.collectionData key="identifier" as |data index|}}
-          {{yield
-            (hash
-              Field=(this.componentFor FKField index)
-              Object=(this.componentFor FKObject index)
-              Collection=(this.componentFor FKCollection index)
-              remove=this.remove
-            )
-            index
-            data.item
-          }}
-        {{/each}}
-      </Wrapper>
-    {{/let}}
+    {{#if this.collectionData.length}}
+      {{#let (dElement this.tagName) as |Wrapper|}}
+        <Wrapper class="form-kit__collection">
+          {{#each this.collectionData key="identifier" as |data index|}}
+            {{yield
+              (hash
+                Field=(this.componentFor FKField index)
+                Object=(this.componentFor FKObject index)
+                Collection=(this.componentFor FKCollection index)
+                remove=this.remove
+              )
+              index
+              data.item
+            }}
+          {{/each}}
+        </Wrapper>
+      {{/let}}
+    {{/if}}
   </template>
 }

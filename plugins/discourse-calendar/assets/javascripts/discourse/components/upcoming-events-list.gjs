@@ -3,11 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { ajax } from "discourse/lib/ajax";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 
@@ -88,6 +90,13 @@ export default class UpcomingEventsList extends Component {
     }
   }
 
+  get shouldShowCrossCategory() {
+    return applyValueTransformer(
+      "discourse-calendar-upcoming-events-show-cross-category",
+      false // default value
+    );
+  }
+
   @action
   async updateEventsList() {
     this.isLoading = true;
@@ -96,14 +105,15 @@ export default class UpcomingEventsList extends Component {
     const data = {
       limit: this.count,
       before: moment().add(this.upcomingDays, "days").toISOString(),
-      after: moment().subtract(2, "hours").toISOString(),
+      after: moment().toISOString(),
+      include_ongoing: true,
     };
 
     if (this.includeSubcategories) {
       data.include_subcategories = true;
     }
 
-    if (this.categoryId) {
+    if (this.categoryId && !this.shouldShowCrossCategory) {
       data.category_id = this.categoryId;
     }
 
@@ -121,9 +131,16 @@ export default class UpcomingEventsList extends Component {
   }
 
   @action
-  formatTime({ starts_at, ends_at }) {
-    return isNotFullDayEvent(moment(starts_at), moment(ends_at))
-      ? moment(starts_at).format(this.timeFormat)
+  formatTime(event) {
+    if (this.isMultiDayEvent(event)) {
+      return this.formatDateRange(event);
+    }
+
+    const startsAt = moment(event.starts_at);
+    const endsAt = event.ends_at ? moment(event.ends_at) : null;
+
+    return isNotFullDayEvent(startsAt, endsAt)
+      ? startsAt.format(this.timeFormat)
       : this.allDayLabel;
   }
 
@@ -137,23 +154,61 @@ export default class UpcomingEventsList extends Component {
     return moment(`${month}-${day}`).format("D");
   }
 
+  isMultiDayEvent(event) {
+    if (!event.ends_at) {
+      return false;
+    }
+    const startDate = moment(event.starts_at);
+    const endDate = moment(event.ends_at);
+    return !startDate.isSame(endDate, "day");
+  }
+
+  formatDateRange(event) {
+    // Date-only strings (all-day events) must be parsed as local dates;
+    // new Date("YYYY-MM-DD") treats them as UTC, shifting the day in western timezones
+    const start = event.all_day
+      ? new Date(event.starts_at + "T00:00:00")
+      : new Date(event.starts_at);
+    const end = event.all_day
+      ? new Date(event.ends_at + "T00:00:00")
+      : new Date(event.ends_at);
+    return new Intl.DateTimeFormat(moment.locale(), {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).formatRange(start, end);
+    // en-US: "June 5–10, 2025" or "June 5 – July 10, 2025"
+    // fr-FR: "5–10 juin 2025" or "5 juin – 10 juillet 2025"
+    // de-DE: "5.–10. Juni 2025"
+  }
+
   groupByMonthAndDay(data) {
+    const today = moment();
     let events = data.reduce((result, item) => {
       const startDate = moment(item.starts_at);
       const endDate = item.ends_at ? moment(item.ends_at) : null;
-      const today = moment();
 
-      if (!endDate) {
-        addToResult(startDate, item, result);
-        return result;
+      let displayDate;
+      if (!this.isMultiDayEvent(item)) {
+        // Single-day event
+        displayDate = startDate.clone();
+      } else {
+        // Multi-day event
+        if (startDate.isAfter(today, "day")) {
+          // Future event - show at start date
+          displayDate = startDate.clone();
+        } else if (today.isSameOrBefore(endDate, "day")) {
+          // Ongoing event - show at today's date
+          displayDate = today.clone();
+        } else {
+          // Past event - skip it
+          return result;
+        }
       }
 
-      while (startDate.isSameOrBefore(endDate, "day")) {
-        if (startDate.isAfter(today)) {
-          addToResult(startDate, item, result);
-        }
-
-        startDate.add(1, "day");
+      // Only add if display date is in the future or today
+      if (displayDate.isSameOrAfter(today, "day")) {
+        addToResult(displayDate, item, result);
       }
 
       return result;
@@ -183,7 +238,7 @@ export default class UpcomingEventsList extends Component {
       </h3>
 
       <div class="upcoming-events-list__container">
-        <ConditionalLoadingSpinner @condition={{this.isLoading}} />
+        <DConditionalLoadingSpinner @condition={{this.isLoading}} />
 
         {{#if this.hasEmptyResponse}}
           <div class="upcoming-events-list__empty-message">
@@ -220,6 +275,9 @@ export default class UpcomingEventsList extends Component {
                         class="upcoming-events-list__event-name"
                         title={{or event.name event.post.topic.title}}
                       >
+                        {{#if event.recurrence}}
+                          {{dIcon "arrows-rotate"}}
+                        {{/if}}
                         {{or event.name event.post.topic.title}}
                       </span>
                       {{#if this.timeFormat}}

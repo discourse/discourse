@@ -1,0 +1,31 @@
+[
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t3",
+          "data": {
+            "title": "What are some underrated local LLMs?",
+            "author": "llm_enthusiast",
+            "subreddit_name_prefixed": "r/LocalLLaMA",
+            "score": 256,
+            "num_comments": 89,
+            "selftext": "I've been experimenting with various local models and wanted to hear what hidden gems people have found. Specifically looking for models under 13B parameters that punch above their weight.",
+            "is_self": true,
+            "is_video": false,
+            "over_18": false,
+            "url": "https://www.reddit.com/r/LocalLLaMA/comments/xyz789/what_are_some_underrated_local_llms/",
+            "permalink": "/r/LocalLLaMA/comments/xyz789/what_are_some_underrated_local_llms/"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "Listing",
+    "data": {
+      "children": []
+    }
+  }
+]

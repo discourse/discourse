@@ -1,8 +1,9 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import Draft from "discourse/models/draft";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -27,6 +28,13 @@ acceptance(`Composer Actions`, function (needs) {
     server.put("/u/kris.json", () => helper.response({ user: {} }));
     const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
     server.get("/u/shade/card.json", () => helper.response(cardResponse));
+    server.get("/c/shared-drafts/24/l/latest.json", () => {
+      const response = cloneJSON(discoveryFixtures["/c/bug/1/l/latest.json"]);
+      response.topic_list.can_create_topic = true;
+      response.topic_list.filter = "c/shared-drafts/24/l/latest";
+
+      return helper.response(response);
+    });
   });
 
   test("replying to post", async function (assert) {
@@ -88,7 +96,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .doesNotExist("whisper icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -98,7 +106,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .exists("whisper icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
   });
 
@@ -223,6 +231,26 @@ acceptance(`Composer Actions`, function (needs) {
     assert.strictEqual(composerActions.rows().length, 5);
   });
 
+  test("new topic in shared drafts category opens shared draft composer", async function (assert) {
+    await visit("/c/shared-drafts/24");
+
+    assert.dom("#create-topic").hasText(i18n("topic.create_shared_draft"));
+
+    await click("#create-topic");
+
+    assert
+      .dom("#reply-control .btn-primary.create .d-button-label")
+      .hasText(i18n("composer.create_shared_draft"));
+    assert
+      .dom(".composer-actions svg.d-icon-far-clipboard")
+      .exists("shared draft icon is visible");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().value(),
+      null,
+      "shared drafts category is not selected as the destination category"
+    );
+  });
+
   test("interactions - private message", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
@@ -246,7 +274,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -256,7 +284,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .exists("no-bump icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
 
     await composerActions.expand();
@@ -266,7 +294,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
   });
 
@@ -283,7 +311,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".reply-details .whisper .d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -298,7 +326,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".reply-details .no-bump .d-icon-anchor")
       .exists("no-bump icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
   });
 
@@ -396,6 +424,7 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
 
     await visit("/");
     await click("button.topic-drafts-menu-trigger");
+    await waitFor(".topic-drafts-menu-content");
     await click(
       ".topic-drafts-menu-content .topic-drafts-item:first-child button"
     );
@@ -408,13 +437,13 @@ acceptance(`Composer Actions With New Topic Draft`, function (needs) {
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("shared_draft");
 
-    assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(tags.header().name(), "monkey", "tags are not reset");
     assert
       .dom("#reply-title")
       .hasValue("This is the new text for the title using 'quotes'");

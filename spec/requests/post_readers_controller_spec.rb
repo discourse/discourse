@@ -130,5 +130,21 @@ RSpec.describe PostReadersController do
 
       expect(response).to be_forbidden
     end
+
+    it "returns forbidden when a non-staff group member requests readers for a whisper post" do
+      regular_user = Fabricate(:user)
+      @group.update!(publish_read_state: true)
+      @group.add(regular_user)
+      sign_in(regular_user)
+
+      @post.update!(post_type: Post.types[:whisper])
+      staff_reader = Fabricate(:admin)
+      @group.add(staff_reader)
+      TopicUser.create!(user: staff_reader, topic: @group_message, last_read_post_number: 4)
+
+      get "/post_readers.json", params: { id: @post.id }
+
+      expect(response).to be_forbidden
+    end
   end
 end

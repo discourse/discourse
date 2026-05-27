@@ -85,6 +85,51 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
     end
+
+    context "with user status enabled" do
+      before { SiteSetting.enable_user_status = true }
+
+      it "preloads user_options to avoid N+1 queries" do
+        3.times do
+          user = Fabricate(:user)
+          Fabricate(:user_status, user:)
+          msg = Fabricate(:chat_message, chat_channel: channel, user:)
+          mentioned = Fabricate(:user)
+          Fabricate(:user_status, user: mentioned)
+          Fabricate(:user_chat_mention, chat_message: msg, user: mentioned)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        queries = track_sql_queries { get "/chat/api/channels/#{channel.id}/messages" }
+        user_option_queries = queries.select { |q| q.include?('"user_options"') }
+
+        expect(user_option_queries.size).to eq(2)
+      end
+
+      it "preloads thread original message mentions to avoid N+1 queries" do
+        channel.update!(threading_enabled: true)
+
+        3.times do
+          original_message = Fabricate(:chat_message, chat_channel: channel)
+          thread = Fabricate(:chat_thread, channel: channel, original_message: original_message)
+          mentioned = Fabricate(:user)
+          mentioned.set_status!("status", "wave")
+          Fabricate(:user_chat_mention, chat_message: original_message, user: mentioned)
+          reply =
+            Fabricate(:chat_message, chat_channel: channel, thread: thread, message: "thread reply")
+          thread.update!(last_message: reply)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        queries = track_sql_queries { get "/chat/api/channels/#{channel.id}/messages" }
+        mention_queries =
+          queries.select { |q| q.include?('"chat_mentions"') && q.include?("chat_message_id") }
+
+        expect(mention_queries.size).to eq(1)
+      end
+    end
   end
 
   describe "#create" do
@@ -127,7 +172,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           ]
         end
 
-        it "raises invalid acces" do
+        it "raises invalid access" do
           post "/chat/#{channel.id}.json", params: params
 
           expect(response.status).to eq(403)
@@ -178,6 +223,79 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
           expect(response.status).to eq(422)
         end
+      end
+
+      context "when current user is silenced" do
+        before { UserSilencer.new(current_user).silence }
+
+        it "returns a 422" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(422)
+        end
+      end
+
+      context "when message belongs to a different channel" do
+        fab!(:other_channel, :category_channel)
+        fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
+
+        it "returns a 404" do
+          put "/chat/api/channels/#{channel.id}/messages/#{other_message.id}",
+              params: {
+                message: "probe",
+              }
+
+          # Without channel_id scoping, the service finds the message in the
+          # wrong channel and returns a non-404 status, leaking its existence
+          expect(response.status).to eq(404)
+        end
+      end
+    end
+  end
+
+  describe "#restore" do
+    context "when the user no longer has access to a private category channel" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group:) }
+      fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: private_channel, user: current_user) }
+
+      before do
+        group.add(current_user)
+        private_channel.add(current_user)
+        message.trash!(current_user)
+        GroupUser.where(group: group, user: current_user).destroy_all
+      end
+
+      it "does not restore their own deleted message" do
+        put "/chat/api/channels/#{private_channel.id}/messages/#{message.id}/restore"
+
+        expect(response.status).to eq(403)
+        expect(message.reload).to be_trashed
+      end
+    end
+
+    context "when the user is no longer a member of a direct message channel" do
+      fab!(:other_user, :user)
+      fab!(:third_user, :user)
+      fab!(:dm_channel) do
+        Fabricate(:direct_message_channel, users: [current_user, other_user, third_user])
+      end
+      fab!(:message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
+
+      before do
+        message.trash!(current_user)
+        dm_channel.chatable.direct_message_users.find_by!(user: current_user).destroy!
+      end
+
+      it "does not restore their own deleted message" do
+        put "/chat/api/channels/#{dm_channel.id}/messages/#{message.id}/restore"
+
+        expect(response.status).to eq(403)
+        expect(message.reload).to be_trashed
       end
     end
   end

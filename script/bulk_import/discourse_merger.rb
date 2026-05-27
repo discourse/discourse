@@ -223,7 +223,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_model(GroupUser, skip_if_merged: true)
   end
 
-  def category_exisits(cat_row)
+  def category_exists(cat_row)
     # Categories with the same name/slug and parent are merged
 
     parent = category_id_from_imported_id(cat_row["parent_category_id"])
@@ -250,7 +250,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         )
         .each do |row|
           # If a category with the same slug or name, and the same parent, exists
-          existing_category = category_exisits(row)
+          existing_category = category_exists(row)
 
           if existing_category
             @categories[row["id"].to_i] = existing_category
@@ -305,7 +305,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         )
         .each do |row|
           # If a category with the same slug or name, and the same parent, exists
-          existing_category = category_exisits(row)
+          existing_category = category_exists(row)
 
           if existing_category
             @categories[row["id"].to_i] = existing_category
@@ -366,12 +366,10 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       next unless category_id
       category = Category.find_by_id(category_id)
       next if category.name == "Uncategorized"
-      category_settings = CategorySetting.find_by(category_id: category_id)
+      category_settings = category.category_setting
       next unless category_settings
-      category_settings["require_topic_approval"] = row["require_topic_approval"]
-      category_settings["require_reply_approval"] = row["require_reply_approval"]
-      category_settings["num_auto_bump_daily"] = row["num_auto_bump_daily"]
-      category_settings["auto_bump_cooldown_days"] = row["auto_bump_cooldown_days"]
+      category_settings.num_auto_bump_daily = row["num_auto_bump_daily"]
+      category_settings.auto_bump_cooldown_days = row["auto_bump_cooldown_days"]
       category_settings.save!
     end
   end
@@ -445,10 +443,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     puts ""
     print "copying uploads..."
 
-    FileUtils.cp_r(
-      File.join(@uploads_path, "."),
-      File.join(Rails.root, "public", "uploads", "default"),
-    )
+    FileUtils.cp_r(File.join(@uploads_path, "."), Rails.public_path.join("uploads/default").to_s)
 
     columns = Upload.columns.map(&:name)
     last_id = Upload.unscoped.maximum(:id) || 1
@@ -528,7 +523,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       )
     end
 
-    [CategoryFeaturedTopic, CategoryFormTemplate, CategorySearchData].each { |k| copy_model(k) }
+    [
+      CategoryFeaturedTopic,
+      CategoryFormTemplate,
+      CategoryPostingReviewGroup,
+      CategorySearchData,
+    ].each { |k| copy_model(k) }
 
     # Copy custom fields
     [CategoryCustomField].each do |k|

@@ -2,20 +2,22 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import { i18n } from "discourse-i18n";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
 import Dates from "./dates";
 import Description from "./description";
 import EventStatus from "./event-status";
+import Image from "./image";
 import Invitees from "./invitees";
 import Location from "./location";
 import MoreMenu from "./more-menu";
@@ -29,7 +31,7 @@ const StatusSeparator = <template>
 const InfoSection = <template>
   <section class="event__section" ...attributes>
     {{#if @icon}}
-      {{icon @icon}}
+      {{dIcon @icon}}
     {{/if}}
 
     {{yield}}
@@ -40,6 +42,7 @@ export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
   @service messageBus;
+  @service siteSettings;
 
   @tracked event;
 
@@ -54,13 +57,19 @@ export default class DiscoursePostEvent extends Component {
   });
 
   getDisplayTime(time) {
-    if (this.event.showLocalTime) {
+    if (this.event.allDay) {
+      return moment(time, "YYYY-MM-DD");
+    } else if (this.event.showLocalTime) {
       return moment.tz(time, this.event.timezone || "UTC");
     } else {
       return moment
         .utc(time)
         .tz(this.currentUser?.user_option?.timezone || moment.tz.guess());
     }
+  }
+
+  get clampDescription() {
+    return this.args.clampDescription ?? false;
   }
 
   get withDescription() {
@@ -85,6 +94,19 @@ export default class DiscoursePostEvent extends Component {
     return this.event.status === "public";
   }
 
+  get showStatus() {
+    if (this.currentUser) {
+      return this.event.canUpdateAttendance;
+    }
+    // Anonymous users can RSVP on public events unless the site is
+    // invite-only without requiring login (in which case they can't
+    // complete the signup flow anyway).
+    if (this.siteSettings.invite_only && !this.siteSettings.login_required) {
+      return false;
+    }
+    return this.event.isPublic && !this.event.isClosed && !this.event.isExpired;
+  }
+
   get isStandaloneEvent() {
     return this.event.status === "standalone";
   }
@@ -101,6 +123,15 @@ export default class DiscoursePostEvent extends Component {
     return this.event.isExpired && this.event.recurrence;
   }
 
+  get recurrenceLabel() {
+    if (!this.event?.recurrence) {
+      return null;
+    }
+    return i18n(
+      `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`
+    );
+  }
+
   @bind
   async loadEvent() {
     if (this.event) {
@@ -109,21 +140,59 @@ export default class DiscoursePostEvent extends Component {
 
     if (this.args.event) {
       try {
-        this.event = await this.discoursePostEventApi.event(this.args.event.id);
-        this.event.startsAt = this.args.event.startsAt;
-        this.event.endsAt = this.args.event.endsAt;
+        const fetched = await this.discoursePostEventApi.event(
+          this.args.event.id
+        );
+        const displayedStartsAt = this.args.event.startsAt;
+
+        if (
+          fetched.recurrence &&
+          displayedStartsAt &&
+          fetched.startsAt &&
+          displayedStartsAt !== fetched.startsAt
+        ) {
+          this.#filterForFutureOccurrence(fetched);
+        }
+
+        fetched.startsAt = displayedStartsAt;
+        fetched.endsAt = this.args.event.endsAt;
+        this.event = fetched;
       } catch (error) {
         popupAjaxError(error);
       }
     }
   }
 
+  #filterForFutureOccurrence(event) {
+    event.sampleInvitees = event.sampleInvitees.filter(
+      (invitee) => invitee.status !== "going" || invitee.recurring
+    );
+
+    const recurringCount = event.stats?.goingRecurring ?? 0;
+    if (event.stats) {
+      event.stats.going = recurringCount;
+    }
+    event.atCapacity =
+      event.maxAttendees != null && recurringCount >= event.maxAttendees;
+
+    if (
+      event.watchingInvitee?.status === "going" &&
+      !event.watchingInvitee?.recurring
+    ) {
+      event.watchingInvitee = null;
+    }
+  }
+
   <template>
-    <AsyncContent @asyncData={{this.loadEvent}}>
+    <DAsyncContent @asyncData={{this.loadEvent}}>
       <:content as |event|>
         <div class="discourse-post-event">
           <div class="discourse-post-event-widget">
             {{#if event}}
+              <Image
+                @imageUpload={{event.imageUpload}}
+                @alt={{this.eventName}}
+              />
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
                   <div class="month">
@@ -147,9 +216,9 @@ export default class DiscoursePostEvent extends Component {
                       <a
                         href={{event.post.url}}
                         rel="noopener noreferrer"
-                      >{{replaceEmoji this.eventName}}</a>
+                      >{{dReplaceEmoji this.eventName}}</a>
                     {{else}}
-                      {{replaceEmoji this.eventName}}
+                      {{dReplaceEmoji this.eventName}}
                     {{/if}}
                   </span>
                   <div class="status-and-creators">
@@ -169,19 +238,23 @@ export default class DiscoursePostEvent extends Component {
                   </div>
                 </div>
 
-                <MoreMenu
-                  @event={{event}}
-                  @isStandaloneEvent={{this.isStandaloneEvent}}
-                  @composePrivateMessage={{routeAction "composePrivateMessage"}}
-                />
-
-                {{#if @onClose}}
-                  <DButton
-                    class="btn-default btn-small discourse-post-event-close"
-                    @icon="xmark"
-                    @action={{@onClose}}
+                <div class="event-header__controls">
+                  <MoreMenu
+                    @event={{event}}
+                    @isStandaloneEvent={{this.isStandaloneEvent}}
+                    @composePrivateMessage={{routeAction
+                      "composePrivateMessage"
+                    }}
                   />
-                {{/if}}
+
+                  {{#if @onClose}}
+                    <DButton
+                      class="btn-default btn-small discourse-post-event-close"
+                      @icon="xmark"
+                      @action={{@onClose}}
+                    />
+                  {{/if}}
+                </div>
               </header>
 
               <PluginOutlet
@@ -191,7 +264,9 @@ export default class DiscoursePostEvent extends Component {
                   Section=(component InfoSection event=event)
                   Url=(component Url url=event.url)
                   Description=(component
-                    Description description=event.description
+                    Description
+                    description=event.description
+                    clamp=this.clampDescription
                   )
                   Location=(component Location location=event.location)
                   Dates=(component
@@ -199,25 +274,40 @@ export default class DiscoursePostEvent extends Component {
                     event=event
                     expiredAndRecurring=this.expiredAndRecurring
                   )
+                  Recurrence=(component
+                    InfoSection icon="arrows-rotate" class="event-recurrence"
+                  )
+                  recurrenceLabel=this.recurrenceLabel
                   Invitees=(component Invitees event=event)
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
+                  Image=(component
+                    Image imageUpload=event.imageUpload alt=this.eventName
+                  )
                 }}
               >
                 <Dates
                   @event={{event}}
                   @expiredAndRecurring={{this.expiredAndRecurring}}
                 />
+                {{#if event.recurrence}}
+                  <InfoSection @icon="arrows-rotate" class="event-recurrence">
+                    {{this.recurrenceLabel}}
+                  </InfoSection>
+                {{/if}}
                 <Location @location={{event.location}} />
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
 
                 {{#if this.withDescription}}
-                  <Description @description={{event.description}} />
+                  <Description
+                    @descriptionHtml={{event.descriptionHtml}}
+                    @clamp={{this.clampDescription}}
+                  />
                 {{/if}}
 
-                {{#if @event.canUpdateAttendance}}
+                {{#if this.showStatus}}
                   <Status @event={{event}} />
                 {{/if}}
               </PluginOutlet>
@@ -230,6 +320,6 @@ export default class DiscoursePostEvent extends Component {
           <div class="spinner"></div>
         </div>
       </:loading>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }

@@ -55,6 +55,7 @@ module Jobs
       post.cooked = update_cooked(post.cooked)
 
       post.update_columns(raw: post.raw, cooked: post.cooked)
+      post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
     rescue => e
@@ -63,8 +64,8 @@ module Jobs
 
     def update_revision(revision)
       if revision.modifications["raw"] || revision.modifications["cooked"]
-        revision.modifications["raw"].map! { |raw| update_raw(raw) }
-        revision.modifications["cooked"].map! { |cooked| update_cooked(cooked) }
+        revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
+        revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
         revision.save!
       end
     rescue => e

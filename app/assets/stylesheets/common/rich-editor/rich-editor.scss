@@ -17,7 +17,7 @@
 
   > div:first-child,
   > details:first-child {
-    margin-top: 0.5rem;
+    margin-top: var(--space-4);
 
     // This is hacky, but helps having the leading gapcursor at the right position
     &.ProseMirror-gapcursor {
@@ -51,21 +51,81 @@
     font-size: var(--font-up-1-rem);
   }
 
-  img[data-placeholder="true"] {
-    animation: placeholder 1.5s infinite;
+  .upload-placeholder {
+    &.--image {
+      position: relative;
+      display: inline-block;
+      vertical-align: bottom;
 
-    @keyframes placeholder {
-      0% {
-        opacity: 0.6;
-      }
+      img {
+        max-width: 350px;
 
-      50% {
-        opacity: 0.4;
+        @include viewport.until(sm) {
+          max-width: 100%;
+        }
+        height: auto;
+        border-radius: var(--d-border-radius);
+        display: block;
+        animation: placeholder 1.5s infinite;
       }
+    }
 
-      100% {
-        opacity: 0.6;
+    &.--file {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-1) 0 0.65em;
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+
+      .d-icon {
+        fill: currentcolor;
       }
+    }
+
+    &__overlay {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-1) 0 0.65em;
+      background: var(--primary-very-low);
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+    }
+
+    &__progress {
+      color: var(--tertiary);
+      font-weight: bold;
+    }
+
+    &__filename,
+    &__icon {
+      animation: placeholder 1.5s infinite;
+    }
+
+    &__cancel {
+      padding: 0.5em 0.65em;
+    }
+  }
+
+  @keyframes placeholder {
+    0% {
+      opacity: 0.6;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+
+    100% {
+      opacity: 0.6;
     }
   }
 
@@ -181,24 +241,40 @@
     position: relative;
     border: 2px dashed var(--primary-low-mid);
     border-radius: var(--d-border-radius);
-    padding: var(--space-half) var(--space-2) var(--space-2) var(--space-2);
+    padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
-    &__title {
+    > div:not(.composer-image-gallery__mode-buttons) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      padding-block: var(--space-2);
+
+      p {
+        margin: 0;
+      }
+    }
+
+    &__remove-btn {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      color: var(--primary-medium);
+      padding: var(--space-1) var(--space-2);
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+      font-size: var(--font-down-1-rem);
       display: flex;
       align-items: center;
-      justify-content: end;
-      font-size: var(--font-down-1-rem);
-      color: var(--primary-medium);
+      gap: var(--space-1);
 
-      svg {
-        font-size: var(--font-up-1-rem);
-        padding-inline: var(--space-2);
+      @include viewport.until(sm) {
+        padding: var(--space-2) var(--space-4);
+      }
 
-        &:hover {
-          color: var(--primary);
-          cursor: pointer;
-        }
+      &:hover {
+        color: var(--primary);
+        background: var(--primary-low);
       }
     }
 
@@ -218,6 +294,49 @@
     &.ProseMirror-selectednode {
       outline-offset: -2px;
       border-radius: calc(var(--d-border-radius) + 2px);
+    }
+  }
+
+  .composer-wrap-node {
+    position: relative;
+    white-space: normal;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding-inline: var(--space-2);
+    margin-block: var(--space-4);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
+
+    .d-wrap-indicator {
+      color: var(--primary-medium);
+      background-color: var(--secondary);
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &.--inline {
+        font-size: var(--font-down-2);
+        padding: var(--space-half) 0;
+        margin-left: calc(-1 * var(--space-1));
+        margin-right: var(--space-2);
+        vertical-align: text-top;
+        display: inline-block;
+      }
+
+      &.--block {
+        position: absolute;
+        z-index: 1;
+        font-size: var(--font-down-1);
+        left: var(--space-2);
+        top: calc(-1 * var(--space-3) + 1px);
+        padding: 0 var(--space-1);
+      }
     }
   }
 
@@ -247,10 +366,10 @@
 
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
-.fk-d-menu[data-identifier="composer-image-alt-text"] {
+.fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;
   z-index: z("composer", "dropdown");
-  animation: fade-in ease 0.25s 1 forwards !important;
 
   .fk-d-menu__inner-content {
     overflow: visible;
@@ -283,6 +402,7 @@
 
     &.--active {
       background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
   }
 
@@ -374,6 +494,7 @@
 
     &.ProseMirror-selectednode {
       user-select: none;
+      cursor: zoom-in;
     }
   }
 }
@@ -433,6 +554,10 @@
 .ProseMirror {
   overflow-wrap: break-word;
   white-space: break-spaces;
+
+  // Any children with position fixed will be relative to this element (eg. footnotes)
+  // see https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Containing_block#identifying_the_containing_block
+  contain: layout;
 }
 
 // stylelint-disable-next-line no-duplicate-selectors

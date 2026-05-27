@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Logo Page", type: :system do
+describe "Admin Logo Page" do
   fab!(:admin)
   fab!(:image_upload)
 

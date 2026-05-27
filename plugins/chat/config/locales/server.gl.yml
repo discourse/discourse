@@ -21,8 +21,8 @@ gl:
         agree_and_silence:
           title: "Silenciar o usuario"
           description: "De acordo con esta denuncia e silenciar o usuario."
-        disagree:
-          title: "Discrepar"
+        ignore:
+          title: "Ignorar denuncia"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -32,6 +32,9 @@ gl:
     popup:
       chat_mention:
         direct: '%{username} mencionouno en "%{channel}"'
+    actions:
+      chat_reply:
+        title: Responder
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

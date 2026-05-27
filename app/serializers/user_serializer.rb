@@ -32,7 +32,7 @@ class UserSerializer < UserCardSerializer
     can_edit
   end
 
-  staff_attributes :post_count, :can_be_deleted, :can_delete_all_posts
+  staff_attributes :post_count, :topic_count, :can_be_deleted, :can_delete_all_posts
 
   private_attributes :locale,
                      :muted_category_ids,
@@ -230,6 +230,10 @@ class UserSerializer < UserCardSerializer
     object.user_stat.try(:post_count)
   end
 
+  def topic_count
+    object.user_stat.try(:topic_count)
+  end
+
   def can_be_deleted
     scope.can_delete_user?(object)
   end
@@ -351,7 +355,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_no_password?
-    !object.has_password?
+    (user_is_current_user || scope.is_staff?) && !object.has_password?
   end
 
   private

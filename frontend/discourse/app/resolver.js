@@ -36,7 +36,6 @@ const DEPRECATED_MODULES = new Map(
     "app-events:main": {
       newName: "service:app-events",
       since: "2.4.0",
-      dropFrom: "2.9.0.beta1",
     },
     // Deprecations below are silenced because they're in widespread use, and upgrading
     // themes/plugins right now would break their compatibility with the stable branch.
@@ -44,73 +43,51 @@ const DEPRECATED_MODULES = new Map(
     "store:main": {
       newName: "service:store",
       since: "2.8.0.beta8",
-      dropFrom: "2.9.0.beta1",
-      silent: true,
     },
     "search-service:main": {
       newName: "service:search",
       since: "2.8.0.beta8",
-      dropFrom: "2.9.0.beta1",
-      silent: true,
     },
     "key-value-store:main": {
       newName: "service:key-value-store",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "pm-topic-tracking-state:main": {
       newName: "service:pm-topic-tracking-state",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "message-bus:main": {
       newName: "service:message-bus",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "site-settings:main": {
       newName: "service:site-settings",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "capabilities:main": {
       newName: "service:capabilities",
       since: "3.1.0.beta4",
-      dropFrom: "3.2.0.beta1",
       silent: true,
     },
     "current-user:main": {
       newName: "service:current-user",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "session:main": {
       newName: "service:session",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "site:main": {
       newName: "service:site",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "topic-tracking-state:main": {
       newName: "service:topic-tracking-state",
       since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-      silent: true,
     },
     "controller:composer": {
       newName: "service:composer",
       since: "3.1.0.beta3",
-      dropFrom: "3.2.0",
       silent: true,
     },
     ...Object.fromEntries(
@@ -172,7 +149,6 @@ export function buildResolver(baseName) {
             `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
             {
               since: deprecationInfo.since,
-              dropFrom: deprecationInfo.dropFrom,
               id: "discourse.resolver-resolutions",
             }
           );
@@ -314,30 +290,10 @@ export function buildResolver(baseName) {
     }
 
     findTemplate(parsedName, prefix) {
-      prefix = prefix || "";
-
-      const withoutType = parsedName.fullNameWithoutType,
-        underscored = decamelize(withoutType).replace(/-/g, "_"),
-        segments = withoutType.split("/");
-
-      // Default unmodified behavior of original resolveTemplate.
-      const original = prefix + withoutType;
-
-      const candidates = [
-        // Convert dots and dashes to slashes
-        prefix + withoutType.replace(/[\.-]/g, "/"),
-        original,
-        // Underscored without namespace
-        prefix + underscored,
-        // Underscored with first segment as directory
-        prefix + underscored.replace("_", "/"),
-        // Underscore only the last segment
-        `${prefix}${segments.slice(0, -1).join("/")}/${segments[
-          segments.length - 1
-        ].replace(/-/g, "_")}`,
-        // All dasherized
-        prefix + withoutType.replace(/\//g, "-"),
-      ];
+      const { original, candidates } = this.#buildTemplateCandidates(
+        parsedName,
+        prefix
+      );
 
       for (const candidate of candidates) {
         const result = this.discourseTemplateModule(candidate);
@@ -345,7 +301,10 @@ export function buildResolver(baseName) {
           if (candidate !== original) {
             deprecated(
               `Looking up 'template:${candidate}' is no longer permitted. Rename to 'template:${original}' instead`,
-              { id: "discourse.deprecated-resolver-normalization" }
+              {
+                id: "discourse.deprecated-resolver-normalization",
+                source: DiscourseTemplateMap.identifySource(candidate),
+              }
             );
           }
           return result;
@@ -394,7 +353,10 @@ export function buildResolver(baseName) {
             if (candidate !== parsedName) {
               deprecated(
                 `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
-                { id: "discourse.deprecated-resolver-normalization" }
+                {
+                  id: "discourse.deprecated-resolver-normalization",
+                  source: this.#findTemplateSource(candidate, prefix),
+                }
               );
             }
             return result;
@@ -402,6 +364,56 @@ export function buildResolver(baseName) {
         }
       } else {
         return this.findTemplate(parsedName, "discourse/admin/templates/");
+      }
+    }
+
+    /**
+     * Builds a list of template path candidates based on various naming conventions.
+     * Supports legacy naming patterns (underscored, dasherized, etc.) for backwards compatibility.
+     *
+     * @param {Object} parsedName - The parsed template name object
+     * @param {string} [prefix=""] - Optional prefix to prepend to all candidate paths
+     * @return {Object} Object with 'original' path and array of 'candidates' to try
+     */
+    #buildTemplateCandidates(parsedName, prefix = "") {
+      const withoutType = parsedName.fullNameWithoutType;
+      const underscored = decamelize(withoutType).replace(/-/g, "_");
+      const segments = withoutType.split("/");
+      const original = prefix + withoutType;
+
+      return {
+        original,
+        candidates: [
+          // Convert dots and dashes to slashes
+          prefix + withoutType.replace(/[\.-]/g, "/"),
+          original,
+          // Underscored without namespace
+          prefix + underscored,
+          // Underscored with first segment as directory
+          prefix + underscored.replace("_", "/"),
+          // Underscore only the last segment
+          `${prefix}${segments.slice(0, -1).join("/")}/${segments[segments.length - 1].replace(/-/g, "_")}`,
+          // All dasherized
+          prefix + withoutType.replace(/\//g, "-"),
+        ],
+      };
+    }
+
+    /**
+     * Identifies the source (core, plugin, or theme) of a template by its parsed name.
+     *
+     * @param {Object} parsedName - The parsed template name object
+     * @param {string} [prefix] - Optional prefix to prepend to the template path
+     * @return {Object|undefined} Source information containing type and name, or undefined if not found
+     */
+    #findTemplateSource(parsedName, prefix) {
+      const { candidates } = this.#buildTemplateCandidates(parsedName, prefix);
+
+      for (const candidate of candidates) {
+        const result = this.discourseTemplateModule(candidate);
+        if (result) {
+          return DiscourseTemplateMap.identifySource(candidate);
+        }
       }
     }
   };

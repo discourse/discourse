@@ -35,12 +35,12 @@ module Chat
         end
 
       DB.query_single <<~SQL
-        WITH eligible_users AS (
+        WITH eligible_users AS NOT MATERIALIZED (
           SELECT u.id, uo.allow_private_messages, uo.email_level, uo.chat_email_frequency
           FROM users u
           #{groups_join_sql}
-          JOIN user_options uo ON uo.user_id = u.id 
-            AND uo.chat_enabled 
+          JOIN user_options uo ON uo.user_id = u.id
+            AND uo.chat_enabled
           WHERE u.last_seen_at < now() - interval '15 minutes'
         ), unread_dms AS (
           SELECT DISTINCT uccm.user_id
@@ -56,7 +56,7 @@ module Chat
           JOIN chat_channels cc ON cc.id = cm.chat_channel_id
             AND cc.deleted_at IS NULL
             AND cc.chatable_type = 'DirectMessage'
-          WHERE NOT uccm.muted 
+          WHERE NOT uccm.muted
             AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < cm.id)
             AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < cm.id)
             AND eu.chat_email_frequency = #{UserOption.chat_email_frequencies[:when_away]}
@@ -66,18 +66,18 @@ module Chat
           JOIN eligible_users eu ON eu.id = n.user_id
           JOIN chat_mention_notifications cmn ON cmn.notification_id = n.id
           JOIN chat_mentions mn ON mn.id = cmn.chat_mention_id
-          JOIN chat_messages cm ON cm.id = mn.chat_message_id 
-            AND cm.deleted_at IS NULL 
+          JOIN chat_messages cm ON cm.id = mn.chat_message_id
+            AND cm.deleted_at IS NULL
             AND cm.thread_id IS NULL
             AND NOT cm.created_by_sdk
             AND cm.created_at > now() - interval '1 day'
-          JOIN users sender ON sender.id = cm.user_id 
+          JOIN users sender ON sender.id = cm.user_id
           JOIN chat_channels cc ON cc.id = cm.chat_channel_id
             AND cc.deleted_at IS NULL
             AND cc.chatable_type = 'Category'
           JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = cc.id
-            AND uccm.user_id = n.user_id 
-            AND NOT uccm.muted 
+            AND uccm.user_id = n.user_id
+            AND NOT uccm.muted
             AND uccm.following
             AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < cm.id)
             AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < cm.id)
@@ -92,7 +92,7 @@ module Chat
             AND cm.deleted_at IS NULL
             AND NOT cm.created_by_sdk
             AND cm.created_at > now() - interval '1 day'
-            JOIN users sender ON sender.id = cm.user_id 
+            JOIN users sender ON sender.id = cm.user_id
             JOIN chat_channels cc ON cc.id = ct.channel_id
             AND cc.deleted_at IS NULL
             WHERE uctm.notification_level = #{Chat::NotificationLevels.all[:watching]}

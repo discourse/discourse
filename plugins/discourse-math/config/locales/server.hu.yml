@@ -7,3 +7,10 @@
 hu:
   site_settings:
     discourse_math_enabled: "Discourse Math plugin engedélyezése(speciális feldolgozást ad hozzá a $ és $$ blokkokhoz)"
+    discourse_math_provider: "Alapértelmezett matematikai renderelési szolgáltató"
+    discourse_math_enable_latex_delimiters: "LaTeX stílusú határolójelek engedélyezése: \\(...\\) beágyazott matematikához és \\[...\\] blokkmatematikához"
+    discourse_math_mathjax_output: "MathJax kimeneti formátum (csak MathJax)"
+    discourse_math_enable_menu: "Kontextuális menü engedélyezése (csak MathJax esetén)"
+    discourse_math_enable_accessibility: "Akadálymentesítési funkciók engedélyezése (csak menüvel rendelkező MathJax esetén)"
+    discourse_math_zoom_on_click: "175%-os nagyítás Alt+kattintással (csak menüs MathJax esetén)"
+    discourse_math_enable_asciimath: "Asciimath engedélyezése (speciális feldolgozást ad a %-kal elválasztott bemenethez; csak a MathJax támogatja)"

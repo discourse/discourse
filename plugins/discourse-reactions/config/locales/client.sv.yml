@@ -15,8 +15,6 @@ sv:
       reactions_title: "Reaktioner"
       state_panel:
         more_users: "och ytterligare %{count}..."
-      reaction:
-        forbidden: "Den reaktionen skapades för långt tillbaka i tiden. Den kan inte längre ändras eller tas bort."
       picker:
         react_with: "Reagera på det här inlägget med: %{reaction}"
         cant_remove_reaction: "Du kan inte längre ta bort din reaktion"

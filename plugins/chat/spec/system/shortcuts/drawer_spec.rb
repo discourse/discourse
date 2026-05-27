@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shortcuts | drawer", type: :system do
+RSpec.describe "Shortcuts | drawer" do
   fab!(:user_1, :admin)
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)
@@ -64,8 +64,6 @@ RSpec.describe "Shortcuts | drawer", type: :system do
         fab!(:message) do
           Fabricate(:chat_message, chat_channel: channel_1, upload_ids: [upload.id])
         end
-
-        before { SiteSetting.experimental_lightbox = true }
 
         it "does not close the drawer" do
           expect(chat_page).to have_drawer

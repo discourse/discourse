@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
 export const ALL_PAGES_EXCLUDED_ROUTES = [
@@ -33,14 +34,24 @@ export default class WelcomeBanner extends Component {
   @service search;
 
   checkViewport = modifier((element) => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        this.search.welcomeBannerSearchInViewport = entry.isIntersecting;
-      },
-      { threshold: 1.0 }
-    );
+    const checkVisibility = () => {
+      // Use getBoundingClientRect for reliable visibility detection.
+      // IntersectionObserver's isIntersecting can return stale values during
+      // SPA navigation, but getBoundingClientRect is always accurate.
+      const { top, bottom } = element.getBoundingClientRect();
+      const isFullyVisible = top >= 0 && bottom <= window.innerHeight;
+      this.search.welcomeBannerSearchInViewport = isFullyVisible;
+    };
 
+    // Use IntersectionObserver only as a trigger for when to check visibility,
+    // not to determine actual visibility state.
+    const threshold = 1.0;
+    const observer = new IntersectionObserver(checkVisibility, { threshold });
     observer.observe(element);
+
+    // Set to true immediately when the modifier sets up, since the welcome banner
+    // is always rendered at the top of the page.
+    this.search.welcomeBannerSearchInViewport = true;
 
     return () => {
       observer.disconnect();
@@ -66,6 +77,28 @@ export default class WelcomeBanner extends Component {
     const { currentRouteName } = this.router;
     const { top_menu, welcome_banner_page_visibility } = this.siteSettings;
 
+    const shouldDisplayForRoute = this.#shouldDisplayForRoute(
+      welcome_banner_page_visibility,
+      top_menu,
+      currentRouteName
+    );
+
+    return applyValueTransformer(
+      "welcome-banner-display-for-route",
+      shouldDisplayForRoute,
+      {
+        welcomeBannerPageVisibility: welcome_banner_page_visibility,
+        currentRouteName,
+        homepage: `discovery.${defaultHomepage()}`,
+      }
+    );
+  }
+
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
     switch (welcome_banner_page_visibility) {
       case "top_menu_pages":
         return top_menu
@@ -88,22 +121,30 @@ export default class WelcomeBanner extends Component {
   }
 
   get headerText() {
+    const site_name = this.siteSettings.title || "";
+
+    let key, args;
+
     if (!this.currentUser) {
-      return i18n("welcome_banner.header.anonymous_members", {
-        site_name: this.siteSettings.title,
-      });
+      key = "welcome_banner.header.anonymous_members";
+      args = { site_name };
+    } else {
+      const isNewUser = !this.currentUser.previous_visit_at;
+      key = isNewUser
+        ? "welcome_banner.header.new_members"
+        : "welcome_banner.header.logged_in_members";
+      args = {
+        site_name,
+        preferred_display_name: sanitize(
+          prioritizeNameFallback(
+            this.currentUser.name,
+            this.currentUser.username
+          )
+        ),
+      };
     }
 
-    const isNewUser = !this.currentUser.previous_visit_at;
-    const key = isNewUser
-      ? "welcome_banner.header.new_members"
-      : "welcome_banner.header.logged_in_members";
-
-    return i18n(key, {
-      preferred_display_name: sanitize(
-        prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
-      ),
-    });
+    return i18n(key, args);
   }
 
   get subheaderText() {
@@ -137,7 +178,7 @@ export default class WelcomeBanner extends Component {
 
   get bgImgStyle() {
     if (this.siteSettings.welcome_banner_image) {
-      return htmlSafe(
+      return trustHTML(
         `background-image:url(${escapeExpression(
           this.siteSettings.welcome_banner_image
         )});`
@@ -150,7 +191,7 @@ export default class WelcomeBanner extends Component {
       this.siteSettings.welcome_banner_image &&
       this.siteSettings.welcome_banner_text_color
     ) {
-      return htmlSafe(
+      return trustHTML(
         `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
     }
@@ -160,7 +201,7 @@ export default class WelcomeBanner extends Component {
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "welcome-banner"
           this.locationClass
           this.bgImgClass
@@ -176,10 +217,10 @@ export default class WelcomeBanner extends Component {
             class="welcome-banner__title"
             style={{if this.textColorStyle this.textColorStyle}}
           >
-            {{htmlSafe this.headerText}}
+            {{trustHTML this.headerText}}
             {{#if this.subheaderText}}
               <p class="welcome-banner__subheader">
-                {{htmlSafe this.subheaderText}}
+                {{trustHTML this.subheaderText}}
               </p>
             {{/if}}
           </div>

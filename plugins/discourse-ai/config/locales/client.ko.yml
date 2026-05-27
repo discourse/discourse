@@ -38,19 +38,39 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      llm_selector:
+        none: "없음"
       features:
-        back: "뒤로"
         disabled: "(비활성)"
         groups: "그룹:"
         no_groups: "없음"
-        edit: "편집"
+        edit: "설정"
         expand_list:
           other: "(%{count}개 더보기)"
+        bot:
+          setting_groups:
+            settings: "기본 설정"
+        nav:
+          enabled: "활성화"
         filters:
           all: "모두"
           reset: "리셋"
+        summarization:
+          setting_groups:
+            settings: "기본 설정"
         search:
           name: "검색"
+          setting_groups:
+            settings: "기본 설정"
+        discord:
+          setting_groups:
+            settings: "기본 설정"
+        inference:
+          setting_groups:
+            settings: "기본 설정"
+        translation:
+          setting_groups:
+            settings: "기본 설정"
         spam:
           name: "스팸"
       modals:
@@ -77,11 +97,11 @@ ko:
         summary: "요약"
         username: "아이디"
         total_requests: "총 요청횟수"
+        total: "합계"
         periods:
           last_day: "지난 24시간"
           custom: "사용자 지정..."
-      ai_persona:
-        back: "뒤로"
+      ai_agent:
         name: "그룹명"
         edit: "편집"
         export: "내보내기"
@@ -103,7 +123,6 @@ ko:
           title: "업로드된 파일"
           uploading: "업로드 중..."
       tools:
-        back: "뒤로"
         export: "내보내기"
         import: "가져오기"
         name: "그룹명"
@@ -113,13 +132,34 @@ ko:
         remove_parameter: "제거"
         parameter_required: "필수"
         edit: "편집"
+        test: "테스트"
         delete: "삭제"
+      secrets:
+        short_title: "자격 증명"
+        name: "그룹명"
+        secret: "값"
+        save: "저장"
+        edit: "편집"
+        delete: "삭제"
+        embedding: "삽입(Embedding)"
+      mcp_servers:
+        name: "그룹명"
+        description: "내용"
+        url: "URL"
+        oauth_statuses:
+          connected: "연결됨"
+        oauth_connect: "연결"
+        enabled: "활성화"
+        save: "저장"
+        edit: "편집"
+        delete: "삭제"
+        tools_modal:
+          required: "필수"
       llms:
         display_name: "그룹명"
         provider: "공급자"
         save: "저장"
         edit: "편집"
-        back: "뒤로"
         delete: 삭제
         quotas:
           group: "그룹"
@@ -134,7 +174,10 @@ ko:
           hours: "시간"
         usage:
           ai_summarization: "요약하기"
+          ai_embeddings_semantic_search: "AI 검색"
           ai_spam: "스팸"
+        preconfigured:
+          title_no_llms: "시작하려면 템플릿을 선택하세요."
         next:
           title: "다음"
         tests:
@@ -154,10 +197,10 @@ ko:
           cancel: "취소"
         thumbnail_suggestions:
           select: "선택"
+          try_again: "다시 시도"
         image_caption:
           save_caption: "저장"
       embeddings:
-        back: "뒤로"
         save: "저장"
         delete: "삭제"
         edit: "편집"
@@ -182,6 +225,7 @@ ko:
           today: "오늘"
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"
+          scroll_to_bottom: "맨 아래로 스크롤"
       sentiments:
         sentiment_analysis:
           filter_types:

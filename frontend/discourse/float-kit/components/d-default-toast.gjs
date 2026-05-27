@@ -1,14 +1,14 @@
 import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import { trustHTML } from "@ember/template";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const DDefaultToast = <template>
   <div
-    class={{concatClass
+    class={{dConcatClass
       "fk-d-default-toast"
       (concat "-" (or @data.theme "default"))
     }}
@@ -22,7 +22,7 @@ const DDefaultToast = <template>
     {{/if}}
     {{#if @data.icon}}
       <div class="fk-d-default-toast__icon-container">
-        {{icon @data.icon}}
+        {{dIcon @data.icon}}
       </div>
     {{/if}}
     <div class="fk-d-default-toast__main-container">
@@ -35,7 +35,7 @@ const DDefaultToast = <template>
         {{#if @data.message}}
           <div class="fk-d-default-toast__message">
             {{#if @data.isHtmlMessage}}
-              {{htmlSafe @data.message}}
+              {{trustHTML @data.message}}
             {{else}}
               {{@data.message}}
             {{/if}}

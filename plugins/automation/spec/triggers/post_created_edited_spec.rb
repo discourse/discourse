@@ -209,7 +209,7 @@ describe "PostCreatedEdited" do
       end
 
       context "when PM is not sent to the group" do
-        it "doesnt fire the trigger" do
+        it "doesn't fire the trigger" do
           list =
             capture_contexts do
               PostCreator.create(

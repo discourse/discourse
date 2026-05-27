@@ -15,6 +15,16 @@ export default class TagUtils extends Service {
       .catch(popupAjaxError);
   }
 
+  sortSearchResults(results) {
+    if (!this.siteSettings.tags_sort_alphabetically) {
+      return results;
+    }
+    const byName = (a, b) => a.name.localeCompare(b.name);
+    const enabled = results.filter((r) => !r.disabled).sort(byName);
+    const disabled = results.filter((r) => r.disabled).sort(byName);
+    return [...enabled, ...disabled];
+  }
+
   validateCreate(
     filter,
     content,
@@ -45,11 +55,14 @@ export default class TagUtils extends Service {
     }
 
     const toLowerCaseOrUndefined = (string) => {
-      return isEmpty(string) ? undefined : string.toLowerCase();
+      if (isEmpty(string)) {
+        return undefined;
+      }
+      return typeof string === "string" ? string.toLowerCase() : undefined;
     };
 
     const inCollection = content
-      .map((c) => toLowerCaseOrUndefined(getValue(c)))
+      .map((c) => toLowerCaseOrUndefined(c?.name || getValue(c)))
       .filter(Boolean)
       .includes(filter);
 
@@ -70,8 +83,10 @@ export default class TagUtils extends Service {
     input = input
       .trim()
       .replace(/\s+/g, "-")
-      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
-      .substring(0, this.siteSettings.max_tag_length);
+      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=%\\`^\s|\{\}"<>]+/g, "")
+      .replace(/-{2,}/g, "-")
+      .substring(0, this.siteSettings.max_tag_length)
+      .replace(/^\.+|\.+$/g, "");
 
     if (this.siteSettings.force_lowercase_tags) {
       input = input.toLowerCase();

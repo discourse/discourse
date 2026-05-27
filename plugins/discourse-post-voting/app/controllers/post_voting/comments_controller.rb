@@ -6,7 +6,7 @@ module PostVoting
 
     before_action :find_post, only: %i[load_more_comments create]
     before_action :ensure_post_voting_enabled, only: %i[load_more_comments create]
-    before_action :ensure_logged_in, only: %i[create destroy update]
+    before_action :ensure_logged_in, only: %i[create destroy update flag]
 
     def load_more_comments
       @guardian.ensure_can_see!(@post)
@@ -26,6 +26,8 @@ module PostVoting
     end
 
     def create
+      @guardian.ensure_can_see!(@post)
+
       raise Discourse::InvalidAccess if !@guardian.can_create_post_on_topic?(@post.topic)
 
       comment =

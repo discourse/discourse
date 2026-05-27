@@ -4,10 +4,10 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import { MODES } from "./constants";
 import ChatablesLoader from "./lib/chatables-loader";
@@ -17,21 +17,17 @@ import SearchInput from "./search-input";
 
 export default class ChatMessageCreatorSearch extends Component {
   @service chat;
+  @service chatGuardian;
   @service router;
 
   @tracked chatables = [];
   @tracked highlightedChatable;
   @tracked term;
-  @tracked loading = false;
 
   get items() {
     const items = [];
 
-    if (this.loading) {
-      return items;
-    }
-
-    if (!this.term?.length) {
+    if (!this.term?.length && this.chatGuardian.canUseGroupChat()) {
       items.push({
         identifier: "new-group",
         type: "list-action",

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Editing sidebar tags navigation", type: :system do
+RSpec.describe "Editing sidebar tags navigation" do
   fab!(:user)
   fab!(:tag1) { Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
 
@@ -175,6 +175,20 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     modal.filter_by_all
 
     expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+  end
+
+  it "displays empty state when filtering by selected with no tags selected" do
+    visit "/latest"
+
+    expect(sidebar).to have_tags_section
+
+    modal = sidebar.click_edit_tags_button
+
+    expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+
+    modal.filter_by_selected
+
+    expect(modal).to have_no_tag_checkboxes
   end
 
   it "loads more tags when the user scrolls views the last tag in the modal and there is more tags to load" do

@@ -43,12 +43,19 @@ module DiscourseAi
           call_details[:name] = raw_message[:name]
 
           if @responses_api
-            {
+            provider_data = raw_message[:provider_data] || {}
+            open_ai_data =
+              provider_data[:open_ai_responses] || provider_data["open_ai_responses"] || {}
+            tool_item_id = open_ai_data[:id] || open_ai_data["id"]
+
+            payload = {
               type: "function_call",
+              id: tool_item_id,
               call_id: raw_message[:id],
               name: call_details[:name],
               arguments: call_details[:arguments],
             }
+            payload.compact
           else
             {
               role: "assistant",

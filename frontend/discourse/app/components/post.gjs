@@ -4,11 +4,10 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostA11yHeading from "discourse/components/post/a11y-heading";
@@ -22,7 +21,6 @@ import PostMetaData from "discourse/components/post/meta-data";
 import PostMetaDataReplyToTab from "discourse/components/post/meta-data/reply-to-tab";
 import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
 import { relativeAge } from "discourse/lib/formatter";
@@ -36,6 +34,8 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {
@@ -52,14 +52,11 @@ export default class Post extends Component {
 
   @tracked expandedFirstPost;
   @tracked repliesAbove;
-  @tracked repliesBelow = new TrackedArray();
-
-  /**
-   * @type {boolean}
-   */
   @tracked isTogglingReplies = false;
+  @tracked isLoadingMoreReplies = false;
 
-  decoratorState = new TrackedMap();
+  repliesBelow = trackedArray();
+  decoratorState = trackedMap();
 
   addEventListeners = modifier((element, [listeners]) => {
     for (const { event, callback } of listeners) {
@@ -233,20 +230,30 @@ export default class Post extends Component {
 
   @action
   async loadMoreReplies() {
-    const after = this.repliesBelow.length
-      ? this.repliesBelow.at(-1).post_number
-      : 1;
+    if (this.isLoadingMoreReplies) {
+      return;
+    }
 
-    const replies = await this.store.find("post-reply", {
-      postId: this.args.post.id,
-      after,
-    });
+    this.isLoadingMoreReplies = true;
 
-    replies.content.forEach((reply) => {
-      // the components expect a post model instance
-      const replyAsPost = this.store.createRecord("post", reply);
-      this.repliesBelow.push(replyAsPost);
-    });
+    try {
+      const after = this.repliesBelow.length
+        ? this.repliesBelow.at(-1).post_number
+        : 1;
+
+      const replies = await this.store.find("post-reply", {
+        postId: this.args.post.id,
+        after,
+      });
+
+      replies.content.forEach((reply) => {
+        // the components expect a post model instance
+        const replyAsPost = this.store.createRecord("post", reply);
+        this.repliesBelow.push(replyAsPost);
+      });
+    } finally {
+      this.isLoadingMoreReplies = false;
+    }
   }
 
   @action
@@ -403,7 +410,7 @@ export default class Post extends Component {
       ...attributes
       class={{unless
         @cloaked
-        (concatClass
+        (dConcatClass
           "topic-post"
           "clearfix"
           (unless this.site.mobileView "post--sticky-avatar sticky-avatar")
@@ -418,7 +425,7 @@ export default class Post extends Component {
           (if @post.deleted "post--deleted deleted")
           (if
             @post.primary_group_name
-            (concatClass
+            (dConcatClass
               (concat "post--group-" @post.primary_group_name)
               (concat "group-" @post.primary_group_name)
             )
@@ -459,7 +466,7 @@ export default class Post extends Component {
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
               id={{@elementId}}
-              class={{concatClass
+              class={{dConcatClass
                 "boxed"
                 "onscreen-post"
                 (if
@@ -489,7 +496,7 @@ export default class Post extends Component {
                       class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
                     >
                       <DButton
-                        class="post__collapse-button post__collapse-button-down collapse-down"
+                        class="btn-default btn-small post__collapse-button post__collapse-button-down collapse-down"
                         @action={{this.toggleReplyAbove}}
                         @icon="chevron-down"
                         @title="post.collapse"
@@ -538,7 +545,7 @@ export default class Post extends Component {
                       />
                     </PluginOutlet>
                     <div
-                      class={{concatClass
+                      class={{dConcatClass
                         "post__regular regular"
                         "post__contents contents"
                         (if
@@ -570,7 +577,7 @@ export default class Post extends Component {
                       {{#if
                         (and @post.cooked_hidden @post.can_see_hidden_post)
                       }}
-                        {{! template-lint-disable no-invalid-interactive }}
+                        {{! eslint-disable ember/template-no-invalid-interactive }}
                         <a
                           class="post__expand-hidden expand-hidden"
                           {{on "click" @expandHidden}}
@@ -586,7 +593,7 @@ export default class Post extends Component {
                         )
                       }}
                         <DButton
-                          class="post__expand-button expand-post"
+                          class="btn-default post__expand-button expand-post"
                           @action={{this.expandFirstPost}}
                           @translatedLabel={{if
                             this.expandedFirstPost.isPending
@@ -596,7 +603,11 @@ export default class Post extends Component {
                         />
                       {{/if}}
 
-                      <section class="post__menu-area post-menu-area clearfix">
+                      <section
+                        class="post__menu-area post-menu-area clearfix"
+                        role="group"
+                        aria-label={{i18n "post.controls.menu_label"}}
+                      >
                         <PostMenu
                           @post={{@post}}
                           @prevPost={{@prevPost}}
@@ -653,7 +664,7 @@ export default class Post extends Component {
                           {{/each}}
 
                           <DButton
-                            class="post__collapse-button post__collapse-button-up collapse-up"
+                            class="btn-default btn-small post__collapse-button post__collapse-button-up collapse-up"
                             @action={{this.toggleRepliesBelow}}
                             @ariaLabel="post.sr_collapse_replies"
                             @icon="chevron-up"
@@ -665,6 +676,7 @@ export default class Post extends Component {
                               class="post__load-more load-more-replies"
                               @label="post.load_more_replies"
                               @action={{this.loadMoreReplies}}
+                              @disabled={{this.isLoadingMoreReplies}}
                             />
                           {{/if}}
                         </section>

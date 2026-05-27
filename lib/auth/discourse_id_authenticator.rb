@@ -24,6 +24,7 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
     info do
       {
         nickname: access_token.params["info"]["username"],
+        name: access_token.params["info"]["name"],
         email: access_token.params["info"]["email"],
         image: access_token.params["info"]["image"],
       }
@@ -48,7 +49,7 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
   end
 
   def site
-    SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
+    DiscourseId.provider_url
   end
 
   def register_middleware(omniauth)

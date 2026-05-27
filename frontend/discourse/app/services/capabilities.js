@@ -9,11 +9,14 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 const ua = navigator.userAgent;
 
-const anyPointerCourseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
+const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
 
 let siteInitialized = false;
 
-class Capabilities {
+/**
+ * @typedef {_Capabilities} Capabilities
+ */
+class _Capabilities {
   isAndroid = ua.includes("Android");
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
@@ -26,10 +29,15 @@ class Capabilities {
   isOpera = !!window.opera || ua.includes(" OPR/");
   isFirefox = ua.includes("Firefox");
   isChrome = !!window.chrome && !this.isOpera;
+  // In iframes, Safari-specific objects aren't accessible, so fall back to UA detection
   isSafari =
-    /Constructor/.test(window.HTMLElement) ||
-    window.safari?.pushNotification?.toString() ===
-      "[object SafariRemoteNotification]";
+    window.self !== window.top
+      ? ua.includes("Safari") &&
+        !ua.includes("Chrome") &&
+        !ua.includes("Chromium")
+      : /Constructor/.test(window.HTMLElement) ||
+        window.safari?.pushNotification?.toString() ===
+          "[object SafariRemoteNotification]";
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
@@ -110,7 +118,7 @@ class Capabilities {
   }
 
   get touch() {
-    return anyPointerCourseQuery.matches;
+    return anyPointerCoarseQuery.matches;
   }
 
   get userHasBeenActive() {
@@ -130,7 +138,7 @@ class Capabilities {
   }
 }
 
-export const capabilities = new Capabilities();
+export const capabilities = new _Capabilities();
 
 export default class CapabilitiesServiceShim {
   static isServiceFactory = true;

@@ -1,18 +1,37 @@
+import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import withEventValue from "discourse/helpers/with-event-value";
+import DCharCounter from "discourse/ui-kit/d-char-counter";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+
+export default class CharCounterMolecule extends Component {
+  get charCounterCode() {
+    return `
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import CharCounter from "discourse/components/char-counter";
 import withEventValue from "discourse/helpers/with-event-value";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const CharCounterMolecule = <template>
-  <StyleguideExample @title="<CharCounter>">
-    <CharCounter @max="50" @value={{@dummy.charCounterContent}}>
-      <textarea
-        {{on "input" (withEventValue (fn (mut @dummy.charCounterContent)))}}
-        class="styleguide--char-counter"
-      ></textarea>
-    </CharCounter>
-  </StyleguideExample>
-</template>;
+<template>
+  <CharCounter @max="50" @value={{@dummy.charCounterContent}}>
+    <textarea
+      {{on "input" (withEventValue (fn (mut @dummy.charCounterContent)))}}
+      class="styleguide--char-counter"
+    ></textarea>
+  </CharCounter>
+</template>
+    `;
+  }
 
-export default CharCounterMolecule;
+  <template>
+    <StyleguideExample @title="<CharCounter>" @code={{this.charCounterCode}}>
+      <DCharCounter @max="50" @value={{@dummy.charCounterContent}}>
+        <textarea
+          {{on "input" (withEventValue (fn (mut @dummy.charCounterContent)))}}
+          class="styleguide--char-counter"
+        ></textarea>
+      </DCharCounter>
+    </StyleguideExample>
+  </template>
+}

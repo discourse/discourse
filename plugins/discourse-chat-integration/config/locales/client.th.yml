@@ -8,6 +8,7 @@ th:
   js:
     chat_integration:
       settings: "การตั้งค่า"
+      more_providers: "อื่น"
       all_categories: "(หมวดหมู่ทั้งหมด)"
       delete_channel: "ลบ"
       edit_channel: "แก้ไข"

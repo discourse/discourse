@@ -39,4 +39,21 @@ RSpec.describe DiscourseAi::AiHelper::SemanticCategorizer do
     expect(category_ids).not_to include(muted_category.id)
     expect(category_ids).to include(category.id)
   end
+
+  it "does not mutate vdef.pg_function when computing category scores" do
+    inner_vector = categorizer.instance_variable_get(:@vector)
+    expect(inner_vector.vdef.pg_function).to eq("<=>")
+    categorizer.categories
+    expect(inner_vector.vdef.pg_function).to eq("<=>")
+  end
+
+  it "does not mutate vdef.pg_function when computing tag scores" do
+    tag = Fabricate(:tag)
+    Fabricate(:topic_tag, topic: topic, tag: tag)
+
+    inner_vector = categorizer.instance_variable_get(:@vector)
+    expect(inner_vector.vdef.pg_function).to eq("<=>")
+    categorizer.tags
+    expect(inner_vector.vdef.pg_function).to eq("<=>")
+  end
 end

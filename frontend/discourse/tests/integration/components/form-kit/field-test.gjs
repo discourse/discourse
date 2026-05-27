@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { trustHTML } from "@ember/template";
 import {
   click,
   fillIn,
@@ -11,6 +12,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
@@ -29,7 +31,7 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @size={{8}}>
+          <form.Field @type="input" @name="foo" @title="Foo" @size={{8}}>
             Test
           </form.Field>
         </Form>
@@ -44,12 +46,13 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form @data={{hash disabled=true}} as |form data|>
           <form.Field
+            @type="input"
             @name="foo"
             @title="Foo"
             @disabled={{data.disabled}}
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
 
           <form.Button class="test" @action={{fn form.set "disabled" false}} />
@@ -73,18 +76,62 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
+            @type="input"
             @name="foo"
             @title="Foo"
             @description="foo foo"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
     );
 
     assert.form().field("foo").hasDescription("foo foo");
+  });
+
+  test("aria-describedby links description, help text, and error", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @description="A description"
+            @helpText="A help text"
+            @validation="required"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    const input = document.querySelector("[name='foo']");
+    const descriptionId = document.querySelector(
+      ".form-kit__container-description"
+    ).id;
+    const helpTextId = document.querySelector(
+      ".form-kit__container-help-text"
+    ).id;
+
+    assert.strictEqual(
+      input.getAttribute("aria-describedby"),
+      `${descriptionId} ${helpTextId}`,
+      "joins description and help text ids when no error"
+    );
+
+    await formKit().submit();
+
+    const errorId = document.querySelector(".form-kit__errors").id;
+    assert.strictEqual(
+      input.getAttribute("aria-describedby"),
+      `${descriptionId} ${helpTextId} ${errorId}`,
+      "appends the error id when a validation error is present"
+    );
   });
 
   test("invalid @name", async function (assert) {
@@ -95,8 +142,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo.bar" @title="Foo" @size={{8}} as |field|>
-            <field.Input />
+          <form.Field
+            @type="input"
+            @name="foo.bar"
+            @title="Foo"
+            @size={{8}}
+            as |field|
+          >
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -116,8 +169,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo" @size={{8}} as |field|>
-            <field.Input />
+          <form.Field @type="input" @name="foo" @size={{8}} as |field|>
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -126,25 +179,51 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     resetOnerror();
   });
 
-  test("@validation", async function (assert) {
+  test("@title with htmlSafe", async function (assert) {
+    const htmlTitle = trustHTML('Title with <a href="#">link</a>');
+
     await render(
       <template>
         <Form as |form|>
           <form.Field
             @name="foo"
+            @type="checkbox"
+            @title={{htmlTitle}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__control-checkbox-title a")
+      .exists("it renders HTML in the title");
+    assert.dom(".form-kit__control-checkbox-title a").hasAttribute("href", "#");
+  });
+
+  test("@validation", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
             @title="Foo"
             @validation="required"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
           <form.Field
+            @type="input"
             @name="bar"
             @title="Bar"
             @validation="required"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -174,12 +253,13 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form @data={{hash foo="bar"}} as |form|>
           <form.Field
+            @type="input"
             @name="foo"
             @title="Foo"
             @validate={{validate}}
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
 
           <form.Submit />
@@ -200,11 +280,12 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
+            @type="input"
             @name="foo"
             @title="Foo"
             @showTitle={{false}}
             as |field|
-          ><field.Input /></form.Field>
+          ><field.Control /></form.Field>
         </Form>
       </template>
     );
@@ -212,17 +293,51 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
+  test("@showOptional", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").exists();
+
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @showOptional={{false}}
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").doesNotExist();
+  });
+
   test("@format", async function (assert) {
     await render(
       <template>
         <Form as |form|>
           <form.Field
+            @type="input"
             @name="foo"
             @title="Foo"
             @description="foo description"
             @format="full"
             as |field|
-          ><field.Input /></form.Field>
+          ><field.Control /></form.Field>
         </Form>
       </template>
     );
@@ -231,58 +346,39 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       .dom(".form-kit__field.--full")
       .exists("it applies the --full class to the field");
     assert
-      .dom(".form-kit__container-description.--full")
-      .exists("it applies the --full class to the description");
+      .dom(".form-kit__container-description:not([class*='--'])")
+      .exists("it does not apply a format class to the description");
+    assert
+      .dom(".form-kit__container-title:not([class*='--'])")
+      .exists("it does not apply a format class to the title");
+  });
+
+  test("@labelFormat", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @description="foo description"
+            @format="large"
+            @labelFormat="full"
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__field.--large")
+      .exists("it applies the --large class to the field");
     assert
       .dom(".form-kit__container-title.--full")
       .exists("it applies the --full class to the title");
-  });
-
-  test("@descriptionFormat", async function (assert) {
-    await render(
-      <template>
-        <Form as |form|>
-          <form.Field
-            @name="foo"
-            @title="Foo"
-            @description="foo description"
-            @format="full"
-            @descriptionFormat="large"
-            as |field|
-          ><field.Input /></form.Field>
-        </Form>
-      </template>
-    );
-
     assert
-      .dom(".form-kit__field.--full")
-      .exists("it applies the --full class to the field");
-    assert
-      .dom(".form-kit__container-description.--large")
-      .exists("it applies the --large class to the description");
-  });
-
-  test("@titleFormat", async function (assert) {
-    await render(
-      <template>
-        <Form as |form|>
-          <form.Field
-            @name="foo"
-            @title="Foo"
-            @format="full"
-            @titleFormat="large"
-            as |field|
-          ><field.Input /></form.Field>
-        </Form>
-      </template>
-    );
-
-    assert
-      .dom(".form-kit__field.--full")
-      .exists("it applies the --full class to the field");
-    assert
-      .dom(".form-kit__container-title.--large")
-      .exists("it applies the --large class to the title");
+      .dom(".form-kit__container-description.--full")
+      .exists("it applies the --full class to the description");
   });
 
   test("@onSet", async function (assert) {
@@ -305,8 +401,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form @data={{hash something=(hash foo=1)}} as |form|>
           <form.Object @name="something" as |object|>
-            <object.Field @name="foo" @title="Foo" @onSet={{onSet}} as |field|>
-              <field.Input />
+            <object.Field
+              @type="input"
+              @name="foo"
+              @title="Foo"
+              @onSet={{onSet}}
+              as |field|
+            >
+              <field.Control />
             </object.Field>
           </form.Object>
         </Form>
@@ -320,8 +422,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @tooltip="text" as |field|>
-            <field.Input />
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @tooltip="text"
+            as |field|
+          >
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -335,12 +443,13 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
+            @type="input"
             @name="foo"
             @title="Foo"
             @tooltip={{component DTooltip content="component"}}
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
         </Form>
       </template>
@@ -350,4 +459,135 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     assert.dom(".fk-d-tooltip__inner-content").hasText("component");
   });
+
+  test("legacy yield does not rerender input on keystroke", async function (assert) {
+    let data = { foo: "" };
+    const mutateData = (x) => (data = x);
+
+    await withSilencedDeprecationsAsync(
+      "discourse.form-kit.legacy-field-yield",
+      async () => {
+        await render(
+          <template>
+            <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+              <form.Field @name="foo" @title="Foo" as |field|>
+                <field.Input />
+              </form.Field>
+            </Form>
+          </template>
+        );
+
+        const input = document.querySelector(".form-kit__control-input");
+        await fillIn(input, "bar");
+
+        assert.strictEqual(
+          document.querySelector(".form-kit__control-input"),
+          input,
+          "the input element is the same DOM node after typing"
+        );
+        assert.form().field("foo").hasValue("bar");
+
+        await formKit().submit();
+
+        assert.deepEqual(data.foo, "bar");
+      }
+    );
+  });
 });
+
+module(
+  "Integration | Component | FormKit | Field | aria-describedby wiring",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const SIMPLE_CONTROLS = [
+      "input",
+      "input-number",
+      "password",
+      "textarea",
+      "checkbox",
+      "color",
+      "calendar",
+      "question",
+    ];
+
+    SIMPLE_CONTROLS.forEach((type) => {
+      test(`@type="${type}" wires aria-describedby to @description`, async function (assert) {
+        await render(
+          <template>
+            <Form as |form|>
+              <form.Field
+                @type={{type}}
+                @name="foo"
+                @title="Foo"
+                @description="A description"
+                as |field|
+              >
+                <field.Control />
+              </form.Field>
+            </Form>
+          </template>
+        );
+
+        const descriptionId = document.querySelector(
+          ".form-kit__container-description"
+        ).id;
+        assert
+          .dom(`[aria-describedby~="${descriptionId}"]`)
+          .exists(
+            `${type} renders a focusable element pointing at the description id`
+          );
+      });
+    });
+
+    test('@type="select" wires aria-describedby to @description', async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @type="select"
+              @name="foo"
+              @title="Foo"
+              @description="A description"
+              as |field|
+            >
+              <field.Control as |select|>
+                <select.Option @value="a">A</select.Option>
+              </field.Control>
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      const descriptionId = document.querySelector(
+        ".form-kit__container-description"
+      ).id;
+      assert.dom(`[aria-describedby~="${descriptionId}"]`).exists();
+    });
+
+    test('@type="radio-group" wires aria-describedby to @description', async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @type="radio-group"
+              @name="foo"
+              @title="Foo"
+              @description="A description"
+              as |field|
+            >
+              <field.Control as |RadioGroup|>
+                <RadioGroup.Radio @value="a">A</RadioGroup.Radio>
+              </field.Control>
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      const descriptionId = document.querySelector(
+        ".form-kit__container-description"
+      ).id;
+      assert.dom(`[aria-describedby~="${descriptionId}"]`).exists();
+    });
+  }
+);

@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PreloadStore from "discourse/lib/preload-store";
 
 let _customizations = {};
@@ -6,12 +6,12 @@ let _customizations = {};
 export function getCustomHTML(key) {
   const c = _customizations[key];
   if (c) {
-    return htmlSafe(c);
+    return trustHTML(c);
   }
 
   const html = PreloadStore.get("customHTML");
   if (html && html[key] && html[key].length) {
-    return htmlSafe(html[key]);
+    return trustHTML(html[key]);
   }
 }
 

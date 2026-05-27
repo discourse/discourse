@@ -145,7 +145,13 @@ bg:
   not_in_group:
     join_group: "Присъедини се към група"
   reading_time: "Време за четене"
+  reading_time_minutes:
+    one: "%{count} минута 🕑"
+    other: "%{count} минути 🕑"
   likes: "Харесвания"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговор във същата публикация."
     other: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговори в същата публикация."
@@ -235,6 +241,7 @@ bg:
       admins: "админи"
       moderators: "модератори"
       staff: "персонал"
+      anonymous: "анонимен"
       trust_level_0: "trust_level_0 "
       trust_level_1: "trust_level_1 "
       trust_level_2: "trust_level_2 "
@@ -482,7 +489,9 @@ bg:
       every_month: "всеки месец"
       every_six_months: "на всеки шест месеца"
   user_api_key:
+    deny: "Отмени"
     read: "четене"
+    copied: "Копирано!"
     otp_confirmation:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{username}
@@ -510,12 +519,35 @@ bg:
         flag: Тип
     visits:
       title: "Потребителски посещения "
-      xaxis: "Ден"
+      xaxis:
+        mobile: "Мобилен"
       yaxis: "Брой на посещенията"
     signups:
       xaxis: "Ден"
     new_contributors:
       xaxis: "Ден"
+    activity_by_category:
+      labels:
+        category: "Категория"
+        topics: "Теми"
+        posts: "Публикации"
+        share: "Споделяне"
+    posters_by_member_type:
+      labels:
+        count: "Публикации"
+        share: "Споделяне"
+      types:
+        staff: "Персонал"
+    trust_level_pipeline:
+      labels:
+        count: "Членове"
+        share: "Споделяне"
+      levels:
+        "0": "Нов"
+        "1": "Основно "
+        "2": "Член"
+        "3": "Редовен"
+        "4": "лидер "
     trust_level_growth:
       yaxis: "Ден"
     consolidated_page_views:
@@ -531,10 +563,11 @@ bg:
     consolidated_page_views_browser_detection:
       yaxis: "Ден"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Анонимен"
       yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
-      description: "Броят на членовете, които са влезли в системата през последния ден, разделен на броя на членовете, които са влезли в системата през последния месец - дава %, който показва \"привързаността\" на общността. Стремете се към >20%."
     daily_engaged_users:
       xaxis: "Ден"
     profile_views:
@@ -614,6 +647,12 @@ bg:
         user: "Потребител"
         num_clicks: "Кликвания"
         num_topics: "Теми"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещения "
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Посещения "
     top_traffic_sources:
       title: "Топ източници на трафик "
       xaxis: "Домейн"
@@ -648,6 +687,8 @@ bg:
     page_view_anon_browser_reqs:
       xaxis: "Ден"
     page_view_logged_in_browser_reqs:
+      xaxis: "Ден"
+    page_view_embed_reqs:
       xaxis: "Ден"
     http_background_reqs:
       title: "Фон"
@@ -690,7 +731,7 @@ bg:
       labels:
         user: Потребител
         location: Локация
-    staff_logins:
+    admin_logins:
       labels:
         user: Потребител
         location: Локация
@@ -746,7 +787,6 @@ bg:
     add_rel_nofollow_to_user_content: 'Добави "rel nofollow" към всички връзки с изключение на вътрешните ( включително домейн майките). Промяната на тази настройка изисква актуализация на всички публикации със "rake posts:rebake"'
     post_excerpt_maxlength: "Максимална дължина на откъс / резюме от публикацията."
     post_onebox_maxlength: "Максимална дължина на oneboxed Discourse публикация в писмени знаци."
-    apple_touch_icon: "Икона, използвана за сензорни устройства на Apple. Не се препоръчва прозрачен фон. Ще бъде автоматично преоразмерена до 180x180. Ако се остави празно, ще се използва large_icon."
     notification_email: "Подател: имейлът се използва при изпращане на всички системни съобщения. Посоченият тук домейн трябва да се конфигурира правилно със SPF, DKIM и PTR данни за успешна доставка."
     summary_score_threshold: "Минимална оценка необходима за една публикация, за да бъде включена в \"Обобщи тази тема\""
     summary_percent_filter: "Когато потребителят кликне върху \"Обобщи тази тема\", се показват % от най-добрите публикации "
@@ -824,9 +864,6 @@ bg:
     tl3_requires_posts_read_all_time: "Общ минимален брой публикации, които потребителят трябва да прочете, за да се класира за ниво на доверие 3."
     tl3_promotion_min_duration: "Минимален брой дни, през които трае повишението на ниво на доверие 3 преди потребителят да бъде понижен обратно на ниво на доверие 2."
     tl3_links_no_follow: "Не премахвайте rel=nofollow от линковете, публикувани от потребители с ниво на доверие 3."
-    tl4_delete_posts_and_topics: "Позволете на потребителите на TL4 да изтриват публикации и теми, създадени от други потребители. Потребителите на TL4 също ще могат да виждат изтритите теми и публикации."
-    min_trust_to_create_topic: "Минимално ниво на доверие изисквано за създаване на нова тема"
-    min_trust_to_edit_wiki_post: "Минимално ниво на доверие изисквано за редактиране на wiki."
     newuser_max_links: "Колко линка може да добави в публикация нов потребител."
     newuser_max_attachments: "Колко прикачени файла може да добави нов потребител в публикацията си."
     newuser_max_mentions_per_post: "Максимален брой споменавания на други потребители @name, които нов потребител може да направи."
@@ -868,13 +905,13 @@ bg:
     strip_images_from_short_emails: "Премахни от имейлите по-малките от 2800 байта изображения"
     sendgrid_verification_key: "Ключ за проверка на Sendgrid, използван за проверка на съобщенията на Webhook."
     mailjet_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Ключ за удостоверение Mandrill, който се използва за проверка на webhook съобщения"
     postmark_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Токен, използван за проверка на полезния товар на webhook. Той трябва да бъде предаден като параметър на заявката \"t\" на webhook, например: https://example.com/webhook/sparkpost?t=supersecret"
     pop3_polling_ssl: "Използвай SSL при свързване със сървъра POP3. (Препоръчително) "
     pop3_polling_username: "Потребителско име за POP3 акаунт за проверка на имейла."
     pop3_polling_password: "Парола за POP3 акаунт за проверка на имейла. "
-    email_in_min_trust: "Минимално ниво на доверие, което потребителя трябва да притежава, за да публикува нови теми чрез имейл."
     email_prefix: " [label] се използва като тема на имейлите. Ако не бъде определено, ще бъде използвано \"заглавие\" по подразбиране."
     email_site_title: "Заглавието на сайта се използва като подател на имейлите от сайта. Ако не бъде определено, ще бъде използвано \"заглавие\" по подразбиране. Ако вашето \"заглавие\" съдържа символи, които не са позволени, използвайте тази настройка."
     minimum_topics_similar: "Колко теми трябва да съществуват преди да бъдат представени подобни теми при създаването на нови."
@@ -882,7 +919,6 @@ bg:
     delete_user_max_post_age: "Забрани изтриване на потребители, чиято първа публикация е по-стара от (x) дни."
     delete_all_posts_max: "Максимален брой публикации, които могат да бъдат изтрити наведнъж с бутона за изтриване на всички публикации. Ако потребителят има по-голям брой публикации от този, то те не могат да бъдат изтрити наведнъж, следователно и потребителя не може да бъде изтрит."
     email_editable: "Разреши на потребителите да променят техния имейл адрес след регистрация."
-    allow_uploaded_avatars: "Позволи на потребителите да качват свои снимки на профилите си."
     default_avatars: "URL за аватари, които ще бъдат използвани по подразбиране за нови потребители, преди те да ги променят"
     automatically_download_gravatars: "Свали Gravatar за потребителите преди създаването на профил или промяна на имейла."
     max_daily_gravatar_crawls: "Максимален брой сваляния на аватари с Gravatar за ден"
@@ -890,7 +926,6 @@ bg:
     anonymous_account_duration_minutes: "За да се защити анонимността създавай нови анонимни акаунти на всеки N минути за всеки потребител. Например: Ако е настроено на 600, означава, че 600 минути след последния пост на потребителя, след като той излезе, ще бъде създаден анонимен акаунт."
     allow_profile_backgrounds: "Позволи на потребителите да качват фонове на профилите си."
     dont_feed_the_trolls_threshold: "Брой сигнали от други потребители, преди да бъдат предупредени."
-    enable_mobile_theme: "Мобилните устройства използват адаптирана тема с възможност за преминаване към нормален изглед. Забранете тази настройка, ако искате да използвате свой собствен стил за мобилните устройства."
     dominating_topic_minimum_percent: "Какъв процент публикации може да направи един потребител преди да бъде предупреден за доминиране в тема."
     suppress_uncategorized_badge: "Не показвай значката в списъците с теми за тези, които не са категоризирани. "
     disable_system_edit_notifications: "Забрани редактирането на уведомления от системните потребители когато 'download_remote_images_to_local' е активно."
@@ -1082,8 +1117,10 @@ bg:
     queued_by_staff:
       title: "Публикацията изисква одобрение"
     welcome_user:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     welcome_invite:
+      preview: "Добре дошли в %{site_name}!"
       subject_template: "Добре дошли в %{site_name}!"
     backup_succeeded:
       subject_template: "Бекъпа завърши успещно."
@@ -1136,11 +1173,14 @@ bg:
       liked_received: "Получени харесвания"
       new_users: "Нови потребители"
       join_the_discussion: "Прочетете повече"
+      subject_template_improved: "Сумарно"
       click_here: "кликнете тук"
     forgot_password:
       title: "Забравена парола"
     set_password:
       title: "Задайте парола"
+    admin_login:
+      subject_template_improved: "Логване"
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:
@@ -1577,7 +1617,8 @@ bg:
     no_plugins: "Деактивирайте всички персонализации на приставки от страна на клиента"
   wizard:
     step:
-      privacy:
+      setup:
+        title: "Първи стъпки"
         fields:
           login_required:
             label: "Видимост"
@@ -1586,18 +1627,6 @@ bg:
                 label: "Публични"
               private:
                 label: "Затворени"
-      styling:
-        fields:
-          styling_preview:
-            label: "Преглед"
-          homepage_style:
-            choices:
-              latest:
-                label: "Последни"
-      invites:
-        title: "Поканете персонал"
-      finished:
-        title: "Вашият Discourse е готов!"
   search_logs:
     graph_title: "Брой търсения"
   onebox:
@@ -1605,6 +1634,9 @@ bg:
       user_joined_community: "Присъединен на %{date}"
     github:
       closed: "затворена"
+      status_date:
+        approved: "одобрен"
+        closed: "затворена"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'
@@ -1651,12 +1683,7 @@ bg:
         title: "Изтрий"
         complete: "Публикацията е изтрита."
       delete_and_ignore:
-        title: "Игнорирайте сигнала и изтрийте публикацията"
-        description: "Игнорирайте сигнала, като го премахнете от опашката и изтрийте публикацията; ако е първата публикация, изтрийте и темата. "
         complete: "Публикацията е изтрита."
-      delete_and_ignore_replies:
-        title: "Игнориране на сигнала, изтриване на публикацията и отговорите"
-        description: "Игнорирайте сигнала, като го премахнете от опашката, изтрийте публикацията и всички нейни отговори; ако е първата публикация, изтрийте и темата"
       delete_and_agree:
         title: "Изтрий публикацията"
         description: "Съгласете се със сигнала и изтрийте публикацията; ако това е първата публикация, изтрийте и темата."
@@ -1665,10 +1692,11 @@ bg:
         title: "Изтриване на публикацията и отговорите"
         description: "Съгласете се със сигнала и изтрийте публикацията и всички нейни отговори; ако това е първата публикация, изтрийте и темата."
       disagree_and_restore:
-        title: "Не, възстанови публикацията"
-        description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
-      disagree:
+        title: "Възстановяване на публикацията"
+      disagree_bundle:
         title: "Не"
+      disagree:
+        title: "Запазете публикацията"
         complete: "Сигналът е игнориран."
       ignore:
         title: "Игнорирай"
@@ -1678,22 +1706,36 @@ bg:
         description: "Игнорирайте сигнала, като го премахнете от опашката, без да предприемате никакви действия. Скритите публикации ще останат скрити и ще бъдат обработвани от автоматичните инструменти."
         complete: "Сигналът е игнориран."
       approve:
-        title: "Одобри"
+        title: "Да"
         complete: "Публикацията е одобрена."
       approve_post:
+        title: "Да"
         complete: "Публикацията е одобрена."
       approve_post_closed:
+        title: "Да"
         complete: "Публикацията е одобрена."
+      reject_post_bundle:
+        title: "Не"
       reject_post:
         complete: "Публикацията е отхвърлена."
       approve_user:
+        title: "Да"
         complete: "Потребителят е одобрен."
       reject_user:
+        title: "Не"
         delete:
           title: "Изтрий потребител "
           complete: "Потребителят е изтрит."
+      confirm_spam:
+        title: "Да"
+      not_spam:
+        title: "Не"
       reject:
         title: "Отхвърли"
+      approve_and_restore:
+        title: "Да"
+      approve_and_unhide:
+        title: "Да"
       delete_post:
         title: "Изтрий публикацията"
         complete: "Публикацията е изтрита"

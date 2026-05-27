@@ -269,7 +269,7 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       run(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.composer.isDestroying || this.composer.isDestroyed) {
           return;
         }
 
@@ -312,6 +312,10 @@ export default class UppyComposerUpload {
             (progress.bytesUploaded / progress.bytesTotal) * 100
           );
           upload.set("progress", percentage);
+          this.appEvents.trigger(
+            `composer:upload-progress:${file.id}`,
+            percentage
+          );
         }
       });
     });
@@ -350,7 +354,7 @@ export default class UppyComposerUpload {
 
         const MIN_IMAGES_TO_AUTO_GRID = 3;
         if (
-          this.siteSettings.experimental_auto_grid_images &&
+          this.siteSettings.enable_auto_grid_images &&
           this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID &&
           this.textManipulation
         ) {

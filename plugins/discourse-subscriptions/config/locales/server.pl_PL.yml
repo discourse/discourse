@@ -7,6 +7,7 @@
 pl_PL:
   discourse_subscriptions:
     customer_not_found: Nie znaleziono klienta
+    subscription_not_found: Nie znaleziono subskrypcji
     card:
       declined: Karta odrzucona
       invalid: Karta nieprawidłowa

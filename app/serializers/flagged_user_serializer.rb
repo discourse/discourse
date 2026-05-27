@@ -6,6 +6,7 @@ class FlaggedUserSerializer < BasicUserSerializer
              :post_count,
              :topic_count,
              :ip_address,
+             :email,
              :custom_fields,
              :flags_agreed,
              :flags_disagreed,
@@ -13,7 +14,10 @@ class FlaggedUserSerializer < BasicUserSerializer
              :created_at,
              :custom_fields,
              :post_count,
-             :trust_level
+             :trust_level,
+             :silenced_count,
+             :suspended_count,
+             :rejected_posts_count
 
   def can_delete_all_posts
     scope.can_delete_all_posts?(object)
@@ -25,6 +29,10 @@ class FlaggedUserSerializer < BasicUserSerializer
 
   def ip_address
     object.ip_address.try(:to_s)
+  end
+
+  def include_ip_address?
+    scope.can_see_ip?
   end
 
   def flags_agreed
@@ -39,6 +47,18 @@ class FlaggedUserSerializer < BasicUserSerializer
     object.user_stat.flags_ignored
   end
 
+  def silenced_count
+    object.number_of_silencings
+  end
+
+  def suspended_count
+    object.number_of_suspensions
+  end
+
+  def rejected_posts_count
+    object.number_of_rejected_posts
+  end
+
   def custom_fields
     fields = User.allowed_user_custom_fields(scope)
 
@@ -48,19 +68,7 @@ class FlaggedUserSerializer < BasicUserSerializer
     result
   end
 
-  def include_created_at?
-    scope.can_see_reviewable_ui_refresh?
-  end
-
-  def include_custom_fields?
-    scope.can_see_reviewable_ui_refresh?
-  end
-
-  def include_post_count?
-    scope.can_see_reviewable_ui_refresh?
-  end
-
-  def include_trust_level?
-    scope.can_see_reviewable_ui_refresh?
+  def include_email?
+    scope.can_check_emails?(scope.user)
   end
 end

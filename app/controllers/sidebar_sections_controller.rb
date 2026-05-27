@@ -10,7 +10,7 @@ class SidebarSectionsController < ApplicationController
         .strict_loading
         .includes(:sidebar_urls)
         .where("public OR user_id = ?", current_user.id)
-        .order("(public IS TRUE) DESC, title ASC")
+        .order("section_type IS NOT NULL DESC, public DESC, title ASC")
 
     sections =
       ActiveModel::ArraySerializer.new(
@@ -41,7 +41,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def update
-    sidebar_section = SidebarSection.find_by(id: section_params["id"])
+    sidebar_section = SidebarSection.find(section_params["id"])
     @guardian.ensure_can_edit!(sidebar_section)
 
     ActiveRecord::Base.transaction do
@@ -91,7 +91,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def destroy
-    sidebar_section = SidebarSection.find_by(id: section_params["id"])
+    sidebar_section = SidebarSection.find(section_params["id"])
     @guardian.ensure_can_delete!(sidebar_section)
     sidebar_section.destroy!
 

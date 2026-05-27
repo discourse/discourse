@@ -3,9 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import { trustHTML } from "@ember/template";
 import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -15,6 +13,8 @@ import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const NOTIFY_MODERATORS_KEY = "notify_moderators";
@@ -27,11 +27,9 @@ export default class Flag extends Component {
   // eslint-disable-next-line discourse/no-unused-services
   @service site; // FIXME: used by flag-target objects
 
-  @tracked userDetails;
   @tracked selected;
   @tracked message;
   @tracked isConfirmed = false;
-  @tracked isWarning = false;
   @tracked spammerDetails;
 
   constructor() {
@@ -239,7 +237,7 @@ export default class Flag extends Component {
       {{on "keydown" this.onKeydown}}
     >
       <:body>
-        <p>{{htmlSafe (i18n "flagging.review_process_description")}}</p>
+        <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
         <PluginOutlet
           @name="after-flag-modal-review-process-description"
           @connectorTagName="div"
@@ -255,7 +253,6 @@ export default class Flag extends Component {
               @flag={{f}}
               @message={{this.message}}
               @isConfirmed={{this.isConfirmed}}
-              @isWarning={{this.isWarning}}
               @selectedFlag={{this.selected}}
               @username={{@model.flagModel.username}}
               @staffFlagsAvailable={{this.staffFlagsAvailable}}
@@ -275,7 +272,7 @@ export default class Flag extends Component {
           @action={{this.createFlag}}
           @disabled={{not this.submitEnabled}}
           @title="flagging.submit_tooltip"
-          @icon={{if this.selected.is_custom_flag "envelope" "flag"}}
+          @icon={{if this.selected.require_message "envelope" "flag"}}
           @label={{this.submitLabel}}
         />
 

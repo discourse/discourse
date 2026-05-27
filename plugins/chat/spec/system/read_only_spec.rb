@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Read only", type: :system do
+RSpec.describe "Read only" do
   fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import I18n from "discourse-i18n";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class VerboseLocalizationButton extends Component {
   @action
@@ -18,14 +18,14 @@ export default class VerboseLocalizationButton extends Component {
 
   <template>
     <button
-      title="Toggle verbose localization"
-      class={{concatClass
+      title={{i18n "dev_tools.toggle_verbose_localization"}}
+      class={{dConcatClass
         "toggle-verbose-localization"
         (if I18n.verbose "--active")
       }}
       {{on "click" this.toggleVerboseLocalization}}
     >
-      {{icon "scroll"}}
+      {{dIcon "scroll"}}
     </button>
   </template>
 }

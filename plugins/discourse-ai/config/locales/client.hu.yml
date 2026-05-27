@@ -38,22 +38,28 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      llm_selector:
+        none: "Egyik sem"
       features:
-        back: "Vissza"
         disabled: "(kikapcsolva)"
         groups: "Csoportok:"
-        no_persona: "Nincs beállítva"
+        no_agent: "Nincs beállítva"
         no_groups: "Egyik sem"
-        edit: "Szerkesztés"
+        edit: "Beállítások"
         expand_list:
           one: "(%{count} további)"
           other: "(%{count} további)"
         collapse_list: "(kevesebb megjelenítése)"
+        nav:
+          enabled: "Bekapcsolva"
         filters:
           all: "Összes"
           reset: "Alaphelyzetbe állítás"
         search:
           name: "Keresés"
+        embeddings:
+          setting_groups:
+            related_topics: "Kapcsolódó témák"
         spam:
           name: "Kéretlen tartalom"
       modals:
@@ -90,11 +96,11 @@ hu:
         summary: "Összefoglaló"
         username: "Felhasználónév"
         total_requests: "Összes kérés"
+        total: "Összesen"
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
-      ai_persona:
-        back: "Vissza"
+      ai_agent:
         name: "Név"
         edit: "Szerkesztés"
         export: "Exportálás"
@@ -103,6 +109,9 @@ hu:
         user: Felhasználó
         save: "Mentés"
         enabled: "Engedélyezve?"
+        mcp_tools_modal:
+          select_all: "Összes kiválasztása"
+          clear_all: "Összes törlése"
         delete: "Törlés"
         response_format:
           open_modal: "Szerkesztés"
@@ -115,7 +124,6 @@ hu:
           title: "Feltöltések"
           uploading: "Feltöltés…"
       tools:
-        back: "Vissza"
         export: "Exportálás"
         import: "Importálás"
         name: "Név"
@@ -125,17 +133,41 @@ hu:
         save: "Mentés"
         remove_parameter: "Eltávolítás"
         parameter_required: "Kötelező"
+        credential_not_set: "(nincs beállítva)"
         edit: "Szerkesztés"
-        test: "Teszt futtatása"
+        test: "Teszt"
         delete: "Törlés"
         test_modal:
           run: "Teszt futtatása"
+      secrets:
+        short_title: "Hitelesítő adatok"
+        name: "Név"
+        secret: "Érték"
+        save: "Mentés"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        embedding: "Beágyazás"
+      mcp_servers:
+        name: "Név"
+        description: "Leírás"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Kapcsolódva"
+        oauth_connect: "Kapcsolódás"
+        oauth_hide_details: "Részletek elrejtése"
+        enabled: "Bekapcsolva"
+        save: "Mentés"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        tools_modal:
+          required: "Kötelező"
       llms:
         display_name: "Név"
         provider: "Szolgáltató"
         save: "Mentés"
         edit: "Szerkesztés"
-        back: "Vissza"
         delete: Törlés
         quotas:
           group: "Csoport"
@@ -159,6 +191,10 @@ hu:
         providers:
           google: "Google"
           fake: "Egyéni"
+        provider_fields:
+          adaptive_thinking: "Adaptív gondolkodás engedélyezése (Claude 4.6 modellekhez javasolt)"
+          enable_thinking: "Gondolkodás engedélyezése (Gemini 2.5 modellek – token-keretet használ)"
+          thinking_level: "Gondolkodási szint (Gemini 3 modellek – a következtetési mélységet szabályozza)"
       related_topics:
         pill: "Kapcsolódó"
       ai_helper:
@@ -174,10 +210,10 @@ hu:
         thumbnail_suggestions:
           select: "Kiválasztás"
           selected: "Kiválasztott"
+          try_again: "Újrapróbálkozás"
         image_caption:
           save_caption: "Mentés"
       embeddings:
-        back: "Vissza"
         save: "Mentés"
         delete: "Törlés"
         edit: "Szerkesztés"
@@ -200,9 +236,12 @@ hu:
         share_modal:
           copy: "Másolás"
         conversations:
+          starred: "Csillagozott"
           today: "Ma"
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"
+          scroll_to_bottom: "Görgetés lefelé"
+          editing_post: "Bejegyzés szerkesztése"
       sentiments:
         sentiment_analysis:
           filter_types:

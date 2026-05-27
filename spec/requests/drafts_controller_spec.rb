@@ -146,7 +146,11 @@ RSpec.describe DraftsController do
 
     it "checks for a tag conflict on update" do
       sign_in(user)
+      tag1 = Fabricate(:tag, name: "tag1")
+      tag2 = Fabricate(:tag, name: "tag2")
       post = Fabricate(:post, user:)
+      # topic has different tags than original_tags in draft
+      post.topic.tags = [tag1]
 
       post "/drafts.json",
            params: {
@@ -189,6 +193,32 @@ RSpec.describe DraftsController do
                postId: post.id,
                original_text: post.raw,
                original_tags: [regular_tag.name],
+               action: "edit",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["conflict_user"]).to eq(nil)
+    end
+
+    it "handles tag objects format when checking for tag conflict" do
+      sign_in(user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      post = Fabricate(:post, user:)
+      post.topic.tags = [tag1, tag2]
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic",
+             sequence: 0,
+             data: {
+               postId: post.id,
+               original_text: post.raw,
+               original_tags: [
+                 { "id" => tag1.id, "name" => tag1.name, "slug" => tag1.name },
+                 { "id" => tag2.id, "name" => tag2.name, "slug" => tag2.name },
+               ],
                action: "edit",
              }.to_json,
            }
@@ -320,6 +350,15 @@ RSpec.describe DraftsController do
           expect(response).to have_http_status :bad_request
         end
       end
+
+      context "when data is not a string" do
+        before { sign_in(user) }
+
+        it "returns an error" do
+          post "/drafts.json", params: { draft_key: "xyz", data: { cat: "tomtom" }, sequence: 0 }
+          expect(response).to have_http_status :bad_request
+        end
+      end
     end
 
     it "returns 403 when the maximum amount of drafts per users is reached" do
@@ -360,6 +399,25 @@ RSpec.describe DraftsController do
       expect(Draft.where(user_id: user1.id).count).to eq(2)
       expect(Draft.where(user_id: user2.id).count).to eq(1)
     end
+
+    it "does not leak conflict info for posts user cannot see" do
+      private_post = Fabricate(:private_message_post)
+
+      sign_in(user)
+      post "/drafts.json",
+           params: {
+             draft_key: "topic_#{private_post.topic_id}",
+             sequence: 0,
+             data: {
+               postId: private_post.id,
+               action: "edit",
+               original_text: "wrong text to trigger conflict",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("conflict_user")
+    end
   end
 
   describe "#destroy" do
@@ -382,64 +440,96 @@ RSpec.describe DraftsController do
       expect(Draft.get(user, "xxx", 0)).to be_present
     end
 
-    shared_examples "for a passed user" do
-      it "deletes draft" do
-        api_key = Fabricate(:api_key).key
-        Draft.set(recipient, "xxx", 0, "hi")
+    describe "via API" do
+      fab!(:admin)
+      fab!(:other_user, :user)
+
+      it "admin can target another user with `username` param" do
+        api_key = Fabricate(:api_key, user: admin).key
+        Draft.set(other_user, "xxx", 0, "hi")
 
         delete "/drafts/xxx.json",
                params: {
                  sequence: 0,
-                 username: recipient.username,
+                 username: other_user.username,
                },
                headers: {
-                 HTTP_API_USERNAME: caller.username,
+                 HTTP_API_USERNAME: admin.username,
                  HTTP_API_KEY: api_key,
                }
 
-        expect(response.status).to eq(response_code)
-
-        if draft_deleted
-          expect(Draft.get(recipient, "xxx", 0)).to eq(nil)
-        else
-          expect(Draft.get(recipient, "xxx", 0)).to be_present
-        end
+        expect(response.status).to eq(200)
+        expect(Draft.get(other_user, "xxx", 0)).to eq(nil)
       end
-    end
 
-    describe "api called by admin" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:admin) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 200 }
-        let(:draft_deleted) { true }
+      it "admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: admin).key
+        Draft.set(admin, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+               },
+               headers: {
+                 HTTP_API_USERNAME: admin.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(admin, "xxx", 0)).to eq(nil)
       end
-    end
 
-    describe "api called by tl4 user" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:trust_level_4) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 403 }
-        let(:draft_deleted) { false }
+      it "non-admin gets 403 when passing `username` to target another user" do
+        api_key = Fabricate(:api_key, user: user).key
+        Draft.set(user, "xxx", 0, "hi")
+        Draft.set(other_user, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+                 username: other_user.username,
+               },
+               headers: {
+                 HTTP_API_USERNAME: user.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(403)
+        expect(Draft.get(user, "xxx", 0)).to be_present
+        expect(Draft.get(other_user, "xxx", 0)).to be_present
       end
-    end
 
-    describe "api called by regular user" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:user) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 403 }
-        let(:draft_deleted) { false }
+      it "non-admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: user).key
+        Draft.set(user, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+               },
+               headers: {
+                 HTTP_API_USERNAME: user.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(user, "xxx", 0)).to eq(nil)
       end
-    end
 
-    describe "api called by admin for another admin" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:admin) }
-        let(:recipient) { Fabricate(:admin) }
-        let(:response_code) { 200 }
-        let(:draft_deleted) { true }
+      it "returns 404 when admin targets a nonexistent `username`" do
+        api_key = Fabricate(:api_key, user: admin).key
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+                 username: "does_not_exist",
+               },
+               headers: {
+                 HTTP_API_USERNAME: admin.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(404)
       end
     end
   end
@@ -533,6 +623,18 @@ RSpec.describe DraftsController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects too many draft_keys" do
+      sign_in(user)
+
+      keys = (1..31).map { |i| "key_#{i}" }
+      delete "/drafts/bulk_destroy.json", params: { draft_keys: keys }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include(
+        I18n.t("draft.bulk_destroy_limit", limit: DraftsController::BULK_DESTROY_LIMIT),
+      )
+    end
+
     it "updates user draft count after bulk deletion" do
       sign_in(user)
 
@@ -559,11 +661,11 @@ RSpec.describe DraftsController do
       expect(user.user_stat.draft_count).to eq(initial_draft_count - 3)
     end
 
-    context "when using API access" do
-      it "allows admin to delete other user's drafts via API" do
-        admin = Fabricate(:admin)
-        api_key = Fabricate(:api_key, user: admin)
+    describe "via API" do
+      fab!(:admin)
 
+      it "admin can target another user with `username` param" do
+        api_key = Fabricate(:api_key, user: admin).key
         Draft.set(user, "draft1", 0, '{"reply": "draft content"}')
 
         delete "/drafts/bulk_destroy.json",
@@ -575,7 +677,7 @@ RSpec.describe DraftsController do
                  username: user.username,
                },
                headers: {
-                 "Api-Key" => api_key.key,
+                 "Api-Key" => api_key,
                  "Api-Username" => admin.username,
                }
 
@@ -583,10 +685,29 @@ RSpec.describe DraftsController do
         expect(Draft.get(user, "draft1", 0)).to eq(nil)
       end
 
-      it "denies non-admin API access to other user's drafts" do
-        non_admin = Fabricate(:user)
-        api_key = Fabricate(:api_key, user: non_admin)
+      it "admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: admin).key
+        Draft.set(admin, "draft1", 0, '{"reply": "draft content"}')
 
+        delete "/drafts/bulk_destroy.json",
+               params: {
+                 draft_keys: ["draft1"],
+                 sequences: {
+                   "draft1" => 0,
+                 },
+               },
+               headers: {
+                 "Api-Key" => api_key,
+                 "Api-Username" => admin.username,
+               }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(admin, "draft1", 0)).to eq(nil)
+      end
+
+      it "non-admin gets 403 when passing `username` to target another user" do
+        non_admin = Fabricate(:user)
+        api_key = Fabricate(:api_key, user: non_admin).key
         Draft.set(user, "draft1", 0, '{"reply": "draft content"}')
 
         delete "/drafts/bulk_destroy.json",
@@ -598,7 +719,7 @@ RSpec.describe DraftsController do
                  username: user.username,
                },
                headers: {
-                 "Api-Key" => api_key.key,
+                 "Api-Key" => api_key,
                  "Api-Username" => non_admin.username,
                }
 

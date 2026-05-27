@@ -47,11 +47,11 @@ module Chat
       # and a count of unread messages per channel
       Chat::Message
         .includes(:user, :chat_channel)
-        .where(chat_channel_id: data.map { _1[1] })
+        .where(chat_channel_id: data.map { it[1] })
         .where(
           "chat_messages.id >= (
               SELECT min_unread_id 
-              FROM (VALUES #{data.map { "(#{_1[1]}, #{_1[2]})" }.join(",")}) AS t(channel_id, min_unread_id) 
+              FROM (VALUES #{data.map { "(#{it[1]}, #{it[2]})" }.join(",")}) AS t(channel_id, min_unread_id) 
               WHERE t.channel_id = chat_messages.chat_channel_id
             )",
         )
@@ -63,11 +63,11 @@ module Chat
     def messages_for_threads(data, guardian)
       Chat::Message
         .includes(:user, :chat_channel)
-        .where(thread_id: data.map { _1[1] })
+        .where(thread_id: data.map { it[1] })
         .where(
           "chat_messages.id >= (
               SELECT min_unread_id
-              FROM (VALUES #{data.map { "(#{_1[1]}, #{_1[2]})" }.join(",")}) AS t(thread_id, min_unread_id)
+              FROM (VALUES #{data.map { "(#{it[1]}, #{it[2]})" }.join(",")}) AS t(thread_id, min_unread_id)
               WHERE t.thread_id = chat_messages.thread_id
             )",
         )
@@ -81,14 +81,17 @@ module Chat
     end
 
     def subject(type, **args)
-      I18n.t("user_notifications.chat_summary.subject.#{type}", { site_name: @site_name, **args })
+      key = "user_notifications.chat_summary.subject.#{type}"
+      key += "_improved" if SiteSetting.simple_email_subject && I18n.exists?("#{key}_improved")
+
+      I18n.t(key, { site_name: @site_name, **args })
     end
 
     def chat_summary_subject(grouped_channels, grouped_dms, grouped_threads, count)
       return subject(:private_email, count:) if SiteSetting.private_email
 
       # consider "direct messages" with more than 2 users as group messages (aka. channels)
-      dms, groups = grouped_dms.keys.partition { _1.user_chat_channel_memberships.count == 2 }
+      dms, groups = grouped_dms.keys.partition { it.user_chat_channel_memberships.count == 2 }
 
       channels = grouped_channels.keys + groups
 

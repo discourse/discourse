@@ -27,6 +27,7 @@ export function registerChatComposerButton(button) {
     displayed: true,
     disabled: false,
     priority: 0,
+    synchronous: false,
   };
 
   const normalizedButton = Object.assign(defaultButton, button);
@@ -111,6 +112,7 @@ export function chatComposerButtons(composer, position, context) {
       result.icon = computeButton(composer, button, "icon");
       result.disabled = computeButton(composer, button, "disabled");
       result.priority = computeButton(composer, button, "priority");
+      result.synchronous = computeButton(composer, button, "synchronous");
 
       if (isFunction(button.action)) {
         result.action = () => {

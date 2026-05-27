@@ -3,16 +3,34 @@
 class UpcomingChanges::Toggle
   include Service::Base
 
+  # For cases like the UpcomingChanges::Promote where we don't want to log
+  # the change again since it's already being logged there.
+  options { attribute :log_change, default: true }
+
   params do
-    attribute :setting_name, :string
+    attribute :setting_name, :symbol
     attribute :enabled, :boolean
     validates :setting_name, presence: true
     validates :enabled, inclusion: [true, false]
+
+    def upcoming_change_event
+      enabled ? :upcoming_change_enabled : :upcoming_change_disabled
+    end
   end
 
   policy :current_user_is_admin
   policy :setting_is_available
+  policy :allowed_enabled_for_target
   transaction { step :toggle }
+
+  step :clear_groups_if_groups_not_allowed
+
+  only_if(:should_log_change) do
+    step :log_change
+    step :log_event
+  end
+
+  step :trigger_event
 
   private
 
@@ -24,22 +42,50 @@ class UpcomingChanges::Toggle
     SiteSetting.respond_to?(params.setting_name)
   end
 
-  def toggle(params:, guardian:)
-    # TODO (martin) Remove this once we release upcoming changes,
-    # otherwise it will be confusing for people to see log messages
-    # about upcoming changes via "What's new?" experimental toggles
-    # before we update that UI.
-    if SiteSetting.enable_upcoming_changes
-      previous_value = SiteSetting.public_send(params.setting_name)
-      SiteSetting.send("#{params.setting_name}=", params.enabled)
-      StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
-        params.setting_name,
-        previous_value,
-        params.enabled,
-        { context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled") },
-      )
-    else
-      SiteSetting.set_and_log(params.setting_name, params.enabled, guardian.user)
-    end
+  def toggle(params:, guardian:, options:)
+    context[:previous_value] = SiteSetting.public_send(params.setting_name)
+    SiteSetting.send("#{params.setting_name}=", params.enabled)
+  end
+
+  def allowed_enabled_for_target(params:)
+    return true if !params.enabled
+
+    # When enabling with no groups configured, the resulting target is "everyone".
+    # Otherwise the group target is validated by SiteSetting::UpsertGroups.
+    return true if SiteSettingGroup.exists?(name: params.setting_name)
+
+    UpcomingChanges.target_allowed?(params.setting_name, :everyone)
+  end
+
+  def clear_groups_if_groups_not_allowed(params:)
+    return if UpcomingChanges.groups_target_allowed?(params.setting_name)
+
+    SiteSettingGroup.find_by(name: params.setting_name)&.destroy!
+    SiteSetting.refresh_site_setting_group_ids!
+  end
+
+  def should_log_change(options:)
+    options.log_change
+  end
+
+  def log_change(params:, guardian:, options:)
+    StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
+      params.setting_name,
+      context[:previous_value],
+      params.enabled,
+      { context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled") },
+    )
+  end
+
+  def log_event(params:, guardian:, options:)
+    UpcomingChangeEvent.create!(
+      event_type: params.enabled ? :manual_opt_in : :manual_opt_out,
+      upcoming_change_name: params.setting_name,
+      acting_user: guardian.user,
+    )
+  end
+
+  def trigger_event(params:)
+    DiscourseEvent.trigger(params.upcoming_change_event, params.setting_name)
   end
 end

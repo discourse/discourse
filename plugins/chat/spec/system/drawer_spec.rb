@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Drawer", type: :system do
+RSpec.describe "Drawer" do
   fab!(:current_user, :user)
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -27,6 +27,21 @@ RSpec.describe "Drawer", type: :system do
     expect(page).to have_css("html.has-chat.has-full-page-chat")
     expect(page).to have_no_css("body.has-drawer-chat")
     expect(page).to have_no_css("html.has-drawer-chat")
+  end
+
+  it "respects drawer preference after page refresh" do
+    visit("/")
+    chat_page.open_from_header
+    expect(page).to have_css("body.has-drawer-chat")
+
+    drawer_page.close
+    expect(page).to have_no_css("body.chat-drawer-active")
+
+    refresh
+
+    chat_page.open_from_header
+    expect(page).to have_css("body.has-drawer-chat")
+    expect(page).to have_no_css("body.has-full-page-chat")
   end
 
   context "when on channel" do
@@ -78,8 +93,8 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       chat_drawer = page.find(".chat-drawer")
-      expect(get_style(chat_drawer, "width")).to eq("500px")
-      expect(get_style(chat_drawer, "height")).to eq("500px")
+      expect(chat_drawer).to have_computed_style(width: "500px")
+      expect(chat_drawer).to have_computed_style(height: "500px")
     end
 
     it "has a default size" do
@@ -88,8 +103,8 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       chat_drawer = page.find(".chat-drawer")
-      expect(get_style(chat_drawer, "width")).to eq("400px")
-      expect(get_style(chat_drawer, "height")).to eq("530px")
+      expect(chat_drawer).to have_computed_style(width: "400px")
+      expect(chat_drawer).to have_computed_style(height: "530px")
     end
   end
 
@@ -194,57 +209,56 @@ RSpec.describe "Drawer", type: :system do
 
       expect(drawer_page).to have_open_channel(channel)
     end
+
+    it "returns to the homepage when toggling chat icon after expanding drawer to full page" do
+      SiteSetting.chat_separate_sidebar_mode = "fullscreen"
+      SiteSetting.top_menu = "categories|latest|new"
+
+      visit("/discuss/")
+      chat_page.open_from_header
+      expect(page).to have_css("body.has-drawer-chat")
+
+      drawer_page.maximize
+      expect(page).to have_css("body.has-full-page-chat")
+
+      find(".chat-header-icon").click
+
+      expect(page).to have_current_path("/discuss/categories")
+      expect(page).to have_no_css("body.has-full-page-chat")
+    end
   end
 
-  context "when sending a message from topic" do
-    fab!(:topic)
-    fab!(:posts) { Fabricate.times(5, :post, topic: topic) }
-    fab!(:channel, :chat_channel)
+  context "when sending a message from a thread while viewing a topic" do
+    fab!(:post1, :post)
+    fab!(:post2) { Fabricate(:post, topic: post1.topic) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, with_replies: 1, use_service: true) }
     fab!(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end
 
     let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+    let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
-    context "when on a channel" do
-      xit "has context" do
-        ::Chat::CreateMessage
-          .expects(:call)
-          .with do |value|
-            value["topic_id"] === topic.id.to_s &&
-              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
-          end
+    before { Jobs.run_immediately! }
 
-        topic_page.visit_topic(topic, post_number: 3)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel)
-        channel_page.send_message
-      end
-    end
+    it "has topic context" do
+      tested_context = {}
+      blk = ->(*, context) { tested_context = context }
+      DiscourseEvent.on(:chat_message_created, &blk)
 
-    context "when on a thread" do
-      before { channel.update!(threading_enabled: true) }
+      topic_page.visit_topic(post1.topic)
+      chat_page.open_from_header
+      drawer_page.open_channel(channel)
+      drawer_page.open_thread_list
+      thread_list_page.open_thread(thread)
+      thread_page.send_message
 
-      fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
-
-      let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
-      let(:thread_page) { PageObjects::Pages::ChatThread.new }
-
-      xit "has context" do
-        ::Chat::CreateMessage
-          .expects(:call)
-          .with do |value|
-            value["topic_id"] === topic.id.to_s &&
-              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
-          end
-
-        topic_page.visit_topic(topic, post_number: 3)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel)
-        drawer_page.open_thread_list
-        thread_list_page.open_thread(thread_1)
-        thread_page.send_message
-      end
+      expect(tested_context.dig(:context, :post_ids)).to eq([post1.id, post2.id])
+      expect(tested_context.dig(:context, :topic_id)).to eq(post1.topic_id)
+    ensure
+      DiscourseEvent.off(:chat_message_created, &blk)
     end
   end
 
@@ -261,7 +275,7 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       expect(page).to have_css(".chat-drawer .c-footer")
-      expect(page).to have_css(".chat-drawer .c-footer__item", count: 2)
+      expect(page).to have_css(".chat-drawer .c-footer__item", count: 3)
     end
 
     it "hides footer nav when only channels are accessible" do
@@ -275,10 +289,12 @@ RSpec.describe "Drawer", type: :system do
 
     context "when clicking footer nav items" do
       fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+      fab!(:other_user, :user)
 
       before do
         SiteSetting.chat_threads_enabled = true
         channel.add(current_user)
+        channel.add(other_user)
       end
 
       it "shows active state" do
@@ -289,18 +305,28 @@ RSpec.describe "Drawer", type: :system do
         expect(page).to have_css("#c-footer-direct-messages.--active")
       end
 
-      it "redirects to correct route" do
-        visit("/")
-        chat_page.open_from_header
+      context "with viewable threads" do
+        before do
+          message = Fabricate(:chat_message, chat_channel: channel, user: current_user)
+          thread = Fabricate(:chat_thread, channel: channel, original_message: message)
+          thread.add(current_user)
+          Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
+          thread.set_replies_count_cache(1, update_db: true)
+        end
 
-        drawer_page.click_direct_messages
-        expect(drawer_page).to have_open_direct_messages
+        it "redirects to correct route" do
+          visit("/")
+          chat_page.open_from_header
 
-        drawer_page.click_channels
-        expect(drawer_page).to have_open_channels
+          drawer_page.click_direct_messages
+          expect(drawer_page).to have_open_direct_messages
 
-        drawer_page.click_user_threads
-        expect(drawer_page).to have_open_user_threads
+          drawer_page.click_channels
+          expect(drawer_page).to have_open_channels
+
+          drawer_page.click_user_threads
+          expect(drawer_page).to have_open_user_threads
+        end
       end
     end
   end

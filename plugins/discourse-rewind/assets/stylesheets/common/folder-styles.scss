@@ -1,0 +1,97 @@
+@use "lib/viewport";
+
+.--most-viewed-tags,
+.--most-viewed-categories {
+  .rewind-card {
+    @include rewind-border;
+    flex-grow: 1;
+    position: relative;
+    background: var(--rewind-black);
+    border-radius: 4px;
+    z-index: 1;
+    width: 100%;
+    transition: transform 0.3s ease;
+    transform: skew(-1deg) scaleY(1);
+
+    p {
+      color: var(--rewind-white);
+    }
+  }
+
+  .rewind-report-container {
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+
+      .folder-wrapper {
+        width: 100%;
+      }
+    }
+  }
+
+  .folder-tab {
+    display: block;
+    content: "";
+    width: 3em;
+    height: 1em;
+    border: 2px solid var(--rewind-green);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    position: absolute;
+    top: -1em;
+    left: 0;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+    background: var(--rewind-black);
+  }
+
+  .folder-bg {
+    content: "";
+    border: 2px solid var(--rewind-green);
+    width: calc(100% - 4px);
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    border-radius: 0 4px 4px;
+    transition: background-color 0.3s ease;
+    z-index: -1;
+  }
+
+  .folder-wrapper {
+    display: flex;
+    position: relative;
+    flex: 1;
+    margin-top: 1.5em;
+    width: 25%;
+    overflow-wrap: anywhere;
+
+    .rewind-card {
+      padding: 0.5em 0.5em;
+    }
+
+    @include viewport.until(sm) {
+      width: 50%;
+    }
+
+    &.--opened {
+      z-index: 4;
+
+      .folder-bg,
+      .folder-tab {
+        background-color: var(--rewind-white);
+      }
+
+      .rewind-card {
+        transform: skew(-10deg) scaleY(0.9) translateY(7px) translateX(10px);
+        box-shadow: -12px -30px 30px rgb(255 255 255 / 0.5);
+
+        p {
+          color: var(--rewind-yellow);
+        }
+      }
+    }
+  }
+}

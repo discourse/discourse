@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Watched Words", type: :system do
+describe "Admin Watched Words" do
   fab!(:current_user, :admin)
 
   before { sign_in(current_user) }
@@ -31,5 +31,19 @@ describe "Admin Watched Words", type: :system do
 
     ww_page.visit(action: "replace")
     expect(ww_page).to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
+  end
+
+  it "creates a watched word with the tag action type" do
+    Fabricate(:tag, name: "greeting")
+
+    ww_page.visit(action: "tag")
+    ww_page.add_word_with_tag("hello", "greeting")
+
+    expect(ww_page).to have_word
+
+    watched_word = WatchedWord.find_by(word: "hello")
+    expect(watched_word).to be_present
+    expect(watched_word.action).to eq(WatchedWord.actions[:tag])
+    expect(watched_word.replacement).to eq("greeting")
   end
 end

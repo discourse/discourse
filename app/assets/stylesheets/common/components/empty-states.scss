@@ -8,7 +8,8 @@
 
     &.--text-only {
       .empty-state__title {
-        font-weight: bold;
+        font-family: var(--heading-font-family);
+        font-weight: var(--heading-font-weight);
         font-size: var(--font-up-1);
       }
     }

@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe SystemThemesManager do
+  # This is necessary since the theme settings migrations happen
+  # when `SystemThemesManager.sync!` is called as part of app boot,
+  # and we want to ensure that any previous migration records for the core themes are cleared to properly test idempotency.
+  before { ThemeSettingsMigration.where(theme_id: Theme::CORE_THEMES.values).delete_all }
+
   it "is idempotent" do
     Theme.delete_all
     expect { SystemThemesManager.sync! }.to change { Theme.system.count }.by(2)
@@ -34,5 +39,19 @@ RSpec.describe SystemThemesManager do
 
     expect(Theme.horizon_theme.color_scheme).to eq(nil)
     expect(Theme.horizon_theme.dark_color_scheme).to eq(nil)
+  end
+
+  it "does not raise when re-syncing themes with existing settings migrations" do
+    Theme.delete_all
+    SystemThemesManager.sync!
+
+    themes_with_migrations =
+      Theme::CORE_THEMES.select { |_, id| ThemeSettingsMigration.exists?(theme_id: id) }
+
+    skip "no core themes have settings migrations" if themes_with_migrations.empty?
+
+    themes_with_migrations.each_key do |theme_name|
+      expect { SystemThemesManager.sync_theme!(theme_name) }.not_to raise_error
+    end
   end
 end

@@ -10,7 +10,7 @@ pt:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permite a procura com IA"
       site_settings:
         categories:
@@ -69,18 +69,19 @@ pt:
       title: "IA"
       default_llm:
         title: "Modelo de LLM Predefinido"
+      llm_selector:
+        none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
-        back: "Voltar"
         disabled: "(desativado)"
         groups: "Grupos:"
         llm:
           one: "LLM:"
           other: "LLMs:"
         no_llm: "Nenhum LLM selecionado"
-        no_persona: "Não definido"
+        no_agent: "Não definido"
         no_groups: "Nenhuma"
-        edit: "Editar"
+        edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
           other: "(%{count} mais)"
@@ -90,8 +91,7 @@ pt:
           name: "Robô"
           description: "Um robô de conversação pode responder a perguntas e assistir os utilizadores nas mensagens pessoais, fórum e na conversação"
         nav:
-          configured: "Configurada"
-          unconfigured: "Não configurada"
+          enabled: "Ativado"
         filters:
           all: "Todos"
           reset: "Repor"
@@ -105,14 +105,14 @@ pt:
           hyde: "HyDE"
         discord:
           name: "Integração do Discord"
-          search: "Procura do Discord"
+          description: "Adiciona a capacidade para procurar canais no Discord"
+          search: "Procura no Discord"
         ai_helper:
-          name: "Assistente"
           description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
           proofread: Rever texto
           title_suggestions: "Sugerir títulos"
           explain: "Explicar"
-          illustrate_post: "Ilustrar artigo"
+          illustrate_post: "Ilustrar publicação"
           smart_dates: "Datas inteligentes"
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Marcação"
@@ -126,6 +126,8 @@ pt:
         spam:
           name: "Lixo Eletrónico"
           inspect_posts: "Inspecionar publicações"
+        automation_reports:
+          name: "Relatórios automatizados"
       modals:
         select_option: "Selecione uma opção..."
       translations:
@@ -145,6 +147,9 @@ pt:
           bar_done:
             one: "%{count} mensagem"
             other: "%{count} mensagens"
+        theme_translations:
+          translate:
+            label: "Traduzir"
       spam:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
@@ -152,6 +157,7 @@ pt:
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
+          llm: "LLM"
           spam: "Spam"
       usage:
         summary: "Resumo"
@@ -159,11 +165,11 @@ pt:
         all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
+        total: "Total"
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
-      ai_persona:
-        back: "Retroceder"
+      ai_agent:
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
@@ -172,6 +178,9 @@ pt:
         user: Utilizador
         save: "Guardar"
         enabled: "Ativado?"
+        mcp_tools_modal:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
         response_format:
@@ -184,12 +193,12 @@ pt:
         features_list:
           one: "Funcionalidade:"
           other: "Funcionalidades:"
+        llms_list: "LLM:"
       rag:
         uploads:
           title: "Uploads"
           uploading: "A enviar…"
       tools:
-        back: "Retroceder"
         export: "Exportar"
         import: "Importar"
         name: "Nome"
@@ -198,14 +207,34 @@ pt:
         save: "Guardar"
         remove_parameter: "Remover"
         parameter_required: "Necessário"
+        credential_not_set: "(não definido)"
+        edit: "Editar"
+        test: "Testar"
+        delete: "Eliminar"
+      secrets:
+        short_title: "Credenciais"
+        name: "Nome"
+        secret: "Valor"
+        save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
+        embedding: "Incorporação"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrição"
+        url: "URL"
+        oauth_connect: "Associar"
+        enabled: "Ativado"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          required: "Necessário"
       llms:
         display_name: "Nome"
         provider: "Provedor"
         save: "Guardar"
         edit: "Editar"
-        back: "Retroceder"
         delete: Eliminar
         quotas:
           group: "Grupo"
@@ -221,6 +250,8 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
+        model_description:
+          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -240,10 +271,10 @@ pt:
           cancel: "Cancelar"
         thumbnail_suggestions:
           select: "Selecionar"
+          try_again: "Tentar Novamente"
         image_caption:
           save_caption: "Guardar"
       embeddings:
-        back: "Retroceder"
         save: "Guardar"
         delete: "Eliminar"
         edit: "Editar"
@@ -266,6 +297,7 @@ pt:
           today: "Hoje"
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"
+          scroll_to_bottom: "Rolar até o final"
       sentiments:
         sentiment_analysis:
           filter_types:
@@ -277,6 +309,8 @@ pt:
       summarization:
         chat:
           summarize: "Resumir"
+        topic:
+          regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
         regular_results: "Tópicos"
         collapse: "Colapsar"

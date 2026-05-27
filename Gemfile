@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.3"
+ruby "~> 3.4"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
@@ -20,7 +20,7 @@ gem "propshaft"
 gem "json"
 
 # this will eventually be added to rails,
-# allows us to precompile all our templates in the unicorn master
+# allows us to precompile all our templates in the app server master
 gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
@@ -53,6 +53,7 @@ gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
 gem "discourse-emojis", require: "discourse_emojis"
+gem "discourse_math_bundle"
 
 gem "message_bus"
 
@@ -62,8 +63,10 @@ gem "fastimage"
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
+gem "aws-sdk-sts", require: false
 gem "aws-sdk-mediaconvert", require: false
-gem "excon", require: false
+gem "aws-sdk-bedrockruntime", require: false
+gem "excon"
 gem "unf", require: false
 
 gem "email_reply_trimmer"
@@ -96,14 +99,14 @@ gem "rake"
 gem "thor", require: false
 gem "diffy", require: false
 gem "rinku"
-gem "sidekiq"
+gem "sidekiq", ">= 7.3.10" # ensuring it won't get downgraded to accomodate a connection_pool upgrade
 gem "mini_scheduler"
 
 gem "mini_racer"
 
 gem "highline", require: false
 
-# When unicorn is not used anymore, we can use Rack 3
+# TODO: upgrade to Rack 3 now that Unicorn has been removed
 gem "rack", "< 3"
 
 gem "rack-protection" # security
@@ -113,7 +116,6 @@ gem "addressable"
 gem "json_schemer"
 
 gem "net-smtp", require: false
-gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 
@@ -127,6 +129,7 @@ group :test do
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
   gem "capybara-playwright-driver"
+  gem "puma", require: false
 end
 
 group :test, :development do
@@ -142,7 +145,6 @@ group :test, :development do
 
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
-  gem "pry-stack_explorer", require: false
   gem "debug", ">= 1.0.0", require: "debug/prelude"
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
@@ -160,7 +162,6 @@ group :development do
   gem "ruby-prof", require: false, platform: :mri
   gem "bullet", require: !!ENV["BULLET"]
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
-  gem "binding_of_caller"
   gem "yaml-lint"
   gem "yard"
   gem "ruby-lsp", require: false
@@ -194,9 +195,11 @@ gem "htmlentities", require: false
 
 gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
-gem "unicorn", require: false, platform: :ruby
-gem "puma", require: false
 gem "pitchfork", require: false
+
+# Used by discourse-prometheus to collect socket queue stats.
+# Was previously a transitive dependency of the unicorn gem.
+gem "raindrops", require: false, platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 
@@ -223,6 +226,10 @@ gem "rotp", require: false
 gem "rqrcode"
 
 gem "rubyzip", require: false
+
+install_if -> { RUBY_PLATFORM.include?("linux") } do
+  gem "landlock", require: false
+end
 
 gem "sshkey", require: false
 
@@ -290,6 +297,7 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+gem "tty-prompt", require: false
 
 # for discourse-zendesk-plugin
 gem "inflection", require: false

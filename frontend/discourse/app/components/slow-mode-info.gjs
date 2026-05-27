@@ -1,23 +1,24 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import { action, computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class SlowModeInfo extends Component {
-  @discourseComputed("topic.slow_mode_seconds")
-  durationText(seconds) {
-    return durationTextFromSeconds(seconds);
+  @computed("topic.slow_mode_seconds")
+  get durationText() {
+    return durationTextFromSeconds(this.topic?.slow_mode_seconds);
   }
 
-  @discourseComputed("topic.slow_mode_seconds", "topic.closed")
-  showSlowModeNotice(seconds, closed) {
-    return seconds > 0 && !closed;
+  @computed("topic.slow_mode_seconds", "topic.closed")
+  get showSlowModeNotice() {
+    return this.topic?.slow_mode_seconds > 0 && !this.topic?.closed;
   }
 
   @action
@@ -32,7 +33,7 @@ export default class SlowModeInfo extends Component {
       <div class="topic-status-info">
         <h3 class="slow-mode-heading">
           <span>
-            {{icon "hourglass-start"}}
+            {{dIcon "hourglass-start"}}
             {{i18n
               "topic.slow_mode_notice.duration"
               duration=this.durationText

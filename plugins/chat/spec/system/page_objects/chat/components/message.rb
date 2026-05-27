@@ -23,6 +23,7 @@ module PageObjects
 
         def open_more_menu
           hover
+          page.find(".chat-message-actions-container")
           click_more_button
         end
 

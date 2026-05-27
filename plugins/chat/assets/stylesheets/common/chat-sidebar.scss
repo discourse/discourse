@@ -1,0 +1,7 @@
+.chat-channel-sidebar-link-menu {
+  .btn {
+    > * {
+      pointer-events: none;
+    }
+  }
+}

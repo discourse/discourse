@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 vi:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Đăng nhập bằng Apple"
+        sr_title: "Đăng nhập bằng Apple"
+        message: "Đang xác thực với Apple"

@@ -1,18 +1,18 @@
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminReport from "discourse/admin/components/admin-report";
 import DashboardPeriodSelector from "discourse/admin/components/dashboard-period-selector";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import basePath from "discourse/helpers/base-path";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <ConditionalLoadingSpinner @condition={{@controller.isLoading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.isLoading}}>
     <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
 
     {{#if @controller.isCommunityHealthVisible}}
@@ -31,7 +31,6 @@ export default <template>
               @startDate={{@controller.startDate}}
               @endDate={{@controller.endDate}}
               @setCustomDateRange={{@controller.setCustomDateRange}}
-              @onDateChange={{@controller.onDateChange}}
             />
           </div>
 
@@ -146,7 +145,7 @@ export default <template>
         {{/if}}
 
         <div class="user-metrics">
-          <ConditionalLoadingSection @isLoading={{@controller.isLoading}}>
+          <DConditionalLoadingSection @isLoading={{@controller.isLoading}}>
             <AdminReport
               @forcedModes={{@controller.reportModes.inline_table}}
               @dataSourceName="users_by_type"
@@ -156,7 +155,7 @@ export default <template>
               @forcedModes={{@controller.reportModes.inline_table}}
               @dataSourceName="users_by_trust_level"
             />
-          </ConditionalLoadingSection>
+          </DConditionalLoadingSection>
         </div>
 
         <div class="misc">
@@ -169,7 +168,7 @@ export default <template>
           <div class="last-dashboard-update">
             <div>
               <h4>{{i18n "admin.dashboard.last_updated"}} </h4>
-              <p>{{formatDate
+              <p>{{dFormatDate
                   @controller.model.attributes.updated_at
                   leaveAgo="true"
                 }}</p>
@@ -177,7 +176,7 @@ export default <template>
             {{#if @controller.model.attributes.discourse_updated_at}}
               <div>
                 <h4>{{i18n "admin.dashboard.discourse_last_updated"}} </h4>
-                <p>{{formatDate
+                <p>{{dFormatDate
                     @controller.model.attributes.discourse_updated_at
                     leaveAgo="true"
                   }}</p>
@@ -205,9 +204,10 @@ export default <template>
             @isEnabled={{@controller.logSearchQueriesEnabled}}
             @disabledLabel={{@controller.trendingSearchDisabledLabel}}
           />
-          {{htmlSafe
+          {{trustHTML
             (i18n
-              "admin.dashboard.reports.trending_search.more" basePath=(basePath)
+              "admin.dashboard.reports.trending_search.more"
+              basePath=(dBasePath)
             )
           }}
         </div>
@@ -219,5 +219,5 @@ export default <template>
       @connectorTagName="div"
       @outletArgs={{lazyHash filters=@controller.filters}}
     />
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

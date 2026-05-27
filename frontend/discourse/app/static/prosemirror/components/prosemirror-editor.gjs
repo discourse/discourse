@@ -2,13 +2,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import "../extensions/register-default";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { baseKeymap } from "prosemirror-commands";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -17,6 +17,7 @@ import * as ProsemirrorHistory from "prosemirror-history";
 import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import * as ProsemirrorModel from "prosemirror-model";
+import * as ProsemirrorSchemaList from "prosemirror-schema-list";
 import * as ProsemirrorState from "prosemirror-state";
 import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
@@ -85,8 +86,8 @@ export default class ProsemirrorEditor extends Component {
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
-  /** @type {TrackedArray<GlimmerNodeView>} */
-  glimmerNodeViews = new TrackedArray();
+  /** @type {Array<GlimmerNodeView>} */
+  glimmerNodeViews = trackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */
   #destructor;
@@ -98,6 +99,8 @@ export default class ProsemirrorEditor extends Component {
         ...utils,
         convertFromMarkdown: this.convertFromMarkdown,
         convertToMarkdown: this.convertToMarkdown,
+        splitNonEmptyLines: this.splitNonEmptyLines,
+        buildListNode: this.buildListNode,
         toggleRichEditor: this.args.toggleRichEditor,
       },
       schema: this.schema,
@@ -106,6 +109,7 @@ export default class ProsemirrorEditor extends Component {
       pmView: ProsemirrorView,
       pmHistory: ProsemirrorHistory,
       pmTransform: ProsemirrorTransform,
+      pmSchemaList: ProsemirrorSchemaList,
       pmCommands: ProsemirrorCommands,
       getContext: () => ({
         placeholder: this.args.placeholder,
@@ -227,7 +231,7 @@ export default class ProsemirrorEditor extends Component {
           // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
           // which is originally responsible for preventDefault.
           if (
-            event.clipboardData.files &&
+            event.clipboardData.files.length > 0 &&
             !authorizesOneOrMoreExtensions(
               this.currentUser.staff,
               this.siteSettings
@@ -260,6 +264,8 @@ export default class ProsemirrorEditor extends Component {
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
+      splitNonEmptyLines: this.splitNonEmptyLines,
+      buildListNode: this.buildListNode,
       commands: buildCommands(this.extensions, params, this.view),
       customState: buildCustomState(this.extensions, params),
     });
@@ -299,6 +305,29 @@ export default class ProsemirrorEditor extends Component {
 
       throw e;
     }
+  }
+
+  @bind
+  splitNonEmptyLines(text) {
+    return text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  }
+
+  @bind
+  buildListNode(schema, listType, lines) {
+    const listItems = lines.map((line) =>
+      schema.nodes.list_item.create(null, [
+        schema.nodes.paragraph.create(
+          null,
+          line.length > 0 ? schema.text(line) : undefined
+        ),
+      ])
+    );
+
+    if (typeof listType === "string") {
+      listType = schema.nodes[listType];
+    }
+
+    return listType.create(null, listItems);
   }
 
   @bind
@@ -363,15 +392,16 @@ export default class ProsemirrorEditor extends Component {
       {{forceScrollingElementPosition}}
     ></div>
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
-      {{#in-element nodeView.dom insertBefore=null}}
+      {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
           @node={{nodeView.node}}
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @pluginParams={{nodeView.pluginParams}}
           @onSetup={{nodeView.setComponentInstance}}
         />
-      {{/in-element}}
+      {{~/in-element~}}
     {{/each}}
   </template>
 }

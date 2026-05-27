@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User tips", type: :system do
+describe "User tips" do
   fab!(:admin)
   fab!(:user)
   fab!(:topics) { Fabricate.times(2, :post).map(&:topic) }
@@ -14,14 +14,6 @@ describe "User tips", type: :system do
 
     it "does not show the 'first notification' tip to the user when disabled" do
       sign_in(user)
-      visit("/")
-
-      expect(tooltip).to be_not_present
-    end
-
-    it "does not show the boostrapping tip to an admin user" do
-      SiteSetting.bootstrap_mode_enabled = true
-      sign_in(admin)
       visit("/")
 
       expect(tooltip).to be_not_present

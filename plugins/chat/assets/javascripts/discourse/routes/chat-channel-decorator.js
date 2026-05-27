@@ -16,7 +16,7 @@ export default function withChatChannel(extendedClass) {
         return;
       }
 
-      const title = this.currentModel.unicodeTitle || this.currentModel.title;
+      const title = this.currentModel.displayTitle;
 
       if (this.currentModel.isDirectMessageChannel) {
         return `${title}`;

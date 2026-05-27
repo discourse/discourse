@@ -12,6 +12,8 @@ cs:
     github_linkback_access_token: 'Platný přístupový token pro uživatele, který bude zveřejňovat zpětný odkaz a počítat commity/příspěvky pro udělování odznaků. Pokyny k získání tokenu naleznete <a href="https://meta.discourse.org/t/99895">zde</a>.'
     github_linkback_maximum_links: "Maximální počet zpětných odkazů, které lze vytvořit z jednoho příspěvku. Když příspěvek obsahuje více odkazů, žádný se nevytvoří."
     github_permalinks_enabled: "Povolení přepisování trvalých odkazů GitHubu"
+    github_pr_status_enabled: "Zobrazit stav pull requestu z GitHubu v OneBoxech (koncept, otevřeno, schváleno, sloučeno, uzavřeno)"
+    github_webhook_secret: "Secret token pro ověření podpisu webhooku GitHub. Tuto hodnotu nakonfigurujte v nastavení webhooku GitHub."
     github_permalinks_exclude: "Název souboru nebo adresáře, který má být vyloučen z přepisování trvalých odkazů. Zadejte pouze název souboru nebo celou cestu: user/repository/optional-directory/filename."
     github_badges_enabled: "Povolit odznaky GitHub"
     github_badges_repos: "Adresy URL repozitářů GitHub pro vyhledávání příspěvků a commitů."

@@ -1,4 +1,10 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+  waitFor,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -102,5 +108,25 @@ acceptance(`Composer - Hyperlink`, function (needs) {
       .isFocused(
         "focus stays on composer after dismissing modal using Esc key"
       );
+  });
+
+  test("handles percent-encoded reserved characters without double-encoding", async function (assert) {
+    const testUrl = "https://example.com/?q=%3D+test";
+
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+
+    await waitFor(".d-editor-input:not([disabled])");
+    await fillIn(".d-editor-input", "");
+    await click(".d-editor-button-bar .link");
+    await waitFor(".upsert-hyperlink-modal");
+
+    await fillIn(".link-url", testUrl);
+    await fillIn(".link-text", "Link");
+    await click(".d-modal__footer button.btn-primary");
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(`[Link](${testUrl})`, "should preserve the encoded '=' (%3D)");
   });
 });

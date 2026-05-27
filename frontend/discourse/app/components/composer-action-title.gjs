@@ -1,12 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { alias } from "@ember/object/computed";
+import { on } from "@ember/modifier";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { classNames } from "@ember-decorators/component";
-import PostLanguageSelector from "discourse/components/post-language-selector";
-import discourseComputed from "discourse/lib/decorators";
+import { trustHTML } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -29,80 +28,105 @@ const TITLES = {
   [ADD_TRANSLATION]: "composer.translations.title",
 };
 
-@classNames("composer-action-title")
+@tagName("")
 export default class ComposerActionTitle extends Component {
-  @service currentUser;
-  @service siteSettings;
-
-  @alias("model.replyOptions") options;
-  @alias("model.action") action;
-
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
-  @discourseComputed("options", "action", "model.tags", "model.category")
-  actionTitle(opts, action) {
+
+  @service composer;
+
+  @computed("model.replyOptions")
+  get options() {
+    return this.model?.replyOptions;
+  }
+
+  set options(value) {
+    set(this, "model.replyOptions", value);
+  }
+
+  @computed("model.action")
+  get action() {
+    return this.model?.action;
+  }
+
+  set action(value) {
+    set(this, "model.action", value);
+  }
+
+  @computed("action", "model.post.can_edit", "model.topic")
+  get canEditReplyTo() {
+    return (
+      this.action === EDIT &&
+      !!this.model?.post?.can_edit &&
+      !!this.model?.topic
+    );
+  }
+
+  @action
+  openChangeReplyToModal() {
+    this.composer.openChangeReplyToModal();
+  }
+
+  @computed("options", "action", "model.tags", "model.category")
+  get actionTitle() {
     const result = this.model.customizationFor("actionTitle");
     if (result) {
       return result;
     }
 
-    if (TITLES[action]) {
-      return i18n(TITLES[action]);
+    if (TITLES[this.action]) {
+      return i18n(TITLES[this.action]);
     }
 
-    if (action === REPLY) {
-      if (opts.userAvatar && opts.userLink) {
-        return this._formatReplyToUserPost(opts.userAvatar, opts.userLink);
-      } else if (opts.topicLink) {
-        return this._formatReplyToTopic(opts.topicLink);
+    if (this.action === REPLY) {
+      if (this.options.userAvatar && this.options.userLink) {
+        return this._formatReplyToUserPost(
+          this.options.userAvatar,
+          this.options.userLink
+        );
+      } else if (this.options.topicLink) {
+        return this._formatReplyToTopic(this.options.topicLink);
       }
     }
 
-    if (action === EDIT) {
-      if (opts.userAvatar && opts.userLink && opts.postLink) {
+    if (this.action === EDIT) {
+      if (
+        this.options.userAvatar &&
+        this.options.userLink &&
+        this.options.postLink
+      ) {
         return this._formatEditUserPost(
-          opts.userAvatar,
-          opts.userLink,
-          opts.postLink,
-          opts.originalUser
+          this.options.userAvatar,
+          this.options.userLink,
+          this.options.postLink
         );
       }
     }
   }
 
-  get showPostLanguageSelector() {
-    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    if (
-      this.currentUser &&
-      this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.model.action)
-    ) {
-      return true;
+  @computed("options.originalUser")
+  get replyTargetSegment() {
+    const originalUser = this.options?.originalUser;
+    if (!originalUser) {
+      return null;
     }
-
-    return false;
+    return trustHTML(
+      `${iconHTML("share", { class: "reply-to-glyph" })}
+       ${originalUser.avatar}
+       <span class="original-username">${escape(originalUser.username)}</span>`
+    );
   }
 
-  _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
-    let editTitle = `
+  _formatEditUserPost(userAvatar, userLink, postLink) {
+    return trustHTML(`
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
-      <span class="username">${userLink.anchor}</span>
-    `;
-
-    if (originalUser) {
-      editTitle += `
-        ${iconHTML("share", { class: "reply-to-glyph" })}
-        ${originalUser.avatar}
-        <span class="original-username">${originalUser.username}</span>
-      `;
-    }
-
-    return htmlSafe(editTitle);
+      <span class="username">${escape(userLink.anchor)}</span>
+    `);
   }
 
   _formatReplyToTopic(link) {
-    return htmlSafe(
+    return trustHTML(
       `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
         "model.topic.id"
       )}">${link.anchor}</a>`
@@ -113,33 +137,40 @@ export default class ComposerActionTitle extends Component {
     const htmlLink = `<a class="user-link" href="${link.href}">${escape(
       link.anchor
     )}</a>`;
-    return htmlSafe(`${avatar}${htmlLink}`);
+    return trustHTML(`${avatar}${htmlLink}`);
   }
 
   <template>
-    <ComposerActions
-      @composerModel={{this.model}}
-      @replyOptions={{this.model.replyOptions}}
-      @canWhisper={{this.canWhisper}}
-      @canUnlistTopic={{this.canUnlistTopic}}
-      @action={{this.model.action}}
-      @tabindex={{this.tabindex}}
-      @topic={{this.model.topic}}
-      @post={{this.model.post}}
-      @whisper={{this.model.whisper}}
-      @noBump={{this.model.noBump}}
-      @options={{hash mobilePlacementStrategy="fixed"}}
-    />
-
-    <span class="action-title" role="heading" aria-level="1">
-      {{this.actionTitle}}
-    </span>
-
-    {{#if this.showPostLanguageSelector}}
-      <PostLanguageSelector
+    <div class="composer-action-title" ...attributes>
+      <ComposerActions
         @composerModel={{this.model}}
-        @selectedLanguage={{this.model.locale}}
+        @replyOptions={{this.model.replyOptions}}
+        @canWhisper={{this.canWhisper}}
+        @canUnlistTopic={{this.canUnlistTopic}}
+        @action={{this.model.action}}
+        @tabindex={{this.tabindex}}
+        @topic={{this.model.topic}}
+        @post={{this.model.post}}
+        @whisper={{this.model.whisper}}
+        @noBump={{this.model.noBump}}
+        @options={{hash mobilePlacementStrategy="fixed"}}
       />
-    {{/if}}
+
+      <span class="action-title" role="heading" aria-level="1">
+        {{this.actionTitle}}
+        {{#if this.replyTargetSegment}}
+          {{#if this.canEditReplyTo}}
+            <button
+              type="button"
+              class="composer-edit-reply-to"
+              title={{i18n "composer.change_reply_to.open"}}
+              {{on "click" this.openChangeReplyToModal}}
+            >{{this.replyTargetSegment}}</button>
+          {{else}}
+            {{this.replyTargetSegment}}
+          {{/if}}
+        {{/if}}
+      </span>
+    </div>
   </template>
 }

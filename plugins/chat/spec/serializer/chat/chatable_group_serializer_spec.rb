@@ -29,4 +29,10 @@ RSpec.describe Chat::ChatableGroupSerializer do
     SiteSetting.chat_max_direct_message_users = 2
     expect(serializer.can_chat).to eq(false)
   end
+
+  it "uses COUNT instead of loading all users for chat_enabled_user_count" do
+    queries = track_sql_queries { serializer.chat_enabled_user_count }
+
+    expect(queries.any? { |q| q.include?("COUNT(*)") }).to eq(true)
+  end
 end

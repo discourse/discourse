@@ -1,0 +1,4 @@
+{
+  "extends": "discourse/tsconfig-plugin",
+  "include": ["javascripts/**/*", "test/**/*"]
+}

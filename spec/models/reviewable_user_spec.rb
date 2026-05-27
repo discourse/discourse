@@ -92,6 +92,15 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.target.approved_at).to be_present
         expect(reviewable.version > 0).to eq(true)
       end
+
+      it "logs a staff action linked to the reviewable" do
+        expect { reviewable.perform(moderator, :approve_user) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:approve_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
+      end
     end
 
     context "when rejecting" do
@@ -188,6 +197,17 @@ RSpec.describe ReviewableUser, type: :model do
         reviewable.reload
         expect(reviewable.target).to be_present
         expect(reviewable.target.approved).to eq(false)
+      end
+
+      it "logs a staff action linked to the reviewable" do
+        expect {
+          reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
+        }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
       end
     end
   end
@@ -327,19 +347,6 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.payload["email"]).to be_blank
         expect(reviewable.payload["name"]).to be_blank
       end
-    end
-  end
-  describe "#build_new_separated_actions" do
-    fab!(:reviewable)
-
-    it "returns correct actions in the pending state" do
-      reviewable.actions_for(Guardian.new(moderator))
-      expect(reviewable.build_new_separated_actions.actions.map(&:id)).to eq(
-        %w[user-approve_user user-delete_user user-delete_user_block],
-      )
-
-      reviewable.update!(status: Reviewable.statuses[:rejected])
-      expect(reviewable.build_new_separated_actions.actions.map(&:id)).to eq(%w[user-scrub])
     end
   end
 end

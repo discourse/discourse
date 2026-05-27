@@ -10,6 +10,7 @@ th:
       alt:
         solved:
           accepted_notification: "ยอมรับแล้ว"
+          topic_solved_notification: "แก้ไขแล้ว"
     solved:
       title: "แก้ไขแล้ว"
       allow_accepted_answers: "อนุญาตให้เจ้าของกระทู้และทีมงานทำเครื่องหมายการตอบกลับว่าเป็นวิธีแก้ปัญหา"
@@ -25,6 +26,8 @@ th:
       topic_status_filter:
         all: "ทั้งหมด"
         solved: "แก้ไขแล้ว"
+      move_post_cancel: "ยกเลิก"
+      confirm_solved_removal_cancel: "ยกเลิก"
     discourse_automation:
       triggerables:
         first_accepted_solution:

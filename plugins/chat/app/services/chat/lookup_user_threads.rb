@@ -41,6 +41,7 @@ module Chat
 
     def fetch_threads(guardian:, params:)
       ::Chat::Thread
+        .viewable_by_user(guardian.user)
         .includes(
           :channel,
           :user_chat_thread_memberships,
@@ -49,55 +50,23 @@ module Chat
             :uploads,
             :chat_webhook_event,
             :chat_channel,
-            user_mentions: {
-              user: :user_status,
-            },
-            user: :user_status,
+            { user_mentions: { user: :user_status } },
+            { user: :user_status },
           ],
           original_message: [
             :uploads,
             :chat_webhook_event,
             :chat_channel,
-            user_mentions: {
-              user: :user_status,
-            },
-            user: :user_status,
+            { user_mentions: { user: :user_status } },
+            { user: :user_status },
           ],
         )
-        .joins(
-          "INNER JOIN user_chat_thread_memberships ON chat_threads.id = user_chat_thread_memberships.thread_id",
-        )
-        .joins(
-          "LEFT JOIN chat_messages AS last_message ON chat_threads.last_message_id = last_message.id",
-        )
-        .joins(
-          "INNER JOIN chat_messages AS original_message ON chat_threads.original_message_id = original_message.id",
-        )
-        .where(
-          channel_id:
-            ::Chat::Channel
-              .joins(:user_chat_channel_memberships)
-              .where(user_chat_channel_memberships: { user_id: guardian.user.id, following: true })
-              .where({ threading_enabled: true, status: ::Chat::Channel.statuses[:open] })
-              .select(:id),
-        )
-        .where("original_message.chat_channel_id = chat_threads.channel_id")
-        .where("original_message.deleted_at IS NULL")
-        .where("last_message.chat_channel_id = chat_threads.channel_id")
-        .where("last_message.deleted_at IS NULL")
-        .where("chat_threads.replies_count > 0")
-        .where("user_chat_thread_memberships.user_id = ?", guardian.user.id)
-        .where(
-          "user_chat_thread_memberships.notification_level IN (?)",
-          [
-            ::Chat::UserChatThreadMembership.notification_levels[:normal],
-            ::Chat::UserChatThreadMembership.notification_levels[:watching],
-            ::Chat::UserChatThreadMembership.notification_levels[:tracking],
-          ],
-        )
-        .order(
-          "CASE WHEN user_chat_thread_memberships.last_read_message_id IS NULL OR user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id THEN true ELSE false END DESC, last_message.created_at DESC",
-        )
+        .order(<<~SQL)
+          CASE WHEN user_chat_thread_memberships.last_read_message_id IS NULL
+               OR user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id
+          THEN 1 ELSE 0 END DESC,
+          viewable_lm.created_at DESC
+        SQL
         .limit(params.limit)
         .offset(params.offset)
     end

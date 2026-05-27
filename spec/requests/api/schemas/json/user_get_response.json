@@ -216,6 +216,9 @@
         "post_count": {
           "type": "integer"
         },
+        "topic_count": {
+          "type": "integer"
+        },
         "can_be_deleted": {
           "type": "boolean"
         },
@@ -750,6 +753,9 @@
             "notify_on_linked_posts": {
               "type": "boolean"
             },
+            "enable_upcoming_change_available_notifications": {
+              "type": "boolean"
+            },
             "include_tl0_in_digests": {
               "type": "boolean"
             },
@@ -827,6 +833,9 @@
             },
             "interface_color_mode": {
               "type": "integer"
+            },
+            "show_original_content": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -853,6 +862,7 @@
             "email_in_reply_to",
             "like_notification_frequency",
             "notify_on_linked_posts",
+            "enable_upcoming_change_available_notifications",
             "include_tl0_in_digests",
             "theme_ids",
             "theme_key_seq",
@@ -868,7 +878,8 @@
             "timezone",
             "skip_new_user_tips",
             "topics_unread_when_closed",
-            "interface_color_mode"
+            "interface_color_mode",
+            "show_original_content"
           ]
         }
       },
@@ -915,6 +926,7 @@
         "can_upload_profile_header",
         "can_upload_user_card_background",
         "post_count",
+        "topic_count",
         "can_be_deleted",
         "can_delete_all_posts",
         "locale",

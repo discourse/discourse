@@ -5,20 +5,28 @@ describe DirectoryItem, type: :model do
     fab!(:user)
     fab!(:admin)
 
-    fab!(:topic1) { Fabricate(:topic, archetype: "regular", user:) }
+    fab!(:topic1) { Fabricate(:topic_with_op, archetype: "regular", user:) }
     fab!(:topic_post1) { Fabricate(:post, topic: topic1, user:, created_at: 10.years.ago) }
 
-    fab!(:topic2) { Fabricate(:topic, archetype: "regular", user:) }
+    fab!(:topic2) { Fabricate(:topic_with_op, archetype: "regular", user:) }
     fab!(:topic_post2) { Fabricate(:post, topic: topic2, user:, created_at: 10.years.ago) }
 
-    fab!(:pm) { Fabricate(:topic, archetype: "private_message", user:, category_id: nil) }
+    fab!(:pm) { Fabricate(:topic_with_op, archetype: "private_message", user:, category_id: nil) }
     fab!(:pm_post) { Fabricate(:post, topic: pm, user:) }
 
-    before { SiteSetting.solved_enabled = true }
+    before do
+      SiteSetting.solved_enabled = true
+      SiteSetting.allow_solved_on_all_topics = true
+    end
 
     it "excludes PM post solutions from solutions" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
-      DiscourseSolved.accept_answer!(pm_post, admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: admin.guardian,
+      )
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: pm_post.id }, guardian: admin.guardian)
 
       DirectoryItem.refresh!
 
@@ -31,8 +39,18 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes deleted posts from solutions" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
-      DiscourseSolved.accept_answer!(topic_post2, admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: admin.guardian,
+      )
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post2.id,
+        },
+        guardian: admin.guardian,
+      )
       topic_post2.update(deleted_at: Time.zone.now)
 
       DirectoryItem.refresh!
@@ -46,8 +64,18 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes deleted topics from solutions" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
-      DiscourseSolved.accept_answer!(topic_post2, admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: admin.guardian,
+      )
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post2.id,
+        },
+        guardian: admin.guardian,
+      )
       topic2.update(deleted_at: Time.zone.now)
 
       DirectoryItem.refresh!
@@ -63,7 +91,12 @@ describe DirectoryItem, type: :model do
     it "excludes solutions for silenced users" do
       user.update(silenced_till: 1.day.from_now)
 
-      DiscourseSolved.accept_answer!(topic_post1, admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: admin.guardian,
+      )
 
       DirectoryItem.refresh!
 
@@ -76,7 +109,12 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes solutions for suspended users" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: admin.guardian,
+      )
       user.update(suspended_till: 1.day.from_now)
 
       DirectoryItem.refresh!
@@ -90,7 +128,12 @@ describe DirectoryItem, type: :model do
     end
 
     it "includes solutions for active users" do
-      DiscourseSolved.accept_answer!(topic_post1, admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: admin.guardian,
+      )
 
       DirectoryItem.refresh!
 
@@ -105,7 +148,12 @@ describe DirectoryItem, type: :model do
     context "when refreshing across dates" do
       it "updates the user's solution count from 1 to 0" do
         freeze_time 40.days.ago
-        DiscourseSolved.accept_answer!(topic_post1, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: topic_post1.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
 
         DirectoryItem.refresh!
 

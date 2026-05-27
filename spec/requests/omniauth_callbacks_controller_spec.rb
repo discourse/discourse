@@ -136,6 +136,19 @@ RSpec.describe Users::OmniauthCallbacksController do
           I18n.t("login.omniauth_error.generic_with_provider", provider: "Google"),
         )
       end
+
+      it "HTML-escapes the provider display name in the error message" do
+        display_name = "<Custom & Provider>"
+        authenticator = Auth::GoogleOAuth2Authenticator.new
+        authenticator.stubs(:display_name).returns(display_name)
+        Discourse.stubs(:enabled_authenticators).returns([authenticator])
+
+        get "/auth/failure", params: { provider: "google_oauth2" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(display_name)
+        expect(response.body).to include(CGI.escapeHTML(display_name))
+      end
     end
 
     describe "request" do
@@ -168,7 +181,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           )
         post "/auth/google_oauth2"
         expect(response.status).to eq(302)
-        expect(response.location).to include("/auth/failure?message=request_error")
+        expect(response.location).to include("/auth/failure?message=unauthorized")
 
         OmniAuth::Strategies::GoogleOauth2
           .any_instance
@@ -372,7 +385,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         get "/auth/google_oauth2/callback.json"
         data = JSON.parse(cookies[:authentication_data])
 
-        expect(data["username"]).to eq("user1") # not "billmailbox" that can be extracted from email
+        # leaves field blank for user to choose
+        expect(data["username"]).to eq(nil)
       end
 
       it "uses email for username suggestions if enabled in settings" do
@@ -398,7 +412,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         get "/auth/google_oauth2/callback.json"
         data = JSON.parse(cookies[:authentication_data])
 
-        expect(data["username"]).to eq("user1")
+        # leaves field blank for user to choose
+        expect(data["username"]).to eq(nil)
       end
 
       describe "when site is invite_only" do
@@ -439,6 +454,33 @@ RSpec.describe Users::OmniauthCallbacksController do
           data = JSON.parse(response.cookies["authentication_data"])
 
           expect(data["requires_invite"]).to eq(nil)
+        end
+
+        it "requires invite when origin is a non-invite route containing an invite key" do
+          invite = Fabricate(:invite)
+          Rails.application.env_config["omniauth.origin"] = "/t/#{invite.invite_key}"
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          data = JSON.parse(response.cookies["authentication_data"])
+          expect(data["requires_invite"]).to eq(true)
+        end
+
+        it "requires invite when the invite is not redeemable" do
+          invite = Fabricate(:invite, expires_at: 1.day.ago)
+          origin =
+            Rails.application.routes.url_helpers.invite_url(
+              invite.invite_key,
+              host: Discourse.base_url,
+            )
+          Rails.application.env_config["omniauth.origin"] = origin
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          data = JSON.parse(response.cookies["authentication_data"])
+          expect(data["requires_invite"]).to eq(true)
         end
       end
     end
@@ -921,7 +963,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "admin@example.com"
           SiteSetting.google_oauth2_hd_groups_service_account_json = {
             "private_key" => private_key.to_s,
-            :"client_email" => "discourse-group-sync@example.iam.gserviceaccount.com",
+            :client_email => "discourse-group-sync@example.iam.gserviceaccount.com",
           }.to_json
           SiteSetting.google_oauth2_hd_groups = true
 

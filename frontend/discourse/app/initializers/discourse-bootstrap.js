@@ -1,3 +1,5 @@
+import { DEBUG } from "@glimmer/env";
+import { importSync } from "@embroider/macros";
 import RSVP from "rsvp";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import * as environment from "discourse/lib/environment";
@@ -12,7 +14,7 @@ import I18n from "discourse-i18n";
 export default {
   // The very first initializer to run
   initialize(app) {
-    const { isDevelopment, isProduction, isTesting, setEnvironment } =
+    const { isDevelopment, isProduction, isTesting, isRailsTesting } =
       environment;
 
     setURLContainer(app.__container__);
@@ -24,6 +26,7 @@ export default {
     }
 
     let setupData;
+
     const setupDataElement = document.getElementById("data-discourse-setup");
     if (setupDataElement) {
       setupData = setupDataElement.dataset;
@@ -50,7 +53,25 @@ export default {
     });
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
-    setEnvironment(setupData.environment);
+
+    // the `if DEBUG` forces the code inside the conditional block to be tree-shaken in
+    // production builds
+    if (DEBUG && isRailsTesting()) {
+      if (typeof setupData.raiseOnDeprecation !== "undefined") {
+        window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
+      }
+
+      // the module deprecation-counter is only available in test environments
+      // we need to use importSync to inform Embroider that this module is required
+      // dynamically. `requireOptional` won't work here
+      const DeprecationCounterModule = importSync(
+        "discourse/tests/helpers/deprecation-counter"
+      );
+
+      DeprecationCounterModule &&
+        DeprecationCounterModule.setupDeprecationCounter();
+    }
+
     DeprecationWorkflow.setEnvironment(environment);
 
     I18n.defaultLocale = setupData.defaultLocale;

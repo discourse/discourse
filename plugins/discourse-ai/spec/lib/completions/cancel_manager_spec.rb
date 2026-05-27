@@ -6,13 +6,12 @@ describe DiscourseAi::Completions::CancelManager do
   before do
     enable_current_plugin
     WebMock.disable!
-    FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
-    SiteSetting.allowed_internal_hosts = "127.0.0.1"
+    FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).returns(["127.0.0.1"])
   end
 
   after do
+    FinalDestination::SSRFDetector.unstub(:lookup_and_filter_ips)
     WebMock.enable!
-    FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
   end
 
   it "can stop monitoring for cancellation cleanly" do
@@ -61,14 +60,12 @@ describe DiscourseAi::Completions::CancelManager do
       thread =
         Thread.new do
           loop do
-            begin
-              _client = server.accept
-              sleep(30) # Hold the connection longer than the test will run
-              break
-            rescue StandardError
-              # Server closed
-              break
-            end
+            _client = server.accept
+            sleep(30) # Hold the connection longer than the test will run
+            break
+          rescue StandardError
+            # Server closed
+            break
           end
         end
 

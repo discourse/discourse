@@ -5,17 +5,8 @@ module DiscourseCakeday
     before_action :ensure_cakeday_enabled
 
     def index
-      column_sql = "created_at"
-
-      # The users.created_at column is a "timestamp without timezone"
-      # so we need to convert the "point in time" to the current user's timezone
-      # for proper filtering and display (otherwise you might get off by ones
-      # if you live in ~~the future~~ Fiji or in ~~the past~~ Hawaii)
-      if @timezone.present? && @timezone != "UTC"
-        column_sql += " AT TIME ZONE 'UTC' AT TIME ZONE '#{@timezone}'"
-      end
-
-      users, total, more_params = cakedays_by(column_sql, at_least_one_year_old: true)
+      users, total, more_params =
+        cakedays_by("created_at", at_least_one_year_old: true, apply_timezone: true)
 
       render_json_dump(
         anniversaries: serialize_data(users, CakedayUserSerializer),

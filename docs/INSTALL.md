@@ -6,7 +6,7 @@ To install and self-host Discourse, follow the steps below. But if you'd rather 
 
 > :bell: The only officially supported installs of Discourse are [Docker](https://www.docker.io/) based. You must have SSH access to a 64-bit Linux server **with Docker support**. We regret that we cannot support any other methods of installation including cpanel, plesk, webmin, etc.
 
-Simple 30 minute basic install:
+Simple 10 minute basic install:
 [**Beginner Docker install guide**][basic]
 
 Powerful, flexible, large / multiple server install:
@@ -25,7 +25,7 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 ### Software Requirements
 
-- [Postgres 13](https://www.postgresql.org/download/)
+- [PostgreSQL](https://www.postgresql.org/download/) (with major version matching the [version deployed in our docker images](https://github.com/discourse/discourse_docker/blob/main/image/base/Dockerfile))
 - [Redis 7](https://redis.io/download)
 - [Ruby 3.2+](https://www.ruby-lang.org/en/downloads/)
 ## Security

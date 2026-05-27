@@ -1,10 +1,9 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import RecalculateScoresForm from "discourse/plugins/discourse-gamification/discourse/components/modal/recalculate-scores-form";
 
@@ -14,13 +13,6 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
   @service toasts;
 
   creatingNew = false;
-
-  @discourseComputed("model.leaderboards.@each.updatedAt")
-  sortedLeaderboards(leaderboards) {
-    return (
-      leaderboards?.sort((a, b) => compare(b?.updatedAt, a?.updatedAt)) || []
-    );
-  }
 
   @action
   resetNewLeaderboard() {
@@ -40,12 +32,13 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
         )
           .then(() => {
             this.toasts.success({
-              duration: 3000,
+              duration: "short",
               data: {
                 message: i18n("gamification.leaderboard.delete_success"),
               },
             });
-            this.model.leaderboards.removeObject(leaderboard);
+
+            removeValueFromArray(this.model.leaderboards, leaderboard);
           })
           .catch(popupAjaxError);
       },

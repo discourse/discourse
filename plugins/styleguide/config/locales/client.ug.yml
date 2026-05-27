@@ -38,6 +38,8 @@ ug:
           title: "خەت نۇسخا سىستېمىسى"
         colors:
           title: "رەڭ"
+        dialog:
+          title: "سۆزلەشكۈ"
         icons:
           title: "سىنبەلگە"
           full_list: "Font Awesome سىنبەلگىسىنىڭ تولۇق تىزىمىنى كۆرسىتىدۇ"
@@ -60,7 +62,7 @@ ug:
         categories_list:
           title: "سەھىپە تىزىمى"
         topic_link:
-          title: "تېما ئۇلانمىسى"
+          title: "تېما ئۇلانمىسى ۋە ھالىتى"
         topic_list_item:
           title: "تېما تىزىم تۈرى"
         topic_statuses:
@@ -69,8 +71,6 @@ ug:
           title: "تېما تىزىمى"
         basic_topic_list:
           title: "ئاساسىي تېما تىزىمى"
-        footer_message:
-          title: "بەت ئاستى ئۇچۇرى"
         signup_cta:
           title: "تىزىملىتىش چاقىرىق سۆزى"
         topic_timer_info:
@@ -103,6 +103,8 @@ ug:
           title: "ماۋزۇ سىنبەلگە"
         spinners:
           title: "چىغ توپچە"
+        otp:
+          title: "OTP"
         empty_state:
           title: "بوش ھالەت"
         tooltips:

@@ -49,4 +49,12 @@ RSpec.describe Onebox::Engine::VideoOnebox do
       ).to_s,
     ).to include("controlslist=\"nodownload\"")
   end
+
+  context "with Dropbox URL" do
+    let(:html) { Onebox.preview("https://www.dropbox.com/scl/fi/abc123/video.mp4?rlkey=xyz").to_s }
+
+    it "transforms to direct download link" do
+      expect(html).to include("dl.dropboxusercontent.com")
+    end
+  end
 end

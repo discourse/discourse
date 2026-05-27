@@ -38,6 +38,8 @@ ar:
           title: "نظام الخطوط"
         colors:
           title: "الألوان"
+        dialog:
+          title: "حوار"
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
@@ -60,7 +62,7 @@ ar:
         categories_list:
           title: "قائمة الفئات"
         topic_link:
-          title: "رابط الموضوع"
+          title: "رابط الموضوع والحالة"
         topic_list_item:
           title: "العنصر في قائمة الموضوعات"
         topic_statuses:
@@ -69,8 +71,6 @@ ar:
           title: "قائمة الموضوعات"
         basic_topic_list:
           title: "قائمة الموضوعات الأساسية"
-        footer_message:
-          title: "رسالة التذييل"
         signup_cta:
           title: "عبارة الحث على الاشتراك"
         topic_timer_info:
@@ -85,6 +85,8 @@ ar:
           title: "قائمة المنشورات"
           empty_example: "<PostList /> حالة فارغة"
           populated_example: "<PostList /> حالة ممتلئة"
+        post_oneboxes:
+          title: "لوحات معاينة المنشورات"
         topic_map:
           title: "خريطة الموضوع"
         site_header:
@@ -103,6 +105,8 @@ ar:
           title: "أيقونات الترويسة"
         spinners:
           title: "المُنزلقات"
+        otp:
+          title: "رمز التحقق لمرة واحدة"
         empty_state:
           title: "حالة فارغة"
         tooltips:
@@ -113,3 +117,5 @@ ar:
         char_counter:
           title: "عداد الأحرف"
           placeholder: "أدخل نصك هنا..."
+        segmented_control:
+          title: "عنصر تحكم مُقسَّم (مجموعة أزرار تبديل)"

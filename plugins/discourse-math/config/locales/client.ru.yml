@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    discourse_math:
+      edit_math: "Редактировать математические формулы"
+      edit_modal:
+        title: "Редактировать математические формулы"
+        label: "Математика"
+        apply: "Применить"
+      composer:
+        insert_math: "Вставить математический код"
+      insert_modal:
+        title_inline: "Вставить встроенное математическое выражение"
+        title_block: "Вставить блок математики"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Вставить"
+        block_mode: "Блочный режим (отображаемое уравнение)"

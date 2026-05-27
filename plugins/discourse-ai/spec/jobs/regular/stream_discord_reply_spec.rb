@@ -12,23 +12,21 @@ RSpec.describe Jobs::StreamDiscordReply, type: :job do
   end
 
   fab!(:llm_model)
-  fab!(:persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+  fab!(:agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
 
   before do
     enable_current_plugin
     SiteSetting.ai_discord_search_enabled = true
-    SiteSetting.ai_discord_search_mode = "persona"
-    SiteSetting.ai_discord_search_persona = persona.id
+    SiteSetting.ai_discord_search_mode = "agent"
+    SiteSetting.ai_discord_search_agent = agent.id
   end
 
-  it "calls PersonaReplier when search mode is persona" do
-    expect_any_instance_of(DiscourseAi::Discord::Bot::PersonaReplier).to receive(
-      :handle_interaction!,
-    )
+  it "calls AgentReplier when search mode is agent" do
+    expect_any_instance_of(DiscourseAi::Discord::Bot::AgentReplier).to receive(:handle_interaction!)
     described_class.new.execute(interaction: interaction)
   end
 
-  it "calls Search when search mode is not persona" do
+  it "calls Search when search mode is not agent" do
     SiteSetting.ai_discord_search_mode = "search"
     expect_any_instance_of(DiscourseAi::Discord::Bot::Search).to receive(:handle_interaction!)
     described_class.new.execute(interaction: interaction)

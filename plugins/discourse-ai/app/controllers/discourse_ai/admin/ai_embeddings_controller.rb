@@ -24,6 +24,12 @@ module DiscourseAi
                        { id: tn, name: tn.split("::").last }
                      },
                    presets: EmbeddingDefinition.presets,
+                   ai_secrets:
+                     ActiveModel::ArraySerializer.new(
+                       AiSecret.all.order(:name),
+                       each_serializer: AiSecretSerializer,
+                       root: false,
+                     ).as_json,
                  },
                }
       end
@@ -123,6 +129,7 @@ module DiscourseAi
             :provider,
             :url,
             :api_key,
+            :ai_secret_id,
             :tokenizer_class,
             :embed_prompt,
             :search_prompt,
@@ -135,7 +142,7 @@ module DiscourseAi
             params.dig(:ai_embedding, :provider_params)&.slice(*extra_field_names.keys)
 
           if received_prov_params.present?
-            permitted[:provider_params] = received_prov_params.permit!
+            permitted[:provider_params] = received_prov_params.permit(*extra_field_names.keys)
           end
         end
 

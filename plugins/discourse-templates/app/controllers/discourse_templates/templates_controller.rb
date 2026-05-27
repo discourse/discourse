@@ -18,6 +18,8 @@ module DiscourseTemplates
 
       return render_json_error("Invalid template id", status: 422) if topic.blank?
 
+      guardian.ensure_can_see!(topic)
+
       unless topic.template?(current_user)
         return(render_json_error("Id does not belong to a template", status: 422))
       end

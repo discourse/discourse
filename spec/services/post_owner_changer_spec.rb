@@ -341,5 +341,71 @@ RSpec.describe PostOwnerChanger do
         expect(p5.reply_to_user_id).to eq(p2.user_id)
       end
     end
+
+    describe "private content" do
+      fab!(:moderator)
+
+      describe "with private messages" do
+        fab!(:pm_user, :user)
+        fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_user) }
+        fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_user) }
+
+        it "raises error when moderator cannot see the topic" do
+          expect {
+            PostOwnerChanger.new(
+              post_ids: [pm_post.id],
+              topic_id: pm_topic.id,
+              new_owner: user_a,
+              acting_user: moderator,
+            ).change_owner!
+          }.to raise_error(Discourse::InvalidAccess)
+        end
+
+        it "allows admin to change ownership" do
+          PostOwnerChanger.new(
+            post_ids: [pm_post.id],
+            topic_id: pm_topic.id,
+            new_owner: user_a,
+            acting_user: editor,
+          ).change_owner!
+
+          expect(pm_post.reload.user).to eq(user_a)
+        end
+      end
+
+      describe "with private categories" do
+        fab!(:private_category) do
+          Fabricate(
+            :private_category,
+            group: Fabricate(:group),
+            permission_type: CategoryGroup.permission_types[:full],
+          )
+        end
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+        it "raises error if moderator cannot see the topic" do
+          expect {
+            PostOwnerChanger.new(
+              post_ids: [private_post.id],
+              topic_id: private_topic.id,
+              new_owner: user_a,
+              acting_user: moderator,
+            ).change_owner!
+          }.to raise_error(Discourse::InvalidAccess)
+        end
+
+        it "allows admin to change ownership" do
+          PostOwnerChanger.new(
+            post_ids: [private_post.id],
+            topic_id: private_topic.id,
+            new_owner: user_a,
+            acting_user: editor,
+          ).change_owner!
+
+          expect(private_post.reload.user).to eq(user_a)
+        end
+      end
+    end
   end
 end

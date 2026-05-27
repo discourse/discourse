@@ -203,7 +203,13 @@ ca:
     join_group: "Uneix-me al grup"
   deleted_topic: "Oh! Aquest tema s'ha suprimit i ja no està disponible."
   reading_time: "Temps de lectura."
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "'M'agrada'"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ho sentim, però els usuaris nous estan de moment limitats a %{count} resposta en el mateix tema."
     other: "Ho sentim, però els usuaris nous estan de moment limitats a %{count} respostes en el mateix tema."
@@ -324,6 +330,7 @@ ca:
       admins: "administradors"
       moderators: "moderadors"
       staff: "equip responsable"
+      anonymous: "anònim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -712,12 +719,12 @@ ca:
       every_month: "cada mes"
       every_six_months: "cada sis mesos"
   user_api_key:
-    title: "Autoritza l'accés a l'aplicació"
     authorize: "Autoritza"
+    deny: "Cancel·la"
     read: "llegeix"
     read_write: "llegeix/escriu"
-    description: '"%{application_name}" sol·licita el següent accés al vostre compte:'
     instructions: 'Hem generat una nova clau d''API d''usuari per a utilitzar amb "%{application_name}". Enganxeu la clau següent en la vostra aplicació:'
+    copied: "Copiat!"
     otp_description: 'Voleu permetre que "%{application_name}" accedeixi a aquest lloc web?'
     otp_confirmation:
       confirm_title: Continua a %{site_name}
@@ -790,7 +797,9 @@ ca:
       description: "Llista dels estats de les banderes incloent-hi la classe de bandera, el publicador, el reportador i el temps de resolució."
     visits:
       title: "Visites de l'usuari"
-      xaxis: "Dia"
+      xaxis:
+        desktop: "Escriptori"
+        mobile: "Mòbil"
       yaxis: "Nombre de visites"
     signups:
       title: "Registres"
@@ -802,6 +811,29 @@ ca:
       xaxis: "Dia"
       yaxis: "Nombre de col·laboradors nous"
       description: "Nombre d'usuaris que han fet la seva primera publicació en aquest període."
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Temes"
+        posts: "Publicacions"
+        share: "Comparteix"
+    posters_by_member_type:
+      labels:
+        count: "Publicacions"
+        share: "Comparteix"
+      types:
+        staff: "Equip responsable"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membres"
+        share: "Comparteix"
+      levels:
+        "0": "Nou"
+        "1": "Bàsic"
+        "2": "Membre"
+        "3": "Habitual"
+        "4": "Líder"
     trust_level_growth:
       yaxis: "Dia"
     consolidated_page_views:
@@ -825,12 +857,13 @@ ca:
     consolidated_page_views_browser_detection:
       yaxis: "Dia"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anònim"
+        page_view_crawler: "Rastrejadors"
       yaxis: "Dia"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Dia"
       yaxis: "DAU/MAU"
-      description: "Nombre de membres que han iniciat sessió el darrer dia dividit pel nombre de membres que ha iniciat sessió el darrer mes. Dóna un % que indica l'_adhesivitat_ de la comunitat. Objectiu >20%."
     daily_engaged_users:
       title: "Usuaris diaris compromesos"
       xaxis: "Dia"
@@ -936,6 +969,12 @@ ca:
         num_clicks: "Clics"
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visites"
     top_traffic_sources:
       title: "Principals fonts de tràfic "
       xaxis: "Domini"
@@ -989,6 +1028,8 @@ ca:
     page_view_anon_browser_reqs:
       xaxis: "Dia"
     page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
+    page_view_embed_reqs:
       xaxis: "Dia"
     http_background_reqs:
       title: "Fons"
@@ -1047,7 +1088,7 @@ ca:
         os: Sistema operatiu
         login_time: Hora d'inici de sessió
       description: "Detalls de nous inicis de sessió que difereixen sospitosament de connexions anteriors."
-    staff_logins:
+    admin_logins:
       title: "Inicis de sessió d'administradors"
       labels:
         user: Usuari
@@ -1158,7 +1199,6 @@ ca:
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
-    email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
@@ -1191,12 +1231,10 @@ ca:
     maximum_session_age: "L'usuari romandrà amb la sessió iniciada durant n hores des de la darrera visita"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
-    use_admin_ip_allowlist: "Els administradors sols poden iniciar la sessió des d'una adreça IP definida en la llista d'IPs sota supervisió (Administració > Registres > IPs sota supervisió)."
     blocked_ip_blocks: "Una llista de blocs d'IP privades que no han de ser rastrejats mai per Discourse"
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
-    content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
@@ -1266,7 +1304,6 @@ ca:
     max_logins_per_ip_per_minute: "Nombre màxim de connexions permeses per adreça IP per minut"
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
-    categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
     suggested_topics: "Nombre de temes recomanats que es mostren a baix d'un tema."
     limit_suggested_to_category: "Mostra solament temes de la categoria actual en els temes recomanats."
     suggested_topics_max_days_old: "Els temes recomanats no haurien de tenir més de n dies."
@@ -1315,13 +1352,7 @@ ca:
     tl3_requires_likes_given: "Nombre mínim de 'M'agrada' que cal donar durant els darrers dies (període de temps nivell 3) per a optar al nivell de confiança 3."
     tl3_requires_likes_received: "Nombre mínim de 'M'agrada' que cal rebre durant els darrers dies (període de temps nivell 3) per a optar al nivell de confiança 3."
     tl3_links_no_follow: "No elimineu l'atribut rel=\"nofollow\" dels enllaços publicats per usuaris de nivell de confiança 3."
-    min_trust_to_create_topic: "Nivell mínim de confiança necessària per a crear un tema nou."
     allow_flagging_staff: "Si està activat, els usuaris poden marcar amb bandera publicacions de comptes de l'equip responsable. "
-    min_trust_to_edit_wiki_post: "Nivell de confiança mínim necessari per a editar una publicació marcada com a wiki."
-    min_trust_to_edit_post: "Nivell de confiança mínim necessari per a editar publicacions."
-    min_trust_to_allow_self_wiki: "Nivell de confiança mínim necessari per a convertir en wiki les publicacions pròpies. "
-    min_trust_to_flag_posts: "Nivell de confiança mínim necessari per a marcar amb bandera les publicacions"
-    min_trust_to_post_links: "Nivell de confiança mínim necessari per a incloure enllaços en els missatges"
     allowed_link_domains: "Dominis als quals els usuaris poden enllaçar fins i tot si no tenen el nivell de confiança adequat per a publicar enllaços"
     newuser_max_links: "Quants enllaços pot afegir un usuari nou a una publicació."
     newuser_max_attachments: "Quants adjunts pot afegir un usuari nou a una publicació"
@@ -1371,7 +1402,6 @@ ca:
     num_flaggers_to_close_topic: "Nombre mínim de banderes úniques necessàries per a aturar automàticament un tema per a una intervenció"
     num_hours_to_close_topic: "Nombre d'hores per a aturar un tema per a intervenció."
     auto_respond_to_flag_actions: "Habilita la resposta automàtica quan s'elimini una bandera."
-    min_first_post_typing_time: "Nombre mínim de temps en mil·lisegons que un usuari ha d'escriure durant la primera publicació. Si no s'assoleix el límit, la publicació passarà automàticament a la cua de les que requereixen aprovació. Poseu a 0 per desactivar (no recomanat)."
     auto_silence_fast_typers_max_trust_level: "Nivell de confiança sota el qual se silencien automàticament usuaris que escriguin massa de pressa"
     reviewable_claiming: "Cal que es reclami el contingut revisable abans que s'hi pugui actuar?"
     reviewable_default_topics: "Per defecte, mostra el contingut revisable agrupat per temes"
@@ -1380,7 +1410,6 @@ ca:
     alternative_reply_by_email_addresses: "Llista de plantilles alternatives per a les adreces de resposta per correu. Per exemple: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilitza HTML en comptes de text per al correu electrònic entrant."
     strip_incoming_email_lines: "Elimina els espais en blanc al principi i al final de cada línia de correu electrònic entrant."
-    disable_emails: "Evita que Discourse enviï cap mena de correu electrònic. Seleccioneu \"sí\" per a inhabilitar els correus per a tots els usuaris. Seleccioneu \"no equip responsable\" per a inhabilitar els correus sols per a usuaris fora de l'equip responsable."
     strip_images_from_short_emails: "Elimina imatges de correus amb una mida inferior a 2800 bytes"
     display_name_on_email_from: "Mostra noms complets en els camps de remitent dels correus"
     unsubscribe_via_email: "Permet als usuaris cancel·lar la subscripció enviant un correu amb 'unsubscribe' en el tema o en el cos del missatge."
@@ -1412,7 +1441,6 @@ ca:
     pop3_polling_password: "Contrasenya del compte POP3 per a la consulta de correu."
     pop3_polling_delete_from_server: "Suprimeix els correus electrònics del servidor. NOTA: Si ho desactiveu, haureu de buidar manualment la vostra bústia de correu."
     log_mail_processing_failures: "Registra tots els errors de processament de correu electrònic en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "El nivell de confiança mínim que un usuari necessita per a tenir permís per a publicar temes nous des del correu."
     email_prefix: "L'[etiqueta] utilitzada en l'assumpte dels correus. Per defecte serà 'títol'."
     email_site_title: "El títol del lloc web usat com a remitent de correus des del lloc web. Per defecte serà 'títol' si no es configura. Si el vostre 'títol' conté caràcters no permesos en correus electrònics, feu servir aquesta opció. "
     find_related_post_with_key: "Utilitza només la \"tecla de resposta\" per a trobar la publicació a què s'ha respost. ADVERTÈNCIA: desactivar-ho permet la suplantació d'usuaris basant-se en l'adreça de correu."
@@ -1423,7 +1451,6 @@ ca:
     username_change_period: "Nombre màxim de dies després del registre en què els comptes poden canviar el nom d'usuari (0 per a impedir el canvi de nom d'usuari)."
     email_editable: "Permet que els usuaris canviïn l'adreça de correu després del registre."
     logout_redirect: "Localització per a redirigir el navegador quan es tanca la sessió (p. ex.: https://example.com/logout)"
-    allow_uploaded_avatars: "Permet que els usuaris pugin imatges de perfil personalitzades."
     default_avatars: "URLs d'avatars que es faran servir per defecte per als usuaris nous fins que els canviïn."
     automatically_download_gravatars: "Descarrega Gravatars per a usuaris quan es crea un compte o es canvia el correu."
     digest_topics: "Nombre màxim de temes populars que es mostren en el resum per correu."
@@ -1444,9 +1471,7 @@ ca:
     enable_group_directory: "Proporciona un directori de grups per a navegar-hi"
     group_in_subject: "Estableix %%{optional_pm} en l'assumpte del correu al nom del primer grup en MP. Vegeu: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalitza el format de l'assumpte en correus estàndard</a>."
     anonymous_account_duration_minutes: "Per a protegir l'anonimat, crea un compte anònim nou per a cada usuari cada N minuts. Per exemple: si és configurat a 600, tan bon punt passin 600 minuts des de la darrera publicació *i* l'usuari canviï a anònim, es crearà un nou compte anònim."
-    hide_user_profiles_from_public: "Inhabilita targetes d'usuari, perfils d'usuari i directori d'usuaris per a usuaris anònims."
     show_inactive_accounts: "Permet que els usuaris que han iniciat la sessió explorin els perfils dels comptes inactius."
-    hide_suspension_reasons: "No mostris públicament els motius de suspensió en els perfils d'usuari."
     log_personal_messages_views: "Registra les visualitzacions dels missatges personals d'altres usuaris o grups fetes per administradors."
     ignored_users_count_message_threshold: "Notifica als moderadors si un usuari determinat és ignorat per molts altres usuaris."
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."
@@ -1454,7 +1479,6 @@ ca:
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
-    enable_mobile_theme: "Els dispositius mòbils fan servir una aparença compatible amb els mòbils, amb la possibilitat de passar a la versió normal. Desactiveu-ho si voleu fer servir un full d'estils personalitzat totalment responsiu. "
     dominating_topic_minimum_percent: "Quin percentatge de publicacions ha de fer un usuari en un tema abans de ser advertit sobre ús abusiu."
     suppress_uncategorized_badge: "No mostris la insígnia per a temes sense categoria en les llistes de temes."
     header_dropdown_category_count: "Quantes categories es poden mostrar en el menú desplegable de la capçalera."
@@ -1518,14 +1542,12 @@ ca:
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
-    min_trust_to_create_tag: "Nivell mínim de confiança necessari per a crear una etiqueta."
     max_tags_per_topic: "Nombre màxim d'etiquetes que es poden aplicar a un tema."
     max_tag_length: "Nombre màxim de caràcters que es poden fer servir en una etiqueta."
     max_tag_search_results: "Nombre màxim de resultats que es mostren en cercar etiquetes."
     max_tags_in_filter_list: "Nombre màxim d'etiquetes que es mostren en el filtre desplegable. S'hi mostraran les etiquetes més emprades."
     tags_sort_alphabetically: "Mostra les etiquetes per ordre alfabètic. Per defecte es mostren ordenades per popularitat."
     tags_listed_by_group: "Llista les etiquetes per grups d'etiquetes en la <a href='%{base_path}/tags' target='_blank'>pàgina d'etiquetes</a>."
-    min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per a etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules en els títols dels temes, no mostris l'etiqueta."
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."
     force_lowercase_tags: "Obliga que totes les etiquetes noves siguin completament en minúscula."
@@ -1556,10 +1578,6 @@ ca:
       staged_users_disabled: "Cal activar 'usuaris ficticis' abans d'activar aquest paràmetre."
       reply_by_email_disabled: "Cal habilitar primer 'resposta per correu' abans d'habilitar aquesta opció."
       enable_local_logins_disabled: "Primer cal habilitar \"habilita els inicis de sessió locals\" abans d'habilitar aquesta opció."
-      min_username_length_exists: "No podeu establir la longitud mínima del nom d'usuari per damunt del nom d'usuari més curt (%{username})."
-      min_username_length_range: "No podeu definir el mínim per damunt del màxim."
-      max_username_length_exists: "No podeu establir la longitud màxima del nom d'usuari per sota del nom d'usuari més llarg (%{username})."
-      max_username_length_range: "No podeu definir el màxim per sota del mínim."
       invalid_hex_value: "Els valors de color han de ser codis hexadecimals de 6 dígits."
       allowed_unicode_usernames:
         regex_invalid: "L'expressió regular no és vàlida: %{error}"
@@ -1686,7 +1704,6 @@ ca:
     errors: "%{errors}"
     not_available: "No disponible. Proveu: %{suggestion}"
     something_already_taken: "Alguna cosa ha anat malament. Potser el nom d'usuari o l'adreça de correu ja han estat registrats. Proveu l'enllaç de contrasenya oblidada."
-    omniauth_confirm_title: "Inici de sessió mitjançant %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "No es permeten adreces de correu associades amb %{account}. Potser us cal configurar el compte amb una adreça de correu diferent."
     new_registrations_disabled: "Ara mateix no es permeten els registres de comptes nous."
@@ -1819,6 +1836,7 @@ ca:
       text_body_template: "Per a obtenir uns quants consells ràpids sobre com començar com a usuari nou, [consulteu aquesta entrada del bloc](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/). \n\nA mesura que hi participeu, us coneixerem i es retiraran les limitacions temporals d'usuari nou. Amb el pas del temps guanyareu [nivells de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclouen capacitats especials per a ajudar-nos a gestionar la comunitat junts.\n"
     welcome_user:
       title: "Benvinguda a l'usuari"
+      preview: "Benvingut a %{site_name}!"
       subject_template: "Benvingut a %{site_name}!"
       text_body_template: |
         Gràcies per unir-vos a %{site_name}! Benvingut!
@@ -1840,6 +1858,7 @@ ca:
       subject_template: "Enhorabona, se us ha concedit estatus de: %{role}!"
     welcome_invite:
       title: "Benvingut convidat"
+      preview: "Benvingut a %{site_name}!"
       subject_template: "Benvingut a %{site_name}!"
       text_body_template: "Gràcies per acceptar la invitació a %{site_name}. Benvingut!\n\n- Us hem creat el compte **%{username}**. Canvieu el nom o la contrasenya visitant [el perfil d'usuari][prefs]. \n\n- Quan inicieu sessió, **utilitzeu la mateixa adreça de correu de la invitació original**. En cas contrari, no podrem dir que sou vós. \n\n%{new_user_tips} \n\nCreiem en un [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
@@ -1884,7 +1903,6 @@ ca:
       text_body_template: "Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat. \n\nLa vostra resposta s'ha enviat des d'una adreça de correu blocada. Proveu d'enviar-la des d'una altra adreça o bé [contacteu amb un membre de l'equip responsable](%{base_url}/about).\n"
     email_reject_not_allowed_email:
       title: "Correu rebutjat: correu no permès"
-      subject_template: "[%{email_prefix}] Problema de correu electrònic: correu electrònic bloquejat"
       text_body_template: "Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat. \n\nLa vostra resposta s'ha enviat des d'una adreça de correu blocada. Proveu d'enviar-la des d'una altra adreça o bé [contacteu amb un membre de l'equip responsable](%{base_url}/about).\n"
     email_reject_inactive_user:
       title: "Correu rebutjat: usuari inactiu"
@@ -2041,6 +2059,7 @@ ca:
       subject_template: "L'usuari nou %{username} té entrades blocades a causa d'enllaços repetits."
     unsilenced:
       title: "Desfet el silenciament"
+      preview: "El compte ja no està en espera."
       subject_template: "El compte ja no està en espera"
       text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que el vostre compte ja no està retingut després de la revisió de l'equip responsable. \n\nAra podeu crear respostes i temes nous. Gràcies per la vostra paciència.\n"
     pending_users_reminder:
@@ -2055,7 +2074,6 @@ ca:
       text_body_template: "S'ha inhabilitat el paràmetre `download_remote_images_to_local` perquè s'ha arribat al límit d'espai de disc en `download_remote_images_threshold`."
     new_user_of_the_month:
       title: "Sou el nou usuari del mes!"
-      subject_template: "Sou un nou usuari del mes!"
       text_body_template: |
         Enhorabona, heu guanyat el premi **Nou usuari del mes en %{month_year}**. :trophy:
 
@@ -2078,7 +2096,6 @@ ca:
     Per a cancel·lar la subscripció a aquests correus, [feu clic aquí](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Respostes anteriors"
     reached_limit:
@@ -2319,6 +2336,7 @@ ca:
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"
+      subject_template_improved: "El compte ja existeix"
       text_body_template: "Fa poc heu intentat crear un compte en %{site_name}, o heu intentat canviar el correu d'un compte a %{email}. Tanmateix, ja existeix un compte per a %{email}. \n\nSi heu oblidat la contrasenya, [restabliu-la ara](%{base_url}/password-reset). \n\nSi no heu intentat crear un compte per a %{email} o canviar la vostra adreça de correu, no us preocupeu: podeu ignorar aquest missatge de manera segura. \n\nSi teniu alguna pregunta, [poseu-vos en contacte amb l'equip responsable] (%{base_url}/about).\n"
     digest:
       since_last_visit: "Des de la vostra darrera visita"
@@ -2331,6 +2349,7 @@ ca:
       popular_posts: "Publicacions populars"
       more_new: "Nou per a vós"
       subject_template: "[%{email_prefix}] Resum"
+      subject_template_improved: "Resum"
       unsubscribe: "Aquest resum és enviat des de %{site_link} quan no us hem vist en molt de temps. Canvieu %{email_preferences_link} o %{unsubscribe_link} per a cancel·lar la subscripció."
       your_email_settings: "la vostra configuració de correu"
       click_here: "feu clic aquí"
@@ -2341,18 +2360,19 @@ ca:
       text_body_template: "Algú ha demanat restablir la contrasenya en [%{site_name}] (%{base_url}). \n\nSi no heu estat vós, podeu ignorar aquest correu de manera segura. \n\nFeu clic en l'enllaç següent per a triar una contrasenya nova: \n%{base_url}/u/password-reset/%{email_token}\n"
     email_login:
       title: "Inicia la sessió mitjançant enllaç"
+      preview: "Inicia la sessió mitjançant enllaç."
       subject_template: "[%{email_prefix}] Inicia sessió mitjançant enllaç"
+      subject_template_improved: "Inicia la sessió mitjançant enllaç"
       text_body_template: "L'enllaç per a iniciar sessió en [%{site_name}](%{base_url}). \n\nSi no heu sol·licitat aquest enllaç, podeu ignorar el correu de manera segura. \n\nFeu clic en l'enllaç següent per a iniciar sessió: \n%{base_url}/session/email-login/%{email_token}\n"
     set_password:
       title: "Estableix la contrasenya"
-      subject_template: "[%{email_prefix}] Establiu la contrasenya"
       text_body_template: "Algú ha demanat afegir una contrasenya al vostre compte en [%{site_name}](%{base_url}). Com a alternativa, podeu iniciar la sessió amb qualsevol servei en línia compatible (Google, Facebook, etc.) associat a aquesta adreça de correu validada. \n\nSi no heu fet aquesta sol·licitud, podeu ignorar aquest correu electrònic de manera segura.\n\nFeu clic en l'enllaç següent per a triar una contrasenya: \n%{base_url}/u/password-reset/%{email_token}\n"
     admin_login:
       title: "Inicia sessió d'administració"
       subject_template: "[%{email_prefix}] Inici de sessió"
+      subject_template_improved: "Inicia la sessió"
     account_created:
       title: "Compte creat"
-      subject_template: "[%{email_prefix}] El vostre compte nou"
       text_body_template: |
         Us hem creat un compte nou en %{site_name}.
 
@@ -2388,7 +2408,6 @@ ca:
       text_body_template: "Benvingut a %{site_name}! \n\nAixò és un recordatori amigable per a activar el vostre compte.\n\nFeu clic en l'enllaç següent per a confirmar i activar el vostre compte nou: \n%{base_url}/u/activate-account/%{email_token} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del vostre navegador web.\n"
     suspicious_login:
       title: "Notificació d'inici de sessió nou"
-      subject_template: "[%{site_name}] Inici de sessió nou des de %{location}"
     post_approved:
       title: "La vostra publicació ha estat aprovada"
   page_not_found:
@@ -2551,17 +2570,12 @@ ca:
     nice_share:
       name: Bonica compartició
       description: Ha compartit una publicació amb 25 visitants únics
-      long_description: "Aquesta insígnia es concedeix quan comparteixes un enllaç en el qual han fet clic 25 visitants. Gràcies per escampar la veu sobre les nostres discussions i sobre la comunitat. \n"
     good_share:
       name: Bona compartició
       description: Publicació compartida amb 300 visitants únics
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç clicat per 300 visitants externs. Bona feina! Heu mostrat una gran discussió a un grup de persones noves i heu ajudat a fer créixer la comunitat.
     great_share:
       name: Gran compartició
       description: Publicació compartida amb 1.000 visites úniques
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç en el qual han fet clic 1000 visitants externs. Molt bé! Heu promogut un debat interessant a un públic nou i enorme, i ens heu ajudat a fer créixer la comunitat en gran manera!
     first_like:
       name: Primer 'M'agrada'
       description: Ha fet 'M'agrada' a una publicació
@@ -2750,13 +2764,8 @@ ca:
   wizard:
     title: "Instal·lació de Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Cau de la Jane"
-          site_description:
-            placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
-      privacy:
+      setup:
+        title: "Primers passos"
         fields:
           login_required:
             label: "Visibilitat"
@@ -2765,35 +2774,14 @@ ca:
                 label: "Públic"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Previsualitza"
-          homepage_style:
-            choices:
-              latest:
-                label: "Més recents"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Jurisdicció de Califòrnia"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "San Francisco, Califòrnia"
-          site_contact:
-            description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
-      invites:
-        title: "Convida l'equip responsable"
-        description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
-        disabled: "Atès que els inicis de sessió locals no estan habilitats, no és possible enviar invitacions a ningú. Procediu al pas següent."
-      finished:
-        title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:
     github:
       closed: "tancat"
+      status_date:
+        approved: "aprovat"
+        closed: "tancat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'
@@ -2853,41 +2841,45 @@ ca:
         complete: "Publicació suprimida."
       delete_and_agree_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
-      disagree_and_restore:
-        description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
-      disagree:
+      disagree_bundle:
         title: "No"
       ignore:
         title: "Ignora"
       ignore_and_do_nothing:
         title: "No facis res"
       approve:
-        title: "Aprova"
+        title: "Sí"
       approve_post:
-        title: "Aprova la publicació"
+        title: "Sí"
       approve_post_closed:
-        title: "Aprova la publicació"
+        title: "Sí"
         confirm: "Aquest tema és tancat. Voleu crear la publicació de totes maneres?"
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rebutja la publicació"
       approve_user:
-        title: "Aprova l'usuari"
+        title: "Sí"
       reject_user:
+        title: "No"
         delete:
           title: "Suprimeix l'usuari"
-          description: "L'usuari serà suprimit del fòrum."
           complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
+      confirm_spam:
+        title: "Sí"
+      not_spam:
+        title: "No"
       reject:
         title: "Rebutja"
-      no_action_post:
-        title: "Cap acció"
+      approve_and_restore:
+        title: "Sí"
+      approve_and_unhide:
+        title: "Sí"
       delete_post:
         complete: "Publicació suprimida"
-      no_action_user:
-        title: "Cap acció"
       delete_user:
         complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"

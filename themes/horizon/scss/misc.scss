@@ -10,7 +10,9 @@
 }
 
 .powered-by-discourse {
-  z-index: 400;
+  z-index: calc(
+    z("base") + 2
+  ); // has to top experimental framing inset elements of Horizon
 }
 
 .boxed.white {
@@ -36,10 +38,6 @@
 .fk-d-menu__inner-content,
 .menu-panel {
   background-color: var(--d-content-background);
-}
-
-.open .grippie {
-  background-color: var(--accent-color);
 }
 
 .d-editor-textarea-wrapper.in-focus,
@@ -102,6 +100,10 @@ input[type="color"]:focus,
 
 .period-chooser-header {
   border-radius: 0;
+}
+
+.upcoming-change__badge-info {
+  padding-right: var(--space-2);
 }
 
 // compatibility with the top contributors sidebar theme component

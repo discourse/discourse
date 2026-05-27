@@ -10,11 +10,17 @@ fr:
       site_settings:
         categories:
           discourse_solved: "Discourse résolu"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Solutions acceptées"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "accepté"
+          topic_solved_notification: "résolu"
     solutions: "Solutions"
     solved:
       title: "Résolus"
@@ -38,11 +44,17 @@ fr:
       no_solved_topics_title: "Vous n'avez encore résolu aucun sujet"
       no_solved_topics_title_others: "%{username} n'a encore résolu aucun sujet."
       no_solved_topics_body: "Lorsque vous fournissez une réponse utile à un sujet, votre réponse peut être sélectionnée comme solution par le ou la propriétaire ou responsable du sujet."
+      move_post_cancel: "Annuler"
+      confirm_solved_removal_confirm: "Confirmer"
+      confirm_solved_removal_cancel: "Annuler"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "votre message a été marqué comme solution"
+      category_type_support:
+        title: "Soutenir"
     topic_statuses:
       solved:
         help: "Ce sujet a une solution"

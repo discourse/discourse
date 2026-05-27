@@ -18,7 +18,7 @@ acceptance("home-logo-image-url transformer", function () {
       .dom("#site-logo")
       .hasAttribute(
         "src",
-        "/transformed/assets/logo.png",
+        "/transformed/images/discourse-logo-sketch.png",
         "it transforms the logo url"
       );
   });

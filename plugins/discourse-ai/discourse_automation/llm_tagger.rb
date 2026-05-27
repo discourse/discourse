@@ -7,14 +7,14 @@ if defined?(DiscourseAutomation)
 
     placeholder :post
 
-    triggerables %i[post_created_edited]
+    triggerables %i[post_created_edited stalled_topic]
 
-    field :tagger_persona,
+    field :tagger_agent,
           component: :choices,
           required: true,
           extra: {
             content:
-              DiscourseAi::Automation.available_persona_choices(
+              DiscourseAi::Automation.available_agent_choices(
                 require_user: false,
                 require_default_llm: true,
               ),
@@ -54,7 +54,9 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields|
       post = context["post"]
-      next if post&.user&.bot? && !fields.dig("allow_system_posts", "value")
+      post ||= context["topic"]&.posts&.find_by(post_number: 1)
+      next if post.blank?
+      next if post.user&.bot? && !fields.dig("allow_system_posts", "value")
 
       next if post.post_number != 1
 
@@ -66,7 +68,7 @@ if defined?(DiscourseAutomation)
         next if latest_revision&.modifications&.has_key?("tags")
       end
 
-      tagger_persona_id = fields.dig("tagger_persona", "value")
+      tagger_agent_id = fields.dig("tagger_agent", "value")
       tag_mode = fields.dig("tag_mode", "value") || "manual"
       manual_tags = fields.dig("available_tags", "value") || []
       confidence_threshold = fields.dig("confidence_threshold", "value").to_f
@@ -111,7 +113,7 @@ if defined?(DiscourseAutomation)
 
         DiscourseAi::Automation::LlmTagger.handle(
           post: post,
-          tagger_persona_id: tagger_persona_id,
+          tagger_agent_id: tagger_agent_id,
           tag_mode: tag_mode,
           available_tags: manual_tags,
           confidence_threshold: confidence_threshold,
@@ -119,7 +121,7 @@ if defined?(DiscourseAutomation)
           max_post_tokens: max_post_tokens,
           allow_restricted_tags: allow_restricted_tags,
           max_posts_for_context: max_posts_for_context,
-          automation: self.automation,
+          automation: automation,
         )
 
         post.topic.custom_fields["llm_tagger_processed"] = true

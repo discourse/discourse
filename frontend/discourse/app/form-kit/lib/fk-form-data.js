@@ -30,13 +30,13 @@ export default class FKFormData {
    * The patches to be applied.
    * @type {Array}
    */
-  patches = [];
+  @tracked patches = [];
 
   /**
    * The inverse patches to be applied, useful for rollback.
    * @type {Array}
    */
-  inversePatches = [];
+  @tracked inversePatches = [];
 
   /**
    * Creates an instance of Changeset.
@@ -113,9 +113,9 @@ export default class FKFormData {
    */
   async rollback() {
     while (this.inversePatches.length > 0) {
-      this.draftData = applyPatches(this.draftData, [
-        this.inversePatches.pop(),
-      ]);
+      const patch = this.inversePatches[this.inversePatches.length - 1];
+      this.draftData = applyPatches(this.draftData, [patch]);
+      this.inversePatches = this.inversePatches.slice(0, -1);
     }
 
     this.resetPatches();
@@ -191,10 +191,25 @@ export default class FKFormData {
         target[parts[0]] = value;
       },
       (patches, inversePatches) => {
-        this.patches.push(...patches);
-        this.inversePatches.push(...inversePatches);
+        this.patches = [...this.patches, ...patches];
+        this.inversePatches = [...this.inversePatches, ...inversePatches];
       }
     );
+  }
+
+  /**
+   * Commits the current draft value of a specific field as the new baseline
+   * and removes only its patches from the history. Other fields' dirty state
+   * is unaffected.
+   * @param {string} name - The top-level property name to commit.
+   */
+  commitField(name) {
+    this.data = produce(this.data, (target) => {
+      target[name] = this.draftData[name];
+    });
+
+    this.patches = this.patches.filter((p) => p.path[0] !== name);
+    this.inversePatches = this.inversePatches.filter((p) => p.path[0] !== name);
   }
 
   /**

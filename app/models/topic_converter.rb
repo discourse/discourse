@@ -3,9 +3,10 @@
 class TopicConverter
   attr_reader :topic
 
-  def initialize(topic, user)
+  def initialize(topic, user, silent: false)
     @topic = topic
     @user = user
+    @silent = silent
   end
 
   def convert_to_public_topic(category_id = nil)
@@ -22,55 +23,70 @@ class TopicConverter
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
-        category_id: @category.id,
-        archetype: Archetype.default,
+        { category_id: @category.id, archetype: Archetype.default },
+        revise_opts,
       )
 
       raise ActiveRecord::Rollback if !@topic.valid?
 
       update_user_stats
       update_post_uploads_secure_status
-      add_small_action("public_topic")
+      add_small_action("public_topic") unless @silent
       Tag.update_counters(@topic.tags, { public_topic_count: 1 }) if !@category.read_restricted
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
-      watch_topic(@topic)
+      watch_topic(@topic) unless @silent
     end
 
     @topic
   end
 
   def convert_to_private_message
+    if exceeds_recipient_cap?
+      @topic.errors.add(
+        :base,
+        I18n.t(
+          "topic_converter.too_many_recipients",
+          max: SiteSetting.max_allowed_message_recipients,
+        ),
+      )
+      return @topic
+    end
+
     Topic.transaction do
       was_public = !@topic.category.read_restricted
       @topic.update_category_topic_count_by(-1) if @topic.visible
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
-        category_id: nil,
-        archetype: Archetype.private_message,
+        { category_id: nil, archetype: Archetype.private_message },
+        revise_opts,
       )
 
       raise ActiveRecord::Rollback if !@topic.valid?
 
       add_allowed_users
       update_post_uploads_secure_status
-      add_small_action("private_topic")
+      add_small_action("private_topic") unless @silent
       Tag.update_counters(@topic.tags, { public_topic_count: -1 }) if was_public
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
-      watch_topic(@topic)
+      watch_topic(@topic) unless @silent
     end
 
     @topic
   end
 
   private
+
+  def revise_opts
+    { bypass_bump: @silent, skip_revision: @silent, silent: @silent }
+  end
 
   def posters
     @posters ||=
@@ -126,15 +142,17 @@ class TopicConverter
     existing_allowed_users = @topic.topic_allowed_users.pluck(:user_id)
     users_to_allow = posters << @user.id
 
-    if (users_to_allow | existing_allowed_users).length > SiteSetting.max_allowed_message_recipients
-      users_to_allow = [@user.id]
-    end
-
     (users_to_allow - existing_allowed_users).uniq.each do |user_id|
       @topic.topic_allowed_users.build(user_id: user_id)
     end
 
     @topic.save!
+  end
+
+  def exceeds_recipient_cap?
+    allowed_users = @topic.topic_allowed_users.pluck(:user_id)
+    total_recipients = (posters | allowed_users | [@user.id]).size
+    total_recipients > SiteSetting.max_allowed_message_recipients
   end
 
   def watch_topic(topic)

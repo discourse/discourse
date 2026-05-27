@@ -1,3 +1,5 @@
+import { cached } from "@glimmer/tracking";
+import { service } from "@ember/service";
 import { replaceIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUrlFor } from "discourse/lib/text";
@@ -8,12 +10,10 @@ import { resetCurrentReaction } from "../components/discourse-reactions-actions"
 import ReactionsActionButton from "../components/discourse-reactions-actions-button";
 import ReactionsActionSummary from "../components/discourse-reactions-actions-summary";
 
-const PLUGIN_ID = "discourse-reactions";
-
 replaceIcon("notification.reaction", "bell");
 
-function initializeDiscourseReactions(api) {
-  customizePostMenu(api);
+function initializeDiscourseReactions(api, siteSettings) {
+  customizePostMenu(api, siteSettings);
 
   api.addKeyboardShortcut("l", null, {
     click: ".topic-post.selected .discourse-reactions-reaction-button",
@@ -28,42 +28,47 @@ function initializeDiscourseReactions(api) {
 
   api.modifyClass(
     "component:emoji-value-list",
-    {
-      pluginId: PLUGIN_ID,
+    (SuperClass) =>
+      class extends SuperClass {
+        @service siteSettings;
 
-      didReceiveAttrs() {
-        this._super(...arguments);
+        @cached
+        get collection() {
+          const result = super.collection;
 
-        if (this.setting.setting !== "discourse_reactions_enabled_reactions") {
-          return;
-        }
-
-        let defaultValue = this.values.includes(
-          this.siteSettings.discourse_reactions_reaction_for_like
-        );
-
-        if (!defaultValue) {
-          this.collection.unshiftObject({
-            emojiUrl: emojiUrlFor(
+          if (
+            this.args.setting.setting ===
+            "discourse_reactions_enabled_reactions"
+          ) {
+            const hasDefaultValue = this.args.values.includes(
               this.siteSettings.discourse_reactions_reaction_for_like
-            ),
-            isEditable: false,
-            isEditing: false,
-            value: this.siteSettings.discourse_reactions_reaction_for_like,
-          });
-        } else {
-          const mainEmoji = this.collection.find(
-            (item) =>
-              item.value ===
-              this.siteSettings.discourse_reactions_reaction_for_like
-          );
+            );
 
-          if (mainEmoji) {
-            mainEmoji.isEditable = false;
+            if (!hasDefaultValue) {
+              result.unshift({
+                emojiUrl: emojiUrlFor(
+                  this.siteSettings.discourse_reactions_reaction_for_like
+                ),
+                isEditable: false,
+                isEditing: false,
+                value: this.siteSettings.discourse_reactions_reaction_for_like,
+              });
+            } else {
+              const mainEmoji = result.find(
+                (item) =>
+                  item.value ===
+                  this.siteSettings.discourse_reactions_reaction_for_like
+              );
+
+              if (mainEmoji) {
+                mainEmoji.isEditable = false;
+              }
+            }
           }
+
+          return result;
         }
       },
-    },
     // It's an admin component so it's not always present
     { ignoreMissing: true }
   );
@@ -152,14 +157,18 @@ function initializeDiscourseReactions(api) {
   }
 }
 
-function customizePostMenu(api) {
+function customizePostMenu(api, siteSettings) {
   api.registerValueTransformer(
     "post-menu-buttons",
     ({ value: dag, context: { buttonKeys } }) => {
       dag.replace(buttonKeys.LIKE, ReactionsActionButton);
-      dag.add("discourse-reactions-actions", ReactionsActionSummary, {
-        after: buttonKeys.REPLIES,
-      });
+      dag.add(
+        "discourse-reactions-actions",
+        ReactionsActionSummary,
+        siteSettings.enable_new_post_reply_count_position
+          ? { before: buttonKeys.REPLIES }
+          : { after: buttonKeys.REPLIES }
+      );
     }
   );
 }
@@ -171,7 +180,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.discourse_reactions_enabled) {
-      withPluginApi(initializeDiscourseReactions);
+      withPluginApi((api) => initializeDiscourseReactions(api, siteSettings));
     }
   },
 

@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
-import { concat, fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { fn, hash } from "@ember/helper";
+import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
-import concatClass from "discourse/helpers/concat-class";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import TrapTab from "discourse/modifiers/trap-tab";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
+import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export default class DFloatBody extends Component {
   closeOnScroll = modifierFn(() => {
@@ -26,15 +26,16 @@ export default class DFloatBody extends Component {
     };
   });
 
-  trapPointerDown = modifierFn((element) => {
+  trapInteractionPropagation = modifierFn((element) => {
     const handler = (event) => {
       event.stopPropagation();
     };
 
-    element.addEventListener("pointerdown", handler);
+    const events = ["pointerdown", "mousedown", "touchend"];
+    events.forEach((name) => element.addEventListener(name, handler));
 
     return () => {
-      element.removeEventListener("pointerdown", handler);
+      events.forEach((name) => element.removeEventListener(name, handler));
     };
   });
 
@@ -62,13 +63,23 @@ export default class DFloatBody extends Component {
     return this.args.instance.options;
   }
 
+  get style() {
+    const maxWidth =
+      typeof this.options.maxWidth === "number"
+        ? `${this.options.maxWidth}px`
+        : this.options.maxWidth;
+
+    return trustHTML(`max-width: ${maxWidth}`);
+  }
+
   <template>
-    <DFloatPortal
+    {{~! strip whitespace ~}}<DFloatPortal
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
+      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
-        class={{concatClass
+        class={{dConcatClass
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
@@ -79,12 +90,12 @@ export default class DFloatBody extends Component {
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
-        {{this.trapPointerDown}}
-        {{(if @trapTab (modifier TrapTab autofocus=this.options.autofocus))}}
+        {{this.trapInteractionPropagation}}
+        {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
         {{(if
           (and @instance.expanded this.supportsCloseOnClickOutside)
           (modifier
-            closeOnClickOutside
+            dCloseOnClickOutside
             (fn @instance.close (hash focusTrigger=false))
             (hash target=this.content)
           )
@@ -94,13 +105,13 @@ export default class DFloatBody extends Component {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
-        style={{htmlSafe (concat "max-width: " this.options.maxWidth "px")}}
+        style={{this.style}}
         ...attributes
       >
         <div class={{@innerClass}}>
           {{yield}}
         </div>
       </div>
-    </DFloatPortal>
+    </DFloatPortal>{{~! strip whitespace ~}}
   </template>
 }

@@ -4,31 +4,22 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@discourse/lint-configs": "^2.35.0",
+    "@discourse/lint-configs": "^3.0.1",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
-    "@fortawesome/fontawesome-free": "6.7.2",
-    "@glint/ember-tsc": "^1.0.7",
-    "@glint/tsserver-plugin": "^2.0.7",
+    "@fortawesome/fontawesome-free": "7.2.0",
+    "@glint/ember-tsc": "^1.2.3",
+    "@glint/tsserver-plugin": "^2.4.0",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.15.3",
-    "chrome-launcher": "^1.2.1",
-    "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.2.1",
-    "ember-template-lint": "7.9.3",
-    "esbuild": "^0.25.11",
-    "eslint": "9.39.1",
+    "eslint": "9.39.2",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.0.4",
+    "lefthook": "^2.1.6",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.4",
-    "lint-to-the-future-ember-template": "^3.1.0",
-    "lint-to-the-future-eslint": "^3.2.0",
-    "playwright": "1.56.1",
-    "prettier": "3.6.2",
-    "puppeteer-core": "^24.31.0",
-    "stylelint": "16.26.0",
-    "terser": "^5.44.1",
+    "lint-to-the-future-eslint": "^3.3.0",
+    "playwright": "1.59.1",
+    "prettier": "3.8.1",
+    "stylelint": "17.4.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
@@ -37,13 +28,13 @@
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
     "lint:css": "pnpm stylelint 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') 'themes/**/*.scss'",
     "lint:css:fix": "pnpm stylelint --fix 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') 'themes/**/*.scss'",
-    "lint:js": "eslint ./frontend $(script/list_bundled_plugins) ./themes --cache --no-error-on-unmatched-pattern",
+    "lint:js": "eslint ./frontend $(script/list_bundled_plugins) ./themes --cache --no-error-on-unmatched-pattern --max-warnings 0",
     "lint:js:fix": "eslint --fix ./frontend $(script/list_bundled_plugins) ./themes --no-error-on-unmatched-pattern",
-    "lint:hbs": "ember-template-lint 'frontend/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}' 'themes/**/*.{gjs,hbs}'",
-    "lint:hbs:fix": "ember-template-lint 'frontend/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}' 'themes/**/*.{gjs,hbs}' --fix",
-    "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
-    "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
-    "lint:glint": "ember-tsc -b",
+    "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs}') 'themes/**/*.{js,gjs,scss}'",
+    "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs}') 'themes/**/*.{js,gjs,scss}'",
+    "lint:types": "ember-tsc -b",
+    "types:generate": "pnpm --dir=frontend/discourse-i18n ember-tsc && pnpm --dir=frontend/discourse-types generate-external",
+    "types:watch": "pnpm types:generate && pnpm ember-tsc -b --watch --preserveWatchOutput",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
@@ -54,31 +45,33 @@
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@10.28.0",
   "pnpm": {
     "patchedDependencies": {
       "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch",
       "babel-plugin-debug-macros@0.3.4": "patches/babel-plugin-debug-macros@0.3.4.patch",
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
-      "ember-source@6.6.0": "patches/ember-source@6.6.0.patch",
+      "ember-source@6.10.1": "patches/ember-source@6.10.1.patch",
       "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {
         "lint-to-the-future-eslint>eslint": "*",
         "@mixer/parallel-prettier>prettier": "*",
-        "lint-to-the-future-ember-template>ember-template-lint": "*",
-        "ember-this-fallback>ember-source": "*"
+        "ember-this-fallback>ember-source": "*",
+        "ember-this-fallback>ember-cli-htmlbars": "*",
+        "@fullcalendar/moment-timezone>moment-timezone": "*"
       },
       "ignoreMissing": [
         "webpack"
       ]
     },
     "overrides": {
-      "@ember/test-waiters": "4.1.1"
+      "@ember/test-waiters": "4.1.1",
+      "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
     }
   }
 }

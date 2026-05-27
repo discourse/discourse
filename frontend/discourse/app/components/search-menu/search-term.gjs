@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
-import { isiPad } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
@@ -21,6 +20,7 @@ export function resetOnKeyUpCallbacks() {
 
 export default class SearchTerm extends Component {
   @service search;
+  @service capabilities;
 
   @tracked lastEnterTimestamp = null;
   @tracked searchCleared = !this.search.activeGlobalSearchTerm;
@@ -78,7 +78,7 @@ export default class SearchTerm extends Component {
       if (
         e.ctrlKey ||
         e.metaKey ||
-        (isiPad() && e.altKey) ||
+        (this.capabilities.isIpadOS && e.altKey) ||
         (this.args.typeFilter !== DEFAULT_TYPE_FILTER && recentEnterHit)
       ) {
         this.args.fullSearch();

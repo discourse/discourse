@@ -294,6 +294,8 @@ module("Unit | Model | composer", function (hooks) {
       reply: "asdf2",
       post: store.createRecord("post", { id: 1 }),
       title: "wat",
+      reply_to_post_number: 3,
+      reply_to_user: { username: "alice" },
     });
 
     composer.clearState();
@@ -302,6 +304,70 @@ module("Unit | Model | composer", function (hooks) {
     assert.blank(composer.reply);
     assert.blank(composer.post);
     assert.blank(composer.title);
+    assert.blank(composer.reply_to_post_number);
+    assert.blank(composer.reply_to_user);
+  });
+
+  test("setReplyTo and replyOptions live updates in edit mode", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1, title: "t" }),
+      post: store.createRecord("post", {
+        id: 1,
+        post_number: 3,
+        avatar_template: "/a.png",
+        username: "bob",
+        name: "Bob",
+      }),
+      reply_to_post_number: 2,
+      reply_to_user: {
+        username: "alice",
+        avatar_template: "/alice.png",
+      },
+    });
+
+    assert.strictEqual(
+      composer.replyOptions.originalUser?.username,
+      "alice",
+      "originalUser reflects composer state on open"
+    );
+
+    composer.setReplyTo(null, null);
+    assert.strictEqual(composer.reply_to_post_number, null);
+    assert.strictEqual(composer.reply_to_user, null);
+    assert.strictEqual(
+      composer.replyOptions.originalUser,
+      null,
+      "originalUser clears after removing reply target"
+    );
+
+    composer.setReplyTo(1, {
+      username: "carol",
+      avatar_template: "/carol.png",
+    });
+    assert.strictEqual(composer.reply_to_post_number, 1);
+    assert.strictEqual(
+      composer.replyOptions.originalUser?.username,
+      "carol",
+      "originalUser reflects the newly chosen target"
+    );
+  });
+
+  test("reply_to edits are serialized into drafts", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1 }),
+      post: store.createRecord("post", { id: 1, post_number: 3 }),
+      reply_to_post_number: 2,
+      reply_to_user: { username: "alice", avatar_template: "/alice.png" },
+    });
+
+    const draft = composer.serializeDraftData();
+
+    assert.strictEqual(draft.reply_to_post_number, 2);
+    assert.strictEqual(draft.reply_to_user.username, "alice");
   });
 
   test("initial category when uncategorized is allowed", function (assert) {
@@ -510,5 +576,76 @@ module("Unit | Model | composer", function (hooks) {
       USER_OPTION_COMPOSITION_MODES.markdown
     );
     assert.strictEqual(composer.composerVersion, 1);
+  });
+
+  test("serialize normalizes tags to {id, name} objects", function (assert) {
+    const composer = createComposer.call(this, {
+      tags: [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 2, name: "feature", slug: "feature" },
+      ],
+      originalTags: [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 3, name: "support", slug: "support" },
+      ],
+    });
+
+    const serialized = composer.serialize({
+      tags: "tags",
+      original_tags: "originalTags",
+    });
+
+    assert.deepEqual(
+      serialized.tags,
+      [
+        { id: 1, name: "bug" },
+        { id: 2, name: "feature" },
+      ],
+      "tags are sent as objects with IDs for backend to resolve original names"
+    );
+    assert.deepEqual(
+      serialized.original_tags,
+      [
+        { id: 1, name: "bug", slug: "bug" },
+        { id: 3, name: "support", slug: "support" },
+      ],
+      "original_tags are kept as objects for backend to extract IDs"
+    );
+  });
+
+  test("showCategoryChooser with lazy loaded categories", function (assert) {
+    const site = getOwner(this).lookup("service:site");
+    site.set("lazy_load_categories", true);
+    site.set("categories", []);
+
+    const composer = createComposer.call(this, { action: CREATE_TOPIC });
+
+    assert.true(
+      composer.showCategoryChooser,
+      "shows category chooser when lazy_load_categories is enabled even with no categories loaded"
+    );
+  });
+
+  test("editPost rolls back state on save failure", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 123,
+      post_number: 2,
+      cooked: "<p>original content</p>",
+    });
+
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      post,
+      reply: "this will 409",
+      topic: store.createRecord("topic", { id: 456 }),
+    });
+
+    await assert.rejects(composer.editPost({}));
+
+    assert.strictEqual(post.cooked, "<p>original content</p>");
+    assert.false(post.staged);
+    assert.strictEqual(composer.composeState, "open");
+    assert.true(composer.editConflict);
   });
 });

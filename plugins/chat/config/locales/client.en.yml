@@ -39,6 +39,15 @@ en:
           other: "%{formatted_number} chat messages"
 
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Channel"
+        description: "Description"
+        actions: "Actions"
+        settings: "Settings"
+        no_channels: "There are no chat channels associated with this category"
+        no_channels_body: "You can have multiple channels per category, accessible to the same members based on the category's Security settings. <a href='%{chatBrowseUrl}'>Create a chat channel</a>."
+        include_subcategories: "Include subcategory channels"
       text_copied: Text copied to clipboard
       link_copied: Link copied to clipboard
       back_to_forum: "Forum"
@@ -53,8 +62,21 @@ en:
       cancel: "Cancel"
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
+      starred: "Starred"
+      starred_channels: "Starred channels"
+      starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
+      pinned_messages:
+        title: "Pinned messages"
+        close: "Close pinned messages"
+        pinned_by_you: "Pinned by you"
+        pinned_by_user: "Pinned by %{username}"
+      no_pinned_messages: "No pinned messages in this channel."
+      pin_message: "Pin message"
+      unpin_message: "Unpin message"
+      pinned: "Pinned"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
+      open_channel_menu: "Open channel menu"
       move_to_channel:
         title: "Move messages to channel"
         instructions:
@@ -69,13 +91,19 @@ en:
         title: "Channel settings"
         edit: "Edit"
         add: "Add"
+        star_channel: "Star channel"
+        unstar_channel: "Unstar channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
+        open_channel_disabled_archived: "Archived channels cannot be reopened."
+        open_channel_disabled_read_only: "Read-only channels cannot be reopened."
         archive_channel: "Archive channel"
         delete_channel: "Delete channel"
         join_channel: "Join channel"
         leave_channel: "Leave channel"
         leave_groupchat_info: "By leaving this group chat, you will no longer have access to it and won’t receive notifications related to it. To rejoin, you will need to be re-invited by a member of the group chat."
+        notification_settings: "Notification settings"
+        notification_settings_context: "Notifications"
         join: "Join"
         leave: "Leave"
         save_label:
@@ -137,12 +165,11 @@ en:
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
       send_shortcut:
+        title: "Send shortcut"
         enter:
           label: "Send by Enter"
-          description: "New line by Shift + Enter"
         meta_enter:
           label: "Send by %{meta_key} + Enter"
-          description: "New line by Enter"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -240,12 +267,12 @@ en:
       no_public_channels: "You have not joined any channels yet!"
       no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
+      chat_notifications_title: "Chat notifications"
       only_chat_push_notifications:
         title: "Only send chat push notifications"
-        description: "Block all non-chat push notifications from being sent"
+      personalization_title: "Personalization"
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
-        description: "Do not send notifications for channel-wide mentions (@here and @all)"
       show_thread_title_prompts:
         title: "Show thread title prompts"
         description: "Show prompts to set a title for new threads"
@@ -274,7 +301,6 @@ en:
       retry_staged_message:
         title: "Network error"
         action: "Send again?"
-      unreliable_network: "Network is unreliable, sending messages and saving draft might not work"
       bookmark_message: "Bookmark"
       bookmark_message_edit: "Edit Bookmark"
       restore: "Restore deleted message"
@@ -288,6 +314,9 @@ en:
         other: "You have %{count} unread discussions"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"
+      new_messages:
+        one: "%{count} new message"
+        other: "%{count} new messages"
       sound:
         title: "Desktop chat notification sound"
       sounds:
@@ -504,6 +533,7 @@ en:
         follow: "Join"
         followed: "Joined"
         mute: "Mute channel"
+        unmute: "Unmute channel"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"
         muted_on: "On"
@@ -530,6 +560,7 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       search:
+        short_title: Search
         title: Search chat
         aria_label: "Switch to chat search"
         no_results: "No results found"
@@ -619,14 +650,15 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
+        chat_settings: "Chat settings"
         indefinitely_short: "indefinitely"
-        indefinitely_long: "Chat settings have been set to retain channel messages indefinitely."
+        indefinitely_long: "%{chatSettingsLink} have been set to retain channel messages indefinitely."
         short:
           one: "%{count} day"
           other: "%{count} days"
         long:
-          one: "Chat settings have been set to retain channel messages for %{count} day."
-          other: "Chat settings have been set to retain channel messages for %{count} days."
+          one: "%{chatSettingsLink} have been set to retain channel messages for %{count} day."
+          other: "%{chatSettingsLink} have been set to retain channel messages for %{count} days."
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."
@@ -767,7 +799,7 @@ en:
           composer_bold: "%{shortcut} Bold (composer only)"
           composer_italic: "%{shortcut} Italic (composer only)"
           composer_code: "%{shortcut} Code (composer only)"
-          drawer_open: "%{shortcut} Open chat drawer"
+          drawer_toggle: "%{shortcut} Toggle chat drawer"
           drawer_close: "%{shortcut} Close chat drawer"
           mark_all_channels_read: "%{shortcut} Mark all channels read"
     topic_statuses:

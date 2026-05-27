@@ -26,7 +26,6 @@ da:
       assigned: "Tildelt"
       group_everyone: "Alle"
       assigned_to: "Tildelt til"
-      assigned_to_w_ellipsis: "Tildelt til..."
       unassign:
         title: "Fjern tildeling"
         title_w_ellipsis: "Fjern tildeling..."
@@ -79,10 +78,6 @@ da:
           unassigned: "er ikke tildelt"
         assigned:
           label: "Tildelt til"
-    topics:
-      bulk:
-        unassign: "Fjern tildeling af emner"
-        assign: "Tildel emner"
     discourse_automation:
       scriptables:
         random_assign:

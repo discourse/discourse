@@ -9,7 +9,7 @@ Topic discussing the plugin itself can be found here: https://meta.discourse.org
 ### Usage
 
 See the [Graphviz](https://www.graphviz.org/documentation/) site for documentation and examples.  
-To use with a discourse post, wrap the chart defintion in `graphviz` tags and define engine (if not defined, it will default to `dot`) like this:
+To use with a discourse post, wrap the chart definition in `graphviz` tags and define engine (if not defined, it will default to `dot`) like this:
 
 ```
 [graphviz engine=neato]

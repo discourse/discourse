@@ -16,7 +16,7 @@ import Post from "discourse/models/post";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 const translateResultsCallbacks = [];
@@ -103,10 +103,13 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function (tag) {
-      const tagName = escapeExpression(tag.name);
+      const id = tag.id;
+      const name = escapeExpression(tag.name);
+      const slug = tag.slug || `${id}-tag`;
       return EmberObject.create({
-        id: tagName,
-        url: getURL("/tag/" + tagName),
+        id,
+        name,
+        url: getURL(`/tag/${slug}/${id}`),
       });
     })
     .filter((item) => item != null);
@@ -219,21 +222,42 @@ export function getSearchKey(args) {
   );
 }
 
+// Patterns that bypass minimum search term length because they
+// produce meaningful results on their own. Note: 't' (in:title) is
+// intentionally excluded - it modifies where to search but still
+// requires actual search terms.
+const MIN_LENGTH_BYPASS_PATTERN =
+  /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
+
+// Filters that scope the search to private messages. Mirrors the server-side
+// set in lib/search.rb (`in:personal`, `in:messages`, `in:personal-direct`,
+// `in:all-pms` — all of which set @search_pms = true).
+const PM_FILTER_PATTERN = /\bin:(personal|messages|personal-direct|all-pms)\b/i;
+
+export function searchTermScopesToPMs(searchTerm) {
+  return PM_FILTER_PATTERN.test(searchTerm || "");
+}
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
-  if (searchTerm) {
-    return searchTerm.trim().length >= siteSettings.min_search_term_length;
-  } else {
+  if (!searchTerm) {
     return false;
   }
+
+  const trimmed = searchTerm.trim();
+
+  if (MIN_LENGTH_BYPASS_PATTERN.test(trimmed)) {
+    return true;
+  }
+
+  return trimmed.length >= siteSettings.min_search_term_length;
 }
 
 export function applySearchAutocomplete(inputElement, siteSettings, owner) {
   const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
-  DAutocompleteModifier.setupAutocomplete(
-    owner,
-    inputElement,
-    autocompleteHandler,
-    {
+  const modifiers = [];
+
+  modifiers.push(
+    dAutocomplete.setupAutocomplete(owner, inputElement, autocompleteHandler, {
       component: HashtagAutocompleteResults,
       key: HashtagAutocompleteResults.TRIGGER_KEY,
       autoSelectFirstSuggestion: false,
@@ -241,27 +265,32 @@ export function applySearchAutocomplete(inputElement, siteSettings, owner) {
       dataSource: (term) => searchCategoryTag(term, siteSettings),
       fixedTextareaPosition: true,
       offset: 2,
-    }
+    })
   );
+
   if (siteSettings.enable_mentions) {
-    DAutocompleteModifier.setupAutocomplete(
-      owner,
-      inputElement,
-      autocompleteHandler,
-      {
-        component: UserAutocompleteResults,
-        key: UserAutocompleteResults.TRIGGER_KEY,
-        autoSelectFirstSuggestion: false,
-        transformComplete: (v) => {
-          validateSearchResult(v);
-          return v.username || v.name;
-        },
-        dataSource: (term) => userSearch({ term, includeGroups: true }),
-        fixedTextareaPosition: true,
-        offset: 2,
-      }
+    modifiers.push(
+      dAutocomplete.setupAutocomplete(
+        owner,
+        inputElement,
+        autocompleteHandler,
+        {
+          component: UserAutocompleteResults,
+          key: UserAutocompleteResults.TRIGGER_KEY,
+          autoSelectFirstSuggestion: false,
+          transformComplete: (v) => {
+            validateSearchResult(v);
+            return v.username || v.name;
+          },
+          dataSource: (term) => userSearch({ term, includeGroups: true }),
+          fixedTextareaPosition: true,
+          offset: 2,
+        }
+      )
     );
   }
+
+  return modifiers;
 }
 
 export function updateRecentSearches(currentUser, term) {

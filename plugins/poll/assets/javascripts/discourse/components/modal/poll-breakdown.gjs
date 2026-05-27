@@ -2,21 +2,22 @@
 import Component from "@ember/component";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classify } from "@ember/string";
-import { htmlSafe } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import concatClass from "discourse/helpers/concat-class";
+import { trustHTML } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import PollBreakdownChart from "discourse/plugins/poll/discourse/components/poll-breakdown-chart";
 import PollBreakdownOption from "discourse/plugins/poll/discourse/components/poll-breakdown-option";
 
+@tagName("")
 export default class PollBreakdownModal extends Component {
   @service dialog;
   @service siteSettings;
@@ -35,9 +36,11 @@ export default class PollBreakdownModal extends Component {
     super.init(...arguments);
   }
 
-  @discourseComputed("model.poll.title", "model.post.topic.title")
-  title(pollTitle, topicTitle) {
-    return pollTitle ? htmlSafe(pollTitle) : topicTitle;
+  @computed("model.poll.title", "model.post.topic.title")
+  get title() {
+    return this.model?.poll?.title
+      ? trustHTML(this.model?.poll?.title)
+      : this.model?.post?.topic?.title;
   }
 
   get groupableUserFields() {
@@ -55,9 +58,12 @@ export default class PollBreakdownModal extends Component {
       });
   }
 
-  @discourseComputed("model.poll.options")
-  totalVotes(options) {
-    return options.reduce((sum, option) => sum + option.votes, 0);
+  @computed("model.poll.options")
+  get totalVotes() {
+    return this.model?.poll?.options?.reduce(
+      (sum, option) => sum + option.votes,
+      0
+    );
   }
 
   fetchGroupedPollData() {
@@ -96,7 +102,7 @@ export default class PollBreakdownModal extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <DModal
       @title={{i18n "poll.breakdown.title"}}
       @closeModal={{@closeModal}}
@@ -105,14 +111,14 @@ export default class PollBreakdownModal extends Component {
       <:headerBelowTitle>
         <ul class="modal-tabs">
           <li
-            class={{concatClass
+            class={{dConcatClass
               "modal-tab percentage"
               (if (eq this.displayMode "percentage") "is-active")
             }}
             {{on "click" (fn (mut this.displayMode) "percentage")}}
           >{{i18n "poll.breakdown.percentage"}}</li>
           <li
-            class={{concatClass
+            class={{dConcatClass
               "modal-tab count"
               (if (eq this.displayMode "count") "is-active")
             }}

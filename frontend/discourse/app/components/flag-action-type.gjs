@@ -2,20 +2,30 @@
 import Component, { Input, Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { and, equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { computed } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class FlagActionType extends Component {
-  @and("flag.require_message", "selected") showMessageInput;
-  @and("flag.isIllegal", "selected") showConfirmation;
-  @equal("flag.name_key", "notify_user") isNotifyUser;
+  @computed("flag.require_message", "selected")
+  get showMessageInput() {
+    return this.flag?.require_message && this.selected;
+  }
+
+  @computed("flag.isIllegal", "selected")
+  get showConfirmation() {
+    return this.flag?.isIllegal && this.selected;
+  }
+
+  @computed("flag.name_key")
+  get isNotifyUser() {
+    return this.flag?.name_key === "notify_user";
+  }
 
   get flagDescription() {
     return applyValueTransformer("flag-description", this.description, {
@@ -23,57 +33,63 @@ export default class FlagActionType extends Component {
     });
   }
 
-  @discourseComputed("flag.name_key")
-  wrapperClassNames(nameKey) {
-    return `flag-action-type ${nameKey}`;
+  @computed("flag.name_key")
+  get wrapperClassNames() {
+    return `flag-action-type ${this.flag?.name_key}`;
   }
 
-  @discourseComputed("flag.name_key")
-  customPlaceholder(nameKey) {
+  @computed("flag.name_key")
+  get customPlaceholder() {
     return applyValueTransformer(
       "flag-custom-placeholder",
-      i18n("flagging.custom_placeholder_" + nameKey, {
+      i18n("flagging.custom_placeholder_" + this.flag?.name_key, {
         defaultValue: i18n("flagging.custom_placeholder_notify_moderators"),
       }),
-      { nameKey }
+      { nameKey: this.flag?.name_key }
     );
   }
 
-  @discourseComputed("flag.name", "flag.name_key", "username")
-  formattedName(name, nameKey, username) {
-    if (["notify_user", "notify_moderators"].includes(nameKey)) {
-      return name.replace(/{{username}}|%{username}/, username);
+  @computed("flag.name", "flag.name_key", "username")
+  get formattedName() {
+    if (["notify_user", "notify_moderators"].includes(this.flag?.name_key)) {
+      return this.flag?.name?.replace(
+        /{{username}}|%{username}/,
+        this.username
+      );
     } else {
       return applyValueTransformer(
         "flag-formatted-name",
-        i18n("flagging.formatted_name." + nameKey, {
-          defaultValue: name,
+        i18n("flagging.formatted_name." + this.flag?.name_key, {
+          defaultValue: this.flag?.name,
         }),
-        { nameKey }
+        { nameKey: this.flag?.name_key }
       );
     }
   }
 
-  @discourseComputed("flag", "selectedFlag")
-  selected(flag, selectedFlag) {
-    return flag === selectedFlag;
+  @computed("flag", "selectedFlag")
+  get selected() {
+    return this.flag === this.selectedFlag;
   }
 
-  @discourseComputed("flag.description", "flag.short_description")
-  description(long_description, short_description) {
-    return this.site.mobileView ? short_description : long_description;
+  @computed("flag.description", "flag.short_description")
+  get description() {
+    return this.site.mobileView
+      ? this.flag?.short_description
+      : this.flag?.description;
   }
 
-  @discourseComputed("message.length")
-  customMessageLengthClasses(messageLength) {
-    return messageLength < this.siteSettings.min_personal_message_post_length
+  @computed("message.length")
+  get customMessageLengthClasses() {
+    return this.message?.length <
+      this.siteSettings.min_personal_message_post_length
       ? "too-short"
       : "ok";
   }
 
-  @discourseComputed("message.length")
-  customMessageLength(messageLength) {
-    const len = messageLength || 0;
+  @computed("message.length")
+  get customMessageLength() {
+    const len = this.message?.length || 0;
     const minLen = this.siteSettings.min_personal_message_post_length;
     if (len === 0) {
       return i18n("flagging.custom_message.at_least", { count: minLen });
@@ -100,8 +116,11 @@ export default class FlagActionType extends Component {
             />
 
             <div class="flag-action-type-details">
-              <span class="description">{{htmlSafe this.flagDescription}}</span>
+              <span class="description">{{trustHTML
+                  this.flagDescription
+                }}</span>
               {{#if this.showMessageInput}}
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
                   name="message"
                   class="flag-message"
@@ -110,7 +129,7 @@ export default class FlagActionType extends Component {
                   @value={{this.message}}
                 />
                 <div
-                  class={{concatClass
+                  class={{dConcatClass
                     "custom-message-length"
                     this.customMessageLengthClasses
                   }}
@@ -137,8 +156,9 @@ export default class FlagActionType extends Component {
             />
             <div class="flag-action-type-details">
               <strong class="flag-name">{{this.formattedName}}</strong>
-              <div class="description">{{htmlSafe this.flagDescription}}</div>
+              <div class="description">{{trustHTML this.flagDescription}}</div>
               {{#if this.showMessageInput}}
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
                   name="message"
                   class="flag-message"
@@ -149,7 +169,7 @@ export default class FlagActionType extends Component {
                   @value={{this.message}}
                 />
                 <div
-                  class={{concatClass
+                  class={{dConcatClass
                     "custom-message-length"
                     this.customMessageLengthClasses
                   }}

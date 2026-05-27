@@ -1,0 +1,148 @@
+# frozen_string_literal: true
+
+RSpec.describe "Support Category Type Setup" do
+  fab!(:admin)
+
+  let(:category_page) { PageObjects::Pages::Category.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
+  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:toast) { PageObjects::Components::Toasts.new }
+
+  before do
+    SiteSetting.enable_support_category_type_setup = true
+    sign_in(admin)
+  end
+
+  it "works with correct defaults and configures site settings and category custom field automatically" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("support").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
+
+    # Preload basic data for this category type
+    expect(form.field("name").value).to eq("Support")
+    expect(
+      form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
+        "checked"
+      ],
+    ).to eq(true)
+    expect(form.field("style_type").find("#control-emoji").find("img.emoji")["title"]).to eq(
+      "red_question_mark",
+    )
+
+    expect(banner).to be_visible
+    banner.click_save
+
+    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Support"))
+    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+    expect(SiteSetting.solved_enabled).to eq(true)
+    expect(SiteSetting.show_filter_by_solved_status).to eq(true)
+    category = Category.find_by(name: "Support")
+    expect(category.custom_fields["enable_accepted_answers"]).to eq("true")
+    expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("48")
+    expect(category.custom_fields["notify_on_staff_accept_solved"]).to eq("true")
+    expect(category.custom_fields["empty_box_on_unsolved"]).to eq("true")
+  end
+
+  it "is able to click the support tab when creating a new category when solved is disabled" do
+    SiteSetting.solved_enabled = false
+    visit("/new-category/setup")
+    category_type_card.find_type_card("support").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
+    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+  end
+
+  context "for an existing category with no support category type" do
+    fab!(:category)
+
+    it "can add the support category type" do
+      visit("/c/#{category.slug}/edit")
+      category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+      category_type_selector.expand
+      category_type_selector.option(".category-type-selector__result.--category-type-support").click
+      banner.click_save
+      expect(page).to have_css(".nav-pills .edit-category-support")
+      category.reload
+      expect(category.category_types.keys).to eq(%i[discussion support])
+    end
+  end
+
+  context "when there is a support category already configured" do
+    fab!(:category)
+
+    before do
+      DiscourseSolved::Categories::Types::Support.configure_category(
+        category,
+        guardian: admin.guardian,
+      )
+    end
+
+    it "does not preload basic data for the support category type" do
+      visit("/new-category/setup")
+      category_type_card.find_type_card("support").click
+
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
+      expect(form.field("name").value).to eq("")
+      expect(
+        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
+          "checked"
+        ],
+      ).to eq(nil)
+    end
+
+    it "can edit the settings of the support category in a tab" do
+      visit("/c/#{category.slug}/edit/support")
+
+      expect(
+        form
+          .field("custom_fields.solved_topics_auto_close_hours")
+          .component
+          .find("input.relative-time-duration")
+          .value,
+      ).to eq("2")
+      expect(form.field("custom_fields.notify_on_staff_accept_solved").value).to be_truthy
+      expect(form.field("custom_fields.empty_box_on_unsolved").value).to be_truthy
+
+      form.field("custom_fields.notify_on_staff_accept_solved").toggle
+      form.field("custom_fields.empty_box_on_unsolved").toggle
+      form
+        .field("custom_fields.solved_topics_auto_close_hours")
+        .component
+        .find("input.relative-time-duration")
+        .fill_in(with: "3")
+      form.field("category_type_site_settings.show_who_marked_solved").toggle
+
+      banner.click_save
+      expect(toast).to have_success(I18n.t("js.saved"))
+      category.reload
+
+      expect(category.custom_fields["notify_on_staff_accept_solved"]).to eq("false")
+      expect(category.custom_fields["empty_box_on_unsolved"]).to eq("false")
+      expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("72")
+      expect(SiteSetting.show_who_marked_solved).to eq(true)
+    end
+
+    it "can remove the support category type" do
+      visit("/c/#{category.slug}/edit")
+      category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+      category_type_selector.remove_selected_option("Support")
+      banner.click_save
+      expect(toast).to have_success(I18n.t("js.saved"))
+      expect(page).to have_no_css(".nav-pills .edit-category-support")
+      category.reload
+      expect(category.category_types.keys).to eq(%i[discussion])
+    end
+  end
+
+  context "when visiting the Support tab for a non-support category" do
+    fab!(:category)
+
+    it "shows the not support type message" do
+      visit("/c/#{category.slug}/edit/support")
+      expect(page).to have_content(
+        I18n.t("js.category.unknown_category_type_description", categoryType: "support"),
+      )
+    end
+  end
+end

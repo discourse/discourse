@@ -12,14 +12,10 @@ ca:
     topic_voting:
       reached_limit: "Us heu quedat sense vots. Elimineu un vot existent."
       list_votes: "Llista els vots"
-      votes_nav_help: "temes amb més vots"
       voted: "Heu votat sobre aquest tema"
       allow_topic_voting: "Permet als usuaris votar sobre temes d'aquesta categoria"
       vote_title: "Vota"
       vote_title_plural: "Vots"
-      voted_title: "Votat"
-      voting_closed_title: "Tancat"
-      voting_limit: "Límit"
       votes:
         one: " %{count} vot"
         other: "%{count} vots"
@@ -27,7 +23,9 @@ ca:
         one: "Vota"
         other: "Vots"
       remove_vote: "Elimina el vot"
+      and_more_voters: "i %{count} més..."
+      show_voters: "Mostra qui ha votat"
+      vote_count_thousands: "%{count}k"
     filters:
       votes:
         title: "Vots"
-        help: "temes amb més vots"

@@ -1,43 +1,64 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
-import { alias } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { action, computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
-import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
+import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
 
 export default class SharePanel extends Component {
   tagName = null;
 
-  @alias("panel.model.type") type;
-  @alias("panel.model.topic") topic;
-  @alias("panel.model.topic.category.read_restricted") privateCategory;
+  @computed("panel.model.type")
+  get type() {
+    return this.panel?.model?.type;
+  }
 
-  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
-  sources(topic) {
+  set type(value) {
+    set(this, "panel.model.type", value);
+  }
+
+  @computed("panel.model.topic")
+  get topic() {
+    return this.panel?.model?.topic;
+  }
+
+  set topic(value) {
+    set(this, "panel.model.topic", value);
+  }
+
+  @computed("panel.model.topic.category.read_restricted")
+  get privateCategory() {
+    return this.panel?.model?.topic?.category?.read_restricted;
+  }
+
+  set privateCategory(value) {
+    set(this, "panel.model.topic.category.read_restricted", value);
+  }
+
+  @computed("topic.{isPrivateMessage,invisible,category}")
+  get sources() {
     const privateContext =
       this.siteSettings.login_required ||
-      (topic && topic.isPrivateMessage) ||
-      (topic && topic.invisible) ||
+      (this.topic && this.topic?.isPrivateMessage) ||
+      (this.topic && this.topic?.invisible) ||
       this.privateCategory;
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   }
 
-  @discourseComputed("type", "topic.title")
-  shareTitle(type, topicTitle) {
-    topicTitle = escapeExpression(topicTitle);
+  @computed("type", "topic.title")
+  get shareTitle() {
+    const topicTitle = escapeExpression(this.topic?.title);
     return i18n("share.topic_html", { topicTitle });
   }
 
-  @discourseComputed("panel.model.shareUrl", "topic.shareUrl")
-  shareUrl(forcedShareUrl, shareUrl) {
-    shareUrl = forcedShareUrl || shareUrl;
+  @computed("panel.model.shareUrl", "topic.shareUrl")
+  get shareUrl() {
+    let shareUrl = this.panel?.model?.shareUrl || this.topic?.shareUrl;
 
     if (isEmpty(shareUrl)) {
       return;
@@ -74,7 +95,7 @@ export default class SharePanel extends Component {
 
   <template>
     <div class="header">
-      <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
+      <h3 class="title">{{trustHTML this.shareTitle}}</h3>
     </div>
 
     <div class="body">

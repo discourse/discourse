@@ -13,10 +13,7 @@ RSpec.describe Admin::EmailTemplatesController do
   let(:original_body) { original_text("user_notifications.admin_login.text_body_template") }
   let(:headers) { { ACCEPT: "application/json" } }
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -55,6 +52,39 @@ RSpec.describe Admin::EmailTemplatesController do
         templates = response.parsed_body["email_templates"]
         template = templates.find { |t| t["id"] == "user_notifications.admin_login" }
         expect(template["can_revert"]).to eq(false)
+      end
+
+      it "returns interpolation_keys for each email template" do
+        get "/admin/email/templates.json"
+        expect(response.status).to eq(200)
+
+        templates = response.parsed_body["email_templates"]
+        template = templates.find { |t| t["id"] == "user_notifications.admin_login" }
+
+        expect(template["interpolation_keys"]).to eq(
+          %w[base_url email_prefix email_token site_name],
+        )
+      end
+
+      it "returns interpolation_keys from body when subject is pluralized" do
+        get "/admin/email/templates.json"
+        expect(response.status).to eq(200)
+
+        templates = response.parsed_body["email_templates"]
+        template = templates.find { |t| t["id"] == "system_messages.pending_users_reminder" }
+
+        expect(template["interpolation_keys"]).to eq(%w[base_url])
+      end
+
+      it "returns empty interpolation_keys for templates without any keys" do
+        get "/admin/email/templates.json"
+        expect(response.status).to eq(200)
+
+        templates = response.parsed_body["email_templates"]
+        template =
+          templates.find { |t| t["id"] == "system_messages.download_remote_images_disabled" }
+
+        expect(template["interpolation_keys"]).to eq([])
       end
 
       it "includes custom email template keys added via modifier" do
@@ -230,6 +260,25 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
+              )
+            }",
+          ]
+        end
+
+        include_examples "invalid email template"
+      end
+
+      context "when body contains malformed interpolation keys" do
+        let(:email_subject) { "%{email_prefix} Foo" }
+        let(:email_body) { "Hello %{user.username}" }
+
+        let(:expected_errors) do
+          [
+            "<b>Body</b>: #{
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "user.username",
                 count: 1,
               )
             }",
@@ -475,10 +524,12 @@ RSpec.describe Admin::EmailTemplatesController do
   end
 
   describe ".email_keys" do
-    it "returns a list that contains all the email templates in the server.en.yml file" do
-      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(
-        *EmailTemplatesFinder.list,
-      )
+    it "returns all email templates except security-restricted ones" do
+      expected_keys =
+        EmailTemplatesFinder.list.reject do |key|
+          Admin::EmailTemplatesController.restricted_key?(key)
+        end
+      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(*expected_keys)
     end
   end
 end

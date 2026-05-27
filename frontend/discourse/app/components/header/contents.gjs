@@ -4,6 +4,7 @@ import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { i18n } from "discourse-i18n";
 import PluginOutlet from "../plugin-outlet";
 import HeaderSearch from "./header-search";
 import HomeLogo from "./home-logo";
@@ -76,7 +77,6 @@ export default class Contents extends Component {
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            dropFrom="3.4.0"
             silence="discourse.header-service-topic"
           )
         }}
@@ -118,13 +118,16 @@ export default class Contents extends Component {
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              dropFrom="3.4.0"
               silence="discourse.header-service-topic"
             )
           }}
         />
       </div>
-      <div class="panel" role="navigation">{{yield}}</div>
+      <div
+        class="panel"
+        role="navigation"
+        aria-label={{i18n "header_panel"}}
+      >{{yield}}</div>
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @name="after-header-panel"
@@ -138,7 +141,6 @@ export default class Contents extends Component {
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              dropFrom="3.4.0"
               silence="discourse.header-service-topic"
             )
           }}
@@ -156,7 +158,6 @@ export default class Contents extends Component {
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            dropFrom="3.4.0"
             silence="discourse.header-service-topic"
           )
         }}

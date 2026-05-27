@@ -1,9 +1,10 @@
 .form-kit__control-radio-label {
   display: flex;
   gap: 0.5em;
-  font-weight: normal !important;
+  font-weight: 500 !important;
   margin: 0;
   color: var(--primary);
+  font-size: var(--font-down-1-rem);
 
   .form-kit__field[data-disabled] & {
     cursor: not-allowed;

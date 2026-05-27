@@ -5,17 +5,16 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trustHTML } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -29,10 +28,13 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-persona-llm-selector";
+import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
 
+@tagName("")
 export default class AiBotConversations extends Component {
   @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
@@ -44,7 +46,10 @@ export default class AiBotConversations extends Component {
 
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
-  @tracked uploads = new TrackedArray();
+  @tracked uploads = trackedArray();
+
+  shiftHeldOnEnter = false;
+
   // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
@@ -58,7 +63,7 @@ export default class AiBotConversations extends Component {
 
     const instance = this.tooltip.register(element, {
       identifier: "ai-credit-limit-tooltip",
-      content: htmlSafe(
+      content: trustHTML(
         this.aiCredits.getCreditLimitMessage(this.creditStatus)
       ),
       placement: "top",
@@ -170,12 +175,12 @@ export default class AiBotConversations extends Component {
   }
 
   @action
-  async setPersonaId(id) {
-    this.aiBotConversationsHiddenSubmit.personaId = id;
-    // Only check persona credits if no LLM is explicitly selected
-    // (e.g., when persona has force_default_llm)
+  async setAgentId(id) {
+    this.aiBotConversationsHiddenSubmit.agentId = id;
+    // Only check agent credits if no LLM is explicitly selected
+    // (e.g., when agent has force_default_llm)
     if (!this.selectedLlmId) {
-      await this.#checkCreditStatus(id, "persona");
+      await this.#checkCreditStatus(id, "agent");
     }
   }
 
@@ -195,8 +200,8 @@ export default class AiBotConversations extends Component {
 
     try {
       this.creditStatus =
-        type === "persona"
-          ? await this.aiCredits.getPersonaCreditStatus(id)
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
           : await this.aiCredits.getLlmModelCreditStatus(id);
     } catch {
       // Fail open - allow usage if credit check fails
@@ -221,9 +226,24 @@ export default class AiBotConversations extends Component {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey) {
-      this.prepareAndSubmitToBot();
+    if (event.key === "Enter") {
+      this.shiftHeldOnEnter = event.shiftKey;
     }
+  }
+
+  @action
+  handleBeforeInput(event) {
+    // Real Enter on a textarea inserts a line break; IME-confirming Enter
+    // inserts composition text. Reading inputType is deterministic across
+    // browsers regardless of compositionend/keydown ordering quirks.
+    const shiftHeld = this.shiftHeldOnEnter;
+    this.shiftHeldOnEnter = false;
+    if (event.inputType !== "insertLineBreak" || shiftHeld) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.prepareAndSubmitToBot();
   }
 
   @action
@@ -251,7 +271,7 @@ export default class AiBotConversations extends Component {
     }
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -293,7 +313,7 @@ export default class AiBotConversations extends Component {
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -328,7 +348,7 @@ export default class AiBotConversations extends Component {
 
   @action
   removeUpload(upload) {
-    this.uploads = new TrackedArray(this.uploads.filter((u) => u !== upload));
+    this.uploads = trackedArray(this.uploads.filter((u) => u !== upload));
   }
 
   @action
@@ -345,7 +365,7 @@ export default class AiBotConversations extends Component {
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
-      this.uploads = new TrackedArray();
+      this.uploads = trackedArray();
     } catch (error) {
       popupAjaxError(error);
     }
@@ -367,14 +387,14 @@ export default class AiBotConversations extends Component {
   }
 
   <template>
-    <div class="ai-bot-conversations">
+    <div class="ai-bot-conversations" ...attributes>
       {{bodyClass "ai-bot-conversations-page"}}
-      <AiPersonaLlmSelector
+      <AiAgentLlmSelector
         @showLabels={{true}}
-        @setPersonaId={{this.setPersonaId}}
+        @setAgentId={{this.setAgentId}}
         @setLlmId={{this.setLlmId}}
         @setTargetRecipient={{this.setTargetRecipient}}
-        @personaName={{@controller.persona}}
+        @agentName={{@controller.agent}}
         @llmName={{@controller.llm}}
       />
 
@@ -392,7 +412,7 @@ export default class AiBotConversations extends Component {
 
         <div
           {{this.creditLimitTooltipModifier}}
-          class={{concatClass
+          class={{dConcatClass
             "ai-bot-conversations__input-wrapper"
             (if this.isSubmitDisabled "--disabled")
           }}
@@ -408,6 +428,7 @@ export default class AiBotConversations extends Component {
             {{didInsert this.setTextArea}}
             {{on "input" this.updateInputValue}}
             {{on "keydown" this.handleKeyDown}}
+            {{on "beforeinput" this.handleBeforeInput}}
             id="ai-bot-conversations-input"
             autofocus={{unless this.isSubmitDisabled "true"}}
             placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}

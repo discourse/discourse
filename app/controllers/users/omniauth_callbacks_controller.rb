@@ -105,7 +105,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].index_by { _1 }
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat unauthorized].index_by { it }
 
   def failure
     error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
@@ -113,7 +113,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if error == "generic"
       provider_name = params[:provider].presence || params[:strategy].presence
-      provider = Discourse.enabled_authenticators.find { _1.name == provider_name }&.display_name
+      provider = Discourse.enabled_authenticators.find { it.name == provider_name }&.display_name
 
       if provider.blank? && Discourse.enabled_authenticators.one?
         provider = Discourse.enabled_authenticators[0].display_name
@@ -122,7 +122,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       error = provider.present? ? "generic_with_provider" : "generic_without_provider"
     end
 
-    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:).html_safe
+    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:)
 
     render "failure"
   end
@@ -140,7 +140,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   protected
 
   def render_auth_result_failure
-    flash[:error] = @auth_result.failed_reason.html_safe
+    flash[:error] = @auth_result.failed_reason
     render "failure"
   end
 
@@ -158,8 +158,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     if SiteSetting.invite_only?
       path = Discourse.route_for(@origin)
       return true unless path
-      return true if path[:controller] != "invites" && path[:action] != "show"
-      !Invite.exists?(invite_key: path[:id])
+      return true if path[:controller] != "invites" || path[:action] != "show"
+      !Invite.find_by(invite_key: path[:id])&.redeemable?
     end
   end
 
@@ -206,7 +206,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         return
       end
 
-      log_on_user(user, { authenticated_with_oauth: true })
+      log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       server_session.delete(:authentication) # don't carry around old auth info
       @auth_result.authenticated = true

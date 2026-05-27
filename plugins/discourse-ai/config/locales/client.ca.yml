@@ -34,15 +34,18 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      llm_selector:
+        none: "Cap"
       features:
-        back: "Enrere"
         disabled: "(desactivat)"
         groups: "Grups:"
         no_groups: "Cap"
-        edit: "Edita"
+        edit: "Configuració"
         expand_list:
           one: "(%{count} més)"
           other: "(%{count} més)"
+        nav:
+          enabled: "Activat"
         filters:
           all: "Tots"
           reset: "Restableix"
@@ -78,10 +81,10 @@ ca:
         summary: "Resum"
         username: "Nom d'usuari "
         total_requests: "Total de peticions"
+        total: "Total"
         periods:
           last_day: "Últimes 24 hores"
-      ai_persona:
-        back: "Enrere"
+      ai_agent:
         name: "Nom"
         edit: "Edita"
         export: "Exporta"
@@ -102,7 +105,6 @@ ca:
           title: "Càrregues"
           uploading: "Carregant..."
       tools:
-        back: "Enrere"
         export: "Exporta"
         import: "Importa"
         name: "Nom"
@@ -112,13 +114,34 @@ ca:
         remove_parameter: "Elimina"
         parameter_required: "Necessari"
         edit: "Edita"
+        test: "Test"
         delete: "Suprimeix"
+      secrets:
+        short_title: "Credencials"
+        name: "Nom"
+        secret: "Valor"
+        save: "Desa"
+        edit: "Edita"
+        delete: "Suprimeix"
+        embedding: "Incrustant"
+      mcp_servers:
+        name: "Nom"
+        description: "Descripció"
+        url: "URL"
+        oauth_statuses:
+          connected: "Connectat"
+        oauth_connect: "Connecta"
+        enabled: "Activat"
+        save: "Desa"
+        edit: "Edita"
+        delete: "Suprimeix"
+        tools_modal:
+          required: "Necessari"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
         save: "Desa"
         edit: "Edita"
-        back: "Enrere"
         delete: Suprimeix
         quotas:
           group: "Grup"
@@ -143,10 +166,11 @@ ca:
           copy: "Còpia"
           copied: "Copiat!"
           cancel: "Cancel·la"
+        thumbnail_suggestions:
+          try_again: "Torna-ho a intentar"
         image_caption:
           save_caption: "Desa"
       embeddings:
-        back: "Enrere"
         save: "Desa"
         delete: "Suprimeix"
         edit: "Edita"

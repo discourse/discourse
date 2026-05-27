@@ -20,3 +20,9 @@ ja:
       other: "%{count} 票が移動されました。"
     duplicated_votes:
       other: "ユーザーが別のトピックに投票済みであるため、%{count} 票を移動できませんでした。"
+    filter:
+      description:
+        topic_votes_min: "トピックの最低投票数"
+        topic_votes_max: "トピックの最大投票数"
+        order_topic_votes: "投票数の多い順にトピックを並べ替えます"
+        order_topic_votes_asc: "投票数の少ない順にトピックを並べ替えます"

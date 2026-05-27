@@ -1,30 +1,34 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import { API_KEY_SCOPE_MODES } from "discourse/admin/lib/constants";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { clipboardCopy } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service modal;
   @service store;
+  @service toasts;
 
   @tracked username;
   @tracked loadingScopes = false;
   @tracked scopes = null;
 
   @tracked generatedApiKey = null;
+  @tracked createdKeyData = null;
 
   userModes = [
     { id: "all", name: i18n("admin.api.all_users") },
@@ -98,9 +102,30 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     try {
       const result = await this.store.createRecord("api-key").save(payload);
       this.generatedApiKey = result.payload.key;
+      this.createdKeyData = {
+        description: data.description,
+        scopeMode: data.scope_mode,
+        scopes:
+          data.scope_mode === "granular"
+            ? this.#selectedScopes(data.scopes)
+            : null,
+      };
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  get scopeModeLabel() {
+    return i18n(`admin.api.scopes.${this.createdKeyData.scopeMode}`);
+  }
+
+  @action
+  async copyApiKey() {
+    await clipboardCopy(this.generatedApiKey);
+    this.toasts.success({
+      data: { message: i18n("admin.api_keys.key_copied_to_clipboard") },
+      duration: "short",
+    });
   }
 
   #selectedScopes(scopes) {
@@ -170,7 +195,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
   @action
   scopesDataKeys(scopesData) {
-    return Object.keys(scopesData);
+    return Object.keys(scopesData).sort();
   }
 
   <template>
@@ -180,15 +205,70 @@ export default class AdminConfigAreasApiKeysNew extends Component {
       <div class="admin-config-area__primary-content">
         <div class="admin-config-area-card">
           {{#if this.generatedApiKey}}
-            <div>{{i18n "admin.api.not_shown_again"}}</div>
-            <div class="generated-api-key">{{this.generatedApiKey}}</div>
-            <DButton
-              @route="adminApiKeys.index"
-              @label="admin.api_keys.continue"
-              class="continue btn-danger"
-            />
+            <div class="generated-api-key-container">
+              <div class="alert alert-warning">
+                {{dIcon "triangle-exclamation"}}
+                <span>{{i18n "admin.api.not_shown_again"}}</span>
+              </div>
+
+              {{#if this.createdKeyData}}
+                <div class="generated-api-key__details">
+                  {{#if this.createdKeyData.description}}
+                    <div class="generated-api-key__detail-row">
+                      <span class="generated-api-key__label">{{i18n
+                          "admin.api.description"
+                        }}</span>
+                      <span>{{this.createdKeyData.description}}</span>
+                    </div>
+                  {{/if}}
+                  <div class="generated-api-key__detail-row">
+                    <span class="generated-api-key__label">{{i18n
+                        "admin.api.scope_mode"
+                      }}</span>
+                    <span>{{this.scopeModeLabel}}</span>
+                  </div>
+                  {{#if this.createdKeyData.scopes}}
+                    <div class="generated-api-key__detail-row">
+                      <span class="generated-api-key__label">{{i18n
+                          "admin.api.scopes.title"
+                        }}</span>
+                      <span class="generated-api-key__scope-badges">
+                        {{#each this.createdKeyData.scopes as |scope|}}
+                          <span class="generated-api-key__scope-badge">
+                            {{scope.scope_id}}
+                            {{#each scope.params as |paramName|}}
+                              {{#if (get scope paramName)}}
+                                <span
+                                  class="generated-api-key__scope-param"
+                                >({{paramName}}: {{get scope paramName}})</span>
+                              {{/if}}
+                            {{/each}}
+                          </span>
+                        {{/each}}
+                      </span>
+                    </div>
+                  {{/if}}
+                </div>
+              {{/if}}
+
+              <div class="generated-api-key__key-row">
+                <code class="generated-api-key">{{this.generatedApiKey}}</code>
+                <DButton
+                  @action={{this.copyApiKey}}
+                  @icon="copy"
+                  @label="admin.api_keys.copy_key"
+                  class="btn-default generated-api-key__copy-btn"
+                />
+              </div>
+
+              <DButton
+                @route="adminApiKeys.index"
+                @label="admin.api_keys.continue"
+                class="continue btn-default"
+              />
+            </div>
           {{else}}
-            <ConditionalLoadingSection @isLoading={{this.loadingScopes}}>
+            <DConditionalLoadingSection @isLoading={{this.loadingScopes}}>
               <Form
                 @onSubmit={{this.save}}
                 @data={{this.formData}}
@@ -200,9 +280,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.description"}}
                   @format="large"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
 
                 <form.Field
@@ -210,15 +291,16 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.user_mode"}}
                   @format="large"
                   @validation="required"
+                  @type="select"
                   as |field|
                 >
-                  <field.Select as |select|>
+                  <field.Control as |select|>
                     {{#each this.userModes as |userMode|}}
                       <select.Option
                         @value={{userMode.id}}
                       >{{userMode.name}}</select.Option>
                     {{/each}}
-                  </field.Select>
+                  </field.Control>
                 </form.Field>
 
                 {{#if (eq transientData.user_mode "single")}}
@@ -227,9 +309,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     @title={{i18n "admin.api.user"}}
                     @format="large"
                     @validation="required"
+                    @type="custom"
                     as |field|
                   >
-                    <field.Custom>
+                    <field.Control>
                       <EmailGroupUserChooser
                         @value={{this.username}}
                         @onChange={{fn this.updateUsername field}}
@@ -238,7 +321,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                           filterPlaceholder="admin.api.user_placeholder"
                         }}
                       />
-                    </field.Custom>
+                    </field.Control>
                   </form.Field>
                 {{/if}}
 
@@ -247,15 +330,16 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   @title={{i18n "admin.api.scope_mode"}}
                   @format="large"
                   @validation="required"
+                  @type="select"
                   as |field|
                 >
-                  <field.Select as |select|>
+                  <field.Control as |select|>
                     {{#each this.scopeModes as |scopeMode|}}
                       <select.Option
                         @value={{scopeMode.id}}
                       >{{scopeMode.name}}</select.Option>
                     {{/each}}
-                  </field.Select>
+                  </field.Control>
                 </form.Field>
 
                 {{#if (eq transientData.scope_mode "granular")}}
@@ -305,9 +389,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       collectionData.key
                                     )
                                   }}
+                                  @type="checkbox"
                                   as |field|
                                 >
-                                  <field.Checkbox />
+                                  <field.Control />
                                 </topicsCollection.Field>
                               </td>
                               <td>
@@ -333,9 +418,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                       @name={{name}}
                                       @title={{name}}
                                       @showTitle={{false}}
+                                      @type="input"
                                       as |field|
                                     >
-                                      <field.Input placeholder={{name}} />
+                                      <field.Control placeholder={{name}} />
                                     </paramsObject.Field>
                                   {{/each}}
                                 </topicsCollection.Object>
@@ -357,7 +443,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                   />
                 </form.Actions>
               </Form>
-            </ConditionalLoadingSection>
+            </DConditionalLoadingSection>
           {{/if}}
         </div>
       </div>

@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ShareModal extends Component {
@@ -29,7 +29,7 @@ export default class ShareModal extends Component {
       context.push(`<p><b>${post.username}:</b></p>`);
       context.push(post.cooked);
     });
-    return htmlSafe(context.join("\n"));
+    return trustHTML(context.join("\n"));
   }
 
   async generateShareURL() {
@@ -123,14 +123,14 @@ export default class ShareModal extends Component {
       @closeModal={{@closeModal}}
     >
       <:body>
-        {{! template-lint-disable no-invalid-interactive }}
+        {{! eslint-disable ember/template-no-invalid-interactive }}
         <div
           class="ai-share-full-topic-modal__body"
           {{on "click" this.maybeCopyEmbed}}
         >
           {{this.htmlContext}}
         </div>
-        {{! template-lint-enable}}
+        {{! eslint-enable }}
       </:body>
 
       <:footer>

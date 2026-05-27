@@ -45,7 +45,8 @@ TopicStatusUpdater =
         result = false if rc == 0
       end
 
-      DiscourseEvent.trigger(:topic_closed, topic) if status.manually_closing_topic?
+      DiscourseEvent.trigger(:topic_closed, topic, :manually) if status.manually_closing_topic?
+      DiscourseEvent.trigger(:topic_closed, topic, :automatically) if status.auto_closing_topic?
 
       if status.visible? && status.disabled?
         UserProfile.remove_featured_topic_from_all_profiles(topic)
@@ -57,6 +58,17 @@ TopicStatusUpdater =
           status.enabled? ? :increment! : :decrement!,
           topic.first_post,
         )
+
+        # Notify tracking state when topic visibility changes
+        # This handles the case where a topic is hidden due to flagging
+        # or made visible again after review
+        if SiteSetting.experimental_topic_category_change_notification
+          if status.enabled?
+            TopicTrackingState.publish_recover(topic)
+          else
+            TopicTrackingState.publish_delete(topic)
+          end
+        end
       end
 
       if status.visible?
@@ -78,12 +90,12 @@ TopicStatusUpdater =
       # remove featured topics if we close/archive/make them invisible. Previously we used
       # to run the whole featuring logic but that could be very slow and have concurrency
       # errors on large sites with many autocloses and topics being created.
-      if (
-           (status.enabled? && (status.autoclosed? || status.closed? || status.archived?)) ||
-             (status.disabled? && status.visible?)
-         )
+      if (status.enabled? && (status.autoclosed? || status.closed? || status.archived?)) ||
+           (status.disabled? && status.visible?)
         CategoryFeaturedTopic.where(topic_id: topic.id).delete_all
       end
+
+      TopicHotScore.where(topic_id: topic.id).delete_all if status.visible? && status.disabled?
 
       result
     end
@@ -188,6 +200,10 @@ TopicStatusUpdater =
 
         def closing_topic?
           (closed? || autoclosed?) && enabled?
+        end
+
+        def auto_closing_topic?
+          autoclosed? && enabled?
         end
 
         def manually_closing_topic?

@@ -59,8 +59,6 @@ ur:
           title: "نیویگیشن اَن٘بار"
         categories_list:
           title: "اقسام کی فہرست"
-        topic_link:
-          title: "موضوع کا رابطہ"
         topic_list_item:
           title: "موضوعات کی فہرست میں ایک شے"
         topic_statuses:
@@ -69,8 +67,6 @@ ur:
           title: "موضوعات کی فہرست"
         basic_topic_list:
           title: "بنیادی موضوعات کی فہرست"
-        footer_message:
-          title: "اختتامی پیغام"
         signup_cta:
           title: "سائن اپ سی ٹی اے"
         topic_timer_info:

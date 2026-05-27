@@ -10,23 +10,23 @@ module PageObjects
         self
       end
 
-      def toggle_configured
+      def toggle_enabled
         select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-select")
-        select.find("option[value='configured']").select_option
+        select.find("option[value='enabled']").select_option
       end
 
-      def toggle_unconfigured
+      def toggle_not_enabled
         select = page.find("#{FEATURES_PAGE} .ai-features__controls .d-select")
-        select.find("option[value='unconfigured']").select_option
+        select.find("option[value='not enabled']").select_option
       end
 
       def has_listed_modules?(count)
         page.has_css?("#{FEATURES_PAGE} .ai-module", count: count)
       end
 
-      def has_feature_persona?(feature_name, name)
+      def has_feature_agent?(feature_name, name)
         page.has_css?(
-          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__persona-link",
+          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__agent-link",
           text: name,
         )
       end

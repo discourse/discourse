@@ -174,6 +174,41 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
   end
 
+  def minimal_pdf_content
+    <<~PDF
+      %PDF-1.4
+      1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+      2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+      3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+      4 0 obj<< /Length 44 >>stream
+      BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+      endstream
+      endobj
+      xref
+      0 5
+      0000000000 65535 f
+      0000000010 00000 n
+      0000000060 00000 n
+      0000000111 00000 n
+      0000000200 00000 n
+      trailer<< /Size 5 /Root 1 0 R >>
+      startxref
+      268
+      %%EOF
+    PDF
+  end
+
+  def build_pdf_upload
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(minimal_pdf_content)
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
+  end
+
   before { enable_current_plugin }
 
   describe "max tokens for reasoning models" do
@@ -534,6 +569,9 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
   describe "image support" do
     it "can handle images" do
       model = Fabricate(:llm_model, vision_enabled: true)
+      model.update!(allowed_attachment_types: %w[pdf])
+      model.reload
+      expect(model.allowed_attachment_types).to eq(%w[pdf])
       llm = DiscourseAi::Completions::Llm.proxy(model)
       prompt =
         DiscourseAi::Completions::Prompt.new(
@@ -568,6 +606,57 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
                 type: "image_url",
                 image_url: {
                   url: "data:#{encoded[0][:mime_type]};base64,#{encoded[0][:base64]}",
+                },
+              },
+            ],
+            name: "user1",
+          },
+        ],
+      }
+      expect(parsed_body).to eq(expected_body)
+    end
+
+    it "can handle pdf documents via input_file nodes" do
+      model = Fabricate(:llm_model, vision_enabled: true)
+      model.update!(allowed_attachment_types: %w[pdf])
+      llm = DiscourseAi::Completions::Llm.proxy(model)
+
+      pdf_upload = build_pdf_upload
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are pdf bot",
+          messages: [type: :user, id: "user1", content: ["hello", { upload_id: pdf_upload.id }]],
+        )
+
+      encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+      parsed_body = nil
+
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [message: { content: "thanks" }] }.to_json)
+
+      completion = llm.generate(prompt, user: user)
+
+      expect(completion).to eq("thanks")
+      expected_body = {
+        model: "gpt-4-turbo",
+        messages: [
+          { role: "system", content: "You are pdf bot" },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: "hello" },
+              {
+                type: "file",
+                file: {
+                  filename: "document.pdf",
+                  file_data: "data:#{encoded[0][:mime_type]};base64,#{encoded[0][:base64]}",
                 },
               },
             ],
@@ -1022,24 +1111,6 @@ TEXT
     let(:prompt) { compliance.generic_prompt }
     let(:dialect) { compliance.dialect(prompt: prompt) }
 
-    it "uses reasoning object format for responses API" do
-      model.update!(provider_params: { enable_responses_api: true, reasoning_effort: "minimal" })
-
-      parsed_body = nil
-      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
-        body:
-          proc do |req_body|
-            parsed_body = JSON.parse(req_body, symbolize_names: true)
-            true
-          end,
-      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
-
-      endpoint.perform_completion!(dialect, user)
-
-      expect(parsed_body[:reasoning]).to include(effort: "minimal", summary: "auto")
-      expect(parsed_body).not_to have_key(:reasoning_effort)
-    end
-
     it "uses reasoning_effort field for standard API" do
       model.update!(provider_params: { reasoning_effort: "low" })
 
@@ -1058,6 +1129,59 @@ TEXT
       expect(parsed_body).not_to have_key(:reasoning)
     end
 
+    it "accepts none as reasoning_effort" do
+      model.update!(provider_params: { reasoning_effort: "none" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("none")
+    end
+
+    it "accepts xhigh as reasoning_effort" do
+      model.update!(provider_params: { reasoning_effort: "xhigh" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("xhigh")
+    end
+
+    it "strips temperature and top_p when reasoning_effort is set" do
+      model.update!(provider_params: { reasoning_effort: "low" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { temperature: 0.7, top_p: 0.9 })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+      expect(parsed_body).not_to have_key(:temperature)
+      expect(parsed_body).not_to have_key(:top_p)
+    end
+
     it "omits reasoning parameters when not configured" do
       parsed_body = nil
       stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
@@ -1072,6 +1196,121 @@ TEXT
 
       expect(parsed_body).not_to have_key(:reasoning)
       expect(parsed_body).not_to have_key(:reasoning_effort)
+    end
+  end
+
+  describe "service_tier payload" do
+    let(:prompt) { compliance.generic_prompt }
+    let(:dialect) { compliance.dialect(prompt: prompt) }
+
+    it "includes service_tier when set to auto" do
+      model.update!(provider_params: { service_tier: "auto" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("auto")
+    end
+
+    it "includes service_tier when set to flex" do
+      model.update!(provider_params: { service_tier: "flex" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("flex")
+    end
+
+    it "includes service_tier when set to priority" do
+      model.update!(provider_params: { service_tier: "priority" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("priority")
+    end
+
+    it "omits service_tier when set to default" do
+      model.update!(provider_params: { service_tier: "default" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body).not_to have_key(:service_tier)
+    end
+
+    it "omits service_tier when not configured" do
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body).not_to have_key(:service_tier)
+    end
+
+    it "includes service_tier for azure provider" do
+      model.update!(
+        provider: "azure",
+        url:
+          "https://test.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview",
+        provider_params: {
+          service_tier: "priority",
+        },
+      )
+
+      parsed_body = nil
+      stub_request(
+        :post,
+        "https://test.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview",
+      ).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("priority")
     end
   end
 end

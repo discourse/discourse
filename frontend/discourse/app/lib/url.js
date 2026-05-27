@@ -1,9 +1,10 @@
-/* eslint-disable ember/no-private-routing-service */
+/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
@@ -14,6 +15,7 @@ import Session from "discourse/models/session";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
+const NESTED_URL_REGEXP = /^\/n\/([^\/]+)\/(\d+)(?:\/(\d+))?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
@@ -33,6 +35,14 @@ const SERVER_SIDE_ONLY = [
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
+  /^\/safe-mode/,
+  /^\/dev-mode/,
+  /^\/theme-qunit/,
+  /^\/llms\.txt$/,
+  /^\/robots\.txt$/,
+  /^\/offline\.html$/,
+  /^\/manifest\.webmanifest$/,
+  /^\/opensearch\.xml$/,
 ];
 
 // The amount of height (in pixels) that we factor in when jumpEnd is called so
@@ -116,9 +126,19 @@ class DiscourseURL extends EmberObject {
       if (opts.anchor) {
         selector = `#main #${opts.anchor}, a[name=${opts.anchor}]`;
         holder = document.querySelector(selector);
+
+        if (!holder) {
+          // Anchor not found — post may be cloaked. Scroll to the post
+          // placeholder to trigger uncloaking, then let LockOn retry
+          // until the anchor element appears in the rendered content.
+          const postHolder = document.querySelector(holderId);
+          if (postHolder) {
+            postHolder.scrollIntoView(true);
+          }
+        }
       }
 
-      if (!holder) {
+      if (!holder && !opts.anchor) {
         selector = holderId;
         holder = document.querySelector(selector);
       }
@@ -210,6 +230,23 @@ class DiscourseURL extends EmberObject {
       return;
     }
 
+    // In embed mode, open all navigation in new tabs except same-topic navigation
+    if (EmbedMode.enabled) {
+      const currentTopicMatch = TOPIC_URL_REGEXP.exec(window.location.pathname);
+      const currentTopicId = currentTopicMatch ? currentTopicMatch[2] : null;
+      const newTopicMatch = TOPIC_URL_REGEXP.exec(path);
+      const newTopicId = newTopicMatch ? newTopicMatch[2] : null;
+
+      // Allow same-topic navigation (scrolling to different posts)
+      if (currentTopicId && newTopicId && currentTopicId === newTopicId) {
+        // Continue with normal routing for same-topic navigation
+      } else {
+        // Open in new tab for all other navigation
+        window.open(getURL(path), "_blank");
+        return;
+      }
+    }
+
     if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
       return this.redirectTo(path);
     }
@@ -220,7 +257,10 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some((r) => pathname.match(r));
+    const pathnameWithoutPrefix = withoutPrefix(pathname);
+    const serverSide = SERVER_SIDE_ONLY.some((r) =>
+      pathnameWithoutPrefix.match(r)
+    );
     if (serverSide) {
       this.redirectTo(path);
       return;
@@ -250,6 +290,14 @@ class DiscourseURL extends EmberObject {
       return;
     }
 
+    if (oldPath === path && NESTED_URL_REGEXP.test(path)) {
+      // The nested context view caches its scroll target in the
+      // component's lifecycle, so a plain refresh() wouldn't re-trigger
+      // it. Fire an event the view listens for instead.
+      this.appEvents.trigger("nested:scroll-to-target");
+      return;
+    }
+
     if (oldPath === path || this.refreshedHomepage(oldPath, path)) {
       // If navigating to the same path, refresh the route
       this.routerService.refresh();
@@ -271,12 +319,16 @@ class DiscourseURL extends EmberObject {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   }
 
-  redirectAbsolute(url) {
+  redirectAbsolute(url, { replace = false } = {}) {
     // Redirects will kill a test runner
     if (isTesting()) {
       return true;
     }
-    window.location = url;
+    if (replace) {
+      window.location.replace(url);
+    } else {
+      window.location = url;
+    }
     return true;
   }
 
@@ -321,7 +373,7 @@ class DiscourseURL extends EmberObject {
 
     const internalPath = url.replace(this.origin, "");
 
-    return internalPath.startsWith("/t/");
+    return internalPath.startsWith("/t/") || internalPath.startsWith("/n/");
   }
 
   /**
@@ -503,7 +555,12 @@ export function prefixProtocol(url) {
     return `https:${url}`;
   }
 
-  if (url.startsWith("/") || url.includes("://") || url.startsWith("mailto:")) {
+  if (
+    url.startsWith("/") ||
+    url.includes("://") ||
+    url.startsWith("mailto:") ||
+    url.startsWith("#")
+  ) {
     return url;
   }
 
@@ -515,21 +572,23 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (category.default_list_filter === "none" && subcategories) {
-      if (subcategories) {
-        url += "/all";
-      } else {
-        url += "/none";
-      }
-    } else if (!subcategories) {
+    if (!subcategories) {
       url += "/none";
+    } else if (category.default_list_filter === "none") {
+      url += "/all";
     }
   }
 
   if (tag) {
-    url = url
-      ? "/tags" + url + "/" + tag.toLowerCase()
-      : "/tag/" + tag.toLowerCase();
+    // tag can be string "none" (special filter) or object with {id, name, slug}.
+    // A Tag model with a null id also represents the "no tags" filter — handle
+    // it the same as the string form so we don't produce ".../none/null" URLs.
+    const isString = typeof tag === "string";
+    const slug = isString ? tag : tag.slug;
+    const id = isString ? null : tag.id;
+
+    const prefix = url ? `/tags${url}` : "/tag";
+    url = id ? `${prefix}/${slug}/${id}` : `${prefix}/${slug}`;
   }
 
   return getURL(url || "/");
