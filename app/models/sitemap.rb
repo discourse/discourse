@@ -41,19 +41,15 @@ class Sitemap < ActiveRecord::Base
     # we never advertise a URL the controller would refuse to serve without a
     # guardian check.
     def publishable_pages
-      if !SiteSetting.enable_page_publishing? || SiteSetting.secure_uploads
+      if !SiteSetting.enable_page_publishing? || SiteSetting.secure_uploads ||
+           SiteSetting.login_required?
         return PublishedPage.none
       end
 
-      if SiteSetting.login_required? && !SiteSetting.show_published_pages_login_required?
-        return PublishedPage.none
-      end
-
-      public_category_ids = Category.where(read_restricted: false).pluck(:id)
       PublishedPage
         .where(public: true)
-        .joins(:topic)
-        .where(topics: { visible: true, category_id: public_category_ids })
+        .joins(topic: :category)
+        .where(topics: { visible: true }, categories: { read_restricted: false })
     end
 
     def published_pages_sitemap_available?

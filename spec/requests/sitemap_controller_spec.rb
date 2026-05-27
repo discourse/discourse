@@ -160,21 +160,15 @@ RSpec.describe SitemapController do
       expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{page.slug}")
     end
 
-    it "lists pages when published pages are shown with login required" do
-      page = Fabricate(:published_page, public: true, slug: "public-post")
+    it "returns 404 when login_required is enabled" do
+      Fabricate(:published_page, public: true, slug: "public-post")
       SiteSetting.login_required = true
       SiteSetting.show_published_pages_login_required = true
-
-      # The sitemap controller redirects anonymous requests to /login
-      # when login_required is on, regardless of
-      # show_published_pages_login_required. Signing in lets us assert
-      # the publishable_pages filter, which is what this test is for.
       sign_in(Fabricate(:user))
 
-      locs = published_page_locs
+      get "/sitemap_published_pages.xml"
 
-      expect(response.status).to eq(200)
-      expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{page.slug}")
+      expect(response.status).to eq(404)
     end
 
     it "excludes non-public pages" do
@@ -250,12 +244,6 @@ RSpec.describe SitemapController do
       SiteSetting.secure_uploads = true
       get "/sitemap_published_pages.xml"
       expect(response.status).to eq(404)
-
-      # The login_required gate isn't asserted here: it short-circuits
-      # at middleware (302 to /login) before reaching the controller,
-      # so a controller spec isn't the place. Its effect on
-      # publishable_pages is covered directly in the regenerate_sitemaps
-      # spec below.
     end
   end
 
@@ -328,7 +316,7 @@ RSpec.describe SitemapController do
 
       SiteSetting.secure_uploads = false
       SiteSetting.login_required = true
-      SiteSetting.show_published_pages_login_required = false
+      SiteSetting.show_published_pages_login_required = true
       row.update!(enabled: true)
       Sitemap.regenerate_sitemaps
       expect(row.reload.enabled).to eq(false)
