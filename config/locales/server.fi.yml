@@ -1231,6 +1231,30 @@ fi:
       xaxis: "Päivä"
       yaxis: "Uusien kirjoittajien lukumäärä"
       description: "Kuinka moni kirjoitti ensimmäisen viestinsä tällä ajanjaksolla."
+    activity_by_category:
+      labels:
+        category: "Luokka"
+        topics: "Aiheet"
+        posts: "Viestejä"
+        share: "Jaa"
+    posters_by_member_type:
+      labels:
+        count: "Viestejä"
+        share: "Jaa"
+      types:
+        staff: "Henkilökunta"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Luottamustaso"
+        count: "Jäsenet"
+        share: "Jaa"
+      levels:
+        "0": "Uudet"
+        "1": "Haastaja"
+        "2": "Konkari"
+        "3": "Normaali"
+        "4": "Johtaja"
     trust_level_growth:
       title: "Luottamustasojen nousu"
       xaxis:
@@ -1274,9 +1298,8 @@ fi:
     site_traffic:
       title: "Sivuston liikenne"
       xaxis:
-        page_view_anon_browser: "Sivunkatselut (anonyymit)"
-        page_view_logged_in_browser: "Sivunkatselut (kirjautuneet)"
-        page_view_crawler: "Tunnetut hakurobotit"
+        page_view_anon_browser: "Anonyymeja"
+        page_view_crawler: "Hakurobotit"
         page_view_other: "Muu liikenne"
       yaxis: "Päivä"
       description: "Kirjautuneiden käyttäjien, anonyymien käyttäjien, tunnettujen hakurobottien ja muun liikenteen sivunkatselut."
@@ -1391,6 +1414,12 @@ fi:
         num_clicks: "Klikkauksia"
         num_topics: "Ketjuja"
       description: "Käyttäjät järjestettynä sen mukaan, montako kertaa heidän jakamiaan linkkejä on klikattu."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vierailuja"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vierailuja"
     top_traffic_sources:
       title: "Parhaat liikenteen lähteet"
       xaxis: "Verkkotunnus"
@@ -1607,6 +1636,9 @@ fi:
       maxmind_db_configuration: 'Palvelin on määritetty käyttämään MaxMind-tietokantoja käänteisissä IP-hauissa, mutta kelvollista MaxMind-tilin tunnusta ei ole määritetty, mikä saattaa johtaa siihen, että MaxMind-tietokantoja ei voi ladata jatkossa. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Katso tästä oppaasta lisätietoja</a>.'
       admin_sidebar_deprecation: "Vanha ylläpitäjien asettelu on vanhentunut ja korvataan uudella <a href='https://meta.discourse.org/t/-/289281'>sivupalkkiasettelulla</a>. Se poistetaan seuraavassa julkaisuversiossa. Voit <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>määrittää</a> uuden sivupalkkiasettelun nyt ottaaksesi sen käyttöön ennen sitä."
     back_from_logster_text: "Takaisin sivustolle"
+    reports_section:
+      providers:
+        core_report: "Standardi"
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
     disabled: "poistettu käytöstä"
@@ -1766,7 +1798,6 @@ fi:
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua APIa, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Salli valvojien muuttaa viestin omistajuutta"
     cors_origins: "Sallitut alkuperät eri alkuperät sisältäville pyynnöille (CORS). Jokaisen alkuperän täytyy sisältää http:// tai https://. DISCOURSE_ENABLE_CORS-ympäristömuuttuja täytyy olla asetettu todeksi CORSin käyttöönottamiseksi."
-    use_admin_ip_allowlist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blocked_ip_blocks: "Luettelo yksityisistä IP-lohkoista, joita Discourse ei tulisi koskaan indeksoida"
     allowed_internal_hosts: "Luettelo sisäisistä isännistä, joita Discourse voi turvallisesti indeksoida onebox-esikatselua ja muita tarkoituksia varten"
     allowed_onebox_iframes: "Luettelo iframe src -verkkotunnuksista, jotka sallitaan Onebox-upotusten kautta. `*` sallii kaikki Onebox-oletusmoduulit."
@@ -1894,7 +1925,6 @@ fi:
     s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säiliöissä; poista tämän asetuksen valinta vain, jos aiot määrittää käyttöoikeuskäytäntöjä määritetyille s3_upload_bucket- ja s3_backup_bucket-säiliöille."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."
-    backup_location: "Sijainti, johon varmuuskopiot tallennetaan. TÄRKEÄÄ: S3 edelyttää, että kelvolliset S3-tunnistetiedot syötetään tiedostoasetuksissa. Kun muutat tämän S3:ksi Localista, sinun täytyy suorittaa rake-tehtävä \"s3:ensure_cors_rules\"."
     backup_gzip_compression_level_for_uploads: "Gzip-pakkausaste, jota käytetään palvelimeen ladattujen tiedostojen pakkaamiseen."
     include_thumbnails_in_backups: "Sisällytä luodut esikatselukuvat varmuuskopioihin. Käytöstä poistaminen pienentää varmuuskopioita, mutta varmuuskopiopalautuksen yhteydessä kaikki viestit on rakennettava uudelleen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
@@ -2077,7 +2107,6 @@ fi:
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus merkintää poistettaessa."
     auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, jotka eivät täytä \"fast typing threshold\" -rajaa"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
-    auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viestin lähettämiseen hyväksyntäjonoon. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan \"hemmetti\", \"aba\" tai \"aca\". Koskee vain käyttäjän ensimmäistä viestiä. VANHENTUNUT: käytä tämän sijaan tarkkailtujen sanojen hiljennystä."
     reviewable_claiming: "Tarvitseeko arvioitava sisältö omia ennen kuin sen voi käsitellä?"
     reviewable_default_topics: "Oletuksena, näytä arvioitava sisältö ryhmiteltynä ketjuittain"
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
@@ -2194,7 +2223,6 @@ fi:
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
     dont_feed_the_trolls_threshold: "Muiden käyttäjien tekemä ilmoitusmäärä, josta seuraa varoitus."
-    enable_mobile_theme: "Mobiililaitteet käyttävät mobiiliystävällistä teemaa, jonka voi vaihtaa koko sivustoon. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin häntä muistutetaan ketjun dominoinnista."
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     header_dropdown_category_count: "Kuinka monta aluetta näytetään yläpalkin pudotusvalikossa."

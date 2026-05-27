@@ -50,6 +50,8 @@ hu:
           one: "(%{count} további)"
           other: "(%{count} további)"
         collapse_list: "(kevesebb megjelenítése)"
+        nav:
+          enabled: "Bekapcsolva"
         filters:
           all: "Összes"
           reset: "Alaphelyzetbe állítás"

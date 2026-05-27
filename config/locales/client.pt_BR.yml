@@ -358,7 +358,6 @@ pt_BR:
         condition_debugging: "Depuração de condições"
       toggle_safe_mode: "Alternar modo de segurança"
       toggle_verbose_localization: "Alternar localização detalhada"
-      toggle_mobile_view: "Alternar visualização móvel"
       disable_dev_tools: "Desativar ferramentas de desenvolvimento"
     s3:
       regions:
@@ -416,8 +415,6 @@ pt_BR:
     tos: "Termos de Serviço"
     rules: "Regras"
     conduct: "Código de Conduta"
-    mobile_view: "VIsualização Móvel"
-    desktop_view: "Visualização do Desktop"
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
@@ -3441,6 +3438,8 @@ pt_BR:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar apenas postagens novas ou parar de monitorar tópicos"
         also_dismiss_topics: "Parar de monitorar estes tópicos para que eles deixem de aparecer como não lidos para mim"
+        dismiss_new_topics: "Descartar novos tópicos"
+        dismiss_new_replies: "Descartar novas respostas"
         dismiss_new: "Descartar novos"
         dismiss_new_modal:
           title: "Descartar novos"
@@ -4300,7 +4299,6 @@ pt_BR:
         name_placeholder: "Para que serve este favorito?"
         name_input_label: "Adicionar nome aos favoritos"
         set_reminder: "Lembrar"
-        options: "Opções"
         actions:
           delete_bookmark:
             name: "Excluir favorito"
@@ -4962,18 +4960,8 @@ pt_BR:
       staff_info: "Para adicionar restrições, coloque esta etiqueta em um <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as seguintes etiquetas forem usadas, serão substituídas por <b>%{base_tag_name}</b>."
       synonyms_inline: "Estes sinônimos serão substituídos por %{base_tag_name}:"
       save: "Salvar nome e descrição da etiqueta"
-      tag_groups_info:
-        one: 'Esta etiqueta pertence ao grupo: %{tag_groups}.'
-        other: "Esta etiqueta pertence aos grupos: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Esta tag pertence ao grupo "
-        other: "Esta tag pertence a estes grupos: "
-      category_restrictions:
-        one: "Pode ser usada apenas nesta categoria:"
-        other: "Pode ser usada apenas nestas categorias:"
       restricted_to: "Restrito a"
       no_synonyms: "Esta tag não possui sinônimos."
       edit_synonyms: "Editar sinônimos"
@@ -6143,8 +6131,37 @@ pt_BR:
             title: "Tráfego do site"
           engagement:
             title: "Engajamento"
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Postagens"
+              share: "Compartilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Equipe"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nova"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Regular"
+                "4": "Líder"
+              trend:
+                stable: "estável"
+        reports_section:
+          no_data: "Nenhum dado para exibir"
+          modal:
+            enabled_heading: "Ativados"
+            all_heading: "Todos os relatórios"
+            apply: "Aplicar"
+            move_up: "Mover para cima"
+            move_down: "Mover para baixo"
         configure:
           button: "Configurar"
+        site_traffic:
+          series:
+            anonymous: "Anônimo(a)"
+            crawlers: "Rastreadores"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"

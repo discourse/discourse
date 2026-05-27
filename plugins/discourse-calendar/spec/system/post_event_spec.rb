@@ -76,14 +76,71 @@ describe "Post event" do
       visit("/new-topic")
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
-      post_event_form_page.fill_description("foo\nbar").fill_timezone(timezone).submit
+
+      # Toolbar inserts inline; fill the description in the preview editor and
+      # focus out to flush back to raw.
+      composer.preview.find(".composer-event__description-textarea").fill_in(with: "foo\nbar")
+      find(".d-editor-input").click
 
       expect(composer).to have_value <<~EVENT.strip
-        [event start="2025-06-15 14:30" status="public" timezone="#{timezone}"]
+        [event start="2025-06-15 15:00" status="public" timezone="#{timezone}" end="2025-06-15 16:00" reminders="notification.15.minutes"]
         foo
         bar
         [/event]
       EVENT
+    end
+  end
+
+  context "with markdown-mode preview" do
+    it "inserts BBCode inline and renders the compact editor in the preview pane pre-populated" do
+      visit("/new-topic")
+      find(".toolbar-menu__options-trigger").click
+      click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      preview = composer.preview
+      expect(preview).to have_css(".composer-event-node")
+      expect(preview.find(".composer-event__date-input", match: :first).value).not_to(
+        be_empty,
+        "start date should be populated from the inserted BBCode",
+      )
+      expect(composer).to have_value(/\[event /)
+    end
+
+    it "preserves a multi-day end date when toggling all-day on" do
+      visit("/new-topic")
+      composer.fill_title("Multi-day all-day toggle")
+      composer.fill_content <<~MD
+        [event start='2024-06-01 10:00' end='2024-06-03 12:00' timezone='UTC' status='public']
+        [/event]
+      MD
+
+      preview = composer.preview
+      expect(preview).to have_css(".composer-event-node")
+
+      preview.find(".composer-event__all-day-toggle .d-toggle-switch__label").click
+      find(".d-editor-input").click
+
+      expect(composer).to have_value(/start="2024-06-01"/)
+      expect(composer).to have_value(/end="2024-06-03"/)
+    end
+
+    context "when showLocalTime is set and the event crosses midnight relative to the viewer",
+            timezone: "Australia/Brisbane" do
+      it "renders the preview badge in the event timezone, not the viewer's" do
+        # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
+        # so without showLocalTime the viewer would see "Sep 8" in the badge.
+        # With showLocalTime, the preview must stay anchored to the event timezone.
+        visit("/new-topic")
+        composer.fill_title("Local time preview test")
+        composer.fill_content <<~MD
+          [event start='2025-09-07 22:30' timezone='Europe/Paris' showLocalTime='true' status='public']
+          [/event]
+        MD
+
+        preview = composer.preview
+        expect(preview).to have_css(".composer-event__month", text: "SEP")
+        expect(preview).to have_css(".composer-event__day", text: "7")
+      end
     end
   end
 
@@ -115,6 +172,9 @@ describe "Post event" do
 
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      # Toolbar inserts inline; click gear to open the modal on advanced.
+      find(".d-editor-preview .composer-event__more-dropdown button").click
 
       tz_select =
         PageObjects::Components::SelectKit.new(".post-event-builder-modal .timezone-input")
@@ -168,7 +228,7 @@ describe "Post event" do
   it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
+    tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]
@@ -386,14 +446,17 @@ describe "Post event" do
     composer.fill_title("Test event with updates")
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
-    find(".d-modal input[name=status][value=private]").click
+
+    # Toolbar inserts inline; click gear to open the modal on advanced.
+    find(".d-editor-preview .composer-event__more-dropdown button").click
+
+    form = PageObjects::Components::FormKit.new(".d-modal form")
+    form.field("eventType").select("private")
     find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     find(".d-modal .custom-field-input").fill_in(with: "custom value")
-    dropdown = PageObjects::Components::SelectKit.new(".available-recurrences")
-    dropdown.expand
-    dropdown.select_row_by_value("every_day")
+    form.field("recurrence").select("every_day")
     find(".d-modal .recurrence-until .date-picker").fill_in(with: "#{1.year.from_now.year}-12-30")
     find(".d-modal .btn-primary").click
     composer.submit
@@ -401,8 +464,10 @@ describe "Post event" do
     expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
+    find(".d-modal .d-modal__footer .advanced-settings").click
 
-    expect(find(".d-modal input[name=status][value=private]").checked?).to eq(true)
+    form = PageObjects::Components::FormKit.new(".d-modal form")
+    expect(form.field("eventType")).to have_value("private")
     expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
     expect(find(".d-modal .custom-field-input").value).to eq("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|

@@ -28,6 +28,10 @@ module DiscourseAi
             emotion_clause = <<~SQL
               COUNT(*) FILTER (WHERE (classification_results.classification::jsonb->'#{emotion}')::float > 0.1)
             SQL
+            model_name =
+              ActiveRecord::Base.connection.quote(
+                DiscourseAi::Sentiment::PostClassification.active_model_name_for(:emotion),
+              )
 
             # TODO: This is slow, we will need to materialize this in the future
             with_clause = <<~SQL
@@ -42,7 +46,7 @@ module DiscourseAi
                     classification_results ON
                     classification_results.target_id = posts.id AND
                     classification_results.target_type = 'Post' AND
-                    classification_results.model_used = 'SamLowe/roberta-base-go_emotions'
+                    classification_results.model_used = #{model_name}
                 WHERE
                     topics.archetype = 'regular'
                     AND topics.deleted_at IS NULL

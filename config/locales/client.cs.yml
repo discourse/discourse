@@ -448,8 +448,6 @@ cs:
     tos: "Podmínky služby"
     rules: "Pravidla"
     conduct: "Kodex chování"
-    mobile_view: "Mobilní verze"
-    desktop_view: "Plná verze"
     now: "právě teď"
     read_more: "číst dále"
     more: "Více"
@@ -3702,6 +3700,8 @@ cs:
           other: "Skrýt (%{count})…"
         dismiss_tooltip: "Označit jako přečtené jen nové příspěvky nebo přestat sledovat témata"
         also_dismiss_topics: "Přestat sledovat tyto témata, takže se mi znovu nezobrazí jako nepřečtená"
+        dismiss_new_topics: "Skrýt nová témata"
+        dismiss_new_replies: "Skrýt nové odpovědi"
         dismiss_new: "Označit jako přečtené vše nové"
         dismiss_new_modal:
           title: "Skrýt nové"
@@ -4649,7 +4649,6 @@ cs:
         name_placeholder: "K čemu je tato záložka?"
         name_input_label: "Název záložky"
         set_reminder: "Připomenout"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Smazat záložku"
@@ -5359,18 +5358,7 @@ cs:
       staff_info: "Chcete-li přidat omezení, vložte tento štítek do <a href=%{basePath}/tag_groups>skupiny štítků</a>."
       category_restricted: "Tento štítek je omezen na kategorie, ke kterým nemáte oprávnění k přístupu."
       synonyms: "Synonyma"
-      synonyms_description: "Pokud jsou použity následující štítky, budou nahrazeny <b>%{base_tag_name}</b>."
       save: "Uložit název a popis značky"
-      tag_groups_info:
-        one: 'Tento štítek patří do skupiny "%{tag_groups}".'
-        few: "Tento štítek patří do těchto skupin: %{tag_groups}."
-        many: "Tento štítek patří do těchto skupin: %{tag_groups}."
-        other: "Tento štítek patří do těchto skupin: %{tag_groups}."
-      category_restrictions:
-        one: "Lze jej použít pouze v této kategorii:"
-        few: "Lze jej použít pouze v těchto kategoriích:"
-        many: "Lze jej použít pouze v těchto kategoriích:"
-        other: "Lze jej použít pouze v těchto kategoriích:"
       edit_synonyms: "Upravit synonyma"
       add_synonyms_label: "Přidat synonyma:"
       add_synonyms: "Přidat"
@@ -6549,6 +6537,36 @@ cs:
             title: "Sestav"
           traffic:
             title: "Návštěvnost stránek"
+          engagement:
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Témata"
+              posts: "Příspěvky"
+              share: "Sdílet"
+            whos_posting:
+              all_categories: "Všechny kategorie"
+              staff: "Redakce"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základní"
+                "2": "Člen"
+                "3": "Stálý člen"
+                "4": "Leader"
+              trend:
+                stable: "stabilní"
+        reports_section:
+          no_data: "Žádná data k zobrazení"
+          modal:
+            enabled_heading: "Zapnuto"
+            all_heading: "Všechny sestavy"
+            apply: "Použít"
+            move_up: "Posunout nahoru"
+            move_down: "Posunout dolů"
+        site_traffic:
+          series:
+            anonymous: "Anonymní"
+            crawlers: "Vyhledávače"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"

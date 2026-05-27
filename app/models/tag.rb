@@ -132,7 +132,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.find_by_name(name)
-    self.find_by("lower(name) = ?", name.downcase)
+    find_by("lower(name) = ?", name.downcase)
   end
 
   def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
@@ -253,7 +253,7 @@ class Tag < ActiveRecord::Base
   end
 
   def synonym?
-    !self.target_tag_id.nil?
+    !target_tag_id.nil?
   end
 
   def target_tag_validator
@@ -314,11 +314,11 @@ class Tag < ActiveRecord::Base
   end
 
   def sanitize_description
-    self.description = sanitize_field(self.description) if description_changed?
+    self.description = sanitize_field(description) if description_changed?
   end
 
   def name_validator
-    errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
+    errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(name.strip.downcase)
   end
 end
 

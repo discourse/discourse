@@ -67,10 +67,6 @@ describe "Bookmarking posts and topics" do
     bookmark_menu.click_menu_option("custom")
     expect(bookmark_modal).to be_open
 
-    # NOTE: (martin) Not sure why, but I need to click this twice for the panel to open :/
-    bookmark_modal.open_options_panel
-    bookmark_modal.open_options_panel
-
     expect(bookmark_modal).to have_auto_delete_preference(
       Bookmark.auto_delete_preferences[:on_owner_reply],
     )
@@ -79,7 +75,6 @@ describe "Bookmarking posts and topics" do
     expect(topic_page).to have_post_bookmarked(post_2, with_reminder: false)
     topic_page.click_post_action_button(post_2, :bookmark)
     bookmark_menu.click_menu_option("edit")
-    expect(bookmark_modal).to have_open_options_panel
     expect(bookmark_modal).to have_auto_delete_preference(
       Bookmark.auto_delete_preferences[:clear_reminder],
     )
@@ -231,7 +226,6 @@ describe "Bookmarking posts and topics" do
     it "prefills the name of the bookmark and the custom reminder date and time" do
       visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
       bookmark_menu.click_menu_option("edit")
-      expect(bookmark_modal).to have_open_options_panel
       expect(bookmark_modal.name.value).to eq("test name")
       expect(bookmark_modal.existing_reminder_alert).to have_content(
         bookmark_modal.existing_reminder_alert_message(bookmark),

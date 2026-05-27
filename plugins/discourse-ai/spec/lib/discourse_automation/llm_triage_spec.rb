@@ -78,8 +78,8 @@ describe DiscourseAi::Automation::LlmTriage do
     count = ai_log.raw_request_payload.scan("hello").size
     # we could use the exact count here but it can get fragile
     # as we change tokenizers, this will give us reasonable confidence
-    expect(count).to be <= (100)
-    expect(count).to be > (50)
+    expect(count).to be <= 100
+    expect(count).to be > 50
   end
 
   it "can trigger via stalled_topic with topic context" do

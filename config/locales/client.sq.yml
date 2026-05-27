@@ -269,8 +269,6 @@ sq:
     tos: "Kushtet e shërbimit"
     rules: "Rregullat"
     conduct: "Kodi i Sjelljes"
-    mobile_view: "Pamja për celular"
-    desktop_view: "Pamja për desktop"
     now: "tani"
     read_more: "lexo më shumë"
     more: "Më shumë"
@@ -2912,6 +2910,8 @@ sq:
           other: "Hiq (%{count})…"
         dismiss_tooltip: "Hiq veç postimet e reja ose ndalo së ndjekuri temat"
         also_dismiss_topics: "Mos i gjurmo më këto tema që të mos afishohen më si të palexuara për mua"
+        dismiss_new_topics: "Hiqni temat e reja"
+        dismiss_new_replies: "Hiqni përgjigjet e reja"
         dismiss_new: "Hiqni të Rejat"
         dismiss_new_modal:
           title: "Hiqni të Rejat"
@@ -3455,7 +3455,6 @@ sq:
             button: "HTML"
       bookmarks:
         name: "Emri"
-        options: "Opsione"
     category:
       none: "(pa kategori)"
       all: "Të gjitha kategoritë"
@@ -4117,6 +4116,30 @@ sq:
         general_tab: "Karakteristika të përgjithshme"
         security_tab: "Siguria"
         report_filter_any: "ndonjë"
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Topics"
+              posts: "Postime"
+              share: "Shpërndaje"
+            whos_posting:
+              all_categories: "Të gjitha kategoritë"
+              staff: "Stafi"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "I Ri"
+                "1": "Anëtar i Thjeshtë"
+                "2": "Anëtar"
+                "3": "I zakonshëm"
+                "4": "Udhëheqës"
+        reports_section:
+          modal:
+            enabled_heading: "Aktivizuar"
+            apply: "Apliko"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
         period:
           custom: "Grupet e krijuara"
         reports:

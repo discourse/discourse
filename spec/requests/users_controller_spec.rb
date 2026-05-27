@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rotp"
+require "discourse_ip_info"
 
 RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
@@ -795,6 +796,16 @@ RSpec.describe UsersController do
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(user.id)
+    end
+
+    it "does not replay queued anonymous actions on toggle" do
+      SiteSetting.allow_anonymous_mode = true
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+
+      AnonymousAction.expects(:consume).never
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
     end
   end
 
@@ -5196,6 +5207,52 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
         expect(response.body).to include(user1.username)
+      end
+    end
+
+    describe "auth token IP visibility" do
+      before { DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
+
+      let!(:token) do
+        UserAuthToken.generate!(
+          user_id: user1.id,
+          client_ip: "81.2.69.142",
+          user_agent: "Mozilla/5.0",
+        )
+      end
+
+      it "omits client_ip but keeps location when a moderator without can_see_ip views another user" do
+        SiteSetting.moderators_view_ips = false
+        sign_in(moderator)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        expect(serialized_token.keys).not_to include("client_ip")
+        expect(serialized_token["location"]).to eq("London, England, United Kingdom")
+        expect(response.body).not_to include(token.client_ip.to_s)
+      end
+
+      it "includes client_ip when an admin views another user" do
+        sign_in(admin)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        expect(serialized_token["client_ip"]).to eq(token.client_ip.to_s)
+      end
+
+      it "includes client_ip when a user views their own tokens" do
+        SiteSetting.moderators_view_ips = false
+        sign_in(user1)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        expect(serialized_token["client_ip"]).to eq(token.client_ip.to_s)
       end
     end
   end

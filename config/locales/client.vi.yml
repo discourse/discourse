@@ -359,8 +359,6 @@ vi:
     tos: "Điều khoản dịch vụ"
     rules: "Các quy tắc"
     conduct: "Quy tắc ứng xử"
-    mobile_view: "Xem chế độ điện thoại"
-    desktop_view: "Xem chế độ máy tính"
     now: "vừa xong"
     read_more: "đọc thêm"
     more: "Thêm nữa"
@@ -3178,6 +3176,8 @@ vi:
           other: "Loại bỏ (%{count})…"
         dismiss_tooltip: "Chỉ bỏ qua tút mới hoặc dừng theo dõi chủ đề"
         also_dismiss_topics: "Ngừng theo dõi các chủ đề này để không hiển thị lại là chủ đề chưa đọc"
+        dismiss_new_topics: "Bỏ qua các chủ đề mới"
+        dismiss_new_replies: "Bỏ qua các trả lời mới"
         dismiss_new: "Bỏ qua tất cả"
         dismiss_new_modal:
           title: "Bỏ qua mục mới"
@@ -3957,7 +3957,6 @@ vi:
         name_placeholder: "Bạn đánh dấu cái này để làm gì?"
         name_input_label: "Tên đánh dấu"
         set_reminder: "Nhắc nhở tôi"
-        options: "Lựa chọn"
         actions:
           delete_bookmark:
             name: "Xóa đánh dấu"
@@ -4579,12 +4578,7 @@ vi:
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
       category_restricted: "Thẻ này bị giới hạn đối với các chuyên mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
-      synonyms_description: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng <b>%{base_tag_name}</b>."
       save: "Lưu tên và mô tả của thẻ"
-      tag_groups_info:
-        other: "Thẻ này thuộc các nhóm: %{tag_groups}."
-      category_restrictions:
-        other: "Nó chỉ có thể được sử dụng trong các chuyên mục sau:"
       edit_synonyms: "Chỉnh sửa từ đồng nghĩa"
       add_synonyms_label: "Thêm từ đồng nghĩa:"
       add_synonyms: "Thêm"
@@ -5693,6 +5687,36 @@ vi:
         sections:
           reports:
             title: "Báo cáo"
+          engagement:
+            activity_by_category:
+              category: "Danh mục"
+              topics: "Các chủ đề"
+              posts: "Số lượng tút"
+              share: "Chia sẻ"
+            whos_posting:
+              all_categories: "Tất cả danh mục"
+              staff: "Nhân viên"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Chủ đề mới"
+                "1": "Cơ Bản"
+                "2": "Nâng Cao"
+                "3": "Tích Cực"
+                "4": "Nhà Lãnh Đạo"
+              trend:
+                stable: "ổn định"
+        reports_section:
+          no_data: "Không có dữ liệu để hiển thị"
+          modal:
+            enabled_heading: "Đã bật"
+            all_heading: "Tất cả các báo cáo"
+            apply: "Áp dụng"
+            move_up: "Chuyển lên"
+            move_down: "Chuyển xuống"
+        site_traffic:
+          series:
+            anonymous: "Ẩn danh"
+            crawlers: "Trình thu thập thông tin"
         period:
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"

@@ -947,6 +947,30 @@ da:
       xaxis: "Dag"
       yaxis: "Antal nye bidragsydere"
       description: "Antal brugere, der har foretaget deres første indlæg i denne periode."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Emner"
+        posts: "Indlæg"
+        share: "Del"
+    posters_by_member_type:
+      labels:
+        count: "Indlæg"
+        share: "Del"
+      types:
+        staff: "Personale"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Tillidsniveau"
+        count: "Brugere"
+        share: "Del"
+      levels:
+        "0": "Nye"
+        "1": "Basis"
+        "2": "Bruger"
+        "3": "Almindelig"
+        "4": "Leder"
     trust_level_growth:
       title: "Tillidsniveau vækst"
       xaxis:
@@ -982,9 +1006,8 @@ da:
     site_traffic:
       title: "Webstedstrafik"
       xaxis:
-        page_view_anon_browser: "Sidevisninger (anonyme)"
-        page_view_logged_in_browser: "Sidevisninger (logget ind)"
-        page_view_crawler: "Kendte crawlere"
+        page_view_anon_browser: "Anonym"
+        page_view_crawler: "Crawlere"
         page_view_other: "Anden trafik"
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
@@ -1093,6 +1116,12 @@ da:
         num_clicks: "Klik"
         num_topics: "Emner"
       description: "Brugere opført efter antal klik på links, de har delt."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøg"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besøg"
     top_traffic_sources:
       title: "Top Trafik Kilder"
       xaxis: "Domæne"
@@ -1271,6 +1300,9 @@ da:
       out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:%{themes_list}"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
     back_from_logster_text: "Tilbage til webstedet"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -1349,7 +1381,6 @@ da:
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     moderators_change_post_ownership: "Tillad moderatorer at ændre ejerskab af indlæg"
-    use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
     allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
     allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."
@@ -1522,7 +1553,6 @@ da:
     show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
     user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
-    enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."

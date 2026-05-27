@@ -32,6 +32,7 @@ const categoryFixtures = {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
+      search_priority: 0,
       group_permissions: [
         { permission_type: 1, group_name: "everyone", group_id: 0 },
       ],

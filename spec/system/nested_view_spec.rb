@@ -208,6 +208,64 @@ RSpec.describe "Nested view" do
     end
   end
 
+  describe "mobile focused branch navigation" do
+    fab!(:root_reply) do
+      Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Post with children")
+    end
+
+    fab!(:sibling_root_reply) do
+      Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Sibling root reply")
+    end
+
+    fab!(:child_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A child post",
+        reply_to_post_number: root_reply.post_number,
+      )
+    end
+
+    fab!(:grandchild_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A grandchild post",
+        reply_to_post_number: child_reply.post_number,
+      )
+    end
+
+    it "lets the user drill into reply branches without leaving the topic", mobile: true do
+      nested_view.visit_nested(topic, query: "collapse_replies=true")
+      nested_path = %r{/n/#{topic.slug}/#{topic.id}\?collapse_replies=true}
+
+      nested_view.scroll_post_near_top(root_reply)
+      root_reply_top = nested_view.post_viewport_top(root_reply)
+
+      nested_view.click_replies_toggle(root_reply)
+
+      expect(page).to have_current_path(nested_path)
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_post(child_reply)
+      expect(nested_view).to have_no_root_post(sibling_root_reply)
+
+      nested_view.click_replies_toggle(child_reply)
+
+      expect(page).to have_current_path(nested_path)
+      expect(nested_view).to have_mobile_ancestor(root_reply)
+      expect(nested_view).to have_post(grandchild_reply)
+
+      nested_view.click_mobile_focus_back
+
+      expect(page).to have_current_path(nested_path)
+      expect(nested_view).to have_no_mobile_focus
+      expect(nested_view).to have_root_post(sibling_root_reply)
+      expect(nested_view.post_viewport_top(root_reply)).to be_within(5).of(root_reply_top)
+    end
+  end
+
   describe "flat view toggle" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
     fab!(:admin)

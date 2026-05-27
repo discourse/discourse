@@ -2,16 +2,14 @@
 
 # we should set the locale before the migration
 task "set_locale" do
-  begin
-    I18n.locale =
-      begin
-        (SiteSetting.default_locale || :en)
-      rescue StandardError
-        :en
-      end
-  rescue I18n::InvalidLocale
-    I18n.locale = :en
-  end
+  I18n.locale =
+    begin
+      SiteSetting.default_locale || :en
+    rescue StandardError
+      :en
+    end
+rescue I18n::InvalidLocale
+  I18n.locale = :en
 end
 
 module MultisiteTestHelpers
@@ -68,7 +66,7 @@ begin
     top_level_tasks = Rake.application.top_level_tasks
     db_create_index = top_level_tasks.index("db:create")
     if db_create_index && db_create_index < top_level_tasks.length - 1
-      exec "#{Rails.root}/bin/rake", *top_level_tasks[db_create_index + 1..-1]
+      exec "#{Rails.root.join("bin/rake")}", *top_level_tasks[db_create_index + 1..-1]
     end
   end
 end
@@ -250,12 +248,10 @@ task "db:migrate" => %w[
     end
 
     %i[pg_trgm unaccent].each do |extension|
-      begin
-        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
-      rescue => e
-        STDERR.puts "Cannot enable database extension #{extension}"
-        STDERR.puts e
-      end
+      DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
+    rescue => e
+      STDERR.puts "Cannot enable database extension #{extension}"
+      STDERR.puts e
     end
 
     execute_db_migration
@@ -406,7 +402,7 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
 
   puts
 
-  fix_indexes = (ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix")
+  fix_indexes = ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix"
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|
@@ -465,11 +461,9 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
       if fix_indexes
         puts "Adding missing indexes..."
         missing.each do |m|
-          begin
-            DB.exec(m)
-          rescue => e
-            $stderr.puts "Error running: #{m} - #{e}"
-          end
+          DB.exec(m)
+        rescue => e
+          $stderr.puts "Error running: #{m} - #{e}"
         end
       end
     else
@@ -557,24 +551,20 @@ task "db:rebuild_indexes" => "environment" do
         "SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')",
       )
     index_names.each do |index_name|
-      begin
-        puts index_name
-        DB.exec("DROP INDEX public.#{index_name}")
-      rescue ActiveRecord::StatementInvalid
-        # It's this:
-        # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
-        # HINT:  You can drop constraint category_users_pkey on table category_users instead.
-      end
+      puts index_name
+      DB.exec("DROP INDEX public.#{index_name}")
+    rescue ActiveRecord::StatementInvalid
+      # It's this:
+      # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
+      # HINT:  You can drop constraint category_users_pkey on table category_users instead.
     end
 
     # Create the indexes
     table_names.each do |table_name|
       index_definitions[table_name].each do |index_def|
-        begin
-          DB.exec(index_def)
-        rescue ActiveRecord::StatementInvalid
-          # Trying to recreate a primary key
-        end
+        DB.exec(index_def)
+      rescue ActiveRecord::StatementInvalid
+        # Trying to recreate a primary key
       end
     end
   rescue StandardError
@@ -587,14 +577,12 @@ end
 
 desc "Check that the DB can be accessed"
 task "db:status:json" do
-  begin
-    Rake::Task["environment"].invoke
-    DB.query("SELECT 1")
-  rescue StandardError
-    puts({ status: "error" }.to_json)
-  else
-    puts({ status: "ok" }.to_json)
-  end
+  Rake::Task["environment"].invoke
+  DB.query("SELECT 1")
+rescue StandardError
+  puts({ status: "error" }.to_json)
+else
+  puts({ status: "ok" }.to_json)
 end
 
 desc "Grow notification id column to a big int in case of overflow"

@@ -206,15 +206,14 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def self.out_of_date_themes
-    self
-      .joined_remotes
+    joined_remotes
       .where("commits_behind > 0 OR remote_version <> local_version")
       .where(themes: { enabled: true })
       .pluck("themes.name", "themes.id")
   end
 
   def self.unreachable_themes
-    self.joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
+    joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
   end
 
   def out_of_date?
@@ -233,7 +232,7 @@ class RemoteTheme < ActiveRecord::Base
       self.remote_version, self.commits_behind = importer.commits_since(local_version)
       self.last_error_text = nil
     ensure
-      self.save!
+      save!
       begin
         importer.cleanup!
       rescue => e
@@ -260,7 +259,7 @@ class RemoteTheme < ActiveRecord::Base
         importer.import!
       rescue RemoteTheme::ImportError => err
         self.last_error_text = err.message
-        self.save!
+        save!
         return self
       else
         self.last_error_text = nil
@@ -303,22 +302,17 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     # Update all theme attributes if this is just a placeholder
-    if self.remote_url.present? && !self.local_version && !self.commits_behind
-      self.theme.name = theme_info["name"]
-      self.theme.component = [true, "true"].include?(theme_info["component"])
-      self.theme.child_components = theme_info["components"].presence || []
+    if remote_url.present? && !local_version && !commits_behind
+      theme.name = theme_info["name"]
+      theme.component = [true, "true"].include?(theme_info["component"])
+      theme.child_components = theme_info["components"].presence || []
     end
 
-    METADATA_PROPERTIES.each do |property|
-      self.public_send(:"#{property}=", theme_info[property.to_s])
-    end
+    METADATA_PROPERTIES.each { |property| public_send(:"#{property}=", theme_info[property.to_s]) }
 
-    if !self.valid?
+    if !valid?
       raise ImportError,
-            I18n.t(
-              "themes.import_error.about_json_values",
-              errors: self.errors.full_messages.join(","),
-            )
+            I18n.t("themes.import_error.about_json_values", errors: errors.full_messages.join(","))
     end
 
     ThemeModifierSet.modifiers.keys.each do |modifier_name|
@@ -393,7 +387,7 @@ class RemoteTheme < ActiveRecord::Base
 
       update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
-      self.save!
+      save!
 
       before_save&.call(theme)
 
@@ -416,7 +410,7 @@ class RemoteTheme < ActiveRecord::Base
     if already_in_transaction
       transaction_block.call
     else
-      self.transaction(&transaction_block)
+      transaction(&transaction_block)
     end
 
     theme.theme_modifier_set.save! if theme.theme_modifier_set.refresh_theme_setting_modifiers

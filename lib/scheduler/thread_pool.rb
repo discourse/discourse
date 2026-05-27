@@ -114,14 +114,9 @@ module Scheduler
 
     def wrap_block(block, db)
       proc do
-        begin
-          RailsMultisite::ConnectionManagement.with_connection(db) { block.call }
-        rescue StandardError => e
-          Discourse.warn_exception(
-            e,
-            message: "Discourse Scheduler ThreadPool: Unhandled exception",
-          )
-        end
+        RailsMultisite::ConnectionManagement.with_connection(db) { block.call }
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Discourse Scheduler ThreadPool: Unhandled exception")
       end
     end
 

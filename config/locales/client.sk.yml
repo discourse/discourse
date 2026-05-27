@@ -332,8 +332,6 @@ sk:
     tos: "Podmienky používania"
     rules: "Pravidlá"
     conduct: "Kódex správania"
-    mobile_view: "Mobilná verzia"
-    desktop_view: "Zobrazenie pre počítač"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -3430,6 +3428,8 @@ sk:
           other: "Odmietnuť (%{count})…"
         dismiss_tooltip: "Zahoď iba nové príspevky, alebo prestaň pozorovať témy"
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
+        dismiss_new_topics: "Zamietnuť nové témy"
+        dismiss_new_replies: "Skryť nové odpovede"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -4329,7 +4329,6 @@ sk:
         name_placeholder: "Na čo slúži táto záložka?"
         name_input_label: "Názov záložky"
         set_reminder: "Pripomeň mi"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Odstrániť záložku"
@@ -4974,18 +4973,7 @@ sk:
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."
       synonyms: "Synonymá"
-      synonyms_description: "Ak sa použijú nasledujúce značky, nahradia sa týmito značkami <b>%{base_tag_name}</b>."
       save: "Uloženie názvu a popisu značky"
-      tag_groups_info:
-        one: 'Táto značka patrí do skupiny "%{tag_groups}".'
-        few: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        many: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        other: "Táto značka patrí do týchto skupín: %{tag_groups}."
-      category_restrictions:
-        one: "Môže sa používať len v tejto kategórii:"
-        few: "Môže sa používať len v týchto kategóriách:"
-        many: "Môže sa používať len v týchto kategóriách:"
-        other: "Môže sa používať len v týchto kategóriách:"
       edit_synonyms: "Upraviť synonymá"
       add_synonyms_label: "Pridajte synonymá:"
       add_synonyms: "Pridať"
@@ -6032,8 +6020,36 @@ sk:
             title: "Hlásení"
           traffic:
             title: "Návštevnosť stránky"
+          engagement:
+            activity_by_category:
+              category: "Kategória"
+              topics: "Témy"
+              posts: "Príspevky"
+              share: "Zdieľať"
+            whos_posting:
+              all_categories: "Všetky kategórie"
+              staff: "Personál"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základné"
+                "2": "Člen"
+                "3": "Bežné"
+                "4": "Vodca"
+        reports_section:
+          no_data: "Žiadne údaje na zobrazenie"
+          modal:
+            enabled_heading: "Povolené"
+            all_heading: "Všetky hlásenia"
+            apply: "Použi"
+            move_up: "Posunúť sa nahor"
+            move_down: "Posunúť sa nadol"
         configure:
           button: "Konfigurovať"
+        site_traffic:
+          series:
+            anonymous: "Anonymný"
+            crawlers: "Crawlery"
         period:
           last_7_days: "Posledných 7 dní"
           last_30_days: "Posledných 30 dní"

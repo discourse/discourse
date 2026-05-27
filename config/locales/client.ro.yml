@@ -406,8 +406,6 @@ ro:
     tos: "Termenii serviciului"
     rules: "Reguli"
     conduct: "Cod de conduită"
-    mobile_view: "Vizualizare pe mobil"
-    desktop_view: "Vizualizare pe desktop"
     now: "chiar acum"
     read_more: "citește mai mult"
     more: "Mai mult"
@@ -3112,7 +3110,6 @@ ro:
         name: "Nume"
         name_placeholder: "Pentru ce este acest semn de carte?"
         set_reminder: "Aminteşte-mi"
-        options: "Opțiuni"
         actions:
           delete_bookmark:
             name: "Ștergere semn de carte"
@@ -4242,6 +4239,41 @@ ro:
             title: "Rapoarte"
           traffic:
             title: "Trafic site"
+          engagement:
+            activity_by_category:
+              category: "Categorie"
+              topics: "Discuții"
+              posts: "Articole"
+              share: "Partajează"
+            whos_posting:
+              all_categories: "Toate categoriile"
+              staff: "Echipa"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nou"
+                "1": "De bază"
+                "2": "Membru"
+                "3": "Utilizator frecvent"
+                "4": "Lider"
+        reports_section:
+          add: "Adaugă raport"
+          remove: "Elimină raportul"
+          no_data: "Nu există date de afișat"
+          modal:
+            title: "Gestionare rapoarte"
+            search_placeholder: "Caută rapoarte"
+            counter: "%{count} / %{max} rapoarte"
+            enabled_heading: "Activate"
+            all_heading: "Toate rapoartele"
+            apply: "Aplică"
+            toggle: "Comută raport"
+            move_up: "Mută sus"
+            move_down: "Mută jos"
+        site_traffic:
+          series:
+            anonymous: "Anonimi"
+            crawlers: "Crawlere"
+          see_details: "Vezi detalii"
         period:
           last_7_days: "Ultimele 7 zile"
           last_30_days: "Ultimele 30 de zile"

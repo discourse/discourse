@@ -17,7 +17,7 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   def chat_message
-    @chat_message ||= (target || Chat::Message.with_deleted.find_by(id: target_id))
+    @chat_message ||= target || Chat::Message.with_deleted.find_by(id: target_id)
   end
 
   def chat_message_creator

@@ -374,8 +374,6 @@ it:
     tos: "Termini di Servizio"
     rules: "Regole"
     conduct: "Codice di Condotta"
-    mobile_view: "Visualizzazione cellulari"
-    desktop_view: "Visualizzazione Desktop"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -3204,6 +3202,8 @@ it:
           other: "Ignora (%{count})…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
+        dismiss_new_topics: "Ignora nuovi argomenti"
+        dismiss_new_replies: "Ignora nuove risposte"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_modal:
           title: "Ignora nuovi"
@@ -4007,7 +4007,6 @@ it:
         name_placeholder: "A cosa serve questo segnalibro?"
         name_input_label: "Nome del segnalibro"
         set_reminder: "Ricordamelo"
-        options: "Opzioni"
         actions:
           delete_bookmark:
             name: "Cancella segnalibro"
@@ -4605,14 +4604,7 @@ it:
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
-      synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."
       save: "Salva il nome e la descrizione dell’etichetta"
-      tag_groups_info:
-        one: 'Questa etichetta appartiene al gruppo "%{tag_groups}".'
-        other: "Questa etichetta appartiene a questi gruppi: %{tag_groups}."
-      category_restrictions:
-        one: "Può essere utilizzato solo in questa categoria:"
-        other: "Può essere utilizzato solo in queste categorie:"
       edit_synonyms: "Modifica Sinonimi"
       add_synonyms_label: "Aggiungi sinonimi:"
       add_synonyms: "Aggiungi"
@@ -5623,8 +5615,36 @@ it:
             title: "Report"
           traffic:
             title: "Traffico del sito"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Argomenti"
+              posts: "Messaggi"
+              share: "Condividi"
+            whos_posting:
+              all_categories: "Tutte le categorie"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nuovo"
+                "1": "Base"
+                "2": "Membro"
+                "3": "Abituale"
+                "4": "Veterano"
+        reports_section:
+          no_data: "Non ci sono dati da mostrare"
+          modal:
+            enabled_heading: "Abilitato"
+            all_heading: "Tutti i report"
+            apply: "Applica"
+            move_up: "Sposta su"
+            move_down: "Sposta giù"
         configure:
           button: "Configura"
+        site_traffic:
+          series:
+            anonymous: "Anonimo"
+            crawlers: "Crawler"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"

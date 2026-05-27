@@ -213,8 +213,6 @@ th:
     tos: "เงื่อนไขการบริการ"
     rules: "กฎ"
     conduct: "กฎเกณฑ์และเงื่อนไข"
-    mobile_view: "ดูแบบอุปกรณ์เคลื่อนที่"
-    desktop_view: "ดูแบบเดสก์ท็อป"
     now: "ขณะนี้"
     read_more: "อ่านเพิ่มเติม"
     more: "เพิ่มเติม"
@@ -2061,7 +2059,6 @@ th:
         name: "ชื่อ"
         name_placeholder: "บุ๊กมาร์กนี้สำหรับสิ่งใด"
         set_reminder: "เตือนฉัน"
-        options: "ตัวเลือก"
         actions:
           delete_bookmark:
             name: "ลบบุ๊กมาร์ก"
@@ -2374,10 +2371,6 @@ th:
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
-      tag_groups_info:
-        other: "แท็กนี้เป็นของกลุ่มเหล่านี้: %{tag_groups}"
-      category_restrictions:
-        other: "สามารถใช้ได้แค่ในหมวดหมู่เหล่านี้เท่านั้น"
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
@@ -2689,6 +2682,27 @@ th:
         security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
+        sections:
+          engagement:
+            activity_by_category:
+              category: "หมวดหมู่"
+              topics: "หัวข้อ"
+              posts: "โพส"
+              share: "แบ่งปัน"
+            whos_posting:
+              all_categories: "หมวดหมู่ทั้งหมด"
+              staff: "ทีมงาน"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "ใหม่"
+                "2": "สมาชิก"
+                "3": "ทั่วไป"
+        reports_section:
+          modal:
+            apply: "นำไปใช้"
+        site_traffic:
+          series:
+            anonymous: "ไม่ระบุชื่อ"
         period:
           last_7_days: "7 วันที่ผ่านมา"
           last_30_days: "30 วันที่ผ่านมา"

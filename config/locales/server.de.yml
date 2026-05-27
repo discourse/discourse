@@ -1268,6 +1268,30 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl neuer Mitwirkender"
       description: "Anzahl der Benutzer, die ihren ersten Beitrag in dieser Zeit erstellt haben."
+    activity_by_category:
+      labels:
+        category: "Kategorie"
+        topics: "Themen"
+        posts: "Beiträge"
+        share: "Teilen"
+    posters_by_member_type:
+      labels:
+        count: "Beiträge"
+        share: "Teilen"
+      types:
+        staff: "Team"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Vertrauensstufe"
+        count: "Mitglieder"
+        share: "Teilen"
+      levels:
+        "0": "Neue"
+        "1": "Anwärter"
+        "2": "Mitglied"
+        "3": "Regulär"
+        "4": "Anführer"
     trust_level_growth:
       title: "Wachstum der Vertrauensstufen"
       xaxis:
@@ -1313,9 +1337,8 @@ de:
     site_traffic:
       title: "Website-Traffic"
       xaxis:
-        page_view_anon_browser: "Seitenaufrufe (anonym)"
-        page_view_logged_in_browser: "Seitenaufrufe (angemeldet)"
-        page_view_crawler: "Bekannte Crawler"
+        page_view_anon_browser: "Anonym"
+        page_view_crawler: "Crawler"
         page_view_other: "Sonstiger Traffic"
       yaxis: "Tag"
       description: "Seitenaufrufe für angemeldete Benutzer, anonyme Benutzer, bekannte Crawler und anderen Traffic."
@@ -1432,6 +1455,12 @@ de:
         num_clicks: "Klicks"
         num_topics: "Themen"
       description: "Benutzer nach Anzahl von Klicks auf Links, die sie geteilt haben."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Aufrufe"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Aufrufe"
     top_traffic_sources:
       title: "Top-Traffic-Quellen"
       xaxis: "Domain"
@@ -1654,6 +1683,9 @@ de:
       admin_sidebar_deprecation: "Das alte Admin-Layout wird vom neuen <a href='https://meta.discourse.org/t/-/289281'>Seitenleisten-Layout</a> abgelöst und in der nächsten Version entfernt. Du kannst das neue Seitenleisten-Layout jetzt <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurieren</a>, um es vorher zu aktivieren."
       starttls_disabled: "In der Konfiguration für ausgehende E-Mails ist STARTTLS deaktiviert. Das ist fast nie notwendig. Erwäge, <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> aus deiner Umgebung zu entfernen. Weitere Informationen findest du in <a href='https://meta.discourse.org/t/387286'>diesem Thema</a>."
     back_from_logster_text: "Zurück zur Website"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1825,7 +1857,6 @@ de:
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
     change_post_ownership_allowed_groups: "Erlaube Benutzern in diesen Gruppen, den Eigentümer von Beiträgen zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
-    use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     allowed_internal_hosts: "Eine Liste interner Hosts, die Discourse sicher indizieren kann (für Oneboxing und zu anderen Zwecken)"
     allowed_onebox_iframes: "Eine Liste von „iframe src“-Domains, die in Onebox-Einbettungen erlaubt sind. Mit `*` werden alle Standard-Onebox-Engines zugelassen."
@@ -1960,7 +1991,6 @@ de:
     s3_use_acls: "AWS empfiehlt, keine ACLs für S3-Buckets zu verwenden. Deaktiviere diese Option nur, wenn du für die konfigurierten `s3_upload_bucket` und `s3_backup_bucket` Berechtigungsrichtlinien konfigurieren möchtest."
     backup_time_of_day: "Uhrzeit in UTC, zu der Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups einschließen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
-    backup_location: "Ort, an dem die Backups gespeichert werden. WICHTIG: S3 erfordert gültige S3-Anmeldedaten in den Dateien-Einstellungen. Wenn du den Speicherort von „Lokal“ auf S3 änderst, musst du den Rake-Befehl `s3:ensure_cors_rules` ausführen."
     backup_gzip_compression_level_for_uploads: "Gzip-Komprimierungsstufe, die für die Komprimierung von Uploads verwendet wird."
     include_thumbnails_in_backups: "Generierte Vorschaubilder in Backups einschließen. Bei Deaktivierung werden Backups kleiner, aber nach einer Wiederherstellung müssen alle Posts überarbeitet werden."
     active_user_rate_limit_secs: "Anzahl der Sekunden, nach denen das „last_seen_at“-Feld aktualisiert wird."
@@ -2151,7 +2181,6 @@ de:
     fast_typing_threshold: "Zeit, die ein Benutzer mindestens aufwenden muss, um seinen ersten Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. „Low“ ist 1 Sekunde, „standard“ sind 3 Sekunden, „high“ sind 5 Sekunden."
     auto_silence_fast_typers_on_first_post: "Automatisches Stummschalten von Benutzern, die `fast typing threshold` nicht erreichen"
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
-    auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Erfolg dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a wird dazu führen, dass alle Beiträge, die „wüten“ oder „aba“ oder „aca“ enthalten, stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter stummschalten“."
     moderator_guide_topic: "Das Thema, das beschreibt, wie ihr eure Community moderiert. Der Link wird in der Warteschlange für Moderatoren und Administratoren angezeigt."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
@@ -2280,7 +2309,6 @@ de:
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
     dont_feed_the_trolls_threshold: "Anzahl der Meldungen von anderen Benutzern, bevor verwarnt wird."
-    enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen PN warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für nicht kategorisierte Themen in der Themenliste."
@@ -2504,7 +2532,6 @@ de:
     rich_editor: "Aktiviere den Rich-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor wechseln können, um intuitiver und benutzerfreundlicher zu arbeiten."
     default_composition_mode: "Lege den Standardmodus für den Editor deiner Community fest. Der Rich-Text-Modus bietet den meisten Benutzern ein moderneres, vertrauteres Schreibgefühl, während der Markdown-Modus für ein eher technisches Publikum geeignet sein kann. Die Mitglieder können mit einem Schalter in der Editor-Symbolleiste zwischen den Modi wechseln."
     reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
-    viewport_based_mobile_mode: "Verwende die Viewport-Breite, um den Mobil-/Desktop-Modus zu bestimmen. Diese Einstellung wird bald entfernt werden. Wenn du sie deaktivieren möchtest, lass es uns bitte <a href='https://meta.discourse.org/t/384280'>auf Meta</a> wissen."
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Die Standardsprache des Forums ist immer enthalten. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
@@ -3088,7 +3115,7 @@ de:
 
       - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/v%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
@@ -3103,7 +3130,7 @@ de:
 
       - Aktualisiere mit unserem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)**
 
-      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/%{new_version}) an
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://releases.discourse.org/changelog/v%{new_version}) an
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 

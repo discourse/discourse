@@ -51,7 +51,7 @@ describe "Admin Dashboard Configure menu" do
 
       dashboard.open_configure_menu.move_section_up("reports").close_configure_menu
 
-      expect(page).to have_css(".db-main__section:first-child[data-section-id='reports']")
+      expect(dashboard).to have_first_section("reports")
       expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
     end
   end

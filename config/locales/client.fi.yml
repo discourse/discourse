@@ -374,8 +374,6 @@ fi:
     tos: "Käyttöehdot"
     rules: "Säännöt"
     conduct: "Käytännesäännöt"
-    mobile_view: "Mobiilinäkymä"
-    desktop_view: "Työpöytänäkymä"
     now: "hetki sitten"
     read_more: "lue lisää"
     more: "Lisää"
@@ -3207,6 +3205,8 @@ fi:
           other: "Kuittaa (%{count})…"
         dismiss_tooltip: "Kuittaa uudet viestit luetuiksi tai lopeta ketjujen seuraaminen"
         also_dismiss_topics: "Älä seuraa näitä ketjuja enää – ne eivät jatkossa lukemattomina"
+        dismiss_new_topics: "Kuittaa uudet ketjut"
+        dismiss_new_replies: "Kuittaa uudet vastaukset"
         dismiss_new: "Kuittaa luetuksi"
         dismiss_new_modal:
           title: "Kuittaa uudet"
@@ -4010,7 +4010,6 @@ fi:
         name_placeholder: "Mitä varten kirjanmerkki on?"
         name_input_label: "Kirjanmerkin nimi"
         set_reminder: "Muistuta minua"
-        options: "Asetukset"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
@@ -4608,14 +4607,7 @@ fi:
       staff_info: "Lisää rajoituksia asettamalla tämä tunniste <a href=%{basePath}/tag_groups>-tunnisteryhmään</a>."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
-      synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan tunnisteella <b>%{base_tag_name}</b>."
       save: "Tallenna tunnisteen nimi ja kuvaus"
-      tag_groups_info:
-        one: 'Tunniste kuuluu ryhmään "%{tag_groups}".'
-        other: "Tunniste kuuluu näihin ryhmiin: %{tag_groups}"
-      category_restrictions:
-        one: "Sitä voi käyttää vain tällä alueella:"
-        other: "Sitä voi käyttää vain näillä alueilla:"
       edit_synonyms: "Muokkaa synonyymejä"
       add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
@@ -5626,8 +5618,35 @@ fi:
             title: "Raportit"
           traffic:
             title: "Sivuston liikenne"
+          engagement:
+            activity_by_category:
+              category: "Luokka"
+              topics: "Aiheet"
+              posts: "Viestejä"
+              share: "Jaa"
+            whos_posting:
+              all_categories: "Kaikki alueet"
+              staff: "Henkilökunta"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uudet"
+                "1": "Haastaja"
+                "2": "Konkari"
+                "3": "Normaali"
+                "4": "Johtaja"
+        reports_section:
+          modal:
+            enabled_heading: "Käytössä"
+            all_heading: "Kaikki raportit"
+            apply: "Käytä"
+            move_up: "Siirrä ylös"
+            move_down: "Siirrä alas"
         configure:
           button: "Määritä"
+        site_traffic:
+          series:
+            anonymous: "Anonyymeja"
+            crawlers: "Hakurobotit"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"

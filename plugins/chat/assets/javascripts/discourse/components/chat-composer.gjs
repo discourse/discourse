@@ -425,12 +425,14 @@ export default class ChatComposer extends Component {
     }
 
     const selected = this.composer.textarea.getSelected("", { lineVal: true });
-    const linkText = selected?.value;
+    const hasSelection = !!selected && selected.start !== selected.end;
     this.modal.show(UpsertHyperlink, {
       model: {
-        linkText,
+        hasSelection,
         toolbarEvent: {
+          selected,
           addText: (text) => this.composer.textarea.addText(selected, text),
+          applyLink: (url) => this.composer.textarea.applyLink(url),
         },
       },
     });
@@ -440,7 +442,7 @@ export default class ChatComposer extends Component {
   onSelectEmoji(emoji, context = {}) {
     const textareaInteractor = this.composer.textarea;
 
-    if (context.emojiTermStart && context.emojiTermStart) {
+    if (context?.emojiTermStart != null) {
       const value = textareaInteractor.textarea.value;
       const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
       const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
@@ -580,7 +582,8 @@ export default class ChatComposer extends Component {
 
           if (currentValue && currentCaretPos !== undefined) {
             const textBeforeCursor = currentValue.substring(0, currentCaretPos);
-            const incompleteMatch = textBeforeCursor.match(/(:[\w-]+)$/);
+            const incompleteMatch =
+              textBeforeCursor.match(/(:[\p{L}\p{N}_-]+)$/u);
 
             if (incompleteMatch) {
               emojiContext = {

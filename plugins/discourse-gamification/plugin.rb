@@ -80,7 +80,7 @@ after_initialize do
   add_to_serializer(
     :admin_plugin,
     :extras,
-    include_condition: -> { self.name == "discourse-gamification" },
+    include_condition: -> { name == "discourse-gamification" },
   ) do
     {
       gamification_recalculate_scores_remaining:
@@ -89,7 +89,7 @@ after_initialize do
         Group
           .includes(:flair_upload)
           .all
-          .map { |group| BasicGroupSerializer.new(group, root: false, scope: self.scope).as_json },
+          .map { |group| BasicGroupSerializer.new(group, root: false, scope: scope).as_json },
       gamification_leaderboards:
         DiscourseGamification::GamificationLeaderboard
           .order(updated_at: :desc)
@@ -102,10 +102,7 @@ after_initialize do
     DiscourseGamification::GamificationLeaderboard.first&.id
   end
 
-  SeedFu.fixture_paths << Rails
-    .root
-    .join("plugins", "discourse-gamification", "db", "fixtures")
-    .to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-gamification/db/fixtures").to_s
 
   on(:site_setting_changed) do |name|
     next if name != :score_ranking_strategy

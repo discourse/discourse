@@ -5,7 +5,13 @@ module PageObjects
     class AdminDashboard < PageObjects::Pages::Base
       def visit
         page.visit("/admin")
-        has_css?(".db-main__section, .db-main__empty, .nav-pills")
+        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
+        self
+      end
+
+      def visit_with_query(params)
+        page.visit("/admin?#{params.to_query}")
+        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
         self
       end
 
@@ -68,15 +74,23 @@ module PageObjects
       end
 
       def has_section?(id)
-        has_css?(".db-main__section[data-section-id='#{id}']")
+        has_css?(".db-main [data-section-id='#{id}']")
       end
 
       def has_no_section?(id)
-        has_no_css?(".db-main__section[data-section-id='#{id}']")
+        has_no_css?(".db-main [data-section-id='#{id}']")
+      end
+
+      def has_first_section?(id)
+        has_css?(".db-main > :first-child[data-section-id='#{id}']")
+      end
+
+      def site_traffic
+        PageObjects::Components::AdminDashboardSiteTraffic.new
       end
 
       def section_ids_in_order
-        all(".db-main__section").map { |el| el["data-section-id"] }
+        all(".db-main [data-section-id]").map { |el| el["data-section-id"] }
       end
 
       def has_empty_state?

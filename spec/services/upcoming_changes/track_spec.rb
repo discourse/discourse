@@ -7,24 +7,20 @@ RSpec.describe UpcomingChanges::Track do
   describe ".call" do
     subject(:result) { described_class.call }
 
-    let(:added_changes_result) do
-      { added_changes: [:added_change], notified_changes: [:notified_added] }
-    end
+    let(:added_changes_result) { [:added_change] }
 
     let(:removed_changes_result) { [:removed_change] }
 
-    let(:status_changes_result) do
-      { status_changes: { status_change: :data }, notified_changes: [:notified_status] }
-    end
+    let(:status_changes_result) { { status_change: :data } }
 
     before do
-      allow(UpcomingChanges::Action::TrackNotifyAddedChanges).to receive(:call).and_return(
+      allow(UpcomingChanges::Action::TrackAddedChanges).to receive(:call).and_return(
         added_changes_result,
       )
       allow(UpcomingChanges::Action::TrackRemovedChanges).to receive(:call).and_return(
         removed_changes_result,
       )
-      allow(UpcomingChanges::Action::TrackNotifyStatusChanges).to receive(:call).and_return(
+      allow(UpcomingChanges::Action::TrackStatusChanges).to receive(:call).and_return(
         status_changes_result,
       )
     end
@@ -33,9 +29,9 @@ RSpec.describe UpcomingChanges::Track do
       expect(result).to run_successfully
     end
 
-    it "calls TrackNotifyAddedChanges with correct arguments" do
+    it "calls TrackAddedChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackNotifyAddedChanges).to have_received(:call) do |args|
+      expect(UpcomingChanges::Action::TrackAddedChanges).to have_received(:call) do |args|
         expect(args[:all_admins]).to contain_exactly(admin_1, admin_2)
       end
     end
@@ -45,9 +41,9 @@ RSpec.describe UpcomingChanges::Track do
       expect(UpcomingChanges::Action::TrackRemovedChanges).to have_received(:call)
     end
 
-    it "calls TrackNotifyStatusChanges with correct arguments" do
+    it "calls TrackStatusChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackNotifyStatusChanges).to have_received(:call) do |args|
+      expect(UpcomingChanges::Action::TrackStatusChanges).to have_received(:call) do |args|
         expect(args[:all_admins]).to contain_exactly(admin_1, admin_2)
         expect(args[:added_changes]).to eq([:added_change])
         expect(args[:removed_changes]).to eq([:removed_change])
@@ -61,7 +57,6 @@ RSpec.describe UpcomingChanges::Track do
         status_changes: {
           status_change: :data,
         },
-        notified_admins_for_added_changes: %i[notified_added notified_status],
       )
     end
   end

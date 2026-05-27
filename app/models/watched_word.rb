@@ -4,14 +4,14 @@ class WatchedWord < ActiveRecord::Base
   MAX_WORDS_PER_ACTION = 2000
 
   before_validation do
-    self.word = WatchedWord.normalize_word(self.word)
-    self.replacement = WatchedWord.normalize_word(self.replacement) if self.replacement.present?
+    self.word = WatchedWord.normalize_word(word)
+    self.replacement = WatchedWord.normalize_word(replacement) if replacement.present?
   end
 
   before_validation do
-    if self.action == WatchedWord.actions[:link] && self.replacement !~ %r{\Ahttps?://}
+    if action == WatchedWord.actions[:link] && replacement !~ %r{\Ahttps?://}
       self.replacement =
-        "#{Discourse.base_url}#{self.replacement&.starts_with?("/") ? "" : "/"}#{self.replacement}"
+        "#{Discourse.base_url}#{replacement&.starts_with?("/") ? "" : "/"}#{replacement}"
     end
   end
 

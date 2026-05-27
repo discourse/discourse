@@ -16,7 +16,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
     assert.dom(".date-picker").hasValue("2019-01-29");
     assert
       .dom(".d-time-input .combo-box-header")
-      .hasAttribute("data-name", "14:45");
+      .hasAttribute("data-name", "2:45 PM");
   });
 
   test("prevents mutations", async function (assert) {

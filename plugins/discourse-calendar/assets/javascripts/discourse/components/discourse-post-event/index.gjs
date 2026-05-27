@@ -42,6 +42,7 @@ export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
   @service messageBus;
+  @service siteSettings;
 
   @tracked event;
 
@@ -91,6 +92,19 @@ export default class DiscoursePostEvent extends Component {
 
   get isPublicEvent() {
     return this.event.status === "public";
+  }
+
+  get showStatus() {
+    if (this.currentUser) {
+      return this.event.canUpdateAttendance;
+    }
+    // Anonymous users can RSVP on public events unless the site is
+    // invite-only without requiring login (in which case they can't
+    // complete the signup flow anyway).
+    if (this.siteSettings.invite_only && !this.siteSettings.login_required) {
+      return false;
+    }
+    return this.event.isPublic && !this.event.isClosed && !this.event.isExpired;
   }
 
   get isStandaloneEvent() {
@@ -293,7 +307,7 @@ export default class DiscoursePostEvent extends Component {
                   />
                 {{/if}}
 
-                {{#if @event.canUpdateAttendance}}
+                {{#if this.showStatus}}
                   <Status @event={{event}} />
                 {{/if}}
               </PluginOutlet>

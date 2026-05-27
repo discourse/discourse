@@ -32,10 +32,7 @@ require_relative "lib/discourse_topic_voting/engine"
 require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails
-    .root
-    .join("plugins", "discourse-topic-voting", "db", "fixtures")
-    .to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
 
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
@@ -242,5 +239,14 @@ after_initialize do
         :constraints => {
           username: RouteFormat.username,
         }
+  end
+
+  register_anonymous_action("vote_topic") do |user, params|
+    DiscourseTopicVoting::Votes::Cast.call(
+      params: {
+        topic_id: params["topic_id"],
+      },
+      guardian: user.guardian,
+    )
   end
 end

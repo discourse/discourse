@@ -61,6 +61,7 @@ RSpec.describe Jobs::CheckNewFeatures do
   end
 
   before do
+    Migration::Helpers.stubs(:new_site?).returns(false)
     DiscourseUpdates.stubs(:current_version).returns("2.8.1.beta13")
     freeze_time
     stub_new_features_endpoint(feature1, feature2, pending_feature)
@@ -101,6 +102,59 @@ RSpec.describe Jobs::CheckNewFeatures do
         .where(notification_type: Notification.types[:new_features], read: false)
         .count,
     ).to eq(1)
+  end
+
+  context "when the site is brand new (< 1 hour old)" do
+    before { Migration::Helpers.stubs(:new_site?).returns(true) }
+
+    it "suppresses the back-catalog notification and seeds last_viewed_feature_date" do
+      Notification.destroy_all
+
+      described_class.new.execute({})
+
+      expect(
+        admin1.notifications.where(notification_type: Notification.types[:new_features]),
+      ).to be_empty
+      expect(
+        admin2.notifications.where(notification_type: Notification.types[:new_features]),
+      ).to be_empty
+
+      # pending_feature is filtered out by version (beta14 > current beta13), so
+      # feature2 is the newest visible item.
+      newest_at = Time.zone.parse(feature2[:created_at])
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id)).to be_within_one_second_of(
+        newest_at,
+      )
+      expect(DiscourseUpdates.get_last_viewed_feature_date(admin2.id)).to be_within_one_second_of(
+        newest_at,
+      )
+    end
+
+    it "still notifies once a newer feature lands after the site is established" do
+      Notification.destroy_all
+
+      described_class.new.execute({})
+
+      Migration::Helpers.stubs(:new_site?).returns(false)
+      newer_feature =
+        build_feature_hash(id: 99, created_at: 1.hour.from_now, discourse_version: "2.8.1.beta13")
+      stub_new_features_endpoint(newer_feature, feature1, feature2, pending_feature)
+
+      described_class.new.execute({})
+
+      expect(
+        admin1
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+      expect(
+        admin2
+          .notifications
+          .where(notification_type: Notification.types[:new_features], read: false)
+          .count,
+      ).to eq(1)
+    end
   end
 
   context "when a permanent upcoming change is merged into an empty new-features feed" do

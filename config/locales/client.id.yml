@@ -226,8 +226,6 @@ id:
     tos: "Ketentuan Layanan"
     rules: "Aturan"
     conduct: "Kode Etik"
-    mobile_view: "Tampilan Mobile"
-    desktop_view: "Tampilan Desktop"
     now: "baru saja"
     read_more: "baca selengkapnya"
     more: "Selengkapnya"
@@ -1759,6 +1757,8 @@ id:
         clear_all: "Hapus Semua"
         defer: "Tandai belum dibaca"
         dismiss: "Bubar"
+        dismiss_new_topics: "Abaikan topik baru"
+        dismiss_new_replies: "Abaikan balasan baru"
         dismiss_new_modal:
           title: "Abaikan yang baru"
           topics: "Abaikan topik baru"
@@ -1954,7 +1954,6 @@ id:
         create: "Buat penanda"
         edit: "Sunting penanda"
         name: "Nama"
-        options: "Pilihan"
         actions:
           delete_bookmark:
             name: "Hapus penanda"
@@ -2459,6 +2458,28 @@ id:
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
         custom_date_range: Rentang tanggal tertentu
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Topik"
+              posts: "Pos"
+            whos_posting:
+              all_categories: "Semua kategori"
+              staff: "Staf"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Baru"
+                "2": "Anggota"
+                "3": "Umum"
+        reports_section:
+          modal:
+            enabled_heading: "Diaktifkan"
+            apply: "menerapkan"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
+            crawlers: "Perayap"
         period:
           last_7_days: "7 hari terakhir"
           last_30_days: "30 hari terakhir"

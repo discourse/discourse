@@ -360,7 +360,6 @@ tr_TR:
         condition_debugging: "Durum hata ayıklama"
       toggle_safe_mode: "Güvenli modu aç/kapat"
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
-      toggle_mobile_view: "Mobil görünümü aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
       toggle_upcoming_changes_debug: "Yaklaşan değişikliklerin hata ayıklama modunu aç/kapat"
     s3:
@@ -419,8 +418,6 @@ tr_TR:
     tos: "Hizmet Şartları"
     rules: "Kurallar"
     conduct: "Davranış Kuralları"
-    mobile_view: "Mobil Görünüm"
-    desktop_view: "Masaüstü Görünümü"
     now: "az önce"
     read_more: "devamını oku"
     more: "Daha fazla"
@@ -3511,6 +3508,8 @@ tr_TR:
           other: "Kapat (%{count})"
         dismiss_tooltip: "Yeni gönderileri kapat veya konuları takip etmeyi durdur"
         also_dismiss_topics: "Yeniden okunmamış olarak gösterilmemesi için bu konuları takip etmeyi durdur"
+        dismiss_new_topics: "Yeni konuları kapat"
+        dismiss_new_replies: "Yeni yanıtları kapat"
         dismiss_new: "Yenileri Kapat"
         dismiss_new_modal:
           title: "Yeniyi kapat"
@@ -4472,7 +4471,6 @@ tr_TR:
         name_placeholder: "Bu yer imi ne için?"
         name_input_label: "Yer imi adı"
         set_reminder: "Bana anımsat"
-        options: "Seçenekler"
         actions:
           delete_bookmark:
             name: "Yer imini sil"
@@ -5151,18 +5149,8 @@ tr_TR:
       staff_info: "Kısıtlama eklemek için bu etiketi bir <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
       category_restricted: "Bu etiket, erişim izninizin olmadığı kategorilerle sınırlı."
       synonyms: "Eş Anlamlılar"
-      synonyms_description: "Aşağıdaki etiketler kullanıldığında <b>%{base_tag_name}</b>ile değiştirilir."
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      tag_groups_info:
-        one: 'Bu etiket %{tag_groups} grubuna ait.'
-        other: "Bu etiket şu gruplara ait: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Bu etiket gruba aittir "
-        other: "Bu etiket şu gruplara aittir: "
-      category_restrictions:
-        one: "Sadece şu kategoride kullanılabilir:"
-        other: "Yalnızca şu kategorilerde kullanılabilir:"
       restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
@@ -6350,8 +6338,37 @@ tr_TR:
             title: "Site trafiği"
           engagement:
             title: "Taahhüt"
+            activity_by_category:
+              category: "Kategori"
+              topics: "Konular"
+              posts: "Gönderi"
+              share: "Paylaş"
+            whos_posting:
+              all_categories: "Tüm kategoriler"
+              staff: "Personel"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Yeni"
+                "1": "Temel"
+                "2": "Üye"
+                "3": "Normal"
+                "4": "Lider"
+              trend:
+                stable: "stabil"
+        reports_section:
+          no_data: "Gösterilecek veri yok"
+          modal:
+            enabled_heading: "Etkin mi"
+            all_heading: "Tüm raporlar"
+            apply: "Uygula"
+            move_up: "Yukarı taşı"
+            move_down: "Aşağı taşı"
         configure:
           button: "Yapılandır"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
+            crawlers: "Gezginler"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

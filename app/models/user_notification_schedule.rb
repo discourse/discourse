@@ -6,8 +6,8 @@ class UserNotificationSchedule < ActiveRecord::Base
   DEFAULT = -> do
     attrs = { enabled: false }
     7.times do |n|
-      attrs["day_#{n}_start_time".to_sym] = 480
-      attrs["day_#{n}_end_time".to_sym] = 1020
+      attrs[:"day_#{n}_start_time"] = 480
+      attrs[:"day_#{n}_end_time"] = 1020
     end
     attrs
   end.call

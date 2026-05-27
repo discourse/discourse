@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -2928,6 +2929,28 @@ class _PluginApi {
   }
 
   /**
+   * Registers a component used to render a report on the customisable
+   * Reports section of the new admin dashboard. Pair with the server-side
+   * `register_admin_dashboard_report_source` registration: the source name
+   * passed here matches the provider's `source_name`. The component
+   * receives `@item`, `@payload`, and `@filters` and is mounted inside the
+   * card's chart area; the card frame (title, label pill, X-to-remove) is
+   * owned by core.
+   *
+   * ```
+   * import MyReportCard from "discourse/plugins/my-plugin/discourse/components/my-report-card";
+   *
+   * api.registerAdminDashboardReportRenderer("my_source", MyReportCard);
+   * ```
+   *
+   * @param {string} source - The provider's source_name.
+   * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
+   */
+  registerAdminDashboardReportRenderer(source, componentClass) {
+    registerAdminDashboardReportRenderer(source, componentClass);
+  }
+
+  /**
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -3315,9 +3338,6 @@ class _PluginApi {
 
   /**
    * Registers a custom tab for the category edit page.
-   * Only available when the `enable_simplified_category_creation`
-   * site setting is enabled, this will not work for the legacy
-   * category edit page.
    *
    * ```
    * api.registerEditCategoryTab({
@@ -3341,8 +3361,7 @@ class _PluginApi {
 
   /**
    * Register a callback that runs when the user changes category type selection in the
-   * **simplified** category editor (General tab) when `enable_simplified_category_creation` is
-   * enabled. It does not run on the legacy category editor.
+   * category editor's General tab.
    *
    * Callbacks run in order. Each may be `async`. The change applies only if every callback
    * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback

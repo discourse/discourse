@@ -760,6 +760,29 @@ hy:
       xaxis: "Օր"
       yaxis: "Նոր մասնակիցների քանակ"
       description: "Այն օգտատերերի քանակը, որոնք այս ժամանակահատվածում կատարել են իրենց առաջին գրառումը:"
+    activity_by_category:
+      labels:
+        category: "Կատեգորիա"
+        topics: "Թեմաներ"
+        posts: "Գրառումներ"
+        share: "Կիսվել"
+    posters_by_member_type:
+      labels:
+        count: "Գրառումներ"
+        share: "Կիսվել"
+      types:
+        staff: "Անձնակազմ"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Անդամներ"
+        share: "Կիսվել"
+      levels:
+        "0": "Նոր"
+        "1": "Հիմնական"
+        "2": "Անդամ"
+        "3": "Սովորական"
+        "4": "Առաջնորդ"
     trust_level_growth:
       yaxis: "Օր"
     consolidated_page_views:
@@ -783,6 +806,9 @@ hy:
     consolidated_page_views_browser_detection:
       yaxis: "Օր"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Անանուն"
+        page_view_crawler: "Տվյալների հավաքագրիչներ (Crawler)"
       yaxis: "Օր"
     dau_by_mau:
       xaxis: "Օր"
@@ -892,6 +918,12 @@ hy:
         num_clicks: "Սեղմումներ"
         num_topics: "Թեմաներ"
       description: "Օգտատերեր՝ ցուցակավորված ըստ այն հղումների սեղմումների, որոնցով կիսվել են:"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
     top_traffic_sources:
       title: "Թոփ Այցելությունների Աղբյուրներ"
       xaxis: "Դոմեն"
@@ -1131,7 +1163,6 @@ hy:
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Թույլատրել մոդերատորներին փոխել գրառման սեփականության իրավունքը"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
-    use_admin_ip_allowlist: "Ադմինները կարող են մուտք գործել, եթե միայն ունեն Ցուցադրված IP-ների ցանկում սահմանված IP հասցե (Admin > Logs > Screened Ips):"
     blocked_ip_blocks: "Մասնավոր IP արգելափակումների ցանկ, որոնք երբեք չպետք է ենթարկվեն տվյալների հավաքագրման Discourse-ի կողմից:"
     allowed_internal_hosts: "Ներքին հոսթերի ցանկ, որը discourse-ը կարող է ապահով հավաքագրել սմարթ-ներդիրի և այլ նպատակների համար"
     slow_down_crawler_rate: "Եթե slow_down_crawler_user_agents -ը որոշված է, այս գնահատականը կկիրառվի տվյալների բոլոր հավաքագրիչների նկատմամբ (հարցումների միջև դադարի վայրկյանների քանակը)"
@@ -1358,7 +1389,6 @@ hy:
     ignored_users_message_gap_days: "Որքան սպասել՝ մինչ մոդերատորներին կրկին ծանուցելը օգտատիրոջ մասին, որը անտեսվել է շատ այլոց կողմից:"
     allow_profile_backgrounds: "Թույլատրել օգտատերերին վերբեռնել պրոֆիլի ֆոն:"
     get_a_room_threshold: "Գրառումների քանակը, որ օգտատերը պետք է կատարի նույն մարդուն նույն թեմայում՝ մինչ զգուշացում ստանալը:"
-    enable_mobile_theme: "Հեռախոսային սարքավորումները օգտագործում են հարմարեցված թեմա՝ ամբողջական կայքին անցնելու կարողությամբ: Անջատեք սա, եթե ցանկանում եք օգտագործել մասնավոր ոճ, որը ամբողջովին արձագանքող(responsive) է:"
     dominating_topic_minimum_percent: "Թեմայի գրառումների քանի տոկոսը պետք է կատարի օգտատերը՝ մինչ թեմայում կատարելապես գերադրական դիրք ունենալու մասին հիշեցում ստանալը:"
     suppress_uncategorized_badge: "Չցուցադրել չկատեգորիզացված թեմաների համար կրծքանշանը թեմաների ցանկում:"
     header_dropdown_category_count: "Քանի կատեգորիա պետք է ցուցադրվի վերնամասի բացվող ցուցակի մենյուում:"

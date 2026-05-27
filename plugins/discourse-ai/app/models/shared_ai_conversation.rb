@@ -2,6 +2,7 @@
 
 class SharedAiConversation < ActiveRecord::Base
   DEFAULT_MAX_POSTS = 100
+  ARTIFACT_SECURITY_MODES = %w[lax hybrid strict]
 
   belongs_to :user
   belongs_to :target, polymorphic: true
@@ -17,18 +18,20 @@ class SharedAiConversation < ActiveRecord::Base
     raise "Target must be a topic for now" if !target.is_a?(Topic)
 
     conversation = find_by(user: user, target: target)
-    conversation_data =
-      build_conversation_data(target, max_posts: max_posts, publish_artifacts: true)
+    conversation_data = build_conversation_data(target, max_posts: max_posts)
 
-    conversation =
+    shared =
       if conversation
         conversation.update(**conversation_data)
-        conversation
       else
-        create(user_id: user.id, target: target, **conversation_data)
+        conversation = create(user_id: user.id, target: target, **conversation_data)
+        conversation.persisted?
       end
 
-    ::Jobs.enqueue(:shared_conversation_adjust_upload_security, conversation_id: conversation.id)
+    if shared
+      share_artifacts(target, max_posts: max_posts)
+      ::Jobs.enqueue(:shared_conversation_adjust_upload_security, conversation_id: conversation.id)
+    end
 
     conversation
   end
@@ -73,7 +76,7 @@ class SharedAiConversation < ActiveRecord::Base
 
   def to_json
     posts =
-      self.populated_context.map do |post|
+      populated_context.map do |post|
         {
           id: post.id,
           cooked: post.cooked,
@@ -81,7 +84,7 @@ class SharedAiConversation < ActiveRecord::Base
           created_at: post.created_at,
         }
       end
-    { llm_name: self.llm_name, share_key: self.share_key, title: self.title, posts: posts }
+    { llm_name: llm_name, share_key: share_key, title: title, posts: posts }
   end
 
   def url
@@ -136,12 +139,7 @@ class SharedAiConversation < ActiveRecord::Base
     I18n.t("discourse_ai.share_ai.formatted_excerpt", llm_name: llm_name, excerpt: excerpt)
   end
 
-  def self.build_conversation_data(
-    topic,
-    max_posts: DEFAULT_MAX_POSTS,
-    include_usernames: false,
-    publish_artifacts: false
-  )
+  def self.build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)
     allowed_user_ids = topic.topic_allowed_users.pluck(:user_id)
     ai_bot_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
 
@@ -155,14 +153,7 @@ class SharedAiConversation < ActiveRecord::Base
       agent = AiAgent.find_by(id: agent_id.to_i)&.name
     end
 
-    posts =
-      topic
-        .posts
-        .by_post_number
-        .where(post_type: Post.types[:regular])
-        .where.not(cooked: nil)
-        .where(deleted_at: nil)
-        .limit(max_posts)
+    posts = conversation_posts(topic, max_posts: max_posts)
 
     {
       llm_name: llm_name,
@@ -174,7 +165,7 @@ class SharedAiConversation < ActiveRecord::Base
             id: post.id,
             user_id: post.user_id,
             created_at: post.created_at,
-            cooked: cook_artifacts(post, publish: publish_artifacts),
+            cooked: cook_artifacts(post),
           }
 
           mapped[:agent] = agent if ai_bot_participant&.id == post.user_id
@@ -184,9 +175,9 @@ class SharedAiConversation < ActiveRecord::Base
     }
   end
 
-  def self.cook_artifacts(post, publish: false)
+  def self.cook_artifacts(post)
     html = post.cooked
-    return html if !%w[lax hybrid strict].include?(SiteSetting.ai_artifact_security)
+    return html if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
 
     doc = Nokogiri::HTML5.fragment(html)
     doc
@@ -195,13 +186,34 @@ class SharedAiConversation < ActiveRecord::Base
         id = node["data-ai-artifact-id"].to_i
         version = node["data-ai-artifact-version"]
         version_number = version.to_i if version
-        if id > 0
-          AiArtifact.share_publicly(id: id, post: post) if publish
-          node.replace(AiArtifact.iframe_for(id, version_number))
-        end
+        node.replace(AiArtifact.iframe_for(id, version_number)) if id > 0
       end
 
     doc.to_s
+  end
+
+  def self.share_artifacts(topic, max_posts: DEFAULT_MAX_POSTS)
+    return if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
+
+    conversation_posts(topic, max_posts: max_posts).each do |post|
+      doc = Nokogiri::HTML5.fragment(post.cooked)
+      doc
+        .css("div.ai-artifact")
+        .each do |node|
+          id = node["data-ai-artifact-id"].to_i
+          AiArtifact.share_publicly(id: id, post: post) if id > 0
+        end
+    end
+  end
+
+  def self.conversation_posts(topic, max_posts: DEFAULT_MAX_POSTS)
+    topic
+      .posts
+      .by_post_number
+      .where(post_type: Post.types[:regular])
+      .where.not(cooked: nil)
+      .where(deleted_at: nil)
+      .limit(max_posts)
   end
 
   private

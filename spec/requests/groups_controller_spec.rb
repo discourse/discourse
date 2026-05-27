@@ -602,6 +602,37 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
+    it "omits hidden mentions from other users", :aggregate_failures do
+      visible_post = Fabricate(:post, user: user, raw: "visible group mention")
+      hidden_post = Fabricate(:post, user: user, raw: "private hidden group mention", hidden: true)
+      GroupMention.create!(post: visible_post, group: group)
+      GroupMention.create!(post: hidden_post, group: group)
+
+      sign_in(user2)
+      get "/groups/#{group.name}/mentions.json"
+
+      post_ids = response.parsed_body["posts"].map { |post| post["id"] }
+
+      expect(response.status).to eq(200)
+      expect(post_ids).to contain_exactly(visible_post.id)
+      expect(response.body).not_to include(hidden_post.raw)
+    end
+
+    it "returns hidden mentions to the author", :aggregate_failures do
+      hidden_post =
+        Fabricate(:post, user: user, raw: "author visible hidden group mention", hidden: true)
+      GroupMention.create!(post: hidden_post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        hidden_post.id,
+      )
+      expect(response.body).to include(hidden_post.raw)
+    end
+
     it "supports pagination using before (date)" do
       post = Fabricate(:post)
       GroupMention.create!(post: post, group: group)
@@ -676,6 +707,60 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+    end
+
+    it "omits hidden posts from other users", :aggregate_failures do
+      visible_post = Fabricate(:post, user: user, raw: "visible group post")
+      hidden_post = Fabricate(:post, user: user, raw: "private hidden group post", hidden: true)
+
+      sign_in(user2)
+      get "/groups/#{group.name}/posts.json"
+
+      post_ids = response.parsed_body["posts"].map { |post| post["id"] }
+
+      expect(response.status).to eq(200)
+      expect(post_ids).to contain_exactly(visible_post.id)
+      expect(response.body).not_to include(hidden_post.raw)
+    end
+
+    it "returns hidden posts to staff", :aggregate_failures do
+      hidden_post =
+        Fabricate(:post, user: user, raw: "staff visible hidden group post", hidden: true)
+
+      sign_in(moderator)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        hidden_post.id,
+      )
+      expect(response.body).to include(hidden_post.raw)
+    end
+
+    it "returns hidden posts to category moderators", :aggregate_failures do
+      SiteSetting.enable_category_group_moderation = true
+      moderated_category = Fabricate(:category)
+      moderation_group = Fabricate(:group)
+      category_moderator = Fabricate(:user)
+      moderation_group.add(category_moderator)
+      Fabricate(:category_moderation_group, category: moderated_category, group: moderation_group)
+      hidden_post =
+        Fabricate(
+          :post,
+          user: user,
+          topic: Fabricate(:topic, category: moderated_category),
+          raw: "category moderator visible hidden group post",
+          hidden: true,
+        )
+
+      sign_in(category_moderator)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        hidden_post.id,
+      )
+      expect(response.body).to include(hidden_post.raw)
     end
 
     it "does not include names when names are disabled" do
@@ -2592,6 +2677,29 @@ RSpec.describe GroupsController do
           expect(result["subject"]).to eq("public_exit")
           expect(result["prev_value"]).to eq("f")
           expect(result["new_value"]).to eq("t")
+        end
+      end
+
+      it "does not expose email setting values in history logs" do
+        group.update!(
+          email_password: "secret_smtp_pass",
+          email_username: "group@example.com",
+          smtp_server: "smtp.example.com",
+          smtp_port: 587,
+          smtp_ssl_mode: "starttls",
+        )
+        GroupActionLogger.new(admin, group).log_change_group_settings
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+
+        logs = response.parsed_body["logs"]
+        redacted = I18n.t("staff_action_logs.redacted")
+
+        %w[email_password email_username smtp_server smtp_port smtp_ssl_mode].each do |subject|
+          entry = logs.find { |log| log["subject"] == subject }
+          expect(entry["new_value"]).to eq(redacted)
         end
       end
 

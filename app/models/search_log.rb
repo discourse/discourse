@@ -66,7 +66,7 @@ class SearchLog < ActiveRecord::Base
 
     if !result
       log =
-        self.create!(
+        create!(
           term: term,
           search_type: search_type,
           ip_address: ip_address,

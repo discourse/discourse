@@ -26,6 +26,16 @@ RSpec.describe Admin::ReportsController do
           *Report::ADMIN_ONLY_REPORTS,
         )
       end
+
+      it "includes suspicious logins when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+
+        get "/admin/reports.json"
+
+        expect(response.parsed_body["reports"].map { |r| r["type"] }).to include(
+          "suspicious_logins",
+        )
+      end
     end
 
     before { sign_in(admin) }
@@ -240,6 +250,29 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["reports"][2]).to include("error" => "not_found", "data" => nil)
         expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
       end
+
+      it "redacts suspicious login IP addresses when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+        DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+        user.user_auth_token_logs.create!(
+          action: "suspicious",
+          client_ip: "1.1.1.1",
+          user_agent: "Mozilla/5.0",
+          created_at: 1.hour.ago,
+        )
+
+        get "/admin/reports/bulk.json", params: { reports: { suspicious_logins: { limit: 10 } } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"].count).to eq(1)
+
+        report = response.parsed_body["reports"].first
+        row = report["data"].first
+        expect(report["type"]).to eq("suspicious_logins")
+        expect(row["username"]).to eq(user.username)
+        expect(row["client_ip"]).to be_nil
+        expect(row["location"]).to eq("Earth")
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -427,6 +460,31 @@ RSpec.describe Admin::ReportsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["report"]["total"]).to eq(1)
+      end
+
+      context "when moderators cannot view IPs" do
+        before do
+          SiteSetting.moderators_view_ips = false
+          DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+
+          user.user_auth_token_logs.create!(
+            action: "suspicious",
+            client_ip: "1.1.1.1",
+            user_agent: "Mozilla/5.0",
+            created_at: 1.hour.ago,
+          )
+        end
+
+        it "redacts suspicious login IP address while retaining location" do
+          get "/admin/reports/suspicious_logins.json"
+
+          expect(response.status).to eq(200)
+
+          row = response.parsed_body.dig("report", "data", 0)
+          expect(row["username"]).to eq(user.username)
+          expect(row["client_ip"]).to be_nil
+          expect(row["location"]).to eq("Earth")
+        end
       end
 
       it "does not allow accessing admin-only reports" do
