@@ -131,27 +131,42 @@ class PublishedPagesController < ApplicationController
   end
 
   def published_page_cache_validator(pp)
+    theme_updated_at = Theme.maximum(:updated_at)
+    child_theme_updated_at = ChildTheme.maximum(:updated_at)
+    theme_field_updated_at = ThemeField.maximum(:updated_at)
+
     last_modified = [
       pp.updated_at,
       @topic.updated_at,
       @topic.first_post&.updated_at,
       @topic.user&.updated_at,
       SiteSetting.maximum(:updated_at),
-      Theme.maximum(:updated_at),
-      ChildTheme.maximum(:updated_at),
-      ThemeField.maximum(:updated_at),
+      theme_updated_at,
+      child_theme_updated_at,
+      theme_field_updated_at,
     ].compact.max
 
     {
       etag:
         Digest::SHA1.hexdigest(
-          [last_modified&.to_f, published_page_layout_cache_version].compact.join("\n"),
+          [
+            last_modified&.to_f,
+            published_page_layout_cache_version(
+              theme_updated_at: theme_updated_at,
+              child_theme_updated_at: child_theme_updated_at,
+              theme_field_updated_at: theme_field_updated_at,
+            ),
+          ].compact.join("\n"),
         ),
       last_modified: last_modified,
     }
   end
 
-  def published_page_layout_cache_version
+  def published_page_layout_cache_version(
+    theme_updated_at:,
+    child_theme_updated_at:,
+    theme_field_updated_at:
+  )
     [
       Discourse.git_version,
       MessageBus.last_id(Site::SITE_JSON_CHANNEL),
@@ -161,9 +176,9 @@ class PublishedPagesController < ApplicationController
       SiteSetting.google_site_verification_token,
       SiteSetting.logo&.id,
       SiteSetting.logo_small&.id,
-      Theme.maximum(:updated_at)&.to_f,
-      ChildTheme.maximum(:updated_at)&.to_f,
-      ThemeField.maximum(:updated_at)&.to_f,
+      theme_updated_at&.to_f,
+      child_theme_updated_at&.to_f,
+      theme_field_updated_at&.to_f,
     ]
   end
 
