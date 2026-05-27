@@ -14,6 +14,9 @@ hu:
       explorer:
         no_semicolons: "Pontosvesszők eltávolítása a lekérdezésből."
         dirty: "Futtatás előtt el kell mentenie a lekérdezést."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nincs találat"
     explorer:
       default_query: "Alapértelmezett"
       default_query_notice: "Ez egy alapértelmezett lekérdezés, az SQL nem szerkeszthető. Az SQL szerkesztéséhez hozzon létre egy új lekérdezést."

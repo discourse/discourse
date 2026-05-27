@@ -1636,6 +1636,9 @@ fr:
       maxmind_db_configuration: 'Le serveur a été configuré pour utiliser les bases de données MaxMind pour les recherches IP inversées, mais aucun identifiant de compte MaxMind valide n''a été configuré, ce qui pourrait empêcher le téléchargement des bases de données MaxMind à l''avenir. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consultez ce guide pour en savoir plus</a>.'
       admin_sidebar_deprecation: "L'ancienne disposition d'administration est obsolète au profit de la nouvelle <a href='https://meta.discourse.org/t/-/289281'>disposition de la barre latérale</a> et sera supprimée dans la prochaine version. Vous pouvez <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurer</a> la nouvelle disposition de la barre latérale maintenant pour l'activer avant cette suppression."
     back_from_logster_text: "Retour au site"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
     disabled: "désactivé"
@@ -2221,7 +2224,6 @@ fr:
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrière-plans de profil."
     get_a_room_threshold: "Nombre de messages qu'un utilisateur doit envoyer à la même personne dans un même sujet avant de recevoir un avertissement."
     dont_feed_the_trolls_threshold: "Nombre de signalements émis par d'autres utilisateurs avant d'être avertis."
-    enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
     dominating_topic_minimum_percent: "Quel pourcentage de messages un utilisateur doit publier dans un sujet avant d'être averti et invité à laisser la communauté répondre."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets sans catégorie dans les listes de sujets."
     header_dropdown_category_count: "Nombre de catégories qui peuvent être affichées dans le menu déroulant de l'en-tête."

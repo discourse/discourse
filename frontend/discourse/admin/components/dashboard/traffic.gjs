@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const PERIOD_COPY_KEYS = {
@@ -108,6 +110,13 @@ export default class DashboardTraffic extends Component {
     };
   }
 
+  get reportQuery() {
+    return {
+      start_date: moment(this.args.startDate).format("YYYY-MM-DD"),
+      end_date: moment(this.args.endDate).format("YYYY-MM-DD"),
+    };
+  }
+
   formatHeadlineCount(value) {
     if (value >= 1_000_000) {
       const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
@@ -187,26 +196,25 @@ export default class DashboardTraffic extends Component {
       @title={{i18n "admin.dashboard.sections.traffic.title"}}
       @startDate={{@startDate}}
       @endDate={{@endDate}}
+      ...attributes
     >
       <div class="db-traffic {{if @loading 'is-loading'}}">
         <div class="db-section__subheader">
           <div class="db-section__subintro">
-            <h3 class="db-traffic__headline">
+            <h3>
               {{this.headlineText}}
               {{#if this.trend}}
-                <span class="db-traffic__headline-separator"> - </span>
-                <span
-                  class="db-traffic__trend {{concat '--' this.trendDirection}}"
-                >
+                —
+                <span class="db-traffic__trend --{{this.trendDirection}}">
                   {{this.trendText}}
-                  <DTooltip
-                    class="db-traffic__info"
-                    @identifier="site-traffic-comparison-tooltip"
-                    @icon="circle-info"
-                  >
-                    <:content>{{this.comparisonTooltipText}}</:content>
-                  </DTooltip>
                 </span>
+                <DTooltip
+                  class="db-section__info"
+                  @identifier="site-traffic-comparison-tooltip"
+                  @icon="circle-question"
+                >
+                  <:content>{{this.comparisonTooltipText}}</:content>
+                </DTooltip>
               {{/if}}
             </h3>
             {{! <p>
@@ -227,9 +235,9 @@ export default class DashboardTraffic extends Component {
                     "admin.dashboard.site_traffic.kpi.logged_in_share.label"
                   }}
                   <DTooltip
-                    class="db-traffic__info"
+                    class="db-section__info"
                     @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="circle-info"
+                    @icon="circle-question"
                   >
                     <:content>
                       {{i18n
@@ -262,6 +270,18 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
+          <LinkTo
+            class="db-traffic__see-details"
+            @route="adminReports.show"
+            @model="site_traffic"
+            @query={{hash
+              start_date=this.reportQuery.start_date
+              end_date=this.reportQuery.end_date
+            }}
+          >
+            {{i18n "admin.dashboard.site_traffic.see_details"}}
+            {{dIcon "arrow-right"}}
+          </LinkTo>
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>

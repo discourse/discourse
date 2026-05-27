@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Viewport-based mobile mode" do
-  before { SiteSetting.viewport_based_mobile_mode = true }
-
   it "has both stylesheets, and updates classes at runtime" do
     visit "/"
 

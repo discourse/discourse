@@ -620,9 +620,16 @@ class Middleware::RequestTracker
     # or a subsequent XHR from inside the embed iframe which sets the header below.
     # Use `request.GET` (query-string only) rather than `request.params` so a missing
     # or malformed request body cannot raise from here.
+    embed_mode_param =
+      begin
+        request.GET["embed_mode"]
+      rescue Rack::QueryParser::ParameterTypeError, Rack::QueryParser::InvalidParameterError
+        # malformed query string — Rails will turn this into a 400 downstream
+        nil
+      end
+
     is_embed =
-      request.GET["embed_mode"] == "true" ||
-        %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
+      embed_mode_param == "true" || %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
 
     {
       track_view: track_view,
@@ -729,8 +736,13 @@ class Middleware::RequestTracker
         created_at: payload[:occurred_at],
       )
     rescue ActiveRecord::StatementInvalid => e
-      raise unless e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
-      Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      if e.cause.is_a?(PG::ReadOnlySqlTransaction)
+        # Skip recording browser pageviews when PostgreSQL is in read-only transaction mode.
+      elsif e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
+        Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      else
+        raise
+      end
     rescue => e
       Rails.logger.error(
         "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",

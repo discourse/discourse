@@ -12,7 +12,7 @@ describe Jobs::DetectTranslateTopic do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
-    SiteSetting.ai_translation_target_categories = topic.category_id.to_s
+    SiteSetting.ai_translation_excluded_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -139,11 +139,11 @@ describe Jobs::DetectTranslateTopic do
     expect { job.execute({ topic_id: topic.id }) }.not_to raise_error
   end
 
-  describe "with target categories and PM scope" do
-    fab!(:target_category, :category)
-    fab!(:non_target_category, :category)
-    fab!(:target_topic) { Fabricate(:topic, category: target_category) }
-    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
+  describe "with excluded categories and PM scope" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
 
     fab!(:personal_pm_topic, :private_message_topic)
 
@@ -151,29 +151,35 @@ describe Jobs::DetectTranslateTopic do
       Fabricate(:group_private_message_topic, recipient_group: Fabricate(:group))
     end
 
-    before { SiteSetting.ai_translation_target_categories = target_category.id.to_s }
+    before { SiteSetting.ai_translation_excluded_categories = excluded_category.id.to_s }
 
-    it "skips topics not in target categories" do
+    it "skips topics in excluded categories" do
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
-        .with(non_target_topic)
+        .with(excluded_topic)
         .never
 
-      job.execute({ topic_id: non_target_topic.id })
+      job.execute({ topic_id: excluded_topic.id })
     end
 
-    it "processes topics in target categories" do
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(target_topic).once
+    it "processes topics in included categories" do
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
 
-      job.execute({ topic_id: target_topic.id })
+      job.execute({ topic_id: included_topic.id })
     end
 
-    it "skips topics when target_categories is empty" do
-      SiteSetting.ai_translation_target_categories = ""
+    it "processes regular topics when excluded categories is empty" do
+      SiteSetting.ai_translation_excluded_categories = ""
 
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(target_topic).never
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
 
-      job.execute({ topic_id: target_topic.id })
+      job.execute({ topic_id: included_topic.id })
     end
 
     context "when pm_translation_scope is none" do

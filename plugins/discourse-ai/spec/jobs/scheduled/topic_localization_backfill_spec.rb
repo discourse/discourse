@@ -10,7 +10,7 @@ describe Jobs::TopicLocalizationBackfill do
     SiteSetting.ai_translation_backfill_max_age_days = 100
     SiteSetting.content_localization_supported_locales = "en"
     SiteSetting.ai_translation_enabled = true
-    SiteSetting.ai_translation_target_categories = topic.category_id.to_s
+    SiteSetting.ai_translation_excluded_categories = ""
   end
 
   it "does not enqueue topic translation when translator disabled" do

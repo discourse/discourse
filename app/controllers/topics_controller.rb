@@ -942,13 +942,7 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
-    user =
-      if is_api? && @guardian.is_admin? &&
-           (params[:username].present? || params[:external_id].present?)
-        fetch_user_from_params
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     topic = Topic.find(params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)
@@ -1109,7 +1103,7 @@ class TopicsController < ApplicationController
         topic_id,
         topic_time,
         timings.map { |post_number, t| [post_number.to_i, t.to_i] },
-        mobile: view_context.mobile_view?,
+        mobile: view_context.mobile_device?,
       )
       render body: nil
     end

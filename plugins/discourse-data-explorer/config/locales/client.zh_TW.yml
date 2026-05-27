@@ -6,6 +6,9 @@
 
 zh_TW:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "沒有結果"
     explorer:
       default_query: "預設"
       or: "或"

@@ -1479,7 +1479,6 @@ ca:
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
-    enable_mobile_theme: "Els dispositius mòbils fan servir una aparença compatible amb els mòbils, amb la possibilitat de passar a la versió normal. Desactiveu-ho si voleu fer servir un full d'estils personalitzat totalment responsiu. "
     dominating_topic_minimum_percent: "Quin percentatge de publicacions ha de fer un usuari en un tema abans de ser advertit sobre ús abusiu."
     suppress_uncategorized_badge: "No mostris la insígnia per a temes sense categoria en les llistes de temes."
     header_dropdown_category_count: "Quantes categories es poden mostrar en el menú desplegable de la capçalera."

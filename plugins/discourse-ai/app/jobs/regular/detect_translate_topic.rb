@@ -34,9 +34,7 @@ module Jobs
           return
         end
       else
-        target_category_ids = SiteSetting.ai_translation_target_categories
-        return if target_category_ids.blank?
-        return if target_category_ids.split("|").map(&:to_i).exclude?(topic.category_id)
+        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
       end
 
       if (detected_locale = topic.locale).blank?

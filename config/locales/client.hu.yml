@@ -358,7 +358,6 @@ hu:
         condition_debugging: "Feltétel hibakeresése"
       toggle_safe_mode: "Biztonságos mód be-/kikapcsolása"
       toggle_verbose_localization: "Részletes honosítási mód be-/kikapcsolása"
-      toggle_mobile_view: "Mobil nézet be-/kikapcsolása"
       disable_dev_tools: "Fejlesztői eszközök letiltása"
     s3:
       regions:
@@ -416,8 +415,6 @@ hu:
     tos: "Szolgáltatási feltételek"
     rules: "Szabályok"
     conduct: "Magatartási kódex"
-    mobile_view: "Mobil nézet"
-    desktop_view: "Asztali nézet"
     now: "épp most"
     read_more: "olvasás tovább"
     more: "Több"
@@ -4287,7 +4284,6 @@ hu:
         name_placeholder: "Mire való ez a könyvjelző?"
         name_input_label: "Könyvjelző neve"
         set_reminder: "Emlékeztetés"
-        options: "Beállítások"
         actions:
           delete_bookmark:
             name: "Könyvjelző törlése"
@@ -6150,6 +6146,14 @@ hu:
                 "4": "Vezető"
               trend:
                 stable: "stabil"
+        reports_section:
+          no_data: "Nincs megjeleníthető adat"
+          modal:
+            enabled_heading: "Bekapcsolva"
+            all_heading: "Összes bejelentés"
+            apply: "Alkalmaz"
+            move_up: "Mozgatás fel"
+            move_down: "Mozgatás le"
         site_traffic:
           series:
             anonymous: "Névtelen"

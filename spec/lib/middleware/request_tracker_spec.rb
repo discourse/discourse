@@ -18,6 +18,7 @@ RSpec.describe Middleware::RequestTracker do
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   after do
@@ -371,6 +372,19 @@ RSpec.describe Middleware::RequestTracker do
             0.1,
           )
         }.not_to raise_error
+      end
+
+      it "survives malformed query strings while detecting embed mode" do
+        data = nil
+        expect {
+          data =
+            Middleware::RequestTracker.get_data(
+              env(path: "/?foo=1&foo%5B1%5D=2"),
+              ["200", { "Content-Type" => "text/html" }],
+              0.1,
+            )
+        }.not_to raise_error
+        expect(data[:is_embed]).to eq(false)
       end
 
       it "still counts crawlers as page_view_crawler even on embed URLs" do

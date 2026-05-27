@@ -240,8 +240,6 @@ bs_BA:
     tos: "Uslovi korištenja"
     rules: "Pravila"
     conduct: "Kodeks ponašanja"
-    mobile_view: "Mobilni prikaz"
-    desktop_view: "Desktop prikaz"
     now: "upravo sada"
     read_more: "pročitaj više"
     more: "Više"
@@ -2499,7 +2497,6 @@ bs_BA:
         name: "Ime"
         name_placeholder: "Za što služi ova zabilješka?"
         set_reminder: "Podsjeti me"
-        options: "Opcije"
         actions:
           delete_bookmark:
             name: "Obriši zabilješku"
@@ -3362,6 +3359,12 @@ bs_BA:
                 "2": "Član"
                 "3": "Normalno"
                 "4": "Vođa"
+        reports_section:
+          no_data: "Nema podataka za prikaz"
+          modal:
+            enabled_heading: "Omogućen"
+            all_heading: "Svi izvještaji"
+            apply: "Snimi"
         site_traffic:
           series:
             anonymous: "Anoniman"

@@ -7,6 +7,7 @@ describe "Request tracking" do
     CachedCounting.reset
     CachedCounting.enable
     SiteSetting.trigger_browser_pageview_events = true
+    SiteSetting.persist_browser_pageview_events = false
   end
 
   after do

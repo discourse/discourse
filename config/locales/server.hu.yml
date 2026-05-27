@@ -1665,6 +1665,9 @@ hu:
       admin_sidebar_deprecation: "A régi adminisztrátori elrendezés elavult, az új <a href='https://meta.discourse.org/t/-/289281'>oldalsávelrendezés helyett</a> , és a következő kiadásban eltávolítjuk. Most már <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurálhatja</a> az új oldalsáv-elrendezést, hogy azelőtt bekapcsolódjon."
       starttls_disabled: "A kimenő e-mail konfigurációban a STARTTLS le van tiltva. Erre szinte soha nincs szükség. Fontolja meg a <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> eltávolítását a környezetéből. További részletekért tekintse meg <a href='https://meta.discourse.org/t/387286'>ezt a témát</a> ."
     back_from_logster_text: "Vissza az oldalra"
+    reports_section:
+      providers:
+        core_report: "Szabványos"
   site_settings:
     allow_bulk_invite: "Tömeges meghívók engedélyezése CSV-fájl feltöltésével"
     disabled: "kikapcsolva"
@@ -2283,7 +2286,6 @@ hu:
     allow_profile_backgrounds: "Engedélyezze a felhasználóknak profilhátterek feltöltését."
     get_a_room_threshold: "Azon bejegyzések száma, amelyeket a felhasználónak ugyanabban a témában ugyanannak a személynek kell közzétennie, mielőtt figyelmeztetést kapna."
     dont_feed_the_trolls_threshold: "A többi felhasználótól kapott jelzések száma a figyelmeztetés előtt."
-    enable_mobile_theme: "A mobileszközök mobilbarát témát használnak, és a teljes webhelyre válthatnak. Tiltsa le ezt, ha olyan egyéni stíluslapot szeretne használni, amely teljesen reszponzív."
     dominating_topic_minimum_percent: "Egy felhasználónak hány százaléknyi bejegyzést kell tennie egy témában, mielőtt figyelmeztetést kap a téma túlzott dominanciájáról."
     pm_warn_user_last_seen_months_ago: "Új privát üzenet írásakor figyelmeztesse a felhasználót, ha a címzett több mint n hónapja nem volt aktív."
     suppress_uncategorized_badge: "Ne jelenítse meg a kategorizálatlan témák jelvényét a témalistákban."
@@ -2499,7 +2501,6 @@ hu:
     rich_editor: "Engedélyezze a gazdag szerkesztőt a szerző számára, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új gazdag szövegszerkesztő között az intuitívabb és felhasználóbarátabb komponálás érdekében."
     default_composition_mode: "Állítsd be a közösséged szövegszerkesztőjének alapértelmezett módját. A Rich Text mód modernebb, ismerősebb írási élményt nyújt a legtöbb felhasználó számára, míg a Markdown mód a technikaibb közönség számára lehet alkalmasabb. A tagok a szövegszerkesztő eszköztárán található kapcsolóval válthatnak a módok között."
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
-    viewport_based_mobile_mode: "A mobil/asztali mód meghatározásához használd a nézetablak szélességét. Ez a beállítás hamarosan eltávolításra kerül. Ha ki szeretnéd kapcsolni, kérjük, jelezd nekünk <a href='https://meta.discourse.org/t/384280'>a Meta</a>oldalon."
     content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
     content_localization_supported_locales: "Azon támogatott nyelvek listája, amelyekre a felhasználói tartalmak lefordíthatók. Az oldal alapértelmezett nyelve minden esetben szerepel a listában. Használatához a „tartalom-lokalizáció engedélyezése” (content localization enabled) beállítás szükséges."
     content_localization_allowed_groups: "Lokalizált tartalom frissítésére jogosult csoportok. Feltételezi a 'tartalom lokalizáció engedélyezve' opciót."

@@ -183,8 +183,7 @@ class CategoriesController < ApplicationController
     if @category.save
       @category.move_to(position.to_i) if position
 
-      if category_type.present? &&
-           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+      if category_type.present?
         type_class = Categories::TypeRegistry.get(category_type.to_sym)
         allowed_setting_keys = type_class&.configuration_schema_keys(:category_settings) || []
         type_settings = params[:category_type_settings]&.slice(*allowed_setting_keys)&.permit!
@@ -242,13 +241,10 @@ class CategoriesController < ApplicationController
 
       # Handles adding or removing category types registered by plugins
       # based on the multi-type selector in the General tab for categories.
-      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        manage_category_types(cat, pending_custom_fields || {})
-        cat.reload
-      end
+      manage_category_types(cat, pending_custom_fields || {})
+      cat.reload
 
-      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
-           params[:category_type_settings].present?
+      if params[:category_type_settings].present?
         # Re-run configure_category for each matching type so per-type
         # category_settings (e.g. events_calendar_default_view) are persisted on
         # edit, not just on create. Each type only sees its own keys so it

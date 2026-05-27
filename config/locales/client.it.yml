@@ -374,8 +374,6 @@ it:
     tos: "Termini di Servizio"
     rules: "Regole"
     conduct: "Codice di Condotta"
-    mobile_view: "Visualizzazione cellulari"
-    desktop_view: "Visualizzazione Desktop"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -4007,7 +4005,6 @@ it:
         name_placeholder: "A cosa serve questo segnalibro?"
         name_input_label: "Nome del segnalibro"
         set_reminder: "Ricordamelo"
-        options: "Opzioni"
         actions:
           delete_bookmark:
             name: "Cancella segnalibro"
@@ -5639,6 +5636,14 @@ it:
                 "2": "Membro"
                 "3": "Abituale"
                 "4": "Veterano"
+        reports_section:
+          no_data: "Non ci sono dati da mostrare"
+          modal:
+            enabled_heading: "Abilitato"
+            all_heading: "Tutti i report"
+            apply: "Applica"
+            move_up: "Sposta su"
+            move_down: "Sposta giù"
         configure:
           button: "Configura"
         site_traffic:

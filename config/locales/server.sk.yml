@@ -1786,6 +1786,9 @@ sk:
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
     back_from_logster_text: "Späť na stránku"
+    reports_section:
+      providers:
+        core_report: "Štandardné"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
     disabled: "vypnuté"
@@ -2368,7 +2371,6 @@ sk:
     allow_profile_backgrounds: "Povoliť používateľov nahranie pozadia do profilu."
     get_a_room_threshold: "Počet príspevkov, ktoré musí používateľ odoslať tej istej osobe v rovnakej téme, kým bude upozornený."
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
-    enable_mobile_theme: "Mobilné zariadenia používajú tému pre mobilné zariadenia s možnosťou prepnutia na plnú verziu stránok. Vypnite, ak chcete použiť vlastný štýl, ktorý podporuje mobilné zariadenia."
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
     header_dropdown_category_count: "Koľko kategórií sa môže zobraziť v rozbaľovacom menu v záhlaví."

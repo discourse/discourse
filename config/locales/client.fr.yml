@@ -379,8 +379,6 @@ fr:
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
     conduct: "Code de conduite"
-    mobile_view: "Version mobile"
-    desktop_view: "Version ordinateur"
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
@@ -4036,7 +4034,6 @@ fr:
         name_placeholder: "À quoi correspond ce signet ?"
         name_input_label: "Nom du signet"
         set_reminder: "Me le rappeler"
-        options: "Options"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -5668,6 +5665,14 @@ fr:
                 "2": "Membre"
                 "3": "Normal"
                 "4": "Meneur"
+        reports_section:
+          no_data: "Aucune donnée à afficher"
+          modal:
+            enabled_heading: "Activé"
+            all_heading: "Tous les rapports"
+            apply: "Appliquer"
+            move_up: "Déplacer vers le haut"
+            move_down: "Déplacer vers le bas"
         configure:
           button: "Configurer"
         site_traffic:

@@ -177,7 +177,7 @@ class SiteSettings::TypeSupervisor
   # @return [Object] the Ruby value of the setting
   #
   # @example
-  #   to_rb_value(:enable_mobile_theme, "true") # => true
+  #   to_rb_value(:enable_badges, "true") # => true
   #   to_rb_value(:topics_per_period_in_top_page, "50") # => 50
   #   to_rb_value(:title, "My awesome forum") # => "My awesome forum"
   def to_rb_value(name, value, override_type = nil)

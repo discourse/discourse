@@ -2,6 +2,23 @@
 
 module PostVoting
   module GuardianExtension
+    def can_vote_on_post?(post, direction: nil)
+      return false if !user
+      return false if !post
+      return false if !post.is_post_voting_topic?
+      return false if !can_see?(post)
+      return false if post.user_id == user.id
+      return false if post.topic.archived?
+      return false if post.topic.closed?
+      if direction
+        if PostVotingVote.exists?(votable: post, user_id: user.id, direction: direction)
+          return false
+        end
+        return false if !PostVoting::VoteManager.can_undo(post, user)
+      end
+      true
+    end
+
     def can_edit_comment?(comment)
       return false if !user
       return true if comment.user_id == user.id

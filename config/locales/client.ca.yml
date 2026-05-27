@@ -269,8 +269,6 @@ ca:
     tos: "Condicions del servei"
     rules: "Regles"
     conduct: "Codi de Conducta"
-    mobile_view: "Vista mòbil"
-    desktop_view: "Vista d'escriptori"
     now: "ara mateix"
     read_more: "llegeix més"
     more: "Més"
@@ -2471,7 +2469,6 @@ ca:
         edit: "Edita el marcador"
         updated: "Actualitzat"
         name: "Nom"
-        options: "Opcions"
         actions:
           edit_bookmark:
             name: "Edita el marcador"
@@ -3293,6 +3290,11 @@ ca:
                 "2": "Membre"
                 "3": "Habitual"
                 "4": "Líder"
+        reports_section:
+          modal:
+            enabled_heading: "Activat"
+            all_heading: "Tots els reports"
+            apply: "Aplica"
         site_traffic:
           series:
             anonymous: "Anònim"

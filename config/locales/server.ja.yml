@@ -1577,6 +1577,9 @@ ja:
       admin_sidebar_deprecation: "古い管理者レイアウトは使用できなくなり、新しい<a href='https://meta.discourse.org/t/-/289281'>サイドバーレイアウト</a>に代わります。古いレイアウトは次のリリースで削除されます。その前に新しいサイドバーレイアウトを使用し始める場合は、今すぐ<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>構成</a>してください。"
       starttls_disabled: "送信メールの構成では STARTTLS が無効になっています。これはほとんど必要ありません。環境から <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> を削除することを検討してください。詳細については、<a href='https://meta.discourse.org/t/387286'>こちらのトピック</a>をご覧ください。"
     back_from_logster_text: "サイトに戻る"
+    reports_section:
+      providers:
+        core_report: "標準"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
     disabled: "無効"
@@ -2186,7 +2189,6 @@ ja:
     allow_profile_backgrounds: "ユーザーにプロファイル背景のアップロードを許可します。"
     get_a_room_threshold: "警告を受けるまでに、ユーザーが同じトピックの同じ人物に行える投稿数。"
     dont_feed_the_trolls_threshold: "警告を受けるまでの他のユーザーからの通報数。"
-    enable_mobile_theme: "モバイルデバイスにモバイル対応のテーマを使用します (デスクトップサイトに切り替え可能)。完全にレスポンシブなカスタムスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザーがトピックを過度に占領していることを通知する、トピック内のユーザーの投稿率。"
     suppress_uncategorized_badge: "トピックリストに未分類のトピックのバッジを表示しない"
     header_dropdown_category_count: "ヘッダードロップダウンメニューに表示できるカテゴリ数。"
@@ -2399,7 +2401,6 @@ ja:
     rich_editor: "作成ツールでリッチエディターを有効にして、すべてのユーザーがより直感的で使いやすく作成できるように、現在の Markdown モードと新しいリッチテキストエディターを切り替えられるようにする。"
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
-    viewport_based_mobile_mode: "ビューポートの幅を使用してモバイル/デスクトップモードを決定する。この設定はまもなく削除されます。オフにする必要がある場合は、<a href='https://meta.discourse.org/t/384280'>Meta</a> でお知らせください。"
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
     content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
     content_localization_allowed_groups: "ローカライズされたコンテンツの更新を許可されたグループ。'content localization enabled' が必要です。"

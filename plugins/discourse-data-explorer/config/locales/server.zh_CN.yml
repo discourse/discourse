@@ -36,6 +36,7 @@ zh_CN:
         title: 使用数据资源管理器结果安排某一话题的帖子
         description: 将定时报告发布到特定话题
   data_explorer:
+    admin_dashboard_label: "数据资源管理器"
     report_generator:
       private_message:
         title: "%{query_name} 的定时报告"

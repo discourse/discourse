@@ -169,6 +169,8 @@ RSpec.describe Admin::DashboardController do
       end
 
       context "with traffic_data" do
+        before { SiteSetting.persist_browser_pageview_events = false }
+
         let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
 
         it "returns the site traffic payload for the selected dates" do

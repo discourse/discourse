@@ -1017,6 +1017,9 @@ pt:
         other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
       poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
       poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
+    reports_section:
+      providers:
+        core_report: "Padrão"
   site_settings:
     disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -1241,7 +1244,6 @@ pt:
     max_notifications_per_user: "O número máximo de notificações por utilizador, se este número for excedido as notificações antigas serão eliminadas. Reforçado semanalmente. Defina como 0 para desativar"
     allowed_user_website_domains: "O ''site'' da Web do utilizador será verificado em relação a estes domínios."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
-    enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar ligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover rotas de tópico. O formato é regex+string utilize \\1 etc. para aceder a capturas"

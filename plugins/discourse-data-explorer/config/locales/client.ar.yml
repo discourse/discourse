@@ -21,6 +21,9 @@ ar:
       explorer:
         no_semicolons: "أزِل الفواصل المنقوطة من الاستعلام."
         dirty: "يجب عليك حفظ الاستعلام قبل التشغيل."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "لا توجد نتائج"
     explorer:
       default_query: "افتراضي"
       default_query_notice: "هذا استعلام افتراضي، ولا يمكن تعديل SQL. لتعديل SQL، أنشئ استعلامًا جديدًا."

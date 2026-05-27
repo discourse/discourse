@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagList from "discourse/components/tag-list";
@@ -76,7 +75,6 @@ export default <template>
             {{i18n "tagging.bulk_create_inline_placeholder"}}
           </label>
           <DExpandingTextArea
-            {{didInsert @controller.registerTextarea}}
             {{on "input" (withEventValue (fn (mut @controller.bulkTagInput)))}}
             value={{@controller.bulkTagInput}}
             placeholder={{i18n "tagging.bulk_create_inline_placeholder"}}
