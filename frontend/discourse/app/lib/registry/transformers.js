@@ -9,6 +9,7 @@
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
+  "before-create-account",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "custom-homepage-model",
@@ -36,7 +37,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-plugin-icon",
   "admin-reports-show-query-params",
   "admin-theme-card-show-full-controls",
-  "before-create-account",
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",

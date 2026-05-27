@@ -20,8 +20,8 @@ function initializeHCaptcha(api, container) {
     return;
   }
 
-  api.registerValueTransformer("before-create-account", async ({ value }) => {
-    const previousResult = await value;
+  api.registerBehaviorTransformer("before-create-account", async ({ next }) => {
+    const previousResult = await next();
     if (!previousResult.success) {
       return previousResult;
     }

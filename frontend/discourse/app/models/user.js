@@ -34,7 +34,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -1525,9 +1525,9 @@ User.reopenClass({
       data.invite_code = attrs.inviteCode;
     }
 
-    const shouldCreate = await applyValueTransformer(
+    const shouldCreate = await applyBehaviorTransformer(
       "before-create-account",
-      Promise.resolve({ success: true }), // plugins might want to make external API calls to validate the data before account creation, so we return a promise here
+      () => ({ success: true }),
       { data }
     );
 
