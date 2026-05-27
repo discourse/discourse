@@ -161,7 +161,7 @@
   &__publish-status-icon {
     flex: 0 0 auto;
     margin-top: 0.1rem;
-    color: var(--highlight-high);
+    color: var(--workflow-status-running);
     font-size: var(--font-down-1);
   }
 
@@ -367,7 +367,7 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--highlight-high);
+    background: var(--workflow-status-running);
     color: var(--secondary);
     display: flex;
     align-items: center;

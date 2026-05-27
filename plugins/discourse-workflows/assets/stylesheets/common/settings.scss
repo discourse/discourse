@@ -8,7 +8,7 @@
     padding: var(--space-4);
 
     &.--danger {
-      border: 1px solid var(--danger-low);
+      border: 1px solid var(--workflow-status-error-low);
       border-radius: var(--d-border-radius);
     }
   }
@@ -18,7 +18,7 @@
     margin: 0 0 var(--space-2) 0;
 
     .--danger & {
-      color: var(--danger);
+      color: var(--workflow-status-error);
     }
   }
 

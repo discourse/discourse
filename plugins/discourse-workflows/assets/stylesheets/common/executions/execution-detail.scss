@@ -6,16 +6,16 @@
     margin-bottom: var(--space-3);
 
     &.--success {
-      border-color: var(--success);
-      background: color-mix(in srgb, var(--success-low) 40%, transparent);
+      border-color: var(--workflow-status-success);
+      background: var(--workflow-status-success-low);
     }
 
     &.--error {
-      border-color: var(--danger);
+      border-color: var(--workflow-status-error);
     }
 
     &.--running {
-      border-color: var(--highlight);
+      border-color: var(--workflow-status-running);
     }
 
     &.--skipped {
@@ -123,7 +123,7 @@
 
   &__step-summary {
     font-size: var(--font-down-1);
-    color: var(--danger);
+    color: var(--workflow-status-error);
     margin-top: var(--space-1);
     padding-left: calc(1.25em + var(--space-2));
   }
@@ -141,18 +141,18 @@
     border-radius: 0.25em;
 
     &.--success {
-      background: var(--success-low);
-      color: var(--success);
+      background: var(--workflow-status-success-low);
+      color: var(--workflow-status-success);
     }
 
     &.--error {
-      background: var(--danger-low);
-      color: var(--danger);
+      background: var(--workflow-status-error-low);
+      color: var(--workflow-status-error);
     }
 
     &.--running {
-      background: var(--highlight-low);
-      color: var(--highlight);
+      background: var(--workflow-status-running-low);
+      color: var(--workflow-status-running);
     }
 
     &.--skipped {
@@ -161,8 +161,8 @@
     }
 
     &.--filtered {
-      background: var(--highlight-low);
-      color: var(--highlight);
+      background: var(--workflow-status-running-low);
+      color: var(--workflow-status-running);
     }
 
     &.--waiting {
@@ -175,6 +175,14 @@
     font-size: var(--font-down-1);
     color: var(--primary-medium);
     margin-left: auto;
+  }
+
+  &__step.--success .workflows-execution-detail__step-time {
+    color: var(--workflow-status-success);
+  }
+
+  &__step.--success .workflows-execution-detail__step-body {
+    border-color: var(--workflow-status-success);
   }
 
   &__conditions {
@@ -193,11 +201,11 @@
     border-radius: 0.25em;
 
     &.--passed {
-      background: var(--success-low);
+      background: var(--workflow-status-success-low);
     }
 
     &.--failed {
-      background: var(--highlight-low);
+      background: var(--workflow-status-running-low);
     }
 
     code {
@@ -212,11 +220,11 @@
     font-weight: bold;
 
     .--passed > & {
-      color: var(--success);
+      color: var(--workflow-status-success);
     }
 
     .--failed > & {
-      color: var(--highlight);
+      color: var(--workflow-status-running);
     }
   }
 

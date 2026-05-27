@@ -25,9 +25,9 @@
   &__test-banner {
     margin: 0 0 var(--space-4);
     padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--highlight-medium);
+    border: 1px solid var(--workflow-status-running);
     border-radius: var(--d-border-radius);
-    background: var(--highlight-low);
+    background: var(--workflow-status-running-low);
     color: var(--primary-high);
     font-size: var(--font-down-1);
     text-align: center;
@@ -54,7 +54,7 @@
   }
 
   &__error {
-    color: var(--danger);
+    color: var(--workflow-status-error);
   }
 
   &__completion-title {

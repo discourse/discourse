@@ -40,10 +40,10 @@
   }
 
   &.is-copied {
-    border-color: var(--success);
+    border-color: var(--workflow-status-success);
 
     .d-icon {
-      color: var(--success);
+      color: var(--workflow-status-success);
     }
   }
 

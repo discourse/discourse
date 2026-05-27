@@ -13,18 +13,18 @@
     border-radius: 0.25em;
 
     &.--success {
-      background: var(--success-low);
-      color: var(--success);
+      background: var(--workflow-status-success-low);
+      color: var(--workflow-status-success);
     }
 
     &.--error {
-      background: var(--danger-low);
-      color: var(--danger);
+      background: var(--workflow-status-error-low);
+      color: var(--workflow-status-error);
     }
 
     &.--running {
-      background: var(--highlight-low);
-      color: var(--highlight);
+      background: var(--workflow-status-running-low);
+      color: var(--workflow-status-running);
     }
 
     &.--pending {

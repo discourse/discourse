@@ -231,7 +231,7 @@
     }
 
     &--exceeded {
-      color: var(--danger);
+      color: var(--workflow-status-error);
       font-weight: 700;
     }
   }
