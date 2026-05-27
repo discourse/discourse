@@ -5,6 +5,7 @@ import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class TopicDismissButtons extends Component {
@@ -128,7 +129,10 @@ export default class TopicDismissButtons extends Component {
         {{~#if @showResetNew~}}
           {{#if @showNewDismissCombo}}
             <DComboButton
-              class="--has-menu topic-dismiss-buttons__combo"
+              class={{dConcatClass
+                "topic-dismiss-buttons__combo"
+                (if this.showDismissNewMenu "--has-menu")
+              }}
               as |combo|
             >
               <combo.Button
