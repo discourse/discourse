@@ -275,6 +275,20 @@ RSpec.describe PublishedPagesController do
           expect(response.headers["ETag"]).not_to eq(first_etag)
           expect(response.body).to include("renamed_author")
         end
+
+        it "returns a fresh 200 when rendered site settings change" do
+          get public_page.path
+          first_etag = response.headers["ETag"]
+
+          freeze_time 1.minute.from_now do
+            SiteSetting.title = "Renamed public site"
+          end
+
+          get public_page.path, headers: { "If-None-Match" => first_etag }
+          expect(response.status).to eq(200)
+          expect(response.headers["ETag"]).not_to eq(first_etag)
+          expect(response.body).to include("Renamed public site")
+        end
       end
     end
 

@@ -134,6 +134,10 @@ class PublishedPagesController < ApplicationController
       @topic.updated_at,
       @topic.first_post&.updated_at,
       @topic.user&.updated_at,
+      SiteSetting.maximum(:updated_at),
+      Theme.maximum(:updated_at),
+      ChildTheme.maximum(:updated_at),
+      ThemeField.maximum(:updated_at),
     ].compact.max
   end
 
