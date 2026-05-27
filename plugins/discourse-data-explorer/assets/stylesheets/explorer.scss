@@ -179,8 +179,6 @@ table.group-reports {
         border-bottom: 1px solid var(--primary-low);
 
         @include viewport.until(sm) {
-          position: sticky;
-          top: 0;
           border-top: 1px solid var(--primary-low);
         }
 
