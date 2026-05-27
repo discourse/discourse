@@ -1,34 +1,13 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { buildComposerActionItems } from "discourse/lib/composer/action-items";
+import { ComposerActionItemBuilder } from "discourse/lib/composer/action-items";
 import {
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-
-function build(context = {}) {
-  return buildComposerActionItems({
-    action: REPLY,
-    topic: topic(),
-    post: null,
-    replyOptions: {},
-    snapshots: {},
-    currentUser: {
-      can_create_topic: true,
-      can_send_private_messages: true,
-    },
-    site: {},
-    composerModel: {},
-    isEditing: false,
-    postDisplayName: (replyPost) => replyPost?.username,
-    ...context,
-  });
-}
-
-function ids(context) {
-  return build(context).map((item) => item.id);
-}
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 function topic(attrs = {}) {
   return {
@@ -47,10 +26,56 @@ function post(attrs = {}) {
   };
 }
 
-module("Unit | Lib | composer action items", function () {
+module("Unit | Lib | composer action items", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    logIn(this.owner);
+    this.composerActionState = this.owner.lookup(
+      "service:composer-action-state"
+    );
+    this.composerActionState.clear();
+    this.owner.lookup("service:site").set("shared_drafts_category_id", null);
+  });
+
+  function build(testContext, context = {}) {
+    const {
+      action = REPLY,
+      topic: topicArg = topic(),
+      post: postArg = null,
+      replyOptions = {},
+      composerModel = {},
+      snapshots = {},
+    } = context;
+
+    if (snapshots.topic || snapshots.post) {
+      testContext.composerActionState.remember({
+        topic: snapshots.topic,
+        post: snapshots.post,
+      });
+    }
+
+    if (context.site) {
+      testContext.owner.lookup("service:site").setProperties(context.site);
+    }
+
+    return new ComposerActionItemBuilder(
+      testContext,
+      action,
+      topicArg,
+      postArg,
+      replyOptions,
+      composerModel
+    ).build();
+  }
+
+  function ids(testContext, context) {
+    return build(testContext, context).map((item) => item.id);
+  }
+
   test("reply to post", function (assert) {
     assert.deepEqual(
-      ids({
+      ids(this, {
         post: post(),
         replyOptions: {
           userAvatar: true,
@@ -58,13 +83,13 @@ module("Unit | Lib | composer action items", function () {
           topicLink: true,
         },
       }),
-      ["reply_as_new_topic", "reply_to_topic"]
+      ["reply_to_topic", "reply_as_new_topic"]
     );
   });
 
   test("reply to topic", function (assert) {
     assert.deepEqual(
-      ids({
+      ids(this, {
         post: null,
         replyOptions: {
           topicLink: true,
@@ -76,7 +101,7 @@ module("Unit | Lib | composer action items", function () {
 
   test("reply as new topic", function (assert) {
     assert.true(
-      ids({
+      ids(this, {
         topic: topic({ isPrivateMessage: false }),
       }).includes("reply_as_new_topic")
     );
@@ -84,7 +109,7 @@ module("Unit | Lib | composer action items", function () {
 
   test("reply as new group message", function (assert) {
     assert.deepEqual(
-      ids({
+      ids(this, {
         topic: topic({
           isPrivateMessage: true,
           details: {
@@ -99,7 +124,7 @@ module("Unit | Lib | composer action items", function () {
 
   test("create topic with snapshots restores reply targets", function (assert) {
     assert.deepEqual(
-      ids({
+      ids(this, {
         action: CREATE_TOPIC,
         topic: null,
         snapshots: {
@@ -113,7 +138,7 @@ module("Unit | Lib | composer action items", function () {
 
   test("fresh create topic/message with no snapshots does not show stale reply targets", function (assert) {
     assert.deepEqual(
-      ids({
+      ids(this, {
         action: CREATE_TOPIC,
         topic: null,
         snapshots: {},
@@ -122,7 +147,7 @@ module("Unit | Lib | composer action items", function () {
     );
 
     assert.deepEqual(
-      ids({
+      ids(this, {
         action: PRIVATE_MESSAGE,
         topic: null,
         snapshots: {},
@@ -131,9 +156,9 @@ module("Unit | Lib | composer action items", function () {
     );
   });
 
-  test("shared draft and PM/create-topic switching options", function (assert) {
+  test("shared draft and PM/create topic switching options", function (assert) {
     assert.deepEqual(
-      ids({
+      ids(this, {
         action: CREATE_TOPIC,
         topic: null,
         site: { shared_drafts_category_id: 24 },
@@ -142,7 +167,7 @@ module("Unit | Lib | composer action items", function () {
     );
 
     assert.deepEqual(
-      ids({
+      ids(this, {
         action: CREATE_SHARED_DRAFT,
         topic: null,
       }),
@@ -150,12 +175,12 @@ module("Unit | Lib | composer action items", function () {
     );
 
     assert.deepEqual(
-      ids({
+      ids(this, {
         action: PRIVATE_MESSAGE,
         topic: null,
         snapshots: { topic: topic() },
       }),
-      ["reply_to_topic", "create_topic"]
+      ["create_topic", "reply_to_topic"]
     );
   });
 });

@@ -76,7 +76,7 @@ export default class ComposerActionStateService extends Service {
     options.recipients = recipients.join(",");
     options.archetypeId = "private_message";
 
-    await this._replyFromExisting(
+    await this.#replyFromExisting(
       options,
       this.postSnapshot,
       this.topicSnapshot
@@ -90,60 +90,60 @@ export default class ComposerActionStateService extends Service {
       this.dialog.confirm({
         message: i18n("composer.composer_actions.reply_as_new_topic.confirm"),
         confirmButtonLabel: "composer.ok_proceed",
-        didConfirm: () => this._replyAsNewTopicSelect(options, composerModel),
+        didConfirm: () => this.#replyAsNewTopicSelect(options, composerModel),
       });
     } else {
-      await this._replyAsNewTopicSelect(options, composerModel);
+      await this.#replyAsNewTopicSelect(options, composerModel);
     }
   }
 
-  async _replyAsNewTopicSelect(options, composerModel) {
+  async replyToPostSelected(options) {
+    options.action = REPLY;
+    options.post = this.postSnapshot;
+    await this.#openComposer(options);
+  }
+
+  async replyToTopicSelected(options) {
+    options.action = REPLY;
+    options.topic = this.topicSnapshot;
+    await this.#openComposer(options);
+  }
+
+  async sharedDraftSelected(options, composerModel) {
+    await this.#switchCreate(options, CREATE_SHARED_DRAFT, composerModel);
+  }
+
+  async createTopicSelected(options, composerModel) {
+    await this.#switchCreate(options, CREATE_TOPIC, composerModel);
+  }
+
+  async createPrivateMessageSelected(options, composerModel) {
+    options.archetypeId = "private_message";
+    await this.#switchCreate(options, PRIVATE_MESSAGE, composerModel);
+  }
+
+  async #replyAsNewTopicSelect(options, composerModel) {
     options.action = CREATE_TOPIC;
     options.draftKey = this.composer.topicDraftKey;
     options.categoryId = composerModel.topic?.category?.id;
     options.disableScopedCategory = true;
 
-    await this._replyFromExisting(
+    await this.#replyFromExisting(
       options,
       this.postSnapshot,
       this.topicSnapshot
     );
   }
 
-  async replyToPostSelected(options) {
-    options.action = REPLY;
-    options.post = this.postSnapshot;
-    await this._openComposer(options);
-  }
-
-  async replyToTopicSelected(options) {
-    options.action = REPLY;
-    options.topic = this.topicSnapshot;
-    await this._openComposer(options);
-  }
-
-  async sharedDraftSelected(options, composerModel) {
-    await this._switchCreate(options, CREATE_SHARED_DRAFT, composerModel);
-  }
-
-  async createTopicSelected(options, composerModel) {
-    await this._switchCreate(options, CREATE_TOPIC, composerModel);
-  }
-
-  async createPrivateMessageSelected(options, composerModel) {
-    options.archetypeId = "private_message";
-    await this._switchCreate(options, PRIVATE_MESSAGE, composerModel);
-  }
-
-  async _switchCreate(options, composerAction, composerModel) {
+  async #switchCreate(options, composerAction, composerModel) {
     options.action = composerAction;
     options.categoryId = composerModel.categoryId;
     options.topicTitle = composerModel.title;
     options.tags = composerModel.tags;
-    await this._openComposer(options);
+    await this.#openComposer(options);
   }
 
-  _continuedFromText(post, topic) {
+  #continuedFromText(post, topic) {
     let url = post?.url || topic?.url;
     const topicTitle = topic?.title;
 
@@ -158,36 +158,36 @@ export default class ComposerActionStateService extends Service {
     });
   }
 
-  async _replyFromExisting(options, post, topic) {
+  async #replyFromExisting(options, post, topic) {
     const snapshot = this.snapshot;
 
-    this._clearUnsupportedToggles(options);
+    this.#clearUnsupportedToggles(options);
     await this.composer.destroyDraft();
     this.composer.close();
-    this._restoreSnapshot(snapshot);
+    this.#restoreSnapshot(snapshot);
     await this.composer.open({
       ...options,
-      prependText: this._continuedFromText(post, topic),
+      prependText: this.#continuedFromText(post, topic),
     });
-    this._reapplyToggles(options);
+    this.#reapplyToggles(options);
   }
 
-  async _openComposer(options) {
+  async #openComposer(options) {
     const snapshot = this.snapshot;
 
-    this._clearUnsupportedToggles(options);
+    this.#clearUnsupportedToggles(options);
     this.composer.closeComposer();
-    this._restoreSnapshot(snapshot);
+    this.#restoreSnapshot(snapshot);
     await this.composer.open(options);
-    this._reapplyToggles(options);
+    this.#reapplyToggles(options);
   }
 
-  _restoreSnapshot({ topic, post }) {
+  #restoreSnapshot({ topic, post }) {
     this.topicSnapshot = topic;
     this.postSnapshot = post;
   }
 
-  _clearUnsupportedToggles(options) {
+  #clearUnsupportedToggles(options) {
     if (options.action !== REPLY) {
       options.whisper = false;
       options.noBump = false;
@@ -198,7 +198,7 @@ export default class ComposerActionStateService extends Service {
     }
   }
 
-  _reapplyToggles(options) {
+  #reapplyToggles(options) {
     const model = this.composer.model;
     if (!model) {
       return;

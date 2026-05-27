@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { buildComposerActionItems } from "discourse/lib/composer/action-items";
+import { ComposerActionItemBuilder } from "discourse/lib/composer/action-items";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import {
   applyBehaviorTransformer,
@@ -33,8 +33,6 @@ import { i18n } from "discourse-i18n";
 export default class ComposerActions extends Component {
   @service composer;
   @service composerActionState;
-  @service currentUser;
-  @service site;
 
   constructor() {
     super(...arguments);
@@ -162,25 +160,28 @@ export default class ComposerActions extends Component {
     const currentAction = this.action;
     const currentTopic = this.topic;
     const currentPost = this.post;
-    const items = buildComposerActionItems({
-      action: currentAction,
-      topic: currentTopic,
-      post: currentPost,
-      replyOptions: this.replyOptions,
-      snapshots: this.composerActionState.snapshot,
-      currentUser: this.currentUser,
-      site: this.site,
-      composerModel: this.composerModel,
-      isEditing: this.isEditing,
-      postDisplayName: (post) => this._postDisplayName(post),
-    });
 
-    return applyValueTransformer("composer-actions-content", items, {
-      action: currentAction,
-      topic: currentTopic,
-      post: currentPost,
-      composerModel: this.composerModel,
-    });
+    const composerActionItemBuilder = new ComposerActionItemBuilder(
+      this,
+      currentAction,
+      currentTopic,
+      currentPost,
+      this.replyOptions,
+      this.composerModel
+    );
+
+    const composerActionItems = composerActionItemBuilder.build();
+
+    return applyValueTransformer(
+      "composer-actions-content",
+      composerActionItems,
+      {
+        action: currentAction,
+        topic: currentTopic,
+        post: currentPost,
+        composerModel: this.composerModel,
+      }
+    );
   }
 
   get hasToggles() {
