@@ -82,18 +82,19 @@ RSpec.describe Categories::TypeRegistry do
       before { described_class.register(test_type, plugin_identifier: "discourse-test-plugin") }
       after { described_class.reset! }
 
-      it "returns available: false for moderators" do
+      it "returns can_enable_plugin: false for moderators" do
         moderator = Fabricate(:moderator)
         type_metadata =
           described_class
             .list(guardian: moderator.guardian)
             .find { |t| t[:id] == :test_plugin_list_type }
 
-        expect(type_metadata[:available]).to eq(false)
+        expect(type_metadata[:available]).to eq(true)
+        expect(type_metadata[:can_enable_plugin]).to eq(false)
         expect(type_metadata[:required_plugin]).to eq("Test")
       end
 
-      it "returns available: true for admins" do
+      it "returns can_enable_plugin: true for admins" do
         admin = Fabricate(:admin)
         type_metadata =
           described_class
@@ -101,6 +102,7 @@ RSpec.describe Categories::TypeRegistry do
             .find { |t| t[:id] == :test_plugin_list_type }
 
         expect(type_metadata[:available]).to eq(true)
+        expect(type_metadata[:can_enable_plugin]).to eq(true)
         expect(type_metadata[:required_plugin]).to eq("Test")
       end
     end
@@ -119,6 +121,29 @@ RSpec.describe Categories::TypeRegistry do
     it "returns the plugin identifier for registered types" do
       described_class.register(test_type, plugin_identifier: "discourse-test")
       expect(described_class.owner(:test_owner_type)).to eq("discourse-test")
+    end
+  end
+
+  describe ".plugin_display_name" do
+    let(:test_type) do
+      Class.new(Categories::Types::Base).tap { |t| t.type_id(:test_display_name_type) }
+    end
+
+    after { described_class.all.delete(:test_display_name_type) }
+
+    it "returns nil for types without a plugin identifier" do
+      described_class.register(test_type)
+      expect(described_class.plugin_display_name(:test_display_name_type)).to be_nil
+    end
+
+    it "strips discourse- prefix and -plugin suffix and titleizes" do
+      described_class.register(test_type, plugin_identifier: "discourse-solved-plugin")
+      expect(described_class.plugin_display_name(:test_display_name_type)).to eq("Solved")
+    end
+
+    it "handles plugin names without prefix/suffix" do
+      described_class.register(test_type, plugin_identifier: "my-cool-feature")
+      expect(described_class.plugin_display_name(:test_display_name_type)).to eq("My Cool Feature")
     end
   end
 

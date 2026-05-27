@@ -390,18 +390,13 @@ module Categories
             title: I18n.t("category_types.#{type_id}.title", default: name),
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
-            available: guardian ? available_for?(guardian) : available?,
+            available: available?,
             visible: visible?,
             configuration_schema: resolved_configuration_schema,
           }
           if enables_plugin?
-            plugin_name =
-              Categories::TypeRegistry
-                .owner(type_id)
-                &.sub(/^discourse-/, "")
-                &.sub(/-plugin$/, "")
-                &.titleize
-            result[:required_plugin] = plugin_name
+            result[:required_plugin] = Categories::TypeRegistry.plugin_display_name(type_id)
+            result[:can_enable_plugin] = available_for?(guardian)
           end
           result.merge(additional_metadata)
         end

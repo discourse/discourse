@@ -562,12 +562,7 @@ class CategoriesController < ApplicationController
     type_class = Categories::TypeRegistry.get(type_id)
 
     if type_class&.enables_plugin?
-      plugin_name =
-        Categories::TypeRegistry
-          .owner(type_id)
-          &.sub(/^discourse-/, "")
-          &.sub(/-plugin$/, "")
-          &.titleize
+      plugin_name = Categories::TypeRegistry.plugin_display_name(type_id)
       I18n.t("category_types.requires_plugin", type_name: category_type.to_s.humanize, plugin_name:)
     else
       I18n.t("category_types.not_available", type_name: category_type.to_s.humanize)
