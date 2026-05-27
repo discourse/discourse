@@ -25,13 +25,24 @@ export default async function openEventComposer({
   const timezone =
     currentUser?.user_option?.timezone || moment.tz.guess() || "UTC";
 
-  const start = moment.parseZone(info.dateStr);
+  let start;
+  if (info.startStr) {
+    start = moment.parseZone(info.startStr);
+  } else {
+    start = moment.parseZone(info.dateStr);
+  }
+
   if (info.allDay) {
     const { hour, minute } = allDayStartTime(siteSettings);
     start.hour(hour).minute(minute);
   }
 
-  const end = start.clone().add(1, "hour");
+  let end;
+  if (info.endStr) {
+    end = moment.parseZone(info.endStr);
+  } else {
+    end = start.clone().add(1, "hour");
+  }
 
   const params = {
     start: start.format("YYYY-MM-DD HH:mm"),
@@ -40,9 +51,13 @@ export default async function openEventComposer({
     end: end.format("YYYY-MM-DD HH:mm"),
   };
 
-  const markdown = Object.entries(params)
+  let markdown = Object.entries(params)
     .map(([key, value]) => `${key}="${value}"`)
     .join(" ");
+
+  if (info.allDay) {
+    markdown += " allDay=true";
+  }
 
   const body = `[event ${markdown}]\n[/event]\n`;
 

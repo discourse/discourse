@@ -9,6 +9,7 @@ import { modifier as modifierFn } from "ember-modifier";
 import { iconHTML } from "discourse/lib/icon-library";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
 import DiscourseURL from "discourse/lib/url";
+import { i18n } from "discourse-i18n";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
 import {
   getCalendarButtonsText,
@@ -84,6 +85,7 @@ export default class FullCalendar extends Component {
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
+      selectable: true,
       events: async (info, successCallback, failureCallback) => {
         if (this.args.onLoadEvents) {
           try {
@@ -174,6 +176,11 @@ export default class FullCalendar extends Component {
         } else if (postNumber) {
           this.topic.send("jumpToPost", postNumber);
         }
+      },
+      allDayContent: () =>
+        i18n("discourse_post_event.upcoming_events_list.all_day"),
+      select: (info) => {
+        this.args.onDateClick?.(info);
       },
     });
 

@@ -18,9 +18,13 @@ export default class UpcomingEventsCalendar extends Component {
   @service discoursePostEventService;
 
   get canCreateEvent() {
+    if (!this.currentUser) {
+      return false;
+    }
+
     return (
-      !!this.currentUser?.can_create_discourse_post_event &&
-      !!this.currentUser?.can_create_topic
+      this.currentUser.can_create_discourse_post_event &&
+      this.currentUser.can_create_topic
     );
   }
 
