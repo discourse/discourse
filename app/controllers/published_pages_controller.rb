@@ -58,7 +58,9 @@ class PublishedPagesController < ApplicationController
       # re-render) and false when they do (Rails has already set 304).
       validator = published_page_cache_validator(pp)
 
-      render layout: "publish" if stale?(etag: validator.to_f.to_s, last_modified: validator)
+      if stale?(etag: validator[:etag], last_modified: validator[:last_modified])
+        render layout: "publish"
+      end
     else
       render layout: "publish"
     end
@@ -129,7 +131,7 @@ class PublishedPagesController < ApplicationController
   end
 
   def published_page_cache_validator(pp)
-    [
+    last_modified = [
       pp.updated_at,
       @topic.updated_at,
       @topic.first_post&.updated_at,
@@ -139,6 +141,30 @@ class PublishedPagesController < ApplicationController
       ChildTheme.maximum(:updated_at),
       ThemeField.maximum(:updated_at),
     ].compact.max
+
+    {
+      etag:
+        Digest::SHA1.hexdigest(
+          [last_modified&.to_f, published_page_layout_cache_version].compact.join("\n"),
+        ),
+      last_modified: last_modified,
+    }
+  end
+
+  def published_page_layout_cache_version
+    [
+      Discourse.git_version,
+      MessageBus.last_id(Site::SITE_JSON_CHANNEL),
+      SiteSetting.title,
+      SiteSetting.site_favicon_url,
+      SiteSetting.site_apple_touch_icon_url,
+      SiteSetting.google_site_verification_token,
+      SiteSetting.logo&.id,
+      SiteSetting.logo_small&.id,
+      Theme.maximum(:updated_at)&.to_f,
+      ChildTheme.maximum(:updated_at)&.to_f,
+      ThemeField.maximum(:updated_at)&.to_f,
+    ]
   end
 
   def append_vary_header!(*values)
