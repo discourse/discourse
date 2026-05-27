@@ -11,7 +11,7 @@ class Sitemap < ActiveRecord::Base
 
       names_used.each { |name| touch(name) }
 
-      if publishable_pages.exists?
+      if published_pages_sitemap_available?
         touch(PUBLISHED_PAGES_SITEMAP_NAME)
         names_used << PUBLISHED_PAGES_SITEMAP_NAME
       end
@@ -55,6 +55,11 @@ class Sitemap < ActiveRecord::Base
         .joins(:topic)
         .where(topics: { visible: true, category_id: public_category_ids })
     end
+
+    def published_pages_sitemap_available?
+      count = publishable_pages.limit(SiteSetting.sitemap_page_size + 1).count
+      count.positive? && count <= SiteSetting.sitemap_page_size
+    end
   end
 
   def topics
@@ -71,7 +76,12 @@ class Sitemap < ActiveRecord::Base
   # [[slug, updated_at], ...]. Only meaningful when name ==
   # PUBLISHED_PAGES_SITEMAP_NAME.
   def published_pages
-    self.class.publishable_pages.pluck(:slug, "published_pages.updated_at")
+    self
+      .class
+      .publishable_pages
+      .order(:id)
+      .limit(SiteSetting.sitemap_page_size)
+      .pluck(:slug, "published_pages.updated_at")
   end
 
   def last_posted_topic

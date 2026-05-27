@@ -64,18 +64,12 @@ class SitemapController < ApplicationController
   # same settings and visibility gates so the source of truth for
   # "what's anonymously reachable" lives in one place.
   def published_pages
-    raise Discourse::NotFound if !Sitemap.publishable_pages.exists?
+    raise Discourse::NotFound if !Sitemap.published_pages_sitemap_available?
+
     sitemap = Sitemap.touch(Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
+    @pages = sitemap.published_pages
 
-    @output =
-      Rails
-        .cache
-        .fetch("sitemap/published_pages/#{sitemap.last_posted_at.to_i}", expires_in: 1.hour) do
-          @pages = sitemap.published_pages
-          render :published_pages, content_type: "text/xml; charset=UTF-8"
-        end
-
-    render plain: @output, content_type: "text/xml; charset=UTF-8" unless performed?
+    render :published_pages, content_type: "text/xml; charset=UTF-8"
   end
 
   private

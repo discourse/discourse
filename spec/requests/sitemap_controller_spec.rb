@@ -140,14 +140,7 @@ RSpec.describe SitemapController do
   describe "#published_pages" do
     before { SiteSetting.enable_page_publishing = true }
 
-    def clear_published_pages_sitemap_cache
-      sitemap = Sitemap.touch(Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
-      Discourse.cache.delete("sitemap/published_pages/#{sitemap.last_posted_at.to_i}")
-    end
-
     def published_page_locs
-      clear_published_pages_sitemap_cache
-
       get "/sitemap_published_pages.xml"
 
       Nokogiri::XML::Document.parse(response.body).css("loc").map(&:text)
@@ -214,6 +207,33 @@ RSpec.describe SitemapController do
       expect(locs).to contain_exactly("#{Discourse.base_url}/pub/#{public_page.slug}")
     end
 
+    it "does not serve stale URLs after sitemap membership shrinks" do
+      newer_page = Fabricate(:published_page, public: true, slug: "newer-post")
+      older_topic = Fabricate(:topic)
+      older_page = Fabricate(:published_page, public: true, slug: "older-post", topic: older_topic)
+      older_page.update!(updated_at: 1.day.ago)
+      newer_page.update!(updated_at: 1.minute.ago)
+
+      expect(published_page_locs).to contain_exactly(
+        "#{Discourse.base_url}/pub/#{newer_page.slug}",
+        "#{Discourse.base_url}/pub/#{older_page.slug}",
+      )
+
+      older_topic.update!(visible: false)
+
+      expect(published_page_locs).to contain_exactly("#{Discourse.base_url}/pub/#{newer_page.slug}")
+    end
+
+    it "returns 404 when there are more published pages than a sitemap supports" do
+      SiteSetting.sitemap_page_size = 1
+      Fabricate(:published_page, public: true, slug: "first-post")
+      Fabricate(:published_page, public: true, slug: "second-post")
+
+      get "/sitemap_published_pages.xml"
+
+      expect(response.status).to eq(404)
+    end
+
     it "returns 404 when published pages are not available to anonymous visitors" do
       Fabricate(:published_page, public: true, slug: "public-post")
 
@@ -264,6 +284,22 @@ RSpec.describe SitemapController do
       row = Sitemap.find_by(name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
       expect(row).to be_present
       expect(row.enabled).to eq(false)
+    end
+
+    it "disables the published_pages row when there are more published pages than a sitemap supports" do
+      SiteSetting.sitemap_page_size = 1
+      Fabricate(:published_page, public: true, slug: "first-post")
+      Fabricate(:published_page, public: true, slug: "second-post")
+      row =
+        Sitemap.create!(
+          name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME,
+          enabled: true,
+          last_posted_at: 1.minute.ago,
+        )
+
+      Sitemap.regenerate_sitemaps
+
+      expect(row.reload.enabled).to eq(false)
     end
 
     it "disables the published_pages row when published pages are not available to anonymous visitors" do
