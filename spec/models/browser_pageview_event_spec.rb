@@ -18,4 +18,72 @@ RSpec.describe BrowserPageviewEvent do
     expect(event.session_id.length).to eq(described_class::MAX_SESSION_ID_LENGTH)
     expect(event.normalized_referrer.length).to eq(described_class::MAX_NORMALIZED_REFERRER_LENGTH)
   end
+
+  describe ".flush_queued!" do
+    let(:occurred_at) { Time.zone.parse("2026-05-27 10:30:00") }
+
+    let(:payload) do
+      {
+        url: "https://discourse.example/t/topic/1",
+        ip_address: "1.2.3.4",
+        country_code: "AU",
+        asn: 12_345,
+        referrer: "https://www.example.com/path?utm_source=x",
+        user_agent: "Mozilla/5.0",
+        session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
+        topic_id: 123,
+        occurred_at: occurred_at.iso8601(6),
+      }
+    end
+
+    def queue_payload(payload)
+      Discourse.redis.rpush(described_class::REDIS_QUEUE_KEY, JSON.generate(payload))
+    end
+
+    it "persists queued payloads and removes them from Redis" do
+      Discourse.stubs(:pg_readonly_mode?).returns(true)
+      described_class.enqueue_for_later(payload)
+      Discourse.unstub(:pg_readonly_mode?)
+
+      expect { described_class.flush_queued! }.to change { described_class.count }.by(1)
+
+      event = described_class.last
+      expect(event.url).to eq(payload[:url])
+      expect(event.country_code).to eq("AU")
+      expect(event.asn).to eq(12_345)
+      expect(event.normalized_referrer).to eq("example.com/path")
+      expect(event.created_at).to eq_time(occurred_at)
+      expect(described_class.queued_count).to eq(0)
+    end
+
+    it "keeps queued payloads while PostgreSQL is readonly" do
+      Discourse.stubs(:pg_readonly_mode?).returns(true)
+      described_class.enqueue_for_later(payload)
+
+      expect { described_class.flush_queued! }.not_to change { described_class.count }
+
+      expect(described_class.queued_count).to eq(1)
+    end
+
+    it "discards invalid payloads without blocking later entries" do
+      invalid_payload = payload.merge(occurred_at: "not-a-date")
+      valid_payload = payload.merge(url: "https://discourse.example/t/topic/2")
+      queue_payload(invalid_payload)
+      queue_payload(valid_payload)
+
+      expect { described_class.flush_queued! }.to change { described_class.count }.by(1)
+
+      expect(described_class.last.url).to eq(valid_payload[:url])
+      expect(described_class.queued_count).to eq(0)
+    end
+
+    it "removes malformed queued payloads" do
+      Discourse.redis.rpush(described_class::REDIS_QUEUE_KEY, "{")
+      queue_payload(payload.except(:url))
+
+      expect { described_class.flush_queued! }.not_to change { described_class.count }
+
+      expect(described_class.queued_count).to eq(0)
+    end
+  end
 end

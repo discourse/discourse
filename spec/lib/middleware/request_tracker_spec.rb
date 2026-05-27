@@ -731,6 +731,10 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "browser_pageview event" do
+      def log_browser_pageview(data)
+        Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] }).log_later(data, {}, nil)
+      end
+
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
@@ -749,10 +753,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(1)
           event = events[0][:params].first
@@ -781,10 +782,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events).to be_empty
         end
@@ -805,10 +803,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(1)
           event = events[0][:params].first
@@ -843,10 +838,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(1)
           event = events[0][:params].first
@@ -866,10 +858,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(0)
         end
@@ -891,10 +880,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(0)
         end
@@ -922,9 +908,7 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect { Middleware::RequestTracker.log_request(data) }.to change {
-                BrowserPageviewEvent.count
-              }.by(1)
+              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
@@ -973,7 +957,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          Middleware::RequestTracker.log_request(data)
+          log_browser_pageview(data)
 
           event = BrowserPageviewEvent.last
           expect(event.referrer).to eq("https://www.example.com/path?utm_source=x")
@@ -996,7 +980,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          Middleware::RequestTracker.log_request(data)
+          log_browser_pageview(data)
 
           event = BrowserPageviewEvent.last
           expect(event.normalized_referrer).to be_nil
@@ -1020,12 +1004,39 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect { Middleware::RequestTracker.log_request(data) }.to change {
-                BrowserPageviewEvent.count
-              }.by(1)
+              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
+        end
+
+        it "skips browser pageviews while PostgreSQL is readonly" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          expect {
+            Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] }).log_later(
+              data,
+              {},
+              nil,
+            )
+          }.not_to change { BrowserPageviewEvent.count }
+
+          expect(BrowserPageviewEvent.queued_count).to eq(0)
+        ensure
+          Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
         end
       end
     end

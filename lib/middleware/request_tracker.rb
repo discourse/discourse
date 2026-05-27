@@ -143,7 +143,6 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
         end
-        trigger_browser_pageview_event(data)
       end
 
       if data[:topic_id].present? && (!data[:has_auth_cookie] || data[:current_user_id].present?) &&
@@ -422,6 +421,7 @@ class Middleware::RequestTracker
     Scheduler::Defer.later("Track view") do
       unless Discourse.pg_readonly_mode?
         self.class.log_request(data)
+        self.class.track_browser_pageview(data)
         instrument_browser_page_view(env, request, data)
       end
     rescue ActiveRecord::ReadOnlyError
@@ -712,15 +712,16 @@ class Middleware::RequestTracker
   end
   private_class_method :extract_beacon_view_tracking_data
 
-  def self.trigger_browser_pageview_event(data)
+  def self.track_browser_pageview(data)
+    return if data[:is_beacon]
+    return if !tracks_browser_page_view?(data)
+
     if SiteSetting.persist_browser_pageview_events
       persist_browser_pageview_event(build_browser_pageview_event_payload(data))
     elsif SiteSetting.trigger_browser_pageview_events
       DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
     end
   end
-  private_class_method :trigger_browser_pageview_event
-
   def self.persist_browser_pageview_event(payload)
     if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
       Rails.logger.debug("Discarding BrowserPageviewEvent: incomplete payload")
@@ -728,23 +729,18 @@ class Middleware::RequestTracker
     end
 
     Scheduler::Defer.later "Create BrowserPageviewEvent" do
-      BrowserPageviewEvent.create!(
-        url: payload[:url],
-        ip_address: payload[:ip_address],
-        country_code: payload[:country_code],
-        asn: payload[:asn],
-        referrer: payload[:referrer],
-        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
-        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
-        user_agent: payload[:user_agent],
-        session_id: payload[:session_id],
-        user_id: payload[:user_id],
-        topic_id: payload[:topic_id],
-        created_at: payload[:occurred_at],
-      )
+      if Discourse.pg_readonly_mode?
+        queue_browser_pageview_event(payload)
+      else
+        BrowserPageviewEvent.create_from_payload!(payload)
+      end
+    rescue ActiveRecord::ReadOnlyError
+      Discourse.received_postgres_readonly!
+      queue_browser_pageview_event(payload)
     rescue ActiveRecord::StatementInvalid => e
-      if e.cause.is_a?(PG::ReadOnlySqlTransaction)
-        # Skip recording browser pageviews when PostgreSQL is in read-only transaction mode.
+      if BrowserPageviewEvent.postgres_readonly_error?(e)
+        Discourse.received_postgres_readonly!
+        queue_browser_pageview_event(payload)
       elsif e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
         Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
       else
@@ -757,6 +753,13 @@ class Middleware::RequestTracker
     end
   end
   private_class_method :persist_browser_pageview_event
+
+  def self.queue_browser_pageview_event(payload)
+    BrowserPageviewEvent.enqueue_for_later(
+      payload.merge(occurred_at: payload[:occurred_at].iso8601(6)),
+    )
+  end
+  private_class_method :queue_browser_pageview_event
 
   def self.trigger_beacon_browser_pageview_event(data)
     if SiteSetting.trigger_browser_pageview_events

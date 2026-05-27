@@ -7,6 +7,174 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
   RETENTION_PERIOD = 3.months
+  REDIS_QUEUE_KEY = "browser_pageview_events:pending"
+  REDIS_FLUSH_LOCK_KEY = "browser_pageview_events:flush"
+  REDIS_FLUSH_BATCH_SIZE = 1000
+
+  class << self
+    def enqueue_for_later(payload)
+      Discourse.redis.rpush(REDIS_QUEUE_KEY, JSON.generate(serialize_payload(payload)))
+    rescue Redis::BaseConnectionError => e
+      Rails.logger.warn("Failed to queue BrowserPageviewEvent in Redis: #{e.message}")
+    end
+
+    def create_from_payload!(payload)
+      BrowserPageviewEvent.create!(attributes_from_payload(payload))
+    end
+
+    def flush_queued!
+      return 0 if Discourse.pg_readonly_mode?
+
+      processed = 0
+
+      DistributedMutex.synchronize(REDIS_FLUSH_LOCK_KEY, validity: 5.minutes) do
+        entries = Array(Discourse.redis.lrange(REDIS_QUEUE_KEY, 0, REDIS_FLUSH_BATCH_SIZE - 1))
+        queued_attributes = []
+
+        entries.each do |entry|
+          attributes = attributes_from_payload(deserialize_payload(entry))
+          if valid_attributes?(attributes)
+            queued_attributes << attributes
+          else
+            Rails.logger.debug("Discarding queued BrowserPageviewEvent: invalid data")
+            queued_attributes << nil
+          end
+          processed += 1
+        rescue JSON::ParserError => e
+          Rails.logger.error("Discarding queued BrowserPageviewEvent: #{e.message}")
+          queued_attributes << nil
+          processed += 1
+        end
+
+        begin
+          insert_rows!(queued_attributes)
+        rescue ActiveRecord::ReadOnlyError
+          Discourse.received_postgres_readonly!
+          return 0
+        rescue ActiveRecord::StatementInvalid => e
+          if postgres_readonly_error?(e)
+            Discourse.received_postgres_readonly!
+            return 0
+          end
+
+          return 0 if postgres_connection_error?(e)
+
+          Rails.logger.error("Failed to insert queued BrowserPageviewEvents: #{e.message}")
+          return 0
+        end
+      end
+
+      processed
+    end
+
+    def queued_count
+      Discourse.redis.llen(REDIS_QUEUE_KEY).to_i
+    end
+
+    def clear_queued!
+      Discourse.redis.del(REDIS_QUEUE_KEY)
+    end
+
+    def postgres_readonly_error?(error)
+      error.cause.is_a?(PG::ReadOnlySqlTransaction)
+    end
+
+    private
+
+    def insert_rows!(queued_attributes)
+      return if queued_attributes.blank?
+
+      rows = queued_attributes.compact
+      if rows.present?
+        BrowserPageviewEvent.transaction(requires_new: true) do
+          BrowserPageviewEvent.insert_all(rows, returning: false)
+        end
+      end
+      Discourse.redis.ltrim(REDIS_QUEUE_KEY, queued_attributes.length, -1)
+    rescue ActiveRecord::StatementInvalid => e
+      Rails.logger.error(
+        "Failed to insert queued BrowserPageviewEvents in bulk; retrying individually: #{e.message}",
+      )
+      insert_rows_individually!(queued_attributes)
+    end
+
+    def insert_rows_individually!(queued_attributes)
+      queued_attributes.each do |attributes|
+        if attributes
+          BrowserPageviewEvent.transaction(requires_new: true) do
+            BrowserPageviewEvent.insert_all([attributes], returning: false)
+          end
+        end
+        Discourse.redis.ltrim(REDIS_QUEUE_KEY, 1, -1)
+      rescue ActiveRecord::StatementInvalid => e
+        raise if postgres_readonly_error?(e) || postgres_connection_error?(e)
+
+        Rails.logger.error(
+          "Discarding queued BrowserPageviewEvent after insert failure: #{e.message}",
+        )
+        Discourse.redis.ltrim(REDIS_QUEUE_KEY, 1, -1)
+      end
+    end
+
+    def serialize_payload(payload)
+      payload = payload.with_indifferent_access
+
+      {
+        user_id: payload[:user_id],
+        url: payload[:url]&.slice(0, MAX_URL_LENGTH),
+        ip_address: payload[:ip_address],
+        country_code: payload[:country_code]&.slice(0, 2),
+        asn: payload[:asn],
+        referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
+        user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
+        session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
+        topic_id: payload[:topic_id],
+        occurred_at: payload[:occurred_at],
+      }
+    end
+
+    def deserialize_payload(entry)
+      JSON.parse(entry).with_indifferent_access
+    end
+
+    def attributes_from_payload(payload)
+      normalized_referrer = BrowserPageviewReferrerInspector.normalize(payload[:referrer])
+
+      {
+        url: payload[:url]&.slice(0, MAX_URL_LENGTH),
+        ip_address: payload[:ip_address],
+        country_code: payload[:country_code]&.slice(0, 2),
+        asn: payload[:asn],
+        referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
+        normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
+        session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
+        user_id: payload[:user_id],
+        topic_id: payload[:topic_id],
+        created_at: payload[:occurred_at],
+      }
+    end
+
+    def valid_attributes?(attributes)
+      attributes[:url].present? && attributes[:ip_address].present? &&
+        attributes[:user_agent].present? && attributes[:session_id].present? &&
+        attributes[:created_at].present? && valid_ip_address?(attributes[:ip_address])
+    end
+
+    def valid_ip_address?(ip_address)
+      IPAddr.new(ip_address)
+      true
+    rescue IPAddr::InvalidAddressError
+      false
+    end
+
+    def postgres_connection_error?(error)
+      cause = error.cause
+      cause.is_a?(PG::ConnectionBad) ||
+        (defined?(PG::UnableToSend) && cause.is_a?(PG::UnableToSend))
+    end
+  end
 
   has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
 
