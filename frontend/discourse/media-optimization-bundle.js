@@ -1,7 +1,8 @@
 import { decodeAnimated as decodeGifAnimated } from "@discourse/gif";
 import { decode as decodeHeic } from "@discourse/heic";
-import { encode as encodeJpeg } from "@discourse/jpeg";
+import { decode as decodeJpeg, encode as encodeJpeg } from "@discourse/jpeg";
 import { decode as decodeJxl } from "@discourse/jxl";
+import { decode as decodePng } from "@discourse/png";
 import resize from "@discourse/resize";
 import {
   encode as encodeWebp,
@@ -171,6 +172,10 @@ globalThis.convert = async function (
     imageData = await decodeJxl(fileBuffer);
   } else if (/hei[cf]$/i.test(fileType)) {
     imageData = await decodeHeic(fileBuffer);
+  } else if (/jpe?g$/i.test(fileType)) {
+    imageData = await decodeJpeg(fileBuffer, { preserveOrientation: true });
+  } else if (/png$/i.test(fileType)) {
+    imageData = await decodePng(fileBuffer);
   } else {
     throw `Unsupported file type for conversion: ${fileType}`;
   }

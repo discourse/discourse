@@ -59,5 +59,30 @@ RSpec.describe DiscourseAi::Completions::Dialects::Converse do
       expect(user_message[:content]).not_to include(hash_including(image: anything))
       expect(user_message[:content]).not_to include(hash_including(document: anything))
     end
+
+    it "passes raw bytes for image uploads, not the base64-encoded string" do
+      model.update!(vision_enabled: true)
+      raw_bytes = "\x89PNG\r\n\x1a\nbinary".b
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Describe: ", { upload_id: 456 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [{ kind: :image, mime_type: "image/png", base64: Base64.strict_encode64(raw_bytes) }],
+      )
+
+      translated = described_class.new(prompt, model).translate
+      user_message = translated.messages.find { |msg| msg[:role] == "user" }
+      image_block = user_message[:content].find { |c| c[:image] }
+
+      expect(image_block).to be_present
+      expect(image_block.dig(:image, :format)).to eq("png")
+      # AWS SDK for Ruby expects raw bytes; it will base64-encode on the wire.
+      # Passing the base64 string would cause double-encoding and Bedrock would
+      # return "Could not process image".
+      expect(image_block.dig(:image, :source, :bytes)).to eq(raw_bytes)
+    end
   end
 end

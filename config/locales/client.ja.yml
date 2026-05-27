@@ -359,8 +359,6 @@ ja:
     tos: "利用規約"
     rules: "ルール"
     conduct: "行動規範"
-    mobile_view: "モバイルビュー"
-    desktop_view: "デスクトップビュー"
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
@@ -3174,6 +3172,8 @@ ja:
           other: "閉じる (%{count})…"
         dismiss_tooltip: "新規投稿のみを閉じるかトピックの追跡を停止します"
         also_dismiss_topics: "これらのトピックの追跡を停止して、未読として表示されないようにする"
+        dismiss_new_topics: "新しいトピックを閉じる"
+        dismiss_new_replies: "新しい返信を閉じる"
         dismiss_new: "新規を閉じる"
         dismiss_new_modal:
           title: "新規を閉じる"
@@ -3955,7 +3955,6 @@ ja:
         name_placeholder: "これは何のブックマークですか？"
         name_input_label: "ブックマーク名"
         set_reminder: "リマインダー"
-        options: "オプション"
         actions:
           delete_bookmark:
             name: "ブックマークを削除"
@@ -4576,12 +4575,7 @@ ja:
       staff_info: "制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加します。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
       synonyms: "同義語"
-      synonyms_description: "次のタグが使用されている場合、<b>%{base_tag_name}</b> に置き換えられます。"
       save: "タグの名前と説明を保存する"
-      tag_groups_info:
-        other: "このタグは次のグループに属しています: %{tag_groups}。"
-      category_restrictions:
-        other: "次のカテゴリでのみ使用できます:"
       edit_synonyms: "同義語を編集"
       add_synonyms_label: "同義語の追加:"
       add_synonyms: "追加"
@@ -5708,6 +5702,13 @@ ja:
                 "4": "リーダー"
               trend:
                 stable: "安定"
+        reports_section:
+          modal:
+            enabled_heading: "有効"
+            all_heading: "すべてのレポート"
+            apply: "適用"
+            move_up: "上に移動"
+            move_down: "下に移動"
         configure:
           button: "構成"
         site_traffic:

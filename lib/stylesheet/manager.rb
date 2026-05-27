@@ -156,7 +156,7 @@ class Stylesheet::Manager
   def self.manifest_full_path
     path = "#{MANIFEST_DIR}/stylesheet-manifest"
     return path if !Rails.env.test?
-    "#{path}-test_#{Discourse.test_env_number}"
+    "#{path}-test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}"
   end
   private_class_method :manifest_full_path
 
@@ -196,7 +196,7 @@ class Stylesheet::Manager
   def self.cache_fullpath
     path = "#{Rails.root.join("#{CACHE_PATH}")}"
     return path if !Rails.env.test?
-    File.join(path, "test_#{Discourse.test_env_number}")
+    File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
   end
 
   if Rails.env.test?

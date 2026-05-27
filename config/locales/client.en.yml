@@ -3805,6 +3805,11 @@ en:
           other: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
+        dismiss_all: "Dismiss all"
+        dismiss_new_topics: "Dismiss new topics"
+        dismiss_new_replies: "Dismiss new replies"
+        dismiss_new_menu: "Dismiss options"
+        dismiss_and_stop_tracking: "Dismiss and stop tracking"
         dismiss_new: "Dismiss New"
         dismiss_new_modal:
           title: "Dismiss new"
@@ -4005,6 +4010,9 @@ en:
         other: "%{count} replies"
       collapse: "Collapse"
       collapse_parent: "Collapse parent thread"
+      focused_path: "Focused reply path"
+      return_to_branch: "Return to %{username}'s branch"
+      all_replies: "All replies"
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
       no_replies: "No replies yet."
@@ -5627,19 +5635,21 @@ en:
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
-      synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      synonyms_description:
+        one: "The synonym %{synonyms} will be replaced with %{base_tag_name}."
+        other: "The synonyms %{synonyms} will be replaced with %{base_tag_name}."
       synonyms_inline: "These synonyms will be replaced with %{base_tag_name}:"
       synonym_hint: "→ %{tag_name}"
       save: "Save name and description of the tag"
       tag_groups_info:
-        one: 'This tag belongs to the group "%{tag_groups}".'
-        other: "This tag belongs to these groups: %{tag_groups}."
+        one: 'This tag belongs to the tag group "%{tag_groups}".'
+        other: "This tag belongs to these tag groups: %{tag_groups}."
       tag_groups_info_prefix:
-        one: "This tag belongs to the group "
-        other: "This tag belongs to these groups: "
+        one: "This tag belongs to the tag group "
+        other: "This tag belongs to these tag groups: "
       category_restrictions:
-        one: "It can only be used in this category:"
-        other: "It can only be used in these categories:"
+        one: "It can only be used in the %{categories} category."
+        other: "It can only be used in these categories: %{categories}."
       restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
@@ -6949,13 +6959,14 @@ en:
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
-            counter: "%{count} / %{max} reports"
+            counter: "%{count} / %{max} reports added"
             enabled_heading: "Enabled"
             all_heading: "All reports"
             apply: "Apply"
-            toggle: "Toggle report"
-            move_up: "Move up"
-            move_down: "Move down"
+            enable: "Enable %{title}"
+            disable: "Disable %{title}"
+            move_up: "Move %{title} up"
+            move_down: "Move %{title} down"
 
         configure:
           button: "Configure"

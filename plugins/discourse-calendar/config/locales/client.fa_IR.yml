@@ -391,6 +391,22 @@ fa_IR:
             private:
               title: "خصوصی"
               description: "فقط کاربران دعوت شده می‌توانند به رویداد خصوصی بپیوندند"
+      composer:
+        name_placeholder: "نام رویداد"
+        reminder:
+          units:
+            minutes:
+              one: "دقیقه"
+              other: "دقیقه"
+            hours:
+              one: "ساعت"
+              other: "ساعت"
+            days:
+              one: "روز"
+              other: "روزها"
+            weeks:
+              one: "هفته"
+              other: "هفته"
       builder_modal:
         custom_fields:
           label: "فیلدهای سفارشی"
@@ -410,8 +426,6 @@ fa_IR:
           remove_timezone: بدون منطقه زمانی (UTC)
         reminders:
           label: "یادآورها"
-          types:
-            notification: "اطلاع دادن به شرکت‌کنندگان"
           units:
             minutes: "دقیقه"
             hours: "ساعت"
@@ -424,11 +438,11 @@ fa_IR:
           label: "همروندی"
           none: "بدون همروندی"
           every_day: "هر روز"
-          every_month: "هر ماه در این روز"
           every_weekday: "هر هفته"
-          every_week: "هر هفته در این روز"
-          every_two_weeks: "هر دو هفته در این روز"
-          every_four_weeks: "هر چهار هفته در این روز"
+          ordinals:
+            last: "آخرین"
+        attendance:
+          none: "هیچ‌کدام"
         url:
           label: "نشانی اینترنتی"
           placeholder: "اختیاری"
@@ -441,8 +455,9 @@ fa_IR:
           placeholder: "اختیاری، پیش‌فرض عنوان موضوع است"
         invitees:
           label: "گروه‌های دعوت شده"
-        status:
-          label: "وضعیت"
+        event_type:
+          public:
+            title: "عمومی"
       invite_user_or_group:
         title: "اطلاع دادن به کاربر(ها) یا گروه(ها)"
         invite: "ارسال"

@@ -6,16 +6,16 @@ import { i18n } from "discourse-i18n";
   <LinkTo
     @route="adminPlugins.show.explorer.new"
     @model="discourse-data-explorer"
-    class="de-manage-reports-hint"
+    class="de-cta"
   >
-    <div class="de-manage-reports-hint__text">
-      <span class="de-manage-reports-hint__title">
+    <div class="de-cta__text">
+      <span class="de-cta__title">
         {{i18n "data_explorer.manage_reports_hint.title"}}
       </span>
-      <span class="de-manage-reports-hint__description">
+      <span class="de-cta__description">
         {{i18n "data_explorer.manage_reports_hint.description"}}
       </span>
     </div>
-    {{dIcon "chevron-right" class="de-manage-reports-hint__chevron"}}
+    {{dIcon "chevron-right" class="de-cta__chevron"}}
   </LinkTo>
 </template>

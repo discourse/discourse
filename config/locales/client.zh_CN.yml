@@ -334,7 +334,6 @@ zh_CN:
         find_on_github: "在 GitHub 上查找"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
-      toggle_mobile_view: "切换移动视图"
       disable_dev_tools: "禁用开发者工具"
       toggle_upcoming_changes_debug: "切换即将推出的更改调试"
     s3:
@@ -392,8 +391,6 @@ zh_CN:
     tos: "服务条款"
     rules: "规则"
     conduct: "行为准则"
-    mobile_view: "移动版视图"
-    desktop_view: "桌面版视图"
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
@@ -3326,6 +3323,11 @@ zh_CN:
           other: "忽略（%{count} 个）…"
         dismiss_tooltip: "仅忽略新帖子或停止跟踪话题"
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
+        dismiss_all: "全部忽略"
+        dismiss_new_topics: "忽略新话题"
+        dismiss_new_replies: "忽略新回复"
+        dismiss_new_menu: "忽略选项"
+        dismiss_and_stop_tracking: "忽略并停止跟踪"
         dismiss_new: "忽略新话题"
         dismiss_new_modal:
           title: "关闭新话题"
@@ -4219,7 +4221,6 @@ zh_CN:
         name_placeholder: "此书签有什么用？"
         name_input_label: "书签名称"
         set_reminder: "提醒我"
-        options: "选项"
         actions:
           delete_bookmark:
             name: "删除书签"
@@ -4875,15 +4876,8 @@ zh_CN:
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
-      synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
       synonyms_inline: "这些同义词将被替换为 %{base_tag_name}："
       save: "保存标签的名称和描述"
-      tag_groups_info:
-        other: "此标签属于以下组：%{tag_groups}。"
-      tag_groups_info_prefix:
-        other: "此标签属于群组： "
-      category_restrictions:
-        other: "它只能用于以下类别："
       restricted_to: "限于"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
@@ -6065,6 +6059,13 @@ zh_CN:
                 "4": "领导者"
               trend:
                 stable: "稳定"
+        reports_section:
+          modal:
+            enabled_heading: "已启用"
+            all_heading: "所有报告"
+            apply: "应用"
+            move_up: "上移"
+            move_down: "下移"
         configure:
           button: "配置"
         site_traffic:
@@ -6072,6 +6073,7 @@ zh_CN:
             anonymous: "匿名"
             embedded: "嵌入式页面浏览量"
             crawlers: "抓取工具"
+          see_details: "查看详情"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

@@ -14,6 +14,9 @@ pt_BR:
       explorer:
         no_semicolons: "Remover os pontos e vírgulas da consulta."
         dirty: "Você precisa salvar a consulta antes de executar."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nenhum resultado"
     explorer:
       default_query: "Padrão"
       default_query_notice: "Esta é uma consulta padrão; o SQL não pode ser editado. Para editar o SQL, crie uma nova consulta."

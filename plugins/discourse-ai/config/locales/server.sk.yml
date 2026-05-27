@@ -42,7 +42,6 @@ sk:
     ai_sentiment_enabled: "Povoľte modul sentimentu."
     ai_sentiment_inference_service_api_endpoint: "URL adresa, na ktorej je spustené API pre modul sentimentu"
     ai_sentiment_inference_service_api_key: "Kľúč API pre API sentimentu"
-    ai_sentiment_models: "Modely, ktoré sa majú použiť na odvodzovanie. Sentiment klasifikuje príspevok v priestore pozitívny/neutrálny/negatívny. Emócia klasifikuje príspevok v priestore hnev/znechutenie/strach/radosť/neutrálny/smútok/prekvapenie."
     ai_nsfw_detection_enabled: "Povoľte modul NSFW."
     ai_nsfw_inference_service_api_endpoint: "URL adresa, na ktorej je spustené API pre modul NSFW"
     ai_nsfw_inference_service_api_key: "Kľúč API pre rozhranie NSFW API"

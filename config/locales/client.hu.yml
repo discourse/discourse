@@ -358,7 +358,6 @@ hu:
         condition_debugging: "Feltétel hibakeresése"
       toggle_safe_mode: "Biztonságos mód be-/kikapcsolása"
       toggle_verbose_localization: "Részletes honosítási mód be-/kikapcsolása"
-      toggle_mobile_view: "Mobil nézet be-/kikapcsolása"
       disable_dev_tools: "Fejlesztői eszközök letiltása"
     s3:
       regions:
@@ -416,8 +415,6 @@ hu:
     tos: "Szolgáltatási feltételek"
     rules: "Szabályok"
     conduct: "Magatartási kódex"
-    mobile_view: "Mobil nézet"
-    desktop_view: "Asztali nézet"
     now: "épp most"
     read_more: "olvasás tovább"
     more: "Több"
@@ -3438,6 +3435,8 @@ hu:
           other: "Elvetés (%{count})…"
         dismiss_tooltip: "Csak az új hozzászólások elvetése vagy a témák követésének leállítása"
         also_dismiss_topics: "Ezen témák követésének leállítása, így sosem fognak olvasatlanként megjelenni"
+        dismiss_new_topics: "Új témák elvetése"
+        dismiss_new_replies: "Új válaszok elvetése"
         dismiss_new: "Újak elvetése"
         dismiss_new_modal:
           title: "Újak elvetése"
@@ -4287,7 +4286,6 @@ hu:
         name_placeholder: "Mire való ez a könyvjelző?"
         name_input_label: "Könyvjelző neve"
         set_reminder: "Emlékeztetés"
-        options: "Beállítások"
         actions:
           delete_bookmark:
             name: "Könyvjelző törlése"
@@ -4955,18 +4953,8 @@ hu:
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       category_restricted: "Ez a címke olyan kategóriákra korlátozódik, amelyekhez nincs hozzáférési jogosultsága."
       synonyms: "Szinonimák"
-      synonyms_description: "A következő címkék használatakor ezek helyére <b>%{base_tag_name}</b>kerül."
       synonyms_inline: "Ezek a szinonimák a következőre lesznek lecserélve: %{base_tag_name}:"
       save: "Címke nevének és leírásának mentése"
-      tag_groups_info:
-        one: 'Ez a címke a "%{tag_groups}" csoportba tartozik.'
-        other: "Ez a címke a következő csoportokhoz tartozik: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Ez a címke a következő csoporthoz tartozik: "
-        other: "Ez a címke a következő csoportokhoz tartozik: "
-      category_restrictions:
-        one: "Csak ebben a kategóriában használható"
-        other: "Csak ezekben a kategóriákban használható:"
       restricted_to: "Korlátozva a következőre:"
       no_synonyms: "Ennek a címkének nincsenek szinonimái."
       edit_synonyms: "Szinonimák szerkesztése"
@@ -6150,6 +6138,14 @@ hu:
                 "4": "Vezető"
               trend:
                 stable: "stabil"
+        reports_section:
+          no_data: "Nincs megjeleníthető adat"
+          modal:
+            enabled_heading: "Bekapcsolva"
+            all_heading: "Összes bejelentés"
+            apply: "Alkalmaz"
+            move_up: "Mozgatás fel"
+            move_down: "Mozgatás le"
         site_traffic:
           series:
             anonymous: "Névtelen"

@@ -43,7 +43,6 @@ fi:
     ai_sentiment_enabled: "Ota sävymoduuli käyttöön."
     ai_sentiment_inference_service_api_endpoint: "URL-osoite, jossa sävymoduulin API on käynnissä"
     ai_sentiment_inference_service_api_key: "Sävy-APIn API-avain"
-    ai_sentiment_models: "Päätelmien tekemiseen käytettävät mallit. Sävy luokittelee viestin positiivinen/neutraali/negatiivinen-skaalalla. Tunne luokittelee viha/inho/pelko/ilo/neutraali/suru/yllätys-skaalalla."
     ai_nsfw_detection_enabled: "Ota NSFW-moduuli käyttöön."
     ai_nsfw_inference_service_api_endpoint: "URL-osoite, jossa NSFW-moduulin API on käynnissä"
     ai_nsfw_inference_service_api_key: "NSFW-APIn API-avain"

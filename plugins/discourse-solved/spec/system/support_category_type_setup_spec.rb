@@ -11,7 +11,6 @@ RSpec.describe "Support Category Type Setup" do
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.enable_simplified_category_creation = true
     SiteSetting.enable_support_category_type_setup = true
     sign_in(admin)
   end

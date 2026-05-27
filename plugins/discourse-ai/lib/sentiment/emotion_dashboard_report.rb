@@ -15,7 +15,9 @@ module DiscourseAi
         end
 
         def self.fetch_data(report)
-          DB.query(<<~SQL, end: report.end_date, start: report.start_date)
+          model_name = DiscourseAi::Sentiment::PostClassification.active_model_name_for(:emotion)
+
+          DB.query(<<~SQL, end: report.end_date, start: report.start_date, model_name: model_name)
             SELECT
               posts.created_at::DATE AS day,
               #{
@@ -37,7 +39,7 @@ module DiscourseAi
                 topics.deleted_at IS NULL
             WHERE
                 classification_results.target_type = 'Post' AND
-                classification_results.model_used = 'SamLowe/roberta-base-go_emotions'
+                classification_results.model_used = :model_name
             GROUP BY 1
             ORDER BY 1 ASC
           SQL

@@ -21,6 +21,12 @@ uk:
       explorer:
         no_semicolons: "Вилучіть крапки з комою з запиту."
         dirty: "Ви повинні зберегти запит перед запуском."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Немає результатів"
+      manage_reports_hint:
+        title: "Створення запиту Провідника даних"
+        description: "Напишіть власний SQL-запит, щоб знайти щось специфічне для вашої спільноти."
     explorer:
       default_query: "Стандартна"
       default_query_notice: "Це запит за замовчуванням, SQL-код не можна редагувати. Щоб редагувати SQL-код, створіть новий запит."
@@ -41,6 +47,8 @@ uk:
         description_title: "Генеруйте за допомогою ШІ"
         description_hint: "Опишіть, що ви хочете, простою мовою. Ми згенеруємо для вас запит SQL, назву та опис."
         description_placeholder: "наприклад, показати мені реєстрації в часі"
+        regenerate_placeholder: "Наприклад, оновіть запит, щоб обмежити його до 50 результатів"
+        prompt_label: "Підказка"
         generate: "Згенерувати"
         regenerate: "Перегенерувати"
         generating: "Створення запиту за допомогою ШІ..."

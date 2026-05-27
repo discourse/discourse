@@ -877,6 +877,8 @@ class ApplicationController < ActionController::Base
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     allowed_paths = [redirect_path, second_factor_path, path("/admin"), path("/safe-mode")]
     if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
+      cookies[:destination_url] = destination_url.presence
+
       rate_limiter = RateLimiter.new(current_user, "redirect_to_required_fields_log", 1, 24.hours)
 
       if rate_limiter.performed!(raise_error: false)

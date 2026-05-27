@@ -1075,6 +1075,7 @@ ur:
     consolidated_page_views_browser_detection:
       yaxis: "دن"
     site_traffic:
+      title: "سائٹ پر آمدو رفت"
       xaxis:
         page_view_anon_browser: "گمنام"
         page_view_crawler: "کرالرز"
@@ -1383,6 +1384,9 @@ ur:
       force_https: "آپ کی ویب سائٹ SSL استعمال کر رہی ہے۔ لیکن `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ابھی تک آپ کی سائٹ ترتیبات میں فعال نہیں ہے۔"
       admin_sidebar_deprecation: "پرانے منتظم لے آؤٹ کو نئے <a href='https://meta.discourse.org/t/-/289281'>سائڈبار لے آؤٹ</a> کے حق میں فرسودہ کر دیا گیا ہے اور اگلی ریلیز میں ہٹا دیا جائے گا۔ اس سے پہلے آپٹ ان کرنے کے لیے آپ <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'></a> نئے سائڈبار لے آؤٹ کو ترتیب کر سکتے ہیں۔"
     back_from_logster_text: "فورم پر واپسی"
+    reports_section:
+      providers:
+        core_report: "معیاری"
   site_settings:
     allow_bulk_invite: "CSV فائل اپ لوڈ کرکے کَثْرَتی دعوتوں کی اجازت دیں"
     disabled: "غیر فعال"
@@ -1804,7 +1808,6 @@ ur:
     max_notifications_per_user: "فی رکن اطلاعات کی زیادہ سے زیادہ مقدار، اگر اس نمبر سے تجاوز کر گیا تو پرانی اطلاعات کو حذف کر دیا جائے گا۔ ہفتہ وار نافذ۔ غیر فعال کرنے کے لیے 0 پر سیٹ کریں۔"
     allow_profile_backgrounds: "صارفین کو پروفائل پسِ منظر اَپ لوڈ کرنے کی اجازت دیں۔"
     get_a_room_threshold: "انتباہ کرا دینے سے پہلے صارف ایک ہی ٹاپک میں ایک ہی شخص کیلئے کتنی پوسٹس شائع کرے۔"
-    enable_mobile_theme: "موبائل ڈِیوائیسِز ایک موبائل دوستانہ تھِیم کا استعمال کرتی ہیں، مکمل سائٹ پر تبدیل ہو جانے کی صلاحیت کے ساتھ۔ اگر آپ اپنی مرضی کی سٹائل شیٹ، جو کہ مکمل طور پر رِسپَونسِو ہو، استعمال کرنا چاہتے ہیں تو اِس کو غیر فعال کریں۔"
     dominating_topic_minimum_percent: "ایک ٹاپک میں ایک ہی صارف کی طرف سے کتنے فیصد پوسٹس ہونی چاہئیں، اِس سے پہلے کہ اُسے ٹاپک پر حد سے زیادہ غالب ہو جانے کی یاد دہانی کرائی جائے۔"
     suppress_uncategorized_badge: "موضوعات کی فہرستوں میں غیر زمرہ والے موضوعات کے لئے تمغہ نہ دکھائیں۔"
     header_dropdown_category_count: "ہیڈر ڈراپ ڈاؤن مینو میں کتنے زُمرہ جات ظاہر کیے جا سکتے ہیں۔"

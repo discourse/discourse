@@ -780,7 +780,9 @@ export default class UpsertCategoryGeneral extends Component {
               <Content @name="square">
                 {{trustHTML
                   (dCategoryBadge
-                    (this.buildTransientModel @transientData) styleType="square"
+                    (this.buildTransientModel @transientData)
+                    styleType="square"
+                    previewColor=true
                   )
                 }}
               </Content>

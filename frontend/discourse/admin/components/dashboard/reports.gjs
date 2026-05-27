@@ -133,6 +133,7 @@ export default class DashboardReports extends Component {
       @headerAction={{if this.canEdit this.openReportsConfig}}
       @startDate={{@startDate}}
       @endDate={{@endDate}}
+      ...attributes
     >
       <div
         class="db-reports"

@@ -48,6 +48,18 @@ bg:
               title: "Публични"
             private:
               title: "Затворени"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "минута"
+              other: "минути"
+            hours:
+              one: "час"
+              other: "часа"
+            days:
+              one: "ден"
+              other: "дни "
       builder_modal:
         custom_fields:
           placeholder: "По избор"
@@ -63,6 +75,8 @@ bg:
           periods:
             before: "преди"
             after: "след"
+        attendance:
+          none: "Без"
         url:
           label: "URL"
           placeholder: "По избор"
@@ -70,5 +84,6 @@ bg:
           label: "Локация"
         description:
           label: "Описание"
-        status:
-          label: "Статус"
+        event_type:
+          public:
+            title: "Публични"

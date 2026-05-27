@@ -213,6 +213,9 @@ importers:
       '@discourse/jxl':
         specifier: ^1.0.0
         version: 1.3.0
+      '@discourse/png':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@discourse/resize':
         specifier: ^2.1.0
         version: 2.1.1
@@ -1596,6 +1599,9 @@ packages:
 
   '@discourse/moment-timezone-names-translations@1.0.0':
     resolution: {integrity: sha512-4xr1QWQ0nzmFa2ZXQgWZA+dtE/BU2ePA+qkJWPFzNpq4ZnQi8MmMMAS2285t3rc2ySMBQqYaAArmcSUiufUgRA==}
+
+  '@discourse/png@3.1.1':
+    resolution: {integrity: sha512-9Cv3CKItt7qhS13B74LK32SL4VPE8YzkbW1ecw5r67p0ny7KnCHXYsYd1KGN94lSXIKkyADDEG7M7Wbmz/y/gQ==}
 
   '@discourse/resize@2.1.1':
     resolution: {integrity: sha512-iSPfgyCWTXsLcYoUN7/TxTbCSMlSqCI2v9/dCmg5dQdr/qi0TtRKjMzmSy7+8+Ns2v076IQDtdyfvBT8CQPd3g==}
@@ -9468,6 +9474,8 @@ snapshots:
       - supports-color
 
   '@discourse/moment-timezone-names-translations@1.0.0': {}
+
+  '@discourse/png@3.1.1': {}
 
   '@discourse/resize@2.1.1': {}
 

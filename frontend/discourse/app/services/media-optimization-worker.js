@@ -52,6 +52,9 @@ export default class MediaOptimizationWorkerService extends Service {
     const isConvertFormat = CONVERT_FORMAT_REGEX.test(typeOrName);
     const isAnimatedGif = ANIMATED_GIF_REGEX.test(typeOrName);
     const isOptimizable = OPTIMIZABLE_REGEX.test(typeOrName);
+    const wasmDecodeOptimizable =
+      isOptimizable &&
+      this.siteSettings.composer_media_optimization_image_wasm_decode_enabled;
 
     if (!isConvertFormat && !isAnimatedGif && !isOptimizable) {
       return Promise.resolve();
@@ -120,7 +123,7 @@ export default class MediaOptimizationWorkerService extends Service {
         mediaOptimizationBundle: this.session.mediaOptimizationBundle,
       };
 
-      if (isConvertFormat) {
+      if (isConvertFormat || wasmDecodeOptimizable) {
         let arrayBuffer;
         try {
           arrayBuffer = await file.data.arrayBuffer();
@@ -135,7 +138,7 @@ export default class MediaOptimizationWorkerService extends Service {
             fileId: file.id,
             file: arrayBuffer,
             fileName: file.name,
-            fileType: file.type || file.data.type,
+            fileType: file.type || file.data.type || file.name,
             originalFileSize: file.size,
             settings,
           },

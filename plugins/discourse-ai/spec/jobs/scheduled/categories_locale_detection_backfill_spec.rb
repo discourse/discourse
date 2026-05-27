@@ -11,7 +11,8 @@ describe Jobs::CategoriesLocaleDetectionBackfill do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
-    SiteSetting.ai_translation_target_categories = category.id.to_s
+    SiteSetting.ai_translation_excluded_categories =
+      Category.where.not(id: category.id).pluck(:id).join("|")
   end
 
   it "does nothing when AI is disabled" do
@@ -42,19 +43,22 @@ describe Jobs::CategoriesLocaleDetectionBackfill do
     job.execute({})
   end
 
-  it "does nothing when target_categories is empty" do
-    SiteSetting.ai_translation_target_categories = ""
+  it "does nothing when all categories are excluded" do
+    SiteSetting.ai_translation_excluded_categories = Category.pluck(:id).join("|")
     DiscourseAi::Translation::CategoryLocaleDetector.expects(:detect_locale).never
 
     job.execute({})
   end
 
-  it "detects locale for categories with nil locale in target categories" do
-    non_target = Fabricate(:category, locale: nil)
+  it "detects locale for categories with nil locale when they are not excluded" do
+    excluded = Fabricate(:category, locale: nil)
+    SiteSetting.ai_translation_excluded_categories = excluded.id.to_s
+    SiteSetting.ai_translation_excluded_categories =
+      Category.where.not(id: category.id).pluck(:id).join("|")
 
     DiscourseAi::Translation::CategoryLocaleDetector.expects(:detect_locale).with(category).once
 
-    DiscourseAi::Translation::CategoryLocaleDetector.expects(:detect_locale).with(non_target).never
+    DiscourseAi::Translation::CategoryLocaleDetector.expects(:detect_locale).with(excluded).never
 
     job.execute({})
   end
@@ -81,7 +85,8 @@ describe Jobs::CategoriesLocaleDetectionBackfill do
   it "limits processing to the backfill rate" do
     SiteSetting.ai_translation_backfill_hourly_rate = 1
     extra = Fabricate(:category, locale: nil)
-    SiteSetting.ai_translation_target_categories = "#{category.id}|#{extra.id}"
+    SiteSetting.ai_translation_excluded_categories =
+      Category.where.not(id: [category.id, extra.id]).pluck(:id).join("|")
 
     DiscourseAi::Translation::CategoryLocaleDetector.expects(:detect_locale).once
 

@@ -1476,6 +1476,10 @@ posting:
   max_mentions_per_post:
     default: 10
     area: "notifications"
+  max_quotes_per_post:
+    default: 50
+    min: 0
+    area: "posts_and_topics"
   max_users_notified_per_group_mention:
     default: 100
     client: true
@@ -2548,6 +2552,10 @@ files:
       learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
+  composer_media_optimization_image_wasm_decode_enabled:
+    default: false
+    hidden: true
+    client: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -3156,6 +3164,10 @@ rate_limits:
     default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
+  limit_admin_personal_messages_per_day:
+    default: 0
+    min: 0
+    hidden: true
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day:

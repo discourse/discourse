@@ -24,7 +24,7 @@ describe "Tag Settings" do
       sign_in(admin)
 
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
 
       expect(tag_settings_page).to have_tag_settings_page
       expect(page).to have_current_path("/tag/#{tag_1.id}-tag/#{tag_1.id}/edit/general")
@@ -36,18 +36,18 @@ describe "Tag Settings" do
       sign_in(admin)
 
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
 
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
 
       sign_in(user)
       tags_page.visit_tag(tag_1)
 
-      expect(tags_page).to have_no_tag_info_btn
+      expect(tags_page).to have_no_edit_tag_btn
       visit("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
     end
@@ -55,7 +55,7 @@ describe "Tag Settings" do
     it "allows privileged users to edit tag, admin to delete tag" do
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
 
       expect(page).to have_no_css(".d-page-header__actions .btn-danger")
       expect(tag_settings_page).to have_name_value(tag_1.name)
@@ -80,14 +80,14 @@ describe "Tag Settings" do
 
       sign_in(admin)
       tags_page.visit_tag(tag_2)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       expect(page).to have_css(".d-page-header__actions .btn-danger")
       tag_settings_page.click_delete
       dialog.click_danger
       expect(page).to have_current_path("/tags")
 
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       tag_settings_page.click_back
       expect(page).to have_current_path("/tag/custom-slug/#{tag_1.id}")
     end

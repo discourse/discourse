@@ -332,7 +332,6 @@ class Category < ActiveRecord::Base
   end
 
   def category_types
-    return {} if !SiteSetting.enable_simplified_category_creation
     Categories::TypeRegistry
       .all
       .values

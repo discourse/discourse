@@ -21,6 +21,12 @@ pl_PL:
       explorer:
         no_semicolons: "Usuń średniki z zapytania."
         dirty: "Musisz zapisać zapytanie zanim je wykonasz."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Brak wyników"
+      manage_reports_hint:
+        title: "Utwórz zapytanie w Eksploratorze danych"
+        description: "Napisz niestandardowe zapytanie SQL, aby wyświetlić informacje specyficzne dla Twojej społeczności."
     explorer:
       default_query: "Domyślny"
       default_query_notice: "To jest zapytanie domyślne, którego nie można edytować. Aby edytować zapytanie SQL, utwórz nowe zapytanie."
