@@ -2,7 +2,9 @@
   // reset
   margin: 0;
   width: 100%;
+  min-width: 0;
   border-radius: var(--d-border-radius);
   box-sizing: border-box;
   padding: 0.5em;
+  overflow-wrap: break-word;
 }

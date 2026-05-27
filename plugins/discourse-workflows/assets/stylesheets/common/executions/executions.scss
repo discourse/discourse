@@ -1,0 +1,44 @@
+.workflows-executions {
+  &__table {
+    width: 100%;
+
+    td {
+      padding: var(--space-2) var(--space-1);
+    }
+  }
+
+  &__badge {
+    font-size: var(--font-down-1);
+    padding: 0.2em 0.5em;
+    border-radius: 0.25em;
+
+    &.--success {
+      background: var(--success-low);
+      color: var(--success);
+    }
+
+    &.--error {
+      background: var(--danger-low);
+      color: var(--danger);
+    }
+
+    &.--running {
+      background: var(--highlight-low);
+      color: var(--highlight);
+    }
+
+    &.--pending {
+      background: var(--primary-low);
+      color: var(--primary-medium);
+    }
+  }
+
+  &__time {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+  }
+}

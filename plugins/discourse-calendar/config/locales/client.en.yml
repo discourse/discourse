@@ -392,7 +392,7 @@ en:
       upcoming_events_list:
         title: "Upcoming events"
         empty: "No upcoming events"
-        all_day: "All day"
+        all_day: "All-day"
         error: "Failed to retrieve events"
         try_again: "Try again"
         view_all: "View all"
@@ -499,7 +499,7 @@ en:
           label: "End date"
         all_day:
           label: "All day event"
-          description: "An all day event will not have specific times, just a date. The event will run from the start of the day to the end of the day."
+          description: "An all-day event will not have specific times, just a date. The event will run from the start of the day to the end of the day."
         reminders:
           label: "Reminders"
           types:

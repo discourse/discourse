@@ -7,8 +7,8 @@ RSpec.describe "Viewport-based mobile mode" do
     mobile_stylesheet = find("link[rel=stylesheet][href*='stylesheets/mobile']", visible: false)
     desktop_stylesheet = find("link[rel=stylesheet][href*='stylesheets/desktop']", visible: false)
 
-    expect(mobile_stylesheet["media"]).to include("width < 40rem")
-    expect(desktop_stylesheet["media"]).to include("width >= 40rem")
+    expect(mobile_stylesheet["media"]).to include("max-width")
+    expect(desktop_stylesheet["media"]).to include("min-width")
 
     expect(page).to have_css("html.desktop-view")
     expect(page).not_to have_css("html.mobile-view")

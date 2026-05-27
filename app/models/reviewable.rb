@@ -390,10 +390,10 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Includes pending scores plus disagreed ones, so re-approving a previously
-  # rejected reviewable correctly flips those scores back to "agreed".
+  # Override this in specific reviewable type to include scores for
+  # non-pending reviewables
   def updatable_reviewable_scores
-    reviewable_scores.pending.or(reviewable_scores.disagreed)
+    reviewable_scores.pending
   end
 
   def transition_to(status_symbol, performed_by)

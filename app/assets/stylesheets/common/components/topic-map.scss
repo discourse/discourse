@@ -115,8 +115,7 @@ body:not(.archetype-private_message) {
         }
       }
 
-      .fk-d-menu__trigger,
-      .topic-map__stat {
+      .fk-d-menu__trigger {
         display: flex;
         flex-direction: column;
         justify-content: center;
