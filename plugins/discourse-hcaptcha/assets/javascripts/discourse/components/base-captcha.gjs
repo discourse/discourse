@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import InputTip from "discourse/components/input-tip";
 import loadScript from "discourse/lib/load-script";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 
 export default class BaseCaptcha extends Component {
@@ -121,7 +121,7 @@ export default class BaseCaptcha extends Component {
     {{/if}}
 
     {{#if this.captchaService.submitFailed}}
-      <InputTip @validation={{this.captchaService.inputValidation}} />
+      <DInputTip @validation={{this.captchaService.inputValidation}} />
     {{/if}}
   </template>
 }
