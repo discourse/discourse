@@ -2996,6 +2996,8 @@ fa_IR:
           other: "رد کردن (%{count})…"
         dismiss_tooltip: "نوشته‌های جددی را ببند یا موضوعات را پیگیری نکن"
         also_dismiss_topics: "توقف پیگیری این موضوعات که دیگر به عنوان خوانده نشده برای من نمایش داده نشوند"
+        dismiss_new_topics: "رد کردن موضوعات جدید"
+        dismiss_new_replies: "رد کردن پاسخ های جدید"
         dismiss_new: "بستن جدید"
         dismiss_new_modal:
           title: "رد کردن جدید"
@@ -4351,14 +4353,7 @@ fa_IR:
       staff_info: "برای افزودن محدودیت، این برچسب را در یک <a href=%{basePath}/tag_groups>گروه برچسب</a> قرار دهید."
       category_restricted: "این برچسب محدود به دسته‌هایی است که اجازه دسترسی به آن‌ها را ندارید."
       synonyms: "مترادف‌ها"
-      synonyms_description: "هنگامی که از برچسب‌های زیر استفاده می‌شود، آنها با <b>%{base_tag_name}</b>جایگزین می‌شوند."
       save: "ذخیره نام و توضیحات برچسب"
-      tag_groups_info:
-        one: 'این برچسب متعلق به گروه "%{tag_groups}" است.'
-        other: "این برچسب متعلق به این گروه ها است:%{tag_groups}."
-      category_restrictions:
-        one: "فقط در این دسته قابل استفاده است:"
-        other: "فقط در این دسته‌ها قابل استفاده است:"
       edit_synonyms: "ویرایش مترادف ها"
       add_synonyms_label: "اضافه کردن مترادف‌ها:"
       add_synonyms: "افزودن"

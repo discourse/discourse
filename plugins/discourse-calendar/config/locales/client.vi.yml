@@ -61,9 +61,20 @@ vi:
               title: "Công khai"
             private:
               title: "Riêng tư"
+      composer:
+        reminder:
+          units:
+            minutes:
+              other: "phút"
+            hours:
+              other: "tiếng"
+            days:
+              other: "ngày"
       builder_modal:
         custom_fields:
           placeholder: "Tùy chọn"
+        advanced_settings_title: "Cài đặt nâng cao"
+        advanced_settings: "Cài đặt nâng cao"
         create: "Tạo"
         update: "Lưu lại"
         timezone:
@@ -80,6 +91,10 @@ vi:
           label: "Tái diễn"
           none: "Không tái diễn"
           every_day: "Mỗi ngày"
+          ordinals:
+            last: "cuối cùng"
+        attendance:
+          none: "Không"
         url:
           label: "URL"
           placeholder: "Tùy chọn"
@@ -87,7 +102,8 @@ vi:
           label: "Vị trí"
         description:
           label: "Mô tả"
-        status:
-          label: "Trạng thái"
+        event_type:
+          public:
+            title: "Công khai"
       invite_user_or_group:
         invite: "Gửi"

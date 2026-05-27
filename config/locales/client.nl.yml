@@ -3494,6 +3494,8 @@ nl:
           other: "Negeren (%{count})…"
         dismiss_tooltip: "Negeer alleen nieuwe berichten of stop het volgen van topics"
         also_dismiss_topics: "Volgen van deze topics stoppen, zodat ze nooit meer als ongelezen verschijnen voor mij"
+        dismiss_new_topics: "Nieuwe topics negeren"
+        dismiss_new_replies: "Nieuwe antwoorden sluiten"
         dismiss_new: "Nieuwe negeren"
         dismiss_new_modal:
           title: "Nieuwe negeren"
@@ -5111,18 +5113,8 @@ nl:
       staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe je geen toegang hebt."
       synonyms: "Synoniemen"
-      synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
       synonyms_inline: "Deze synoniemen worden vervangen door %{base_tag_name}:"
       save: "Sla de naam en beschrijving van de tag op"
-      tag_groups_info:
-        one: 'Deze tag behoort tot de groep ''%{tag_groups}''.'
-        other: "Deze tag behoort tot deze groepen: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Deze tag behoort tot de groep"
-        other: "Deze tag behoort tot deze groepen: "
-      category_restrictions:
-        one: "Deze kan alleen worden gebruikt in deze categorie:"
-        other: "Deze kan alleen worden gebruikt in deze categorieën:"
       restricted_to: "Beperkt tot"
       no_synonyms: "Deze tag heeft geen synoniemen."
       edit_synonyms: "Synoniemen bewerken"

@@ -2899,6 +2899,8 @@ zh_TW:
           other: "忽略（%{count} 個）…"
         dismiss_tooltip: "僅忽略新貼文或停止追蹤話題"
         also_dismiss_topics: "停止追蹤這些話題，這樣這些話題就不再顯示為未讀了"
+        dismiss_new_topics: "關閉新主題"
+        dismiss_new_replies: "忽略新回覆"
         dismiss_new: "忽略新內容"
         dismiss_new_modal:
           title: "忽略新內容"
@@ -4174,12 +4176,7 @@ zh_TW:
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"
       synonyms: "同義詞"
-      synonyms_description: "使用以下標記時，它們將被替換為 <b>%{base_tag_name}</b>。"
       save: "保存標記的名稱和描述"
-      tag_groups_info:
-        other: "此標記屬於以下組：%{tag_groups}。"
-      category_restrictions:
-        other: "它只能用於以下類別："
       edit_synonyms: "編輯同義詞"
       add_synonyms_label: "新增同義字："
       add_synonyms: "新增"

@@ -1757,6 +1757,8 @@ id:
         clear_all: "Hapus Semua"
         defer: "Tandai belum dibaca"
         dismiss: "Bubar"
+        dismiss_new_topics: "Abaikan topik baru"
+        dismiss_new_replies: "Abaikan balasan baru"
         dismiss_new_modal:
           title: "Abaikan yang baru"
           topics: "Abaikan topik baru"

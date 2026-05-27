@@ -53,6 +53,15 @@ zh_TW:
               title: "公開"
             private:
               title: "私密"
+      composer:
+        reminder:
+          units:
+            minutes:
+              other: "分鐘"
+            hours:
+              other: "小時"
+            days:
+              other: "天"
       builder_modal:
         custom_fields:
           placeholder: "可選"
@@ -72,6 +81,8 @@ zh_TW:
           label: "週期"
           none: "單一"
           every_day: "每天"
+        attendance:
+          none: "無"
         url:
           label: "網址"
           placeholder: "可選"
@@ -79,7 +90,8 @@ zh_TW:
           label: "位置"
         description:
           label: "描述"
-        status:
-          label: "狀態"
+        event_type:
+          public:
+            title: "公開"
       invite_user_or_group:
         invite: "傳送"

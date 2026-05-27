@@ -4273,6 +4273,7 @@ ro:
           series:
             anonymous: "Anonimi"
             crawlers: "Crawlere"
+          see_details: "Vezi detalii"
         period:
           last_7_days: "Ultimele 7 zile"
           last_30_days: "Ultimele 30 de zile"

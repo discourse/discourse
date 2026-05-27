@@ -3929,13 +3929,6 @@ da:
       default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
       category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
-      synonyms_description: "Når følgende tags bruges, vil de blive erstattet med <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Dette mærke tilhører gruppen "%{tag_groups}".'
-        other: "Dette mærke tilhører disse grupper: %{tag_groups}."
-      category_restrictions:
-        one: "Den kan kun bruges i denne kategori:"
-        other: "Det kan kun bruges i disse kategorier:"
       edit_synonyms: "Rediger Synonymer"
       add_synonyms_label: "Tilføj synonymer:"
       add_synonyms: "Tilføj"

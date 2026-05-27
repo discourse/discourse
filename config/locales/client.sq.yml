@@ -2910,6 +2910,8 @@ sq:
           other: "Hiq (%{count})…"
         dismiss_tooltip: "Hiq veç postimet e reja ose ndalo së ndjekuri temat"
         also_dismiss_topics: "Mos i gjurmo më këto tema që të mos afishohen më si të palexuara për mua"
+        dismiss_new_topics: "Hiqni temat e reja"
+        dismiss_new_replies: "Hiqni përgjigjet e reja"
         dismiss_new: "Hiqni të Rejat"
         dismiss_new_modal:
           title: "Hiqni të Rejat"
