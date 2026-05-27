@@ -11,10 +11,7 @@ describe "Simplified Category Creation" do
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
-  before do
-    SiteSetting.enable_simplified_category_creation = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   describe "Selecting category type when setting up a new category" do
     it "automatically skips category type selection when only one type (discussion) is available" do

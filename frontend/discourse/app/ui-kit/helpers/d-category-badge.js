@@ -6,6 +6,10 @@ export default function dCategoryBadge(cat, options = {}) {
     hideParent: options.hideParent,
     allowUncategorized: options.allowUncategorized,
     categoryStyle: options.categoryStyle,
+    styleType: options.styleType,
+    icon: options.icon,
+    emoji: options.emoji,
+    previewColor: options.previewColor,
     link: isPresent(options.link) ? options.link : false,
   });
 }

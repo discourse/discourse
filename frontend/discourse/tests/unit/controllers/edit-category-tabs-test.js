@@ -34,9 +34,6 @@ module("Unit | Controller | edit-category-tabs", function (hooks) {
   });
 
   test("validateForm delegates to registered validators", function (assert) {
-    this.controller.siteSettings = {
-      enable_simplified_category_creation: true,
-    };
     this.controller.selectedTab = "general";
 
     const validatorLog = [];
@@ -71,9 +68,6 @@ module("Unit | Controller | edit-category-tabs", function (hooks) {
   });
 
   test("validateForm passes removeError to validators", function (assert) {
-    this.controller.siteSettings = {
-      enable_simplified_category_creation: true,
-    };
     this.controller.selectedTab = "general";
 
     let removedField;
