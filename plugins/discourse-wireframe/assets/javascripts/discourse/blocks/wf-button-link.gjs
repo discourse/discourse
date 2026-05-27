@@ -46,7 +46,7 @@ export default class WFButtonLink extends Component {
         DButton's built-in `@icon` path. We re-create the
         `.d-button-label` wrapper that DButton would otherwise emit
         when `@translatedLabel` is set, so spacing / styling match. }}
-    <DButton class={{this.btnClass}} @href={{@href}}>
+    <DButton class={{this.btnClass}} @href={{@href}} data-block-arg="href">
       <IconRenderer @value={{@icon}} @arg="icon" />
       <span class="d-button-label">{{@label}}</span>
     </DButton>

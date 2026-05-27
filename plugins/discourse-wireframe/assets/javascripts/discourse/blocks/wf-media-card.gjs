@@ -233,6 +233,7 @@ export default class WFMediaCard extends Component {
             class="wf-media-card__cta
               {{if R.isEmpty 'wf-media-card__cta--empty'}}"
             href={{@ctaHref}}
+            data-block-arg="ctaHref"
           >
             <R.Content />
           </a>

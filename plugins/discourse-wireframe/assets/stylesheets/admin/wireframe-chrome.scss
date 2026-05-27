@@ -3727,6 +3727,79 @@ body.wireframe-active .fk-d-menu[data-identifier="d-icon-grid-picker"] {
   --icon-grid-h-padding: 0.5rem;
 }
 
+/* Inline URL edit — the rendered link element (an `<a>` inside DButton
+   or a raw `<a>`) carries `data-block-arg` so the chrome's onClick
+   routes to `linkEdit.start()`. The chrome's `pointer-events: none`
+   rule on non-structural children of `.wireframe-block-chrome`
+   inherits down to descendants; this rule re-enables click handling
+   on the marked link elements when the block is selected, and adds
+   a dashed hover affordance to telegraph "click to edit URL." */
+
+body.wireframe-active .wireframe-block-chrome.--selected a[data-block-arg],
+body.wireframe-active
+  .wireframe-block-chrome.--selected
+  button[data-block-arg] {
+  pointer-events: auto;
+  cursor: pointer;
+
+  &:hover {
+    outline: 1px dashed var(--tertiary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* URL-edit chip — a small "Edit URL" button shown in a FloatKit
+   tooltip anchored to the rendered link. The chrome registers the
+   tooltip per URL arg on `didInsert` (see `block-chrome.gjs`'s
+   `_setupUrlTooltips`). FloatKit handles the hover-trigger,
+   positioning, and the hover bridge between trigger and content
+   via `interactive: true`. */
+
+.wf-link-edit-popover {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wf-link-edit-popover__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--secondary);
+  color: var(--primary);
+  border: 1px solid var(--tertiary);
+  border-radius: 999px;
+  font-size: var(--font-down-1);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--tertiary-low);
+  }
+}
+
+.wf-link-edit-popover__input {
+  width: 220px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--primary-low);
+  border-radius: 3px;
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  background: var(--secondary);
+  margin: 0 2px;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 2px var(--tertiary-low);
+  }
+}
+
 /* Placeholder text for empty fields, shown only on the canvas. Triggered
    by the renderer's explicit `--empty` modifier (set in JS from
    `runs.length === 0`), not by the `:empty` CSS pseudo — Glimmer's

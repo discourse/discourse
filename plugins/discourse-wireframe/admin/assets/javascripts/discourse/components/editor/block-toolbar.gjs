@@ -1,5 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -35,6 +36,15 @@ import DButton from "discourse/ui-kit/d-button";
  */
 export default class BlockToolbar extends Component {
   @service wireframe;
+
+  /**
+   * Working value of the URL input while a field-editor slot is
+   * active. Seeded from `wireframe.fieldEditor.value` when the input
+   * mounts (see `seedFieldEditorValue`). The slot's `value` is the
+   * INITIAL value; this is the live edit-in-progress string the user
+   * is typing.
+   */
+  @tracked _editorValue = "";
 
   get canMoveUp() {
     return this.wireframe.canMoveSelectedUp;
@@ -99,8 +109,19 @@ export default class BlockToolbar extends Component {
     return this.inlineController?.markState;
   }
 
-  get linkEditMode() {
-    return !!this.inlineController?.linkEditMode;
+  /**
+   * `true` when the toolbar should render its URL-edit surface for
+   * the inline rich-text link mark — i.e. PM has entered link-mark
+   * mode (`enterLinkMode` in `inline-edit-controller.gjs`), which
+   * populates `wireframe.fieldEditor` with `kind === "url"`.
+   *
+   * Block-arg URL edits (e.g. a button's `href`) are no longer routed
+   * through here — those open an anchored `LinkEditPopover` next to
+   * the link element instead. The rich-text link mark has no DOM
+   * anchor of its own, so it stays on the toolbar.
+   */
+  get isUrlFieldEditing() {
+    return this.wireframe.fieldEditor?.kind === "url";
   }
 
   @action
@@ -144,71 +165,77 @@ export default class BlockToolbar extends Component {
   }
 
   @action
-  applyLink() {
-    this.inlineController?.applyLink();
+  applyFieldEditor() {
+    this.wireframe.fieldEditor?.apply?.(this._editorValue);
   }
 
   @action
-  removeLink() {
-    this.inlineController?.removeLink();
+  removeFieldEditor() {
+    this.wireframe.fieldEditor?.remove?.();
   }
 
   @action
-  cancelLink() {
-    this.inlineController?.cancelLink();
+  cancelFieldEditor() {
+    this.wireframe.fieldEditor?.cancel?.();
   }
 
   @action
-  onLinkUrlInput(event) {
-    if (this.inlineController) {
-      this.inlineController.linkEditUrl = event.target.value;
-    }
+  onUrlInput(event) {
+    this._editorValue = event.target.value;
   }
 
   @action
-  onLinkUrlKeydown(event) {
+  onUrlKeydown(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      this.applyLink();
+      this.applyFieldEditor();
     } else if (event.key === "Escape") {
       event.preventDefault();
-      this.cancelLink();
+      this.cancelFieldEditor();
     }
   }
 
+  /**
+   * Seed the local working value from the slot's initial value when
+   * the input mounts (a new slot opens). The slot's `value` is the
+   * current arg / mark value at edit-start; `_editorValue` is the
+   * live in-progress edit. Auto-selects so typing replaces.
+   */
   @action
-  focusLinkInput(element) {
+  seedFieldEditorValue(element) {
+    this._editorValue = this.wireframe.fieldEditor?.value ?? "";
     element.focus();
     element.select();
   }
 
   <template>
     <div class="wireframe-block-toolbar" role="toolbar">
-      {{#if this.linkEditMode}}
+      {{#if this.isUrlFieldEditing}}
+        {{! eslint-disable-next-line ember/template-no-nested-interactive }}
         <input
           type="url"
           class="wireframe-block-toolbar__url-input"
           placeholder="https://..."
-          value={{this.inlineController.linkEditUrl}}
-          {{didInsert this.focusLinkInput}}
-          {{on "input" this.onLinkUrlInput}}
-          {{on "keydown" this.onLinkUrlKeydown}}
+          value={{this._editorValue}}
+          {{didInsert this.seedFieldEditorValue}}
+          {{on "input" this.onUrlInput}}
+          {{on "keydown" this.onUrlKeydown}}
         />
         <DButton
           class="btn-flat wireframe-block-toolbar__btn"
           @icon="check"
           @title="wireframe.canvas.toolbar.link_apply"
           @ariaLabel="wireframe.canvas.toolbar.link_apply"
-          @action={{this.applyLink}}
+          @action={{this.applyFieldEditor}}
           @preventFocus={{true}}
         />
-        {{#if this.markState.link}}
+        {{#if this.wireframe.fieldEditor.remove}}
           <DButton
             class="btn-flat wireframe-block-toolbar__btn"
             @icon="link-slash"
             @title="wireframe.canvas.toolbar.link_remove"
             @ariaLabel="wireframe.canvas.toolbar.link_remove"
-            @action={{this.removeLink}}
+            @action={{this.removeFieldEditor}}
             @preventFocus={{true}}
           />
         {{/if}}
@@ -217,7 +244,7 @@ export default class BlockToolbar extends Component {
           @icon="xmark"
           @title="wireframe.canvas.toolbar.link_cancel"
           @ariaLabel="wireframe.canvas.toolbar.link_cancel"
-          @action={{this.cancelLink}}
+          @action={{this.cancelFieldEditor}}
           @preventFocus={{true}}
         />
       {{else}}

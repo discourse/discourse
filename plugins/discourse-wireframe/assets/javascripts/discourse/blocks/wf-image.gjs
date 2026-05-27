@@ -66,7 +66,7 @@ export default class WFImage extends Component {
       {{#if @caption}}
         <figure class="wf-image">
           {{#if @link}}
-            <a href={{@link}}>
+            <a href={{@link}} data-block-arg="link">
               <DLightDarkImg
                 @lightImg={{@image}}
                 @darkImg={{@imageDark}}
@@ -83,7 +83,7 @@ export default class WFImage extends Component {
           <figcaption class="wf-image__caption">{{@caption}}</figcaption>
         </figure>
       {{else if @link}}
-        <a href={{@link}} class="wf-image">
+        <a href={{@link}} class="wf-image" data-block-arg="link">
           <DLightDarkImg
             @lightImg={{@image}}
             @darkImg={{@imageDark}}

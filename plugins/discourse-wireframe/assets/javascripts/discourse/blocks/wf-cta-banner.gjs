@@ -151,6 +151,7 @@ export default class WFCTABanner extends Component {
                 class="btn btn-primary"
                 @href={{@linkHref}}
                 @translatedLabel={{@linkLabel}}
+                data-block-arg="linkHref"
               />
             {{/if}}
             {{#if @dismissable}}

@@ -21,9 +21,11 @@ import {
   placementsOverlap,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { entryHasEmptyImageUploadArgs } from "../../lib/empty-image-upload";
+import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
 import containerDropTarget from "../../modifiers/container-drop-target";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
+import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
 import EmptyCellPlaceholder from "./empty-cell-placeholder";
 import EmptyImageState from "./empty-image-state";
@@ -53,6 +55,7 @@ import GridOverlay from "./grid-overlay";
  */
 export default class BlockChrome extends Component {
   @service blocks;
+  @service tooltip;
   @service wireframe;
 
   /**
@@ -108,6 +111,24 @@ export default class BlockChrome extends Component {
    * stale `null`).
    */
   @tracked _chromeEl = null;
+
+  /**
+   * Registered URL-edit tooltips for this block. Cleaned up in
+   * `willDestroy`. Hover bridging between the link trigger and the
+   * floating chip is handled by float-kit via `hoverGracePeriod`, so
+   * the chrome doesn't own any extra listener teardown.
+   *
+   * @type {any[]}
+   */
+  _urlTooltips = [];
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    for (const instance of this._urlTooltips) {
+      instance.destroy?.();
+    }
+    this._urlTooltips.length = 0;
+  }
 
   /**
    * Block metadata (description, namespace, isContainer, args schema, etc.)
@@ -588,6 +609,52 @@ export default class BlockChrome extends Component {
   @action
   captureChromeEl(element) {
     this._chromeEl = element;
+    this._setupUrlTooltips();
+  }
+
+  /**
+   * Registers a FloatKit tooltip per URL inline-editable arg on this
+   * block, anchored to the rendered link element (matched via
+   * `[data-block-arg]` + `kindForArg` lookup). The tooltip hosts a
+   * `LinkEditPopover` that swaps between a chip and an input mode in
+   * place — `data` carries the `(blockKey, argName)` the popover needs
+   * to drive its own `linkEdit` session.
+   *
+   * `hoverGracePeriod` gives the pointer ~120 ms to cross FloatKit's
+   * offset gap from the trigger to the popover without dismissing —
+   * see the matching listeners in `FloatKitInstance` and the
+   * `hoverGrace` modifier in `d-float-body.gjs`.
+   *
+   * Why this lives in the chrome and not the block templates: the
+   * blocks just emit `data-block-arg` (semantic markup); all editor
+   * scaffolding — including hover-triggered affordances — lives in
+   * admin code.
+   */
+  _setupUrlTooltips() {
+    const meta = this.metadata;
+    if (!meta?.args || !this._chromeEl) {
+      return;
+    }
+    const linkEls = this._chromeEl.querySelectorAll("[data-block-arg]");
+    for (const linkEl of linkEls) {
+      const argName = linkEl.dataset.blockArg;
+      if (kindForArg(meta, argName) !== "url") {
+        continue;
+      }
+      const instance = this.tooltip.register(linkEl, {
+        identifier: "wf-link-edit-popover",
+        component: LinkEditPopover,
+        interactive: true,
+        hoverGracePeriod: 120,
+        placement: "right",
+        offset: 4,
+        data: {
+          blockKey: this.args.blockKey,
+          argName,
+        },
+      });
+      this._urlTooltips.push(instance);
+    }
   }
 
   /**
@@ -625,22 +692,36 @@ export default class BlockChrome extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const argEl = event.target.closest?.("[data-wf-inline-edit-arg]");
+    const argEl = event.target.closest?.("[data-block-arg]");
     if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
-      const kind = argEl.dataset.wfInlineEditKind ?? "rich-text";
-      const argName = argEl.dataset.wfInlineEditArg;
-      if (kind === "icon") {
-        this.wireframe.iconEdit.start({
-          blockKey: this.args.blockKey,
-          argName,
-          anchorEl: argEl,
-        });
-      } else {
-        this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
-          coords: { x: event.clientX, y: event.clientY },
-        });
+      const argName = argEl.dataset.blockArg;
+      const kind = kindForArg(this.metadata, argName);
+      switch (kind) {
+        case "rich-text":
+          this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
+            coords: { x: event.clientX, y: event.clientY },
+          });
+          return;
+        case "icon":
+          this.wireframe.iconEdit.start({
+            blockKey: this.args.blockKey,
+            argName,
+            anchorEl: argEl,
+          });
+          return;
+        case "url":
+          this.wireframe.linkEdit.start({
+            blockKey: this.args.blockKey,
+            argName,
+          });
+          // The hover popover registered on this same link element
+          // owns the URL-edit UI. Force it open so the user sees the
+          // editor surface even if they came in via a click rather
+          // than a hover.
+          this._urlTooltips.find((t) => t.trigger === argEl)?.show?.();
+          return;
       }
-      return;
+      // No matching kind — fall through to block selection.
     }
 
     this.wireframe.selectBlock({

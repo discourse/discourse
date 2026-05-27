@@ -326,6 +326,7 @@ en:
         drop_inside: "Drop here to add inside"
         drag_handle_title: "Drag to move this block"
         delete_block_title: "Delete this block"
+        edit_url: "Edit URL"
         empty_outlet_hint: "Drag a block from the palette to fill this outlet"
         empty_container_hint: "Drag a block here"
         image_empty_label: "Add an image"

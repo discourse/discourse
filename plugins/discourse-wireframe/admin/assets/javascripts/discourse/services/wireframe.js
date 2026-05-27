@@ -35,6 +35,7 @@ import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-rende
 import { resolveTemplateLayout } from "../lib/grid-templates";
 import IconEditState from "../lib/icon-edit-state";
 import InlineEditState from "../lib/inline-edit-state";
+import LinkEditState from "../lib/link-edit-state";
 import {
   clearValidatorStamps,
   cloneEntryForPaste,
@@ -227,6 +228,19 @@ export default class WireframeService extends Service {
   @tracked conditionsPanelRect = null;
 
   /**
+   * Contextual toolbar slot — when non-null, the block toolbar
+   * transitions into a field-editing mode driven by this state instead
+   * of showing default block actions. Generic shape:
+   * `{ kind, value, apply, cancel, remove? }`. PM's link-mark editing
+   * AND block-arg URL editing both populate this with `kind: "url"`;
+   * future kinds (e.g. `"color"`, `"image"`) plug into the same slot
+   * without re-architecting. Exactly one slot is active at a time —
+   * a new source setting it implicitly closes the previous session.
+   *
+   * @type {Object|null}
+   */
+  @tracked fieldEditor = null;
+  /**
    * Inline-text-edit session state. Holds the active `(blockKey, argName)`,
    * the cached entry location, the pre-edit snapshot for undo, the
    * registered controller, structural ops (split / merge), and sibling
@@ -250,6 +264,16 @@ export default class WireframeService extends Service {
    * @type {IconEditState}
    */
   iconEdit = new IconEditState(this);
+
+  /**
+   * Inline URL-edit session state + operations. Same separate-object
+   * split: when started, populates `fieldEditor` with the URL slot so
+   * the block toolbar transitions into URL-edit mode. See
+   * `../lib/link-edit-state.js`.
+   *
+   * @type {LinkEditState}
+   */
+  linkEdit = new LinkEditState(this);
 
   /**
    * Sticky mirror of `activeDropPreview` captured at the moment of
@@ -444,7 +468,7 @@ export default class WireframeService extends Service {
       // a hover tooltip) so clicks inside them must NOT deselect.
       target.closest(".fk-d-menu") ||
       target.closest(".fk-d-menu-modal") ||
-      target.closest(".fk-d-tooltip")
+      target.closest(".fk-d-tooltip__content")
     );
   }
 

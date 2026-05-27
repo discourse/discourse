@@ -1170,4 +1170,40 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.true(this.editor.structuralVersion > before);
     });
   });
+
+  module("_isInsideAllowedScope", function (innerHooks) {
+    innerHooks.afterEach(function () {
+      document
+        .querySelectorAll(".__wf-allowed-scope-test")
+        .forEach((el) => el.remove());
+    });
+
+    function appendScope(className) {
+      const wrap = document.createElement("div");
+      wrap.className = `${className} __wf-allowed-scope-test`;
+      const child = document.createElement("button");
+      wrap.appendChild(child);
+      document.body.appendChild(wrap);
+      return child;
+    }
+
+    test("a click target inside a FloatKit tooltip's portaled content stays in-scope", function (assert) {
+      // The portaled tooltip body carries `fk-d-tooltip__content`; the
+      // bare `fk-d-tooltip` class never appears on the portal, so the
+      // safety check must match `__content` for clicks inside an
+      // interactive tooltip (the URL-edit chip) to NOT deselect.
+      const child = appendScope("fk-d-tooltip__content");
+      assert.true(this.editor._isInsideAllowedScope(child));
+    });
+
+    test("a click target inside a FloatKit menu stays in-scope", function (assert) {
+      const child = appendScope("fk-d-menu");
+      assert.true(this.editor._isInsideAllowedScope(child));
+    });
+
+    test("a click target outside any editor scope is out-of-scope", function (assert) {
+      const child = appendScope("");
+      assert.false(this.editor._isInsideAllowedScope(child));
+    });
+  });
 });
