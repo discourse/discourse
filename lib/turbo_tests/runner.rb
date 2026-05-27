@@ -73,21 +73,7 @@ module TurboTests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
-      # Skip the multisite subprocess when every file is a system spec. By
-      # convention `spec/system/` never carries `type: :multisite`, so the
-      # subprocess would boot Rails and require all ~250 system spec files
-      # only to filter every example out — pure overhead on a CPU-saturated
-      # runner. Passing an empty list short-circuits inside `start_subprocess`
-      # so no process is spawned but the expected exit message is still
-      # emitted, keeping `handle_messages` exit accounting unchanged.
-      multisite_files =
-        if @files.any? && @files.all? { |f| f.match?(%r{(?:\A|/)spec/system/}) }
-          []
-        else
-          @files
-        end
-
-      start_multisite_subprocess(multisite_files, **subprocess_opts)
+      start_multisite_subprocess(@files, **subprocess_opts)
 
       tests_in_groups.each_with_index do |tests, process_id|
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
