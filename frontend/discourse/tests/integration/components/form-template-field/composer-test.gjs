@@ -99,6 +99,129 @@ module(
       );
     });
 
+    test("re-claims the upload target on dragenter", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const uppy = fakeUppy();
+      this.set("uppy", uppy);
+
+      await render(
+        <template>
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{this.uppy}} />
+        </template>
+      );
+
+      await waitUntil(() => uppy.textManipulation);
+
+      const initialTextManipulation = uppy.textManipulation;
+      uppy.textManipulation = "trampled-by-another-field";
+
+      await triggerEvent(".d-editor-input", "dragenter");
+
+      assert.strictEqual(
+        uppy.textManipulation,
+        initialTextManipulation,
+        "dragenter restores this field's textManipulation as the upload target"
+      );
+    });
+
+    test("re-claims the upload target on dragover", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const uppy = fakeUppy();
+      this.set("uppy", uppy);
+
+      await render(
+        <template>
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{this.uppy}} />
+        </template>
+      );
+
+      await waitUntil(() => uppy.textManipulation);
+
+      const initialTextManipulation = uppy.textManipulation;
+      uppy.textManipulation = "trampled-by-another-field";
+
+      await triggerEvent(".d-editor-input", "dragover");
+
+      assert.strictEqual(
+        uppy.textManipulation,
+        initialTextManipulation,
+        "dragover restores this field's textManipulation as the upload target"
+      );
+    });
+
+    test("dragging onto an unfocused field claims its upload target", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const uppy = fakeUppy();
+      this.set("uppy", uppy);
+
+      await render(
+        <template>
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{this.uppy}} />
+          <FormComposer @onChange={{noop}} @uppyComposerUpload={{this.uppy}} />
+        </template>
+      );
+
+      await waitUntil(() => uppy.textManipulation);
+
+      const textareas = document.querySelectorAll(
+        "[data-field-type='composer'] .d-editor-input"
+      );
+
+      await triggerEvent(textareas[0], "focusin");
+      const fieldATextManipulation = uppy.textManipulation;
+
+      await triggerEvent(textareas[1], "dragenter");
+
+      assert.notStrictEqual(
+        uppy.textManipulation,
+        fieldATextManipulation,
+        "dragenter on field B switches the upload target away from field A without requiring focus"
+      );
+    });
+
+    test("removes claim listeners when the component is destroyed", async function (assert) {
+      stubAllowUpload(this, true);
+
+      const uppy = fakeUppy();
+      this.set("uppy", uppy);
+      this.set("show", true);
+
+      await render(
+        <template>
+          {{#if this.show}}
+            <FormComposer
+              @onChange={{noop}}
+              @uppyComposerUpload={{this.uppy}}
+            />
+          {{/if}}
+        </template>
+      );
+
+      await waitUntil(() => uppy.textManipulation);
+
+      const textarea = document.querySelector(
+        "[data-field-type='composer'] .d-editor-input"
+      );
+
+      this.set("show", false);
+      await settled();
+
+      uppy.textManipulation = "sentinel";
+
+      for (const event of ["focusin", "dragenter", "dragover"]) {
+        textarea.dispatchEvent(new Event(event, { bubbles: true }));
+      }
+
+      assert.strictEqual(
+        uppy.textManipulation,
+        "sentinel",
+        "claim listeners no longer fire after the component is destroyed"
+      );
+    });
+
     test("multiple fields route uploads to the focused field", async function (assert) {
       stubAllowUpload(this, true);
 

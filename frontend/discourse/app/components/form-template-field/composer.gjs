@@ -13,8 +13,7 @@ export default class FormTemplateFieldComposer extends Component {
 
   @tracked composerValue = this.args.value || "";
 
-  _focusTarget = null;
-  _claimUploadTarget = null;
+  _claimAbortController = null;
 
   constructor() {
     super(...arguments);
@@ -24,12 +23,7 @@ export default class FormTemplateFieldComposer extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
-
-    if (this._focusTarget && this._claimUploadTarget) {
-      this._focusTarget.removeEventListener("focusin", this._claimUploadTarget);
-      this._focusTarget = null;
-      this._claimUploadTarget = null;
-    }
+    this._claimAbortController?.abort();
   }
 
   @action
@@ -67,16 +61,17 @@ export default class FormTemplateFieldComposer extends Component {
       return;
     }
 
-    if (this._focusTarget && this._claimUploadTarget) {
-      this._focusTarget.removeEventListener("focusin", this._claimUploadTarget);
-    }
+    this._claimAbortController?.abort();
+    this._claimAbortController = new AbortController();
+    const { signal } = this._claimAbortController;
 
     const claimUploadTarget = () => {
       this.args.uppyComposerUpload.textManipulation = textManipulation;
     };
-    editorTarget.addEventListener("focusin", claimUploadTarget);
-    this._focusTarget = editorTarget;
-    this._claimUploadTarget = claimUploadTarget;
+
+    for (const event of ["focusin", "dragenter", "dragover"]) {
+      editorTarget.addEventListener(event, claimUploadTarget, { signal });
+    }
   }
 
   <template>
