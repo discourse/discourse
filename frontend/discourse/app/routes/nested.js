@@ -11,6 +11,7 @@ import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
   @service composer;
+  @service header;
   @service nestedViewCache;
   @service screenTrack;
   @service site;
@@ -99,6 +100,8 @@ export default class NestedRoute extends Route {
     // topic.details.updateNotifications() can construct the correct URL.
     model.topic.details.set("topic", model.topic);
 
+    this.header.enterTopic(model.topic, !model.contextMode);
+
     // Store the OP in the postStream so core components that call
     // postStream.findLoadedPost() (e.g. share modal's "reply as new topic")
     // find a valid post instead of undefined.
@@ -133,6 +136,7 @@ export default class NestedRoute extends Route {
 
     controller.unsubscribe();
     this.screenTrack.stop();
+    this.header.clearTopic();
   }
 
   _saveToCache(controller) {
