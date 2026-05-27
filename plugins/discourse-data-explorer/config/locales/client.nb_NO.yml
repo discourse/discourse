@@ -35,18 +35,13 @@ nb_NO:
           yes: "Ja"
           no: "Nei"
           null_: "Null"
-      export: "Eksporter"
-      edit: "Rediger"
       delete: "Slett"
-      download_json: "JSON"
-      download_csv: "CSV"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
       query_groups: "Grupper"
       query_description: "Beskrivelse"
-      explain_label: "Inkluder spørringsplan?"
       reset_params: "Tilbakestill"
       search_placeholder: "Søk…"
     group:

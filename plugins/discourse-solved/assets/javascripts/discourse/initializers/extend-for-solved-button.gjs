@@ -5,6 +5,7 @@ import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
 import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
+import SolvedSharedIssueButton from "../components/solved-shared-issue-button";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
 import setAcceptedSolution from "../lib/set-accepted-solution";
 
@@ -19,7 +20,6 @@ function topicHasSolvedEnabled(topic) {
     return true;
   }
 
-  // TODO: change to category.isType("support") once enable_simplified_category_creation is permanent
   const category = Category.findById(topic.category_id);
   if (category?.custom_fields?.enable_accepted_answers === "true") {
     return true;
@@ -39,7 +39,13 @@ function initializeWithApi(api) {
     api.addDiscoveryQueryParam("solved", { replace: true, refreshModel: true });
   }
 
-  api.addTrackedTopicProperties("accepted_answer", "has_accepted_answer");
+  api.addTrackedTopicProperties(
+    "accepted_answer",
+    "has_accepted_answer",
+    "shared_issue_count",
+    "user_created_shared_issue",
+    "shared_issue_visible"
+  );
 }
 
 function customizeNotificationDescriptions(api) {
@@ -127,6 +133,17 @@ function customizePostMenu(api) {
         );
     }
   );
+
+  api.renderAfterWrapperOutlet(
+    "post-content-cooked-html",
+    class extends Component {
+      static shouldRender(args) {
+        return args.post?.post_number === 1;
+      }
+
+      <template><SolvedSharedIssueButton @post={{@post}} /></template>
+    }
+  );
 }
 
 function handleMessages(api) {
@@ -140,6 +157,17 @@ function handleMessages(api) {
 
   api.registerCustomPostMessageCallback("accepted_solution", callback);
   api.registerCustomPostMessageCallback("unaccepted_solution", callback);
+
+  api.registerCustomPostMessageCallback(
+    "shared_issue",
+    (controller, message) => {
+      const topic = controller.model;
+      if (!topic) {
+        return;
+      }
+      topic.set("shared_issue_count", message.count);
+    }
+  );
 }
 
 export default {

@@ -4,9 +4,9 @@ import { service } from "@ember/service";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
-import AsyncContent from "discourse/components/async-content";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import { i18n } from "discourse-i18n";
 
 const REPORT_GROUPS = {
@@ -51,13 +51,13 @@ const REPORT_GROUPS = {
     "user_to_user_private_messages_with_replies",
   ],
   moderation_and_security: [
+    "admin_logins",
     "associated_accounts_by_provider",
     "consolidated_api_requests",
     "emails",
     "flags",
     "flags_status",
     "moderators_activity",
-    "staff_logins",
     "suspicious_logins",
     "user_flagging_ratio",
     "web_crawlers",
@@ -153,7 +153,7 @@ export default class AdminReports extends Component {
   }
 
   <template>
-    <AsyncContent @asyncData={{this.loadReports}}>
+    <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
         <AdminFilterControls
           @array={{this.filterReports reports}}
@@ -193,6 +193,6 @@ export default class AdminReports extends Component {
           </:content>
         </AdminFilterControls>
       </:content>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }

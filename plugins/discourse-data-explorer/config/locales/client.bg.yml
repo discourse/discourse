@@ -23,8 +23,6 @@ bg:
         bool:
           yes: "Да"
           no: "Не"
-      export: "Експорт "
-      edit: "Редактирай"
       delete: "Изтрий"
       result_count:
         one: "%{count} резултат."

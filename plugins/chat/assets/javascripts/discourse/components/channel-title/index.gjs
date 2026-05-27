@@ -1,10 +1,10 @@
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 
 const ChatChannelTitle = <template>
   <div
-    class={{concatClass
+    class={{dConcatClass
       "chat-channel-title"
       (if @channel.isDirectMessageChannel "is-dm" "is-category")
     }}

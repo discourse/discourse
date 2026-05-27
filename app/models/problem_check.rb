@@ -67,6 +67,7 @@ class ProblemCheck
   #
   CORE_PROBLEM_CHECKS = [
     ProblemCheck::BadFaviconUrl,
+    ProblemCheck::EmailSendingFailures,
     ProblemCheck::EmailPollingErroredRecently,
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
@@ -222,7 +223,7 @@ class ProblemCheck
           target.present? ? translation_data(target) : translation_data,
         ).symbolize_keys,
       ),
-      priority: self.config.priority,
+      priority: config.priority,
       identifier:,
       target: target_identifier,
       details:,

@@ -6,6 +6,9 @@
 
 fa_IR:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "هیچ نتیجه‌ای وجود ندارد"
     explorer:
       default_query: "پیش‌فرض"
       or: "یا"
@@ -23,10 +26,8 @@ fa_IR:
         bool:
           yes: "بله"
           no: "خیر"
-      export: "خروجی گرفتن"
       save: "ذخیر تغییرات"
       run: "اجرا"
-      edit: "ویرایش"
       delete: "حذف"
       result_count:
         one: "%{count} نتیجه."

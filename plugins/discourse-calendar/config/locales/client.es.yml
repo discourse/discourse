@@ -411,10 +411,10 @@ es:
       models:
         invitee:
           no_users: "No se han encontrado usuarios"
+          leave_event: "Abandonar evento"
           status:
             unknown: "No estoy interesado"
             going: "Asistiré"
-            not_going: "No asistiré"
             interested: "Estoy interesado"
             going_count:
               one: "%{count} asistirá"

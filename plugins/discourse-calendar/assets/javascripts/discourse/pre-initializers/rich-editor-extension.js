@@ -2,7 +2,8 @@ import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import EventNodeView from "../components/event-node-view";
-import { buildEventPreview } from "../initializers/discourse-post-event-decorator";
+import { buildEventPreview } from "../lib/event-preview";
+import { defaultReminderFor, reminderToBBCode } from "../lib/raw-event-helper";
 
 export const EVENT_ATTRIBUTES = {
   name: { default: null },
@@ -114,8 +115,17 @@ const extension = {
       if (userInput) {
         eventMarkdown = `[event ${userInput}]\n[/event]`;
       } else {
-        const now = moment.tz(moment(), timezone);
-        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
+        const now = moment
+          .tz(moment(), timezone)
+          .startOf("hour")
+          .add(1, "hour");
+        const endsAt = now.clone().add(1, "hour");
+        const reminder = defaultReminderFor({
+          startsAt: now,
+          endsAt,
+          allDay: false,
+        });
+        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" end="${endsAt.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}" reminders="${reminderToBBCode(reminder)}"`;
         eventMarkdown = `[event ${defaults}]\n[/event]`;
       }
 

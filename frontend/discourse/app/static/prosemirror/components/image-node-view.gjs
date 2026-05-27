@@ -11,8 +11,11 @@ import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
+
+const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 
 const MIN_SCALE = 50;
 const MAX_SCALE = 100;
@@ -87,6 +90,7 @@ class ImageToolbar extends ToolbarBase {
 }
 
 export default class ImageNodeView extends Component {
+  @service("app-events") appEvents;
   @service menu;
   @service siteSettings;
 
@@ -94,16 +98,33 @@ export default class ImageNodeView extends Component {
   @tracked menuInstance;
   @tracked altMenuInstance;
   @tracked imageLoaded = false;
+  @tracked uploadProgress = 0;
+  #progressEvent;
 
   constructor() {
     super(...arguments);
+
+    if (this.isPlaceholder) {
+      const fileId = this.args.node.attrs.title;
+      this.args.dom.classList.add(...PLACEHOLDER_CLASSES);
+      this.args.dom.dataset.uploadId = fileId;
+      this.#progressEvent = `composer:upload-progress:${fileId}`;
+      this.appEvents.on(this.#progressEvent, this, this.onUploadProgress);
+    }
 
     this.args.onSetup?.(this);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.#progressEvent) {
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+    }
     this.closeMenus();
+  }
+
+  get isPlaceholder() {
+    return !!this.args.node.attrs.placeholder;
   }
 
   stopEvent(event) {
@@ -272,14 +293,18 @@ export default class ImageNodeView extends Component {
   selectNode() {
     this.image.classList.add("ProseMirror-selectednode");
 
-    this.showToolbar();
-    this.showAltText();
+    if (!this.isPlaceholder) {
+      this.showToolbar();
+      this.showAltText();
+    }
   }
 
   deselectNode() {
     this.image.classList.remove("ProseMirror-selectednode");
 
-    this.closeMenus();
+    if (!this.isPlaceholder) {
+      this.closeMenus();
+    }
   }
 
   closeMenus() {
@@ -568,6 +593,19 @@ export default class ImageNodeView extends Component {
     view.dispatch(tr);
   }
 
+  onUploadProgress(percentage) {
+    this.uploadProgress = percentage;
+  }
+
+  @action
+  cancelUpload(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.appEvents.trigger("composer:cancel-upload", {
+      fileId: this.args.node.attrs.title,
+    });
+  }
+
   @action
   updateImageLoaded() {
     this.imageLoaded = true;
@@ -600,6 +638,7 @@ export default class ImageNodeView extends Component {
       height={{@node.attrs.height}}
       data-orig-src={{@node.attrs.originalSrc}}
       data-scale={{@node.attrs.scale}}
+      data-placeholder={{@node.attrs.placeholder}}
       data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
       style={{this.imageStyle}}
       role="button"
@@ -607,6 +646,20 @@ export default class ImageNodeView extends Component {
       {{on "load" this.updateImageLoaded}}
       {{on "click" this.handleImageClick}}
     />
+    {{#if this.isPlaceholder}}
+      <span class="upload-placeholder__overlay">
+        <span
+          class="upload-placeholder__progress"
+        >{{this.uploadProgress}}%</span>
+        <button
+          class="upload-placeholder__cancel btn-transparent no-text"
+          title={{i18n "cancel"}}
+          aria-label={{i18n "cancel"}}
+          contenteditable="false"
+          {{on "click" this.cancelUpload}}
+        >{{icon "xmark"}}</button>
+      </span>
+    {{/if}}
   </template>
 }
 

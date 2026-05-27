@@ -17,8 +17,6 @@ sr:
         bool:
           yes: "Da"
           no: "Ne"
-      export: "Izvoz"
-      edit: "Izmeni"
       delete: "Obriši"
       query_groups: "Grupe"
       query_description: "Opis"

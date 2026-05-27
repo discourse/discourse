@@ -704,14 +704,12 @@ RSpec.describe PrettyText do
     end
 
     it "does censor code fences" do
-      begin
-        %w[apple banana].each do |w|
-          Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
-        end
-        expect(PrettyText.cook("# banana")).not_to include("banana")
-      ensure
-        Discourse.redis.flushdb
+      %w[apple banana].each do |w|
+        Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
       end
+      expect(PrettyText.cook("# banana")).not_to include("banana")
+    ensure
+      Discourse.redis.flushdb
     end
 
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
@@ -1630,6 +1628,13 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
     end
 
+    it "renders a denied emoji name as plain text when the name contains regex metacharacters" do
+      SiteSetting.emoji_deny_list = "+1"
+      Emoji.clear_cache
+
+      expect(PrettyText.cook(":+1: hello")).to eq("<p>:+1: hello</p>")
+    end
+
     it "does not replace left right arrow" do
       expect(PrettyText.cook("&harr;")).to eq("<p>↔</p>")
     end
@@ -1922,6 +1927,37 @@ RSpec.describe PrettyText do
         "data-type": "category",
         "data-slug": private_category.slug,
         "data-id": private_category.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    tag_with_periods = Fabricate(:tag, name: "sam.i.am")
+    Fabricate(:topic, tags: [tag_with_periods])
+    cooked = PrettyText.cook(" #sam.i.am", user_id: user.id)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag_with_periods.url,
+        "data-type": "tag",
+        "data-slug": tag_with_periods.name,
+        "data-id": tag_with_periods.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    cooked = PrettyText.cook(" #known::tag.", user_id: user.id)
+    expect(cooked).to include("</a>.")
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
       },
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
@@ -2739,7 +2775,7 @@ HTML
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
     #
-    html = (<<~MD).strip
+    html = <<~MD.strip
       <ruby lang="je">
         <rb lang="je">X</rb>
         漢 <rp>(</rp><rt lang="je"> ㄏㄢˋ </rt><rp>)</rp>

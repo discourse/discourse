@@ -13,12 +13,12 @@ end
 # Table name: gamification_score_events
 #
 #  id          :bigint           not null, primary key
-#  user_id     :integer          not null
 #  date        :date             not null
-#  points      :integer          not null
 #  description :text
+#  points      :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  user_id     :integer          not null
 #
 # Indexes
 #

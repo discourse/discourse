@@ -17,6 +17,9 @@ export default class FKControlEmoji extends FKBaseControl {
       @didSelectEmoji={{this.updateField}}
       @modalForMobile={{false}}
       @btnClass="btn-emoji"
+      @icon={{null}}
+      @showCaret={{true}}
+      @showSelectedName={{true}}
     />
   </template>
 }

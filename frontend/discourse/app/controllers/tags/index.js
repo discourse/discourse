@@ -1,10 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed, set } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import autosize from "autosize";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { optionalRequire } from "discourse/lib/utilities";
@@ -15,8 +13,6 @@ export default class TagsIndexController extends Controller {
   @tracked bulkTagInput = "";
   @tracked isCreatingTags = false;
   @tracked bulkCreateResults = null;
-
-  bulkTagTextarea = null;
 
   sortedByCount = true;
   sortedByName = false;
@@ -106,11 +102,6 @@ export default class TagsIndexController extends Controller {
   }
 
   @action
-  registerTextarea(element) {
-    this.bulkTagTextarea = element;
-  }
-
-  @action
   async bulkCreateTags(event) {
     event?.preventDefault();
 
@@ -138,11 +129,6 @@ export default class TagsIndexController extends Controller {
       this.bulkTagInput = "";
       this.bulkCreateResults = response;
 
-      schedule("afterRender", () => {
-        if (this.bulkTagTextarea) {
-          autosize.update(this.bulkTagTextarea);
-        }
-      });
       this.router.refresh();
     } catch (error) {
       popupAjaxError(error);

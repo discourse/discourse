@@ -236,6 +236,10 @@ en:
         other_type: "%{username} mentioned %{identifier} in personal chat"
       new_chat_message: '%{username} sent a message in "%{channel}"'
       new_direct_chat_message: "%{username} sent a message in personal chat"
+    actions:
+      chat_reply:
+        title: Reply
+        placeholder: Reply…
 
   discourse_automation:
     scriptables:

@@ -35,8 +35,11 @@ create_optimized_images: false
 
 site_settings:
   authorized_extensions: "*"
-  max_attachment_size_kb: 102_400
+  max_attachment_size_kb: 512_000
   max_image_size_kb: 102_400
+  max_image_megapixels: 150
+  secure_uploads: false
+  s3_enable_access_control_tags: true
 
   enable_s3_uploads: true
   s3_upload_bucket: "your-bucket-name"

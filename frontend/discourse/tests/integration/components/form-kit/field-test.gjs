@@ -91,6 +91,49 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.form().field("foo").hasDescription("foo foo");
   });
 
+  test("aria-describedby links description, help text, and error", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @description="A description"
+            @helpText="A help text"
+            @validation="required"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    const input = document.querySelector("[name='foo']");
+    const descriptionId = document.querySelector(
+      ".form-kit__container-description"
+    ).id;
+    const helpTextId = document.querySelector(
+      ".form-kit__container-help-text"
+    ).id;
+
+    assert.strictEqual(
+      input.getAttribute("aria-describedby"),
+      `${descriptionId} ${helpTextId}`,
+      "joins description and help text ids when no error"
+    );
+
+    await formKit().submit();
+
+    const errorId = document.querySelector(".form-kit__errors").id;
+    assert.strictEqual(
+      input.getAttribute("aria-describedby"),
+      `${descriptionId} ${helpTextId} ${errorId}`,
+      "appends the error id when a validation error is present"
+    );
+  });
+
   test("invalid @name", async function (assert) {
     setupOnerror((error) => {
       assert.deepEqual(error.message, "@name can't include `.` or `-`.");
@@ -250,6 +293,39 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
+  test("@showOptional", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").exists();
+
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @showOptional={{false}}
+            as |field|
+          ><field.Control /></form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-optional").doesNotExist();
+  });
+
   test("@format", async function (assert) {
     await render(
       <template>
@@ -270,14 +346,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       .dom(".form-kit__field.--full")
       .exists("it applies the --full class to the field");
     assert
-      .dom(".form-kit__container-description.--full")
-      .exists("it applies the --full class to the description");
+      .dom(".form-kit__container-description:not([class*='--'])")
+      .exists("it does not apply a format class to the description");
     assert
-      .dom(".form-kit__container-title.--full")
-      .exists("it applies the --full class to the title");
+      .dom(".form-kit__container-title:not([class*='--'])")
+      .exists("it does not apply a format class to the title");
   });
 
-  test("@descriptionFormat", async function (assert) {
+  test("@labelFormat", async function (assert) {
     await render(
       <template>
         <Form as |form|>
@@ -286,8 +362,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
             @name="foo"
             @title="Foo"
             @description="foo description"
-            @format="full"
-            @descriptionFormat="large"
+            @format="large"
+            @labelFormat="full"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -295,35 +371,14 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     );
 
     assert
-      .dom(".form-kit__field.--full")
-      .exists("it applies the --full class to the field");
+      .dom(".form-kit__field.--large")
+      .exists("it applies the --large class to the field");
     assert
-      .dom(".form-kit__container-description.--large")
-      .exists("it applies the --large class to the description");
-  });
-
-  test("@titleFormat", async function (assert) {
-    await render(
-      <template>
-        <Form as |form|>
-          <form.Field
-            @type="input"
-            @name="foo"
-            @title="Foo"
-            @format="full"
-            @titleFormat="large"
-            as |field|
-          ><field.Control /></form.Field>
-        </Form>
-      </template>
-    );
-
+      .dom(".form-kit__container-title.--full")
+      .exists("it applies the --full class to the title");
     assert
-      .dom(".form-kit__field.--full")
-      .exists("it applies the --full class to the field");
-    assert
-      .dom(".form-kit__container-title.--large")
-      .exists("it applies the --large class to the title");
+      .dom(".form-kit__container-description.--full")
+      .exists("it applies the --full class to the description");
   });
 
   test("@onSet", async function (assert) {
@@ -439,3 +494,100 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | Component | FormKit | Field | aria-describedby wiring",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const SIMPLE_CONTROLS = [
+      "input",
+      "input-number",
+      "password",
+      "textarea",
+      "checkbox",
+      "color",
+      "calendar",
+      "question",
+    ];
+
+    SIMPLE_CONTROLS.forEach((type) => {
+      test(`@type="${type}" wires aria-describedby to @description`, async function (assert) {
+        await render(
+          <template>
+            <Form as |form|>
+              <form.Field
+                @type={{type}}
+                @name="foo"
+                @title="Foo"
+                @description="A description"
+                as |field|
+              >
+                <field.Control />
+              </form.Field>
+            </Form>
+          </template>
+        );
+
+        const descriptionId = document.querySelector(
+          ".form-kit__container-description"
+        ).id;
+        assert
+          .dom(`[aria-describedby~="${descriptionId}"]`)
+          .exists(
+            `${type} renders a focusable element pointing at the description id`
+          );
+      });
+    });
+
+    test('@type="select" wires aria-describedby to @description', async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @type="select"
+              @name="foo"
+              @title="Foo"
+              @description="A description"
+              as |field|
+            >
+              <field.Control as |select|>
+                <select.Option @value="a">A</select.Option>
+              </field.Control>
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      const descriptionId = document.querySelector(
+        ".form-kit__container-description"
+      ).id;
+      assert.dom(`[aria-describedby~="${descriptionId}"]`).exists();
+    });
+
+    test('@type="radio-group" wires aria-describedby to @description', async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @type="radio-group"
+              @name="foo"
+              @title="Foo"
+              @description="A description"
+              as |field|
+            >
+              <field.Control as |RadioGroup|>
+                <RadioGroup.Radio @value="a">A</RadioGroup.Radio>
+              </field.Control>
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      const descriptionId = document.querySelector(
+        ".form-kit__container-description"
+      ).id;
+      assert.dom(`[aria-describedby~="${descriptionId}"]`).exists();
+    });
+  }
+);

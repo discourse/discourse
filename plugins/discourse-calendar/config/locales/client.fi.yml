@@ -395,10 +395,10 @@ fi:
       models:
         invitee:
           no_users: "Käyttäjiä ei löydy"
+          leave_event: "Poistu tapahtumasta"
           status:
             unknown: "Ei kiinnostunut"
             going: "Menossa"
-            not_going: "Ei menossa"
             interested: "Kiinnostunut"
             going_count:
               one: "%{count} menossa"

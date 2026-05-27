@@ -32,8 +32,6 @@ fr:
         cta: "Créez votre premier classement"
         none: "Aucun classement n'a encore été créé."
         confirm_destroy: "Voulez-vous vraiment supprimer ce classement ?"
-        section:
-          groups: "Groupes"
         date:
           range: "Plage de date du/au"
           from: "Date de début"
@@ -48,9 +46,6 @@ fr:
         default_period: "Période par défaut"
         default_period_help: "Définissez la période par défaut à afficher pour ce classement."
         period_filter_disabled: "Désactiver le filtre de période"
-        weight:
-          post_created: "Publication créée"
-          solution: "Solution"
         period:
           all_time: "Depuis toujours"
           yearly: "Annuel"

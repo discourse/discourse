@@ -63,7 +63,10 @@ RSpec.describe "Param input" do
     DiscourseDataExplorer::Parameter
       .create_from_sql(ALL_PARAMS_SQL)
       .each do |param|
-        expect(page).to have_css(".query-params .param [name=\"#{param.identifier}\"]")
+        expect(page).to have_css(
+          ".query-params .param [name=\"#{param.identifier}\"]",
+          visible: :all,
+        )
 
         # select-kit fields
         ignore_fields = %i[user_id post_id topic_id category_id group_id group_list user_list]
@@ -72,6 +75,7 @@ RSpec.describe "Param input" do
           expect(page).to have_field(
             param.identifier,
             with: simple_normalize(param.type, param.default),
+            visible: :all,
           )
         end
       end

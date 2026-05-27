@@ -6,17 +6,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
   fab!(:post) { Fabricate(:post, locale: nil) }
 
   before do
-    fake_llm = assign_fake_provider_to(:ai_default_llm_model)
-
-    # Update the locale detector agent (ID -27) with the fake LLM
-    locale_detector = AiAgent.find_by(id: -27)
-    locale_detector.update!(default_llm_id: fake_llm.id) if locale_detector
+    assign_fake_provider_to(:ai_default_llm_model)
 
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
-    SiteSetting.ai_translation_target_categories = post.topic.category_id.to_s
+    SiteSetting.ai_translation_excluded_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -101,13 +97,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
     job.execute({})
   end
 
-  describe "with target categories" do
-    fab!(:target_category, :category)
-    fab!(:non_target_category, :category)
-    fab!(:target_topic) { Fabricate(:topic, category: target_category) }
-    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
-    fab!(:target_post) { Fabricate(:post, topic: target_topic, locale: nil) }
-    fab!(:non_target_post) { Fabricate(:post, topic: non_target_topic, locale: nil) }
+  describe "with excluded categories" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
+    fab!(:included_post) { Fabricate(:post, topic: included_topic, locale: nil) }
+    fab!(:excluded_post) { Fabricate(:post, topic: excluded_topic, locale: nil) }
 
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -117,30 +113,25 @@ describe Jobs::PostsLocaleDetectionBackfill do
     fab!(:pm_post) { Fabricate(:post, topic: pm_topic, locale: nil) }
 
     before do
-      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_excluded_categories =
+        Category.where.not(id: included_category.id).pluck(:id).join("|")
       SiteSetting.ai_translation_personal_messages = "none"
     end
 
-    it "only processes posts from target categories" do
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(target_post).once
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(non_target_post)
-        .never
+    it "does not process posts from excluded categories" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 
       job.execute({})
     end
 
-    it "processes target posts and group PMs when pm_translation_scope is group" do
+    it "processes included posts and group PMs when pm_translation_scope is group" do
       SiteSetting.ai_translation_personal_messages = "group"
 
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(target_post).once
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(non_target_post)
-        .never
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).once
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 

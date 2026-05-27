@@ -483,6 +483,21 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(422)
         end
 
+        it "rejects invalid emoji names" do
+          post "/categories.json",
+               params: {
+                 name: "Emoji Category",
+                 color: "ff0",
+                 text_color: "fff",
+                 style_type: "emoji",
+                 emoji: %(<img src=x onerror="alert('xss')">),
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Emoji is invalid")
+          expect(Category.find_by(name: "Emoji Category")).to be_nil
+        end
+
         it "returns errors with invalid group" do
           category = Fabricate(:category, user: admin)
           readonly = CategoryGroup.permission_types[:readonly]
@@ -553,7 +568,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(1)
+          expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
         end
 
         it "creates a category with posting review mode" do
@@ -596,8 +611,6 @@ RSpec.describe CategoriesController do
         end
 
         describe "when category_type is provided" do
-          before { SiteSetting.enable_simplified_category_creation = true }
-
           it "creates a category with the category type" do
             post "/categories.json", params: { name: "Test Category", category_type: "discussion" }
 
@@ -615,6 +628,7 @@ RSpec.describe CategoriesController do
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
                   "title" => "discussion",
+                  "visible" => true,
                 },
               },
             )
@@ -764,7 +778,7 @@ RSpec.describe CategoriesController do
 
         expect do delete "/categories/#{category.slug}.json" end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
-        expect(UserHistory.count).to eq(1)
+        expect(UserHistory.count).to eq(2) # 1 + 1 (bootstrap first admin)
         expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
@@ -995,7 +1009,7 @@ RSpec.describe CategoriesController do
                 },
               }
           expect(response.status).to eq(200)
-          expect(UserHistory.count).to eq(2)
+          expect(UserHistory.count).to eq(3) # 2 + 1 (bootstrap first admin)
         end
 
         it "does not log false permission changes when everyone group name is localized" do
@@ -1267,8 +1281,6 @@ RSpec.describe CategoriesController do
         end
 
         context "when category_type_site_settings are provided" do
-          before { SiteSetting.enable_simplified_category_creation = true }
-
           it "can set site_settings for the category type when they match the schema" do
             Categories::Types::Discussion.stubs(:configuration_schema).returns(
               { site_settings: { max_category_nesting: 2 } },

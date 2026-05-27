@@ -401,10 +401,10 @@ he:
       models:
         invitee:
           no_users: "לא נמצאו משתמשים"
+          leave_event: "עזיבת האירוע"
           status:
             unknown: "לא מעניין"
             going: "אשתתף"
-            not_going: "לא אשתתף"
             interested: "מעניין"
             going_count:
               one: "%{count} מגיעים/ות"

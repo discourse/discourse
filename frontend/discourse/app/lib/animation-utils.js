@@ -2,47 +2,30 @@ import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
-// Resolves on the animationend/transitionend event, or on a timeout if the event never triggers.
-function waitForEndEvent(element, eventName, styleKey, filter) {
+export function waitForAnimationEnd(element) {
   return waitForPromise(
     new Promise((resolve) => {
       const style = window.getComputedStyle(element);
-      const duration = parseFloat(style[`${styleKey}Duration`]) * 1000 || 0;
-      const delay = parseFloat(style[`${styleKey}Delay`]) * 1000 || 0;
+      const duration = parseFloat(style.animationDuration) * 1000 || 0;
+      const delay = parseFloat(style.animationDelay) * 1000 || 0;
 
-      const handler = (event) => {
-        if (filter && !filter(event)) {
-          return;
-        }
-
+      const handleAnimationEnd = () => {
         clearTimeout(timeoutId);
-        element.removeEventListener(eventName, handler);
+        element.removeEventListener("animationend", handleAnimationEnd);
         resolve();
       };
 
+      // Fallback in case the `animationend` event does not fire (e.g., when no animation is present).
       const timeoutId = setTimeout(
         () => {
-          element.removeEventListener(eventName, handler);
+          element.removeEventListener("animationend", handleAnimationEnd);
           resolve();
         },
         Math.max(duration + delay + 50, 50)
       );
 
-      element.addEventListener(eventName, handler);
+      element.addEventListener("animationend", handleAnimationEnd);
     })
-  );
-}
-
-export function waitForAnimationEnd(element) {
-  return waitForEndEvent(element, "animationend", "animation");
-}
-
-export function waitForTransitionEnd(element, propertyName) {
-  return waitForEndEvent(
-    element,
-    "transitionend",
-    "transition",
-    (event) => event.propertyName === propertyName
   );
 }
 

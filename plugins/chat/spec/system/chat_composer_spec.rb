@@ -87,6 +87,25 @@ RSpec.describe "Chat composer" do
 
       expect(channel_page.composer).to have_value("hey :grimacing: ")
     end
+
+    it "replaces a partially typed term containing Unicode letters" do
+      chat_page.visit_channel(channel_1)
+      input = find(".chat-composer__input")
+      input.send_keys(":gri")
+      # Inject a Unicode character into the partial term while the autocomplete
+      # is open, so the captured term spans non-ASCII letters too.
+      page.execute_script(<<~JS)
+        const el = document.querySelector(".chat-composer__input");
+        el.focus();
+        el.setSelectionRange(el.value.length, el.value.length);
+        document.execCommand("insertText", false, "ü");
+      JS
+
+      click_link(I18n.t("js.composer.more_emoji"))
+      find(".emoji-picker [data-emoji='grimacing']").click
+
+      expect(channel_page.composer).to have_value(":grimacing: ")
+    end
   end
 
   context "when typing on keyboard" do

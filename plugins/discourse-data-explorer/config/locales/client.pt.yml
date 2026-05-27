@@ -14,6 +14,9 @@ pt:
       explorer:
         no_semicolons: "Remova os pontos e vírgulas da consulta."
         dirty: "Deve guardar a consulta antes de executar."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Sem resultados"
     explorer:
       default_query: "Predefinição"
       or: "ou"
@@ -36,12 +39,8 @@ pt:
         bool:
           yes: "Sim"
           no: "Não"
-      export: "Exportar"
       run: "Executar"
-      edit: "Editar"
       delete: "Eliminar"
-      download_json: "JSON"
-      download_csv: "CSV"
       others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
       run_time: "Consulta concluída em %{value} ms."
       result_count:
@@ -50,7 +49,6 @@ pt:
       query_groups: "Grupos"
       query_description: "Descrição"
       column: "Coluna %{number}"
-      explain_label: "Incluir plano de consulta?"
       reset_params: "Repor"
       search_placeholder: "Pesquisar..."
     group:

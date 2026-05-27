@@ -21,11 +21,21 @@ pl_PL:
       explorer:
         no_semicolons: "Usuń średniki z zapytania."
         dirty: "Musisz zapisać zapytanie zanim je wykonasz."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Brak wyników"
+      manage_reports_hint:
+        title: "Utwórz zapytanie w Eksploratorze danych"
+        description: "Napisz niestandardowe zapytanie SQL, aby wyświetlić informacje specyficzne dla Twojej społeczności."
     explorer:
       default_query: "Domyślny"
       default_query_notice: "To jest zapytanie domyślne, którego nie można edytować. Aby edytować zapytanie SQL, utwórz nowe zapytanie."
       queries: "Zapytania"
       query_created: "Zapytanie utworzone!"
+      mode:
+        label: "Tryb tworzenia zapytań"
+        manual: "Napisz SQL"
+        ai: "Generuj za pomocą AI"
       or: "lub"
       admins_only: "Eksplorator danych jest dostępny wyłącznie dla administratorów."
       allow_groups: "Zezwól grupom na dostęp do tego zapytania"
@@ -37,6 +47,8 @@ pl_PL:
         description_title: "Generuj za pomocą AI"
         description_hint: "Opisz, czego potrzebujesz, prostym językiem. Wygenerujemy dla Ciebie kod SQL, nazwę i opis."
         description_placeholder: "np. Pokaż mi zapisy na przestrzeni czasu"
+        regenerate_placeholder: "np. zaktualizuj zapytanie, aby ograniczyć je do 50 wyników"
+        prompt_label: "Monit"
         generate: "Generuj"
         regenerate: "Wygeneruj ponownie"
         generating: "Generowanie zapytań za pomocą AI..."
@@ -60,26 +72,37 @@ pl_PL:
       schema:
         title: "Schemat bazy danych"
         filter: "Wyszukiwanie..."
+        search_tables: "Przeszukaj tabele"
         sensitive: "Zawartość tej kolumny może zawierać szczególnie wrażliwe lub prywatne dane. Prosimy o zachowanie ostrożności przy używaniu tych danych."
       types:
         bool:
           yes: "Tak"
           no: "Nie"
           null_: "Null"
-      export: "Eksport"
       view_json: "Wyświetl JSON"
-      view: "Widok"
       save: "Zapisz zmiany"
       saverun: "Zapisz zmiany i uruchom"
       run: "Wykonaj"
       undo: "Odrzuć zmiany"
-      edit: "Edytuj"
       delete: "Usuń"
       recover: "Cofnij usunięcie zapytania"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabela"
-      show_graph: "Wykres"
+      sql_label: "SQL"
+      run_with_explain: "Uruchom z planem zapytań"
+      run_options: "Więcej opcji uruchamiania"
+      view:
+        label: "Widok wyników"
+      chart_empty:
+        no_rows: "Brak wierszy do wykresu."
+        no_numeric: "To zapytanie nie zawiera żadnych kolumn liczbowych do wykresu."
+        no_numeric_with_columns: "To zapytanie nie ma żadnych kolumn liczbowych do wykresu (zignorowano: %{columns})."
+        view_as_table: "Wyświetl jako tabelę"
+      chart_footnote:
+        ignored: "Kolumny nieobjęte wykresem: %{columns}"
+      export_as:
+        label: "Eksportuj jako…"
+        results_json: "Wyniki (JSON)"
+        results_csv: "Wyniki (CSV)"
+        query_json: "Definicja zapytania (JSON)"
       others_dirty: "Zapytanie ma niezapisane zmiany, które utracisz, jeśli przejdziesz w inne miejsce."
       run_time: "Zapytanie zakończone w %{value} ms."
       cached_result_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."
@@ -101,7 +124,6 @@ pl_PL:
       query_time: "Ostatnie uruchomienie"
       query_user: "Stworzone przez"
       column: "Kolumna %{number}"
-      explain_label: "Dołączyć plan zapytania?"
       save_params: "Ustaw wartości domyślne"
       reset_params: "Przywróć"
       search_placeholder: "Wyszukiwanie..."

@@ -13,29 +13,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-// Only fields managed through FormKit in the legacy edit-category flow.
-// Other legacy tab components (settings, tags, etc.) write directly to the model.
-const LEGACY_FORMKIT_FIELDS = [
-  "name",
-  "slug",
-  "parent_category_id",
-  "color",
-  "text_color",
-  "style_type",
-  "emoji",
-  "icon",
-  "locale",
-  "localizations",
-  "email_in",
-  "email_in_enabled",
-  "email_in_allow_strangers",
-  "mailinglist_mirror",
-  "topic_template",
-  "topic_title_placeholder",
-  "form_template_ids",
-];
-
-// All fields managed through FormKit in the simplified creation flow.
 const SIMPLIFIED_FIELD_LIST = [
   "name",
   "slug",
@@ -130,47 +107,48 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   initFormData() {
-    const enableSimplifiedCategoryCreation =
-      this.siteSettings.enable_simplified_category_creation;
-    const data = getProperties(
-      this.model,
-      ...(enableSimplifiedCategoryCreation
-        ? SIMPLIFIED_FIELD_LIST
-        : LEGACY_FORMKIT_FIELDS)
-    );
+    const data = getProperties(this.model, ...SIMPLIFIED_FIELD_LIST);
 
     if (this.siteSettings.content_localization_enabled && !data.locale) {
       data.locale = this.siteSettings.default_locale;
     }
 
-    if (enableSimplifiedCategoryCreation) {
-      if (!this.model.styleType) {
-        data.style_type = "icon";
-      }
-
-      data.required_tag_groups = Array.from(
-        data.required_tag_groups ?? [],
-        (rtg) => ({ ...rtg })
-      );
-      data.category_setting = { ...(this.model.category_setting ?? {}) };
-      data.custom_fields = { ...(this.model.custom_fields ?? {}) };
-
-      data.category_type_site_settings = {};
-
-      Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
-        categoryType.configuration_schema.category_custom_fields?.forEach(
-          (field) => {
-            data.custom_fields[field.key] ??= field.default;
-          }
-        );
-
-        categoryType.configuration_schema.site_settings?.forEach((setting) => {
-          data.category_type_site_settings[setting.key] = this.model.id
-            ? setting.current
-            : setting.default;
-        });
-      });
+    if (!this.model.styleType) {
+      data.style_type = "icon";
     }
+
+    data.required_tag_groups = Array.from(
+      data.required_tag_groups ?? [],
+      (rtg) => ({
+        ...rtg,
+      })
+    );
+    data.category_setting = { ...(this.model.category_setting ?? {}) };
+    data.custom_fields = { ...(this.model.custom_fields ?? {}) };
+
+    data.category_type_site_settings = {};
+    data.category_type_settings = {
+      ...(this.model.category_type_settings ?? {}),
+    };
+    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+
+    Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.category_custom_fields?.forEach(
+        (field) => {
+          data.custom_fields[field.key] ??= field.default;
+        }
+      );
+
+      categoryType.configuration_schema.category_settings?.forEach((field) => {
+        data.category_type_settings[field.key] ??= field.default;
+      });
+
+      categoryType.configuration_schema.site_settings?.forEach((setting) => {
+        data.category_type_site_settings[setting.key] = this.model.id
+          ? setting.current
+          : setting.default;
+      });
+    });
 
     this.formData = data;
   }
@@ -222,12 +200,15 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (tab !== "general") {
+      this.showAdvancedTabs = true;
+    }
+
     if (this.selectedTab === tab) {
       return;
     }
 
     this.selectedTab = tab;
-    this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }
 
   /**
@@ -243,10 +224,6 @@ export default class EditCategoryTabsController extends Controller {
    */
   @action
   validateForm(data, { addError, removeError }) {
-    if (!this.siteSettings.enable_simplified_category_creation) {
-      return;
-    }
-
     for (const validator of this.validators) {
       validator(data, { addError, removeError });
     }
@@ -369,12 +346,29 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const previousTypes = new Set(
+        Object.keys(this.model.categoryTypes ?? {})
+      );
       const result = await this.model.save();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 
       if (lostAccess) {
         this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      const newTypes = Object.keys(result.category.category_types ?? {});
+      const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+      if (typeWasAdded) {
+        if (this.model.id) {
+          window.location.reload();
+        } else {
+          window.location = this.router.urlFor(
+            "editCategory",
+            Category.slugFor(updatedModel)
+          );
+        }
         return;
       }
 

@@ -3,10 +3,6 @@ import { action } from "@ember/object";
 import { i18n } from "discourse-i18n";
 
 export default class AssignSettingsUpsert extends Component {
-  static shouldRender(args, context) {
-    return context.siteSettings.enable_simplified_category_creation;
-  }
-
   get enableUnassignedFilter() {
     const value =
       this.args.outletArgs.transientData?.custom_fields
@@ -28,6 +24,7 @@ export default class AssignSettingsUpsert extends Component {
             @title={{i18n "discourse_assign.add_unassigned_filter"}}
             @onSet={{this.onToggleUnassignedFilter}}
             @type="checkbox"
+            @format="full"
             as |field|
           >
             <field.Control checked={{this.enableUnassignedFilter}} />

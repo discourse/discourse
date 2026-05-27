@@ -156,7 +156,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) if !guardian.can_admin_group?(group)
 
-    group_attributes = group_params(automatic: group.automatic)
+    group_attributes = group_params(automatic: group.automatic, group:)
     reset_group_email_settings_if_disabled!(group, group_attributes)
 
     categories, tags = []
@@ -423,19 +423,17 @@ class GroupsController < ApplicationController
       skip_email ||= params.key?(:notify_users) && !notify
 
       emails.each do |email|
-        begin
-          Invite.generate(current_user, email:, group_ids:, skip_email:)
-        rescue RateLimiter::LimitExceeded => e
-          return(
-            render_json_error(
-              I18n.t(
-                "invite.rate_limit",
-                count: SiteSetting.max_invites_per_day,
-                time_left: e.time_left,
-              ),
-            )
+        Invite.generate(current_user, email:, group_ids:, skip_email:)
+      rescue RateLimiter::LimitExceeded => e
+        return(
+          render_json_error(
+            I18n.t(
+              "invite.rate_limit",
+              count: SiteSetting.max_invites_per_day,
+              time_left: e.time_left,
+            ),
           )
-        end
+        )
       end
 
       render json: success_json.merge!(usernames: uniq_users.map(&:username), emails: emails)
@@ -686,12 +684,17 @@ class GroupsController < ApplicationController
   end
 
   def search
-    include_everyone = params[:include_everyone] == "true"
+    include_everyone =
+      params[:include_everyone] == "true" || params[:include_pseudogroups] == "true"
+    include_pseudogroups = params[:include_pseudogroups] == "true"
     order = ["name"]
     groups =
-      Group.visible_groups(current_user, order, include_everyone: include_everyone).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        current_user,
+        order,
+        include_everyone: include_everyone,
+        include_pseudogroups: include_pseudogroups,
+      ).includes(:flair_upload)
 
     if (term = params[:term]).present?
       groups =
@@ -752,30 +755,28 @@ class GroupsController < ApplicationController
     end
 
     hijack do
-      begin
-        raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+      raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
-        settings.delete(:ssl_mode)
+      settings.delete(:ssl_mode)
 
-        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
-          raise Discourse::InvalidParameters.new("SSL mode must be valid")
-        end
-
-        final_settings =
-          settings.merge(
-            enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
-            enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
-          ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-        EmailSettingsValidator.validate_as_user(
-          current_user,
-          "smtp",
-          **final_settings.to_h.symbolize_keys,
-        )
-
-        render json: success_json
-      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
-        render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
+      if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+        raise Discourse::InvalidParameters.new("SSL mode must be valid")
       end
+
+      final_settings =
+        settings.merge(
+          enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
+          enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
+        ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+      EmailSettingsValidator.validate_as_user(
+        current_user,
+        "smtp",
+        **final_settings.to_h.symbolize_keys,
+      )
+
+      render json: success_json
+    rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
+      render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
     end
   end
 
@@ -796,7 +797,7 @@ class GroupsController < ApplicationController
     end
   end
 
-  def group_params(automatic: false)
+  def group_params(automatic: false, group: nil)
     attributes = %i[
       bio_raw
       default_notification_level
@@ -836,13 +837,16 @@ class GroupsController < ApplicationController
         :primary_group,
         :name,
         :grant_trust_level,
-        :automatic_membership_email_domains,
         :publish_read_state,
         :allow_unknown_sender_topic_replies,
       )
 
       custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
       attributes << { custom_fields: custom_fields } if custom_fields.present?
+    end
+
+    if !automatic && group && guardian.can_admin_group?(group)
+      attributes.push(:automatic_membership_email_domains)
     end
 
     if !automatic || current_user.admin
@@ -919,7 +923,7 @@ class GroupsController < ApplicationController
     tags = {}
 
     NotificationLevels.all.each do |key, value|
-      category_ids = (params["#{key}_category_ids".to_sym] || []) - ["-1"]
+      category_ids = (params[:"#{key}_category_ids"] || []) - ["-1"]
 
       category_ids.each do |category_id|
         category_id = category_id.to_i
@@ -939,7 +943,7 @@ class GroupsController < ApplicationController
         categories[category_id] = metadata
       end
 
-      tag_names = (params["#{key}_tags".to_sym] || []) - ["-1"]
+      tag_names = (params[:"#{key}_tags"] || []) - ["-1"]
       tag_ids = Tag.where(name: tag_names).pluck(:id)
 
       tag_ids.each do |tag_id|

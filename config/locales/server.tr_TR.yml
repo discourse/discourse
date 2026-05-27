@@ -377,7 +377,6 @@ tr_TR:
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">Şifrenizi Sıfırlayın</a>.</p>
     not_found_template_link: |
       <p>Bu <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamıyor. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin.</p>
-    existing_user_cannot_redeem: "Bu davet kullanılamaz. Lütfen sizi davet eden kişiden size yeni bir davet göndermesini isteyin."
     existing_user_already_redemeed: "Bu davet bağlantısını zaten kullandınız."
     user_exists: "<b>%{email}</b> adresini davet etmeye gerek yok, zaten hesabı var!"
     invite_exists: "<b>%{email}</b> adresini zaten davet etmiştiniz."
@@ -616,6 +615,7 @@ tr_TR:
       admins: "yöneticiler"
       moderators: "moderatörler"
       staff: "personel"
+      anonymous: "anonim"
       trust_level_0: "güven_seviyesi_0"
       trust_level_1: "güven_seviyesi_1"
       trust_level_2: "güven_seviyesi_2"
@@ -1268,6 +1268,30 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Yeni katkıda bulunanların sayısı"
       description: "Bu dönemde ilk gönderisini yapan kullanıcı sayısı."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Konular"
+        posts: "Gönderi"
+        share: "Paylaş"
+    posters_by_member_type:
+      labels:
+        count: "Gönderi"
+        share: "Paylaş"
+      types:
+        staff: "Personel"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Güven seviyesi"
+        count: "Üyeler"
+        share: "Paylaş"
+      levels:
+        "0": "Yeni"
+        "1": "Temel"
+        "2": "Üye"
+        "3": "Normal"
+        "4": "Lider"
     trust_level_growth:
       title: "Güven Seviyesi büyümesi"
       xaxis:
@@ -1313,9 +1337,8 @@ tr_TR:
     site_traffic:
       title: "Site trafiği"
       xaxis:
-        page_view_anon_browser: "Sayfa görüntülemeleri (anonim)"
-        page_view_logged_in_browser: "Sayfa görüntülemeleri (giriş yapılmış)"
-        page_view_crawler: "Bilinen gezginler"
+        page_view_anon_browser: "Anonim"
+        page_view_crawler: "Gezginler"
         page_view_other: "Diğer trafik"
       yaxis: "Gün"
       description: "Giriş yapmış kullanıcılar, anonim kullanıcılar, bilinen gezginler ve diğer trafik için sayfa görüntülemeleri."
@@ -1432,6 +1455,12 @@ tr_TR:
         num_clicks: "Tıklamalar"
         num_topics: "Konular"
       description: "Kullanıcılar, paylaştıkları bağlantıların tıklanma sayısına göre listelenir."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
     top_traffic_sources:
       title: "En Popüler Trafik Kaynakları"
       xaxis: "Alan Adı"
@@ -1494,6 +1523,8 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Giriş Yapılmış Tarayıcı Sayfa Görüntüleme Sayısı"
       description: "Gerçek tarayıcı kullanan giriş yapmış ziyaretçilerin sayfa görüntüleme sayısı."
+    page_view_embed_reqs:
+      xaxis: "Gün"
     http_background_reqs:
       title: "Arka plan"
       xaxis: "Gün"
@@ -1555,7 +1586,7 @@ tr_TR:
         os: İşletim Sistemi
         login_time: Giriş Zamanı
       description: "Önceki girişlerden şüpheli bir şekilde farklı olan yeni girişlerin ayrıntıları."
-    staff_logins:
+    admin_logins:
       title: "Yönetici Girişleri"
       labels:
         user: Kullanıcı
@@ -1652,6 +1683,9 @@ tr_TR:
       admin_sidebar_deprecation: "Eski yönetici düzeni, yeni <a href='https://meta.discourse.org/t/-/289281'>kenar çubuğu düzeni</a> lehine kullanımdan kaldırıldı ve bir sonraki sürümde kaldırılacak. Bundan önce katılmak için şimdi yeni kenar çubuğu düzenini <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>yapılandırabilirsiniz</a>."
       starttls_disabled: "Giden e-posta yapılandırmasında STARTTLS devre dışı bırakılmıştır. Bu neredeyse hiçbir zaman gerekli değildir. Ortamınızdan <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> öğesini kaldırmayı düşünün. Daha fazla ayrıntı için lütfen <a href='https://meta.discourse.org/t/387286'>bu konuya</a> bakın."
     back_from_logster_text: "Siteye geri dön"
+    reports_section:
+      providers:
+        core_report: "Standart"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"
@@ -1755,7 +1789,7 @@ tr_TR:
     x_summary_large_image: "Twitter kartı \"özet büyük görüntü\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
     email_custom_headers: "Özel e-posta başlıklarının listesi"
-    email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    simple_email_subject: "Bu özellik etkinleştirildiğinde, e-posta konu satırları daha kısa ve öz olacak ve yalnızca gerekli bilgileri içerecektir. Bu sayede kullanıcılar, e-postanın amacını bir bakışta kolayca anlayabilirler."
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
     enforce_second_factor: "Kullanıcıların Discourse kullanıcı arayüzüne erişmeden önce iki faktörlü kimlik doğrulamayı (2FA) etkinleştirmelerini zorunlu kılın. Bu ayar, API veya 'DiscourseConnect sağlayıcı' kimlik doğrulamasını etkilemez. enforce_second_factor_on_external_auth etkinleştirilirse, kullanıcılar 2FA'yı kurduktan sonra harici kimlik doğrulama sağlayıcılarıyla oturum açamazlar."
     enforce_second_factor_on_external_auth: "Kullanıcıların her zaman iki faktörlü kimlik doğrulama (2FA) kullanmasını zorunlu kılın. Etkinleştirildiğinde, bu özellik, 2FA'yı etkinleştirmiş olan kullanıcıların sosyal medya hesapları gibi harici kimlik doğrulama yöntemleriyle oturum açmasını engeller. Devre dışı bırakıldığında, kullanıcılar yalnızca kullanıcı adı ve şifre ile oturum açarken 2FA'yı onaylamaları gerekir. Ayrıca `enforce_second_factor` ayarına da bakın."
@@ -1823,7 +1857,6 @@ tr_TR:
     moderators_change_post_ownership: "Moderatörlerin gönderi sahipliğini değiştirmesine izin verin"
     change_post_ownership_allowed_groups: "Bu gruplardaki kullanıcıların gönderi sahipliğini değiştirmesine izin ver"
     cors_origins: "Kökenler arası talepler (CORS) için izin verilen kökenler. Her köken http:// veya https:// içermelidir. CORS'u etkinleştirmek için DISCOURSE_ENABLE_CORS env değişkeni true olarak ayarlanmalıdır."
-    use_admin_ip_allowlist: "Yöneticiler yalnızca Taranan IP'ler listesinde tanımlanan bir IP adresindelerse oturum açabilirler (Yönetici > Günlükler > Taranan IP'ler)."
     blocked_ip_blocks: "Discourse tarafından asla taranmaması gereken özel IP bloklarının bir listesi"
     allowed_internal_hosts: "Discourse'un oneboxing ve diğer amaçlar için güvenle tarayabileceği dahili sunucularının bir listesi"
     allowed_onebox_iframes: "Onebox yerleştirmeleri aracılığıyla izin verilen iframe src alan adlarının bir listesi. *` tüm varsayılan Onebox motorlarına izin verir."
@@ -1927,7 +1960,6 @@ tr_TR:
     google_oauth2_client_secret: "Google uygulamanızın istemci gizli dizisi."
     google_oauth2_prompt: "Yetkilendirme sunucusunun kullanıcıdan yeniden kimlik doğrulaması ve onay isteyip istemediğini belirten, isteğe bağlı, boşlukla sınırlandırılmış bir dize değerleri listesi. Olası değerler için bkz. <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Oturum açmanın sınırlı olacağı isteğe bağlı bir Google Apps'in Sunucu alan adı. Daha fazla bilgi için <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> adresini ziyaret edin."
-    google_oauth2_hd_groups: "Kimlik doğrulama sırasında sunucu alan adındaki kullanıcıların Google gruplarını alın. Alınan Google grupları, otomatik Discourse grup üyeliği vermek için kullanılabilir (grup ayarlarına bakın). Daha fazla bilgi için bkz. https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Google Workspace yönetici hesabına ait bir e-posta adresi. Grup bilgilerini almak için hizmet hesabı giriş bilgileriyle birlikte kullanılır."
     google_oauth2_hd_groups_service_account_json: "Hizmet Hesabı için JSON biçimlendirilmiş anahtar bilgileri. Grup bilgilerini almak için kullanılır."
     google_oauth2_verbose_logging: "Google OAuth2 ile ilgili ayrıntılı tanılamaları <a href='%{base_path}/logs' target='_blank'>/logs</a> (günlükler) bölümüne kaydedin"
@@ -1957,10 +1989,8 @@ tr_TR:
     s3_configure_tombstone_policy: "Silinmiş öge yüklemeleri için otomatik silme ilkesini etkinleştirin. ÖNEMLİ: Devre dışı bırakılırsa yüklemeler silindikten sonra hiçbir alan geri alınmaz."
     s3_disable_cleanup: "İzin verilen maksimum değerden daha fazla yedekleme olduğunda eski yedeklemelerin S3'ten kaldırılmasını önleyin."
     s3_use_acls: "AWS, S3 kovalarında ACL kullanılmamasını önerir; yalnızca yapılandırılmış `s3_upload_bucket` ve `s3_backup_bucket` üzerinde izin politikaları yapılandırmayı düşünüyorsanız bu seçeneğin işaretini kaldırın."
-    enable_direct_s3_uploads: "Amazon S3'e doğrudan çok parçalı yüklemelere izin verir, daha fazla bilgi için https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 adresine bakın."
     backup_time_of_day: "Yedeklemenin gerçekleşmesi gereken günün saati UTC."
     backup_with_uploads: "Yüklemeleri zamanlanan yedeklemelere dahil et. Bu devre dışı bırakıldığında yalnızca veritabanı yedeklenir."
-    backup_location: "Yedeklemelerin depolandığı konum. ÖNEMLİ: S3, Dosya ayarlarında geçerli S3 giriş bilgilerinin girilmesini gerektirir. Bunu Yerel'den S3'e değiştirirken, `s3:ensure_cors_rules` rake görevini çalıştırmanız gerekir."
     backup_gzip_compression_level_for_uploads: "Yüklemeleri sıkıştırmak için kullanılan Gzip sıkıştırma seviyesi."
     include_thumbnails_in_backups: "Oluşturulan küçük resimleri yedeklemelere dahil edin. Bunu devre dışı bırakmak yedeklemeleri küçültür, ancak geri yüklemeden sonra tüm gönderilerin yeniden yüklenmesini gerektirir."
     active_user_rate_limit_secs: "\"last_seen_at\" alanını saniye cinsinden güncelleme sıklığımız"
@@ -2151,7 +2181,6 @@ tr_TR:
     fast_typing_threshold: "Bir kullanıcının ilk gönderisi için yazması gereken minimum süre. Eşik değeri karşılanmazsa, gönderi otomatik olarak inceleme kuyruğuna girer. Düşük değer 1 saniye, standart değer 3 saniye, yüksek değer 5 saniyedir."
     auto_silence_fast_typers_on_first_post: "`fast typing threshold`u karşılamayan kullanıcıları otomatik olarak susturun"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazanları otomatik olarak susturmak için maksimum güven seviyesi"
-    auto_silence_first_post_regex: "Büyük/küçük harfe duyarlı olmayan regex, geçilirse kullanıcının ilk gönderisinin susturulmasına ve onay kuyruğuna gönderilmesine neden olur. Örnek: raging|a[bc]a , raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Sadece ilk gönderi için geçerlidir. DEVRE DIŞI BIRAKILDI: Bunun yerine İzlenen Kelimeleri Sessize Al'ı kullanın."
     moderator_guide_topic: "Topluluğunuzu nasıl yönettiğinizi özetleyen konu. Bağlantı, moderatörler ve yöneticiler için inceleme kuyruğunda görünecektir."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için talep edilmesi gerekir mi?"
     reviewable_default_topics: "İncelenebilir içeriği varsayılan olarak konuya göre gruplandırılmış şekilde gösterin"
@@ -2219,7 +2248,6 @@ tr_TR:
     log_mail_processing_failures: "Tüm e-posta işleme hatalarını <a href='%{base_path}/logs' target='_blank'>/logs</a> bölümüne kaydedin"
     email_in: "Kullanıcıların e-posta yoluyla yeni konular oluşturmasına izin verin. Bu ayarı etkinleştirdikten sonra, gruplar ve kategoriler için gelen e-posta adreslerini yapılandırabileceksiniz."
     email_in_allowed_groups: "E-posta yoluyla yeni konu göndermesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman e-posta yoluyla yeni konular gönderebilir."
-    email_in_authserv_id: "Gelen e-postalarda kimlik doğrulaması kontrolleri yapan hizmetin tanımlayıcısı. Bunun nasıl yapılandırılacağına ilişkin talimatlar için <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> adresine bakın."
     email_in_spam_header: "Spam'i tanımlamak için kullanılacak belirli e-posta başlığını seçer. Bu seçenek X-Spam-Flag, X-Spam-Status veya X-SES-Spam-Verdict olabilir ve e-posta, başlığın değerine göre spam olarak etiketlenir. Örneğin, seçilen ayar X-Spam-Flag ise, bu başlık değeri EVET olarak ayarlanmış bir e-posta istenmeyen olarak sınıflandırılır."
     enable_smtp: "Grup mesajları için bildirim göndermek üzere SMTP'yi etkinleştirin."
     email_prefix: "E-postaların konusunda kullanılan [label]. Ayarlanmamışsa varsayılan olarak \"başlık\" olacaktır."
@@ -2281,7 +2309,6 @@ tr_TR:
     allow_profile_backgrounds: "Kullanıcıların profil arka planları yüklemesine izin verin."
     get_a_room_threshold: "Bir kullanıcının uyarılmadan önce aynı konuda aynı kişiye yapması gereken gönderi sayısı."
     dont_feed_the_trolls_threshold: "Uyarılmadan önce diğer kullanıcılardan gelen bayrak sayısı."
-    enable_mobile_theme: "Mobil cihazlar, sitenin tamamına geçebilme özelliğine sahip mobil uyumlu bir tema kullanır. Tamamen duyarlı özel bir stil sayfası kullanmak istiyorsanız bunu devre dışı bırakın."
     dominating_topic_minimum_percent: "Bir kullanıcının bir konuda aşırı baskınlık kurduğu hatırlatılmadan önce bir konuda yüzde kaç gönderi yapması gerektiği."
     pm_warn_user_last_seen_months_ago: "Yeni bir PM oluştururken, hedef alıcı n aydan fazla süredir görülmemişse kullanıcıları uyarın."
     suppress_uncategorized_badge: "Konu listelerinde kategorize edilmemiş konular için rozet göstermeyin."
@@ -2328,6 +2355,7 @@ tr_TR:
     allowed_embed_selectors: "Yerleştirmelerde izin verilen CSS ögelerinin virgülle ayrılmış bir listesi."
     allowed_href_schemes: "Bağlantılarda http ve https'ye ek olarak izin verilen şemalar."
     embed_full_app: "Gömülü yorumlar için tam uygulama modunu etkinleştirin. Bu özellik etkinleştirildiğinde, gömülü yorumlar Discourse uygulamasının tamamını bir iframe içinde yükler ve kullanıcıların konularla doğrudan etkileşime girmesine olanak tanır"
+    suppress_third_party_analytics_in_embed: "Discourse, tam bir uygulama gömülü iframe içinde yüklendiğinde, üçüncü taraf analiz komut dosyalarının (Google Tag Manager, Google Analytics, Adobe Analytics) işlenmesini atlayın. Ana sayfa aynı komut dosyalarını zaten yüklemişse, bu işlem sayfa görüntüleme sayısının artmasını ve etiketlerin gereksiz yere tetiklenmesini önler."
     embed_post_limit: "Yerleştirilecek maksimum gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
@@ -2480,7 +2508,6 @@ tr_TR:
     welcome_banner_location: "Hoş geldiniz banner'ının sayfada nerede görüneceğini belirler."
     welcome_banner_page_visibility: "Hoş geldiniz banner'ının hangi sayfalarda görüneceğini belirler."
     welcome_banner_text_color: "'Hoş geldiniz banner görüntüsü' ayarı yapılandırıldığında, banner metin rengini okunabilir olmasını sağlamak için bu ayarı kullanın. Boş bırakıldığında veya görüntü yüklenmediğinde, aktif tema rengi kontrol eder."
-    splash_screen: "Site varlıkları yüklenirken geçici bir yükleme ekranı gösterir"
     splash_screen_image: "Site yüklenirken açılış ekranında görüntülenecek bir SVG görüntüsü. Animasyonlu SVG'ler yalnızca CSS dönüşümü veya opaklık animasyonları kullanmalıdır. CSS sınıfları ve anahtar kareler için benzersiz adlar kullanın. Tema renklerini belirtmek için var(--primary), var(--secondary) ve var(--tertiary) kullanabilirsiniz."
     navigation_menu: "Siteniz için ana gezinme menüsü olarak kenar çubuğunu veya başlık açılır menüsünü belirleyin. Kenar çubuğu önerilir."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
@@ -2492,7 +2519,6 @@ tr_TR:
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
     enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
     enable_new_post_reactions_menu: "Sonsuz kaydırma özelliği ve mobil cihazlara özel bir deneyim sunan, yeniden tasarlanan gönderi beğenileri ve tepkileri menüsünü etkinleştirin."
-    impersonate_without_logout: "Yöneticilerin, yönetici hesaplarından çıkış yapmadan bir kullanıcıyı taklit etmelerine izin verin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
@@ -2506,7 +2532,6 @@ tr_TR:
     rich_editor: "Besteci için zengin düzenleyiciyi etkinleştirin, böylece tüm kullanıcılar mevcut Markdown modu ile daha sezgisel ve kullanıcı dostu kompozisyonlar için yeni zengin metin düzenleyicisi arasında geçiş yapabilirler."
     default_composition_mode: "Topluluğunuzun bestecisi için varsayılan modu ayarlayın. Zengin metin modu çoğu kullanıcı için daha modern ve tanıdık bir yazma deneyimi sağlarken, Markdown modu daha teknik kitleler için uygun olabilir. Üyeler, besteci araç çubuğundaki geçiş düğmesini kullanarak modlar arasında geçiş yapabilirler."
     reviewable_ui_refresh: "İnceleme kuyruğunda deneysel yeni kullanıcı arayüzünü kullanabilen gruplar."
-    viewport_based_mobile_mode: "Mobil/masaüstü modlarını belirlemek için görüntü alanı genişliğini kullanın. Bu ayar yakında kaldırılacaktır. Kapatmanız gerektiğini düşünüyorsanız, lütfen <a href='https://meta.discourse.org/t/384280'>Meta'da</a> bize bildirin."
     content_localization_enabled: "Kullanıcılara tarayıcı veya kullanıcı dil tercihlerine göre yerelleştirilmiş içerik görüntüler. Bu içerik kategoriler, etiketler, gönderiler ve konular içerebilir. Desteklenen yerel ayarlar, \"İçerik yerelleştirmesi tarafından desteklenen yerel ayarlar\" bölümünde belirtilmiştir."
     content_localization_supported_locales: "Kullanıcı içeriğinin çevrilebileceği desteklenen yerel ayarların listesi. Sitenin varsayılan yerel ayarı her zaman dahil edilir. ‘İçerik yerelleştirme etkin’ seçeneği gerekir."
     content_localization_allowed_groups: "Grupların yerelleştirilmiş içeriği güncellemesine izin verildi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
@@ -2525,7 +2550,6 @@ tr_TR:
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     rename_faq_to_guidelines: "Bu değişiklikle SSS sayfası, Kılavuzlar olarak yeniden adlandırılmıştır. SSS sayfası hala /faq adresinde erişilebilir olacaktır. ‘faq url’ ayarı eskisi gibi çalışmaya devam edecektir."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."
-    enable_custom_splash_screen: "Yükleme açılış ekranını kendi SVG görüntünüzle özelleştirmenize olanak tanır. ‘Açılış ekranı görüntüsü’ ayarı üzerinden bir görüntü yükleyin. Uyarı: Bu, LCP puanlarını ve Google indekslemesini olumsuz etkileyebilir."
     modernize_foundation_theme: "Bu değişiklik, Discourse'daki Foundation temasına tasarım değişiklikleri getiriyor."
     reporting_improvements: "Discourse'un yönetici raporlarının gezinme, tasarım ve kullanılabilirlik özelliklerinde iyileştirmeler."
     errors:
@@ -3043,6 +3067,7 @@ tr_TR:
   download_backup_mailer:
     title: "Yedek Posta Göndericisini indir"
     subject_template: "[%{email_prefix}] Site Yedeklemesi İndirme"
+    subject_template_improved: "%{email_prefix}: Site yedeklemesini indir"
     text_body_template: |
       İşte talep ettiğiniz [site yedeklemesi indirme dosyası](%{backup_file_path}).
 
@@ -3054,6 +3079,7 @@ tr_TR:
   admin_confirmation_mailer:
     title: "Yönetici Onayı"
     subject_template: "[%{email_prefix}] Yeni Yönetici Hesabını Onaylayın"
+    subject_template_improved: "%{email_prefix}: Yeni yönetici hesabını onaylayın"
     text_body_template: |
       Lütfen **%{target_username} (%{target_email})** adlı kişiyi forumunuza yönetici olarak eklemek istediğinizi onaylayın.
 
@@ -3061,10 +3087,12 @@ tr_TR:
   test_mailer:
     title: "Test Posta Göndericisi"
     subject_template: "[%{email_prefix}] E-posta Teslim Edilebilirlik Testi"
+    subject_template_improved: "%{email_prefix}: E-posta teslim edilebilirlik testi"
     text_body_template: "Bu, aşağıdaki adresten gelen bir test e-postasıdır:\n\n[**%{base_url}**][0]\n\nBu e-posta teslim edilebilirlik testini sorunsuz bir şekilde aldığınızı umuyoruz!\n\nİşte [e-posta teslimi yapılandırmasını doğrulamak için kullanışlı bir kontrol listesi][1].\n\nİyi şanslar,\n\n[Discourse]'taki arkadaşlarınız \n(https://www.discourse.org)\n\n[0]: %{base_url}\n[1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839\n"
   new_version_mailer:
     title: "Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] Yeni Discourse sürümü, güncelleme mevcut"
+    subject_template_improved: "%{email_prefix}: Yeni Discourse sürümü, güncelleme mevcut"
     text_body_template: |
       Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
@@ -3073,12 +3101,13 @@ tr_TR:
 
       - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/v%{new_version}) yenilikleri inceleyin
 
       - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
   new_version_mailer_with_notes:
     title: "Notlarla Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] güncelleme mevcut"
+    subject_template_improved: "%{email_prefix}: Güncelleme mevcut"
     text_body_template: |
       Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
@@ -3087,7 +3116,7 @@ tr_TR:
 
       - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/v%{new_version}) yenilikleri inceleyin
 
       - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
 
@@ -3439,6 +3468,7 @@ tr_TR:
     email_reject_insufficient_trust_level:
       title: "E-posta Reddedildi yetersiz Güven Seviyesi"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Yetersiz Güven Seviyesi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- güven düzeyi yetersiz"
       text_body_template: |
         Üzgünüz, ancak %{destination} ( %{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3446,6 +3476,7 @@ tr_TR:
     email_reject_user_not_found:
       title: "E-posta Reddedildi Kullanıcı Bulunamadı"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Kullanıcı Bulunamadı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- kullanıcı bulunamadı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3453,13 +3484,15 @@ tr_TR:
     email_reject_screened_email:
       title: "E-posta Reddedildi Taranan E-posta"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Engellenen E-posta"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- engellenen e-posta"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
         Yanıtınız engellenmiş bir e-posta adresinden gönderildi. Başka bir e-posta adresinden göndermeyi deneyin veya [bir personel üyesiyle iletişime geçin](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-posta Reddedildi İzin Verilmeyen E-posta"
-      subject_template: "[%{email_prefix}] E-posta sorunu -- Engellenen E-posta"
+      subject_template: "[%{email_prefix}] E-posta sorunu -- engellenen e-posta"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- engellenen e-posta"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3467,6 +3500,7 @@ tr_TR:
     email_reject_inactive_user:
       title: "E-posta Reddedildi Etkin Olmayan Kullanıcı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Etkin Olmayan Kullanıcı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- etkin olmayan kullanıcı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız işe yaramadı.
 
@@ -3474,6 +3508,7 @@ tr_TR:
     email_reject_silenced_user:
       title: "E-posta Reddedildi Susturulmuş Kullanıcı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Susturulmuş Kullanıcı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- susturulmuş kullanıcı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3481,6 +3516,7 @@ tr_TR:
     email_reject_reply_user_not_matching:
       title: "E-posta Reddedildi Kullanıcı Eşleşmiyor"
       subject_template: "[%{email_prefix}] E-posta sorunu - Beklenmeyen Yanıt Adresi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- beklenmedik yanıt adresi"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3488,6 +3524,7 @@ tr_TR:
     email_reject_empty:
       title: "E-posta Reddedildi Boş"
       subject_template: "[%{email_prefix}] E-posta sorunu - İçerik Yok"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu — içerik yok"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3497,6 +3534,7 @@ tr_TR:
     email_reject_parsing:
       title: "E-posta Reddedildi Ayrıştırma"
       subject_template: "[%{email_prefix}] E-posta sorunu - İçerik Tanınmadı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- içerik tanınmıyor"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3504,6 +3542,7 @@ tr_TR:
     email_reject_invalid_access:
       title: "E-posta Reddedildi Geçersiz Erişim"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Geçersiz Erişim"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- geçersiz erişim"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3511,6 +3550,7 @@ tr_TR:
     email_reject_strangers_not_allowed:
       title: "E-posta Reddedildi Yabancılara İzin Verilmiyor"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Geçersiz Erişim"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- geçersiz erişim"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız çalışmadı.
 
@@ -3518,6 +3558,7 @@ tr_TR:
     email_reject_invalid_post:
       title: "E-posta Reddedildi Geçersiz Gönderi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Gönderim hatası"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- gönderme hatası"
       text_body_template: |
         Üzgünüz, ancak %{destination} %{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3525,6 +3566,7 @@ tr_TR:
     email_reject_invalid_post_specified:
       title: "E-posta Reddedildi Geçersiz Gönderi Belirtildi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Gönderim hatası"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- gönderme hatası"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3537,6 +3579,7 @@ tr_TR:
     email_reject_post_too_short:
       title: "E-posta Reddedildi Gönderi Çok Kısa"
       subject_template: "[%{email_prefix}] E-posta sorunu - Gönderi çok kısa"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- gönderi çok kısa"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3544,6 +3587,7 @@ tr_TR:
     email_reject_invalid_post_action:
       title: "E-posta Reddedildi Geçersiz Gönderi Eylemi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Geçersiz Gönderi Eylemi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- geçersiz gönderi işlemi"
       text_body_template: |
         Üzgünüz, ancak %{destination} adresine gönderdiğiniz e-posta mesajı (%{former_title} başlıklı) başarısız oldu.
 
@@ -3551,6 +3595,7 @@ tr_TR:
     email_reject_reply_key:
       title: "E-posta Reddedildi Yanıtlama Anahtarı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Bilinmeyen Yanıt Anahtarı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- bilinmeyen yanıt anahtarı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3558,6 +3603,7 @@ tr_TR:
     email_reject_bad_destination_address:
       title: "E-posta Reddedildi Hatalı Hedef Adresi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Bilinmeyen Kime: Adresi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- alıcı adresi bilinmiyor"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3573,6 +3619,7 @@ tr_TR:
     email_reject_old_destination:
       title: "E-posta Reddedildi Eski Hedef"
       subject_template: "[%{email_prefix}] E-posta sorunu - Eski bir bildirimi yanıtlamaya çalışıyorsunuz"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu — eski bir bildirime yanıt vermeye çalışıyorsunuz"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3580,6 +3627,7 @@ tr_TR:
     email_reject_topic_not_found:
       title: "E-posta Reddedildi Konu Bulunamadı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Konu Bulunamadı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- konu bulunamadı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3587,6 +3635,7 @@ tr_TR:
     email_reject_topic_closed:
       title: "E-posta Reddedildi Konu Kapatıldı"
       subject_template: "[%{email_prefix}] E-posta sorunu - Konu Kapatıldı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- konu kapatıldı"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3594,6 +3643,7 @@ tr_TR:
     email_reject_auto_generated:
       title: "E-posta Reddedildi Otomatik Oluşturulmuş"
       subject_template: "[%{email_prefix}] E-posta sorunu - Otomatik Oluşturulmuş Yanıt"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- otomatik olarak oluşturulan yanıt"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3601,6 +3651,7 @@ tr_TR:
     email_reject_unrecognized_error:
       title: "E-posta Reddedildi Tanınmayan Hata"
       subject_template: "[%{email_prefix}] E-posta sorunu - Tanınmayan Hata"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- tanımlanamayan hata"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3608,6 +3659,7 @@ tr_TR:
     email_reject_attachment:
       title: "E-posta Eki Reddedildi"
       subject_template: "[%{email_prefix}] E-posta sorunu - Ek Reddedildi"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- ek reddedildi"
       text_body_template: |
         Ne yazık ki %{destination} hedefine gönderdiğiniz e-posta mesajınızdaki (%{former_title}başlıklı) bazı ekler reddedildi.
 
@@ -3618,13 +3670,15 @@ tr_TR:
     email_reject_reply_not_allowed:
       title: "E-posta Reddedildi Yanıta İzin Verilmiyor"
       subject_template: "[%{email_prefix}] E-posta sorunu - Yanıta İzin Verilmiyor"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- yanıta izin verilmiyor"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
         Konuya yanıt verme izniniz yok. Bunun bir hata olduğunu düşünüyorsanız [bir personel üyesiyle iletişime geçin](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "E-posta Reddedildi Özete Yanıt"
-      subject_template: "[%{email_prefix}] E-posta sorunu -- Özete Yanıt"
+      subject_template: "[%{email_prefix}] E-posta sorunu -- Özetine Yanıtla"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- özetine yanıt ver"
       text_body_template: |
         Üzgünüz, ancak %{destination} (%{former_title} başlıklı) e-posta mesajınız başarısız oldu.
 
@@ -3634,6 +3688,7 @@ tr_TR:
     email_reject_too_many_recipients:
       title: "E-posta Reddedildi Çok Fazla Alıcı"
       subject_template: "[%{email_prefix}] E-posta sorunu -- Çok Fazla Alıcı"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu — alıcı sayısı fazla"
       text_body_template: |
         Üzgünüz ancak %{destination} hedefine (%{former_title} başlıklı) e-posta mesajınız gönderilemedi.
 
@@ -3643,6 +3698,7 @@ tr_TR:
     email_error_notification:
       title: "E-posta Hata Bildirimi"
       subject_template: "[%{email_prefix}] E-posta sorunu - POP kimlik doğrulama hatası"
+      subject_template_improved: "%{email_prefix}: E-posta sorunu -- POP kimlik doğrulama hatası"
       text_body_template: |
         Ne yazık ki, POP sunucusundan postalar yoklanırken bir kimlik doğrulama hatası oluştu.
 
@@ -3770,7 +3826,7 @@ tr_TR:
       text_body_template: "\"Download_remote_images_to_local\" ayarı, \"download_remote_images_threshold\" adresindeki disk alanı sınırına ulaşıldığı için devre dışı bırakıldı."
     new_user_of_the_month:
       title: "Ayın Yeni Kullanıcısısınız!"
-      subject_template: "Ayın Yeni Kullanıcısısınız!"
+      subject_template: "Bu ayın yeni kullanıcısı sensin!"
       text_body_template: |
         Tebrikler, %{month_year}** için **Ayın Yeni Kullanıcısı ödülünü kazandınız. :trophy:
 
@@ -3870,6 +3926,7 @@ tr_TR:
     user_invited_to_private_message_pm_group:
       title: "Kullanıcı, Grubu Kişisel Mesaja Davet Etti"
       subject_template: "[%{email_prefix}] %{username} @%{group_name} adlı grubu \"%{topic_title}\" başlıklı mesaja davet etti"
+      subject_template_improved: "%{email_prefix}: %{username}, @%{group_name} grubunu '%{topic_title}' başlıklı bir mesaja davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3879,6 +3936,7 @@ tr_TR:
     user_invited_to_private_message_pm:
       title: "Kullanıcı Kişisel Mesaja Davet Edildi"
       subject_template: "[%{email_prefix}] %{username} sizi bir mesaja davet etti \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: %{username} sizi '%{topic_title}' başlıklı bir mesaja davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3888,6 +3946,7 @@ tr_TR:
     user_invited_to_private_message_pm_staged:
       title: "Kullanıcı Kişisel Mesaja Davet Edildi Aşamalı"
       subject_template: "[%{email_prefix}] %{username} sizi bir mesaja davet etti \"%{topic_title}\""
+      subject_template_improved: "%{email_prefix}: %{username} sizi '%{topic_title}' başlıklı bir mesaja davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3897,6 +3956,7 @@ tr_TR:
     user_invited_to_topic:
       title: "Kullanıcı Konuya Davet Edildi"
       subject_template: "[%{email_prefix}] %{username} sizi \"%{topic_title}\" başlıklı konuya davet etti"
+      subject_template_improved: "%{email_prefix}: %{username} sizi '%{topic_title}' etkinliğine davet etti"
       text_body_template: |
         %{header_instructions}
 
@@ -3907,6 +3967,7 @@ tr_TR:
       title: "Kullanıcı Yanıtladı"
       preview: "Birisi gönderinize yanıt verdi."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3918,6 +3979,7 @@ tr_TR:
     user_replied_pm:
       title: "Kullanıcı Kişisel Mesajı Yanıtladı"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3930,6 +3992,7 @@ tr_TR:
       title: "Kullanıcı Alıntı yaptı"
       preview: "Birisi bir gönderide sizi alıntıladı."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3942,6 +4005,7 @@ tr_TR:
       title: "Kullanıcı Bağlantı Verdi"
       preview: "Başka bir konuda bağlantısı paylaşılmış gönderi."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3954,6 +4018,7 @@ tr_TR:
       title: "Kullanıcı Bahsetti"
       preview: "Birisi bir gönderide senden bahsetmiş."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3965,6 +4030,7 @@ tr_TR:
     user_mentioned_pm:
       title: "Kullanıcı Kişisel Mesajdan Bahsetti"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3976,6 +4042,7 @@ tr_TR:
     user_group_mentioned:
       title: "Kullanıcı Grubundan Bahsedildi"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3987,6 +4054,7 @@ tr_TR:
     user_group_mentioned_pm:
       title: "Kullanıcı Grubundan Bahsedildi Kişisel Mesaj"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3998,6 +4066,7 @@ tr_TR:
     user_group_mentioned_pm_group:
       title: "Kullanıcı Grubundan Bahsedildi Kişisel Mesaj"
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4010,6 +4079,7 @@ tr_TR:
       title: "Kullanıcı Gönderi Yaptı"
       preview: "Birisi izlediğiniz bir konuya yanıt verdi."
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4021,6 +4091,7 @@ tr_TR:
     user_watching_category_or_tag:
       title: "Kullanıcı İzleme Kategorisi veya Etiketi"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4032,6 +4103,7 @@ tr_TR:
     user_watching_first_post:
       title: "Kullanıcı İlk Gönderiyi İzliyor"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4044,6 +4116,7 @@ tr_TR:
       title: "Kullanıcı Kişisel Mesaj Gönderdi"
       preview: "Birisi size özel mesaj gönderdi."
       subject_template: "[%{email_prefix}] [Kişisel Mesaj] %{topic_title}"
+      subject_template_improved: "%{email_prefix}: %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4061,6 +4134,7 @@ tr_TR:
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
+      subject_template_improved: "Hesabınız askıya alınmıştır"
       text_body_template: |
         Forumda %{suspended_till} tarihine kadar askıya alındınız.
 
@@ -4068,6 +4142,7 @@ tr_TR:
     account_suspended_forever:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
+      subject_template_improved: "Hesabınız askıya alınmıştır"
       text_body_template: |
         Forumda askıya alındınız.
 
@@ -4075,6 +4150,7 @@ tr_TR:
     account_silenced:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
+      subject_template_improved: "Hesabınız susturuldu"
       text_body_template: |
         Forumda %{silenced_till} tarihine kadar susturuldunuz.
 
@@ -4082,6 +4158,7 @@ tr_TR:
     account_silenced_forever:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
+      subject_template_improved: "Hesabınız susturuldu"
       text_body_template: |
         Forumda susturuldunuz.
 
@@ -4089,6 +4166,7 @@ tr_TR:
     account_deleted:
       title: "Hesap Silindi"
       subject_template: "[%{email_prefix}] Hesabınız silindi"
+      subject_template_improved: "Hesabınız silindi"
       text_body_template: |
         Merhaba,
 
@@ -4100,6 +4178,7 @@ tr_TR:
     account_exists:
       title: "Hesap zaten mevcut"
       subject_template: "[%{email_prefix}] Hesap zaten mevcut"
+      subject_template_improved: "Hesap zaten mevcut"
       text_body_template: |
         Az önce %{site_name}'ta bir hesap oluşturmaya veya bir hesabın e-postasını %{email} olarak değiştirmeye çalıştınız. Ancak %{email} için zaten bir hesap var.
 
@@ -4111,6 +4190,7 @@ tr_TR:
     account_second_factor_disabled:
       title: "İki Adımlı Kimlik Doğrulama devre dışı"
       subject_template: "[%{email_prefix}] İki Adımlı Kimlik Doğrulama devre dışı"
+      subject_template_improved: "İki Adımlı Kimlik Doğrulama devre dışı"
       text_body_template: |
         %{site_name} adresindeki hesabınızda iki faktörlü kimlik doğrulama devre dışı bırakılmıştır. Artık yalnızca şifrenizle oturum açabilirsiniz; ek kimlik doğrulama kodu artık gerekli değildir.
 
@@ -4130,6 +4210,7 @@ tr_TR:
       popular_posts: "Popüler Gönderiler"
       more_new: "Sizin için yeni"
       subject_template: "[%{email_prefix}] Özet"
+      subject_template_improved: "Özet"
       unsubscribe: "Bu özet, sizi bir süredir görmediğimizde %{site_link} tarafından gönderilir. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link}."
       your_email_settings: "e-posta ayarlarınız"
       click_here: "buraya tıklayın"
@@ -4139,6 +4220,7 @@ tr_TR:
       title: "Şifremi Unuttum"
       preview: "Şifrenizi sıfırlayın."
       subject_template: "[%{email_prefix}] Şifre sıfırlama"
+      subject_template_improved: "Şifre sıfırlama"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) şifrenizi sıfırlamak istedi.
 
@@ -4150,6 +4232,7 @@ tr_TR:
       title: "Bağlantı yoluyla giriş yapın"
       preview: "Bağlantı yoluyla giriş yapın."
       subject_template: "[%{email_prefix}] Bağlantı yoluyla giriş yapın"
+      subject_template_improved: "Bağlantı yoluyla giriş yapın"
       text_body_template: |
         İşte [%{site_name}](%{base_url}) üzerinde giriş yapmak için bağlantınız.
 
@@ -4160,7 +4243,8 @@ tr_TR:
     set_password:
       title: "Şifre Belirle"
       preview: "Hesap şifresini ayarlayın."
-      subject_template: "[%{email_prefix}] Şifre Belirle"
+      subject_template: "[%{email_prefix}] Şifreyi belirle"
+      subject_template_improved: "Şifre belirle"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) hesabınıza şifre eklemek istedi. Alternatif olarak, bu doğrulanmış e-posta adresiyle ilişkili desteklenen herhangi bir çevrimiçi hizmeti (Google, Facebook, vb.) kullanarak giriş yapabilirsiniz.
 
@@ -4172,6 +4256,7 @@ tr_TR:
       title: "Yönetici Girişi"
       preview: "Yönetici girişi isteniyor."
       subject_template: "[%{email_prefix}] Giriş"
+      subject_template_improved: "Giriş yap"
       text_body_template: |
         Biri [%{site_name}](%{base_url}) hesabınıza giriş yapmak istedi.
 
@@ -4182,7 +4267,8 @@ tr_TR:
     account_created:
       title: "Hesap Oluşturuldu"
       preview: "Sizin için yeni bir hesap oluşturuldu."
-      subject_template: "[%{email_prefix}] Yeni Hesabınız"
+      subject_template: "[%{email_prefix}] Yeni hesabınız"
+      subject_template_improved: "Yeni hesabınız"
       text_body_template: |
         Sizin için %{site_name}'ta yeni bir hesap oluşturuldu
 
@@ -4191,6 +4277,7 @@ tr_TR:
     confirm_new_email:
       title: "Yeni E-postayı Onayla"
       subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
+      subject_template_improved: "Yeni e-posta adresinizi onaylayın"
       text_body_template: |
         Aşağıdaki bağlantıya tıklayarak %{site_name} için yeni e-posta adresinizi onaylayın:
 
@@ -4200,6 +4287,7 @@ tr_TR:
     confirm_new_email_via_admin:
       title: "Yeni E-postayı Onayla"
       subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
+      subject_template_improved: "Yeni e-posta adresinizi onaylayın"
       text_body_template: |
         Aşağıdaki bağlantıya tıklayarak %{site_name} için yeni e-posta adresinizi onaylayın:
 
@@ -4209,6 +4297,7 @@ tr_TR:
     confirm_old_email:
       title: "Eski E-postayı Onayla"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
+      subject_template_improved: "Mevcut e-posta adresinizi onaylayın"
       text_body_template: |
         E-posta adresinizi değiştirebilmemiz için mevcut e-posta hesabını kontrol ettiğinizi onaylamanız gerekiyor. Bu adımı tamamladıktan sonra yeni e-posta adresini onaylamanızı isteyeceğiz.
 
@@ -4218,11 +4307,13 @@ tr_TR:
     confirm_old_email_add:
       title: "Eski E-postayı Onayla (Ekle)"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
+      subject_template_improved: "Mevcut e-posta adresinizi onaylayın"
       text_body_template: "Yeni bir e-posta adresi ekleyebilmemiz için mevcut e-posta hesabını kontrol ettiğinizi onaylamanız gerekiyor. Bu adımı tamamladıktan sonra yeni e-posta adresini onaylamanızı isteyeceğiz. \n\nAşağıdaki bağlantıya tıklayarak %{site_name} için mevcut e-posta adresinizi onaylayın: \n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
     notify_old_email:
       title: "Eski E-postaya Bildirim Gönder"
       preview: "E-posta adresi güncellendi."
       subject_template: "[%{email_prefix}] E-posta adresiniz değiştirildi"
+      subject_template_improved: "E-posta adresiniz değiştirildi"
       text_body_template: |
         Bu, %{site_name} için e-posta adresinizin değiştirildiğini bildiren otomatik bir mesajdır. Bu işlem yanlışlıkla yapıldıysa lütfen
         site yöneticisiyle iletişime geçin.
@@ -4233,6 +4324,7 @@ tr_TR:
     notify_old_email_add:
       title: "Eski E-postaya Bildirim Gönder (Ekle)"
       subject_template: "[%{email_prefix}] Yeni bir e-posta adresi eklendi"
+      subject_template_improved: "Yeni bir e-posta adresi eklendi"
       text_body_template: |
         Bu, %{site_name} için bir e-posta adresi eklendiğini bildirmek için gönderilen otomatik bir mesajdır. Bir yanlışlık olduğunu düşünüyorsanız lütfen site yöneticisiyle iletişime geçin.
 
@@ -4255,10 +4347,12 @@ tr_TR:
       title: "Kaydol"
       preview: "Hesabınızı onaylayın."
       subject_template: "[%{email_prefix}] Yeni hesabınızı onaylayın"
+      subject_template_improved: "Yeni hesabınızı onaylayın"
       text_body_template: "%{site_name}'a hoş geldiniz! \n\nYeni hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıya tıklayın: \n%{base_url}/u/activate-account/%{email_token}\n\nYukarıdaki bağlantı tıklanabilir değilse kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin.\n"
     activation_reminder:
       title: "Etkinleştirme Anımsatıcısı"
       subject_template: "[%{email_prefix}] Hesabınızı onaylamanız için anımsatıcı"
+      subject_template_improved: "Hesabınızı onaylamanız gerektiğini hatırlatırız"
       text_body_template: |
         %{site_name}'a hoş geldiniz!
 
@@ -4271,7 +4365,8 @@ tr_TR:
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       preview: "Cihazınızı doğrulayın."
-      subject_template: "[%{site_name}] %{location} Konumundan Yeni Giriş"
+      subject_template: "[%{site_name}] %{location} adresinden yeni oturum açma"
+      subject_template_improved: "%{site_name}: %{location} adresinden yeni oturum açıldı"
       text_body_template: |
         Merhaba,
 
@@ -4287,6 +4382,7 @@ tr_TR:
     post_approved:
       title: "Gönderiniz onaylandı"
       subject_template: "[%{site_name}] Gönderiniz onaylandı"
+      subject_template_improved: "%{site_name}: Gönderiniz onaylandı"
       text_body_template: |
         Merhaba,
 

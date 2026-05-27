@@ -97,7 +97,7 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: content_array.flatten,
-              upload_encoder: ->(details) { upload_node(details) },
+              upload_encoder: ->(details) { upload_node(details, role) },
               text_encoder: ->(text) { text_node(text, role) },
               other_encoder: ->(hash) { thinking_signature_node(hash) },
               allow_images:,
@@ -145,7 +145,9 @@ module DiscourseAi
           { type: role == "user" ? "input_text" : "output_text", text: text }
         end
 
-        def upload_node(details)
+        def upload_node(details, role)
+          return text_node(details[:text], role) if details[:text].present?
+
           if details[:mime_type] == "application/pdf" || details[:kind] == :document
             file_node(details)
           else

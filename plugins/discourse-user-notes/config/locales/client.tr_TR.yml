@@ -9,7 +9,6 @@ tr_TR:
     user_notes:
       title: "Kullanıcı notları"
       attach: "Kullanıcı notu ekle"
-      attach_note_description: "Bu kullanıcı hakkında yalnızca personel tarafından görülebilecek bir not ekle"
       remove: "Kullanıcı notunu kaldır"
       show: "Kullanıcı notları (%{count})"
       delete_confirm: "Bu kullanıcı notunu silmek istediğinizden emin misiniz?"

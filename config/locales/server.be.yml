@@ -256,6 +256,7 @@ be:
       admins: "адміны"
       moderators: "мадэратары"
       staff: "персанал"
+      anonymous: "ананімны"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -630,6 +631,28 @@ be:
       xaxis: "Дзень"
       yaxis: "Колькасць новых удзельнікаў"
       description: "Колькасць карыстальнікаў, якія зрабілі свой першы пост на працягу гэтага перыяду."
+    activity_by_category:
+      labels:
+        category: "Катэгорыя"
+        topics: "тэмы"
+        posts: "Допісы"
+        share: "Абагуліць"
+    posters_by_member_type:
+      labels:
+        count: "Допісы"
+        share: "Абагуліць"
+      types:
+        staff: "Персанал"
+    trust_level_pipeline:
+      labels:
+        count: "Члены"
+        share: "Абагуліць"
+      levels:
+        "0": "Новы"
+        "1": "асноўнай"
+        "2": "Член"
+        "3": "рэгулярнае"
+        "4": "лідэр"
     trust_level_growth:
       yaxis: "Дзень"
     consolidated_page_views:
@@ -652,6 +675,9 @@ be:
     consolidated_page_views_browser_detection:
       yaxis: "дзень"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "ананімны"
+        page_view_crawler: "Краўлеры пошукавых сістэм"
       yaxis: "дзень"
     dau_by_mau:
       xaxis: "дзень"
@@ -754,6 +780,12 @@ be:
         num_clicks: "пстрычкі"
         num_topics: "тэмы"
       description: "Карыстальнікі, пералічаныя па колькасці клікаў па спасылках, яны падзяліліся."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "наведванне"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "наведванне"
     top_traffic_sources:
       title: "Галоўныя крыніцы трафіку"
       xaxis: "дамен"
@@ -806,6 +838,8 @@ be:
     page_view_anon_browser_reqs:
       xaxis: "дзень"
     page_view_logged_in_browser_reqs:
+      xaxis: "дзень"
+    page_view_embed_reqs:
       xaxis: "дзень"
     http_background_reqs:
       title: "фон"
@@ -863,11 +897,11 @@ be:
         os: Аперацыйная сістэма
         login_time: увайсці Час
       description: "Звесткі аб новых лагінаў, якія падазрона адрозніваюцца ад папярэдніх уваходаў у сістэму."
-    staff_logins:
+    admin_logins:
       title: "лагіны адміністратара"
       labels:
-        user: карыстальнік
-        location: размяшчэнне
+        user: Карыстальнік
+        location: Месцазнаходжанне
         login_at: Уваход у
       description: "Спіс часу адміністратара для ўваходу з месцам."
     top_uploads:
@@ -1156,7 +1190,6 @@ be:
     clean_up_inactive_users_after_days: "Колькасць дзён да неактыўнага карыстальніка (давер ўзроўню 0 без якіх-небудзь паведамленняў) выдаляецца. Каб адключыць ачыстку набору 0."
     allow_profile_backgrounds: "Дазволіць карыстальнікам загружаць профілю фону."
     get_a_room_threshold: "Колькасць паведамленняў карыстальнік павінен зрабіць тое ж асоба ў той жа тэме, перш чым папярэджваюцца."
-    enable_mobile_theme: "Мабільныя прылады выкарыстоўваюць мабільную дружалюбную тэму, з магчымасцю пераключэння на поўным сайт. Адключыце, калі вы хочаце выкарыстоўваць карыстацкія табліцы стыляў, якая цалкам спагадны."
     dominating_topic_minimum_percent: "Які працэнт паведамленняў карыстальнік павінен зрабіць у тэме да напамінку аб празмерна дамінуючай тэмай."
     suppress_uncategorized_badge: "Не паказваць значок для неклясыфікаваных тэма ў спісах тэмы."
     header_dropdown_category_count: "Колькі катэгорый могуць быць адлюстраваны ў меню загалоўка спісу."
@@ -1591,7 +1624,6 @@ be:
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
     new_user_of_the_month:
       title: "Вы новы карыстальнік месяцы!"
-      subject_template: "Вы новы карыстальнік месяцы!"
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
@@ -1818,6 +1850,7 @@ be:
     account_exists:
       title: "Лік ужо існуе"
       subject_template: "[% {Email_prefix}] Лік ужо існуе"
+      subject_template_improved: "Лік ужо існуе"
       text_body_template: |
         Вы проста спрабавалі стварыць уліковы запіс на% {SITE_NAME}, або спрабавалі змяніць адрас электроннай пошты ўліковага запісу на% {адрас электроннай пошты}. Аднак уліковы запіс ўжо існуе для% {} электроннай пошты.Калі вы забылі свой пароль, [скіньце яго] (% {base_url}
     digest:
@@ -1831,6 +1864,7 @@ be:
       popular_posts: "Папулярныя паведамленні"
       more_new: "Новае для вас"
       subject_template: "[%{email_prefix}] Кароткае апісанне"
+      subject_template_improved: "Зводка"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
@@ -1848,6 +1882,7 @@ be:
       title: "Увайсці па спасылцы"
       preview: "Увайсці па спасылцы."
       subject_template: "[%{email_prefix}] Уваход па спасылцы"
+      subject_template_improved: "Увайсці па спасылцы"
       text_body_template: |
         Вось ваша спасылка каб ўвайсці на [%{site_name}](%{base_url}).
 
@@ -1857,7 +1892,6 @@ be:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "ўсталяваць пароль"
-      subject_template: "[%{email_prefix}] Усталяваць пароль"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -1868,9 +1902,9 @@ be:
     admin_login:
       title: "Увайсці як адміністратар"
       subject_template: "[%{email_prefix}] Увайсці"
+      subject_template_improved: "Уваход"
     account_created:
       title: "Уліковы запіс створаны"
-      subject_template: "[%{email_prefix}] Ваш новы рахунак"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -1915,7 +1949,6 @@ be:
         Сардэчна запрашаем у% {site_name}!Гэта сяброўскае напамін, каб актываваць свой рахунак.Націсніце на спасылку, каб пацвердзіць і актываваць новы рахунак:% {Base_url}
     suspicious_login:
       title: "Новы Лагін абвесткі"
-      subject_template: "[%{site_name}] New Login from %{location}"
   page_not_found:
     title: "На жаль! Гэтая старонка не існуе або з'яўляецца прыватнай уласнасцю."
     see_more: "Больш"

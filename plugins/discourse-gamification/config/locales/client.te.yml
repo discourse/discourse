@@ -12,8 +12,6 @@ te:
         link_to_settings: "అమరికలు"
         refresh: "రిఫ్రెష్ చేయండి"
         name: "పేరు"
-        section:
-          groups: "సమూహాలు"
         period:
           all_time: "ఆల్ టైమ్"
           yearly: "వార్షిక"

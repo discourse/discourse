@@ -70,6 +70,11 @@ fa_IR:
       and_x_others:
         one: "و %{count} نفر دیگر"
         other: "و %{count} نفر دیگر"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: پاسخ
+        placeholder: پاسخ…
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -88,6 +93,10 @@ fa_IR:
         one: "شما یک پیام گفتگو جدیدی دارید"
         other: "شما پیام‌های گفتگو جدیدی دارید"
       from: "%{site_name}"
+      subject:
+        private_email_improved:
+          one: "پیام جدید"
+          other: "پیام جدید"
       view_messages:
         one: "مشاهده پیام"
         other: "مشاهده %{count} پیام"

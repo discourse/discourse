@@ -185,6 +185,7 @@ bs_BA:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      anonymous: "anoniman"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -426,6 +427,29 @@ bs_BA:
       xaxis: "Day"
     new_contributors:
       xaxis: "Day"
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Topics"
+        posts: "Objave"
+        share: "Dijeli"
+    posters_by_member_type:
+      labels:
+        count: "Objave"
+        share: "Dijeli"
+      types:
+        staff: "Staff"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Članovi"
+        share: "Dijeli"
+      levels:
+        "0": "Novo"
+        "1": "Osnovni"
+        "2": "Član"
+        "3": "Normalno"
+        "4": "Vođa"
     trust_level_growth:
       yaxis: "Day"
     consolidated_page_views:
@@ -442,6 +466,8 @@ bs_BA:
     consolidated_page_views_browser_detection:
       yaxis: "Day"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anoniman"
       yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
@@ -527,6 +553,12 @@ bs_BA:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Teme"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visits"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -562,6 +594,8 @@ bs_BA:
       xaxis: "Day"
     page_view_logged_in_browser_reqs:
       xaxis: "Day"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       xaxis: "Day"
     http_2xx_reqs:
@@ -593,7 +627,7 @@ bs_BA:
       labels:
         user: User
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Lokacija
@@ -747,7 +781,6 @@ bs_BA:
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
@@ -895,6 +928,7 @@ bs_BA:
       liked_received: "Likes Received"
       new_users: "Users"
       join_the_discussion: "Pročitaj Više"
+      subject_template_improved: "Sažetak"
       click_here: "klikni ovdje"
     email_login:
       text_body_template: |
@@ -906,6 +940,8 @@ bs_BA:
         %{base_url}/session/e-mail-login/%{email_token}
     set_password:
       title: "Postavi šifru"
+    admin_login:
+      subject_template_improved: "Login"
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
     post_approved:

@@ -11,7 +11,7 @@ end
 
 class Autospec::Manager
   def self.run(opts = {})
-    self.new(opts).run
+    new(opts).run
   end
 
   def initialize(opts = {})
@@ -230,23 +230,21 @@ class Autospec::Manager
     %w[spec lib app config test vendor plugins].each do |watch|
       puts "@@@@@@@@@ Listen to #{path}/#{watch} #{options}" if @debug
       Thread.new do
-        begin
-          listener =
-            Listen.to("#{path}/#{watch}", options) do |modified, added, _|
-              paths = [modified, added].flatten
-              paths.compact!
-              paths.map! do |long|
-                long = reverse_symlink(long)
-                long[(path.length + 1)..-1]
-              end
-              process_change(paths)
+        listener =
+          Listen.to("#{path}/#{watch}", options) do |modified, added, _|
+            paths = [modified, added].flatten
+            paths.compact!
+            paths.map! do |long|
+              long = reverse_symlink(long)
+              long[(path.length + 1)..-1]
             end
-          listener.start
-          sleep
-        rescue => e
-          puts "FAILED to listen on changes to #{path}/#{watch}"
-          puts e
-        end
+            process_change(paths)
+          end
+        listener.start
+        sleep
+      rescue => e
+        puts "FAILED to listen on changes to #{path}/#{watch}"
+        puts e
       end
     end
   end

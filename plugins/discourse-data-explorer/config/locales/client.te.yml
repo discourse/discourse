@@ -6,6 +6,9 @@
 
 te:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "ఫలితాలు లేవు"
     explorer:
       default_query: "అప్రమేయ"
       or: "లేదా"
@@ -19,8 +22,6 @@ te:
         bool:
           yes: "అవును"
           no: "లేదు"
-      export: "ఎగుమతి"
-      edit: "సవరించండి"
       delete: "తొలగించండి"
       query_groups: "సమూహాలు"
       query_description: "వివరణ"

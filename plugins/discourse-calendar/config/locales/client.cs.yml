@@ -402,10 +402,10 @@ cs:
       models:
         invitee:
           no_users: "Nebyli nalezeni žádní uživatelé"
+          leave_event: "Opustit událost"
           status:
             unknown: "Nemám zájem"
             going: "Zúčastním se"
-            not_going: "Nezúčastním se"
             interested: "Mám zájem"
             going_count:
               one: "%{count} se účastní"

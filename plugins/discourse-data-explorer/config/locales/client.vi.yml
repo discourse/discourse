@@ -6,6 +6,9 @@
 
 vi:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Không có kết quả"
     explorer:
       default_query: "Mặc định"
       or: "hoặc"
@@ -23,11 +26,8 @@ vi:
         bool:
           yes: "Đồng ý"
           no: "Không"
-      export: "Xuất"
-      view: "Xem"
       save: "Lưu thay đổi"
       undo: "Hủy bỏ các thay đổi"
-      edit: "Sửa"
       delete: "Xóa"
       result_count:
         other: "%{count} kết quả."

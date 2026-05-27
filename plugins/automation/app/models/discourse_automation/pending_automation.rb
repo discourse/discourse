@@ -13,8 +13,8 @@ end
 # Table name: discourse_automation_pending_automations
 #
 #  id            :bigint           not null, primary key
-#  automation_id :bigint           not null
 #  execute_at    :datetime         not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  automation_id :bigint           not null
 #

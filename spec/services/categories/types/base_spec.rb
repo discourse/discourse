@@ -73,7 +73,7 @@ RSpec.describe Categories::Types::Base do
         category,
         guardian: admin.guardian,
         configuration_values: {
-          "title" => "Override",
+          title: "Override",
         },
       )
       expect(SiteSetting.title).to eq("Override")
@@ -352,7 +352,6 @@ RSpec.describe Categories::Types::Base do
         end
 
       Categories::TypeRegistry.register(test_type, plugin_identifier: "test")
-      SiteSetting.enable_simplified_category_creation = true
 
       expect { category.category_type_site_setting_names }.not_to raise_error
     ensure

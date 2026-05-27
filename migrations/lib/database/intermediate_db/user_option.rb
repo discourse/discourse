@@ -31,6 +31,7 @@ module Migrations
             enable_markdown_monospace_font,
             enable_quoting,
             enable_smart_lists,
+            enable_upcoming_change_available_notifications,
             external_links_in_new_tab,
             hide_presence,
             hide_profile,
@@ -47,6 +48,7 @@ module Migrations
             notify_on_linked_posts,
             oldest_search_log_date,
             seen_popups,
+            show_original_content,
             sidebar_link_to_filtered_list,
             sidebar_show_count_of_new_items,
             skip_new_user_tips,
@@ -60,61 +62,63 @@ module Migrations
             watched_precedence_over_muted
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `user_options` record in the IntermediateDB.
         #
-        # @param user_id                            [Integer, String]
-        # @param allow_private_messages             [Boolean, nil]
-        # @param auto_track_topics_after_msecs      [Integer, nil]
-        # @param automatically_unpin_topics         [Boolean, nil]
-        # @param bookmark_auto_delete_preference    [Integer, nil]
-        # @param color_scheme_id                    [Integer, String, nil]
-        # @param composition_mode                   [Integer, nil]
-        # @param dark_scheme_id                     [Integer, String, nil]
-        # @param default_calendar                   [Integer, nil]
-        # @param digest_after_minutes               [Integer, nil]
-        # @param dynamic_favicon                    [Boolean, nil]
-        # @param email_digests                      [Boolean, nil]
-        # @param email_in_reply_to                  [Boolean, nil]
-        # @param email_level                        [Integer, nil]
-        # @param email_messages_level               [Integer, nil]
-        # @param email_previous_replies             [Integer, nil]
-        # @param enable_allowed_pm_users            [Boolean, nil]
-        # @param enable_defer                       [Boolean, nil]
-        # @param enable_markdown_monospace_font     [Boolean, nil]
-        # @param enable_quoting                     [Boolean, nil]
-        # @param enable_smart_lists                 [Boolean, nil]
-        # @param external_links_in_new_tab          [Boolean, nil]
-        # @param hide_presence                      [Boolean, nil]
-        # @param hide_profile                       [Boolean, nil]
-        # @param hide_profile_and_presence          [Boolean, nil]
-        # @param homepage_id                        [Integer, String, nil]
-        # @param include_tl0_in_digests             [Boolean, nil]
-        # @param interface_color_mode               [Integer, nil]
-        # @param last_redirected_to_top_at          [Time, nil]
-        # @param like_notification_frequency        [Integer, nil]
-        # @param mailing_list_mode                  [Boolean, nil]
-        # @param mailing_list_mode_frequency        [Integer, nil]
-        # @param new_topic_duration_minutes         [Integer, nil]
-        # @param notification_level_when_replying   [Integer, nil]
-        # @param notify_on_linked_posts             [Boolean, nil]
-        # @param oldest_search_log_date             [Time, nil]
-        # @param seen_popups                        [Integer, nil]
-        # @param sidebar_link_to_filtered_list      [Boolean, nil]
-        # @param sidebar_show_count_of_new_items    [Boolean, nil]
-        # @param skip_new_user_tips                 [Boolean, nil]
-        # @param text_size_key                      [Integer, nil]
-        # @param text_size_seq                      [Integer, nil]
-        # @param theme_ids                          [Integer, nil]
-        # @param theme_key_seq                      [Integer, nil]
-        # @param timezone                           [String, nil]
-        # @param title_count_mode_key               [Integer, nil]
-        # @param topics_unread_when_closed          [Boolean, nil]
-        # @param watched_precedence_over_muted      [Boolean, nil]
+        # @param user_id                                          [Integer, String]
+        # @param allow_private_messages                           [Boolean, nil]
+        # @param auto_track_topics_after_msecs                    [Integer, nil]
+        # @param automatically_unpin_topics                       [Boolean, nil]
+        # @param bookmark_auto_delete_preference                  [Integer, nil]
+        # @param color_scheme_id                                  [Integer, String, nil]
+        # @param composition_mode                                 [Integer, nil]
+        # @param dark_scheme_id                                   [Integer, String, nil]
+        # @param default_calendar                                 [Integer, nil]
+        # @param digest_after_minutes                             [Integer, nil]
+        # @param dynamic_favicon                                  [Boolean, nil]
+        # @param email_digests                                    [Boolean, nil]
+        # @param email_in_reply_to                                [Boolean, nil]
+        # @param email_level                                      [Integer, nil]
+        # @param email_messages_level                             [Integer, nil]
+        # @param email_previous_replies                           [Integer, nil]
+        # @param enable_allowed_pm_users                          [Boolean, nil]
+        # @param enable_defer                                     [Boolean, nil]
+        # @param enable_markdown_monospace_font                   [Boolean, nil]
+        # @param enable_quoting                                   [Boolean, nil]
+        # @param enable_smart_lists                               [Boolean, nil]
+        # @param enable_upcoming_change_available_notifications   [Boolean, nil]
+        # @param external_links_in_new_tab                        [Boolean, nil]
+        # @param hide_presence                                    [Boolean, nil]
+        # @param hide_profile                                     [Boolean, nil]
+        # @param hide_profile_and_presence                        [Boolean, nil]
+        # @param homepage_id                                      [Integer, String, nil]
+        # @param include_tl0_in_digests                           [Boolean, nil]
+        # @param interface_color_mode                             [Integer, nil]
+        # @param last_redirected_to_top_at                        [Time, nil]
+        # @param like_notification_frequency                      [Integer, nil]
+        # @param mailing_list_mode                                [Boolean, nil]
+        # @param mailing_list_mode_frequency                      [Integer, nil]
+        # @param new_topic_duration_minutes                       [Integer, nil]
+        # @param notification_level_when_replying                 [Integer, nil]
+        # @param notify_on_linked_posts                           [Boolean, nil]
+        # @param oldest_search_log_date                           [Time, nil]
+        # @param seen_popups                                      [Integer, nil]
+        # @param show_original_content                            [Boolean, nil]
+        # @param sidebar_link_to_filtered_list                    [Boolean, nil]
+        # @param sidebar_show_count_of_new_items                  [Boolean, nil]
+        # @param skip_new_user_tips                               [Boolean, nil]
+        # @param text_size_key                                    [Integer, nil]
+        # @param text_size_seq                                    [Integer, nil]
+        # @param theme_ids                                        [Integer, nil]
+        # @param theme_key_seq                                    [Integer, nil]
+        # @param timezone                                         [String, nil]
+        # @param title_count_mode_key                             [Integer, nil]
+        # @param topics_unread_when_closed                        [Boolean, nil]
+        # @param watched_precedence_over_muted                    [Boolean, nil]
         #
         # @return [void]
         def self.create(
@@ -139,6 +143,7 @@ module Migrations
           enable_markdown_monospace_font: nil,
           enable_quoting: nil,
           enable_smart_lists: nil,
+          enable_upcoming_change_available_notifications: nil,
           external_links_in_new_tab: nil,
           hide_presence: nil,
           hide_profile: nil,
@@ -155,6 +160,7 @@ module Migrations
           notify_on_linked_posts: nil,
           oldest_search_log_date: nil,
           seen_popups: nil,
+          show_original_content: nil,
           sidebar_link_to_filtered_list: nil,
           sidebar_show_count_of_new_items: nil,
           skip_new_user_tips: nil,
@@ -190,6 +196,7 @@ module Migrations
             Migrations::Database.format_boolean(enable_markdown_monospace_font),
             Migrations::Database.format_boolean(enable_quoting),
             Migrations::Database.format_boolean(enable_smart_lists),
+            Migrations::Database.format_boolean(enable_upcoming_change_available_notifications),
             Migrations::Database.format_boolean(external_links_in_new_tab),
             Migrations::Database.format_boolean(hide_presence),
             Migrations::Database.format_boolean(hide_profile),
@@ -206,6 +213,7 @@ module Migrations
             Migrations::Database.format_boolean(notify_on_linked_posts),
             Migrations::Database.format_datetime(oldest_search_log_date),
             seen_popups,
+            Migrations::Database.format_boolean(show_original_content),
             Migrations::Database.format_boolean(sidebar_link_to_filtered_list),
             Migrations::Database.format_boolean(sidebar_show_count_of_new_items),
             Migrations::Database.format_boolean(skip_new_user_tips),

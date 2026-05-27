@@ -12,10 +12,6 @@ nb_NO:
         link_to_settings: "Innstillinger"
         refresh: "Last inn på nytt"
         name: "Navn"
-        section:
-          groups: "Grupper"
-        weight:
-          solution: "Løsning"
         period:
           all_time: "Totalt"
           yearly: "Årlig"

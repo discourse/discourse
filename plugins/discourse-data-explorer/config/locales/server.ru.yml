@@ -34,6 +34,7 @@ ru:
         title: Запланировать публикацию в теме с результатами от проводника данных
         description: Отправка запланированных отчетов через публикацию в определенной теме
   data_explorer:
+    admin_dashboard_label: "Проводник данных"
     report_generator:
       private_message:
         title: "Запланированный отчет по запросу «%{query_name}»"

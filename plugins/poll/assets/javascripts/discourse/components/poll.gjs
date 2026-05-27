@@ -2,14 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import round from "discourse/lib/round";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import {
@@ -320,13 +322,28 @@ export default class PollComponent extends Component {
   }
 
   @action
-  toggleOption(option, rank = 0) {
+  async toggleOption(option, rank = 0) {
     if (this.closed) {
       return;
     }
 
     if (!this.currentUser) {
-      // unlikely, handled by template logic
+      // Archived topics reject votes server-side, so don't queue them.
+      // Closed topics still accept votes from regular users, so let anon
+      // queue and replay after login.
+      if (this.post?.topic?.archived) {
+        return;
+      }
+      if (!this.isMultiple && !this.isRankedChoice) {
+        return deferAnonymousAction(this, "vote_poll", {
+          post_id: this.post.id,
+          poll_name: this.poll.name,
+          options: [option.id],
+        });
+      }
+      // Multi-choice / ranked-choice anonymous votes can't be saved on a
+      // single click since the selection isn't complete until "Cast Votes".
+      getOwner(this).lookup("route:application").send("showLogin");
       return;
     }
 
@@ -751,7 +768,7 @@ export default class PollComponent extends Component {
             disabled={{this.castVotesDisabled}}
             {{on "click" this.castVotes}}
           >
-            {{icon this.castVotesButtonIcon}}
+            {{dIcon this.castVotesButtonIcon}}
             <span class="d-button-label">{{i18n "poll.cast-votes.label"}}</span>
           </button>
         {{/if}}
@@ -762,7 +779,7 @@ export default class PollComponent extends Component {
             title={{i18n "poll.hide-results.title"}}
             {{on "click" this.toggleResults}}
           >
-            {{icon "chevron-left"}}
+            {{dIcon "chevron-left"}}
             <span class="d-button-label">{{i18n
                 "poll.hide-results.label"
               }}</span>
@@ -775,7 +792,7 @@ export default class PollComponent extends Component {
             title={{i18n "poll.show-results.title"}}
             {{on "click" this.toggleResults}}
           >
-            {{icon "chart-bar"}}
+            {{dIcon "chart-bar"}}
             <span class="d-button-label">{{i18n
                 "poll.show-results.label"
               }}</span>
@@ -788,7 +805,7 @@ export default class PollComponent extends Component {
             title={{i18n "poll.remove-vote.title"}}
             {{on "click" this.removeVote}}
           >
-            {{icon "arrow-rotate-left"}}
+            {{dIcon "arrow-rotate-left"}}
             <span class="d-button-label">{{i18n
                 "poll.remove-vote.label"
               }}</span>

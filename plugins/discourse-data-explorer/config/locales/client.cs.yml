@@ -6,6 +6,9 @@
 
 cs:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Žádné výsledky"
     explorer:
       default_query: "Výchozí"
       or: "nebo"
@@ -24,14 +27,9 @@ cs:
           yes: "Ano"
           no: "Ne"
           null_: "Null"
-      export: "Export"
-      view: "Zobrazit"
       save: "Uložit změny"
       undo: "Zahodit změny"
-      edit: "Upravit"
       delete: "Smazat"
-      download_json: "JSON"
-      download_csv: "CSV"
       result_count:
         one: "%{count} výsledek."
         few: "%{count} výsledky."

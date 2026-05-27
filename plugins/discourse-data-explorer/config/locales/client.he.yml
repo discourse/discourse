@@ -14,6 +14,9 @@ he:
       explorer:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
         dirty: "עליך לשמור את השאילתה בטרם ההרצה."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "אין תוצאות"
     explorer:
       default_query: "ברירת מחדל"
       or: "או"
@@ -42,18 +45,11 @@ he:
           yes: "כן"
           no: "לא"
           null_: "ריק"
-      export: "ייצוא"
       view_json: "הצגת JSON"
-      view: "תצוגה"
       save: "שמירת השינויים"
       run: "הרצה"
       undo: "התעלמות מהשינויים"
-      edit: "עריכה"
       delete: "מחיקה"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "טבלה"
-      show_graph: "תרשים"
       others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד עקב ניווט למקום אחר."
       run_time: "השאילתה הושלמה תוך %{value} מילישניות."
       result_count:
@@ -74,7 +70,6 @@ he:
       query_time: "ריצה אחרונה"
       query_user: "נוצר על ידי"
       column: "עמודה %{number}"
-      explain_label: "לכלול תכנית שאילתה?"
       reset_params: "איפוס"
       search_placeholder: "חיפוש…"
       no_search_results: "לא הצלחנו למצוא תוצאות שעונות לטקסט שלך, עמך הסליחה."

@@ -8,8 +8,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { trustHTML } from "@ember/template";
-import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { eq } from "discourse/truth-helpers";
+import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").RichHashtagAutocompleteResult} RichHashtagAutocompleteResult
@@ -64,7 +64,7 @@ export default class RichHashtagAutocompleteResults extends Component {
           {{#each @results as |result index|}}
             <li
               class="hashtag-autocomplete__option"
-              {{scrollIntoView (this.shouldScroll index)}}
+              {{dScrollIntoView (this.shouldScroll index)}}
             >
               <a
                 class="hashtag-autocomplete__link

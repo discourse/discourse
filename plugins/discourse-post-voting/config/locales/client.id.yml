@@ -6,8 +6,6 @@
 
 id:
   js:
-    vote:
-      toggle_voters: "Tunjukkan siapa yang memilih"
     post_voting:
       post:
         post_voting_comment:

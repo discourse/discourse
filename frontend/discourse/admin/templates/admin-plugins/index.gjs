@@ -2,11 +2,11 @@ import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminPluginsList from "discourse/admin/components/admin-plugins-list";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -31,10 +31,10 @@ export default <template>
         />
       </:breadcrumbs>
       <:tabs>
-        <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
+        <DNavItem @route="adminPlugins.index" @label="admin.plugins.title" />
         {{#each @controller.adminRoutes as |route|}}
           {{#if route.use_new_show_route}}
-            <NavItem
+            <DNavItem
               @route={{route.full_location}}
               @label={{route.label}}
               @routeParam={{route.location}}
@@ -42,7 +42,7 @@ export default <template>
               data-plugin-nav-tab-id={{route.plugin_id}}
             />
           {{else}}
-            <NavItem
+            <DNavItem
               @route={{route.full_location}}
               @label={{route.label}}
               @class="admin-plugin-tab-nav-item"

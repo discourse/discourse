@@ -128,8 +128,13 @@ export default class TagChooser extends MultiSelectComponent {
     return this.tagUtils.createContentFromInput(input);
   }
 
+  get _normalizedBlockedTags() {
+    return makeArray(this.blockedTags).filter(Boolean);
+  }
+
   search(query) {
     const selectedTags = makeArray(this.tags).filter(Boolean);
+    const blockedTags = this._normalizedBlockedTags;
 
     const data = {
       q: query,
@@ -137,9 +142,9 @@ export default class TagChooser extends MultiSelectComponent {
       categoryId: this.categoryId,
     };
 
-    if (selectedTags.length || this.blockedTags.length) {
+    if (selectedTags.length || blockedTags.length) {
       const allTags = uniqueItemsFromArray(
-        selectedTags.concat(this.blockedTags)
+        selectedTags.concat(blockedTags)
       ).slice(0, 100);
 
       // Extract IDs for objects, keep strings for legacy/blocked tags
@@ -186,9 +191,9 @@ export default class TagChooser extends MultiSelectComponent {
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (this.blockedTags) {
-      // extract names from blockedTags (may be strings or objects)
-      const blockedNames = this.blockedTags.map((t) =>
+    const blockedTags = this._normalizedBlockedTags;
+    if (blockedTags.length) {
+      const blockedNames = blockedTags.map((t) =>
         typeof t === "string" ? t : t.name
       );
       results = results.filter((result) => {
@@ -196,9 +201,7 @@ export default class TagChooser extends MultiSelectComponent {
       });
     }
 
-    if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.name > b.name);
-    }
+    results = this.tagUtils.sortSearchResults(results);
 
     return uniqueItemsFromArray(results, "name");
   }

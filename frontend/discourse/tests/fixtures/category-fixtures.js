@@ -32,6 +32,7 @@ const categoryFixtures = {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
+      search_priority: 0,
       group_permissions: [
         { permission_type: 1, group_name: "everyone", group_id: 0 },
       ],
@@ -44,9 +45,16 @@ const categoryFixtures = {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
   "/c/11/show.json": {
@@ -124,9 +132,16 @@ const categoryFixtures = {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
   "/c/2481/show.json": {
@@ -146,9 +161,16 @@ const categoryFixtures = {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
 };

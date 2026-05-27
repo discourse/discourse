@@ -384,13 +384,14 @@
 
   .search-result-user .user-result img.avatar,
   .search-item-user {
-    display: flex;
-    align-self: center;
-    gap: var(--space-2);
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
 
     img.avatar {
       width: 20px;
       height: 20px;
+      align-self: center;
     }
   }
 

@@ -4,6 +4,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -183,6 +184,15 @@ export default class AdminUserIndexController extends Controller {
   @computed("ssoLastPayload")
   get ssoPayload() {
     return this.ssoLastPayload.split("&");
+  }
+
+  @action
+  openUserUpcomingChanges() {
+    this.modal.show(AdminUserUpcomingChanges, {
+      model: {
+        user: this.model,
+      },
+    });
   }
 
   @action
@@ -432,13 +442,31 @@ export default class AdminUserIndexController extends Controller {
       .catch(popupAjaxError);
   }
 
+  get deleteUserOptions() {
+    return [
+      {
+        id: "delete_dont_block",
+        label: i18n("admin.user.delete_dont_block"),
+        description: i18n("admin.user.delete_dont_block_description"),
+        icon: "trash-can",
+      },
+      {
+        id: "delete_and_block",
+        label: i18n("admin.user.delete_and_block"),
+        description: i18n("admin.user.delete_and_block_description"),
+        icon: "ban",
+      },
+    ];
+  }
+
   @action
-  destroyUser() {
+  destroyUser(optionId) {
+    const block = optionId === "delete_and_block";
     const postCount = this.get("model.post_count");
     const maxPostCount = this.siteSettings.delete_all_posts_max;
     const location = document.location.pathname;
 
-    const performDestroy = (block) => {
+    const performDestroy = () => {
       this.dialog.notice(i18n("admin.user.deleting_user"));
       let formData = { context: location };
       if (block) {
@@ -467,30 +495,15 @@ export default class AdminUserIndexController extends Controller {
         });
     };
 
-    this.dialog.alert({
+    this.dialog.deleteConfirm({
       title: i18n("admin.user.delete_confirm_title"),
       message: i18n("admin.user.delete_confirm"),
-      class: "delete-user-modal",
-      buttons: [
-        {
-          label: i18n("admin.user.delete_dont_block"),
-          class: "btn-danger delete-dont-block",
-          action: () => {
-            return performDestroy(false);
-          },
-        },
-        {
-          icon: "triangle-exclamation",
-          label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger delete-and-block",
-          action: () => {
-            return performDestroy(true);
-          },
-        },
-        {
-          label: i18n("composer.cancel"),
-        },
-      ],
+      class: `delete-user-modal ${
+        block ? "delete-and-block" : "delete-dont-block"
+      }`,
+      confirmButtonLabel: `admin.user.${optionId}`,
+      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
+      didConfirm: performDestroy,
     });
   }
 

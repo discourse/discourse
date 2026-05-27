@@ -176,4 +176,111 @@ RSpec.describe PostRevisionSerializer do
       expect(json[:locale_changes][:current]).to eq("ja")
     end
   end
+
+  describe "reply_to_post_number edits" do
+    fab!(:topic)
+    fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:other_parent) { Fabricate(:post, topic: topic, post_number: 2) }
+    fab!(:subject_post) do
+      Fabricate(
+        :post,
+        topic: topic,
+        post_number: 3,
+        version: 2,
+        reply_to_post_number: other_parent.post_number,
+      )
+    end
+
+    def serialize(revision)
+      PostRevisionSerializer.new(
+        revision,
+        scope: Guardian.new(Fabricate(:user)),
+        root: false,
+      ).as_json
+    end
+
+    it "exposes the change with user info enrichment when the target still exists" do
+      revision =
+        Fabricate(
+          :post_revision,
+          post: subject_post,
+          modifications: {
+            "reply_to_post_number" => [op.post_number, other_parent.post_number],
+          },
+        )
+
+      json = serialize(revision)
+
+      expect(json[:reply_to_post_number_changes][:previous][:post_number]).to eq(op.post_number)
+      expect(json[:reply_to_post_number_changes][:previous][:username]).to eq(
+        op.user.username_lower,
+      )
+      expect(json[:reply_to_post_number_changes][:current][:post_number]).to eq(
+        other_parent.post_number,
+      )
+      expect(json[:reply_to_post_number_changes][:current][:username]).to eq(
+        other_parent.user.username_lower,
+      )
+    end
+
+    it "returns nil on the side that has no reply target" do
+      revision =
+        Fabricate(
+          :post_revision,
+          post: subject_post,
+          modifications: {
+            "reply_to_post_number" => [nil, other_parent.post_number],
+          },
+        )
+
+      json = serialize(revision)
+
+      expect(json[:reply_to_post_number_changes][:previous]).to be_nil
+      expect(json[:reply_to_post_number_changes][:current][:post_number]).to eq(
+        other_parent.post_number,
+      )
+    end
+
+    it "omits the field when reply_to_post_number didn't change" do
+      revision =
+        Fabricate(:post_revision, post: subject_post, modifications: { "raw" => %w[old new] })
+
+      json = serialize(revision)
+
+      expect(json).not_to have_key(:reply_to_post_number_changes)
+    end
+
+    it "does not leak author info for a target the viewer cannot see" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          post_number: 4,
+          post_type: Post.types[:whisper],
+          user: Fabricate(:user),
+        )
+      subject_post.update!(reply_to_post_number: whisper.post_number)
+
+      revision =
+        Fabricate(
+          :post_revision,
+          post: subject_post,
+          modifications: {
+            "reply_to_post_number" => [other_parent.post_number, whisper.post_number],
+          },
+        )
+
+      json =
+        PostRevisionSerializer.new(
+          revision,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json[:reply_to_post_number_changes][:current][:post_number]).to eq(whisper.post_number)
+      expect(json[:reply_to_post_number_changes][:current]).not_to have_key(:username)
+      expect(json[:reply_to_post_number_changes][:current]).not_to have_key(:avatar_template)
+    end
+  end
 end

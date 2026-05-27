@@ -117,6 +117,13 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
+  @include viewport.until(sm) {
+    #topic-progress-wrapper,
+    .topic-navigation.with-topic-progress {
+      display: none;
+    }
+  }
+
   @include viewport.until(lg) {
     .archetype-private_message .topic-post:last-child {
       margin-bottom: 0;
@@ -296,8 +303,6 @@ body.has-ai-conversations-sidebar {
         resize: none;
         max-height: 30vh;
         min-height: var(--input-min-height);
-        border-radius: 0 var(--d-button-border-radius)
-          var(--d-button-border-radius) 0;
         border: none;
         padding-block: 0.8em;
         padding-inline: 0;

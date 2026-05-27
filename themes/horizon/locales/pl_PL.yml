@@ -29,4 +29,4 @@ pl_PL:
     description: "Prosty, piękny motyw, który od razu po zainstalowaniu poprawia komfort korzystania ze stron Discourse."
     settings:
       topic_card_high_context:
-        description: "Po włączeniu wyświetla dodatkowy kontekst na kartach tematów, w tym tagi, fragmenty, status rozwiązania, przypisanych użytkowników i liczbę głosów (eksperymentalne)"
+        description: "Po włączeniu wyświetla dodatkowy kontekst na kartach tematów, w tym tagi, fragmenty, status rozwiązania, przypisanych użytkowników i liczbę głosów"

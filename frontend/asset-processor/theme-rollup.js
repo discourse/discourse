@@ -6,7 +6,6 @@ import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/ember-template-compiler/index.js";
 import EmberThisFallback from "ember-this-fallback";
-import { memfs } from "memfs";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
@@ -20,6 +19,7 @@ import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
+import createVirtualFs from "./virtual-fs";
 
 let lastRollupResult;
 let lastRollupError;
@@ -37,14 +37,14 @@ async function performRollup(modules, opts) {
     inputConfig[key] = `virtual:entrypoint:${key}`;
   }
 
-  const { vol } = memfs(modules, basePath);
+  const fs = createVirtualFs(modules, basePath);
 
   const cache = opts.pluginName ? caches.get(opts.pluginName) : false;
 
   const result = await rollup({
     input: inputConfig,
     logLevel: "info",
-    fs: vol.promises,
+    fs,
     cache,
     onLog(level, message) {
       if (String(message).startsWith("Circular dependency")) {

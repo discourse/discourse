@@ -111,7 +111,7 @@
 .cooked,
 .d-editor-preview {
   overflow-wrap: break-word;
-  line-height: 1.5;
+  line-height: var(--cooked-line-height);
 
   video {
     max-width: 100%;

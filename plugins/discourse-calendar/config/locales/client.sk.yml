@@ -396,10 +396,10 @@ sk:
       models:
         invitee:
           no_users: "Nenašli sa žiadni používatelia"
+          leave_event: "Opustiť udalosť"
           status:
             unknown: "Nemám záujem"
             going: "Idem"
-            not_going: "Nejdem"
             interested: "Záujem"
             going_count:
               one: "%{count} ide"

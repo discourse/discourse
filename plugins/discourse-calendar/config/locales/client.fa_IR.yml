@@ -380,6 +380,7 @@ fa_IR:
       models:
         invitee:
           no_users: "هیچ کاربری یافت نشد"
+          leave_event: "ترک رویداد"
         event:
           expired: "منقضی شده"
           closed: "بسته شده"

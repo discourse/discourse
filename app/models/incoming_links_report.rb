@@ -20,11 +20,11 @@ class IncomingLinksReport
 
   def as_json(_options = nil)
     {
-      type: self.type,
-      title: I18n.t("reports.#{self.type}.title"),
-      xaxis: I18n.t("reports.#{self.type}.xaxis"),
-      ytitles: self.y_titles,
-      data: self.data,
+      type: type,
+      title: I18n.t("reports.#{type}.title"),
+      xaxis: I18n.t("reports.#{type}.xaxis"),
+      ytitles: y_titles,
+      data: data,
       start_date: start_date,
       end_date: end_date,
     }

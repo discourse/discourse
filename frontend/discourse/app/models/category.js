@@ -494,6 +494,7 @@ export default class Category extends RestModel {
   init() {
     super.init(...arguments);
     this.setupGroupsAndPermissions();
+    this.setupCategoryTypes();
   }
 
   setupCategoryTypes() {
@@ -848,6 +849,7 @@ export default class Category extends RestModel {
         }),
         ...this._categoryTypeSaveProperties(id),
         ...this._pluginSaveProperties(),
+        category_types: this.category_types,
       }),
       type: id ? "PUT" : "POST",
     });
@@ -856,6 +858,7 @@ export default class Category extends RestModel {
   _categoryTypeSaveProperties(id) {
     const props = {
       category_type_site_settings: this.category_type_site_settings,
+      category_type_settings: this.category_type_settings,
     };
 
     if (!id && this.categoryTypes) {

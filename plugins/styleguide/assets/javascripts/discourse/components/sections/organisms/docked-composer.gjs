@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DockedComposer from "discourse/components/docked-composer";
 import withEventValue from "discourse/helpers/with-event-value";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -37,7 +37,7 @@ export default class DockedComposerSection extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-potential-path-strings}}
+    {{! eslint-disable ember/template-no-potential-path-strings }}
     <StyleguideExample @title="<DockedComposer>">
       <StyleguideComponent>
         <div class="docked-composer-styleguide">

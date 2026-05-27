@@ -45,6 +45,8 @@ bs_BA:
           one: "(još %{count})"
           few: "(još %{count})"
           other: "(još %{count})"
+        nav:
+          enabled: "Omogućen"
         filters:
           all: "Sve"
           reset: "Resetovati"

@@ -7,8 +7,6 @@
 nb_NO:
   js:
     discourse_reactions:
-      users_popup:
-        all: "Alle"
       main_reaction:
         add: "Liker dette innlegget"
     notifications:

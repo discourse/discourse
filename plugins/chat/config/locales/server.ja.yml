@@ -213,6 +213,9 @@ ja:
         other_type: "%{username} が %{identifier} をパーソナルチャットでメンションしました"
       new_chat_message: '%{username} が "%{channel}" でメッセージを送信しました'
       new_direct_chat_message: "%{username} がパーソナルチャットでメッセージを送信しました"
+    actions:
+      chat_reply:
+        title: 返信
   discourse_automation:
     scriptables:
       send_chat_message:

@@ -17,9 +17,6 @@ el:
     topic_voting_show_votes_on_profile: 'Να επιτρέπεται στους χρήστες να βλέπουν τις ψήφους τους στην ροή δραστηριότητάς τους;'
     topic_voting_alert_votes_left: 'Να ειδοποιείται ο χρήστης όταν απομένουν τόσες ψήφοι'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Προβολή ψηφοφόρων."
     votes_moved:
       one: "Μια ψήφος έχει μετακινηθεί."
       other: "%{count} ψήφοι έχουν μετακινηθεί."

@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -15,9 +14,8 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
@@ -25,6 +23,9 @@ import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import nestedPostUrl from "../../lib/nested-post-url";
 import NestedPostChildren from "./post-children";
@@ -41,6 +42,8 @@ export default class NestedPost extends Component {
   @tracked lineHighlighted = false;
   @tracked collapsed;
   @tracked showDeletedContent = false;
+  @tracked showIgnoredContent = false;
+  @tracked loadingIgnoredContent = false;
 
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
@@ -49,6 +52,11 @@ export default class NestedPost extends Component {
     }
     const rect = element.getBoundingClientRect();
     window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+
+    // Defer the event to avoid backtracking re-render errors during the render phase
+    Promise.resolve().then(() => {
+      this.appEvents.trigger("nested-replies:scroll-restored");
+    });
   });
 
   @tracked _childWasCreated = false;
@@ -61,9 +69,22 @@ export default class NestedPost extends Component {
       this.expanded = cached.expanded;
       this.collapsed = cached.collapsed;
     } else {
-      this.expanded =
+      const wouldExpand =
         (this.args.children?.length ?? 0) > 0 ||
-        this.args.post.deleted_post_placeholder === true;
+        this.args.post.deleted_post_placeholder === true ||
+        this.args.post.ignored_post_placeholder === true;
+
+      // collapseFromDepth is the URL-driven cutoff (set by the parent view —
+      // 0 for root view, 1 for context view). At/below it, the post renders
+      // but its children start hidden behind an "Expand X replies" button.
+      if (
+        this.args.collapseFromDepth != null &&
+        this.args.depth >= this.args.collapseFromDepth
+      ) {
+        this.expanded = false;
+      } else {
+        this.expanded = wouldExpand;
+      }
       this.collapsed = false;
     }
 
@@ -156,6 +177,14 @@ export default class NestedPost extends Component {
     return this.args.post.deleted_post_placeholder === true;
   }
 
+  get isIgnoredPlaceholder() {
+    return this.args.post.ignored_post_placeholder === true;
+  }
+
+  get renderIgnoredPlaceholder() {
+    return this.isIgnoredPlaceholder && !this.showIgnoredContent;
+  }
+
   get showContinueThread() {
     return (
       this.atMaxDepth &&
@@ -169,7 +198,26 @@ export default class NestedPost extends Component {
   }
 
   get showExpandRepliesButton() {
-    return this.hasReplies && !this.expanded && !this.atMaxDepth;
+    return this.hasReplies && !this.effectiveExpanded && !this.atMaxDepth;
+  }
+
+  get childPath() {
+    return [
+      ...(this.args.path || []),
+      { post: this.args.post, children: this.args.children || [] },
+    ];
+  }
+
+  get mobileFocusEnabled() {
+    return this.site.mobileView && this.args.focusPost;
+  }
+
+  get effectiveExpanded() {
+    return this.args.forceExpanded || this.expanded;
+  }
+
+  get effectiveCollapsed() {
+    return !this.args.forceExpanded && this.collapsed;
   }
 
   get isOP() {
@@ -205,8 +253,37 @@ export default class NestedPost extends Component {
   }
 
   @action
+  handleReplies() {
+    if (this.mobileFocusEnabled) {
+      this.args.focusPost(this.childPath);
+      return;
+    }
+
+    this.toggleExpanded();
+  }
+
+  @action
   toggleDeletedContent() {
     this.showDeletedContent = !this.showDeletedContent;
+  }
+
+  @action
+  async revealIgnoredContent() {
+    if (this.showIgnoredContent || this.loadingIgnoredContent) {
+      return;
+    }
+
+    const post = this.args.post;
+    try {
+      this.loadingIgnoredContent = true;
+      const result = await ajax(`/posts/${post.id}/cooked.json`);
+      post.set("cooked", result.cooked);
+      this.showIgnoredContent = true;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingIgnoredContent = false;
+    }
   }
 
   @action
@@ -287,11 +364,11 @@ export default class NestedPost extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "nested-post"
         this.depthClass
         (if @parentLineHighlighted "--parent-line-highlighted")
-        (if this.collapsed "nested-post--collapsed")
+        (if this.effectiveCollapsed "nested-post--collapsed")
         (if @isPinned "nested-post--pinned")
         (if @post.isWhisper "nested-post--whisper")
         (if (or @post.deleted @post.user_deleted) "nested-post--deleted")
@@ -317,17 +394,32 @@ export default class NestedPost extends Component {
         <div class="nested-post__gutter">
           {{#unless this.isMobile}}
             {{#if this.isDeletedPlaceholder}}
-              <div class="nested-post__deleted-avatar-placeholder">
-                {{icon "trash-can"}}
+              <div class="nested-post__placeholder-avatar">
+                {{dIcon "trash-can"}}
               </div>
+            {{else if this.renderIgnoredPlaceholder}}
+              <button
+                type="button"
+                class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
+                data-post-number={{@post.post_number}}
+                aria-label={{i18n "nested_replies.toggle_ignored_content"}}
+                disabled={{this.loadingIgnoredContent}}
+                {{on "click" this.revealIgnoredContent}}
+              >
+                {{#if this.loadingIgnoredContent}}
+                  {{dIcon "spinner" class="fa-spin"}}
+                {{else}}
+                  {{dIcon "far-eye-slash"}}
+                {{/if}}
+              </button>
             {{else}}
               <PostAvatar @post={{@post}} @size="small" />
             {{/if}}
           {{/unless}}
-          {{#if (and this.showDepthLine (not this.collapsed))}}
+          {{#if (and this.showDepthLine (not this.effectiveCollapsed))}}
             <button
               type="button"
-              class={{concatClass
+              class={{dConcatClass
                 "nested-post__depth-line"
                 (if this.lineHighlighted "nested-post__depth-line--highlighted")
                 (unless this.expanded "nested-post__depth-line--collapsed")
@@ -343,24 +435,28 @@ export default class NestedPost extends Component {
             >
               {{#if this.expanded}}
                 <span class="nested-post__depth-line-icon">
-                  {{icon "nested-circle-minus"}}
+                  {{dIcon "discourse-circle-minus"}}
                 </span>
               {{/if}}
             </button>
           {{/if}}
         </div>
         <div class="nested-post__main">
-          {{#if this.collapsed}}
+          {{#if this.effectiveCollapsed}}
             <button
               type="button"
               class="nested-post__collapsed-bar"
               data-post-number={{@post.post_number}}
               {{on "click" this.toggleExpanded}}
             >
-              {{icon "nested-circle-plus"}}
+              {{dIcon "discourse-circle-plus"}}
               {{#if this.isDeletedPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n
                     "nested_replies.deleted_post_placeholder"
+                  }}</span>
+              {{else if this.renderIgnoredPlaceholder}}
+                <span class="nested-post__collapsed-username">{{i18n
+                    "nested_replies.ignored_post_placeholder"
                   }}</span>
               {{else}}
                 <span
@@ -377,11 +473,11 @@ export default class NestedPost extends Component {
             </button>
           {{else if this.isDeletedPlaceholder}}
             <div
-              class="nested-post__deleted-placeholder"
+              class="nested-post__placeholder nested-post__placeholder--deleted"
               data-post-number={{@post.post_number}}
             >
-              <div class="nested-post__deleted-actions">
-                <span class="nested-post__deleted-label">{{i18n
+              <div class="nested-post__placeholder-actions">
+                <span class="nested-post__placeholder-label">{{i18n
                     "nested_replies.deleted_post_placeholder"
                   }}</span>
                 {{#if this.currentUser.staff}}
@@ -406,8 +502,8 @@ export default class NestedPost extends Component {
                 {{/if}}
               </div>
               {{#if this.showDeletedContent}}
-                <div class="nested-post__deleted-content">
-                  <div class="nested-post__deleted-content-header">
+                <div class="nested-post__placeholder-reveal">
+                  <div class="nested-post__placeholder-reveal-header">
                     <PostAvatar @post={{@post}} @size="small" />
                     <PostMetaData @post={{@post}} />
                   </div>
@@ -415,8 +511,22 @@ export default class NestedPost extends Component {
                 </div>
               {{/if}}
             </div>
+          {{else if this.renderIgnoredPlaceholder}}
+            <div
+              class="nested-post__placeholder nested-post__placeholder--ignored"
+              data-post-number={{@post.post_number}}
+            >
+              <div class="nested-post__placeholder-actions">
+                <span class="nested-post__placeholder-label">{{i18n
+                    "nested_replies.ignored_post_placeholder"
+                  }}</span>
+              </div>
+            </div>
           {{else}}
-            {{#let (lazyHash post=@post) as |postOutletArgs|}}
+            {{#let
+              (lazyHash post=@post nestedReplyView=true)
+              as |postOutletArgs|
+            }}
               <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
                 <article
                   class="nested-post__article boxed"
@@ -472,19 +582,37 @@ export default class NestedPost extends Component {
                         @replyToPost={{fn @replyToPost @post @depth}}
                         @share={{this.share}}
                         @showFlags={{fn @showFlags @post}}
+                        @changeNotice={{fn @changeNotice @post}}
+                        @changePostOwner={{fn @changePostOwner @post}}
+                        @grantBadge={{fn @grantBadge @post}}
+                        @lockPost={{fn @lockPost @post}}
+                        @unlockPost={{fn @unlockPost @post}}
+                        @permanentlyDeletePost={{fn
+                          @permanentlyDeletePost
+                          @post
+                        }}
+                        @rebakePost={{fn @rebakePost @post}}
+                        @showPagePublish={{@showPagePublish}}
+                        @togglePostType={{fn @togglePostType @post}}
+                        @toggleWiki={{fn @toggleWiki @post}}
+                        @unhidePost={{fn @unhidePost @post}}
                         @toggleLike={{this.toggleLike}}
                         @toggleReplies={{unless
                           this.atMaxDepth
-                          this.toggleExpanded
+                          this.handleReplies
                         }}
-                        @repliesShown={{if this.atMaxDepth true this.expanded}}
+                        @repliesShown={{if
+                          this.atMaxDepth
+                          true
+                          this.effectiveExpanded
+                        }}
                         @showLogin={{this.showLogin}}
                       />
                     </section>
                     {{#if this.showExpandRepliesButton}}
                       <NestedRepliesExpandButton
                         @replyCount={{this.replyCount}}
-                        @onClick={{this.toggleExpanded}}
+                        @onClick={{this.handleReplies}}
                       />
                     {{/if}}
                     <PluginOutlet
@@ -509,7 +637,13 @@ export default class NestedPost extends Component {
             {{/let}}
           {{/if}}
 
-          {{#if (and this.expanded (not this.collapsed) (not this.atMaxDepth))}}
+          {{#if
+            (and
+              this.effectiveExpanded
+              (not this.effectiveCollapsed)
+              (not this.atMaxDepth)
+            )
+          }}
             <NestedPostChildren
               @topic={{@topic}}
               @parentPostNumber={{@post.post_number}}
@@ -517,6 +651,7 @@ export default class NestedPost extends Component {
               @directReplyCount={{@post.direct_reply_count}}
               @totalDescendantCount={{@post.total_descendant_count}}
               @depth={{@depth}}
+              @path={{this.childPath}}
               @sort={{@sort}}
               @replyToPost={{@replyToPost}}
               @editPost={{@editPost}}
@@ -524,6 +659,17 @@ export default class NestedPost extends Component {
               @recoverPost={{@recoverPost}}
               @showFlags={{@showFlags}}
               @showHistory={{@showHistory}}
+              @changeNotice={{@changeNotice}}
+              @changePostOwner={{@changePostOwner}}
+              @grantBadge={{@grantBadge}}
+              @lockPost={{@lockPost}}
+              @unlockPost={{@unlockPost}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @rebakePost={{@rebakePost}}
+              @showPagePublish={{@showPagePublish}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @unhidePost={{@unhidePost}}
               @collapseParent={{this.toggleExpanded}}
               @highlightParentLine={{this.highlightLine}}
               @unhighlightParentLine={{this.unhighlightLine}}
@@ -532,6 +678,8 @@ export default class NestedPost extends Component {
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}
               @registerPost={{@registerPost}}
+              @collapseFromDepth={{@collapseFromDepth}}
+              @focusPost={{@focusPost}}
             />
           {{/if}}
         </div>

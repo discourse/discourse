@@ -15,6 +15,7 @@ import Session from "discourse/models/session";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
+const NESTED_URL_REGEXP = /^\/n\/([^\/]+)\/(\d+)(?:\/(\d+))?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
@@ -286,6 +287,14 @@ class DiscourseURL extends EmberObject {
     }
 
     if (this.navigatedToPost(oldPath, path, opts)) {
+      return;
+    }
+
+    if (oldPath === path && NESTED_URL_REGEXP.test(path)) {
+      // The nested context view caches its scroll target in the
+      // component's lifecycle, so a plain refresh() wouldn't re-trigger
+      // it. Fire an event the view listens for instead.
+      this.appEvents.trigger("nested:scroll-to-target");
       return;
     }
 
@@ -563,29 +572,23 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (category.default_list_filter === "none" && subcategories) {
-      if (subcategories) {
-        url += "/all";
-      } else {
-        url += "/none";
-      }
-    } else if (!subcategories) {
+    if (!subcategories) {
       url += "/none";
+    } else if (category.default_list_filter === "none") {
+      url += "/all";
     }
   }
 
   if (tag) {
-    // tag can be string "none" (special filter) or object with {id, name, slug}
-    if (typeof tag === "string") {
-      // special case: "none" filter
-      url = url ? "/tags" + url + "/" + tag : "/tag/" + tag;
-    } else {
-      if (url) {
-        url = "/tags" + url + "/" + tag.slug + "/" + tag.id;
-      } else {
-        url = "/tag/" + tag.slug + "/" + tag.id;
-      }
-    }
+    // tag can be string "none" (special filter) or object with {id, name, slug}.
+    // A Tag model with a null id also represents the "no tags" filter — handle
+    // it the same as the string form so we don't produce ".../none/null" URLs.
+    const isString = typeof tag === "string";
+    const slug = isString ? tag : tag.slug;
+    const id = isString ? null : tag.id;
+
+    const prefix = url ? `/tags${url}` : "/tag";
+    url = id ? `${prefix}/${slug}/${id}` : `${prefix}/${slug}`;
   }
 
   return getURL(url || "/");

@@ -56,7 +56,11 @@
 .fc-header-toolbar {
   .fc-button,
   .fc-toolbar-title {
-    font-size: var(--font-down-1) !important;
+    font-size: var(--font-0);
+
+    @include viewport.from(md) {
+      font-size: var(--font-down-1);
+    }
   }
 }
 
@@ -89,15 +93,12 @@
 @include viewport.until(md) {
   .fc-header-toolbar {
     display: flex;
-    flex-direction: column;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .fc-toolbar-chunk {
-    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 
   .post-calendar {

@@ -347,7 +347,6 @@ da:
           status:
             unknown: "Ikke interesseret"
             going: "Deltager"
-            not_going: "Deltager Ikke"
             interested: "Interesseret"
         event:
           expired: "Udløbet"

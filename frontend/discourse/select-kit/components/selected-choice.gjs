@@ -5,8 +5,8 @@ import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -62,7 +62,7 @@ export default class SelectedChoice extends Component {
         id="{{this.id}}-choice"
         class="btn btn-default selected-choice {{this.extraClass}}"
       >
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
         {{#if (has-block)}}
           {{yield}}
         {{else}}

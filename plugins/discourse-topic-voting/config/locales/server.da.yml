@@ -16,9 +16,6 @@ da:
     topic_voting_show_votes_on_profile: 'Tillad brugere at se deres stemmer i deres aktivitetsfeed?'
     topic_voting_alert_votes_left: 'Advar bruger når så mange stemmer er tilbage'
   topic_voting:
-    category_type:
-      show_who_voted:
-        label: "Vis hvem der stemte"
     votes_moved:
       one: "En stemme er blevet flyttet."
       other: "%{count} stemmer er blevet flyttet."

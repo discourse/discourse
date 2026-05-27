@@ -39,8 +39,7 @@ module DiscourseAi
           translation_enabled: SiteSetting.ai_translation_enabled,
           hourly_rate: SiteSetting.ai_translation_backfill_hourly_rate,
           backfill_max_age_days: SiteSetting.ai_translation_backfill_max_age_days,
-          target_category_ids:
-            SiteSetting.ai_translation_target_categories.to_s.split("|").map(&:to_i),
+          excluded_category_ids: DiscourseAi::Translation.excluded_category_ids,
         }
       end
     end

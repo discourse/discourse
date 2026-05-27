@@ -9,6 +9,10 @@ const QueryResultsWrapper = <template>
           @content={{@results}}
           @cachedAt={{@cachedAt}}
           @showDownloads={{@showDownloads}}
+          @includeQueryExport={{@includeQueryExport}}
+          @view={{@view}}
+          @onSetView={{@onSetView}}
+          @hideHeaderActions={{@hideHeaderActions}}
         />
       {{else}}
         {{#each @results.errors as |err|}}

@@ -19,12 +19,13 @@ module Jobs
 
       @quote_rewriter = QuoteRewriter.new(@user_id)
 
+      escaped_old_username = Regexp.escape(@old_username)
       @raw_mention_regex =
         /
         (?:
           (?<![\p{Alnum}\p{M}`])     # make sure there is no preceding letter, number or backtick
         )
-        @#{@old_username}
+        @#{escaped_old_username}
         (?:
           (?![\p{Alnum}\p{M}_\-.`])  # make sure there is no trailing letter, number, underscore, dash, dot or backtick
           |                          # or
@@ -33,9 +34,10 @@ module Jobs
       /ix
 
       cooked_username = PrettyText::Helpers.format_username(@old_username)
-      @cooked_mention_username_regex = /\A@#{cooked_username}\z/i
-      @cooked_mention_user_path_regex =
-        %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
+      escaped_cooked_username = Regexp.escape(cooked_username)
+      escaped_encoded_cooked_username = Regexp.escape(UrlHelper.encode_component(cooked_username))
+      @cooked_mention_username_regex = /\A@#{escaped_cooked_username}\z/i
+      @cooked_mention_user_path_regex = %r{\A/u(?:sers)?/#{escaped_encoded_cooked_username}\z}i
 
       update_posts
       update_revisions
@@ -64,16 +66,31 @@ module Jobs
         .with_deleted
         .where("raw ILIKE ?", "%@#{@old_username}%")
         .where("posts.user_id = :user_id", user_id: @user_id)
+        .where.not(id: updated_post_ids)
         .find_each do |post|
           update_post(post)
           updated_post_ids << post.id
         end
 
+      # Posts quoting this user
       Post
         .with_deleted
         .joins(quoted("posts.id"))
         .where("p.user_id = :user_id", user_id: @user_id)
-        .find_each { |post| update_post(post) if updated_post_ids.exclude?(post.id) }
+        .where.not(id: updated_post_ids)
+        .find_each do |post|
+          update_post(post)
+          updated_post_ids << post.id
+        end
+
+      # Category description posts may be authored by the system user and have no user_actions
+      Post
+        .with_deleted
+        .joins("INNER JOIN categories ON categories.topic_id = posts.topic_id")
+        .where(post_number: 1)
+        .where("raw ILIKE ?", "%@#{@old_username}%")
+        .where.not(id: updated_post_ids)
+        .find_each { |post| update_post(post) }
     end
 
     def update_revisions
@@ -136,6 +153,7 @@ module Jobs
       post.cooked = update_cooked(post.cooked)
 
       post.update_columns(raw: post.raw, cooked: post.cooked)
+      post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
     rescue => e

@@ -170,7 +170,6 @@ zh_TW:
   word_connector:
     comma: "，"
   invite:
-    existing_user_cannot_redeem: "此邀請無法兌換。請找當初邀請您的人來重發一個新的邀請。"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
     disabled_errors:
       invalid_access: "你不允許查看所請求的資源。"
@@ -309,6 +308,7 @@ zh_TW:
       admins: "管理員"
       moderators: "板主"
       staff: "工作人員"
+      anonymous: "匿名"
       trust_level_0: "信任等級 0"
       trust_level_1: "信任等級 1"
       trust_level_2: "信任等級 2"
@@ -743,6 +743,30 @@ zh_TW:
       xaxis: "天"
       yaxis: "新的參與者數量"
       description: "這段期間第一次發文的使用者數量。"
+    activity_by_category:
+      labels:
+        category: "分類"
+        topics: "話題"
+        posts: "新發表的貼文"
+        share: "分享"
+    posters_by_member_type:
+      labels:
+        count: "新發表的貼文"
+        share: "分享"
+      types:
+        staff: "管理員"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "信任等級"
+        count: "成員"
+        share: "分享"
+      levels:
+        "0": "新使用者"
+        "1": "初級使用者"
+        "2": "成員"
+        "3": "活躍使用者"
+        "4": "資深"
     trust_level_growth:
       xaxis:
         tl1_reached: "達到信任等級 1"
@@ -771,6 +795,9 @@ zh_TW:
     consolidated_page_views_browser_detection:
       yaxis: "天"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "匿名"
+        page_view_crawler: "爬蟲"
       yaxis: "天"
     dau_by_mau:
       xaxis: "天"
@@ -880,6 +907,12 @@ zh_TW:
         num_clicks: "點擊數"
         num_topics: "話題"
       description: "透過共用連結的點擊次數列出的使用者"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "造訪"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "造訪"
     top_traffic_sources:
       title: "最高流量來源"
       xaxis: "網域"
@@ -932,6 +965,8 @@ zh_TW:
     page_view_anon_browser_reqs:
       xaxis: "天"
     page_view_logged_in_browser_reqs:
+      xaxis: "天"
+    page_view_embed_reqs:
       xaxis: "天"
     http_background_reqs:
       title: "後台"
@@ -989,7 +1024,7 @@ zh_TW:
         os: 運行系統
         login_time: 登入時間
       description: "與先前登入不同的新登入的詳細資訊"
-    staff_logins:
+    admin_logins:
       title: "管理員登入次數"
       labels:
         user: 使用者
@@ -1048,6 +1083,9 @@ zh_TW:
       poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
       force_https: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
       google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
+    reports_section:
+      providers:
+        core_report: "標準"
   site_settings:
     disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
@@ -1096,7 +1134,6 @@ zh_TW:
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
-    email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
     summary_percent_filter: "當使用者點擊 \"此話題的摘要\"，顯示前面多少 % 的貼文"
@@ -1125,7 +1162,6 @@ zh_TW:
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
-    use_admin_ip_allowlist: "當目前的IP剛好處于IP段禁止名單(Admin > Logs > Screened Ips)中的時候，只有管理員才可登入。"
     blocked_ip_blocks: "Discourse 將不會使用爬蟲爬私人IP黑名單清單。"
     allowed_internal_hosts: "Discourse 可以安全抓取以用於 Onebox 與其他用途的內部主機列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"
@@ -1362,7 +1398,6 @@ zh_TW:
     clean_up_inactive_users_after_days: "刪除尚未認證電子郵件的使用者（沒有發表任何討論主題、信任級別為0）之前的天數。要禁用自動刪除，請設定為0。"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
     get_a_room_threshold: "在收到警告之前，使用者必須向同一主題中的同一個人發佈的討論話題數。"
-    enable_mobile_theme: "為移動設備啟用移動友好的主題，但也能切換回完整站點。如果你想要使用自定義的響應式主題請禁用它。"
     dominating_topic_minimum_percent: "使用者在主題中的貼文占到多少百分比時使得使用者主導話題。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     header_dropdown_category_count: "在下拉式功能表中可以顯示多少類別"
@@ -1824,7 +1859,6 @@ zh_TW:
         您的回覆是在黑名單內的電子郵件地址發送的。請重新嘗試用其他Email 地址或 [聯絡管理成員](%{base_url}/about)。
     email_reject_not_allowed_email:
       title: "電子郵件拒絕 不被允許的郵件地址"
-      subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 被封禁的郵件地址"
       text_body_template: |
         我們非常抱歉，但是您發送至 %{destination} （郵件標題為：%{former_title}） 的郵件出問題了。
 
@@ -2062,7 +2096,6 @@ zh_TW:
       text_body_template: "`download_remote_images_to_local` 設定已被禁用，因為已經達到 ``download_remote_images_threshold` 設定中的磁碟空間限制。"
     new_user_of_the_month:
       title: "你是本月最佳新人！"
-      subject_template: "你是本月最佳新人！"
       text_body_template: |
         恭喜，你贏得了**%{month_year} 最佳新人獎**！ :trophy:
 
@@ -2298,6 +2331,7 @@ zh_TW:
     account_exists:
       title: "帳號已存在"
       subject_template: "[%{email_prefix}] 帳號已存在"
+      subject_template_improved: "帳號已存在"
       text_body_template: |
         您剛剛嘗試在%{site_name}建立帳號，或者嘗試將帳戶的電子郵件更改為%{email}。但是，%{email}已存在一個帳戶。
 
@@ -2317,6 +2351,7 @@ zh_TW:
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
       subject_template: "[%{email_prefix}] 摘要"
+      subject_template_improved: "摘要"
       unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上論壇近期摘要郵件。如需取消訂閱，請至 %{email_preferences_link} 或點擊 %{unsubscribe_link}。"
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
@@ -2335,6 +2370,7 @@ zh_TW:
       title: "透過連結登入"
       preview: "透過連結登入."
       subject_template: "[%{email_prefix}] 透過連結登入"
+      subject_template_improved: "透過連結登入"
       text_body_template: |
         有人嘗試登入你在[%{site_name}](%{base_url})的帳號。
 
@@ -2344,7 +2380,6 @@ zh_TW:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "設定密碼"
-      subject_template: "[%{email_prefix}] 設定密碼"
       text_body_template: |
         有人要求為你在 [%{site_name}](%{base_url}) 的帳號新增密碼。你也可以直接透過任何與此郵件信箱關聯的線上服務登入（例如 Google、Facebook 等）。
 
@@ -2355,9 +2390,9 @@ zh_TW:
     admin_login:
       title: "管理員登入"
       subject_template: "[%{email_prefix}] 登入"
+      subject_template_improved: "登入"
     account_created:
       title: "建立使用者"
-      subject_template: "[%{email_prefix}] 你的新帳號"
       text_body_template: |
         你在 %{site_name} 的新帳號已準備好。
 
@@ -2409,7 +2444,6 @@ zh_TW:
         如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器的網址列中開啟。
     suspicious_login:
       title: "新登入提醒"
-      subject_template: "[%{site_name}] 新登入來自%{location}"
       text_body_template: |
         您好，
 

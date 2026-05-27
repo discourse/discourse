@@ -45,20 +45,22 @@ module DiscourseAi
         topics =
           topics.where("topics.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
-        target_category_ids = SiteSetting.ai_translation_target_categories
+        excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
         pm_scope = SiteSetting.ai_translation_personal_messages
 
-        # Category filter: include target categories + PMs (PMs filtered in next step)
-        if target_category_ids.present?
-          category_ids = target_category_ids.split("|").map(&:to_i)
+        if excluded_category_ids.present?
           topics =
             topics.where(
-              "topics.category_id IN (:cats) OR topics.archetype = :pm",
-              cats: category_ids,
+              "topics.category_id NOT IN (:cats) OR topics.archetype = :pm",
+              cats: excluded_category_ids,
               pm: Archetype.private_message,
             )
         else
-          topics = topics.where(archetype: Archetype.private_message)
+          topics =
+            topics.where(
+              "topics.category_id IS NOT NULL OR topics.archetype = :pm",
+              pm: Archetype.private_message,
+            )
         end
 
         # PM scope filter

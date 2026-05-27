@@ -241,6 +241,7 @@ bg:
       admins: "админи"
       moderators: "модератори"
       staff: "персонал"
+      anonymous: "анонимен"
       trust_level_0: "trust_level_0 "
       trust_level_1: "trust_level_1 "
       trust_level_2: "trust_level_2 "
@@ -525,6 +526,28 @@ bg:
       xaxis: "Ден"
     new_contributors:
       xaxis: "Ден"
+    activity_by_category:
+      labels:
+        category: "Категория"
+        topics: "Теми"
+        posts: "Публикации"
+        share: "Споделяне"
+    posters_by_member_type:
+      labels:
+        count: "Публикации"
+        share: "Споделяне"
+      types:
+        staff: "Персонал"
+    trust_level_pipeline:
+      labels:
+        count: "Членове"
+        share: "Споделяне"
+      levels:
+        "0": "Нов"
+        "1": "Основно "
+        "2": "Член"
+        "3": "Редовен"
+        "4": "лидер "
     trust_level_growth:
       yaxis: "Ден"
     consolidated_page_views:
@@ -540,6 +563,8 @@ bg:
     consolidated_page_views_browser_detection:
       yaxis: "Ден"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Анонимен"
       yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
@@ -622,6 +647,12 @@ bg:
         user: "Потребител"
         num_clicks: "Кликвания"
         num_topics: "Теми"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещения "
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Посещения "
     top_traffic_sources:
       title: "Топ източници на трафик "
       xaxis: "Домейн"
@@ -656,6 +687,8 @@ bg:
     page_view_anon_browser_reqs:
       xaxis: "Ден"
     page_view_logged_in_browser_reqs:
+      xaxis: "Ден"
+    page_view_embed_reqs:
       xaxis: "Ден"
     http_background_reqs:
       title: "Фон"
@@ -698,7 +731,7 @@ bg:
       labels:
         user: Потребител
         location: Локация
-    staff_logins:
+    admin_logins:
       labels:
         user: Потребител
         location: Локация
@@ -893,7 +926,6 @@ bg:
     anonymous_account_duration_minutes: "За да се защити анонимността създавай нови анонимни акаунти на всеки N минути за всеки потребител. Например: Ако е настроено на 600, означава, че 600 минути след последния пост на потребителя, след като той излезе, ще бъде създаден анонимен акаунт."
     allow_profile_backgrounds: "Позволи на потребителите да качват фонове на профилите си."
     dont_feed_the_trolls_threshold: "Брой сигнали от други потребители, преди да бъдат предупредени."
-    enable_mobile_theme: "Мобилните устройства използват адаптирана тема с възможност за преминаване към нормален изглед. Забранете тази настройка, ако искате да използвате свой собствен стил за мобилните устройства."
     dominating_topic_minimum_percent: "Какъв процент публикации може да направи един потребител преди да бъде предупреден за доминиране в тема."
     suppress_uncategorized_badge: "Не показвай значката в списъците с теми за тези, които не са категоризирани. "
     disable_system_edit_notifications: "Забрани редактирането на уведомления от системните потребители когато 'download_remote_images_to_local' е активно."
@@ -1141,11 +1173,14 @@ bg:
       liked_received: "Получени харесвания"
       new_users: "Нови потребители"
       join_the_discussion: "Прочетете повече"
+      subject_template_improved: "Сумарно"
       click_here: "кликнете тук"
     forgot_password:
       title: "Забравена парола"
     set_password:
       title: "Задайте парола"
+    admin_login:
+      subject_template_improved: "Логване"
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:

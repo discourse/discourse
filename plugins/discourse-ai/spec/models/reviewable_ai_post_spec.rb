@@ -234,6 +234,15 @@ describe ReviewableAiPost do
         expect(result.transition_to).to eq :approved
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
+
+      it "links the staff action log to the reviewable" do
+        expect { reviewable.perform(admin, :delete_user) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
+      end
     end
 
     it "ignores the reviewable" do

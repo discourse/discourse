@@ -91,7 +91,7 @@ describe "Tags" do
 
       # /latest
       expect(discovery.topic_list).to have_topic_tag(topic_with_one_tag, "tag-one")
-      expect(discovery.topic_list).to have_topic_tags(topic_with_two_tags, "tag-one", "tag-two")
+      expect(discovery.topic_list).to have_topic_tags(topic_with_two_tags, tags: [tag_one, tag_two])
       expect(discovery.topic_list).to have_no_topic_tags(topic_with_no_tags)
       expect(discovery.tag_drop).to have_selected_name("tags") # unselected
 
@@ -405,6 +405,50 @@ describe "Tags" do
       expect(composer_tag_chooser).to have_option_name("cap-approved")
       expect(composer_tag_chooser).to have_option_name("cap-closed")
       expect(composer_tag_chooser).to have_option_name("cap-open")
+    end
+  end
+
+  describe "tag names with periods" do
+    let(:discovery) { PageObjects::Pages::Discovery.new }
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+
+    fab!(:node_tag) { Fabricate(:tag, name: "node.js") }
+    fab!(:node_topic) do
+      Fabricate(:topic, title: "Tagged with node.js example", tags: [node_tag]).tap do |t|
+        Fabricate(:post, topic: t)
+      end
+    end
+
+    before { SearchIndexer.enable }
+    after { SearchIndexer.disable }
+
+    it "renders the period verbatim through list, topic, tag page, and search" do
+      SearchIndexer.update_tags_index(node_tag.id, node_tag.name)
+
+      sign_in(user_tl1)
+
+      visit "/latest"
+      expect(discovery.topic_list).to have_topic_tag(node_topic, "node.js")
+
+      discovery.topic_list.click_topic_title(node_topic)
+      expect(topic_page).to have_topic_title("Tagged with node.js example")
+      expect(topic_page.topic_tags).to include("node.js")
+
+      find(".title-wrapper .discourse-tag", text: "node.js").click
+
+      expect(page).to have_current_path("/tag/#{node_tag.slug}/#{node_tag.id}")
+      expect(discovery.topic_list).to have_topic(node_topic)
+
+      visit "/search?q=node&search_type=categories_tags"
+
+      expect(page).to have_selector(
+        ".fps-tag-item a[href=\"/tag/#{node_tag.slug}/#{node_tag.id}\"]",
+        text: "node.js",
+      )
+
+      find(".fps-tag-item a", text: "node.js").click
+
+      expect(page).to have_current_path("/tag/#{node_tag.slug}/#{node_tag.id}")
     end
   end
 end

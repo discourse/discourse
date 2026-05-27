@@ -12,11 +12,6 @@ pt:
         link_to_settings: "Configurações"
         refresh: "Atualizar"
         name: "Nome"
-        section:
-          groups: "Grupos"
-        weight:
-          post_created: "Criada publicação"
-          solution: "Solução"
         period:
           all_time: "Desde Sempre"
           yearly: "Anualmente"

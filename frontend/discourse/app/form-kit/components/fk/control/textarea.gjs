@@ -3,6 +3,8 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 export default class FKControlTextarea extends FKBaseControl {
   static controlType = "textarea";
@@ -40,19 +42,23 @@ export default class FKControlTextarea extends FKBaseControl {
     return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
   }
 
+  get textareaElement() {
+    return this.args.autoResize ? DExpandingTextArea : dElement("textarea");
+  }
+
   <template>
-    <textarea
-      class="form-kit__control-textarea"
+    <this.textareaElement
+      {{on "input" this.handleInput}}
+      {{on "keydown" this.onKeyDown}}
       style={{this.style}}
       disabled={{@field.disabled}}
       value={{@field.value}}
       id={{@field.id}}
       name={{@field.name}}
       aria-invalid={{if @field.error "true"}}
-      aria-describedby={{if @field.error @field.errorId}}
+      aria-describedby={{@field.describedBy}}
+      class="form-kit__control-textarea"
       ...attributes
-      {{on "input" this.handleInput}}
-      {{on "keydown" this.onKeyDown}}
     />
   </template>
 }
