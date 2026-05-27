@@ -39,7 +39,7 @@ function detectListType(element) {
     if (/^[a-zA-Z][.)]/.test(markerText)) {
       return { isOrdered: true, startNumber: 1 };
     }
-    // Roman numerals (i., ii., I., II.)
+    // Roman numerals, including larger numerals (i., ii., L., C., D., M.)
     if (/^[ivxlcdmIVXLCDM]+[.)]/.test(markerText)) {
       return { isOrdered: true, startNumber: 1 };
     }

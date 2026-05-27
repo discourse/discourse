@@ -50,7 +50,18 @@ module("Unit | Static | ProseMirror | Extensions | word-paste", function () {
   });
 
   test("detects ordered list from various marker formats", function (assert) {
-    const markers = ["1.", "1)", "a.", "A)", "i.", "ii."];
+    const markers = [
+      "1.",
+      "1)",
+      "a.",
+      "A)",
+      "i.",
+      "ii.",
+      "L.",
+      "C)",
+      "D.",
+      "M)",
+    ];
 
     for (const marker of markers) {
       const html = wordListHtml([

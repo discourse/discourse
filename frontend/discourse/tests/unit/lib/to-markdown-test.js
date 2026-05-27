@@ -539,6 +539,40 @@ there is a quote above
 `;
 
     assert.strictEqual(await toMarkdown(html), markdown.trim());
+
+    html = `
+    <aside class="quote no-group" data-username="foo" data-post="1" data-topic="2" data-full="false">
+    <blockquote>
+    <p>not a full quote</p>
+    </blockquote>
+    </aside>
+    `;
+
+    markdown = `
+[quote="foo, post:1, topic:2"]
+not a full quote
+
+[/quote]
+`;
+
+    assert.strictEqual(await toMarkdown(html), markdown.trim());
+
+    html = `
+    <aside class="quote no-group" data-username="foo" data-post="1" data-topic="2" data-full="true">
+    <blockquote>
+    <p>full quote</p>
+    </blockquote>
+    </aside>
+    `;
+
+    markdown = `
+[quote="foo, post:1, topic:2, full:true"]
+full quote
+
+[/quote]
+`;
+
+    assert.strictEqual(await toMarkdown(html), markdown.trim());
   });
 
   test("converts nested quotes to markdown", async function (assert) {
