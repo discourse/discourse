@@ -34,6 +34,7 @@ class TopicsController < ApplicationController
                  ]
 
   before_action :consider_user_for_promotion, only: :show
+  before_action :set_embed_class, only: :show
   after_action :allow_embed_mode, only: :show
 
   skip_before_action :check_xhr, only: %i[show feed]
@@ -1388,11 +1389,24 @@ class TopicsController < ApplicationController
   end
 
   def allow_embed_mode
-    return if params[:embed_mode].blank?
-    return unless SiteSetting.embed_full_app
-    return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
+    response.headers.delete("X-Frame-Options") if embed_mode_allowed?
+  end
 
-    response.headers.delete("X-Frame-Options")
+  # Applies the `class_name` passed by the embedding page (see EmbedController)
+  # to the `<html>` element of the full app, mirroring classic embed mode.
+  def set_embed_class
+    return unless embed_mode_allowed?
+    return if params[:class_name].blank?
+    return unless params[:class_name].match?(/\A[a-zA-Z0-9\-_ ]+\z/)
+
+    @embed_class = params[:class_name]
+  end
+
+  def embed_mode_allowed?
+    return false if params[:embed_mode].blank?
+    return false unless SiteSetting.embed_full_app
+
+    SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer).present?
   end
 
   def topic_params
