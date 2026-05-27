@@ -125,7 +125,7 @@ acceptance("quoting with recurring and countdown", function (needs) {
     });
   });
 
-test("quoting single local dates with recurring and countdown options", async function (assert) {
+  test("quoting single local dates with recurring and countdown options", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .select-local-date-test");
     await click(".insert-quote");

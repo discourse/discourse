@@ -199,7 +199,7 @@ module("Integration | Component | Dates", function (hooks) {
         );
     });
 
-// this test goes against the current implementation in local-dates
+    // this test goes against the current implementation in local-dates
     skip("formats same day range", async function (assert) {
       await render(
         <template><Dates @event={{events.currentYear.endsSameDay}} /></template>

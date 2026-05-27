@@ -30,8 +30,8 @@ import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
-import wordPaste from "./word-paste";
 import uploadPlaceholder from "./upload-placeholder";
+import wordPaste from "./word-paste";
 import wrap from "./wrap";
 
 /**
