@@ -6,6 +6,9 @@
 
 ug:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "نەتىجە يوق"
     explorer:
       default_query: "كۆڭۈلدىكى"
       or: "ياكى"

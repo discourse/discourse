@@ -32,6 +32,16 @@
       float: none;
       width: auto;
       margin-right: 0;
+      padding-right: 0;
+    }
+
+    .setting-value {
+      max-width: 100%;
+
+      .select-kit {
+        // Not ideal, but upstream .select-kit gets a width: 100% !important that is too eager
+        max-width: calc(100% - 100px);
+      }
     }
   }
 }

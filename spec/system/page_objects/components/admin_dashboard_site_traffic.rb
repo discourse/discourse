@@ -4,23 +4,23 @@ module PageObjects
   module Components
     class AdminDashboardSiteTraffic < PageObjects::Components::Base
       def has_headline?(text)
-        has_css?(".db-traffic__headline", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_trend?(text)
-        has_css?(".db-traffic__trend", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_up_trend?(text)
-        has_css?(".db-traffic__trend.--up", text: text)
+        has_trend?(text)
       end
 
       def has_down_trend?(text)
-        has_css?(".db-traffic__trend.--down", text: text)
+        has_trend?(text)
       end
 
       def has_no_trend?
-        has_no_css?(".db-traffic__trend")
+        has_no_css?(".db-section__subintro h3", text: "—")
       end
 
       def has_metric?(label, value)
@@ -34,6 +34,14 @@ module PageObjects
 
       def has_chart?
         has_css?(".db-section__traffic-chart canvas")
+      end
+
+      def has_see_details_link?
+        has_css?("a.db-traffic__see-details")
+      end
+
+      def click_see_details
+        find("a.db-traffic__see-details").click
       end
 
       def hover_comparison_tooltip

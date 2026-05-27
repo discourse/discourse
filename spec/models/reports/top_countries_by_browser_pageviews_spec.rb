@@ -5,33 +5,29 @@ describe Reports::TopCountriesByBrowserPageviews do
     let(:start_date) { 7.days.ago.to_date }
     let(:end_date) { Date.today }
 
+    let(:report) do
+      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewEvent.delete_all
+      Report.find("top_countries_by_browser_pageviews", start_date: start_date, end_date: end_date)
+    end
+
     it "ranks countries by event count and computes percent of total browser pageviews" do
       3.times { Fabricate(:browser_pageview_event, country_code: "US") }
       1.times { Fabricate(:browser_pageview_event, country_code: "GB") }
 
-      report =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-        )
-      expect(report.data.map { |row| row[:country_code] }).to eq(%w[US GB])
-      expect(report.data.first[:count]).to eq(3)
-      expect(report.data.first[:percent]).to eq(75)
+      data = report.data
+      expect(data.map { |row| row[:country_code] }).to eq(%w[US GB])
+      expect(data.first[:count]).to eq(3)
+      expect(data.first[:percent]).to eq(75)
     end
 
     it "excludes NULL country_code from numerator but includes in denominator" do
       2.times { Fabricate(:browser_pageview_event, country_code: "US") }
       2.times { Fabricate(:browser_pageview_event, country_code: nil) }
 
-      report =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-        )
-      expect(report.data.map { |row| row[:country_code] }).to eq(%w[US])
-      expect(report.data.first[:percent]).to eq(50)
+      data = report.data
+      expect(data.map { |row| row[:country_code] }).to eq(%w[US])
+      expect(data.first[:percent]).to eq(50)
     end
 
     it "excludes MaxMind reserved country codes" do
@@ -40,12 +36,6 @@ describe Reports::TopCountriesByBrowserPageviews do
       end
       Fabricate(:browser_pageview_event, country_code: "US")
 
-      report =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-        )
       expect(report.data.map { |row| row[:country_code] }).to eq(%w[US])
     end
 
@@ -56,24 +46,13 @@ describe Reports::TopCountriesByBrowserPageviews do
       Fabricate(:browser_pageview_event, country_code: "US") # anonymous, ignored
       Fabricate(:browser_pageview_event, country_code: "GB", user_id: user.id)
 
-      report =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-        )
-      expect(report.data.map { |row| row[:country_code] }).to contain_exactly("US", "GB")
-      expect(report.data.first[:count]).to eq(1)
-      expect(report.data.first[:percent]).to eq(50)
+      data = report.data
+      expect(data.map { |row| row[:country_code] }).to contain_exactly("US", "GB")
+      expect(data.first[:count]).to eq(1)
+      expect(data.first[:percent]).to eq(50)
     end
 
     it "returns empty data when no events exist in range" do
-      report =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-        )
       expect(report.data).to eq([])
     end
 
@@ -83,12 +62,6 @@ describe Reports::TopCountriesByBrowserPageviews do
       Fabricate(:browser_pageview_event, country_code: "US", created_at: end_of_day)
       Fabricate(:browser_pageview_event, country_code: "US", created_at: next_day) # out of range
 
-      report =
-        Report.find(
-          "top_countries_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-        )
       expect(report.data.first[:count]).to eq(1)
     end
 
@@ -97,14 +70,16 @@ describe Reports::TopCountriesByBrowserPageviews do
         (idx + 1).times { Fabricate(:browser_pageview_event, country_code: code) }
       end
 
-      report =
+      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewEvent.delete_all
+      limited =
         Report.find(
           "top_countries_by_browser_pageviews",
           start_date: start_date,
           end_date: end_date,
           limit: 3,
         )
-      expect(report.data.size).to eq(3)
+      expect(limited.data.size).to eq(3)
     end
   end
 end

@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { render, triggerKeyEvent } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AiHelperCustomPrompt from "discourse/plugins/discourse-ai/discourse/components/ai-helper-custom-prompt";
@@ -11,37 +11,31 @@ class TestState {
 module("Integration | Component | ai-helper-custom-prompt", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("does not submit when Enter is pressed during IME composition", async function (assert) {
-    let submitted = false;
-    const submit = () => (submitted = true);
+  async function renderPrompt(submit, initialValue = "test") {
     const state = new TestState();
-
+    state.value = initialValue;
     await render(
       <template>
         <AiHelperCustomPrompt @value={{state.value}} @submit={{submit}} />
       </template>
     );
+  }
 
-    await triggerKeyEvent(".ai-custom-prompt__input", "keydown", "Enter", {
-      isComposing: true,
-    });
+  test("submitting the form calls @submit", async function (assert) {
+    let submitted = 0;
+    await renderPrompt(() => (submitted += 1));
 
-    assert.false(submitted, "does not submit during IME composition");
+    await triggerEvent(".ai-custom-prompt", "submit");
+
+    assert.strictEqual(submitted, 1, "called @submit once");
   });
 
-  test("submits when Enter is pressed outside of IME composition", async function (assert) {
-    let submitted = false;
-    const submit = () => (submitted = true);
-    const state = new TestState();
+  test("submit is skipped when the input is empty", async function (assert) {
+    let submitted = 0;
+    await renderPrompt(() => (submitted += 1), "");
 
-    await render(
-      <template>
-        <AiHelperCustomPrompt @value={{state.value}} @submit={{submit}} />
-      </template>
-    );
+    await triggerEvent(".ai-custom-prompt", "submit");
 
-    await triggerKeyEvent(".ai-custom-prompt__input", "keydown", "Enter");
-
-    assert.true(submitted, "submits on Enter without IME composition");
+    assert.strictEqual(submitted, 0, "did not call @submit");
   });
 });

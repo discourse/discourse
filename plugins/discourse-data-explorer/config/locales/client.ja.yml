@@ -14,6 +14,9 @@ ja:
       explorer:
         no_semicolons: "クエリからセミコロンを削除します。"
         dirty: "クエリは保存してから実行する必要があります。"
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "結果がありません"
     explorer:
       default_query: "デフォルト"
       or: "または"

@@ -73,11 +73,11 @@ export default class NestedPostChildren extends Component {
     this._reportToCache();
   }
 
-  _reportToCache() {
-    if (!this.loaded || !this.args.fetchedChildrenCache) {
+  _reportToCache(parentPostNumber = this.args.parentPostNumber) {
+    if (!this.loaded || !parentPostNumber || !this.args.fetchedChildrenCache) {
       return;
     }
-    this.args.fetchedChildrenCache.set(this.args.parentPostNumber, {
+    this.args.fetchedChildrenCache.set(parentPostNumber, {
       childNodes: this.childNodes,
       page: this.page,
       hasMore: this.hasMore,
@@ -216,6 +216,7 @@ export default class NestedPostChildren extends Component {
             @children={{node.children}}
             @topic={{@topic}}
             @depth={{this.childDepth}}
+            @path={{@path}}
             @sort={{@sort}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
@@ -243,6 +244,7 @@ export default class NestedPostChildren extends Component {
             @scrollAnchor={{@scrollAnchor}}
             @registerPost={{@registerPost}}
             @collapseFromDepth={{@collapseFromDepth}}
+            @focusPost={{@focusPost}}
           />
         {{/each}}
 

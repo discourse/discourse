@@ -3338,9 +3338,6 @@ class _PluginApi {
 
   /**
    * Registers a custom tab for the category edit page.
-   * Only available when the `enable_simplified_category_creation`
-   * site setting is enabled, this will not work for the legacy
-   * category edit page.
    *
    * ```
    * api.registerEditCategoryTab({
@@ -3364,8 +3361,7 @@ class _PluginApi {
 
   /**
    * Register a callback that runs when the user changes category type selection in the
-   * **simplified** category editor (General tab) when `enable_simplified_category_creation` is
-   * enabled. It does not run on the legacy category editor.
+   * category editor's General tab.
    *
    * Callbacks run in order. Each may be `async`. The change applies only if every callback
    * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback

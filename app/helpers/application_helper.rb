@@ -196,10 +196,6 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    unless SiteSetting.viewport_based_mobile_mode
-      list << (mobile_view? ? "mobile-view" : "desktop-view")
-      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -457,7 +453,7 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      if mobile_view?
+      if mobile_device?
         if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
           SiteSetting.site_mobile_logo_dark_url
         elsif SiteSetting.site_mobile_logo_url.present?
@@ -475,9 +471,9 @@ module ApplicationHelper
   def application_logo_dark_url
     @application_logo_dark_url ||=
       if dark_scheme_id != -1
-        if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
           SiteSetting.site_mobile_logo_dark_url
-        elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
+        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
           SiteSetting.site_logo_dark_url
         end
       end
@@ -491,8 +487,8 @@ module ApplicationHelper
     "#{Discourse.base_path}/login"
   end
 
-  def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
+  def mobile_device?
+    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def crawler_layout?
@@ -505,16 +501,12 @@ module ApplicationHelper
     else
       return false if !current_user && SiteSetting.login_required?
 
-      crawler_layout? || !mobile_view? || !modern_mobile_device?
+      crawler_layout? || !mobile_device? || !modern_mobile_device?
     end
   end
 
   def modern_mobile_device?
     MobileDetection.modern_mobile_device?(request.user_agent)
-  end
-
-  def mobile_device?
-    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -793,7 +785,7 @@ module ApplicationHelper
   def theme_lookup(name)
     Theme.lookup_field(
       theme_id,
-      mobile_view? ? :mobile : :desktop,
+      mobile_device? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
       csp_nonce: csp_nonce_placeholder,

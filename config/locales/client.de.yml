@@ -358,7 +358,6 @@ de:
         condition_debugging: "Debugging der Bedingungen"
       toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
-      toggle_mobile_view: "Mobile Ansicht umschalten"
       disable_dev_tools: "Entwicklertools deaktivieren"
       toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
@@ -417,8 +416,6 @@ de:
     tos: "Nutzungsbedingungen"
     rules: "Regeln"
     conduct: "Verhaltenskodex"
-    mobile_view: "Mobile Ansicht"
-    desktop_view: "Desktop-Ansicht"
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
@@ -4449,7 +4446,6 @@ de:
         name_placeholder: "Wofür dient dieses Lesezeichen?"
         name_input_label: "Name des Lesezeichens"
         set_reminder: "Erinnere mich"
-        options: "Optionen"
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
@@ -6344,6 +6340,14 @@ de:
                 "4": "Anführer"
               trend:
                 stable: "stabil"
+        reports_section:
+          no_data: "Keine Daten anzuzeigen"
+          modal:
+            enabled_heading: "Aktiviert"
+            all_heading: "Alle Berichte"
+            apply: "Anwenden"
+            move_up: "Nach oben"
+            move_down: "Nach unten"
         configure:
           button: "Konfigurieren"
         site_traffic:

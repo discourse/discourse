@@ -20,7 +20,7 @@ module Reports::TopReferrersByBrowserPageviews
         },
       ]
 
-      user_filter_sql = SiteSetting.login_required ? "AND user_id IS NOT NULL" : ""
+      count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
 
       host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
@@ -30,12 +30,11 @@ module Reports::TopReferrersByBrowserPageviews
         WITH ranked AS (
           SELECT
             normalized_referrer,
-            COUNT(*) AS count,
-            SUM(COUNT(*)) OVER () AS total
-          FROM browser_pageview_events
-          WHERE created_at >= :start_date
-            AND created_at < :end_date_exclusive
-            #{user_filter_sql}
+            SUM(#{count_expr}) AS count,
+            SUM(SUM(#{count_expr})) OVER () AS total
+          FROM browser_pageview_referrer_daily_rollups
+          WHERE date >= :start_date
+            AND date < :end_date_exclusive
             AND (
               normalized_referrer IS NULL
               OR (
@@ -45,6 +44,7 @@ module Reports::TopReferrersByBrowserPageviews
               )
             )
           GROUP BY normalized_referrer
+          HAVING SUM(#{count_expr}) > 0
         )
         SELECT normalized_referrer, count,
                CASE WHEN total = 0 THEN 0

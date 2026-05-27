@@ -6,6 +6,9 @@
 
 fa_IR:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "هیچ نتیجه‌ای وجود ندارد"
     explorer:
       default_query: "پیش‌فرض"
       or: "یا"

@@ -171,6 +171,13 @@ module PageObjects
         has_no_css?("#{@context}.is-expanded .select-kit-row.is-selected")
       end
 
+      def has_disabled_row_reason?(name)
+        expanded_component
+        has_css?(
+          "#{@context}.is-expanded .select-kit-row.disabled[data-name='#{name}'] .disabled-reason",
+        )
+      end
+
       def option_names
         expanded_component
           .locator(".select-kit-row")

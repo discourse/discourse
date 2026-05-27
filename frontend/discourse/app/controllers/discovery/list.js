@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -46,17 +47,22 @@ export function addDiscoveryQueryParam(p, opts) {
 
 @disableImplicitInjections
 export default class DiscoveryListController extends Controller {
+  @service appEvents;
   @service composer;
   @service siteSettings;
   @service currentUser;
   @service router;
+  @service store;
   @service topicTrackingState;
 
   @tracked model;
-
+  @tracked showTagInfo = false;
+  @tracked tagInfo = null;
+  @tracked loadingTagInfo = false;
   queryParams = Object.keys(queryParams);
-
   bulkSelectHelper = new BulkSelectHelper(this);
+  #loadedTagId = null;
+  #tagInfoFetchToken = 0;
 
   constructor() {
     super(...arguments);
@@ -65,6 +71,12 @@ export default class DiscoveryListController extends Controller {
     }
 
     this.bulkSelectHelper.onResetNew = () => this.resetNew();
+    this.appEvents.on("tag-info:updated", this, this.onTagInfoUpdated);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("tag-info:updated", this, this.onTagInfoUpdated);
   }
 
   // NOTE: (martin) Please keep this in tact for now, will remove once we have
@@ -223,6 +235,110 @@ export default class DiscoveryListController extends Controller {
   changeNewListSubset(subset) {
     this.subset = subset;
     this.model.list.updateNewListSubsetParam(subset);
+  }
+
+  #resetTagInfo() {
+    this.tagInfo = null;
+    this.#loadedTagId = null;
+    this.#tagInfoFetchToken++;
+    this.loadingTagInfo = false;
+  }
+
+  async #fetchTagInfo(tagKey) {
+    const token = ++this.#tagInfoFetchToken;
+    this.loadingTagInfo = true;
+    try {
+      const result = await this.store.find("tag-info", tagKey);
+
+      // discard if a newer fetch superseded this one
+      if (token !== this.#tagInfoFetchToken) {
+        return;
+      }
+
+      result.synonyms = result.synonyms.map((s) =>
+        this.store.createRecord("tag", s)
+      );
+      this.tagInfo = result;
+      this.#loadedTagId = tagKey;
+    } catch (e) {
+      if (token !== this.#tagInfoFetchToken) {
+        return;
+      }
+      popupAjaxError(e);
+      throw e;
+    } finally {
+      if (token === this.#tagInfoFetchToken) {
+        this.loadingTagInfo = false;
+      }
+    }
+  }
+
+  @action
+  async toggleTagInfo() {
+    if (this.showTagInfo) {
+      this.showTagInfo = false;
+      return;
+    }
+
+    const tagKey = this.model.tag?.id || this.model.tag?.name;
+    if (!tagKey) {
+      return;
+    }
+
+    if (!this.tagInfo || this.#loadedTagId !== tagKey) {
+      try {
+        await this.#fetchTagInfo(tagKey);
+      } catch {
+        return;
+      }
+    }
+
+    this.showTagInfo = true;
+  }
+
+  @action
+  onTagInfoUpdated(tagId) {
+    if (this.#loadedTagId !== tagId) {
+      return;
+    }
+
+    if (this.showTagInfo) {
+      this.#fetchTagInfo(tagId).catch(() => {
+        this.#resetTagInfo();
+        this.showTagInfo = false;
+      });
+    } else {
+      this.#resetTagInfo();
+    }
+  }
+
+  get canShowTagInfo() {
+    const { tag, category, additionalTags } = this.model;
+    return tag && tag.name !== "none" && !additionalTags && !category;
+  }
+
+  @action
+  syncTagInfo() {
+    if (!this.canShowTagInfo) {
+      this.showTagInfo = false;
+      this.#resetTagInfo();
+      return;
+    }
+
+    const tagKey = this.model.tag.id || this.model.tag.name;
+
+    if (this.#loadedTagId === tagKey) {
+      return;
+    }
+
+    if (this.showTagInfo) {
+      this.#fetchTagInfo(tagKey).catch(() => {
+        this.#resetTagInfo();
+        this.showTagInfo = false;
+      });
+    } else {
+      this.#resetTagInfo();
+    }
   }
 
   @action

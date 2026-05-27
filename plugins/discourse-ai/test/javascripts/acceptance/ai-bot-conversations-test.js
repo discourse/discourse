@@ -1,6 +1,8 @@
-import { fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+const INPUT = "#ai-bot-conversations-input";
 
 acceptance("AI Bot - Conversations IME handling", function (needs) {
   let postRequests = 0;
@@ -24,12 +26,12 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/discourse-ai/ai-bot/conversations.json", () => {
-      return helper.response({
+    server.get("/discourse-ai/ai-bot/conversations.json", () =>
+      helper.response({
         conversations: [],
         meta: { has_more: false },
-      });
-    });
+      })
+    );
 
     server.post("/posts.json", () => {
       postRequests += 1;
@@ -40,21 +42,43 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
         post_url: "/t/ai-conversation/1/1",
       });
     });
+
+    server.get("/t/:slug/:id.json", () => helper.response({}));
   });
 
-  test("does not submit when Enter is pressed during IME composition", async function (assert) {
-    postRequests = 0;
+  needs.hooks.beforeEach(() => (postRequests = 0));
 
+  async function prepareDraft() {
     await visit("/discourse-ai/ai-bot/conversations");
-    await fillIn(
-      "#ai-bot-conversations-input",
-      "これはテスト入力として十分長い文章です"
-    );
+    await fillIn(INPUT, "これはテスト入力として十分長い文章です");
+  }
 
-    await triggerKeyEvent("#ai-bot-conversations-input", "keydown", "Enter", {
-      isComposing: true,
+  test("Enter submits the message", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
+
+    assert.strictEqual(postRequests, 1, "submitted once");
+  });
+
+  test("Shift+Enter does not submit", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter", shiftKey: true });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
+
+    assert.strictEqual(postRequests, 0, "did not submit");
+  });
+
+  test("IME-confirming Enter does not submit", async function (assert) {
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", {
+      inputType: "insertCompositionText",
     });
 
-    assert.strictEqual(postRequests, 0, "does not request /posts.json");
+    assert.strictEqual(postRequests, 0, "did not submit");
   });
 });

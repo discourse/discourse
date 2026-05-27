@@ -36,6 +36,7 @@ uk:
         title: Запланувати публікацію в темі за допомогою результатів Data Explorer
         description: Отримуйте заплановані звіти, опубліковані на певну тему
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Запланований звіт для %{query_name}"

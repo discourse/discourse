@@ -14,6 +14,9 @@ ur:
       explorer:
         no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
         dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "کوئی نتائج نہیں"
     explorer:
       default_query: "ڈِیفالٹ"
       or: "یا"

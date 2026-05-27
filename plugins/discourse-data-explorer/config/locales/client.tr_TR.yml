@@ -21,6 +21,9 @@ tr_TR:
       explorer:
         no_semicolons: "Noktalı virgülleri sorgudan kaldırın."
         dirty: "Çalıştırmadan önce sorguyu kaydetmeniz gerekir."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Sonuç yok"
     explorer:
       default_query: "Varsayılan"
       default_query_notice: "Bu varsayılan bir sorgudur, SQL düzenlenemez. SQL'yi düzenlemek için yeni bir sorgu oluşturun."

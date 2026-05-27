@@ -1686,7 +1686,6 @@ ko:
     allow_profile_backgrounds: "사용자가 프로필 배경을 업로드하도록 허용합니다."
     get_a_room_threshold: "사용자가 경고를 받기 전에 동일한 주제에서 동일한 사람에게 작성해야 하는 게시물 수입니다."
     dont_feed_the_trolls_threshold: "경고를 받기 전, 다른 사용자로부터 받은 경고(flag)의 수"
-    enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용하며 PC용 화면으로 전환할 수 있습니다. 완전 반응형 사용자 지정 스타일시트를 사용하려면 이 기능을 비활성화하세요."
     dominating_topic_minimum_percent: "주제를 과도하게 점유한다는 알림을 받기 전에 사용자가 주제에서 작성해야 하는 게시물의 퍼센트입니다."
     suppress_uncategorized_badge: "주제 목록에서 카테고리가 없는 주제에 대한 배지를 표시하지 않습니다."
     header_dropdown_category_count: "헤더 드롭다운 메뉴에 표시할 수 있는 카테고리 수입니다."

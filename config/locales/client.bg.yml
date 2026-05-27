@@ -260,8 +260,6 @@ bg:
     tos: "Правила за ползване"
     rules: "Правила"
     conduct: "Правила за поведение"
-    mobile_view: "Мобилен изглед"
-    desktop_view: "Десктоп изглед"
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
@@ -2896,7 +2894,6 @@ bg:
         name_placeholder: "За какво е тази отметка?"
         name_input_label: "Име на отметка"
         set_reminder: "Напомни ми"
-        options: "Опции"
         actions:
           delete_bookmark:
             name: "Изтриване на отметка"
@@ -3614,6 +3611,10 @@ bg:
                 "2": "Член"
                 "3": "Редовен"
                 "4": "лидер "
+        reports_section:
+          modal:
+            enabled_heading: "Да е включен"
+            apply: "Приложи"
         site_traffic:
           series:
             anonymous: "Анонимен"
