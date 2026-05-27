@@ -149,7 +149,6 @@ export default class QueriesEdit extends Component {
                     dragMove=@controller.dragMove
                   }}
                 >
-                  {{dIcon "discourse-expand"}}
                 </div>
 
                 <div class="clear"></div>

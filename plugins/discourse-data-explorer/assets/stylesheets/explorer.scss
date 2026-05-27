@@ -119,6 +119,8 @@ table.group-reports {
     flex: 1 0 50%;
 
     .ace-wrapper {
+      --min-height: unset;
+      min-height: var(--min-height);
       position: relative;
       height: 100%;
       width: 100%;
@@ -126,7 +128,7 @@ table.group-reports {
       border: none;
 
       @include viewport.until(sm) {
-        min-height: 300px;
+        --min-height: 300px;
       }
     }
 
@@ -140,12 +142,13 @@ table.group-reports {
   }
 
   .right-panel {
+    --width: 345px;
     flex-shrink: 0;
     flex-grow: 0;
-    width: 345px;
+    width: var(--width);
 
     @include viewport.until(sm) {
-      width: 100%;
+      --width: 100%;
     }
 
     .schema {
@@ -291,17 +294,10 @@ table.group-reports {
 
   .grippie {
     cursor: nwse-resize;
-    clear: both;
-    font-size: $font-down-2;
+    padding-bottom: var(--space-2);
     user-select: none;
     color: var(--primary);
     text-align: right;
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-very-low);
-
-    .d-icon {
-      transform: rotate(90deg);
-    }
   }
 }
 
