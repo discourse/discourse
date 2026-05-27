@@ -4,13 +4,11 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Category.clear_subcategory_ids if name === :max_category_nesting
 
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
-  # existing users are approved unless they currently have a pending reviewable.
+  # existing users are approved.
   if name == :must_approve_users && new_value == true
     User
       .where(approved: false)
-      .joins(
-        "LEFT JOIN reviewables r ON r.target_id = users.id AND r.target_type = 'User' AND r.status = #{Reviewable.statuses[:pending]}",
-      )
+      .joins("LEFT JOIN reviewables r ON r.target_id = users.id")
       .where(r: { id: nil })
       .update_all(approved: true)
   end

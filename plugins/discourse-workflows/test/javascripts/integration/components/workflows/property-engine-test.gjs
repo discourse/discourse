@@ -1,0 +1,700 @@
+import {
+  click,
+  fillIn,
+  findAll,
+  render,
+  select,
+  waitFor,
+} from "@ember/test-helpers";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import Form from "discourse/components/form";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
+import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
+
+module("Integration | Component | workflows property engine", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get("/svg-sprite/picker-search", () =>
+      response(200, [
+        { id: "gear", symbol: '<symbol id="gear"></symbol>' },
+        { id: "bolt", symbol: '<symbol id="bolt"></symbol>' },
+      ])
+    );
+    pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
+      response(200, { variables: [] })
+    );
+    this.session = new WorkflowEditorSession({
+      workflowId: 7,
+      lastExecutionRunData: {},
+    });
+  });
+
+  hooks.afterEach(function () {
+    sinon.restore();
+  });
+
+  test("preserves focus for scalar fields while typing", async function (assert) {
+    this.setProperties({
+      configuration: { title: "" },
+      nodeType: "action:topic",
+      schema: {
+        title: {
+          type: "string",
+          required: true,
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await fillIn("input", "Hello");
+
+    assert.dom("input").hasValue("Hello");
+    assert.dom("input").isFocused();
+  });
+
+  test("preserves focus for collection fields while typing", async function (assert) {
+    this.setProperties({
+      configuration: {
+        headers: { values: [{ key: "", value: "" }] },
+      },
+      nodeType: "action:http_request",
+      schema: {
+        headers: {
+          type: "fixed_collection",
+          options: [
+            {
+              name: "values",
+              values: {
+                key: {
+                  type: "string",
+                  required: true,
+                },
+                value: {
+                  type: "string",
+                  required: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    let [keyInput] = findAll(
+      ".workflows-property-engine__collection-row input"
+    );
+
+    await fillIn(keyInput, "Authorization");
+
+    [keyInput] = findAll(".workflows-property-engine__collection-row input");
+
+    assert.strictEqual(keyInput.value, "Authorization");
+    assert.strictEqual(document.activeElement, keyInput);
+  });
+
+  test("renders fixed collections with missing group data", async function (assert) {
+    this.setProperties({
+      configuration: { entries: {} },
+      formApi: null,
+      nodeType: "action:log",
+      schema: {
+        entries: {
+          type: "fixed_collection",
+          type_options: {
+            multiple_values: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                key: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+                value: {
+                  type: "string",
+                  required: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-property-engine__collection-row").doesNotExist();
+
+    await click(".btn-default");
+
+    assert.dom(".workflows-property-engine__collection-row").exists();
+    assert.strictEqual(this.formApi.get("entries.values").length, 1);
+  });
+
+  test("renders condition builder controls inside the property engine", async function (assert) {
+    this.setProperties({
+      configuration: {
+        conditions: [],
+      },
+      formApi: null,
+      node: {
+        clientId: "branch",
+        type: "condition:if",
+      },
+      nodes: [
+        {
+          clientId: "trigger",
+          type: "trigger:manual",
+          name: "Trigger",
+        },
+        {
+          clientId: "secondary",
+          type: "action:http_request",
+          name: "Secondary",
+        },
+        {
+          clientId: "branch",
+          type: "condition:if",
+          name: "Branch",
+        },
+      ],
+      connections: [
+        {
+          sourceClientId: "trigger",
+          targetClientId: "branch",
+        },
+        {
+          sourceClientId: "secondary",
+          targetClientId: "branch",
+          targetInputIndex: 1,
+        },
+      ],
+      nodeTypes: [],
+      nodeType: "condition:if",
+      schema: {
+        conditions: {
+          type: "array",
+          ui: {
+            control: "condition_builder",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+    this.session.lastExecutionRunData = {
+      Trigger: [
+        {
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [
+                { json: { status: "ok", "topic title": { "post-count": 2 } } },
+              ],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+      Secondary: [
+        {
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { secondary_status: "ok" } }],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+    };
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @connections={{this.connections}}
+            @node={{this.node}}
+            @nodes={{this.nodes}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(".workflows-empty-state .btn-primary");
+
+    const conditions = this.formApi.get("conditions");
+    assert.strictEqual(conditions.length, 1);
+    assert.dom(".workflows-property-engine__collection-row").exists();
+    assert
+      .dom(
+        ".workflows-property-engine__collection-row option[value='$json.status']"
+      )
+      .exists();
+    assert
+      .dom(
+        '.workflows-property-engine__collection-row option[value=\'$json["topic title"]["post-count"]\']'
+      )
+      .exists();
+    assert
+      .dom(
+        ".workflows-property-engine__collection-row option[value='$(\"Secondary\").all(0)[$itemIndex].json.secondary_status']"
+      )
+      .hasText("Secondary.secondary_status");
+
+    await select(
+      ".workflows-property-engine__collection-row select",
+      '$json["topic title"]["post-count"]'
+    );
+
+    assert.strictEqual(
+      this.formApi.get("conditions.0.leftValue"),
+      '={{ $json["topic title"]["post-count"] }}'
+    );
+  });
+
+  test("renders webhook URL previews from schema controls", async function (assert) {
+    this.setProperties({
+      configuration: { path: "my-hook" },
+      nodeType: "trigger:webhook",
+      schema: {
+        path: {
+          type: "string",
+        },
+        url_preview: {
+          type: "custom",
+          ui: {
+            control: "url_preview",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("/workflows/webhooks/my-hook");
+  });
+
+  test("renders form trigger test and production URL controls", async function (assert) {
+    sinon.stub(window, "open");
+    pretender.post(
+      "/admin/plugins/discourse-workflows/workflows/7/form-test-sessions.json",
+      (request) => {
+        assert.strictEqual(
+          request.requestBody,
+          "trigger_node_id=trigger-1",
+          "posts the selected form trigger node id"
+        );
+        return response(201, {
+          test_url: "/workflows/form-test/test-token",
+        });
+      }
+    );
+
+    this.setProperties({
+      configuration: {},
+      node: {
+        clientId: "trigger-1",
+        type: "trigger:form",
+        webhookId: "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+      },
+      nodeType: "trigger:form",
+      schema: {
+        url_preview: {
+          type: "custom",
+          ui: {
+            control: "url_preview",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789");
+
+    await click(".workflows-url-preview-mode__button:first-child");
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("Listen for test event");
+
+    await click(".workflows-url-preview");
+
+    assert.true(window.open.calledOnce);
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("/workflows/form-test/test-token");
+  });
+
+  test("renders webhook trigger test and production URL controls", async function (assert) {
+    pretender.post(
+      "/admin/plugins/discourse-workflows/workflows/7/webhook-test-listeners.json",
+      (request) => {
+        assert.strictEqual(
+          request.requestBody,
+          "trigger_node_id=webhook-1",
+          "posts the selected webhook trigger node id"
+        );
+        return response(201, {
+          listener_id: "listener-1",
+          test_url: "/workflows/webhook-test/listener-1/my-hook",
+          expires_at: new Date(Date.now() + 120_000).toISOString(),
+        });
+      }
+    );
+
+    this.setProperties({
+      configuration: { path: "my-hook" },
+      node: { clientId: "webhook-1", type: "trigger:webhook" },
+      nodeType: "trigger:webhook",
+      schema: {
+        path: {
+          type: "string",
+        },
+        url_preview: {
+          type: "custom",
+          ui: {
+            control: "url_preview",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("/workflows/webhooks/my-hook");
+
+    await click(".workflows-url-preview-mode__button:first-child");
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("Listen for test event");
+
+    await click(".workflows-url-preview");
+
+    assert
+      .dom(".workflows-url-preview code")
+      .includesText("/workflows/webhook-test/listener-1/my-hook");
+    assert
+      .dom(".workflows-url-preview__status")
+      .includesText("Listening for test event");
+  });
+
+  test("renders icon fields with the form-kit icon control", async function (assert) {
+    this.setProperties({
+      configuration: { icon: "gear" },
+      formApi: null,
+      nodeType: "trigger:topic_admin_button",
+      schema: {
+        icon: {
+          type: "icon",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-icon").exists();
+    assert.dom(".form-kit__control-icon").hasAttribute("data-value", "gear");
+
+    await click(".form-kit__control-icon .d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+    await click('[data-icon-id="bolt"]');
+
+    assert.dom(".form-kit__control-icon").hasAttribute("data-value", "bolt");
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert.strictEqual(this.formApi.get("icon"), "=bolt");
+    assert.dom(".workflows-variable-input").exists();
+  });
+
+  test("shows expected value hints in dynamic mode", async function (assert) {
+    this.setProperties({
+      configuration: { channel_id: "2" },
+      formApi: null,
+      nodeType: "action:send_chat_message",
+      schema: {
+        channel_id: {
+          type: "integer",
+          ui: {
+            dynamic_value: "chat_channel_id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-property-engine__dynamic-hint").doesNotExist();
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert
+      .dom(".workflows-property-engine__dynamic-hint")
+      .hasText("Must resolve to a chat channel ID.");
+  });
+
+  test("select fields render with correct initial value", async function (assert) {
+    this.setProperties({
+      configuration: { combinator: "or" },
+      nodeType: "condition:if",
+      schema: {
+        combinator: {
+          type: "options",
+          options: ["and", "or"],
+          default: "and",
+          no_data_expression: true,
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom("select").hasValue("or");
+  });
+
+  test("renders combo boxes from metadata and applies option patches", async function (assert) {
+    this.setProperties({
+      configuration: { agent_id: 2, agent_name: "" },
+      formApi: null,
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          metadata: {
+            agents: [
+              { id: 1, name: "Support Bot" },
+              { id: 2, name: "Helper Bot" },
+            ],
+            i18n_prefix: "discourse_ai.discourse_workflows",
+          },
+        },
+      ],
+      schema: {
+        agent_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "agents",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
+            set_from_option: {
+              agent_name: "name",
+            },
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+    assert.strictEqual(selector.header().value(), "2");
+    assert.strictEqual(selector.header().label(), "Helper Bot");
+
+    await selector.expand();
+    await selector.selectRowByValue("1");
+
+    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
+    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
+  });
+});

@@ -52,14 +52,6 @@ module PageObjects
         find(".btn-danger.unsilence-user").click
       end
 
-      def click_approve_button
-        find(".display-row .controls .btn", text: I18n.t("admin_js.admin.user.approve")).click
-      end
-
-      def has_approve_success?
-        has_css?(".display-row .controls", text: I18n.t("admin_js.admin.user.approve_success"))
-      end
-
       def custom_groups_chooser
         PageObjects::Components::SelectKit.new(".admin-user__custom-groups .group-chooser")
       end

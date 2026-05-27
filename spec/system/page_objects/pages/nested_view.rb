@@ -189,8 +189,27 @@ module PageObjects
         has_no_css?(wrapper_selector(post, ".nested-post__article"))
       end
 
+      def has_flat_view_link?
+        has_css?(".nested-view__flat-link")
+      end
+
+      def has_no_flat_view_link?
+        has_no_css?(".nested-view__flat-link")
+      end
+
+      def has_view_as_nested_link?
+        has_css?(".nested-view-link")
+      end
+
+      def has_no_view_as_nested_link?
+        has_no_css?(".nested-view-link")
+      end
+
       def has_sort_active?(sort)
-        has_css?(".nested-sort-selector__trigger", text: I18n.t("js.nested_replies.sort.#{sort}"))
+        has_css?(
+          ".nested-sort-selector button.active",
+          text: I18n.t("js.nested_replies.sort.#{sort}"),
+        )
       end
 
       def has_op_post?
@@ -207,20 +226,6 @@ module PageObjects
 
       def has_no_topic_title_editor?
         has_no_css?(".edit-topic-title")
-      end
-
-      def has_topic_title_in_site_header?(topic)
-        has_css?(
-          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
-          text: topic.title,
-        )
-      end
-
-      def has_no_topic_title_in_site_header?(topic)
-        has_no_css?(
-          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
-          text: topic.title,
-        )
       end
 
       def has_topic_map?
@@ -312,13 +317,6 @@ module PageObjects
         self
       end
 
-      def scroll_past_topic_title
-        page.execute_script(<<~JS)
-          window.scrollTo(0, document.body.scrollHeight);
-        JS
-        self
-      end
-
       def click_reply_on_op
         find(".nested-view__op .post-action-menu__reply").click
         self
@@ -405,9 +403,13 @@ module PageObjects
         self
       end
 
+      def click_flat_view_link
+        find(".nested-view__flat-link").click
+        self
+      end
+
       def click_sort(sort)
-        find(".nested-sort-selector__trigger").click
-        find(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        find(".nested-sort-selector button", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 

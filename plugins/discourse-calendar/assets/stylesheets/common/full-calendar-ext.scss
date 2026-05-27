@@ -42,22 +42,7 @@
   }
 }
 
-.fc-timegrid-slot-lane {
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--tertiary-50);
-    opacity: 0.6;
-  }
-}
-
 .fc-daygrid-day-frame {
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--tertiary-50);
-  }
-
   .fc-daygrid-day-top {
     justify-content: center;
 

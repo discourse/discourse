@@ -93,9 +93,7 @@
   }
 
   &__topic-map {
-    margin-bottom: 0.25em;
-    padding-bottom: 0.25em;
-    border-bottom: 0;
+    margin-bottom: 1em;
     max-width: none;
 
     .top-replies {
@@ -111,22 +109,6 @@
     margin-bottom: 1em;
   }
 
-  &:not(.nested-context-view) > &__controls {
-    position: sticky;
-    top: var(--header-offset, 0);
-    z-index: z("header") - 3;
-    padding: 0.25em 0;
-    background: var(--secondary);
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__controls-left {
-    display: flex;
-    align-items: center;
-    gap: 0.85em;
-    min-width: 0;
-  }
-
   &__controls-right {
     display: flex;
     align-items: center;
@@ -134,31 +116,10 @@
     margin-left: auto;
   }
 
-  &__activity-link {
+  &__activity-link,
+  &__flat-link {
     font-size: var(--font-down-1);
     white-space: nowrap;
-  }
-
-  .nested-sort-selector {
-    display: flex;
-    align-items: center;
-    gap: 0.35em;
-    margin: 0;
-    font-size: var(--font-down-1);
-
-    &__label {
-      color: var(--primary-high);
-    }
-
-    &__trigger.btn {
-      padding: 0.35em 0.55em;
-      min-height: auto;
-      line-height: var(--line-height-small);
-    }
-
-    .d-icon {
-      margin-left: 0.15em;
-    }
   }
 
   &__op {
@@ -863,6 +824,13 @@
   }
 }
 
+// ── Topic connector link ───────────────────────────────────────────
+.nested-view-link {
+  font-size: var(--font-down-1);
+  display: block;
+  margin-top: 0.5em;
+}
+
 // ── Deep-link highlight animation ──────────────────────────────────
 .nested-post--highlighted {
   animation: nested-post-highlight 2s ease-out;
@@ -962,10 +930,6 @@
     margin-right: -0.5em;
     padding: 0.5em;
     margin-bottom: 0;
-  }
-
-  .nested-view__controls-left {
-    flex-wrap: wrap;
   }
 
   .nested-context-view__banner {
@@ -1126,6 +1090,10 @@
 
   .nested-view__floating-actions {
     bottom: 1em;
+  }
+
+  .nested-sort-selector {
+    flex-wrap: wrap;
   }
 
   // Strip L-hook connectors on load-more buttons

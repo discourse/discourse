@@ -9,6 +9,7 @@ import { service } from "@ember/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -22,6 +23,7 @@ import NestedSortSelector from "./sort-selector";
 
 export default class NestedContextView extends Component {
   @service appEvents;
+  @service currentUser;
   @service header;
   @service screenTrack;
 
@@ -87,6 +89,10 @@ export default class NestedContextView extends Component {
 
   get #scrollKey() {
     return `${this.args.targetPostNumber}:${this.args.contextChain?.post?.id}`;
+  }
+
+  get flatViewUrl() {
+    return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}?flat=1`);
   }
 
   #scrollToTarget() {
@@ -194,16 +200,20 @@ export default class NestedContextView extends Component {
       />
 
       <div class="nested-view__controls">
-        <div class="nested-view__controls-left">
-          <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        </div>
-
+        <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
         <div class="nested-view__controls-right">
           {{#if @topic.has_activity_log}}
             <DButton
               class="btn-flat nested-view__activity-link"
               @action={{@showActivityLog}}
               @label="nested_replies.activity_log.link"
+            />
+          {{/if}}
+          {{#if this.currentUser.can_toggle_nested_mode}}
+            <DButton
+              class="btn-flat nested-view__flat-link"
+              @href={{this.flatViewUrl}}
+              @label="nested_replies.view_as_flat"
             />
           {{/if}}
         </div>
