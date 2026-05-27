@@ -171,36 +171,35 @@ module UpcomingChanges
         eligible, reason = eligibility_for(current_status, last_status_change)
 
         {
-          "name" => name.to_s,
-          "settings_path" => metadata[:settings_path],
-          "current_status" => current_status,
-          "next_status" => next_status,
-          "eligible" => eligible,
-          "eligibility_reason" => reason,
-          "days_since_status_change" => days_since(last_status_change),
-          "last_status_change_commit" => last_status_change&.fetch(:commit)&.sha,
-          "last_status_change_date" => last_status_change&.fetch(:commit)&.date,
-          "original_commit" => original_commit&.fetch(:commit)&.sha,
-          "original_commit_date" => original_commit&.fetch(:commit)&.date,
-          "original_author_name" => original_commit&.fetch(:commit)&.author_name,
-          "original_author_email" => original_commit&.fetch(:commit)&.author_email,
-          "original_pr_number" => original_pr_number(original_commit),
+          name: name.to_s,
+          settings_path: metadata[:settings_path],
+          current_status: current_status,
+          next_status: next_status,
+          eligible: eligible,
+          eligibility_reason: reason,
+          days_since_status_change: days_since(last_status_change),
+          last_status_change_commit: last_status_change&.fetch(:commit)&.sha,
+          last_status_change_date: last_status_change&.fetch(:commit)&.date,
+          original_commit: original_commit&.fetch(:commit)&.sha,
+          original_commit_date: original_commit&.fetch(:commit)&.date,
+          original_author_name: original_commit&.fetch(:commit)&.author_name,
+          original_author_email: original_commit&.fetch(:commit)&.author_email,
+          original_pr_number: original_pr_number(original_commit),
         }
       end
     end
 
     def apply(change_name)
-      record = report.find { |change| change["name"] == change_name.to_s }
+      record = report.find { |change| change[:name] == change_name.to_s }
       raise "Unknown upcoming change: #{change_name}" if record.nil?
-      if !record["eligible"]
-        raise "Upcoming change is not eligible: #{record["eligibility_reason"]}"
-      end
+      raise "Upcoming change is not eligible: #{record[:eligibility_reason]}" if !record[:eligible]
 
-      SourceStatusUpdater.new(
-        settings_file: File.join(@repo_path, record.fetch("settings_path")),
-      ).update!(change_name: change_name.to_s, next_status: record.fetch("next_status"))
+      SourceStatusUpdater.new(settings_file: File.join(@repo_path, record[:settings_path])).update!(
+        change_name: change_name.to_s,
+        next_status: record[:next_status],
+      )
 
-      record.merge("applied" => true)
+      record.merge(applied: true)
     end
 
     private
@@ -327,13 +326,13 @@ module UpcomingChanges
 
         parser.parse!(args)
 
-        report =
+        status_report =
           StatusReport.new(
             repo_path: options[:repo_path],
             settings_paths: options[:settings_paths],
             stale_after_days: options[:stale_after_days],
           )
-        output = options[:apply] ? report.apply(options[:apply]) : report.report
+        output = options[:apply] ? status_report.apply(options[:apply]) : status_report.report
         puts(options[:pretty] ? JSON.pretty_generate(output) : JSON.generate(output))
       end
     end
