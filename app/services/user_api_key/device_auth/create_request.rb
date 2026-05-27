@@ -41,8 +41,7 @@ class UserApiKey::DeviceAuth::CreateRequest
   def build_grant(params:, client:)
     request_params = params.attributes.symbolize_keys
     scopes = request_params[:scopes].split(",")
-    expires_in_seconds =
-      UserApiKey::DeviceAuth::Expiry.parse_seconds!(request_params[:expires_in_seconds])
+    expires_in_seconds = UserApiKey::Expiry.parse_seconds!(request_params[:expires_in_seconds])
     device_code = SecureRandom.hex(32)
 
     context[:device_request] = { device_code: device_code }

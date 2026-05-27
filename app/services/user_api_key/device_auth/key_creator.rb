@@ -14,7 +14,7 @@ class UserApiKey::DeviceAuth::KeyCreator
       client.keys.create!(
         user_id: user.id,
         push_url: grant.push_url,
-        expires_at: UserApiKey::DeviceAuth::Expiry.requested_expires_at(grant.expires_in_seconds),
+        expires_at: grant.expires_at,
         scopes: grant.scopes.map { |name| UserApiKeyScope.new(name: name) },
       )
     end

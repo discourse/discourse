@@ -31,8 +31,23 @@ class UserApiKey::DeviceAuth::UserActivation
   end
 
   def create_approval_token!(grant)
-    UserApiKey::DeviceAuth::CodeRegistry.delete_user_code(grant.user_code)
-    @approval_tokens.create!(grant.device_code)
+    approval_token = nil
+
+    UserApiKey::DeviceAuth::GrantStore.with_lock!(grant.device_code) do
+      grant = UserApiKey::DeviceAuth::GrantStore.load(grant.device_code)
+      return if unavailable_for_user?(grant)
+
+      grant.bind_to_user!(user)
+      UserApiKey::DeviceAuth::GrantStore.save!(
+        grant,
+        ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
+      )
+      approval_token = @approval_tokens.create!(grant.device_code)
+    end
+
+    approval_token
+  rescue Discourse::InvalidAccess
+    nil
   end
 
   def resolve_authorize_device_code(request_token:, user_code:, approval_token:)
@@ -61,23 +76,43 @@ class UserApiKey::DeviceAuth::UserActivation
     grant = UserApiKey::DeviceAuth::CodeRegistry.load_by_request_token(request_token)
     return expired_result if unavailable_for_user?(grant)
 
-    unless UserApiKey::DeviceAuth::CodeRegistry.user_code_matches_grant?(user_code, grant)
-      return Result.new(status: :invalid_code, grant: grant, request_token: request_token)
+    result = nil
+
+    UserApiKey::DeviceAuth::GrantStore.with_lock!(grant.device_code) do
+      grant = UserApiKey::DeviceAuth::CodeRegistry.load_by_request_token(request_token)
+
+      if unavailable_for_user?(grant)
+        result = expired_result
+        next
+      end
+
+      unless UserApiKey::DeviceAuth::CodeRegistry.user_code_matches_grant?(user_code, grant)
+        result = Result.new(status: :invalid_code, grant: grant, request_token: request_token)
+        next
+      end
+
+      if !grant.bind_to_user!(user)
+        result = expired_result
+        next
+      end
+
+      UserApiKey::DeviceAuth::GrantStore.save!(
+        grant,
+        ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
+      )
+
+      result =
+        Result.new(
+          status: :success,
+          grant: grant,
+          device_code: grant.device_code,
+          request_token: request_token,
+        )
     end
 
-    return expired_result if !grant.bind_to_user!(user)
-
-    UserApiKey::DeviceAuth::GrantStore.save!(
-      grant,
-      ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
-    )
-
-    Result.new(
-      status: :success,
-      grant: grant,
-      device_code: grant.device_code,
-      request_token: request_token,
-    )
+    result || expired_result
+  rescue Discourse::InvalidAccess
+    expired_result
   end
 
   def resolve_approval_token_device_code(approval_token)

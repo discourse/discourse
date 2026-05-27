@@ -16,6 +16,7 @@ export default class UserApiKeyActivateController extends Controller {
   request = null;
   codeFormApi = null;
   codeFormData = { [CODE_FIELD]: "" };
+  approvalFormData = {};
 
   normalizeCode(value) {
     return value?.toUpperCase().replace(/[^A-Z0-9]/g, "") || "";
@@ -100,8 +101,13 @@ export default class UserApiKeyActivateController extends Controller {
   async approve(data) {
     await this.submitAuthorization(
       "/user-api-key/device/authorize.json",
-      data.code
+      data?.code
     );
+  }
+
+  @action
+  async approveWithApprovalToken() {
+    await this.submitAuthorization("/user-api-key/device/authorize.json");
   }
 
   @action

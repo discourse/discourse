@@ -97,6 +97,47 @@ RSpec.describe UserApiKey::DeviceAuth::GrantStore do
     end
   end
 
+  describe ".consume_authorized" do
+    it "atomically removes and returns an authorized grant" do
+      authorized_grant =
+        UserApiKey::DeviceAuth::Grant.new(
+          status: :authorized,
+          device_code: device_code,
+          payload: "encrypted-payload",
+        )
+      described_class.save!(authorized_grant, ttl: 1.minute)
+
+      expect(described_class.consume_authorized(device_code)).to eq(authorized_grant)
+      expect(described_class.consume_authorized(device_code)).to be_nil
+      expect(described_class.load(device_code)).to be_nil
+    end
+
+    it "returns a locked sentinel when the lock is held" do
+      authorized_grant =
+        UserApiKey::DeviceAuth::Grant.new(
+          status: :authorized,
+          device_code: device_code,
+          payload: "encrypted-payload",
+        )
+      described_class.save!(authorized_grant, ttl: 1.minute)
+      Discourse.redis.setex(
+        described_class.lock_key(device_code),
+        UserApiKey::DeviceAuth::DEVICE_AUTHORIZATION_LOCK_TTL.to_i,
+        SecureRandom.hex,
+      )
+
+      expect(described_class.consume_authorized(device_code)).to eq(described_class::CONSUME_LOCKED)
+      expect(described_class.load(device_code)).to eq(authorized_grant)
+    end
+
+    it "does not consume pending grants" do
+      described_class.save!(grant, ttl: 1.minute)
+
+      expect(described_class.consume_authorized(device_code)).to be_nil
+      expect(described_class.load(device_code)).to eq(grant)
+    end
+  end
+
   describe ".with_lock!" do
     it "runs while holding the grant lock" do
       expect { |block| described_class.with_lock!(device_code, &block) }.to yield_control

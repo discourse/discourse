@@ -34,11 +34,13 @@ class UserApiKey::DeviceAuth::RequestValidator
   end
 
   def self.validate_requested_scopes!(scopes)
-    if scopes.blank? || scopes.any?(&:blank?) ||
-         !UserApiKey.allowed_scopes.superset?(Set.new(scopes)) ||
-         DISALLOWED_DEVICE_SCOPES.intersect?(Set.new(scopes))
+    raise Discourse::InvalidParameters.new(:scopes) if scopes.blank? || scopes.any?(&:blank?)
+
+    requested_scopes = Set.new(scopes)
+    if DISALLOWED_DEVICE_SCOPES.intersect?(requested_scopes)
       raise Discourse::InvalidParameters.new(:scopes)
     end
+    raise Discourse::InvalidAccess if !UserApiKey.allowed_scopes.superset?(requested_scopes)
   end
 
   def self.validate_client_scopes!(client, scopes)

@@ -9,7 +9,9 @@ class UserApiKey::DeviceAuth::Deny
     validates :device_code, presence: true
   end
 
-  step :deny_grant
+  try Discourse::InvalidParameters, Discourse::InvalidAccess do
+    step :deny_grant
+  end
 
   private
 

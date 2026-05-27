@@ -29,7 +29,6 @@ class UserApiKeysController < ApplicationController
 
   AUTH_API_VERSION = 4
   ALLOWED_PADDING_MODES = %w[pkcs1 oaep].freeze
-  DEVICE_AUTH_TTL = 10.minutes
   DEVICE_REQUESTS_PER_MINUTE = 20
   DEVICE_POLLS_PER_MINUTE = 60
   DEVICE_ACTIVATION_ATTEMPTS_PER_MINUTE = 10
@@ -139,10 +138,6 @@ class UserApiKeysController < ApplicationController
   def create_device_request
     ensure_json_request!
     rate_limit_device_request_creation
-    require_params
-    find_client
-    require_client_params
-    validate_params
 
     UserApiKey::DeviceAuth::CreateRequest.call(service_params) do
       on_success do |device_request:|
@@ -210,11 +205,15 @@ class UserApiKeysController < ApplicationController
       return
     end
 
+    approval_token = device_user_activation.create_approval_token!(result.grant)
+
+    if approval_token.blank?
+      render_device_activation({ state: "enter_code", expired_code: true })
+      return
+    end
+
     render_device_activation(
-      device_authorization_model(
-        state: "authorize",
-        approval_token: device_user_activation.create_approval_token!(result.grant),
-      ),
+      device_authorization_model(state: "authorize", approval_token: approval_token),
     )
   end
 
@@ -283,6 +282,9 @@ class UserApiKeysController < ApplicationController
         render_device_activation({ state: "complete", denied: true })
       end
       on_failed_step(:deny_grant) do
+        render_device_activation({ state: "enter_code", expired_code: true })
+      end
+      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do
         render_device_activation({ state: "enter_code", expired_code: true })
       end
     end
@@ -596,11 +598,11 @@ class UserApiKeysController < ApplicationController
   end
 
   def parse_expires_in_seconds!
-    UserApiKey::DeviceAuth::Expiry.parse_seconds!(params[:expires_in_seconds])
+    UserApiKey::Expiry.parse_seconds!(params[:expires_in_seconds])
   end
 
   def requested_expires_at(expires_in_seconds)
-    UserApiKey::DeviceAuth::Expiry.requested_expires_at(expires_in_seconds)
+    UserApiKey::Expiry.requested_expires_at(expires_in_seconds)
   end
 
   def ensure_json_request!

@@ -47,8 +47,24 @@ module PageObjects
         self
       end
 
+      def click_continue
+        click_button(I18n.t("user_api_key.device.continue"))
+        self
+      end
+
       def click_authorize
-        click_button(I18n.t("user_api_key.authorize"))
+        if has_css?(
+             ".authorize-api-key__buttons .btn-primary",
+             text: I18n.t("user_api_key.authorize"),
+             wait: 0,
+           )
+          find(
+            ".authorize-api-key__buttons .btn-primary",
+            text: I18n.t("user_api_key.authorize"),
+          ).click
+        else
+          click_button(I18n.t("user_api_key.authorize"))
+        end
         self
       end
 

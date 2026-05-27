@@ -580,7 +580,8 @@ RSpec.describe UserApiKeysController do
     it "shows the authorization page for a manually submitted valid code" do
       freeze_time
       body = create_pending_device_request(scopes: "read,write", expires_in_seconds: 1.day.to_i)
-      sign_in(Fabricate(:user, refresh_auto_groups: true))
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
 
       post "/user-api-key/activate.json", params: { code: body["user_code"].delete("-") }
 
@@ -597,6 +598,38 @@ RSpec.describe UserApiKeysController do
       expect(response.parsed_body.dig("device_auth", "write_scope")).to eq(true)
       expect(response.parsed_body.dig("device_auth", "unregistered_client")).to eq(true)
       expect(response.parsed_body.dig("device_auth", "expires_at")).to eq(1.day.from_now.iso8601)
+      expect(Discourse.redis.get("user_api_key:device:code:#{body["user_code"]}")).to eq(
+        body["device_code"],
+      )
+
+      grant = UserApiKey::DeviceAuth::GrantStore.load(body["device_code"])
+      expect(grant.authorizing_user_id).to eq(user.id)
+    end
+
+    it "does not allow another user to claim a manual code after the first user reaches confirmation" do
+      body = create_pending_device_request
+      request_token =
+        Rack::Utils.parse_query(URI.parse(body["verification_uri_with_request"]).query)["request"]
+      first_user = Fabricate(:user, refresh_auto_groups: true)
+      second_user = Fabricate(:user, refresh_auto_groups: true)
+
+      sign_in(first_user)
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
+      expect(response.parsed_body["approval_token"]).to be_present
+
+      sign_in(second_user)
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
+
+      expect(response.parsed_body["expired_code"]).to eq(true)
+      expect(response.parsed_body["approval_token"]).to be_blank
+
+      post "/user-api-key/device/authorize.json",
+           params: {
+             request: request_token,
+             code: body["user_code"],
+           }
+      expect(response.parsed_body["state"]).to eq("enter_code")
+      expect(response.parsed_body["expired_code"]).to eq(true)
     end
 
     it "warns when no expiry is requested" do

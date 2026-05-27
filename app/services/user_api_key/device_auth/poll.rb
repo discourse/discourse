@@ -24,8 +24,14 @@ class UserApiKey::DeviceAuth::Poll
     if grant.pending?
       { status: "authorization_pending" }
     elsif grant.authorized?
-      UserApiKey::DeviceAuth::GrantStore.delete(params.device_code)
-      { status: "authorized", payload: grant.payload }
+      authorized_grant = UserApiKey::DeviceAuth::GrantStore.consume_authorized(params.device_code)
+      if authorized_grant == UserApiKey::DeviceAuth::GrantStore::CONSUME_LOCKED
+        { status: "authorization_pending" }
+      elsif authorized_grant.present?
+        { status: "authorized", payload: authorized_grant.payload }
+      else
+        { status: "expired_token" }
+      end
     elsif grant.denied?
       { status: "access_denied" }
     else

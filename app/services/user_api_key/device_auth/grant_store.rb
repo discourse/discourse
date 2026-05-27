@@ -2,6 +2,7 @@
 
 class UserApiKey::DeviceAuth::GrantStore
   REDIS_PREFIXES = [UserApiKey::DeviceAuth::DEVICE_AUTHORIZATION_LOCK_REDIS_PREFIX].freeze
+  CONSUME_LOCKED = :locked
 
   def self.grant_key(device_code)
     "#{UserApiKey::DeviceAuth::DEVICE_CODE_REDIS_PREFIX}#{device_code}"
@@ -29,6 +30,24 @@ class UserApiKey::DeviceAuth::GrantStore
 
   def self.delete(device_code)
     Discourse.redis.del(grant_key(device_code))
+  end
+
+  def self.consume_authorized(device_code)
+    return if !UserApiKey::DeviceAuth::DEVICE_CODE_REGEX.match?(device_code.to_s)
+
+    consumed_grant = nil
+
+    with_lock!(device_code) do
+      grant = load(device_code)
+      if grant&.authorized?
+        delete(device_code)
+        consumed_grant = grant
+      end
+    end
+
+    consumed_grant
+  rescue Discourse::InvalidAccess
+    CONSUME_LOCKED
   end
 
   def self.ttl_for_update(device_code)

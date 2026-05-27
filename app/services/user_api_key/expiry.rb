@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserApiKey::DeviceAuth::Expiry
+class UserApiKey::Expiry
   def self.parse_seconds!(value)
     return if value.blank?
 

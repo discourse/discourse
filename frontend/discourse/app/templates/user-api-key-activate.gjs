@@ -144,12 +144,18 @@ export default <template>
             </Form>
           {{else}}
             <div class="authorize-api-key__buttons">
-              <DButton
-                @isLoading={{@controller.isLoading}}
-                @action={{@controller.approve}}
-                @label="user_api_key.authorize"
-                class="btn-primary"
-              />
+              <Form
+                @data={{@controller.approvalFormData}}
+                @onSubmit={{@controller.approveWithApprovalToken}}
+                as |form|
+              >
+                <form.Actions>
+                  <form.Submit
+                    @label="user_api_key.authorize"
+                    @disabled={{@controller.isLoading}}
+                  />
+                </form.Actions>
+              </Form>
               <DButton
                 @disabled={{@controller.isLoading}}
                 @action={{@controller.deny}}

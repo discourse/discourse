@@ -77,8 +77,9 @@ RSpec.describe UserApiKey::DeviceAuth::Grant do
     expect(grant.push_url).to be_nil
     expect(grant.padding).to eq("oaep")
     expect(grant.expires_in_seconds).to eq(1.day.to_i)
+    expect(grant.expires_at).to eq_time(1.day.from_now)
     expect(grant).not_to be_unregistered_client
-    expect(grant.to_h["created_at"]).to eq(Time.zone.now.iso8601)
+    expect(grant.to_h["created_at"]).to eq(Time.zone.now.iso8601(6))
   end
 
   it "builds a grant for an unregistered client" do
@@ -99,7 +100,7 @@ RSpec.describe UserApiKey::DeviceAuth::Grant do
     expect(grant.public_key).to eq("submitted-key")
     expect(grant.push_url).to eq("https://example.com/push")
     expect(grant).to be_unregistered_client
-    expect(grant.to_h["created_at"]).to eq(Time.zone.now.iso8601)
+    expect(grant.to_h["created_at"]).to eq(Time.zone.now.iso8601(6))
   end
 
   it "falls back to request details when registered client fields are missing" do
@@ -119,39 +120,55 @@ RSpec.describe UserApiKey::DeviceAuth::Grant do
   end
 
   it "exposes fields used by the authorization view" do
-    grant =
-      described_class.new(
-        status: :pending,
-        device_code: device_code,
-        user_code: "ABCD-2345",
-        application_name: "Device Client",
-        client_id: "device-client",
-        scopes: %w[read write],
-        push_url: "https://example.com/push",
-        padding: "oaep",
-        expires_in_seconds: 1.day.to_i,
-        unregistered_client: true,
+    grant = nil
+    freeze_time do
+      grant =
+        described_class.new(
+          status: :pending,
+          device_code: device_code,
+          user_code: "ABCD-2345",
+          application_name: "Device Client",
+          client_id: "device-client",
+          scopes: %w[read write],
+          push_url: "https://example.com/push",
+          padding: "oaep",
+          expires_in_seconds: 1.day.to_i,
+          unregistered_client: true,
+        )
+
+      expect(grant.user_code).to eq("ABCD-2345")
+      expect(grant.application_name).to eq("Device Client")
+      expect(grant.client_id).to eq("device-client")
+      expect(grant.localized_scopes).to eq(
+        [I18n.t("user_api_key.scopes.read"), I18n.t("user_api_key.scopes.write")],
       )
+      expect(grant).to be_write_scope
+      expect(grant.push_url).to eq("https://example.com/push")
+      expect(grant.padding).to eq("oaep")
+      expect(grant.expires_in_seconds).to eq(1.day.to_i)
+      expect(grant).to be_unregistered_client
+      expect(grant.expires_at).to eq_time(1.day.from_now)
+    end
 
-    expect(grant.user_code).to eq("ABCD-2345")
-    expect(grant.application_name).to eq("Device Client")
-    expect(grant.client_id).to eq("device-client")
-    expect(grant.localized_scopes).to eq(
-      [I18n.t("user_api_key.scopes.read"), I18n.t("user_api_key.scopes.write")],
-    )
-    expect(grant).to be_write_scope
-    expect(grant.push_url).to eq("https://example.com/push")
-    expect(grant.padding).to eq("oaep")
-    expect(grant.expires_in_seconds).to eq(1.day.to_i)
-    expect(grant).to be_unregistered_client
-    freeze_time { expect(grant.expires_at).to eq_time(1.day.from_now) }
-
-    grant.expires_in_seconds = nil
-    expect(grant.expires_at).to be_nil
+    grant_without_expiry = described_class.new(status: :pending, device_code: device_code)
+    expect(grant_without_expiry.expires_at).to be_nil
 
     grant.scopes = nil
     expect(grant.scopes).to eq([])
     expect(grant).not_to be_write_scope
+  end
+
+  it "uses created_at when loading an older serialized grant without expires_at" do
+    freeze_time
+    grant =
+      described_class.new(
+        status: :pending,
+        device_code: device_code,
+        expires_in_seconds: 1.day.to_i,
+        created_at: 1.hour.ago.iso8601(6),
+      )
+
+    expect(grant.expires_at).to eq_time(23.hours.from_now)
   end
 
   it "rejects invalid statuses" do

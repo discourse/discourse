@@ -15,7 +15,8 @@ class UserApiKey::DeviceAuth::PayloadBuilder
 
   def self.encrypted_payload!(grant, key)
     public_key = UserApiKey::DeviceAuth::Crypto.parse_public_key!(grant.public_key)
-    payload = payload_json(grant, key_value: key.key, push: key.has_push?)
+    payload =
+      payload_json(grant, key_value: key.key, push: key.has_push?, expires_at: key.expires_at)
 
     UserApiKey::DeviceAuth::Crypto.validate_payload_size!(
       payload,
@@ -27,13 +28,9 @@ class UserApiKey::DeviceAuth::PayloadBuilder
     )
   end
 
-  def self.payload_json(grant, key_value:, push:)
+  def self.payload_json(grant, key_value:, push:, expires_at: grant.expires_at)
     payload = { key: key_value, nonce: grant.nonce, push: push, api: AUTH_API_VERSION }
-    if grant.expires_in_seconds.present?
-      payload[:expires_at] = UserApiKey::DeviceAuth::Expiry.requested_expires_at(
-        grant.expires_in_seconds,
-      ).iso8601
-    end
+    payload[:expires_at] = expires_at.iso8601 if expires_at.present?
     payload.to_json
   end
 end

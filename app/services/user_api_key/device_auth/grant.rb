@@ -7,6 +7,8 @@ class UserApiKey::DeviceAuth::Grant
   STATUSES = [PENDING_STATUS, AUTHORIZED_STATUS, DENIED_STATUS].freeze
 
   def self.build(params, client, scopes, expires_in_seconds, device_code)
+    created_at = Time.zone.now
+
     new(
       status: :pending,
       device_code: device_code,
@@ -23,8 +25,10 @@ class UserApiKey::DeviceAuth::Grant
       push_url: params[:push_url].presence,
       padding: params[:padding].presence,
       expires_in_seconds: expires_in_seconds,
+      expires_at:
+        expires_in_seconds.present? ? (created_at + expires_in_seconds.seconds).iso8601(6) : nil,
       unregistered_client: client.blank? || client.public_key.blank?,
-      created_at: Time.zone.now.iso8601,
+      created_at: created_at.iso8601(6),
     )
   end
 
@@ -51,7 +55,7 @@ class UserApiKey::DeviceAuth::Grant
               :payload,
               :authorizing_user_id
 
-  attr_writer :scopes, :expires_in_seconds
+  attr_writer :scopes
 
   def initialize(
     status:,
@@ -66,6 +70,7 @@ class UserApiKey::DeviceAuth::Grant
     push_url: nil,
     padding: nil,
     expires_in_seconds: nil,
+    expires_at: nil,
     unregistered_client: false,
     created_at: nil,
     payload: nil,
@@ -88,8 +93,9 @@ class UserApiKey::DeviceAuth::Grant
     @push_url = push_url
     @padding = padding
     @expires_in_seconds = expires_in_seconds
-    @unregistered_client = unregistered_client
     @created_at = created_at
+    @expires_at = expires_at || default_expires_at&.iso8601(6)
+    @unregistered_client = unregistered_client
     @payload = payload
     @authorized_at = authorized_at
     @denied_at = denied_at
@@ -127,7 +133,9 @@ class UserApiKey::DeviceAuth::Grant
   end
 
   def expires_at
-    UserApiKey::DeviceAuth::Expiry.requested_expires_at(expires_in_seconds)
+    return if @expires_at.blank?
+
+    Time.zone.parse(@expires_at.to_s)
   end
 
   def unregistered_client?
@@ -182,6 +190,7 @@ class UserApiKey::DeviceAuth::Grant
       "push_url" => push_url,
       "padding" => padding,
       "expires_in_seconds" => expires_in_seconds,
+      "expires_at" => @expires_at,
       "unregistered_client" => unregistered_client?,
       "created_at" => @created_at,
       "payload" => payload,
@@ -205,6 +214,16 @@ class UserApiKey::DeviceAuth::Grant
 
   def normalize_status(status)
     status.to_s
+  end
+
+  def default_expires_at
+    return if expires_in_seconds.blank?
+
+    if @created_at.present?
+      Time.zone.parse(@created_at.to_s) + expires_in_seconds.to_i.seconds
+    else
+      UserApiKey::Expiry.requested_expires_at(expires_in_seconds)
+    end
   end
 
   def validate_status!

@@ -8,9 +8,9 @@ class UserApiKey::DeviceAuth
   #    returns a device code, a user-facing code, and an 8-character request token.
   # 2. The user visits `/user-api-key/activate` manually, or opens the request-token URL.
   #    `UserActivation` loads the pending grant and validates user-facing codes/tokens.
-  # 3. The user confirms the code. Manual-code approvals receive a browser-session approval
-  #    token. Request-token approvals bind the pending grant to the approving user after a
-  #    matching code is submitted.
+  # 3. The user confirms the code. Manual-code approvals bind the pending grant to the
+  #    approving user and receive a browser-session approval token. Request-token approvals
+  #    bind the pending grant to the approving user after a matching code is submitted.
   # 4. `Authorize` creates the User API key, encrypts the response payload, stores it briefly,
   #    and removes the user-code/request-token indexes.
   # 5. The client polls until `Poll` returns pending, denied, expired, or the encrypted payload.
