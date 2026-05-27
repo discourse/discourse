@@ -475,6 +475,51 @@ RSpec.describe BadgeGranter do
       BadgeGranter.grant(badge, nil)
       expect(badge.reload.grant_count).to eq(0)
     end
+
+    context "when the badge was granted for a specific post" do
+      let(:multi_badge) { Fabricate(:badge, multiple_grant: true) }
+      fab!(:topic)
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "includes post and topic context in the notification" do
+        BadgeGranter.grant(multi_badge, user, post_id: post.id)
+
+        data =
+          user
+            .notifications
+            .find_by(notification_type: Notification.types[:granted_badge])
+            .data_hash
+        expect(data["post_id"]).to eq(post.id)
+        expect(data["post_number"]).to eq(post.post_number)
+        expect(data["topic_id"]).to eq(topic.id)
+        expect(data["topic_title"]).to eq(topic.title)
+      end
+
+      it "omits post context for a non-post badge grant" do
+        BadgeGranter.grant(badge, user)
+
+        data =
+          user
+            .notifications
+            .find_by(notification_type: Notification.types[:granted_badge])
+            .data_hash
+        expect(data).not_to have_key("post_id")
+        expect(data).not_to have_key("topic_id")
+      end
+
+      it "omits post context when the post is no longer visible to the user" do
+        post.trash!
+
+        BadgeGranter.grant(multi_badge, user, post_id: post.id)
+
+        data =
+          user
+            .notifications
+            .find_by(notification_type: Notification.types[:granted_badge])
+            .data_hash
+        expect(data).not_to have_key("post_id")
+      end
+    end
   end
 
   describe "revoke" do

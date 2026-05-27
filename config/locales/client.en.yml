@@ -3476,6 +3476,7 @@ en:
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Earned '%{description}'"
+      granted_badge_for_post: "Earned '%{description}' for your post in %{topic}"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>New Topic</span> %{description}"
       membership_request_accepted: "Membership accepted in '%{group_name}'"

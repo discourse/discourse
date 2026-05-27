@@ -58,4 +58,39 @@ module("Unit | Notification Types | granted-badge", function (hooks) {
       "contains the right content"
     );
   });
+
+  test("linkHref points at the post when the badge was granted for one", function (assert) {
+    const notification = getNotification({
+      data: { topic_id: 123, post_number: 4 },
+    });
+    const director = createRenderDirector(
+      notification,
+      "granted_badge",
+      this.siteSettings
+    );
+    assert.strictEqual(
+      director.linkHref,
+      "/t/123/4",
+      "links to the post that earned the badge"
+    );
+  });
+
+  test("description names the topic when the badge was granted for a post", function (assert) {
+    const notification = getNotification({
+      data: { topic_id: 123, post_number: 4, topic_title: "A great topic" },
+    });
+    const director = createRenderDirector(
+      notification,
+      "granted_badge",
+      this.siteSettings
+    );
+    assert.strictEqual(
+      director.description,
+      i18n("notifications.granted_badge_for_post", {
+        description: "Badge 15",
+        topic: "A great topic",
+      }),
+      "includes the topic title"
+    );
+  });
 });

@@ -152,7 +152,13 @@ class BadgeGranter
         skip_new_user_tips = @user.user_option.skip_new_user_tips
         unless self.class.suppress_notification?(@badge, user_badge.granted_at, skip_new_user_tips)
           notification =
-            self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
+            self.class.send_notification(
+              @user.id,
+              @user.username,
+              @user.effective_locale,
+              @badge,
+              post_id: user_badge.post_id,
+            )
           user_badge.update!(notification_id: notification.id)
         end
         is_favorite = @user.user_badges.where(badge: @badge, is_favorite: true).exists?
@@ -456,7 +462,7 @@ class BadgeGranter
         #{post_clause}
         /*where*/
         ON CONFLICT DO NOTHING
-        RETURNING id, user_id, granted_at
+        RETURNING id, user_id, granted_at, post_id
       )
       SELECT w.*, username, locale, (u.admin OR u.moderator) AS staff, uo.skip_new_user_tips
         FROM w
@@ -499,7 +505,8 @@ class BadgeGranter
       next if suppress_notification?(badge, row.granted_at, row.skip_new_user_tips)
       next if row.staff && badge.awarded_for_trust_level?
 
-      notification = send_notification(row.user_id, row.username, row.locale, badge)
+      notification =
+        send_notification(row.user_id, row.username, row.locale, badge, post_id: row.post_id)
       UserBadge.trigger_user_badge_granted_event(badge.id, row.user_id)
 
       DB.exec(
@@ -550,18 +557,35 @@ class BadgeGranter
     use_default_locale ? SiteSetting.default_locale : locale
   end
 
-  def self.send_notification(user_id, username, locale, badge)
+  def self.send_notification(user_id, username, locale, badge, post_id: nil)
     I18n.with_locale(notification_locale(locale)) do
+      data = {
+        badge_id: badge.id,
+        badge_name: badge.display_name,
+        badge_slug: badge.slug,
+        badge_title: badge.allow_title,
+        username: username,
+      }
+
+      # When the badge was granted for a specific post (e.g. Thank You,
+      # Nice Reply), include enough to link the notification straight to
+      # that post. Post.find_by excludes trashed posts via the default
+      # scope; the guardian check additionally drops posts the user
+      # can't see (e.g. moved to a hidden category).
+      if post_id
+        post = Post.find_by(id: post_id)
+        if post && Guardian.new(User.find_by(id: user_id)).can_see?(post)
+          data[:post_id] = post.id
+          data[:post_number] = post.post_number
+          data[:topic_id] = post.topic_id
+          data[:topic_title] = post.topic&.title
+        end
+      end
+
       Notification.create!(
         user_id: user_id,
         notification_type: Notification.types[:granted_badge],
-        data: {
-          badge_id: badge.id,
-          badge_name: badge.display_name,
-          badge_slug: badge.slug,
-          badge_title: badge.allow_title,
-          username: username,
-        }.to_json,
+        data: data.to_json,
       )
     end
   end
