@@ -189,27 +189,8 @@ module PageObjects
         has_no_css?(wrapper_selector(post, ".nested-post__article"))
       end
 
-      def has_flat_view_link?
-        has_css?(".nested-view__flat-link")
-      end
-
-      def has_no_flat_view_link?
-        has_no_css?(".nested-view__flat-link")
-      end
-
-      def has_view_as_nested_link?
-        has_css?(".nested-view-link")
-      end
-
-      def has_no_view_as_nested_link?
-        has_no_css?(".nested-view-link")
-      end
-
       def has_sort_active?(sort)
-        has_css?(
-          ".nested-sort-selector button.active",
-          text: I18n.t("js.nested_replies.sort.#{sort}"),
-        )
+        has_css?(".nested-sort-selector__trigger", text: I18n.t("js.nested_replies.sort.#{sort}"))
       end
 
       def has_op_post?
@@ -403,13 +384,9 @@ module PageObjects
         self
       end
 
-      def click_flat_view_link
-        find(".nested-view__flat-link").click
-        self
-      end
-
       def click_sort(sort)
-        find(".nested-sort-selector button", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        find(".nested-sort-selector__trigger").click
+        find(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 
