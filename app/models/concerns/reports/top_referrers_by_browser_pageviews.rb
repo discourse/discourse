@@ -26,10 +26,6 @@ module Reports::TopReferrersByBrowserPageviews
       host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
       escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
 
-      # The percent denominator (total) counts referred traffic only: direct
-      # visits (NULL referrer) and self-referrals are excluded so each percent
-      # reads as a referrer's share of external traffic rather than of all
-      # pageviews.
       sql = <<~SQL
         WITH ranked AS (
           SELECT

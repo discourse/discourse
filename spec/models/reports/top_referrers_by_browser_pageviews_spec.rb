@@ -114,8 +114,6 @@ describe Reports::TopReferrersByBrowserPageviews do
       expect(limited.data.map { |row| row[:normalized_referrer] }).to eq(
         %w[a.example.com b.example.com],
       )
-      # Denominator is all 10 external pageviews (a + b + c), not just the 8
-      # shown, so the hidden c.example.com still dilutes the percentages.
       expect(limited.data.map { |row| row[:percent] }).to eq([50, 30])
     end
   end
