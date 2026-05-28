@@ -43,6 +43,8 @@ module("Unit | Utility | workflows property engine", function () {
       propertyLabel("trigger:schedule", "minutesInterval"),
       "Minutes between triggers"
     );
+    assert.strictEqual(propertyLabel("header_auth", "name"), "Header name");
+    assert.strictEqual(propertyLabel("header_auth", "value"), "Header value");
     assert.strictEqual(
       propertyDescription("action:topic", "raw"),
       "Raw content for the first post"

@@ -26,6 +26,9 @@ en:
         title: "Configuration issues"
         required: "%{label} is required"
         unknown: "%{label}: %{message}"
+      header_auth:
+        name: "Header name"
+        value: "Header value"
       run_scope:
         per_item: "One run per item"
         all_items: "One run for all items"
