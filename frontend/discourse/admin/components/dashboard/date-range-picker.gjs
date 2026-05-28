@@ -520,27 +520,26 @@ export default class DashboardDateRangePicker extends Component {
 
   <template>
     <div class="d-date-range-picker">
-      <ul
+      <div
         class="d-date-range-picker__presets"
+        role="group"
         aria-label={{i18n "date_range_picker.presets.label"}}
         {{this.scrollActivePresetIntoView}}
       >
         {{#each this.presets as |preset|}}
-          <li class="d-date-range-picker__preset-item">
-            <button
-              type="button"
-              class={{dConcatClass
-                "d-date-range-picker__preset"
-                (if (eq this.activePreset preset) "is-active")
-              }}
-              aria-current={{if (eq this.activePreset preset) "true"}}
-              {{on "click" (fn this.selectPreset preset)}}
-            >
-              {{i18n (get PRESET_LABEL_KEYS preset)}}
-            </button>
-          </li>
+          <button
+            type="button"
+            class={{dConcatClass
+              "d-date-range-picker__preset"
+              (if (eq this.activePreset preset) "is-active")
+            }}
+            aria-current={{if (eq this.activePreset preset) "true"}}
+            {{on "click" (fn this.selectPreset preset)}}
+          >
+            {{i18n (get PRESET_LABEL_KEYS preset)}}
+          </button>
         {{/each}}
-      </ul>
+      </div>
 
       <div class="d-date-range-picker__body">
         <div
@@ -549,7 +548,7 @@ export default class DashboardDateRangePicker extends Component {
         >
           <button
             type="button"
-            class="d-date-range-picker__nav --prev"
+            class="d-date-range-picker__nav"
             aria-label={{i18n "dates.previous_month"}}
             {{on "click" (fn this.shiftMonth -1)}}
           >
@@ -564,7 +563,7 @@ export default class DashboardDateRangePicker extends Component {
                 </div>
                 <div class="d-date-range-picker__weekdays" aria-hidden="true">
                   {{#each this.weekdayLabels as |dow|}}
-                    <span class="d-date-range-picker__weekday">{{dow}}</span>
+                    <span>{{dow}}</span>
                   {{/each}}
                 </div>
                 <div
@@ -577,10 +576,7 @@ export default class DashboardDateRangePicker extends Component {
                     <div class="d-date-range-picker__week" role="row">
                       {{#each week as |day|}}
                         {{#if (this.isMutedDay day month)}}
-                          <span
-                            class="d-date-range-picker__day-placeholder"
-                            aria-hidden="true"
-                          ></span>
+                          <span aria-hidden="true"></span>
                         {{else}}
                           <button
                             type="button"
@@ -610,7 +606,7 @@ export default class DashboardDateRangePicker extends Component {
 
           <button
             type="button"
-            class="d-date-range-picker__nav --next"
+            class="d-date-range-picker__nav"
             aria-label={{i18n "dates.next_month"}}
             {{on "click" (fn this.shiftMonth 1)}}
           >
@@ -630,9 +626,6 @@ export default class DashboardDateRangePicker extends Component {
             {{on "change" this.commitStartInput}}
             {{on "keydown" this.commitInputOnEnter}}
           />
-          <span class="d-date-range-picker__input-arrow" aria-hidden="true">
-            {{dIcon "arrow-right"}}
-          </span>
           <input
             type="text"
             class="d-date-range-picker__input"
