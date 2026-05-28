@@ -8,7 +8,7 @@ end
 
 class Stylesheet::Manager
   # Bump this number to invalidate all stylesheet caches (e.g. if you change something inside the compiler)
-  BASE_COMPILER_VERSION = 6
+  BASE_COMPILER_VERSION = 7
 
   # Add any dependencies here which should automatically cause a global cache invalidation.
   BASE_CACHE_KEY = "#{BASE_COMPILER_VERSION}::#{DiscourseFonts::VERSION}"
@@ -57,12 +57,14 @@ class Stylesheet::Manager
         include_disabled: true,
         mobile_view: true,
         desktop_view: true,
+        include_admin: true,
       )
     targets +=
       Discourse.find_plugin_css_assets(
         include_disabled: true,
         mobile_view: true,
         desktop_view: true,
+        include_admin: true,
         rtl: true,
       )
 

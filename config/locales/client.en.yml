@@ -178,6 +178,18 @@ en:
       placeholder: date
       from_placeholder: "from date"
       to_placeholder: "to date"
+    date_range_picker:
+      apply: "Apply"
+      start_date: "Start date"
+      end_date: "End date"
+      date_placeholder: "yyyy/mm/dd"
+      presets:
+        label: "Date range presets"
+        last_7_days: "Last 7 days"
+        last_30_days: "Last 30 days"
+        last_3_months: "Last 3 months"
+        last_6_months: "Last 6 months"
+        last_year: "Last year"
     languages:
       ar:
         name: Arabic
@@ -3805,6 +3817,11 @@ en:
           other: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
+        dismiss_all: "Dismiss all"
+        dismiss_new_topics: "Dismiss new topics"
+        dismiss_new_replies: "Dismiss new replies"
+        dismiss_new_menu: "Dismiss options"
+        dismiss_and_stop_tracking: "Dismiss and stop tracking"
         dismiss_new: "Dismiss New"
         dismiss_new_modal:
           title: "Dismiss new"
@@ -3985,8 +4002,6 @@ en:
     nested_replies:
       nested_view: "Nested view"
       flat_view: "Flat view"
-      view_as_nested: "View as nested"
-      view_as_flat: "View as flat"
       sort:
         label: "Sort by"
         top: "Top"
@@ -6964,19 +6979,21 @@ en:
                 summary: "Pick a longer date range or come back once your community has more activity."
 
         reports_section:
+          description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
-            counter: "%{count} / %{max} reports"
+            counter: "%{count} / %{max} reports added"
             enabled_heading: "Enabled"
             all_heading: "All reports"
             apply: "Apply"
-            toggle: "Toggle report"
-            move_up: "Move up"
-            move_down: "Move down"
+            enable: "Enable %{title}"
+            disable: "Disable %{title}"
+            move_up: "Move %{title} up"
+            move_down: "Move %{title} down"
 
         configure:
           button: "Configure"

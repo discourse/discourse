@@ -214,6 +214,16 @@ pl_PL:
       placeholder: data
       from_placeholder: "od daty"
       to_placeholder: "do daty"
+    date_range_picker:
+      apply: "Zastosuj"
+      start_date: "Data rozpoczęcia"
+      end_date: "Data zakończenia"
+      presets:
+        last_7_days: "Ostatnie 7 dni"
+        last_30_days: "Ostatnie 30 dni"
+        last_3_months: "Ostatnie 3 miesiące"
+        last_6_months: "Ostatnie 6 miesięcy"
+        last_year: "W ubiegłym roku"
     languages:
       ar:
         name: arabski
@@ -3914,6 +3924,11 @@ pl_PL:
           other: "Odrzuć (%{count})…"
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
         also_dismiss_topics: "Przestać śledzić wskazane tematy. Nie chcę, aby pojawiały się w zakładce nieprzeczytane."
+        dismiss_all: "Odrzuć wszystko"
+        dismiss_new_topics: "Odrzuć nowe tematy"
+        dismiss_new_replies: "Odrzuć nowe odpowiedzi"
+        dismiss_new_menu: "Odrzuć opcje"
+        dismiss_and_stop_tracking: "Odrzuć i zatrzymaj śledzenie"
         dismiss_new: "Wyczyść nowe"
         dismiss_new_modal:
           title: "Odrzuć nowe"
@@ -4133,8 +4148,6 @@ pl_PL:
     nested_replies:
       nested_view: "Widok zagnieżdżony"
       flat_view: "Widok płaski"
-      view_as_nested: "Wyświetl jako zagnieżdżone"
-      view_as_flat: "Wyświetl jako płaskie"
       sort:
         label: "Sortuj po"
         top: "Popularne"
@@ -4159,6 +4172,9 @@ pl_PL:
         other: "%{count} odpowiedzi"
       collapse: "Zwiń"
       collapse_parent: "Zwiń wątek nadrzędny"
+      focused_path: "Skoncentrowana ścieżka odpowiedzi"
+      return_to_branch: "Powrót do gałęzi %{username}"
+      all_replies: "Wszystkie odpowiedzi"
       category_settings:
         default_nested_view: "Użyj widoku zagnieżdżonego jako domyślnego dla tematów w tej kategorii"
       no_replies: "Nie ma jeszcze odpowiedzi."
@@ -5827,25 +5843,29 @@ pl_PL:
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
-      synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
+      synonyms_description:
+        one: "Synonim %{synonyms} zostanie zastąpiony przez %{base_tag_name}."
+        few: "Synonimy %{synonyms} zostaną zastąpiony przez %{base_tag_name}."
+        many: "Synonimy %{synonyms} zostaną zastąpiony przez %{base_tag_name}."
+        other: "Synonimy %{synonyms} zostaną zastąpiony przez %{base_tag_name}."
       synonyms_inline: "Synonimy te zostaną zastąpione przez %{base_tag_name}:"
       synonym_hint: "→ %{tag_name}"
       save: "Zapisz nazwę i opis tagu"
       tag_groups_info:
-        one: 'Ten tag należy do grupy "%{tag_groups}”.'
-        few: "Ten tag należy do następujących grup: %{tag_groups}."
-        many: "Ten tag należy do następujących grup: %{tag_groups}."
-        other: "Ten tag należy do następujących grup: %{tag_groups}."
+        one: 'Ten tag należy do grupy tagów „%{tag_groups}”.'
+        few: "Ten tag należy do grup tagów „%{tag_groups}”."
+        many: "Ten tag należy do grup tagów „%{tag_groups}”."
+        other: "Ten tag należy do grup tagów „%{tag_groups}”."
       tag_groups_info_prefix:
-        one: "Ten tag należy do grupy "
-        few: "Te tagi należą do grupy: "
-        many: "Te tagi należą do grupy: "
-        other: "Te tagi należą do grupy: "
+        one: "Ten tag należy do grupy tagów: "
+        few: "Ten tag należy do grup tagów: "
+        many: "Ten tag należy do grup tagów: "
+        other: "Ten tag należy do grup tagów: "
       category_restrictions:
-        one: "Można go używać tylko w tej kategorii:"
-        few: "Można go używać tylko w tych kategoriach:"
-        many: "Można go używać tylko w tych kategoriach:"
-        other: "Można go używać tylko w tych kategoriach:"
+        one: "Można go używać tylko w kategorii %{categories}."
+        few: "Można go używać tylko w tych kategoriach: %{categories}"
+        many: "Można go używać tylko w tych kategoriach: %{categories}"
+        other: "Można go używać tylko w tych kategoriach: %{categories}"
       restricted_to: "Ograniczone do"
       no_synonyms: "Ten tag nie ma synonimów."
       edit_synonyms: "Edytuj synonimy"
@@ -7160,13 +7180,14 @@ pl_PL:
           modal:
             title: "Zarządzaj raportami"
             search_placeholder: "Wyszukaj raporty"
-            counter: "Raporty: %{count} / %{max}"
+            counter: "Dodane raporty: %{count} / %{max}"
             enabled_heading: "Włączono"
             all_heading: "Wszystkie zgłoszenia"
             apply: "Zastosuj"
-            toggle: "Przełącz raport"
-            move_up: "Przenieś wyżej"
-            move_down: "Przenieś niżej"
+            enable: "Włącz %{title}"
+            disable: "Wyłącz %{title}"
+            move_up: "Przesuń %{title} w górę"
+            move_down: "Przesuń %{title} w dół"
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."

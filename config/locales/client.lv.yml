@@ -127,6 +127,11 @@ lv:
       previous_month: "Iepriekšējais mēnesis"
       next_month: "Nākamais mēnesis"
       placeholder: datums
+    date_range_picker:
+      apply: "Pielietot"
+      presets:
+        last_7_days: "Pēdējās 7 dienas"
+        last_30_days: "Pēdējās 30 dienas"
     share:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       close: "aizvērt"

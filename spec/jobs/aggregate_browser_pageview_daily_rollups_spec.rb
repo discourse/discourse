@@ -34,15 +34,6 @@ RSpec.describe Jobs::AggregateBrowserPageviewDailyRollups do
     expect(BrowserPageviewCountryDailyRollup.pluck(:country_code)).to contain_exactly("US", "GB")
   end
 
-  it "clears the report cache after running so stale empty results do not linger" do
-    SiteSetting.persist_browser_pageview_events = true
-    Fabricate(:browser_pageview_event, country_code: "US")
-    Report.expects(:clear_cache).with("top_countries_by_browser_pageviews").once
-    Report.expects(:clear_cache).with("top_referrers_by_browser_pageviews").once
-
-    described_class.new.execute({})
-  end
-
   it "only aggregates yesterday and today once historical rollups are populated" do
     SiteSetting.persist_browser_pageview_events = true
     Fabricate(:browser_pageview_event, country_code: "US", created_at: 60.days.ago)

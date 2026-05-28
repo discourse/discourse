@@ -48,9 +48,12 @@ describe AdminDashboardHighlights do
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     it "populates prev_period when the facet is requested" do
-      DiscourseSolved::SolvedTopic.create!(
-        topic: topic,
-        answer_post: post,
+      solved_topic =
+        DiscourseSolved::SolvedTopic.create!(topic: topic, created_at: Time.zone.local(2026, 3, 15))
+
+      DiscourseSolved::TopicAnswer.create!(
+        solved_topic: solved_topic,
+        post: post,
         accepter: user,
         created_at: Time.zone.local(2026, 3, 15),
       )
@@ -67,9 +70,12 @@ describe AdminDashboardHighlights do
     end
 
     it "excludes deleted topics from prev_period" do
-      DiscourseSolved::SolvedTopic.create!(
-        topic: topic,
-        answer_post: post,
+      solved_topic =
+        DiscourseSolved::SolvedTopic.create!(topic: topic, created_at: Time.zone.local(2026, 3, 15))
+
+      DiscourseSolved::TopicAnswer.create!(
+        solved_topic: solved_topic,
+        post: post,
         accepter: user,
         created_at: Time.zone.local(2026, 3, 15),
       )
@@ -89,9 +95,12 @@ describe AdminDashboardHighlights do
     it "excludes private message topics from prev_period" do
       pm = Fabricate(:private_message_topic)
       pm_post = Fabricate(:post, topic: pm)
-      DiscourseSolved::SolvedTopic.create!(
-        topic: pm,
-        answer_post: pm_post,
+      solved_topic =
+        DiscourseSolved::SolvedTopic.create!(topic: pm, created_at: Time.zone.local(2026, 3, 15))
+
+      DiscourseSolved::TopicAnswer.create!(
+        solved_topic: solved_topic,
+        post: pm_post,
         accepter: user,
         created_at: Time.zone.local(2026, 3, 15),
       )

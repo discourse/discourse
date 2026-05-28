@@ -1898,17 +1898,6 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
-  nested_replies_toggle_mode_groups:
-    type: group_list
-    list_type: compact
-    default: "3"
-    allow_any: false
-    refresh: true
-    disallowed_groups: "4"
-    area: "posts_and_topics"
-    depends_on:
-      - "nested_replies_enabled"
-    depends_behavior: "hidden"
 
 email:
   email_time_window_mins:

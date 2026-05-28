@@ -15,9 +15,8 @@ const callbacks = [];
 
 /**
  * Registers a callback to run when the user changes category type selection in the
- * simplified category editor (upsert "general" tab). When `enable_simplified_category_creation` is
- * on, the callback runs in registration order. If any callback’s resolved value is falsy, the new
- * selection is not applied.
+ * category editor's General tab. Callbacks run in registration order. If any
+ * callback’s resolved value is falsy, the new selection is not applied.
  *
  * The callback may be `async` (e.g. to show a modal and await the result). Return a **truthy**
  * value to allow the change, or a **falsy** value to block it. On thrown errors, the change is

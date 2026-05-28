@@ -327,7 +327,7 @@ sr:
         vs_prior: "U odnosu na prethodni period"
     posters_by_member_type:
       title: "Ko objavljuje?"
-      description: "Postovi objavljeni u odabranom periodu, podeljeni po tipu člana. \"Novi članovi\" su se registrovali tokom perioda, \"Vraćajući\" su se registrovali pre njega, a \"Osoblje\" su administratori ili moderatori."
+      description: 'Postovi objavljeni u odabranom periodu, podeljeni po tipu člana. "Novi članovi" su se registrovali tokom perioda, "Vraćajući" su se registrovali pre njega, a "Osoblje" su administratori ili moderatori.'
       labels:
         member_type: "Tip člana"
         count: "Poruka"
@@ -476,8 +476,8 @@ sr:
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
     auth_skip_create_confirm: Kada se prijavljujete putem spoljne autorizacije, preskočite popup prozor za kreiranje računa. Najbolje se upotrebljava uz auth_overrides_email, auth_overrides_username i auth_overrides_name.
     allow_passkeys_for_2fa: "Dozvoli korisnicima da koriste passkey za dvofaktorsku autentifikaciju prilikom potvrđivanja osetljive akcije."
-    google_oauth2_hd_groups: "Preuzmi Google grupe korisnika sa hostovanog domena prilikom autentifikacije. Preuzete Google grupe mogu se koristiti za dodelu automatskog članstva u Discourse grupama (vidi podešavanja grupa). Za više informacija, pogledajte <a target=\"_blank\" href=\"https://meta.discourse.org/t/226850\">ovu Meta temu</a>."
-    enable_direct_s3_uploads: "Omogućava direktno višedelno otpremanje na Amazon S3, pogledajte <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">ovu Meta temu</a> za više detalja."
+    google_oauth2_hd_groups: 'Preuzmi Google grupe korisnika sa hostovanog domena prilikom autentifikacije. Preuzete Google grupe mogu se koristiti za dodelu automatskog članstva u Discourse grupama (vidi podešavanja grupa). Za više informacija, pogledajte <a target="_blank" href="https://meta.discourse.org/t/226850">ovu Meta temu</a>.'
+    enable_direct_s3_uploads: 'Omogućava direktno višedelno otpremanje na Amazon S3, pogledajte <a target="_blank" href="https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469">ovu Meta temu</a> za više detalja.'
     backup_location: "Lokacija gde se čuvaju rezervne kopije. VAŽNO: S3 zahteva važeće S3 kredencijale unete u <a href=\"%{base_path}/admin/site_settings/category/files\">Podešavanjima datoteka</a>. Kada ovo menjate sa Lokalno na S3, morate pokrenuti rake zadatak `s3:ensure_cors_rules`."
     purge_unactivated_users_grace_period_days: "Period odlaganja (u danima) pre brisanja korisnika koji nije aktivirao svoj nalog. Postavite na 0 da nikada ne brišete neaktivirane korisnike."
     composer_media_optimization_image_convert_enabled: "Omogućava konverziju JXL, HEIC i animiranih GIF slika na strani klijenta pre otpremanja. JXL i HEIC se konvertuju u JPEG, a animirani GIF-ovi veći od praga se konvertuju u animirane WEBP."

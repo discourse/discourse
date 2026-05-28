@@ -11,14 +11,14 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
   describe "#show" do
     context "when logged in as admin" do
-      fab!(:target_category, :category)
+      fab!(:excluded_category, :category)
 
       before do
         sign_in(admin)
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = true
         SiteSetting.content_localization_supported_locales = "en|fr|es"
-        SiteSetting.ai_translation_target_categories = target_category.id.to_s
+        SiteSetting.ai_translation_excluded_categories = excluded_category.id.to_s
       end
 
       it "returns base configuration data without progress" do
@@ -97,26 +97,27 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(response.parsed_body["backfill_enabled"]).to eq(false)
       end
 
-      it "returns target_category_ids from ai_translation_target_categories" do
+      it "returns excluded_category_ids from ai_translation_excluded_categories" do
         other_category = Fabricate(:category)
-        SiteSetting.ai_translation_target_categories = "#{target_category.id}|#{other_category.id}"
+        SiteSetting.ai_translation_excluded_categories =
+          "#{excluded_category.id}|#{other_category.id}"
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["target_category_ids"]).to contain_exactly(
-          target_category.id,
+        expect(response.parsed_body["excluded_category_ids"]).to contain_exactly(
+          excluded_category.id,
           other_category.id,
         )
       end
 
-      it "returns an empty array when no target categories are configured" do
-        SiteSetting.ai_translation_target_categories = ""
+      it "returns an empty array when no excluded categories are configured" do
+        SiteSetting.ai_translation_excluded_categories = ""
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["target_category_ids"]).to eq([])
+        expect(response.parsed_body["excluded_category_ids"]).to eq([])
       end
 
       it "correctly indicates if feature is enabled" do
@@ -187,7 +188,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = true
         SiteSetting.content_localization_supported_locales = "en|fr|es"
-        SiteSetting.ai_translation_target_categories = target_category.id.to_s
+        SiteSetting.ai_translation_excluded_categories = ""
       end
 
       it "returns translation progress data" do

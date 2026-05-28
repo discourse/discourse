@@ -97,6 +97,22 @@ RSpec.describe "Nested view" do
     end
   end
 
+  describe "topic header" do
+    fab!(:scrollable_replies) do
+      Fabricate.times(8, :post, topic: topic, user: user, raw: "Scrollable nested reply\n\n" * 30)
+    end
+
+    it "shows the topic title after scrolling past it" do
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_no_topic_title_in_site_header(topic)
+
+      nested_view.scroll_past_topic_title
+
+      expect(nested_view).to have_topic_title_in_site_header(topic)
+    end
+  end
+
   describe "post editing" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: user, raw: "My editable reply") }
 
@@ -263,29 +279,6 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_root_post(sibling_root_reply)
       expect(nested_view.post_viewport_top(root_reply)).to be_within(5).of(root_reply_top)
-    end
-  end
-
-  describe "flat view toggle" do
-    fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
-    fab!(:admin)
-
-    it "shows the link and navigates to flat view for allowed groups" do
-      sign_in(admin)
-      nested_view.visit_nested(topic)
-
-      expect(nested_view).to have_flat_view_link
-      nested_view.click_flat_view_link
-
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
-      expect(page).to have_current_path(/flat=1/)
-      expect(nested_view).to have_no_nested_view
-    end
-
-    it "does not show the link for users outside allowed groups" do
-      nested_view.visit_nested(topic)
-
-      expect(nested_view).to have_no_flat_view_link
     end
   end
 

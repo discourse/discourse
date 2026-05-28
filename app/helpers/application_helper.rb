@@ -199,6 +199,7 @@ module ApplicationHelper
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
+    list << @embed_class if @embed_class.present?
     list.join(" ")
   end
 

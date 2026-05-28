@@ -11,7 +11,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import setAcceptedSolution from "../lib/set-accepted-solution";
+import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
 export default class SolvedUnacceptAnswerButton extends Component {
   @service appEvents;
@@ -35,20 +35,26 @@ export default class SolvedUnacceptAnswerButton extends Component {
     }
   }
 
+  get answerInfo() {
+    return this.args.post.topic.accepted_answers?.find(
+      (a) => a.post_number === this.args.post.post_number
+    );
+  }
+
   get showAcceptedBy() {
     return !(
       !this.siteSettings.show_who_marked_solved ||
-      !this.args.post.topic.accepted_answer.accepter_username
+      !this.answerInfo?.accepter_username
     );
   }
 
   get acceptedByUsername() {
-    return this.args.post.topic.accepted_answer.accepter_username;
+    return this.answerInfo?.accepter_username;
   }
 
   get acceptedByDisplayName() {
-    const username = this.args.post.topic.accepted_answer.accepter_username;
-    const name = this.args.post.topic.accepted_answer.accepter_name;
+    const username = this.answerInfo?.accepter_username;
+    const name = this.answerInfo?.accepter_name;
     return this.siteSettings.display_name_on_posts && name ? name : username;
   }
 
@@ -114,12 +120,12 @@ async function unacceptPost(post) {
   const topic = post.topic;
 
   try {
-    await ajax("/solution/unaccept", {
+    const remainingAcceptedAnswers = await ajax("/solution/unaccept", {
       type: "POST",
       data: { id: post.id },
     });
 
-    setAcceptedSolution(topic, undefined);
+    setAcceptedSolutions(topic, remainingAcceptedAnswers);
   } catch (e) {
     popupAjaxError(e);
   }

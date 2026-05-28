@@ -144,6 +144,15 @@ fi:
       placeholder: päivämäärä
       from_placeholder: "alkaen päivämäärästä"
       to_placeholder: "päivämäärään"
+    date_range_picker:
+      apply: "Käytä"
+      start_date: "Alkamispäivä"
+      presets:
+        last_7_days: "Viimeiset 7 päivää"
+        last_30_days: "Viimeiset 30 päivää"
+        last_3_months: "Viimeiset 3 kuukautta"
+        last_6_months: "Viimeiset 6 kuukautta"
+        last_year: "Viime vuosi"
     languages:
       ar:
         name: Arabia
@@ -3205,6 +3214,8 @@ fi:
           other: "Kuittaa (%{count})…"
         dismiss_tooltip: "Kuittaa uudet viestit luetuiksi tai lopeta ketjujen seuraaminen"
         also_dismiss_topics: "Älä seuraa näitä ketjuja enää – ne eivät jatkossa lukemattomina"
+        dismiss_new_topics: "Kuittaa uudet ketjut"
+        dismiss_new_replies: "Kuittaa uudet vastaukset"
         dismiss_new: "Kuittaa luetuksi"
         dismiss_new_modal:
           title: "Kuittaa uudet"
@@ -4605,14 +4616,7 @@ fi:
       staff_info: "Lisää rajoituksia asettamalla tämä tunniste <a href=%{basePath}/tag_groups>-tunnisteryhmään</a>."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
-      synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan tunnisteella <b>%{base_tag_name}</b>."
       save: "Tallenna tunnisteen nimi ja kuvaus"
-      tag_groups_info:
-        one: 'Tunniste kuuluu ryhmään "%{tag_groups}".'
-        other: "Tunniste kuuluu näihin ryhmiin: %{tag_groups}"
-      category_restrictions:
-        one: "Sitä voi käyttää vain tällä alueella:"
-        other: "Sitä voi käyttää vain näillä alueilla:"
       edit_synonyms: "Muokkaa synonyymejä"
       add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
@@ -5644,8 +5648,6 @@ fi:
             enabled_heading: "Käytössä"
             all_heading: "Kaikki raportit"
             apply: "Käytä"
-            move_up: "Siirrä ylös"
-            move_down: "Siirrä alas"
         configure:
           button: "Määritä"
         site_traffic:

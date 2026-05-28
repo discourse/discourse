@@ -158,6 +158,15 @@ tr_TR:
       placeholder: tarih
       from_placeholder: "başlangıç tarihi"
       to_placeholder: "bugüne kadar"
+    date_range_picker:
+      apply: "Uygula"
+      start_date: "Başlangıç tarihi"
+      presets:
+        last_7_days: "Son 7 gün"
+        last_30_days: "Son 30 gün"
+        last_3_months: "Son 3 ay"
+        last_6_months: "Son 6 ay"
+        last_year: "Geçen yıl"
     languages:
       ar:
         name: Arapça
@@ -3508,6 +3517,8 @@ tr_TR:
           other: "Kapat (%{count})"
         dismiss_tooltip: "Yeni gönderileri kapat veya konuları takip etmeyi durdur"
         also_dismiss_topics: "Yeniden okunmamış olarak gösterilmemesi için bu konuları takip etmeyi durdur"
+        dismiss_new_topics: "Yeni konuları kapat"
+        dismiss_new_replies: "Yeni yanıtları kapat"
         dismiss_new: "Yenileri Kapat"
         dismiss_new_modal:
           title: "Yeniyi kapat"
@@ -3673,8 +3684,6 @@ tr_TR:
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"
-      view_as_nested: "İç içe geçmiş olarak görüntüle"
-      view_as_flat: "Düz olarak görüntüle"
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"
@@ -5147,18 +5156,8 @@ tr_TR:
       staff_info: "Kısıtlama eklemek için bu etiketi bir <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
       category_restricted: "Bu etiket, erişim izninizin olmadığı kategorilerle sınırlı."
       synonyms: "Eş Anlamlılar"
-      synonyms_description: "Aşağıdaki etiketler kullanıldığında <b>%{base_tag_name}</b>ile değiştirilir."
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      tag_groups_info:
-        one: 'Bu etiket %{tag_groups} grubuna ait.'
-        other: "Bu etiket şu gruplara ait: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Bu etiket gruba aittir "
-        other: "Bu etiket şu gruplara aittir: "
-      category_restrictions:
-        one: "Sadece şu kategoride kullanılabilir:"
-        other: "Yalnızca şu kategorilerde kullanılabilir:"
       restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
@@ -6369,8 +6368,6 @@ tr_TR:
             enabled_heading: "Etkin mi"
             all_heading: "Tüm raporlar"
             apply: "Uygula"
-            move_up: "Yukarı taşı"
-            move_down: "Aşağı taşı"
         configure:
           button: "Yapılandır"
         site_traffic:

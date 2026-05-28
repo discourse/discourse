@@ -141,6 +141,14 @@ da:
       placeholder: dato
       from_placeholder: "fra dato"
       to_placeholder: "til dato"
+    date_range_picker:
+      apply: "Anvend"
+      presets:
+        last_7_days: "Seneste 7 dage"
+        last_30_days: "Seneste 30 dage"
+        last_3_months: "Seneste 3 måneder"
+        last_6_months: "Seneste 6 måneder"
+        last_year: "Sidste år"
     languages:
       ar:
         name: Arabisk
@@ -3929,13 +3937,6 @@ da:
       default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
       category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
-      synonyms_description: "Når følgende tags bruges, vil de blive erstattet med <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Dette mærke tilhører gruppen "%{tag_groups}".'
-        other: "Dette mærke tilhører disse grupper: %{tag_groups}."
-      category_restrictions:
-        one: "Den kan kun bruges i denne kategori:"
-        other: "Det kan kun bruges i disse kategorier:"
       edit_synonyms: "Rediger Synonymer"
       add_synonyms_label: "Tilføj synonymer:"
       add_synonyms: "Tilføj"
@@ -4628,8 +4629,6 @@ da:
             enabled_heading: "Aktiveret"
             all_heading: "Alle rapporter"
             apply: "Anvend"
-            move_up: "Flyt op"
-            move_down: "Flyt ned"
         site_traffic:
           series:
             anonymous: "Anonym"

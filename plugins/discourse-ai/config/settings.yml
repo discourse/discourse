@@ -491,7 +491,7 @@ discourse_ai:
     max: 100000
     client: false
     area: "ai-features/translation"
-  ai_translation_target_categories:
+  ai_translation_excluded_categories:
     type: category_list
     default: ""
     client: false

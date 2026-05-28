@@ -144,6 +144,11 @@ pt:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até à data"
+    date_range_picker:
+      apply: "Aplicar"
+      presets:
+        last_7_days: "Últimos 7 Dias"
+        last_30_days: "Últimos 30 Dias"
     languages:
       ar:
         name: Árabe
@@ -3144,6 +3149,7 @@ pt:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "rejeitar apenas as novas mensagens ou deixar de seguir os tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
+        dismiss_new_replies: "Descartar respostas novas"
         dismiss_new: "Marcar Visto Novos"
         dismiss_new_modal:
           posts: "Descartar respostas novas"
@@ -4277,13 +4283,6 @@ pt:
       choose_for_topic: "tags opcionais"
       category_restricted: "Esta tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as tags seguintes forem usadas, elas serão substituídas por <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Esta tag pertence ao grupo "%{tag_groups}".'
-        other: "Esta tag pertence a estes grupos: %{tag_groups}."
-      category_restrictions:
-        one: "Só pode ser usado nesta categoria:"
-        other: "Só pode ser usado nessas categorias:"
       add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
       remove_synonym: "Remover Sinônimo"
@@ -4809,8 +4808,6 @@ pt:
             enabled_heading: "Ativado"
             all_heading: "Todos os relatórios"
             apply: "Aplicar"
-            move_up: "Mover para cima"
-            move_down: "Mover para baixo"
         site_traffic:
           series:
             anonymous: "Anónimo"

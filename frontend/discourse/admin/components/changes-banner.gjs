@@ -52,6 +52,7 @@ export default class ChangesBanner extends Component {
         />
         <DButton
           class="btn-primary btn-small"
+          @id={{@saveButtonId}}
           @action={{this.save}}
           @isLoading={{this.isSaving}}
           @translatedLabel={{@saveLabel}}

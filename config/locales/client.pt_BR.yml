@@ -158,6 +158,14 @@ pt_BR:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até agora"
+    date_range_picker:
+      apply: "Aplicar"
+      start_date: "Data de início"
+      presets:
+        last_7_days: "Últimos sete dias"
+        last_30_days: "Últimos 30 dias"
+        last_6_months: "Últimos seis meses"
+        last_year: "Ano passado"
     languages:
       ar:
         name: Árabe
@@ -3438,6 +3446,8 @@ pt_BR:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar apenas postagens novas ou parar de monitorar tópicos"
         also_dismiss_topics: "Parar de monitorar estes tópicos para que eles deixem de aparecer como não lidos para mim"
+        dismiss_new_topics: "Descartar novos tópicos"
+        dismiss_new_replies: "Descartar novas respostas"
         dismiss_new: "Descartar novos"
         dismiss_new_modal:
           title: "Descartar novos"
@@ -4958,18 +4968,8 @@ pt_BR:
       staff_info: "Para adicionar restrições, coloque esta etiqueta em um <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as seguintes etiquetas forem usadas, serão substituídas por <b>%{base_tag_name}</b>."
       synonyms_inline: "Estes sinônimos serão substituídos por %{base_tag_name}:"
       save: "Salvar nome e descrição da etiqueta"
-      tag_groups_info:
-        one: 'Esta etiqueta pertence ao grupo: %{tag_groups}.'
-        other: "Esta etiqueta pertence aos grupos: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Esta tag pertence ao grupo "
-        other: "Esta tag pertence a estes grupos: "
-      category_restrictions:
-        one: "Pode ser usada apenas nesta categoria:"
-        other: "Pode ser usada apenas nestas categorias:"
       restricted_to: "Restrito a"
       no_synonyms: "Esta tag não possui sinônimos."
       edit_synonyms: "Editar sinônimos"
@@ -6162,8 +6162,6 @@ pt_BR:
             enabled_heading: "Ativados"
             all_heading: "Todos os relatórios"
             apply: "Aplicar"
-            move_up: "Mover para cima"
-            move_down: "Mover para baixo"
         configure:
           button: "Configurar"
         site_traffic:

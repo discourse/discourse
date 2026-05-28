@@ -106,6 +106,8 @@ sw:
       previous_month: "Mwezi Uliopita"
       next_month: "Mwezi Ujao"
       placeholder: tarehe
+    date_range_picker:
+      apply: "Tumia"
     share:
       close: "funga"
     action_codes:

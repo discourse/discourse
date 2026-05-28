@@ -586,6 +586,11 @@ pl_PL:
     few: "Przepraszamy, nowi użytkownicy mogą dodawać tylko %{count} linki do wpisu."
     many: "Przepraszamy, nowi użytkownicy mogą dodawać tylko %{count} linków do wpisu."
     other: "Przepraszamy, nowi użytkownicy mogą dodawać tylko %{count} linków do wpisu."
+  too_many_quotes:
+    one: "Niestety, w jednym wpisie możesz zamieścić tylko jeden cytat."
+    few: "Niestety, w jednym wpisie możesz zamieścić tylko %{count} cytaty."
+    many: "Niestety, w jednym wpisie możesz zamieścić tylko %{count} cytatów."
+    other: "Niestety, w jednym wpisie możesz zamieścić tylko %{count} cytatów."
   contains_blocked_word: "Niestety, nie możesz opublikować słowa '%{word}'; jest ono niedozwolone."
   contains_blocked_words: "Przepraszamy, nie możesz tego opublikować. Niedozwolone słowa: %{words}."
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
@@ -1445,7 +1450,7 @@ pl_PL:
         vs_prior: "Kontra wcześniej"
     posters_by_member_type:
       title: "Kto publikuje?"
-      description: "Wpisy utworzone w wybranym okresie, podzielone według typu użytkownika. „Nowi użytkownicy” zarejestrowali się w tym okresie, „Powracający” zarejestrowali się przed nim, a „Zespół” to administratorzy lub moderatorzy."
+      description: 'Wpisy utworzone w wybranym okresie, podzielone według typu użytkownika. „Nowi użytkownicy” zarejestrowali się w tym okresie, „Powracający” zarejestrowali się przed nim, a „Zespół” to administratorzy lub moderatorzy.'
       labels:
         member_type: "Typ członka"
         count: "Wpisy"
@@ -2159,7 +2164,7 @@ pl_PL:
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     google_oauth2_prompt: "Opcjonalna lista wartości łańcuchowych rozdzielanych spacjami, która określa, czy serwer autoryzacji monituje użytkownika o ponowne uwierzytelnienie i zgodę. Możliwe wartości można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Opcjonalna domena Google Apps Hosted, do której logowanie będzie ograniczone. Więcej informacji można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>"
-    google_oauth2_hd_groups: "Po uwierzytelnieniu pobierz grupy Google użytkowników w domenie hostowanej. Pobrane grupy Google mogą służyć do automatycznego przyznawania członkostwa w grupie Discourse (zobacz ustawienia grupy). Aby uzyskać więcej informacji, zobacz <a target=\"_blank\" href=\"https://meta.discourse.org/t/226850\">ten temat Meta</a>."
+    google_oauth2_hd_groups: 'Po uwierzytelnieniu pobierz grupy Google użytkowników w domenie hostowanej. Pobrane grupy Google mogą służyć do automatycznego przyznawania członkostwa w grupie Discourse (zobacz ustawienia grupy). Aby uzyskać więcej informacji, zobacz <a target="_blank" href="https://meta.discourse.org/t/226850">ten temat Meta</a>.'
     google_oauth2_hd_groups_service_account_admin_email: "Adres e-mail należący do konta administratora Google Workspace. Będzie używany z poświadczeniami konta usługi do pobierania informacji o grupie."
     google_oauth2_hd_groups_service_account_json: "Kluczowe informacje w formacie JSON dla konta usługi. Będą używane do pobierania informacji o grupie."
     google_oauth2_verbose_logging: "Rejestruj szczegółową diagnostykę związaną z Google OAuth2 w <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2189,7 +2194,7 @@ pl_PL:
     s3_configure_tombstone_policy: "Włącz automatyczne usuwanie plików przesłanych do reliktu. WAŻNE: jeśli ta opcja jest wyłączona, po usunięciu przesłanych plików nie zostanie odzyskane żadne miejsce."
     s3_disable_cleanup: "Zapobiegaj usuwaniu starych kopii zapasowych z S3, gdy jest ich więcej niż dozwolone maksimum."
     s3_use_acls: "AWS zaleca nieużywanie list kontroli dostępu w kontenerach S3; należy odznaczyć tę opcję tylko wtedy, gdy zamierzasz skonfigurować zasady uprawnień w skonfigurowanych kontenerach `s3_upload_bucket` i `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3. Więcej szczegółów można znaleźć w <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">tym temacie Meta</a>."
+    enable_direct_s3_uploads: 'Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3. Więcej szczegółów można znaleźć w <a target="_blank" href="https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469">tym temacie Meta</a>.'
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
     backup_location: "Lokalizacja przechowywania kopii zapasowych. WAŻNE: S3 wymaga wprowadzenia prawidłowych poświadczeń S3 w ustawieniach <a href='%{base_path}/admin/site_settings/category/files'>Plików</a>. Po zmianie z Lokalnego na S3 należy uruchomić zadanie rake `s3:ensure_cors_rules`."
@@ -2211,6 +2216,7 @@ pl_PL:
     max_edits_per_day: "Maksymalna liczba edycji per użytkownik per dzień."
     max_topics_per_day: "Maksymalna liczba tematów jakie użytkownik może stworzyć jednego dnia."
     max_personal_messages_per_day: "Maksymalna liczba nowych prywatnych wiadomości, które użytkownik może utworzyć dziennie."
+    limit_admin_personal_messages_per_day: "Maksymalna liczba nowych tematów wiadomości prywatnych, jaką administrator może utworzyć dziennie. Ustaw 0, aby nie było limitu."
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
     max_topic_invitations_per_minute: "Maksymalna liczba zaproszeń do tematów, które użytkownik może wysłać na minutę."
@@ -2263,6 +2269,7 @@ pl_PL:
     composer_media_optimization_image_resize_width_target: "Obrazy o szerokości większej niż `composer_media_optimization_image_dimensions_resize_threshold` zostaną przeskalowane do tej szerokości. Musi być >= niż `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "Jakość kodowania JPG używana w procesie ponownego kodowania."
     composer_media_optimization_image_convert_enabled: "Umożliwia konwersję obrazów JXL, HEIC i animowanych GIF po stronie klienta przed przesłaniem. Pliki JXL i HEIC są konwertowane do formatu JPEG, a animowane pliki GIF o rozmiarze większym niż próg są konwertowane do animowanego WEBP."
+    composer_media_optimization_image_wasm_decode_enabled: "Dekoduj obrazy JPEG i PNG w WASM wewnątrz Web Workera zamiast korzystać z interfejsów API kanwy przeglądarki. Pozwala to uniknąć ograniczeń pikseli kanwy iOS i niestabilności funkcji createImageBitmap, kosztem większego pakietu roboczego."
     composer_media_optimization_gif_conversion_threshold: "Minimalny rozmiar pliku GIF w bajtach, który powoduje konwersję po stronie klienta do animowanego pliku WEBP."
     video_conversion_enabled: "Włącz konwersję wideo dla przesłanych plików wideo. Umożliwia to konwersję filmów do formatów kompatybilnych z internetem."
     video_conversion_service: "Usługa konwersji wideo służąca do przetwarzania przesłanych filmów."
@@ -2320,6 +2327,7 @@ pl_PL:
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     newuser_max_replies_per_topic: "Maksymalna liczba odpowiedzi, jakie nowy użytkownik może dodać w pojedynczym temacie zanim ktoś odpowie."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
+    max_quotes_per_post: "Maksymalna liczba cytatów dozwolona w jednym wpisie. Ustaw na 0, aby wyłączyć sprawdzanie."
     max_users_notified_per_group_mention: "Maksymalna liczba użytkowników, którzy mogą otrzymać powiadomienie jeśli ktoś wspomniał(a) o grupie (jeśli próg został osiągnięty, nie będzie żadnych powiadomień)"
     enable_mentions: "Pozwala użytkownikom oznaczać lub odnosić się do siebie w swoich postach za pomocą symbolu '@'."
     here_mention: "Nazwa używana do @mention, aby umożliwić uprzywilejowanym użytkownikom powiadomienie maksymalnie 'max_here_mentioned' osób uczestniczących w temacie. Nie może to być istniejąca nazwa użytkownika."
@@ -2752,7 +2760,6 @@ pl_PL:
     nested_replies_default: "Użyj zagnieżdżonych odpowiedzi jako domyślnego widoku dla wszystkich tematów."
     nested_replies_default_sort: "Domyślny algorytm sortowania dla widoku zagnieżdżonych odpowiedzi."
     nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
-    nested_replies_toggle_mode_groups: "Grupy, które mogą przełączać się między widokiem zagnieżdżonym i płaskim."
     nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."

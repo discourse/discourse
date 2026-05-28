@@ -3257,6 +3257,17 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
     end
 
+    it "preserves class_name alongside embed_mode when redirecting to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" }
+
+      expect(response).to redirect_to(
+        "/n/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
+      )
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 
@@ -7624,6 +7635,29 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "applies class_name to the html element when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
+      expect(response.body).to match(/<html[^>]*\bclass="[^"]*\blee-af\b/)
+    end
+
+    it "ignores class_name when embed_mode is not allowed" do
+      get("/t/#{topic.slug}/#{topic.id}", params: { class_name: "lee-af" })
+      expect(response.body).not_to match(/<html[^>]*\blee-af\b/)
+    end
+
+    it "ignores class_name with invalid characters" do
+      SiteSetting.embed_any_origin = true
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+          class_name: "lee\" onload=alert(1)",
+        },
+      )
+      expect(response.body).not_to include("onload=alert(1)")
     end
   end
 
