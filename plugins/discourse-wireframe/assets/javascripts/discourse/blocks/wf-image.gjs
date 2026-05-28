@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
+import { URL_PATTERN } from "../lib/arg-patterns";
 
 @block("wf:image", {
   displayName: "Image",
@@ -12,6 +13,7 @@ import { i18n } from "discourse-i18n";
   args: {
     image: {
       type: "object",
+      required: true,
       properties: {
         url: { type: "string", required: true },
         width: { type: "number" },
@@ -45,7 +47,7 @@ import { i18n } from "discourse-i18n";
     },
     link: {
       type: "string",
-      default: "",
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         label: i18n("wireframe.inspector.image.link_label"),

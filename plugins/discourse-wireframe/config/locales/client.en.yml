@@ -154,7 +154,7 @@ en:
           link_href: "Button link"
           dismissable: "Allow dismiss"
           cookie_key: "Dismiss key"
-          cookie_key_help: "Identifier for this banner's dismiss cookie. Leave blank to share state with other banners that don't set a key."
+          cookie_key_help: "Identifier for this banner's dismiss cookie. Required so each dismissable banner has independent dismissal state."
         image:
           image_label: "Image"
           dark_label: "Dark mode variant"
@@ -329,6 +329,8 @@ en:
         edit_url: "Edit URL"
         empty_outlet_hint: "Drag a block from the palette to fill this outlet"
         empty_container_hint: "Drag a block here"
+        empty_slot_hint: "Pick a block for this slot"
+        empty_cell_hint: "Add a block to this cell"
         image_empty_label: "Add an image"
         ghost:
           condition_failed: "This block's conditions aren't met right now, so it won't render on the live page. Adjust its conditions, or simulate a different viewport / persona, to preview it here."
@@ -341,9 +343,7 @@ en:
         out_of_bounds_label: "Out of bounds"
         out_of_bounds_warning: "This block references cells outside the grid's columns or rows. CSS Grid is rendering it in implicit tracks past the grid edge."
         grid_overlay:
-          add_at_cell: "Add a block to this cell"
           pick_block: "Pick a block"
-          cancel: "Cancel"
           delete_tile: "Remove this tile"
           resize_tile: "Drag to resize this tile"
         breadcrumb_label: "Selected block breadcrumb"
@@ -360,6 +360,9 @@ en:
           link_apply: "Apply link"
           link_remove: "Remove link"
           link_cancel: "Cancel"
+      validation:
+        cta_banner:
+          cookie_key_required: "Set a dismiss key when 'Allow dismiss' is on, so this banner's dismissal state stays independent from other banners."
       placeholders:
         heading_text: "Section heading"
         paragraph_text: "Add your text here."

@@ -14,6 +14,7 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
   args: {
     text: {
       type: "richInline",
+      required: true,
       ui: { control: "rich-inline", label: "Text" },
     },
     align: {

@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import { HEX_COLOR_PATTERN } from "../lib/arg-patterns";
 
 const VALID_STYLES = ["solid", "dashed", "dotted"];
 
@@ -19,7 +20,7 @@ const VALID_STYLES = ["solid", "dashed", "dotted"];
     },
     color: {
       type: "string",
-      default: "",
+      pattern: HEX_COLOR_PATTERN,
       ui: { control: "color", label: "Color" },
     },
   },

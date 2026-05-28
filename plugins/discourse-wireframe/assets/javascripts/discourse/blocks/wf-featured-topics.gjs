@@ -8,6 +8,7 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
+import { URL_PATTERN } from "../lib/arg-patterns";
 import {
   fetchTopicList,
   VALID_TOPIC_LIST_FILTERS,
@@ -69,19 +70,21 @@ import {
     },
     linkLabel: {
       type: "string",
-      default: "",
       ui: {
         label: i18n("wireframe.inspector.featured_topics.link_label"),
       },
     },
     linkHref: {
       type: "string",
-      default: "",
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         label: i18n("wireframe.inspector.featured_topics.link_href"),
       },
     },
+  },
+  constraints: {
+    allOrNone: ["linkLabel", "linkHref"],
   },
 })
 export default class WFFeaturedTopics extends Component {

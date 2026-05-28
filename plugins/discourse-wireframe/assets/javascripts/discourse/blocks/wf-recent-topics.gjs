@@ -7,6 +7,7 @@ import { bind } from "discourse/lib/decorators";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import { URL_PATTERN } from "../lib/arg-patterns";
 import {
   fetchTopicList,
   VALID_TOPIC_LIST_FILTERS,
@@ -81,19 +82,21 @@ import {
     },
     linkLabel: {
       type: "string",
-      default: "",
       ui: {
         label: i18n("wireframe.inspector.recent_topics.link_label"),
       },
     },
     linkHref: {
       type: "string",
-      default: "",
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         label: i18n("wireframe.inspector.recent_topics.link_href"),
       },
     },
+  },
+  constraints: {
+    allOrNone: ["linkLabel", "linkHref"],
   },
 })
 export default class WFRecentTopics extends Component {

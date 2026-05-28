@@ -4,6 +4,7 @@ import { block } from "discourse/blocks";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RichTextRenderer from "../components/rich-text-renderer";
+import { ICON_NAME_PATTERN } from "../lib/arg-patterns";
 
 const VALID_TONES = ["info", "success", "warning", "danger"];
 
@@ -22,10 +23,12 @@ const VALID_TONES = ["info", "success", "warning", "danger"];
     icon: {
       type: "string",
       default: "circle-info",
+      pattern: ICON_NAME_PATTERN,
       ui: { control: "icon", label: "Icon" },
     },
     body: {
       type: "richInline",
+      required: true,
       ui: { control: "rich-inline", label: "Body" },
     },
   },

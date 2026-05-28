@@ -5,6 +5,11 @@ import { block } from "discourse/blocks";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RichTextRenderer from "../components/rich-text-renderer";
+import {
+  HEX_COLOR_PATTERN,
+  ICON_NAME_PATTERN,
+  URL_PATTERN,
+} from "../lib/arg-patterns";
 
 /**
  * Standalone media card for podcast / video / article promos. One
@@ -25,7 +30,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
   args: {
     avatarUrl: {
       type: "string",
-      default: "",
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         label: i18n("wireframe.inspector.media_card.avatar_url"),
@@ -47,7 +52,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     badgeIcon: {
       type: "string",
-      default: "",
+      pattern: ICON_NAME_PATTERN,
       ui: {
         control: "icon",
         label: i18n("wireframe.inspector.media_card.badge_icon"),
@@ -55,6 +60,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     badgeLabel: {
       type: "richInline",
+      required: true,
       ui: {
         control: "rich-inline",
         label: i18n("wireframe.inspector.media_card.badge_label"),
@@ -62,6 +68,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     title: {
       type: "richInline",
+      required: true,
       ui: {
         control: "rich-inline",
         label: i18n("wireframe.inspector.media_card.title"),
@@ -69,6 +76,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     ctaLabel: {
       type: "richInline",
+      required: true,
       ui: {
         control: "rich-inline",
         label: i18n("wireframe.inspector.media_card.cta_label"),
@@ -76,7 +84,8 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     ctaHref: {
       type: "string",
-      default: "",
+      required: true,
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         label: i18n("wireframe.inspector.media_card.cta_href"),
@@ -84,7 +93,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     backgroundColor: {
       type: "string",
-      default: "",
+      pattern: HEX_COLOR_PATTERN,
       ui: {
         control: "color",
         group: "Advanced",
@@ -94,7 +103,7 @@ import RichTextRenderer from "../components/rich-text-renderer";
     },
     imageUrl: {
       type: "string",
-      default: "",
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         group: "Advanced",

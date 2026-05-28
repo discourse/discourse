@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import WFImage from "discourse/plugins/discourse-wireframe/discourse/blocks/wf-image";
@@ -21,16 +22,18 @@ module("Integration | Wireframe | wf:image block", function (hooks) {
     session.set("defaultColorSchemeIsDark", null);
   });
 
-  test("renders nothing when image arg is missing", async function (assert) {
-    withPluginApi((api) =>
-      api.renderBlocks("hero-blocks", [{ block: WFImage, args: {} }])
+  test("declares image as a required arg", function (assert) {
+    // The render-time check (`validateBlockArgs` at `args.js:1042`)
+    // throws a `BlockError` when `entry.args.image` is missing, which
+    // the editor's permissive layer surfaces in the inspector validation
+    // banner. We assert the schema declaration directly rather than
+    // triggering the render-time path, because the rejection happens
+    // inside a tracked async getter and escapes `assert.rejects`.
+    const metadata = getBlockMetadata(WFImage);
+    assert.true(
+      metadata?.args?.image?.required,
+      "image arg is marked required: true"
     );
-
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
-
-    assert.dom(".wf-image").doesNotExist("the image block paints nothing");
-    assert.dom("img").doesNotExist();
-    assert.dom("picture").doesNotExist();
   });
 
   test("renders a plain image when only the light variant is set", async function (assert) {

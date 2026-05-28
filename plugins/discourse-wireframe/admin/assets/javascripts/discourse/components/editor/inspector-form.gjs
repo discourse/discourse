@@ -176,8 +176,20 @@ export default class InspectorForm extends Component {
         ? coerced.url
         : coerced;
 
+    // Treat empty string as absence for string args that don't declare a
+    // default. Without this, the editor service writes the literal `""`
+    // back into `entry.args` (per `_writeArgs`'s "`""` is a valid scalar"
+    // contract) and runtime `required` / `atLeastOne` / `allOrNone`
+    // checks pass even though the field is visibly blank. Args WITH a
+    // default keep the existing behaviour: clearing the field stores
+    // `""` so the user's explicit empty overrides the default — matches
+    // the inline-text editor's same convention in
+    // `inline-edit-state.js:344-356`.
+    const writeValue =
+      coerced === "" && argDef?.default === undefined ? null : coerced;
+
     await ctx.set(ctx.name, formValue);
-    this.wireframe.updateSelectedArg(ctx.name, coerced);
+    this.wireframe.updateSelectedArg(ctx.name, writeValue);
   }
 
   <template>
@@ -191,7 +203,7 @@ export default class InspectorForm extends Component {
                 authors opt in by setting `ui.group: "Advanced"` on
                 rarely-touched args. Matches the disclosure pattern
                 in `inspector-layout-form.gjs` (Advanced Templates). }}
-            {{! template-lint-disable no-nested-interactive }}
+
             <details class="wireframe-inspector-form__advanced">
               <summary>{{group.group}}</summary>
               <div class="wireframe-inspector-form__advanced-body">

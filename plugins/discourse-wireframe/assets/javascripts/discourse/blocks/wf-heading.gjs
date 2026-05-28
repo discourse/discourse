@@ -6,6 +6,7 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RichTextRenderer from "../components/rich-text-renderer";
+import { ICON_NAME_PATTERN } from "../lib/arg-patterns";
 
 const VALID_LEVELS = [1, 2, 3, 4, 5, 6];
 const VALID_ALIGNMENTS = ["left", "center", "right"];
@@ -18,11 +19,12 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
   args: {
     text: {
       type: "richInline",
+      required: true,
       ui: { control: "rich-inline", label: "Text" },
     },
     icon: {
       type: "string",
-      default: "",
+      pattern: ICON_NAME_PATTERN,
       ui: { control: "icon", label: "Icon" },
     },
     level: {

@@ -8,6 +8,7 @@ import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import RichTextRenderer from "../components/rich-text-renderer";
+import { URL_PATTERN } from "../lib/arg-patterns";
 
 const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
 
@@ -28,6 +29,7 @@ const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
   args: {
     title: {
       type: "richInline",
+      required: true,
       ui: {
         control: "rich-inline",
         label: i18n("wireframe.inspector.cta_banner.title"),
@@ -42,14 +44,15 @@ const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
     },
     linkLabel: {
       type: "string",
-      default: "",
+      required: true,
       ui: {
         label: i18n("wireframe.inspector.cta_banner.link_label"),
       },
     },
     linkHref: {
       type: "string",
-      default: "",
+      required: true,
+      pattern: URL_PATTERN,
       ui: {
         control: "url",
         label: i18n("wireframe.inspector.cta_banner.link_href"),
@@ -65,7 +68,6 @@ const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
     },
     cookieKey: {
       type: "string",
-      default: "",
       ui: {
         label: i18n("wireframe.inspector.cta_banner.cookie_key"),
         helpText: i18n("wireframe.inspector.cta_banner.cookie_key_help"),
@@ -73,6 +75,15 @@ const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
         conditional: { arg: "dismissable", equals: true },
       },
     },
+  },
+  validate(args) {
+    // `requires` is value-agnostic (any non-undefined value satisfies it),
+    // but `dismissable` defaults to `false` so it's always considered
+    // provided. We only want to demand a `cookieKey` when dismissable is
+    // toggled ON — otherwise the conditional UI hides the field anyway.
+    if (args.dismissable === true && !args.cookieKey) {
+      return i18n("wireframe.validation.cta_banner.cookie_key_required");
+    }
   },
 })
 export default class WFCTABanner extends Component {

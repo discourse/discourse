@@ -5,6 +5,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RichTextRenderer from "../components/rich-text-renderer";
+import { ICON_NAME_PATTERN, URL_PATTERN } from "../lib/arg-patterns";
 
 const VALID_VARIANTS = ["primary", "default", "danger"];
 
@@ -21,6 +22,7 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
     href: {
       type: "string",
       default: "/",
+      pattern: URL_PATTERN,
       ui: { control: "url", label: "Link URL" },
     },
     variant: {
@@ -31,9 +33,12 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
     },
     icon: {
       type: "string",
-      default: "",
+      pattern: ICON_NAME_PATTERN,
       ui: { control: "icon", label: "Icon" },
     },
+  },
+  constraints: {
+    atLeastOne: ["label", "icon"],
   },
 })
 export default class WFButtonLink extends Component {
