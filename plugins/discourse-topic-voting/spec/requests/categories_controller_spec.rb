@@ -48,14 +48,6 @@ describe CategoriesController do
     it "can add the ideas type to the category" do
       expect(Category.can_vote?(category.id)).to eq(false)
 
-      Categories::Configure.call(
-        guardian: admin.guardian,
-        params: {
-          category_type: "ideas",
-          category_id: category.id,
-        },
-      )
-
       put "/categories/#{category.id}.json", params: { category_types: ["ideas"] }
 
       expect(response.status).to eq(200)
