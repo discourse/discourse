@@ -96,7 +96,7 @@ if defined?(DiscourseWorkflows)
 
           def run_agent(config, log)
             agent_id = config["agent_id"]
-            prompt = config["prompt"]
+            prompt = config["prompt"].to_s
 
             agent_record = ::AiAgent.find_by(id: agent_id)
             raise_node_error!("AI Agent with id #{agent_id} not found") if agent_record.nil?

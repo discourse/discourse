@@ -66,4 +66,11 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     expect(items.map { |item| item["pairedItem"] }).to eq([{ "item" => 0 }, { "item" => 1 }])
     expect(bot).to have_received(:reply).twice
   end
+
+  it "uses an empty string when the optional prompt is blank" do
+    items = execute_node_output(configuration: { "agent_id" => agent.id }).first
+
+    expect(prompts).to eq([""])
+    expect(items.first["json"]["result"]).to eq("Reply to ")
+  end
 end
