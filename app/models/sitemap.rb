@@ -11,10 +11,7 @@ class Sitemap < ActiveRecord::Base
 
       names_used.each { |name| touch(name) }
 
-      if published_pages_sitemap_available?
-        touch(PUBLISHED_PAGES_SITEMAP_NAME)
-        names_used << PUBLISHED_PAGES_SITEMAP_NAME
-      end
+      names_used << PUBLISHED_PAGES_SITEMAP_NAME if sync_published_pages_sitemap!
 
       count = Category.where(read_restricted: false).sum(:topic_count)
       max_page_size = SiteSetting.sitemap_page_size
@@ -56,6 +53,15 @@ class Sitemap < ActiveRecord::Base
       count = publishable_pages.limit(SiteSetting.sitemap_page_size + 1).count
       count.positive? && count <= SiteSetting.sitemap_page_size
     end
+
+    def sync_published_pages_sitemap!
+      if published_pages_sitemap_available?
+        touch(PUBLISHED_PAGES_SITEMAP_NAME)
+      else
+        where(name: PUBLISHED_PAGES_SITEMAP_NAME).update_all(enabled: false)
+        nil
+      end
+    end
   end
 
   def topics
@@ -82,7 +88,9 @@ class Sitemap < ActiveRecord::Base
 
   def last_posted_topic
     if name == PUBLISHED_PAGES_SITEMAP_NAME
-      self.class.publishable_pages.maximum("published_pages.updated_at")
+      PublishedPage.joins(topic: :category).maximum(
+        "GREATEST(published_pages.updated_at, topics.updated_at, categories.updated_at)",
+      )
     else
       sitemap_topics.maximum(:updated_at)
     end

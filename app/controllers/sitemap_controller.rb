@@ -6,6 +6,7 @@ class SitemapController < ApplicationController
   before_action :check_sitemap_enabled
 
   def index
+    Sitemap.sync_published_pages_sitemap!
     @sitemaps = Sitemap.where(enabled: true).where.not(name: Sitemap::NEWS_SITEMAP_NAME)
 
     render :index

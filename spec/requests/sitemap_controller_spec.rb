@@ -19,6 +19,15 @@ RSpec.describe SitemapController do
   end
 
   describe "#index" do
+    def sitemap_index_entries
+      get "/sitemap.xml"
+
+      Nokogiri::XML::Document
+        .parse(response.body)
+        .css("sitemap")
+        .to_h { |sitemap| [sitemap.at_css("loc").text, sitemap.at_css("lastmod").text] }
+    end
+
     it "lists no sitemaps if we haven't generated them yet" do
       get "/sitemap.xml"
 
@@ -44,6 +53,39 @@ RSpec.describe SitemapController do
       sitemaps = Nokogiri::XML::Document.parse(response.body).css("loc")
 
       expect(sitemaps).to be_empty
+    end
+
+    it "removes a stale published pages sitemap entry after eligibility is lost" do
+      SiteSetting.enable_page_publishing = true
+      Fabricate(:published_page, public: true, slug: "indexed-post")
+      Sitemap.regenerate_sitemaps
+
+      expect(sitemap_index_entries.keys).to include(
+        "#{Discourse.base_url}/sitemap_#{Sitemap::PUBLISHED_PAGES_SITEMAP_NAME}.xml",
+      )
+
+      SiteSetting.enable_page_publishing = false
+
+      expect(sitemap_index_entries.keys).not_to include(
+        "#{Discourse.base_url}/sitemap_#{Sitemap::PUBLISHED_PAGES_SITEMAP_NAME}.xml",
+      )
+      expect(Sitemap.find_by(name: Sitemap::PUBLISHED_PAGES_SITEMAP_NAME).enabled).to eq(false)
+    end
+
+    it "updates the published pages sitemap lastmod when source topic visibility changes" do
+      SiteSetting.enable_page_publishing = true
+      newer_page = Fabricate(:published_page, public: true, slug: "newer-post")
+      older_topic = Fabricate(:topic, updated_at: 2.hours.ago)
+      older_page = Fabricate(:published_page, public: true, slug: "older-post", topic: older_topic)
+      newer_page.update!(updated_at: 1.hour.ago)
+      older_page.update!(updated_at: 2.hours.ago)
+      Sitemap.regenerate_sitemaps
+
+      loc = "#{Discourse.base_url}/sitemap_#{Sitemap::PUBLISHED_PAGES_SITEMAP_NAME}.xml"
+      previous_lastmod = Time.zone.parse(sitemap_index_entries.fetch(loc))
+      older_topic.update!(visible: false, updated_at: 1.minute.from_now)
+
+      expect(Time.zone.parse(sitemap_index_entries.fetch(loc))).to be > previous_lastmod
     end
   end
 
