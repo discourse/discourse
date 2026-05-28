@@ -5,7 +5,7 @@
   @include mixins.topic-list-icons;
 
   .table-heading {
-    padding: 12px 5px;
+    padding: var(--space-2) var(--space-1);
     color: var(--primary-med-or-secondary-high);
   }
 

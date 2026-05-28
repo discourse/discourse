@@ -33,7 +33,6 @@
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.15",
     "postcss-js": "^5.1.0",
-    "postcss-media-minmax": "^5.0.0",
     "postcss-nesting": "^14.0.0",
     "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
