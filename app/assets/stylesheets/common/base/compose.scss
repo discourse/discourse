@@ -1210,4 +1210,18 @@ body.has-sidebar-page {
   cursor: pointer;
 
   @include menu-item;
+
+  &__icons .d-toggle-switch {
+    --toggle-switch-width: var(--d-sidebar-section-link-prefix-width);
+    --toggle-switch-height: calc(
+      var(--d-sidebar-section-link-prefix-width) * 0.5
+    );
+  }
+
+  .d-toggle-switch__checkbox-slider::before {
+    width: calc(var(--toggle-switch-height) * 0.625);
+    height: calc(var(--toggle-switch-height) * 0.625);
+    top: calc(var(--toggle-switch-height) * 0.155);
+    left: calc(var(--toggle-switch-height) * 0.155);
+  }
 }

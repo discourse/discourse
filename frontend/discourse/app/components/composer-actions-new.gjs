@@ -290,7 +290,7 @@ export default class ComposerActions extends Component {
 
           <:content>
             <DDropdownMenu as |dropdown|>
-              {{#each data.actions as |availAction|}}
+              {{#each data.actions key="id" as |availAction|}}
                 {{#unless availAction.isToggle}}
                   <dropdown.item>
                     <DButton
@@ -321,8 +321,9 @@ export default class ComposerActions extends Component {
               {{/unless}}
 
               {{#if this.hasToggles}}
+                <dropdown.divider />
                 <div class="composer-actions-toggles">
-                  {{#each data.actions as |availAction|}}
+                  {{#each data.actions key="id" as |availAction|}}
                     {{#if availAction.isToggle}}
                       <dropdown.item>
                         {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
@@ -334,7 +335,10 @@ export default class ComposerActions extends Component {
                           {{on "click" availAction.action}}
                         >
                           <div class="composer-toggle-item__icons">
-                            {{dIcon availAction.icon}}
+                            <DToggleSwitch
+                              @state={{availAction.state}}
+                              aria-label={{availAction.ariaLabel}}
+                            />
                           </div>
                           <div class="composer-toggle-item__texts">
                             <span
@@ -344,10 +348,7 @@ export default class ComposerActions extends Component {
                               class="composer-toggle-item__description"
                             >{{availAction.description}}</span>
                           </div>
-                          <DToggleSwitch
-                            @state={{availAction.state}}
-                            aria-label={{availAction.ariaLabel}}
-                          />
+
                         </div>
                       </dropdown.item>
                     {{/if}}
