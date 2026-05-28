@@ -33,6 +33,6 @@ import { block } from "discourse/blocks";
 export default class WFSlot extends Component {
   <template>
     {{! Live page: render nothing. Editor: BlockChrome substitutes
-        the EmptyCellPlaceholder when @blockName === "wf:slot". }}
+        the EditorEmptyDropPlaceholder when @blockName === "wf:slot". }}
   </template>
 }

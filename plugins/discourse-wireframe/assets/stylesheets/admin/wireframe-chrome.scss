@@ -155,8 +155,13 @@ body.wireframe-active {
 
        We disable pointer events on every direct child of the chrome
        EXCEPT the chrome's own structural pieces (handle, drag source,
-       drop zones, toolbar). The wrapped block component lives among
-       the disabled children, so its links / buttons go inert.
+       drop zones, toolbar) — and the unified empty-state placeholder,
+       which is editor chrome by construction and needs to fire its own
+       `click` to open the block picker. For slot chromes the placeholder
+       lives one level deeper inside `__content`, so we additionally
+       re-enable pointer events on a `__content` that holds a
+       placeholder (`:has()` keeps the grid-cell case — where `__content`
+       wraps the actual block — inert).
 
        Container blocks render child block chrome wrappers inside the
        wrapped component; CSS inheritance would make those non-
@@ -164,11 +169,16 @@ body.wireframe-active {
        the `.wireframe-block-chrome` rule's `pointer-events: auto`
        above. */
 
+    > .wireframe-block-chrome__content:has(.wireframe-empty-drop-placeholder) {
+      pointer-events: auto;
+    }
+
     > *:not(
         .wireframe-block-toolbar,
         .wireframe-drop-zone,
         .wireframe-block-chrome__resize-handle,
-        .wireframe-block-chrome__overlap-badge
+        .wireframe-block-chrome__overlap-badge,
+        .wireframe-empty-drop-placeholder
       ) {
       pointer-events: none;
 
@@ -1950,7 +1960,7 @@ body.wireframe-active
     flex-direction: column;
     gap: 0.35rem;
     padding: 0.4rem;
-    width: 240px;
+    width: 220px;
   }
 
   .wireframe-block-picker__header {
@@ -1963,24 +1973,27 @@ body.wireframe-active
   }
 
   .wireframe-block-picker__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
     max-height: 260px;
     overflow-y: auto;
   }
 
   .wireframe-block-picker__chip {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.45rem;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    padding: 0.4rem 0.55rem;
+    width: 100%;
+    overflow: hidden;
     background: var(--secondary);
     border: 1px solid var(--primary-low);
     border-radius: 4px;
     cursor: pointer;
     color: var(--primary);
-    font-size: var(--font-down-2);
+    font-size: var(--font-down-1);
     text-align: left;
 
     &:hover {
@@ -1988,7 +2001,18 @@ body.wireframe-active
       border-color: var(--primary-low-mid);
     }
 
+    /* `.btn` from core sets `white-space: nowrap`; pair it with overflow
+       on the chip so long block names ellipsize instead of overflowing
+       the popover (which is clipped at the viewport edge). */
+
+    .d-button-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
     .d-icon {
+      flex: 0 0 auto;
       color: var(--primary-medium);
       font-size: 0.8rem;
     }

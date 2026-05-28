@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 // `grid-math` is in the universal bundle (its `parsePlacement` is
@@ -19,7 +18,8 @@ import {
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
-import EmptyCellPlaceholder from "./empty-cell-placeholder";
+import { buildBlockPalette } from "../../lib/palette";
+import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
 
 /**
  * Shallow equivalence check for intermediate (logical) grid drop
@@ -148,10 +148,6 @@ export default class GridOverlay extends Component {
         `order: ${(cell.row - 1) * 1000 + (cell.column - 1)};`
     );
 
-  isPickingCell = (cell) =>
-    this._pickingCell?.column === cell.column &&
-    this._pickingCell?.row === cell.row;
-
   /**
    * Accept palette drops AND existing-block drops. The grid-level
    * drop target dispatches whichever descriptor the dragover handler
@@ -199,15 +195,6 @@ export default class GridOverlay extends Component {
    * container's PDND drop target. Invoked once on destroy.
    */
   #gridDropTargetCleanup = null;
-  /**
-   * Cell currently in "pick a block" mode. `null` when no picker is
-   * open. Stored here (rather than per-cell state) so clicking another
-   * `+` swaps the picker over instead of opening a second one.
-   *
-   * @type {{column: number, row: number}|null}
-   */
-  @tracked _pickingCell = null;
-
   /**
    * The layout's grid `<div>`, located on insert via the marker's
    * sibling lookup. `{{#in-element}}` mounts the cells / tiles / ghost
@@ -346,24 +333,7 @@ export default class GridOverlay extends Component {
    */
   @cached
   get palette() {
-    return this.blocks
-      .listBlocksWithMetadata()
-      .map(({ name, component }) => {
-        const display = getBlockDisplayMetadata(component) ?? {};
-        return {
-          name,
-          displayName: display.displayName,
-          icon: display.icon,
-          category: display.category ?? "Misc",
-          paletteHidden: display.paletteHidden === true,
-        };
-      })
-      .filter((row) => !row.paletteHidden)
-      .sort(
-        (a, b) =>
-          a.category.localeCompare(b.category) ||
-          a.displayName.localeCompare(b.displayName)
-      );
+    return buildBlockPalette(this.blocks);
   }
 
   /**
@@ -1458,33 +1428,13 @@ export default class GridOverlay extends Component {
   }
 
   @action
-  openPicker(cell, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this._pickingCell = cell;
-  }
-
-  @action
-  closePicker(event) {
-    event?.preventDefault?.();
-    this._pickingCell = null;
-  }
-
-  @action
-  pickBlock(blockEntry, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const cell = this._pickingCell;
-    if (!cell) {
-      return;
-    }
+  pickBlockForCell(cell, blockEntry) {
     this.wireframe.insertBlockAtCell({
       gridKey: this.args.gridKey,
       blockName: blockEntry.name,
       column: cell.column,
       row: cell.row,
     });
-    this._pickingCell = null;
   }
 
   <template>
@@ -1508,12 +1458,10 @@ export default class GridOverlay extends Component {
             data-col={{cell.column}}
             data-row={{cell.row}}
           >
-            <EmptyCellPlaceholder
+            <EditorEmptyDropPlaceholder
+              @hint={{i18n "wireframe.canvas.empty_cell_hint"}}
               @palette={{this.palette}}
-              @isOpen={{this.isPickingCell cell}}
-              @onOpen={{fn this.openPicker cell}}
-              @onClose={{this.closePicker}}
-              @onPick={{this.pickBlock}}
+              @onPick={{fn this.pickBlockForCell cell}}
             />
           </div>
         {{/each}}
