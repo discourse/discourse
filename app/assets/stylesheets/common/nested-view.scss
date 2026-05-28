@@ -489,6 +489,33 @@
       }
     }
 
+    &--leaf {
+      &::after {
+        opacity: 0.18;
+        transition:
+          background-color 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      .nested-post__depth-line-icon .d-icon {
+        opacity: 0.45;
+        transition:
+          color 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      &:focus-visible,
+      &.nested-post__depth-line--highlighted {
+        &::after {
+          opacity: 1;
+        }
+
+        .nested-post__depth-line-icon .d-icon {
+          opacity: 1;
+        }
+      }
+    }
+
     // When children are collapsed, turn the vertical line into an L-shape
     // that bends toward the "N replies" expand button
     &--collapsed {
@@ -520,6 +547,18 @@
           background: none;
           border-color: var(--tertiary);
         }
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover > .nested-post__gutter .nested-post__depth-line--leaf {
+      &::after {
+        opacity: 1;
+      }
+
+      .nested-post__depth-line-icon .d-icon {
+        opacity: 1;
       }
     }
   }
