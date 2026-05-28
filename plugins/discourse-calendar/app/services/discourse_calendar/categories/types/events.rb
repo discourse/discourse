@@ -16,6 +16,10 @@ module DiscourseCalendar
             SiteSetting.discourse_post_event_enabled = true
           end
 
+          def plugin_enabled?
+            SiteSetting.calendar_enabled && SiteSetting.discourse_post_event_enabled
+          end
+
           def category_matches?(category)
             events_calendar_category_ids.include?(category.id)
           end
