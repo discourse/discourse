@@ -338,6 +338,7 @@ export default class ComposerActions extends Component {
                             <DToggleSwitch
                               @state={{availAction.state}}
                               aria-label={{availAction.ariaLabel}}
+                              {{on "click" availAction.action}}
                             />
                           </div>
                           <div class="composer-toggle-item__texts">
