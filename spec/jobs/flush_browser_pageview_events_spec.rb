@@ -12,7 +12,7 @@ RSpec.describe Jobs::FlushBrowserPageviewEvents do
   end
 
   def queue_payload(payload)
-    Discourse.redis.rpush(BrowserPageviewEvent::REDIS_QUEUE_KEY, JSON.generate(payload))
+    BrowserPageviewEvent.enqueue_for_later(payload)
   end
 
   def queue_payloads(payloads)

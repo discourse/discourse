@@ -889,6 +889,10 @@ RSpec.describe Middleware::RequestTracker do
       context "when SiteSetting.persist_browser_pageview_events is true" do
         before { SiteSetting.persist_browser_pageview_events = true }
 
+        def flush_browser_pageview_events
+          Jobs::FlushBrowserPageviewEvents.new.execute({})
+        end
+
         it "creates a BrowserPageviewEvent row and does not fire the :browser_pageview event" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
@@ -908,7 +912,10 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
+              expect {
+                log_browser_pageview(data)
+                flush_browser_pageview_events
+              }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
@@ -958,6 +965,7 @@ RSpec.describe Middleware::RequestTracker do
             )
 
           log_browser_pageview(data)
+          flush_browser_pageview_events
 
           event = BrowserPageviewEvent.last
           expect(event.referrer).to eq("https://www.example.com/path?utm_source=x")
@@ -981,6 +989,7 @@ RSpec.describe Middleware::RequestTracker do
             )
 
           log_browser_pageview(data)
+          flush_browser_pageview_events
 
           event = BrowserPageviewEvent.last
           expect(event.normalized_referrer).to be_nil
@@ -1004,7 +1013,10 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
+              expect {
+                log_browser_pageview(data)
+                flush_browser_pageview_events
+              }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty

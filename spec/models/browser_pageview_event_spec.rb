@@ -37,13 +37,17 @@ RSpec.describe BrowserPageviewEvent do
     end
 
     def queue_payload(payload)
-      Discourse.redis.rpush(described_class::REDIS_QUEUE_KEY, JSON.generate(payload))
+      described_class.enqueue_for_later(payload)
+    end
+
+    it "queues payloads without flushing them synchronously" do
+      expect { described_class.enqueue_for_later(payload) }.not_to change { described_class.count }
+
+      expect(described_class.queued_count).to eq(1)
     end
 
     it "persists queued payloads and removes them from Redis" do
-      Discourse.stubs(:pg_readonly_mode?).returns(true)
       described_class.enqueue_for_later(payload)
-      Discourse.unstub(:pg_readonly_mode?)
 
       expect { described_class.flush_queued! }.to change { described_class.count }.by(1)
 
