@@ -22,6 +22,12 @@ require_relative "lib/discourse_assign/engine"
 require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/assign_topic/v1"
+      DiscourseWorkflows::Nodes::AssignTopic::V1
+    end
+  end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
 
   reloadable_patch do |plugin|

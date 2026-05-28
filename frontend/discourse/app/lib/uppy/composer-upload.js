@@ -135,6 +135,10 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
+    if (this.#uploadTargetBound) {
+      this.teardown();
+    }
+
     this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
@@ -554,9 +558,7 @@ export default class UppyComposerUpload {
 
   @bind
   _pasteEventListener(event) {
-    if (
-      !document.querySelector(this.editorInputClass)?.contains(event.target)
-    ) {
+    if (!event.target.closest(this.editorInputClass)) {
       return;
     }
 

@@ -71,4 +71,26 @@ acceptance("Topic - Admin Menu", function (needs) {
     await click(".extra-button");
     assert.true(this.actionCalled, "The action was called");
   });
+
+  test("Buttons with a section are rendered under a subheader", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    withPluginApi((api) => {
+      api.addTopicAdminMenuButton(() => ({
+        className: "section-button",
+        icon: "heart",
+        translatedLabel: "Section button",
+        action: () => {},
+        section: { id: "test-section", translatedLabel: "Test section" },
+      }));
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".toggle-admin-menu");
+
+    assert
+      .dom(".dropdown-menu__subheader")
+      .hasText("Test section", "The section subheader is rendered");
+    assert.dom(".section-button").exists("The section button is rendered");
+  });
 });

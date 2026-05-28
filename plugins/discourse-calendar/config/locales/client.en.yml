@@ -450,6 +450,9 @@ en:
           other: "Max %{count} attendees"
         no_rsvps_label: "Not collecting attendance"
         description_placeholder: "Add event description"
+        event_title_placeholder: "Event name"
+        create_event_button: "Create event"
+        action_title: "Create a new event"
         all_day: "All day"
         reminder:
           units:
@@ -470,6 +473,13 @@ en:
           notification_title: "Notify attendees"
           bump_topic_title: "Auto-bump topic"
           remove: "Remove reminder"
+      composer_actions:
+        create_event:
+          label: "Create event"
+          desc: "Create a new event in this category"
+        create_topic:
+          label: "Create topic"
+          desc: "Create a regular topic instead of an event"
 
       builder_modal:
         custom_fields:

@@ -440,13 +440,23 @@ export default class ComposerService extends Service {
     );
   }
 
-  @computed("model.action", "isWhispering", "model.privateMessage")
+  @computed(
+    "model.action",
+    "isWhispering",
+    "model.privateMessage",
+    "model.category"
+  )
   get saveIcon() {
     if (this.isWhispering) {
       return "far-eye-slash";
     }
     if (this.model?.privateMessage && this.model?.action === Composer.REPLY) {
       return "envelope";
+    }
+
+    const custom = this.model?.customizationFor("saveIcon");
+    if (custom) {
+      return custom;
     }
 
     return SAVE_ICONS[this.model?.action];

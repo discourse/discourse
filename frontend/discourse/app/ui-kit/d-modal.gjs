@@ -336,7 +336,10 @@ export default class DModal extends Component {
         {{htmlClass "modal-open"}}
       {{/unless}}
       <this.dynamicElement
-        class={{dConcatClass "d-modal" (if this.animating "is-animating")}}
+        class={{dConcatClass
+          "modal d-modal"
+          (if this.animating "is-animating")
+        }}
         data-keyboard="false"
         aria-modal="true"
         role="dialog"

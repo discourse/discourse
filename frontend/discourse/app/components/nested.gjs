@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
-import TopicMap from "discourse/components/topic-map";
 import lazyHash from "discourse/helpers/lazy-hash";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { and, gt, includes, not } from "discourse/truth-helpers";
@@ -22,6 +21,7 @@ import NestedHeader from "./nested/header";
 import NestedOp from "./nested/op";
 import NestedPost from "./nested/post";
 import NestedSortSelector from "./nested/sort-selector";
+import NestedTopicActions from "./nested/topic-actions";
 
 const postExcerpt = helper(([post]) => {
   const element = document.createElement("div");
@@ -32,6 +32,7 @@ const postExcerpt = helper(([post]) => {
 
 export default class Nested extends Component {
   @service appEvents;
+  @service currentUser;
   @service header;
   @service screenTrack;
   @service site;
@@ -304,13 +305,9 @@ export default class Nested extends Component {
           @registerPost={{this.viewportTracker.registerPost}}
         />
 
-        <div class="nested-view__topic-map topic-map">
-          <TopicMap
-            @model={{@topic}}
-            @topicDetails={{@topic.details}}
-            @showPMMap={{@topic.isPrivateMessage}}
-          />
-        </div>
+        {{#if this.currentUser}}
+          <NestedTopicActions @topic={{@topic}} />
+        {{/if}}
 
         <div class="nested-view__controls">
           <div class="nested-view__controls-left">

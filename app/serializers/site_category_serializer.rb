@@ -5,12 +5,18 @@ class SiteCategorySerializer < BasicCategorySerializer
              :allowed_tag_groups,
              :allow_global_tags,
              :read_only_banner,
-             :form_template_ids
+             :form_template_ids,
+             :category_types
 
   has_many :category_required_tag_groups, key: :required_tag_groups, embed: :objects
 
   def form_template_ids
     object.form_template_ids.sort
+  end
+
+  def category_types
+    return {} if !SiteSetting.enable_simplified_category_creation
+    object.category_types
   end
 
   def include_allowed_tags?

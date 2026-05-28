@@ -58,6 +58,7 @@
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
       "ember-source@6.10.1": "patches/ember-source@6.10.1.patch",
       "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch",
+      "ember-exam@10.1.0": "patches/ember-exam@10.1.0.patch",
       "message-bus-client": "patches/message-bus-client.patch",
       "ember-buffered-proxy": "patches/ember-buffered-proxy.patch",
       "pikaday": "patches/pikaday.patch"
