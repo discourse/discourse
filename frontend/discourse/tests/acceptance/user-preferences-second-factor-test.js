@@ -67,9 +67,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".new-totp");
     assert.dom(".qr-code img").exists("shows qr code image");
 
-    await click(".modal a.show-second-factor-key");
+    await click(".d-modal a.show-second-factor-key");
     assert
-      .dom(".modal .second-factor-key")
+      .dom(".d-modal .second-factor-key")
       .exists("displays second factor key");
 
     await click(".add-totp");
