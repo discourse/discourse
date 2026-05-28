@@ -44,7 +44,7 @@
   &__warning {
     display: inline-flex;
     align-items: center;
-    color: var(--danger);
+    color: var(--workflow-status-error);
     line-height: 1;
   }
 
@@ -79,11 +79,11 @@
     }
 
     &.is-published::before {
-      background: var(--success);
+      background: var(--workflow-status-success);
     }
 
     &.is-unpublished::before {
-      background: var(--highlight);
+      background: var(--workflow-status-running);
     }
 
     &.is-unpublished-changes {

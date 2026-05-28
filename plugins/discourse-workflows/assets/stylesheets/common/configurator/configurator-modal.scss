@@ -107,7 +107,7 @@
   }
 
   &__save-status--saved {
-    color: var(--success);
+    color: var(--workflow-status-success);
   }
 
   &__save-status--fading {
@@ -221,13 +221,13 @@
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
-    background: var(--highlight-low);
-    border-bottom: 1px solid var(--highlight-medium);
+    background: var(--workflow-status-running-low);
+    border-bottom: 1px solid var(--workflow-status-running);
     color: var(--primary-high);
     font-size: var(--font-down-1);
 
     .d-icon {
-      color: var(--highlight);
+      color: var(--workflow-status-running);
     }
   }
 

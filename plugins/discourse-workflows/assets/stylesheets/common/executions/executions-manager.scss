@@ -9,15 +9,15 @@
     }
 
     &.--success .d-icon {
-      color: var(--success);
+      color: var(--workflow-status-success);
     }
 
     &.--error .d-icon {
-      color: var(--danger);
+      color: var(--workflow-status-error);
     }
 
     &.--running .d-icon {
-      color: var(--highlight);
+      color: var(--workflow-status-running);
     }
 
     &.--waiting .d-icon {

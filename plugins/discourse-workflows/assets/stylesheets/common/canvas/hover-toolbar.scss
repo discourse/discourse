@@ -58,10 +58,14 @@
     }
 
     &.--success {
-      background: var(--success);
+      background: var(--workflow-status-success);
 
       &:hover {
-        background: var(--success-hover);
+        background: color-mix(
+          in srgb,
+          var(--workflow-status-success) 85%,
+          black
+        );
       }
     }
 
