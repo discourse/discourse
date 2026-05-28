@@ -56,6 +56,8 @@ export default class extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-potential-path-strings }}
+
     <StyleguideExample @title="<DModal>">
       <StyleguideComponent>
         <DButton

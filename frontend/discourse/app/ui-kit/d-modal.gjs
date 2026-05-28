@@ -325,6 +325,8 @@ export default class DModal extends Component {
   }
 
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
+
     <DConditionalInElement
       @element={{this.modal.containerElement}}
       @inline={{@inline}}
@@ -460,6 +462,7 @@ export default class DModal extends Component {
         </div>
       </this.dynamicElement>
       {{#unless @inline}}
+        {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <div
           class="d-modal__backdrop"
           {{dSwipe
