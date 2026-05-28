@@ -284,7 +284,7 @@ export default class InstallThemeModal extends Component {
   <template>
     <DModal
       @bodyClass="install-theme"
-      class="admin-install-theme-modal -large"
+      class="admin-install-theme-modal --large"
       @title={{i18n "admin.customize.theme.install"}}
       @closeModal={{@closeModal}}
     >
