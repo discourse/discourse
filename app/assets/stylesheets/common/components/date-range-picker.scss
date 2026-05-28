@@ -214,14 +214,20 @@
   }
 
   &__input {
+    width: 100%;
+    box-sizing: border-box;
     border: 1px solid var(--primary-low);
     padding: var(--space-1) var(--space-2);
     border-radius: var(--space-1);
     background: var(--secondary);
+    color: var(--primary);
     font-size: var(--font-down-1);
     min-height: 1.75rem;
-    display: flex;
-    align-items: center;
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -1px;
+    }
   }
 
   &__input-arrow {

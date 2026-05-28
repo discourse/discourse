@@ -180,6 +180,9 @@ en:
       to_placeholder: "to date"
     date_range_picker:
       apply: "Apply"
+      start_date: "Start date"
+      end_date: "End date"
+      date_placeholder: "yyyy/mm/dd"
       presets:
         label: "Date range presets"
         last_7_days: "Last 7 days"

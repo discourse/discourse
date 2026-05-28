@@ -96,7 +96,7 @@ export function matchingPreset(from, to, presets, today = moment()) {
   );
 }
 
-export default class DDateRangePicker extends Component {
+export default class DashboardDateRangePicker extends Component {
   @service site;
 
   @tracked pendingStart = null;
@@ -109,6 +109,19 @@ export default class DDateRangePicker extends Component {
     if (shouldFocus) {
       element.focus();
     }
+  });
+
+  scrollActivePresetIntoView = modifier((element) => {
+    const active = element.querySelector(
+      ".d-date-range-picker__preset.is-active"
+    );
+    if (!active) {
+      return;
+    }
+    const railRect = element.getBoundingClientRect();
+    const activeRect = active.getBoundingClientRect();
+    element.scrollLeft +=
+      activeRect.left - railRect.left - (railRect.width - activeRect.width) / 2;
   });
 
   get presets() {
@@ -451,9 +464,58 @@ export default class DDateRangePicker extends Component {
     }
   }
 
+  get startInputValue() {
+    return this.currentStart ? this.currentStart.format("YYYY/MM/DD") : "";
+  }
+
+  get endInputValue() {
+    return this.currentEnd ? this.currentEnd.format("YYYY/MM/DD") : "";
+  }
+
+  parseTypedDate(value) {
+    const parsed = moment(value, "YYYY/MM/DD", true);
+    if (!parsed.isValid()) {
+      return null;
+    }
+    const day = parsed.startOf("day");
+    if (day.isAfter(this.maxDate, "day")) {
+      return null;
+    }
+    return day;
+  }
+
   @action
-  formatDate(value) {
-    return value ? moment(value).format("ll") : "";
+  commitStartInput(event) {
+    const parsed = this.parseTypedDate(event.target.value);
+    if (!parsed) {
+      event.target.value = this.startInputValue;
+      return;
+    }
+    const end = this.currentEnd;
+    this.pendingStart = parsed;
+    this.pendingEnd = end && !end.isBefore(parsed, "day") ? end.clone() : null;
+    this.focusedDay = parsed.clone();
+  }
+
+  @action
+  commitEndInput(event) {
+    const parsed = this.parseTypedDate(event.target.value);
+    const start = this.currentStart;
+    if (!parsed || !start || parsed.isBefore(start, "day")) {
+      event.target.value = this.endInputValue;
+      return;
+    }
+    this.pendingStart = start.clone();
+    this.pendingEnd = parsed;
+    this.focusedDay = parsed.clone();
+  }
+
+  @action
+  commitInputOnEnter(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.target.blur();
+    }
   }
 
   <template>
@@ -461,6 +523,7 @@ export default class DDateRangePicker extends Component {
       <ul
         class="d-date-range-picker__presets"
         aria-label={{i18n "date_range_picker.presets.label"}}
+        {{this.scrollActivePresetIntoView}}
       >
         {{#each this.presets as |preset|}}
           <li class="d-date-range-picker__preset-item">
@@ -556,15 +619,31 @@ export default class DDateRangePicker extends Component {
         </div>
 
         <div class="d-date-range-picker__inputs">
-          <span class="d-date-range-picker__input">
-            {{this.formatDate this.currentStart}}
-          </span>
+          <input
+            type="text"
+            class="d-date-range-picker__input"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder={{i18n "date_range_picker.date_placeholder"}}
+            aria-label={{i18n "date_range_picker.start_date"}}
+            value={{this.startInputValue}}
+            {{on "change" this.commitStartInput}}
+            {{on "keydown" this.commitInputOnEnter}}
+          />
           <span class="d-date-range-picker__input-arrow" aria-hidden="true">
             {{dIcon "arrow-right"}}
           </span>
-          <span class="d-date-range-picker__input">
-            {{this.formatDate this.currentEnd}}
-          </span>
+          <input
+            type="text"
+            class="d-date-range-picker__input"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder={{i18n "date_range_picker.date_placeholder"}}
+            aria-label={{i18n "date_range_picker.end_date"}}
+            value={{this.endInputValue}}
+            {{on "change" this.commitEndInput}}
+            {{on "keydown" this.commitInputOnEnter}}
+          />
         </div>
 
         <div class="d-date-range-picker__footer">

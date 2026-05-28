@@ -49,23 +49,18 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
     assert.dom(".db-date-range__trigger-label").includesText("Apr 28");
   });
 
-  test("trigger label is the literal range for sidebar-only presets (6m / 1y)", async function (assert) {
-    const today = moment().startOf("day");
-    const sixMonthsAgo = today
-      .clone()
-      .subtract(6, "months")
-      .add(1, "day")
-      .toDate();
-    const todayDate = today.toDate();
-    const expectedStart = moment(sixMonthsAgo).format("ll");
-    const expectedEnd = moment(todayDate).format("ll");
+  test("trigger label is the literal range for a custom hand-picked range", async function (assert) {
+    const start = new Date("2026-02-10");
+    const end = new Date("2026-04-05");
+    const expectedStart = moment(start).format("ll");
+    const expectedEnd = moment(end).format("ll");
 
     await render(
       <template>
         <DashboardDateRange
           @period="custom"
-          @startDate={{sixMonthsAgo}}
-          @endDate={{todayDate}}
+          @startDate={{start}}
+          @endDate={{end}}
         />
       </template>
     );

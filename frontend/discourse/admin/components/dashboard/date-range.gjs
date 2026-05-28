@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DMenu from "discourse/float-kit/components/d-menu";
-import DDateRangePicker, {
+import DashboardDateRangePicker, {
   ALL_PRESETS,
   formatRange,
   PRESET_LAST_3_MONTHS,
   PRESET_LAST_7_DAYS,
   PRESET_LAST_30_DAYS,
-} from "discourse/ui-kit/d-date-range-picker";
+} from "discourse/admin/components/dashboard/date-range-picker";
+import DMenu from "discourse/float-kit/components/d-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -71,7 +71,7 @@ export default class DashboardDateRange extends Component {
 
   <template>
     <DMenu
-      @identifier="db-date-range"
+      @identifier="db-date-range-menu"
       @triggerClass="db-date-range__trigger"
       @modalForMobile={{true}}
       @placement="bottom-end"
@@ -83,7 +83,7 @@ export default class DashboardDateRange extends Component {
         <span class="db-date-range__trigger-label">{{this.triggerLabel}}</span>
       </:trigger>
       <:content as |args|>
-        <DDateRangePicker
+        <DashboardDateRangePicker
           @from={{@startDate}}
           @to={{@endDate}}
           @presets={{ALL_PRESETS}}
