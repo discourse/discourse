@@ -36,10 +36,6 @@ html:not(.keyboard-visible).mobile-device {
   z-index: z("modal", "content");
   overflow: auto;
 
-  &.--inline {
-    position: relative;
-  }
-
   @include viewport.until(sm) {
     align-items: flex-end;
   }
