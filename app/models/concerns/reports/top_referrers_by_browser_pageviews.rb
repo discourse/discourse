@@ -26,6 +26,10 @@ module Reports::TopReferrersByBrowserPageviews
       host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
       escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
 
+      # The percent denominator (total) counts referred traffic only: direct
+      # visits (NULL referrer) and self-referrals are excluded so each percent
+      # reads as a referrer's share of external traffic rather than of all
+      # pageviews.
       sql = <<~SQL
         WITH ranked AS (
           SELECT
@@ -35,14 +39,10 @@ module Reports::TopReferrersByBrowserPageviews
           FROM browser_pageview_referrer_daily_rollups
           WHERE date >= :start_date
             AND date < :end_date_exclusive
-            AND (
-              normalized_referrer IS NULL
-              OR (
-                normalized_referrer <> :host_exact
-                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
-              )
-            )
+            AND normalized_referrer IS NOT NULL
+            AND normalized_referrer <> :host_exact
+            AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+            AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
           GROUP BY normalized_referrer
           HAVING SUM(#{count_expr}) > 0
         )
@@ -50,7 +50,6 @@ module Reports::TopReferrersByBrowserPageviews
                CASE WHEN total = 0 THEN 0
                     ELSE ROUND((count::numeric / total) * 100)::integer END AS percent
         FROM ranked
-        WHERE normalized_referrer IS NOT NULL
         ORDER BY count DESC, normalized_referrer ASC
         LIMIT :limit
       SQL
