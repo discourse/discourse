@@ -4225,6 +4225,9 @@ user_api:
     default: ""
     type: list
     hidden: true
+  verbose_user_api_key_device_auth_logging:
+    default: false
+    hidden: true
 
 tags:
   tagging_enabled:

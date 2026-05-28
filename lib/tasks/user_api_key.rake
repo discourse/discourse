@@ -27,6 +27,7 @@ module UserApiKeyDeviceAuthRake
       poll_interval = ENV.fetch("POLL_INTERVAL", "5").to_i
       timeout = ENV.fetch("TIMEOUT", "600").to_i
       verify = ENV.fetch("VERIFY", "1") != "0"
+      verbose = verbose?
       expires_in_seconds = requested_expiry_seconds
 
       private_key = OpenSSL::PKey::RSA.new(2048)
@@ -48,11 +49,24 @@ module UserApiKeyDeviceAuthRake
       device_url =
         device_response["verification_uri_with_request"] || device_response["verification_uri"]
 
+      device_code = device_response["device_code"]
+      abort "Device authorization response did not include a device_code." if device_code.blank?
+      fingerprint = device_code_fingerprint(device_code)
+
       puts "Open this URL in your browser: #{device_url}"
       puts "Enter this code when prompted: #{device_response["user_code"]}"
+      log("Device code fingerprint: #{fingerprint} (matches verbose server logs)", verbose: verbose)
       puts "Waiting for authorization..."
 
-      payload = poll_for_payload(site, device_response["device_code"], interval, timeout)
+      payload =
+        poll_for_payload(
+          site,
+          device_code,
+          interval,
+          timeout,
+          verbose: verbose,
+          device_code_fingerprint: fingerprint,
+        )
       decrypted_payload = decrypt_payload(payload, private_key, padding)
 
       if decrypted_payload["nonce"] != nonce
@@ -92,8 +106,21 @@ module UserApiKeyDeviceAuthRake
           POLL_INTERVAL        Poll interval in seconds. Defaults to 5.
           TIMEOUT              Poll timeout in seconds. Defaults to 600.
           VERIFY               Set to 0 to skip /session/current.json verification.
+          VERBOSE              Set to 1 to print poll attempts, status changes, and correlation IDs.
           HELP                 Set to 1 to show this help.
       TEXT
+    end
+
+    def verbose?
+      ENV["VERBOSE"] == "1"
+    end
+
+    def log(message, verbose: verbose?)
+      puts message if verbose
+    end
+
+    def device_code_fingerprint(device_code)
+      UserApiKey::DeviceAuth.trace_id_for(device_code)
     end
 
     def requested_expiry_seconds
@@ -170,12 +197,18 @@ module UserApiKeyDeviceAuthRake
       abort "Request to #{uri} failed: #{e.message}"
     end
 
-    def poll_for_payload(site, device_code, interval, timeout)
-      deadline = Time.now + timeout
+    def poll_for_payload(site, device_code, interval, timeout, verbose:, device_code_fingerprint:)
+      started_at = Time.now
+      deadline = started_at + timeout
+      attempt = 0
+      previous_status = nil
 
       loop do
-        abort "Timed out waiting for authorization." if Time.now >= deadline
+        if Time.now >= deadline
+          abort "Timed out waiting for authorization#{correlation_suffix(device_code_fingerprint)}."
+        end
 
+        attempt += 1
         _, response =
           json_request(
             :post,
@@ -185,19 +218,55 @@ module UserApiKeyDeviceAuthRake
             },
           )
 
-        case response["status"]
-        when "authorization_pending"
+        status = response["status"]
+        log_poll_attempt(
+          attempt: attempt,
+          status: status,
+          previous_status: previous_status,
+          started_at: started_at,
+          deadline: deadline,
+          interval: interval,
+          device_code_fingerprint: device_code_fingerprint,
+          verbose: verbose,
+        )
+        previous_status = status
+
+        case status
+        when UserApiKey::DeviceAuth::POLL_STATUS_AUTHORIZATION_PENDING
           sleep interval
-        when "authorized"
+        when UserApiKey::DeviceAuth::POLL_STATUS_AUTHORIZED
           return response.fetch("payload")
-        when "access_denied"
-          abort "The authorization request was denied."
-        when "expired_token"
-          abort "The device authorization request expired."
+        when UserApiKey::DeviceAuth::POLL_STATUS_ACCESS_DENIED
+          abort "The authorization request was denied#{correlation_suffix(device_code_fingerprint)}."
+        when UserApiKey::DeviceAuth::POLL_STATUS_EXPIRED_TOKEN
+          abort "The device authorization request expired#{correlation_suffix(device_code_fingerprint)}."
         else
-          abort "Unexpected device authorization status: #{response["status"].inspect}"
+          abort "Unexpected device authorization status: #{status.inspect}#{correlation_suffix(device_code_fingerprint)}."
         end
       end
+    end
+
+    def log_poll_attempt(
+      attempt:,
+      status:,
+      previous_status:,
+      started_at:,
+      deadline:,
+      interval:,
+      device_code_fingerprint:,
+      verbose:
+    )
+      return if !verbose
+
+      elapsed = (Time.now - started_at).round(1)
+      remaining = [deadline - Time.now, 0].max.round(1)
+      transition =
+        previous_status.present? && previous_status != status ? " (was #{previous_status})" : ""
+      puts "Poll ##{attempt}: status=#{status.inspect}#{transition}, elapsed=#{elapsed}s, remaining=#{remaining}s, next_interval=#{interval}s, device_code_hash=#{device_code_fingerprint}"
+    end
+
+    def correlation_suffix(device_code_fingerprint)
+      " (device_code_hash=#{device_code_fingerprint})"
     end
 
     def decrypt_payload(payload, private_key, padding)

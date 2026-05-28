@@ -18,6 +18,8 @@ class UserApiKey::DeviceAuth::CreateRequest
     validates :client_id, presence: true
   end
 
+  options { attribute :request_id, :string }
+
   model :client, optional: true
 
   try Discourse::InvalidParameters, Discourse::InvalidAccess do
@@ -67,8 +69,16 @@ class UserApiKey::DeviceAuth::CreateRequest
     device_request[:request_token] = codes.request_token
   end
 
-  def store_grant(device_request:, grant:)
+  def store_grant(device_request:, grant:, options:)
     UserApiKey::DeviceAuth::KeyCreator.validate_grant_size!(grant)
     UserApiKey::DeviceAuth::GrantStore.save!(grant, ttl: UserApiKey::DeviceAuth::DEVICE_AUTH_TTL)
+    UserApiKey::DeviceAuth.trace(
+      "device_auth.create.succeeded",
+      request_id: options.request_id,
+      client_id: grant.client_id,
+      device_code: grant.device_code,
+      request_token: grant.request_token,
+      user_code: grant.user_code,
+    )
   end
 end

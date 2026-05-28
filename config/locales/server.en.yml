@@ -2776,6 +2776,7 @@ en:
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
     revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
     max_user_api_key_expiry_days: "Maximum expiry, in days, that clients can request for user API keys"
+    verbose_user_api_key_device_auth_logging: "Log detailed diagnostics for the user API key device authorization flow"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."

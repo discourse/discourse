@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
+import { USER_API_KEY_AUTHORIZATION_STATES } from "discourse/lib/user-api-key-device-auth";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UserApiKeyNewRoute extends DiscourseRoute {
@@ -22,7 +23,7 @@ export default class UserApiKeyNewRoute extends DiscourseRoute {
 
     return ajax(`/user-api-key/new.json${window.location.search}`).catch(
       () => ({
-        state: "generic_error",
+        state: USER_API_KEY_AUTHORIZATION_STATES.GENERIC_ERROR,
       })
     );
   }

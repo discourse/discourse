@@ -3,6 +3,7 @@
 class UserApiKey::DeviceAuth::CodeRegistry
   USER_CODE_ALPHABET = UserApiKey::DeviceAuth::USER_CODE_ALPHABET
   REQUEST_TOKEN_REGEX = UserApiKey::DeviceAuth::DEVICE_REQUEST_TOKEN_REGEX
+  MAX_COLLISION_ATTEMPTS = UserApiKey::DeviceAuth::MAX_CODE_REGISTRY_COLLISION_ATTEMPTS
 
   CodeSet =
     if const_defined?(:CodeSet, false)
@@ -97,7 +98,7 @@ class UserApiKey::DeviceAuth::CodeRegistry
   end
 
   def self.reserve_user_code!(device_code)
-    20.times do
+    MAX_COLLISION_ATTEMPTS.times do
       user_code = generate_user_code
       if Discourse.redis.set(
            user_code_key(user_code),
@@ -113,7 +114,7 @@ class UserApiKey::DeviceAuth::CodeRegistry
   end
 
   def self.reserve_request_token!(device_code)
-    20.times do
+    MAX_COLLISION_ATTEMPTS.times do
       request_token = SecureRandom.urlsafe_base64(6)
       if Discourse.redis.set(
            request_token_key(request_token),

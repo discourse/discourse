@@ -6,6 +6,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import copyText from "discourse/lib/copy-text";
 import { longDate } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
+import { USER_API_KEY_AUTHORIZATION_STATES } from "discourse/lib/user-api-key-device-auth";
 
 export default class UserApiKeyNewController extends Controller {
   @tracked page;
@@ -34,15 +35,17 @@ export default class UserApiKeyNewController extends Controller {
   }
 
   get ready() {
-    return this.page?.state === "ready";
+    return this.page?.state === USER_API_KEY_AUTHORIZATION_STATES.READY;
   }
 
   get noTrustLevel() {
-    return this.page?.state === "no_trust_level";
+    return (
+      this.page?.state === USER_API_KEY_AUTHORIZATION_STATES.NO_TRUST_LEVEL
+    );
   }
 
   get genericError() {
-    return this.page?.state === "generic_error";
+    return this.page?.state === USER_API_KEY_AUTHORIZATION_STATES.GENERIC_ERROR;
   }
 
   get avatarUrl() {

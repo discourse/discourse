@@ -46,12 +46,28 @@ class UserApiKeysController < ApplicationController
     return if performed?
 
     render_user_api_key_authorization(json)
-  rescue Discourse::InvalidAccess
-    render_user_api_key_authorization({ state: "generic_error" })
+  rescue Discourse::InvalidAccess => exception
+    trace_device_auth(
+      "device_auth.authorization.rendered_generic",
+      reason: exception.class.name,
+      exception: exception,
+      client_id: params[:client_id],
+    )
+    render_user_api_key_authorization(
+      { state: UserApiKey::DeviceAuth::AUTHORIZATION_STATE_GENERIC_ERROR },
+    )
   rescue Discourse::InvalidParameters => exception
     raise if exception.message == "padding"
 
-    render_user_api_key_authorization({ state: "generic_error" })
+    trace_device_auth(
+      "device_auth.authorization.rendered_generic",
+      reason: exception.class.name,
+      exception: exception,
+      client_id: params[:client_id],
+    )
+    render_user_api_key_authorization(
+      { state: UserApiKey::DeviceAuth::AUTHORIZATION_STATE_GENERIC_ERROR },
+    )
   end
 
   def create
@@ -139,7 +155,7 @@ class UserApiKeysController < ApplicationController
     ensure_json_request!
     rate_limit_device_request_creation
 
-    UserApiKey::DeviceAuth::CreateRequest.call(service_params) do
+    UserApiKey::DeviceAuth::CreateRequest.call(device_auth_service_params) do
       on_success do |device_request:|
         verification_uri = UrlHelper.absolute_without_cdn(path("/user-api-key/activate"))
 
@@ -153,8 +169,21 @@ class UserApiKeysController < ApplicationController
                  interval: UserApiKey::DeviceAuth::DEVICE_AUTH_INTERVAL,
                }
       end
-      on_failed_contract { raise Discourse::InvalidParameters.new(:base) }
+      on_failed_contract do |failure|
+        trace_device_auth(
+          "device_auth.create.failed",
+          reason: "contract_invalid",
+          contract_errors: failure.errors&.attribute_names&.join(","),
+        )
+        raise Discourse::InvalidParameters.new(:base)
+      end
       on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+        trace_device_auth(
+          "device_auth.create.failed",
+          reason: exception.class.name,
+          exception: exception,
+          client_id: params[:client_id],
+        )
         raise exception
       end
     end
@@ -189,36 +218,57 @@ class UserApiKeysController < ApplicationController
     result = device_user_activation.find_manual_code(params[:code])
 
     if result.status == :invalid_code
-      render_device_activation({ state: "enter_code", invalid_code: true })
+      render_device_activation(
+        { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, invalid_code: true },
+        debug_reason: result.debug_reason,
+      )
       return
     end
 
     if result.status == :expired_code
-      render_device_activation({ state: "enter_code", expired_code: true })
+      render_device_activation(
+        { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+        debug_reason: result.debug_reason,
+      )
       return
     end
 
     @device_auth = result.grant
 
     unless meets_tl?
-      render_device_activation(device_authorization_model(state: "authorize", no_trust_level: true))
+      render_device_activation(
+        device_authorization_model(
+          state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
+          no_trust_level: true,
+        ),
+        debug_reason: "insufficient_trust_level",
+      )
       return
     end
 
     approval_token = device_user_activation.create_approval_token!(result.grant)
 
     if approval_token.blank?
-      render_device_activation({ state: "enter_code", expired_code: true })
+      render_device_activation(
+        { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+        debug_reason: "approval_token_not_created",
+      )
       return
     end
 
     render_device_activation(
-      device_authorization_model(state: "authorize", approval_token: approval_token),
+      device_authorization_model(
+        state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
+        approval_token: approval_token,
+      ),
     )
   end
 
   def authorize_device_request
-    raise Discourse::InvalidAccess unless meets_tl?
+    unless meets_tl?
+      trace_device_auth("device_auth.authorize.failed", reason: "insufficient_trust_level")
+      raise Discourse::InvalidAccess
+    end
 
     device_code = device_code_for_authorize_request
 
@@ -226,31 +276,53 @@ class UserApiKeysController < ApplicationController
       if @request_token.present? && @device_auth&.application_name.present?
         render_device_activation(
           device_authorization_model(
-            state: "authorize",
+            state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
             request_token: @request_token,
             invalid_code: true,
           ),
+          debug_reason: @device_auth_debug_reason || "invalid_request_token_code",
         )
       else
-        render_device_activation({ state: "enter_code", expired_code: true })
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+          debug_reason: @device_auth_debug_reason || "device_code_unavailable",
+        )
       end
       return
     end
 
     UserApiKey::DeviceAuth::Authorize.call(
-      service_params.deep_merge(params: { device_code: device_code, user_id: current_user.id }),
+      device_auth_service_params(device_code: device_code, user_id: current_user.id),
     ) do
       on_success do
         if params[:approval_token].present?
           device_user_activation.delete_approval_token(params[:approval_token])
         end
-        render_device_activation({ state: "complete", denied: false })
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE, denied: false },
+        )
       end
-      on_model_not_found(:user) { raise Discourse::InvalidAccess }
-      on_failed_step(:authorize_grant) do
-        render_device_activation({ state: "enter_code", expired_code: true })
+      on_model_not_found(:user) do
+        trace_device_auth(
+          "device_auth.authorize.failed",
+          reason: "user_not_found",
+          device_code: device_code,
+        )
+        raise Discourse::InvalidAccess
+      end
+      on_failed_step(:authorize_grant) do |failure|
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+          debug_reason: failure.error,
+        )
       end
       on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+        trace_device_auth(
+          "device_auth.authorize.failed",
+          reason: exception.class.name,
+          exception: exception,
+          device_code: device_code,
+        )
         raise exception
       end
     end
@@ -258,7 +330,10 @@ class UserApiKeysController < ApplicationController
 
   def deny_device_request
     if params[:request].present?
-      render_device_activation({ state: "enter_code", expired_code: true })
+      render_device_activation(
+        { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+        debug_reason: "deny_requires_approval_token",
+      )
       return
     end
 
@@ -270,22 +345,33 @@ class UserApiKeysController < ApplicationController
       )
 
     if result.status != :success
-      render_device_activation({ state: "enter_code", expired_code: true })
+      render_device_activation(
+        { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+        debug_reason: result.debug_reason,
+      )
       return
     end
 
     UserApiKey::DeviceAuth::Deny.call(
-      service_params.deep_merge(params: { device_code: result.device_code }),
+      device_auth_service_params(device_code: result.device_code),
     ) do
       on_success do
         device_user_activation.delete_approval_token(approval_token)
-        render_device_activation({ state: "complete", denied: true })
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE, denied: true },
+        )
       end
-      on_failed_step(:deny_grant) do
-        render_device_activation({ state: "enter_code", expired_code: true })
+      on_failed_step(:deny_grant) do |failure|
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+          debug_reason: failure.error,
+        )
       end
-      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do
-        render_device_activation({ state: "enter_code", expired_code: true })
+      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+          debug_reason: exception.class.name,
+        )
       end
     end
   end
@@ -297,9 +383,9 @@ class UserApiKeysController < ApplicationController
     device_code = params.require(:device_code)
     rate_limit_device_poll_for_code(device_code)
 
-    UserApiKey::DeviceAuth::Poll.call(
-      service_params.deep_merge(params: { device_code: device_code }),
-    ) { on_success { |poll_response:| render json: poll_response } }
+    UserApiKey::DeviceAuth::Poll.call(device_auth_service_params(device_code: device_code)) do
+      on_success { |poll_response:| render json: poll_response }
+    end
   end
 
   def otp
@@ -375,7 +461,17 @@ class UserApiKeysController < ApplicationController
     end
   end
 
-  def render_device_activation(json)
+  def render_device_activation(json, debug_reason: nil)
+    if debug_reason.present?
+      trace_device_auth(
+        "device_auth.activation.rendered_generic",
+        reason: debug_reason,
+        state: json[:state] || json["state"],
+        expired_code: json[:expired_code] || json["expired_code"],
+        invalid_code: json[:invalid_code] || json["invalid_code"],
+      )
+    end
+
     respond_to do |format|
       format.html do
         store_preloaded("user_api_key_device_activation", MultiJson.dump(json))
@@ -405,7 +501,7 @@ class UserApiKeysController < ApplicationController
     if !meets_tl?
       return(
         {
-          state: "no_trust_level",
+          state: UserApiKey::DeviceAuth::AUTHORIZATION_STATE_NO_TRUST_LEVEL,
           application_name: application_name,
           current_user: current_user_json,
         }
@@ -413,7 +509,7 @@ class UserApiKeysController < ApplicationController
     end
 
     {
-      state: "ready",
+      state: UserApiKey::DeviceAuth::AUTHORIZATION_STATE_READY,
       application_name: application_name,
       public_key: params[:public_key] || @client&.public_key,
       nonce: params[:nonce],
@@ -441,16 +537,27 @@ class UserApiKeysController < ApplicationController
   end
 
   def device_activation_model
-    return { state: "enter_code" } if params[:request].blank?
+    if params[:request].blank?
+      return { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE }
+    end
 
     rate_limit_device_request_token_lookup(params[:request])
     result = device_user_activation.preview_request_token(params[:request])
 
-    return { state: "enter_code", expired_code: true } if result.status != :success
+    if result.status != :success
+      trace_device_auth(
+        "device_auth.activation.preview.failed",
+        reason: result.debug_reason,
+        request_token: params[:request],
+      )
+      return(
+        { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true }
+      )
+    end
 
     @device_auth = result.grant
     device_authorization_model(
-      state: "authorize",
+      state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
       request_token: params[:request],
       no_trust_level: !meets_tl?,
     )
@@ -628,14 +735,32 @@ class UserApiKeysController < ApplicationController
 
   def device_user_activation
     @device_user_activation ||=
-      UserApiKey::DeviceAuth::UserActivation.new(session: session, user: current_user)
+      UserApiKey::DeviceAuth::UserActivation.new(
+        session: session,
+        user: current_user,
+        request_id: request.request_id,
+      )
+  end
+
+  def device_auth_service_params(**overrides)
+    service_params.deep_merge(params: overrides, options: { request_id: request.request_id })
+  end
+
+  def trace_device_auth(event, **payload)
+    UserApiKey::DeviceAuth.trace(
+      event,
+      **{ request_id: request.request_id, user_id: current_user&.id }.merge(payload),
+    )
   end
 
   def device_code_for_authorize_request
     if params[:request].present?
       rate_limit_device_request_token_lookup(params[:request])
       preview = device_user_activation.preview_request_token(params[:request])
-      return if preview.status != :success
+      if preview.status != :success
+        @device_auth_debug_reason = preview.debug_reason
+        return
+      end
 
       @device_auth = preview.grant
       @request_token = params[:request]
@@ -648,6 +773,7 @@ class UserApiKeysController < ApplicationController
           approval_token: nil,
         )
       @device_auth = result.grant if result.grant.present?
+      @device_auth_debug_reason = result.debug_reason
 
       return result.device_code if result.status == :success
       return
@@ -660,6 +786,7 @@ class UserApiKeysController < ApplicationController
         user_code: nil,
         approval_token: approval_token,
       )
+    @device_auth_debug_reason = result.debug_reason
     result.device_code if result.status == :success
   end
 

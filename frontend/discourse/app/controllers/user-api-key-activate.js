@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { longDate } from "discourse/lib/formatter";
+import { USER_API_KEY_DEVICE_ACTIVATION_STATES } from "discourse/lib/user-api-key-device-auth";
 import { i18n } from "discourse-i18n";
 
 const CODE_FIELD = "code";
@@ -30,15 +31,17 @@ export default class UserApiKeyActivateController extends Controller {
   }
 
   get showEnterCode() {
-    return this.page?.state === "enter_code";
+    return (
+      this.page?.state === USER_API_KEY_DEVICE_ACTIVATION_STATES.ENTER_CODE
+    );
   }
 
   get showAuthorize() {
-    return this.page?.state === "authorize";
+    return this.page?.state === USER_API_KEY_DEVICE_ACTIVATION_STATES.AUTHORIZE;
   }
 
   get showComplete() {
-    return this.page?.state === "complete";
+    return this.page?.state === USER_API_KEY_DEVICE_ACTIVATION_STATES.COMPLETE;
   }
 
   get deviceExpiresAt() {

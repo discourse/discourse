@@ -143,6 +143,14 @@ RSpec.describe UserApiKey::DeviceAuth::GrantStore do
       expect { |block| described_class.with_lock!(device_code, &block) }.to yield_control
     end
 
+    it "releases the owned lock after running" do
+      described_class.with_lock!(device_code) do
+        expect(Discourse.redis.get(described_class.lock_key(device_code))).to be_present
+      end
+
+      expect(Discourse.redis.get(described_class.lock_key(device_code))).to be_nil
+    end
+
     it "raises when the lock is already held" do
       Discourse.redis.setex(
         described_class.lock_key(device_code),
@@ -151,6 +159,16 @@ RSpec.describe UserApiKey::DeviceAuth::GrantStore do
       )
 
       expect { described_class.with_lock!(device_code) }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "does not release a lock claimed by another token" do
+      replacement_token = SecureRandom.hex
+
+      described_class.with_lock!(device_code) do
+        Discourse.redis.set(described_class.lock_key(device_code), replacement_token)
+      end
+
+      expect(Discourse.redis.get(described_class.lock_key(device_code))).to eq(replacement_token)
     end
   end
 

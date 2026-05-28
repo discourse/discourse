@@ -3,6 +3,13 @@
 class UserApiKey::DeviceAuth::GrantStore
   REDIS_PREFIXES = [UserApiKey::DeviceAuth::DEVICE_AUTHORIZATION_LOCK_REDIS_PREFIX].freeze
   CONSUME_LOCKED = :locked
+  UNLOCK_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("del", KEYS[1])
+      else
+        return 0
+      end
+    LUA
 
   def self.grant_key(device_code)
     "#{UserApiKey::DeviceAuth::DEVICE_CODE_REDIS_PREFIX}#{device_code}"
@@ -32,12 +39,16 @@ class UserApiKey::DeviceAuth::GrantStore
     Discourse.redis.del(grant_key(device_code))
   end
 
-  def self.consume_authorized(device_code)
+  def self.consume_authorized(device_code, request_id: nil)
     return if !UserApiKey::DeviceAuth::DEVICE_CODE_REGEX.match?(device_code.to_s)
 
     consumed_grant = nil
 
-    with_lock!(device_code) do
+    with_lock!(
+      device_code,
+      operation: "device_auth.poll.consume_authorized",
+      request_id: request_id,
+    ) do
       grant = load(device_code)
       if grant&.authorized?
         delete(device_code)
@@ -59,9 +70,11 @@ class UserApiKey::DeviceAuth::GrantStore
     [ttl_for_update(device_code), UserApiKey::DeviceAuth::DEVICE_AUTHORIZED_PAYLOAD_TTL.to_i].min
   end
 
-  def self.with_lock!(device_code)
+  def self.with_lock!(device_code, operation: "device_auth.lock", request_id: nil)
     lock_key = self.lock_key(device_code)
+    namespaced_lock_key = namespaced_key(lock_key)
     lock_token = SecureRandom.hex
+    lock_acquired = false
 
     unless Discourse.redis.set(
              lock_key,
@@ -69,12 +82,32 @@ class UserApiKey::DeviceAuth::GrantStore
              nx: true,
              ex: UserApiKey::DeviceAuth::DEVICE_AUTHORIZATION_LOCK_TTL.to_i,
            )
+      UserApiKey::DeviceAuth.trace(
+        "#{operation}.failed",
+        request_id: request_id,
+        reason: "lock_busy",
+        device_code: device_code,
+      )
       raise Discourse::InvalidAccess
     end
 
+    lock_acquired = true
+
     yield
   ensure
-    Discourse.redis.del(lock_key) if lock_key && Discourse.redis.get(lock_key) == lock_token
+    release_lock(namespaced_lock_key, lock_token) if lock_acquired
+  end
+
+  def self.namespaced_key(key)
+    if Discourse.redis.respond_to?(:namespace_key)
+      Discourse.redis.namespace_key(key)
+    else
+      key
+    end
+  end
+
+  def self.release_lock(namespaced_lock_key, lock_token)
+    UNLOCK_SCRIPT.eval(Discourse.redis, [namespaced_lock_key], [lock_token])
   end
 
   def self.clear!

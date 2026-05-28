@@ -34,6 +34,11 @@ RSpec.describe UserApiKeysController do
     Base64.decode64(CGI.unescape(payload))
   end
 
+  def expect_required_fields(response_body, contract, state)
+    required_fields = contract.fetch(state).fetch(:required_fields)
+    expect(response_body.keys.map(&:to_sym)).to include(*required_fields)
+  end
+
   describe "#new" do
     it "supports a head request cleanly" do
       head "/user-api-key/new"
@@ -111,6 +116,34 @@ RSpec.describe UserApiKeysController do
         get "/user-api-key/new.json", params: args.merge(auth_redirect: "https://evil.com/steal")
         expect(response.parsed_body["state"]).to eq("generic_error")
         expect(response.parsed_body["redirect_uri"]).to be_nil
+      end
+
+      it "matches the ready state contract" do
+        get "/user-api-key/new.json", params: args
+
+        expect(response.parsed_body["state"]).to eq(
+          UserApiKey::DeviceAuth::AUTHORIZATION_STATE_READY,
+        )
+        expect_required_fields(
+          response.parsed_body,
+          UserApiKey::DeviceAuth::AUTHORIZATION_STATE_CONTRACT,
+          UserApiKey::DeviceAuth::AUTHORIZATION_STATE_READY,
+        )
+      end
+
+      it "matches the no trust level state contract" do
+        SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+        get "/user-api-key/new.json", params: args
+
+        expect(response.parsed_body["state"]).to eq(
+          UserApiKey::DeviceAuth::AUTHORIZATION_STATE_NO_TRUST_LEVEL,
+        )
+        expect_required_fields(
+          response.parsed_body,
+          UserApiKey::DeviceAuth::AUTHORIZATION_STATE_CONTRACT,
+          UserApiKey::DeviceAuth::AUTHORIZATION_STATE_NO_TRUST_LEVEL,
+        )
       end
 
       it "allows auth_redirect when it matches allowed_user_api_auth_redirects" do
@@ -534,7 +567,14 @@ RSpec.describe UserApiKeysController do
       get "/user-api-key/activate.json", params: { request: request_token }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["state"]).to eq("authorize")
+      expect(response.parsed_body["state"]).to eq(
+        UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
+      )
+      expect_required_fields(
+        response.parsed_body,
+        UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_CONTRACT,
+        UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
+      )
       expect(response.parsed_body["request_token"]).to eq(request_token)
       expect(response.parsed_body["user_code"]).to be_blank
       expect(response.parsed_body["approval_token"]).to be_blank
@@ -566,7 +606,14 @@ RSpec.describe UserApiKeysController do
              request: request_token,
              code: body["user_code"].delete("-"),
            }
-      expect(response.parsed_body["state"]).to eq("complete")
+      expect(response.parsed_body["state"]).to eq(
+        UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE,
+      )
+      expect_required_fields(
+        response.parsed_body,
+        UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_CONTRACT,
+        UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE,
+      )
 
       sign_in(second_user)
       post "/user-api-key/device/authorize.json",
