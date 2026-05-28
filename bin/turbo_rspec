@@ -3,27 +3,6 @@
 
 ENV["RAILS_ENV"] ||= "test"
 
-# Skip Rails eager loading for pure system-test runs. Eager loading runs in
-# every worker (see config/environments/test.rb: `config.eager_load =
-# ENV["CI"].present?`) and on the CI image accounts for ~10-30s of CPU per
-# worker boot. System specs autoload their own dependencies via Zeitwerk and
-# the explicit `Dir[...].each { require ... }` blocks in spec/rails_helper.rb,
-# so eager-loading every application class up-front is pure overhead for this
-# job. The flag is read inside spec/rails_helper.rb before
-# `require "config/environment"` to override the Rails::Application
-# configuration getter so the finisher's `:eager_load!` initializer no-ops.
-#
-# Detection must happen BEFORE `require "./lib/turbo_tests"` because that
-# require boots Rails in the parent process. We only flip the flag when
-# every positional argument targets `spec/system` (the Core System Tests
-# step's invocation), to avoid affecting mixed backend + system runs or
-# other targets that rely on eager-loaded classes.
-existing_path_args = ARGV.reject { |arg| arg.start_with?("-") }.select { |arg| File.exist?(arg) }
-if existing_path_args.any? &&
-     existing_path_args.all? { |arg| arg == "spec/system" || arg.start_with?("spec/system/") }
-  ENV["DISCOURSE_DISABLE_EAGER_LOAD"] = "1"
-end
-
 require "./lib/turbo_tests"
 require "optparse"
 
