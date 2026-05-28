@@ -110,6 +110,11 @@ id:
       placeholder: tanggal
       from_placeholder: "dari tanggal"
       to_placeholder: "sampai saat ini"
+    date_range_picker:
+      apply: "menerapkan"
+      presets:
+        last_7_days: "7 hari terakhir"
+        last_30_days: "30 hari terakhir"
     share:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "kiriman #%{postNumber} oleh @%{username}"

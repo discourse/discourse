@@ -58,6 +58,7 @@ class DiscoursePluginRegistry
   define_register :stylesheets, Hash
   define_register :mobile_stylesheets, Hash
   define_register :desktop_stylesheets, Hash
+  define_register :admin_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
   define_register :serialized_current_user_fields, Set
   define_register :seed_data, ActiveSupport::HashWithIndifferentAccess
@@ -203,6 +204,9 @@ class DiscoursePluginRegistry
       elsif opts == :desktop
         desktop_stylesheets[plugin_directory_name] ||= Set.new
         desktop_stylesheets[plugin_directory_name] << asset
+      elsif opts == :admin
+        admin_stylesheets[plugin_directory_name] ||= Set.new
+        admin_stylesheets[plugin_directory_name] << asset
       elsif opts == :color_definitions
         color_definition_stylesheets[plugin_directory_name] = asset
       else
@@ -218,6 +222,8 @@ class DiscoursePluginRegistry
       desktop_stylesheets[plugin_directory_name].present?
     when :mobile
       mobile_stylesheets[plugin_directory_name].present?
+    when :admin
+      admin_stylesheets[plugin_directory_name].present?
     else
       stylesheets[plugin_directory_name].present?
     end

@@ -385,7 +385,6 @@ fr:
       upcoming_events_list:
         title: "Événements à venir"
         empty: "Aucun événement à venir"
-        all_day: "Toute la journée"
         error: "Échec de la récupération des événements"
         try_again: "Réessayer"
         view_all: "Tout voir"

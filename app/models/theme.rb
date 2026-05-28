@@ -506,7 +506,13 @@ class Theme < ActiveRecord::Base
 
     if with_scheme
       targets.prepend(:common, :desktop, :mobile, :admin)
-      targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
+      targets.append(
+        *Discourse.find_plugin_css_assets(
+          mobile_view: true,
+          desktop_view: true,
+          include_admin: true,
+        ),
+      )
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end
 

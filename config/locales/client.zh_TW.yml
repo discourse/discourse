@@ -115,6 +115,13 @@ zh_TW:
       placeholder: 日期
       from_placeholder: "從日期"
       to_placeholder: "至今"
+    date_range_picker:
+      apply: "套用"
+      presets:
+        last_7_days: "過去 7 天"
+        last_30_days: "過去 30 天"
+        last_3_months: "過去 3 個月"
+        last_6_months: "過去 6 個月"
     languages:
       ar:
         name: 阿拉伯語
@@ -5021,8 +5028,6 @@ zh_TW:
             enabled_heading: "啟用"
             all_heading: "所有報告"
             apply: "套用"
-            move_up: "上移"
-            move_down: "下移"
         site_traffic:
           series:
             anonymous: "匿名"

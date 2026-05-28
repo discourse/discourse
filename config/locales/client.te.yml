@@ -142,6 +142,11 @@ te:
       placeholder: తేదీ
       from_placeholder: "తేదీ నుండి"
       to_placeholder: "ఇప్పటి వరకు"
+    date_range_picker:
+      apply: "దరఖాస్తు చేసుకోండి"
+      presets:
+        last_3_months: "గత 3 నెలలు"
+        last_6_months: "గత 6 నెలలు"
     share:
       topic_html: 'విషయం: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}ద్వారా పోస్ట్ #%{postNumber}"

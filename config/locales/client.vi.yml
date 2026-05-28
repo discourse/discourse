@@ -120,6 +120,14 @@ vi:
       placeholder: ngày
       from_placeholder: "từ ngày"
       to_placeholder: "đến nay"
+    date_range_picker:
+      apply: "Áp dụng"
+      presets:
+        last_7_days: "7 ngày qua"
+        last_30_days: "30 ngày qua"
+        last_3_months: "3 tháng qua"
+        last_6_months: "6 tháng qua"
+        last_year: "Năm ngoái"
     languages:
       ar:
         name: Tiếng Ả Rập
@@ -5711,8 +5719,6 @@ vi:
             enabled_heading: "Đã bật"
             all_heading: "Tất cả các báo cáo"
             apply: "Áp dụng"
-            move_up: "Chuyển lên"
-            move_down: "Chuyển xuống"
         site_traffic:
           series:
             anonymous: "Ẩn danh"

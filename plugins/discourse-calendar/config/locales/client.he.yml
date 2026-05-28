@@ -387,7 +387,6 @@ he:
       upcoming_events_list:
         title: "אירועים קרובים"
         empty: "אין אירועים בקרוב"
-        all_day: "יום שלם"
         error: "משיכת האירועים נכשלה"
         try_again: "ניסיון נוסף"
         view_all: "להציג הכול"

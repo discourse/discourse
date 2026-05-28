@@ -172,6 +172,13 @@ sr:
       placeholder: датум
       from_placeholder: "од датума"
       to_placeholder: "до датума"
+    date_range_picker:
+      apply: "Primeni"
+      presets:
+        last_7_days: "Последњих 7 дана"
+        last_30_days: "Последњих 30 дана"
+        last_3_months: "Poslednja 3 meseca"
+        last_6_months: "Poslednja 6 meseca"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} od @%{username}"
@@ -2988,6 +2995,8 @@ sr:
           modal:
             enabled_heading: "Omogućeno"
             apply: "Primeni"
+            move_up: "Pomeri %{title} gore"
+            move_down: "Pomeri %{title} dole"
         configure:
           button: "Konfiguriši"
           reorder_up: "Pomeri %{label} gore"

@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 class NestedTopicsController < ApplicationController
+  include EmbedModeHandler
+
   skip_before_action :check_xhr, only: %i[show context]
 
   before_action :ensure_nested_replies_enabled
   before_action :find_topic_with_topic_view, only: %i[show children context]
   before_action :find_topic, only: %i[pin toggle activity]
   before_action :ensure_not_pm
+  before_action :set_embed_class, only: %i[show context]
   after_action :track_visit, only: %i[show context]
+  after_action :allow_embed_mode, only: %i[show context]
 
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)

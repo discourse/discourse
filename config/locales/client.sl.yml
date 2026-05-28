@@ -164,6 +164,11 @@ sl:
       placeholder: datum
       from_placeholder: "od datuma"
       to_placeholder: "na datum"
+    date_range_picker:
+      apply: "Uporabi"
+      presets:
+        last_7_days: "Zadnjih 7 dni"
+        last_30_days: "Zadnjih 30 dni"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zapri"

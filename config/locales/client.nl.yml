@@ -158,6 +158,15 @@ nl:
       placeholder: datum
       from_placeholder: "vanaf datum"
       to_placeholder: "tot datum"
+    date_range_picker:
+      apply: "Toepassen"
+      start_date: "Begindatum"
+      presets:
+        last_7_days: "Afgelopen 7 dagen"
+        last_30_days: "Afgelopen 30 dagen"
+        last_3_months: "Afgelopen 3 maanden"
+        last_6_months: "Afgelopen 6 maanden"
+        last_year: "Vorig jaar"
     languages:
       ar:
         name: Arabisch
@@ -3641,8 +3650,6 @@ nl:
     nested_replies:
       nested_view: "Geneste weergave"
       flat_view: "Platte weergave"
-      view_as_nested: "Weergeven als genest"
-      view_as_flat: "Weergeven als plat"
       sort:
         label: "Sorteren op"
         top: "Top"
@@ -6322,8 +6329,6 @@ nl:
             enabled_heading: "Ingeschakeld"
             all_heading: "Alle rapporten"
             apply: "Toepassen"
-            move_up: "Omhoog verplaatsen"
-            move_down: "Omlaag verplaatsen"
         configure:
           button: "Configureren"
         site_traffic:

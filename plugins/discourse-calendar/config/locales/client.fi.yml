@@ -381,7 +381,6 @@ fi:
       upcoming_events_list:
         title: "Tulevat tapahtumat"
         empty: "Ei tulevia tapahtumia"
-        all_day: "Koko päivä"
         error: "Tapahtumien hakeminen epäonnistui"
         try_again: "Yritä uudelleen"
         view_all: "Näytä kaikki"

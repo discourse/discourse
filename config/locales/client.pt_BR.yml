@@ -158,6 +158,14 @@ pt_BR:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até agora"
+    date_range_picker:
+      apply: "Aplicar"
+      start_date: "Data de início"
+      presets:
+        last_7_days: "Últimos sete dias"
+        last_30_days: "Últimos 30 dias"
+        last_6_months: "Últimos seis meses"
+        last_year: "Ano passado"
     languages:
       ar:
         name: Árabe
@@ -6154,8 +6162,6 @@ pt_BR:
             enabled_heading: "Ativados"
             all_heading: "Todos os relatórios"
             apply: "Aplicar"
-            move_up: "Mover para cima"
-            move_down: "Mover para baixo"
         configure:
           button: "Configurar"
         site_traffic:

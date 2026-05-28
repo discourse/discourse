@@ -144,6 +144,15 @@ fr:
       placeholder: date
       from_placeholder: "date de début"
       to_placeholder: "date de fin"
+    date_range_picker:
+      apply: "Appliquer"
+      start_date: "Date de début"
+      presets:
+        last_7_days: "Ces 7 derniers jours"
+        last_30_days: "30 derniers jours"
+        last_3_months: "3 derniers mois"
+        last_6_months: "6 derniers mois"
+        last_year: "L'année dernière"
     languages:
       ar:
         name: Arabe
@@ -5666,8 +5675,6 @@ fr:
             enabled_heading: "Activé"
             all_heading: "Tous les rapports"
             apply: "Appliquer"
-            move_up: "Déplacer vers le haut"
-            move_down: "Déplacer vers le bas"
         configure:
           button: "Configurer"
         site_traffic:

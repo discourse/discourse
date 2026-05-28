@@ -127,6 +127,7 @@ export default class DashboardReports extends Component {
   <template>
     <DashboardSection
       @title={{i18n "admin.dashboard.sections.reports.title"}}
+      @description={{i18n "admin.dashboard.reports_section.description"}}
       @bordered={{false}}
       @layout="grid"
       @headerActionIcon={{if this.canEdit "gear"}}

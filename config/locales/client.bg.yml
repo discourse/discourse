@@ -142,6 +142,11 @@ bg:
       placeholder: дата
       from_placeholder: "от дата"
       to_placeholder: "до дата"
+    date_range_picker:
+      apply: "Приложи"
+      presets:
+        last_7_days: "Последните 7 дни"
+        last_30_days: "Последните 30 дни"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"

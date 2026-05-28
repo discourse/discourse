@@ -56,6 +56,9 @@ en:
       weekly: "weekly"
       monthly: "monthly"
       quarterly: "quarterly"
+    discourse_workflows:
+      assign_topic:
+        error: "Failed to assign topic: %{reason}"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"

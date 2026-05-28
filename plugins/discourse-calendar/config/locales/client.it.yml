@@ -381,7 +381,6 @@ it:
       upcoming_events_list:
         title: "Prossimi eventi"
         empty: "Nessun evento in programma"
-        all_day: "Tutto il giorno"
         error: "Impossibile recuperare gli eventi"
         try_again: "Riprova"
         view_all: "Vedi tutto"

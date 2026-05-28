@@ -115,6 +115,13 @@ ko:
       placeholder: 날짜
       from_placeholder: "시작 날짜"
       to_placeholder: "종료 날짜"
+    date_range_picker:
+      apply: "적용"
+      presets:
+        last_7_days: "지난 7일"
+        last_30_days: "지난 30일"
+        last_3_months: "지난 3개월"
+        last_6_months: "지난 6개월"
     share:
       topic_html: '글: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}님의 글 #%{postNumber}"

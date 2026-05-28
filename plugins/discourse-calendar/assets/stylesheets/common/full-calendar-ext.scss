@@ -53,6 +53,14 @@
   }
 }
 
+.fc-daygrid-day {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--tertiary-50);
+  }
+}
+
 .fc-header-toolbar {
   .fc-button,
   .fc-toolbar-title {
