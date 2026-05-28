@@ -1206,6 +1206,36 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(closed_and_unlisted_topic.id)
         end
       end
+
+      describe "when query string is `status:noreplies`" do
+        fab!(:topic_without_replies) { Fabricate(:topic, posts_count: 1) }
+        fab!(:topic_with_replies) { Fabricate(:topic, posts_count: 2) }
+
+        it "should only return topics that have no replies" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:noreplies")
+              .pluck(:id),
+          ).to contain_exactly(topic_without_replies.id)
+        end
+      end
+
+      describe "when query string is `status:single_user`" do
+        fab!(:single_user_topic) { Fabricate(:topic, participant_count: 1) }
+        fab!(:multi_user_topic) { Fabricate(:topic, participant_count: 2) }
+
+        it "should only return topics that have a single participant" do
+          topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:single_user")
+              .pluck(:id)
+
+          expect(topic_ids).to include(single_user_topic.id)
+          expect(topic_ids).not_to include(multi_user_topic.id)
+        end
+      end
     end
 
     describe "when filtering by tags" do
