@@ -8,44 +8,26 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
       it "returns false and adds an error to the workflow" do
         nodes_data =
           (described_class::MAX_NODES + 1).times.map do |i|
-            {
-              id: "node-#{i}",
-              type: "trigger:topic_created",
-              name: "Node #{i}"
-            }
+            { id: "node-#{i}", type: "trigger:topic_created", name: "Node #{i}" }
           end
 
         result =
-          described_class.call(
-            workflow: workflow,
-            nodes_data: nodes_data,
-            connections_data: {
-            }
-          )
+          described_class.call(workflow: workflow, nodes_data: nodes_data, connections_data: {})
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          /cannot have more than #{described_class::MAX_NODES}/
+          /cannot have more than #{described_class::MAX_NODES}/,
         )
       end
 
       it "accepts exactly the maximum number of nodes" do
         nodes_data =
           described_class::MAX_NODES.times.map do |i|
-            {
-              id: "node-#{i}",
-              type: "trigger:topic_created",
-              name: "Node #{i}"
-            }
+            { id: "node-#{i}", type: "trigger:topic_created", name: "Node #{i}" }
           end
 
         result =
-          described_class.call(
-            workflow: workflow,
-            nodes_data: nodes_data,
-            connections_data: {
-            }
-          )
+          described_class.call(workflow: workflow, nodes_data: nodes_data, connections_data: {})
 
         expect(result).to eq(true)
         expect(workflow.reload.nodes.size).to eq(described_class::MAX_NODES)
@@ -60,10 +42,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             nodes_data: [
               { id: "error-1", type: "trigger:error", name: "Error one" },
               { id: "error-1", type: "trigger:error", name: "Error one" },
-              { id: "error-2", type: "trigger:error", name: "Error two" }
+              { id: "error-2", type: "trigger:error", name: "Error two" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(false)
@@ -71,8 +53,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           I18n.t(
             "discourse_workflows.errors.max_nodes_of_type_exceeded",
             max: 1,
-            type: "trigger:error"
-          )
+            type: "trigger:error",
+          ),
         )
       end
     end
@@ -84,29 +66,18 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             workflow: workflow,
             nodes_data: [
               { id: "manual-1", type: "trigger:manual", name: "Manual" },
-              { id: "error-1", type: "trigger:error", name: "Error trigger" }
+              { id: "error-1", type: "trigger:error", name: "Error trigger" },
             ],
             connections_data: {
               "Manual" => {
-                "main" => [
-                  [
-                    {
-                      "node" => "Error trigger",
-                      "type" => "main",
-                      "index" => 0
-                    }
-                  ]
-                ]
-              }
-            }
+                "main" => [[{ "node" => "Error trigger", "type" => "main", "index" => 0 }]],
+              },
+            },
           )
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          I18n.t(
-            "discourse_workflows.errors.node_does_not_accept_inputs",
-            node: "Error trigger"
-          )
+          I18n.t("discourse_workflows.errors.node_does_not_accept_inputs", node: "Error trigger"),
         )
       end
     end
@@ -117,15 +88,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           described_class.call(
             workflow: workflow,
             nodes_data: [
-              {
-                id: "node-1",
-                type: "trigger:topic_created",
-                typeVersion: "99.0",
-                name: "Bad"
-              }
+              { id: "node-1", type: "trigger:topic_created", typeVersion: "99.0", name: "Bad" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(false)
@@ -133,8 +99,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           I18n.t(
             "discourse_workflows.errors.unsupported_node_version",
             version: "99.0",
-            type: "trigger:topic_created"
-          )
+            type: "trigger:topic_created",
+          ),
         )
       end
     end
@@ -145,16 +111,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         allow(plugin).to receive(:enabled?).and_return(false)
         node_class =
           Class.new(DiscourseWorkflows::NodeType) do
-            description(
-              name: "action:populate_disabled_plugin_test",
-              version: "1.0"
-            )
+            description(name: "action:populate_disabled_plugin_test", version: "1.0")
           end
 
-        DiscoursePluginRegistry.register_discourse_workflows_node(
-          node_class,
-          plugin
-        )
+        DiscoursePluginRegistry.register_discourse_workflows_node(node_class, plugin)
 
         result =
           described_class.call(
@@ -164,22 +124,22 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
                 id: "node-1",
                 type: "action:populate_disabled_plugin_test",
                 typeVersion: "1.0",
-                name: "Unavailable node"
-              }
+                name: "Unavailable node",
+              },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(true)
         expect(workflow.reload.nodes.first).to include(
           "type" => "action:populate_disabled_plugin_test",
-          "typeVersion" => "1.0"
+          "typeVersion" => "1.0",
         )
       ensure
-        DiscoursePluginRegistry
-          ._raw_discourse_workflows_nodes
-          .reject! { |entry| entry[:value] == node_class }
+        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
+          entry[:value] == node_class
+        end
         DiscourseWorkflows::Registry.reset_indexes!
       end
     end
@@ -195,36 +155,26 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             description(name: "action:populate_versioned_test", version: "2.0")
           end
 
-        DiscoursePluginRegistry.register_discourse_workflows_node(
-          v1,
-          Plugin::Instance.new
-        )
-        DiscoursePluginRegistry.register_discourse_workflows_node(
-          v2,
-          Plugin::Instance.new
-        )
+        DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
+        DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
         DiscourseWorkflows::Registry.reset_indexes!
 
         result =
           described_class.call(
             workflow: workflow,
             nodes_data: [
-              {
-                id: "node-1",
-                type: "action:populate_versioned_test",
-                name: "Versioned"
-              }
+              { id: "node-1", type: "action:populate_versioned_test", name: "Versioned" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(true)
         expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")
       ensure
-        DiscoursePluginRegistry
-          ._raw_discourse_workflows_nodes
-          .reject! { |entry| [v1, v2].include?(entry[:value]) }
+        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
+          [v1, v2].include?(entry[:value])
+        end
         DiscourseWorkflows::Registry.reset_indexes!
       end
     end
@@ -232,33 +182,27 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
     context "with nodes and connections" do
       let(:nodes_data) do
         [
-          {
-            id: "node-1",
-            type: "trigger:topic_created",
-            name: "Topic Created"
-          },
+          { id: "node-1", type: "trigger:topic_created", name: "Topic Created" },
           {
             id: "node-2",
             type: "action:topic_tags",
             name: "Topic Tags",
             parameters: {
-              "tag_names" => "processed"
-            }
+              "tag_names" => "processed",
+            },
           },
-          { id: "node-3", type: "action:log", name: "Log" }
+          { id: "node-3", type: "action:log", name: "Log" },
         ]
       end
 
       let(:connections_data) do
         {
           "Topic Created" => {
-            "main" => [
-              [{ "node" => "Topic Tags", "type" => "main", "index" => 0 }]
-            ]
+            "main" => [[{ "node" => "Topic Tags", "type" => "main", "index" => 0 }]],
           },
           "Topic Tags" => {
-            "main" => [[{ "node" => "Log", "type" => "main", "index" => 0 }]]
-          }
+            "main" => [[{ "node" => "Log", "type" => "main", "index" => 0 }]],
+          },
         }
       end
 
@@ -266,7 +210,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         described_class.call(
           workflow: workflow,
           nodes_data: nodes_data,
-          connections_data: connections_data
+          connections_data: connections_data,
         )
 
         workflow.reload
@@ -279,16 +223,16 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           "parameters" => {
           },
           "credentials" => {
-          }
+          },
         )
         expect(nodes[1]).to include(
           "type" => "action:topic_tags",
           "name" => "Topic Tags",
           "parameters" => {
-            "tag_names" => "processed"
+            "tag_names" => "processed",
           },
           "credentials" => {
-          }
+          },
         )
         expect(nodes[2]).to include(
           "type" => "action:log",
@@ -296,7 +240,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           "parameters" => {
           },
           "credentials" => {
-          }
+          },
         )
         expect(nodes).not_to include(include("position_index"))
       end
@@ -305,7 +249,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         described_class.call(
           workflow: workflow,
           nodes_data: nodes_data,
-          connections_data: connections_data
+          connections_data: connections_data,
         )
 
         workflow.reload
@@ -313,35 +257,26 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         connections = workflow.connections
         expect(connections).to eq(
           "Topic Created" => {
-            "main" => [
-              [{ "node" => "Topic Tags", "type" => "main", "index" => 0 }]
-            ]
+            "main" => [[{ "node" => "Topic Tags", "type" => "main", "index" => 0 }]],
           },
           "Topic Tags" => {
-            "main" => [[{ "node" => "Log", "type" => "main", "index" => 0 }]]
-          }
+            "main" => [[{ "node" => "Log", "type" => "main", "index" => 0 }]],
+          },
         )
         expect(nodes.map { |node| node["id"] }).to eq(%w[node-1 node-2 node-3])
       end
     end
 
     context "with unsupported node JSON keys" do
-      let(:nodes_data) do
-        [{ id: "node-1", type: "trigger:manual", settings: {}, name: "Manual" }]
-      end
+      let(:nodes_data) { [{ id: "node-1", type: "trigger:manual", settings: {}, name: "Manual" }] }
 
       it "rejects the graph" do
         result =
-          described_class.call(
-            workflow: workflow,
-            nodes_data: nodes_data,
-            connections_data: {
-            }
-          )
+          described_class.call(workflow: workflow, nodes_data: nodes_data, connections_data: {})
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          I18n.t("discourse_workflows.errors.invalid_node_json_keys")
+          I18n.t("discourse_workflows.errors.invalid_node_json_keys"),
         )
       end
     end
@@ -352,20 +287,15 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           described_class.call(
             workflow: workflow,
             nodes_data: [
-              {
-                id: "node-1",
-                type: "trigger:manual",
-                name: "Manual",
-                parameters: "bad"
-              }
+              { id: "node-1", type: "trigger:manual", name: "Manual", parameters: "bad" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          I18n.t("discourse_workflows.errors.invalid_node_fields")
+          I18n.t("discourse_workflows.errors.invalid_node_fields"),
         )
       end
     end
@@ -377,12 +307,12 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             workflow: workflow,
             nodes_data: [{ id: "node-1", type: "trigger:manual" }],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          I18n.t("discourse_workflows.errors.node_names_required")
+          I18n.t("discourse_workflows.errors.node_names_required"),
         )
       end
     end
@@ -394,18 +324,15 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             workflow: workflow,
             nodes_data: [
               { id: "node-1", type: "trigger:manual", name: "Step" },
-              { id: "node-2", type: "action:log", name: "Step" }
+              { id: "node-2", type: "action:log", name: "Step" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          I18n.t(
-            "discourse_workflows.errors.duplicate_node_names",
-            names: "Step"
-          )
+          I18n.t("discourse_workflows.errors.duplicate_node_names", names: "Step"),
         )
       end
     end
@@ -417,18 +344,15 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             workflow: workflow,
             nodes_data: [
               { id: "node-1", type: "trigger:manual", name: "Sticky Note" },
-              { id: "note-1", type: "flow:sticky_note", name: "Sticky Note" }
+              { id: "note-1", type: "flow:sticky_note", name: "Sticky Note" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(false)
         expect(workflow.errors.full_messages).to include(
-          I18n.t(
-            "discourse_workflows.errors.duplicate_node_names",
-            names: "Sticky Note"
-          )
+          I18n.t("discourse_workflows.errors.duplicate_node_names", names: "Sticky Note"),
         )
       end
     end
@@ -440,15 +364,15 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
             workflow: workflow,
             nodes_data: [
               { id: "note-1", type: "flow:sticky_note", name: "Sticky Note" },
-              { id: "note-2", type: "flow:sticky_note", name: "Sticky Note" }
+              { id: "note-2", type: "flow:sticky_note", name: "Sticky Note" },
             ],
             connections_data: {
-            }
+            },
           )
 
         expect(result).to eq(true)
         expect(workflow.reload.nodes.map { |node| node["name"] }).to eq(
-          ["Sticky Note", "Sticky Note"]
+          ["Sticky Note", "Sticky Note"],
         )
       end
     end
@@ -457,34 +381,24 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
       let(:nodes_data) do
         [
           { id: "node-1", type: "condition:if", name: "If" },
-          { id: "node-2", type: "action:log", name: "Log" }
+          { id: "node-2", type: "action:log", name: "Log" },
         ]
       end
       let(:connections_data) do
-        {
-          "If" => {
-            "main" => [
-              nil,
-              [{ "node" => "Log", "type" => "main", "index" => 0 }]
-            ]
-          }
-        }
+        { "If" => { "main" => [nil, [{ "node" => "Log", "type" => "main", "index" => 0 }]] } }
       end
 
       it "stores empty arrays instead of null output slots" do
         described_class.call(
           workflow: workflow,
           nodes_data: nodes_data,
-          connections_data: connections_data
+          connections_data: connections_data,
         )
 
         expect(workflow.reload.connections).to eq(
           "If" => {
-            "main" => [
-              [],
-              [{ "node" => "Log", "type" => "main", "index" => 0 }]
-            ]
-          }
+            "main" => [[], [{ "node" => "Log", "type" => "main", "index" => 0 }]],
+          },
         )
       end
     end
@@ -503,31 +417,31 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
               parameters: {
                 "url" => "https://example.com",
                 "method" => "GET",
-                "authentication" => "basic_auth"
+                "authentication" => "basic_auth",
               },
               credentials: {
                 "auth" => {
                   "id" => 12,
-                  "credential_type" => "basic_auth"
-                }
-              }
-            }
+                  "credential_type" => "basic_auth",
+                },
+              },
+            },
           ],
           connections_data: {
-          }
+          },
         )
 
         node = workflow.reload.nodes.first
         expect(node["parameters"]).to eq(
           "url" => "https://example.com",
           "method" => "GET",
-          "authentication" => "basic_auth"
+          "authentication" => "basic_auth",
         )
         expect(node["credentials"]).to eq(
           "auth" => {
             "id" => "12",
-            "credential_type" => "basic_auth"
-          }
+            "credential_type" => "basic_auth",
+          },
         )
         expect(node["notes"]).to eq("Fetches data")
         expect(node["alwaysOutputData"]).to eq(true)
@@ -545,18 +459,18 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
               parameters: {
                 "url" => "https://example.com",
                 "method" => "GET",
-                "authentication" => "none"
+                "authentication" => "none",
               },
               credentials: {
                 "auth" => {
                   "id" => "12",
-                  "credential_type" => "basic_auth"
-                }
-              }
-            }
+                  "credential_type" => "basic_auth",
+                },
+              },
+            },
           ],
           connections_data: {
-          }
+          },
         )
 
         expect(workflow.reload.nodes.first["credentials"]).to eq({})
@@ -577,11 +491,9 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
       it "removes stale nodes and creates new ones" do
         described_class.call(
           workflow: workflow,
-          nodes_data: [
-            { id: "new-1", type: "trigger:topic_created", name: "New Node" }
-          ],
+          nodes_data: [{ id: "new-1", type: "trigger:topic_created", name: "New Node" }],
           connections_data: {
-          }
+          },
         )
 
         workflow.reload
@@ -598,12 +510,12 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
               type: "action:topic_tags",
               name: "Updated Name",
               parameters: {
-                "tag_names" => "new"
-              }
-            }
+                "tag_names" => "new",
+              },
+            },
           ],
           connections_data: {
-          }
+          },
         )
 
         node = workflow.reload.nodes.first
@@ -616,57 +528,47 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         workflow.update!(
           static_data: {
             "global" => {
-              "tenant_id" => "acme"
+              "tenant_id" => "acme",
             },
             "node:Kept Node" => {
-              "key" => "value"
+              "key" => "value",
             },
             "node:Removed Node" => {
-              "key" => "stale"
-            }
-          }
+              "key" => "stale",
+            },
+          },
         )
 
         described_class.call(
           workflow: workflow,
           nodes_data: [
-            {
-              id: "existing-1",
-              type: "action:topic_tags",
-              name: "Kept Node",
-              parameters: {
-              }
-            }
+            { id: "existing-1", type: "action:topic_tags", name: "Kept Node", parameters: {} },
           ],
           connections_data: {
-          }
+          },
         )
 
         workflow.reload
         expect(workflow.static_data["global"]).to eq("tenant_id" => "acme")
         expect(workflow.static_data).to include(
           "node:Kept Node" => {
-            "key" => "value"
+            "key" => "value",
           },
           "node:Removed Node" => {
-            "key" => "stale"
-          }
+            "key" => "stale",
+          },
         )
       end
     end
 
     context "with connections referencing non-existent client IDs" do
-      let(:nodes_data) do
-        [{ id: "node-1", type: "trigger:topic_created", name: "Topic Created" }]
-      end
+      let(:nodes_data) { [{ id: "node-1", type: "trigger:topic_created", name: "Topic Created" }] }
 
       let(:connections_data) do
         {
           "Topic Created" => {
-            "main" => [
-              [{ "node" => "Missing node", "type" => "main", "index" => 0 }]
-            ]
-          }
+            "main" => [[{ "node" => "Missing node", "type" => "main", "index" => 0 }]],
+          },
         }
       end
 
@@ -674,7 +576,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         described_class.call(
           workflow: workflow,
           nodes_data: nodes_data,
-          connections_data: connections_data
+          connections_data: connections_data,
         )
 
         workflow.reload
@@ -689,7 +591,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           workflow: workflow,
           nodes_data: [{ id: "form-1", type: "trigger:form", name: "Form" }],
           connections_data: {
-          }
+          },
         )
 
         workflow.reload
@@ -702,15 +604,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         described_class.call(
           workflow: workflow,
           nodes_data: [
-            {
-              id: "form-1",
-              type: "trigger:form",
-              name: "Form",
-              webhookId: "existing-uuid"
-            }
+            { id: "form-1", type: "trigger:form", name: "Form", webhookId: "existing-uuid" },
           ],
           connections_data: {
-          }
+          },
         )
 
         expect(workflow.reload.nodes.first["webhookId"]).to eq("existing-uuid")
@@ -720,9 +617,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
     context "when an existing form trigger is updated" do
       before do
         extra =
-          build_workflow_graph do |g|
-            g.node "form-1", "trigger:form", webhook_id: "original-uuid"
-          end
+          build_workflow_graph { |g| g.node "form-1", "trigger:form", webhook_id: "original-uuid" }
         workflow.update!(nodes: extra[:nodes])
       end
 
@@ -735,12 +630,12 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
               type: "trigger:form",
               name: "Updated Form",
               parameters: {
-                "some_field" => "value"
-              }
-            }
+                "some_field" => "value",
+              },
+            },
           ],
           connections_data: {
-          }
+          },
         )
 
         node = workflow.reload.nodes.first

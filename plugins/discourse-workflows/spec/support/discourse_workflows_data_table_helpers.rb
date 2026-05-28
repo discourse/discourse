@@ -20,7 +20,7 @@ module DataTableHelpers
         offset: options[:offset],
         sort_by: options[:sort_by],
         sort_direction: options[:sort_direction],
-        optional_filter: true
+        optional_filter: true,
       )
 
     facade.query(query)

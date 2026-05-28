@@ -19,10 +19,7 @@ module DiscourseWorkflows
       Array
         .wrap(node_classes)
         .each do |node_class|
-          DiscoursePluginRegistry.register_discourse_workflows_node(
-            node_class,
-            plugin
-          )
+          DiscoursePluginRegistry.register_discourse_workflows_node(node_class, plugin)
         end
     end
 
@@ -41,12 +38,8 @@ end
 
 class Plugin::Instance
   def register_discourse_workflows_node(node_class = nil, &block)
-    if node_class && block
-      raise ArgumentError, "Provide a node class or a block, not both"
-    end
-    if !node_class && !block
-      raise ArgumentError, "Provide a node class or a block"
-    end
+    raise ArgumentError, "Provide a node class or a block, not both" if node_class && block
+    raise ArgumentError, "Provide a node class or a block" if !node_class && !block
 
     register_discourse_workflows_node_cache_reset!
 

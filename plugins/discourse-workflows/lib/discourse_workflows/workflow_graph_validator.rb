@@ -3,12 +3,7 @@
 module DiscourseWorkflows
   class WorkflowGraphValidator
     MAX_NODES = 50
-    UNSUPPORTED_NODE_KEYS = %i[
-      type_version
-      webhook_id
-      position_index
-      settings
-    ].freeze
+    UNSUPPORTED_NODE_KEYS = %i[type_version webhook_id position_index settings].freeze
     STICKY_NOTE_TYPE = "flow:sticky_note"
 
     attr_reader :workflow
@@ -52,10 +47,7 @@ module DiscourseWorkflows
     end
 
     def connections
-      DiscourseWorkflows::WorkflowDocument.normalize_connections(
-        nodes,
-        connections_data
-      )
+      DiscourseWorkflows::WorkflowDocument.normalize_connections(nodes, connections_data)
     end
 
     private
@@ -64,24 +56,15 @@ module DiscourseWorkflows
 
     def validate_payload_shape
       unless nodes_data.is_a?(Array)
-        workflow.errors.add(
-          :base,
-          I18n.t("discourse_workflows.errors.invalid_nodes")
-        )
+        workflow.errors.add(:base, I18n.t("discourse_workflows.errors.invalid_nodes"))
       end
 
       if nodes_data.is_a?(Array) && nodes_data.any? { |node| !node.is_a?(Hash) }
-        workflow.errors.add(
-          :base,
-          I18n.t("discourse_workflows.errors.invalid_nodes")
-        )
+        workflow.errors.add(:base, I18n.t("discourse_workflows.errors.invalid_nodes"))
       end
 
       unless connections_data.is_a?(Hash)
-        workflow.errors.add(
-          :base,
-          I18n.t("discourse_workflows.errors.invalid_connections")
-        )
+        workflow.errors.add(:base, I18n.t("discourse_workflows.errors.invalid_connections"))
       end
     end
 
@@ -97,53 +80,34 @@ module DiscourseWorkflows
     def validate_node_type_presence(node_data)
       return if node_data[:type].present?
 
-      workflow.errors.add(
-        :base,
-        I18n.t("discourse_workflows.errors.node_types_required")
-      )
+      workflow.errors.add(:base, I18n.t("discourse_workflows.errors.node_types_required"))
     end
 
     def validate_node_name_presence(node_data)
       return if node_data[:name].present?
 
-      workflow.errors.add(
-        :base,
-        I18n.t("discourse_workflows.errors.node_names_required")
-      )
+      workflow.errors.add(:base, I18n.t("discourse_workflows.errors.node_names_required"))
     end
 
     def validate_node_hash_field(node_data, field)
       return if node_data[field].nil? || node_data[field].is_a?(Hash)
 
-      workflow.errors.add(
-        :base,
-        I18n.t("discourse_workflows.errors.invalid_node_fields")
-      )
+      workflow.errors.add(:base, I18n.t("discourse_workflows.errors.invalid_node_fields"))
     end
 
     def validate_node_count
       if normalized_nodes_data.size > MAX_NODES
         workflow.errors.add(
           :base,
-          I18n.t(
-            "discourse_workflows.errors.max_nodes_exceeded",
-            max: MAX_NODES
-          )
+          I18n.t("discourse_workflows.errors.max_nodes_exceeded", max: MAX_NODES),
         )
       end
     end
 
     def validate_node_json_keys
-      if normalized_nodes_data.none? { |node_data|
-           unsupported_node_key?(node_data)
-         }
-        return
-      end
+      return if normalized_nodes_data.none? { |node_data| unsupported_node_key?(node_data) }
 
-      workflow.errors.add(
-        :base,
-        I18n.t("discourse_workflows.errors.invalid_node_json_keys")
-      )
+      workflow.errors.add(:base, I18n.t("discourse_workflows.errors.invalid_node_json_keys"))
     end
 
     def unsupported_node_key?(node_data)
@@ -160,8 +124,7 @@ module DiscourseWorkflows
           .select { |node_data| sticky_note?(node_data) }
           .map { |node_data| node_data[:name].to_s }
 
-      duplicate_names =
-        executable_names.tally.select { |_name, count| count > 1 }.keys
+      duplicate_names = executable_names.tally.select { |_name, count| count > 1 }.keys
       duplicate_names += sticky_note_names & executable_names
       duplicate_names = duplicate_names.uniq
 
@@ -171,8 +134,8 @@ module DiscourseWorkflows
         :base,
         I18n.t(
           "discourse_workflows.errors.duplicate_node_names",
-          names: duplicate_names.join(", ")
-        )
+          names: duplicate_names.join(", "),
+        ),
       )
     end
 
@@ -190,11 +153,7 @@ module DiscourseWorkflows
 
           workflow.errors.add(
             :base,
-            I18n.t(
-              "discourse_workflows.errors.max_nodes_of_type_exceeded",
-              max: max_nodes,
-              type:
-            )
+            I18n.t("discourse_workflows.errors.max_nodes_of_type_exceeded", max: max_nodes, type:),
           )
         end
     end
@@ -204,7 +163,7 @@ module DiscourseWorkflows
         DiscourseWorkflows::Registry.find_node_type(
           node_data[:type],
           version: type_version,
-          include_disabled_plugins: true
+          include_disabled_plugins: true,
         )
       parameters = split_node_data(node_data, existing: nil)[:parameters]
 
@@ -216,15 +175,15 @@ module DiscourseWorkflows
     def validate_node_version(node_data, type_version)
       if DiscourseWorkflows::Registry.available_versions(
            node_data[:type],
-           include_disabled_plugins: true
+           include_disabled_plugins: true,
          ).exclude?(type_version)
         workflow.errors.add(
           :base,
           I18n.t(
             "discourse_workflows.errors.unsupported_node_version",
             version: type_version,
-            type: node_data[:type]
-          )
+            type: node_data[:type],
+          ),
         )
       end
     end
@@ -232,34 +191,26 @@ module DiscourseWorkflows
     def validate_connections
       connection_records.each do |connection_data|
         target =
-          node_map.values.find do |node|
-            node["id"].to_s == connection_data["target_node_id"].to_s
-          end
+          node_map.values.find { |node| node["id"].to_s == connection_data["target_node_id"].to_s }
         next if target.blank?
 
         target_type =
           DiscourseWorkflows::Registry.find_node_type(
             target["type"],
             version: target["typeVersion"],
-            include_disabled_plugins: true
+            include_disabled_plugins: true,
           )
         next if target_type&.inputs(target["parameters"]).present?
 
         workflow.errors.add(
           :base,
-          I18n.t(
-            "discourse_workflows.errors.node_does_not_accept_inputs",
-            node: target["name"]
-          )
+          I18n.t("discourse_workflows.errors.node_does_not_accept_inputs", node: target["name"]),
         )
       end
     end
 
     def connection_records
-      DiscourseWorkflows::WorkflowDocument.connection_records(
-        nodes,
-        connections_data
-      )
+      DiscourseWorkflows::WorkflowDocument.connection_records(nodes, connections_data)
     end
 
     def node_map
@@ -283,15 +234,14 @@ module DiscourseWorkflows
       node_data = split_node_data(node_data, existing:)
 
       {
-        "id" =>
-          existing ? existing["id"] : (node_id.presence || SecureRandom.uuid),
+        "id" => existing ? existing["id"] : (node_id.presence || SecureRandom.uuid),
         "type" => node_data[:type],
         "typeVersion" => resolve_type_version(node_data, existing),
         "name" => node_data[:name],
         "position" => node_data[:position],
         "parameters" => node_data[:parameters],
         "credentials" => node_data[:credentials],
-        "webhookId" => node_data[:webhookId]
+        "webhookId" => node_data[:webhookId],
       }.merge(node_data[:directSettings])
     end
 
@@ -311,15 +261,14 @@ module DiscourseWorkflows
           parameters: node_data[:parameters],
           credentials: node_data[:credentials],
           webhook_id: resolved_webhook_id(node_data, existing: existing),
-          node_type: node_data[:type]
+          node_type: node_data[:type],
         )
 
       node_data.merge(
         parameters: split["parameters"],
         credentials: split["credentials"],
-        webhookId:
-          split[DiscourseWorkflows::WorkflowDocument.node_webhook_id_key],
-        directSettings: NodeData.direct_settings(node_data)
+        webhookId: split[DiscourseWorkflows::WorkflowDocument.node_webhook_id_key],
+        directSettings: NodeData.direct_settings(node_data),
       )
     end
 

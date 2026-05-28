@@ -9,10 +9,7 @@ module DiscourseWorkflows
     class << self
       def nodes(include_disabled_plugins: false)
         if include_disabled_plugins
-          DiscoursePluginRegistry
-            ._raw_discourse_workflows_nodes
-            .map { |entry| entry[:value] }
-            .uniq
+          DiscoursePluginRegistry._raw_discourse_workflows_nodes.map { |entry| entry[:value] }.uniq
         else
           DiscoursePluginRegistry.discourse_workflows_nodes
         end
@@ -42,30 +39,17 @@ module DiscourseWorkflows
         credential_type_index[identifier]
       end
 
-      def find_node_type(
-        identifier,
-        version: nil,
-        include_disabled_plugins: false
-      )
+      def find_node_type(identifier, version: nil, include_disabled_plugins: false)
         version ||= DEFAULT_VERSION
-        node_type_index(include_disabled_plugins: include_disabled_plugins)[
-          [identifier, version]
-        ]
+        node_type_index(include_disabled_plugins: include_disabled_plugins)[[identifier, version]]
       end
 
       def latest_version(identifier, include_disabled_plugins: false)
-        available_versions(
-          identifier,
-          include_disabled_plugins: include_disabled_plugins
-        ).last
+        available_versions(identifier, include_disabled_plugins: include_disabled_plugins).last
       end
 
       def available_versions(identifier, include_disabled_plugins: false)
-        versions_by_identifier(
-          include_disabled_plugins: include_disabled_plugins
-        )[
-          identifier
-        ] || []
+        versions_by_identifier(include_disabled_plugins: include_disabled_plugins)[identifier] || []
       end
 
       def reset_indexes!
@@ -75,15 +59,11 @@ module DiscourseWorkflows
       private
 
       def node_type_index(include_disabled_plugins: false)
-        nodes(
-          include_disabled_plugins: include_disabled_plugins
-        ).each_with_object({}) do |klass, h|
-          version =
-            klass.respond_to?(:version) ? klass.version : DEFAULT_VERSION
+        nodes(include_disabled_plugins: include_disabled_plugins).each_with_object({}) do |klass, h|
+          version = klass.respond_to?(:version) ? klass.version : DEFAULT_VERSION
           key = [klass.identifier, version]
           if h.key?(key)
-            raise ArgumentError,
-                  "Duplicate workflow node type #{klass.identifier} v#{version}"
+            raise ArgumentError, "Duplicate workflow node type #{klass.identifier} v#{version}"
           end
           h[key] = klass
         end

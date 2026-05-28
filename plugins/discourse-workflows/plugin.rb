@@ -46,14 +46,10 @@ register_svg_icon "user-plus"
 register_svg_icon "grip-vertical"
 register_svg_icon "arrow-down-a-z"
 
-add_admin_route "discourse_workflows.admin.title",
-                "discourse-workflows",
-                use_new_show_route: true
+add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
 DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_nodes)
-DiscoursePluginRegistry.define_filtered_register(
-  :discourse_workflows_credential_types
-)
+DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential_types)
 
 after_initialize do
   Rails.application.config.filter_parameters += %i[signature]
@@ -61,9 +57,7 @@ after_initialize do
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 
   nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
-  Dir
-    .glob(File.join(nodes_dir, "**/*.rb"))
-    .each { |f| Rails.autoloaders.main.load_file(f) }
+  Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
 
   DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
     DiscoursePluginRegistry.register_discourse_workflows_node(node_class, self)
@@ -80,15 +74,15 @@ after_initialize do
 
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     DiscourseWorkflows::CredentialTypes::BasicAuth,
-    self
+    self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     DiscourseWorkflows::CredentialTypes::BearerToken,
-    self
+    self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     DiscourseWorkflows::CredentialTypes::HeaderAuth,
-    self
+    self,
   )
 
   add_to_serializer :site,

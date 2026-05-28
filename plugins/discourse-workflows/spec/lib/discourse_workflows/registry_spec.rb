@@ -15,9 +15,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       plugin.register_discourse_workflows_node(node_class)
       described_class.reset_indexes!
 
-      expect(
-        described_class.find_node_type("action:plugin_hook_direct_test")
-      ).to eq(node_class)
+      expect(described_class.find_node_type("action:plugin_hook_direct_test")).to eq(node_class)
     ensure
       DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
         entry[:value] == node_class
@@ -33,10 +31,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       plugin.register_discourse_workflows_node do
         node_class =
           Class.new(DiscourseWorkflows::NodeType) do
-            description(
-              name: "action:plugin_hook_deferred_test",
-              version: "1.0"
-            )
+            description(name: "action:plugin_hook_deferred_test", version: "1.0")
           end
       end
 
@@ -47,9 +42,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       DiscourseWorkflows.flush_plugin_node_registrations!
       described_class.reset_indexes!
 
-      expect(
-        described_class.find_node_type("action:plugin_hook_deferred_test")
-      ).to eq(node_class)
+      expect(described_class.find_node_type("action:plugin_hook_deferred_test")).to eq(node_class)
       expect(plugin.discourse_workflows_node_registrations).to be_empty
     ensure
       DiscourseWorkflows.node_registration_ready = true
@@ -72,25 +65,16 @@ RSpec.describe DiscourseWorkflows::Registry do
       plugin.register_discourse_workflows_node(node_class)
       described_class.reset_indexes!
 
-      expect(
-        described_class.find_node_type("action:plugin_hook_enabled_test")
-      ).to eq(node_class)
+      expect(described_class.find_node_type("action:plugin_hook_enabled_test")).to eq(node_class)
 
       SiteSetting.discourse_sample_plugin_enabled = false
-      expect(
-        described_class.find_node_type("action:plugin_hook_enabled_test")
-      ).to be_nil
+      expect(described_class.find_node_type("action:plugin_hook_enabled_test")).to be_nil
 
       SiteSetting.discourse_sample_plugin_enabled = true
-      expect(
-        described_class.find_node_type("action:plugin_hook_enabled_test")
-      ).to eq(node_class)
+      expect(described_class.find_node_type("action:plugin_hook_enabled_test")).to eq(node_class)
     ensure
       if plugin
-        handler =
-          plugin.instance_variable_get(
-            :@discourse_workflows_node_cache_reset_handler
-          )
+        handler = plugin.instance_variable_get(:@discourse_workflows_node_cache_reset_handler)
         DiscourseEvent.off(:site_setting_changed, &handler) if handler
       end
       SiteSetting.discourse_sample_plugin_enabled = true
@@ -107,34 +91,25 @@ RSpec.describe DiscourseWorkflows::Registry do
           description(name: "action:plugin_hook_filter_test", version: "1.0")
         end
 
-      DiscoursePluginRegistry.register_discourse_workflows_node(
-        node_class,
-        plugin
-      )
+      DiscoursePluginRegistry.register_discourse_workflows_node(node_class, plugin)
 
-      expect(
-        described_class.available_versions("action:plugin_hook_filter_test")
-      ).to eq(["1.0"])
+      expect(described_class.available_versions("action:plugin_hook_filter_test")).to eq(["1.0"])
 
       allow(plugin).to receive(:enabled?).and_return(false)
 
-      expect(
-        described_class.available_versions("action:plugin_hook_filter_test")
-      ).to eq([])
-      expect(
-        described_class.find_node_type("action:plugin_hook_filter_test")
-      ).to be_nil
+      expect(described_class.available_versions("action:plugin_hook_filter_test")).to eq([])
+      expect(described_class.find_node_type("action:plugin_hook_filter_test")).to be_nil
       expect(
         described_class.available_versions(
           "action:plugin_hook_filter_test",
-          include_disabled_plugins: true
-        )
+          include_disabled_plugins: true,
+        ),
       ).to eq(["1.0"])
       expect(
         described_class.find_node_type(
           "action:plugin_hook_filter_test",
-          include_disabled_plugins: true
-        )
+          include_disabled_plugins: true,
+        ),
       ).to eq(node_class)
     ensure
       DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
@@ -164,34 +139,20 @@ RSpec.describe DiscourseWorkflows::Registry do
           description(name: "action:registry_versioned_test", version: "2.0")
         end
 
-      DiscoursePluginRegistry.register_discourse_workflows_node(
-        v1,
-        Plugin::Instance.new
-      )
-      DiscoursePluginRegistry.register_discourse_workflows_node(
-        v2,
-        Plugin::Instance.new
-      )
+      DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
+      DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
       described_class.reset_indexes!
 
       expect(
-        described_class.find_node_type(
-          "action:registry_versioned_test",
-          version: "1.0"
-        )
+        described_class.find_node_type("action:registry_versioned_test", version: "1.0"),
       ).to eq(v1)
       expect(
-        described_class.find_node_type(
-          "action:registry_versioned_test",
-          version: "2.0"
-        )
+        described_class.find_node_type("action:registry_versioned_test", version: "2.0"),
       ).to eq(v2)
-      expect(
-        described_class.available_versions("action:registry_versioned_test")
-      ).to eq(%w[1.0 2.0])
-      expect(
-        described_class.latest_version("action:registry_versioned_test")
-      ).to eq("2.0")
+      expect(described_class.available_versions("action:registry_versioned_test")).to eq(
+        %w[1.0 2.0],
+      )
+      expect(described_class.latest_version("action:registry_versioned_test")).to eq("2.0")
     ensure
       DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
         [v1, v2].include?(entry[:value])
@@ -209,21 +170,13 @@ RSpec.describe DiscourseWorkflows::Registry do
           description(name: "action:registry_duplicate_test", version: "1.0")
         end
 
-      DiscoursePluginRegistry.register_discourse_workflows_node(
-        first,
-        Plugin::Instance.new
-      )
-      DiscoursePluginRegistry.register_discourse_workflows_node(
-        duplicate,
-        Plugin::Instance.new
-      )
+      DiscoursePluginRegistry.register_discourse_workflows_node(first, Plugin::Instance.new)
+      DiscoursePluginRegistry.register_discourse_workflows_node(duplicate, Plugin::Instance.new)
       described_class.reset_indexes!
 
-      expect {
-        described_class.find_node_type("action:registry_duplicate_test")
-      }.to raise_error(
+      expect { described_class.find_node_type("action:registry_duplicate_test") }.to raise_error(
         ArgumentError,
-        "Duplicate workflow node type action:registry_duplicate_test v1.0"
+        "Duplicate workflow node type action:registry_duplicate_test v1.0",
       )
     ensure
       DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
