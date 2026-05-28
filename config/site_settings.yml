@@ -182,13 +182,6 @@ branding:
   generate_topic_og_image:
     default: false
     client: true
-    hidden: true
-    upcoming_change:
-      status: "experimental"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/403875"
-      allow_enabled_for:
-        - everyone
   opengraph_image:
     default: ""
     client: true
