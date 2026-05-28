@@ -69,4 +69,16 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
       .dom(".d-stat-tiles .d-stat-tile a.d-stat-tile__value")
       .hasAttribute("href", "https://meta.discourse.org");
   });
+
+  test("applies a BEM modifier class when @format is set", async function (assert) {
+    await render(
+      <template>
+        <DStatTiles @format="compact" as |tiles|>
+          <tiles.Tile @value="1" @label={{label}} />
+        </DStatTiles>
+      </template>
+    );
+
+    assert.dom(".d-stat-tiles.--compact").exists();
+  });
 });

@@ -1,0 +1,55 @@
+.workflows-templates {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+
+  &__tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      border-color: var(--primary-medium);
+    }
+
+    &[disabled] {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  }
+
+  &__description {
+    font-size: var(--font-0);
+    color: var(--primary);
+    line-height: var(--line-height-large);
+  }
+
+  &__icons {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+
+    &.--overflow {
+      font-size: var(--font-down-2);
+      font-weight: 700;
+      color: var(--primary-medium);
+    }
+  }
+}

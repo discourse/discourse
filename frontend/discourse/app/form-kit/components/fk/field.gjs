@@ -136,6 +136,7 @@ export default class FKField extends Component {
               }}
               data-disabled={{field.disabled}}
               data-name={{field.name}}
+              ...attributes
               {{this.applyControlType field}}
               {{didInsert (fn @registerField field.name field)}}
               {{willDestroy (fn @unregisterField field.name)}}
