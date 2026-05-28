@@ -10,6 +10,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import TopicMap from "discourse/components/topic-map";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
@@ -169,6 +170,14 @@ export default class NestedOp extends Component {
             </article>
           </PluginOutlet>
         {{/let}}
+
+        <div class="nested-view__topic-map topic-map">
+          <TopicMap
+            @model={{@topic}}
+            @topicDetails={{@topic.details}}
+            @showPMMap={{@topic.isPrivateMessage}}
+          />
+        </div>
       </div>
     {{/if}}
   </template>
