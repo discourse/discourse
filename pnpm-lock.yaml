@@ -15,6 +15,9 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: 387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f
     path: patches/babel-plugin-debug-macros@0.3.4.patch
+  ember-exam@10.1.0:
+    hash: 1b2f23c19eb9a2a0eb935bfcf98e0a5e9f77d46c41bd1b5c7d12ef4369e067e3
+    path: patches/ember-exam@10.1.0.patch
   ember-source@6.10.1:
     hash: 85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926
     path: patches/ember-source@6.10.1.patch
@@ -584,7 +587,7 @@ importers:
         version: 6.1.1
       ember-exam:
         specifier: ^10.1.0
-        version: 10.1.0(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33))
+        version: 10.1.0(patch_hash=1b2f23c19eb9a2a0eb935bfcf98e0a5e9f77d46c41bd1b5c7d12ef4369e067e3)(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -14306,7 +14309,7 @@ snapshots:
       content-tag: 4.2.0
       oxc-parser: 0.130.0
 
-  ember-exam@10.1.0(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33)):
+  ember-exam@10.1.0(patch_hash=1b2f23c19eb9a2a0eb935bfcf98e0a5e9f77d46c41bd1b5c7d12ef4369e067e3)(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33)):
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       chalk: 5.6.2
