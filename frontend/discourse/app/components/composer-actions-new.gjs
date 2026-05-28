@@ -35,6 +35,7 @@ export default class ComposerActions extends Component {
   @service composer;
   @service composerActionState;
   @service router;
+  @service site;
 
   @tracked replyTargetInViewport = false;
   #observer = null;
@@ -284,9 +285,23 @@ export default class ComposerActions extends Component {
     return this.replyTargetInViewport;
   }
 
+  get replyTargetLabel() {
+    if (this.post) {
+      return this.replyOptions?.postLink?.anchor;
+    }
+    if (this.isOnComposerTopic && !this.site.mobileView) {
+      return null;
+    }
+    return this.replyOptions?.topicLink?.anchor;
+  }
+
   get showReplyTargetLink() {
     if (!this.replyTargetHref) {
       return false;
+    }
+
+    if (this.site.mobileView) {
+      return true;
     }
 
     if (this.post) {
@@ -438,7 +453,7 @@ export default class ComposerActions extends Component {
                         <div
                           class={{dConcatClass
                             availAction.class
-                            "composer-toggle-item --with-description"
+                            "composer-toggle-item --with-description btn"
                           }}
                           {{on "click" availAction.action}}
                         >
@@ -470,12 +485,21 @@ export default class ComposerActions extends Component {
 
         {{#if this.showReplyTargetLink}}
           <a
-            class="composer-actions-reply-target-link btn btn-icon btn-flat no-text"
+            class={{dConcatClass
+              "composer-actions-reply-target-link btn btn-flat"
+              (if this.replyTargetLabel "btn-icon-text" "btn-icon no-text")
+              (if this.site.mobileView "btn-small")
+            }}
             href={{this.replyTargetHref}}
             title={{this.replyTargetTitle}}
             aria-label={{this.replyTargetTitle}}
           >
-            {{dIcon "up-right-from-square"}}
+            {{dIcon "link"}}
+            {{#if this.replyTargetLabel}}
+              <span
+                class="d-button-label composer-actions-reply-target-link__label"
+              >{{this.replyTargetLabel}}</span>
+            {{/if}}
           </a>
         {{/if}}
       {{else if this.composer.showEditReason}}
@@ -516,6 +540,7 @@ export default class ComposerActions extends Component {
           class={{dConcatClass
             "composer-whisper-indicator btn-flat"
             (if this.composerModel.whisper "--whispering" "--public")
+            (if this.site.mobileView "btn-small")
           }}
         />
       {{/if}}

@@ -199,70 +199,69 @@ export default class ComposerContainer extends Component {
 
             <div class="reply-to">
               {{#unless this.composer.model.viewFullscreen}}
-                <div class="reply-details">
-                  <ComposerActionTitle
-                    @model={{this.composer.model}}
-                    @canWhisper={{this.composer.canWhisper}}
-                    @canUnlistTopic={{this.composer.canUnlistTopic}}
+                <ComposerActionTitle
+                  @model={{this.composer.model}}
+                  @canWhisper={{this.composer.canWhisper}}
+                  @canUnlistTopic={{this.composer.canUnlistTopic}}
+                />
+
+                {{#if this.composer.showTranslationSelector}}
+                  <DropdownSelectBox
+                    @nameProperty="name"
+                    @valueProperty="value"
+                    @value={{this.composer.selectedTranslationLocale}}
+                    @content={{this.availableContentLocalizationLocales}}
+                    @onChange={{this.updateSelectedTranslationLocale}}
+                    @options={{hash
+                      icon="language"
+                      showCaret=true
+                      filterable=true
+                      disabled=this.composer.loading
+                      placement="bottom-start"
+                      translatedNone=(i18n "composer.translations.select")
+                    }}
+                    class="translation-selector-dropdown btn-small"
                   />
+                {{/if}}
 
-                  {{#if this.composer.showTranslationSelector}}
-                    <DropdownSelectBox
-                      @nameProperty="name"
-                      @valueProperty="value"
-                      @value={{this.composer.selectedTranslationLocale}}
-                      @content={{this.availableContentLocalizationLocales}}
-                      @onChange={{this.updateSelectedTranslationLocale}}
-                      @options={{hash
-                        icon="language"
-                        showCaret=true
-                        filterable=true
-                        disabled=this.composer.loading
-                        placement="bottom-start"
-                        translatedNone=(i18n "composer.translations.select")
-                      }}
-                      class="translation-selector-dropdown btn-small"
-                    />
-                  {{/if}}
+                <PluginOutlet
+                  @name="composer-action-after"
+                  @outletArgs={{lazyHash model=this.composer.model}}
+                />
 
-                  <PluginOutlet
-                    @name="composer-action-after"
-                    @outletArgs={{lazyHash model=this.composer.model}}
-                  />
-
-                  {{#if this.site.desktopView}}
-                    {{#unless this.siteSettings.enable_new_composer_actions}}
-                      {{#if this.composer.model.unlistTopic}}
-                        <span class="unlist">({{i18n "composer.unlist"}})</span>
-                      {{/if}}
-                      {{#if this.composer.isWhispering}}
-                        {{#if this.composer.model.noBump}}
-                          <span class="no-bump">{{dIcon "anchor"}}</span>
-                        {{/if}}
-                      {{/if}}
-                    {{/unless}}
-                  {{/if}}
-
+                {{#if this.site.desktopView}}
                   {{#unless this.siteSettings.enable_new_composer_actions}}
-                    {{#if this.composer.canEdit}}
-                      <LinkToInput
-                        @onClick={{this.composer.displayEditReason}}
-                        @showInput={{this.composer.showEditReason}}
-                        @icon="pen-to-square"
-                        class="display-edit-reason
-                          {{if this.composer.showEditReason '--active'}}"
-                        title={{i18n "composer.edit_reason"}}
-                      >
-                        <DTextField
-                          @value={{this.composer.editReason}}
-                          @id="edit-reason"
-                          @maxlength="255"
-                          @placeholderKey="composer.edit_reason_placeholder"
-                        />
-                      </LinkToInput>
+                    {{#if this.composer.model.unlistTopic}}
+                      <span class="unlist">({{i18n "composer.unlist"}})</span>
+                    {{/if}}
+                    {{#if this.composer.isWhispering}}
+                      {{#if this.composer.model.noBump}}
+                        <span class="no-bump">{{dIcon "anchor"}}</span>
+                      {{/if}}
                     {{/if}}
                   {{/unless}}
-                </div>
+                {{/if}}
+
+                {{#unless this.siteSettings.enable_new_composer_actions}}
+                  {{#if this.composer.canEdit}}
+                    <LinkToInput
+                      @onClick={{this.composer.displayEditReason}}
+                      @showInput={{this.composer.showEditReason}}
+                      @icon="pen-to-square"
+                      class="display-edit-reason
+                        {{if this.composer.showEditReason '--active'}}"
+                      title={{i18n "composer.edit_reason"}}
+                    >
+                      <DTextField
+                        @value={{this.composer.editReason}}
+                        @id="edit-reason"
+                        @maxlength="255"
+                        @placeholderKey="composer.edit_reason_placeholder"
+                      />
+                    </LinkToInput>
+                  {{/if}}
+                {{/unless}}
+
               {{/unless}}
 
               <PluginOutlet
