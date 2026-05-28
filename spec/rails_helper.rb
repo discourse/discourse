@@ -27,6 +27,30 @@ require_relative "support/server_error_tracking"
 
 ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
+
+# Set by bin/turbo_rspec when every positional argument targets `spec/system`.
+# Suppresses the test-env eager_load that would otherwise force every Discourse
+# class to load up-front in every worker (10-30s of CPU per worker boot).
+# config/environments/test.rb sets `config.eager_load = ENV["CI"].present?`,
+# so on CI both the parent turbo_rspec process and each `bundle exec rspec`
+# worker pay the cost. We override the getter rather than the setter so the
+# test.rb `eager_load = true` assignment still completes harmlessly; only the
+# `:eager_load!` finisher initializer's `if config.eager_load` check observes
+# the override and short-circuits. Classes load lazily via Zeitwerk during the
+# actual spec run, and spec/rails_helper.rb's own `Dir[...]` blocks below
+# still eagerly require the system-spec helpers / page objects / fabricators
+# that system specs depend on.
+if ENV["DISCOURSE_DISABLE_EAGER_LOAD"] == "1"
+  require "rails"
+  Rails::Application::Configuration.prepend(
+    Module.new do
+      def eager_load
+        false
+      end
+    end,
+  )
+end
+
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 require "rspec/rails"
