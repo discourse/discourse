@@ -33,14 +33,6 @@ export default class DSegmentedControl extends Component {
     return () => cancelAnimationFrame(frameId);
   });
 
-  get classNames() {
-    const classes = ["d-segmented-control"];
-    if (this.args.size === "small") {
-      classes.push("d-segmented-control--small");
-    }
-    return classes.join(" ");
-  }
-
   get legend() {
     if (this.args.label) {
       return i18n(this.args.label);
@@ -60,7 +52,7 @@ export default class DSegmentedControl extends Component {
 
   <template>
     <fieldset
-      class={{this.classNames}}
+      class="d-segmented-control"
       {{this.positionSlider @value}}
       ...attributes
     >

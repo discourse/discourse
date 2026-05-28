@@ -84,7 +84,7 @@
   }
 
   .d-icon {
-    color: var(--primary-medium);
+    color: var(--primary-high);
   }
 
   .select-kit-header {
@@ -173,7 +173,7 @@
       margin-right: 0;
       padding-left: 5px;
       pointer-events: none;
-      color: var(--primary-medium);
+      color: inherit;
     }
 
     .d-button-label {

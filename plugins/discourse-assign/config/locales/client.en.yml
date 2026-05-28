@@ -197,18 +197,3 @@ en:
       title: "Edit assignments"
       topic: "Topic"
       post: "Post"
-    discourse_workflows:
-      node_unavailable:
-        requires_assign: "Requires the Assign plugin to be enabled"
-      nodes:
-        "action:assign_topic": "Assign topic"
-      node_descriptions:
-        "action:assign_topic": "Assign or unassign a topic"
-      assign_topic:
-        operation: "Operation"
-        operations:
-          assign: "Assign"
-          unassign: "Unassign"
-        topic_id: "Topic ID"
-        assignee: "Assignee"
-        replace_existing: "Replace existing assignment"
