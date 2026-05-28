@@ -20,6 +20,78 @@
     display: flex;
     gap: var(--space-4);
     margin-left: auto;
+
+    @include viewport.until(sm) {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom) + var(--space-4));
+      right: 50%;
+      transform: translateX(50%);
+      z-index: 2;
+      margin-left: 0;
+      align-items: center;
+      gap: var(--space-2);
+      transition: bottom 0.3s ease;
+
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--space-4)
+        );
+      }
+    }
+  }
+}
+
+.db-date-range {
+  &__trigger {
+    height: var(--space-9);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
+    color: var(--primary-high);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    &:hover {
+      background: var(--primary-very-low);
+      color: var(--primary);
+    }
+
+    @include viewport.until(sm) {
+      border-radius: 999px;
+      box-shadow: var(--shadow-dropdown);
+    }
+  }
+
+  &__popover {
+    padding: 0;
+  }
+}
+
+.db-toolbar__actions .btn[data-identifier="db-configure"] {
+  height: var(--space-9);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--d-border-radius);
+
+  @include viewport.until(sm) {
+    width: var(--space-9);
+    padding: 0;
+    min-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    box-shadow: var(--shadow-dropdown);
+
+    .d-button-label {
+      display: none;
+    }
+
+    .d-icon {
+      margin-right: 0;
+    }
   }
 }
 
