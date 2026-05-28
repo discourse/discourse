@@ -35,23 +35,10 @@
   --wireframe-bg-opacity: 0.05;
   --wireframe-badge-font-size: 0.75rem;
   --wireframe-badge-padding: 2px 5px;
-  --wireframe-badge-radius: 0 0 4px 0;
   --wireframe-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
   --wireframe-container-margin: 2px;
   --wireframe-container-padding: 2px;
   --wireframe-container-border-width: 1px;
-
-  /* Offset to slide an in-flow badge from its natural position
-     (inside the chrome's padding) onto the chrome's outline corner.
-     Used by outlet badges so adjusting padding / outline in one place
-     re-aligns every badge. */
-  --wireframe-badge-offset: calc(
-    -1 *
-      (
-        var(--wireframe-container-padding) +
-          var(--wireframe-container-border-width)
-      )
-  );
 }
 
 /* Entry pill */
@@ -625,10 +612,18 @@ body.wireframe-active {
     }
   }
 
+  /* Outlet badge — rendered as a tab sitting directly above the
+     boundary's top-left border corner. Same positioning trick as the
+     block handle: absolute, `bottom: 100%` so the tab's bottom edge
+     meets the boundary's border, top corners rounded / bottom corners
+     square so the tab merges visually into the border below it. Unlike
+     the block handle, outlet badges stay visible always — the outlet
+     cascade needs to read at every nesting level. */
+
   .wireframe-outlet-boundary__badge {
-    position: relative;
-    top: var(--wireframe-badge-offset);
-    left: var(--wireframe-badge-offset);
+    position: absolute;
+    bottom: 100%;
+    left: calc(-1 * var(--wireframe-container-border-width));
     z-index: 1000;
     display: inline-flex;
     align-items: center;
@@ -638,7 +633,7 @@ body.wireframe-active {
     color: white;
     font-size: var(--wireframe-badge-font-size);
     font-weight: bold;
-    border-radius: var(--wireframe-badge-radius);
+    border-radius: 4px 4px 0 0;
     text-shadow: var(--wireframe-shadow);
     pointer-events: auto;
 
