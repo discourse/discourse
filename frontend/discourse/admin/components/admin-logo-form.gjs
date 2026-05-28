@@ -59,29 +59,26 @@ export default class AdminLogoForm extends Component {
 
   @action
   async save(data) {
-    const params = {
-      logo: data.logo,
-      logo_dark: data.logo_dark,
-      large_icon: data.large_icon,
-      favicon: data.favicon,
-      logo_small: data.logo_small,
-      logo_small_dark: data.logo_small_dark,
-      mobile_logo: data.mobile_logo,
-      mobile_logo_dark: data.mobile_logo_dark,
-      manifest_icon: data.manifest_icon,
-      manifest_screenshots: data.manifest_screenshots,
-      apple_touch_icon: data.apple_touch_icon,
-      digest_logo: data.digest_logo,
-      generate_topic_og_image: this.generateTopicOgImageValue(data),
-      opengraph_image:
-        data.og_image_source === "generated" ? "" : data.opengraph_image,
-      x_summary_large_image: data.x_summary_large_image,
-    };
-
     try {
       await ajax("/admin/config/logo.json", {
         type: "PUT",
-        data: params,
+        data: {
+          logo: data.logo,
+          logo_dark: data.logo_dark,
+          large_icon: data.large_icon,
+          favicon: data.favicon,
+          logo_small: data.logo_small,
+          logo_small_dark: data.logo_small_dark,
+          mobile_logo: data.mobile_logo,
+          mobile_logo_dark: data.mobile_logo_dark,
+          manifest_icon: data.manifest_icon,
+          manifest_screenshots: data.manifest_screenshots,
+          apple_touch_icon: data.apple_touch_icon,
+          digest_logo: data.digest_logo,
+          generate_topic_og_image: data.og_image_source === "generated",
+          opengraph_image: data.opengraph_image,
+          x_summary_large_image: data.x_summary_large_image,
+        },
       });
       this.toasts.success({
         duration: "short",
@@ -105,26 +102,6 @@ export default class AdminLogoForm extends Component {
     field.set(selected.join("|"));
   }
 
-  generateTopicOgImageValue(data) {
-    if (
-      this.ogImageSource === "uploaded" &&
-      data.og_image_source === "uploaded" &&
-      this.siteSettings.opengraph_image &&
-      this.siteSettings.generate_topic_og_image
-    ) {
-      return true;
-    }
-
-    return data.og_image_source === "generated";
-  }
-
-  get ogImageSource() {
-    return this.siteSettings.generate_topic_og_image &&
-      !this.siteSettings.opengraph_image
-      ? "generated"
-      : "uploaded";
-  }
-
   @cached
   get formData() {
     return {
@@ -143,7 +120,9 @@ export default class AdminLogoForm extends Component {
       manifest_screenshots: this.siteSettings.manifest_screenshots,
       apple_touch_icon: this.siteSettings.apple_touch_icon,
       digest_logo: this.siteSettings.digest_logo,
-      og_image_source: this.ogImageSource,
+      og_image_source: this.siteSettings.generate_topic_og_image
+        ? "generated"
+        : "uploaded",
       opengraph_image: this.siteSettings.opengraph_image,
       x_summary_large_image: this.siteSettings.x_summary_large_image,
     };

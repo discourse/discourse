@@ -5,7 +5,7 @@ module Jobs
     sidekiq_options queue: "ultra_low"
 
     def execute(args)
-      return if !TopicOgImageGenerator.enabled?
+      return if !SiteSetting.generate_topic_og_image
 
       topic_id = args[:topic_id]
       raise Discourse::InvalidParameters.new(:topic_id) if topic_id.blank?

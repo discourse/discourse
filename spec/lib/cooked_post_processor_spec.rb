@@ -917,14 +917,6 @@ RSpec.describe CookedPostProcessor do
           }
         end
 
-        it "does not enqueue when a default OpenGraph image is configured" do
-          SiteSetting.generate_topic_og_image = true
-          SiteSetting.opengraph_image = Fabricate(:upload)
-          expect { CookedPostProcessor.new(post).post_process }.not_to change {
-            Jobs::GenerateTopicOgImage.jobs.size
-          }
-        end
-
         it "does not enqueue when the topic already has a generated OG image" do
           SiteSetting.generate_topic_og_image = true
           post.topic.update_column(:og_image_upload_id, Fabricate(:upload).id)
