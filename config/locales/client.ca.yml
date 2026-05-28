@@ -143,6 +143,11 @@ ca:
       placeholder: data
       from_placeholder: "des de la data"
       to_placeholder: "fins a la data"
+    date_range_picker:
+      apply: "Aplica"
+      presets:
+        last_7_days: "Els darrers 7 dies"
+        last_30_days: "Els darrers 30 dies"
     languages:
       en:
         name: Anglès

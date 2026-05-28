@@ -125,6 +125,8 @@ et:
       previous_month: "Eelmine kuu"
       next_month: "Järgmine kuu"
       placeholder: kuupäev
+    date_range_picker:
+      apply: "Rakenda"
     share:
       topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
       close: "Sulge"

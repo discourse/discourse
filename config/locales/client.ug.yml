@@ -153,6 +153,13 @@ ug:
       placeholder: چېسلا
       from_placeholder: "باشلانغان ۋاقىت"
       to_placeholder: "ئاخىرلىشىدىغان ۋاقىت"
+    date_range_picker:
+      apply: "قوللان"
+      start_date: "باشلىنىش ۋاقتى"
+      presets:
+        last_3_months: "ئۆتكەن 3 ئاي"
+        last_6_months: "ئۆتكەن 6 ئاي"
+        last_year: "ئۆتكەن يىل"
     languages:
       ar:
         name: ئەرەبچە
@@ -5919,8 +5926,6 @@ ug:
             enabled_heading: "قوزغىتىلدى"
             all_heading: "بارلىق دوكلات"
             apply: "قوللان"
-            move_up: "ئۈستىگە يۆتكەل"
-            move_down: "ئاستىغا يۆتكەل"
         configure:
           button: "سەپلە"
         site_traffic:

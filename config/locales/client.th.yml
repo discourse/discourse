@@ -109,6 +109,11 @@ th:
       placeholder: วัน
       from_placeholder: "ตั้งแต่วันที่"
       to_placeholder: "ไปวันที่"
+    date_range_picker:
+      apply: "นำไปใช้"
+      presets:
+        last_7_days: "7 วันที่ผ่านมา"
+        last_30_days: "30 วันที่ผ่านมา"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"

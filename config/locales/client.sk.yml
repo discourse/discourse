@@ -200,6 +200,15 @@ sk:
       placeholder: Dátum
       from_placeholder: "od dátumu"
       to_placeholder: "k dnešnému dňu"
+    date_range_picker:
+      apply: "Použi"
+      start_date: "Dátum začiatku"
+      presets:
+        last_7_days: "Posledných 7 dní"
+        last_30_days: "Posledných 30 dní"
+        last_3_months: "Posledných 3 mesiacov"
+        last_6_months: "Posledných 6 mesiacov"
+        last_year: "Minulý rok"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
@@ -6042,8 +6051,6 @@ sk:
             enabled_heading: "Povolené"
             all_heading: "Všetky hlásenia"
             apply: "Použi"
-            move_up: "Posunúť sa nahor"
-            move_down: "Posunúť sa nadol"
         configure:
           button: "Konfigurovať"
         site_traffic:

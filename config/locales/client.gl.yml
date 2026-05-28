@@ -118,6 +118,8 @@ gl:
       next_month: "Mes seguinte"
       placeholder: data
       to_placeholder: "ata a data"
+    date_range_picker:
+      apply: "Aplicar"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"

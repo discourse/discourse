@@ -172,6 +172,14 @@ hr:
       placeholder: datum
       from_placeholder: "od datuma"
       to_placeholder: "do danas"
+    date_range_picker:
+      apply: "Primijeni"
+      presets:
+        last_7_days: "Zadnjih 7 dana"
+        last_30_days: "Zadnjih 30 dana"
+        last_3_months: "Posljednjih 3 mjeseci"
+        last_6_months: "Posljednjih 6 mjeseci"
+        last_year: "Prošla godina"
     languages:
       ar:
         name: arapski
@@ -5833,8 +5841,6 @@ hr:
             enabled_heading: "Omogućeno"
             all_heading: "Sva izvješća"
             apply: "Primijeni"
-            move_up: "Pomakni gore"
-            move_down: "Pomakni dolje"
         site_traffic:
           series:
             anonymous: "Anonimno"

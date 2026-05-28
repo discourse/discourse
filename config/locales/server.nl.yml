@@ -2543,7 +2543,6 @@ nl:
     nested_replies_default: "Gebruik geneste antwoorden als standaard weergave voor alle topics."
     nested_replies_default_sort: "Standaard sorteeralgoritme voor de weergave met geneste antwoorden."
     nested_replies_max_depth: "Maximale visuele nestdiepte voor antwoorden in thread. Berichten die dieper zijn dan dit tonen een link 'Doorgaan met deze thread'."
-    nested_replies_toggle_mode_groups: "Groepen die kunnen schakelen tussen geneste en platte weergave."
     nested_replies_backfill_batch_size: "Aantal topics om statistieken van geneste antwoorden aan te vullen per geplande run."
     nested_replies_cap_nesting_depth: "Beperk antwoordnesting op de maximale visuele diepte. Als dit is ingeschakeld, worden antwoorden op het diepste niveau opnieuw gelijkliggend in plaats van onderliggend."
     fake_upcoming_change: "Dit is een nep aankomende wijziging voor testdoeleinden. Je hoeft deze string niet te vertalen."

@@ -144,6 +144,13 @@ fa_IR:
       placeholder: تاریخ
       from_placeholder: "از تاریخ"
       to_placeholder: "تا تاریخ"
+    date_range_picker:
+      apply: "اعمال کردن"
+      presets:
+        last_7_days: "۷ روز گذشته"
+        last_30_days: "۳۰ روز گذشته"
+        last_6_months: "۶ ماه گذشته"
+        last_year: "سال گذشته"
     languages:
       ar:
         name: عربی
@@ -5145,8 +5152,6 @@ fa_IR:
             enabled_heading: "فعال شده"
             all_heading: "تمامی گزارشات"
             apply: "اعمال کردن"
-            move_up: "انتقال به بالا"
-            move_down: "انتقال به پایین"
         site_traffic:
           series:
             anonymous: "ناشناس"

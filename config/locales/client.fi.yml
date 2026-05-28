@@ -144,6 +144,15 @@ fi:
       placeholder: päivämäärä
       from_placeholder: "alkaen päivämäärästä"
       to_placeholder: "päivämäärään"
+    date_range_picker:
+      apply: "Käytä"
+      start_date: "Alkamispäivä"
+      presets:
+        last_7_days: "Viimeiset 7 päivää"
+        last_30_days: "Viimeiset 30 päivää"
+        last_3_months: "Viimeiset 3 kuukautta"
+        last_6_months: "Viimeiset 6 kuukautta"
+        last_year: "Viime vuosi"
     languages:
       ar:
         name: Arabia
@@ -5639,8 +5648,6 @@ fi:
             enabled_heading: "Käytössä"
             all_heading: "Kaikki raportit"
             apply: "Käytä"
-            move_up: "Siirrä ylös"
-            move_down: "Siirrä alas"
         configure:
           button: "Määritä"
         site_traffic:

@@ -144,6 +144,11 @@ pt:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até à data"
+    date_range_picker:
+      apply: "Aplicar"
+      presets:
+        last_7_days: "Últimos 7 Dias"
+        last_30_days: "Últimos 30 Dias"
     languages:
       ar:
         name: Árabe
@@ -4803,8 +4808,6 @@ pt:
             enabled_heading: "Ativado"
             all_heading: "Todos os relatórios"
             apply: "Aplicar"
-            move_up: "Mover para cima"
-            move_down: "Mover para baixo"
         site_traffic:
           series:
             anonymous: "Anónimo"

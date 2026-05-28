@@ -388,7 +388,6 @@ cs:
       upcoming_events_list:
         title: "Nadcházející události"
         empty: "Žádné nadcházející události"
-        all_day: "Celodenní"
         error: "Nepodařilo se načíst události"
         try_again: "Zkusit znovu"
         view_all: "Zobrazit vše"

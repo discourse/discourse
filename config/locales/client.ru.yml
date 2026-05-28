@@ -214,6 +214,15 @@ ru:
       placeholder: дата
       from_placeholder: "с даты"
       to_placeholder: "по дату"
+    date_range_picker:
+      apply: "Применить"
+      start_date: "Дата начала"
+      presets:
+        last_7_days: "За последние 7 дней"
+        last_30_days: "За последние 30 дней"
+        last_3_months: "За последние 3 месяцев"
+        last_6_months: "За последние 6 месяцев"
+        last_year: "За последний год"
     languages:
       ar:
         name: Арабский
@@ -6653,8 +6662,6 @@ ru:
             enabled_heading: "Включено"
             all_heading: "Все отчеты"
             apply: "Применить"
-            move_up: "Вверх"
-            move_down: "Вниз"
         configure:
           button: "Настроить"
         site_traffic:

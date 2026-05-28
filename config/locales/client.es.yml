@@ -158,6 +158,15 @@ es:
       placeholder: fecha
       from_placeholder: "desde la fecha"
       to_placeholder: "hasta hoy"
+    date_range_picker:
+      apply: "Aplicar"
+      start_date: "Fecha de inicio"
+      presets:
+        last_7_days: "Últimos 7 días"
+        last_30_days: "Últimos 30 días"
+        last_3_months: "Últimos 3 meses"
+        last_6_months: "Últimos 6 meses"
+        last_year: "El año pasado"
     languages:
       ar:
         name: Árabe
@@ -6267,8 +6276,6 @@ es:
             enabled_heading: "Activado"
             all_heading: "Todos los informes"
             apply: "Aplicar"
-            move_up: "Mover arriba"
-            move_down: "Mover abajo"
         configure:
           button: "Configurar"
         site_traffic:
