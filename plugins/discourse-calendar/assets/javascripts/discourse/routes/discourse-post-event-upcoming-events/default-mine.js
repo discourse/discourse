@@ -3,13 +3,10 @@ import moment from "moment";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class PostEventUpcomingEventsDefaultMineRoute extends DiscourseRoute {
-  @service currentUser;
   @service router;
 
   beforeModel() {
-    // Use the user's TZ so the redirect date matches what the calendar will render.
-    const tz = this.currentUser?.user_option?.timezone;
-    const today = tz ? moment.tz(tz) : moment();
+    const today = moment();
     const year = today.year();
     const month = today.month() + 1; // moment months are 0-indexed, but URLs use 1-indexed
     const day = today.date();

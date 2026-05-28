@@ -31,6 +31,12 @@ class ReviewableQueuedPost < Reviewable
     }
   end
 
+  def updatable_reviewable_scores
+    # Approvals are possible for already rejected queued posts. We need the
+    # scores to be updated when this happens.
+    reviewable_scores.pending.or(reviewable_scores.disagreed)
+  end
+
   def build_combined_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?

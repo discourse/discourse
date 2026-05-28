@@ -15,7 +15,6 @@ RSpec.describe "Nested view category default" do
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:category_page) { PageObjects::Pages::Category.new }
-  let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before do
@@ -62,20 +61,6 @@ RSpec.describe "Nested view category default" do
 
       expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
-    end
-
-    it "takes the user to the top of a nested topic from a scrolled list" do
-      category_page.visit(nested_category)
-      expect(topic_list).to have_topic(topic)
-
-      topic_list.scroll_page_down
-      expect(topic_list).to be_scrolled_down
-
-      topic_list.visit_topic(topic)
-
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
-      expect(nested_view).to have_nested_view
-      try_until_success { expect(page.evaluate_script("window.scrollY")).to eq(0) }
     end
 
     it "does not redirect topics in categories without nested default" do
