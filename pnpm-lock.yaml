@@ -219,9 +219,6 @@ importers:
       '@discourse/webp':
         specifier: ^1.0.0
         version: 1.5.0
-      '@embroider/legacy-inspector-support':
-        specifier: ^0.1.3
-        version: 0.1.3
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
@@ -1692,9 +1689,6 @@ packages:
   '@embroider/core@4.6.0':
     resolution: {integrity: sha512-koZ3XYO/69z2MU7qagEdsTPcJDGgY47iHd/TMTEcMrEcrGE6hbFv1lWCebHzPRQajTjRhsbX5HxzPKorxdvNcw==}
     engines: {node: '>= 20.19.*'}
-
-  '@embroider/legacy-inspector-support@0.1.3':
-    resolution: {integrity: sha512-0VzD1xExkT78a1CUiW8wZ5VZDL4bVyMSc3t8E/RiAW1X6TlyKIA/m6zoQgsQtQIiiTPPxH0/1Tdd0F7b5//etw==}
 
   '@embroider/macros@1.20.2':
     resolution: {integrity: sha512-WJWSkG9vIL0s93vKwtNFqqAOCOflNkWNpqsC7VAqXeeTKNpCc7wtdOhPkNGJpb52CEt7vlQ5R/zMyCfGAB7MEA==}
@@ -9724,12 +9718,6 @@ snapshots:
       - canvas
       - supports-color
       - utf-8-validate
-
-  '@embroider/legacy-inspector-support@0.1.3':
-    dependencies:
-      '@embroider/addon-shim': 1.10.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@embroider/macros@1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)':
     dependencies:

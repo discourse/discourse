@@ -23,7 +23,7 @@ module PageObjects
       end
 
       def mark_as_public
-        find(".modal .mark-public").click
+        find(".d-modal .mark-public").click
       end
 
       def remove_last_link
