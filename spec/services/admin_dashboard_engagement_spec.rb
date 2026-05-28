@@ -36,6 +36,46 @@ describe AdminDashboardEngagement do
       expect(engaged[:report_query]).to eq(start_date: "2026-04-01", end_date: "2026-04-28")
     end
 
+    it "averages daily_engaged_users and reports a decline when daily engagement falls" do
+      engaged_now = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+      Fabricate(
+        :user_action,
+        user: engaged_now,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 23, 12),
+      )
+      Fabricate(
+        :user_action,
+        user: engaged_now,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 24, 12),
+      )
+
+      4.times do
+        engaged_before = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+        Fabricate(
+          :user_action,
+          user: engaged_before,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 16, 12),
+        )
+        Fabricate(
+          :user_action,
+          user: engaged_before,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 17, 12),
+        )
+      end
+
+      result = described_class.build(start_date: "2026-04-22", end_date: "2026-04-28")
+      engaged = result[:kpis].find { |k| k[:type] == :daily_engaged_users }
+
+      expect(engaged[:value]).to eq(1.0)
+      expect(engaged[:previous_value]).to eq(4.0)
+      expect(engaged[:percent_change]).to eq(-75.0)
+      expect(result[:headline][:key]).not_to end_with("healthy_growth")
+    end
+
     it "falls back to a default 30-day window when params are blank" do
       result = described_class.build(start_date: nil, end_date: nil)
       expect(result[:kpis]).to be_an(Array)
