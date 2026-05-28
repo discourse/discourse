@@ -337,12 +337,6 @@ acceptance("Keyboard Shortcuts Help Modal - Search", function () {
     return i18n(`keyboard_shortcuts_help.${key}`, { shortcut: "" }).trim();
   }
 
-  function renderedDescriptions(selector = ".shortcut-description") {
-    return Array.from(document.querySelectorAll(selector), (element) =>
-      element.textContent.trim()
-    );
-  }
-
   test("matches sequential keys without whitespace (gh → G H)", async function (assert) {
     await openHelpModal();
     await fillIn(".filter-input", "gh");
@@ -407,12 +401,9 @@ acceptance("Keyboard Shortcuts Help Modal - Search", function () {
 
     // application.search has alternatives "/" or Ctrl+Alt+F. "ctrl /" must not
     // match because "ctrl" lives in one alternative and "/" in the other.
-    assert.false(
-      renderedDescriptions(
-        ".shortcut-category-application .shortcut-description"
-      ).includes(description("application.search")),
-      "search shortcut is filtered out"
-    );
+    assert
+      .dom(".shortcut-category-application tbody")
+      .doesNotIncludeText(description("application.search"));
   });
 
   test("plugin-registered shortcut with raw 'esc' key matches escape alias", async function (assert) {

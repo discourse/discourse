@@ -165,9 +165,7 @@ class Service::Runner
           result[
             [*action[:key], action[:name] || args.first || action[:default_name]].join(".")
           ].public_send(action[:property] || :itself),
-          **result.slice(
-            *block.parameters.filter_map { it.last if %i[keyreq key].include?(it.first) },
-          ),
+          **result.slice(*block.parameters.filter_map { it.last if it.first == :keyreq }),
           &block
         )
       end,

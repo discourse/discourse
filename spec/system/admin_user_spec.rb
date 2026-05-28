@@ -32,6 +32,20 @@ describe "Admin User Page" do
     end
   end
 
+  context "when approving a user with a previously rejected reviewable" do
+    before { SiteSetting.must_approve_users = true }
+
+    it "approves the user from the admin profile page" do
+      stuck_user = Fabricate(:user, active: true, approved: false)
+      Fabricate(:reviewable_user, target: stuck_user, status: Reviewable.statuses[:rejected])
+
+      admin_user_page.visit(stuck_user)
+      admin_user_page.click_approve_button
+      expect(admin_user_page).to have_approve_success
+      expect(stuck_user.reload).to be_approved
+    end
+  end
+
   context "when visiting a regular user's page" do
     fab!(:user) { Fabricate(:user, ip_address: "93.123.44.90") }
     fab!(:similar_user) { Fabricate(:user, ip_address: user.ip_address) }

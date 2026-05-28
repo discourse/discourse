@@ -68,10 +68,16 @@ module DiscourseAi
 
         if defined?(DiscourseSolved)
           @solutions =
-            DiscourseSolved::SolvedTopic
-              .where(topic_id: @posts.select(:topic_id))
-              .pluck(:topic_id, :answer_post_id)
-              .to_h
+            DiscourseSolved::TopicAnswer
+              .joins(:solved_topic)
+              .where("discourse_solved_solved_topics.topic_id": @posts.select(:topic_id))
+              .pluck(
+                "discourse_solved_solved_topics.topic_id",
+                "discourse_solved_topic_answers.answer_post_id",
+              )
+              .each_with_object({}) do |(topic_id, answer_post_id), h|
+                (h[topic_id] ||= []) << answer_post_id
+              end
         else
           @solutions = {}
         end
@@ -96,7 +102,7 @@ module DiscourseAi
         buffer = []
         buffer << ""
         buffer << "post_number: #{post.post_number}"
-        buffer << "solution: true" if @solutions[post.topic_id] == post.id
+        buffer << "solution: true" if @solutions[post.topic_id]&.include?(post.id)
         buffer << post.created_at.strftime("%Y-%m-%d %H:%M")
         buffer << "user: #{post.user&.username}"
         buffer << "likes: #{post.like_count}"
