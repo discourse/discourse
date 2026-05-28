@@ -48,7 +48,8 @@ describe "Solved | Shared issue button" do
 
   it "hides the button once the topic is solved" do
     answer_post = Fabricate(:post, topic:)
-    Fabricate(:solved_topic, topic:, answer_post:, accepter: author)
+    solved_topic = Fabricate(:solved_topic, topic:)
+    Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
 
     sign_in(member)
     topic_page.visit_topic(topic)
@@ -67,11 +68,11 @@ describe "Solved | Shared issue button" do
     within("#post_#{answer_post.post_number}") do
       find(".post-action-menu__solved-unaccepted").click
     end
-    expect(page).to have_css(".accepted-answer")
+    expect(page).to have_css(".accepted-answers")
     expect(shared_issue_button).to have_no_shared_issue_button
 
     within("#post_#{answer_post.post_number}") { find(".post-action-menu__solved-accepted").click }
-    expect(page).to have_no_css(".accepted-answer")
+    expect(page).to have_no_css(".accepted-answers")
     expect(shared_issue_button).to have_shared_issue_button
   end
 
@@ -109,5 +110,33 @@ describe "Solved | Shared issue button" do
     expect(shared_issue_button).to have_shared_issue_button
     expect(shared_issue_button).to have_read_only
     expect(shared_issue_button).to have_count(0)
+  end
+
+  describe "with multiple solutions enabled" do
+    before { SiteSetting.solved_allow_multiple_solutions = true }
+
+    it "shows the button even after a solution is accepted" do
+      answer_post = Fabricate(:post, topic:)
+      solved_topic = Fabricate(:solved_topic, topic:)
+      Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
+
+      sign_in(member)
+      topic_page.visit_topic(topic)
+
+      expect(shared_issue_button).to have_shared_issue_button
+    end
+
+    it "lets a member create a shared issue on a solved topic" do
+      answer_post = Fabricate(:post, topic:)
+      solved_topic = Fabricate(:solved_topic, topic:)
+      Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
+
+      sign_in(member)
+      topic_page.visit_topic(topic)
+
+      shared_issue_button.click
+      expect(shared_issue_button).to have_active
+      expect(shared_issue_button).to have_count(1)
+    end
   end
 end

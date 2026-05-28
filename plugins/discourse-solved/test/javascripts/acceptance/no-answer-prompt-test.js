@@ -3,7 +3,10 @@ import { test } from "qunit";
 import sinon from "sinon";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { topicWithNoAnswer } from "../helpers/discourse-solved-helpers";
+import {
+  postStreamWithAcceptedAnswerExcerpt,
+  topicWithNoAnswer,
+} from "../helpers/discourse-solved-helpers";
 
 acceptance("No Answer Prompt", function (needs) {
   needs.user({ id: 1 });
@@ -24,6 +27,12 @@ acceptance("No Answer Prompt", function (needs) {
     );
   });
 
+  needs.hooks.beforeEach(function () {
+    pretender.get("/t/23.json", () =>
+      response(postStreamWithAcceptedAnswerExcerpt("excerpt"))
+    );
+  });
+
   test("hides the no answer prompt when clicking the solution button", async function (assert) {
     await visit("/t/test-topic-no-answer/100");
 
@@ -36,6 +45,14 @@ acceptance("No Answer Prompt", function (needs) {
     assert
       .dom(".topic-navigation-popup")
       .doesNotExist("no answer prompt is hidden after accepting solution");
+  });
+
+  test("hides the no answer prompt when there's already a solution", async function (assert) {
+    await visit("/t/23");
+
+    assert
+      .dom(".topic-navigation-popup")
+      .doesNotExist("no answer prompt is not displayed");
   });
 
   test("shows confetti when accepting a solution", async function (assert) {
