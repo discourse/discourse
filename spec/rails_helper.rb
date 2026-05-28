@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-# Enable YJIT on CI so Rails, Discourse, Capybara's Puma server, fabricators,
-# and per-example hooks are JIT-compiled while the worker is hot.
-if ENV["CI"] && defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable)
-  RubyVM::YJIT.enable
-end
-
 if ENV["COVERAGE"]
   require "simplecov"
   if ENV["TEST_ENV_NUMBER"]
