@@ -68,12 +68,14 @@ export default class AceEditor extends Component {
   skipChangePropagation = false;
 
   setContent = modifier(() => {
-    if (this.args.content === this.editor.getSession().getValue()) {
+    const content = this.args.content || "";
+
+    if (content === this.editor.getSession().getValue()) {
       return;
     }
 
     this.skipChangePropagation = true;
-    this.editor.getSession().setValue(this.args.content || "");
+    this.editor.getSession().setValue(content);
     this.skipChangePropagation = false;
 
     const token = WAITER.beginAsync();
