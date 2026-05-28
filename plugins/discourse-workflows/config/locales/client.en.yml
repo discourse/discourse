@@ -875,7 +875,7 @@ en:
         change_color: "Change color"
         placeholder: "Double-click to edit..."
       manual_trigger:
-        run: "Run manually"
+        run: "Run manually with the sample pinned data"
         triggered: "Triggered"
         failed: "Execution failed"
         view_execution: "View execution"
