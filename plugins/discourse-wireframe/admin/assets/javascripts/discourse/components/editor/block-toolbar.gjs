@@ -1,32 +1,42 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import { i18n } from "discourse-i18n";
 
 /**
- * Floating contextual toolbar shown above the currently-selected block.
- * Modelled on Gutenberg / Webflow / Puck's block-toolbar pattern: quick
- * actions (move up / move down / duplicate / delete) anchored to the
- * selected block, plus a `⋯` overflow menu reserved for less-common
- * affordances added in later sub-phases (wrap, convert, edit JSON).
+ * Floating contextual bar shown above each block chrome. Two regions
+ * sit inside one rounded "tab" anchored to the chrome's top-left edge:
  *
- * Mounted only when the chrome is selected. Positioning is via CSS
- * (`top: -34px; left: 0` against the chrome) — anchoring via
- * JavaScript would require popper/floating-ui, and our toolbar is
- * always relative to its host chrome anyway.
+ *   1. Handle region (always rendered) — grip icon + display name +
+ *      drag-source modifier. Replaces the standalone block-handle
+ *      badge so the block's identity stays visible whenever the bar
+ *      is.
+ *   2. Action region (rendered when `@isSelected`) — move up / down,
+ *      duplicate, optional force-expand toggle, inline-format
+ *      buttons, delete. Modelled on the Gutenberg / Webflow /
+ *      Puck pattern.
  *
- * Inline-format buttons (bold / italic / link) appear in this same
- * toolbar when the user has entered an inline-edit session on the
- * block AND has a non-empty text selection inside it. The controller
- * (`InlineEditController`) registers itself with the service as
- * `inlineEdit.controller`; we read its `markState` (a tracked-on-PM-transactions
- * getter) and call its commands. Co-locating the inline formatters
- * with the block actions avoids the focus / scroll-tracking problems
- * a separately-floating bubble menu had.
+ * The bar is mounted whenever the chrome is rendered; CSS reveals it
+ * on hover (innermost only) or on selection. Positioning is via CSS
+ * (`bottom: 100%; left: ~-border-width` against the chrome) — same
+ * anchor as the outlet badge.
+ *
+ * Inline-format buttons (bold / italic / link) appear when the user
+ * has entered an inline-edit session on this block AND has a non-empty
+ * text selection inside it. The controller (`InlineEditController`)
+ * registers itself with the service as `inlineEdit.controller`; we
+ * read its `markState` (a tracked-on-PM-transactions getter) and call
+ * its commands. Co-locating the inline formatters with the block
+ * actions avoids the focus / scroll-tracking problems a separately-
+ * floating bubble menu had.
  *
  * Inline-format buttons use `@preventFocus={{true}}` on `DButton` so
  * the mousedown's default focus shift is suppressed — ProseMirror
@@ -208,148 +218,180 @@ export default class BlockToolbar extends Component {
     element.select();
   }
 
+  @action
+  startDrag({ source }) {
+    this.wireframe.startDrag(source.data);
+  }
+
   <template>
     <div class="wireframe-block-toolbar" role="toolbar">
-      {{#if this.isUrlFieldEditing}}
-        {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-        <input
-          type="url"
-          class="wireframe-block-toolbar__url-input"
-          placeholder="https://..."
-          value={{this._editorValue}}
-          {{didInsert this.seedFieldEditorValue}}
-          {{on "input" this.onUrlInput}}
-          {{on "keydown" this.onUrlKeydown}}
-        />
-        <DButton
-          class="btn-flat wireframe-block-toolbar__btn"
-          @icon="check"
-          @title="wireframe.canvas.toolbar.link_apply"
-          @ariaLabel="wireframe.canvas.toolbar.link_apply"
-          @action={{this.applyFieldEditor}}
-          @preventFocus={{true}}
-        />
-        {{#if this.wireframe.fieldEditor.remove}}
+      {{! Handle region — always present so block identity stays
+        visible whenever the bar is shown, and so the drag-source
+        modifier's registration is stable across hover transitions.
+        `dragPreview` is the chrome's outer div (passed in by
+        BlockChrome via `@chromeEl`) so the browser shows a
+        translucent copy of the actual block during the drag instead
+        of the small handle tab. }}
+      <span
+        class="wireframe-block-toolbar__handle"
+        title={{i18n "wireframe.canvas.drag_handle_title"}}
+        {{dDragAndDropSource
+          type="wf-block"
+          data=(hash blockKey=@blockKey outletName=@outletName)
+          dragPreview=@chromeEl
+          onDragStart=this.startDrag
+          onDrop=this.wireframe.endDrag
+        }}
+      >
+        {{dIcon "grip-lines"}}
+        <span>{{@displayName}}</span>
+      </span>
+
+      {{#if @isSelected}}
+        {{#if this.isUrlFieldEditing}}
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <input
+            type="url"
+            class="wireframe-block-toolbar__url-input"
+            placeholder="https://..."
+            value={{this._editorValue}}
+            {{didInsert this.seedFieldEditorValue}}
+            {{on "input" this.onUrlInput}}
+            {{on "keydown" this.onUrlKeydown}}
+          />
           <DButton
             class="btn-flat wireframe-block-toolbar__btn"
-            @icon="link-slash"
-            @title="wireframe.canvas.toolbar.link_remove"
-            @ariaLabel="wireframe.canvas.toolbar.link_remove"
-            @action={{this.removeFieldEditor}}
+            @icon="check"
+            @title="wireframe.canvas.toolbar.link_apply"
+            @ariaLabel="wireframe.canvas.toolbar.link_apply"
+            @action={{this.applyFieldEditor}}
             @preventFocus={{true}}
           />
-        {{/if}}
-        <DButton
-          class="btn-flat wireframe-block-toolbar__btn"
-          @icon="xmark"
-          @title="wireframe.canvas.toolbar.link_cancel"
-          @ariaLabel="wireframe.canvas.toolbar.link_cancel"
-          @action={{this.cancelFieldEditor}}
-          @preventFocus={{true}}
-        />
-      {{else}}
-        <DButton
-          class="btn-flat wireframe-block-toolbar__btn"
-          @icon="arrow-up"
-          @title="wireframe.canvas.toolbar.move_up"
-          @ariaLabel="wireframe.canvas.toolbar.move_up"
-          @disabled={{if this.canMoveUp false true}}
-          @action={{this.moveUp}}
-        />
-        <DButton
-          class="btn-flat wireframe-block-toolbar__btn"
-          @icon="arrow-down"
-          @title="wireframe.canvas.toolbar.move_down"
-          @ariaLabel="wireframe.canvas.toolbar.move_down"
-          @disabled={{if this.canMoveDown false true}}
-          @action={{this.moveDown}}
-        />
-        <DButton
-          class="btn-flat wireframe-block-toolbar__btn"
-          @icon="copy"
-          @title="wireframe.canvas.toolbar.duplicate"
-          @ariaLabel="wireframe.canvas.toolbar.duplicate"
-          @action={{this.duplicate}}
-        />
-        {{#if this.canForceExpand}}
+          {{#if this.wireframe.fieldEditor.remove}}
+            <DButton
+              class="btn-flat wireframe-block-toolbar__btn"
+              @icon="link-slash"
+              @title="wireframe.canvas.toolbar.link_remove"
+              @ariaLabel="wireframe.canvas.toolbar.link_remove"
+              @action={{this.removeFieldEditor}}
+              @preventFocus={{true}}
+            />
+          {{/if}}
           <DButton
-            class={{if
-              this.isForceExpanded
-              "btn-flat wireframe-block-toolbar__btn --active"
-              "btn-flat wireframe-block-toolbar__btn"
-            }}
-            @icon={{if
-              this.isForceExpanded
-              "down-left-and-up-right-to-center"
-              "up-right-and-down-left-from-center"
-            }}
-            @title={{if
-              this.isForceExpanded
-              "wireframe.canvas.toolbar.collapse_for_preview"
-              "wireframe.canvas.toolbar.expand_for_editing"
-            }}
-            @ariaLabel={{if
-              this.isForceExpanded
-              "wireframe.canvas.toolbar.collapse_for_preview"
-              "wireframe.canvas.toolbar.expand_for_editing"
-            }}
-            @ariaPressed={{this.isForceExpanded}}
-            @action={{this.toggleForceExpand}}
+            class="btn-flat wireframe-block-toolbar__btn"
+            @icon="xmark"
+            @title="wireframe.canvas.toolbar.link_cancel"
+            @ariaLabel="wireframe.canvas.toolbar.link_cancel"
+            @action={{this.cancelFieldEditor}}
+            @preventFocus={{true}}
           />
-        {{/if}}
-        {{#if this.showInlineFormat}}
+        {{else}}
+          <DButton
+            class="btn-flat wireframe-block-toolbar__btn"
+            @icon="arrow-up"
+            @title="wireframe.canvas.toolbar.move_up"
+            @ariaLabel="wireframe.canvas.toolbar.move_up"
+            @disabled={{if this.canMoveUp false true}}
+            @action={{this.moveUp}}
+          />
+          <DButton
+            class="btn-flat wireframe-block-toolbar__btn"
+            @icon="arrow-down"
+            @title="wireframe.canvas.toolbar.move_down"
+            @ariaLabel="wireframe.canvas.toolbar.move_down"
+            @disabled={{if this.canMoveDown false true}}
+            @action={{this.moveDown}}
+          />
+          <DButton
+            class="btn-flat wireframe-block-toolbar__btn"
+            @icon="copy"
+            @title="wireframe.canvas.toolbar.duplicate"
+            @ariaLabel="wireframe.canvas.toolbar.duplicate"
+            @action={{this.duplicate}}
+          />
+          {{#if this.canForceExpand}}
+            <DButton
+              class={{if
+                this.isForceExpanded
+                "btn-flat wireframe-block-toolbar__btn --active"
+                "btn-flat wireframe-block-toolbar__btn"
+              }}
+              @icon={{if
+                this.isForceExpanded
+                "down-left-and-up-right-to-center"
+                "up-right-and-down-left-from-center"
+              }}
+              @title={{if
+                this.isForceExpanded
+                "wireframe.canvas.toolbar.collapse_for_preview"
+                "wireframe.canvas.toolbar.expand_for_editing"
+              }}
+              @ariaLabel={{if
+                this.isForceExpanded
+                "wireframe.canvas.toolbar.collapse_for_preview"
+                "wireframe.canvas.toolbar.expand_for_editing"
+              }}
+              @ariaPressed={{this.isForceExpanded}}
+              @action={{this.toggleForceExpand}}
+            />
+          {{/if}}
+          {{#if this.showInlineFormat}}
+            <span
+              class="wireframe-block-toolbar__separator"
+              aria-hidden="true"
+            ></span>
+            <DButton
+              class={{if
+                this.markState.strong
+                "btn-flat wireframe-block-toolbar__btn --active"
+                "btn-flat wireframe-block-toolbar__btn"
+              }}
+              @icon="bold"
+              @title="wireframe.canvas.toolbar.bold"
+              @ariaLabel="wireframe.canvas.toolbar.bold"
+              @ariaPressed={{this.markState.strong}}
+              @action={{this.toggleBold}}
+              @preventFocus={{true}}
+            />
+            <DButton
+              class={{if
+                this.markState.em
+                "btn-flat wireframe-block-toolbar__btn --active"
+                "btn-flat wireframe-block-toolbar__btn"
+              }}
+              @icon="italic"
+              @title="wireframe.canvas.toolbar.italic"
+              @ariaLabel="wireframe.canvas.toolbar.italic"
+              @ariaPressed={{this.markState.em}}
+              @action={{this.toggleItalic}}
+              @preventFocus={{true}}
+            />
+            <DButton
+              class={{if
+                this.markState.link
+                "btn-flat wireframe-block-toolbar__btn --active"
+                "btn-flat wireframe-block-toolbar__btn"
+              }}
+              @icon="link"
+              @title="wireframe.canvas.toolbar.link"
+              @ariaLabel="wireframe.canvas.toolbar.link"
+              @ariaPressed={{this.markState.link}}
+              @action={{this.startLinkEdit}}
+              @preventFocus={{true}}
+            />
+          {{/if}}
           <span
             class="wireframe-block-toolbar__separator"
             aria-hidden="true"
           ></span>
           <DButton
-            class={{if
-              this.markState.strong
-              "btn-flat wireframe-block-toolbar__btn --active"
-              "btn-flat wireframe-block-toolbar__btn"
-            }}
-            @icon="bold"
-            @title="wireframe.canvas.toolbar.bold"
-            @ariaLabel="wireframe.canvas.toolbar.bold"
-            @ariaPressed={{this.markState.strong}}
-            @action={{this.toggleBold}}
-            @preventFocus={{true}}
-          />
-          <DButton
-            class={{if
-              this.markState.em
-              "btn-flat wireframe-block-toolbar__btn --active"
-              "btn-flat wireframe-block-toolbar__btn"
-            }}
-            @icon="italic"
-            @title="wireframe.canvas.toolbar.italic"
-            @ariaLabel="wireframe.canvas.toolbar.italic"
-            @ariaPressed={{this.markState.em}}
-            @action={{this.toggleItalic}}
-            @preventFocus={{true}}
-          />
-          <DButton
-            class={{if
-              this.markState.link
-              "btn-flat wireframe-block-toolbar__btn --active"
-              "btn-flat wireframe-block-toolbar__btn"
-            }}
-            @icon="link"
-            @title="wireframe.canvas.toolbar.link"
-            @ariaLabel="wireframe.canvas.toolbar.link"
-            @ariaPressed={{this.markState.link}}
-            @action={{this.startLinkEdit}}
-            @preventFocus={{true}}
+            class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__btn--danger"
+            @icon="trash-can"
+            @title="wireframe.canvas.toolbar.delete"
+            @ariaLabel="wireframe.canvas.toolbar.delete"
+            @action={{this.remove}}
           />
         {{/if}}
-        <span class="toolbar-separator" aria-hidden="true"></span>
-        <DButton
-          class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__btn--danger"
-          @icon="trash-can"
-          @title="wireframe.canvas.toolbar.delete"
-          @ariaLabel="wireframe.canvas.toolbar.delete"
-          @action={{this.remove}}
-        />
       {{/if}}
     </div>
   </template>

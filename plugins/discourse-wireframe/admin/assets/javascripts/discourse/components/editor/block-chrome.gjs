@@ -1,17 +1,14 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
 // `grid-math` is in the universal bundle (its `parsePlacement` is
 // called by the live-page `wf-layout.gjs`); this chrome is admin-only.
@@ -23,11 +20,12 @@ import {
 import { entryHasEmptyImageUploadArgs } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
+import { buildBlockPalette } from "../../lib/palette";
 import containerDropTarget from "../../modifiers/container-drop-target";
 import gridTileDrag from "../../modifiers/grid-tile-drag";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
-import EmptyCellPlaceholder from "./empty-cell-placeholder";
+import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
 import EmptyImageState from "./empty-image-state";
 import GridOverlay from "./grid-overlay";
 
@@ -43,11 +41,12 @@ import GridOverlay from "./grid-overlay";
  *
  * Drag-and-drop model (chosen because HTML5 DnD on nested-draggable
  * elements is unreliable):
- *   - The chrome itself is NOT draggable. The `.wireframe-block-handle`
- *     corner badge IS the drag source.
- *   - The handle is rendered always; CSS hides it until the chrome is
- *     hovered or selected. That way users grab it with one gesture, not
- *     two.
+ *   - The chrome itself is NOT draggable. The handle region inside
+ *     `BlockToolbar` (`.wireframe-block-toolbar__handle`) IS the drag
+ *     source.
+ *   - The toolbar is rendered always; CSS hides it until the chrome
+ *     is hovered or selected. That way users grab the handle with one
+ *     gesture, not two.
  *   - Drop zones (before/after siblings, optional inside-container) are
  *     siblings of the wrapped component within the chrome. They occupy
  *     real layout space (4px) at all times while the editor is active so
@@ -58,15 +57,6 @@ export default class BlockChrome extends Component {
   @service tooltip;
   @service wireframe;
 
-  /**
-   * Whether this slot is currently showing its palette picker
-   * popover. Stored on the chrome instance (rather than at a higher
-   * scope) because the chrome IS the slot in this model — each slot
-   * gets its own chrome, each picker opens / closes against the
-   * chrome that owns it. Unprefixed because the template reads it
-   * via `this.pickingSlot`.
-   */
-  @tracked pickingSlot = false;
   acceptedDragKinds = ["wf-block", "wf-palette-block"];
 
   /**
@@ -102,13 +92,13 @@ export default class BlockChrome extends Component {
     return grid?.querySelector(".wireframe-grid-ghost") ?? null;
   };
   /**
-   * Reference to the chrome's outer `<div>`, set on insert. Used as the
-   * drag-source's drag image so the browser shows a translucent copy of
-   * the actual block being dragged instead of the tiny handle badge
-   * (the default when no `dragImage` is supplied). Tracked so the
-   * drag-source modifier re-runs once the ref is captured (it installs
-   * before the chrome div's `didInsert` fires, otherwise capturing a
-   * stale `null`).
+   * Reference to the chrome's outer `<div>`, set on insert. Passed to
+   * `BlockToolbar` as `@chromeEl` and used as the drag-source's drag
+   * image so the browser shows a translucent copy of the actual block
+   * being dragged instead of the handle tab itself (the default when
+   * no `dragImage` is supplied). Tracked so the drag-source modifier
+   * re-runs once the ref is captured (it installs before the chrome
+   * div's `didInsert` fires, otherwise capturing a stale `null`).
    */
   @tracked _chromeEl = null;
 
@@ -565,36 +555,14 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Compact palette for the slot picker popover — same shape the
-   * grid overlay uses for its auto-empty-cell picker. The two are
-   * intentionally identical in vocabulary; the only difference is
-   * where the placeholder is anchored.
+   * Palette for the slot/container picker popovers — same data the
+   * grid overlay and the outlet boundary use. Cached so the same list
+   * reference flows into every empty-state placeholder this chrome
+   * renders.
    */
   @cached
-  get slotPalette() {
-    return this.blocks
-      .listBlocksWithMetadata()
-      .map(({ name, component }) => {
-        const display = getBlockDisplayMetadata(component) ?? {};
-        return {
-          name,
-          displayName: display.displayName,
-          icon: display.icon,
-          paletteHidden: display.paletteHidden === true,
-        };
-      })
-      .filter((row) => !row.paletteHidden)
-      .sort((a, b) => a.displayName.localeCompare(b.displayName));
-  }
-
-  @action
-  openSlotPicker() {
-    this.pickingSlot = true;
-  }
-
-  @action
-  closeSlotPicker() {
-    this.pickingSlot = false;
+  get palette() {
+    return buildBlockPalette(this.blocks);
   }
 
   @action
@@ -603,7 +571,16 @@ export default class BlockChrome extends Component {
       slotKey: this.args.blockKey,
       blockName: blockEntry.name,
     });
-    this.pickingSlot = false;
+  }
+
+  @action
+  pickBlockForContainer(blockEntry) {
+    this.wireframe.insertBlock({
+      blockName: blockEntry.name,
+      targetKey: this.args.blockKey,
+      position: "inside",
+      targetOutletName: this.args.outletName,
+    });
   }
 
   @action
@@ -789,19 +766,6 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Adapts the source modifier's `{source}` drag-start payload into
-   * the shape `wireframe.startDrag` expects (a flat
-   * `{blockKey, outletName}`). The data was attached at the
-   * `dDragAndDropSource` call site as `(hash blockKey=… outletName=…)`
-   * and exposed back to us under `source.data` (with `source.type`
-   * carrying the discriminator string).
-   */
-  @action
-  handleDragStart({ source }) {
-    this.wireframe.startDrag(source.data);
-  }
-
-  /**
    * Forwards the drop-target's `position` straight to the service so the
    * canvas can highlight the matching zone. The core modifier passes
    * `position` in the callback payload (lifted from the modifier's own
@@ -824,18 +788,6 @@ export default class BlockChrome extends Component {
       targetKey: this.args.blockKey,
       position,
     });
-  }
-
-  /**
-   * Deletes the block this chrome wraps. Wired to the trash button on
-   * the handle for selected blocks; the inspector's recovery banner
-   * uses the same service method.
-   */
-  @action
-  deleteBlock(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.wireframe.removeBlock(this.args.blockKey);
   }
 
   <template>
@@ -884,9 +836,13 @@ export default class BlockChrome extends Component {
           role="button"
           tabindex="0"
         >
-          {{#if this.isSelected}}
-            <BlockToolbar @blockKey={{@blockKey}} />
-          {{/if}}
+          <BlockToolbar
+            @blockKey={{@blockKey}}
+            @outletName={{@outletName}}
+            @displayName={{this.displayName}}
+            @chromeEl={{this._chromeEl}}
+            @isSelected={{this.isSelected}}
+          />
 
           {{! Overlap / out-of-bounds warning badge — only visible when
             this cell's rectangle intersects a sibling or runs past the
@@ -910,40 +866,14 @@ export default class BlockChrome extends Component {
             </span>
           {{/if}}
 
-          {{! The handle is the ONLY drag source. Always rendered (CSS hides
-            it until the chrome is hovered) so the modifier's
-            registration is stable across hover transitions. When selected,
-            the floating toolbar (above) takes over quick-action duty;
-            the handle stays as the drag affordance only.
-
-            `dragImage` is the chrome's outer div — the browser shows a
-            translucent copy of the actual block during the drag instead
-            of the tiny handle badge (the default). }}
-          <span
-            class="wireframe-block-handle"
-            title={{i18n "wireframe.canvas.drag_handle_title"}}
-            {{dDragAndDropSource
-              type="wf-block"
-              data=(hash blockKey=@blockKey outletName=@outletName)
-              dragPreview=this._chromeEl
-              onDragStart=this.handleDragStart
-              onDrop=this.wireframe.endDrag
-            }}
-          >
-            {{dIcon "grip-lines"}}
-            <span>{{this.displayName}}</span>
-          </span>
-
           {{#if this.isSlot}}
             <div
               class="wireframe-block-chrome__content"
               style={{this.contentStyle}}
             >
-              <EmptyCellPlaceholder
-                @palette={{this.slotPalette}}
-                @isOpen={{this.pickingSlot}}
-                @onOpen={{this.openSlotPicker}}
-                @onClose={{this.closeSlotPicker}}
+              <EditorEmptyDropPlaceholder
+                @hint={{i18n "wireframe.canvas.empty_slot_hint"}}
+                @palette={{this.palette}}
                 @onPick={{this.pickBlockForSlot}}
               />
             </div>
@@ -989,9 +919,11 @@ export default class BlockChrome extends Component {
           {{/if}}
 
           {{#if this.isEmptyContainer}}
-            <span class="wireframe-block-chrome__empty-hint">
-              {{i18n "wireframe.canvas.empty_container_hint"}}
-            </span>
+            <EditorEmptyDropPlaceholder
+              @hint={{i18n "wireframe.canvas.empty_container_hint"}}
+              @palette={{this.palette}}
+              @onPick={{this.pickBlockForContainer}}
+            />
           {{/if}}
         </div>
       </div>

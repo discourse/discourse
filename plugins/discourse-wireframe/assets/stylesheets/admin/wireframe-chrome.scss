@@ -81,10 +81,10 @@ body.wireframe-active {
       outline-color 80ms ease-out,
       background-color 80ms ease-out;
 
-    /* Empty container chrome needs a baseline height so the inside drop
-       zone has somewhere to live; block-level layouts collapse to zero
-       height when they render no children, leaving the chrome's empty
-       hint with nothing to anchor to. */
+    /* Empty container chrome needs a baseline height so the empty-state
+       placeholder has somewhere to live; block-level layouts collapse to
+       zero height when they render no children, leaving the placeholder
+       with nothing to anchor to. */
 
     &.--empty-container {
       min-height: 4rem;
@@ -165,13 +165,53 @@ body.wireframe-active {
        above. */
 
     > *:not(
-        .wireframe-block-handle,
         .wireframe-block-toolbar,
         .wireframe-drop-zone,
         .wireframe-block-chrome__resize-handle,
         .wireframe-block-chrome__overlap-badge
       ) {
       pointer-events: none;
+
+      /* Wrapped block content is inert in editor mode — clicks select
+         the block (or route to inline-edit targets like
+         `a[data-block-arg]`), never fire the button's own action.
+         Suppress the DButton hover/focus visuals so they don't compete
+         with the chrome's dashed click-to-edit outline, and reset the
+         cursor so the button reads as non-clickable.
+
+         Implementation: override the `--d-button-*--hover` custom
+         properties that core's `@include btn(...)` reads on
+         `:hover` / `:focus-visible` (see
+         `app/assets/stylesheets/common/components/buttons.scss`) so they
+         resolve back to the resting values. Covers the default /
+         primary / danger variants that `wf:button-link` exposes; other
+         `.btn-*` rules that hard-code their hover colors (`.btn-link`,
+         `.btn-social`) aren't reached and would need a separate rule. */
+
+      .btn {
+        cursor: default;
+
+        --d-button-default-bg-color--hover: var(--d-button-default-bg-color);
+        --d-button-default-text-color--hover: var(
+          --d-button-default-text-color
+        );
+        --d-button-default-icon-color--hover: var(
+          --d-button-default-icon-color
+        );
+        --d-button-default-border--hover: var(--d-button-default-border);
+        --d-button-primary-bg-color--hover: var(--d-button-primary-bg-color);
+        --d-button-primary-text-color--hover: var(
+          --d-button-primary-text-color
+        );
+        --d-button-primary-icon-color--hover: var(
+          --d-button-primary-icon-color
+        );
+        --d-button-primary-border--hover: var(--d-button-primary-border);
+        --d-button-danger-bg-color--hover: var(--d-button-danger-bg-color);
+        --d-button-danger-text-color--hover: var(--d-button-danger-text-color);
+        --d-button-danger-icon-color--hover: var(--d-button-danger-icon-color);
+        --d-button-danger-border--hover: var(--d-button-danger-border);
+      }
     }
   }
 
@@ -204,88 +244,6 @@ body.wireframe-active {
       width: var(--wireframe-badge-font-size) !important;
       filter: drop-shadow(var(--wireframe-shadow));
     }
-  }
-
-  /* Block handle (corner badge) — also the drag source.
-     Renders as a "tab" sitting directly above the chrome's top-left
-     outline corner: absolutely positioned so it takes no layout space,
-     and anchored via `bottom: 100%` so its bottom edge meets the
-     chrome's outline top edge. Top corners rounded, bottom corners
-     square — so the bottom edge merges visually into the outline below
-     it. Default `opacity: 0`; fades in only when the chrome is hovered
-     (innermost only) or selected — see the reveal rule below. Keeping
-     the badge in the DOM at idle (rather than `display: none`) means
-     the drag-source modifier's registration stays stable across hover
-     transitions.
-
-     Outlet badges (`.wireframe-outlet-boundary__badge`) keep their
-     always-visible treatment so the outlet cascade stays readable at
-     every nesting level. */
-
-  .wireframe-block-handle {
-    position: absolute;
-    bottom: 100%;
-    left: calc(-1 * var(--wireframe-container-border-width));
-    z-index: 1000;
-    opacity: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: var(--wireframe-badge-padding);
-    background: var(--wireframe-block-color);
-    color: white;
-    font-size: var(--wireframe-badge-font-size);
-    font-weight: bold;
-    border-radius: 4px 4px 0 0;
-    text-shadow: var(--wireframe-shadow);
-    cursor: grab;
-    pointer-events: none;
-    transition: opacity 80ms ease-out;
-
-    &:hover {
-      background: var(--wireframe-block-hover-color);
-    }
-
-    &:active {
-      cursor: grabbing;
-    }
-
-    .d-icon {
-      color: white !important;
-      font-size: var(--wireframe-badge-font-size) !important;
-      width: var(--wireframe-badge-font-size) !important;
-      filter: drop-shadow(var(--wireframe-shadow));
-    }
-
-    &__delete {
-      background: transparent;
-      border: none;
-      padding: 0 0 0 4px;
-      margin: 0;
-      color: white;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      border-left: 1px solid rgb(255, 255, 255, 0.4);
-      margin-left: 4px;
-
-      &:hover {
-        color: var(--danger-low);
-      }
-    }
-  }
-
-  /* Reveal the handle on hover (innermost chrome only — matches the
-     outline / tint gating above so a hovered nested block doesn't also
-     reveal every ancestor's badge) or when the block is selected. */
-
-  .wireframe-block-chrome:hover:not(
-      :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
-    )
-    > .wireframe-block-handle,
-  .wireframe-block-chrome.--selected > .wireframe-block-handle {
-    opacity: 1;
-    pointer-events: auto;
   }
 
   /* Drop zones for drag-and-drop reordering. Always present in layout
@@ -469,30 +427,77 @@ body.wireframe-active {
     }
   }
 
-  /* Floating block toolbar (Phase 7p.2). Mounted inside a selected
-     chrome, anchors above the block. Quick actions: move up / move
-     down / duplicate / delete. Replaces the corner-badge delete
-     button from Phase 6d. */
+  /* Unified floating bar above each block chrome. Two regions:
+       - `__handle` (always rendered): grip + display name, painted
+         with the block-color badge styling — preserves the block's
+         visual identity at all times the bar is shown. Also the
+         drag source.
+       - action buttons (`__btn`, only when the chrome is selected):
+         move up / down, duplicate, optional expand toggle, inline
+         format, delete. Buttons override DButton's default
+         `btn-icon` dimensions so the bar stays at the compact
+         badge height instead of inflating.
+
+     Anchored as a tab merging into the chrome's top-left border via
+     `bottom: 100%` + `left: ~-border-width` — same trick the outlet
+     badge uses. Default `opacity: 0`; reveals on hover (innermost
+     chrome only) or selection. Keeping the bar in the DOM at idle
+     (rather than `display: none`) means the drag-source modifier's
+     registration stays stable across hover transitions.
+
+     Outlet badges (`.wireframe-outlet-boundary__badge`) keep their
+     always-visible treatment so the outlet cascade stays readable at
+     every nesting level. */
 
   .wireframe-block-toolbar {
     position: absolute;
-    top: -34px;
-    left: 0;
-    z-index: 1100;
+    bottom: 100%;
+    left: calc(-1 * var(--wireframe-container-border-width));
+    z-index: 1000;
+    opacity: 0;
     display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    padding: 2px;
+    align-items: stretch;
     background: var(--secondary);
     border: 1px solid var(--primary-low);
-    border-radius: 4px;
+    border-radius: 4px 4px 0 0;
     box-shadow: var(--shadow-card);
-    pointer-events: auto;
+    pointer-events: none;
+    overflow: hidden; /* clip the handle's bg into the rounded corners */
+    transition: opacity 80ms ease-out;
 
-    /* Sizing comes from `<DButton @icon=...>` (auto-applied
-       `btn btn-icon no-text` classes). `btn-flat` keeps the resting
-       background transparent so the buttons sit cleanly on the
-       toolbar's secondary background. Active state mirrors the
+    &__handle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: var(--wireframe-badge-padding);
+      background: var(--wireframe-block-color);
+      color: white;
+      font-size: var(--wireframe-badge-font-size);
+      font-weight: bold;
+      text-shadow: var(--wireframe-shadow);
+      cursor: grab;
+
+      &:hover {
+        background: var(--wireframe-block-hover-color);
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      .d-icon {
+        color: white !important;
+        font-size: var(--wireframe-badge-font-size) !important;
+        width: var(--wireframe-badge-font-size) !important;
+        filter: drop-shadow(var(--wireframe-shadow));
+      }
+    }
+
+    /* Action buttons sized to match the badge — overrides DButton's
+       default `btn-icon` dimensions so the unified bar stays at the
+       compact badge height instead of inflating. `btn-flat` keeps the
+       resting background transparent so the buttons sit cleanly on
+       the toolbar's secondary background. Active state mirrors the
        composer toolbar (`.toolbar__button.--active` in
        `common/d-editor.scss`) via the `--d-selected` token so the
        two toolbars highlight the same way. */
@@ -502,6 +507,20 @@ body.wireframe-active {
       transition:
         background-color 120ms ease,
         color 120ms ease;
+
+      &.btn.btn-icon {
+        min-width: 0;
+        min-height: 0;
+        width: auto;
+        height: auto;
+        padding: var(--wireframe-badge-padding);
+        line-height: 1;
+      }
+
+      .d-icon {
+        font-size: var(--wireframe-badge-font-size) !important;
+        width: var(--wireframe-badge-font-size) !important;
+      }
 
       &.--active {
         background: var(--d-selected);
@@ -530,6 +549,32 @@ body.wireframe-active {
         }
       }
     }
+
+    &__separator {
+      align-self: stretch;
+      width: 1px;
+      background: var(--primary-low);
+    }
+
+    &__url-input {
+      font-size: var(--wireframe-badge-font-size);
+      padding: var(--wireframe-badge-padding);
+      line-height: 1;
+      min-height: 0;
+    }
+  }
+
+  /* Reveal the bar on hover (innermost chrome only — matches the
+     outline / tint gating so a hovered nested block doesn't also
+     reveal every ancestor's bar) or when the block is selected. */
+
+  .wireframe-block-chrome:hover:not(
+      :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
+    )
+    > .wireframe-block-toolbar,
+  .wireframe-block-chrome.--selected > .wireframe-block-toolbar {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   /* Ghost block softening (Phase 7p.9).
@@ -549,8 +594,8 @@ body.wireframe-active {
      No `min-height` here: in flex / sidebar columns the floor would
      compete with the inner block's natural size and the content
      would overflow the boundary. Empty outlets get their visible
-     drop target from `.wireframe-empty-outlet-drop-zone` (rule
-     below), which carries its own min-height. */
+     drop target from `.wireframe-empty-drop-placeholder` (the shared
+     empty-state component), which carries its own min-height. */
 
   .wireframe-outlet-boundary {
     position: relative;
@@ -577,38 +622,6 @@ body.wireframe-active {
       > .wireframe-block-chrome-wrapper
       + .wireframe-block-chrome-wrapper {
       margin-top: 0.5rem;
-    }
-  }
-
-  /* Empty-outlet visual affordance. Drops on the empty outlet are
-     handled by the parent `<OutletBoundary>`'s `containerDropTarget`
-     modifier — this element is purely a "drop something here" hint.
-     `pointer-events: none` lets dragover pass straight through to the
-     boundary; without it the deeper element would receive dragover
-     events even though it doesn't handle them. */
-
-  .wireframe-empty-outlet-drop-zone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-height: 64px;
-    margin: 1.5rem 0.25rem 0.25rem;
-    padding: 1rem;
-    border: 2px dashed var(--primary-low-mid);
-    border-radius: 6px;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-    background: rgb(0 0 0 / 0.02);
-    pointer-events: none;
-
-    &__icon {
-      display: inline-flex;
-      align-items: center;
-
-      .d-icon {
-        font-size: 1.25rem;
-      }
     }
   }
 
@@ -1816,8 +1829,8 @@ body.wireframe-active {
        outline decoration — the slot wrapper IS the visible cell outline.
        Hide outline / background / box-shadow and zero out the spacing so
        the only visible chrome around the cell is the slot wrapper's,
-       perfectly aligned to the grid cell. The inner chrome's badge
-       (`.wireframe-block-handle`) is absolute-positioned and still
+       perfectly aligned to the grid cell. The inner chrome's floating
+       bar (`.wireframe-block-toolbar`) is absolute-positioned and still
        reveals on hover / selection — it lands near the slot's top-left
        corner (inside the slot's padding). */
 
@@ -1916,57 +1929,31 @@ body.wireframe-active
     content: none;
   }
 
-  &__plus {
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    border: 1px solid var(--wireframe-block-color);
-    background: var(--secondary);
-    color: var(--wireframe-block-color);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.85;
-    transition:
-      opacity 80ms ease-out,
-      background 80ms ease-out,
-      color 80ms ease-out,
-      border-color 80ms ease-out;
+  /* The shared empty-state placeholder takes over the cell's interior
+     (centred `+` icon + hint label, or icon-only at narrow widths via
+     the container query); the cell itself only contributes the dashed
+     border + drag-target chrome. The hand-rolled `+` button and the
+     custom popover that used to live here have been replaced by
+     `EditorEmptyDropPlaceholder` + FloatKit's `menu` service. */
+}
 
-    &:hover {
-      opacity: 1;
-      background: var(--wireframe-block-color);
-      color: white;
-      border-color: var(--wireframe-block-hover-color);
-    }
+/* FloatKit menu body opened from every empty-drop placeholder. Picker
+   header + 2-column grid of block chips. Targets the menu wrapper via
+   `[data-identifier="wireframe-block-picker"]`, the `identifier` passed
+   to `menu.show()` — `DHeadlessMenu` doesn't apply an identifier-derived
+   class on its own, but the data attribute lands on the wrapper, so we
+   can address it without leaking classes into the menu container. */
 
-    .d-icon {
-      font-size: 0.75rem;
-    }
-  }
-
-  &__picker {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1500;
-    width: 240px;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: 6px;
-    box-shadow: var(--shadow-card);
-    padding: 0.4rem;
+[data-identifier="wireframe-block-picker"] {
+  .wireframe-block-picker {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
+    padding: 0.4rem;
+    width: 240px;
   }
 
-  &__picker-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .wireframe-block-picker__header {
     color: var(--primary-medium);
     font-size: var(--font-down-2);
     text-transform: uppercase;
@@ -1975,21 +1962,7 @@ body.wireframe-active
     padding: 0.1rem 0.2rem;
   }
 
-  &__picker-close {
-    background: transparent;
-    border: none;
-    padding: 0.15rem;
-    color: var(--primary-medium);
-    cursor: pointer;
-    border-radius: 3px;
-
-    &:hover {
-      color: var(--primary);
-      background: var(--primary-very-low);
-    }
-  }
-
-  &__picker-grid {
+  .wireframe-block-picker__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.2rem;
@@ -1997,7 +1970,7 @@ body.wireframe-active
     overflow-y: auto;
   }
 
-  &__picker-chip {
+  .wireframe-block-picker__chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -2019,6 +1992,93 @@ body.wireframe-active
       color: var(--primary-medium);
       font-size: 0.8rem;
     }
+  }
+}
+
+/* Unified empty-state placeholder — the canonical "drag/click a block
+   here" affordance, rendered in four contexts: empty outlets, empty
+   non-grid containers, unfilled `wf:slot` entries, and unoccupied grid
+   cells. The button is the full click target; clicking it opens a
+   FloatKit menu (see the `[data-identifier="wireframe-block-picker"]`
+   block above) anchored to the button.
+
+   Responsive degradation: the placeholder defines a `wireframe-empty`
+   inline-size container so the hint label can be hidden when the
+   available width drops below ~12rem. In the narrow case the sibling
+   `__tooltip-host` element switches from `display: none` to covering
+   the whole button, letting its FloatKit tooltip surface the hint on
+   hover. That gate is purely CSS — when the host is `display: none` its
+   listeners never fire, so the visible label and the tooltip never
+   appear simultaneously. */
+
+.wireframe-empty-drop-placeholder {
+  container-type: inline-size;
+  container-name: wireframe-empty;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 4rem;
+  margin: 0.25rem;
+  padding: 1rem;
+  border: 0;
+  background: rgb(0 0 0 / 0.02);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  cursor: pointer;
+  transition:
+    background 80ms ease-out,
+    color 80ms ease-out;
+
+  &:hover {
+    background: rgb(217 119 6 / 0.08);
+    color: var(--wireframe-block-color);
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+
+    .d-icon {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__hint {
+    /* When the container query in the narrow branch fires, the hint is
+       hidden and the centred `+` icon stands alone. */
+  }
+
+  &__tooltip-host {
+    /* Invisible by default. When the hint label is visible there's no
+       reason to surface the same string in a tooltip, so the host
+       receives no pointer events and the FloatKit listeners attached
+       to it stay dormant. */
+    display: none;
+  }
+
+  /* Inside a grid cell the placeholder fills the cell rectangle (the
+     cell's dashed border is the surrounding affordance). Drop the
+     outer margin so the placeholder hugs the border. */
+
+  .wireframe-grid-cell > & {
+    margin: 0;
+    min-height: 0;
+    padding: 0.35rem;
+  }
+}
+
+@container wireframe-empty (max-width: 12rem) {
+  .wireframe-empty-drop-placeholder__hint {
+    display: none;
+  }
+
+  .wireframe-empty-drop-placeholder__tooltip-host {
+    display: block;
+    position: absolute;
+    inset: 0;
   }
 }
 
@@ -2619,22 +2679,12 @@ body.wireframe-dragging {
   }
 }
 
-/* Empty-container hint — replaces the old `--inside` drop zone
-   label. Visible only when the container actually has no children,
-   so an empty `wf:layout` reads as "drag something into me" without
-   eating layout space on every block like the old strip zones did. */
+/* Empty-container affordance — the shared `EditorEmptyDropPlaceholder`
+   is rendered inside an empty non-grid container. `min-height` keeps
+   the chrome from collapsing to zero before the placeholder paints. */
 
 .wireframe-block-chrome.--empty-container {
   min-height: 4rem;
-
-  .wireframe-block-chrome__empty-hint {
-    display: block;
-    text-align: center;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-    font-style: italic;
-    padding: 1rem 0.5rem;
-  }
 }
 
 /* Editor-only chrome support: anchor for the absolute-positioned
@@ -3509,8 +3559,7 @@ body.wireframe-active {
      without an affordance pointing it out). Dashed amber outline + tinted
      background mirror the grid overlay's auto-empty cells so the two read
      as the same affordance. The chrome's inner `__content` carries the
-     `EmptyCellPlaceholder` (+ button + palette picker), so this is just
-     the frame around it. */
+     `EditorEmptyDropPlaceholder`, so this is just the frame around it. */
 
   .wireframe-block-chrome.--slot {
     outline: var(--wireframe-container-border-width) dashed
