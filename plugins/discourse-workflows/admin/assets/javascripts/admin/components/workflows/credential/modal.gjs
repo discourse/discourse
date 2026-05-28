@@ -5,13 +5,17 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { eq } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import {
   fieldVisible,
   normalizeSchema,
+  propertyLabel,
 } from "../../../lib/workflows/property-engine";
 import Field from "../configurators/field";
+
+const CREDENTIAL_DATA_NAME_FIELD = "credential_data_name";
 
 function credentialTypeDefinition(credentialTypes, type) {
   if (!type || !credentialTypes) {
@@ -53,14 +57,16 @@ export default class CredentialModal extends Component {
 
   get formData() {
     const credential = this.args.model.credential;
-    if (credential) {
-      return {
-        name: credential.name,
-        credential_type: credential.credential_type,
-        ...credential.data,
-      };
+    if (!credential) {
+      return { name: "", credential_type: "" };
     }
-    return { name: "", credential_type: "" };
+
+    return {
+      ...(credential.data || {}),
+      name: credential.name,
+      credential_type: credential.credential_type,
+      [CREDENTIAL_DATA_NAME_FIELD]: credential.data?.name,
+    };
   }
 
   @action
@@ -72,8 +78,10 @@ export default class CredentialModal extends Component {
       );
       const credentialData = {};
       for (const field of schema) {
-        if (data[field.name] !== undefined) {
-          credentialData[field.name] = data[field.name];
+        const dataFieldName =
+          field.name === "name" ? CREDENTIAL_DATA_NAME_FIELD : field.name;
+        if (data[dataFieldName] !== undefined) {
+          credentialData[field.name] = data[dataFieldName];
         }
       }
 
@@ -163,7 +171,17 @@ export default class CredentialModal extends Component {
               <Field
                 @form={{form}}
                 @formApi={{form.api}}
-                @fieldName={{fieldSchema.name}}
+                @fieldName={{if
+                  (eq fieldSchema.name "name")
+                  "credential_data_name"
+                  fieldSchema.name
+                }}
+                @label={{propertyLabel
+                  (credentialTypeDefinition
+                    this.credentialTypes transientData.credential_type
+                  )
+                  fieldSchema.name
+                }}
                 @schema={{fieldSchema}}
                 @configuration={{transientData}}
                 @nodeDefinition={{credentialTypeDefinition
