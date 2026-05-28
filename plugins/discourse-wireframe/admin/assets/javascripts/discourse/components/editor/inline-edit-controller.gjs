@@ -289,6 +289,19 @@ export default class InlineEditController extends Component {
       if (event.target.closest?.(".wireframe-block-toolbar")) {
         return;
       }
+      // Clicks anywhere on the same block (e.g., the button padding
+      // around a button-link's label, the icon area, the block chrome
+      // gutter) are also "inside the edit" — the chrome's onClick
+      // routes those to the right handler (start a different arg,
+      // reselect the block), which transitions the session cleanly via
+      // `start()`'s implicit commit. Closing here on every padding
+      // click made cursor placement inside small fields fiddly.
+      const editingBlock = this.activeRendererEl?.closest?.(
+        "[data-wf-block-key]"
+      );
+      if (editingBlock?.contains(event.target)) {
+        return;
+      }
       // Bail out if the edit session has already ended (e.g. a sibling
       // click handler called `inlineEdit.stop` first). `activeRendererEl`
       // returns `null` when there's no active session.

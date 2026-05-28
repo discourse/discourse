@@ -3720,6 +3720,20 @@ body.wireframe-active {
       outline-offset: 2px;
     }
   }
+
+  /* Empty-icon slot. Reveal a small dashed square only while the
+     parent block is selected, so authors can click to add an icon
+     without leaving the canvas for the inspector. Hidden everywhere
+     else (live + non-selected canvas — see `wireframe.scss`). */
+
+  &--empty {
+    .wireframe-block-chrome.--selected & {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      border: 1px dashed var(--primary-low);
+    }
+  }
 }
 
 /* Picker CSS variables + z-index override.

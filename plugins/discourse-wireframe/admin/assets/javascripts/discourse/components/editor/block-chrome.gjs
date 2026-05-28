@@ -648,6 +648,15 @@ export default class BlockChrome extends Component {
         hoverGracePeriod: 120,
         placement: "right",
         offset: 4,
+        // `dTrapTab` autofocuses the popover's first focusable element by
+        // default when `trapTab` is on (and `interactive: true` turns it
+        // on). On hover-show that pulls focus out of any active inline
+        // editor on the same block — e.g. typing in the label PM editor
+        // while the URL chip materialises next to it. Tab-trapping is
+        // still useful for the edit-mode input, but autofocus is not:
+        // `seedInputValue` focuses the URL input directly when the popover
+        // swaps into edit mode.
+        autofocus: false,
         data: {
           blockKey: this.args.blockKey,
           argName,

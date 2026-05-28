@@ -3,6 +3,8 @@ import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+import RichTextRenderer from "../components/rich-text-renderer";
 
 const VALID_VARIANTS = ["primary", "default", "danger"];
 
@@ -13,9 +15,8 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
   description: "A button-styled link.",
   args: {
     label: {
-      type: "string",
-      default: "Learn more",
-      ui: { label: "Label" },
+      type: "richInline",
+      ui: { control: "rich-inline", label: "Label" },
     },
     href: {
       type: "string",
@@ -41,19 +42,27 @@ export default class WFButtonLink extends Component {
   }
 
   <template>
-    {{! Block-form invocation so the icon glyph carries its own
-        `data-block-arg` wrapper (for the click-to-edit popover)
-        instead of going through DButton's built-in `@icon` path. We
-        re-create the `.d-button-label` wrapper that DButton would
-        otherwise emit when `@translatedLabel` is set, so spacing and
-        styling match. }}
+    {{! Use block-form DButton (rather than `@icon` / `@translatedLabel`)
+        so the icon and label each render inside their own click-to-edit
+        wrapper while still matching DButton's spacing. }}
     <DButton class={{this.btnClass}} @href={{@href}} data-block-arg="href">
-      {{#if @icon}}
-        <span class="wf-inline-icon" data-block-arg="icon">
+      <span
+        class="wf-inline-icon {{unless @icon 'wf-inline-icon--empty'}}"
+        data-block-arg="icon"
+      >
+        {{#if @icon}}
           {{dIcon @icon}}
-        </span>
-      {{/if}}
-      <span class="d-button-label">{{@label}}</span>
+        {{/if}}
+      </span>
+      <RichTextRenderer
+        @arg="label"
+        @schema="plain"
+        @value={{@label}}
+        @placeholder={{i18n "wireframe.placeholders.button_link_label"}}
+        as |R|
+      >
+        <span class="d-button-label"><R.Content /></span>
+      </RichTextRenderer>
     </DButton>
   </template>
 }

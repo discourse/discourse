@@ -371,6 +371,7 @@ en:
         media_card_badge_label: "Featured"
         media_card_title: "A short headline describing this card"
         media_card_cta_label: "Learn more"
+        button_link_label: "Learn more"
       theme_admin:
         open_button: "Wireframe"
         open_button_title: "Open the wireframe for this theme"

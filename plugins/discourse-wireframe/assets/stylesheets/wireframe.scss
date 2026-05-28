@@ -168,6 +168,15 @@
   display: inline;
 }
 
+/* Empty inline-icon slot. Blocks that support inline icon edit render
+   the wrapper unconditionally so authors get a click-to-add target
+   when the block is selected on the canvas; hidden on the live site
+   and revealed only by the chrome (see `admin/wireframe-chrome.scss`). */
+
+.wf-inline-icon--empty {
+  display: none;
+}
+
 /* Starter block library */
 .wf-heading,
 .wf-paragraph {
