@@ -365,7 +365,7 @@ export default class DModal extends Component {
                 "d-modal__header"
                 (if
                   (and this.mobileDismissable (has-block "headerPrimaryAction"))
-                  "--has-primary-action"
+                  "has-primary-action"
                 )
                 @headerClass
               }}

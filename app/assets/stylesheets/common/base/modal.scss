@@ -115,7 +115,7 @@ html:not(.keyboard-visible).mobile-device {
     padding: 0.5rem;
     border-bottom: 1px solid var(--content-border-color);
 
-    &:not(.--has-primary-action) {
+    &:not(.has-primary-action) {
       padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
     }
 
