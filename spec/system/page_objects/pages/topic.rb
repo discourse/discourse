@@ -399,7 +399,7 @@ module PageObjects
       end
 
       def move_to_public_modal
-        find(".d-modal.convert-to-public-topic")
+        find(".modal.convert-to-public-topic")
       end
 
       def has_no_flag_button?

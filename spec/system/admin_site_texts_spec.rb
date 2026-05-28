@@ -123,7 +123,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.click_replace_text_button
 
-    expect(page.all(".d-modal label span").map(&:text)).to eq(["Uncategorized"])
+    expect(page.all(".modal label span").map(&:text)).to eq(["Uncategorized"])
   end
 
   it "can load more results" do
