@@ -129,6 +129,11 @@ export default class ComposerEditor extends Component {
     });
   }
 
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.uppyComposerUpload.teardown();
+  }
+
   get topic() {
     return this.composer.get("model.topic");
   }
@@ -292,13 +297,6 @@ export default class ComposerEditor extends Component {
   _composerEditorInitFormTemplate(formEl) {
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(formEl);
-    }
-  }
-
-  @action
-  _composerEditorDestroyFormTemplate() {
-    if (this.composer.allowUpload) {
-      this.uppyComposerUpload.teardown();
     }
   }
 
@@ -1087,7 +1085,6 @@ export default class ComposerEditor extends Component {
           <form
             id="form-template-form"
             {{didInsert this._composerEditorInitFormTemplate}}
-            {{willDestroy this._composerEditorDestroyFormTemplate}}
           >
             <Wrapper
               @id={{this.selectedFormTemplateId}}
