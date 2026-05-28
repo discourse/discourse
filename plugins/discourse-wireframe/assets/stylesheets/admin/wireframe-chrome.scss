@@ -43,20 +43,14 @@
 
   /* Offset to slide an in-flow badge from its natural position
      (inside the chrome's padding) onto the chrome's outline corner.
-     Used by outlet badges so adjusting padding / border in one place re-aligns every badge. */
+     Used by outlet badges so adjusting padding / outline in one place
+     re-aligns every badge. */
   --wireframe-badge-offset: calc(
     -1 *
       (
         var(--wireframe-container-padding) +
           var(--wireframe-container-border-width)
       )
-  );
-
-  /* Offset to slide an in-flow badge from its natural position
-   (inside the chrome's padding) onto the chrome's outline corner.
-   Used by blocks handlers so adjusting padding / border in one place re-aligns every badge. */
-  --wireframe-handler-offset: calc(
-    -1 * var(--wireframe-container-border-width)
   );
 }
 
@@ -85,18 +79,20 @@
 }
 
 body.wireframe-active {
-  /* Block boundaries — dotted orange, mirrors .block-debug-info */
+  /* Block boundaries — drawn via `outline` so they take no layout space.
+     Idle blocks render with no chrome at all (no border, no background
+     tint, no badge); the outline + tint + handle badge only appear when
+     the block is hovered or selected. `outline` (vs `border`) avoids
+     the layout shift that would otherwise happen when the ring toggles
+     on / off. */
+
   .wireframe-block-chrome {
     position: relative;
     margin: var(--wireframe-container-margin);
-    border: var(--wireframe-container-border-width) dotted
-      var(--wireframe-block-color);
-    background: rgb(217 119 6 / var(--wireframe-bg-opacity));
     padding: var(--wireframe-container-padding);
-
-    &.--container {
-      /* containers stay dotted — same treatment as leaves */
-    }
+    transition:
+      outline-color 80ms ease-out,
+      background-color 80ms ease-out;
 
     /* Empty container chrome needs a baseline height so the inside drop
        zone has somewhere to live; block-level layouts collapse to zero
@@ -107,17 +103,38 @@ body.wireframe-active {
       min-height: 4rem;
     }
 
-    &.--selected {
-      border-style: solid;
-      border-color: var(--wireframe-block-hover-color);
+    /* Hover — dotted lighter-orange outline + subtle tint. Scoped to the
+       innermost hovered chrome: `:has()` suppresses every ancestor that
+       contains a hovered chrome or slot wrapper, so only one block reads
+       as "under the cursor" at a time even in deeply nested layouts. The
+       leading `:not()` skips chromes that already have a state-specific
+       visual treatment (selection, ghost preview, unfilled slot, error,
+       overlap) — those rules paint their own outline that hover shouldn't
+       repaint. `.--selected` is in there so the selected style wins when
+       you hover the currently-selected block. */
+
+    &:not(.--selected, .--ghost, .--slot, .--error, .--overlapping):hover:not(
+        :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
+      ) {
+      outline: var(--wireframe-container-border-width) dotted
+        var(--wireframe-block-color);
+      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
     }
 
-    /* When the chrome sits inside a `wf:slot` (grid cell), zero
-       out the margin and the inner padding so the chrome's border
-       lands exactly on the cell's edges. Without this, the chrome
-       reads as 2px smaller than the empty cell placeholders and the
-       grid looks misaligned. The wrapper's before/after drop zones
-       are skipped at the template level for the same reason. */
+    /* Selected — solid darker-orange outline (visibly distinct from the
+       hover treatment) + the same tint so the selected block stays lit
+       even when the cursor leaves it. */
+
+    &.--selected {
+      outline: var(--wireframe-container-border-width) solid
+        var(--wireframe-block-hover-color);
+      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+    }
+
+    /* When the chrome sits inside a `wf:slot` (grid cell), zero out the
+       margin and the inner padding so the chrome's outline lands exactly
+       on the cell's edges. The wrapper's before/after drop zones are
+       skipped at the template level for the same reason. */
 
     &.--in-grid-slot {
       margin: 0;
@@ -127,18 +144,14 @@ body.wireframe-active {
     /* Free-grid slot whose cell rectangle overlaps a sibling slot's.
        Free-grid CSS allows overlap (sometimes intentional — layered
        designs), but silent overlap looks like a bug. Loud styling:
-       solid danger border + danger-tinted background + corner badge
-       (see `.wireframe-block-chrome__overlap-badge` below). */
+       danger-colored outline + box-shadow ring (total 2px of red) +
+       danger-tinted background + corner badge. Always on, regardless
+       of hover / selection — it's a warning, not an interaction state. */
 
     &.--overlapping {
-      border-color: var(--danger);
-      border-style: solid;
-      background: rgb(220 53 69 / 0.18);
+      outline: var(--wireframe-container-border-width) solid var(--danger);
       box-shadow: 0 0 0 1px var(--danger);
-
-      &.--selected {
-        border-color: var(--danger);
-      }
+      background: rgb(220 53 69 / 0.18);
     }
 
     /* The chrome wrapper itself is always clickable so its selection
@@ -207,22 +220,27 @@ body.wireframe-active {
   }
 
   /* Block handle (corner badge) — also the drag source.
-     Floats over the chrome's top-left corner instead of taking flow
-     space, and only appears when the chrome is hovered or selected.
-     Two reasons: it doesn't push the wrapped block's content down
-     (centered placements read against the cell, not the area below
-     the handle), and the chrome stays visually quiet at idle so a
-     populated canvas isn't a wall of orange badges.
+     Renders as a "tab" sitting directly above the chrome's top-left
+     outline corner: absolutely positioned so it takes no layout space,
+     and anchored via `bottom: 100%` so its bottom edge meets the
+     chrome's outline top edge. Top corners rounded, bottom corners
+     square — so the bottom edge merges visually into the outline below
+     it. Default `opacity: 0`; fades in only when the chrome is hovered
+     (innermost only) or selected — see the reveal rule below. Keeping
+     the badge in the DOM at idle (rather than `display: none`) means
+     the drag-source modifier's registration stays stable across hover
+     transitions.
 
-     Outlet badges (`.wireframe-outlet-boundary__badge`) keep
-     their always-visible treatment so the outlet cascade stays
-     readable at every nesting level. */
+     Outlet badges (`.wireframe-outlet-boundary__badge`) keep their
+     always-visible treatment so the outlet cascade stays readable at
+     every nesting level. */
 
   .wireframe-block-handle {
-    position: relative;
-    top: var(--wireframe-handler-offset);
-    left: var(--wireframe-handler-offset);
+    position: absolute;
+    bottom: 100%;
+    left: calc(-1 * var(--wireframe-container-border-width));
     z-index: 1000;
+    opacity: 0;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -231,7 +249,7 @@ body.wireframe-active {
     color: white;
     font-size: var(--wireframe-badge-font-size);
     font-weight: bold;
-    border-radius: var(--wireframe-badge-radius);
+    border-radius: 4px 4px 0 0;
     text-shadow: var(--wireframe-shadow);
     cursor: grab;
     pointer-events: none;
@@ -270,11 +288,14 @@ body.wireframe-active {
     }
   }
 
-  /* Reveal the handle on hover or when the chrome's block is selected.
-     Scoped to the handle's own chrome so a hovered ancestor doesn't
-     also unhide every descendant's handle. */
+  /* Reveal the handle on hover (innermost chrome only — matches the
+     outline / tint gating above so a hovered nested block doesn't also
+     reveal every ancestor's badge) or when the block is selected. */
 
-  .wireframe-block-chrome:hover > .wireframe-block-handle,
+  .wireframe-block-chrome:hover:not(
+      :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
+    )
+    > .wireframe-block-handle,
   .wireframe-block-chrome.--selected > .wireframe-block-handle {
     opacity: 1;
     pointer-events: auto;
@@ -1734,56 +1755,46 @@ body.wireframe-active {
 
     /* The slot wrapper IS the cell — outline lives here, not on the
        inner block's chrome (which is content-height and would draw a
-       border smaller than the cell). Border treatment matches the
-       standard block chrome (dotted amber, solid on selection) so cells
-       in a free-grid read consistently with everything else.
-
-       Padding and border use the same variables as the other chrome
-       boxes so the cell insets and badge offset stay in sync. */
-    border: var(--wireframe-container-border-width) dotted
-      var(--wireframe-block-color);
+       smaller ring than the cell rectangle). Same gating as the block
+       chrome: idle slots are invisible, outline + tint appear only on
+       hover (innermost slot only) or when selected. `outline` (vs
+       `border`) keeps everything layout-shift-free. */
     border-radius: 3px;
-    background: rgb(217 119 6 / var(--wireframe-bg-opacity));
     padding: var(--wireframe-container-padding);
     pointer-events: auto;
     transition:
       grid-column 140ms ease-out,
       grid-row 140ms ease-out,
-      border-color 80ms ease-out,
-      background 80ms ease-out;
+      outline-color 80ms ease-out,
+      background-color 80ms ease-out;
+
+    &:not(.--selected, .--overlapping, .--out-of-bounds):hover:not(
+        :has(.wireframe-transparent-slot:hover)
+      ) {
+      outline: var(--wireframe-container-border-width) dotted
+        var(--wireframe-block-color);
+      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+    }
 
     &.--selected {
-      border-style: solid;
-      border-color: var(--wireframe-block-hover-color);
+      outline: var(--wireframe-container-border-width) solid
+        var(--wireframe-block-hover-color);
+      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
     }
 
-    &.--overlapping {
-      border-color: var(--danger);
-      border-style: solid;
-      background: rgb(220 53 69 / 0.18);
-      box-shadow: 0 0 0 1px var(--danger);
+    /* Overlapping / out-of-bounds — always-on danger treatment, wins over
+       hover and selected via source order. `--overlapping`: free-grid
+       cell rectangle intersects a sibling. `--out-of-bounds`: placement
+       references column / row lines past the parent grid's
+       `columns` × `rows` and CSS Grid pushed the cell into an implicit
+       track. The badge text ("Overlap" vs "Out of bounds") carries the
+       differentiation; outline treatment is identical. */
 
-      &.--selected {
-        border-color: var(--danger);
-      }
-    }
-
-    /* Out-of-bounds slot — placement references column / row lines
-       past the parent grid's `columns` × `rows`. CSS Grid pushes them
-       into auto-sized implicit tracks; the styling here flags them so
-       authors can match the inspector's warning banner to a specific
-       block. Same danger treatment as `--overlapping` — the badge
-       text ("Out of bounds" vs "Overlap") carries the differentiation. */
-
+    &.--overlapping,
     &.--out-of-bounds {
-      border-color: var(--danger);
-      border-style: solid;
-      background: rgb(220 53 69 / 0.18);
+      outline: var(--wireframe-container-border-width) solid var(--danger);
       box-shadow: 0 0 0 1px var(--danger);
-
-      &.--selected {
-        border-color: var(--danger);
-      }
+      background: rgb(220 53 69 / 0.18);
     }
 
     /* Per-zone drop feedback is no longer painted on the slot itself.
@@ -1808,15 +1819,15 @@ body.wireframe-active {
 
     /* The inner block's chrome inside a slot must NOT add its own
        outline decoration — the slot wrapper IS the visible cell outline.
-       Hide border / background / box-shadow and zero out the spacing so
+       Hide outline / background / box-shadow and zero out the spacing so
        the only visible chrome around the cell is the slot wrapper's,
        perfectly aligned to the grid cell. The inner chrome's badge
-       (`.wireframe-block-handle`) is in flow so it sits as the
-       first row at the top of the chrome, with the wrapped block's
-       content below it. */
+       (`.wireframe-block-handle`) is absolute-positioned and still
+       reveals on hover / selection — it lands near the slot's top-left
+       corner (inside the slot's padding). */
 
     .wireframe-block-chrome {
-      border: none !important;
+      outline: 0 !important;
       background: transparent !important;
       box-shadow: none !important;
       padding: 0 !important;
@@ -3477,39 +3488,42 @@ body.wireframe-active {
 }
 
 /* Block-chrome ghost modifier — the wrapper that surrounds WFGhostBlock
-   tones down its border and background, since the ghost component
-   already paints its own dashed silhouette. */
+   paints a dashed outline (the ghost component itself fills in the
+   silhouette). Always-on so the preview clone remains identifiable as
+   it travels with the drag. */
 
 body.wireframe-active {
   .wireframe-block-chrome.--ghost {
-    border-style: dashed;
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-color);
     background: transparent;
   }
 
   /* Error-tone chrome — applied alongside `.--ghost` for genuine
-     authoring mistakes (UNKNOWN_BLOCK). Repaints the chrome border in
-     danger so the surrounding wrapper matches the inner ghost's
-     red silhouette. */
+     authoring mistakes (UNKNOWN_BLOCK). Always-on danger outline so the
+     bad block can't be missed. */
 
   .wireframe-block-chrome.--error,
   .wireframe-block-chrome-wrapper.--error > .wireframe-block-chrome {
-    border-color: var(--danger);
+    outline: var(--wireframe-container-border-width) solid var(--danger);
+    background: rgb(220 53 69 / 0.06);
   }
 
-  /* Slot chrome — a `wf:slot` entry is a template-defined drop
-     target. Dashed amber border + tinted background mirror the grid
-     overlay's auto-empty cells so the two read as the same
-     affordance. The chrome's inner `__content` carries the
-     `EmptyCellPlaceholder` (+ button + palette picker), so this is
-     just the frame around it. */
+  /* Slot chrome — a `wf:slot` entry is a template-defined drop target.
+     Always visible (unlike normal blocks, an empty slot is meaningless
+     without an affordance pointing it out). Dashed amber outline + tinted
+     background mirror the grid overlay's auto-empty cells so the two read
+     as the same affordance. The chrome's inner `__content` carries the
+     `EmptyCellPlaceholder` (+ button + palette picker), so this is just
+     the frame around it. */
 
   .wireframe-block-chrome.--slot {
-    border-style: dashed;
-    border-color: var(--wireframe-block-outlet-color);
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-outlet-color);
     background: rgb(245 158 11 / 0.06);
 
     &:hover {
-      border-color: var(--wireframe-block-outlet-hover-color);
+      outline-color: var(--wireframe-block-outlet-hover-color);
       background: rgb(245 158 11 / 0.12);
     }
   }
