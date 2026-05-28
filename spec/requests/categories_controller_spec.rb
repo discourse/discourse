@@ -1332,6 +1332,10 @@ RSpec.describe CategoriesController do
               def self.enable_plugin
               end
 
+              def self.plugin_enabled?
+                false
+              end
+
               def self.category_matches?(category)
                 false
               end
