@@ -263,6 +263,11 @@ html.composer-open:not(.has-full-page-chat) {
       img.avatar {
         margin-right: 3px;
       }
+
+      .action-title {
+        display: flex;
+        gap: var(--space-1);
+      }
     }
 
     .composer-controls {

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
@@ -33,10 +34,60 @@ import { i18n } from "discourse-i18n";
 export default class ComposerActions extends Component {
   @service composer;
   @service composerActionState;
+  @service router;
+
+  @tracked replyTargetInViewport = false;
+  #observer = null;
 
   constructor() {
     super(...arguments);
     this.composerActionState.remember({ topic: this.topic, post: this.post });
+
+    this.router.on("routeDidChange", this.refreshReplyTargetObserver);
+    this.refreshReplyTargetObserver();
+
+    registerDestructor(this, () => {
+      this.router.off("routeDidChange", this.refreshReplyTargetObserver);
+      this.#disconnectReplyTargetObserver();
+    });
+  }
+
+  @action
+  refreshReplyTargetObserver() {
+    this.#disconnectReplyTargetObserver();
+
+    const postId = this.post?.id;
+    if (!postId || !this.isOnComposerTopic) {
+      this.replyTargetInViewport = false;
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const element = document.querySelector(
+        `article[data-post-id="${postId}"]`
+      );
+
+      if (!element) {
+        this.replyTargetInViewport = false;
+        return;
+      }
+
+      this.#observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          this.replyTargetInViewport = entry.isIntersecting;
+        }
+      });
+      this.#observer.observe(element);
+    });
+  }
+
+  #disconnectReplyTargetObserver() {
+    this.#observer?.disconnect();
+    this.#observer = null;
   }
 
   get action() {
@@ -196,6 +247,63 @@ export default class ComposerActions extends Component {
 
   get hasMenuContent() {
     return this.templateData.hasActions || this.hasToggles;
+  }
+
+  get replyTargetHref() {
+    if (this.action !== REPLY) {
+      return null;
+    }
+
+    const options = this.replyOptions;
+    if (this.post && options?.postLink) {
+      return options.postLink.href;
+    }
+    if (options?.topicLink) {
+      return options.topicLink.href;
+    }
+    return null;
+  }
+
+  get isOnComposerTopic() {
+    const composerTopicId = this.composerModel?.topic?.id;
+    if (!composerTopicId) {
+      return false;
+    }
+
+    let route = this.router.currentRoute;
+    while (route) {
+      if (route.name === "topic") {
+        return parseInt(route.params?.id, 10) === composerTopicId;
+      }
+      route = route.parent;
+    }
+    return false;
+  }
+
+  get isReplyTargetOnScreen() {
+    return this.replyTargetInViewport;
+  }
+
+  get showReplyTargetLink() {
+    if (!this.replyTargetHref) {
+      return false;
+    }
+
+    if (this.post) {
+      return !this.isReplyTargetOnScreen;
+    }
+
+    return !this.isOnComposerTopic;
+  }
+
+  get replyTargetTitle() {
+    if (this.post) {
+      return i18n("composer.composer_actions.reply_to_post.label", {
+        postUsername: this._postDisplayName(this.post),
+        postNumber: this.post.post_number,
+      });
+    }
+    return i18n("composer.composer_actions.reply_to_topic.label");
   }
 
   toggleProperty(property) {
@@ -359,6 +467,17 @@ export default class ComposerActions extends Component {
             </DDropdownMenu>
           </:content>
         </DMenu>
+
+        {{#if this.showReplyTargetLink}}
+          <a
+            class="composer-actions-reply-target-link btn btn-icon btn-flat no-text"
+            href={{this.replyTargetHref}}
+            title={{this.replyTargetTitle}}
+            aria-label={{this.replyTargetTitle}}
+          >
+            {{dIcon "up-right-from-square"}}
+          </a>
+        {{/if}}
       {{else if this.composer.showEditReason}}
         <span
           class="composer-actions-trigger composer-actions-trigger--static composer-actions-trigger--editing"
