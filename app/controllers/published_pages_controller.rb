@@ -53,14 +53,12 @@ class PublishedPagesController < ApplicationController
     apply_cache_headers!(pp)
 
     if publicly_cacheable?(pp)
-      # stale? sets ETag + Last-Modified on the response. Returns true
-      # when the client's conditional headers don't match (we must
-      # re-render) and false when they do (Rails has already set 304).
+      # stale? sets ETag on the response. Returns true when the
+      # client's conditional headers don't match (we must re-render)
+      # and false when they do (Rails has already set 304).
       validator = published_page_cache_validator(pp)
 
-      if stale?(etag: validator[:etag], last_modified: validator[:last_modified])
-        render layout: "publish"
-      end
+      render layout: "publish" if stale?(etag: validator[:etag])
     else
       render layout: "publish"
     end
@@ -124,26 +122,18 @@ class PublishedPagesController < ApplicationController
   def apply_cache_headers!(pp)
     if publicly_cacheable?(pp)
       response.headers["Cache-Control"] = "public, max-age=60, s-maxage=0, must-revalidate"
-      append_vary_header!("Accept", "Accept-Encoding")
+      append_vary_header!("Accept", "Accept-Encoding", "Cookie", "User-Agent")
     else
       response.headers["Cache-Control"] = "private, no-store"
     end
   end
 
   def published_page_cache_validator(pp)
-    theme_updated_at = Theme.maximum(:updated_at)
-    child_theme_updated_at = ChildTheme.maximum(:updated_at)
-    theme_field_updated_at = ThemeField.maximum(:updated_at)
-
     last_modified = [
       pp.updated_at,
       @topic.updated_at,
       @topic.first_post&.updated_at,
       @topic.user&.updated_at,
-      SiteSetting.maximum(:updated_at),
-      theme_updated_at,
-      child_theme_updated_at,
-      theme_field_updated_at,
     ].compact.max
 
     {
@@ -151,35 +141,29 @@ class PublishedPagesController < ApplicationController
         Digest::SHA1.hexdigest(
           [
             last_modified&.to_f,
-            published_page_layout_cache_version(
-              theme_updated_at: theme_updated_at,
-              child_theme_updated_at: child_theme_updated_at,
-              theme_field_updated_at: theme_field_updated_at,
-            ),
+            published_page_layout_cache_version,
+            published_page_variant_cache_version,
           ].compact.join("\n"),
         ),
-      last_modified: last_modified,
     }
   end
 
-  def published_page_layout_cache_version(
-    theme_updated_at:,
-    child_theme_updated_at:,
-    theme_field_updated_at:
-  )
+  def published_page_layout_cache_version
     [
       Discourse.git_version,
       MessageBus.last_id(Site::SITE_JSON_CHANNEL),
+      MessageBus.last_id("/file-change"),
       SiteSetting.title,
       SiteSetting.site_favicon_url,
       SiteSetting.site_apple_touch_icon_url,
       SiteSetting.google_site_verification_token,
       SiteSetting.logo&.id,
       SiteSetting.logo_small&.id,
-      theme_updated_at&.to_f,
-      child_theme_updated_at&.to_f,
-      theme_field_updated_at&.to_f,
     ]
+  end
+
+  def published_page_variant_cache_version
+    [theme_id, MobileDetection.mobile_device?(request.user_agent) ? :mobile : :desktop]
   end
 
   def append_vary_header!(*values)

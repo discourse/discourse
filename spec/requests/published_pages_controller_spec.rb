@@ -190,7 +190,7 @@ RSpec.describe PublishedPagesController do
           expect(response.headers["Cache-Control"]).to include("s-maxage=0")
           expect(response.headers["Cache-Control"]).to include("must-revalidate")
           expect(response.headers["Cache-Control"]).not_to include("stale-while-revalidate")
-          expect(response.headers["Vary"]).to eq("Accept, Accept-Encoding")
+          expect(response.headers["Vary"]).to eq("Accept, Accept-Encoding, Cookie, User-Agent")
           expect(response.headers["ETag"]).to be_present
         end
 
@@ -288,6 +288,42 @@ RSpec.describe PublishedPagesController do
           expect(response.status).to eq(200)
           expect(response.headers["ETag"]).not_to eq(first_etag)
           expect(response.body).to include("Renamed public site")
+        end
+
+        it "returns a fresh 200 when the request switches to a mobile variant" do
+          get public_page.path
+          first_etag = response.headers["ETag"]
+
+          get public_page.path,
+              headers: {
+                "HTTP_USER_AGENT" =>
+                  "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) Mobile/13D15",
+                "If-None-Match" => first_etag,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.headers["ETag"]).not_to eq(first_etag)
+        end
+
+        it "returns a fresh 200 when a theme cookie changes the rendered theme" do
+          theme = Fabricate(:theme, user_selectable: true)
+          theme.set_field(
+            target: :common,
+            name: "header",
+            value: "cookie theme header",
+            type: :html,
+          )
+          theme.save!
+
+          get public_page.path
+          first_etag = response.headers["ETag"]
+
+          cookies["theme_ids"] = "#{theme.id}|0"
+          get public_page.path, headers: { "If-None-Match" => first_etag }
+
+          expect(response.status).to eq(200)
+          expect(response.headers["ETag"]).not_to eq(first_etag)
+          expect(response.body).to include("cookie theme header")
         end
       end
     end
