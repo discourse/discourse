@@ -28,25 +28,27 @@ end
 #
 # Table name: browser_pageview_events
 #
-#  id                  :bigint           not null, primary key
-#  asn                 :integer
-#  country_code        :string(2)
-#  ip_address          :inet             not null
-#  normalized_referrer :string(2000)
-#  referrer            :string(2000)
-#  score               :integer
-#  url                 :string(2000)     not null
-#  user_agent          :string(1000)     not null
-#  created_at          :datetime         not null
-#  session_id          :string(32)       not null
-#  topic_id            :integer
-#  user_id             :integer
+#  id                          :bigint           not null, primary key
+#  asn                         :integer
+#  country_code                :string(2)
+#  ip_address                  :inet             not null
+#  normalized_referrer         :string(2000)
+#  normalized_referrer_version :integer
+#  referrer                    :string(2000)
+#  score                       :integer
+#  url                         :string(2000)     not null
+#  user_agent                  :string(1000)     not null
+#  created_at                  :datetime         not null
+#  session_id                  :string(32)       not null
+#  topic_id                    :integer
+#  user_id                     :integer
 #
 # Indexes
 #
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
+#  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)

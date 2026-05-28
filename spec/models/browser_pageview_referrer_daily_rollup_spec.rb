@@ -82,4 +82,58 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
       expect(described_class.sum(:count)).to eq(1)
     end
   end
+
+  describe ".recompute" do
+    it "produces a rollup row only for referrers that have events on the date" do
+      date = 2.days.ago.to_date
+      described_class.create!(date:, normalized_referrer: nil, count: 2, logged_in_count: 0)
+      2.times do
+        Fabricate(:browser_pageview_event, normalized_referrer: "google.com", created_at: date)
+      end
+
+      described_class.recompute([date])
+
+      expect(described_class.where(date:).pluck(:normalized_referrer, :count)).to contain_exactly(
+        ["google.com", 2],
+      )
+    end
+
+    it "produces a NULL rollup row for pageviews with no referrer" do
+      date = 2.days.ago.to_date
+      Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: date)
+      Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com", created_at: date)
+
+      described_class.recompute([date])
+
+      expect(described_class.where(date:).pluck(:normalized_referrer, :count)).to contain_exactly(
+        [nil, 1],
+        ["reddit.com", 1],
+      )
+    end
+
+    it "only recomputes the given dates" do
+      recomputed_date = 2.days.ago.to_date
+      other_date = 5.days.ago.to_date
+      described_class.create!(
+        date: other_date,
+        normalized_referrer: "stale.example.com",
+        count: 9,
+        logged_in_count: 0,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        normalized_referrer: "google.com",
+        created_at: recomputed_date,
+      )
+
+      described_class.recompute([recomputed_date])
+
+      expect(described_class.where(date: other_date).pluck(:normalized_referrer)).to eq(
+        ["stale.example.com"],
+      )
+      expect(described_class.where(date: recomputed_date).pluck(:normalized_referrer)).to eq(
+        ["google.com"],
+      )
+    end
+  end
 end

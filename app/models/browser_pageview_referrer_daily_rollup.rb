@@ -18,6 +18,20 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
             logged_in_count = EXCLUDED.logged_in_count
       SQL
   end
+
+  def self.recompute(dates)
+    dates = Array(dates).map(&:to_date).uniq
+    return if dates.empty?
+
+    transaction do
+      DB.exec(<<~SQL, dates: dates)
+        DELETE FROM browser_pageview_referrer_daily_rollups
+        WHERE date IN (:dates)
+      SQL
+
+      dates.each { |date| aggregate(start_date: date, end_date: date) }
+    end
+  end
 end
 
 # == Schema Information
