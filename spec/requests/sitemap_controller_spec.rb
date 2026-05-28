@@ -87,6 +87,28 @@ RSpec.describe SitemapController do
 
       expect(Time.zone.parse(sitemap_index_entries.fetch(loc))).to be > previous_lastmod
     end
+
+    it "does not update the published pages sitemap lastmod for private page changes" do
+      SiteSetting.enable_page_publishing = true
+      public_page = Fabricate(:published_page, public: true, slug: "public-post")
+      private_page = Fabricate(:published_page, public: false, slug: "private-post")
+      public_page.update!(updated_at: 2.hours.ago)
+      private_page.update!(updated_at: 1.hour.from_now)
+      Sitemap.regenerate_sitemaps
+
+      loc = "#{Discourse.base_url}/sitemap_#{Sitemap::PUBLISHED_PAGES_SITEMAP_NAME}.xml"
+
+      expected_lastmod = [
+        public_page.reload.updated_at,
+        public_page.topic.updated_at,
+        public_page.topic.category.updated_at,
+      ].max
+
+      lastmod = Time.zone.parse(sitemap_index_entries.fetch(loc))
+
+      expect(lastmod.to_i).to eq(expected_lastmod.to_i)
+      expect(lastmod).to be < private_page.updated_at
+    end
   end
 
   describe "#page" do

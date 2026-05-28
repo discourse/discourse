@@ -88,9 +88,10 @@ class Sitemap < ActiveRecord::Base
 
   def last_posted_topic
     if name == PUBLISHED_PAGES_SITEMAP_NAME
-      PublishedPage.joins(topic: :category).maximum(
-        "GREATEST(published_pages.updated_at, topics.updated_at, categories.updated_at)",
-      )
+      PublishedPage
+        .where(public: true)
+        .joins(topic: :category)
+        .maximum("GREATEST(published_pages.updated_at, topics.updated_at, categories.updated_at)")
     else
       sitemap_topics.maximum(:updated_at)
     end
