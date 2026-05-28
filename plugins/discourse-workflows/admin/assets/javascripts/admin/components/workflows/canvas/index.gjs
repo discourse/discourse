@@ -91,11 +91,11 @@ export default class WorkflowCanvas extends Component {
   }
 
   get showUnpublishedChangesMessage() {
-    return (
-      this.showPublishButton &&
-      this.workflowPublished &&
-      this.hasUnpublishedChanges
-    );
+    return this.showPublishButton;
+  }
+
+  get showDiscardChangesButton() {
+    return this.workflowPublished && this.hasUnpublishedChanges;
   }
 
   @action
@@ -832,13 +832,15 @@ export default class WorkflowCanvas extends Component {
                   class="btn-primary btn-small workflows-canvas__publish-status-btn"
                 />
 
-                <DButton
-                  @action={{this.discardWorkflow}}
-                  @translatedLabel={{i18n
-                    "discourse_workflows.discard_changes"
-                  }}
-                  class="btn-default btn-small workflows-canvas__publish-status-btn"
-                />
+                {{#if this.showDiscardChangesButton}}
+                  <DButton
+                    @action={{this.discardWorkflow}}
+                    @translatedLabel={{i18n
+                      "discourse_workflows.discard_changes"
+                    }}
+                    class="btn-default btn-small workflows-canvas__publish-status-btn"
+                  />
+                {{/if}}
               </span>
             </div>
           {{/if}}

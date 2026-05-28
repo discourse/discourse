@@ -42,7 +42,10 @@ function setRouter(editor, assert) {
 
 module("Unit | Component | workflows editor", function () {
   test("beforeunload warns when the workflow has an unpublished draft", function (assert) {
-    const editor = buildEditor({ hasUnpublishedChanges: true });
+    const editor = buildEditor({
+      activeVersionId: "published-version",
+      hasUnpublishedChanges: true,
+    });
     const event = {
       returnValue: null,
       preventDefault() {
@@ -62,6 +65,20 @@ module("Unit | Component | workflows editor", function () {
 
   test("beforeunload does not warn when the workflow has no unpublished draft", function (assert) {
     const editor = buildEditor({ hasUnpublishedChanges: false });
+    const event = {
+      preventDefault() {
+        assert.true(false, "preventDefault should not be called");
+      },
+    };
+
+    assert.strictEqual(editor.handleBeforeUnload(event), undefined);
+  });
+
+  test("beforeunload does not warn for workflows that were never published", function (assert) {
+    const editor = buildEditor({
+      activeVersionId: null,
+      hasUnpublishedChanges: true,
+    });
     const event = {
       preventDefault() {
         assert.true(false, "preventDefault should not be called");
@@ -128,7 +145,13 @@ module("Unit | Component | workflows editor", function () {
         buttons[0].action();
       },
     };
-    const editor = buildEditor({ hasUnpublishedChanges: true }, dialog);
+    const editor = buildEditor(
+      {
+        activeVersionId: "published-version",
+        hasUnpublishedChanges: true,
+      },
+      dialog
+    );
 
     editor.confirmUnpublishedDraftTransition(transition);
 
@@ -171,7 +194,13 @@ module("Unit | Component | workflows editor", function () {
         return true;
       },
     };
-    const editor = buildEditor({ hasUnpublishedChanges: true }, dialog);
+    const editor = buildEditor(
+      {
+        activeVersionId: "published-version",
+        hasUnpublishedChanges: true,
+      },
+      dialog
+    );
     editor.discardWorkflowDraft = async () => assert.step("discarded");
 
     editor.confirmUnpublishedDraftTransition(transition);

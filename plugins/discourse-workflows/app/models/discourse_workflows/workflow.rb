@@ -179,7 +179,7 @@ module DiscourseWorkflows
     end
 
     def has_unpublished_changes?
-      version_id != active_version_id
+      published? && version_id != active_version_id
     end
 
     def versioned_payload

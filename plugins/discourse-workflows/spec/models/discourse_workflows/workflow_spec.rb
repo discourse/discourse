@@ -13,6 +13,27 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
   end
 
+  describe "#has_unpublished_changes?" do
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
+
+    it "is false for workflows that have never been published" do
+      expect(workflow).not_to have_unpublished_changes
+    end
+
+    it "is false for published workflows without a draft" do
+      workflow.update!(active_version_id: workflow.version_id)
+
+      expect(workflow).not_to have_unpublished_changes
+    end
+
+    it "is true for published workflows with draft changes" do
+      workflow.update!(active_version_id: workflow.version_id)
+      workflow.snapshot!(user: user)
+
+      expect(workflow).to have_unpublished_changes
+    end
+  end
+
   describe "#node_static_data" do
     fab!(:workflow) do
       Fabricate(

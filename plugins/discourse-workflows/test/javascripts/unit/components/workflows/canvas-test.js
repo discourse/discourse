@@ -87,6 +87,10 @@ module("Unit | Component | workflows canvas", function (hooks) {
       canvas.showUnpublishedChangesMessage,
       "unpublished changes message is hidden after publish with no draft changes"
     );
+    assert.false(
+      canvas.showDiscardChangesButton,
+      "discard changes is hidden after publish with no draft changes"
+    );
 
     workflow.hasUnpublishedChanges = true;
 
@@ -105,6 +109,10 @@ module("Unit | Component | workflows canvas", function (hooks) {
     assert.true(
       canvas.showUnpublishedChangesMessage,
       "later draft edits show the unpublished changes message"
+    );
+    assert.true(
+      canvas.showDiscardChangesButton,
+      "later draft edits show discard changes"
     );
   });
 
@@ -139,12 +147,16 @@ module("Unit | Component | workflows canvas", function (hooks) {
       "workflow is no longer published after unpublish"
     );
     assert.false(
-      canvas.showUnpublishedChangesMessage,
-      "unpublished changes message is hidden for fully unpublished workflows"
+      canvas.showToolbarPublishButton,
+      "toolbar publish remains hidden for fully unpublished workflows"
     );
     assert.true(
-      canvas.showToolbarPublishButton,
-      "toolbar publish remains available for fully unpublished workflows"
+      canvas.showUnpublishedChangesMessage,
+      "publish status remains visible for fully unpublished workflows"
+    );
+    assert.false(
+      canvas.showDiscardChangesButton,
+      "discard changes is hidden for fully unpublished workflows"
     );
   });
 
@@ -223,6 +235,10 @@ module("Unit | Component | workflows canvas", function (hooks) {
       canvas.showUnpublishedChangesMessage,
       "unpublished changes message is hidden after discard"
     );
+    assert.false(
+      canvas.showDiscardChangesButton,
+      "discard changes is hidden after discard"
+    );
   });
 
   test("publish is hidden until the workflow has a node", async function (assert) {
@@ -261,9 +277,17 @@ module("Unit | Component | workflows canvas", function (hooks) {
 
     canvas.args.nodes.push({ clientId: "node-1", type: "trigger:manual" });
 
-    assert.true(
+    assert.false(
       canvas.showToolbarPublishButton,
-      "toolbar publish is shown once a node exists"
+      "toolbar publish stays hidden once a node exists"
+    );
+    assert.true(
+      canvas.showUnpublishedChangesMessage,
+      "publish status is shown once a node exists"
+    );
+    assert.false(
+      canvas.showDiscardChangesButton,
+      "discard changes is hidden for an unpublished workflow"
     );
   });
 });

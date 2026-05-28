@@ -110,7 +110,8 @@ export default class WorkflowsEditor extends Component {
 
   get hasUnpublishedDraft() {
     return Boolean(
-      this.args.workflow?.hasUnpublishedChanges ||
+      (this.args.workflow?.activeVersionId &&
+        this.args.workflow?.hasUnpublishedChanges) ||
       this.saving ||
       this.pendingSave
     );
