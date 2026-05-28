@@ -419,7 +419,9 @@ class Middleware::RequestTracker
 
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
-      unless Discourse.pg_readonly_mode?
+      if Discourse.pg_readonly_mode?
+        self.class.track_browser_pageview(data) if SiteSetting.persist_browser_pageview_events
+      else
         self.class.log_request(data)
         self.class.track_browser_pageview(data)
         instrument_browser_page_view(env, request, data)

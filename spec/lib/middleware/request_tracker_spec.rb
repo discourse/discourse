@@ -1022,7 +1022,7 @@ RSpec.describe Middleware::RequestTracker do
           expect(events).to be_empty
         end
 
-        it "skips browser pageviews while PostgreSQL is readonly" do
+        it "queues browser pageviews while PostgreSQL is readonly" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
 
@@ -1038,14 +1038,12 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          expect {
-            Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] }).log_later(
-              data,
-              {},
-              nil,
-            )
-          }.not_to change { BrowserPageviewEvent.count }
+          expect { log_browser_pageview(data) }.not_to change { BrowserPageviewEvent.count }
+          expect(BrowserPageviewEvent.queued_count).to eq(1)
 
+          Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+
+          expect { flush_browser_pageview_events }.to change { BrowserPageviewEvent.count }.by(1)
           expect(BrowserPageviewEvent.queued_count).to eq(0)
         ensure
           Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
