@@ -35,7 +35,7 @@ require "discourse_webauthn"
 #
 # @params will contain authenticatorData and signature which you can use as is.
 #
-# The origin param needs to be http://localhost:4200 (that's the port tests run on)
+# The origin param needs to be http://localhost:3000 (that's the port tests run on)
 
 RSpec.describe DiscourseWebauthn::AuthenticationService do
   subject(:service) { described_class.new(current_user, params, **options) }
@@ -62,7 +62,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   let(:challenge) { "81d4acfbd69eafa8f02bc2ecbec5267be8c9b28c1e0ba306d52b79f0f13d" }
   let(:client_data_challenge) { Base64.strict_encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.get" }
-  let(:client_data_origin) { "http://localhost:4200" }
+  let(:client_data_origin) { "http://localhost:3000" }
 
   ##
   # IMPORTANT: For the SHA256 hash to match the same one as was used to generate
@@ -100,7 +100,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     # we have to stub here because the test public key was created
     # using this specific challenge and this origin
     DiscourseWebauthn.stubs(:challenge).returns(challenge)
-    DiscourseWebauthn.stubs(:origin).returns("http://localhost:4200")
+    DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
   end
 
   it "updates last_used when the security key and params are valid" do
