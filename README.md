@@ -38,7 +38,9 @@ Here are just a few of the incredible communities using Discourse:
 
 To get your environment set up, follow one of the setup guides:
 
-- [Docker / Dev Container](https://meta.discourse.org/t/336366)
+- Docker
+    - [Dev Container in VS Code](https://meta.discourse.org/t/336366) (recommended)
+    - [CLI](https://meta.discourse.org/t/102009)
 - [macOS](https://meta.discourse.org/t/15772)
 - [Ubuntu/Debian](https://meta.discourse.org/t/14727)
 - [Windows](https://meta.discourse.org/t/75149)
