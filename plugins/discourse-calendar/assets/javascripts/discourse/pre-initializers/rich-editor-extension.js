@@ -3,7 +3,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import EventNodeView from "../components/event-node-view";
 import { buildEventPreview } from "../lib/event-preview";
-import { defaultReminderFor, reminderToBBCode } from "../lib/raw-event-helper";
+import { buildEventSkeleton } from "../lib/raw-event-helper";
 
 export const EVENT_ATTRIBUTES = {
   name: { default: null },
@@ -106,28 +106,10 @@ const extension = {
   inputRules: ({ utils: { convertFromMarkdown }, getContext }) => ({
     match: /^\[event([^\]]*)]$/,
     handler: (state, match, start, end) => {
-      const currentUser = getContext().currentUser;
-      const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
-
       const userInput = match[1].trim();
-      let eventMarkdown;
-
-      if (userInput) {
-        eventMarkdown = `[event ${userInput}]\n[/event]`;
-      } else {
-        const now = moment
-          .tz(moment(), timezone)
-          .startOf("hour")
-          .add(1, "hour");
-        const endsAt = now.clone().add(1, "hour");
-        const reminder = defaultReminderFor({
-          startsAt: now,
-          endsAt,
-          allDay: false,
-        });
-        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" end="${endsAt.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}" reminders="${reminderToBBCode(reminder)}"`;
-        eventMarkdown = `[event ${defaults}]\n[/event]`;
-      }
+      const eventMarkdown = userInput
+        ? `[event ${userInput}]\n[/event]`
+        : buildEventSkeleton(getContext().currentUser);
 
       const doc = convertFromMarkdown(eventMarkdown);
       return doc.content.firstChild

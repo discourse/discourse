@@ -128,6 +128,7 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
+import { registerComposerAction } from "discourse/select-kit/components/composer-actions";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -907,6 +908,33 @@ class _PluginApi {
     );
 
     this.addComposerToolbarPopupMenuOption(opts);
+  }
+
+  /**
+   * Register a custom item in the composer-actions dropdown (the menu next
+   * to the composer title that switches between Reply, Create Topic, etc.).
+   *
+   * @param {Object} opts
+   * @param {string} opts.id - Unique identifier for the item.
+   * @param {string} opts.label - I18n key for the item's display name.
+   * @param {string} [opts.description] - Optional I18n key for the item's description text.
+   * @param {string} [opts.icon] - Optional icon name.
+   * @param {Function} [opts.condition] - `(composerActionsComponent) => boolean`. Item is shown when this returns truthy, or when omitted.
+   * @param {Function} opts.action - `(composerModel, composerActionsComponent) => void`. Called when the user picks the item.
+   *
+   * @example
+   * api.addComposerAction({
+   *   id: "create_event",
+   *   label: "discourse_post_event.composer_actions.create_event.label",
+   *   description: "discourse_post_event.composer_actions.create_event.desc",
+   *   icon: "calendar-days",
+   *   condition: (component) =>
+   *     component.composerModel?.category?.isType("events"),
+   *   action: (composerModel) => composerModel.set("creatingEvent", true),
+   * });
+   */
+  addComposerAction(opts) {
+    registerComposerAction(opts);
   }
 
   /**
@@ -2435,6 +2463,12 @@ class _PluginApi {
    * Support for customizing the composer text. By providing a callback. Callbacks should
    * return `null` or `undefined` if you don't need a customization based on the current state.
    *
+   * Supported callback keys: `actionTitle`, `saveLabel`, `saveIcon`,
+   * `titlePlaceholder`. Each callback receives the composer model and
+   * returns an i18n key (or a translated string for `actionTitle`, or an
+   * icon name for `saveIcon`). Return `null` or `undefined` to fall
+   * through to the default.
+   *
    * ```
    * api.customizeComposerText({
    *   actionTitle(model) {
@@ -2445,6 +2479,12 @@ class _PluginApi {
    *
    *   saveLabel(model) {
    *     return "my.custom_save_label_key";
+   *   },
+   *
+   *   titlePlaceholder(model) {
+   *     if (model.creatingEvent) {
+   *       return "my.event_title_placeholder";
+   *     }
    *   }
    * })
    *

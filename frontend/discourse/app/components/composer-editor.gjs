@@ -960,6 +960,11 @@ export default class ComposerEditor extends Component {
   }
 
   @action
+  replyChanged() {
+    this.appEvents.trigger("composer:reply-changed", this.composer.model);
+  }
+
+  @action
   previewUpdated(preview, helper) {
     this._renderMentions(preview);
     this._renderHashtags(preview);
@@ -1141,6 +1146,7 @@ export default class ComposerEditor extends Component {
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}
+        @change={{this.replyChanged}}
         @placeholder={{this.replyPlaceholder}}
         @previewUpdated={{this.previewUpdated}}
         @markdownOptions={{this.markdownOptions}}
