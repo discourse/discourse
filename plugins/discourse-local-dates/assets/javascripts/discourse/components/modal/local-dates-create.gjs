@@ -418,7 +418,7 @@ export default class LocalDatesCreate extends Component {
     <DModal
       @title={{i18n "discourse_local_dates.title"}}
       @closeModal={{@closeModal}}
-      class="discourse-local-dates-create-modal -large"
+      class="discourse-local-dates-create-modal --large"
     >
       <:body>
         <div class="form">
