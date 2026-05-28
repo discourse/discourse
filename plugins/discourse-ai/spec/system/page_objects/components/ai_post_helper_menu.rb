@@ -29,7 +29,11 @@ module PageObjects
 
       def has_suggestion_value?(value)
         # Bumped wait because of: MessageBus, typing animation, text cooking.
-        page.has_css?("#{SUGGESTION_SELECTOR}__text:not(.streaming)", text: value, wait: 10)
+        page.has_css?(
+          "#{SUGGESTION_SELECTOR}__text:not(.streaming)",
+          text: value,
+          wait: Capybara.default_max_wait_time * 2,
+        )
       end
 
       def suggestion_value
