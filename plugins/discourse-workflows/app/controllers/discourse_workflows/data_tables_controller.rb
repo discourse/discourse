@@ -6,7 +6,7 @@ module DiscourseWorkflows
 
     def index
       DiscourseWorkflows::DataTable::List.call(service_params) do |result|
-        on_success do |data_tables:, total_rows:, table_sizes: {}, load_more_url: nil|
+        on_success do |data_tables:, total_rows:, table_sizes: {}, load_more_url:|
           render json: {
                    data_tables:
                      serialize_data(

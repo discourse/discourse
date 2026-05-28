@@ -35,7 +35,7 @@ module DiscourseWorkflows
     model :workflows, optional: true
     model :has_more, :compute_has_more, optional: true
     model :total_rows, optional: true
-    only_if(:has_more) { model :load_more_url, :build_load_more_url, optional: true }
+    model :load_more_url, :build_load_more_url, optional: true
 
     private
 
@@ -81,7 +81,7 @@ module DiscourseWorkflows
     end
 
     def build_load_more_url(params:, workflows:)
-      return if workflows.blank?
+      return if !has_more || workflows.blank?
 
       query = {
         cursor: workflows.last.id,

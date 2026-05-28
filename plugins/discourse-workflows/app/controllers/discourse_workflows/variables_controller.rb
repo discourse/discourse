@@ -6,7 +6,7 @@ module DiscourseWorkflows
 
     def index
       DiscourseWorkflows::Variable::List.call(service_params) do |result|
-        on_success do |variables:, total_rows:, load_more_url: nil|
+        on_success do |variables:, total_rows:, load_more_url:|
           render json: {
                    variables: serialize_data(variables, DiscourseWorkflows::VariableSerializer),
                    meta: { total_rows: total_rows, load_more_url: load_more_url }.compact,
