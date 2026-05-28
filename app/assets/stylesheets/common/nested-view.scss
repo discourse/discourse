@@ -103,6 +103,25 @@
     }
   }
 
+  &__op > &__topic-map {
+    margin: 0.75em 0 0;
+    padding: 0.75em 0 0;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  #topic-footer-buttons.nested-view__topic-actions {
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 0.5em;
+    max-width: none;
+    margin-bottom: 0.75em;
+
+    .topic-footer-main-buttons {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+
   &__controls {
     display: flex;
     align-items: center;
@@ -114,7 +133,7 @@
   &:not(.nested-context-view) > &__controls {
     position: sticky;
     top: var(--header-offset, 0);
-    z-index: z("header") - 3;
+    z-index: z("timeline");
     padding: 0.25em 0;
     background: var(--secondary);
     border-bottom: 1px solid var(--primary-low);

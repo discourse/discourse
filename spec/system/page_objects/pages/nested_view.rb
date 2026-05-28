@@ -224,11 +224,31 @@ module PageObjects
       end
 
       def has_topic_map?
-        has_css?(".nested-view__topic-map .topic-map__contents")
+        has_css?(".nested-view__op > .nested-view__topic-map .topic-map__contents")
       end
 
       def has_no_top_replies_button?
-        has_no_css?(".nested-view__topic-map .top-replies")
+        has_no_css?(".nested-view__op > .nested-view__topic-map .top-replies")
+      end
+
+      def has_topic_actions_above_controls?
+        has_css?(".nested-view__topic-actions + .nested-view__controls")
+      end
+
+      def has_share_topic_action?
+        has_css?(".nested-view__topic-actions #topic-footer-button-share-and-invite")
+      end
+
+      def has_bookmark_topic_action?
+        has_css?(".nested-view__topic-actions .bookmark-menu__trigger")
+      end
+
+      def has_flag_topic_action?
+        has_css?(".nested-view__topic-actions #topic-footer-button-flag")
+      end
+
+      def has_no_topic_action_reply_button?
+        has_no_css?(".nested-view__topic-actions .create")
       end
 
       def has_floating_reply_button?
