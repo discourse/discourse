@@ -10,7 +10,7 @@ module Jobs
       return if !SiteSetting.clean_up_browser_pageview_events
 
       BrowserPageviewEvent
-        .where("created_at < ?", RETENTION_PERIOD.ago)
+        .where("created_at < ?", RETENTION_PERIOD.ago.beginning_of_day)
         .in_batches(of: 10_000)
         .delete_all
     end
