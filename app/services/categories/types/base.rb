@@ -158,6 +158,13 @@ module Categories
           method(:enable_plugin).owner != Categories::Types::Base.singleton_class
         end
 
+        # Returns true if the plugin required by this category type is already enabled.
+        # This MUST be overridden by category types that define enable_plugin.
+        def plugin_enabled?
+          raise NotImplementedError if enables_plugin?
+          true
+        end
+
         # Configure any category-specific settings or custom fields that are
         # specific to this category type, including whatever setting or custom
         # field values make this category type unique.
@@ -303,9 +310,10 @@ module Categories
         end
 
         # Checks availability considering both the base available? check and
-        # guardian permissions. Types that enable plugins require admin access.
+        # guardian permissions. Types that enable plugins require admin access
+        # only when the plugin is not already enabled.
         def available_for?(guardian = nil)
-          return false if enables_plugin? && guardian && !guardian.is_admin?
+          return false if enables_plugin? && !plugin_enabled? && guardian && !guardian.is_admin?
           available?
         end
 
