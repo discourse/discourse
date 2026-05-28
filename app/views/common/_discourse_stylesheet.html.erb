@@ -13,7 +13,7 @@
   <%= discourse_stylesheet_link_tag(:wizard, supports_rtl: true) %>
 <%- end %>
 
-<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: true, desktop_view: true, request: request, rtl: false).each do |file| %>
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: true, desktop_view: true, include_admin: staff?, request: request, rtl: false).each do |file| %>
   <%=
     media = if file.end_with?("_mobile")
       "(width < 40rem)"
