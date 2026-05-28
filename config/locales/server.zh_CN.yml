@@ -2478,7 +2478,6 @@ zh_CN:
     nested_replies_default: "将嵌套回复设置为所有话题的默认视图。"
     nested_replies_default_sort: "嵌套回复视图的默认排序算法。"
     nested_replies_max_depth: "消息串回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此消息串”链接。"
-    nested_replies_toggle_mode_groups: "可以在嵌套视图与平面视图之间切换的群组。"
     nested_replies_backfill_batch_size: "每次定时运行要回填嵌套回复统计信息的话题数量。"
     nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将被重新设置为同级回复，而不是子回复。"
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"

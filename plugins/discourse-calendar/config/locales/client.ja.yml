@@ -385,7 +385,6 @@ ja:
       upcoming_events_list:
         title: "今後のイベント"
         empty: "今後のイベントはありません"
-        all_day: "終日"
         error: "イベントの取得に失敗しました"
         try_again: "やり直す"
         view_all: "すべて表示"

@@ -158,6 +158,15 @@ tr_TR:
       placeholder: tarih
       from_placeholder: "başlangıç tarihi"
       to_placeholder: "bugüne kadar"
+    date_range_picker:
+      apply: "Uygula"
+      start_date: "Başlangıç tarihi"
+      presets:
+        last_7_days: "Son 7 gün"
+        last_30_days: "Son 30 gün"
+        last_3_months: "Son 3 ay"
+        last_6_months: "Son 6 ay"
+        last_year: "Geçen yıl"
     languages:
       ar:
         name: Arapça
@@ -3675,8 +3684,6 @@ tr_TR:
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"
-      view_as_nested: "İç içe geçmiş olarak görüntüle"
-      view_as_flat: "Düz olarak görüntüle"
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"
@@ -6361,8 +6368,6 @@ tr_TR:
             enabled_heading: "Etkin mi"
             all_heading: "Tüm raporlar"
             apply: "Uygula"
-            move_up: "Yukarı taşı"
-            move_down: "Aşağı taşı"
         configure:
           button: "Yapılandır"
         site_traffic:

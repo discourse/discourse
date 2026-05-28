@@ -1450,7 +1450,7 @@ pl_PL:
         vs_prior: "Kontra wcześniej"
     posters_by_member_type:
       title: "Kto publikuje?"
-      description: "Wpisy utworzone w wybranym okresie, podzielone według typu użytkownika. „Nowi użytkownicy” zarejestrowali się w tym okresie, „Powracający” zarejestrowali się przed nim, a „Zespół” to administratorzy lub moderatorzy."
+      description: 'Wpisy utworzone w wybranym okresie, podzielone według typu użytkownika. „Nowi użytkownicy” zarejestrowali się w tym okresie, „Powracający” zarejestrowali się przed nim, a „Zespół” to administratorzy lub moderatorzy.'
       labels:
         member_type: "Typ członka"
         count: "Wpisy"
@@ -2164,7 +2164,7 @@ pl_PL:
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     google_oauth2_prompt: "Opcjonalna lista wartości łańcuchowych rozdzielanych spacjami, która określa, czy serwer autoryzacji monituje użytkownika o ponowne uwierzytelnienie i zgodę. Możliwe wartości można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Opcjonalna domena Google Apps Hosted, do której logowanie będzie ograniczone. Więcej informacji można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>"
-    google_oauth2_hd_groups: "Po uwierzytelnieniu pobierz grupy Google użytkowników w domenie hostowanej. Pobrane grupy Google mogą służyć do automatycznego przyznawania członkostwa w grupie Discourse (zobacz ustawienia grupy). Aby uzyskać więcej informacji, zobacz <a target=\"_blank\" href=\"https://meta.discourse.org/t/226850\">ten temat Meta</a>."
+    google_oauth2_hd_groups: 'Po uwierzytelnieniu pobierz grupy Google użytkowników w domenie hostowanej. Pobrane grupy Google mogą służyć do automatycznego przyznawania członkostwa w grupie Discourse (zobacz ustawienia grupy). Aby uzyskać więcej informacji, zobacz <a target="_blank" href="https://meta.discourse.org/t/226850">ten temat Meta</a>.'
     google_oauth2_hd_groups_service_account_admin_email: "Adres e-mail należący do konta administratora Google Workspace. Będzie używany z poświadczeniami konta usługi do pobierania informacji o grupie."
     google_oauth2_hd_groups_service_account_json: "Kluczowe informacje w formacie JSON dla konta usługi. Będą używane do pobierania informacji o grupie."
     google_oauth2_verbose_logging: "Rejestruj szczegółową diagnostykę związaną z Google OAuth2 w <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2194,7 +2194,7 @@ pl_PL:
     s3_configure_tombstone_policy: "Włącz automatyczne usuwanie plików przesłanych do reliktu. WAŻNE: jeśli ta opcja jest wyłączona, po usunięciu przesłanych plików nie zostanie odzyskane żadne miejsce."
     s3_disable_cleanup: "Zapobiegaj usuwaniu starych kopii zapasowych z S3, gdy jest ich więcej niż dozwolone maksimum."
     s3_use_acls: "AWS zaleca nieużywanie list kontroli dostępu w kontenerach S3; należy odznaczyć tę opcję tylko wtedy, gdy zamierzasz skonfigurować zasady uprawnień w skonfigurowanych kontenerach `s3_upload_bucket` i `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3. Więcej szczegółów można znaleźć w <a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">tym temacie Meta</a>."
+    enable_direct_s3_uploads: 'Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3. Więcej szczegółów można znaleźć w <a target="_blank" href="https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469">tym temacie Meta</a>.'
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
     backup_location: "Lokalizacja przechowywania kopii zapasowych. WAŻNE: S3 wymaga wprowadzenia prawidłowych poświadczeń S3 w ustawieniach <a href='%{base_path}/admin/site_settings/category/files'>Plików</a>. Po zmianie z Lokalnego na S3 należy uruchomić zadanie rake `s3:ensure_cors_rules`."
@@ -2760,7 +2760,6 @@ pl_PL:
     nested_replies_default: "Użyj zagnieżdżonych odpowiedzi jako domyślnego widoku dla wszystkich tematów."
     nested_replies_default_sort: "Domyślny algorytm sortowania dla widoku zagnieżdżonych odpowiedzi."
     nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
-    nested_replies_toggle_mode_groups: "Grupy, które mogą przełączać się między widokiem zagnieżdżonym i płaskim."
     nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."

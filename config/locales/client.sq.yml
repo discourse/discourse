@@ -144,6 +144,8 @@ sq:
       placeholder: data
       from_placeholder: "nga data"
       to_placeholder: "deri më"
+    date_range_picker:
+      apply: "Apliko"
     languages:
       en:
         name: Anglisht

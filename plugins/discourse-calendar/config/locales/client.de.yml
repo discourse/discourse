@@ -397,7 +397,6 @@ de:
       upcoming_events_list:
         title: "Anstehende Ereignisse"
         empty: "Keine anstehenden Ereignisse"
-        all_day: "Ganztägig"
         error: "Ereignisse konnten nicht abgerufen werden"
         try_again: "Erneut versuchen"
         view_all: "Alle ansehen"
@@ -487,7 +486,6 @@ de:
           label: "Startdatum"
         all_day:
           label: "Ganztägiges Ereignis"
-          description: "Ein ganztägiges Ereignis hat keine festen Uhrzeiten, sondern nur ein Datum. Das Ereignis dauert vom Beginn bis zum Ende des Tages."
         reminders:
           label: "Erinnerungen"
           units:

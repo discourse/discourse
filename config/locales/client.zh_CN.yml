@@ -130,6 +130,15 @@ zh_CN:
       placeholder: 日期
       from_placeholder: "起始日期"
       to_placeholder: "截止日期"
+    date_range_picker:
+      apply: "应用"
+      start_date: "开始日期"
+      presets:
+        last_7_days: "过去 7 天"
+        last_30_days: "过去 30 天"
+        last_3_months: "过去 3 个月"
+        last_6_months: "过去 6 个月"
+        last_year: "去年"
     languages:
       ar:
         name: 阿拉伯语
@@ -3473,8 +3482,6 @@ zh_CN:
     nested_replies:
       nested_view: "嵌套视图"
       flat_view: "平面视图"
-      view_as_nested: "以嵌套方式查看"
-      view_as_flat: "以平面方式查看"
       sort:
         label: "排序依据"
         top: "热门"
@@ -6064,8 +6071,6 @@ zh_CN:
             enabled_heading: "已启用"
             all_heading: "所有报告"
             apply: "应用"
-            move_up: "上移"
-            move_down: "下移"
         configure:
           button: "配置"
         site_traffic:

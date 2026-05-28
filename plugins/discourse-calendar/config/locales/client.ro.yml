@@ -58,7 +58,6 @@ ro:
       upcoming_events_list:
         title: "Evenimente viitoare"
         empty: "Fără evenimente viitoare"
-        all_day: "Toată ziua"
         error: "Eroare la preluarea evenimentelor"
         try_again: "Încearcă din nou"
         view_all: "Vezi tot"

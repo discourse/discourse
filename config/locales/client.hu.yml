@@ -158,6 +158,14 @@ hu:
       placeholder: dátum
       from_placeholder: "ettől:"
       to_placeholder: "eddig:"
+    date_range_picker:
+      apply: "Alkalmaz"
+      presets:
+        last_7_days: "Elmúlt 7 nap"
+        last_30_days: "Elmúlt 30 nap"
+        last_3_months: "Elmúlt 3 hónap"
+        last_6_months: "Elmúlt 6 hónap"
+        last_year: "Tavaly"
     languages:
       ar:
         name: Arab
@@ -6144,8 +6152,6 @@ hu:
             enabled_heading: "Bekapcsolva"
             all_heading: "Összes bejelentés"
             apply: "Alkalmaz"
-            move_up: "Mozgatás fel"
-            move_down: "Mozgatás le"
         site_traffic:
           series:
             anonymous: "Névtelen"

@@ -198,6 +198,8 @@ be:
       placeholder: дата
       from_placeholder: "з даты"
       to_placeholder: "па дату"
+    date_range_picker:
+      apply: "Прымяніць"
     languages:
       ar:
         name: Арабская

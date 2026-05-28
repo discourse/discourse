@@ -204,6 +204,14 @@ cs:
       placeholder: datum
       from_placeholder: "od data"
       to_placeholder: "do data"
+    date_range_picker:
+      apply: "Použít"
+      presets:
+        last_7_days: "Posledních 7 dní"
+        last_30_days: "Posledních 30 dní"
+        last_3_months: "Posledních 3 měsíců"
+        last_6_months: "Posledních 6 měsíců"
+        last_year: "Minulý rok"
     languages:
       ar:
         name: Arabština
@@ -6561,8 +6569,6 @@ cs:
             enabled_heading: "Zapnuto"
             all_heading: "Všechny sestavy"
             apply: "Použít"
-            move_up: "Posunout nahoru"
-            move_down: "Posunout dolů"
         site_traffic:
           series:
             anonymous: "Anonymní"

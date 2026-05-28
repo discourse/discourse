@@ -214,6 +214,16 @@ pl_PL:
       placeholder: data
       from_placeholder: "od daty"
       to_placeholder: "do daty"
+    date_range_picker:
+      apply: "Zastosuj"
+      start_date: "Data rozpoczęcia"
+      end_date: "Data zakończenia"
+      presets:
+        last_7_days: "Ostatnie 7 dni"
+        last_30_days: "Ostatnie 30 dni"
+        last_3_months: "Ostatnie 3 miesiące"
+        last_6_months: "Ostatnie 6 miesięcy"
+        last_year: "W ubiegłym roku"
     languages:
       ar:
         name: arabski
@@ -4138,8 +4148,6 @@ pl_PL:
     nested_replies:
       nested_view: "Widok zagnieżdżony"
       flat_view: "Widok płaski"
-      view_as_nested: "Wyświetl jako zagnieżdżone"
-      view_as_flat: "Wyświetl jako płaskie"
       sort:
         label: "Sortuj po"
         top: "Popularne"
@@ -7172,13 +7180,14 @@ pl_PL:
           modal:
             title: "Zarządzaj raportami"
             search_placeholder: "Wyszukaj raporty"
-            counter: "Raporty: %{count} / %{max}"
+            counter: "Dodane raporty: %{count} / %{max}"
             enabled_heading: "Włączono"
             all_heading: "Wszystkie zgłoszenia"
             apply: "Zastosuj"
-            toggle: "Przełącz raport"
-            move_up: "Przenieś wyżej"
-            move_down: "Przenieś niżej"
+            enable: "Włącz %{title}"
+            disable: "Wyłącz %{title}"
+            move_up: "Przesuń %{title} w górę"
+            move_down: "Przesuń %{title} w dół"
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."

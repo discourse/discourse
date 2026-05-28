@@ -270,6 +270,15 @@ ar:
       placeholder: التاريخ
       from_placeholder: "من التاريخ"
       to_placeholder: "إلى التاريخ"
+    date_range_picker:
+      apply: "تطبيق"
+      start_date: "تاريخ البدء"
+      presets:
+        last_7_days: "آخر 7 أيام"
+        last_30_days: "آخر 30 يومًا"
+        last_3_months: "آخر 3 أشهر"
+        last_6_months: "آخر 6 أشهر"
+        last_year: "العام الماضي"
     languages:
       ar:
         name: العربية
@@ -4479,8 +4488,6 @@ ar:
     nested_replies:
       nested_view: "العرض المتداخل"
       flat_view: "العرض المسطح"
-      view_as_nested: "عرض بشكل متداخل"
-      view_as_flat: "عرض بشكل مسطح"
       sort:
         label: "الترتيب حسب"
         top: "الأكثر نشاطًا"
@@ -7568,8 +7575,6 @@ ar:
             enabled_heading: "مفعَّلة"
             all_heading: "جميع التقارير"
             apply: "تطبيق"
-            move_up: "التحريك لأعلى"
-            move_down: "التحريك لأسفل"
         configure:
           button: "التهيئة"
         highlights:

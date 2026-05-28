@@ -144,6 +144,15 @@ it:
       placeholder: data
       from_placeholder: "dalla data"
       to_placeholder: "a oggi"
+    date_range_picker:
+      apply: "Applica"
+      start_date: "Data iniziale"
+      presets:
+        last_7_days: "Ultimi 7 giorni"
+        last_30_days: "Ultimi 30 giorni"
+        last_3_months: "Ultimi 3 mesi"
+        last_6_months: "Ultimi 6 mesi"
+        last_year: "Ultimo anno"
     languages:
       ar:
         name: Arabo
@@ -5637,8 +5646,6 @@ it:
             enabled_heading: "Abilitato"
             all_heading: "Tutti i report"
             apply: "Applica"
-            move_up: "Sposta su"
-            move_down: "Sposta giù"
         configure:
           button: "Configura"
         site_traffic:

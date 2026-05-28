@@ -382,7 +382,6 @@ sk:
       upcoming_events_list:
         title: "Nadchádzajúce udalosti"
         empty: "Žiadne nadchádzajúce udalosti"
-        all_day: "Celodenný"
         error: "Nepodarilo sa načítať udalosti"
         try_again: "Skúste to znova"
         view_all: "Zobraziť všetko"
