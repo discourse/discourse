@@ -73,6 +73,7 @@ export function buildConfig({ devMode } = {}) {
   return {
     resolve: {
       extensions,
+      conditionNames: isProduction ? ["production"] : ["development"],
     },
     experimental: {
       incrementalBuild: true,
