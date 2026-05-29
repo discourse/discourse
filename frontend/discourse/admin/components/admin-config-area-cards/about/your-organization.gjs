@@ -74,7 +74,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         @title={{i18n "admin.config_areas.about.company_url"}}
         @format="large"
         @type="input-url"
-        @validation="url"
         as |field|
       >
         <field.Control

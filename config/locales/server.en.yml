@@ -2889,7 +2889,6 @@ en:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_datetime: "Invalid datetime format. Please ensure you've entered a valid date and time."
       invalid_email: "Invalid email address."
-      invalid_url: "Must be a valid URL"
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."

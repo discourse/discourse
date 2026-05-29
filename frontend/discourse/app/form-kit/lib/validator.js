@@ -109,10 +109,6 @@ export default class Validator {
   }
 
   urlValidator(value) {
-    if (isBlank(value)) {
-      return;
-    }
-
     try {
       // eslint-disable-next-line no-new
       new URL(value);

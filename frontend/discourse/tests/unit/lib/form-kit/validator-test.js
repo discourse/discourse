@@ -189,13 +189,6 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       [],
       "it returns no errors when the value is a valid URL"
     );
-
-    errors = await new Validator("", { url: {} }).validate();
-    assert.deepEqual(
-      errors,
-      [],
-      "it returns no errors when the value is blank (treat as optional)"
-    );
   });
 
   test("accepted", async function (assert) {
