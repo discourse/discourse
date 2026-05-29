@@ -546,12 +546,16 @@ export default class BlockChrome extends Component {
 
   /**
    * Image args declared on the wrapped block plus their live values
-   * and emptiness. Drives the per-arg overlay scaffold rendered next
-   * to (and over) the block content. Block templates stay agnostic —
-   * they keep rendering nothing for empty image args; the chrome shows
-   * the affordance around that void.
+   * and emptiness. Drives the per-arg overlays painted over the block
+   * content. The block always renders a marker for each image arg
+   * (the real image when filled, a collapsed slot when empty), and the
+   * chrome paints the affordance over that marker — empty or filled.
    *
-   * @returns {Array<{name: string, def: Object, value: any, isEmpty: boolean}>}
+   * The `key` folds emptiness into the `{{#each}}` identity so an arg
+   * flipping empty↔filled remounts its overlay, letting each mode wire
+   * its own upload lifecycle cleanly instead of reconfiguring in place.
+   *
+   * @returns {Array<{name: string, def: Object, value: any, isEmpty: boolean, key: string}>}
    */
   get imageArgEntries() {
     // eslint-disable-next-line no-unused-vars
@@ -559,32 +563,10 @@ export default class BlockChrome extends Component {
     const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
-    return imageArgEntries(this.metadata?.args, entry?.args);
-  }
-
-  /**
-   * `true` when the block declares one or more image args AND every
-   * one of them is empty. The chrome's content area then steps aside
-   * for a stack of empty-state overlays (one per arg) instead of
-   * rendering the block, which would paint nothing visible.
-   *
-   * @returns {boolean}
-   */
-  get hasEmptyImageArgs() {
-    const entries = this.imageArgEntries;
-    return entries.length > 0 && entries.every((e) => e.isEmpty);
-  }
-
-  /**
-   * Image args that currently have a URL. Drives the per-arg drop-
-   * to-replace overlays painted ON TOP of the rendered block (in
-   * absolute-positioned siblings of the wrapped content). Empty args
-   * are handled separately by `hasEmptyImageArgs`.
-   *
-   * @returns {Array<{name: string, def: Object, value: any}>}
-   */
-  get filledImageArgEntries() {
-    return this.imageArgEntries.filter((e) => !e.isEmpty);
+    return imageArgEntries(this.metadata?.args, entry?.args).map((e) => ({
+      ...e,
+      key: `${e.name}:${e.isEmpty}`,
+    }));
   }
 
   /**
@@ -1286,38 +1268,19 @@ export default class BlockChrome extends Component {
               class="wireframe-block-chrome__content"
               style={{this.contentStyle}}
             >
-              {{#if this.hasEmptyImageArgs}}
-                {{#each this.imageArgEntries as |imageArg|}}
-                  <ImageArgOverlay
-                    @blockKey={{@blockKey}}
-                    @argName={{imageArg.name}}
-                    @argDef={{imageArg.def}}
-                    @isEmpty={{imageArg.isEmpty}}
-                  />
-                {{/each}}
-              {{else}}
-                <@WrappedComponent />
-              {{/if}}
+              <@WrappedComponent />
             </div>
-          {{else if this.hasEmptyImageArgs}}
-            {{#each this.imageArgEntries as |imageArg|}}
-              <ImageArgOverlay
-                @blockKey={{@blockKey}}
-                @argName={{imageArg.name}}
-                @argDef={{imageArg.def}}
-                @isEmpty={{imageArg.isEmpty}}
-              />
-            {{/each}}
           {{else}}
             <@WrappedComponent />
           {{/if}}
 
-          {{! Per-arg drop-to-replace overlays painted on top of the
-            rendered block. Each overlay positions itself over its
-            image arg's marker via JS-computed bounding rects (see
-            `image-arg-overlay.gjs`). Invisible by default; lights up
-            when an image file drag enters. }}
-          {{#each this.filledImageArgEntries as |imageArg|}}
+          {{! Per-arg overlays painted on top of the rendered block —
+            one per image arg, empty or filled. Each positions itself
+            over its arg's marker via JS-computed bounding rects (see
+            `image-arg-overlay.gjs`): an in-place "add image" affordance
+            when empty, an invisible drop-to-replace target when filled.
+            Keyed on emptiness so a fill / clear remounts the overlay. }}
+          {{#each this.imageArgEntries key="key" as |imageArg|}}
             <ImageArgOverlay
               @blockKey={{@blockKey}}
               @argName={{imageArg.name}}

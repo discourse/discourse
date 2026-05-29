@@ -120,4 +120,19 @@
       display: revert;
     }
   }
+
+  /* Empty image-arg markers — the avatar slot and the backdrop are kept
+     in the DOM so the chrome can anchor an "add image" overlay over
+     them, but they collapse on the live site. Revealed on the canvas
+     only when the card is selected (matching the decorative-affordance
+     behaviour of the empty text wrappers above). */
+
+  &__avatar--empty,
+  &__backdrop--empty {
+    display: none;
+
+    .wireframe-block-chrome.--selected & {
+      display: revert;
+    }
+  }
 }

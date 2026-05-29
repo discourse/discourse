@@ -427,26 +427,23 @@ body.wireframe-active {
     min-width: 0;
   }
 
-  /* Canvas-only empty state for image-typed args. Rendered by
-     `ImageArgOverlay` as a sibling of the block content whenever the
-     arg's value carries no `url`. The chrome already paints its own
-     dashed border + tint around the block, so each overlay is just a
-     centred icon + label naming the arg ("Image", "Avatar", …).
-
-     Two layers: the outer flexbox spans whatever vertical space the
-     chrome allots (or stacks with sibling overlays for multi-image
-     blocks); the inner __content shrink-wraps the icon + label so they
-     read as a single visual unit no matter how wide the surrounding
-     cell happens to be. */
+  /* Canvas-only per-arg overlay for image-typed args. Rendered by
+     `ImageArgOverlay` and absolute-positioned over the arg's marker via
+     a JS-measured rect (inline `style`), so it tracks the marker's own
+     geometry — a 44px avatar slot, a full-bleed backdrop, or the whole
+     block for `data-drop-fills-block` markers. The inner __content
+     shrink-wraps the icon + label so they read as a single unit
+     regardless of the marker's size. The overlay collapses itself
+     (inline `display: none`) whenever its marker is hidden. */
 
   .wireframe-image-arg-overlay {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3;
     color: var(--primary-medium);
 
     &--empty {
-      min-height: 8rem;
       cursor: pointer;
 
       &:hover {
@@ -466,8 +463,35 @@ body.wireframe-active {
        marks the active drop target. */
 
     &--filled {
-      z-index: 3;
       background: transparent;
+    }
+
+    /* Passive markers (a full-bleed background behind the block
+       content) are hint-only: click-through so the overlay never
+       swallows clicks meant for the content layered on top. Adding /
+       replacing the image runs through the chrome's click dispatch and
+       the inspector instead. */
+
+    &--passive {
+      pointer-events: none;
+    }
+
+    /* Compact affordance for small in-place slots (e.g. a 44px avatar):
+       the icon + label don't fit, so collapse to a tight icon-only
+       badge that sits inside the slot. */
+
+    &--compact {
+      .wireframe-image-arg-overlay__content {
+        padding: 0;
+      }
+
+      .wireframe-image-arg-overlay__label {
+        display: none;
+      }
+
+      .d-icon {
+        font-size: var(--font-0);
+      }
     }
 
     &--drag-over {
@@ -4179,6 +4203,17 @@ body.wireframe-active
 .wireframe-block-chrome.--selected :has(> .wf-inline-rich-text.--empty),
 .wireframe-block-chrome.--selected .wf-inline-rich-text.--empty {
   display: revert;
+}
+
+/* Structural empty image marker (e.g. `wf:image`, which paints nothing
+   when empty). Revealed on the canvas regardless of selection — unlike
+   the decorative slots above — so the block keeps a minimum height for
+   its whole-block "add image" overlay to fill. The marker itself stays
+   invisible; the overlay paints the affordance on top. */
+
+.wireframe-block-chrome .wf-image--empty {
+  display: block;
+  min-height: 8rem;
 }
 
 /* Inspector form — read-only summary for `rich-inline` args. The actual

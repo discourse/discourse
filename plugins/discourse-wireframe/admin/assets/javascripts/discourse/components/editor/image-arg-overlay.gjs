@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -16,15 +17,25 @@ import ImageVariantDropPopover from "./image-variant-drop-popover";
 
 /**
  * Per-arg overlay for image-typed args. Painted by `block-chrome` for
- * every image arg the block declares.
+ * every image arg the block declares — empty or filled. The overlay is
+ * always absolute-positioned over the arg's rendered marker (an element
+ * carrying `data-block-arg="<argName>"`); the block keeps rendering its
+ * own markers and the chrome paints the affordance around them.
  *
- * Two modes:
- *   - **Empty arg** (no `url`): the in-content empty-state card.
- *     Click opens the OS file picker; dropping a file uploads.
- *   - **Filled arg**: absolute-positioned overlay tracking the
- *     rendered image marker's bounding rect (or the chrome's rect
- *     when the marker carries `data-drop-fills-block`). Invisible by
- *     default; tints on file drag with "Image will be overwritten".
+ * Three behaviors, selected by `@isEmpty` and the marker's attributes:
+ *   - **Empty arg** (no `url`): the in-place empty-state card. Click
+ *     opens the OS file picker; dropping a file uploads. When the marker
+ *     carries `data-drop-fills-block` the overlay spans the whole block
+ *     (the marker is just an anchor); otherwise it tracks the marker's
+ *     own rect.
+ *   - **Filled arg**: invisible drop-to-replace overlay tracking the
+ *     marker's rect. Tints on file drag with "Image will be overwritten".
+ *   - **Passive marker** (`data-drop-passive`): a full-bleed background
+ *     that sits BEHIND the block's content. The overlay is rendered
+ *     click-through (`pointer-events: none`) so it can show an empty-state
+ *     hint without swallowing clicks meant for the content on top; adding
+ *     / replacing the image is handled by the chrome's own click dispatch
+ *     and the inspector.
  *
  * Drop pipelines are independent:
  *   - Drop on the OVERLAY → replaces the LIGHT variant (preserving
@@ -46,7 +57,7 @@ import ImageVariantDropPopover from "./image-variant-drop-popover";
  *   chrome but we don't rely on its component lifecycle. The
  *   `chromeEl` getter walks up from the overlay's own element via
  *   `closest(".wireframe-block-chrome")` because `captureChromeEl`
- *   on the parent chrome runs AFTER our `setupFilled` for loaded
+ *   on the parent chrome runs AFTER our `setupPositioning` for loaded
  *   layouts (the didInsert order is child-first when both modifiers
  *   are scheduled in the same render pass).
  */
@@ -64,7 +75,8 @@ export default class ImageArgOverlay extends Component {
 
   /**
    * Marker rect (relative to the chrome) used to position the
-   * filled overlay. `null` until first measure.
+   * overlay. `null` until first measure, and whenever the marker is
+   * collapsed (e.g. a decorative slot on an unselected card).
    */
   @tracked markerRect = null;
 
@@ -75,10 +87,26 @@ export default class ImageArgOverlay extends Component {
    */
   @tracked popoverHovered = false;
 
+  /**
+   * `true` when the resolved marker carries `data-drop-passive` — a
+   * full-bleed background behind the block content. Drives the
+   * click-through BEM modifier. Read from the template, so it stays
+   * unprefixed. Set during `measure`.
+   */
+  @tracked markerPassive = false;
+
+  /**
+   * `true` when the resolved marker carries `data-drop-fills-block` —
+   * the image owns the whole block, so the overlay spans the chrome.
+   * Read from the template (drives the compact-affordance decision),
+   * so it stays unprefixed. Set during `measure`.
+   */
+  @tracked markerFillsBlock = false;
+
   /** The overlay's outer `<div>`. Pinned on insert. */
   #overlayEl = null;
 
-  /** Hidden file input ref (empty state only). */
+  /** Hidden file input ref (interactive empty state only). */
   #fileInputEl = null;
 
   /** ResizeObserver shared between marker + chrome. */
@@ -125,19 +153,40 @@ export default class ImageArgOverlay extends Component {
     return this.args.argDef?.ui?.label ?? this.args.argName;
   }
 
-  get rendersAsFilledOverlay() {
-    return !this.args.isEmpty && this.args.getChromeEl;
+  /**
+   * `true` when this overlay is the interactive empty-state card —
+   * empty AND not a passive background. Only this variant gets the
+   * hidden file input, the click-to-pick gesture, and keyboard
+   * focus; passive empties are hint-only.
+   *
+   * @returns {boolean}
+   */
+  get isInteractiveEmpty() {
+    return this.args.isEmpty && !this.markerPassive;
+  }
+
+  /**
+   * `true` for a small in-place empty affordance — an arg whose marker
+   * is neither a whole-block fill nor a full-bleed background (e.g. the
+   * media-card avatar slot). These are too small for the icon + label,
+   * so the affordance collapses to just the icon.
+   *
+   * @returns {boolean}
+   */
+  get isCompact() {
+    return this.args.isEmpty && !this.markerPassive && !this.markerFillsBlock;
   }
 
   /**
    * `true` when the filled overlay's dark-variant popover should
-   * be available. Requires the arg to opt into dark variants AND a
+   * be available. Requires the arg to opt into dark variants, a
    * light image to already exist (dark without light is meaningless
    * — the renderer needs a fallback for the default color-scheme
-   * media query).
+   * media query), and a non-passive marker (passive markers never
+   * receive the drag events that open the popover).
    */
   get showsVariantPicker() {
-    if (!this.args.argDef?.allowDark) {
+    if (!this.args.argDef?.allowDark || this.markerPassive) {
       return false;
     }
     return !this.args.isEmpty;
@@ -150,7 +199,7 @@ export default class ImageArgOverlay extends Component {
   /**
    * Walks the DOM up from the overlay element to find the chrome.
    * Bypasses the chrome component's `captureChromeEl` lifecycle —
-   * that fires AFTER our own `setupFilled` on loaded layouts.
+   * that fires AFTER our own `setupPositioning` on loaded layouts.
    */
   get chromeEl() {
     if (!this.#overlayEl) {
@@ -159,6 +208,15 @@ export default class ImageArgOverlay extends Component {
     return this.#overlayEl.closest(".wireframe-block-chrome");
   }
 
+  /**
+   * The block's rendered marker for this arg. Matches any element
+   * carrying `data-block-arg="<argName>"` — `<img>`, `<picture>`, the
+   * media-card backdrop `<div>`, or an empty slot — but EXCLUDES the
+   * image-arg overlays themselves, which carry the same attribute for
+   * the chrome's click dispatch. With one overlay per arg at a time
+   * (block-chrome keys the each on emptiness), exactly one block
+   * marker matches.
+   */
   get markerEl() {
     const chrome = this.chromeEl;
     if (!chrome) {
@@ -166,11 +224,11 @@ export default class ImageArgOverlay extends Component {
     }
     const escaped = CSS.escape(this.args.argName);
     return chrome.querySelector(
-      `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
+      `[data-block-arg="${escaped}"]:not(.wireframe-image-arg-overlay)`
     );
   }
 
-  get filledOverlayStyle() {
+  get overlayStyle() {
     const r = this.markerRect;
     if (!r) {
       return trustHTML("display: none;");
@@ -179,6 +237,21 @@ export default class ImageArgOverlay extends Component {
       `position: absolute; top: ${r.top}px; left: ${r.left}px; ` +
         `width: ${r.width}px; height: ${r.height}px;`
     );
+  }
+
+  /**
+   * A value that changes whenever this block's selection state or the
+   * structural layout changes. Threaded into a `didUpdate` modifier so
+   * the overlay re-measures when a decorative marker is revealed on
+   * selection (the ResizeObserver alone can miss a `display` flip) or
+   * the layout reflows on republish.
+   *
+   * @returns {string}
+   */
+  get remeasureSignal() {
+    const selected =
+      this.wireframe.selectedBlockKey === this.args.blockKey ? "1" : "0";
+    return `${selected}:${this.wireframe.structuralVersion}`;
   }
 
   /**
@@ -221,7 +294,18 @@ export default class ImageArgOverlay extends Component {
   @action
   registerOverlay(el) {
     this.#overlayEl = el;
-    this.#bootUppy().setup();
+    // Passive (behind-content) markers are hint-only: no upload
+    // pipeline, so they never intercept clicks or drops.
+    if (this.#markerIsPassive()) {
+      return;
+    }
+    this.#bootUppy();
+    // Filled overlays have no file input, so wire the drop target now.
+    // Interactive empty overlays defer to `registerFileInput`, which
+    // runs a single `setup(el)` once the input mounts.
+    if (!this.args.isEmpty) {
+      this.#uppyUpload.setup();
+    }
   }
 
   @action
@@ -241,6 +325,88 @@ export default class ImageArgOverlay extends Component {
     }
     this.#closeVariantPopover();
   }
+
+  @action
+  setupPositioning() {
+    this.#boundMeasure = () => this.measure();
+    this.#observer = new ResizeObserver(this.#boundMeasure);
+    this.#attachObserver();
+    window.addEventListener("resize", this.#boundMeasure);
+    this.measure();
+  }
+
+  @action
+  measure() {
+    const marker = this.markerEl;
+    const chrome = this.chromeEl;
+    if (!marker || !chrome) {
+      this.markerRect = null;
+      return;
+    }
+    this.markerPassive = marker.hasAttribute("data-drop-passive");
+    const fillsBlock = marker.hasAttribute("data-drop-fills-block");
+    this.markerFillsBlock = fillsBlock;
+    const targetRect = (fillsBlock ? chrome : marker).getBoundingClientRect();
+    // A zero-size target means the marker is collapsed — e.g. a
+    // decorative slot hidden on an unselected card. Drop the overlay
+    // until the marker is revealed. `data-drop-fills-block` measures
+    // the chrome (never zero), so those overlays stay visible as
+    // anchors regardless of the marker's own display.
+    if (targetRect.width === 0 && targetRect.height === 0) {
+      this.markerRect = null;
+      return;
+    }
+    const chromeRect = chrome.getBoundingClientRect();
+    const next = {
+      top: targetRect.top - chromeRect.top,
+      left: targetRect.left - chromeRect.left,
+      width: targetRect.width,
+      height: targetRect.height,
+    };
+    const prev = this.markerRect;
+    if (
+      prev &&
+      prev.top === next.top &&
+      prev.left === next.left &&
+      prev.width === next.width &&
+      prev.height === next.height
+    ) {
+      return;
+    }
+    this.markerRect = next;
+  }
+
+  /* Click-to-pick (interactive empty state) */
+
+  @action
+  onActivate(event) {
+    // Filled overlays let the click bubble to the chrome, which opens
+    // the replace / remove menu. Only the empty state opens the picker.
+    if (!this.args.isEmpty) {
+      return;
+    }
+    event.stopPropagation();
+    this.wireframe.lastTouchedImageArg = this.args.argName;
+    this.#fileInputEl?.click();
+  }
+
+  @action
+  onKeyActivate(event) {
+    if (!this.args.isEmpty) {
+      return;
+    }
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      this.onActivate(event);
+    }
+  }
+
+  @action
+  onPointerEnter() {
+    this.wireframe.lastTouchedImageArg = this.args.argName;
+  }
+
+  /* File-drag visual hooks */
 
   /**
    * Thin file-drag visual hooks layered on top of Uppy's own
@@ -284,65 +450,8 @@ export default class ImageArgOverlay extends Component {
     this.#closeVariantPopover();
   }
 
-  @action
-  setupFilled() {
-    this.#boundMeasure = () => this.measure();
-    this.#observer = new ResizeObserver(this.#boundMeasure);
-    this.#attachObserver();
-    window.addEventListener("resize", this.#boundMeasure);
-    this.measure();
-  }
-
-  @action
-  measure() {
-    const marker = this.markerEl;
-    const chrome = this.chromeEl;
-    if (!marker || !chrome) {
-      this.markerRect = null;
-      return;
-    }
-    const fillsBlock = marker.hasAttribute("data-drop-fills-block");
-    const targetRect = (fillsBlock ? chrome : marker).getBoundingClientRect();
-    const chromeRect = chrome.getBoundingClientRect();
-    const next = {
-      top: targetRect.top - chromeRect.top,
-      left: targetRect.left - chromeRect.left,
-      width: targetRect.width,
-      height: targetRect.height,
-    };
-    const prev = this.markerRect;
-    if (
-      prev &&
-      prev.top === next.top &&
-      prev.left === next.left &&
-      prev.width === next.width &&
-      prev.height === next.height
-    ) {
-      return;
-    }
-    this.markerRect = next;
-  }
-
-  /* Click-to-pick (empty state) */
-
-  @action
-  onActivate(event) {
-    event.stopPropagation();
-    this.wireframe.lastTouchedImageArg = this.args.argName;
-    this.#fileInputEl?.click();
-  }
-
-  @action
-  onKeyActivate(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      this.onActivate(event);
-    }
-  }
-
-  @action
-  onPointerEnter() {
-    this.wireframe.lastTouchedImageArg = this.args.argName;
+  #markerIsPassive() {
+    return !!this.markerEl?.hasAttribute("data-drop-passive");
   }
 
   #bootUppy() {
@@ -430,7 +539,7 @@ export default class ImageArgOverlay extends Component {
     return entry?.args?.[this.args.argName] ?? null;
   }
 
-  /* Computed state */
+  /* Dark-variant popover */
 
   /**
    * Opens the dark-variant popover via FloatKit's menu service. No
@@ -510,7 +619,7 @@ export default class ImageArgOverlay extends Component {
     }
   }
 
-  /* Filled-state positioning */
+  /* Positioning */
 
   #attachObserver() {
     if (!this.#observer) {
@@ -528,54 +637,65 @@ export default class ImageArgOverlay extends Component {
   }
 
   <template>
-    {{#if @isEmpty}}
-      <div
-        class="wireframe-image-arg-overlay wireframe-image-arg-overlay--empty
-          {{if this.isDragOver 'wireframe-image-arg-overlay--drag-over'}}
-          {{if this.uploading 'wireframe-image-arg-overlay--uploading'}}"
-        data-block-arg={{@argName}}
-        role="button"
-        tabindex="0"
-        {{didInsert this.registerOverlay}}
-        {{willDestroy this.teardown}}
-        {{on "click" this.onActivate}}
-        {{on "keydown" this.onKeyActivate}}
-        {{on "pointerenter" this.onPointerEnter}}
-        {{dDragAndDropExternalTarget
-          accepts="files"
-          indicator=false
-          onDragEnter=this.onExternalDragEnter
-          onDragLeave=this.onExternalDragLeave
-          onDrop=this.onExternalDrop
-        }}
-      >
-        {{#if this.uploading}}
-          <div class="wireframe-image-arg-overlay__progress">
-            <div class="wireframe-image-arg-overlay__progress-track">
-              <div
-                class="wireframe-image-arg-overlay__progress-bar"
-                style={{this.progressBarStyle}}
-              ></div>
-            </div>
-            <span class="wireframe-image-arg-overlay__progress-label">
-              {{i18n
-                "wireframe.canvas.image_uploading"
-                progress=this.uploadProgress
-              }}
-            </span>
+    <div
+      class="wireframe-image-arg-overlay
+        {{if @isEmpty 'wireframe-image-arg-overlay--empty'}}
+        {{unless @isEmpty 'wireframe-image-arg-overlay--filled'}}
+        {{if this.markerPassive 'wireframe-image-arg-overlay--passive'}}
+        {{if this.isCompact 'wireframe-image-arg-overlay--compact'}}
+        {{if this.isDragOver 'wireframe-image-arg-overlay--drag-over'}}
+        {{if this.uploading 'wireframe-image-arg-overlay--uploading'}}"
+      data-block-arg={{@argName}}
+      role={{if this.isInteractiveEmpty "button"}}
+      tabindex={{if this.isInteractiveEmpty "0"}}
+      style={{this.overlayStyle}}
+      {{didInsert this.registerOverlay}}
+      {{didInsert this.setupPositioning}}
+      {{didUpdate this.measure this.remeasureSignal}}
+      {{willDestroy this.teardown}}
+      {{on "click" this.onActivate}}
+      {{on "keydown" this.onKeyActivate}}
+      {{on "pointerenter" this.onPointerEnter}}
+      {{dDragAndDropExternalTarget
+        accepts="files"
+        indicator=false
+        onDragEnter=this.onExternalDragEnter
+        onDragLeave=this.onExternalDragLeave
+        onDrop=this.onExternalDrop
+      }}
+    >
+      {{#if this.uploading}}
+        <div class="wireframe-image-arg-overlay__progress">
+          <div class="wireframe-image-arg-overlay__progress-track">
+            <div
+              class="wireframe-image-arg-overlay__progress-bar"
+              style={{this.progressBarStyle}}
+            ></div>
           </div>
-        {{else}}
-          <div class="wireframe-image-arg-overlay__content">
-            {{dIcon "image"}}
-            <span class="wireframe-image-arg-overlay__label">
-              {{i18n
-                "wireframe.canvas.image_empty_label_named"
-                label=this.label
-              }}
-            </span>
-          </div>
-        {{/if}}
-      </div>
+          <span class="wireframe-image-arg-overlay__progress-label">
+            {{i18n
+              "wireframe.canvas.image_uploading"
+              progress=this.uploadProgress
+            }}
+          </span>
+        </div>
+      {{else if @isEmpty}}
+        <div class="wireframe-image-arg-overlay__content">
+          {{dIcon "image"}}
+          <span class="wireframe-image-arg-overlay__label">
+            {{i18n "wireframe.canvas.image_empty_label_named" label=this.label}}
+          </span>
+        </div>
+      {{else if this.isDragOver}}
+        <div class="wireframe-image-arg-overlay__content">
+          {{dIcon "image"}}
+          <span class="wireframe-image-arg-overlay__label">
+            {{this.dragOverLabel}}
+          </span>
+        </div>
+      {{/if}}
+    </div>
+    {{#if this.isInteractiveEmpty}}
       <input
         type="file"
         accept="image/*"
@@ -583,49 +703,6 @@ export default class ImageArgOverlay extends Component {
         hidden
         {{didInsert this.registerFileInput}}
       />
-    {{else if this.rendersAsFilledOverlay}}
-      <div
-        class="wireframe-image-arg-overlay wireframe-image-arg-overlay--filled
-          {{if this.isDragOver 'wireframe-image-arg-overlay--drag-over'}}
-          {{if this.uploading 'wireframe-image-arg-overlay--uploading'}}"
-        data-block-arg={{@argName}}
-        style={{this.filledOverlayStyle}}
-        {{didInsert this.registerOverlay}}
-        {{didInsert this.setupFilled}}
-        {{willDestroy this.teardown}}
-        {{on "pointerenter" this.onPointerEnter}}
-        {{dDragAndDropExternalTarget
-          accepts="files"
-          indicator=false
-          onDragEnter=this.onExternalDragEnter
-          onDragLeave=this.onExternalDragLeave
-          onDrop=this.onExternalDrop
-        }}
-      >
-        {{#if this.uploading}}
-          <div class="wireframe-image-arg-overlay__progress">
-            <div class="wireframe-image-arg-overlay__progress-track">
-              <div
-                class="wireframe-image-arg-overlay__progress-bar"
-                style={{this.progressBarStyle}}
-              ></div>
-            </div>
-            <span class="wireframe-image-arg-overlay__progress-label">
-              {{i18n
-                "wireframe.canvas.image_uploading"
-                progress=this.uploadProgress
-              }}
-            </span>
-          </div>
-        {{else if this.isDragOver}}
-          <div class="wireframe-image-arg-overlay__content">
-            {{dIcon "image"}}
-            <span class="wireframe-image-arg-overlay__label">
-              {{this.dragOverLabel}}
-            </span>
-          </div>
-        {{/if}}
-      </div>
     {{/if}}
   </template>
 }

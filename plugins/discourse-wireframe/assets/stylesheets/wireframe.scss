@@ -225,6 +225,15 @@
     font-size: var(--font-down-1);
     text-align: center;
   }
+
+  /* Empty-state anchor. With no image the block paints nothing on the
+     live site, so this marker stays collapsed there; the editor chrome
+     reveals it (with height) so its "add image" overlay has a block to
+     fill. */
+
+  &--empty {
+    display: none;
+  }
 }
 
 /* The dark variant is rendered at the LIGHT variant's intrinsic

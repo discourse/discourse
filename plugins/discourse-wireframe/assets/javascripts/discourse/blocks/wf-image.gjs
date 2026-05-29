@@ -121,6 +121,17 @@ export default class WFImage extends Component {
           alt={{@alt}}
         />
       {{/if}}
+    {{else}}
+      {{! With no image the block renders nothing on the live site, so the
+          chrome has nothing to anchor an overlay to. This persistent marker
+          fills that gap: `data-drop-fills-block` makes the chrome's overlay
+          span the whole block, so the marker itself needs no geometry and
+          stays collapsed via `--empty` on the live path. }}
+      <div
+        class="wf-image wf-image--empty"
+        data-block-arg="image"
+        data-drop-fills-block
+      ></div>
     {{/if}}
   </template>
 }

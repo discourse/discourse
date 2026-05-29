@@ -169,15 +169,26 @@ export default class WFMediaCard extends Component {
 
   <template>
     <div class="wf-media-card">
-      {{#if this.backdropStyle}}
-        <div
-          class="wf-media-card__backdrop"
-          style={{this.backdropStyle}}
-          data-block-arg="image"
-        ></div>
-      {{/if}}
+      {{! Always render the backdrop marker so the chrome can anchor an
+          image overlay over it even with no background set. The empty
+          modifier collapses it on the live site; the chrome reveals it on
+          the canvas. data-drop-passive marks it as sitting behind the card
+          content, so its overlay stays click-through and never swallows
+          clicks meant for the title or CTA. }}
+      <div
+        class="wf-media-card__backdrop
+          {{unless this.backdropStyle 'wf-media-card__backdrop--empty'}}"
+        style={{this.backdropStyle}}
+        data-block-arg="image"
+        data-drop-passive
+      ></div>
 
       <div class="wf-media-card__top">
+        {{! The avatar arg always renders a marker for the chrome to
+            anchor its overlay to: the real image once a URL is set, an
+            empty slot otherwise. The two are mutually exclusive so the
+            per-arg overlay never resolves the wrong node. The empty slot
+            collapses on the live site and is revealed on the canvas. }}
         {{#if @avatar.url}}
           <img
             class="wf-media-card__avatar"
@@ -185,6 +196,11 @@ export default class WFMediaCard extends Component {
             alt={{@name}}
             data-block-arg="avatar"
           />
+        {{else}}
+          <div
+            class="wf-media-card__avatar wf-media-card__avatar--empty"
+            data-block-arg="avatar"
+          ></div>
         {{/if}}
 
         <div class="wf-media-card__identity">
