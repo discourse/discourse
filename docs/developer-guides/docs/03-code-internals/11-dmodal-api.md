@@ -107,7 +107,7 @@ const result = await this.modal.show(MyModal);
 
 ## More customizability!
 
-`<DModal>` has a number of named blocks and arguments. 
+`<DModal>` has a number of named blocks and arguments.
 
 ### Arguments
 
