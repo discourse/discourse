@@ -55,12 +55,12 @@ export default class ImageArgOverlay extends Component {
   @service wireframe;
 
   /**
-   * `true` while a file drag is hovering this overlay OR the
-   * dark-variant popover. Drives the BEM `--drag-over` modifier on
-   * the overlay so the tint stays visible while the cursor is over
-   * either surface.
+   * `true` while the cursor is over this overlay during an external
+   * drag. Paired with `popoverHovered`; the `isDragOver` getter
+   * unions the two so the overlay tint stays visible while the
+   * cursor travels between the two surfaces.
    */
-  @tracked isDragOver = false;
+  @tracked overlayHovered = false;
 
   /**
    * Marker rect (relative to the chrome) used to position the
@@ -87,6 +87,14 @@ export default class ImageArgOverlay extends Component {
   #uppyUpload = null;
   /** Active FloatKit menu instance for the dark-variant popover. */
   #variantMenu = null;
+  /**
+   * `true` while `#openVariantPopover` is mid-`await` on
+   * `menu.show(...)`. Prevents a second `dragenter` (e.g. from an
+   * in-out-in flicker that lands inside one runloop tick) from
+   * issuing a concurrent `show()` that would toggle the menu
+   * closed on its expanded-instance branch.
+   */
+  #opening = false;
   /**
    * Bumps when the Uppy instance is created so getters that read
    * Uppy's `@tracked` `uploading` / `uploadProgress` actually open
@@ -183,6 +191,15 @@ export default class ImageArgOverlay extends Component {
   }
 
   /* Computed state */
+
+  /**
+   * Union of `overlayHovered` and `popoverHovered`. Drives the BEM
+   * `--drag-over` modifier so the overlay tint persists while the
+   * cursor travels between the overlay and the popover.
+   */
+  get isDragOver() {
+    return this.overlayHovered || this.popoverHovered;
+  }
 
   get label() {
     return this.args.argDef?.ui?.label ?? this.args.argName;
@@ -319,7 +336,7 @@ export default class ImageArgOverlay extends Component {
    */
   @action
   onExternalDragEnter() {
-    this.isDragOver = true;
+    this.overlayHovered = true;
     // Cancel any pending close from a brief excursion onto the
     // popover and back — we re-use FloatKit's own hover-grace
     // primitive instead of rolling a parallel timer.
@@ -329,16 +346,21 @@ export default class ImageArgOverlay extends Component {
 
   @action
   onExternalDragLeave() {
-    this.isDragOver = false;
-    // The cursor may be heading into the popover. Defer the close
-    // to FloatKit's hoverGracePeriod; the popover cancels it via
-    // `cancelHoverClose` on its own dragenter.
-    this.#variantMenu?.scheduleHoverClose();
+    this.overlayHovered = false;
+    // Only schedule a close when the popover isn't holding the
+    // hover state on its own. That guard makes the schedule /
+    // cancel pair order-independent: whichever of `onDragLeave` on
+    // the overlay and `onDragEnter` on the popover PDND dispatches
+    // first, the menu doesn't end up closing while the cursor is
+    // still on one of our targets.
+    if (!this.popoverHovered) {
+      this.#variantMenu?.scheduleHoverClose();
+    }
   }
 
   @action
   onExternalDrop() {
-    this.isDragOver = false;
+    this.overlayHovered = false;
     this.#closeVariantPopover();
   }
 
@@ -346,42 +368,70 @@ export default class ImageArgOverlay extends Component {
    * Opens the dark-variant popover via FloatKit's menu service. No
    * setTimeout / discourseLater here — FloatKit owns the timing.
    * The `hoverGracePeriod` option keeps the popover open while the
-   * cursor travels between image and popover (we drive it manually
+   * cursor travels between image and popover; we drive it manually
    * from our drag handlers via `cancelHoverClose` /
-   * `scheduleHoverClose` on the returned instance).
+   * `scheduleHoverClose` on the returned instance.
+   *
+   * The `#opening` flag closes a race where a fast dragenter →
+   * dragleave → dragenter sequence lands inside one runloop tick
+   * (before `menu.show`'s `afterRender` await resolves). Without
+   * it, the second `show()` on the same trigger sees
+   * `instance.expanded === true` and toggles the menu closed.
+   *
+   * After the await, reconcile the hover state — the cursor may
+   * have left both targets while we were awaiting `afterRender`,
+   * and no further event would fire to close the now-open popover.
    */
   async #openVariantPopover() {
-    if (!this.showsVariantPicker || this.#variantMenu) {
+    if (!this.showsVariantPicker || this.#variantMenu || this.#opening) {
       return;
     }
     const triggerEl = this.#overlayEl;
     if (!triggerEl) {
       return;
     }
-    this.#variantMenu = await this.menu.show(triggerEl, {
-      identifier: `wireframe-image-variant-drop-${this.args.argName}`,
-      component: ImageVariantDropPopover,
-      placement: "bottom-start",
-      fallbackPlacements: ["top-start", "bottom-end", "top-end"],
-      offset: 0,
-      hoverGracePeriod: 200,
-      maxWidth: 240,
-      data: {
-        blockKey: this.args.blockKey,
-        argName: this.args.argName,
-        hasDarkVariant: this.hasDarkVariant,
-        onDarkUpload: (upload) => this.#applyDarkUpload(upload),
-        onPopoverEnter: () => {
-          this.popoverHovered = true;
-          this.isDragOver = true;
-          this.#variantMenu?.cancelHoverClose();
-        },
-        onPopoverLeave: () => {
+    this.#opening = true;
+    try {
+      this.#variantMenu = await this.menu.show(triggerEl, {
+        identifier: `wireframe-image-variant-drop-${this.args.argName}`,
+        component: ImageVariantDropPopover,
+        placement: "bottom-start",
+        fallbackPlacements: ["top-start", "bottom-end", "top-end"],
+        offset: 0,
+        hoverGracePeriod: 200,
+        maxWidth: 240,
+        onClose: () => {
+          // Keep `#variantMenu` and the hover bookkeeping coherent
+          // when the menu closes on its own — hover-grace timeout,
+          // Escape, or any future close path. Without this, the
+          // stale reference would block the next reopen.
+          this.#variantMenu = null;
+          this.overlayHovered = false;
           this.popoverHovered = false;
-          this.#variantMenu?.scheduleHoverClose();
         },
-      },
-    });
+        data: {
+          blockKey: this.args.blockKey,
+          argName: this.args.argName,
+          hasDarkVariant: this.hasDarkVariant,
+          onDarkUpload: (upload) => this.#applyDarkUpload(upload),
+          onPopoverEnter: () => {
+            this.popoverHovered = true;
+            this.#variantMenu?.cancelHoverClose();
+          },
+          onPopoverLeave: () => {
+            this.popoverHovered = false;
+            if (!this.overlayHovered) {
+              this.#variantMenu?.scheduleHoverClose();
+            }
+          },
+        },
+      });
+      if (!this.overlayHovered && !this.popoverHovered) {
+        this.#variantMenu?.scheduleHoverClose();
+      }
+    } finally {
+      this.#opening = false;
+    }
   }
 
   #closeVariantPopover() {

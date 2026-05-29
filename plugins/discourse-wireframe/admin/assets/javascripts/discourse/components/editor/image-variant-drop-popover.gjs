@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -14,11 +15,18 @@ import { i18n } from "discourse-i18n";
  * an image arg via drag-and-drop.
  *
  * Mounted by `menu.show(overlayEl, { component: ImageVariantDropPopover,
- * data })` from the image overlay when the user has been dragging
- * over the image for ~250ms. The popover hosts its own
- * `UppyUpload` instance with its own DropTarget — dropping a file
- * onto the popover triggers the dark-variant upload pipeline,
- * decoupled from the main image overlay's light-variant pipeline.
+ * data })` from the image overlay when the user starts dragging a
+ * file over the image. The popover hosts its own `UppyUpload`
+ * instance with its own DropTarget — dropping a file onto the
+ * popover triggers the dark-variant upload pipeline, decoupled
+ * from the main image overlay's light-variant pipeline.
+ *
+ * Drag visuals are wired through `{{dDragAndDropExternalTarget}}`
+ * (the ui-kit PDND wrapper). The popover and the overlay both
+ * register as PDND external drop targets so PDND's lifecycle
+ * dispatches enter/leave transitions between them atomically — and
+ * fires `onDragLeave` on whichever target was deepest when the
+ * drag ends, even if the user cancels (Esc, off-window release).
  *
  * @data shape (injected by FloatKit as `@data`):
  *   - blockKey {string}
@@ -27,10 +35,11 @@ import { i18n } from "discourse-i18n";
  *   - onDarkUpload {(upload: Object) => void} — called with the
  *     UppyUpload `uploadDone` payload; the overlay's owner
  *     re-uses it to write to `entry.args[argName].dark`
- *   - onPopoverEnter {() => void} — called on dragenter so the
- *     overlay can cancel FloatKit's hover-close timer
- *   - onPopoverLeave {() => void} — called on dragleave so the
- *     overlay can schedule FloatKit's hover-close
+ *   - onPopoverEnter {() => void} — called when PDND reports the
+ *     popover became the deepest drop target.
+ *   - onPopoverLeave {() => void} — called when PDND reports the
+ *     popover left the drop-target stack (cursor moved elsewhere
+ *     or the drag ended).
  */
 export default class ImageVariantDropPopover extends Component {
   @tracked isDragOver = false;
@@ -40,12 +49,6 @@ export default class ImageVariantDropPopover extends Component {
 
   /** Per-popover UppyUpload. */
   #uppy = null;
-
-  #onDragEnter = null;
-
-  #onDragLeave = null;
-
-  #onDrop = null;
 
   get label() {
     return this.args.data.hasDarkVariant
@@ -66,54 +69,28 @@ export default class ImageVariantDropPopover extends Component {
       },
     });
     this.#uppy.setup();
-    this.#wireDragVisualState();
   }
 
   @action
   teardown() {
     this.#uppy?.teardown();
-    this.#unwireDragVisualState();
   }
 
-  #wireDragVisualState() {
-    if (!this.#dropEl) {
-      return;
-    }
-    this.#onDragEnter = () => {
-      this.isDragOver = true;
-      this.args.data.onPopoverEnter?.();
-    };
-    this.#onDragLeave = (event) => {
-      if (
-        event.relatedTarget &&
-        event.currentTarget.contains(event.relatedTarget)
-      ) {
-        return;
-      }
-      this.isDragOver = false;
-      this.args.data.onPopoverLeave?.();
-    };
-    this.#onDrop = () => {
-      this.isDragOver = false;
-    };
-    this.#dropEl.addEventListener("dragenter", this.#onDragEnter);
-    this.#dropEl.addEventListener("dragleave", this.#onDragLeave);
-    this.#dropEl.addEventListener("drop", this.#onDrop);
+  @action
+  onExternalDragEnter() {
+    this.isDragOver = true;
+    this.args.data.onPopoverEnter?.();
   }
 
-  #unwireDragVisualState() {
-    if (!this.#dropEl) {
-      return;
-    }
-    if (this.#onDragEnter) {
-      this.#dropEl.removeEventListener("dragenter", this.#onDragEnter);
-    }
-    if (this.#onDragLeave) {
-      this.#dropEl.removeEventListener("dragleave", this.#onDragLeave);
-    }
-    if (this.#onDrop) {
-      this.#dropEl.removeEventListener("drop", this.#onDrop);
-    }
+  @action
+  onExternalDragLeave() {
+    this.isDragOver = false;
+    this.args.data.onPopoverLeave?.();
+  }
+
+  @action
+  onExternalDrop() {
+    this.isDragOver = false;
   }
 
   <template>
@@ -125,6 +102,13 @@ export default class ImageVariantDropPopover extends Component {
         }}"
       {{didInsert this.setup}}
       {{willDestroy this.teardown}}
+      {{dDragAndDropExternalTarget
+        accepts="files"
+        indicator=false
+        onDragEnter=this.onExternalDragEnter
+        onDragLeave=this.onExternalDragLeave
+        onDrop=this.onExternalDrop
+      }}
     >
       {{dIcon "moon"}}
       <span>{{this.label}}</span>
