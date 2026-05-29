@@ -4027,6 +4027,7 @@ en:
       collapsed_replies:
         one: "%{count} reply"
         other: "%{count} replies"
+      collapsed_post: "Collapsed post"
       collapse: "Collapse"
       collapse_parent: "Collapse parent thread"
       focused_path: "Focused reply path"
