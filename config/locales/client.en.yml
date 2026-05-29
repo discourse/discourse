@@ -3821,11 +3821,11 @@ en:
         dismiss_new_topics: "Dismiss new topics"
         dismiss_new_replies: "Dismiss new replies"
         dismiss_new_topics_with_selected:
-          one: "Dismiss %{count} new topic"
-          other: "Dismiss %{count} new topics"
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
         dismiss_new_replies_with_selected:
-          one: "Dismiss %{count} new reply"
-          other: "Dismiss %{count} new replies"
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
         dismiss_all_with_selected:
           one: "Dismiss (%{count})"
           other: "Dismiss (%{count})"
