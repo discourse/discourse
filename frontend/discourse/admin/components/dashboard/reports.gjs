@@ -143,8 +143,8 @@ export default class DashboardReports extends Component {
         {{#each this.cards key="key" as |card|}}
           <div class="db-report__card" data-identifier={{card.key}}>
             <div class="db-report__header">
-              <span class="db-report__name">{{card.title}}</span>
-              {{#if this.showLabels}}
+              <a href={{card.url}} class="db-report__name">{{card.title}}</a>
+              {{#if card.label}}
                 <div
                   class="db-report__label"
                   data-source={{card.source}}

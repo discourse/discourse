@@ -794,6 +794,13 @@ h1 {
     align-items: center;
     font-size: var(--font-down-1-rem);
     font-weight: 600;
+    color: var(--primary);
+
+    &:visited,
+    &:hover,
+    &:active {
+      color: var(--primary);
+    }
   }
 
   &__label {
