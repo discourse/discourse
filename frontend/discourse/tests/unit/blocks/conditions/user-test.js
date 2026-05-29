@@ -770,7 +770,6 @@ module("Unit | Blocks | Condition | user", function (hooks) {
         outletArgs: { post: { user: sourceUser } },
         simulation: { user: { trust_level: 4, admin: true } },
       };
-      // Source is the source-of-truth here; sim should not apply.
       assert.false(
         this.condition.evaluate(
           { source: "@outletArgs.post.user", admin: true },

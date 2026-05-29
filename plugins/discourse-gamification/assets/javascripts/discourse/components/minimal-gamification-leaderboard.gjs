@@ -49,26 +49,62 @@ export default class extends Component {
     });
   }
 
+  /**
+   * Whether the current user sits outside the top ten and should be
+   * shown as a pinned "you" row above the ranked list.
+   *
+   * @returns {boolean}
+   */
   get notTopTen() {
     return this.model?.personal?.position > 10;
   }
 
+  /**
+   * Whether to render the `Rank | Score` column header row. Defaults
+   * to `true` to preserve the original sidebar look.
+   *
+   * @returns {boolean}
+   */
   get showColumnHeaders() {
     return this.args.showColumnHeaders ?? true;
   }
 
+  /**
+   * Whether to render the rank column (both the header and the
+   * per-row rank cell). Defaults to `true`.
+   *
+   * @returns {boolean}
+   */
   get showRank() {
     return this.args.showRank ?? true;
   }
 
+  /**
+   * Avatar size passed down to each row. Accepts the standard
+   * Discourse avatar size keywords (`small`, `medium`, `large`).
+   *
+   * @returns {string}
+   */
   get avatarSize() {
     return this.args.avatarSize || "small";
   }
 
+  /**
+   * The title shown in the leaderboard header. Falls back to the
+   * leaderboard's own name when no override is provided.
+   *
+   * @returns {string | undefined}
+   */
   get displayedTitle() {
     return this.args.title || this.model?.leaderboard?.name;
   }
 
+  /**
+   * Label for the optional "view all" footer link. Falls back to a
+   * localized default when no override is provided.
+   *
+   * @returns {string}
+   */
   get footerLinkLabel() {
     return (
       this.args.footerLinkLabel ||

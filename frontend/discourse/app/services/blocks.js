@@ -139,9 +139,9 @@ export default class Blocks extends Service {
    * Returns every registered condition type with its display metadata and
    * argument schema.
    *
-   * Consumed by the visual editor's condition builder (Phase 7) to populate
-   * the "Add condition" picker and render per-type input fields. Each
-   * entry's fields come from the `@blockCondition(...)` decorator:
+   * Consumed by the visual editor's condition builder to populate the
+   * "Add condition" picker and render per-type input fields. Each entry's
+   * fields come from the `@blockCondition(...)` decorator:
    *
    * - `type` — the condition's stable identifier (`"user"`, `"viewport"`, …).
    * - `displayName` — human-readable label; defaults to a Title Case of

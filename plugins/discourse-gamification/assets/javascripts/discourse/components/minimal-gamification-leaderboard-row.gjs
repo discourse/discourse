@@ -11,10 +11,22 @@ import sum from "../helpers/sum";
 export default class MinimalGamificationLeaderboardRow extends Component {
   @service siteSettings;
 
+  /**
+   * Whether to render the rank cell on the left side of the row.
+   * Defaults to `true` to preserve the original sidebar look.
+   *
+   * @returns {boolean}
+   */
   get showRank() {
     return this.args.showRank ?? true;
   }
 
+  /**
+   * Avatar size passed to `dAvatar`. Accepts the standard Discourse
+   * avatar size keywords (`small`, `medium`, `large`).
+   *
+   * @returns {string}
+   */
   get avatarSize() {
     return this.args.avatarSize || "small";
   }

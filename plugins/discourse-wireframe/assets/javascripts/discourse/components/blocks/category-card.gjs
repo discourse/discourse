@@ -23,7 +23,7 @@ export default class CategoryCard extends Component {
    * @param {string} [hex]
    * @returns {string}
    */
-  lighterColor(hex) {
+  #lighterColor(hex) {
     if (!hex) {
       return "rgba(245, 245, 245, 0.15)";
     }
@@ -54,13 +54,26 @@ export default class CategoryCard extends Component {
     return emoji.startsWith(":") ? emoji : `:${emoji}:`;
   }
 
+  /**
+   * Inline style for the badge container — full-colour foreground with a
+   * tinted lower-alpha background so the icon stands out against the
+   * category's brand colour.
+   *
+   * @returns {ReturnType<typeof trustHTML>}
+   */
   get logoStyle() {
     const color = this.args.category?.color;
     return trustHTML(
-      `color: #${color}; background-color: ${this.lighterColor(color)};`
+      `color: #${color}; background-color: ${this.#lighterColor(color)};`
     );
   }
 
+  /**
+   * Inline style for the solid-colour fallback square that renders when
+   * the category has no icon or emoji to display.
+   *
+   * @returns {ReturnType<typeof trustHTML>}
+   */
   get logoSquareStyle() {
     const color = this.args.category?.color;
     if (!color) {

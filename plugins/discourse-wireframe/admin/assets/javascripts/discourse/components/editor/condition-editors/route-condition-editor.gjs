@@ -23,8 +23,8 @@ import { i18n } from "discourse-i18n";
  *  - `pages` — array of `VALID_PAGE_TYPES` ids
  *  - `urls` — array of glob patterns (one per line in the textarea)
  *  - `params` / `queryParams` — JSON objects, edited via the
- *     disclosure as raw JSON for now (a structured editor would need
- *     the page-type's params schema, deferred to a later phase).
+ *     disclosure as raw JSON. A structured editor would need access
+ *     to the page-type's params schema.
  */
 const PAGE_LABELS = {
   HOMEPAGE: "homepage",
@@ -39,12 +39,12 @@ const PAGE_LABELS = {
 };
 
 export default class RouteConditionEditor extends Component {
+  @tracked advancedOpen = false;
+  @tracked paramsJson = serialiseJson(this.args.leaf?.params);
+  @tracked queryParamsJson = serialiseJson(this.args.leaf?.queryParams);
+  @tracked paramsError = null;
+  @tracked queryParamsError = null;
   isPageSelected = (id) => this.selectedPages.has(id);
-  @tracked _advancedOpen = false;
-  @tracked _paramsJson = serialiseJson(this.args.leaf?.params);
-  @tracked _queryParamsJson = serialiseJson(this.args.leaf?.queryParams);
-  @tracked _paramsError = null;
-  @tracked _queryParamsError = null;
 
   get pageTypes() {
     return VALID_PAGE_TYPES.map((id) => ({
@@ -105,42 +105,42 @@ export default class RouteConditionEditor extends Component {
 
   @action
   toggleAdvanced() {
-    this._advancedOpen = !this._advancedOpen;
+    this.advancedOpen = !this.advancedOpen;
   }
 
   @action
   setParamsJson(event) {
     const raw = event.target.value;
-    this._paramsJson = raw;
+    this.paramsJson = raw;
     if (raw.trim() === "") {
-      this._paramsError = null;
+      this.paramsError = null;
       this.patch({ params: undefined });
       return;
     }
     try {
       const parsed = JSON.parse(raw);
-      this._paramsError = null;
+      this.paramsError = null;
       this.patch({ params: parsed });
     } catch (err) {
-      this._paramsError = err.message;
+      this.paramsError = err.message;
     }
   }
 
   @action
   setQueryParamsJson(event) {
     const raw = event.target.value;
-    this._queryParamsJson = raw;
+    this.queryParamsJson = raw;
     if (raw.trim() === "") {
-      this._queryParamsError = null;
+      this.queryParamsError = null;
       this.patch({ queryParams: undefined });
       return;
     }
     try {
       const parsed = JSON.parse(raw);
-      this._queryParamsError = null;
+      this.queryParamsError = null;
       this.patch({ queryParams: parsed });
     } catch (err) {
-      this._queryParamsError = err.message;
+      this.queryParamsError = err.message;
     }
   }
 
@@ -184,16 +184,16 @@ export default class RouteConditionEditor extends Component {
 
       <DButton
         class="wireframe-condition-editor__advanced-toggle"
-        @ariaExpanded={{this._advancedOpen}}
+        @ariaExpanded={{this.advancedOpen}}
         @label={{if
-          this._advancedOpen
+          this.advancedOpen
           "wireframe.inspector.conditions.advanced_hide"
           "wireframe.inspector.conditions.advanced_show"
         }}
         @action={{this.toggleAdvanced}}
       />
 
-      {{#if this._advancedOpen}}
+      {{#if this.advancedOpen}}
         <div class="wireframe-condition-editor__field">
           <span class="wireframe-condition-editor__legend">
             {{i18n "wireframe.inspector.conditions.route_editor.params_legend"}}
@@ -203,10 +203,10 @@ export default class RouteConditionEditor extends Component {
             rows="3"
             placeholder='{"categorySlug": "support"}'
             {{on "input" this.setParamsJson}}
-          >{{this._paramsJson}}</textarea>
-          {{#if this._paramsError}}
+          >{{this.paramsJson}}</textarea>
+          {{#if this.paramsError}}
             <span class="wireframe-condition-editor__error">
-              {{this._paramsError}}
+              {{this.paramsError}}
             </span>
           {{/if}}
         </div>
@@ -222,10 +222,10 @@ export default class RouteConditionEditor extends Component {
             rows="3"
             placeholder='{"filter": "solved"}'
             {{on "input" this.setQueryParamsJson}}
-          >{{this._queryParamsJson}}</textarea>
-          {{#if this._queryParamsError}}
+          >{{this.queryParamsJson}}</textarea>
+          {{#if this.queryParamsError}}
             <span class="wireframe-condition-editor__error">
-              {{this._queryParamsError}}
+              {{this.queryParamsError}}
             </span>
           {{/if}}
         </div>

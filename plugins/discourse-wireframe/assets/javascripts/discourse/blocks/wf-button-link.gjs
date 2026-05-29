@@ -42,14 +42,21 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
   },
 })
 export default class WFButtonLink extends Component {
+  /**
+   * Composes the DButton class list, mixing the wireframe BEM root with
+   * the variant-derived core button class so the rendered control picks
+   * up DButton's existing primary / default / danger styling.
+   *
+   * @returns {string}
+   */
   get btnClass() {
     return `wf-button-link btn-${this.args.variant ?? "default"}`;
   }
 
   <template>
-    {{! Use block-form DButton (rather than `@icon` / `@translatedLabel`)
-        so the icon and label each render inside their own click-to-edit
-        wrapper while still matching DButton's spacing. }}
+    {{! Block-form DButton (instead of `@icon` / `@translatedLabel`) so
+        the icon and label each render in their own click-to-edit wrapper
+        while still matching DButton's spacing. }}
     <DButton class={{this.btnClass}} @href={{@href}} data-block-arg="href">
       <span
         class="wf-inline-icon {{unless @icon 'wf-inline-icon--empty'}}"

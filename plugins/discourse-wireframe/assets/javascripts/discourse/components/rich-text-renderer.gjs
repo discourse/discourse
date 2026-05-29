@@ -38,8 +38,12 @@ import { blockArgRenderers } from "../lib/block-arg-renderers";
  */
 export default class RichTextRenderer extends Component {
   /**
-   * Normalize the value to a content array. Plain strings become a
-   * single text run; doc-JSON's `content` array is returned as-is.
+   * Normalizes the value to a content array. Plain strings become a
+   * single text run; doc-JSON's `content` array is returned as-is;
+   * everything else (null / undefined / unrecognised shape) becomes an
+   * empty array.
+   *
+   * @returns {Array<object>}
    */
   get runs() {
     const value = this.args.value;
@@ -52,6 +56,14 @@ export default class RichTextRenderer extends Component {
     return [];
   }
 
+  /**
+   * Whether the value contains no runs. Authors typically wire this to
+   * an `aria-hidden` attribute on the outer element (for accessibility)
+   * and to a BEM `--empty` modifier (so the wrapper collapses visually
+   * on the live site).
+   *
+   * @returns {boolean}
+   */
   get isEmpty() {
     return this.runs.length === 0;
   }
@@ -60,6 +72,8 @@ export default class RichTextRenderer extends Component {
    * The active inner-content implementation, looked up from the
    * registry on each render so an editor-lifecycle swap fires a
    * re-render of `R.Content` consumers.
+   *
+   * @returns {object}
    */
   get contentComponent() {
     return blockArgRenderers["rich-text"];

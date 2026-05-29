@@ -59,21 +59,21 @@ export default class EditorShell extends Component {
   toggleLeftCollapsed() {
     this.leftCollapsed = !this.leftCollapsed;
     writeBoolStorage("ve.leftCollapsed", this.leftCollapsed);
-    this._syncBodyClasses();
+    this.#syncBodyClasses();
   }
 
   @action
   toggleRightCollapsed() {
     this.rightCollapsed = !this.rightCollapsed;
     writeBoolStorage("ve.rightCollapsed", this.rightCollapsed);
-    this._syncBodyClasses();
+    this.#syncBodyClasses();
   }
 
   @action
   toggleDimNonEditable() {
     this.dimNonEditable = !this.dimNonEditable;
     writeBoolStorage("ve.dimNonEditable", this.dimNonEditable);
-    this._syncBodyClasses();
+    this.#syncBodyClasses();
   }
 
   /**
@@ -85,10 +85,10 @@ export default class EditorShell extends Component {
    */
   @action
   setupBodyClasses() {
-    this._syncBodyClasses();
+    this.#syncBodyClasses();
   }
 
-  _syncBodyClasses() {
+  #syncBodyClasses() {
     document.body.classList.toggle(
       "wireframe-active--left-collapsed",
       this.leftCollapsed
@@ -181,14 +181,14 @@ export default class EditorShell extends Component {
           count: this.wireframe.validationWarnings.length,
         }),
         confirmButtonLabel: "wireframe.chrome.save_anyway",
-        didConfirm: () => this._performSave(),
+        didConfirm: () => this.#performSave(),
       });
       return;
     }
-    this._performSave();
+    this.#performSave();
   }
 
-  async _performSave() {
+  async #performSave() {
     this.isSaving = true;
     this.saveErrorMessage = null;
     try {

@@ -77,17 +77,17 @@ const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
     },
   },
   validate(args) {
-    // `requires` is value-agnostic (any non-undefined value satisfies it),
-    // but `dismissable` defaults to `false` so it's always considered
-    // provided. We only want to demand a `cookieKey` when dismissable is
-    // toggled ON — otherwise the conditional UI hides the field anyway.
+    // Custom validation because `required: true` on `cookieKey` would
+    // demand it unconditionally — but the inspector only surfaces the
+    // field when `dismissable` is on, so we only need the value then.
     if (args.dismissable === true && !args.cookieKey) {
       return i18n("wireframe.validation.cta_banner.cookie_key_required");
     }
   },
 })
 export default class WFCTABanner extends Component {
-  @tracked dismissed = document.cookie.includes(`${this.cookieName}=dismissed`);
+  @tracked
+  _dismissed = document.cookie.includes(`${this.cookieName}=dismissed`);
 
   /**
    * Per-instance cookie name. Combining a fixed prefix with the
@@ -101,14 +101,32 @@ export default class WFCTABanner extends Component {
     return key ? `${COOKIE_PREFIX}--${key}` : COOKIE_PREFIX;
   }
 
+  /**
+   * Whether the banner should be rendered. Hides the banner once the
+   * visitor has dismissed it (and dismissal is enabled).
+   *
+   * @returns {boolean}
+   */
   get shouldShow() {
-    return !(this.args.dismissable && this.dismissed);
+    return !(this.args.dismissable && this._dismissed);
   }
 
+  /**
+   * Whether the actions region (link button and/or close button) has
+   * anything to render. Used to suppress the actions wrapper entirely
+   * when neither a link nor a dismiss button is configured.
+   *
+   * @returns {boolean}
+   */
   get hasActions() {
     return !!(this.args.linkHref || this.args.dismissable);
   }
 
+  /**
+   * Persists the dismissal in a cookie scoped to this banner's
+   * `cookieName`, with a three-month expiry. Flips `_dismissed` so the
+   * banner re-renders empty.
+   */
   @action
   dismissBanner() {
     const expires = new Date();
@@ -118,7 +136,7 @@ export default class WFCTABanner extends Component {
       secure: true,
       expires,
     });
-    this.dismissed = true;
+    this._dismissed = true;
   }
 
   <template>

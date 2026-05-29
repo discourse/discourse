@@ -59,7 +59,7 @@ module("Unit | Discourse Wireframe | schemaToFields", function () {
     assert.strictEqual(fields[0].control, "tag-chooser");
   });
 
-  test("maps a non-string array to a text control (Phase 2 fallback)", function (assert) {
+  test("maps a non-string array to a text control (fallback)", function (assert) {
     const fields = schemaToFields({
       ids: { type: "array", itemType: "number" },
     });

@@ -119,8 +119,7 @@ class ThemeField < ActiveRecord::Base
   BLOCK_LAYOUT_MAX_DEPTH = 20
 
   # Currently-supported block_layout schema version. Bump when the on-disk
-  # JSON shape changes; older versions can be migrated by a future
-  # `BlockLayoutSchemaMigrator` (Phase 7+).
+  # JSON shape changes.
   BLOCK_LAYOUT_SCHEMA_VERSION = 1
 
   def self.theme_var_type_ids
@@ -398,9 +397,8 @@ class ThemeField < ActiveRecord::Base
   # Validation here is structural only: it rejects malformed JSON, missing /
   # unknown schema versions, non-object entries, missing `block` references,
   # and over-deep nesting. Block-class resolution and condition validation
-  # happen client-side at hydration time — Phase 3b deliberately keeps the
-  # server-side check shallow so MiniRacer doesn't have to be wired up just
-  # to bake a layout.
+  # happen client-side at hydration time so MiniRacer doesn't have to be
+  # wired up just to bake a layout.
   def bake_block_layout!
     parsed = JSON.parse(value)
     raise "block_layout payload must be a JSON object." unless parsed.is_a?(Hash)

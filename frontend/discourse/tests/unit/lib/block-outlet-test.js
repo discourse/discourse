@@ -1240,7 +1240,6 @@ module("Unit | Lib | block-outlet", function (hooks) {
         owner
       );
 
-      // Theme still wins resolution.
       const resolved =
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
       assert.strictEqual(resolved[0].args.label, "theme");
@@ -1311,7 +1310,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
     test("permissive mode: empty container resolves with warnings instead of rejecting", async function (assert) {
       // Strict mode (no `permissive` flag) rejects with the existing
-      // BlockError — preserved as a regression check below.
+      // BlockError — kept here as a regression check before switching modes.
       await assert.rejects(
         _setLayoutLayer(
           "homepage-blocks",

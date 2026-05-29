@@ -5,9 +5,13 @@ import { block } from "discourse/blocks";
 
 const VALID_COUNTS = [2, 3, 4];
 
-// Deprecated as of Phase 7p.7. Use `wf:layout` with `mode: "grid"`
-// instead. Kept registered (and `paletteHidden`) so existing saved
-// layouts continue to resolve. Will be removed in a later release.
+/**
+ * Deprecated alias for `wf:layout` with `mode: "grid"`. Kept registered
+ * (and `paletteHidden`) so existing saved layouts continue to resolve;
+ * will be removed in a later release.
+ *
+ * @deprecated Use `wf:layout` with `mode: "grid"` instead.
+ */
 @block("wf:columns", {
   container: true,
   displayName: "Columns (deprecated — use Layout)",
@@ -34,6 +38,13 @@ const VALID_COUNTS = [2, 3, 4];
   },
 })
 export default class WFColumns extends Component {
+  /**
+   * Inline `grid-template-columns` / `gap` declarations derived from the
+   * `count` and `gap` args, wrapped in `trustHTML` so the template can
+   * forward them to a `style` attribute.
+   *
+   * @returns {ReturnType<typeof trustHTML>}
+   */
   get gridStyle() {
     const count = this.args.count ?? 2;
     const gap = this.args.gap ?? 1;

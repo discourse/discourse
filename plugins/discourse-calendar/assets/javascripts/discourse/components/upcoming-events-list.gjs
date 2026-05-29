@@ -48,11 +48,9 @@ export default class UpcomingEventsList extends Component {
   constructor() {
     super(...arguments);
     this.appEvents.on("page:changed", this, this.updateEventsList);
-    // Initial fetch — `page:changed` is the only refresh trigger in the
-    // sidebar use case (it fires every navigation), but consumers that
-    // mount this component outside a route transition (e.g. visual-
-    // editor blocks rendered into a frozen homepage) wouldn't otherwise
-    // see any data.
+    // `page:changed` is the only refresh trigger, so consumers mounted
+    // outside a route transition (e.g. visual-editor blocks on a frozen
+    // homepage) need an explicit initial fetch.
     this.updateEventsList();
   }
 

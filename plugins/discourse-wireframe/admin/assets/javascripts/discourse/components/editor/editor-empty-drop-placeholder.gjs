@@ -42,45 +42,45 @@ export default class EditorEmptyDropPlaceholder extends Component {
 
   /* Captured on insert via didInsert. The button is also the FloatKit
      menu anchor — `menu.show()` positions the popover relative to it. */
-  _buttonEl = null;
+  #buttonEl = null;
 
   /* The open FloatKit menu instance, returned by `menu.show()`. Held
      so `handlePick` can close the popover after firing `@onPick`. */
-  _menuInstance = null;
+  #menuInstance = null;
 
   /* FloatKit tooltip instance returned by `tooltip.register()`. Held so
      the destroy hook can release the listeners when the placeholder
      unmounts. Listeners are attached on the `__tooltip-host` child, not
      the button — that's how the narrow-only behaviour stays CSS-driven. */
-  _tooltipInstance = null;
+  #tooltipInstance = null;
 
   @action
   captureButton(element) {
-    this._buttonEl = element;
+    this.#buttonEl = element;
   }
 
   @action
   registerTooltip(element) {
-    this._tooltipInstance = this.tooltip.register(element, {
+    this.#tooltipInstance = this.tooltip.register(element, {
       content: this.args.hint,
     });
   }
 
   @action
   cleanupTooltip() {
-    this._tooltipInstance?.destroy?.();
-    this._tooltipInstance = null;
+    this.#tooltipInstance?.destroy?.();
+    this.#tooltipInstance = null;
   }
 
   @action
   async openPicker(event) {
-    // Slots and empty containers sit inside `<BlockChrome>`, whose own
-    // click handler unconditionally calls `event.preventDefault()` +
-    // `selectBlock(...)` and triggers a re-render. Without this stop the
-    // chrome's action eats the click — the menu appears to never open.
+    // The surrounding `<BlockChrome>` click handler calls
+    // `event.preventDefault()` + `selectBlock(...)` and triggers a
+    // re-render. Stop propagation so the chrome doesn't swallow the
+    // click before the menu opens.
     event?.stopPropagation?.();
     event?.preventDefault?.();
-    this._menuInstance = await this.menu.show(this._buttonEl, {
+    this.#menuInstance = await this.menu.show(this.#buttonEl, {
       component: EditorBlockPickerMenu,
       identifier: "wireframe-block-picker",
       placement: "bottom",
@@ -96,8 +96,8 @@ export default class EditorEmptyDropPlaceholder extends Component {
   @action
   handlePick(blockEntry) {
     this.args.onPick?.(blockEntry);
-    this._menuInstance?.close?.();
-    this._menuInstance = null;
+    this.#menuInstance?.close?.();
+    this.#menuInstance = null;
   }
 
   <template>

@@ -10,7 +10,7 @@
  * compute-ref proxy propagates the change to the rendered block without
  * re-publishing the layer.
  *
- * Drag-drop / palette additions in later phases will use the immutable
+ * Structural mutations (drag-drop, palette additions) use the immutable
  * `replaceEntryArgs` family to build new layouts and republish via
  * `setLayoutLayer`.
  *
@@ -200,8 +200,8 @@ export function replaceEntryInPlace(layout, key, newEntry) {
  * entry object itself — not a wrapper. `null` is returned when no
  * entry matches.
  *
- * Used by the editor's breadcrumb component (Phase 7p.2) to render
- * the ancestry of the selected block.
+ * Used by the editor's breadcrumb component to render the ancestry
+ * of the selected block.
  *
  * @param {Array<Object>} layout
  * @param {string} key
@@ -258,20 +258,6 @@ export function findEntrySiblings(layout, key) {
 }
 
 /**
- * Replaces the `conditions` field on a matched entry. Mirrors
- * `replaceEntryArgs` but targets the entry's condition tree (the
- * visibility predicate) rather than the rendered args.
- *
- * Accepts `null` to clear the conditions entirely. Untouched subtrees
- * keep their array identity so downstream consumers (block-outlet
- * reactivity) can short-circuit re-renders.
- *
- * @param {Array<Object>} layout
- * @param {string} key
- * @param {Array|Object|null} newConditions
- * @returns {{layout: Array<Object>, changed: boolean}}
- */
-/**
  * Returns a new layout where the entry matching `key` has its `id`
  * replaced. `id` is the entry-level identifier used for CSS targeting
  * (BEM modifier classes, `data-block-id` attribute). Authors edit it
@@ -320,6 +306,20 @@ export function replaceEntryId(layout, key, nextId) {
   return { layout: newLayout, changed };
 }
 
+/**
+ * Replaces the `conditions` field on a matched entry. Mirrors
+ * `replaceEntryArgs` but targets the entry's condition tree (the
+ * visibility predicate) rather than the rendered args.
+ *
+ * Accepts `null` to clear the conditions entirely. Untouched subtrees
+ * keep their array identity so downstream consumers (block-outlet
+ * reactivity) can short-circuit re-renders.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} key
+ * @param {Array|Object|null} newConditions
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
 export function replaceEntryConditions(layout, key, newConditions) {
   let changed = false;
 

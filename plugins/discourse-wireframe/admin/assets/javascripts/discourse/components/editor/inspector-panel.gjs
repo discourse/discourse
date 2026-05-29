@@ -16,11 +16,10 @@ import InspectorMetadataSection from "./inspector-metadata-section";
 import InspectorRawJson from "./inspector-raw-json";
 
 /**
- * Inspector for the selected block. Phase 7p.5 reshape: replaces the
- * stacked-sections layout with a tab strip (Args / Conditions / Raw
- * JSON). Metadata moves to a small `ⓘ` button next to the block name,
- * surfacing via a tooltip — it's reference info, not edit info, and
- * doesn't deserve its own pane.
+ * Inspector for the selected block. Organises content into a tab strip
+ * (Args / Conditions / Raw JSON). Metadata surfaces via a small `ⓘ`
+ * button next to the block name with a tooltip — it's reference info,
+ * not edit info, and doesn't deserve its own pane.
  */
 export default class InspectorPanel extends Component {
   @service wireframe;
@@ -28,14 +27,33 @@ export default class InspectorPanel extends Component {
   isTabActive = (tab) => this._activeTab === tab;
   @tracked _activeTab = "args";
 
+  /**
+   * `true` when a block is currently selected and the inspector has
+   * something to render.
+   *
+   * @returns {boolean}
+   */
   get hasSelection() {
     return this.wireframe.selectedBlockData != null;
   }
 
+  /**
+   * Live data for the selected block, or `null` when nothing is
+   * selected. Pulled from the service so the inspector tracks the
+   * latest live values without holding its own snapshot.
+   *
+   * @returns {Object|null}
+   */
   get data() {
     return this.wireframe.selectedBlockData;
   }
 
+  /**
+   * Block metadata for the selected block (args schema, description,
+   * etc.), or `null` when the registry has no entry.
+   *
+   * @returns {Object|null}
+   */
   get metadata() {
     return this.data?.metadata ?? null;
   }
@@ -58,9 +76,9 @@ export default class InspectorPanel extends Component {
   /**
    * Whether the selected block deserves a bespoke args form instead of
    * the generic FormKit one. The `wf:layout` block gets a custom form
-   * (Phase 7s.4) that surfaces mode-specific controls — segmented
-   * mode picker, columns/rows steppers, gap slider, template
-   * disclosure. Other blocks fall through to the generic form.
+   * that surfaces mode-specific controls — segmented mode picker,
+   * columns/rows steppers, gap slider, template disclosure. Other
+   * blocks fall through to the generic form.
    *
    * @returns {boolean}
    */

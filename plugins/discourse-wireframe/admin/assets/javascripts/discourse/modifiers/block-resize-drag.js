@@ -187,7 +187,8 @@ export default modifier(
       try {
         element.releasePointerCapture(pointerId);
       } catch {
-        // Same rationale as above.
+        // The capture is automatically released if the element was
+        // removed mid-drag; safe to ignore.
       }
       pointerId = null;
       originRect = null;

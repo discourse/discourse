@@ -14,10 +14,22 @@ import { safeHref } from "../lib/inline-rich-text";
  * recursive structure produces nesting that matches that order.
  */
 export default class MarkedText extends Component {
+  /**
+   * The first mark to wrap the text with on this recursion level.
+   * `undefined` when the marks array is empty.
+   *
+   * @returns {object|undefined}
+   */
   get head() {
     return this.args.marks?.[0];
   }
 
+  /**
+   * The remaining marks to apply via recursion, with the head removed.
+   * Returns an empty array when the marks list is exhausted.
+   *
+   * @returns {object[]}
+   */
   get rest() {
     return this.args.marks?.slice(1) ?? [];
   }
@@ -34,7 +46,8 @@ export default class MarkedText extends Component {
           rel="noopener nofollow ugc"
         ><MarkedText @text={{@text}} @marks={{this.rest}} /></a>
       {{else}}
-        {{! Unknown mark — fall through. Validator should have caught this. }}
+        {{! Unknown mark — validator should have caught this; recurse to
+            skip the head and apply the rest. }}
         <MarkedText @text={{@text}} @marks={{this.rest}} />
       {{/if}}
     {{else}}

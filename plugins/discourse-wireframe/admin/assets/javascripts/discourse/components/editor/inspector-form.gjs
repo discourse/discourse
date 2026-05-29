@@ -47,9 +47,9 @@ function coerceToSchemaType(value, argDef) {
 }
 
 /**
- * Phase 2 inspector form. Reads the selected block's args schema (with `ui`
- * hints), maps it to FormKit fields via `schemaToFields`, and pushes value
- * changes back through `wireframe.updateSelectedArg`.
+ * Inspector form for the selected block's args. Reads the args schema
+ * (with `ui` hints), maps it to FormKit fields via `schemaToFields`,
+ * and pushes value changes back through `wireframe.updateSelectedArg`.
  *
  * Live editing is wired through each Field's `@onSet` hook: when a control
  * commits a new value, FormKit invokes `onSet(value, { set, name })` instead
@@ -57,11 +57,7 @@ function coerceToSchemaType(value, argDef) {
  * FormKit's own draft data in sync, and `updateSelectedArg(name, value)`
  * pushes the change to the layout so the canvas re-renders. (FormKit
  * intentionally has no form-level `@onChange`; per-field `@onSet` is the
- * supported extension point — see `field-data.gjs:69`.)
- *
- * Phase 2 control coverage falls back to `input-text` for the entity pickers
- * (`category-select`, `tag-select`, `user-select`, `group-select`) until the
- * bespoke pickers ship in a later phase.
+ * supported extension point — see `fk/field-data.gjs:71`.)
  */
 export default class InspectorForm extends Component {
   @service wireframe;
@@ -79,7 +75,7 @@ export default class InspectorForm extends Component {
    *
    * @type {{addError: Function, removeErrors: Function}|null}
    */
-  _formApi = null;
+  #formApi = null;
 
   /**
    * Subscribes the surrounding tracking frame to the wireframe service's
@@ -204,7 +200,7 @@ export default class InspectorForm extends Component {
    */
   @action
   registerFormApi(api) {
-    this._formApi = api;
+    this.#formApi = api;
   }
 
   /**
@@ -230,15 +226,15 @@ export default class InspectorForm extends Component {
    */
   @action
   syncErrors() {
-    if (!this._formApi) {
+    if (!this.#formApi) {
       return;
     }
-    this._formApi.removeErrors();
+    this.#formApi.removeErrors();
 
     for (const [field, details] of Object.entries(this.fieldErrors)) {
       const label = this.schema?.[field]?.ui?.label ?? field;
       for (const d of details) {
-        this._formApi.addError(field, {
+        this.#formApi.addError(field, {
           title: label,
           message: friendlyErrorMessage(d),
         });
@@ -247,7 +243,7 @@ export default class InspectorForm extends Component {
 
     const blockLabel = i18n("wireframe.inspector.errors.block_label");
     this.wireframe.selectedBlockNonFieldErrors.forEach((d, i) => {
-      this._formApi.addError(`_block:${i}`, {
+      this.#formApi.addError(`_block:${i}`, {
         title: blockLabel,
         message: friendlyErrorMessage(d),
       });

@@ -70,30 +70,58 @@ export default class WFCategoryBanner extends Component {
    * latch onto the previous category until the new one resolves,
    * avoiding a flash of empty banner.
    */
-  @tracked keepInLoadingRoute = false;
+  @tracked _keepInLoadingRoute = false;
 
+  /**
+   * The current category's slug-with-ID URL segment, read off the
+   * router's current-route params. `undefined` outside category routes.
+   *
+   * @returns {string|undefined}
+   */
   get categorySlugPathWithID() {
     return this.router?.currentRoute?.params?.category_slug_path_with_id;
   }
 
+  /**
+   * Whether the banner should render at all. True on category routes and
+   * during the brief `*.loading` window between category navigations
+   * (see the `_keepInLoadingRoute` field's JSDoc for context).
+   *
+   * @returns {boolean}
+   */
   get shouldRender() {
     return (
       this.categorySlugPathWithID ||
-      (this.keepInLoadingRoute &&
+      (this._keepInLoadingRoute &&
         this.router.currentRoute.name.includes("loading"))
     );
   }
 
+  /**
+   * Whether the banner is in a route that should keep its existing
+   * category data loaded. Used by `loadCategory()` to decide whether to
+   * fetch fresh data or hold onto the previous category during loading
+   * transitions.
+   *
+   * @returns {boolean}
+   */
   get isVisible() {
     if (this.categorySlugPathWithID) {
       return true;
     }
     if (this.router.currentRoute.name.includes("loading")) {
-      return this.keepInLoadingRoute;
+      return this._keepInLoadingRoute;
     }
     return false;
   }
 
+  /**
+   * Inline style with the category's brand colours, exposed as CSS custom
+   * properties so the stylesheet can theme the banner without touching
+   * inline-style specificity.
+   *
+   * @returns {ReturnType<typeof trustHTML>}
+   */
   get safeStyle() {
     return trustHTML(
       `--wf-category-banner-background: #${this.category.color}; ` +
@@ -101,10 +129,24 @@ export default class WFCategoryBanner extends Component {
     );
   }
 
+  /**
+   * Whether the description region should appear. Honours the
+   * `showDescription` arg and also collapses for categories without any
+   * description text.
+   *
+   * @returns {boolean}
+   */
   get displayCategoryDescription() {
     return this.args.showDescription && this.category.description?.length > 0;
   }
 
+  /**
+   * Whether to render the category's icon (or emoji) in the heading.
+   * Requires both the `showIcon` arg AND a matching `style_type` /
+   * payload on the category itself.
+   *
+   * @returns {boolean}
+   */
   get showCategoryIcon() {
     if (!this.args.showIcon) {
       return false;
@@ -115,6 +157,14 @@ export default class WFCategoryBanner extends Component {
     return hasIcon || hasEmoji;
   }
 
+  /**
+   * HTML for the category-name pill (lock icon, colour swatch, name).
+   * Delegates to core's `categoryLinkHTML`, but with `link: false` so
+   * the badge is presentational only — the surrounding heading already
+   * carries the link semantics.
+   *
+   * @returns {ReturnType<typeof categoryLinkHTML>}
+   */
   get categoryNameBadge() {
     return categoryLinkHTML(this.category, {
       allowUncategorized: true,
@@ -122,10 +172,22 @@ export default class WFCategoryBanner extends Component {
     });
   }
 
+  /**
+   * Whether the current category has subcategories worth listing in the
+   * banner's secondary region.
+   *
+   * @returns {boolean}
+   */
   get hasSubcategories() {
     return this.category?.subcategories?.length > 0;
   }
 
+  /**
+   * Resolves the current route's category and latches the loading-route
+   * fallback flag (see `_keepInLoadingRoute`). Triggered by `did-insert`
+   * / `did-update` modifiers so the category refreshes on every visible
+   * route change.
+   */
   @action
   loadCategory() {
     if (!this.isVisible) {
@@ -135,9 +197,9 @@ export default class WFCategoryBanner extends Component {
       this.category = Category.findBySlugPathWithID(
         this.categorySlugPathWithID
       );
-      this.keepInLoadingRoute = true;
+      this._keepInLoadingRoute = true;
     } else if (!this.router.currentRoute.name.includes("loading")) {
-      this.keepInLoadingRoute = false;
+      this._keepInLoadingRoute = false;
     }
   }
 

@@ -59,45 +59,43 @@ export default class ConditionsFloatingPanel extends Component {
     observer.observe(element);
     return () => observer.disconnect();
   });
-  @tracked _dragging = false;
-  _dragStart = null;
-
-  _onDragMove = (event) => {
-    if (!this._dragStart) {
+  #dragStart = null;
+  #onDragMove = (event) => {
+    if (!this.#dragStart) {
       return;
     }
-    const dx = event.clientX - this._dragStart.pointerX;
-    const dy = event.clientY - this._dragStart.pointerY;
+    const dx = event.clientX - this.#dragStart.pointerX;
+    const dy = event.clientY - this.#dragStart.pointerY;
     const next = {
       x: Math.max(
         0,
         Math.min(
-          window.innerWidth - this._dragStart.width,
-          Math.round(this._dragStart.originX + dx)
+          window.innerWidth - this.#dragStart.width,
+          Math.round(this.#dragStart.originX + dx)
         )
       ),
       y: Math.max(
         0,
         Math.min(
-          window.innerHeight - this._dragStart.height,
-          Math.round(this._dragStart.originY + dy)
+          window.innerHeight - this.#dragStart.height,
+          Math.round(this.#dragStart.originY + dy)
         )
       ),
-      width: Math.round(this._dragStart.width),
-      height: Math.round(this._dragStart.height),
+      width: Math.round(this.#dragStart.width),
+      height: Math.round(this.#dragStart.height),
     };
     this.wireframe.updateConditionsPanelRect(next);
   };
-
-  _endDrag = () => {
+  #endDrag = () => {
     this._dragging = false;
-    this._dragStart = null;
-    document.removeEventListener("pointermove", this._onDragMove);
+    this.#dragStart = null;
+    document.removeEventListener("pointermove", this.#onDragMove);
   };
+  @tracked _dragging = false;
 
   willDestroy() {
     super.willDestroy(...arguments);
-    document.removeEventListener("pointermove", this._onDragMove);
+    document.removeEventListener("pointermove", this.#onDragMove);
   }
 
   get isOpen() {
@@ -131,7 +129,7 @@ export default class ConditionsFloatingPanel extends Component {
     const rect = event.currentTarget
       .closest(".wireframe-conditions-floating")
       .getBoundingClientRect();
-    this._dragStart = {
+    this.#dragStart = {
       pointerX: event.clientX,
       pointerY: event.clientY,
       originX: rect.left,
@@ -140,8 +138,8 @@ export default class ConditionsFloatingPanel extends Component {
       height: rect.height,
     };
     this._dragging = true;
-    document.addEventListener("pointermove", this._onDragMove);
-    document.addEventListener("pointerup", this._endDrag, { once: true });
+    document.addEventListener("pointermove", this.#onDragMove);
+    document.addEventListener("pointerup", this.#endDrag, { once: true });
   }
 
   @action

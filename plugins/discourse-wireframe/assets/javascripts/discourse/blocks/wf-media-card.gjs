@@ -288,9 +288,9 @@ export default class WFMediaCard extends Component {
 /**
  * Wraps a URL in CSS `url("...")` syntax with backslash-escaped quotes
  * and backslashes so the value can be safely interpolated into an inline
- * `style` attribute. The URL itself is still trusted (it passes the
- * block's URL_PATTERN validation), but this guards against accidental
- * breakage from a stray double-quote in a CDN-rewritten path.
+ * `style` attribute. The URL itself comes from the trusted upload
+ * pipeline; this guards against accidental breakage from a stray
+ * double-quote in a CDN-rewritten path.
  *
  * @param {string} url
  * @returns {string}

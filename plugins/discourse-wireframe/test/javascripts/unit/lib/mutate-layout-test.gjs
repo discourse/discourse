@@ -433,8 +433,8 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
     });
 
     test("strips null and undefined args during clone", function (assert) {
-      // Self-heal for layouts persisted before the write-side fix landed
-      // (FormKit cleared text inputs used to land as `null` in args).
+      // Drops args whose value is `null` / `undefined` — these would
+      // otherwise fail the per-arg type validator (typeof null === "object").
       const layout = [
         {
           block: LeafBlock,

@@ -26,6 +26,13 @@ const VALID_STYLES = ["solid", "dashed", "dotted"];
   },
 })
 export default class WFDivider extends Component {
+  /**
+   * Inline border declarations for the `<hr>`, mixing the chosen line
+   * style and colour. Falls back to `--primary-low` when no colour is
+   * supplied so the divider matches the surrounding theme by default.
+   *
+   * @returns {ReturnType<typeof trustHTML>}
+   */
   get hrStyle() {
     const style = this.args.style ?? "solid";
     const color = this.args.color || "var(--primary-low)";

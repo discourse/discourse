@@ -18,7 +18,7 @@ import {
  *   Each condition class that consults the simulated value (currently `user` and
  *   `viewport`) checks `context.simulation?.user` / `context.simulation?.viewport`
  *   before falling back to its real-time service reads. Used by the visual
- *   editor's Phase 7 persona/viewport toolbar to preview how condition-gated
+ *   editor's persona/viewport toolbar to preview how condition-gated
  *   blocks render under a hypothetical user / screen size. Block bodies still
  *   render with the real user's data — simulation only affects condition
  *   evaluation.

@@ -34,6 +34,12 @@ const VALID_TONES = ["info", "success", "warning", "danger"];
   },
 })
 export default class WFCallout extends Component {
+  /**
+   * Composes the BEM class list, appending a `--<tone>` modifier so the
+   * stylesheet can paint each tone with the matching colour palette.
+   *
+   * @returns {string}
+   */
   get calloutClass() {
     return `wf-callout wf-callout--${this.args.tone ?? "info"}`;
   }

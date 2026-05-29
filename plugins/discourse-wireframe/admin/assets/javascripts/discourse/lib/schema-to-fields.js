@@ -81,9 +81,9 @@ function pickControl(argDef) {
       // the current content without having a parallel edit surface here.
       return "rich-inline";
     case "array":
-      // For Phase 2 we only auto-map string arrays to a tag-chooser. Other
-      // shapes fall through to a plain text input until we add bespoke
-      // collection rendering in a later phase.
+      // Only string arrays auto-map to a tag-chooser. Other shapes
+      // fall through to a plain text input until bespoke collection
+      // rendering is added.
       return argDef.itemType === "string" ? "tag-chooser" : "text";
     case "string":
     default:
@@ -165,8 +165,8 @@ export function schemaToFields(schema) {
  *
  * Block authors who want richer inspectors (color pickers, image uploaders,
  * grouping, conditional fields) declare a real schema with `ui:` hints in
- * their decorator. The fallback exists so Phase 2's editing pipeline still
- * works against existing themes that haven't been migrated.
+ * their decorator. The fallback keeps the editing pipeline working
+ * against existing themes that haven't declared one.
  *
  * @param {Object|null|undefined} values
  * @returns {Object} A synthesised args schema in the same shape as the

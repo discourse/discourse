@@ -19,7 +19,7 @@ import { i18n } from "discourse-i18n";
  * Edit model:
  *   - The textarea seeds from `wireframe.selectedBlockRawEntry`
  *     pretty-printed.
- *   - Local `@tracked _draft` tracks unsaved keystrokes.
+ *   - Local `@tracked draft` tracks unsaved keystrokes.
  *   - Apply button parses the draft. Invalid JSON → inline error
  *     banner, draft preserved so the author can fix the typo. Valid
  *     JSON → routes through `replaceSelectedEntryRaw` (which lands
@@ -32,13 +32,13 @@ import { i18n } from "discourse-i18n";
 export default class InspectorRawJson extends Component {
   @service wireframe;
 
-  @tracked _draft = "";
-  @tracked _error = null;
+  @tracked draft = "";
+  @tracked error = null;
 
   /**
    * The pretty-printed JSON form of the currently-selected entry.
    * Read fresh on every getter call from the service — but writing
-   * back to `_draft` happens via the `didInsert` / `didUpdate`
+   * back to `draft` happens via the `didInsert` / `didUpdate`
    * modifiers, not from inside the getter (those run as side effects
    * in render, which ember/no-side-effects rejects).
    */
@@ -53,7 +53,7 @@ export default class InspectorRawJson extends Component {
   /**
    * Reset signal for the textarea — observes the selected block's key.
    * Each time it changes, the `didUpdate` modifier on the textarea
-   * fires and seeds `_draft` with the new entry's serialised form.
+   * fires and seeds `draft` with the new entry's serialised form.
    */
   get selectionKey() {
     return this.wireframe.selectedBlockKey;
@@ -61,28 +61,28 @@ export default class InspectorRawJson extends Component {
 
   @action
   seedDraft() {
-    this._draft = this.serialised;
-    this._error = null;
+    this.draft = this.serialised;
+    this.error = null;
   }
 
   @action
   handleInput(event) {
-    this._draft = event.target.value;
-    this._error = null;
+    this.draft = event.target.value;
+    this.error = null;
   }
 
   @action
   apply() {
     let parsed;
     try {
-      parsed = JSON.parse(this._draft);
+      parsed = JSON.parse(this.draft);
     } catch (e) {
-      this._error = e.message;
+      this.error = e.message;
       return;
     }
     const ok = this.wireframe.replaceSelectedEntryRaw(parsed);
     if (!ok) {
-      this._error = i18n("wireframe.inspector.raw_json.apply_failed");
+      this.error = i18n("wireframe.inspector.raw_json.apply_failed");
       return;
     }
     // Re-seed the draft from the post-publish state so any
@@ -108,7 +108,7 @@ export default class InspectorRawJson extends Component {
   }
 
   get isDirty() {
-    return this._draft !== this.serialised;
+    return this.draft !== this.serialised;
   }
 
   <template>
@@ -120,12 +120,12 @@ export default class InspectorRawJson extends Component {
         {{didInsert this.seedDraft}}
         {{didUpdate this.seedDraft this.selectionKey}}
         {{on "input" this.handleInput}}
-      >{{this._draft}}</textarea>
+      >{{this.draft}}</textarea>
 
-      {{#if this._error}}
+      {{#if this.error}}
         <div class="wireframe-inspector-raw-json__error" role="alert">
           {{dIcon "triangle-exclamation"}}
-          <span>{{this._error}}</span>
+          <span>{{this.error}}</span>
         </div>
       {{/if}}
 

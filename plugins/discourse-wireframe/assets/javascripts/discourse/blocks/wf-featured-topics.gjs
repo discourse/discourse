@@ -91,6 +91,14 @@ export default class WFFeaturedTopics extends Component {
   @service store;
   @service currentUser;
 
+  /**
+   * Fetches the topic list to render, delegated to the shared helper.
+   * Bound via `@bind` so it can be handed to `DAsyncContent` as a
+   * stable function reference (Glimmer would otherwise re-trigger the
+   * fetch on every render).
+   *
+   * @returns {ReturnType<typeof fetchTopicList>}
+   */
   @bind
   async fetchTopics() {
     return fetchTopicList({

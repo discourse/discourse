@@ -84,6 +84,12 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  *   shallowly. Falls back to defaults derived from `args` when unset.
  * @property {string|null} thumbnail - Optional URL of a static thumbnail
  *   image shown in the palette instead of the icon.
+ * @property {boolean} paletteHidden - When true, the visual editor's
+ *   palette omits this block. The block remains registered and renderable
+ *   from layouts that reference it.
+ * @property {boolean} transparent - When true, the block is treated as
+ *   scaffolding by the visual editor's outline (children expanded inline,
+ *   block chrome suppressed). See the `transparent` option on `block()`.
  */
 
 /**
@@ -504,6 +510,8 @@ export function createBlockArgsWithReactiveGetters(
  * - `category` - Palette category label (or `null` if not provided)
  * - `previewArgs` - Sample args for the palette preview (or `null`)
  * - `thumbnail` - Palette thumbnail URL (or `null`)
+ * - `paletteHidden` - When true, the block is omitted from the editor's palette
+ * - `transparent` - When true, the block is treated as scaffolding in the editor's outline
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.

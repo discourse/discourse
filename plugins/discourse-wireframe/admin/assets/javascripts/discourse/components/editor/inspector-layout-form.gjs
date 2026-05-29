@@ -97,7 +97,7 @@ export default class InspectorLayoutForm extends Component {
     return this.outOfBoundsSlots.length > 0;
   }
 
-  get args_() {
+  get #args() {
     return this.wireframe.selectedBlockData?.args ?? {};
   }
 
@@ -105,7 +105,7 @@ export default class InspectorLayoutForm extends Component {
     // Coerce the legacy `"free-grid"` mode value to `"grid"` so the
     // segmented control highlights the right segment and the rest of
     // the form behaves consistently with the new naming.
-    const raw = this.args_.mode ?? "stack";
+    const raw = this.#args.mode ?? "stack";
     return raw === "free-grid" ? "grid" : raw;
   }
 
@@ -114,31 +114,31 @@ export default class InspectorLayoutForm extends Component {
   }
 
   get columns() {
-    return this.args_.columns ?? 6;
+    return this.#args.columns ?? 6;
   }
 
   get rows() {
-    return this.args_.rows ?? 2;
+    return this.#args.rows ?? 2;
   }
 
   get gap() {
-    return this.args_.gap ?? 1;
+    return this.#args.gap ?? 1;
   }
 
   get align() {
-    return this.args_.align ?? "stretch";
+    return this.#args.align ?? "stretch";
   }
 
   get columnTemplate() {
-    return this.args_.columnTemplate ?? "";
+    return this.#args.columnTemplate ?? "";
   }
 
   get rowTemplate() {
-    return this.args_.rowTemplate ?? "";
+    return this.#args.rowTemplate ?? "";
   }
 
   get autoCollapse() {
-    return this.args_.autoCollapse ?? "default";
+    return this.#args.autoCollapse ?? "default";
   }
 
   /**
@@ -150,35 +150,35 @@ export default class InspectorLayoutForm extends Component {
     return `wireframe.inspector.layout.auto_collapse_help_${this.autoCollapse}`;
   }
 
-  set(name, value) {
+  #set(name, value) {
     this.wireframe.updateSelectedArg(name, value);
   }
 
   @action
   setMode(mode) {
-    this.set("mode", mode);
+    this.#set("mode", mode);
   }
 
   @action
   setAutoCollapse(value) {
-    this.set("autoCollapse", value);
+    this.#set("autoCollapse", value);
   }
 
   @action
   setAlign(value) {
-    this.set("align", value);
+    this.#set("align", value);
   }
 
   @action
   bumpColumns(delta) {
     const next = clamp(this.columns + delta, COLUMNS_MIN, COLUMNS_MAX);
-    this._applyDimensionChange({ columns: next, rows: this.rows });
+    this.#applyDimensionChange({ columns: next, rows: this.rows });
   }
 
   @action
   bumpRows(delta) {
     const next = clamp(this.rows + delta, ROWS_MIN, ROWS_MAX);
-    this._applyDimensionChange({ columns: this.columns, rows: next });
+    this.#applyDimensionChange({ columns: this.columns, rows: next });
   }
 
   /**
@@ -190,7 +190,7 @@ export default class InspectorLayoutForm extends Component {
    *
    * @param {{columns: number, rows: number}} next
    */
-  _applyDimensionChange({ columns, rows }) {
+  #applyDimensionChange({ columns, rows }) {
     const data = this.wireframe.selectedBlockData;
     if (!data?.key) {
       return;
@@ -201,7 +201,7 @@ export default class InspectorLayoutForm extends Component {
       rows
     );
     if (offenders.length === 0) {
-      this._writeDimensions({ columns, rows });
+      this.#writeDimensions({ columns, rows });
       return;
     }
     this.dialog.confirm({
@@ -216,26 +216,24 @@ export default class InspectorLayoutForm extends Component {
           maxColumns: columns,
           maxRows: rows,
         });
-        this._writeDimensions({ columns, rows });
+        this.#writeDimensions({ columns, rows });
       },
     });
   }
 
-  _writeDimensions({ columns, rows }) {
+  #writeDimensions({ columns, rows }) {
     if (columns !== this.columns) {
-      this.set("columns", columns);
+      this.#set("columns", columns);
     }
     if (rows !== this.rows) {
-      this.set("rows", rows);
+      this.#set("rows", rows);
     }
   }
 
   /**
    * Clamps the already-out-of-bounds slot placements on an existing
    * layout. Triggered by the warning-banner button surfaced when the
-   * layout loaded with bad data (e.g. someone edited the JSON by hand
-   * or reduced columns in a previous session before the confirm flow
-   * was wired up).
+   * layout loaded with bad data (e.g. someone edited the JSON by hand).
    */
   @action
   fixOutOfBoundsSlots() {
@@ -254,28 +252,28 @@ export default class InspectorLayoutForm extends Component {
   setGap(event) {
     const raw = Number(event.target.value);
     if (Number.isFinite(raw)) {
-      this.set("gap", raw);
+      this.#set("gap", raw);
     }
   }
 
   @action
   setColumnTemplate(event) {
-    this.set("columnTemplate", event.target.value);
+    this.#set("columnTemplate", event.target.value);
   }
 
   @action
   setRowTemplate(event) {
-    this.set("rowTemplate", event.target.value);
+    this.#set("rowTemplate", event.target.value);
   }
 
   @action
   clearColumnTemplate() {
-    this.set("columnTemplate", "");
+    this.#set("columnTemplate", "");
   }
 
   @action
   clearRowTemplate() {
-    this.set("rowTemplate", "");
+    this.#set("rowTemplate", "");
   }
 
   get gridTemplates() {

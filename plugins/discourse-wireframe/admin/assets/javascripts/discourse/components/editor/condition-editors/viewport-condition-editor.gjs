@@ -10,10 +10,10 @@ import { i18n } from "discourse-i18n";
 /**
  * Context-sensitive editor for the `viewport` condition.
  *
- * Quick-pick chips for the three common ranges (mobile only, tablet+,
- * desktop+) cover ~95% of authoring needs. A touch-state segmented
- * control sits below. Advanced authors who need exact breakpoint pairs
- * can edit via the Raw JSON tab.
+ * Quick-pick chips cover the common ranges (any, mobile only, tablet+,
+ * desktop+). A touch-state segmented control sits below. Advanced
+ * authors who need exact breakpoint pairs can edit via the Raw JSON
+ * tab.
  */
 const RANGES = [
   {

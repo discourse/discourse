@@ -7,11 +7,9 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
  *
  * Lives in its own file (universal bundle) so both `lib/grid-math.js`
  * (universal — `parsePlacement` is called from the live-page
- * `wf-layout.gjs` block) and `lib/mutate-layout.js` (now admin-bundle)
- * can read it without dragging mutate-layout's editor-only helpers
- * into the universal bundle. Before the extraction, grid-math imported
- * entryKey directly from mutate-layout, which would have prevented
- * shipping mutate-layout to the admin-only bundle.
+ * `wf-layout.gjs` block) and `lib/mutate-layout.js` (admin-only) can
+ * read it without pulling mutate-layout's editor-only helpers into the
+ * universal bundle.
  *
  * @param {Object} entry
  * @returns {string|null}

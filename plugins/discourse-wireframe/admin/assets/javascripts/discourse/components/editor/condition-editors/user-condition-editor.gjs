@@ -16,7 +16,8 @@ import { i18n } from "discourse-i18n";
  *
  *  - **Login state** — segmented chips: Any / Logged in / Anonymous.
  *  - **Role** — checkbox row: Admin / Moderator / Staff. These are
- *     OR-combined by the evaluator (`isInAnyRole`).
+ *     AND-combined by the evaluator: every checked role must hold for
+ *     the condition to pass.
  *  - **Trust level** — min / max selects with TL0–TL4 labels.
  *  - **Groups** — `<GroupChooser>` configured to deal in names so
  *     the schema (`groups: ["staff", "trust_level_2"]`) round-trips

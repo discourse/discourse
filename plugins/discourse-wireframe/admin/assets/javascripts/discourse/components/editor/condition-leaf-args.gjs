@@ -6,11 +6,9 @@ import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
 
 /**
- * Renders inputs for one leaf condition's args. Lightweight on purpose
- * for the first Phase 7 cut — we render a per-arg input based on the
- * arg's `type` (string / number / boolean / array / enum) without
- * pulling in FormKit. Future polish can graduate this to FormKit if the
- * inspector's other arg surfaces consolidate there.
+ * Renders inputs for one leaf condition's args. Lightweight on purpose:
+ * a per-arg input is rendered based on the arg's `type` (string /
+ * number / boolean / array / enum) without pulling in FormKit.
  *
  * Args:
  *  - `@typeMeta` — the entry from `blocks.listConditionTypes()` for

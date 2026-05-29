@@ -17,13 +17,9 @@ import {
  * Real topic-list block. Fetches via `store.findFiltered("topicList", ...)`
  * with optional category, tag, and solved filters. Renders the result
  * through core's `BasicTopicList` inside an `AsyncContent` for clean
- * loading / empty states.
- *
- * Ported from `discourse/meta-branded-theme`'s `block-featured-list.gjs`
- * (the self-contained `main`-branch version, not the PR variant that
- * reads from `outletArgs.model`). The `filter` enum also covers the
- * `"hot"` use case from the theme's hot-topics block, so a single
- * block covers both surfaces.
+ * loading / empty states. The `filter` enum covers latest, top, new,
+ * unread, hot, etc., so a single block covers both the "recent" and
+ * "hot topics" use cases.
  */
 @block("wf:recent-topics", {
   displayName: "Topic list",
@@ -103,6 +99,14 @@ export default class WFRecentTopics extends Component {
   @service store;
   @service currentUser;
 
+  /**
+   * Fetches the topic list to render, delegated to the shared helper.
+   * Bound via `@bind` so it can be handed to `DAsyncContent` as a
+   * stable function reference (Glimmer would otherwise re-trigger the
+   * fetch on every render).
+   *
+   * @returns {ReturnType<typeof fetchTopicList>}
+   */
   @bind
   async fetchTopics() {
     return fetchTopicList({

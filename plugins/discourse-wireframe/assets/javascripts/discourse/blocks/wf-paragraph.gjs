@@ -34,6 +34,12 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
   },
 })
 export default class WFParagraph extends Component {
+  /**
+   * Composes the BEM class list, appending a `--align-<value>` modifier
+   * for the chosen text alignment.
+   *
+   * @returns {string}
+   */
   get className() {
     return `wf-paragraph wf-paragraph--align-${this.args.align ?? "left"}`;
   }

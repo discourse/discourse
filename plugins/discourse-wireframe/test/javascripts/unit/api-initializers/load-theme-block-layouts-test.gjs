@@ -118,11 +118,8 @@ module(
             layout: [{ block: HydrateTile, args: { label: "from-bus" } }],
             schema_version: 1,
           });
-
-          // Re-instantiate `hydrateThemeBlockLayouts` is called inside the
-          // subscription with `api` captured at subscribe time. Push a fresh
-          // call now so we don't depend on stale `api` references in the
-          // tracked map.
+          // `api` is captured by the subscription's closure; we just
+          // need to be inside withPluginApi for the assertion below.
           void api;
         });
 

@@ -69,6 +69,9 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
  * @typedef {Object} LayerEntry
  * @property {Promise<Array<LayoutEntry>>} validatedLayout - Promise resolving to the validated layout array.
  * @property {Array<LayoutEntry>} layout - The raw layout array (synchronously accessible).
+ * @property {Array<Object>} validationWarnings - Tracked array of warnings
+ *   collected when this entry is published in permissive mode. Empty for
+ *   strict-mode entries (validation either passes or rejects the promise).
  * @property {number} [themeId] - The theme id (only set on entries in the "theme" layer).
  */
 

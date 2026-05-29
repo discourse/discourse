@@ -22,8 +22,7 @@ import { i18n } from "discourse-i18n";
  *      is.
  *   2. Action region (rendered when `@isSelected`) — move up / down,
  *      duplicate, optional force-expand toggle, inline-format
- *      buttons, delete. Modelled on the Gutenberg / Webflow /
- *      Puck pattern.
+ *      buttons, delete.
  *
  * The bar is mounted whenever the chrome is rendered; CSS reveals it
  * on hover (innermost only) or on selection. Positioning is via CSS
@@ -35,9 +34,7 @@ import { i18n } from "discourse-i18n";
  * text selection inside it. The controller (`InlineEditController`)
  * registers itself with the service as `inlineEdit.controller`; we
  * read its `markState` (a tracked-on-PM-transactions getter) and call
- * its commands. Co-locating the inline formatters with the block
- * actions avoids the focus / scroll-tracking problems a separately-
- * floating bubble menu had.
+ * its commands.
  *
  * Inline-format buttons use `@preventFocus={{true}}` on `DButton` so
  * the mousedown's default focus shift is suppressed — ProseMirror
@@ -55,7 +52,7 @@ export default class BlockToolbar extends Component {
    * INITIAL value; this is the live edit-in-progress string the user
    * is typing.
    */
-  @tracked _editorValue = "";
+  @tracked editorValue = "";
 
   get canMoveUp() {
     return this.wireframe.canMoveSelectedUp;
@@ -177,7 +174,7 @@ export default class BlockToolbar extends Component {
 
   @action
   applyFieldEditor() {
-    this.wireframe.fieldEditor?.apply?.(this._editorValue);
+    this.wireframe.fieldEditor?.apply?.(this.editorValue);
   }
 
   @action
@@ -192,7 +189,7 @@ export default class BlockToolbar extends Component {
 
   @action
   onUrlInput(event) {
-    this._editorValue = event.target.value;
+    this.editorValue = event.target.value;
   }
 
   @action
@@ -209,12 +206,12 @@ export default class BlockToolbar extends Component {
   /**
    * Seed the local working value from the slot's initial value when
    * the input mounts (a new slot opens). The slot's `value` is the
-   * current arg / mark value at edit-start; `_editorValue` is the
+   * current arg / mark value at edit-start; `editorValue` is the
    * live in-progress edit. Auto-selects so typing replaces.
    */
   @action
   seedFieldEditorValue(element) {
-    this._editorValue = this.wireframe.fieldEditor?.value ?? "";
+    this.editorValue = this.wireframe.fieldEditor?.value ?? "";
     element.focus();
     element.select();
   }
@@ -255,7 +252,7 @@ export default class BlockToolbar extends Component {
             type="url"
             class="wireframe-block-toolbar__url-input"
             placeholder="https://..."
-            value={{this._editorValue}}
+            value={{this.editorValue}}
             {{didInsert this.seedFieldEditorValue}}
             {{on "input" this.onUrlInput}}
             {{on "keydown" this.onUrlKeydown}}

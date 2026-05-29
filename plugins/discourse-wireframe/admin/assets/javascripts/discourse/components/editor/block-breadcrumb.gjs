@@ -20,20 +20,40 @@ import { i18n } from "discourse-i18n";
  * The path itself is derived in the wireframe service via
  * `selectedBlockAncestry`, which walks the live layout from the
  * outlet root to the selected key and returns an array of
- * `{key, displayName, isOutlet, outletName}` segments.
+ * `{key, blockName, displayName, isOutlet, outletName}` segments.
  */
 export default class BlockBreadcrumb extends Component {
   @service wireframe;
 
+  /**
+   * Ordered list of ancestry segments from the outlet root down to the
+   * selected block. Each segment carries the data needed to render and
+   * to re-select that ancestor.
+   *
+   * @returns {Array<{key: string, blockName: string, displayName: string, isOutlet: boolean, outletName: string}>}
+   */
   @cached
   get segments() {
     return this.wireframe.selectedBlockAncestry;
   }
 
+  /**
+   * `true` when there is a currently-selected block (and therefore a
+   * non-empty ancestry to display).
+   *
+   * @returns {boolean}
+   */
   get hasSelection() {
     return this.segments.length > 0;
   }
 
+  /**
+   * Selects the block represented by the clicked breadcrumb segment.
+   * Clicking the outlet segment clears the selection instead, since
+   * the outlet itself is not a selectable block.
+   *
+   * @param {{key: string, blockName: string, isOutlet: boolean}} segment
+   */
   @action
   pickSegment(segment) {
     if (segment.isOutlet) {

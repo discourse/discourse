@@ -58,8 +58,8 @@ import { mountedOutletNames } from "../lib/walk-layout";
 const FLUSH_DELAY_MS = 200;
 
 /**
- * Phase 1 + 2 + 3 editor service. Holds the editor's session state and
- * mediates the in-memory mutation pipeline.
+ * Editor service. Holds the editor's session state and mediates the
+ * in-memory mutation pipeline.
  *
  * Reactivity contract: every `@tracked` field on this service is read by the
  * panels and the canvas chrome. Mutating one re-renders the relevant pieces
@@ -82,8 +82,8 @@ const FLUSH_DELAY_MS = 200;
  *
  * Discard / exit clears every session-draft layer the editor materialised,
  * leaving the underlying theme / code-default layers intact. Persistence
- * (Phase 3d) publishes the saved layout to the `theme` layer silently —
- * the session-draft is still resolved at that point, so the page doesn't
+ * publishes the saved layout to the `theme` layer silently — the
+ * session-draft is still resolved at that point, so the page doesn't
  * re-render at save time.
  */
 export default class WireframeService extends Service {
@@ -102,9 +102,9 @@ export default class WireframeService extends Service {
    * persistence service uses this when posting saves; if it remains null,
    * the toolbar's Save button stays disabled.
    *
-   * Phase 3f wires the URL-based theme chooser to set this via
-   * `enter({ themeId })` so admins picking a theme from the admin show page
-   * land here with the right target.
+   * The URL-based theme chooser sets this via `enter({ themeId })` so
+   * admins picking a theme from the admin show page land here with
+   * the right target.
    *
    * @type {number|null}
    */
@@ -196,7 +196,7 @@ export default class WireframeService extends Service {
    */
   @tracked activeDropPreview = null;
   /**
-   * Phase 7 simulation slot. When non-null, threads through the condition
+   * Simulation slot. When non-null, threads through the condition
    * evaluator's context (via the `EVAL_CONTEXT` debug hook) so
    * condition-gated blocks render as if the simulated user / viewport
    * were active. Block bodies themselves still render with the real
@@ -209,8 +209,8 @@ export default class WireframeService extends Service {
   @tracked simulation = null;
   /**
    * Whether the inspector's conditions surface is detached from the
-   * right rail and rendered in a floating panel (Phase 7r). Toggled
-   * by the inspector's `↗` button and the panel's `↙` redock button.
+   * right rail and rendered in a floating panel. Toggled by the
+   * inspector's `↗` button and the panel's `↙` redock button.
    * Persisted to localStorage so the preference survives reloads.
    *
    * @type {boolean}
@@ -289,8 +289,7 @@ export default class WireframeService extends Service {
    * the drop's `drop` event. The visible preview is cleared at
    * dragleave / drop start (so the overlay disappears immediately on
    * release), but the dispatch handler needs to read the descriptor
-   * one tick later. Same pattern the old `_lastDropPreview` used
-   * inside `GridOverlay`.
+   * one tick later.
    *
    * @type {Object|null}
    */
@@ -375,7 +374,7 @@ export default class WireframeService extends Service {
   /**
    * Pristine clones of every drafted outlet's layout, captured at `enter()`
    * time. Used by `resetAll()` to roll structural mutations (drag/drop,
-   * insert, delete in later phases) back to the page's pre-edit state.
+   * insert, delete) back to the page's pre-edit state.
    *
    * Stored as a separate clone from the draft itself so subsequent edits
    * (which mutate the draft in place) never bleed into the snapshot.
@@ -763,11 +762,11 @@ export default class WireframeService extends Service {
 
   /**
    * The names of every block outlet that's editable on the current page —
-   * either one that already has a registered layout (the historical
-   * criterion) or one whose `<BlockOutlet>` is mounted in the DOM with no
-   * layout yet. Including the empty-mounted case is what makes "start a
-   * layout from scratch" possible: previously the entry pill stayed
-   * hidden until *some* code path called `api.renderBlocks(...)` first.
+   * either one that already has a registered layout or one whose
+   * `<BlockOutlet>` is mounted in the DOM with no layout yet.
+   * Including the empty-mounted case makes "start a layout from
+   * scratch" possible — the entry pill surfaces even when no code
+   * path has called `api.renderBlocks(...)` for that outlet.
    *
    * Mounted outlets that aren't registered are silently ignored (they
    * can't have a layout, so they shouldn't appear in the editor).
@@ -876,8 +875,7 @@ export default class WireframeService extends Service {
         // produce intermediate invalid states (an empty container after
         // a drag, a typo, a missing required arg). Strict validation
         // would throw and crash the page; permissive marks the
-        // validation as warned and keeps the layout rendering. See
-        // `plugins/discourse-wireframe/docs/PLAN.md` Phase 5.
+        // validation as warned and keeps the layout rendering.
         { permissive: true }
       );
       this._draftedOutlets.add(outletName);
@@ -889,9 +887,9 @@ export default class WireframeService extends Service {
    * mutation actions that target outlets the user is populating from
    * scratch — those outlets have no published layout (so
    * `_materializeAllDrafts` skips them on `enter()`), but the
-   * editor's empty-outlet drop zone (Phase 7p.1) lets authors add
-   * the first block. We mint an empty draft `[]` here so the
-   * subsequent `_publishStructuralChange` has somewhere to land.
+   * editor's empty-outlet drop zone lets authors add the first
+   * block. We mint an empty draft `[]` here so the subsequent
+   * `_publishStructuralChange` has somewhere to land.
    *
    * Idempotent: bails when a draft already exists.
    *
@@ -1158,9 +1156,9 @@ export default class WireframeService extends Service {
    * @returns {boolean} true on success
    */
   /**
-   * Sibling-relative move helpers used by the floating block toolbar
-   * (Phase 7p.2). Each looks up the selected entry's siblings and
-   * computes a `moveBlock` call against the previous / next sibling.
+   * Sibling-relative move helpers used by the floating block toolbar.
+   * Each looks up the selected entry's siblings and computes a
+   * `moveBlock` call against the previous / next sibling.
    *
    * Returns `false` (no-op) when the block is already first / last in
    * its parent, when no block is selected, or when the move would
@@ -4020,7 +4018,7 @@ export default class WireframeService extends Service {
     const sourceLayout = this.readResolvedLayout(sourceOutletName);
     // Mint a draft for the target outlet if it doesn't have one yet —
     // the user may be dragging an existing block into a previously
-    // empty outlet (via the empty-outlet drop zone from Phase 7p.1).
+    // empty outlet via the empty-outlet drop zone.
     const targetLayout = this._ensureDraft(targetOutletName);
     if (!sourceLayout || !targetLayout) {
       return false;

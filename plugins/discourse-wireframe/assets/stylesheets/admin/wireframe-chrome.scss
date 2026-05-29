@@ -41,7 +41,6 @@
   --wireframe-container-border-width: 1px;
 }
 
-/* Entry pill */
 .wireframe-pill {
   position: fixed;
   right: 1rem;
@@ -289,11 +288,10 @@ body.wireframe-active {
      them on the very first dragenter — toggling layout via display: none
      happens too late and the first drop is missed.
 
-     Zones DO NOT change size on hover. Earlier we resized them on hover
-     for visual feedback, but the resulting layout shift bounced the
-     cursor out of the zone (dragleave fires; the user's release happens
-     mid-bounce; no target is active at drop time). Hover/active state
-     is signalled only by background-color now. */
+     Zones must NOT change size on hover: a layout shift bounces the
+     cursor out of the zone (dragleave fires, the user's release happens
+     mid-bounce, and no target is active at drop time). Hover/active
+     state is signalled only by background-color. */
 
   .wireframe-drop-zone {
     height: 0.5rem;
@@ -721,7 +719,7 @@ body.wireframe-active {
     pointer-events: auto;
   }
 
-  /* Ghost block softening (Phase 7p.9).
+  /* Ghost block softening.
      Dev-tools renders condition-failed / unknown blocks with a bold
      red treatment that reads as an error to authors. In the editor's
      context, ghosts are an expected outcome of conditions / sim mode
@@ -808,11 +806,10 @@ body.wireframe-active {
   }
 }
 
-/* Editor chrome (toolbar + optional error banner + 3 panels) */
 .wireframe-shell {
-  /* Phase 7p.10 design tokens — scoped to the editor shell so they
-     don't leak into the host page. New surfaces should reach for
-     these rather than ad-hoc paddings / radii. */
+  /* Design tokens — scoped to the editor shell so they don't leak into
+     the host page. New surfaces should reach for these rather than
+     ad-hoc paddings / radii. */
   --wf-radius: 4px;
   --wf-radius-lg: 6px;
   --wf-gap-tight: 0.25rem;
@@ -827,8 +824,8 @@ body.wireframe-active {
   display: grid;
   grid-template-columns: 280px 1fr 320px;
 
-  /* Per-rail collapse states (Phase 7p.8): shrink the affected column
-     to a slim icon strip so the canvas reclaims the space. */
+  /* Per-rail collapse states: shrink the affected column to a slim
+     icon strip so the canvas reclaims the space. */
 
   &.--left-collapsed {
     grid-template-columns: 40px 1fr 320px;
@@ -964,9 +961,9 @@ body.wireframe-active {
   position: relative;
 }
 
-/* Sticky breadcrumb pinned to the bottom of the canvas (Phase 7p.2).
-   Shows the outlet → … → selected-block ancestry. Hidden when nothing
-   is selected. */
+/* Sticky breadcrumb pinned to the bottom of the canvas. Shows the
+   outlet → … → selected-block ancestry. Hidden when nothing is
+   selected. */
 
 .wireframe-breadcrumb {
   position: fixed;
@@ -1033,8 +1030,8 @@ body.wireframe-active {
     border-left: 1px solid var(--primary-low);
   }
 
-  /* Collapsed-rail variant (Phase 7p.8): the panel body is removed by
-     the template; the header keeps just the collapse-toggle button. */
+  /* Collapsed-rail variant: the panel body is removed by the template;
+     the header keeps just the collapse-toggle button. */
 
   &.--collapsed {
     overflow: hidden;
@@ -1114,7 +1111,6 @@ body.wireframe-active {
   }
 }
 
-/* Palette panel */
 .wireframe-palette {
   display: flex;
   flex-direction: column;
@@ -1250,7 +1246,6 @@ body.wireframe-active {
   }
 }
 
-/* Outline panel */
 .wireframe-outline {
   font-size: var(--font-down-1);
 
@@ -1535,8 +1530,6 @@ body.wireframe-active {
   }
 }
 
-/* Inspector panel */
-
 /* Args tab gets a warning glyph when any of its fields fail validation,
    so users on a different tab still notice. FormKit's `<FKErrorsSummary>`
    inside the form is the canonical in-tab surface; the tab glyph covers
@@ -1550,9 +1543,7 @@ body.wireframe-active {
   }
 }
 
-/* Tab-based inspector layout (Phase 7p.5). Replaces the stacked
-   Metadata / Args / Conditions sections from earlier phases. */
-
+/* Tab-based inspector layout. */
 .wireframe-inspector__header {
   display: flex;
   align-items: center;
@@ -1824,13 +1815,12 @@ body.wireframe-active {
   margin-top: 1rem;
 }
 
-/* Transparent slot wrappers (Phase 7s). The chrome's transparent
-   branch renders a positioned wrapper around the inner block so the
-   wrapper becomes the direct grid item — its `grid-column` /
-   `grid-row` styles (read from the slot's args) are honoured by
-   CSS Grid regardless of how many Glimmer component boundaries sit
-   inside it. No visible decoration: the wrapper exists purely for
-   layout. */
+/* Transparent slot wrappers. The chrome's transparent branch renders
+   a positioned wrapper around the inner block so the wrapper becomes
+   the direct grid item — its `grid-column` / `grid-row` styles (read
+   from the slot's args) are honoured by CSS Grid regardless of how
+   many Glimmer component boundaries sit inside it. No visible
+   decoration: the wrapper exists purely for layout. */
 
 /* The slot wrapper renders ALWAYS — it carries the grid placement
    even when the editor is inactive, so the live page lays out cells
@@ -1895,12 +1885,12 @@ body.wireframe-active {
       background: rgb(220 53 69 / 0.18);
     }
 
-    /* Per-zone drop feedback is no longer painted on the slot itself.
-       During a drag, the grid overlay paints a single rectangle / line
-       (`.wireframe-grid-drop-overlay`) at the cell or grid-gap
-       position the cursor is targeting. The slot wrapper keeps its
-       normal idle styling so the active edge isn't competing with the
-       slot's own 4-side outline.
+    /* Per-zone drop feedback lives on the grid overlay, not the slot:
+       during a drag, `.wireframe-grid-drop-overlay` paints a single
+       rectangle / line at the cell or grid-gap position the cursor is
+       targeting, so the slot wrapper keeps its normal idle styling and
+       the active edge doesn't compete with the slot's own 4-side
+       outline.
 
        The shared `dDragAndDropTarget` modifier still toggles
        `is-drag-above`/`-below`/`-left`/`-right` classes whose default
@@ -2002,10 +1992,10 @@ body.wireframe-active
     border-color: var(--wireframe-block-hover-color);
   }
 
-  /* Per-zone drop feedback is no longer painted on the cell itself.
-     During a drag the grid overlay element paints a single rect or
-     line at the cursor's target position. The cell keeps its idle
-     dashed border so the empty space stays scannable.
+  /* Per-zone drop feedback lives on the grid overlay, not the cell:
+     during a drag the overlay paints a single rect or line at the
+     cursor's target position, while the cell keeps its idle dashed
+     border so the empty space stays scannable.
 
      Suppress the foundation `is-drag-*` pseudo-element indicators
      (a 2px tertiary line above/below/left/right that the shared drop
@@ -2022,17 +2012,8 @@ body.wireframe-active
   /* The shared empty-state placeholder takes over the cell's interior
      (centred `+` icon + hint label, or icon-only at narrow widths via
      the container query); the cell itself only contributes the dashed
-     border + drag-target chrome. The hand-rolled `+` button and the
-     custom popover that used to live here have been replaced by
-     `EditorEmptyDropPlaceholder` + FloatKit's `menu` service. */
+     border + drag-target chrome. */
 }
-
-/* FloatKit menu body opened from every empty-drop placeholder. Picker
-   header + 2-column grid of block chips. Targets the menu wrapper via
-   `[data-identifier="wireframe-block-picker"]`, the `identifier` passed
-   to `menu.show()` — `DHeadlessMenu` doesn't apply an identifier-derived
-   class on its own, but the data attribute lands on the wrapper, so we
-   can address it without leaking classes into the menu container. */
 
 /* FloatKit menu hosting Replace / Remove for a clicked image marker.
    Mounts in `#d-menu-portals` at the body level (outside any wireframe
@@ -2067,6 +2048,13 @@ body.wireframe-active
     }
   }
 }
+
+/* FloatKit menu body opened from every empty-drop placeholder. Picker
+   header + 2-column grid of block chips. Targets the menu wrapper via
+   the `data-identifier` attribute passed to `menu.show()` — FloatKit's
+   `DHeadlessMenu` doesn't apply an identifier-derived class on its own,
+   but the data attribute lands on the wrapper, so we can address it
+   without leaking classes into the menu container. */
 
 [data-identifier="wireframe-block-picker"] {
   .wireframe-block-picker {
@@ -2182,11 +2170,6 @@ body.wireframe-active
     .d-icon {
       font-size: 1.25rem;
     }
-  }
-
-  &__hint {
-    /* When the container query in the narrow branch fires, the hint is
-       hidden and the centred `+` icon stands alone. */
   }
 
   &__tooltip-host {
@@ -2535,10 +2518,10 @@ body.wireframe-active
   }
 }
 
-/* Custom inspector form for the layout block (Phase 7s.4). Replaces
-   the generic FormKit fields with mode-specific controls: segmented
-   mode picker, integer steppers (columns / rows), gap slider with
-   live value, and an advanced disclosure for column / row templates. */
+/* Custom inspector form for the layout block. Mode-specific controls:
+   segmented mode picker, integer steppers (columns / rows), gap slider
+   with live value, and an advanced disclosure for column / row
+   templates. */
 
 .wireframe-layout-form {
   display: flex;
@@ -2751,9 +2734,9 @@ body.wireframe-active
     }
   }
 
-  /* Template presets (Phase 7s.8). Small chips with a miniature SVG
-     preview of each layout's grid + tile arrangement. Clicking a
-     chip applies the template via the service's `applyGridTemplate`. */
+  /* Template presets. Small chips with a miniature SVG preview of each
+     layout's grid + tile arrangement. Clicking a chip applies the
+     template via the service's `applyGridTemplate`. */
 
   &__templates {
     display: grid;
@@ -2949,7 +2932,7 @@ body.wireframe-active {
   }
 }
 
-/* Simulation controls (Phase 7f) */
+/* Simulation controls */
 .wireframe-simulation {
   display: inline-flex;
   align-items: center;
@@ -2973,19 +2956,19 @@ body.wireframe-active {
   }
 }
 
-/* Outlet jump dropdown (Phase 7e) */
+/* Outlet jump dropdown */
 .wireframe-outlet-jump {
   margin: 0 0 0 0.5rem;
   max-width: 200px;
 }
 
-/* Inline-expand conditions surface (Phase 7r). Each rule is a row
-   that toggles open in-flow to reveal its per-type editor — no
-   popovers, so we don't fight z-index against the editor shell. The
-   combinator selector is a chip-toggle, not a dropdown, so authors
-   can see and switch combinators in one click. Group nesting is
-   communicated via a left-bar accent in a colour that matches the
-   group's combinator. */
+/* Inline-expand conditions surface. Each rule is a row that toggles
+   open in-flow to reveal its per-type editor — no popovers, so we
+   don't fight z-index against the editor shell. The combinator
+   selector is a chip-toggle, not a dropdown, so authors can see and
+   switch combinators in one click. Group nesting is communicated via
+   a left-bar accent in a colour that matches the group's
+   combinator. */
 
 /* Inspector Conditions tab header — hosts the detach button. */
 .wireframe-inspector__conditions-header {
@@ -3460,11 +3443,11 @@ body.wireframe-active {
   }
 }
 
-/* Per-type editor surface (Phase 7r). Renders inline inside a rule's
-   expanded body — no popover/portal, so the controls live in normal
-   document flow and grow the inspector column naturally. The styling
-   leans on segmented chips + light borders for an authoring feel
-   rather than form-y radio lists. */
+/* Per-type editor surface. Renders inline inside a rule's expanded
+   body — no popover/portal, so the controls live in normal document
+   flow and grow the inspector column naturally. The styling leans on
+   segmented chips + light borders for an authoring feel rather than
+   form-y radio lists. */
 
 .wireframe-condition-editor {
   display: flex;

@@ -11,9 +11,9 @@ module(
     test("renders at least one entry per registered starter block", async function (assert) {
       await render(<template><PalettePanel /></template>);
 
-      // The 8 starter blocks shipped by Phase 6e plus any core built-ins
-      // (`head`, `group`) auto-register before tests run, so the palette
-      // should have at least 8 entries.
+      // The starter blocks plus any core built-ins (`head`, `group`)
+      // auto-register before tests run, so the palette should have a
+      // non-trivial number of entries.
       assert.dom(".wireframe-palette-entry").exists();
       const entries = document.querySelectorAll(".wireframe-palette-entry");
       assert.true(entries.length >= 8);

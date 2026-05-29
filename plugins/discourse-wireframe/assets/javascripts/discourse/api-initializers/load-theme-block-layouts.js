@@ -47,10 +47,9 @@ export function hydrateThemeBlockLayouts(api, layouts) {
         permissive: true,
       });
     } catch (error) {
-      // Surface the failure in the console without breaking the rest of
-      // the boot. A bad theme-shipped layout shouldn't take down the page;
-      // the underlying code-default layer (if any) is still rendered by
-      // the resolution chain.
+      // Surface the failure without crashing boot — the underlying
+      // code-default layer (if any) is still rendered by the resolution
+      // chain.
       // eslint-disable-next-line no-console
       console.error(
         `[wireframe] Failed to hydrate ${outlet} from theme ${themeId}:`,

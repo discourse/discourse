@@ -25,8 +25,8 @@ import { i18n } from "discourse-i18n";
  *  - **missing** — `exists: false`, the inverse check.
  */
 export default class OutletArgConditionEditor extends Component {
-  @tracked _valueJson = serialiseJson(this.args.leaf?.value);
-  @tracked _valueError = null;
+  @tracked valueJson = serialiseJson(this.args.leaf?.value);
+  @tracked valueError = null;
 
   get currentOperator() {
     if (this.args.leaf?.exists === true) {
@@ -60,8 +60,8 @@ export default class OutletArgConditionEditor extends Component {
   setOperator(op) {
     if (op === "equals") {
       this.patch({ exists: undefined, value: "" });
-      this._valueJson = '""';
-      this._valueError = null;
+      this.valueJson = '""';
+      this.valueError = null;
     } else if (op === "exists") {
       this.patch({ exists: true, value: undefined });
     } else {
@@ -72,18 +72,18 @@ export default class OutletArgConditionEditor extends Component {
   @action
   setValueJson(event) {
     const raw = event.target.value;
-    this._valueJson = raw;
+    this.valueJson = raw;
     if (raw.trim() === "") {
-      this._valueError = null;
+      this.valueError = null;
       this.patch({ value: undefined });
       return;
     }
     try {
       const parsed = JSON.parse(raw);
-      this._valueError = null;
+      this.valueError = null;
       this.patch({ value: parsed });
     } catch (err) {
-      this._valueError = err.message;
+      this.valueError = err.message;
     }
   }
 
@@ -159,10 +159,10 @@ export default class OutletArgConditionEditor extends Component {
             rows="2"
             placeholder='"open" or {"any": [1, 2, 3]}'
             {{on "input" this.setValueJson}}
-          >{{this._valueJson}}</textarea>
-          {{#if this._valueError}}
+          >{{this.valueJson}}</textarea>
+          {{#if this.valueError}}
             <span class="wireframe-condition-editor__error">
-              {{this._valueError}}
+              {{this.valueError}}
             </span>
           {{else}}
             <span class="wireframe-condition-editor__help">

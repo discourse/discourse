@@ -62,12 +62,26 @@ import CategoryCard from "../components/blocks/category-card";
   },
 })
 export default class WFFeaturedCategories extends Component {
+  /**
+   * Resolves the pipe-separated `categories` arg into the matching set
+   * of Discourse Category model instances. Empty / unparseable IDs are
+   * silently dropped. `@cached` so re-renders during inline editing
+   * don't repeat the `findById` lookups.
+   *
+   * @returns {Array<import("discourse/models/category").default>}
+   */
   @cached
   get featuredCategories() {
     const ids = this.args.categories?.split("|").filter(Boolean) ?? [];
     return ids.map((id) => Category.findById(Number(id))).filter(Boolean);
   }
 
+  /**
+   * The resolved URL for the `/categories` index page, used by the
+   * footer "All categories" link.
+   *
+   * @returns {string}
+   */
   get allCategoriesUrl() {
     return getURL("/categories");
   }

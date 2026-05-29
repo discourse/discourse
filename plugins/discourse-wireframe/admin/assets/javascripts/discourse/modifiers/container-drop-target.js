@@ -541,8 +541,7 @@ function validateInsert({ wireframe, source, outletName }) {
     if (source.data.blockKey == null) {
       return { ok: false };
     }
-    // Cross-outlet validation lives in `canDropAt` — same predicate
-    // the old strip zones used.
+    // Cross-outlet validation lives in `canDropAt`.
     return {
       ok: wireframe.canDropAt
         ? wireframe.canDropAt({

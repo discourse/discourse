@@ -20,6 +20,14 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
   },
 })
 export default class WFBadgesGrid extends Component {
+  /**
+   * Parses the comma / pipe-separated `badgeIds` arg into a list of
+   * positive integers. Falls back to a fixed placeholder set when the
+   * arg is empty or no valid IDs were supplied, so the block always
+   * renders at least four tiles for layout preview.
+   *
+   * @returns {number[]}
+   */
   get tiles() {
     const raw = this.args.badgeIds;
     if (typeof raw !== "string" || !raw.trim()) {

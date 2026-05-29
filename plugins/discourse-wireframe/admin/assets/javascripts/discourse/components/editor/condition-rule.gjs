@@ -21,7 +21,7 @@ import ConditionLeafArgs from "./condition-leaf-args";
  * that expands in-place to reveal the per-type editor — no popover,
  * so the body grows the column rather than fighting z-index. The row
  * is a self-toggling disclosure: clicking the header (icon / label /
- * summary / chevron) flips `_expanded` and reveals the inline editor.
+ * summary / chevron) flips `expanded` and reveals the inline editor.
  *
  * Args:
  *  - `@node` — the leaf condition (`{type, ...args}`).
@@ -39,18 +39,31 @@ import ConditionLeafArgs from "./condition-leaf-args";
  *     author immediately sees the editor.
  */
 export default class ConditionRule extends Component {
+  @tracked expanded;
   isTypeSelected = (typeId) => this.args.node?.type === typeId;
-  @tracked _expanded;
 
   constructor() {
     super(...arguments);
-    this._expanded = this.args.startExpanded ?? false;
+    this.expanded = this.args.startExpanded ?? false;
   }
 
+  /**
+   * FontAwesome icon name representing the rule's condition type.
+   * Drives the visual anchor next to each rule row.
+   *
+   * @returns {string}
+   */
   get icon() {
     return iconForConditionType(this.args.node?.type);
   }
 
+  /**
+   * Short, human-readable summary of the leaf's current configuration
+   * (e.g. "Logged-in users in @staff"). Shown collapsed in the rule
+   * header so authors can scan rules without expanding them.
+   *
+   * @returns {string}
+   */
   get summary() {
     return summarizeLeaf(this.args.node);
   }
@@ -82,7 +95,7 @@ export default class ConditionRule extends Component {
 
   @action
   toggleExpanded() {
-    this._expanded = !this._expanded;
+    this.expanded = !this.expanded;
   }
 
   @action
@@ -116,12 +129,12 @@ export default class ConditionRule extends Component {
     <div
       class={{dConcatClass
         "wireframe-condition-rule"
-        (if this._expanded "--expanded")
+        (if this.expanded "--expanded")
       }}
     >
       <DButton
         class="wireframe-condition-rule__header"
-        @ariaExpanded={{this._expanded}}
+        @ariaExpanded={{this.expanded}}
         @action={{this.toggleExpanded}}
       >
         <span class="wireframe-condition-rule__chevron">
@@ -152,7 +165,7 @@ export default class ConditionRule extends Component {
         @action={{this.remove}}
       />
 
-      {{#if this._expanded}}
+      {{#if this.expanded}}
         <div class="wireframe-condition-rule__body">
           <label class="wireframe-condition-rule__type-row">
             <span>{{i18n "wireframe.inspector.conditions.type_label"}}</span>

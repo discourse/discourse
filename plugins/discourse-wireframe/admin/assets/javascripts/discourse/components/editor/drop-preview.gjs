@@ -11,9 +11,7 @@ import { trustHTML } from "@ember/template";
  * top-left corner.
  *
  * Mounted once at the editor shell level so by construction there
- * can never be more than one drop indicator visible — the previous
- * editor had per-block strip zones AND a grid-level overlay paint
- * simultaneously at grid edges; this component replaces both.
+ * can never be more than one drop indicator visible.
  *
  * The descriptor's `geometry` is in viewport coordinates (`top`,
  * `left`, `width`, `height` in CSS pixels). The overlay uses

@@ -491,8 +491,8 @@ export default class InlineEditController extends Component {
    * Picks the Enter handler for the active session based on schema +
    * block type:
    *   - paragraph schema + `wf:paragraph` block → split the block at
-   *     the cursor (Phase 3.1). The current entry keeps the "before"
-   *     doc; a new sibling holds the "after" doc.
+   *     the cursor. The current entry keeps the "before" doc; a new
+   *     sibling holds the "after" doc.
    *   - paragraph schema + other block (callout body, banner content,
    *     media-card title, …) → insert a `hard_break`. Splitting a
    *     callout / banner / card into two of itself has no semantic
@@ -701,9 +701,10 @@ function existingLinkHref(state, markType) {
 }
 
 /**
- * PM keymap command that inserts a `hard_break` node at the cursor — used
- * by paragraph-schema Enter handling in Phase 1. Phase 3 replaces this
- * with the split-into-new-block behavior.
+ * PM keymap command that inserts a `hard_break` node at the cursor —
+ * used by paragraph-schema Enter handling in non-`wf:paragraph`
+ * blocks (callout body, banner content, media-card title, …) where
+ * splitting into a new sibling has no semantic meaning.
  */
 function insertHardBreak(schema) {
   return (state, dispatch) => {

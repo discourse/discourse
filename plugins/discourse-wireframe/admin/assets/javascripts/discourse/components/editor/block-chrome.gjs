@@ -60,6 +60,16 @@ export default class BlockChrome extends Component {
   @service tooltip;
   @service wireframe;
 
+  /**
+   * Reference to the chrome's outer `<div>`, set on insert. Passed to
+   * `BlockToolbar` as `@chromeEl` and used as the drag-source's drag
+   * image so the browser shows a translucent copy of the actual block
+   * being dragged instead of the handle tab itself (the default when
+   * no `dragImage` is supplied). Tracked so the drag-source modifier
+   * re-runs once the ref is captured (it installs before the chrome
+   * div's `didInsert` fires, otherwise capturing a stale `null`).
+   */
+  @tracked chromeEl = null;
   acceptedDragKinds = ["wf-block", "wf-palette-block"];
 
   /**
@@ -69,7 +79,7 @@ export default class BlockChrome extends Component {
    *
    * @returns {Element|null}
    */
-  getChromeEl = () => this._chromeEl;
+  getChromeEl = () => this.chromeEl;
   /**
    * Locates the parent grid layout's grid `<div>` element so the
    * resize modifier can measure cell sizes. Walks up from this chrome's
@@ -78,10 +88,10 @@ export default class BlockChrome extends Component {
    * @returns {Element|null}
    */
   getResizeGridElement = () => {
-    if (!this._chromeEl) {
+    if (!this.chromeEl) {
       return null;
     }
-    return this._chromeEl.closest(".wf-layout--grid");
+    return this.chromeEl.closest(".wf-layout--grid");
   };
   /**
    * Returns the ghost element rendered inside the parent grid by the
@@ -107,27 +117,17 @@ export default class BlockChrome extends Component {
    */
   getImageMarkerEl = () => {
     const arg = this.resizableImageArg;
-    if (!arg || !this._chromeEl) {
+    if (!arg || !this.chromeEl) {
       return null;
     }
     // Pick the visible `<img>` / `<picture>` painted by the block,
     // not the overlay siblings (the filled image-arg overlay also
     // carries `data-block-arg` for its own click / drop dispatch).
     const escaped = CSS.escape(arg.name);
-    return this._chromeEl.querySelector(
+    return this.chromeEl.querySelector(
       `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
     );
   };
-  /**
-   * Reference to the chrome's outer `<div>`, set on insert. Passed to
-   * `BlockToolbar` as `@chromeEl` and used as the drag-source's drag
-   * image so the browser shows a translucent copy of the actual block
-   * being dragged instead of the handle tab itself (the default when
-   * no `dragImage` is supplied). Tracked so the drag-source modifier
-   * re-runs once the ref is captured (it installs before the chrome
-   * div's `didInsert` fires, otherwise capturing a stale `null`).
-   */
-  @tracked _chromeEl = null;
 
   /**
    * Registered URL-edit tooltips for this block. Cleaned up in
@@ -137,14 +137,14 @@ export default class BlockChrome extends Component {
    *
    * @type {any[]}
    */
-  _urlTooltips = [];
+  #urlTooltips = [];
 
   willDestroy() {
     super.willDestroy(...arguments);
-    for (const instance of this._urlTooltips) {
+    for (const instance of this.#urlTooltips) {
       instance.destroy?.();
     }
-    this._urlTooltips.length = 0;
+    this.#urlTooltips.length = 0;
   }
 
   /**
@@ -152,9 +152,8 @@ export default class BlockChrome extends Component {
    * for the wrapped block, or `null` if the registry has no entry for this
    * block name.
    *
-   * `@cached` memoises the lookup per component instance. A future Phase
-   * could promote this to a shared service-level cache to avoid every
-   * rendered block walking the registry on first access.
+   * `@cached` memoises the lookup per component instance so the registry
+   * isn't walked on every getter read.
    */
   @cached
   get metadata() {
@@ -705,9 +704,9 @@ export default class BlockChrome extends Component {
       marker.style.width = "";
       marker.style.height = "";
     }
-    if (this._chromeEl) {
-      this._chromeEl.style.width = "";
-      this._chromeEl.style.height = "";
+    if (this.chromeEl) {
+      this.chromeEl.style.width = "";
+      this.chromeEl.style.height = "";
     }
     const arg = this.resizableImageArg;
     if (!arg) {
@@ -758,10 +757,10 @@ export default class BlockChrome extends Component {
   @action
   fillImageToBlock() {
     const arg = this.resizableImageArg;
-    if (!arg?.value || !this._chromeEl) {
+    if (!arg?.value || !this.chromeEl) {
       return;
     }
-    const rect = this._chromeEl.getBoundingClientRect();
+    const rect = this.chromeEl.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) {
       return;
     }
@@ -819,12 +818,12 @@ export default class BlockChrome extends Component {
    */
   get imageCanFillBlock() {
     const arg = this.resizableImageArg;
-    if (!arg?.value?.width || !arg?.value?.height || !this._chromeEl) {
+    if (!arg?.value?.width || !arg?.value?.height || !this.chromeEl) {
       return false;
     }
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const rect = this._chromeEl.getBoundingClientRect();
+    const rect = this.chromeEl.getBoundingClientRect();
     return (
       rect.width > arg.value.width + 1 || rect.height > arg.value.height + 1
     );
@@ -854,12 +853,21 @@ export default class BlockChrome extends Component {
    * grid overlay and the outlet boundary use. Cached so the same list
    * reference flows into every empty-state placeholder this chrome
    * renders.
+   *
+   * @returns {Array<{name: string, metadata: Object}>}
    */
   @cached
   get palette() {
     return buildBlockPalette(this.blocks);
   }
 
+  /**
+   * Fills this slot with the block the user picked from the palette
+   * placeholder. Routes through `fillSlot` so the slot entry is
+   * REPLACED by the new block rather than inserted alongside it.
+   *
+   * @param {{name: string}} blockEntry - Palette entry the user selected.
+   */
   @action
   pickBlockForSlot(blockEntry) {
     this.wireframe.fillSlot({
@@ -868,6 +876,13 @@ export default class BlockChrome extends Component {
     });
   }
 
+  /**
+   * Inserts the picked block as a new child INSIDE this empty container.
+   * Wired to the palette placeholder rendered when the container has
+   * no children.
+   *
+   * @param {{name: string}} blockEntry - Palette entry the user selected.
+   */
   @action
   pickBlockForContainer(blockEntry) {
     this.wireframe.insertBlock({
@@ -878,10 +893,17 @@ export default class BlockChrome extends Component {
     });
   }
 
+  /**
+   * Pins the chrome's outer `<div>` reference for later use (drag
+   * image, image-arg measurements, tooltip anchoring) and installs the
+   * per-block URL-edit tooltips now that we have the DOM to query.
+   *
+   * @param {Element} element - The chrome's outer `<div>`.
+   */
   @action
   captureChromeEl(element) {
-    this._chromeEl = element;
-    this._setupUrlTooltips();
+    this.chromeEl = element;
+    this.#setupUrlTooltips();
   }
 
   /**
@@ -902,12 +924,12 @@ export default class BlockChrome extends Component {
    * scaffolding — including hover-triggered affordances — lives in
    * admin code.
    */
-  _setupUrlTooltips() {
+  #setupUrlTooltips() {
     const meta = this.metadata;
-    if (!meta?.args || !this._chromeEl) {
+    if (!meta?.args || !this.chromeEl) {
       return;
     }
-    const linkEls = this._chromeEl.querySelectorAll("[data-block-arg]");
+    const linkEls = this.chromeEl.querySelectorAll("[data-block-arg]");
     for (const linkEl of linkEls) {
       const argName = linkEl.dataset.blockArg;
       if (kindForArg(meta, argName) !== "url") {
@@ -934,7 +956,7 @@ export default class BlockChrome extends Component {
           argName,
         },
       });
-      this._urlTooltips.push(instance);
+      this.#urlTooltips.push(instance);
     }
   }
 
@@ -953,19 +975,12 @@ export default class BlockChrome extends Component {
    * @param {Element} argEl - The clicked `[data-block-arg]` element.
    * @param {string} argName - The image arg name on this block.
    */
-  /**
-   * Opens the Replace / Remove menu against the clicked image marker.
-   * Mirrors the pattern in `icon-edit-state.js` which is known to
-   * work: synchronous `menu.show()` call right out of the click
-   * handler, no runloop deferral.
-   */
-  async _openImageEditMenu(argEl, argName) {
+  async #openImageEditMenu(argEl, argName) {
     this.wireframe.lastTouchedImageArg = argName;
     // The `close` callback captures `instance` by reference. At the
     // time the data object is created, `instance` is in the TDZ; by
-    // the time the menu's Replace / Remove buttons can fire it, the
-    // `await` below has resolved and `instance` is assigned. Mirrors
-    // the closure trick `icon-edit-state.js:109` uses.
+    // the time the menu's Replace / Remove buttons can fire it the
+    // `await` below has resolved and `instance` is assigned.
     let instance;
     const data = {
       blockKey: this.args.blockKey,
@@ -1027,9 +1042,9 @@ export default class BlockChrome extends Component {
     // the inspector tracks the change.
     if (argEl && kind === "image") {
       if (this.wireframe.selectedBlockKey !== this.args.blockKey) {
-        this._selectThisBlock();
+        this.#selectThisBlock();
       }
-      this._openImageEditMenu(argEl, argName);
+      this.#openImageEditMenu(argEl, argName);
       return;
     }
 
@@ -1061,13 +1076,13 @@ export default class BlockChrome extends Component {
           // owns the URL-edit UI. Force it open so the user sees the
           // editor surface even if they came in via a click rather
           // than a hover.
-          this._urlTooltips.find((t) => t.trigger === argEl)?.show?.();
+          this.#urlTooltips.find((t) => t.trigger === argEl)?.show?.();
           return;
       }
       // No matching kind — fall through to block selection.
     }
 
-    this._selectThisBlock();
+    this.#selectThisBlock();
   }
 
   /**
@@ -1075,7 +1090,7 @@ export default class BlockChrome extends Component {
    * the per-kind dispatch in `onClick` so the image-arg single-click
    * path can re-use it without duplicating the data payload.
    */
-  _selectThisBlock() {
+  #selectThisBlock() {
     this.wireframe.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,
@@ -1093,6 +1108,9 @@ export default class BlockChrome extends Component {
    * Whether a given before/after/inside drop zone for *this* block is
    * currently active (cursor hovering over it during a drag). Drives the
    * `--active` class so the user sees where the drop will land.
+   *
+   * @param {"before"|"after"|"inside"} position
+   * @returns {boolean}
    */
   @action
   isDropZoneActive(position) {
@@ -1207,7 +1225,7 @@ export default class BlockChrome extends Component {
             @blockKey={{@blockKey}}
             @outletName={{@outletName}}
             @displayName={{this.displayName}}
-            @chromeEl={{this._chromeEl}}
+            @chromeEl={{this.chromeEl}}
             @isSelected={{this.isSelected}}
             @canFillImage={{this.imageCanFillBlock}}
             @canResetImage={{this.imageIsResized}}

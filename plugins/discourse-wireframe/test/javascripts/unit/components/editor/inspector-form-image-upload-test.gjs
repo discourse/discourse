@@ -5,19 +5,21 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-form";
 
 class StubWireframeService extends Service {
+  #blockData;
+
   constructor(owner, blockData) {
     super(owner);
-    this._blockData = blockData;
+    this.#blockData = blockData;
     this.updateSelectedArgCalls = [];
   }
 
   get selectedBlockData() {
-    return this._blockData;
+    return this.#blockData;
   }
 
-  // The form syncs structured field errors into FormKit via
-  // `selectedBlockFieldErrors`; the stub returns an empty map so the
-  // sync is a no-op when a test isn't exercising validation.
+  // The form syncs field errors via `selectedBlockFieldErrors`; empty
+  // map means the sync is a no-op when a test isn't exercising
+  // validation.
   get selectedBlockFieldErrors() {
     return {};
   }

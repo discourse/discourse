@@ -11,6 +11,12 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
  * through the test runner. PDND wraps the native DnD events under the
  * hood, so its callbacks fire when the matching DOM events are
  * dispatched.
+ *
+ * @param {string} sourceSelector CSS selector for the source element.
+ * @param {string} targetSelector CSS selector for the target element.
+ * @param {{ dataTransfer: DataTransfer }} options Shared payload that
+ *   must travel across every event so PDND can correlate them.
+ * @returns {Promise<void>}
  */
 async function dragFromTo(sourceSelector, targetSelector, { dataTransfer }) {
   await triggerEvent(sourceSelector, "dragstart", { dataTransfer });
@@ -114,7 +120,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     const rect = target.getBoundingClientRect();
 
     await triggerEvent("#src", "dragstart", { dataTransfer });
-    // Drop at the top half — should resolve "before".
     await triggerEvent("#tgt", "dragenter", { dataTransfer });
     await triggerEvent("#tgt", "dragover", {
       dataTransfer,
@@ -130,7 +135,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     assert.strictEqual(drops.at(-1).position, "before");
 
-    // Second drag, drop near the bottom edge — should resolve "after".
     drops.length = 0;
     const dataTransfer2 = new DataTransfer();
     await triggerEvent("#src", "dragstart", { dataTransfer: dataTransfer2 });

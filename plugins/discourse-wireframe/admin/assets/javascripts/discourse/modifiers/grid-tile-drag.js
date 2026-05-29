@@ -9,7 +9,7 @@ import {
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 
 /**
- * Pointer-event drag handler for grid tile overlays (Phase 7s.6).
+ * Pointer-event drag handler for grid tile overlays.
  *
  * Two modes, distinguished by the element the user grabs:
  *

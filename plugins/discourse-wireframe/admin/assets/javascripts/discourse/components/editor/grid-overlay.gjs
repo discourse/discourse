@@ -87,13 +87,11 @@ function descriptorsEqual(a, b) {
 /**
  * Edit-mode affordances for a selected `wf:layout` in grid mode.
  *
- * Rather than render a separate grid that sits ON TOP of the layout
- * (which fought alignment endlessly because the two grids resolve row
- * heights independently), this component teleports its edit-mode DOM
- * — empty-cell placeholders, slot tiles, and the drop overlay — INTO
- * the layout's own grid `<div>` via `{{#in-element}}`. Cells, slots,
- * and tiles all become direct children of the same CSS Grid container,
- * so their grid placements snap to the same tracks by construction.
+ * Teleports its edit-mode DOM — empty-cell placeholders, slot tiles,
+ * and the drop overlay — INTO the layout's own grid `<div>` via
+ * `{{#in-element}}`. Cells, slots, and tiles all become direct
+ * children of the same CSS Grid container, so their grid placements
+ * snap to the same tracks by construction.
  *
  * What gets rendered (inside the layout's grid):
  *  - For every empty (column, row), a `<div>` with a `+` button that
@@ -125,6 +123,15 @@ export default class GridOverlay extends Component {
   @service wireframe;
   @service blocks;
   @service dragAndDrop;
+
+  /**
+   * The layout's grid `<div>`, located on insert via the marker's
+   * sibling lookup. `{{#in-element}}` mounts the cells / tiles / ghost
+   * into this element so they share the layout's CSS Grid context.
+   * Tracked so the conditional `{{#if this.gridElement}}` re-renders
+   * once the ref is captured.
+   */
+  @tracked gridElement = null;
 
   // Emits CSS custom properties rather than concrete `grid-column` /
   // `grid-row` so a parent `@container` rule (the auto-collapse
@@ -185,8 +192,8 @@ export default class GridOverlay extends Component {
    * stay current if the page reflows during a drag.
    */
   #invalidateDragGeometry = () => {
-    if (this.#dragCache && this._gridElement) {
-      this.#dragCache.gridRect = this._gridElement.getBoundingClientRect();
+    if (this.#dragCache && this.gridElement) {
+      this.#dragCache.gridRect = this.gridElement.getBoundingClientRect();
       this.#dragCache.isCollapsed = this.#computeIsCollapsed();
     }
   };
@@ -195,20 +202,14 @@ export default class GridOverlay extends Component {
    * container's PDND drop target. Invoked once on destroy.
    */
   #gridDropTargetCleanup = null;
-  /**
-   * The layout's grid `<div>`, located on insert via the marker's
-   * sibling lookup. `{{#in-element}}` mounts the cells / tiles / ghost
-   * into this element so they share the layout's CSS Grid context.
-   * Tracked so the conditional `{{#if this._gridElement}}` re-renders
-   * once the ref is captured.
-   */
-  @tracked _gridElement = null;
 
   /** Resize ghost element ref, captured on its own insert. */
-  _ghostElement = null;
+  // eslint-disable-next-line no-unused-private-class-members
+  #ghostElement = null;
 
   /** Drop-preview overlay element ref, captured on its own insert. */
-  _overlayElement = null;
+  // eslint-disable-next-line no-unused-private-class-members
+  #overlayElement = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -255,7 +256,7 @@ export default class GridOverlay extends Component {
    * container's measured width vs the SCSS thresholds.
    *
    * Drives the dispatch to the DOM-element hit-test / overlay paths
-   * in `_descriptorFromCursor` and `_computeOverlayGeometry`: track
+   * in `#descriptorFromCursor` and `#computeOverlayGeometry`: track
    * math doesn't fit a layout whose cells all span 1 / -1, so we
    * hand off to element lookups instead.
    *
@@ -277,7 +278,7 @@ export default class GridOverlay extends Component {
   }
 
   #computeIsCollapsed() {
-    const gridEl = this._gridElement;
+    const gridEl = this.gridElement;
     if (!gridEl) {
       return false;
     }
@@ -310,7 +311,7 @@ export default class GridOverlay extends Component {
     if (this.#dragCache?.source !== source) {
       this.#dragCache = {
         source,
-        gridRect: this._gridElement?.getBoundingClientRect() ?? null,
+        gridRect: this.gridElement?.getBoundingClientRect() ?? null,
         isCollapsed: this.#computeIsCollapsed(),
       };
     }
@@ -321,7 +322,7 @@ export default class GridOverlay extends Component {
   #getGridRect() {
     return (
       this.#activeDragContext()?.gridRect ??
-      this._gridElement?.getBoundingClientRect() ??
+      this.gridElement?.getBoundingClientRect() ??
       null
     );
   }
@@ -340,7 +341,7 @@ export default class GridOverlay extends Component {
    * Translates an internal (logical) grid descriptor into the
    * unified `activeDropPreview` shape — viewport-coord geometry,
    * unified `kind`, validity, label, and dispatch payload — and
-   * writes it to the service. Called from `_handleGridDragOver`
+   * writes it to the service. Called from `#publishFromDrag`
    * after the dragover-diff has confirmed the intermediate changed.
    *
    * No-ops (publishes `null`) when geometry can't be resolved (e.g.
@@ -348,11 +349,11 @@ export default class GridOverlay extends Component {
    * rather than freezing on stale coords.
    */
   #publishUnified(intermediate, source) {
-    if (!intermediate || !this._gridElement) {
+    if (!intermediate || !this.gridElement) {
       this.wireframe.setActiveDropPreview(null);
       return;
     }
-    const gridRel = this._computeOverlayGeometry(intermediate);
+    const gridRel = this.#computeOverlayGeometry(intermediate);
     if (!gridRel) {
       this.wireframe.setActiveDropPreview(null);
       return;
@@ -370,7 +371,7 @@ export default class GridOverlay extends Component {
         height: gridRel.height,
       },
       kind: this.#unifiedKindFor(intermediate),
-      // The `_invalid` sentinel comes from `_descriptorFromCursor`'s
+      // The `_invalid` sentinel comes from `#descriptorFromCursor`'s
       // validity gate (shift-plan check). It maps to the overlay's
       // red styling AND to `dispatch: null` so `dispatchActiveDrop`
       // no-ops at drop time.
@@ -557,7 +558,7 @@ export default class GridOverlay extends Component {
     // `{{#in-element}}` below mounts cells / overlay as direct grid
     // children.
     const gridEl = element.parentElement?.querySelector(".wf-layout--grid");
-    this._gridElement = gridEl;
+    this.gridElement = gridEl;
     if (!gridEl) {
       return;
     }
@@ -611,7 +612,7 @@ export default class GridOverlay extends Component {
    */
   #publishFromDrag(source, location) {
     const input = location.current.input;
-    const intermediate = this._descriptorFromCursor(input, source);
+    const intermediate = this.#descriptorFromCursor(input, source);
     if (descriptorsEqual(this.#lastIntermediate, intermediate)) {
       return;
     }
@@ -621,12 +622,12 @@ export default class GridOverlay extends Component {
 
   @action
   captureGhost(element) {
-    this._ghostElement = element;
+    this.#ghostElement = element;
   }
 
   @action
   captureOverlay(element) {
-    this._overlayElement = element;
+    this.#overlayElement = element;
   }
 
   /**
@@ -653,7 +654,7 @@ export default class GridOverlay extends Component {
     if (!descriptor?.column || !descriptor?.row) {
       return null;
     }
-    const slot = this._slotAtCell({
+    const slot = this.#slotAtCell({
       column: descriptor.column.start,
       row: descriptor.row.start,
     });
@@ -678,22 +679,22 @@ export default class GridOverlay extends Component {
    * resolved track range or the source can't drop on the resolved
    * target (e.g. palette block onto an occupied slot's center).
    */
-  _descriptorFromCursor(input, source) {
+  #descriptorFromCursor(input, source) {
     // The source can never be dropped onto itself or into any of its
     // own descendants — that would create a cycle. Hide the overlay
     // entirely when the cursor is hovering THIS grid and the source
     // either IS this grid's layout or an ancestor of it.
     const sourceKey =
       source?.type === "wf-block" ? source.data?.blockKey : null;
-    if (sourceKey && this._sourceCoversTarget(sourceKey, this.args.gridKey)) {
+    if (sourceKey && this.#sourceCoversTarget(sourceKey, this.args.gridKey)) {
       return null;
     }
 
     if (this.isCollapsed) {
-      return this._descriptorFromCursorCollapsed(input, source, sourceKey);
+      return this.#descriptorFromCursorCollapsed(input, source, sourceKey);
     }
 
-    const tracks = this._readGridTracks();
+    const tracks = this.#readGridTracks();
     if (!tracks) {
       return null;
     }
@@ -704,35 +705,35 @@ export default class GridOverlay extends Component {
     const x = input.clientX - gridRect.left;
     const y = input.clientY - gridRect.top;
 
-    const cell = this._cursorToCell(x, y, tracks);
+    const cell = this.#cursorToCell(x, y, tracks);
     if (!cell) {
       return null;
     }
-    const bounds = this._cellBounds(cell, tracks);
-    const zone = this._computeZone(
+    const bounds = this.#cellBounds(cell, tracks);
+    const zone = this.#computeZone(
       x - bounds.left,
       y - bounds.top,
       bounds.width,
       bounds.height
     );
 
-    const slot = this._slotAtCell(cell);
+    const slot = this.#slotAtCell(cell);
     let descriptor;
     if (slot) {
       // Same check at the slot level — never preview a drop onto the
       // source slot itself or any slot nested inside the source.
       const slotKey = entryKey(slot);
-      if (sourceKey && this._sourceCoversTarget(sourceKey, slotKey)) {
+      if (sourceKey && this.#sourceCoversTarget(sourceKey, slotKey)) {
         return null;
       }
-      descriptor = this._slotDescriptorForZone({
+      descriptor = this.#slotDescriptorForZone({
         slot,
         zone,
         shift: input.shiftKey,
         source,
       });
     } else {
-      descriptor = this._cellDescriptorForZone(cell, zone);
+      descriptor = this.#cellDescriptorForZone(cell, zone);
     }
     if (!descriptor) {
       return null;
@@ -750,17 +751,17 @@ export default class GridOverlay extends Component {
     // overwriting `variant` because the descriptor's `variant`
     // already carries the operation kind (`insert` / `swap` /
     // `replace` / `move`) that `#buildDispatch` switches on.
-    if (!this._canExecuteDescriptor(descriptor, source)) {
+    if (!this.#canExecuteDescriptor(descriptor, source)) {
       return { ...descriptor, _invalid: true };
     }
     return descriptor;
   }
 
   /**
-   * Collapsed-view variant of `_descriptorFromCursor`. The track-math
+   * Collapsed-view variant of `#descriptorFromCursor`. The track-math
    * path can't run here: a multi-column logical grid that's rendering
    * as one column has `colWidths.length === 1`, so cursor X always
-   * resolves to `column 1` and `_trackStart(col=3, widths)` returns
+   * resolves to `column 1` and `#trackStart(col=3, widths)` returns
    * NaN.
    *
    * Instead we hit-test by DOM element. `elementFromPoint` finds the
@@ -772,12 +773,12 @@ export default class GridOverlay extends Component {
    *
    * Output is exactly the same descriptor shape as the track-math
    * path — `#publishUnified` / `#buildDispatch` and
-   * `_computeOverlayGeometry` (via its own collapsed branch) consume
+   * `#computeOverlayGeometry` (via its own collapsed branch) consume
    * it the same way.
    */
-  _descriptorFromCursorCollapsed(input, source, sourceKey) {
+  #descriptorFromCursorCollapsed(input, source, sourceKey) {
     const el = document.elementFromPoint(input.clientX, input.clientY);
-    if (!el || !this._gridElement.contains(el)) {
+    if (!el || !this.gridElement.contains(el)) {
       return null;
     }
 
@@ -785,20 +786,20 @@ export default class GridOverlay extends Component {
     // teleported directly into the grid and never contain blocks
     // with `data-wf-block-key`, so a hit on one is unambiguous.
     const emptyEl = el.closest(".wireframe-grid-cell");
-    if (emptyEl && this._gridElement.contains(emptyEl)) {
+    if (emptyEl && this.gridElement.contains(emptyEl)) {
       const col = parseInt(emptyEl.getAttribute("data-col"), 10);
       const row = parseInt(emptyEl.getAttribute("data-row"), 10);
       if (Number.isNaN(col) || Number.isNaN(row)) {
         return null;
       }
       const rect = emptyEl.getBoundingClientRect();
-      const zone = this._computeZoneCollapsed(
+      const zone = this.#computeZoneCollapsed(
         input.clientY - rect.top,
         rect.height
       );
-      const base = this._cellDescriptorForZone({ column: col, row }, zone);
-      return this._finishCollapsedDescriptor(
-        this._attachCollapsedHit(base, rect, zone),
+      const base = this.#cellDescriptorForZone({ column: col, row }, zone);
+      return this.#finishCollapsedDescriptor(
+        this.#attachCollapsedHit(base, rect, zone),
         source
       );
     }
@@ -810,26 +811,26 @@ export default class GridOverlay extends Component {
     // `closest` returns the innermost chrome whose key isn't in
     // `this.slots`; we want the outer slot's chrome instead.
     let candidate = el.closest("[data-wf-block-key]");
-    while (candidate && this._gridElement.contains(candidate)) {
+    while (candidate && this.gridElement.contains(candidate)) {
       const blockKey = candidate.getAttribute("data-wf-block-key");
       const slot = this.slots.find((s) => entryKey(s) === blockKey);
       if (slot) {
-        if (sourceKey && this._sourceCoversTarget(sourceKey, blockKey)) {
+        if (sourceKey && this.#sourceCoversTarget(sourceKey, blockKey)) {
           return null;
         }
         const rect = candidate.getBoundingClientRect();
-        const zone = this._computeZoneCollapsed(
+        const zone = this.#computeZoneCollapsed(
           input.clientY - rect.top,
           rect.height
         );
-        const base = this._slotDescriptorForZone({
+        const base = this.#slotDescriptorForZone({
           slot,
           zone,
           shift: input.shiftKey,
           source,
         });
-        return this._finishCollapsedDescriptor(
-          this._attachCollapsedHit(base, rect, zone),
+        return this.#finishCollapsedDescriptor(
+          this.#attachCollapsedHit(base, rect, zone),
           source
         );
       }
@@ -841,17 +842,17 @@ export default class GridOverlay extends Component {
 
   /**
    * Stamps the collapsed-view hit-test result onto the base descriptor
-   * so `_computeOverlayGeometryCollapsed` can paint against the actual
+   * so `#computeOverlayGeometryCollapsed` can paint against the actual
    * element the cursor was over, without round-tripping through
    * logical (col, row) → DOM lookups. The latter fails for auto-placed
    * slots (whose `placement.start` is null) and for any case where
-   * `_slotAtCell` can't resolve the cell back to an element.
+   * `#slotAtCell` can't resolve the cell back to an element.
    *
    * The viewport-coord rect is captured at hit-test time; the
    * mirroring step converts to grid-relative the same way the
    * track-math path does, so the rest of the pipeline stays uniform.
    */
-  _attachCollapsedHit(descriptor, rect, zone) {
+  #attachCollapsedHit(descriptor, rect, zone) {
     if (!descriptor) {
       return null;
     }
@@ -872,7 +873,7 @@ export default class GridOverlay extends Component {
    * don't carry semantics in a vertical stack — only top (insert
    * above) / center (swap-or-move-into) / bottom (insert below) do.
    */
-  _computeZoneCollapsed(y, h) {
+  #computeZoneCollapsed(y, h) {
     const edge = 0.25;
     if (h <= 0) {
       return "center";
@@ -892,11 +893,11 @@ export default class GridOverlay extends Component {
    * mirrored overlay can paint in danger tones for impossible drops
    * (e.g. shift-insert that doesn't fit the grid).
    */
-  _finishCollapsedDescriptor(descriptor, source) {
+  #finishCollapsedDescriptor(descriptor, source) {
     if (!descriptor) {
       return null;
     }
-    if (!this._canExecuteDescriptor(descriptor, source)) {
+    if (!this.#canExecuteDescriptor(descriptor, source)) {
       return { ...descriptor, _invalid: true };
     }
     return descriptor;
@@ -908,9 +909,9 @@ export default class GridOverlay extends Component {
    * `computeShiftPlan` to see whether the cascade fits within the
    * grid; swap / replace / occupy descriptors always succeed at this
    * stage (cycle / self-drop checks already happened upstream in
-   * `_descriptorFromCursor` via `_sourceCoversTarget`).
+   * `#descriptorFromCursor` via `#sourceCoversTarget`).
    */
-  _canExecuteDescriptor(descriptor, source) {
+  #canExecuteDescriptor(descriptor, source) {
     if (!descriptor) {
       return false;
     }
@@ -932,7 +933,7 @@ export default class GridOverlay extends Component {
       let sourceInGrid = null;
       if (sourceKey) {
         const located = this.wireframe._findEntryAndOutletSync?.(sourceKey);
-        if (located?.outletName === this._outletName(this.args.gridKey)) {
+        if (located?.outletName === this.#outletName(this.args.gridKey)) {
           for (const slot of this.slots) {
             if (entryKey(slot) === sourceKey) {
               sourceInGrid = sourceKey;
@@ -953,7 +954,7 @@ export default class GridOverlay extends Component {
     return true;
   }
 
-  _outletName(blockKey) {
+  #outletName(blockKey) {
     return this.wireframe._findEntryAndOutletSync?.(blockKey)?.outletName;
   }
 
@@ -963,7 +964,7 @@ export default class GridOverlay extends Component {
    * (a block dropped into itself or its own subtree would form a
    * cycle in the layout tree).
    */
-  _sourceCoversTarget(sourceKey, targetKey) {
+  #sourceCoversTarget(sourceKey, targetKey) {
     if (!sourceKey || !targetKey) {
       return false;
     }
@@ -980,9 +981,9 @@ export default class GridOverlay extends Component {
    * is split halfway). Returns `null` when the position falls outside
    * the grid's resolved track range.
    */
-  _cursorToCell(x, y, tracks) {
-    const col = this._findTrackIndex(x, tracks.colWidths, tracks.colGap);
-    const row = this._findTrackIndex(y, tracks.rowHeights, tracks.rowGap);
+  #cursorToCell(x, y, tracks) {
+    const col = this.#findTrackIndex(x, tracks.colWidths, tracks.colGap);
+    const row = this.#findTrackIndex(y, tracks.rowHeights, tracks.rowGap);
     if (col == null || row == null) {
       return null;
     }
@@ -996,7 +997,7 @@ export default class GridOverlay extends Component {
    * cursor hasn't passed yet. Past the last track, returns the last
    * track's index.
    */
-  _findTrackIndex(pos, sizes, gap) {
+  #findTrackIndex(pos, sizes, gap) {
     if (pos < 0) {
       return null;
     }
@@ -1016,15 +1017,15 @@ export default class GridOverlay extends Component {
    * grid's resolved tracks. Used to compute the cursor's position
    * within the cell for zone detection.
    */
-  _cellBounds(cell, tracks) {
-    const left = this._trackStart(cell.column, tracks.colWidths, tracks.colGap);
-    const right = this._trackEnd(
+  #cellBounds(cell, tracks) {
+    const left = this.#trackStart(cell.column, tracks.colWidths, tracks.colGap);
+    const right = this.#trackEnd(
       cell.column + 1,
       tracks.colWidths,
       tracks.colGap
     );
-    const top = this._trackStart(cell.row, tracks.rowHeights, tracks.rowGap);
-    const bottom = this._trackEnd(
+    const top = this.#trackStart(cell.row, tracks.rowHeights, tracks.rowGap);
+    const bottom = this.#trackEnd(
       cell.row + 1,
       tracks.rowHeights,
       tracks.rowGap
@@ -1042,7 +1043,7 @@ export default class GridOverlay extends Component {
    * Auto-placed slots (no explicit column / row) are ignored — for
    * descriptor purposes we treat their cells as empty.
    */
-  _slotAtCell(cell) {
+  #slotAtCell(cell) {
     for (const slot of this.slots) {
       const placement = parsePlacement(slot.containerArgs);
       if (placement.column.start == null || placement.row.start == null) {
@@ -1066,7 +1067,7 @@ export default class GridOverlay extends Component {
    * block — palette blocks can't land on an occupied cell's center).
    * Edges map to thin lines in the gap on the slot's outer perimeter.
    */
-  _slotDescriptorForZone({ slot, zone, shift, source }) {
+  #slotDescriptorForZone({ slot, zone, shift, source }) {
     const placement = parsePlacement(slot.containerArgs);
     const slotKey = entryKey(slot);
     if (zone === "center") {
@@ -1126,7 +1127,7 @@ export default class GridOverlay extends Component {
    * column line, so the overlay snaps to the same position from either
    * side.
    */
-  _cellDescriptorForZone(cell, zone) {
+  #cellDescriptorForZone(cell, zone) {
     if (zone === "left") {
       return {
         kind: "line-column",
@@ -1176,7 +1177,7 @@ export default class GridOverlay extends Component {
    * cell stays "left" instead of biasing toward "up"/"down" near
    * corners.
    */
-  _computeZone(x, y, w, h) {
+  #computeZone(x, y, w, h) {
     const edge = 0.2;
     const fromLeft = x / w;
     const fromRight = (w - x) / w;
@@ -1211,11 +1212,11 @@ export default class GridOverlay extends Component {
    *
    * @returns {{top: number, left: number, width: number, height: number}|null}
    */
-  _computeOverlayGeometry(descriptor) {
+  #computeOverlayGeometry(descriptor) {
     if (this.isCollapsed) {
-      return this._computeOverlayGeometryCollapsed(descriptor);
+      return this.#computeOverlayGeometryCollapsed(descriptor);
     }
-    const tracks = this._readGridTracks();
+    const tracks = this.#readGridTracks();
     if (!tracks) {
       return null;
     }
@@ -1235,10 +1236,10 @@ export default class GridOverlay extends Component {
       ) {
         return null;
       }
-      const left = this._trackStart(colStart, colWidths, colGap);
-      const right = this._trackEnd(colEnd, colWidths, colGap);
-      const top = this._trackStart(rowStart, rowHeights, rowGap);
-      const bottom = this._trackEnd(rowEnd, rowHeights, rowGap);
+      const left = this.#trackStart(colStart, colWidths, colGap);
+      const right = this.#trackEnd(colEnd, colWidths, colGap);
+      const top = this.#trackStart(rowStart, rowHeights, rowGap);
+      const bottom = this.#trackEnd(rowEnd, rowHeights, rowGap);
       return {
         left,
         top,
@@ -1248,11 +1249,11 @@ export default class GridOverlay extends Component {
     }
 
     if (descriptor.kind === "line-column") {
-      const lineX = this._lineMidpoint(descriptor.line, colWidths, colGap);
+      const lineX = this.#lineMidpoint(descriptor.line, colWidths, colGap);
       const rowStart = descriptor.row?.start ?? 1;
       const rowEnd = descriptor.row?.end ?? rowHeights.length + 1;
-      const top = this._trackStart(rowStart, rowHeights, rowGap);
-      const bottom = this._trackEnd(rowEnd, rowHeights, rowGap);
+      const top = this.#trackStart(rowStart, rowHeights, rowGap);
+      const bottom = this.#trackEnd(rowEnd, rowHeights, rowGap);
       return {
         left: lineX - stroke / 2,
         top,
@@ -1262,11 +1263,11 @@ export default class GridOverlay extends Component {
     }
 
     if (descriptor.kind === "line-row") {
-      const lineY = this._lineMidpoint(descriptor.line, rowHeights, rowGap);
+      const lineY = this.#lineMidpoint(descriptor.line, rowHeights, rowGap);
       const colStart = descriptor.column?.start ?? 1;
       const colEnd = descriptor.column?.end ?? colWidths.length + 1;
-      const left = this._trackStart(colStart, colWidths, colGap);
-      const right = this._trackEnd(colEnd, colWidths, colGap);
+      const left = this.#trackStart(colStart, colWidths, colGap);
+      const right = this.#trackEnd(colEnd, colWidths, colGap);
       return {
         left,
         top: lineY - stroke / 2,
@@ -1279,7 +1280,7 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Collapsed-view variant of `_computeOverlayGeometry`. Looks up the
+   * Collapsed-view variant of `#computeOverlayGeometry`. Looks up the
    * destination DOM element (slot chrome or empty-cell placeholder)
    * by its logical (column, row) coordinates and uses its bounding
    * rect — translated into grid-relative coords — to paint the
@@ -1294,8 +1295,8 @@ export default class GridOverlay extends Component {
    * — left/right zones aren't emitted — so they're handled as a
    * fallback only.
    */
-  _computeOverlayGeometryCollapsed(descriptor) {
-    if (!this._gridElement) {
+  #computeOverlayGeometryCollapsed(descriptor) {
+    if (!this.gridElement) {
       return null;
     }
     const rect = descriptor._collapsedRect;
@@ -1344,8 +1345,8 @@ export default class GridOverlay extends Component {
    * computed style. Returns `null` if the grid element isn't ready
    * yet (overlay just rendered, hasn't captured the ref).
    */
-  _readGridTracks() {
-    const gridEl = this._gridElement;
+  #readGridTracks() {
+    const gridEl = this.gridElement;
     if (!gridEl) {
       return null;
     }
@@ -1372,12 +1373,12 @@ export default class GridOverlay extends Component {
    * (K-1) tracks and (K-1) gaps in the layout, so the item's left
    * edge falls after both. Line 1 is the grid's origin (0).
    */
-  _trackStart(line, sizes, gap) {
+  #trackStart(line, sizes, gap) {
     if (line <= 1) {
       return 0;
     }
     if (line > sizes.length + 1) {
-      return this._trackEnd(sizes.length + 1, sizes, gap);
+      return this.#trackEnd(sizes.length + 1, sizes, gap);
     }
     let sum = 0;
     for (let i = 0; i < line - 1; i++) {
@@ -1392,7 +1393,7 @@ export default class GridOverlay extends Component {
    * included — only the (line-2) gaps interspersed BETWEEN the spanned
    * tracks contribute.
    */
-  _trackEnd(line, sizes, gap) {
+  #trackEnd(line, sizes, gap) {
     if (line <= 1) {
       return 0;
     }
@@ -1417,14 +1418,14 @@ export default class GridOverlay extends Component {
    * the adjacent tracks. The overlay's stroke is then drawn straddling
    * this position.
    */
-  _lineMidpoint(line, sizes, gap) {
+  #lineMidpoint(line, sizes, gap) {
     if (line <= 1) {
       return 0;
     }
     if (line >= sizes.length + 1) {
-      return this._trackEnd(sizes.length + 1, sizes, gap);
+      return this.#trackEnd(sizes.length + 1, sizes, gap);
     }
-    return this._trackEnd(line, sizes, gap) + gap / 2;
+    return this.#trackEnd(line, sizes, gap) + gap / 2;
   }
 
   @action
@@ -1447,10 +1448,10 @@ export default class GridOverlay extends Component {
       {{didInsert this.captureGridElement}}
     ></span>
 
-    {{#if this._gridElement}}
+    {{#if this.gridElement}}
       {{! `insertBefore=null` appends without wiping the slots already
         rendered inside the grid div. }}
-      {{#in-element this._gridElement insertBefore=null}}
+      {{#in-element this.gridElement insertBefore=null}}
         {{#each this.emptyCells as |cell|}}
           <div
             class="wireframe-grid-cell"

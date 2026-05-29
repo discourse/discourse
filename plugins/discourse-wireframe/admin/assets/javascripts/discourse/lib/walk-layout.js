@@ -18,16 +18,15 @@
  *     minted by `entry-processing.js` and exposed via the BLOCK_DEBUG
  *     payload. Outline ↔ canvas selection compares against this.
  *   - `path` is the array index trail (e.g. `[0, "children", 1]`) suitable
- *     for re-locating the entry from the layout root in future phases that
- *     mutate layouts.
+ *     for re-locating the entry from the layout root.
  *
- * Phase 7p filter: outlets registered site-wide but not mounted on the
- * current page would otherwise show up as dead rows. The walker filters
- * to outlets whose `<OutletBoundary>` is actually in the DOM (the editor
- * always mounts the boundary for active outlets via the
- * OUTLET_INFO_COMPONENT callback — see `api-initializers/wireframe.js`).
- * Falls back to the unfiltered list during tests / SSR where `document`
- * isn't a meaningful DOM source.
+ * The walker filters to outlets whose `<OutletBoundary>` is actually
+ * mounted in the DOM, so outlets registered site-wide but not mounted
+ * on the current page don't show up as dead rows. The editor mounts
+ * the boundary for active outlets via the OUTLET_INFO_COMPONENT
+ * callback — see `api-initializers/wireframe.js`. Falls back to the
+ * unfiltered list during tests / SSR where `document` isn't a
+ * meaningful DOM source.
  */
 import { _getOutletLayouts } from "discourse/blocks/block-outlet";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
@@ -154,9 +153,9 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
     try {
       layout = await entry.validatedLayout;
     } catch {
-      // Skip outlets whose layout failed validation. They show nothing in
-      // the outline rather than an error row — Phase 1 is read-only and
-      // surfacing layout errors in the outline isn't useful yet.
+      // Skip outlets whose layout failed validation. They show nothing
+      // in the outline rather than an error row — layout-level errors
+      // surface elsewhere (the validator's own error reporting).
       continue;
     }
     const rows = [];

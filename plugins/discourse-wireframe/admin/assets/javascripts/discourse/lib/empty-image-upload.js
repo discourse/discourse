@@ -7,11 +7,8 @@
  * service reads, no DOM — so it can be unit-tested with plain JS
  * fixtures.
  *
- * Migration note: this file replaces the older "all image-upload args
- * empty?" predicate that block-chrome used to swap the entire block for
- * a single empty card. The new per-arg shape supports multi-image
- * blocks (e.g. `wf:media-card` with both an avatar and a cover image)
- * and the inline editing affordances introduced alongside the
+ * Supports multi-image blocks (e.g. `wf:media-card` with both an
+ * avatar and a cover image) and the inline editing affordances on the
  * first-class `image` arg type.
  */
 
@@ -65,11 +62,9 @@ export function isImageArgValueEmpty(value) {
 }
 
 /**
- * Convenience predicate retained for callers that only need a boolean.
- * Returns `true` when the schema declares one or more image args AND
- * every one of them is empty. Equivalent to the old
- * `entryHasEmptyImageUploadArgs` but keyed off `type: "image"` instead
- * of `ui.control: "image-upload"`.
+ * Convenience boolean predicate: `true` when the schema declares one or
+ * more image args AND every one of them is empty. Keyed off the
+ * arg's `type: "image"`.
  *
  * @param {Object|null|undefined} argsSchema
  * @param {Object|null|undefined} liveArgs

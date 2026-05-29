@@ -33,6 +33,11 @@ export default class WireframeButton extends Component {
 
   @tracked isOpening = false;
 
+  /**
+   * Opens the page-picker modal so the admin can choose which page to
+   * launch the wireframe editor on. The modal is responsible for the
+   * eventual navigation; this action only flips the loading flag.
+   */
   @action
   async openPagePicker() {
     this.isOpening = true;

@@ -426,7 +426,6 @@ export default class InlineEditState {
       clearValidatorStamps(currentEntry);
       this.service._editedOutlets.add(outletName);
 
-      // Insert the new sibling immediately after the current entry.
       const layout = this.service._ensureDraft(outletName);
       if (!layout) {
         return false;
@@ -569,7 +568,6 @@ export default class InlineEditState {
       clearValidatorStamps(livePrev);
       this.service._editedOutlets.add(outletName);
 
-      // Remove the current entry from the layout.
       const draft = this.service._ensureDraft(outletName);
       if (!draft) {
         return false;

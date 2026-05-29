@@ -23,12 +23,13 @@ module("Integration | Wireframe | wf:image block", function (hooks) {
   });
 
   test("declares image as a required arg", function (assert) {
-    // The render-time check (`validateBlockArgs` at `args.js:1042`)
-    // throws a `BlockError` when `entry.args.image` is missing, which
-    // the editor's permissive layer surfaces in the inspector validation
-    // banner. We assert the schema declaration directly rather than
-    // triggering the render-time path, because the rejection happens
-    // inside a tracked async getter and escapes `assert.rejects`.
+    // The render-time check (`validateArgsAgainstSchema` in
+    // `lib/blocks/-internals/validation/args.js`) throws a `BlockError`
+    // when `entry.args.image` is missing, which the editor's permissive
+    // layer surfaces in the inspector validation banner. We assert the
+    // schema declaration directly rather than triggering the render-time
+    // path, because the rejection happens inside a tracked async getter
+    // and escapes `assert.rejects`.
     const metadata = getBlockMetadata(WFImage);
     assert.true(
       metadata?.args?.image?.required,

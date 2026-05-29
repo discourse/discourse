@@ -9,9 +9,8 @@
 import { entryKey } from "./entry-key";
 
 /**
- * Pure helpers for the grid editor (Phase 7s). All functions
- * operate on plain data — no DOM access — so they're trivially
- * unit-testable.
+ * Pure helpers for the grid editor. All functions operate on plain data
+ * — no DOM access — so they're trivially unit-testable.
  *
  * The grid is 1-indexed (matching CSS Grid's `grid-column` / `grid-row`
  * line numbering). A cell at column C, row R is referred to as
@@ -179,8 +178,8 @@ export function unoccupiedCells(occupied, columns, rows) {
 
 /**
  * Resolves the cell `{column, row}` under a pointer event, given the
- * grid container's bounding rect. Used by the drag handlers in
- * Phase 7s.6 to compute snap targets.
+ * grid container's bounding rect. Used by the drag handlers to compute
+ * snap targets.
  *
  * @param {{clientX: number, clientY: number}} event
  * @param {DOMRect} gridRect

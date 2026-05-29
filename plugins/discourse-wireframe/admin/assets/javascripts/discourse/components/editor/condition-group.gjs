@@ -47,6 +47,12 @@ import ConditionRule from "./condition-rule";
  */
 export default class ConditionGroup extends Component {
   /**
+   * Whether the add-rule picker is currently open. A native
+   * `<details>` would also work, but tracking it on the component
+   * lets us close the picker as soon as the user clicks a type.
+   */
+  @tracked picking = false;
+  /**
    * Whether a given child path matches the most-recently-inserted
    * path. Compared structurally — `@newlyAddedPath` is an array.
    *
@@ -83,12 +89,6 @@ export default class ConditionGroup extends Component {
       }
     );
   };
-  /**
-   * Whether the add-rule picker is currently open. A native
-   * `<details>` would also work, but tracking it on the component
-   * lets us close the picker as soon as the user clicks a type.
-   */
-  @tracked _picking = false;
 
   get combinator() {
     return combinatorOf(this.args.node);
@@ -128,17 +128,17 @@ export default class ConditionGroup extends Component {
 
   @action
   togglePicker() {
-    this._picking = !this._picking;
+    this.picking = !this.picking;
   }
 
   @action
   closePicker() {
-    this._picking = false;
+    this.picking = false;
   }
 
   @action
   pickType(typeId) {
-    this._picking = false;
+    this.picking = false;
     this.args.onInsertLeaf(this.args.path, typeId);
   }
 
@@ -260,9 +260,9 @@ export default class ConditionGroup extends Component {
             <DButton
               class={{dConcatClass
                 "wireframe-condition-group__add-rule"
-                (if this._picking "--active")
+                (if this.picking "--active")
               }}
-              @ariaExpanded={{this._picking}}
+              @ariaExpanded={{this.picking}}
               @icon="plus"
               @label="wireframe.inspector.conditions.add_rule"
               @action={{this.togglePicker}}
@@ -276,7 +276,7 @@ export default class ConditionGroup extends Component {
             />
           </div>
 
-          {{#if this._picking}}
+          {{#if this.picking}}
             <div class="wireframe-condition-group__type-grid" role="menu">
               {{#each @conditionTypes as |typeMeta|}}
                 <DButton

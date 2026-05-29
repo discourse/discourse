@@ -29,9 +29,10 @@ import CategorySelector from "discourse/select-kit/components/category-selector"
 export default class InspectorCategoryField extends Component {
   @tracked selectedCategories = [];
 
+  #pendingCategoriesRequest = Promise.resolve();
+
   constructor() {
     super(...arguments);
-    this.pendingCategoriesRequest = Promise.resolve();
     if (this.isMulti) {
       this.refreshSelectedCategories();
     }
@@ -49,7 +50,7 @@ export default class InspectorCategoryField extends Component {
     return raw.split("|").filter(Boolean);
   }
 
-  async updateSelectedCategories(previousRequest) {
+  async #updateSelectedCategories(previousRequest) {
     const categories = await Category.asyncFindByIds(this.categoryIds);
     // Serialise: the previous request's tracked write must land before
     // ours, otherwise rapid value changes can settle out-of-order.
@@ -59,9 +60,9 @@ export default class InspectorCategoryField extends Component {
 
   @action
   refreshSelectedCategories() {
-    const previousRequest = this.pendingCategoriesRequest;
-    this.pendingCategoriesRequest =
-      this.updateSelectedCategories(previousRequest);
+    const previousRequest = this.#pendingCategoriesRequest;
+    this.#pendingCategoriesRequest =
+      this.#updateSelectedCategories(previousRequest);
   }
 
   @action

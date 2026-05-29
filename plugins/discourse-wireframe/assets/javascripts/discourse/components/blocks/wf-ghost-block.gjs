@@ -32,6 +32,13 @@ import { i18n } from "discourse-i18n";
  *     to render them inside the ghost itself).
  */
 export default class WFGhostBlock extends Component {
+  /**
+   * The icon to display in the ghost header, picked per failure type so
+   * the author can quickly tell whether they're looking at a missing
+   * block, a condition gate, an empty container, etc.
+   *
+   * @returns {string}
+   */
   get iconName() {
     switch (this.args.failureType) {
       case FAILURE_TYPE.OPTIONAL_MISSING:
@@ -41,12 +48,13 @@ export default class WFGhostBlock extends Component {
       case FAILURE_TYPE.NO_VISIBLE_CHILDREN:
         return "circle-dashed";
       default:
-        // CONDITION_FAILED and anything else
         return "eye-slash";
     }
   }
 
   /**
+   * Whether to paint the ghost with the error treatment (danger-red).
+   *
    * UNKNOWN_BLOCK is a genuine authoring error (typo, renamed /
    * removed registration), so it gets the danger-red treatment.
    * CONDITION_FAILED is intentional gating — the author set the
@@ -54,15 +62,19 @@ export default class WFGhostBlock extends Component {
    * NO_VISIBLE_CHILDREN can be either, but the actual cause is
    * visible inside the container's child ghosts; keeping the
    * container itself neutral avoids double-painting.
+   *
+   * @returns {boolean}
    */
   get isError() {
     return this.args.failureType === FAILURE_TYPE.UNKNOWN_BLOCK;
   }
 
   /**
-   * Human-readable explanation. Author-supplied `failureReason`
-   * overrides the canned message so containers (e.g. the head block)
-   * can surface their own reason.
+   * Human-readable explanation shown under the ghost's header.
+   * Author-supplied `failureReason` overrides the canned message so
+   * containers (e.g. the head block) can surface their own reason.
+   *
+   * @returns {string}
    */
   get hintMessage() {
     if (this.args.failureReason) {

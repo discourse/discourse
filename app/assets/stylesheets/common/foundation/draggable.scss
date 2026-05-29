@@ -1,16 +1,8 @@
-// --------------------------------------------------
-// Foundation styles for the drag-and-drop modifier vocabulary
-// (`{{draggable-item}}` + `{{drop-target}}`).
-//
-// The modifiers toggle these class names on their host elements during a
-// drag. The styles below give every consumer a consistent default look —
-// a 50% opacity source plus a 2px tertiary line indicator above or below
-// the drop target — modelled on the visual treatment used by the
-// discourse-doc-categories index editor (the canonical example).
-//
-// Consumers can raise specificity to override (BEM-style) when they need
-// a different treatment (e.g. coloured highlight, full-row glow).
-// --------------------------------------------------
+/* Default styles for the drag-and-drop modifier vocabulary
+   (`{{draggable-item}}` + `{{drop-target}}`). The modifiers toggle these
+   class names on their host elements during a drag; consumers can raise
+   specificity to override when they need a different treatment. */
+
 .is-dragging {
   opacity: 0.5;
 }
@@ -71,10 +63,10 @@
   }
 }
 
-// `inside` mode: the cursor is over a container that accepts the dragged
-// item as a child rather than a sibling. We surface that with a soft
-// outlined treatment instead of a single line — matching the visual
-// editor's container drop zone.
+/* `inside` mode: the cursor is over a container that accepts the dragged
+   item as a child rather than a sibling — surfaced with an outline
+   instead of a single line to distinguish it from above/below/left/right. */
+
 .is-drag-inside {
   outline: 2px solid var(--tertiary);
   outline-offset: -2px;

@@ -23,8 +23,7 @@ import ConditionRule from "./condition-rule";
 /**
  * Top-level conditions surface. Renders a QueryBuilder-style tree of
  * groups and rules; new rules expand inline (no popover, no
- * z-index fight). Replaces the pill-chip surface + DMenu rule
- * layout from Phase 7q.
+ * z-index fight).
  *
  * The tree shape itself is unchanged (`[a, b]` / `{any}` / `{not}` /
  * `{type, ...args}`). Every mutation routes through the editor
@@ -41,6 +40,18 @@ export default class ConditionsTree extends Component {
   @service wireframe;
   @service blocks;
 
+  /**
+   * Path of the most-recently-inserted node. `<ConditionGroup>` reads
+   * this to start the matching child in the expanded state on its
+   * first render — so authors immediately see the editor without
+   * having to click the row again.
+   *
+   * Set by `handleInsertLeaf` / `seedFromEmpty`; cleared on every
+   * non-insert mutation so stale paths don't keep re-expanding rows.
+   *
+   * @type {Array<string|number>|null}
+   */
+  @tracked newlyAddedPath = null;
   emptyPath = [];
   iconFor = (typeId) => iconForConditionType(typeId);
   metaFor = (leaf) => {
@@ -56,37 +67,55 @@ export default class ConditionsTree extends Component {
       }
     );
   };
-  /**
-   * Path of the most-recently-inserted node. `<ConditionGroup>` reads
-   * this to start the matching child in the expanded state on its
-   * first render — so authors immediately see the editor without
-   * having to click the row again.
-   *
-   * Set by `handleInsertLeaf` / `seedFromEmpty`; cleared on every
-   * non-insert mutation so stale paths don't keep re-expanding rows.
-   *
-   * @type {Array<string|number>|null}
-   */
-  @tracked _newlyAddedPath = null;
 
+  /**
+   * The current conditions tree for the selected block. Returns the
+   * service's live tracked tree so mutations propagate without an
+   * explicit subscription.
+   *
+   * @returns {Object|null}
+   */
   @cached
   get tree() {
     return this.wireframe.selectedBlockConditions;
   }
 
+  /**
+   * Registered condition types from the blocks service. Drives the
+   * "Add rule" picker.
+   *
+   * @returns {Array<Object>}
+   */
   @cached
   get conditionTypes() {
     return this.blocks.listConditionTypes();
   }
 
+  /**
+   * `true` when the tree contains no rules — drives the empty-state
+   * placeholder.
+   *
+   * @returns {boolean}
+   */
   get isEmpty() {
     return classifyNode(this.tree) === "empty";
   }
 
+  /**
+   * `true` when the root node is itself a leaf rule (not wrapped in a
+   * group). The UI renders a single-rule shorthand for this case.
+   *
+   * @returns {boolean}
+   */
   get rootIsLeaf() {
     return isLeaf(this.tree);
   }
 
+  /**
+   * `true` when the root node is a combinator group (AND / OR / NOT).
+   *
+   * @returns {boolean}
+   */
   get rootIsGroup() {
     return isGroup(this.tree);
   }
@@ -111,36 +140,36 @@ export default class ConditionsTree extends Component {
    * Called BEFORE `commit()` so it reflects the tree shape we're
    * about to write.
    */
-  _markNewlyAddedFor(groupPath) {
+  #markNewlyAddedFor(groupPath) {
     const tree = this.tree ?? [];
-    const group = groupPath.length === 0 ? tree : this._readAt(tree, groupPath);
+    const group = groupPath.length === 0 ? tree : this.#readAt(tree, groupPath);
     if (!group) {
-      this._newlyAddedPath = null;
+      this.newlyAddedPath = null;
       return;
     }
     const kind = classifyNode(group);
     if (kind === "and") {
-      this._newlyAddedPath = [...groupPath, group.length];
+      this.newlyAddedPath = [...groupPath, group.length];
       return;
     }
     if (kind === "or") {
-      this._newlyAddedPath = [...groupPath, "any", group.any.length];
+      this.newlyAddedPath = [...groupPath, "any", group.any.length];
       return;
     }
     if (kind === "not") {
       if (Array.isArray(group.not)) {
-        this._newlyAddedPath = [...groupPath, "not", group.not.length];
+        this.newlyAddedPath = [...groupPath, "not", group.not.length];
         return;
       }
       // Empty NOT case never happens (newEmptyGroup seeds with a leaf)
       // but if it did, promotion would put the new leaf at index 1.
-      this._newlyAddedPath = [...groupPath, "not", 1];
+      this.newlyAddedPath = [...groupPath, "not", 1];
       return;
     }
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
   }
 
-  _readAt(tree, path) {
+  #readAt(tree, path) {
     let node = tree;
     for (const seg of path) {
       if (node == null) {
@@ -159,49 +188,49 @@ export default class ConditionsTree extends Component {
 
   @action
   handleInsertLeaf(groupPath, typeId) {
-    this._markNewlyAddedFor(groupPath);
+    this.#markNewlyAddedFor(groupPath);
     this.commit(insertLeaf(this.tree ?? [], groupPath, typeId));
   }
 
   @action
   handleInsertGroup(groupPath, combinator) {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(insertGroup(this.tree ?? [], groupPath, combinator));
   }
 
   @action
   handleSetCombinator(path, newCombinator) {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(setCombinator(this.tree, path, newCombinator));
   }
 
   @action
   handleRemoveNode(path) {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(removeAt(this.tree, path));
   }
 
   @action
   handleUpdateLeaf(path, nextLeaf) {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(updateLeaf(this.tree, path, nextLeaf));
   }
 
   @action
   handleRootLeafUpdate(nextLeaf) {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(nextLeaf);
   }
 
   @action
   handleRootLeafChangeType(typeId) {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit({ type: typeId });
   }
 
   @action
   handleRootLeafRemove() {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(null);
   }
 
@@ -210,13 +239,13 @@ export default class ConditionsTree extends Component {
     // Seed in the array (AND) form so the freshly-seeded tree carries
     // a group header — the user can immediately add more rules from
     // the same surface. Mark the new rule for auto-expansion.
-    this._newlyAddedPath = [0];
+    this.newlyAddedPath = [0];
     this.commit([{ type: typeId }]);
   }
 
   @action
   clearAll() {
-    this._newlyAddedPath = null;
+    this.newlyAddedPath = null;
     this.commit(null);
   }
 
@@ -264,7 +293,7 @@ export default class ConditionsTree extends Component {
           @onSetCombinator={{this.handleSetCombinator}}
           @onRemoveNode={{this.handleRemoveNode}}
           @onUpdateLeaf={{this.handleUpdateLeaf}}
-          @newlyAddedPath={{this._newlyAddedPath}}
+          @newlyAddedPath={{this.newlyAddedPath}}
           @isRoot={{true}}
         />
       {{/if}}

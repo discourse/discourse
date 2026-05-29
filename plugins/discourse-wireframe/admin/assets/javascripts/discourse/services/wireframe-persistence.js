@@ -12,8 +12,8 @@ const SCHEMA_VERSION = 1;
 
 /**
  * Bridges the editor's in-memory edits and the server-side `block_layout`
- * ThemeField persistence. Phase 3d ships a single endpoint
- * (`POST /admin/customize/block-layouts.json`) that saves one outlet at a
+ * ThemeField persistence. A single endpoint
+ * (`POST /admin/customize/block-layouts.json`) saves one outlet at a
  * time; this service drives it once per edited outlet on save.
  *
  * After a successful save the service publishes the just-saved layout into
