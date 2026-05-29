@@ -191,6 +191,16 @@ module("Integration | Component | DPostAccordion", function (hooks) {
       </template>
     );
 
+    // Integration tests don't load the component's SCSS, so the content is
+    // never clamped and overflow can't be measured. Apply the max-height
+    // clamp it relies on, which retriggers the resize-based measurement.
+    const content = document.querySelector(".d-post-accordion-item__content");
+    content.style.lineHeight = "1.4";
+    content.style.overflow = "hidden";
+    content.style.maxHeight = "calc(2 * 1.4 * 1em)";
+
+    await waitFor(".d-post-accordion-item[data-overflowing='true']");
+
     assert
       .dom(".d-post-accordion-item")
       .hasAttribute("data-overflowing", "true");
