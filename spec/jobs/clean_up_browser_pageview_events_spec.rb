@@ -18,6 +18,18 @@ RSpec.describe Jobs::CleanUpBrowserPageviewEvents do
     expect(BrowserPageviewEvent.all).to contain_exactly(fresh_event)
   end
 
+  it "deletes scores for deleted events" do
+    SiteSetting.clean_up_browser_pageview_events = true
+    fresh_event = Fabricate(:browser_pageview_event, created_at: 1.month.ago)
+    old_event = Fabricate(:browser_pageview_event, created_at: 4.months.ago)
+    BrowserPageviewEventScore.create!(event: fresh_event)
+    BrowserPageviewEventScore.create!(event: old_event)
+
+    described_class.new.execute({})
+
+    expect(BrowserPageviewEventScore.pluck(:event_id)).to contain_exactly(fresh_event.id)
+  end
+
   it "keeps all events on the retention cutoff day" do
     SiteSetting.clean_up_browser_pageview_events = true
 
