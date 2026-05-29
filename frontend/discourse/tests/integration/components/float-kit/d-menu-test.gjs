@@ -18,7 +18,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import dElement from "discourse/ui-kit/helpers/d-element";
 
-module("Integration | Component | FloatKit | d-menu", function (hooks) {
+module("Integration | Component | FloatKit | DMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   async function open() {

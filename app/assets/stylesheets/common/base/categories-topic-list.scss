@@ -6,7 +6,8 @@
 
   .table-heading {
     padding: var(--space-2) var(--space-1);
-    color: var(--primary-med-or-secondary-high);
+    color: var(--d-topic-list-header-text-color);
+    font-size: var(--d-topic-list-data-font-size);
   }
 
   .no-topics,

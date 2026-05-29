@@ -96,25 +96,13 @@ export default class TagChooserField extends Component {
 
   @action
   handleSelectedValues(event) {
-    const getFallbackValue = (optionValue) =>
-      optionValue.toLowerCase().replace(/\s+/g, "-");
-    let choiceMap = null;
-    const tagChoices = this.args.attributes?.tag_choices;
-
-    if (tagChoices) {
-      choiceMap = new Map(
-        Object.entries(tagChoices).map(([key, value]) => [value, key])
-      );
-    }
-
-    const selectedValues = Array.from(event.target.selectedOptions).map(
-      (option) => {
-        const mappedValue = choiceMap?.get(option.textContent.trim());
-        return mappedValue ?? getFallbackValue(option.value);
-      }
+    const nameByDisplay = new Map(
+      this.formattedChoices.map((choice) => [choice.display, choice.name])
     );
 
-    return selectedValues;
+    return Array.from(event.target.selectedOptions)
+      .map((option) => nameByDisplay.get(option.value))
+      .filter(Boolean);
   }
 
   @action

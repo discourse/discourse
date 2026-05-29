@@ -4,7 +4,7 @@ import {
   shouldShowManualTrigger,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/canvas/workflow-node";
 
-module("Unit | Component | workflows/canvas/workflow-node", function () {
+module("Unit | Component | Workflows | Canvas | WorkflowNode", function () {
   test("shows manual trigger for trigger nodes", function (assert) {
     assert.true(
       shouldShowManualTrigger({

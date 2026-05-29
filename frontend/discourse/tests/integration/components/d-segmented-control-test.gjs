@@ -4,7 +4,7 @@ import DSegmentedControl from "discourse/components/d-segmented-control";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
 
-module("Integration | Component | d-segmented-control", function (hooks) {
+module("Integration | Component | DSegmentedControl", function (hooks) {
   setupRenderingTest(hooks);
 
   const ITEMS = [

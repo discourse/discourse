@@ -36,7 +36,7 @@ import {
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
 
-module("Integration | Component | plugin-outlet", function (hooks) {
+module("Integration | Component | PluginOutlet", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -672,7 +672,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
 });
 
 module(
-  "Integration | Component | plugin-outlet | connector class definitions",
+  "Integration | Component | PluginOutlet | connector class definitions",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1033,7 +1033,7 @@ module(
 );
 
 module(
-  "Integration | Component | plugin-outlet | gjs class definitions",
+  "Integration | Component | PluginOutlet | gjs class definitions",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1055,7 +1055,7 @@ module(
 );
 
 module(
-  "Integration | Component | plugin-outlet | extraConnectorComponent",
+  "Integration | Component | PluginOutlet | ExtraConnectorComponent",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1093,7 +1093,7 @@ module(
 );
 
 module(
-  "Integration | Component | plugin-outlet | legacy extraConnectorClass",
+  "Integration | Component | PluginOutlet | legacy extraConnectorClass",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1124,7 +1124,7 @@ module(
 );
 
 module(
-  "Integration | Component | plugin-outlet | argument currying",
+  "Integration | Component | PluginOutlet | argument currying",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1243,74 +1243,83 @@ module(
   }
 );
 
+module("Integration | Component | PluginOutlet | Whitespace", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("no whitespace for unused outlet", async function (assert) {
+    await render(
+      <template>
+        <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+      </template>
+    );
+    assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+  });
+
+  test("no whitespace for used outlet", async function (assert) {
+    extraConnectorComponent("test-name", <template></template>);
+
+    await render(
+      <template>
+        <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+      </template>
+    );
+    assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+  });
+
+  test("no whitespace for unused wrapper outlet", async function (assert) {
+    await render(
+      <template>
+        <div class="test-wrapper"><PluginOutlet
+            @name="test-name"
+          >foo</PluginOutlet></div>
+      </template>
+    );
+    assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+  });
+
+  test("no whitespace for used wrapper outlet", async function (assert) {
+    extraConnectorComponent(
+      "test-name",
+      <template>
+        {{! eslint-disable ember/template-no-yield-only }}{{yield}}
+      </template>
+    );
+    await render(
+      <template>
+        <div class="test-wrapper"><PluginOutlet
+            @name="test-name"
+          >foo</PluginOutlet></div>
+      </template>
+    );
+    assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+  });
+});
+
+const PLUGIN_OUTLET_DEPRECATION_TEST_IDS = [
+  "discourse.plugin-outlet.alias.old-name",
+  "discourse.plugin-outlet.alias.legacy-name",
+  "discourse.plugin-outlet.alias.deprecated-alias",
+  "discourse.plugin-outlet.alias.old-standalone-outlet",
+  "discourse.plugin-outlet.alias.old-below-outlet",
+  "discourse.plugin-outlet.deprecated.doomed-outlet",
+  "discourse.plugin-outlet.deprecated.old-outlet",
+];
+
 module(
-  "Integration | Component | plugin-outlet | whitespace",
-  function (hooks) {
-    setupRenderingTest(hooks);
-
-    test("no whitespace for unused outlet", async function (assert) {
-      await render(
-        <template>
-          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
-        </template>
-      );
-      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
-    });
-
-    test("no whitespace for used outlet", async function (assert) {
-      extraConnectorComponent("test-name", <template></template>);
-
-      await render(
-        <template>
-          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
-        </template>
-      );
-      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
-    });
-
-    test("no whitespace for unused wrapper outlet", async function (assert) {
-      await render(
-        <template>
-          <div class="test-wrapper"><PluginOutlet
-              @name="test-name"
-            >foo</PluginOutlet></div>
-        </template>
-      );
-      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
-    });
-
-    test("no whitespace for used wrapper outlet", async function (assert) {
-      extraConnectorComponent(
-        "test-name",
-        <template>
-          {{! eslint-disable ember/template-no-yield-only }}{{yield}}
-        </template>
-      );
-      await render(
-        <template>
-          <div class="test-wrapper"><PluginOutlet
-              @name="test-name"
-            >foo</PluginOutlet></div>
-        </template>
-      );
-      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
-    });
-  }
-);
-
-module(
-  "Integration | Component | plugin-outlet | aliases and deprecations",
+  "Integration | Component | PluginOutlet | aliases and deprecations",
   function (hooks) {
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
       this.consoleWarnStub = sinon.stub(console, "warn");
       disableRaiseOnDeprecation();
+      PLUGIN_OUTLET_DEPRECATION_TEST_IDS.forEach(skipCountingDeprecation);
     });
 
     hooks.afterEach(function () {
       this.consoleWarnStub.restore();
       enableRaiseOnDeprecation();
+      PLUGIN_OUTLET_DEPRECATION_TEST_IDS.forEach(restoreCountingDeprecation);
     });
 
     test("renders connectors registered under an alias name", async function (assert) {

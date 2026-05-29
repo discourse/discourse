@@ -20,7 +20,7 @@ async function setupBuilder() {
   return results;
 }
 
-module("Component | poll-ui-builder", function (hooks) {
+module("Component | PollUiBuilder", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Can switch poll type", async function (assert) {

@@ -8,7 +8,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
 module(
-  "Integration | Component | select-kit/category-chooser",
+  "Integration | Component | SelectKit | CategoryChooser",
   function (hooks) {
     setupRenderingTest(hooks);
 

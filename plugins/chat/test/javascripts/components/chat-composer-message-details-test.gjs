@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Component | chat-composer-message-details", function (hooks) {
+module("Component | ChatComposerMessageDetails", function (hooks) {
   setupRenderingTest(hooks);
 
   test("data-id attribute", async function (assert) {

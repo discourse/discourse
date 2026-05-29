@@ -6,7 +6,7 @@ import formKit from "discourse/tests/helpers/form-kit-helper";
 import { i18n } from "discourse-i18n";
 import WorkflowsForm from "discourse/plugins/discourse-workflows/discourse/components/workflows-form";
 
-module("Integration | Component | workflows-form", function (hooks) {
+module("Integration | Component | WorkflowsForm", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders backend form schema with FormKit controls", async function (assert) {

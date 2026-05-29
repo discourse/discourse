@@ -108,7 +108,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
   describe "#convert" do
     let(:output_path) do
-      "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{new_sha1}"
+      "/uploads/default/test_#{Discourse.test_env_number}/original/1X/#{new_sha1}"
     end
     let(:job_id) { "job-123" }
 

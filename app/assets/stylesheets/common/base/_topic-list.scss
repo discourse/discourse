@@ -474,7 +474,8 @@
 }
 
 .table-heading {
-  border-bottom: 3px solid var(--primary-low);
+  border-bottom: var(--d-table-border-top-height) solid
+    var(--table-border-color);
 }
 
 // This is not what we want:

@@ -23,7 +23,7 @@ async function setBuffer(element, value) {
 }
 
 module(
-  "Integration | Component | workflows/context/pin-data-editor",
+  "Integration | Component | Workflows | Context | PinDataEditor",
   function (hooks) {
     setupRenderingTest(hooks);
 

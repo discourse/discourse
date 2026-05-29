@@ -137,6 +137,12 @@ RSpec.describe Groups::Create do
       it { is_expected.to fail_a_policy(:can_create_group) }
     end
 
+    context "when creating a group with access requests and no owner" do
+      let(:params) { { name: "requestable", allow_membership_requests: true, owner_usernames: [] } }
+
+      it { is_expected.to fail_a_policy(:can_request_access) }
+    end
+
     context "when data is invalid" do
       let(:params) { { name: nil } }
 
