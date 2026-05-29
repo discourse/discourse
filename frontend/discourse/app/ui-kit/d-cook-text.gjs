@@ -20,7 +20,11 @@ export default class DCookText extends Component {
 
   @action
   async loadCookedText() {
-    const cooked = await cook(this.args.rawText);
+    const rawText = this.args.rawText;
+    const cooked = await cook(rawText);
+    if (this.args.rawText !== rawText) {
+      return;
+    }
     this.cooked = cooked;
   }
 
