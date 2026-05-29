@@ -80,6 +80,7 @@ export function buildConfig({ devMode } = {}) {
     tsconfig: false,
     resolve: {
       extensions,
+      conditionNames: isProduction ? ["production"] : ["development"],
     },
     experimental: {
       incrementalBuild: true,
