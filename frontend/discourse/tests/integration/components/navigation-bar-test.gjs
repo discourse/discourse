@@ -24,7 +24,7 @@ const navItems = [
   }),
 ];
 
-module("Integration | Component | navigation-bar", function (hooks) {
+module("Integration | Component | NavigationBar", function (hooks) {
   setupRenderingTest(hooks);
 
   test("display navigation bar items", async function (assert) {

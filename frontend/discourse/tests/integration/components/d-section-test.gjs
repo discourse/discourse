@@ -4,7 +4,7 @@ import DSection from "discourse/components/d-section";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | d-section", function (hooks) {
+module("Integration | Component | DSection", function (hooks) {
   setupRenderingTest(hooks);
 
   test("can set classes on the body element", async function (assert) {

@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | select-kit/timezone-input", function (hooks) {
+module("Integration | Component | SelectKit | TimezoneInput", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

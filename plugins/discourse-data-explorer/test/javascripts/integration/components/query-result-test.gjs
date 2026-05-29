@@ -4,7 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import QueryResult from "../../discourse/components/query-result";
 
-module("Integration | Component | query-result", function (hooks) {
+module("Integration | Component | QueryResult", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders query results", async function (assert) {
@@ -135,7 +135,7 @@ module("Integration | Component | query-result", function (hooks) {
   });
 });
 
-module("Integration | Component | query-result | chart", function (hooks) {
+module("Integration | Component | QueryResult | Chart", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders the chart by default and the toggle for chartable results", async function (assert) {

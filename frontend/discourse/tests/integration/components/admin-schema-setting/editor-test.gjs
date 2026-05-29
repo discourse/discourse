@@ -88,7 +88,7 @@ const MOVE_UP_BTN = ".schema-setting-editor__move-up-btn";
 const MOVE_DOWN_BTN = ".schema-setting-editor__move-down-btn";
 
 module(
-  "Integration | Admin | Themes | Component | schema-setting/editor",
+  "Integration | Admin | Themes | Component | SchemaSetting | Editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1865,7 +1865,7 @@ module(
 );
 
 module(
-  "Integration | Admin | Plugins | Component | schema-setting/editor",
+  "Integration | Admin | Plugins | Component | SchemaSetting | Editor",
   function (hooks) {
     setupRenderingTest(hooks);
 

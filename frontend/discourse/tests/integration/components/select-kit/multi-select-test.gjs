@@ -23,7 +23,7 @@ const setDefaultState = (ctx, options) => {
   ctx.setProperties(properties);
 };
 
-module("Integration | Component | select-kit/multi-select", function (hooks) {
+module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
