@@ -158,35 +158,43 @@ module PageObjects
       end
 
       def has_depth_line_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__gutter .nested-post__depth-line"))
+        has_css?(depth_line_selector(post))
       end
 
       def has_no_depth_line_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__gutter .nested-post__depth-line"))
+        has_no_css?(depth_line_selector(post))
+      end
+
+      def has_leaf_depth_line_for?(post)
+        has_css?(leaf_depth_line_selector(post))
+      end
+
+      def has_no_leaf_depth_line_for?(post)
+        has_no_css?(leaf_depth_line_selector(post))
       end
 
       def has_children_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post-children"))
+        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post-children"))
       end
 
       def has_no_children_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post-children"))
+        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post-children"))
       end
 
       def has_collapsed_bar_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__collapsed-bar"))
+        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
       end
 
       def has_no_collapsed_bar_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__collapsed-bar"))
+        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
       end
 
       def has_post_content_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__article"))
+        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__article"))
       end
 
       def has_no_post_content_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__article"))
+        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__article"))
       end
 
       def has_sort_active?(sort)
@@ -350,12 +358,12 @@ module PageObjects
       end
 
       def click_depth_line(post)
-        find(wrapper_selector(post, ".nested-post__depth-line")).click
+        find(depth_line_selector(post)).click
         self
       end
 
       def click_collapsed_bar(post)
-        find(wrapper_selector(post, ".nested-post__collapsed-bar")).click
+        find(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar")).click
         self
       end
 
@@ -572,6 +580,14 @@ module PageObjects
         # to avoid matching ancestor .nested-post wrappers in the nested tree.
         base = ".nested-post:has(> .nested-post__main > [data-post-number='#{post.post_number}'])"
         child_selector ? "#{base} #{child_selector}" : base
+      end
+
+      def depth_line_selector(post)
+        wrapper_selector(post, "> .nested-post__gutter .nested-post__depth-line")
+      end
+
+      def leaf_depth_line_selector(post)
+        wrapper_selector(post, "> .nested-post__gutter .nested-post__depth-line--leaf")
       end
     end
   end
