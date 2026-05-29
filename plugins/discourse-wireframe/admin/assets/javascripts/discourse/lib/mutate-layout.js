@@ -614,11 +614,18 @@ function stripNullish(obj) {
 
 /**
  * Removes the soft-failure stamps core's permissive validator may have
- * written onto an entry (`__failureType`, `__failureReason`, `__visible`).
- * Used both when cloning an entry for the draft layer (the source layer's
- * stamps don't apply to the draft) and after a live arg mutation (the
- * outline / inspector read these directly and validation only re-runs on
- * layer republish, so stale stamps would persist past the underlying fix).
+ * written onto an entry (`__failureType`, `__failureReason`, `__visible`,
+ * `__failureDetails`). Used both when cloning an entry for the draft layer
+ * (the source layer's stamps don't apply to the draft) and after a live arg
+ * mutation (the outline / inspector read these directly and validation only
+ * re-runs on layer republish, so stale stamps would persist past the
+ * underlying fix).
+ *
+ * `__failureDetails` is the structured per-failure list the inspector reads
+ * to render its errors (the outline reads the `__failureType` /
+ * `__failureReason` summary). Clearing it here is what lets a constraint
+ * error (e.g. "set at least one of …") drop off the inspector the moment an
+ * inline edit makes the block valid, rather than lingering until republish.
  *
  * @param {Object} entry - Mutated in place.
  */
@@ -626,6 +633,7 @@ export function clearValidatorStamps(entry) {
   delete entry.__failureType;
   delete entry.__failureReason;
   delete entry.__visible;
+  delete entry.__failureDetails;
 }
 
 /**

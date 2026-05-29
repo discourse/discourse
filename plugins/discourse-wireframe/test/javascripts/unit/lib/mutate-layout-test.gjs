@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import {
+  clearValidatorStamps,
   cloneEntryForPaste,
   cloneLayoutForDraft,
   entryKey,
@@ -533,6 +534,35 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
         "Goodbye"
       );
       assert.deepEqual(next[0].args, { title: "Goodbye", subtitle: "World" });
+    });
+  });
+
+  module("clearValidatorStamps", function () {
+    test("removes every soft-failure stamp the validator wrote", function (assert) {
+      const entry = {
+        block: "wf:mutate-test-leaf",
+        args: {},
+        __failureType: "structural-invalid",
+        __failureReason: 'Block "wf:button-link": at least one of ...',
+        __visible: false,
+        __failureDetails: [
+          {
+            code: "CONSTRAINT_VIOLATION",
+            expected: { constraint: "atLeastOne" },
+          },
+        ],
+      };
+
+      clearValidatorStamps(entry);
+
+      assert.strictEqual(entry.__failureType, undefined);
+      assert.strictEqual(entry.__failureReason, undefined);
+      assert.strictEqual(entry.__visible, undefined);
+      assert.strictEqual(
+        entry.__failureDetails,
+        undefined,
+        "the structured details the inspector reads are cleared too"
+      );
     });
   });
 

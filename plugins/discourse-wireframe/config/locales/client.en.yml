@@ -89,7 +89,6 @@ en:
         label_no_conditions: "No conditions."
         unknown_type: "Unknown"
         errors:
-          block_label: "Block"
           required: "Required."
           type: "Wrong value type."
           pattern: "Doesn't match the expected format."

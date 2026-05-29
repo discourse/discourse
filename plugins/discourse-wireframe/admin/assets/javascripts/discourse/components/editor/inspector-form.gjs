@@ -7,7 +7,6 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { eq } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
 import { friendlyErrorMessage } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 import {
   buildValidationRule,
@@ -220,9 +219,10 @@ export default class InspectorForm extends Component {
    * through synthetic `_block:<n>` keys. They never collide with real
    * arg names (real args can't start with `_`, see
    * `frontend/discourse/app/lib/blocks/-internals/validation/args.js`
-   * `isReservedArgName`), and the synthetic key isn't a real input so
-   * FormKit's summary still shows them with their localized "Block"
-   * title — just without an inline per-field error.
+   * `isReservedArgName`). We add them WITHOUT a title, so FormKit's
+   * summary renders them as form-level errors — the message on its own,
+   * with no field-focus link or label prefix (the constraint message,
+   * e.g. "Set at least one of: …", is already self-describing).
    */
   @action
   syncErrors() {
@@ -241,10 +241,8 @@ export default class InspectorForm extends Component {
       }
     }
 
-    const blockLabel = i18n("wireframe.inspector.errors.block_label");
     this.wireframe.selectedBlockNonFieldErrors.forEach((d, i) => {
       this.#formApi.addError(`_block:${i}`, {
-        title: blockLabel,
         message: friendlyErrorMessage(d),
       });
     });

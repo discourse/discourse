@@ -1,15 +1,18 @@
 import Service from "@ember/service";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-form";
 
 class StubWireframeService extends Service {
   #blockData;
+  #nonFieldErrors;
 
-  constructor(owner, blockData) {
+  constructor(owner, blockData, { nonFieldErrors = [] } = {}) {
     super(owner);
     this.#blockData = blockData;
+    this.#nonFieldErrors = nonFieldErrors;
     this.updateSelectedArgCalls = [];
   }
 
@@ -25,7 +28,7 @@ class StubWireframeService extends Service {
   }
 
   get selectedBlockNonFieldErrors() {
-    return [];
+    return this.#nonFieldErrors;
   }
 
   get selectedBlockHasErrors() {
@@ -49,11 +52,11 @@ class StubWireframeService extends Service {
   }
 }
 
-function stubWireframe(owner, blockData) {
+function stubWireframe(owner, blockData, options) {
   owner.unregister("service:wireframe");
   owner.register(
     "service:wireframe",
-    new StubWireframeService(owner, blockData),
+    new StubWireframeService(owner, blockData, options),
     { instantiate: false }
   );
 }
@@ -229,6 +232,49 @@ module(
       await render(<template><InspectorForm /></template>);
 
       assert.dom(".mini-tag-chooser").exists();
+    });
+
+    test("renders a block-level constraint error as a bare message with no field prefix", async function (assert) {
+      // Constraint violations aren't tied to one input, so the inspector
+      // routes them through FormKit as form-level (titleless) errors. The
+      // summary should show the message on its own — no redundant "Block:"
+      // label and no focus-the-field anchor pointing at a missing control.
+      stubWireframe(
+        this.owner,
+        {
+          metadata: {
+            args: {
+              label: { type: "string", ui: { label: "Label" } },
+              icon: { type: "string", ui: { label: "Icon" } },
+            },
+          },
+          argsSnapshot: {},
+        },
+        {
+          nonFieldErrors: [
+            {
+              code: ERROR_CODES.CONSTRAINT_VIOLATION,
+              expected: { constraint: "atLeastOne", fields: ["label", "icon"] },
+            },
+          ],
+        }
+      );
+
+      await render(<template><InspectorForm /></template>);
+
+      const item = this.element.querySelector(
+        ".form-kit__errors-summary-list li"
+      );
+      assert.dom(item).exists("the constraint error is listed in the summary");
+      assert
+        .dom(item)
+        .hasText(
+          'Set at least one of: "label", "icon".',
+          "shows the bare constraint message, no 'Block:' prefix"
+        );
+      assert
+        .dom(item.querySelector("a"))
+        .doesNotExist("no focus-the-field anchor for a form-level error");
     });
 
     test("coerces radio-group values back to the schema's declared number type", async function (assert) {

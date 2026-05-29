@@ -21,7 +21,7 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
     },
     href: {
       type: "string",
-      default: "/",
+      required: true,
       pattern: URL_PATTERN,
       ui: { control: "url", label: "Link URL" },
     },
