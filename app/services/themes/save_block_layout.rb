@@ -10,7 +10,7 @@
 #
 # Pass `force_parent: true` to write directly to the parent (Git-imported)
 # theme — used when a theme author is intentionally maintaining the upstream
-# layout from inside the editor.
+# layout directly rather than through a child component.
 #
 # @example
 #   Themes::SaveBlockLayout.call(
@@ -161,9 +161,9 @@ class Themes::SaveBlockLayout
   end
 
   # Notifies other tabs / sessions that this outlet's layout has changed.
-  # The plugin subscribes to `/block-layouts/<theme_id>` and re-publishes
+  # Consumers subscribe to `/block-layouts/<theme_id>` and re-publish
   # the payload via `api.setLayoutLayer(outlet, "theme", layout, {themeId})`,
-  # so the canvas refreshes without a page reload.
+  # so rendered outlets refresh without a page reload.
   #
   # Published per-target-theme so subscribers only handle messages from
   # themes that are part of their active stack — there's no point telling

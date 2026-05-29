@@ -37,7 +37,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
  */
 /**
  * Display-metadata sidecar for the core outlets. Keys mirror `BLOCK_OUTLETS`;
- * the visual editor and other introspection UIs read this map via
+ * consumers and other introspection tooling read this map via
  * `services/blocks.js#listOutletsWithMetadata()`.
  *
  * Splitting the metadata from `BLOCK_OUTLETS` keeps the array a pure list of

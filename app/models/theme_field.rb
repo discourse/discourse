@@ -32,7 +32,7 @@ class ThemeField < ActiveRecord::Base
       # `Jobs::CleanUpUploads` doesn't garbage-collect them as orphans.
       # `ensure_exist!` also prunes references this target previously held
       # for uploads no longer present, so removing or swapping an image in
-      # the editor reconciles automatically. Ids are filtered against the
+      # a layout reconciles automatically. Ids are filtered against the
       # current `Upload` table to skip any client-supplied id that points
       # to a non-existent (or just-deleted) upload row.
       ids = BlockLayoutUploads.extract(value)
@@ -698,8 +698,8 @@ class ThemeField < ActiveRecord::Base
       targets: :migrations,
       canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
     ),
-    # block_layouts/<outlet>.json — JSON layouts for the visual editor's
-    # block-outlet system. The capture group accepts any filename-safe
+    # block_layouts/<outlet>.json — JSON layouts for the block-outlet
+    # system. The capture group accepts any filename-safe
     # characters; namespaced outlets (e.g. `chat:thread-blocks`) encode the
     # `:` separator as `__` on disk to keep filenames portable across
     # platforms. The decoding happens at field-set time, not in the regex.

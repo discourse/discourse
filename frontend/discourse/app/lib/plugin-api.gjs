@@ -3503,7 +3503,7 @@ class _PluginApi {
    * Use this for:
    * - Hydrating theme-shipped layouts at boot from the active theme stack
    *   (`layer: "theme"`, with the originating `themeId`).
-   * - Publishing the visual editor's in-progress edits as a session draft
+   * - Publishing in-progress edits as a session draft
    *   (`layer: "session-draft"`).
    *
    * The existing `api.renderBlocks(...)` continues to write into the
@@ -3529,7 +3529,7 @@ class _PluginApi {
    *   errors don't reject the resolved-layout Promise. The error is
    *   captured on the layer entry's `validationWarnings` array and the
    *   layout is returned as-is. Use this for layers fed by user
-   *   authoring (the visual editor's `session-draft` layer, theme-
+   *   authoring (the `session-draft` layer, theme-
    *   shipped block layouts that may contain typos, etc.) where a
    *   structural failure shouldn't crash the page. Code-default layers
    *   should generally stay strict — those are author-controlled and
@@ -3646,11 +3646,11 @@ class _PluginApi {
    * @param {string} outletName - The outlet name (must follow naming conventions).
    * @param {Object} [options] - Outlet configuration options.
    * @param {string} [options.displayName] - Human-readable label shown in
-   *   the visual editor's outlet inventory. Defaults to the outlet name.
+   *   an outlet inventory surfaced to consumers. Defaults to the outlet name.
    * @param {string} [options.description] - One-line summary of where the
    *   outlet renders.
    * @param {string} [options.category] - Optional free-form grouping label
-   *   for the visual editor's outlet inventory (e.g. `"Layout"`).
+   *   for an outlet inventory surfaced to consumers (e.g. `"Layout"`).
    *
    * @example
    * ```javascript

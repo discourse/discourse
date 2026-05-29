@@ -61,12 +61,12 @@ function registerDragAndDropAutoScroll(getArgsRef) {
  * the cursor approaches its edges:
  *
  * ```hbs
- * <div class="canvas"
- *   {{dDragAndDropAutoScroll types=(array "ve-block") axis="vertical"}}
+ * <div class="scroll-container"
+ *   {{dDragAndDropAutoScroll types=(array "card") axis="vertical"}}
  * >
  * ```
  *
- * Attach to a sentinel inside the editor root with `target="window"`
+ * Attach to a sentinel element with `target="window"`
  * to auto-scroll the document body / window instead:
  *
  * ```hbs

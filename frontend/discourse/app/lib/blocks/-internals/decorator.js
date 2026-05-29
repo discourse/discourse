@@ -198,19 +198,19 @@ const BlockComponentManager = new Proxy(
  * runtime behaviour of the block.
  *
  * @typedef {Object} UIHints
- * @property {string} [control] - Override the default inspector control for
+ * @property {string} [control] - Override the default edit control for
  *   this arg. Valid values are listed in `VALID_UI_CONTROLS` (re-exported
  *   from `discourse/lib/blocks`); examples include "text", "textarea",
  *   "color", "icon", "rich-text", and entity pickers like
  *   "category-select", "tag-select", "user-select", "group-select".
- * @property {string} [label] - Inspector field label override. Defaults to a
+ * @property {string} [label] - Edit-form field label override. Defaults to a
  *   title-cased form of the arg name.
  * @property {string} [placeholder] - Placeholder text for text-style controls.
  * @property {string} [helpText] - Help text shown beneath the control.
- * @property {string} [group] - Inspector section name (e.g. "Content",
+ * @property {string} [group] - Edit-form section name (e.g. "Content",
  *   "Appearance"). Args without a group land under "General".
  * @property {boolean} [hidden] - When true, the arg is omitted from the
- *   inspector but kept in the schema (useful for computed args).
+ *   edit form but kept in the schema (useful for computed args).
  * @property {{arg: string, equals?: *, notEmpty?: boolean}} [conditional] -
  *   Show this field only when another arg satisfies the predicate. At least
  *   one of `equals` or `notEmpty` must be set.

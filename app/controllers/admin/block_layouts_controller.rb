@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Saves a single `block_layout` ThemeField via the visual editor's "Save"
-# button. Wraps `Themes::SaveBlockLayout`, which handles auto-redirection to
+# Saves a single `block_layout` ThemeField on behalf of edit-driven tooling.
+# Wraps `Themes::SaveBlockLayout`, which handles auto-redirection to
 # a child theme component when the target theme is Git-imported.
 class Admin::BlockLayoutsController < Admin::AdminController
   def create

@@ -79,8 +79,8 @@ const VALID_UI_CONDITIONAL_PROPERTIES = Object.freeze([
 
 /**
  * Valid properties for block arg schema definitions. Extends the shared
- * `VALID_ARG_SCHEMA_PROPERTIES` with `ui` so blocks can opt into inspector
- * hints without polluting the condition arg schema (which has no inspector).
+ * `VALID_ARG_SCHEMA_PROPERTIES` with `ui` so blocks can opt into edit-form
+ * hints without polluting the condition arg schema (which has none).
  */
 export const VALID_BLOCK_ARG_SCHEMA_PROPERTIES = Object.freeze([
   ...VALID_ARG_SCHEMA_PROPERTIES,

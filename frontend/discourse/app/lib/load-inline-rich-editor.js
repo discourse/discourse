@@ -2,13 +2,14 @@ import { waitForPromise } from "@ember/test-waiters";
 
 /**
  * Lazily loads the ProseMirror modules needed to mount a constrained
- * inline-rich-text editor (no toolbar, no composer chrome). Returns an
- * object with the imported symbols ready to plug into an `EditorView`.
+ * inline-rich-text editor (no toolbar, no surrounding composer UI). Returns
+ * an object with the imported symbols ready to plug into an `EditorView`.
  *
  * Mirrors `loadRichEditor` (`discourse/lib/load-rich-editor`) but exposes
  * the raw building blocks rather than a pre-built component. Used by
  * inline-edit controllers that need ProseMirror without the full composer
- * (e.g. a block editor mounting an editor inside a block's inspector);
+ * (e.g. edit-driven tooling mounting an inline editor inside a block's
+ * edit form);
  * safe to use from plugin code because the dynamic `import()` calls
  * resolve through core's bundler,
  * which has access to the `prosemirror-*` packages and the

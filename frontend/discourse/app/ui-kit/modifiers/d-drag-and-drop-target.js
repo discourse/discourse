@@ -216,7 +216,7 @@ export function registerDragAndDropTarget(element, getArgsRef) {
  *
  * ```hbs
  * <div {{dDragAndDropTarget
- *   accepts="ve-block"
+ *   accepts="block"
  *   position="inside"
  *   onDrop=this.applyMove
  * }}></div>

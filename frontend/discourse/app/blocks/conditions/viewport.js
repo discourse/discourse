@@ -101,7 +101,7 @@ export default class BlockViewportCondition extends BlockCondition {
    */
   capabilitiesSource(context) {
     // Use `in` so an explicit `null` viewport (a sim slot the author may
-    // set to mean "fall back to real, but persona is still simulated")
+    // set to mean "fall back to real, but the simulation is still active")
     // still falls back here cleanly.
     if (context?.simulation && "viewport" in context.simulation) {
       const sim = context.simulation.viewport;

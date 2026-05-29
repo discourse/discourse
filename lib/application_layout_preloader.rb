@@ -142,7 +142,7 @@ class ApplicationLayoutPreloader
 
   # Returns a JSON-serialised flat list of block_layout entries for the
   # active theme stack — one row per `(theme, outlet)` pair, ordered by
-  # `Theme.transform_ids` (theme stack order). The visual editor's boot-time
+  # `Theme.transform_ids` (theme stack order). A boot-time
   # initializer iterates this list and calls `api.setLayoutLayer(outlet,
   # "theme", layout, { themeId })` for each, in array order. Theme-stack
   # ordering means the last theme in the stack ends up at the tail of each
@@ -169,8 +169,9 @@ class ApplicationLayoutPreloader
       next unless by_theme.key?(theme_id)
       by_theme[theme_id].each do |_, outlet, value_baked, error|
         # Skip fields that failed to bake — `value_baked` is nil and
-        # `error` carries the reason. The editor would render nothing for
-        # the outlet; better to fall through to the underlying layer.
+        # `error` carries the reason. An applied layout that failed to bake
+        # would render nothing for the outlet; better to fall through to
+        # the underlying layer.
         next if value_baked.blank? || error.present?
         begin
           parsed = JSON.parse(value_baked)
