@@ -85,7 +85,7 @@ module DiscourseAi
           headers = { "Referer" => Discourse.base_url, "Content-Type" => "application/json" }
 
           api_key = llm_model&.api_key || SiteSetting.ai_vllm_api_key
-          headers["X-API-KEY"] = api_key if api_key.present?
+          headers["Authorization"] = "Bearer #{api_key}" if api_key.present?
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
         end
