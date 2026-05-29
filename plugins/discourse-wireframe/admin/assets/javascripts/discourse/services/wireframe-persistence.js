@@ -29,7 +29,7 @@ export default class WireframePersistenceService extends Service {
    * Saves every edited outlet to the supplied theme. The save loop is
    * sequential by design — partial failure should leave earlier successes
    * persisted. Each successful save clears that outlet from
-   * `_editedOutlets`; cleared snapshot history happens at the call-site
+   * `editedOutlets`; cleared snapshot history happens at the call-site
    * (the toolbar's Save handler) so the toolbar can stay in sync with
    * isDirty/canUndo/canRedo.
    *
@@ -41,7 +41,7 @@ export default class WireframePersistenceService extends Service {
    */
   async saveAll(themeId) {
     const result = { saved: [], errors: [] };
-    const editedOutlets = [...this.wireframe._editedOutlets];
+    const editedOutlets = [...this.wireframe.editedOutlets];
 
     for (const outlet of editedOutlets) {
       try {
@@ -54,7 +54,7 @@ export default class WireframePersistenceService extends Service {
           childCreated: response.child_created,
         });
         this._publishToThemeLayer(outlet, response.target_theme_id);
-        this.wireframe._editedOutlets.delete(outlet);
+        this.wireframe.editedOutlets.delete(outlet);
       } catch (error) {
         result.errors.push({
           outlet,

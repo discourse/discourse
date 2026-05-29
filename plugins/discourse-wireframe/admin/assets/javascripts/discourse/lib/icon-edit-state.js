@@ -11,7 +11,7 @@ import IconEditPopover from "../components/icon-edit-popover";
  * Lives outside `WireframeService` so the service stays focused on
  * layout / palette / clipboard / undo concerns, mirroring the
  * `InlineEditState` split. Service-owned utilities (layout lookup,
- * `_writeArgs`, undo / redo stacks) are reached through `this.service`.
+ * `writeArgs`, undo / redo stacks) are reached through `this.service`.
  *
  * Plain JS class — NOT an Ember service. Instantiated once per
  * service instance at service construction and exposed via
@@ -96,7 +96,7 @@ export default class IconEditState {
       await this.stop();
     }
 
-    const located = this.service._findEntryAndOutletSync(blockKey);
+    const located = this.service.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }
@@ -145,19 +145,19 @@ export default class IconEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service._editedOutlets.add(outletName);
+    this.service.editedOutlets.add(outletName);
     const prevMap = new Map([[argName, this.#prevValue]]);
-    this.service._captureInitialSnapshot(entry, prevMap);
-    this.service._writeArgs(entry, new Map([[argName, value || null]]));
+    this.service.captureInitialSnapshot(entry, prevMap);
+    this.service.writeArgs(entry, new Map([[argName, value || null]]));
 
     if (this.#prevValue !== (value || null)) {
-      this.service._undoStack.push({
+      this.service.undoStack.push({
         kind: "args",
         entry,
         prev: prevMap,
         next: new Map([[argName, value || null]]),
       });
-      this.service._redoStack.length = 0;
+      this.service.redoStack.length = 0;
     }
 
     // Close the popover; `#onMenuClosed` clears the session state.

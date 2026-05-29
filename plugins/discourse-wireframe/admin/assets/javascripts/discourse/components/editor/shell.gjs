@@ -50,6 +50,39 @@ export default class EditorShell extends Component {
 
   isLeftPanelTabActive = (tab) => this.leftPanelTab === tab;
 
+  /**
+   * CSS classes for the shell that drive the canvas grid template
+   * (`--left-collapsed` / `--right-collapsed` from
+   * `wireframe.scss` adjust `grid-template-columns`).
+   */
+  get shellClasses() {
+    const classes = ["wireframe-shell"];
+    if (this.leftCollapsed) {
+      classes.push("--left-collapsed");
+    }
+    if (this.rightCollapsed) {
+      classes.push("--right-collapsed");
+    }
+    return classes.join(" ");
+  }
+
+  /**
+   * Whether the Save button should be enabled. Requires:
+   *   1. The editor to know which theme to write to (`activeThemeId` set).
+   *   2. There to be in-memory edits to save (`isDirty` true) — saving an
+   *      empty draft would be a no-op.
+   *   3. No save currently in flight.
+   *
+   * @returns {boolean}
+   */
+  get canSave() {
+    return (
+      !this.isSaving &&
+      this.wireframe.isDirty &&
+      this.wireframe.activeThemeId != null
+    );
+  }
+
   @action
   setLeftPanelTab(tab) {
     this.leftPanelTab = tab;
@@ -88,37 +121,6 @@ export default class EditorShell extends Component {
     this.#syncBodyClasses();
   }
 
-  #syncBodyClasses() {
-    document.body.classList.toggle(
-      "wireframe-active--left-collapsed",
-      this.leftCollapsed
-    );
-    document.body.classList.toggle(
-      "wireframe-active--right-collapsed",
-      this.rightCollapsed
-    );
-    document.body.classList.toggle(
-      "wireframe-active--dim-non-editable",
-      this.dimNonEditable
-    );
-  }
-
-  /**
-   * CSS classes for the shell that drive the canvas grid template
-   * (`--left-collapsed` / `--right-collapsed` from
-   * `wireframe.scss` adjust `grid-template-columns`).
-   */
-  get shellClasses() {
-    const classes = ["wireframe-shell"];
-    if (this.leftCollapsed) {
-      classes.push("--left-collapsed");
-    }
-    if (this.rightCollapsed) {
-      classes.push("--right-collapsed");
-    }
-    return classes.join(" ");
-  }
-
   @action
   dismissSaveError() {
     this.saveErrorMessage = null;
@@ -149,23 +151,6 @@ export default class EditorShell extends Component {
     this.wireframe.resetAll();
   }
 
-  /**
-   * Whether the Save button should be enabled. Requires:
-   *   1. The editor to know which theme to write to (`activeThemeId` set).
-   *   2. There to be in-memory edits to save (`isDirty` true) — saving an
-   *      empty draft would be a no-op.
-   *   3. No save currently in flight.
-   *
-   * @returns {boolean}
-   */
-  get canSave() {
-    return (
-      !this.isSaving &&
-      this.wireframe.isDirty &&
-      this.wireframe.activeThemeId != null
-    );
-  }
-
   @action
   save() {
     if (!this.canSave) {
@@ -188,6 +173,21 @@ export default class EditorShell extends Component {
     this.#performSave();
   }
 
+  #syncBodyClasses() {
+    document.body.classList.toggle(
+      "wireframe-active--left-collapsed",
+      this.leftCollapsed
+    );
+    document.body.classList.toggle(
+      "wireframe-active--right-collapsed",
+      this.rightCollapsed
+    );
+    document.body.classList.toggle(
+      "wireframe-active--dim-non-editable",
+      this.dimNonEditable
+    );
+  }
+
   async #performSave() {
     this.isSaving = true;
     this.saveErrorMessage = null;
@@ -201,12 +201,12 @@ export default class EditorShell extends Component {
           .join("; ");
       }
       // The save also collapses session-drafts into the theme layer, so
-      // `isDirty` (driven by `_initialSnapshots`) needs to be reset for
+      // `isDirty` (driven by `initialSnapshots`) needs to be reset for
       // the toolbar to reflect "no unsaved changes". Snapshots are tied
       // to draft-entry references that no longer exist after save.
-      this.wireframe._initialSnapshots.clear();
-      this.wireframe._undoStack.length = 0;
-      this.wireframe._redoStack.length = 0;
+      this.wireframe.initialSnapshots.clear();
+      this.wireframe.undoStack.length = 0;
+      this.wireframe.redoStack.length = 0;
     } finally {
       this.isSaving = false;
     }

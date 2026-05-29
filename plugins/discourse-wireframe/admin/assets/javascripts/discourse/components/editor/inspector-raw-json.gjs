@@ -59,6 +59,10 @@ export default class InspectorRawJson extends Component {
     return this.wireframe.selectedBlockKey;
   }
 
+  get isDirty() {
+    return this.draft !== this.serialised;
+  }
+
   @action
   seedDraft() {
     this.draft = this.serialised;
@@ -105,10 +109,6 @@ export default class InspectorRawJson extends Component {
   @action
   reset() {
     this.seedDraft();
-  }
-
-  get isDirty() {
-    return this.draft !== this.serialised;
   }
 
   <template>

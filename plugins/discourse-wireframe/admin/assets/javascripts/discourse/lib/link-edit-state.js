@@ -73,7 +73,7 @@ export default class LinkEditState {
       this.stop();
     }
 
-    const located = this.service._findEntryAndOutletSync(blockKey);
+    const located = this.service.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }
@@ -98,19 +98,19 @@ export default class LinkEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service._editedOutlets.add(outletName);
+    this.service.editedOutlets.add(outletName);
     const prevMap = new Map([[argName, this.#prevValue]]);
-    this.service._captureInitialSnapshot(entry, prevMap);
-    this.service._writeArgs(entry, new Map([[argName, value || null]]));
+    this.service.captureInitialSnapshot(entry, prevMap);
+    this.service.writeArgs(entry, new Map([[argName, value || null]]));
 
     if (this.#prevValue !== (value || null)) {
-      this.service._undoStack.push({
+      this.service.undoStack.push({
         kind: "args",
         entry,
         prev: prevMap,
         next: new Map([[argName, value || null]]),
       });
-      this.service._redoStack.length = 0;
+      this.service.redoStack.length = 0;
     }
 
     this.stop();

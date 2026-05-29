@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
@@ -35,7 +36,7 @@ async function registerLayout(owner) {
 
 async function editArg(editor, argName, value) {
   editor.updateSelectedArg(argName, value);
-  return editor._flushPendingArgs();
+  await settled();
 }
 
 module(
@@ -104,7 +105,7 @@ module(
       await editArg(this.editor, "title", "Edited");
 
       assert.true(
-        this.editor._editedOutlets.has("homepage-blocks"),
+        this.editor.editedOutlets.has("homepage-blocks"),
         "outlet recorded as edited after first mutation"
       );
 
@@ -121,7 +122,7 @@ module(
       await this.persistence.saveAll(5);
 
       assert.false(
-        this.editor._editedOutlets.has("homepage-blocks"),
+        this.editor.editedOutlets.has("homepage-blocks"),
         "edited-outlet bookkeeping cleared after save"
       );
 

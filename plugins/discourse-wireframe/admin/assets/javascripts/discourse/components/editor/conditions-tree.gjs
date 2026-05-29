@@ -131,61 +131,6 @@ export default class ConditionsTree extends Component {
     this.wireframe.updateSelectedConditions(next ?? null);
   }
 
-  /**
-   * Computes the path of the rule that the next render will need to
-   * auto-expand. The path uses condition-tree's segment convention
-   * (numeric index for AND children, `"any"` + index for OR,
-   * `"not"` or `"not"` + index for NOT).
-   *
-   * Called BEFORE `commit()` so it reflects the tree shape we're
-   * about to write.
-   */
-  #markNewlyAddedFor(groupPath) {
-    const tree = this.tree ?? [];
-    const group = groupPath.length === 0 ? tree : this.#readAt(tree, groupPath);
-    if (!group) {
-      this.newlyAddedPath = null;
-      return;
-    }
-    const kind = classifyNode(group);
-    if (kind === "and") {
-      this.newlyAddedPath = [...groupPath, group.length];
-      return;
-    }
-    if (kind === "or") {
-      this.newlyAddedPath = [...groupPath, "any", group.any.length];
-      return;
-    }
-    if (kind === "not") {
-      if (Array.isArray(group.not)) {
-        this.newlyAddedPath = [...groupPath, "not", group.not.length];
-        return;
-      }
-      // Empty NOT case never happens (newEmptyGroup seeds with a leaf)
-      // but if it did, promotion would put the new leaf at index 1.
-      this.newlyAddedPath = [...groupPath, "not", 1];
-      return;
-    }
-    this.newlyAddedPath = null;
-  }
-
-  #readAt(tree, path) {
-    let node = tree;
-    for (const seg of path) {
-      if (node == null) {
-        return null;
-      }
-      if (seg === "any") {
-        node = node.any;
-      } else if (seg === "not") {
-        node = node.not;
-      } else {
-        node = node[seg];
-      }
-    }
-    return node;
-  }
-
   @action
   handleInsertLeaf(groupPath, typeId) {
     this.#markNewlyAddedFor(groupPath);
@@ -247,6 +192,61 @@ export default class ConditionsTree extends Component {
   clearAll() {
     this.newlyAddedPath = null;
     this.commit(null);
+  }
+
+  /**
+   * Computes the path of the rule that the next render will need to
+   * auto-expand. The path uses condition-tree's segment convention
+   * (numeric index for AND children, `"any"` + index for OR,
+   * `"not"` or `"not"` + index for NOT).
+   *
+   * Called BEFORE `commit()` so it reflects the tree shape we're
+   * about to write.
+   */
+  #markNewlyAddedFor(groupPath) {
+    const tree = this.tree ?? [];
+    const group = groupPath.length === 0 ? tree : this.#readAt(tree, groupPath);
+    if (!group) {
+      this.newlyAddedPath = null;
+      return;
+    }
+    const kind = classifyNode(group);
+    if (kind === "and") {
+      this.newlyAddedPath = [...groupPath, group.length];
+      return;
+    }
+    if (kind === "or") {
+      this.newlyAddedPath = [...groupPath, "any", group.any.length];
+      return;
+    }
+    if (kind === "not") {
+      if (Array.isArray(group.not)) {
+        this.newlyAddedPath = [...groupPath, "not", group.not.length];
+        return;
+      }
+      // Empty NOT case never happens (newEmptyGroup seeds with a leaf)
+      // but if it did, promotion would put the new leaf at index 1.
+      this.newlyAddedPath = [...groupPath, "not", 1];
+      return;
+    }
+    this.newlyAddedPath = null;
+  }
+
+  #readAt(tree, path) {
+    let node = tree;
+    for (const seg of path) {
+      if (node == null) {
+        return null;
+      }
+      if (seg === "any") {
+        node = node.any;
+      } else if (seg === "not") {
+        node = node.not;
+      } else {
+        node = node[seg];
+      }
+    }
+    return node;
   }
 
   <template>

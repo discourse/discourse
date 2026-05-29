@@ -17,44 +17,6 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
  */
 export default class CategoryCard extends Component {
   /**
-   * Builds a low-alpha variant of the category colour for the logo
-   * background. Returns a safe fallback when no colour is set.
-   *
-   * @param {string} [hex]
-   * @returns {string}
-   */
-  #lighterColor(hex) {
-    if (!hex) {
-      return "rgba(245, 245, 245, 0.15)";
-    }
-    let c = hex.replace("#", "");
-    if (c.length === 3) {
-      c = c
-        .split("")
-        .map((x) => x + x)
-        .join("");
-    }
-    const r = parseInt(c.substring(0, 2), 16);
-    const g = parseInt(c.substring(2, 4), 16);
-    const b = parseInt(c.substring(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, 0.15)`;
-  }
-
-  /**
-   * Normalises a Discourse emoji string into the `:name:` shortcode form
-   * that `replaceEmoji` expects.
-   *
-   * @param {string} [emoji]
-   * @returns {string|undefined}
-   */
-  formatEmoji(emoji) {
-    if (!emoji) {
-      return emoji;
-    }
-    return emoji.startsWith(":") ? emoji : `:${emoji}:`;
-  }
-
-  /**
    * Inline style for the badge container — full-colour foreground with a
    * tinted lower-alpha background so the icon stands out against the
    * category's brand colour.
@@ -80,6 +42,44 @@ export default class CategoryCard extends Component {
       return trustHTML("background-color: var(--primary);");
     }
     return trustHTML(`background-color: #${color};`);
+  }
+
+  /**
+   * Normalises a Discourse emoji string into the `:name:` shortcode form
+   * that `replaceEmoji` expects.
+   *
+   * @param {string} [emoji]
+   * @returns {string|undefined}
+   */
+  formatEmoji(emoji) {
+    if (!emoji) {
+      return emoji;
+    }
+    return emoji.startsWith(":") ? emoji : `:${emoji}:`;
+  }
+
+  /**
+   * Builds a low-alpha variant of the category colour for the logo
+   * background. Returns a safe fallback when no colour is set.
+   *
+   * @param {string} [hex]
+   * @returns {string}
+   */
+  #lighterColor(hex) {
+    if (!hex) {
+      return "rgba(245, 245, 245, 0.15)";
+    }
+    let c = hex.replace("#", "");
+    if (c.length === 3) {
+      c = c
+        .split("")
+        .map((x) => x + x)
+        .join("");
+    }
+    const r = parseInt(c.substring(0, 2), 16);
+    const g = parseInt(c.substring(2, 4), 16);
+    const b = parseInt(c.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, 0.15)`;
   }
 
   <template>

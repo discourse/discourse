@@ -150,8 +150,8 @@ export default class InspectorLayoutForm extends Component {
     return `wireframe.inspector.layout.auto_collapse_help_${this.autoCollapse}`;
   }
 
-  #set(name, value) {
-    this.wireframe.updateSelectedArg(name, value);
+  get gridTemplates() {
+    return GRID_TEMPLATES;
   }
 
   @action
@@ -179,6 +179,71 @@ export default class InspectorLayoutForm extends Component {
   bumpRows(delta) {
     const next = clamp(this.rows + delta, ROWS_MIN, ROWS_MAX);
     this.#applyDimensionChange({ columns: this.columns, rows: next });
+  }
+
+  /**
+   * Clamps the already-out-of-bounds slot placements on an existing
+   * layout. Triggered by the warning-banner button surfaced when the
+   * layout loaded with bad data (e.g. someone edited the JSON by hand).
+   */
+  @action
+  fixOutOfBoundsSlots() {
+    const data = this.wireframe.selectedBlockData;
+    if (!data?.key) {
+      return;
+    }
+    this.wireframe.clampGridSlotPlacements({
+      gridKey: data.key,
+      maxColumns: this.columns,
+      maxRows: this.rows,
+    });
+  }
+
+  @action
+  setGap(event) {
+    const raw = Number(event.target.value);
+    if (Number.isFinite(raw)) {
+      this.#set("gap", raw);
+    }
+  }
+
+  @action
+  setColumnTemplate(event) {
+    this.#set("columnTemplate", event.target.value);
+  }
+
+  @action
+  setRowTemplate(event) {
+    this.#set("rowTemplate", event.target.value);
+  }
+
+  @action
+  clearColumnTemplate() {
+    this.#set("columnTemplate", "");
+  }
+
+  @action
+  clearRowTemplate() {
+    this.#set("rowTemplate", "");
+  }
+
+  @action
+  applyTemplate(template) {
+    const data = this.wireframe.selectedBlockData;
+    if (!data?.key) {
+      return;
+    }
+    // Templates always switch the layout into `grid` mode — applying
+    // one to a stack/row layout is the natural way to "convert" it.
+    // The service handles the args overwrite atomically.
+    this.wireframe.applyGridTemplate({
+      gridKey: data.key,
+      template,
+    });
+  }
+
+  #set(name, value) {
+    this.wireframe.updateSelectedArg(name, value);
   }
 
   /**
@@ -228,71 +293,6 @@ export default class InspectorLayoutForm extends Component {
     if (rows !== this.rows) {
       this.#set("rows", rows);
     }
-  }
-
-  /**
-   * Clamps the already-out-of-bounds slot placements on an existing
-   * layout. Triggered by the warning-banner button surfaced when the
-   * layout loaded with bad data (e.g. someone edited the JSON by hand).
-   */
-  @action
-  fixOutOfBoundsSlots() {
-    const data = this.wireframe.selectedBlockData;
-    if (!data?.key) {
-      return;
-    }
-    this.wireframe.clampGridSlotPlacements({
-      gridKey: data.key,
-      maxColumns: this.columns,
-      maxRows: this.rows,
-    });
-  }
-
-  @action
-  setGap(event) {
-    const raw = Number(event.target.value);
-    if (Number.isFinite(raw)) {
-      this.#set("gap", raw);
-    }
-  }
-
-  @action
-  setColumnTemplate(event) {
-    this.#set("columnTemplate", event.target.value);
-  }
-
-  @action
-  setRowTemplate(event) {
-    this.#set("rowTemplate", event.target.value);
-  }
-
-  @action
-  clearColumnTemplate() {
-    this.#set("columnTemplate", "");
-  }
-
-  @action
-  clearRowTemplate() {
-    this.#set("rowTemplate", "");
-  }
-
-  get gridTemplates() {
-    return GRID_TEMPLATES;
-  }
-
-  @action
-  applyTemplate(template) {
-    const data = this.wireframe.selectedBlockData;
-    if (!data?.key) {
-      return;
-    }
-    // Templates always switch the layout into `grid` mode — applying
-    // one to a stack/row layout is the natural way to "convert" it.
-    // The service handles the args overwrite atomically.
-    this.wireframe.applyGridTemplate({
-      gridKey: data.key,
-      template,
-    });
   }
 
   <template>
@@ -532,6 +532,14 @@ export default class InspectorLayoutForm extends Component {
  * the integer args (columns, rows).
  */
 class Stepper extends Component {
+  get canDecrement() {
+    return this.args.value > this.args.min;
+  }
+
+  get canIncrement() {
+    return this.args.value < this.args.max;
+  }
+
   @action
   decrement() {
     this.args.onBump(-1);
@@ -540,14 +548,6 @@ class Stepper extends Component {
   @action
   increment() {
     this.args.onBump(1);
-  }
-
-  get canDecrement() {
-    return this.args.value > this.args.min;
-  }
-
-  get canIncrement() {
-    return this.args.value < this.args.max;
   }
 
   <template>

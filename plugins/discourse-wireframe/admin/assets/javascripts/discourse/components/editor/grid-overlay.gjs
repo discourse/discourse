@@ -161,6 +161,7 @@ export default class GridOverlay extends Component {
    * has already published.
    */
   acceptedDropKinds = ["wf-block", "wf-palette-block"];
+
   /**
    * Per-drag geometry cache. Populated lazily on the first dragover
    * of a session (keyed on the drag source's reference identity in
@@ -186,6 +187,7 @@ export default class GridOverlay extends Component {
    * the diff happens before geometry / dispatch builds.
    */
   #lastIntermediate = null;
+
   /**
    * Refreshes the cached gridRect + isCollapsed without dropping the
    * cache identity. Bound to window `resize` and `scroll` so coords
@@ -197,6 +199,7 @@ export default class GridOverlay extends Component {
       this.#dragCache.isCollapsed = this.#computeIsCollapsed();
     }
   };
+
   /**
    * Cleanup function returned by `registerDragAndDropTarget` for the grid
    * container's PDND drop target. Invoked once on destroy.
@@ -225,7 +228,7 @@ export default class GridOverlay extends Component {
     // changes).
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    return this.wireframe._findEntryAndOutletSync(this.args.gridKey)?.entry;
+    return this.wireframe.findEntryAndOutletSync(this.args.gridKey)?.entry;
   }
 
   get columns() {
@@ -277,6 +280,101 @@ export default class GridOverlay extends Component {
     return this.#computeIsCollapsed();
   }
 
+  /**
+   * Compact palette for the cell picker — same data as the main
+   * palette but filtered to user-pickable blocks and sorted by
+   * category then displayName.
+   */
+  @cached
+  get palette() {
+    return buildBlockPalette(this.blocks);
+  }
+
+  @action
+  captureGridElement(element) {
+    // The marker `<span>` is a sibling of the layout's grid div within
+    // the chrome wrapper. Walk up to chrome and find the layout div so
+    // `{{#in-element}}` below mounts cells / overlay as direct grid
+    // children.
+    const gridEl = element.parentElement?.querySelector(".wf-layout--grid");
+    this.gridElement = gridEl;
+    if (!gridEl) {
+      return;
+    }
+    // Drive the overlay descriptor from a single grid-level drop
+    // target so the overlay appears as soon as the cursor enters the
+    // grid — not only when it's over a specific cell or slot. The
+    // cursor's pixel position resolves to a cell coordinate via the
+    // grid's resolved track sizes, then to a zone within that cell. A
+    // line variant in the gap between two cells stays positioned in
+    // that gap even when the cursor is mid-traverse between cells.
+    //
+    // The grid is the SOLE PDND target for the whole grid surface:
+    // empty cells, slot chromes, and grid-positioned leaf chromes all
+    // route their drops here via PDND's "closest ancestor" target
+    // resolution. That keeps descriptor compute centralised — only
+    // this component knows about the grid's resolved tracks.
+    this.#gridDropTargetCleanup = registerDragAndDropTarget(gridEl, () => ({
+      accepts: this.acceptedDropKinds,
+      indicator: false,
+      onDragEnter: ({ source, location }) =>
+        this.#publishFromDrag(source, location),
+      onDrag: ({ source, location }) => this.#publishFromDrag(source, location),
+      onDragLeave: () => {
+        this.#lastIntermediate = null;
+        this.wireframe.setActiveDropPreview(null);
+      },
+      onDrop: this.handleDrop,
+    }));
+    // Refresh the per-drag geometry cache when the page reflows (any
+    // resize) or when any scroll container moves (capture-phase
+    // listener catches scrolls on nested overflow containers too, not
+    // just window scroll). Keeps cached `gridRect` viewport coords
+    // valid through layout shifts during a drag.
+    window.addEventListener("resize", this.#invalidateDragGeometry, {
+      passive: true,
+    });
+    window.addEventListener("scroll", this.#invalidateDragGeometry, {
+      passive: true,
+      capture: true,
+    });
+  }
+
+  @action
+  captureGhost(element) {
+    this.#ghostElement = element;
+  }
+
+  @action
+  captureOverlay(element) {
+    this.#overlayElement = element;
+  }
+
+  /**
+   * Grid-level drop handler. PDND routes every drop within the grid
+   * surface (empty cells, slot chromes, grid-positioned leaves) here
+   * via "closest ancestor target" resolution, since the grid div is
+   * the sole PDND drop target for the surface. The dispatch payload
+   * was already embedded in the active descriptor at hit-test time;
+   * `dispatchActiveDrop` runs it by action name. `endDrag` is
+   * dispatched by the source modifier's `onDrop` callback.
+   */
+  @action
+  handleDrop() {
+    this.#lastIntermediate = null;
+    this.wireframe.dispatchActiveDrop();
+  }
+
+  @action
+  pickBlockForCell(cell, blockEntry) {
+    this.wireframe.insertBlockAtCell({
+      gridKey: this.args.gridKey,
+      blockName: blockEntry.name,
+      column: cell.column,
+      row: cell.row,
+    });
+  }
+
   #computeIsCollapsed() {
     const gridEl = this.gridElement;
     if (!gridEl) {
@@ -325,16 +423,6 @@ export default class GridOverlay extends Component {
       this.gridElement?.getBoundingClientRect() ??
       null
     );
-  }
-
-  /**
-   * Compact palette for the cell picker — same data as the main
-   * palette but filtered to user-pickable blocks and sorted by
-   * category then displayName.
-   */
-  @cached
-  get palette() {
-    return buildBlockPalette(this.blocks);
   }
 
   /**
@@ -434,18 +522,18 @@ export default class GridOverlay extends Component {
   #sourceDisplayName(source) {
     if (source.type === "wf-palette-block") {
       return (
-        this.wireframe._lookupBlockDisplayName(source.data.blockName) ||
+        this.wireframe.lookupBlockDisplayName(source.data.blockName) ||
         source.data.blockName ||
         "block"
       );
     }
     if (source.type === "wf-block") {
-      const located = this.wireframe._findEntryAndOutletSync(
+      const located = this.wireframe.findEntryAndOutletSync(
         source.data.blockKey
       );
       if (located?.entry) {
         return (
-          this.wireframe._lookupBlockDisplayName(located.entry.block) || "block"
+          this.wireframe.lookupBlockDisplayName(located.entry.block) || "block"
         );
       }
     }
@@ -551,56 +639,6 @@ export default class GridOverlay extends Component {
     return null;
   }
 
-  @action
-  captureGridElement(element) {
-    // The marker `<span>` is a sibling of the layout's grid div within
-    // the chrome wrapper. Walk up to chrome and find the layout div so
-    // `{{#in-element}}` below mounts cells / overlay as direct grid
-    // children.
-    const gridEl = element.parentElement?.querySelector(".wf-layout--grid");
-    this.gridElement = gridEl;
-    if (!gridEl) {
-      return;
-    }
-    // Drive the overlay descriptor from a single grid-level drop
-    // target so the overlay appears as soon as the cursor enters the
-    // grid — not only when it's over a specific cell or slot. The
-    // cursor's pixel position resolves to a cell coordinate via the
-    // grid's resolved track sizes, then to a zone within that cell. A
-    // line variant in the gap between two cells stays positioned in
-    // that gap even when the cursor is mid-traverse between cells.
-    //
-    // The grid is the SOLE PDND target for the whole grid surface:
-    // empty cells, slot chromes, and grid-positioned leaf chromes all
-    // route their drops here via PDND's "closest ancestor" target
-    // resolution. That keeps descriptor compute centralised — only
-    // this component knows about the grid's resolved tracks.
-    this.#gridDropTargetCleanup = registerDragAndDropTarget(gridEl, () => ({
-      accepts: this.acceptedDropKinds,
-      indicator: false,
-      onDragEnter: ({ source, location }) =>
-        this.#publishFromDrag(source, location),
-      onDrag: ({ source, location }) => this.#publishFromDrag(source, location),
-      onDragLeave: () => {
-        this.#lastIntermediate = null;
-        this.wireframe.setActiveDropPreview(null);
-      },
-      onDrop: this.handleDrop,
-    }));
-    // Refresh the per-drag geometry cache when the page reflows (any
-    // resize) or when any scroll container moves (capture-phase
-    // listener catches scrolls on nested overflow containers too, not
-    // just window scroll). Keeps cached `gridRect` viewport coords
-    // valid through layout shifts during a drag.
-    window.addEventListener("resize", this.#invalidateDragGeometry, {
-      passive: true,
-    });
-    window.addEventListener("scroll", this.#invalidateDragGeometry, {
-      passive: true,
-      capture: true,
-    });
-  }
-
   /**
    * Builds an intermediate descriptor from the current drag location
    * and publishes it to the unified preview if it differs from the
@@ -618,31 +656,6 @@ export default class GridOverlay extends Component {
     }
     this.#lastIntermediate = intermediate;
     this.#publishUnified(intermediate, source);
-  }
-
-  @action
-  captureGhost(element) {
-    this.#ghostElement = element;
-  }
-
-  @action
-  captureOverlay(element) {
-    this.#overlayElement = element;
-  }
-
-  /**
-   * Grid-level drop handler. PDND routes every drop within the grid
-   * surface (empty cells, slot chromes, grid-positioned leaves) here
-   * via "closest ancestor target" resolution, since the grid div is
-   * the sole PDND drop target for the surface. The dispatch payload
-   * was already embedded in the active descriptor at hit-test time;
-   * `dispatchActiveDrop` runs it by action name. `endDrag` is
-   * dispatched by the source modifier's `onDrop` callback.
-   */
-  @action
-  handleDrop() {
-    this.#lastIntermediate = null;
-    this.wireframe.dispatchActiveDrop();
   }
 
   /**
@@ -932,7 +945,7 @@ export default class GridOverlay extends Component {
       // Only same-grid sources free a cell; cross-grid arrivals don't.
       let sourceInGrid = null;
       if (sourceKey) {
-        const located = this.wireframe._findEntryAndOutletSync?.(sourceKey);
+        const located = this.wireframe.findEntryAndOutletSync?.(sourceKey);
         if (located?.outletName === this.#outletName(this.args.gridKey)) {
           for (const slot of this.slots) {
             if (entryKey(slot) === sourceKey) {
@@ -955,7 +968,7 @@ export default class GridOverlay extends Component {
   }
 
   #outletName(blockKey) {
-    return this.wireframe._findEntryAndOutletSync?.(blockKey)?.outletName;
+    return this.wireframe.findEntryAndOutletSync?.(blockKey)?.outletName;
   }
 
   /**
@@ -971,7 +984,7 @@ export default class GridOverlay extends Component {
     if (sourceKey === targetKey) {
       return true;
     }
-    return this.wireframe._isAncestorOf(sourceKey, targetKey);
+    return this.wireframe.isAncestorOf(sourceKey, targetKey);
   }
 
   /**
@@ -1426,16 +1439,6 @@ export default class GridOverlay extends Component {
       return this.#trackEnd(sizes.length + 1, sizes, gap);
     }
     return this.#trackEnd(line, sizes, gap) + gap / 2;
-  }
-
-  @action
-  pickBlockForCell(cell, blockEntry) {
-    this.wireframe.insertBlockAtCell({
-      gridKey: this.args.gridKey,
-      blockName: blockEntry.name,
-      column: cell.column,
-      row: cell.row,
-    });
   }
 
   <template>

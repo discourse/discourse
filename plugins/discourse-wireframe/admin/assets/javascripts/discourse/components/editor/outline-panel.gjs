@@ -44,11 +44,13 @@ export default class OutlinePanel extends Component {
 
   /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
   @tracked viewMode = "tree";
+
   /**
    * Free-text query that filters tree rows by block name / id (case-
    * insensitive substring). Empty string disables the filter.
    */
   @tracked query = "";
+
   /**
    * Status filter chip. `"all"` shows every row, `"errors"` shows rows
    * with any failure status (unknown block, condition failing), and
@@ -110,7 +112,7 @@ export default class OutlinePanel extends Component {
     return new TrackedAsyncData(
       walkAllOutlets({
         blocksService: this.blocks,
-        alwaysInclude: this.wireframe._draftedOutlets,
+        alwaysInclude: this.wireframe.draftedOutlets,
       })
     );
   }
@@ -154,6 +156,173 @@ export default class OutlinePanel extends Component {
   }
 
   /**
+   * Decorated per-outlet entries for the "Outlets" view mode — joins
+   * `walkAllOutlets`'s row counts with `listOutletsWithMetadata()`
+   * display info. Mounted-outlet filtering already happens inside
+   * `walkAllOutlets`, so any outlet here is on the current page.
+   */
+  get outletsWithMetadata() {
+    const meta = new Map(
+      this.blocks.listOutletsWithMetadata().map((entry) => [entry.name, entry])
+    );
+    return this.outlets.map((group) => {
+      const m = meta.get(group.outletName);
+      return {
+        name: group.outletName,
+        displayName: m?.displayName ?? group.outletName,
+        description: m?.description ?? null,
+        blockCount: group.rows.length,
+      };
+    });
+  }
+
+  /**
+   * Toggles the collapse state for a container row. No-op for leaves.
+   *
+   * DButton stops propagation of its own click, so the surrounding
+   * row's selection handler does not also fire.
+   *
+   * @param {Object} row
+   */
+  @action
+  toggleCollapse(row) {
+    if (!row.hasChildren) {
+      return;
+    }
+    if (this.#collapsedKeys.has(row.blockKey)) {
+      this.#collapsedKeys.delete(row.blockKey);
+    } else {
+      this.#collapsedKeys.add(row.blockKey);
+    }
+  }
+
+  /**
+   * Toggles the collapse state for an outlet group header. Hides the
+   * outlet's rows in the tree view while keeping its label visible
+   * so the user can re-expand.
+   *
+   * @param {string} outletName
+   */
+  @action
+  toggleOutlet(outletName) {
+    if (this.#collapsedOutlets.has(outletName)) {
+      this.#collapsedOutlets.delete(outletName);
+    } else {
+      this.#collapsedOutlets.add(outletName);
+    }
+  }
+
+  /**
+   * @param {string} outletName - The owning outlet's name (the row itself
+   *   does not carry it; we read it from the outer group when the user
+   *   clicks).
+   * @param {Object} row - A row produced by `walkAllOutlets`.
+   */
+  @action
+  selectRow(outletName, row) {
+    this.wireframe.selectBlock({
+      key: row.blockKey,
+      name: row.blockName,
+      id: row.blockId,
+      args: row.args,
+      conditions: row.conditions,
+      outletName,
+      metadata: this.lookupMetadataFor(row.blockName),
+    });
+  }
+
+  lookupMetadataFor(blockName) {
+    if (!this.#metaIndex) {
+      this.#metaIndex = new Map(
+        this.blocks
+          .listBlocksWithMetadata()
+          .map(({ name, metadata }) => [name, metadata])
+      );
+    }
+    return this.#metaIndex.get(blockName) ?? null;
+  }
+
+  /**
+   * Adapts the source modifier's `{source}` payload into the flat
+   * `{blockKey, outletName}` argument the editor service expects.
+   * The data was attached at the `dDragAndDropSource` call site as
+   * `(hash blockKey=… outletName=…)` and exposed back under
+   * `source.data`.
+   */
+  @action
+  handleRowDragStart({ source }) {
+    this.wireframe.startDrag(source.data);
+  }
+
+  /**
+   * Drop-target for an outline row. Maps every drop into a `before`
+   * action — the outline is a flat ordered list, so "drop on row X"
+   * reads as "place above row X". Branches on `source.type` to support
+   * both moves (existing block dragged within the tree) and inserts
+   * (palette block dropped onto an outline row).
+   *
+   * @param {string} outletName
+   * @param {Object} row - Row produced by `walkAllOutlets`.
+   * @param {{ source: { type: string, data: Object } }} target
+   */
+  @action
+  applyRowDrop(outletName, row, target) {
+    const { source } = target;
+    if (source?.type === "wf-palette-block") {
+      this.wireframe.insertBlock({
+        blockName: source.data.blockName,
+        defaultArgs: source.data.defaultArgs,
+        targetKey: row.blockKey,
+        position: "before",
+        targetOutletName: outletName,
+      });
+    } else {
+      this.wireframe.moveBlock({
+        sourceKey: source.data.blockKey,
+        targetKey: row.blockKey,
+        position: "before",
+        targetOutletName: outletName,
+      });
+    }
+    this.wireframe.endDrag();
+  }
+
+  @action
+  isRowDragSource(blockKey) {
+    return this.wireframe.dragSourceKey === blockKey;
+  }
+
+  @action
+  setViewMode(mode) {
+    this.viewMode = mode;
+  }
+
+  @action
+  setStatusFilter(filter) {
+    this.statusFilter = filter;
+  }
+
+  @action
+  onQueryInput(event) {
+    this.query = event.target.value;
+  }
+
+  @action
+  clearQuery() {
+    this.query = "";
+  }
+
+  @action
+  jumpToOutlet(outletName) {
+    const el = document.querySelector(
+      `.wireframe-outlet-boundary[data-outlet-name="${outletName}"]`
+    );
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  /**
    * Walks the DFS-ordered row list and drops every row whose ancestor
    * chain includes a collapsed `blockKey`. Uses the depth field on
    * each row to track the active ancestor stack — when we re-enter a
@@ -192,42 +361,6 @@ export default class OutlinePanel extends Component {
       }
     }
     return result;
-  }
-
-  /**
-   * Toggles the collapse state for a container row. No-op for leaves.
-   *
-   * DButton stops propagation of its own click, so the surrounding
-   * row's selection handler does not also fire.
-   *
-   * @param {Object} row
-   */
-  @action
-  toggleCollapse(row) {
-    if (!row.hasChildren) {
-      return;
-    }
-    if (this.#collapsedKeys.has(row.blockKey)) {
-      this.#collapsedKeys.delete(row.blockKey);
-    } else {
-      this.#collapsedKeys.add(row.blockKey);
-    }
-  }
-
-  /**
-   * Toggles the collapse state for an outlet group header. Hides the
-   * outlet's rows in the tree view while keeping its label visible
-   * so the user can re-expand.
-   *
-   * @param {string} outletName
-   */
-  @action
-  toggleOutlet(outletName) {
-    if (this.#collapsedOutlets.has(outletName)) {
-      this.#collapsedOutlets.delete(outletName);
-    } else {
-      this.#collapsedOutlets.add(outletName);
-    }
   }
 
   /**
@@ -352,137 +485,6 @@ export default class OutlinePanel extends Component {
       return i18n("wireframe.outline.status.conditions_passing");
     }
     return null;
-  }
-
-  /**
-   * @param {string} outletName - The owning outlet's name (the row itself
-   *   does not carry it; we read it from the outer group when the user
-   *   clicks).
-   * @param {Object} row - A row produced by `walkAllOutlets`.
-   */
-  @action
-  selectRow(outletName, row) {
-    this.wireframe.selectBlock({
-      key: row.blockKey,
-      name: row.blockName,
-      id: row.blockId,
-      args: row.args,
-      conditions: row.conditions,
-      outletName,
-      metadata: this.lookupMetadataFor(row.blockName),
-    });
-  }
-
-  lookupMetadataFor(blockName) {
-    if (!this.#metaIndex) {
-      this.#metaIndex = new Map(
-        this.blocks
-          .listBlocksWithMetadata()
-          .map(({ name, metadata }) => [name, metadata])
-      );
-    }
-    return this.#metaIndex.get(blockName) ?? null;
-  }
-
-  /**
-   * Adapts the source modifier's `{source}` payload into the flat
-   * `{blockKey, outletName}` argument the editor service expects.
-   * The data was attached at the `dDragAndDropSource` call site as
-   * `(hash blockKey=… outletName=…)` and exposed back under
-   * `source.data`.
-   */
-  @action
-  handleRowDragStart({ source }) {
-    this.wireframe.startDrag(source.data);
-  }
-
-  /**
-   * Drop-target for an outline row. Maps every drop into a `before`
-   * action — the outline is a flat ordered list, so "drop on row X"
-   * reads as "place above row X". Branches on `source.type` to support
-   * both moves (existing block dragged within the tree) and inserts
-   * (palette block dropped onto an outline row).
-   *
-   * @param {string} outletName
-   * @param {Object} row - Row produced by `walkAllOutlets`.
-   * @param {{ source: { type: string, data: Object } }} target
-   */
-  @action
-  applyRowDrop(outletName, row, target) {
-    const { source } = target;
-    if (source?.type === "wf-palette-block") {
-      this.wireframe.insertBlock({
-        blockName: source.data.blockName,
-        defaultArgs: source.data.defaultArgs,
-        targetKey: row.blockKey,
-        position: "before",
-        targetOutletName: outletName,
-      });
-    } else {
-      this.wireframe.moveBlock({
-        sourceKey: source.data.blockKey,
-        targetKey: row.blockKey,
-        position: "before",
-        targetOutletName: outletName,
-      });
-    }
-    this.wireframe.endDrag();
-  }
-
-  @action
-  isRowDragSource(blockKey) {
-    return this.wireframe.dragSourceKey === blockKey;
-  }
-
-  /**
-   * Decorated per-outlet entries for the "Outlets" view mode — joins
-   * `walkAllOutlets`'s row counts with `listOutletsWithMetadata()`
-   * display info. Mounted-outlet filtering already happens inside
-   * `walkAllOutlets`, so any outlet here is on the current page.
-   */
-  get outletsWithMetadata() {
-    const meta = new Map(
-      this.blocks.listOutletsWithMetadata().map((entry) => [entry.name, entry])
-    );
-    return this.outlets.map((group) => {
-      const m = meta.get(group.outletName);
-      return {
-        name: group.outletName,
-        displayName: m?.displayName ?? group.outletName,
-        description: m?.description ?? null,
-        blockCount: group.rows.length,
-      };
-    });
-  }
-
-  @action
-  setViewMode(mode) {
-    this.viewMode = mode;
-  }
-
-  @action
-  setStatusFilter(filter) {
-    this.statusFilter = filter;
-  }
-
-  @action
-  onQueryInput(event) {
-    this.query = event.target.value;
-  }
-
-  @action
-  clearQuery() {
-    this.query = "";
-  }
-
-  @action
-  jumpToOutlet(outletName) {
-    const el = document.querySelector(
-      `.wireframe-outlet-boundary[data-outlet-name="${outletName}"]`
-    );
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   }
 
   <template>

@@ -355,11 +355,11 @@ function childIsContainer(wireframe, key) {
   if (!key) {
     return false;
   }
-  const located = wireframe._findEntryAndOutletSync(key);
+  const located = wireframe.findEntryAndOutletSync(key);
   if (!located) {
     return false;
   }
-  const metadata = wireframe._lookupBlockMetadata?.(located.entry.block);
+  const metadata = wireframe.lookupBlockMetadata?.(located.entry.block);
   return metadata?.isContainer === true;
 }
 
@@ -562,7 +562,7 @@ function validateInsideDrop({ wireframe, source, targetKey }) {
   return validateInsert({
     wireframe,
     source,
-    outletName: wireframe._findEntryAndOutletSync(targetKey)?.outletName,
+    outletName: wireframe.findEntryAndOutletSync(targetKey)?.outletName,
   });
 }
 
@@ -694,16 +694,16 @@ function replaceSlotDispatch({ source, targetKey }) {
 function sourceDisplayName(wireframe, source) {
   if (source.type === "wf-palette-block") {
     return (
-      wireframe._lookupBlockDisplayName?.(source.data.blockName) ||
+      wireframe.lookupBlockDisplayName?.(source.data.blockName) ||
       source.data.blockName ||
       "block"
     );
   }
   if (source.type === "wf-block") {
-    const located = wireframe._findEntryAndOutletSync(source.data.blockKey);
+    const located = wireframe.findEntryAndOutletSync(source.data.blockKey);
     if (located?.entry) {
       return decorateWithId(
-        wireframe._lookupBlockDisplayName?.(located.entry.block) || "block",
+        wireframe.lookupBlockDisplayName?.(located.entry.block) || "block",
         located.entry.id
       );
     }
@@ -712,11 +712,11 @@ function sourceDisplayName(wireframe, source) {
 }
 
 function targetDisplayName(wireframe, targetKey) {
-  const located = wireframe._findEntryAndOutletSync(targetKey);
+  const located = wireframe.findEntryAndOutletSync(targetKey);
   if (!located?.entry) {
     return null;
   }
-  const name = wireframe._lookupBlockDisplayName?.(located.entry.block);
+  const name = wireframe.lookupBlockDisplayName?.(located.entry.block);
   return decorateWithId(name, located.entry.id);
 }
 

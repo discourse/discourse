@@ -73,7 +73,7 @@ export default class BlockToolbar extends Component {
   get canForceExpand() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const located = this.wireframe._findEntryAndOutletSync(this.args.blockKey);
+    const located = this.wireframe.findEntryAndOutletSync(this.args.blockKey);
     const entry = located?.entry;
     if (entry?.block !== "wf:layout") {
       return false;

@@ -73,12 +73,13 @@ export default class InlineEditState {
 
   /**
    * Cached entry + outlet for the editing session so `applyChange`
-   * doesn't pay the `_findEntryAndOutlet` cost on every keystroke.
+   * doesn't pay the `findEntryAndOutlet` cost on every keystroke.
    * Cleared by `stop`.
    *
    * @type {{entry: Object, outletName: string}|null}
    */
   #located = null;
+
   /**
    * Snapshot of the arg's pre-edit value, captured at `start` time.
    * Used to build the `prev` Map for the undo entry on commit, and to
@@ -88,6 +89,7 @@ export default class InlineEditState {
    * @type {*}
    */
   #prevValue = null;
+
   /**
    * Block name (`wf:paragraph`, `wf:heading`, …) of the entry currently
    * being edited. Cached at session start so the PM keymap can branch
@@ -97,6 +99,7 @@ export default class InlineEditState {
    * @type {string|null}
    */
   #blockName = null;
+
   /**
    * Selection hint for the next `mountEditor` call. `"selectAll"` (the
    * default) preserves the "start typing to replace" affordance for
@@ -114,6 +117,7 @@ export default class InlineEditState {
    * @type {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
    */
   #initialSelection = "selectAll";
+
   /**
    * Callback the inline-edit controller registers via `registerCommit`.
    * Invoked from `stop({ commit: true })` BEFORE the editing state is
@@ -126,6 +130,7 @@ export default class InlineEditState {
    * @type {(() => void) | null}
    */
   #commitFn = null;
+
   /**
    * Reference to the active `InlineEditController` instance — the
    * component that owns the ProseMirror view and exposes
@@ -186,7 +191,7 @@ export default class InlineEditState {
     if (live !== undefined) {
       return live;
     }
-    const schema = this.service._metadataFor(entry)?.args;
+    const schema = this.service.metadataFor(entry)?.args;
     return schema?.[this.argName]?.default;
   }
 
@@ -239,7 +244,7 @@ export default class InlineEditState {
     if (this.blockKey) {
       this.stop({ commit: true });
     }
-    const located = await this.service._findEntryAndOutlet(blockKey);
+    const located = await this.service.findEntryAndOutlet(blockKey);
     if (!located) {
       return false;
     }
@@ -292,16 +297,16 @@ export default class InlineEditState {
 
     if (commit) {
       if (!sameValue(prevValue, nextValue)) {
-        this.service._undoStack.push({
+        this.service.undoStack.push({
           kind: "args",
           entry,
           prev: new Map([[argName, prevValue]]),
           next: new Map([[argName, nextValue]]),
         });
-        this.service._redoStack.length = 0;
+        this.service.redoStack.length = 0;
       }
     } else {
-      this.service._writeArgs(entry, new Map([[argName, prevValue]]));
+      this.service.writeArgs(entry, new Map([[argName, prevValue]]));
     }
 
     this.#located = null;
@@ -324,7 +329,7 @@ export default class InlineEditState {
    * clobbered `args.text` with `""`.
    *
    * Keeps the existing dirty-tracking honest: registers the entry's
-   * outlet in `_editedOutlets` so persistence knows what to save, and
+   * outlet in `editedOutlets` so persistence knows what to save, and
    * captures the initial-snapshot so `resetAll` rolls back the right
    * pre-edit state.
    *
@@ -338,9 +343,9 @@ export default class InlineEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service._editedOutlets.add(outletName);
+    this.service.editedOutlets.add(outletName);
     const prevMap = new Map([[argName, entry.args?.[argName]]]);
-    this.service._captureInitialSnapshot(entry, prevMap);
+    this.service.captureInitialSnapshot(entry, prevMap);
     // Empty edits (`""`, null, undefined) DELETE the key rather than
     // write an explicit empty string. The block decorator's reactive
     // getter (`createBlockArgsWithReactiveGetters` at
@@ -377,7 +382,7 @@ export default class InlineEditState {
    * becomes the new active edit target with the cursor at position 0.
    *
    * The PM keymap calls this with the cursor-split doc-JSON pair. The
-   * whole mutation rides one `_recordStructural` block so Cmd+Z reverts
+   * whole mutation rides one `recordStructural` block so Cmd+Z reverts
    * the split atomically — there's no intermediate `applyChange`
    * write, since we hand-write both docs directly in the recording
    * window.
@@ -394,7 +399,7 @@ export default class InlineEditState {
     if (!blockKey || argName !== "text") {
       return false;
     }
-    const located = this.service._findEntryAndOutletSync(blockKey);
+    const located = this.service.findEntryAndOutletSync(blockKey);
     if (!located || located.entry.block !== "wf:paragraph") {
       return false;
     }
@@ -411,7 +416,7 @@ export default class InlineEditState {
     const newEntry = { block: "wf:paragraph", args: afterArgs };
     let newKey = null;
 
-    const result = this.service._recordStructural([outletName], () => {
+    const result = this.service.recordStructural([outletName], () => {
       // Write the "before" doc back into the current entry. Direct
       // mutation on the live entry is safe here — we're inside the
       // structural-recording window, so the pre-state was already
@@ -424,9 +429,9 @@ export default class InlineEditState {
         currentEntry.args.text = beforeValue;
       }
       clearValidatorStamps(currentEntry);
-      this.service._editedOutlets.add(outletName);
+      this.service.editedOutlets.add(outletName);
 
-      const layout = this.service._ensureDraft(outletName);
+      const layout = this.service.ensureDraft(outletName);
       if (!layout) {
         return false;
       }
@@ -434,9 +439,9 @@ export default class InlineEditState {
       if (!insertion.changed) {
         return false;
       }
-      this.service._publishStructuralChange(outletName, insertion.layout);
+      this.service.publishStructuralChange(outletName, insertion.layout);
 
-      // `_publishStructuralChange` ran `assignStableKeys`, so the new
+      // `publishStructuralChange` ran `assignStableKeys`, so the new
       // entry now has its composite key.
       newKey = entryKey(newEntry);
       return !!newKey;
@@ -479,34 +484,6 @@ export default class InlineEditState {
     return this.#getSiblingInfo(1);
   }
 
-  #getSiblingInfo(direction) {
-    const blockKey = this.blockKey;
-    if (!blockKey) {
-      return null;
-    }
-    const located = this.service._findEntryAndOutletSync(blockKey);
-    if (!located) {
-      return null;
-    }
-    const layout = this.service.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return null;
-    }
-    const sibs = findEntrySiblings(layout, blockKey);
-    if (!sibs) {
-      return null;
-    }
-    const target = sibs.siblings[sibs.index + direction];
-    if (!target) {
-      return null;
-    }
-    return {
-      key: entryKey(target),
-      block: target.block ?? null,
-      value: target.args?.[this.argName],
-    };
-  }
-
   /**
    * Merges the current `wf:paragraph` edit session into its previous
    * sibling. The keymap rebuilds the prev's PM doc (via `toDoc(prevValue)`
@@ -516,7 +493,7 @@ export default class InlineEditState {
    * and the merged-in current content sits. That position becomes the
    * cursor's new home via the `{ pos }` initial-selection hint.
    *
-   * The whole mutation rides one `_recordStructural` block so Cmd+Z
+   * The whole mutation rides one `recordStructural` block so Cmd+Z
    * restores both paragraphs atomically. The current entry is removed;
    * the prev entry absorbs the merged value.
    *
@@ -535,7 +512,7 @@ export default class InlineEditState {
     if (!blockKey || argName !== "text") {
       return false;
     }
-    const located = this.service._findEntryAndOutletSync(blockKey);
+    const located = this.service.findEntryAndOutletSync(blockKey);
     if (!located || located.entry.block !== "wf:paragraph") {
       return false;
     }
@@ -551,11 +528,11 @@ export default class InlineEditState {
     const prevEntry = sibs.siblings[sibs.index - 1];
     const prevKey = entryKey(prevEntry);
 
-    const result = this.service._recordStructural([outletName], () => {
+    const result = this.service.recordStructural([outletName], () => {
       // Write the merged value into the prev entry. Match `applyChange`'s
       // contract of deleting the key on empty so the schema default
       // surfaces.
-      const livePrev = this.service._findEntryByKey(prevKey);
+      const livePrev = this.service.findEntryByKey(prevKey);
       if (!livePrev) {
         return false;
       }
@@ -566,9 +543,9 @@ export default class InlineEditState {
         livePrev.args.text = mergedValue;
       }
       clearValidatorStamps(livePrev);
-      this.service._editedOutlets.add(outletName);
+      this.service.editedOutlets.add(outletName);
 
-      const draft = this.service._ensureDraft(outletName);
+      const draft = this.service.ensureDraft(outletName);
       if (!draft) {
         return false;
       }
@@ -576,7 +553,7 @@ export default class InlineEditState {
       if (!removal.changed) {
         return false;
       }
-      this.service._publishStructuralChange(outletName, removal.layout);
+      this.service.publishStructuralChange(outletName, removal.layout);
       return true;
     });
     if (!result) {
@@ -585,47 +562,6 @@ export default class InlineEditState {
 
     this.#transitionTo(prevKey, { initialSelection: { pos: joinPos } });
     return true;
-  }
-
-  /**
-   * Moves the active edit session to a different block once Glimmer has
-   * rendered the target block's chrome into the DOM. Used by structural
-   * ops (`splitAt`, `mergeWithPrev`) that publish a new layout and
-   * immediately want PM to remount on a different entry.
-   *
-   * Flipping `blockKey` synchronously would race the controller's
-   * `activeRendererEl` lookup (it queries `[data-wf-block-key=...]`
-   * which doesn't exist until the canvas mounts the new block-chrome).
-   * Defer past `afterRender` via `nextRunloop`, then rAF-poll for the
-   * element — the canvas's chrome mount can land later than the
-   * standard render phase. Bails after a fixed attempt count so a
-   * genuinely-missing element doesn't spin forever.
-   *
-   * Once the element is found (or the poll gives up), all session-
-   * scoped state is reset to the new entry and `_restoreSelection`
-   * runs so the chrome's `--selected` reveal rule unhides the empty
-   * placeholder for the destination block.
-   *
-   * @param {string} key
-   * @param {{initialSelection: "start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}} options
-   */
-  #transitionTo(key, { initialSelection }) {
-    const transitionWhenReady = (attempts = 0) => {
-      const found = document.querySelector(
-        `[data-wf-block-key="${CSS.escape(key)}"]`
-      );
-      if (found || attempts > 10) {
-        this.#located = this.service._findEntryAndOutletSync(key);
-        this.#prevValue = this.#located?.entry?.args?.[this.argName];
-        this.#blockName = this.#located?.entry?.block ?? null;
-        this.#initialSelection = initialSelection;
-        this.blockKey = key;
-        this.service._restoreSelection(key);
-        return;
-      }
-      requestAnimationFrame(() => transitionWhenReady(attempts + 1));
-    };
-    nextRunloop(this, transitionWhenReady);
   }
 
   /**
@@ -665,5 +601,74 @@ export default class InlineEditState {
     if (this._controller === controller) {
       this._controller = null;
     }
+  }
+
+  #getSiblingInfo(direction) {
+    const blockKey = this.blockKey;
+    if (!blockKey) {
+      return null;
+    }
+    const located = this.service.findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return null;
+    }
+    const layout = this.service.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return null;
+    }
+    const sibs = findEntrySiblings(layout, blockKey);
+    if (!sibs) {
+      return null;
+    }
+    const target = sibs.siblings[sibs.index + direction];
+    if (!target) {
+      return null;
+    }
+    return {
+      key: entryKey(target),
+      block: target.block ?? null,
+      value: target.args?.[this.argName],
+    };
+  }
+
+  /**
+   * Moves the active edit session to a different block once Glimmer has
+   * rendered the target block's chrome into the DOM. Used by structural
+   * ops (`splitAt`, `mergeWithPrev`) that publish a new layout and
+   * immediately want PM to remount on a different entry.
+   *
+   * Flipping `blockKey` synchronously would race the controller's
+   * `activeRendererEl` lookup (it queries `[data-wf-block-key=...]`
+   * which doesn't exist until the canvas mounts the new block-chrome).
+   * Defer past `afterRender` via `nextRunloop`, then rAF-poll for the
+   * element — the canvas's chrome mount can land later than the
+   * standard render phase. Bails after a fixed attempt count so a
+   * genuinely-missing element doesn't spin forever.
+   *
+   * Once the element is found (or the poll gives up), all session-
+   * scoped state is reset to the new entry and `restoreSelection`
+   * runs so the chrome's `--selected` reveal rule unhides the empty
+   * placeholder for the destination block.
+   *
+   * @param {string} key
+   * @param {{initialSelection: "start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}} options
+   */
+  #transitionTo(key, { initialSelection }) {
+    const transitionWhenReady = (attempts = 0) => {
+      const found = document.querySelector(
+        `[data-wf-block-key="${CSS.escape(key)}"]`
+      );
+      if (found || attempts > 10) {
+        this.#located = this.service.findEntryAndOutletSync(key);
+        this.#prevValue = this.#located?.entry?.args?.[this.argName];
+        this.#blockName = this.#located?.entry?.block ?? null;
+        this.#initialSelection = initialSelection;
+        this.blockKey = key;
+        this.service.restoreSelection(key);
+        return;
+      }
+      requestAnimationFrame(() => transitionWhenReady(attempts + 1));
+    };
+    nextRunloop(this, transitionWhenReady);
   }
 }

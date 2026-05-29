@@ -80,6 +80,7 @@ export default class BlockChrome extends Component {
    * @returns {Element|null}
    */
   getChromeEl = () => this.chromeEl;
+
   /**
    * Locates the parent grid layout's grid `<div>` element so the
    * resize modifier can measure cell sizes. Walks up from this chrome's
@@ -93,6 +94,7 @@ export default class BlockChrome extends Component {
     }
     return this.chromeEl.closest(".wf-layout--grid");
   };
+
   /**
    * Returns the ghost element rendered inside the parent grid by the
    * grid overlay. Re-queried on each pointerdown via this getter
@@ -104,6 +106,7 @@ export default class BlockChrome extends Component {
     const grid = this.getResizeGridElement();
     return grid?.querySelector(".wireframe-grid-ghost") ?? null;
   };
+
   /**
    * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
    * inside the chrome. Used both as the resize-handle anchor (via
@@ -202,7 +205,7 @@ export default class BlockChrome extends Component {
   get gridPlacement() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe._findEntryAndOutletSync(
+    const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return entry?.containerArgs?.grid ?? null;
@@ -253,7 +256,7 @@ export default class BlockChrome extends Component {
     }
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe._findEntryAndOutletSync(
+    const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
@@ -305,7 +308,7 @@ export default class BlockChrome extends Component {
     }
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe._findEntryAndOutletSync(
+    const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
@@ -358,7 +361,7 @@ export default class BlockChrome extends Component {
   get slotGridColumns() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const grid = this.wireframe._findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.findEntryParent(this.args.blockKey);
     return Number(grid?.args?.columns ?? 6);
   }
 
@@ -366,7 +369,7 @@ export default class BlockChrome extends Component {
   get slotGridRows() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const grid = this.wireframe._findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.findEntryParent(this.args.blockKey);
     return Number(grid?.args?.rows ?? 2);
   }
 
@@ -384,13 +387,13 @@ export default class BlockChrome extends Component {
       return false;
     }
     const myPlacement = parsePlacement(
-      this.wireframe._findEntryAndOutletSync(this.args.blockKey)?.entry
+      this.wireframe.findEntryAndOutletSync(this.args.blockKey)?.entry
         ?.containerArgs
     );
     if (myPlacement.column.start == null || myPlacement.row.start == null) {
       return false;
     }
-    const grid = this.wireframe._findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.findEntryParent(this.args.blockKey);
     if (!grid?.children?.length) {
       return false;
     }
@@ -422,14 +425,14 @@ export default class BlockChrome extends Component {
     if (!this.isGridCell) {
       return false;
     }
-    const grid = this.wireframe._findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.findEntryParent(this.args.blockKey);
     if (!grid) {
       return false;
     }
     const maxColumns = Number(grid.args?.columns ?? 6);
     const maxRows = Number(grid.args?.rows ?? 2);
     const placement = parsePlacement(
-      this.wireframe._findEntryAndOutletSync(this.args.blockKey)?.entry
+      this.wireframe.findEntryAndOutletSync(this.args.blockKey)?.entry
         ?.containerArgs
     );
     const colExceeds =
@@ -486,11 +489,11 @@ export default class BlockChrome extends Component {
   get parentLayoutAxis() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const parent = this.wireframe._findEntryParent(this.args.blockKey);
+    const parent = this.wireframe.findEntryParent(this.args.blockKey);
     if (!parent) {
       return null;
     }
-    if (this.wireframe._blockNameOf(parent) !== "wf:layout") {
+    if (this.wireframe.blockNameOf(parent) !== "wf:layout") {
       return null;
     }
     const mode = parent.args?.mode ?? "stack";
@@ -535,7 +538,7 @@ export default class BlockChrome extends Component {
     // after every layout mutation (insert / remove / move).
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe._findEntryAndOutletSync(
+    const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return !entry?.children?.length;
@@ -553,7 +556,7 @@ export default class BlockChrome extends Component {
   get imageArgEntries() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe._findEntryAndOutletSync(
+    const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return imageArgEntries(this.metadata?.args, entry?.args);
@@ -665,135 +668,6 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Resize drag's live preview handler. Applies the proposed
-   * dimensions directly to the IMAGE MARKER (not the chrome) via
-   * inline style so the user sees the size change as they drag
-   * without committing each frame to the layout — and so the overlay's
-   * ResizeObserver sees the change and re-positions the 8 handles to
-   * track the live preview.
-   *
-   * @param {{width: number, height: number}} dims
-   */
-  @action
-  previewImageResize({ width, height }) {
-    const marker = this.getImageMarkerEl();
-    if (!marker) {
-      return;
-    }
-    marker.style.width = `${width}px`;
-    marker.style.height = `${height}px`;
-  }
-
-  /**
-   * Commits the final resize dimensions back into the image arg's own
-   * `width` / `height`. Writing to the arg (not `containerArgs.size`)
-   * means the live site picks up the new dimensions for free — the
-   * renderer already forwards `image.width` / `image.height` to the
-   * underlying `<img>` element's attributes.
-   *
-   * Drops the inline preview style on the MARKER so the committed
-   * value drives layout (otherwise the inline style would stick
-   * around and shadow future adjustments).
-   *
-   * @param {{width: number, height: number}} dims
-   */
-  @action
-  commitImageResize({ width, height }) {
-    const marker = this.getImageMarkerEl();
-    if (marker) {
-      marker.style.width = "";
-      marker.style.height = "";
-    }
-    if (this.chromeEl) {
-      this.chromeEl.style.width = "";
-      this.chromeEl.style.height = "";
-    }
-    const arg = this.resizableImageArg;
-    if (!arg) {
-      return;
-    }
-    // Preserve `naturalWidth` / `naturalHeight` (set at upload /
-    // probe time) so the inspector can offer "Reset to natural" and
-    // we can show the resized info bar. Resize only changes the
-    // DISPLAY dimensions (`width` / `height`), not the intrinsic
-    // ones.
-    const naturalWidth = arg.value?.naturalWidth ?? arg.value?.width;
-    const naturalHeight = arg.value?.naturalHeight ?? arg.value?.height;
-    const nextValue = {
-      ...(arg.value ?? {}),
-      width,
-      height,
-      naturalWidth,
-      naturalHeight,
-    };
-    this.wireframe._setImageArg(this.args.blockKey, arg.name, nextValue);
-  }
-
-  /**
-   * Resets the resizable image arg's display dimensions to its
-   * natural / intrinsic size. Wired to the toolbar "Reset to
-   * natural" button.
-   */
-  @action
-  resetImageToNaturalSize() {
-    const arg = this.resizableImageArg;
-    if (!arg?.value?.naturalWidth || !arg?.value?.naturalHeight) {
-      return;
-    }
-    this.wireframe._setImageArg(this.args.blockKey, arg.name, {
-      ...arg.value,
-      width: arg.value.naturalWidth,
-      height: arg.value.naturalHeight,
-    });
-  }
-
-  /**
-   * Resizes the image arg to fit inside its containing chrome with
-   * the aspect ratio preserved (object-fit: contain semantics). One
-   * dimension matches the chrome; the other has margin. Natural
-   * dimensions are preserved so a subsequent "Reset to natural"
-   * still works.
-   */
-  @action
-  fillImageToBlock() {
-    const arg = this.resizableImageArg;
-    if (!arg?.value || !this.chromeEl) {
-      return;
-    }
-    const rect = this.chromeEl.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) {
-      return;
-    }
-    const naturalWidth = arg.value.naturalWidth ?? arg.value.width;
-    const naturalHeight = arg.value.naturalHeight ?? arg.value.height;
-    if (!naturalWidth || !naturalHeight) {
-      return;
-    }
-    const imageAspect = naturalWidth / naturalHeight;
-    const blockAspect = rect.width / rect.height;
-    let width;
-    let height;
-    if (imageAspect > blockAspect) {
-      // Image is wider than the block: width maxes out, height
-      // shrinks to maintain aspect.
-      width = rect.width;
-      height = rect.width / imageAspect;
-    } else {
-      // Image is taller (or equal): height maxes out, width
-      // shrinks.
-      height = rect.height;
-      width = rect.height * imageAspect;
-    }
-    this.wireframe._setImageArg(this.args.blockKey, arg.name, {
-      ...arg.value,
-      width: Math.round(width),
-      height: Math.round(height),
-      naturalWidth,
-      naturalHeight,
-    });
-  }
-
-  /**
    * `true` when the resizable image arg's current display dims
    * diverge from its natural dims — used to enable the toolbar
    * "Reset to natural" button.
@@ -862,6 +736,135 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Resize drag's live preview handler. Applies the proposed
+   * dimensions directly to the IMAGE MARKER (not the chrome) via
+   * inline style so the user sees the size change as they drag
+   * without committing each frame to the layout — and so the overlay's
+   * ResizeObserver sees the change and re-positions the 8 handles to
+   * track the live preview.
+   *
+   * @param {{width: number, height: number}} dims
+   */
+  @action
+  previewImageResize({ width, height }) {
+    const marker = this.getImageMarkerEl();
+    if (!marker) {
+      return;
+    }
+    marker.style.width = `${width}px`;
+    marker.style.height = `${height}px`;
+  }
+
+  /**
+   * Commits the final resize dimensions back into the image arg's own
+   * `width` / `height`. Writing to the arg (not `containerArgs.size`)
+   * means the live site picks up the new dimensions for free — the
+   * renderer already forwards `image.width` / `image.height` to the
+   * underlying `<img>` element's attributes.
+   *
+   * Drops the inline preview style on the MARKER so the committed
+   * value drives layout (otherwise the inline style would stick
+   * around and shadow future adjustments).
+   *
+   * @param {{width: number, height: number}} dims
+   */
+  @action
+  commitImageResize({ width, height }) {
+    const marker = this.getImageMarkerEl();
+    if (marker) {
+      marker.style.width = "";
+      marker.style.height = "";
+    }
+    if (this.chromeEl) {
+      this.chromeEl.style.width = "";
+      this.chromeEl.style.height = "";
+    }
+    const arg = this.resizableImageArg;
+    if (!arg) {
+      return;
+    }
+    // Preserve `naturalWidth` / `naturalHeight` (set at upload /
+    // probe time) so the inspector can offer "Reset to natural" and
+    // we can show the resized info bar. Resize only changes the
+    // DISPLAY dimensions (`width` / `height`), not the intrinsic
+    // ones.
+    const naturalWidth = arg.value?.naturalWidth ?? arg.value?.width;
+    const naturalHeight = arg.value?.naturalHeight ?? arg.value?.height;
+    const nextValue = {
+      ...(arg.value ?? {}),
+      width,
+      height,
+      naturalWidth,
+      naturalHeight,
+    };
+    this.wireframe.setImageArg(this.args.blockKey, arg.name, nextValue);
+  }
+
+  /**
+   * Resets the resizable image arg's display dimensions to its
+   * natural / intrinsic size. Wired to the toolbar "Reset to
+   * natural" button.
+   */
+  @action
+  resetImageToNaturalSize() {
+    const arg = this.resizableImageArg;
+    if (!arg?.value?.naturalWidth || !arg?.value?.naturalHeight) {
+      return;
+    }
+    this.wireframe.setImageArg(this.args.blockKey, arg.name, {
+      ...arg.value,
+      width: arg.value.naturalWidth,
+      height: arg.value.naturalHeight,
+    });
+  }
+
+  /**
+   * Resizes the image arg to fit inside its containing chrome with
+   * the aspect ratio preserved (object-fit: contain semantics). One
+   * dimension matches the chrome; the other has margin. Natural
+   * dimensions are preserved so a subsequent "Reset to natural"
+   * still works.
+   */
+  @action
+  fillImageToBlock() {
+    const arg = this.resizableImageArg;
+    if (!arg?.value || !this.chromeEl) {
+      return;
+    }
+    const rect = this.chromeEl.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      return;
+    }
+    const naturalWidth = arg.value.naturalWidth ?? arg.value.width;
+    const naturalHeight = arg.value.naturalHeight ?? arg.value.height;
+    if (!naturalWidth || !naturalHeight) {
+      return;
+    }
+    const imageAspect = naturalWidth / naturalHeight;
+    const blockAspect = rect.width / rect.height;
+    let width;
+    let height;
+    if (imageAspect > blockAspect) {
+      // Image is wider than the block: width maxes out, height
+      // shrinks to maintain aspect.
+      width = rect.width;
+      height = rect.width / imageAspect;
+    } else {
+      // Image is taller (or equal): height maxes out, width
+      // shrinks.
+      height = rect.height;
+      width = rect.height * imageAspect;
+    }
+    this.wireframe.setImageArg(this.args.blockKey, arg.name, {
+      ...arg.value,
+      width: Math.round(width),
+      height: Math.round(height),
+      naturalWidth,
+      naturalHeight,
+    });
+  }
+
+  /**
    * Fills this slot with the block the user picked from the palette
    * placeholder. Routes through `fillSlot` so the slot entry is
    * REPLACED by the new block rather than inserted alongside it.
@@ -904,6 +907,164 @@ export default class BlockChrome extends Component {
   captureChromeEl(element) {
     this.chromeEl = element;
     this.#setupUrlTooltips();
+  }
+
+  /**
+   * Routes the resize modifier's commit back to THIS slot's own args.
+   * The resize handle lives on the slot wrapper (transparent path), so
+   * commits update the slot's column / row in place — the cell border
+   * grows / shrinks but the inner content stays put.
+   */
+  @action
+  commitSelfResize(placement) {
+    this.wireframe.setSlotPlacement({
+      slotKey: this.args.blockKey,
+      column: placement.column,
+      row: placement.row,
+    });
+  }
+
+  /**
+   * Captures the click only when editor is active. Stops propagation so the
+   * host page's own click handlers (links, buttons inside the block) don't
+   * fire while the user is editing.
+   *
+   * Click model:
+   *   - Block not selected → first click selects it.
+   *   - Block already selected, click landed on an `[data-wf-inline-edit-arg]`
+   *     region → start editing that arg (the "click again to edit" gesture).
+   *   - Block already selected, click landed elsewhere on the chrome → no-op
+   *     (re-selecting the already-selected block is a no-op).
+   */
+  @action
+  onClick(event) {
+    if (!this.wireframe.isActive) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+
+    const argEl = event.target.closest?.("[data-block-arg]");
+    const argName = argEl?.dataset?.blockArg;
+    const kind = argName ? kindForArg(this.metadata, argName) : null;
+
+    // Image args don't have an internal selection model the way text
+    // does, so a single click on the rendered image opens the replace
+    // / remove menu directly. Selecting the block is a side effect so
+    // the inspector tracks the change.
+    if (argEl && kind === "image") {
+      if (this.wireframe.selectedBlockKey !== this.args.blockKey) {
+        this.#selectThisBlock();
+      }
+      this.#openImageEditMenu(argEl, argName);
+      return;
+    }
+
+    // Other inline-editable args follow the "click to select, click
+    // again to edit" pattern — placing the cursor inside text or
+    // anchoring a popover requires the click to be on the already-
+    // selected block, otherwise the first click is interpreted as
+    // selection.
+    if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
+      switch (kind) {
+        case "rich-text":
+          this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
+            coords: { x: event.clientX, y: event.clientY },
+          });
+          return;
+        case "icon":
+          this.wireframe.iconEdit.start({
+            blockKey: this.args.blockKey,
+            argName,
+            anchorEl: argEl,
+          });
+          return;
+        case "url":
+          this.wireframe.linkEdit.start({
+            blockKey: this.args.blockKey,
+            argName,
+          });
+          // The hover popover registered on this same link element
+          // owns the URL-edit UI. Force it open so the user sees the
+          // editor surface even if they came in via a click rather
+          // than a hover.
+          this.#urlTooltips.find((t) => t.trigger === argEl)?.show?.();
+          return;
+      }
+      // No matching kind — fall through to block selection.
+    }
+
+    this.#selectThisBlock();
+  }
+
+  /**
+   * Whether a given before/after/inside drop zone for *this* block is
+   * currently active (cursor hovering over it during a drag). Drives the
+   * `--active` class so the user sees where the drop will land.
+   *
+   * @param {"before"|"after"|"inside"} position
+   * @returns {boolean}
+   */
+  @action
+  isDropZoneActive(position) {
+    const t = this.wireframe.activeDropTarget;
+    return (
+      t?.targetKey === this.args.blockKey &&
+      t?.position === position &&
+      t?.outletName === this.args.outletName
+    );
+  }
+
+  /**
+   * Drop-target gate — rejects drops that would re-insert a block onto its
+   * own zones (a no-op anyway) and consults the editor service for outlet-
+   * level allowed/denied checks. The modifier filters drags whose `type`
+   * isn't `"wf-block"` or `"wf-palette-block"`, so this only fires for
+   * our own payloads.
+   *
+   * Move drags (`wf-block`) consult `canDropAt` against the active drag
+   * source; palette inserts (`wf-palette-block`) consult
+   * `canInsertBlockAt` against the source's `blockName`.
+   */
+  @action
+  canDropOnThisBlock({ source }) {
+    if (source?.type === "wf-palette-block") {
+      return this.wireframe.canInsertBlockAt({
+        blockName: source.data?.blockName,
+        targetOutletName: this.args.outletName,
+      });
+    }
+    if (source?.data?.blockKey === this.args.blockKey) {
+      return false;
+    }
+    return this.wireframe.canDropAt({
+      targetOutletName: this.args.outletName,
+    });
+  }
+
+  /**
+   * Forwards the drop-target's `position` straight to the service so the
+   * canvas can highlight the matching zone. The core modifier passes
+   * `position` in the callback payload (lifted from the modifier's own
+   * `position` arg) — we do NOT read `event.currentTarget.dataset`,
+   * because by the time `dragLeave` fires from inside its 10ms deferred
+   * clear the browser has already nulled out `event.currentTarget`.
+   */
+  @action
+  handleZoneDragEnter({ position }) {
+    this.wireframe.setActiveDropTarget({
+      targetKey: this.args.blockKey,
+      position,
+      outletName: this.args.outletName,
+    });
+  }
+
+  @action
+  handleZoneDragLeave({ position }) {
+    this.wireframe.clearActiveDropTarget({
+      targetKey: this.args.blockKey,
+      position,
+    });
   }
 
   /**
@@ -998,94 +1159,6 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Routes the resize modifier's commit back to THIS slot's own args.
-   * The resize handle lives on the slot wrapper (transparent path), so
-   * commits update the slot's column / row in place — the cell border
-   * grows / shrinks but the inner content stays put.
-   */
-  @action
-  commitSelfResize(placement) {
-    this.wireframe.setSlotPlacement({
-      slotKey: this.args.blockKey,
-      column: placement.column,
-      row: placement.row,
-    });
-  }
-
-  /**
-   * Captures the click only when editor is active. Stops propagation so the
-   * host page's own click handlers (links, buttons inside the block) don't
-   * fire while the user is editing.
-   *
-   * Click model:
-   *   - Block not selected → first click selects it.
-   *   - Block already selected, click landed on an `[data-wf-inline-edit-arg]`
-   *     region → start editing that arg (the "click again to edit" gesture).
-   *   - Block already selected, click landed elsewhere on the chrome → no-op
-   *     (re-selecting the already-selected block is a no-op).
-   */
-  @action
-  onClick(event) {
-    if (!this.wireframe.isActive) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-
-    const argEl = event.target.closest?.("[data-block-arg]");
-    const argName = argEl?.dataset?.blockArg;
-    const kind = argName ? kindForArg(this.metadata, argName) : null;
-
-    // Image args don't have an internal selection model the way text
-    // does, so a single click on the rendered image opens the replace
-    // / remove menu directly. Selecting the block is a side effect so
-    // the inspector tracks the change.
-    if (argEl && kind === "image") {
-      if (this.wireframe.selectedBlockKey !== this.args.blockKey) {
-        this.#selectThisBlock();
-      }
-      this.#openImageEditMenu(argEl, argName);
-      return;
-    }
-
-    // Other inline-editable args follow the "click to select, click
-    // again to edit" pattern — placing the cursor inside text or
-    // anchoring a popover requires the click to be on the already-
-    // selected block, otherwise the first click is interpreted as
-    // selection.
-    if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
-      switch (kind) {
-        case "rich-text":
-          this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
-            coords: { x: event.clientX, y: event.clientY },
-          });
-          return;
-        case "icon":
-          this.wireframe.iconEdit.start({
-            blockKey: this.args.blockKey,
-            argName,
-            anchorEl: argEl,
-          });
-          return;
-        case "url":
-          this.wireframe.linkEdit.start({
-            blockKey: this.args.blockKey,
-            argName,
-          });
-          // The hover popover registered on this same link element
-          // owns the URL-edit UI. Force it open so the user sees the
-          // editor surface even if they came in via a click rather
-          // than a hover.
-          this.#urlTooltips.find((t) => t.trigger === argEl)?.show?.();
-          return;
-      }
-      // No matching kind — fall through to block selection.
-    }
-
-    this.#selectThisBlock();
-  }
-
-  /**
    * Selects the wrapped block via the editor service. Extracted from
    * the per-kind dispatch in `onClick` so the image-arg single-click
    * path can re-use it without duplicating the data payload.
@@ -1101,76 +1174,6 @@ export default class BlockChrome extends Component {
       outletArgs: this.args.outletArgs,
       outletName: this.args.outletName,
       metadata: this.metadata,
-    });
-  }
-
-  /**
-   * Whether a given before/after/inside drop zone for *this* block is
-   * currently active (cursor hovering over it during a drag). Drives the
-   * `--active` class so the user sees where the drop will land.
-   *
-   * @param {"before"|"after"|"inside"} position
-   * @returns {boolean}
-   */
-  @action
-  isDropZoneActive(position) {
-    const t = this.wireframe.activeDropTarget;
-    return (
-      t?.targetKey === this.args.blockKey &&
-      t?.position === position &&
-      t?.outletName === this.args.outletName
-    );
-  }
-
-  /**
-   * Drop-target gate — rejects drops that would re-insert a block onto its
-   * own zones (a no-op anyway) and consults the editor service for outlet-
-   * level allowed/denied checks. The modifier filters drags whose `type`
-   * isn't `"wf-block"` or `"wf-palette-block"`, so this only fires for
-   * our own payloads.
-   *
-   * Move drags (`wf-block`) consult `canDropAt` against the active drag
-   * source; palette inserts (`wf-palette-block`) consult
-   * `canInsertBlockAt` against the source's `blockName`.
-   */
-  @action
-  canDropOnThisBlock({ source }) {
-    if (source?.type === "wf-palette-block") {
-      return this.wireframe.canInsertBlockAt({
-        blockName: source.data?.blockName,
-        targetOutletName: this.args.outletName,
-      });
-    }
-    if (source?.data?.blockKey === this.args.blockKey) {
-      return false;
-    }
-    return this.wireframe.canDropAt({
-      targetOutletName: this.args.outletName,
-    });
-  }
-
-  /**
-   * Forwards the drop-target's `position` straight to the service so the
-   * canvas can highlight the matching zone. The core modifier passes
-   * `position` in the callback payload (lifted from the modifier's own
-   * `position` arg) — we do NOT read `event.currentTarget.dataset`,
-   * because by the time `dragLeave` fires from inside its 10ms deferred
-   * clear the browser has already nulled out `event.currentTarget`.
-   */
-  @action
-  handleZoneDragEnter({ position }) {
-    this.wireframe.setActiveDropTarget({
-      targetKey: this.args.blockKey,
-      position,
-      outletName: this.args.outletName,
-    });
-  }
-
-  @action
-  handleZoneDragLeave({ position }) {
-    this.wireframe.clearActiveDropTarget({
-      targetKey: this.args.blockKey,
-      position,
     });
   }
 

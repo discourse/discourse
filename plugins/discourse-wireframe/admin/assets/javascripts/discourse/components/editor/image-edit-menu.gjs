@@ -60,7 +60,7 @@ export default class ImageEditMenu extends Component {
 
   @action
   remove() {
-    this.wireframe._setImageArg(
+    this.wireframe.setImageArg(
       this.args.data.blockKey,
       this.args.data.argName,
       null

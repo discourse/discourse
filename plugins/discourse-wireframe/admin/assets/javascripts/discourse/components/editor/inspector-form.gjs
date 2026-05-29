@@ -177,7 +177,7 @@ export default class InspectorForm extends Component {
 
     // Treat empty string as absence for string args that don't declare a
     // default. Without this, the editor service writes the literal `""`
-    // back into `entry.args` (per `_writeArgs`'s "`""` is a valid scalar"
+    // back into `entry.args` (per `writeArgs`'s "`""` is a valid scalar"
     // contract) and runtime `required` / `atLeastOne` / `allOrNone`
     // checks pass even though the field is visibly blank. Args WITH a
     // default keep the existing behaviour: clearing the field stores

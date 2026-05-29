@@ -54,6 +54,22 @@ export default class ImageResizeOverlay extends Component {
   /** Bound `measure` reference for window listeners. */
   #boundMeasure = null;
 
+  /**
+   * Inline style for the overlay's outer div. Positions it absolutely
+   * inside the chrome to match the marker's rect. When the rect isn't
+   * measured yet, paints nothing visible.
+   */
+  get overlayStyle() {
+    const r = this.rect;
+    if (!r) {
+      return trustHTML("display: none;");
+    }
+    return trustHTML(
+      `position: absolute; top: ${r.top}px; left: ${r.left}px; ` +
+        `width: ${r.width}px; height: ${r.height}px; pointer-events: none;`
+    );
+  }
+
   @action
   setup() {
     this.#boundMeasure = () => this.measure();
@@ -73,26 +89,6 @@ export default class ImageResizeOverlay extends Component {
     if (this.#boundMeasure) {
       window.removeEventListener("resize", this.#boundMeasure);
       this.#boundMeasure = null;
-    }
-  }
-
-  /**
-   * Re-attaches the ResizeObserver to the current marker / chrome
-   * elements. Safe to call repeatedly — the observer disconnects and
-   * re-targets on each call.
-   */
-  #attach() {
-    if (!this.#observer) {
-      return;
-    }
-    this.#observer.disconnect();
-    const marker = this.args.getMarkerEl?.();
-    const chrome = this.args.getChromeEl?.();
-    if (marker) {
-      this.#observer.observe(marker);
-    }
-    if (chrome) {
-      this.#observer.observe(chrome);
     }
   }
 
@@ -129,19 +125,23 @@ export default class ImageResizeOverlay extends Component {
   }
 
   /**
-   * Inline style for the overlay's outer div. Positions it absolutely
-   * inside the chrome to match the marker's rect. When the rect isn't
-   * measured yet, paints nothing visible.
+   * Re-attaches the ResizeObserver to the current marker / chrome
+   * elements. Safe to call repeatedly — the observer disconnects and
+   * re-targets on each call.
    */
-  get overlayStyle() {
-    const r = this.rect;
-    if (!r) {
-      return trustHTML("display: none;");
+  #attach() {
+    if (!this.#observer) {
+      return;
     }
-    return trustHTML(
-      `position: absolute; top: ${r.top}px; left: ${r.left}px; ` +
-        `width: ${r.width}px; height: ${r.height}px; pointer-events: none;`
-    );
+    this.#observer.disconnect();
+    const marker = this.args.getMarkerEl?.();
+    const chrome = this.args.getChromeEl?.();
+    if (marker) {
+      this.#observer.observe(marker);
+    }
+    if (chrome) {
+      this.#observer.observe(chrome);
+    }
   }
 
   <template>

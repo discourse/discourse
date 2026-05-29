@@ -40,7 +40,7 @@ class StubWireframeService extends Service {
     return 0;
   }
 
-  _findEntryAndOutletSync() {
+  findEntryAndOutletSync() {
     return null;
   }
 

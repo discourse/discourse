@@ -103,6 +103,17 @@ export default class DragAndDropService extends Service {
   }
 
   /**
+   * `true` if any drag is in flight — element OR external. Lets
+   * consumers paint cross-cutting affordances (drop hints, sidebar
+   * highlights) without caring which kind of drag started.
+   *
+   * @returns {boolean}
+   */
+  get isDragging() {
+    return !!(this.currentDrag || this.currentExternalDrag);
+  }
+
+  /**
    * Stores the in-flight drag's payload. Called by `dDragAndDropSource`
    * from its `onDragStart` callback.
    *
@@ -119,17 +130,6 @@ export default class DragAndDropService extends Service {
    */
   clearCurrentDrag() {
     this.currentDrag = null;
-  }
-
-  /**
-   * `true` if any drag is in flight — element OR external. Lets
-   * consumers paint cross-cutting affordances (drop hints, sidebar
-   * highlights) without caring which kind of drag started.
-   *
-   * @returns {boolean}
-   */
-  get isDragging() {
-    return !!(this.currentDrag || this.currentExternalDrag);
   }
 
   /**

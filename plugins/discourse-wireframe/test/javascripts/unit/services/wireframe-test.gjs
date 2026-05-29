@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
@@ -29,12 +30,13 @@ function registerTestLayout(owner) {
 }
 
 /**
- * Records a pending arg change and immediately flushes the batch.
- * Production code debounces — tests bypass that to assert synchronously.
+ * Records a pending arg change and waits for the debounced flush to run.
+ * Production code debounces the write; `settled()` lets that timer fire so
+ * assertions observe the committed args.
  */
 async function editArg(editor, argName, value) {
   editor.updateSelectedArg(argName, value);
-  return editor._flushPendingArgs();
+  await settled();
 }
 
 module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
@@ -123,8 +125,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("updateSelectedArg refreshes the selection snapshot", async function (assert) {
-      const ok = await editArg(this.editor, "title", "Edited");
-      assert.true(ok);
+      await editArg(this.editor, "title", "Edited");
       assert.strictEqual(this.editor.selectedBlockData.args.title, "Edited");
     });
 
@@ -219,7 +220,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const entry = this.editor.selectedBlockData.args;
       // Look up the live entry (the bound args' parent) and stamp it
       // as the validator would.
-      const located = this.editor._findEntryAndOutletSync(
+      const located = this.editor.findEntryAndOutletSync(
         this.editor.selectedBlockKey
       );
       located.entry.__failureType = "structural-invalid";
@@ -243,7 +244,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // the layer array (frozen at validation time) — so the
       // inspector banner clears as soon as the author edits the arg
       // that was failing.
-      const located = this.editor._findEntryAndOutletSync(
+      const located = this.editor.findEntryAndOutletSync(
         this.editor.selectedBlockKey
       );
       located.entry.__failureType = "arg-invalid";
@@ -282,8 +283,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       // The plugin ships disabled by default; `enter()` early-returns
       // when `canEdit` is false. Enabling the setting + logging in as
-      // a staff user lets `_materializeAllDrafts()` populate
-      // `_originalLayouts`, which `resetAll` reads from on rollback.
+      // a staff user lets `#materializeAllDrafts()` populate
+      // `#originalLayouts`, which `resetAll` reads from on rollback.
       // After this re-lookup the rest of the moveBlock tests use the
       // editor with editing enabled.
       this.editor.siteSettings.wireframe_enabled = true;
@@ -1197,7 +1198,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
   });
 
-  module("_isInsideAllowedScope", function (innerHooks) {
+  module("isInsideAllowedScope", function (innerHooks) {
     innerHooks.afterEach(function () {
       document
         .querySelectorAll(".__wf-allowed-scope-test")
@@ -1219,17 +1220,17 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // safety check must match `__content` for clicks inside an
       // interactive tooltip (the URL-edit chip) to NOT deselect.
       const child = appendScope("fk-d-tooltip__content");
-      assert.true(this.editor._isInsideAllowedScope(child));
+      assert.true(this.editor.isInsideAllowedScope(child));
     });
 
     test("a click target inside a FloatKit menu stays in-scope", function (assert) {
       const child = appendScope("fk-d-menu");
-      assert.true(this.editor._isInsideAllowedScope(child));
+      assert.true(this.editor.isInsideAllowedScope(child));
     });
 
     test("a click target outside any editor scope is out-of-scope", function (assert) {
       const child = appendScope("");
-      assert.false(this.editor._isInsideAllowedScope(child));
+      assert.false(this.editor.isInsideAllowedScope(child));
     });
   });
 });

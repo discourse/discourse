@@ -50,14 +50,6 @@ export default class InspectorCategoryField extends Component {
     return raw.split("|").filter(Boolean);
   }
 
-  async #updateSelectedCategories(previousRequest) {
-    const categories = await Category.asyncFindByIds(this.categoryIds);
-    // Serialise: the previous request's tracked write must land before
-    // ours, otherwise rapid value changes can settle out-of-order.
-    await previousRequest;
-    this.selectedCategories = categories;
-  }
-
   @action
   refreshSelectedCategories() {
     const previousRequest = this.#pendingCategoriesRequest;
@@ -73,6 +65,14 @@ export default class InspectorCategoryField extends Component {
   @action
   onChangeMulti(value) {
     this.args.custom.set((value || []).map((c) => c.id).join("|"));
+  }
+
+  async #updateSelectedCategories(previousRequest) {
+    const categories = await Category.asyncFindByIds(this.categoryIds);
+    // Serialise: the previous request's tracked write must land before
+    // ours, otherwise rapid value changes can settle out-of-order.
+    await previousRequest;
+    this.selectedCategories = categories;
   }
 
   <template>

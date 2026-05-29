@@ -18,7 +18,7 @@ const ASPECT_RATIO_EPSILON = 0.02;
  *
  * Bypasses FormKit's draft entirely: reads the current value live from
  * `entry.args` via the wireframe service, and writes via the service's
- * `_setImageArg`. That keeps the inspector and the canvas perfectly in
+ * `setImageArg`. That keeps the inspector and the canvas perfectly in
  * sync — paste / drop / click-to-pick mutations made on the canvas
  * show up immediately, and inspector edits land in the canvas with
  * the same code path as those external sources.
@@ -126,7 +126,7 @@ export default class InspectorImageField extends Component {
     if (!key) {
       return null;
     }
-    const entry = this.wireframe._findEntryAndOutletSync(key)?.entry;
+    const entry = this.wireframe.findEntryAndOutletSync(key)?.entry;
     return entry?.args?.[this.argName] ?? null;
   }
 
@@ -179,63 +179,19 @@ export default class InspectorImageField extends Component {
 
   /* Write helpers (go through the wireframe service, not FormKit) */
 
-  #commitLight(next) {
-    if (!this.blockKey) {
-      return;
+  /**
+   * Returns `true` when the light variant's display dims differ from
+   * its natural ones — indicating the image has been resized.
+   *
+   * @returns {boolean}
+   */
+  get lightIsResized() {
+    const v = this.lightVariant;
+    if (!v?.naturalWidth || !v?.naturalHeight || !v?.width || !v?.height) {
+      return false;
     }
-    if (next == null) {
-      this.wireframe._setImageArg(this.blockKey, this.argName, null);
-      return;
-    }
-    const merged = { ...next };
-    const existingDark = this.darkVariant;
-    if (existingDark) {
-      merged.dark = existingDark;
-    }
-    this.wireframe._setImageArg(this.blockKey, this.argName, merged);
+    return v.width !== v.naturalWidth || v.height !== v.naturalHeight;
   }
-
-  #commitDark(next) {
-    if (!this.blockKey) {
-      return;
-    }
-    const light = this.lightVariant;
-    if (!light) {
-      return;
-    }
-    const merged = { ...light };
-    if (next == null) {
-      delete merged.dark;
-    } else {
-      merged.dark = next;
-    }
-    this.wireframe._setImageArg(this.blockKey, this.argName, merged);
-  }
-
-  #uploadToVariant(upload) {
-    // `upload_id` is what lets server-side cleanup create an
-    // UploadReference for this image; without it the upload is
-    // treated as orphaned and gets deleted by Jobs::CleanUpUploads
-    // after the 48h grace period.
-    //
-    // `width` / `height` are the DISPLAY dimensions (what the
-    // renderer paints at); `naturalWidth` / `naturalHeight` are the
-    // intrinsic dimensions captured at upload time. They diverge
-    // when the user resizes via the canvas drag handles — the
-    // inspector compares them to surface a "resized" info badge +
-    // a "Reset to natural" affordance.
-    return {
-      source: "upload",
-      upload_id: upload.id,
-      url: upload.url,
-      width: upload.width,
-      height: upload.height,
-      naturalWidth: upload.width,
-      naturalHeight: upload.height,
-    };
-  }
-
-  /* Upload handlers (template-bound, so unprefixed) */
 
   @action
   onLightUploadDone(upload) {
@@ -359,19 +315,63 @@ export default class InspectorImageField extends Component {
     });
   }
 
-  /**
-   * Returns `true` when the light variant's display dims differ from
-   * its natural ones — indicating the image has been resized.
-   *
-   * @returns {boolean}
-   */
-  get lightIsResized() {
-    const v = this.lightVariant;
-    if (!v?.naturalWidth || !v?.naturalHeight || !v?.width || !v?.height) {
-      return false;
+  #commitLight(next) {
+    if (!this.blockKey) {
+      return;
     }
-    return v.width !== v.naturalWidth || v.height !== v.naturalHeight;
+    if (next == null) {
+      this.wireframe.setImageArg(this.blockKey, this.argName, null);
+      return;
+    }
+    const merged = { ...next };
+    const existingDark = this.darkVariant;
+    if (existingDark) {
+      merged.dark = existingDark;
+    }
+    this.wireframe.setImageArg(this.blockKey, this.argName, merged);
   }
+
+  #commitDark(next) {
+    if (!this.blockKey) {
+      return;
+    }
+    const light = this.lightVariant;
+    if (!light) {
+      return;
+    }
+    const merged = { ...light };
+    if (next == null) {
+      delete merged.dark;
+    } else {
+      merged.dark = next;
+    }
+    this.wireframe.setImageArg(this.blockKey, this.argName, merged);
+  }
+
+  #uploadToVariant(upload) {
+    // `upload_id` is what lets server-side cleanup create an
+    // UploadReference for this image; without it the upload is
+    // treated as orphaned and gets deleted by Jobs::CleanUpUploads
+    // after the 48h grace period.
+    //
+    // `width` / `height` are the DISPLAY dimensions (what the
+    // renderer paints at); `naturalWidth` / `naturalHeight` are the
+    // intrinsic dimensions captured at upload time. They diverge
+    // when the user resizes via the canvas drag handles — the
+    // inspector compares them to surface a "resized" info badge +
+    // a "Reset to natural" affordance.
+    return {
+      source: "upload",
+      upload_id: upload.id,
+      url: upload.url,
+      width: upload.width,
+      height: upload.height,
+      naturalWidth: upload.width,
+      naturalHeight: upload.height,
+    };
+  }
+
+  /* Upload handlers (template-bound, so unprefixed) */
 
   <template>
     <div class="wireframe-image-field">

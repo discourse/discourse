@@ -77,16 +77,22 @@ export default class ImageArgOverlay extends Component {
 
   /** The overlay's outer `<div>`. Pinned on insert. */
   #overlayEl = null;
+
   /** Hidden file input ref (empty state only). */
   #fileInputEl = null;
+
   /** ResizeObserver shared between marker + chrome. */
   #observer = null;
+
   /** Bound `measure` reference for the window listener. */
   #boundMeasure = null;
+
   /** Per-overlay UppyUpload. Built lazily in `#bootUppy`. */
   #uppyUpload = null;
+
   /** Active FloatKit menu instance for the dark-variant popover. */
   #variantMenu = null;
+
   /**
    * `true` while `#openVariantPopover` is mid-`await` on
    * `menu.show(...)`. Prevents a second `dragenter` (e.g. from an
@@ -95,6 +101,7 @@ export default class ImageArgOverlay extends Component {
    * closed on its expanded-instance branch.
    */
   #opening = false;
+
   /**
    * Bumps when the Uppy instance is created so getters that read
    * Uppy's `@tracked` `uploading` / `uploadProgress` actually open
@@ -104,93 +111,6 @@ export default class ImageArgOverlay extends Component {
    * progress bar would never appear.
    */
   @tracked _uppyReady = false;
-
-  #bootUppy() {
-    if (this.#uppyUpload) {
-      return this.#uppyUpload;
-    }
-    this.#uppyUpload = new UppyUpload(getOwner(this), {
-      id: `wireframe-img-${this.args.blockKey}-${this.args.argName}`,
-      type: "composer",
-      validateUploadedFilesOptions: { imagesOnly: true },
-      uploadDropTargetOptions: () => ({ target: this.#overlayEl }),
-      uploadDone: (upload) => this.#applyUpload(upload),
-    });
-    this._uppyReady = true;
-    return this.#uppyUpload;
-  }
-
-  /**
-   * Routes an `uploadDone` payload into the LIGHT variant of the
-   * image arg, preserving any existing dark variant.
-   *
-   * @param {{id: string, url: string, width: number, height: number}} upload
-   */
-  #applyUpload(upload) {
-    const current = this.#liveValue();
-    const variant = this.#variantFromUpload(upload);
-    const existingDark = current?.dark;
-    const next = existingDark ? { ...variant, dark: existingDark } : variant;
-    this.wireframe._setImageArg(this.args.blockKey, this.args.argName, next);
-    this.#selectOwningBlock();
-  }
-
-  /**
-   * Routes an upload to the DARK variant — preserving light. Wired
-   * to the popover's `onDarkUpload` callback.
-   *
-   * @param {{id: string, url: string, width: number, height: number}} upload
-   */
-  #applyDarkUpload(upload) {
-    const current = this.#liveValue();
-    if (!current) {
-      // Defensive — dark without light makes no semantic sense.
-      this.#applyUpload(upload);
-      return;
-    }
-    const light = { ...current };
-    delete light.dark;
-    const dark = this.#variantFromUpload(upload);
-    this.wireframe._setImageArg(this.args.blockKey, this.args.argName, {
-      ...light,
-      dark,
-    });
-    this.#selectOwningBlock();
-    this.#closeVariantPopover();
-  }
-
-  /**
-   * Selects this overlay's block after a successful drop so the
-   * inspector reflects the freshly uploaded image without a follow-
-   * up click. Idempotent if the block is already selected.
-   */
-  #selectOwningBlock() {
-    if (this.wireframe.selectedBlockKey === this.args.blockKey) {
-      return;
-    }
-    this.wireframe.selectBlock({ key: this.args.blockKey });
-  }
-
-  #variantFromUpload(upload) {
-    return {
-      source: "upload",
-      upload_id: upload.id,
-      url: upload.url,
-      width: upload.width,
-      height: upload.height,
-      naturalWidth: upload.width,
-      naturalHeight: upload.height,
-    };
-  }
-
-  #liveValue() {
-    const entry = this.wireframe._findEntryAndOutletSync(
-      this.args.blockKey
-    )?.entry;
-    return entry?.args?.[this.args.argName] ?? null;
-  }
-
-  /* Computed state */
 
   /**
    * Union of `overlayHovered` and `popoverHovered`. Drives the BEM
@@ -364,6 +284,154 @@ export default class ImageArgOverlay extends Component {
     this.#closeVariantPopover();
   }
 
+  @action
+  setupFilled() {
+    this.#boundMeasure = () => this.measure();
+    this.#observer = new ResizeObserver(this.#boundMeasure);
+    this.#attachObserver();
+    window.addEventListener("resize", this.#boundMeasure);
+    this.measure();
+  }
+
+  @action
+  measure() {
+    const marker = this.markerEl;
+    const chrome = this.chromeEl;
+    if (!marker || !chrome) {
+      this.markerRect = null;
+      return;
+    }
+    const fillsBlock = marker.hasAttribute("data-drop-fills-block");
+    const targetRect = (fillsBlock ? chrome : marker).getBoundingClientRect();
+    const chromeRect = chrome.getBoundingClientRect();
+    const next = {
+      top: targetRect.top - chromeRect.top,
+      left: targetRect.left - chromeRect.left,
+      width: targetRect.width,
+      height: targetRect.height,
+    };
+    const prev = this.markerRect;
+    if (
+      prev &&
+      prev.top === next.top &&
+      prev.left === next.left &&
+      prev.width === next.width &&
+      prev.height === next.height
+    ) {
+      return;
+    }
+    this.markerRect = next;
+  }
+
+  /* Click-to-pick (empty state) */
+
+  @action
+  onActivate(event) {
+    event.stopPropagation();
+    this.wireframe.lastTouchedImageArg = this.args.argName;
+    this.#fileInputEl?.click();
+  }
+
+  @action
+  onKeyActivate(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      this.onActivate(event);
+    }
+  }
+
+  @action
+  onPointerEnter() {
+    this.wireframe.lastTouchedImageArg = this.args.argName;
+  }
+
+  #bootUppy() {
+    if (this.#uppyUpload) {
+      return this.#uppyUpload;
+    }
+    this.#uppyUpload = new UppyUpload(getOwner(this), {
+      id: `wireframe-img-${this.args.blockKey}-${this.args.argName}`,
+      type: "composer",
+      validateUploadedFilesOptions: { imagesOnly: true },
+      uploadDropTargetOptions: () => ({ target: this.#overlayEl }),
+      uploadDone: (upload) => this.#applyUpload(upload),
+    });
+    this._uppyReady = true;
+    return this.#uppyUpload;
+  }
+
+  /**
+   * Routes an `uploadDone` payload into the LIGHT variant of the
+   * image arg, preserving any existing dark variant.
+   *
+   * @param {{id: string, url: string, width: number, height: number}} upload
+   */
+  #applyUpload(upload) {
+    const current = this.#liveValue();
+    const variant = this.#variantFromUpload(upload);
+    const existingDark = current?.dark;
+    const next = existingDark ? { ...variant, dark: existingDark } : variant;
+    this.wireframe.setImageArg(this.args.blockKey, this.args.argName, next);
+    this.#selectOwningBlock();
+  }
+
+  /**
+   * Routes an upload to the DARK variant — preserving light. Wired
+   * to the popover's `onDarkUpload` callback.
+   *
+   * @param {{id: string, url: string, width: number, height: number}} upload
+   */
+  #applyDarkUpload(upload) {
+    const current = this.#liveValue();
+    if (!current) {
+      // Defensive — dark without light makes no semantic sense.
+      this.#applyUpload(upload);
+      return;
+    }
+    const light = { ...current };
+    delete light.dark;
+    const dark = this.#variantFromUpload(upload);
+    this.wireframe.setImageArg(this.args.blockKey, this.args.argName, {
+      ...light,
+      dark,
+    });
+    this.#selectOwningBlock();
+    this.#closeVariantPopover();
+  }
+
+  /**
+   * Selects this overlay's block after a successful drop so the
+   * inspector reflects the freshly uploaded image without a follow-
+   * up click. Idempotent if the block is already selected.
+   */
+  #selectOwningBlock() {
+    if (this.wireframe.selectedBlockKey === this.args.blockKey) {
+      return;
+    }
+    this.wireframe.selectBlock({ key: this.args.blockKey });
+  }
+
+  #variantFromUpload(upload) {
+    return {
+      source: "upload",
+      upload_id: upload.id,
+      url: upload.url,
+      width: upload.width,
+      height: upload.height,
+      naturalWidth: upload.width,
+      naturalHeight: upload.height,
+    };
+  }
+
+  #liveValue() {
+    const entry = this.wireframe.findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    return entry?.args?.[this.args.argName] ?? null;
+  }
+
+  /* Computed state */
+
   /**
    * Opens the dark-variant popover via FloatKit's menu service. No
    * setTimeout / discourseLater here — FloatKit owns the timing.
@@ -444,15 +512,6 @@ export default class ImageArgOverlay extends Component {
 
   /* Filled-state positioning */
 
-  @action
-  setupFilled() {
-    this.#boundMeasure = () => this.measure();
-    this.#observer = new ResizeObserver(this.#boundMeasure);
-    this.#attachObserver();
-    window.addEventListener("resize", this.#boundMeasure);
-    this.measure();
-  }
-
   #attachObserver() {
     if (!this.#observer) {
       return;
@@ -466,58 +525,6 @@ export default class ImageArgOverlay extends Component {
     if (chrome) {
       this.#observer.observe(chrome);
     }
-  }
-
-  @action
-  measure() {
-    const marker = this.markerEl;
-    const chrome = this.chromeEl;
-    if (!marker || !chrome) {
-      this.markerRect = null;
-      return;
-    }
-    const fillsBlock = marker.hasAttribute("data-drop-fills-block");
-    const targetRect = (fillsBlock ? chrome : marker).getBoundingClientRect();
-    const chromeRect = chrome.getBoundingClientRect();
-    const next = {
-      top: targetRect.top - chromeRect.top,
-      left: targetRect.left - chromeRect.left,
-      width: targetRect.width,
-      height: targetRect.height,
-    };
-    const prev = this.markerRect;
-    if (
-      prev &&
-      prev.top === next.top &&
-      prev.left === next.left &&
-      prev.width === next.width &&
-      prev.height === next.height
-    ) {
-      return;
-    }
-    this.markerRect = next;
-  }
-
-  /* Click-to-pick (empty state) */
-
-  @action
-  onActivate(event) {
-    event.stopPropagation();
-    this.wireframe.lastTouchedImageArg = this.args.argName;
-    this.#fileInputEl?.click();
-  }
-
-  @action
-  onKeyActivate(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      this.onActivate(event);
-    }
-  }
-
-  @action
-  onPointerEnter() {
-    this.wireframe.lastTouchedImageArg = this.args.argName;
   }
 
   <template>
