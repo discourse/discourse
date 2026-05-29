@@ -58,7 +58,6 @@ let started = false;
 function createApplication(config, settings) {
   const app = Application.create(config);
 
-  app.injectTestHelpers();
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
