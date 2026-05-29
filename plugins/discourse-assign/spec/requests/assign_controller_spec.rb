@@ -19,6 +19,13 @@ RSpec.describe DiscourseAssign::AssignController do
 
   fab!(:post)
 
+  def allow_group_to_assign_in_category(category, group)
+    category.custom_fields[
+      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
+    ] = group.id.to_s
+    category.save_custom_fields
+  end
+
   describe "only allow users from allowed groups to assign" do
     it "filters requests where current_user is not member of an allowed group" do
       sign_in(user_in_non_allowed_group)
@@ -116,6 +123,24 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(suggestions).to contain_exactly(admin.username)
     end
 
+    it "returns target scoped groups when suggestions are requested for a scoped category" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      sign_in(scoped_user)
+      get "/assign/suggestions.json", params: { target_id: topic.id, target_type: "Topic" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["assign_allowed_on_groups"]).to contain_exactly(scoped_group.name)
+      expect(response.parsed_body["assign_allowed_for_groups"]).to contain_exactly(
+        scoped_group.name,
+      )
+    end
+
     def assign_user_to_post
       assignee = Fabricate(:user, groups: [allowed_group])
       Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
@@ -151,6 +176,34 @@ RSpec.describe DiscourseAssign::AssignController do
 
       put "/assign/unassign.json", params: { target_id: pm_topic.id, target_type: "Topic" }
       expect(response.status).to eq(404)
+    end
+
+    it "only allows category scoped users to unassign topics in the scoped category" do
+      SiteSetting.assign_allowed_on_groups = ""
+      allowed_category = Fabricate(:category)
+      other_category = Fabricate(:category)
+      allowed_topic =
+        Fabricate(:post).topic.tap { |topic| topic.update!(category: allowed_category) }
+      other_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: other_category) }
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(allowed_category, scoped_group)
+      Fabricate(
+        :topic_assignment,
+        target: allowed_topic,
+        assigned_to: admin,
+        assigned_by_user: admin,
+      )
+      Fabricate(:topic_assignment, target: other_topic, assigned_to: admin, assigned_by_user: admin)
+
+      sign_in(scoped_user)
+      put "/assign/unassign.json", params: { target_id: other_topic.id, target_type: "Topic" }
+      expect(response.status).to eq(403)
+      expect(other_topic.reload.assignment).to be_present
+
+      put "/assign/unassign.json", params: { target_id: allowed_topic.id, target_type: "Topic" }
+      expect(response.status).to eq(200)
+      expect(allowed_topic.reload.assignment).to be_blank
     end
   end
 
@@ -251,6 +304,39 @@ RSpec.describe DiscourseAssign::AssignController do
 
       expect(response.status).to eq(200)
       expect(post.topic.reload.assignment.assigned_to).to eq(assign_allowed_group)
+    end
+
+    it "only allows category scoped users to assign in the exact scoped category" do
+      SiteSetting.assign_allowed_on_groups = ""
+      parent_category = Fabricate(:category)
+      child_category = Fabricate(:category, parent_category: parent_category)
+      parent_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: parent_category) }
+      child_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: child_category) }
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      assignee = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(parent_category, scoped_group)
+
+      sign_in(scoped_user)
+      put "/assign/assign.json",
+          params: {
+            target_id: parent_topic.id,
+            target_type: "Topic",
+            username: assignee.username,
+          }
+      expect(response.status).to eq(200)
+      expect(parent_topic.reload.assignment.assigned_to).to eq(assignee)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: child_topic.id,
+            target_type: "Topic",
+            username: assignee.username,
+          }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["error"]).to eq(
+        I18n.t("discourse_assign.forbidden_assigner_not_allowed"),
+      )
     end
 
     it "fails to assign topic to the user if its already assigned to the same user" do

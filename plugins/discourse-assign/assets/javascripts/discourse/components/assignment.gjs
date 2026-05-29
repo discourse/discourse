@@ -18,6 +18,29 @@ export default class Assignment extends Component {
     return this.args.assignment.username || this.args.assignment.group_name;
   }
 
+  get targetId() {
+    return this.args.assignment.targetId || this.args.assignment.target?.id;
+  }
+
+  get targetType() {
+    return this.args.assignment.targetType || "Topic";
+  }
+
+  get suggestions() {
+    return this.taskActions.suggestionsFor(this.targetId, this.targetType);
+  }
+
+  get allowedGroups() {
+    return this.taskActions.allowedGroupsFor(this.targetId, this.targetType);
+  }
+
+  get allowedGroupsForAssignment() {
+    return this.taskActions.allowedGroupsForAssignmentFor(
+      this.targetId,
+      this.targetType
+    );
+  }
+
   get status() {
     return this.args.assignment.status || this.assignStatuses[0];
   }
@@ -52,7 +75,7 @@ export default class Assignment extends Component {
 
   @action
   setAssignee([newAssignee]) {
-    if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
+    if (this.allowedGroupsForAssignment.includes(newAssignee)) {
       this.args.assignment.username = null;
       this.args.assignment.group_name = newAssignee;
     } else {
@@ -84,10 +107,9 @@ export default class Assignment extends Component {
           mobilePlacementStrategy="absolute"
           includeGroups=true
           customSearchOptions=(hash
-            assignableGroups=true
-            defaultSearchResults=this.taskActions.suggestions
+            assignableGroups=true defaultSearchResults=this.suggestions
           )
-          groupMembersOf=this.taskActions.allowedGroups
+          groupMembersOf=this.allowedGroups
           maximum=1
           tabindex=1
           expandedOnInsert=(not this.assignee)

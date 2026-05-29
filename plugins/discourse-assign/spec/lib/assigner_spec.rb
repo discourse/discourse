@@ -10,6 +10,13 @@ RSpec.describe Assigner do
   let(:pm_post) { Fabricate(:private_message_post) }
   let(:pm) { pm_post.topic }
 
+  def allow_group_to_assign_in_category(category, group)
+    category.custom_fields[
+      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
+    ] = group.id.to_s
+    category.save_custom_fields
+  end
+
   describe "assigning and unassigning" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
@@ -397,6 +404,71 @@ RSpec.describe Assigner do
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
+      end
+    end
+
+    describe "category scoped assignment permissions" do
+      before { SiteSetting.assign_allowed_on_groups = "" }
+
+      it "allows group members to assign members of the same scoped group in the scoped category" do
+        category = Fabricate(:category)
+        topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+        group = Fabricate(:group)
+        assigner = Fabricate(:user, groups: [group])
+        assignee = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(category, group)
+
+        result = described_class.new(topic, assigner).assign(assignee)
+
+        expect(result[:success]).to eq(true)
+        expect(topic.reload.assignment.assigned_to).to eq(assignee)
+      end
+
+      it "does not apply parent category rules to subcategories" do
+        parent_category = Fabricate(:category)
+        child_category = Fabricate(:category, parent_category: parent_category)
+        parent_topic =
+          Fabricate(:post).topic.tap { |topic| topic.update!(category: parent_category) }
+        child_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: child_category) }
+        group = Fabricate(:group)
+        assigner = Fabricate(:user, groups: [group])
+        assignee = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(parent_category, group)
+
+        parent_result = described_class.new(parent_topic, assigner).assign(assignee)
+        child_result = described_class.new(child_topic, assigner).assign(assignee)
+
+        expect(parent_result[:success]).to eq(true)
+        expect(child_result).to eq(success: false, reason: :forbidden_assigner_not_allowed)
+      end
+
+      it "allows globally enabled group members to be assigned outside scoped categories" do
+        category = Fabricate(:category)
+        other_category = Fabricate(:category)
+        other_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: other_category) }
+        group = Fabricate(:group)
+        assignee = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(category, group)
+
+        scoped_result = described_class.new(other_topic, admin).assign(assignee)
+        SiteSetting.assign_allowed_on_groups = group.id.to_s
+        global_result = described_class.new(other_topic, admin).assign(assignee)
+
+        expect(scoped_result).to eq(success: false, reason: :forbidden_assign_to)
+        expect(global_result[:success]).to eq(true)
+      end
+
+      it "allows the scoped group to be assigned directly in the scoped category" do
+        category = Fabricate(:category)
+        topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+        group = Fabricate(:group)
+        assigner = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(category, group)
+
+        result = described_class.new(topic, assigner).assign(group)
+
+        expect(result[:success]).to eq(true)
+        expect(topic.reload.assignment.assigned_to).to eq(group)
       end
     end
 

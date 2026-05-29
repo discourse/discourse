@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../lib/discourse_assign/assignment_permissions"
+
 class Assignment < ActiveRecord::Base
   VALID_TYPES = %w[topic post].freeze
 
@@ -111,7 +113,7 @@ class Assignment < ActiveRecord::Base
         assignment_note: note,
         assignment_status: status,
       },
-      user_ids: User.assign_allowed.pluck(:id),
+      user_ids: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target || topic),
     )
   end
 
