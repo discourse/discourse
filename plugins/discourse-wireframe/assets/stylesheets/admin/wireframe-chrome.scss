@@ -178,7 +178,9 @@ body.wireframe-active {
         .wireframe-drop-zone,
         .wireframe-block-chrome__resize-handle,
         .wireframe-block-chrome__overlap-badge,
-        .wireframe-empty-drop-placeholder
+        .wireframe-empty-drop-placeholder,
+        .wireframe-image-arg-overlay,
+        .wireframe-image-resize-overlay
       ) {
       pointer-events: none;
 
@@ -460,8 +462,10 @@ body.wireframe-active {
     }
 
     /* Drop-to-replace overlay painted on top of a filled image
-       marker. Invisible until a file drag enters — then the dashed
-       outline + tinted background mark it as the active drop target. */
+       marker. Invisible until a file drag enters — then a soft tint
+       lays over the existing image (not a solid wash) so the user
+       still sees the picture underneath while the dashed outline
+       marks the active drop target. */
 
     &--filled {
       z-index: 3;
@@ -471,8 +475,13 @@ body.wireframe-active {
     &--drag-over {
       outline: 2px dashed var(--tertiary);
       outline-offset: -4px;
-      background: var(--tertiary-very-low);
+      background: rgb(var(--tertiary-rgb), 0.25);
       color: var(--primary);
+    }
+
+    &--uploading {
+      background: rgb(var(--tertiary-rgb), 0.25);
+      backdrop-filter: blur(2px);
     }
 
     &__content {
@@ -492,6 +501,73 @@ body.wireframe-active {
 
     &__label {
       font-size: var(--font-down-1);
+    }
+
+    /* Upload progress — same visual pattern as the FormKit
+       UppyImageUploader (`file-uploader__progress-status`). Sits
+       inside the overlay so it tracks the marker rect (or the
+       chrome rect for whole-block drop zones). */
+
+    &__progress {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 80%;
+      max-width: 16rem;
+      pointer-events: none;
+    }
+
+    &__progress-track {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--primary-low);
+      overflow: hidden;
+    }
+
+    &__progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--tertiary);
+      transition: width 80ms linear;
+    }
+
+    &__progress-label {
+      font-size: var(--font-down-1);
+      text-align: center;
+      color: var(--primary);
+    }
+  }
+
+  /* Dark-variant drop popover content rendered via FloatKit's
+     `menu.show()` from `image-arg-overlay.gjs`. The FloatKit
+     wrapper handles positioning + the portal mount; this rule
+     just styles the inner drop target. `pointer-events: auto`
+     so file drags reach the popover's own Uppy DropTarget. */
+
+  .wireframe-image-variant-drop-popover {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    cursor: copy;
+    pointer-events: auto;
+    min-width: 180px;
+    transition: background 80ms ease-out;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &--drag-over {
+      background: var(--tertiary-low);
+
+      .d-icon {
+        color: var(--tertiary);
+      }
     }
   }
 

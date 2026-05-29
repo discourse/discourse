@@ -359,7 +359,11 @@ en:
         empty_cell_hint: "Add a block to this cell"
         image_empty_label: "Add an image"
         image_empty_label_named: "Add %{label}"
-        image_drop_replace: "Drop to replace"
+        image_drop_replace: "Image will be overwritten"
+        image_drop_replace_light: "Replace light variant"
+        image_drop_replace_dark: "Replace dark variant"
+        image_drop_add_dark: "Add dark variant"
+        image_uploading: "Uploading… %{progress}%"
         image_menu_replace: "Replace image"
         image_menu_remove: "Remove image"
         ghost:

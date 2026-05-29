@@ -1866,12 +1866,20 @@ export default class WireframeService extends Service {
       return;
     }
 
+    // Programmatic callers (drag-and-drop auto-select, command-palette,
+    // tests) may pass only `{ key }`. Resolve the rest from the live layout
+    // so the inspector has the block's real metadata. Without this the args
+    // would round-trip through `inferSchemaFromValues` and richly-typed
+    // controls (image, icon, color) would degrade to the generic "any" code
+    // editor.
+    const hydrated = this._hydrateSelectionByKey(data);
+
     // Bind `args` to the LIVE `entry.args` (a `trackedObject`) so consumers
     // that need a live read (canvas-side, undo restoration, etc.) see
     // current values. Walks `_getOutletLayouts()`, which returns the
     // resolved entry per outlet — so when session-drafts are active, we
     // bind to the draft entry, not the underlying layer's.
-    const liveData = { ...data };
+    const liveData = { ...hydrated };
     this._bindLiveArgs(liveData);
 
     // Snapshot the args at selection time as a plain object. `argsSnapshot`
@@ -1920,6 +1928,43 @@ export default class WireframeService extends Service {
     // tear down the input the user is typing in and trigger
     // "@name=... already in use" errors on rapid reselect.
     this.selectedBlockData = this._withInferredMetadata(liveData);
+  }
+
+  /**
+   * Fills in any selection fields that the caller didn't supply by resolving
+   * the key against the current layout. A no-op when the caller already
+   * passed full data (block-chrome's own click handler does, since it has
+   * the entry in hand).
+   *
+   * @param {{key: string}} data
+   * @returns {Object}
+   */
+  _hydrateSelectionByKey(data) {
+    if (!data?.key) {
+      return data;
+    }
+    const needsHydration =
+      data.name == null || data.args == null || data.metadata == null;
+    if (!needsHydration) {
+      return data;
+    }
+    const located = this._findEntryAndOutletSync(data.key);
+    if (!located) {
+      return data;
+    }
+    const blockName = data.name ?? this._blockNameOf(located.entry);
+    const metadata =
+      data.metadata ??
+      (blockName ? this._metadataForName(blockName) : null) ??
+      null;
+    return {
+      ...data,
+      name: blockName,
+      args: data.args ?? located.entry.args,
+      metadata,
+      outletName: data.outletName ?? located.outletName,
+      conditions: data.conditions ?? located.entry.conditions ?? null,
+    };
   }
 
   /**

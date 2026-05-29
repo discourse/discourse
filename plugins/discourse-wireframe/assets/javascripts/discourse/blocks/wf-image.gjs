@@ -85,6 +85,7 @@ export default class WFImage extends Component {
             <a href={{@link}} data-block-arg="link">
               <DLightDarkImg
                 data-block-arg="image"
+                data-drop-fills-block
                 @lightImg={{@image}}
                 @darkImg={{darkVariantWithLightFrame @image}}
                 alt={{@alt}}
@@ -93,6 +94,7 @@ export default class WFImage extends Component {
           {{else}}
             <DLightDarkImg
               data-block-arg="image"
+              data-drop-fills-block
               @lightImg={{@image}}
               @darkImg={{darkVariantWithLightFrame @image}}
               alt={{@alt}}
@@ -113,6 +115,7 @@ export default class WFImage extends Component {
         <DLightDarkImg
           class="wf-image"
           data-block-arg="image"
+          data-drop-fills-block
           @lightImg={{@image}}
           @darkImg={{darkVariantWithLightFrame @image}}
           alt={{@alt}}

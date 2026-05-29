@@ -78,6 +78,32 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.false(this.editor.isBlockSelected("wf:svc-test-tile:8"));
       assert.false(this.editor.isBlockSelected(null));
     });
+
+    test("selectBlock({ key }) resolves name, args, and metadata from the layout", async function (assert) {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      const layout = await registerTestLayout(getOwner(this));
+      const stableKey = layout[0].__stableKey;
+      const key = `wf:svc-test-tile:${stableKey}`;
+
+      // Programmatic callers (eg. drag-and-drop auto-select) only have the
+      // block key. selectBlock must hydrate the rest from the live layout so
+      // the inspector sees the real schema — without it the args render via
+      // inferSchemaFromValues and image / icon / etc. controls degrade to
+      // the generic "any" code editor.
+      this.editor.selectBlock({ key });
+
+      assert.strictEqual(this.editor.selectedBlockKey, key);
+      assert.strictEqual(
+        this.editor.selectedBlockData.name,
+        "wf:svc-test-tile"
+      );
+      assert.deepEqual(this.editor.selectedBlockData.argsSnapshot, {
+        title: "Original",
+      });
+      assert.deepEqual(this.editor.selectedBlockData.metadata?.args, {
+        title: { type: "string" },
+      });
+    });
   });
 
   module("updateSelectedArg / undo / redo / resetAll", function (innerHooks) {
