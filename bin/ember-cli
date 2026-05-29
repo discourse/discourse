@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "bundler/setup"
 require "webrick"
 
 ALLOWED_ARGS = %w[-u --build]
@@ -70,7 +71,7 @@ stub_server =
     begin
       WEBrick::HTTPServer.new(
         Port: stub_port,
-        BindAddress: "127.0.0.1",
+        BindAddress: "0.0.0.0",
         Logger: WEBrick::Log.new(File::NULL),
         AccessLog: [],
       )
