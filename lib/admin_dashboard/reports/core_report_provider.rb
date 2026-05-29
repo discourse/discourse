@@ -9,8 +9,11 @@ module AdminDashboard
         SOURCE_NAME
       end
 
+      # The standard/default provider intentionally has no label, so its
+      # reports render without a pill. Labels exist only to distinguish
+      # non-standard (plugin-contributed) sources.
       def self.label
-        I18n.t("dashboard.reports_section.providers.core_report")
+        nil
       end
 
       def self.resolve_many(identifiers, guardian:)

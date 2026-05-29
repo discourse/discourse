@@ -18,9 +18,10 @@ module AdminDashboard
         raise NotImplementedError
       end
 
-      # @return [String] a short, translated label rendered as a tag pill in
-      #                  the UI to distinguish this provider from others.
-      #                  Only shown when more than one provider is registered.
+      # @return [String, nil] a short, translated label rendered as a tag pill
+      #                  in the UI to distinguish this provider's reports from
+      #                  the standard ones. Return nil for the standard/default
+      #                  provider so its reports render without a pill.
       def self.label
         raise NotImplementedError
       end

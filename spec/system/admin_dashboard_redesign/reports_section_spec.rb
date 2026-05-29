@@ -100,7 +100,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(dashboard).to have_no_add_tile
   end
 
-  it "hides provider label pills when only one provider is registered" do
+  it "does not render a label pill for standard reports" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
     page.visit("/admin")

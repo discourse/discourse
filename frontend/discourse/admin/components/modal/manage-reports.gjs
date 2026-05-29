@@ -45,10 +45,6 @@ export default class ManageReports extends Component {
     this.load();
   }
 
-  get showLabels() {
-    return this.providers.length > 1;
-  }
-
   get enabledKeys() {
     return new Set(this.enabledOrder);
   }
@@ -342,7 +338,7 @@ export default class ManageReports extends Component {
                 <div class="manage-reports__row-text">
                   <div class="manage-reports__row-heading">
                     <span class="manage-reports__title">{{row.title}}</span>
-                    {{#if this.showLabels}}
+                    {{#if row.label}}
                       <span
                         class="manage-reports__label"
                         data-source={{row.source}}

@@ -39,10 +39,6 @@ export default class DashboardReports extends Component {
     return this.args.data?.items ?? [];
   }
 
-  get showLabels() {
-    return this.args.data?.show_labels ?? false;
-  }
-
   get canEdit() {
     return this.currentUser?.admin;
   }
