@@ -81,10 +81,18 @@ RSpec.describe AdminUserListSerializer do
       expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
     end
 
-    it "returns a staged user's emails" do
-      user.staged = true
+    it "doesn't return a staged user's emails without emails_desired" do
+      user.update!(staged: true)
       fabricate_secondary_emails_for(user)
       json = serialize(user, admin)
+      expect(json[:email]).to eq(nil)
+      expect(json[:secondary_emails]).to eq(nil)
+    end
+
+    it "returns a staged user's emails for admins when emails_desired is true" do
+      user.update!(staged: true)
+      fabricate_secondary_emails_for(user)
+      json = serialize(user, admin, emails_desired: true)
       expect(json[:email]).to eq("user@email.com")
       expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
     end

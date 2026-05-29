@@ -36,7 +36,7 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_email?
     # staff members can always see their email
-    (scope.is_staff? && (object.id == scope.user.id || object.staged?)) ||
+    (scope.is_staff? && object.id == scope.user.id) ||
       (@options[:emails_desired] && scope.can_check_emails?(object))
   end
 
