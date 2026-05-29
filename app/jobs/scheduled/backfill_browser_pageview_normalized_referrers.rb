@@ -32,7 +32,6 @@ module Jobs
             normalized_referrer_version IS NULL
             OR normalized_referrer_version < :version
           )
-        ORDER BY id
         LIMIT :limit
       SQL
     end
