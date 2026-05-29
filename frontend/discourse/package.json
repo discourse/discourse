@@ -121,7 +121,7 @@
     "@embroider/core": "^4.6.0",
     "@embroider/macros": "^1.20.3",
     "@embroider/router": "^3.0.6",
-    "@embroider/vite": "^1.7.2",
+    "@embroider/vite": "^1.7.3",
     "@floating-ui/dom": "^1.7.5",
     "@glimmer/component": "^2.0.0",
     "@rolldown/pluginutils": "1.0.0",
