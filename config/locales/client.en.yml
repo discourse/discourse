@@ -3820,6 +3820,15 @@ en:
         dismiss_all: "Dismiss all"
         dismiss_new_topics: "Dismiss new topics"
         dismiss_new_replies: "Dismiss new replies"
+        dismiss_new_topics_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
+        dismiss_all_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
         dismiss_new_menu: "Dismiss options"
         dismiss_and_stop_tracking: "Dismiss and stop tracking"
         dismiss_new: "Dismiss New"

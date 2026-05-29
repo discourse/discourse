@@ -178,6 +178,85 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
     assert.dom("#dismiss-new-menu-bottom").doesNotExist();
   });
 
+  test("shows count of selected topics in the dismiss new topics button", async function (assert) {
+    this.currentUser.new_new_view_enabled = true;
+    this.showNewDismissCombo = true;
+    this.model.params.subset = "topics";
+    this.selectedTopics = [{ id: 1 }, { id: 2 }];
+
+    await render(
+      <template>
+        <TopicDismissButtons
+          @position="top"
+          @model={{this.model}}
+          @selectedTopics={{this.selectedTopics}}
+          @showResetNew={{this.showResetNew}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showDismissRead={{false}}
+          @resetNew={{this.resetNew}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#dismiss-new-top")
+      .hasText(
+        i18n("topics.bulk.dismiss_new_topics_with_selected", { count: 2 })
+      );
+  });
+
+  test("shows count of selected topics in the dismiss new replies button", async function (assert) {
+    this.currentUser.new_new_view_enabled = true;
+    this.showNewDismissCombo = true;
+    this.model.params.subset = "replies";
+    this.selectedTopics = [{ id: 1 }, { id: 2 }];
+
+    await render(
+      <template>
+        <TopicDismissButtons
+          @position="top"
+          @model={{this.model}}
+          @selectedTopics={{this.selectedTopics}}
+          @showResetNew={{this.showResetNew}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showDismissRead={{false}}
+          @resetNew={{this.resetNew}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#dismiss-new-top")
+      .hasText(
+        i18n("topics.bulk.dismiss_new_replies_with_selected", { count: 2 })
+      );
+  });
+
+  test("shows count of selected topics in the dismiss all button", async function (assert) {
+    this.currentUser.new_new_view_enabled = true;
+    this.showNewDismissCombo = true;
+    this.model.params.subset = "all";
+    this.selectedTopics = [{ id: 1 }, { id: 2 }];
+
+    await render(
+      <template>
+        <TopicDismissButtons
+          @position="top"
+          @model={{this.model}}
+          @selectedTopics={{this.selectedTopics}}
+          @showResetNew={{this.showResetNew}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showDismissRead={{false}}
+          @resetNew={{this.resetNew}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#dismiss-new-top")
+      .hasText(i18n("topics.bulk.dismiss_all_with_selected", { count: 2 }));
+  });
+
   test("keeps the legacy dismiss new button outside the experimental new view", async function (assert) {
     await render(
       <template>
