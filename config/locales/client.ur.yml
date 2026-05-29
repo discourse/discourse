@@ -151,6 +151,15 @@ ur:
       placeholder: تاریخ
       from_placeholder: "تاریخ سے"
       to_placeholder: "تاریخ تک"
+    date_range_picker:
+      apply: "لاگو کریں"
+      start_date: "تاریخِ آغاز"
+      presets:
+        last_7_days: "پچھلے 7 دن"
+        last_30_days: "پچھلے 30 دن"
+        last_3_months: "گزشتہ 3 ماہ"
+        last_6_months: "گزشتہ 6 ماہ"
+        last_year: "گزشتہ سال"
     languages:
       ar:
         name: عربی
@@ -5822,8 +5831,6 @@ ur:
             enabled_heading: "فعال شدہ"
             all_heading: "تمام رپورٹیں"
             apply: "لاگو کریں"
-            move_up: "اوپر جائیں"
-            move_down: "نیچے جائیں"
         site_traffic:
           series:
             anonymous: "گمنام"

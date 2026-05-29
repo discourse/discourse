@@ -22,6 +22,12 @@ require_relative "lib/discourse_assign/engine"
 require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/assign_topic/v1"
+      DiscourseWorkflows::Nodes::AssignTopic::V1
+    end
+  end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
 
   reloadable_patch do |plugin|
@@ -1021,6 +1027,8 @@ after_initialize do
 
     on(:unaccepted_solution) do |post|
       next if SiteSetting.assignment_status_on_unsolve.blank?
+      next if post.topic.reload.solved.present?
+
       assignments = Assignment.includes(:target).where(topic: post.topic)
       assignments.each do |assignment|
         assigned_user = User.find_by(id: assignment.assigned_to_id)

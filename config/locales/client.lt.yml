@@ -184,6 +184,13 @@ lt:
       placeholder: data
       from_placeholder: "nuo datos"
       to_placeholder: "iki šiol"
+    date_range_picker:
+      apply: "Kandidatuoti"
+      presets:
+        last_7_days: "Paskutinės 7 dienos"
+        last_30_days: "Paskutinės 30 dienų"
+        last_3_months: "Paskutiniai 3 mėnesiai"
+        last_6_months: "Paskutiniai 6 mėnesiai"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "įrašas #%{postNumber} by @%{username}"

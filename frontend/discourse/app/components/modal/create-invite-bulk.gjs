@@ -9,7 +9,7 @@ const CreateInviteBulk = <template>
   <CreateInviteUploader @autoFindInput={{false}} as |uploader setElement|>
     <DModal
       @title={{i18n "user.invited.bulk_invite.text"}}
-      class="create-invite-bulk-modal -large"
+      class="create-invite-bulk-modal --large"
       @closeModal={{@closeModal}}
     >
       <:body>

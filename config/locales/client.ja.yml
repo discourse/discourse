@@ -120,6 +120,15 @@ ja:
       placeholder: 日付
       from_placeholder: "開始日"
       to_placeholder: "終了日"
+    date_range_picker:
+      apply: "適用"
+      start_date: "開始日"
+      presets:
+        last_7_days: "過去 7 日間"
+        last_30_days: "過去 30 日間"
+        last_3_months: "過去 3 か月"
+        last_6_months: "過去 6 か月"
+        last_year: "昨年"
     languages:
       ar:
         name: アラビア語
@@ -5707,8 +5716,6 @@ ja:
             enabled_heading: "有効"
             all_heading: "すべてのレポート"
             apply: "適用"
-            move_up: "上に移動"
-            move_down: "下に移動"
         configure:
           button: "構成"
         site_traffic:

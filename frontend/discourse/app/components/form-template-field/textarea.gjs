@@ -25,15 +25,15 @@ export default class FormTemplateFieldTextarea extends Component {
 
   @action
   handleReplaceText(oldVal, newVal) {
-    if (this.value?.includes(oldVal)) {
-      const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const regex = new RegExp(escapedOldVal, "g");
-      this.value = this.value.replace(regex, newVal ?? "");
-
-      schedule("afterRender", () => {
-        this.args.onChange?.();
-      });
+    if (!this.value?.includes(oldVal)) {
+      return;
     }
+
+    this.value = this.value.replace(oldVal, newVal ?? "");
+
+    schedule("afterRender", () => {
+      this.args.onChange?.();
+    });
   }
 
   @action

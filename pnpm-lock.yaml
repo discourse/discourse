@@ -15,6 +15,9 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: 387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f
     path: patches/babel-plugin-debug-macros@0.3.4.patch
+  ember-exam@10.1.0:
+    hash: 1b2f23c19eb9a2a0eb935bfcf98e0a5e9f77d46c41bd1b5c7d12ef4369e067e3
+    path: patches/ember-exam@10.1.0.patch
   ember-source@6.10.1:
     hash: 85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926
     path: patches/ember-source@6.10.1.patch
@@ -206,6 +209,24 @@ importers:
 
   frontend/discourse:
     dependencies:
+      '@codemirror/autocomplete':
+        specifier: ^6.20.1
+        version: 6.20.2
+      '@codemirror/commands':
+        specifier: ^6.10.3
+        version: 6.10.3
+      '@codemirror/lang-javascript':
+        specifier: ^6.2.5
+        version: 6.2.5
+      '@codemirror/language':
+        specifier: ^6.12.3
+        version: 6.12.3
+      '@codemirror/state':
+        specifier: ^6.6.0
+        version: 6.6.0
+      '@codemirror/view':
+        specifier: ^6.40.0
+        version: 6.43.0
       '@discourse/gif':
         specifier: ^1.0.0
         version: 1.0.0
@@ -266,6 +287,18 @@ importers:
       '@json-editor/json-editor':
         specifier: 2.15.2
         version: 2.15.2
+      '@lezer/common':
+        specifier: ^1.5.2
+        version: 1.5.2
+      '@lezer/highlight':
+        specifier: ^1.2.3
+        version: 1.2.3
+      '@lezer/javascript':
+        specifier: ^1.5.4
+        version: 1.5.4
+      '@lezer/lr':
+        specifier: ^1.4.8
+        version: 1.4.10
       ace-builds:
         specifier: ^1.43.6
         version: 1.43.6
@@ -278,12 +311,18 @@ importers:
       chartjs-plugin-datalabels:
         specifier: 2.2.0
         version: 2.2.0(chart.js@4.5.1)
+      codemirror:
+        specifier: ^6.0.2
+        version: 6.0.2
       decorator-transforms:
         specifier: ^2.3.2
         version: 2.3.2(@babel/core@7.29.0)
       diff:
         specifier: ^9.0.0
         version: 9.0.0
+      elkjs:
+        specifier: ^0.8.2
+        version: 0.8.2
       ember-curry-component:
         specifier: ^0.4.0
         version: 0.4.0(@babel/core@7.29.0)
@@ -374,9 +413,30 @@ importers:
       prosemirror-view:
         specifier: ^1.41.8
         version: 1.41.8
+      rete:
+        specifier: ^2.0.6
+        version: 2.0.6
+      rete-area-plugin:
+        specifier: ^2.1.5
+        version: 2.1.5(rete@2.0.6)
+      rete-auto-arrange-plugin:
+        specifier: ^2.0.2
+        version: 2.0.2(elkjs@0.8.2)(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)(web-worker@1.5.0)
+      rete-connection-plugin:
+        specifier: ^2.0.5
+        version: 2.0.5(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)
+      rete-history-plugin:
+        specifier: ^2.1.1
+        version: 2.1.1(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)
+      rete-render-utils:
+        specifier: ^2.0.3
+        version: 2.0.3(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
+      web-worker:
+        specifier: ^1.5.0
+        version: 1.5.0
     devDependencies:
       '@babel/core':
         specifier: ^7.28.5
@@ -527,7 +587,7 @@ importers:
         version: 6.1.1
       ember-exam:
         specifier: ^10.1.0
-        version: 10.1.0(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33))
+        version: 10.1.0(patch_hash=1b2f23c19eb9a2a0eb935bfcf98e0a5e9f77d46c41bd1b5c7d12ef4369e067e3)(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -1576,6 +1636,30 @@ packages:
     engines: {node: '>=0.1.95'}
     hasBin: true
 
+  '@codemirror/autocomplete@6.20.2':
+    resolution: {integrity: sha512-G5FPkgIiLjOgZMjqVjvuKQ1rGPtHogLldJr33eFJdVLtmwY+giGrlv/ewljLz6b9BSQLkjxuwBc6g6omDM+YxQ==}
+
+  '@codemirror/commands@6.10.3':
+    resolution: {integrity: sha512-JFRiqhKu+bvSkDLI+rUhJwSxQxYb759W5GBezE8Uc8mHLqC9aV/9aTC7yJSqCtB3F00pylrLCwnyS91Ap5ej4Q==}
+
+  '@codemirror/lang-javascript@6.2.5':
+    resolution: {integrity: sha512-zD4e5mS+50htS7F+TYjBPsiIFGanfVqg4HyUz6WNFikgOPf2BgKlx+TQedI1w6n/IqRBVBbBWmGFdLB/7uxO4A==}
+
+  '@codemirror/language@6.12.3':
+    resolution: {integrity: sha512-QwCZW6Tt1siP37Jet9Tb02Zs81TQt6qQrZR2H+eGMcFsL1zMrk2/b9CLC7/9ieP1fjIUMgviLWMmgiHoJrj+ZA==}
+
+  '@codemirror/lint@6.9.6':
+    resolution: {integrity: sha512-6Kp7r6XfCi/D/5sdXieMfg9pJU1bUEx96WITuLU6ESaKizCz0QHFMjY/TaFSbigDdEAIgi93itLBIUETP4oK+A==}
+
+  '@codemirror/search@6.7.0':
+    resolution: {integrity: sha512-ZvGm99wc/s2cITtMT15LFdn8aH/aS+V+DqyGq/N5ZlV5vWtH+nILvC2nw0zX7ByNoHHDZ2IxxdW38O0tc5nVHg==}
+
+  '@codemirror/state@6.6.0':
+    resolution: {integrity: sha512-4nbvra5R5EtiCzr9BTHiTLc+MLXK2QGiAVYMyi8PkQd3SR+6ixar/Q/01Fa21TBIDOZXgeWV4WppsQolSreAPQ==}
+
+  '@codemirror/view@6.43.0':
+    resolution: {integrity: sha512-V7ZCLQO3Jus9hzh2jVCCPW3mO4IBMr43O37PqSUYautJSnnJF41YlgLw21x0fLJTYvJ+Vkm6Gp+qKGH9pltgXA==}
+
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
@@ -2568,6 +2652,21 @@ packages:
 
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
+
+  '@lezer/common@1.5.2':
+    resolution: {integrity: sha512-sxQE460fPZyU3sdc8lafxiPwJHBzZRy/udNFynGQky1SePYBdhkBl1kOagA9uT3pxR8K09bOrmTUqA9wb/PjSQ==}
+
+  '@lezer/highlight@1.2.3':
+    resolution: {integrity: sha512-qXdH7UqTvGfdVBINrgKhDsVTJTxactNNxLk7+UMwZhU13lMHaOBlJe9Vqp907ya56Y3+ed2tlqzys7jDkTmW0g==}
+
+  '@lezer/javascript@1.5.4':
+    resolution: {integrity: sha512-vvYx3MhWqeZtGPwDStM2dwgljd5smolYD2lR2UyFcHfxbBQebqx8yjmFmxtJ/E6nN6u1D9srOiVWm3Rb4tmcUA==}
+
+  '@lezer/lr@1.4.10':
+    resolution: {integrity: sha512-rnCpTIBafOx4mRp43xOxDJbFipJm/c0cia/V5TiGlhmMa+wsSdoGmUN3w5Bqrks/09Q/D4tNAmWaT8p6NRi77A==}
+
+  '@marijn/find-cluster-break@1.0.2':
+    resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
 
   '@messageformat/runtime@3.0.2':
     resolution: {integrity: sha512-dkIPDCjXcfhSHgNE1/qV6TeczQZR59Yx0xXeafVKgK3QVWoxc38ljwpksUpnzCGvN151KUbCJTDZVmahtf1YZw==}
@@ -4166,6 +4265,9 @@ packages:
     resolution: {integrity: sha512-FMabTRlc5t5zjdenF6mS0MBeFZm0XqHqeOkcskKFb/LYCcRQ5fVgLOHVc4Lq9CqABd9zhjwPjMBCJvMCziSVtA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  codemirror@6.0.2:
+    resolution: {integrity: sha512-VhydHotNW5w1UGK0Qj96BwSk/Zqbp9WbnyK2W/eVMv4QyF41INRGpjUhFJY7/uDNuudSc33a/PKr4iDqRduvHw==}
+
   codsen-utils@1.7.3:
     resolution: {integrity: sha512-YIFQQ1n2NSgwoB3sCe7RpkZzsrPxTMek6jc7wC9fXOm1wwfWAKja9gLOMEjlXOUd3LKV3o6Jci7n9BoHs5Z8Sg==}
     engines: {node: '>=14.18.0'}
@@ -4491,6 +4593,9 @@ packages:
       typescript:
         optional: true
 
+  crelt@1.0.6:
+    resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
+
   cross-spawn@6.0.6:
     resolution: {integrity: sha512-VqCUuhcd1iB+dsv8gxPttb5iZh/D0iubSP21g36KXdEuf6I5JiioesUVjpCdHV9MZRUfVFlvwtIUyPfxo5trtw==}
     engines: {node: '>=4.8'}
@@ -4704,6 +4809,9 @@ packages:
 
   electron-to-chromium@1.5.340:
     resolution: {integrity: sha512-908qahOGocRMinT2nM3ajCEM99H4iPdv84eagPP3FfZy/1ZGeOy2CZYzjhms81ckOPCXPlW7LkY4XpxD8r1DrA==}
+
+  elkjs@0.8.2:
+    resolution: {integrity: sha512-L6uRgvZTH+4OF5NE/MBbzQx/WYpru1xCBE9respNj6qznEewGUIfhzmm7horWWxbNO2M0WckQypGctR8lH79xQ==}
 
   ember-async-data@2.0.1:
     resolution: {integrity: sha512-yCQlVR3NLgjGA09LMc1NYX0XiAd0tHTM4/AmIHD0wq87QpHGmWcpMxyKGEe/TBczyCwBEJifaZNtAjMDsW1YdA==}
@@ -7858,6 +7966,40 @@ packages:
     resolution: {integrity: sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==}
     engines: {node: '>=0.12'}
 
+  rete-area-plugin@2.1.5:
+    resolution: {integrity: sha512-iquEvwkQlcsO4cmgM3Z37TG0AWaE536dfA+lCJAze5YJzVx4RBaViUCqdB4dUA/utSytpBCkiDC4D3ztM9akGQ==}
+    peerDependencies:
+      rete: ^2.0.0
+
+  rete-auto-arrange-plugin@2.0.2:
+    resolution: {integrity: sha512-VLTnVb9tqHfQKkFMZzpYgYxDWcIa+nXHRC+Po0k+gUh2zJqegkx8bFSA1n6VkMv+wPYa9EnWsTMfUDD3k1QEzg==}
+    peerDependencies:
+      elkjs: ^0.8.2
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+      web-worker: ^1.2.0
+
+  rete-connection-plugin@2.0.5:
+    resolution: {integrity: sha512-KFtlOyEJRc0y9STVgo2T+t+j9u5fxiTxbyzPbMCm0uqncb3b8d2ABDIzvWoNo5zQAh2Oz/OvlUovupbzrGzpSg==}
+    peerDependencies:
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+
+  rete-history-plugin@2.1.1:
+    resolution: {integrity: sha512-Kb2FF51qwl9axSVzusZDJ7ojksg0qPBY3CIhAusHxTLYzO5Di1Nu3cAzHUOHik6kcb3eZI+GYdfqaj/E8xggxQ==}
+    peerDependencies:
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+
+  rete-render-utils@2.0.3:
+    resolution: {integrity: sha512-Oz4W2PNayHocRvlzadb5BCNf+tDzJ8RhTwB3ucBPCdCLKZ974wWDiTSCRfA287L2hmHVzRfBdyAwC03K9eP+4g==}
+    peerDependencies:
+      rete: ^2.0.0
+      rete-area-plugin: ^2.0.0
+
+  rete@2.0.6:
+    resolution: {integrity: sha512-kPmlKCGFES2VWtY7Y7SCB8ZeXRMsgX5deza9cu4OwmfM/ZUimd461kC3hRyccoyVxE4POlHUx0gg2jcGfusHFg==}
+
   retry@0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
@@ -8402,6 +8544,9 @@ packages:
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       webpack: ^4.0.0 || ^5.0.0
+
+  style-mod@4.1.3:
+    resolution: {integrity: sha512-i/n8VsZydrugj3Iuzll8+x/00GH2vnYsk1eomD8QiRrSAeW6ItbCQDtfXCeJHd0iwiNagqjQkvpvREEPtW3IoQ==}
 
   styled_string@0.0.1:
     resolution: {integrity: sha512-DU2KZiB6VbPkO2tGSqQ9n96ZstUPjW7X4sGO6V2m1myIQluX0p1Ol8BrA/l6/EesqhMqXOIXs3cJNOy1UuU2BA==}
@@ -9034,6 +9179,9 @@ packages:
   web-streams-polyfill@3.3.3:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
     engines: {node: '>= 8'}
+
+  web-worker@1.5.0:
+    resolution: {integrity: sha512-RiMReJrTAiA+mBjGONMnjVDP2u3p9R1vkcGz6gDIrOMT3oGuYwX2WRMYI9ipkphSuE5XKEhydbhNEJh4NY9mlw==}
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -10058,6 +10206,62 @@ snapshots:
     dependencies:
       exec-sh: 0.3.6
       minimist: 1.2.8
+
+  '@codemirror/autocomplete@6.20.2':
+    dependencies:
+      '@codemirror/language': 6.12.3
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+      '@lezer/common': 1.5.2
+
+  '@codemirror/commands@6.10.3':
+    dependencies:
+      '@codemirror/language': 6.12.3
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+      '@lezer/common': 1.5.2
+
+  '@codemirror/lang-javascript@6.2.5':
+    dependencies:
+      '@codemirror/autocomplete': 6.20.2
+      '@codemirror/language': 6.12.3
+      '@codemirror/lint': 6.9.6
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+      '@lezer/common': 1.5.2
+      '@lezer/javascript': 1.5.4
+
+  '@codemirror/language@6.12.3':
+    dependencies:
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+      '@lezer/common': 1.5.2
+      '@lezer/highlight': 1.2.3
+      '@lezer/lr': 1.4.10
+      style-mod: 4.1.3
+
+  '@codemirror/lint@6.9.6':
+    dependencies:
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+      crelt: 1.0.6
+
+  '@codemirror/search@6.7.0':
+    dependencies:
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+      crelt: 1.0.6
+
+  '@codemirror/state@6.6.0':
+    dependencies:
+      '@marijn/find-cluster-break': 1.0.2
+
+  '@codemirror/view@6.43.0':
+    dependencies:
+      '@codemirror/state': 6.6.0
+      crelt: 1.0.6
+      style-mod: 4.1.3
+      w3c-keyname: 2.2.8
 
   '@colors/colors@1.5.0':
     optional: true
@@ -11225,6 +11429,24 @@ snapshots:
   '@keyv/serialize@1.1.1': {}
 
   '@kurkle/color@0.3.4': {}
+
+  '@lezer/common@1.5.2': {}
+
+  '@lezer/highlight@1.2.3':
+    dependencies:
+      '@lezer/common': 1.5.2
+
+  '@lezer/javascript@1.5.4':
+    dependencies:
+      '@lezer/common': 1.5.2
+      '@lezer/highlight': 1.2.3
+      '@lezer/lr': 1.4.10
+
+  '@lezer/lr@1.4.10':
+    dependencies:
+      '@lezer/common': 1.5.2
+
+  '@marijn/find-cluster-break@1.0.2': {}
 
   '@messageformat/runtime@3.0.2':
     dependencies:
@@ -13188,6 +13410,16 @@ snapshots:
 
   cmd-shim@6.0.3: {}
 
+  codemirror@6.0.2:
+    dependencies:
+      '@codemirror/autocomplete': 6.20.2
+      '@codemirror/commands': 6.10.3
+      '@codemirror/language': 6.12.3
+      '@codemirror/lint': 6.9.6
+      '@codemirror/search': 6.7.0
+      '@codemirror/state': 6.6.0
+      '@codemirror/view': 6.43.0
+
   codsen-utils@1.7.3:
     dependencies:
       rfdc: 1.4.1
@@ -13365,6 +13597,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
+
+  crelt@1.0.6: {}
 
   cross-spawn@6.0.6:
     dependencies:
@@ -13587,6 +13821,8 @@ snapshots:
       jake: 10.9.4
 
   electron-to-chromium@1.5.340: {}
+
+  elkjs@0.8.2: {}
 
   ember-async-data@2.0.1(@babel/core@7.29.0)(@glint/template@1.7.7):
     dependencies:
@@ -14073,7 +14309,7 @@ snapshots:
       content-tag: 4.2.0
       oxc-parser: 0.130.0
 
-  ember-exam@10.1.0(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33)):
+  ember-exam@10.1.0(patch_hash=1b2f23c19eb9a2a0eb935bfcf98e0a5e9f77d46c41bd1b5c7d12ef4369e067e3)(@glint/template@1.7.7)(ember-qunit@9.0.4(@babel/core@7.29.0)(@ember/test-helpers@5.4.2(@babel/core@7.29.0)(@glint/template@1.7.7))(@glint/template@1.7.7)(qunit@2.25.0))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.25.0)(webpack@5.99.9(@swc/core@1.15.33)):
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       chalk: 5.6.2
@@ -17568,6 +17804,41 @@ snapshots:
 
   ret@0.1.15: {}
 
+  rete-area-plugin@2.1.5(rete@2.0.6):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      rete: 2.0.6
+
+  rete-auto-arrange-plugin@2.0.2(elkjs@0.8.2)(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6)(web-worker@1.5.0):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      elkjs: 0.8.2
+      rete: 2.0.6
+      rete-area-plugin: 2.1.5(rete@2.0.6)
+      web-worker: 1.5.0
+
+  rete-connection-plugin@2.0.5(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      rete: 2.0.6
+      rete-area-plugin: 2.1.5(rete@2.0.6)
+
+  rete-history-plugin@2.1.1(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      rete: 2.0.6
+      rete-area-plugin: 2.1.5(rete@2.0.6)
+
+  rete-render-utils@2.0.3(rete-area-plugin@2.1.5(rete@2.0.6))(rete@2.0.6):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      rete: 2.0.6
+      rete-area-plugin: 2.1.5(rete@2.0.6)
+
+  rete@2.0.6:
+    dependencies:
+      '@babel/runtime': 7.28.4
+
   retry@0.12.0: {}
 
   retry@0.13.1: {}
@@ -18243,6 +18514,8 @@ snapshots:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
       webpack: 5.99.9
+
+  style-mod@4.1.3: {}
 
   styled_string@0.0.1: {}
 
@@ -19062,6 +19335,8 @@ snapshots:
       defaults: 1.0.4
 
   web-streams-polyfill@3.3.3: {}
+
+  web-worker@1.5.0: {}
 
   webidl-conversions@3.0.1: {}
 

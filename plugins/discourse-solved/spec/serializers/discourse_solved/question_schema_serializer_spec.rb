@@ -39,7 +39,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
 
     subject(:json) do
       described_class
-        .new(topic, root: false, accepted_answer: answer_post)
+        .new(topic, root: false, accepted_answers: [answer_post])
         .serializable_hash
         .deep_stringify_keys
     end
@@ -48,8 +48,8 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(json["answerCount"]).to eq(1)
     end
 
-    it "includes the accepted answer" do
-      accepted = json["acceptedAnswer"]
+    it "includes accepted answer as an array of Answer objects" do
+      accepted = json["acceptedAnswer"].sole
       expect(accepted["@type"]).to eq("Answer")
       expect(accepted["text"]).to be_present
       expect(accepted["datePublished"]).to be_present
@@ -67,7 +67,12 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
 
     subject(:json) do
       described_class
-        .new(topic, root: false, accepted_answer: answer_post, suggested_answers: [suggested_post])
+        .new(
+          topic,
+          root: false,
+          accepted_answers: [answer_post],
+          suggested_answers: [suggested_post],
+        )
         .serializable_hash
         .deep_stringify_keys
     end

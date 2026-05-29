@@ -60,6 +60,19 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_topic_map
       expect(nested_view).to have_no_top_replies_button
     end
+
+    it "lets users access topic actions before sorting replies" do
+      reader = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(reader)
+
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_topic_actions_above_controls
+      expect(nested_view).to have_share_topic_action
+      expect(nested_view).to have_bookmark_topic_action
+      expect(nested_view).to have_flag_topic_action
+      expect(nested_view).to have_no_topic_action_reply_button
+    end
   end
 
   describe "topic title editing" do

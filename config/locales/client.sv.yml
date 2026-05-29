@@ -143,6 +143,13 @@ sv:
       placeholder: datum
       from_placeholder: "från-datum"
       to_placeholder: "till-datum"
+    date_range_picker:
+      apply: "Tillämpa"
+      presets:
+        last_7_days: "Senaste 7 dagarna"
+        last_30_days: "Senaste 30 dagarna"
+        last_3_months: "Senaste 3 månaderna"
+        last_6_months: "Senaste 6 månaderna"
     languages:
       ur:
         name: Urdu

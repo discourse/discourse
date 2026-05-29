@@ -397,7 +397,6 @@ tr_TR:
       upcoming_events_list:
         title: "Yaklaşan etkinlikler"
         empty: "Yaklaşan etkinlik yok"
-        all_day: "Tüm gün"
         error: "Etkinlikler alınamadı"
         try_again: "Tekrar deneyin"
         view_all: "Tümünü görüntüle"
@@ -486,7 +485,6 @@ tr_TR:
           label: "Başlangıç tarihi"
         all_day:
           label: "Gün boyu sürecek etkinlik"
-          description: "Tüm gün süren bir etkinlikte belirli saatler belirtilmez, sadece tarih belirtilir. Etkinlik, günün başından sonuna kadar sürecektir."
         reminders:
           label: "Anımsatıcılar"
           units:

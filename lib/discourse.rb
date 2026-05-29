@@ -100,20 +100,23 @@ module Discourse
     end
 
     def self.atomic_ln_s(source, destination)
-      begin
-        return if File.readlink(destination) == source
-      rescue Errno::ENOENT, Errno::EINVAL
-      end
+      return if File.symlink?(destination) && File.readlink(destination) == source
 
       FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
-      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-      execute_command("ln", "-s", source, temp_destination)
 
-      # Remove existing symlink first to prevent FileUtils.mv from moving
-      # the temp file inside the symlinked directory instead of replacing it
-      File.delete(destination) if File.symlink?(destination)
+      File.open(
+        Rails.root.join("tmp/atomic_ln_s.lock").to_s,
+        File::CREAT | File::WRONLY,
+        0o644,
+      ) do |lock|
+        lock.flock(File::LOCK_EX)
 
-      FileUtils.mv(temp_destination, destination)
+        next if File.symlink?(destination) && File.readlink(destination) == source
+
+        temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
+        execute_command("ln", "-s", source, temp_destination)
+        File.rename(temp_destination, destination)
+      end
 
       nil
     end
@@ -437,6 +440,7 @@ module Discourse
     targets = [nil]
     targets << :mobile if args[:mobile_view]
     targets << :desktop if args[:desktop_view]
+    targets << :admin if args[:include_admin]
 
     targets.each do |target|
       assets +=
@@ -1283,6 +1287,11 @@ module Discourse
 
   def self.is_parallel_test?
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
+  end
+
+  def self.test_env_number
+    return "0" if ENV["TEST_ENV_NUMBER"].nil?
+    ENV["TEST_ENV_NUMBER"].presence || "1"
   end
 
   def self.apply_cdn_headers(headers)

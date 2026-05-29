@@ -140,6 +140,8 @@ bs_BA:
       next_month: "Sljedeći mjesec"
       placeholder: datum
       to_placeholder: "do datuma"
+    date_range_picker:
+      apply: "Snimi"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"

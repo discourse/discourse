@@ -381,3 +381,12 @@ export function camelCase(input) {
 export function removeEvent(raw) {
   return raw.replace(/\[event (.*?)\](.*?)\[\/event\]/s, "");
 }
+
+export function buildEventSkeleton(currentUser) {
+  const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
+  const startsAt = moment.tz(moment(), timezone).startOf("hour").add(1, "hour");
+  const endsAt = startsAt.clone().add(1, "hour");
+  const reminder = defaultReminderFor({ startsAt, endsAt, allDay: false });
+  const defaults = `start="${startsAt.format("YYYY-MM-DD HH:mm")}" end="${endsAt.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}" reminders="${reminderToBBCode(reminder)}"`;
+  return `[event ${defaults}]\n[/event]`;
+}

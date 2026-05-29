@@ -1,0 +1,43 @@
+:root {
+  --workflow-node-color-purple: light-dark(#6e5dc6, #8f7ee7);
+  --workflow-node-color-deep-orange: light-dark(#bd5b00, #fca700);
+  --workflow-node-color-orange: light-dark(#e06c00, #fbc828);
+  --workflow-node-color-grey: light-dark(#7d818a, #b7b9be);
+  --workflow-node-color-indigo: light-dark(#05c, #388bff);
+  --workflow-node-color-teal: light-dark(#1d7f8c, #37b4c3);
+  --workflow-node-color-blue: light-dark(#1d7afc, #579dff);
+  --workflow-node-color-violet: light-dark(#8270db, #9f8fef);
+  --workflow-node-color-red: light-dark(#e2483d, #fd9891);
+  --workflow-node-color-pink: light-dark(#ae4787, #e774bb);
+  --workflow-node-color-green: light-dark(#1f845a, #4bce97);
+  --workflow-node-color-light-blue: light-dark(#388bff, #85b8ff);
+  --workflow-node-color-light-green: light-dark(#6a9a23, #94c748);
+  --workflow-node-color-yellow: light-dark(#946f00, #e2b203);
+  --workflow-node-color-cyan: light-dark(#37b4c3, #60c6d2);
+  --workflow-node-color-brown: light-dark(#6b6e76, #b7b9be);
+  --workflow-node-color-salmon: light-dark(#f15b50, #fd9891);
+
+  // Sticky note colors
+  --workflow-sticky-yellow: light-dark(#f5e989, #3d2e00);
+  --workflow-sticky-yellow-border: light-dark(#946f00, #e2b203);
+  --workflow-sticky-blue: light-dark(#cce0ff, #09326c);
+  --workflow-sticky-blue-border: light-dark(#05c, #388bff);
+  --workflow-sticky-green: light-dark(#baf3db, #133527);
+  --workflow-sticky-green-border: light-dark(#216e4e, #2abb7f);
+  --workflow-sticky-pink: light-dark(#fdd0ec, #341829);
+  --workflow-sticky-pink-border: light-dark(#943d73, #da62ac);
+  --workflow-sticky-purple: light-dark(#dfd8fd, #231c3f);
+  --workflow-sticky-purple-border: light-dark(#5e4db2, #8f7ee7);
+  --workflow-sticky-orange: light-dark(#fce4a6, #693200);
+  --workflow-sticky-orange-border: light-dark(#bd5b00, #fca700);
+
+  // Execution status colors
+  --workflow-status-success: light-dark(#1f845a, #4bce97);
+  --workflow-status-success-low: light-dark(#dcfff1, #1c3329);
+  --workflow-status-error: light-dark(#e2483d, #fd9891);
+  --workflow-status-error-low: light-dark(#ffd5d2, #5d1f1a);
+  --workflow-status-running: light-dark(#0c66e4, #579dff);
+  --workflow-status-running-low: light-dark(#cce0ff, #09326c);
+  --workflow-status-waiting: light-dark(#6e5dc6, #9f8fef);
+  --workflow-status-waiting-low: light-dark(#dfd8fd, #231c3f);
+}

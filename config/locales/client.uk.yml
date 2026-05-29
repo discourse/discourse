@@ -214,6 +214,16 @@ uk:
       placeholder: дата
       from_placeholder: "з дати"
       to_placeholder: "дата"
+    date_range_picker:
+      apply: "Застосувати"
+      start_date: "Дата початку"
+      end_date: "Дата закінчення"
+      presets:
+        last_7_days: "Останні 7 днів"
+        last_30_days: "Останні 30 днів"
+        last_3_months: "Останні 3 місяців"
+        last_6_months: "Останні 6 місяців"
+        last_year: "Минулого року"
     languages:
       ar:
         name: Арабська
@@ -4140,8 +4150,6 @@ uk:
     nested_replies:
       nested_view: "Вкладений вигляд"
       flat_view: "Плоский вигляд"
-      view_as_nested: "Дивитись як вкладене"
-      view_as_flat: "Вигляд як плоский"
       sort:
         label: "Сортувати за"
         top: "Топ"
@@ -7176,13 +7184,11 @@ uk:
           modal:
             title: "Керування звітами"
             search_placeholder: "Пошук звітів"
-            counter: "%{count} / %{max} звітів"
             enabled_heading: "Включено"
             all_heading: "Всі звіти"
             apply: "Застосувати"
-            toggle: "Перемикання звіту"
-            move_up: "Посунути вгору"
-            move_down: "Посунути вниз"
+            move_up: "Перемістити %{title} вгору"
+            move_down: "Перемістити %{title} вниз"
         configure:
           button: "Налаштувати"
           tooltip: "Налаштуйте вигляд цієї панелі для всіх користувачів сайту."

@@ -386,7 +386,6 @@ hu:
       upcoming_events_list:
         title: "Közelgő események"
         empty: "Nincsenek közelgő események"
-        all_day: "Egész nap"
         error: "Nem sikerült lekérni az eseményeket"
         try_again: "Próbáld újra"
         view_all: "Összes megtekintése"

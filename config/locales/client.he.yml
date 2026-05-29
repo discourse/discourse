@@ -214,6 +214,13 @@ he:
       placeholder: תאריך
       from_placeholder: "מתאריך"
       to_placeholder: "עד תאריך"
+    date_range_picker:
+      apply: "החלה"
+      presets:
+        last_7_days: "7 הימים האחרונים"
+        last_30_days: "30 הימים האחרונים"
+        last_6_months: "חצי השנה האחרונה"
+        last_year: "שנה שעברה"
     languages:
       ar:
         name: ערבית
@@ -3881,8 +3888,6 @@ he:
     nested_replies:
       nested_view: "תצוגה מקוננת"
       flat_view: "תצוגה שטוחה"
-      view_as_nested: "הצגה כמקונן"
-      view_as_flat: "הצגה כשטוח"
       sort:
         label: "מיון לפי"
         top: "מובילים"
@@ -6674,8 +6679,8 @@ he:
             enabled_heading: "פעיל"
             all_heading: "כל הדיווחים"
             apply: "החלה"
-            move_up: "העלאה למעלה"
-            move_down: "הורדה למטה"
+            move_up: "העלאת %{title} למעלה"
+            move_down: "הורדת %{title} למטה"
         configure:
           button: "הגדרה"
           tooltip: "הגדרת איך לוח המחוונים הזה מופיע לכל מבקרי האתר הזה."

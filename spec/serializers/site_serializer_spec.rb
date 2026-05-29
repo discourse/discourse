@@ -6,6 +6,16 @@ RSpec.describe SiteSerializer do
 
   after { Site.clear_cache }
 
+  describe "category_types" do
+    it "is included on each serialized category in the site payload" do
+      category
+      Site.clear_cache
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      c = serialized[:categories].find { |entry| entry[:id] == category.id }
+      expect(c).to have_key(:category_types)
+    end
+  end
+
   describe "#user_tips" do
     it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true

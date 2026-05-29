@@ -397,7 +397,6 @@ es:
       upcoming_events_list:
         title: "Próximos eventos"
         empty: "No hay eventos próximos"
-        all_day: "Todo el día"
         error: "No se pudieron recuperar los eventos"
         try_again: "Intentar de nuevo"
         view_all: "Ver todo"
@@ -486,7 +485,6 @@ es:
           label: "Fecha de inicio"
         all_day:
           label: "Evento de todo el día"
-          description: "Un evento de todo el día no tendrá horas específicas, solo una fecha. El evento durará desde el principio hasta el final del día."
         reminders:
           label: "Recordatorios"
           units:

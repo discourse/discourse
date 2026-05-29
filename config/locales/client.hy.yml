@@ -143,6 +143,8 @@ hy:
       placeholder: ամսաթիվ
       from_placeholder: "ամսաթվից"
       to_placeholder: "դեպի ամսաթիվ"
+    date_range_picker:
+      apply: "Կիրառել"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber} @%{username}-ի կողմից"
