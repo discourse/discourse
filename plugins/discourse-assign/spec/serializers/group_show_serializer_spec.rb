@@ -11,6 +11,13 @@ RSpec.describe GroupShowSerializer do
   let(:guardian) { Guardian.new(user) }
   let(:serializer) { described_class.new(group, scope: guardian) }
 
+  def allow_group_to_assign_in_category(category, group)
+    category.custom_fields[
+      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
+    ] = group.id.to_s
+    category.save_custom_fields
+  end
+
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = group.id.to_s
@@ -22,5 +29,12 @@ RSpec.describe GroupShowSerializer do
 
     Assigner.new(topic2, user).assign(group)
     expect(serializer.as_json[:group_show][:assignment_count]).to eq(2)
+  end
+
+  it "omits assignment count for scoped users" do
+    SiteSetting.assign_allowed_on_groups = ""
+    allow_group_to_assign_in_category(Fabricate(:category), group)
+
+    expect(serializer.as_json[:group_show]).not_to have_key(:assignment_count)
   end
 end

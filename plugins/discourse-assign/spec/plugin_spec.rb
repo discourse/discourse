@@ -3,6 +3,13 @@
 RSpec.describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
 
+  def allow_group_to_assign_in_category(category, group)
+    category.custom_fields[
+      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
+    ] = group.id.to_s
+    category.save_custom_fields
+  end
+
   describe "discourse-assign topics_filter_options modifier" do
     let(:user) { Fabricate(:user) }
 
@@ -31,6 +38,19 @@ RSpec.describe DiscourseAssign do
       options = TopicsFilter.option_info(guardian)
 
       assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+
+    it "does not add assigned filter option for scoped users" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      options = TopicsFilter.option_info(scoped_user.guardian)
+
+      assigned_option = options.find { |option| option[:name] == "assigned:" }
       expect(assigned_option).to be_nil
     end
 

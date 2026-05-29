@@ -656,6 +656,19 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(403)
     end
 
+    it "returns 403 for users who can only assign in scoped categories" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      sign_in(scoped_user)
+
+      get "/assign/members/#{scoped_group.name}.json"
+      expect(response.status).to eq(403)
+    end
+
     it "allows non-member-admin" do
       non_member_admin = Fabricate(:admin)
 

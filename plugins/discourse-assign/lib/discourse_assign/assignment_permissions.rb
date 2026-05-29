@@ -8,12 +8,12 @@ module DiscourseAssign
       def can_assign_anywhere?(user)
         return false if user.blank?
 
-        globally_allowed?(user) || scoped_group_ids_for_user(user).present?
+        can_assign_globally?(user) || scoped_group_ids_for_user(user).present?
       end
 
       def can_assign_target?(user, target)
         return false if user.blank?
-        return true if globally_allowed?(user)
+        return true if can_assign_globally?(user)
 
         category_id = category_id_for(target)
         return false if category_id.blank?
@@ -21,7 +21,7 @@ module DiscourseAssign
         (scoped_group_ids_for_category(category_id) & group_ids_for(user)).present?
       end
 
-      def globally_allowed?(user)
+      def can_assign_globally?(user)
         return false if user.blank?
         return true if user.admin?
 
@@ -48,7 +48,7 @@ module DiscourseAssign
 
       def assign_allowed_groups_for_user(user)
         group_ids =
-          if globally_allowed?(user)
+          if can_assign_globally?(user)
             global_group_ids | all_scoped_group_ids
           else
             global_group_ids | scoped_group_ids_for_user(user)
@@ -59,7 +59,7 @@ module DiscourseAssign
 
       def assignable_user_ids_for_user(user)
         group_ids =
-          if globally_allowed?(user)
+          if can_assign_globally?(user)
             global_group_ids | all_scoped_group_ids
           else
             global_group_ids | scoped_group_ids_for_user(user)

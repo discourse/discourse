@@ -274,8 +274,9 @@ function registerTopicFooterButtons(api) {
 function initialize(api) {
   const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
+  const canAssignGlobally = currentUser?.can_assign_globally;
 
-  if (siteSettings.assigns_public || currentUser?.can_assign) {
+  if (siteSettings.assigns_public || canAssignGlobally) {
     api.addNavigationBarItem({
       name: "unassigned",
       customFilter: (category) => {
@@ -298,14 +299,14 @@ function initialize(api) {
       },
       before: "top",
     });
+  }
 
-    if (api.getCurrentUser()?.can_assign) {
-      customizePostMenu(api);
-    }
+  if (currentUser?.can_assign) {
+    customizePostMenu(api);
   }
 
   api.addAdvancedSearchOptions(
-    api.getCurrentUser()?.can_assign
+    canAssignGlobally
       ? {
           inOptionsForUsers: [
             {
@@ -655,7 +656,7 @@ export default {
 
     withPluginApi((api) => {
       const currentUser = container.lookup("service:current-user");
-      if (currentUser?.can_assign) {
+      if (currentUser?.can_assign_globally) {
         api.modifyClass(
           "component:search-advanced-options",
           (Superclass) =>

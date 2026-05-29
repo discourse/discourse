@@ -60,7 +60,11 @@ after_initialize do
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
 
-  add_to_serializer(:group_show, :assignment_count, include_condition: -> { scope.can_assign? }) do
+  add_to_serializer(
+    :group_show,
+    :assignment_count,
+    include_condition: -> { scope.can_assign_globally? },
+  ) do
     Topic.joins(<<~SQL).where(<<~SQL, group_id: object.id).where("topics.deleted_at IS NULL").count
         JOIN assignments a
         ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
@@ -101,6 +105,12 @@ after_initialize do
     end
   end
 
+  add_to_class(:user, :can_assign_globally?) do
+    return @can_assign_globally if defined?(@can_assign_globally)
+
+    @can_assign_globally = DiscourseAssign::AssignmentPermissions.can_assign_globally?(self)
+  end
+
   add_to_serializer(:current_user, :never_auto_track_topics) do
     (
       user.user_option.auto_track_topics_after_msecs ||
@@ -111,6 +121,7 @@ after_initialize do
   add_to_class(:group, :can_show_assigned_tab?) { assignable_level > Group::ALIAS_LEVELS[:nobody] }
 
   add_to_class(:guardian, :can_assign?) { |target = nil| user && user.can_assign?(target) }
+  add_to_class(:guardian, :can_assign_globally?) { user && user.can_assign_globally? }
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split("|")
@@ -297,7 +308,7 @@ after_initialize do
     name = topic_query.options[:assigned]
     next results if name.blank?
 
-    next results if !topic_query.guardian.can_assign? && !SiteSetting.assigns_public
+    next results if !topic_query.guardian.can_assign_globally? && !SiteSetting.assigns_public
 
     if name == "nobody"
       next(
@@ -427,7 +438,7 @@ after_initialize do
   add_to_class(:list_controller, :messages_assigned) do
     user = User.find_by_username(params[:username])
     raise Discourse::NotFound unless user
-    raise Discourse::InvalidAccess unless current_user.can_assign?
+    raise Discourse::InvalidAccess unless guardian.can_assign_globally?
 
     list_opts = build_topic_list_options
     list_opts.merge!({ filter: :direct }) if params[:direct] == "true"
@@ -444,7 +455,7 @@ after_initialize do
     guardian.ensure_can_see_group_members!(group)
 
     raise Discourse::NotFound unless group
-    raise Discourse::InvalidAccess unless current_user.can_assign?
+    raise Discourse::InvalidAccess unless guardian.can_assign_globally?
     raise Discourse::InvalidAccess unless group.can_show_assigned_tab?
 
     list_opts = build_topic_list_options
@@ -507,7 +518,7 @@ after_initialize do
       options = object.instance_variable_get(:@opts)
 
       if assigned_user = options.dig(:assigned)
-        scope.can_assign? || assigned_user.downcase == scope.current_user&.username_lower
+        scope.can_assign_globally? || assigned_user.downcase == scope.current_user&.username_lower
       end
     end,
   ) do
@@ -778,6 +789,7 @@ after_initialize do
 
   # CurrentUser serializer
   add_to_serializer(:current_user, :can_assign) { object.can_assign? }
+  add_to_serializer(:current_user, :can_assign_globally) { object.can_assign_globally? }
 
   # FlaggedTopic serializer
   add_to_serializer(
@@ -927,7 +939,7 @@ after_initialize do
   end
 
   add_filter_custom_filter("assigned") do |scope, filter_values, guardian|
-    next if !guardian.can_assign? || filter_values.blank?
+    next if !guardian.can_assign_globally? || filter_values.blank?
 
     # Handle multiple comma-separated values (user1,group1,user2)
     names =
@@ -983,7 +995,7 @@ after_initialize do
   end
 
   register_modifier(:topics_filter_options) do |results, guardian|
-    if guardian.can_assign?
+    if guardian.can_assign_globally?
       results << {
         name: "assigned:",
         description: I18n.t("discourse_assign.filter.description.assigned"),
@@ -999,19 +1011,19 @@ after_initialize do
   end
 
   register_search_advanced_filter(/in:assigned/) do |posts|
-    next if !@guardian.can_assign?
+    next if !@guardian.can_assign_globally?
 
     posts.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
   register_search_advanced_filter(/in:unassigned/) do |posts|
-    next if !@guardian.can_assign?
+    next if !@guardian.can_assign_globally?
 
     posts.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
-    next if !@guardian.can_assign? || match.blank?
+    next if !@guardian.can_assign_globally? || match.blank?
     if user_id = User.find_by_username(match)&.id
       posts.where(<<~SQL, user_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
