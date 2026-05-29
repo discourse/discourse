@@ -10,7 +10,7 @@ Rails system specs are used to simulate the actions of a real user using the app
 
 We currently only support running system specs in Chrome, make sure you have Chrome installed before proceeding. Run `pnpm i` to ensure Playwright is correctly set up.
 
-Since the Discourse app is an Ember Single Page Application, there are some unique constraints and challenges to writing system specs. It's important to keep in mind that you should always be observing for changes in the DOM in your tests, not manually waiting for things to happen or adding artificial sleep time. Also, the JavaScript build is separate from the Rails server, which means you must be running the frontend build when writing system specs.
+Since the Discourse app is an Ember Single Page Application, there are some unique constraints and challenges to writing system specs. It's important to keep in mind that you should always be observing for changes in the DOM in your tests, not manually waiting for things to happen or adding artificial sleep time. Also, the JavaScript build is separate from the Rails server, which means you must be running the frontend bundler when writing system specs.
 
 ## Running system specs
 

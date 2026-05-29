@@ -77,7 +77,7 @@ RAILS_ENV=test bundle exec rake db:create db:migrate
 
 Start rails + Ember servers, you have two options here.
 
-**Option 1**: using two separate Terminal tabs/windows, run Rails and the frontend build separately via
+**Option 1**: using two separate Terminal tabs/windows, run Rails and the frontend bundler separately via
 
 ```sh
 bundle exec rails server
@@ -92,7 +92,7 @@ bin/dev --only ember
 **Option 2**: using only one Terminal tab/window:
 
 ```sh
-bin/dev # runs Pitchfork and the frontend build together
+bin/dev # runs Pitchfork and the frontend bundler together
 ```
 
 :tada: You should now be able to navigate to [http://localhost:3000](http://localhost:3000) to see your local Discourse installation. (Note that the first load can take up to a minute as the server is warmed up.)

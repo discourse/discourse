@@ -96,7 +96,7 @@ bin/rails db:migrate
 RAILS_ENV=test bin/rails db:create db:migrate
 ```
 
-Start rails and the frontend build:
+Start rails and the frontend bundler:
 
 ```sh
 bin/dev

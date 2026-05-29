@@ -116,7 +116,7 @@ In a separate terminal instance, navigate to your discourse folder (`cd ~/discou
 bin/dev --only ember
 ```
 
-This starts the frontend build watcher; the app remains served from [http://localhost:3000](http://localhost:3000).
+This starts the frontend bundler; the app remains served from [http://localhost:3000](http://localhost:3000).
 [/quote]
 
 ## Creating a Command to Start Discourse

@@ -3,7 +3,7 @@
 
 require "webrick"
 
-ALLOWED_ARGS = ["-u"]
+ALLOWED_ARGS = %w[-u --build]
 EXTRA_ARGS = ARGV - ALLOWED_ARGS
 
 if ARGV.include?("-h") || ARGV.include?("--help")
@@ -11,8 +11,9 @@ if ARGV.include?("-h") || ARGV.include?("--help")
     bin/ember-cli is deprecated. Use bin/dev instead.
 
     Usage (backwards-compatible):
-      bin/ember-cli       Runs `pnpm start` (frontend only)
-      bin/ember-cli -u    Runs `bin/dev` (Rails + frontend)
+      bin/ember-cli           Runs `bin/dev --only ember` (frontend bundler only)
+      bin/ember-cli -u        Runs `bin/dev` (Rails + frontend bundler)
+      bin/ember-cli --build   Runs `pnpm build` (one-off frontend build, no watching)
   MSG
   exit 0
 end
@@ -24,15 +25,18 @@ abort <<~MSG if !EXTRA_ARGS.empty?
       bin/dev
 
     bin/ember-cli is retained only for backwards compatibility and supports:
-      bin/ember-cli       (equivalent to `pnpm start`)
-      bin/ember-cli -u    (equivalent to `bin/dev`)
+      bin/ember-cli           (equivalent to `bin/dev --only ember`)
+      bin/ember-cli -u        (equivalent to `bin/dev`)
+      bin/ember-cli --build   (equivalent to `pnpm build`)
   MSG
 
 child_command, display_command =
-  if ARGV.include?("-u")
+  if ARGV.include?("--build")
+    [%w[pnpm build], "pnpm build"]
+  elsif ARGV.include?("-u")
     [[File.expand_path("dev", __dir__)], "bin/dev"]
   else
-    [%w[pnpm start], "pnpm start"]
+    [[File.expand_path("dev", __dir__), "--only", "ember"], "bin/dev --only ember"]
   end
 
 warn "\e[31m[bin/ember-cli] DEPRECATED: please use `bin/dev` instead. Continuing with `#{display_command}`...\e[0m"
@@ -56,7 +60,7 @@ stub_message = <<~MSG
       <h1>Ember CLI has been replaced with Rolldown</h1>
       <p>Discourse is now served from a single port in development. Visit <a href="http://localhost:#{target_port}">http://localhost:#{target_port}</a>.</p>
       <p>To start Rails and the Rolldown build in a single command, use <code>bin/dev</code>.</p>
-      <p>To launch a standalone rolldown build, use <code>pnpm start</code>.</p>
+      <p>To launch the standalone frontend bundler, use <code>bin/dev --only ember</code>.</p>
     </body>
   </html>
 MSG
