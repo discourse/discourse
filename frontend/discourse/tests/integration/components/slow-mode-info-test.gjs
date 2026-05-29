@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import SlowModeInfo from "discourse/components/slow-mode-info";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | slow-mode-info", function (hooks) {
+module("Integration | Component | SlowModeInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("doesn't render if the topic is closed", async function (assert) {

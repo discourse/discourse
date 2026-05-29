@@ -8,7 +8,7 @@ class TestState {
   @tracked value = "test";
 }
 
-module("Integration | Component | ai-helper-custom-prompt", function (hooks) {
+module("Integration | Component | AiHelperCustomPrompt", function (hooks) {
   setupRenderingTest(hooks);
 
   async function renderPrompt(submit, initialValue = "test") {

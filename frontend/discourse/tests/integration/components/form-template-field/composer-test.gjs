@@ -11,7 +11,7 @@ function fakeUppy() {
 }
 
 module(
-  "Integration | Component | form-template-field | composer",
+  "Integration | Component | FormTemplateField | Composer",
   function (hooks) {
     setupRenderingTest(hooks);
 

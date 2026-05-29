@@ -4,7 +4,7 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | topic-dismiss-buttons", function (hooks) {
+module("Integration | Component | TopicDismissButtons", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

@@ -4,7 +4,7 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
-  "Integration | Component | topic-list/post-count-or-badges",
+  "Integration | Component | TopicList | PostCountOrBadges",
   function (hooks) {
     setupRenderingTest(hooks);
 

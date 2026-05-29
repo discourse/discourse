@@ -7,7 +7,7 @@ import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | form-template-field | multi-select",
+  "Integration | Component | FormTemplateField | MultiSelect",
   function (hooks) {
     setupRenderingTest(hooks);
 

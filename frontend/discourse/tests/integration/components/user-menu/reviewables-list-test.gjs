@@ -6,7 +6,7 @@ import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | user-menu | reviewables-list",
+  "Integration | Component | UserMenu | ReviewablesList",
   function (hooks) {
     setupRenderingTest(hooks);
 

@@ -48,7 +48,7 @@ function getNotification(currentUser, siteSettings, site, overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with notification items",
+  "Integration | Component | UserMenu | MenuItem | with notification items",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -437,7 +437,7 @@ function getMessage(overrides = {}, siteSettings, site) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with message items",
+  "Integration | Component | UserMenu | MenuItem | with message items",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -506,7 +506,7 @@ function getBookmark(overrides = {}, siteSettings, site) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with bookmark items",
+  "Integration | Component | UserMenu | MenuItem | with bookmark items",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -566,7 +566,7 @@ function getReviewable(currentUser, siteSettings, site, overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with reviewable items",
+  "Integration | Component | UserMenu | MenuItem | with reviewable items",
   function (hooks) {
     setupRenderingTest(hooks);
 

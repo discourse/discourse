@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatChannelPreviewCard from "discourse/plugins/chat/discourse/components/chat-channel-preview-card";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Component | chat-channel-preview-card", function (hooks) {
+module("Component | ChatChannelPreviewCard", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

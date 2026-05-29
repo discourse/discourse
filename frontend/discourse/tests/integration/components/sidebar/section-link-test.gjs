@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import SectionLink from "discourse/components/sidebar/section-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | sidebar | section-link", function (hooks) {
+module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default class attribute for link", async function (assert) {
