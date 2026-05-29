@@ -10,6 +10,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 import ImageVariantDropPopover from "./image-variant-drop-popover";
 
@@ -84,15 +85,6 @@ export default class ImageArgOverlay extends Component {
   #boundMeasure = null;
   /** Per-overlay UppyUpload. Built lazily in `#bootUppy`. */
   #uppyUpload = null;
-  /**
-   * Internal handlers for the thin dragenter/dragleave listeners
-   * we install on top of Uppy's own listeners. Uppy handles the
-   * upload routing; these toggle `isDragOver` for the tint and
-   * drive the variant popover's open/close timing.
-   */
-  #onDragEnter = null;
-  #onDragLeave = null;
-  #onDrop = null;
   /** Active FloatKit menu instance for the dark-variant popover. */
   #variantMenu = null;
   /**
@@ -293,7 +285,6 @@ export default class ImageArgOverlay extends Component {
   registerOverlay(el) {
     this.#overlayEl = el;
     this.#bootUppy().setup();
-    this.#wireDragVisualState();
   }
 
   @action
@@ -305,7 +296,6 @@ export default class ImageArgOverlay extends Component {
   @action
   teardown() {
     this.#uppyUpload?.teardown();
-    this.#unwireDragVisualState();
     this.#observer?.disconnect();
     this.#observer = null;
     if (this.#boundMeasure) {
@@ -316,58 +306,40 @@ export default class ImageArgOverlay extends Component {
   }
 
   /**
-   * Uppy's DropTarget plugin handles the upload pipeline but
-   * doesn't expose a "drag is over" hook for highlight styling.
-   * These listeners drive the tint AND the variant popover.
-   * Neither calls preventDefault — Uppy already does.
+   * Thin file-drag visual hooks layered on top of Uppy's own
+   * `@uppy/drop-target` listeners. Uppy owns the upload pipeline
+   * and calls `preventDefault` itself; these callbacks only toggle
+   * the BEM tint modifier and drive the variant popover's open /
+   * close timing through FloatKit's hover-grace API.
+   *
+   * Wired via `{{dDragAndDropExternalTarget}}` (ui-kit modifier
+   * wrapping PDND's external adapter) instead of raw `{{on}}`. The
+   * modifier owns the deepest-target filter, so the
+   * `dragleave`-bubbling guard the `{{on}}` version needed goes away.
    */
-  #wireDragVisualState() {
-    if (!this.#overlayEl) {
-      return;
-    }
-    this.#onDragEnter = () => {
-      this.isDragOver = true;
-      // Cancel any pending close from a brief excursion onto the
-      // popover and back — re-using FloatKit's own hover-grace
-      // primitive so we don't roll a parallel timer.
-      this.#variantMenu?.cancelHoverClose();
-      this.#openVariantPopover();
-    };
-    this.#onDragLeave = (event) => {
-      if (
-        event.relatedTarget &&
-        event.currentTarget.contains(event.relatedTarget)
-      ) {
-        return;
-      }
-      this.isDragOver = false;
-      // The cursor may be heading into the popover. Defer the
-      // close to FloatKit's hoverGracePeriod; the popover will
-      // cancel it via `cancelHoverClose` on its own dragenter.
-      this.#variantMenu?.scheduleHoverClose();
-    };
-    this.#onDrop = () => {
-      this.isDragOver = false;
-      this.#closeVariantPopover();
-    };
-    this.#overlayEl.addEventListener("dragenter", this.#onDragEnter);
-    this.#overlayEl.addEventListener("dragleave", this.#onDragLeave);
-    this.#overlayEl.addEventListener("drop", this.#onDrop);
+  @action
+  onExternalDragEnter() {
+    this.isDragOver = true;
+    // Cancel any pending close from a brief excursion onto the
+    // popover and back — we re-use FloatKit's own hover-grace
+    // primitive instead of rolling a parallel timer.
+    this.#variantMenu?.cancelHoverClose();
+    this.#openVariantPopover();
   }
 
-  #unwireDragVisualState() {
-    if (!this.#overlayEl) {
-      return;
-    }
-    if (this.#onDragEnter) {
-      this.#overlayEl.removeEventListener("dragenter", this.#onDragEnter);
-    }
-    if (this.#onDragLeave) {
-      this.#overlayEl.removeEventListener("dragleave", this.#onDragLeave);
-    }
-    if (this.#onDrop) {
-      this.#overlayEl.removeEventListener("drop", this.#onDrop);
-    }
+  @action
+  onExternalDragLeave() {
+    this.isDragOver = false;
+    // The cursor may be heading into the popover. Defer the close
+    // to FloatKit's hoverGracePeriod; the popover cancels it via
+    // `cancelHoverClose` on its own dragenter.
+    this.#variantMenu?.scheduleHoverClose();
+  }
+
+  @action
+  onExternalDrop() {
+    this.isDragOver = false;
+    this.#closeVariantPopover();
   }
 
   /**
@@ -512,6 +484,13 @@ export default class ImageArgOverlay extends Component {
         {{on "click" this.onActivate}}
         {{on "keydown" this.onKeyActivate}}
         {{on "pointerenter" this.onPointerEnter}}
+        {{dDragAndDropExternalTarget
+          accepts="files"
+          indicator=false
+          onDragEnter=this.onExternalDragEnter
+          onDragLeave=this.onExternalDragLeave
+          onDrop=this.onExternalDrop
+        }}
       >
         {{#if this.uploading}}
           <div class="wireframe-image-arg-overlay__progress">
@@ -558,6 +537,13 @@ export default class ImageArgOverlay extends Component {
         {{didInsert this.setupFilled}}
         {{willDestroy this.teardown}}
         {{on "pointerenter" this.onPointerEnter}}
+        {{dDragAndDropExternalTarget
+          accepts="files"
+          indicator=false
+          onDragEnter=this.onExternalDragEnter
+          onDragLeave=this.onExternalDragLeave
+          onDrop=this.onExternalDrop
+        }}
       >
         {{#if this.uploading}}
           <div class="wireframe-image-arg-overlay__progress">
