@@ -1295,6 +1295,16 @@ module("Integration | Component | PluginOutlet | Whitespace", function (hooks) {
   });
 });
 
+const PLUGIN_OUTLET_DEPRECATION_TEST_IDS = [
+  "discourse.plugin-outlet.alias.old-name",
+  "discourse.plugin-outlet.alias.legacy-name",
+  "discourse.plugin-outlet.alias.deprecated-alias",
+  "discourse.plugin-outlet.alias.old-standalone-outlet",
+  "discourse.plugin-outlet.alias.old-below-outlet",
+  "discourse.plugin-outlet.deprecated.doomed-outlet",
+  "discourse.plugin-outlet.deprecated.old-outlet",
+];
+
 module(
   "Integration | Component | PluginOutlet | aliases and deprecations",
   function (hooks) {
@@ -1303,11 +1313,13 @@ module(
     hooks.beforeEach(function () {
       this.consoleWarnStub = sinon.stub(console, "warn");
       disableRaiseOnDeprecation();
+      PLUGIN_OUTLET_DEPRECATION_TEST_IDS.forEach(skipCountingDeprecation);
     });
 
     hooks.afterEach(function () {
       this.consoleWarnStub.restore();
       enableRaiseOnDeprecation();
+      PLUGIN_OUTLET_DEPRECATION_TEST_IDS.forEach(restoreCountingDeprecation);
     });
 
     test("renders connectors registered under an alias name", async function (assert) {
