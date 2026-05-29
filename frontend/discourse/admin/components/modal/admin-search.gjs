@@ -24,7 +24,7 @@ export default class AdminSearchModal extends Component {
       @inline={{@inline}}
       @hideHeader={{true}}
     >
-      <AdminSearch />
+      <AdminSearch @closeModal={{@closeModal}} />
     </DModal>
   </template>
 }
