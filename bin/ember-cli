@@ -30,16 +30,16 @@ abort <<~MSG if !EXTRA_ARGS.empty?
       bin/ember-cli --build   (equivalent to `pnpm build`)
   MSG
 
-child_command, display_command =
+child_command, display_command, run_stub_server =
   if ARGV.include?("--build")
-    [%w[pnpm build], "pnpm build"]
+    [%w[pnpm build], "pnpm build", false]
   elsif ARGV.include?("-u")
-    [[File.expand_path("dev", __dir__)], "bin/dev"]
+    [[File.expand_path("dev", __dir__)], "bin/dev", true]
   else
-    [[File.expand_path("dev", __dir__), "--only", "ember"], "bin/dev --only ember"]
+    [[File.expand_path("dev", __dir__), "--only", "ember"], "bin/dev --only ember", true]
   end
 
-warn "\e[31m[bin/ember-cli] DEPRECATED: please use `bin/dev` instead. Continuing with `#{display_command}`...\e[0m"
+warn "\e[31m[bin/ember-cli] DEPRECATED: please use `#{display_command}` instead...\e[0m"
 
 stub_port = (ENV["EMBER_CLI_STUB_PORT"] || 4200).to_i
 target_port = ENV["UNICORN_PORT"] || "3000"
@@ -66,16 +66,18 @@ stub_message = <<~MSG
 MSG
 
 stub_server =
-  begin
-    WEBrick::HTTPServer.new(
-      Port: stub_port,
-      BindAddress: "127.0.0.1",
-      Logger: WEBrick::Log.new(File::NULL),
-      AccessLog: [],
-    )
-  rescue Errno::EADDRINUSE
-    warn "[bin/ember-cli] Port #{stub_port} already in use; skipping deprecation stub server."
-    nil
+  if run_stub_server
+    begin
+      WEBrick::HTTPServer.new(
+        Port: stub_port,
+        BindAddress: "127.0.0.1",
+        Logger: WEBrick::Log.new(File::NULL),
+        AccessLog: [],
+      )
+    rescue Errno::EADDRINUSE
+      warn "[bin/ember-cli] Port #{stub_port} already in use; skipping deprecation stub server."
+      nil
+    end
   end
 
 if stub_server
