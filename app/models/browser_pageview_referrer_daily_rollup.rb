@@ -23,6 +23,22 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
     dates = Array(dates).map(&:to_date).uniq
     return if dates.empty?
 
+    # The rollups are the permanent record, but their source events are pruned
+    # after a retention period (CleanUpBrowserPageviewEvents). Only rebuild
+    # dates that still have events so we never delete a rollup we can no longer
+    # reconstruct from events.
+    dates = DB.query_single(<<~SQL, dates: dates)
+      SELECT d.date
+      FROM unnest(ARRAY[:dates]::date[]) AS d(date)
+      WHERE EXISTS (
+        SELECT 1
+        FROM browser_pageview_events e
+        WHERE e.created_at >= d.date
+          AND e.created_at < d.date + 1
+      )
+    SQL
+    return if dates.empty?
+
     transaction do
       DB.exec(<<~SQL, dates: dates)
         DELETE FROM browser_pageview_referrer_daily_rollups

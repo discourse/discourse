@@ -135,5 +135,42 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
         ["google.com"],
       )
     end
+
+    it "leaves an existing rollup untouched for a date whose events are gone" do
+      date = 2.days.ago.to_date
+      described_class.create!(
+        date:,
+        normalized_referrer: "google.com",
+        count: 5,
+        logged_in_count: 2,
+      )
+
+      described_class.recompute([date])
+
+      expect(
+        described_class.where(date:).pluck(:normalized_referrer, :count, :logged_in_count),
+      ).to eq([["google.com", 5, 2]])
+    end
+
+    it "rebuilds dates that have events while leaving dates without events untouched" do
+      date_live = 2.days.ago.to_date
+      date_gone = 5.days.ago.to_date
+      described_class.create!(
+        date: date_gone,
+        normalized_referrer: "stale.example.com",
+        count: 9,
+        logged_in_count: 0,
+      )
+      Fabricate(:browser_pageview_event, normalized_referrer: "google.com", created_at: date_live)
+
+      described_class.recompute([date_gone, date_live])
+
+      expect(described_class.where(date: date_gone).pluck(:normalized_referrer, :count)).to eq(
+        [["stale.example.com", 9]],
+      )
+      expect(described_class.where(date: date_live).pluck(:normalized_referrer, :count)).to eq(
+        [["google.com", 1]],
+      )
+    end
   end
 end
