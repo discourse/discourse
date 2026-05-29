@@ -180,6 +180,14 @@ For trigram search: `using: "gist", opclass: :gist_trgm_ops`.
 
 Default Rails naming works unless the name exceeds 63 chars (PG limit) — then use a custom `name:`.
 
+## Transaction-disabled migrations
+
+Do not perform schema changes (`add_column`, `remove_column`, `rename_column`, `change_column`, `change_column_null`, `create_table`, `drop_table`, etc.) in a migration that calls `disable_ddl_transaction!`.
+
+Without the wrapping transaction, each statement autocommits. If the migration runs several statements and one fails partway through, the completed statements are committed and won't roll back, leaving the schema half-migrated and hard to recover.
+
+`disable_ddl_transaction!` is only for operations that can't run inside a transaction block: concurrent index creation (see Indexing) and batched data backfills (see Data backfills). Keep such a migration limited to the single operation that requires it, and move any other schema changes to a separate migration that keeps its DDL transaction so they stay atomic.
+
 ## Foreign keys
 
 **Discourse mostly does NOT use foreign keys.** Referential integrity is enforced by application logic and `EnsureDbConsistency` (`app/jobs/scheduled/ensure_db_consistency.rb`), which runs every 12 hours calling `ensure_consistency!` on 18 core models.
@@ -299,3 +307,4 @@ Both tasks spin up a disposable database and load all bundled plugins, so output
 12. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
 13. No rows inserted on fresh installs — seed data lives in `db/fixtures/`; inserts that exist only to preserve behavior on upgrades are gated on `Migration::Helpers.existing_site?`
 14. After schema-altering migrations, `bin/rake db:dump_structure` and `bin/rake annotate:clean` were run and the regenerated files committed
+15. Transaction-disabled migrations (`disable_ddl_transaction!`) contain only the operation that requires it (concurrent index or batched backfill), no other schema changes

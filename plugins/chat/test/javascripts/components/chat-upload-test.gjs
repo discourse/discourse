@@ -66,7 +66,7 @@ const TXT_FIXTURE = {
   human_filesize: "168 KB",
 };
 
-module("Component | chat-upload", function (hooks) {
+module("Component | ChatUpload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with an image", async function (assert) {

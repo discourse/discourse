@@ -194,7 +194,15 @@ export default class NestedPost extends Component {
   }
 
   get showDepthLine() {
-    return this.hasReplies && (!this.atMaxDepth || this.showContinueThread);
+    return !this.hasReplies || !this.atMaxDepth || this.showContinueThread;
+  }
+
+  get depthLineCollapsed() {
+    return this.hasReplies && !this.expanded;
+  }
+
+  get showDepthLineIcon() {
+    return !this.hasReplies || this.expanded;
   }
 
   get showExpandRepliesButton() {
@@ -236,8 +244,32 @@ export default class NestedPost extends Component {
     });
   }
 
+  get collapsedBarLabel() {
+    return this.hasReplies
+      ? this.expandLabel
+      : i18n("nested_replies.collapsed_post");
+  }
+
+  get depthLineLabel() {
+    if (this.depthLineCollapsed) {
+      return this.expandLabel;
+    }
+
+    return i18n("nested_replies.collapse");
+  }
+
   @action
   toggleExpanded() {
+    if (!this.hasReplies) {
+      this.collapsed = !this.collapsed;
+      this.lineHighlighted = false;
+      this.args.expansionState?.set(this.args.post.post_number, {
+        expanded: this.expanded,
+        collapsed: this.collapsed,
+      });
+      return;
+    }
+
     if (this.expanded) {
       this.expanded = false;
       this.collapsed = true;
@@ -422,18 +454,17 @@ export default class NestedPost extends Component {
               class={{dConcatClass
                 "nested-post__depth-line"
                 (if this.lineHighlighted "nested-post__depth-line--highlighted")
-                (unless this.expanded "nested-post__depth-line--collapsed")
+                (unless this.hasReplies "nested-post__depth-line--leaf")
+                (if
+                  this.depthLineCollapsed "nested-post__depth-line--collapsed"
+                )
               }}
               {{on "click" this.toggleExpanded}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
-              aria-label={{if
-                this.expanded
-                (i18n "nested_replies.collapse")
-                this.expandLabel
-              }}
+              aria-label={{this.depthLineLabel}}
             >
-              {{#if this.expanded}}
+              {{#if this.showDepthLineIcon}}
                 <span class="nested-post__depth-line-icon">
                   {{dIcon "discourse-circle-minus"}}
                 </span>
@@ -469,7 +500,7 @@ export default class NestedPost extends Component {
               >&middot;</span>
               <span
                 class="nested-post__collapsed-reply-count"
-              >{{this.expandLabel}}</span>
+              >{{this.collapsedBarLabel}}</span>
             </button>
           {{else if this.isDeletedPlaceholder}}
             <div

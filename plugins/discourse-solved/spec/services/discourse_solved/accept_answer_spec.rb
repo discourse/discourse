@@ -66,8 +66,14 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       it { is_expected.to run_successfully }
 
       context "when a previous answer was already accepted" do
-        fab!(:existing_solved) do
-          Fabricate(:solved_topic, topic:, answer_post: post_1, accepter: acting_user)
+        fab!(:existing_solved) { Fabricate(:solved_topic, topic:) }
+        fab!(:existing_topic_answer) do
+          Fabricate(
+            :topic_answer,
+            solved_topic: existing_solved,
+            post: post_1,
+            accepter: acting_user,
+          )
         end
         fab!(:previous_user_action) do
           UserAction.log_action!(
@@ -80,17 +86,78 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
 
         it "keeps only one solution per topic" do
-          expect { result }.not_to change { DiscourseSolved::SolvedTopic.count }
+          expect { result }.not_to change { DiscourseSolved::TopicAnswer.count }
         end
 
         it "replaces the accepted answer" do
-          expect { result }.to change { topic.reload.solved.answer_post }.from(post_1).to(post)
+          expect { result }.to change { topic.reload.topic_answers.first.post }.from(post_1).to(
+            post,
+          )
         end
 
         it "revokes the previous answer's solved credit" do
           expect { result }.to change {
             UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
           }.by(-1)
+        end
+
+        describe "with multiple solutions enabled" do
+          before { SiteSetting.solved_allow_multiple_solutions = true }
+          it "keeps both solutions" do
+            expect { result }.to change { DiscourseSolved::TopicAnswer.count }.by(1)
+          end
+
+          it "does not replace the accepted answer" do
+            expect { result }.not_to change { topic.reload.topic_answers[0].post }
+            expect(topic.topic_answers[0].post).to eq(post_1)
+            expect(topic.topic_answers[1].post).to eq(post)
+          end
+
+          it "does not revoke the previous answer's solved credit" do
+            expect { result }.to not_change {
+              UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
+            }.and change {
+                    UserAction.where(action_type: UserAction::SOLVED, target_post: post).count
+                  }.by(1)
+          end
+        end
+
+        context "with multiple solutions disabled after two solutions were already accepted" do
+          fab!(:post_2, :post) { Fabricate(:post, topic:) }
+
+          before do
+            UserAction.log_action!(
+              action_type: UserAction::SOLVED,
+              user_id: post_2.user_id,
+              acting_user_id: acting_user.id,
+              target_post_id: post_2.id,
+              target_topic_id: topic.id,
+            )
+            Fabricate(
+              :topic_answer,
+              solved_topic: existing_solved,
+              post: post_2,
+              accepter: acting_user,
+            )
+          end
+
+          it "revokes all existing topic answers and user actions" do
+            expect { result }.to change { topic.reload.topic_answers.count }.from(2).to(
+              1,
+            ).and change {
+                    UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
+                  }.by(-1).and change {
+                          UserAction.where(
+                            action_type: UserAction::SOLVED,
+                            target_post: post_2,
+                          ).count
+                        }.by(-1)
+          end
+        end
+
+        it "replacing an accepted answer destroys the old SolvedTopic and creates a new one" do
+          old_solved_topic_id = topic.solved.id
+          expect { result }.to change { topic.reload.solved.id }.from(old_solved_topic_id)
         end
       end
 
@@ -101,9 +168,11 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       it "marks the topic as solved" do
-        expect(result[:solved]).to have_attributes(
-          topic: topic,
-          answer_post: post,
+        expect { result }.to change { DiscourseSolved::SolvedTopic.count }.by(1)
+        expect(result[:solved_topic]).to have_attributes(topic: topic)
+        expect(result[:topic_answer]).to have_attributes(
+          solved_topic_id: result[:solved_topic].id,
+          post: post,
           accepter: acting_user,
         )
       end

@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import GroupAssignedFilter from "discourse/plugins/discourse-assign/discourse/components/group-assigned-filter";
 
-module("Integration | Component | group-assigned-filter", function (hooks) {
+module("Integration | Component | GroupAssignedFilter", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays username and name", async function (assert) {

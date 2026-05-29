@@ -382,7 +382,6 @@ sk:
       upcoming_events_list:
         title: "Nadchádzajúce udalosti"
         empty: "Žiadne nadchádzajúce udalosti"
-        all_day: "Celodenný"
         error: "Nepodarilo sa načítať udalosti"
         try_again: "Skúste to znova"
         view_all: "Zobraziť všetko"
@@ -434,6 +433,30 @@ sk:
             private:
               title: "Súkromné"
               description: "K súkromnej udalosti sa môžu pripojiť len pozvaní používatelia."
+      composer:
+        name_placeholder: "Názov udalosti"
+        reminder:
+          units:
+            minutes:
+              one: "minúta"
+              few: "minúty"
+              many: "minút"
+              other: "minút"
+            hours:
+              one: "hodina"
+              few: "hodín"
+              many: "hodiny"
+              other: "hodiny"
+            days:
+              one: "deň"
+              few: "dní"
+              many: "dní"
+              other: "dní"
+            weeks:
+              one: "týždeň"
+              few: "týždne"
+              many: "týždne"
+              other: "týždne"
       builder_modal:
         custom_fields:
           label: "Vlastné polia"
@@ -454,11 +477,10 @@ sk:
         timezone:
           label: Časové pásmo
           remove_timezone: Bez časového pásma (UTC)
+        starts_at:
+          label: "Dátum začiatku"
         reminders:
           label: "Pripomienky"
-          types:
-            bump_topic: "téma s automatickým posunom"
-            notification: "upozorniť účastníkov"
           units:
             minutes: "minút"
             hours: "hodiny"
@@ -467,20 +489,13 @@ sk:
           periods:
             before: "pred"
             after: "po"
-        recurrence_until:
-          label: "Do (vrátane)"
         recurrence:
           label: "Opakovanie"
           none: "Žiadna opakovaná udalosť"
           every_day: "Každý deň"
-          every_month: "Každý mesiac v tento pracovný deň"
           every_weekday: "Každý pracovný deň"
-          every_week: "Každý týždeň v tento pracovný deň"
-          every_two_weeks: "Každé dva týždne v tento pracovný deň"
-          every_four_weeks: "Každé štyri týždne v tento pracovný deň"
-        minimal:
-          label: "Minimálna udalosť"
-          checkbox_label: "Skryť tlačidlá Zúčastním sa/Nezúčastním sa a stav pozvaných"
+        attendance:
+          none: "Žiadny"
         allow_chat:
           label: "Integrácia chatu"
           checkbox_label: "Vytvorenie a správa kanála chatu pre konkrétnu udalosť"
@@ -498,8 +513,9 @@ sk:
           placeholder: "Voliteľné, predvolene je názov témy"
         invitees:
           label: "Pozvané skupiny"
-        status:
-          label: "Stav"
+        event_type:
+          public:
+            title: "Verejné"
       invite_user_or_group:
         title: "Upozorniť používateľa (používateľov) alebo skupinu (skupiny)"
         invite: "Odoslať"

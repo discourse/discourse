@@ -1,14 +1,20 @@
 import Component from "@glimmer/component";
-import { array, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import DSegmentedControl from "discourse/components/d-segmented-control";
+import DashboardDateRangePicker, {
+  ALL_PRESETS,
+  formatRange,
+  PRESET_LAST_3_MONTHS,
+  PRESET_LAST_7_DAYS,
+  PRESET_LAST_30_DAYS,
+} from "discourse/admin/components/dashboard/date-range-picker";
+import DMenu from "discourse/float-kit/components/d-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import CustomDateRangeModal from "../modal/custom-date-range";
 
-export const PERIOD_LAST_7_DAYS = "last_7_days";
-export const PERIOD_LAST_30_DAYS = "last_30_days";
-export const PERIOD_LAST_3_MONTHS = "last_3_months";
+export const PERIOD_LAST_7_DAYS = PRESET_LAST_7_DAYS;
+export const PERIOD_LAST_30_DAYS = PRESET_LAST_30_DAYS;
+export const PERIOD_LAST_3_MONTHS = PRESET_LAST_3_MONTHS;
 export const PERIOD_CUSTOM = "custom";
 
 export const DEFAULT_PERIOD = PERIOD_LAST_30_DAYS;
@@ -19,6 +25,14 @@ export const VALID_PERIODS = [
   PERIOD_LAST_3_MONTHS,
   PERIOD_CUSTOM,
 ];
+
+const TOP_TIER_PRESET_I18N_KEYS = {
+  [PERIOD_LAST_7_DAYS]: "date_range_picker.presets.last_7_days",
+  [PERIOD_LAST_30_DAYS]: "date_range_picker.presets.last_30_days",
+  [PERIOD_LAST_3_MONTHS]: "date_range_picker.presets.last_3_months",
+};
+
+const TOP_TIER_PRESETS = new Set(Object.keys(TOP_TIER_PRESET_I18N_KEYS));
 
 export function calculatePresetStartDate(period) {
   const today = moment();
@@ -34,76 +48,49 @@ export function calculatePresetStartDate(period) {
 }
 
 export default class DashboardDateRange extends Component {
-  @service modal;
-
-  get isCustom() {
-    return this.args.period === PERIOD_CUSTOM;
-  }
-
-  get customLabel() {
-    if (!this.isCustom || !this.args.startDate || !this.args.endDate) {
-      return i18n("admin.dashboard.period.custom");
+  get triggerLabel() {
+    const { period, startDate, endDate } = this.args;
+    if (TOP_TIER_PRESET_I18N_KEYS[period]) {
+      return i18n(TOP_TIER_PRESET_I18N_KEYS[period]);
     }
-
-    return i18n("admin.dashboard.period.custom_range", {
-      start: moment(this.args.startDate).format("MMM D"),
-      end: moment(this.args.endDate).format("MMM D"),
-    });
+    if (period === PERIOD_CUSTOM && startDate && endDate) {
+      return formatRange(startDate, endDate);
+    }
+    return i18n(TOP_TIER_PRESET_I18N_KEYS[DEFAULT_PERIOD]);
   }
 
   @action
-  selectPeriod(value) {
-    if (value === PERIOD_CUSTOM) {
-      // custom is handled via handleClick to support re-opening the modal when
-      // already-selected; skip preset state change here
-      return;
+  handleApply(close, { preset, from, to }) {
+    if (preset && TOP_TIER_PRESETS.has(preset)) {
+      this.args.setPeriod?.(preset);
+    } else {
+      this.args.setCustomDateRange?.(from, to);
     }
-    this.args.setPeriod?.(value);
-  }
-
-  @action
-  handleClick(value) {
-    if (value === PERIOD_CUSTOM) {
-      this.openCustomModal();
-    }
-  }
-
-  openCustomModal() {
-    this.modal.show(CustomDateRangeModal, {
-      model: {
-        startDate: this.args.startDate,
-        endDate: this.args.endDate,
-        setCustomDateRange: this.args.setCustomDateRange,
-      },
-    });
+    close();
   }
 
   <template>
-    <DSegmentedControl
-      class="db-date-range"
-      @name="dashboard-period"
-      @value={{@period}}
-      @onSelect={{this.selectPeriod}}
-      @onClickItem={{this.handleClick}}
-      @items={{array
-        (hash
-          value=PERIOD_LAST_7_DAYS
-          label=(i18n "admin.dashboard.period.last_7_days")
-        )
-        (hash
-          value=PERIOD_LAST_30_DAYS
-          label=(i18n "admin.dashboard.period.last_30_days")
-        )
-        (hash
-          value=PERIOD_LAST_3_MONTHS
-          label=(i18n "admin.dashboard.period.last_3_months")
-        )
-        (hash
-          value=PERIOD_CUSTOM
-          label=this.customLabel
-          class="db-date-range__custom"
-        )
-      }}
-    />
+    <DMenu
+      @identifier="db-date-range-menu"
+      @triggerClass="db-date-range__trigger"
+      @modalForMobile={{true}}
+      @placement="bottom-end"
+      @maxWidth={{680}}
+      @contentClass="db-date-range__popover"
+    >
+      <:trigger>
+        {{dIcon "calendar-days"}}
+        <span class="db-date-range__trigger-label">{{this.triggerLabel}}</span>
+      </:trigger>
+      <:content as |args|>
+        <DashboardDateRangePicker
+          @from={{@startDate}}
+          @to={{@endDate}}
+          @presets={{ALL_PRESETS}}
+          @onApply={{fn this.handleApply args.close}}
+          @onCancel={{args.close}}
+        />
+      </:content>
+    </DMenu>
   </template>
 }

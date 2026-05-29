@@ -40,22 +40,21 @@ export default class FormTemplateFieldUpload extends Component {
 
   @action
   handleReplaceText(oldVal, newVal) {
-    if (this.uploadValue?.includes(oldVal)) {
-      const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const regex = new RegExp(escapedOldVal, "g");
-      this.uploadValue = this.uploadValue.replace(regex, newVal ?? "");
+    if (!this.uploadValue?.includes(oldVal)) {
+      return;
+    }
 
-      // If it was a deletion, try to find and remove the file from uploadedFiles list
-      if (!newVal) {
-        this.uploadedFiles = this.uploadedFiles.filter((file) => {
-          return !oldVal.includes(file.short_url);
-        });
-      }
+    this.uploadValue = this.uploadValue.replace(oldVal, newVal ?? "");
 
-      schedule("afterRender", () => {
-        this.args.onChange?.();
+    if (!newVal) {
+      this.uploadedFiles = this.uploadedFiles.filter((file) => {
+        return !oldVal.includes(file.short_url);
       });
     }
+
+    schedule("afterRender", () => {
+      this.args.onChange?.();
+    });
   }
 
   get uploadStatusLabel() {

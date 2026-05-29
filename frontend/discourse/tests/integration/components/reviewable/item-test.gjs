@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import ReviewableItem from "discourse/components/reviewable/item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | reviewable | item", function (hooks) {
+module("Integration | Component | Reviewable | Item", function (hooks) {
   setupRenderingTest(hooks);
 
   const reviewable = {

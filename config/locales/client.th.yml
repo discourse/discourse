@@ -109,6 +109,11 @@ th:
       placeholder: วัน
       from_placeholder: "ตั้งแต่วันที่"
       to_placeholder: "ไปวันที่"
+    date_range_picker:
+      apply: "นำไปใช้"
+      presets:
+        last_7_days: "7 วันที่ผ่านมา"
+        last_30_days: "30 วันที่ผ่านมา"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"
@@ -2371,10 +2376,6 @@ th:
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
-      tag_groups_info:
-        other: "แท็กนี้เป็นของกลุ่มเหล่านี้: %{tag_groups}"
-      category_restrictions:
-        other: "สามารถใช้ได้แค่ในหมวดหมู่เหล่านี้เท่านั้น"
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"

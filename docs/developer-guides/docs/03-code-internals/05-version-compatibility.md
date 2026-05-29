@@ -1,52 +1,66 @@
 ---
-title: Pinning plugin and theme versions for older Discourse installs (.discourse-compatibility)
+title: Pinning plugin and theme versions for older Discourse installs (d-compat branches)
 short_title: Version compatibility
 id: version-compatibility
 ---
 
 ### 📖 Background
 
-Sometimes themes/plugins need to make changes which are only compatible with the latest version of Discourse. In that situation, older versions of Discourse can be instructed to use an older 'pinned' version of the plugin.
+Theme and plugin developers generally want to target the `latest` release of Discourse, without worrying about backwards compatibility. But sites running older Discourse releases still need a version of the theme/plugin that works for them.
 
-This is achieved using a `.discourse-compatibility` file in the root of a theme/plugin repository. It's a YAML file where keys specify the Discourse core version, and the values represent the associated version of your theme/plugin.
+To bridge that gap, Discourse can be told to check out an older 'pinned' version of the theme/plugin. There are two mechanisms for this, checked in order:
 
-Discourse core versions can be specified using the `<=` and `<` operators. `<=` is the default for historical reasons, but generally it makes more sense to use `<`.
+1. **`d-compat/<YYYY>.<M>` git branches** in the theme/plugin repository (the primary method — recommended for all new pins).
+2. **A `.discourse-compatibility` YAML file** in the root of the repository (the original mechanism, still supported as a fallback).
 
-### 📌 Pinning a theme/plugin version
+If both exist, the branch wins.
 
-For example, if Discourse core makes a change during `3.2.0.beta2-dev` (found in version.rb) and your plugin/theme starts depending on it, then you would add an entry to the `.discourse-compatibility` file like this:
+### 🌿 The `d-compat/<YYYY>.<M>` branch system
+
+Discourse releases use date-based versions like `2025.5`, `2025.6`, etc. When Discourse updates a plugin or theme from git, it asks the repository: "do you have a branch named `d-compat/<YYYY>.<M>` matching my version?" (e.g. `d-compat/2025.5` for Discourse `2025.5.x`). If so, Discourse checks out the tip of that branch instead of `main`.
+
+The lookup only runs when the local checkout is on the repo's **default branch**. If you've intentionally pinned to a different branch, the d-compat logic is skipped and your pin is respected.
+
+To support an older Discourse version with this system:
+
+1. Create a branch named `d-compat/<YYYY>.<M>` from a commit that's known to work on that version (e.g. `git checkout -b d-compat/2025.5 <commit>`).
+2. Push it to `origin`. You may want to protect the branch from accidental deletion.
+3. Land any backport commits onto that branch. Discourse instances on `2025.5.x` will pick them up automatically on the next update; instances on newer Discourse will keep tracking the default branch.
+
+You don't need to touch `.discourse-compatibility` at all when using branches.
+
+### ⚙️ Automated branch creation (`create-d-compat-branch.yml`)
+
+In practice you rarely need to create these branches by hand. The default theme and plugin skeletons include a [`d-compat-branch.yml` workflow](https://github.com/discourse/discourse-plugin-skeleton/blob/main/.github/workflows/d-compat-branch.yml) which runs daily, checks for new versions of Discourse core, and pushes matching `d-compat/<YYYY>.<M>` branches as needed.
+
+If your repository was created from an older copy of the skeletons, just copy the [`d-compat-branch.yml`](https://github.com/discourse/discourse-plugin-skeleton/blob/main/.github/workflows/d-compat-branch.yml) file into your `.github/workflows` directory to get it working.
+
+### :git_merged: Backporting a fix to a `d-compat` branch
+
+When you've landed a fix on the default branch that also needs to reach sites on an older Discourse release:
+
+1. Branch off the target d-compat branch and cherry-pick the fix:
+
+   ```bash
+   git fetch origin
+   git checkout -b backport/my-fix-2025.5 origin/d-compat/2025.5
+   git cherry-pick <commit-sha>
+   git push -u origin backport/my-fix-2025.5
+   ```
+
+2. Open a PR with `d-compat/2025.5` as the **base branch** (not `main`). Get it reviewed and merged the same way you would any other PR.
+3. Repeat for each older `d-compat/<YYYY>.<M>` branch that needs the fix.
+
+Sites on `2025.5.x` will pick up the merged commit on their next update.
+
+[details="Legacy fallback: the `.discourse-compatibility` file"]
+
+If no matching `d-compat` branch exists, Discourse falls back to a YAML `.discourse-compatibility` file in the repo root, mapping Discourse versions to git refs of your plugin/theme:
 
 ```yaml
 < 3.2.0.beta2-dev: abcde
 ```
 
-where `abcde` is a reference to the 'legacy' commit hash of YOUR PLUGIN which should be used on older versions of Discourse.
+Discourse picks the lowest entry that matches the running core version, so anyone on `< 3.2.0.beta2-dev` checks out commit `abcde`. Use `<` (or the legacy `<=`, the default when no operator is given) to specify the version bound. Reach for this only if the branch-based system can't express what you need.
 
-Now anyone using an older version of Discourse (e.g. `3.2.0.beta1`, or `3.1.4`) will use version `abcde` of your theme/plugin. Anyone on `3.2.0.beta2-dev` or above will continue using the latest version.
-
-### 📋 Multiple Entries
-
-Over time, you can add multiple lines to the `.discourse-compatibility` file. Discourse will always choose the 'lowest' specification which matches the current Discourse core version. The order of the lines in the file doesn't technically matter, but we recommend putting the newest entries at the top.
-
-### :git_merged: 'Backporting' changes for old Discourse versions
-
-Let's imagine a `.discourse-compatibility` file like this, with two different version specifications pinned to specific plugin commits:
-
-```yaml
-< 3.2.0.beta1-dev: commithashfordiscourse31
-< 3.1.0.beta1-dev: commithashfordiscourse30
-```
-
-If you need to 'backport' a change to Discourse 3.1, you'd do something like:
-
-1. Create a branch from the old commit (`git checkout -b my_branch_name commithashfordiscourse31`)
-
-2. Commit your change and push to the origin. If you use GitHub's branch protection features, you may want to protect this branch from accidental deletion
-
-3. Update the `.discourse-compatibility` file **on the main branch** so that it now points to your new commit on the 3.1 support branch
-
-### 🌍 Real-World Example
-
-Here's a real `.discourse-compatibility` file from the discourse-solved plugin. Note that, at the time of writing, this still uses the 'legacy' syntax without any explicit `<` or `<=` operators. Therefore, each line is automatically interpreted as `<=`.
-
-https://github.com/discourse/discourse-reactions/blob/main/.discourse-compatibility
+[/details]

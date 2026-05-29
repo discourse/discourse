@@ -115,6 +115,13 @@ ko:
       placeholder: 날짜
       from_placeholder: "시작 날짜"
       to_placeholder: "종료 날짜"
+    date_range_picker:
+      apply: "적용"
+      presets:
+        last_7_days: "지난 7일"
+        last_30_days: "지난 30일"
+        last_3_months: "지난 3개월"
+        last_6_months: "지난 6개월"
     share:
       topic_html: '글: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}님의 글 #%{postNumber}"
@@ -3480,12 +3487,7 @@ ko:
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이 없는 카테고리로 제한됩니다."
       synonyms: "동의어"
-      synonyms_description: "다음 태그를 사용하면 <b>%{base_tag_name}</b> 태그로 대체됩니다."
       save: "태그 이름 및 설명 저장"
-      tag_groups_info:
-        other: "이 태그는 %{tag_groups} 그룹에 속합니다."
-      category_restrictions:
-        other: "다음 카테고리에서만 사용할 수 있습니다."
       edit_synonyms: "동의어 편집"
       add_synonyms_label: "동의어 추가 :"
       add_synonyms: "추가"

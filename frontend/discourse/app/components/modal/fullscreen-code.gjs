@@ -38,7 +38,7 @@ export default class FullscreenCode extends Component {
       @title={{i18n "copy_codeblock.view_code"}}
       @closeModal={{this.closeModal}}
       {{didInsert this.applyCodeblockButtons}}
-      class="fullscreen-code-modal -max"
+      class="fullscreen-code-modal --max"
     >
       <:body>
         <PluginOutlet

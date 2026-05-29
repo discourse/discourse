@@ -26,6 +26,9 @@ fr:
               label: ID du sujet
     discourse_calendar:
       invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
+      preferences:
+        all_events: "Tous les événements"
+        my_events_description: "Événements auxquels vous participez ou qui vous intéressent"
       on_holiday: "En vacances"
       disable_holiday: "Désactiver"
       enable_holiday: "Activer"
@@ -382,7 +385,6 @@ fr:
       upcoming_events_list:
         title: "Événements à venir"
         empty: "Aucun événement à venir"
-        all_day: "Toute la journée"
         error: "Échec de la récupération des événements"
         try_again: "Réessayer"
         view_all: "Tout voir"
@@ -426,6 +428,22 @@ fr:
             private:
               title: "Privé"
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
+      composer:
+        name_placeholder: "Nom de l'événement"
+        reminder:
+          units:
+            minutes:
+              one: "minute"
+              other: "minutes"
+            hours:
+              one: "heure"
+              other: "heures"
+            days:
+              one: "jour"
+              other: "jours"
+            weeks:
+              one: "semaine"
+              other: "semaines"
       builder_modal:
         custom_fields:
           label: "Champs personnalisés"
@@ -446,11 +464,10 @@ fr:
         timezone:
           label: Fuseau horaire
           remove_timezone: Pas de fuseau horaire (UTC)
+        starts_at:
+          label: "Date de début"
         reminders:
           label: "Rappels"
-          types:
-            bump_topic: "remonter automatiquement le sujet"
-            notification: "informer les participants"
           units:
             minutes: "minutes"
             hours: "heures"
@@ -459,20 +476,15 @@ fr:
           periods:
             before: "avant"
             after: "après"
-        recurrence_until:
-          label: "Jusqu'à (inclus)"
         recurrence:
           label: "Périodicité"
           none: "Pas de périodicité"
           every_day: "Tous les jours"
-          every_month: "Chaque mois en ce jour de la semaine"
           every_weekday: "Chaque jour de la semaine"
-          every_week: "Chaque semaine en ce jour de la semaine"
-          every_two_weeks: "Toutes les deux semaines en ce jour de la semaine"
-          every_four_weeks: "Toutes les quatre semaines en ce jour de la semaine"
-        minimal:
-          label: "Événement minimal"
-          checkbox_label: "Masquer les boutons Participera/Ne participera pas et le statut des invités"
+          ordinals:
+            last: "dernier"
+        attendance:
+          none: "Jamais"
         allow_chat:
           label: "Intégrations de la messagerie instantanée"
           checkbox_label: "Créez et gérez un canal de discussion spécifique à un événement"
@@ -490,8 +502,9 @@ fr:
           placeholder: "Facultatif, par défaut le titre du sujet"
         invitees:
           label: "Groupes invités"
-        status:
-          label: "Statut"
+        event_type:
+          public:
+            title: "Public"
       invite_user_or_group:
         title: "Avertir les utilisateurs ou les groupes"
         invite: "Envoyer"

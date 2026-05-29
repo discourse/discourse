@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("Category Edit - Security", function (needs) {
@@ -15,23 +15,19 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("removing a permission", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
 
-    await availableGroups.expand();
-    assert.false(
-      availableGroups.rowByValue("everyone").exists(),
-      "everyone is already used and is not in the available groups"
-    );
+    assert
+      .dom(".available-groups option[value='0']")
+      .doesNotExist(
+        "everyone is already used and is not in the available groups"
+      );
 
     await click(".row-body .remove-permission");
-    await availableGroups.expand();
 
-    assert.true(
-      availableGroups.rowByValue("everyone").exists(),
-      "everyone has been removed and appears in the available groups"
-    );
+    assert
+      .dom(".available-groups option[value='0']")
+      .exists("everyone has been removed and appears in the available groups");
     assert
       .dom(".row-empty")
       .hasText(
@@ -41,12 +37,9 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("adding a permission", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
 
-    await availableGroups.expand();
-    await availableGroups.selectRowByValue("staff");
+    await formKit().field("security_add_group_id").select("3");
 
     assert.dom("[data-group-name='staff'] .group-name-link").hasText("staff");
     assert
@@ -58,8 +51,6 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("adding a previously removed permission", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
     await click(".row-body .remove-permission");
 
@@ -67,8 +58,7 @@ acceptance("Category Edit - Security", function (needs) {
       .dom(".row-body")
       .doesNotExist("removes the permission from the list");
 
-    await availableGroups.expand();
-    await availableGroups.selectRowByValue("everyone");
+    await formKit().field("security_add_group_id").select("0");
 
     assert.dom(".row-body").exists("adds back the permission to the list");
 
@@ -81,8 +71,6 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("editing permissions", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
 
     assert
@@ -91,8 +79,7 @@ acceptance("Category Edit - Security", function (needs) {
       )
       .exists({ count: 2 }, "everyone has full permissions by default");
 
-    await availableGroups.expand();
-    await availableGroups.selectRowByValue("staff");
+    await formKit().field("security_add_group_id").select("3");
 
     assert
       .dom(

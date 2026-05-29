@@ -1495,4 +1495,26 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(actions.map { |a| a["action_code"] }).to include("assigned")
     end
   end
+
+  describe "embed mode" do
+    before { SiteSetting.embed_full_app = true }
+
+    it "applies class_name to the html element when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
+      expect(response.body).to match(/<html[^>]*\bclass="[^"]*\blee-af\b/)
+    end
+
+    it "strips X-Frame-Options when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "ignores class_name when embed_mode is not allowed" do
+      get("/n/#{topic.slug}/#{topic.id}", params: { class_name: "lee-af" })
+      expect(response.body).not_to match(/<html[^>]*\blee-af\b/)
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+  end
 end

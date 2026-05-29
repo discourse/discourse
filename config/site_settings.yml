@@ -1895,17 +1895,6 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
-  nested_replies_toggle_mode_groups:
-    type: group_list
-    list_type: compact
-    default: "3"
-    allow_any: false
-    refresh: true
-    disallowed_groups: "4"
-    area: "posts_and_topics"
-    depends_on:
-      - "nested_replies_enabled"
-    depends_behavior: "hidden"
 
 email:
   email_time_window_mins:
@@ -3164,6 +3153,10 @@ rate_limits:
     default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
+  limit_admin_personal_messages_per_day:
+    default: 0
+    min: 0
+    hidden: true
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day:

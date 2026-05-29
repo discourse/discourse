@@ -144,6 +144,15 @@ fr:
       placeholder: date
       from_placeholder: "date de début"
       to_placeholder: "date de fin"
+    date_range_picker:
+      apply: "Appliquer"
+      start_date: "Date de début"
+      presets:
+        last_7_days: "Ces 7 derniers jours"
+        last_30_days: "30 derniers jours"
+        last_3_months: "3 derniers mois"
+        last_6_months: "6 derniers mois"
+        last_year: "L'année dernière"
     languages:
       ar:
         name: Arabe
@@ -3220,6 +3229,8 @@ fr:
           other: "Marquer comme lus (%{count})…"
         dismiss_tooltip: "Marquer les nouveaux messages comme vus, ou arrêter de suivre des sujets"
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
+        dismiss_new_topics: "Ignorer les nouveaux sujets"
+        dismiss_new_replies: "Ignorer les nouvelles réponses"
         dismiss_new: "Marquer comme vu(s)"
         dismiss_new_modal:
           title: "Ignorer les nouveaux"
@@ -4631,14 +4642,7 @@ fr:
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
-      synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
       save: "Enregistrer le nom et la description de l'étiquette"
-      tag_groups_info:
-        one: 'Cette étiquette appartient au groupe « %{tag_groups} ».'
-        other: "Cette étiquette appartient aux groupes : %{tag_groups}."
-      category_restrictions:
-        one: "Elle ne peut être utilisée que dans cette catégorie :"
-        other: "Elle ne peut être utilisée que dans ces catégories :"
       edit_synonyms: "Modifier les synonymes"
       add_synonyms_label: "Ajoutez des synonymes :"
       add_synonyms: "Ajouter"
@@ -5671,8 +5675,6 @@ fr:
             enabled_heading: "Activé"
             all_heading: "Tous les rapports"
             apply: "Appliquer"
-            move_up: "Déplacer vers le haut"
-            move_down: "Déplacer vers le bas"
         configure:
           button: "Configurer"
         site_traffic:

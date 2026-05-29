@@ -49,13 +49,15 @@ module DiscourseSolved
     end
 
     def can_unaccept_answer?(topic, post)
-      can_accept_answer?(topic, post) || (is_staff? && topic&.solved.present?)
+      can_accept_answer?(topic, post) ||
+        (is_staff? && topic&.topic_answers&.exists?(answer_post_id: post.id))
     end
 
     def can_create_shared_issue?(topic)
       return false if topic.blank? || !authenticated?
       return false if topic.user_id == current_user.id
-      return false if topic.private_message? || topic.solved.present?
+      return false if topic.private_message?
+      return false if topic.solved.present? && !SiteSetting.solved_allow_multiple_solutions
       return false unless topic_in_support_category?(topic)
       return false unless current_user.upcoming_change_enabled?(:enable_solved_shared_issues)
       can_see_topic?(topic)

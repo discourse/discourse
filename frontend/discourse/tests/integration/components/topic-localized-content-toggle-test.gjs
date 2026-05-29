@@ -6,7 +6,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | topic-localized-content-toggle",
+  "Integration | Component | TopicLocalizedContentToggle",
   function (hooks) {
     setupRenderingTest(hooks, { stubRouter: true });
 

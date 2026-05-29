@@ -20,14 +20,16 @@ export default class DCookText extends Component {
   }
 
   @action
-  loadCookedText() {
-    waitForPromise(
-      cook(this.args.rawText).then((cooked) => {
-        if (!this.isDestroying && !this.isDestroyed) {
-          this.cooked = cooked;
-        }
-      })
-    );
+  async loadCookedText() {
+    const rawText = this.args.rawText;
+    const cooked = await waitForPromise(cook(rawText));
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+    if (this.args.rawText !== rawText) {
+      return;
+    }
+    this.cooked = cooked;
   }
 
   @action

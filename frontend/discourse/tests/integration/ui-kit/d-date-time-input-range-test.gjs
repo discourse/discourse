@@ -27,7 +27,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
     assert.dom(".from.d-date-time-input .date-picker").hasValue("2019-01-29");
     assert
       .dom(".from.d-date-time-input .d-time-input .combo-box-header")
-      .hasAttribute("data-name", "14:45");
+      .hasAttribute("data-name", "2:45 PM");
     assert.dom(".to.d-date-time-input .date-picker").hasNoValue();
     assert
       .dom(".to.d-date-time-input .d-time-input .combo-box-header")
@@ -38,16 +38,16 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
     await toTimeSelectKit.expand();
 
     let rows = toTimeSelectKit.rows();
-    assert.dom(rows[0]).hasAttribute("data-name", "14:45");
-    assert.dom(rows[rows.length - 1]).hasAttribute("data-name", "23:45");
+    assert.dom(rows[0]).hasAttribute("data-name", "2:45 PM");
+    assert.dom(rows[rows.length - 1]).hasAttribute("data-name", "11:45 PM");
     await toTimeSelectKit.collapse();
 
     await fillIn(".to.d-date-time-input .date-picker", "2019-01-30");
     await toTimeSelectKit.expand();
 
     rows = toTimeSelectKit.rows();
-    assert.dom(rows[0]).hasAttribute("data-name", "00:00");
-    assert.dom(rows[rows.length - 1]).hasAttribute("data-name", "23:45");
+    assert.dom(rows[0]).hasAttribute("data-name", "12:00 AM");
+    assert.dom(rows[rows.length - 1]).hasAttribute("data-name", "11:45 PM");
   });
 
   test("setting relativeDate results in correct intervals (4x 15m then 30m)", async function (assert) {
@@ -69,8 +69,8 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
     await toTimeSelectKit.expand();
 
     let rows = toTimeSelectKit.rows();
-    assert.dom(rows[4]).hasAttribute("data-name", "15:45");
-    assert.dom(rows[5]).hasAttribute("data-name", "16:15");
+    assert.dom(rows[4]).hasAttribute("data-name", "3:45 PM");
+    assert.dom(rows[5]).hasAttribute("data-name", "4:15 PM");
   });
 
   test("timezone support", async function (assert) {
@@ -95,7 +95,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
     assert.dom(".from.d-date-time-input .date-picker").hasValue("2019-01-29");
     assert
       .dom(".from.d-date-time-input .d-time-input .combo-box-header")
-      .hasAttribute("data-name", "14:45");
+      .hasAttribute("data-name", "2:45 PM");
     assert.dom(".to.d-date-time-input .date-picker").hasNoValue();
     assert
       .dom(".to.d-date-time-input .d-time-input .combo-box-header")
@@ -104,7 +104,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
     await fillIn(".to.d-date-time-input .date-picker", "2019-01-29");
     const toTimeSelectKit = selectKit(".to .d-time-input .select-kit");
     await toTimeSelectKit.expand();
-    await toTimeSelectKit.selectRowByName("19:15");
+    await toTimeSelectKit.selectRowByName("7:15 PM");
 
     assert.strictEqual(
       this.state.to.toString(),

@@ -15,7 +15,7 @@ import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
+module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   setupRenderingTest(hooks);
 
   async function hover() {

@@ -7,11 +7,16 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
   def accept
     DiscourseSolved::AcceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
-      on_success { |topic:| render_json_dump(topic.accepted_answer_post_info) }
+      on_success do |topic:|
+        render_json_dump(DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian))
+      end
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_accept_answer) { raise Discourse::InvalidAccess }
-      on_model_errors(:solved) do |model|
+      on_model_errors(:solved_topic) do |model|
+        render_json_error(model, type: :record_invalid, status: 422)
+      end
+      on_model_errors(:topic_answer) do |model|
         render_json_error(model, type: :record_invalid, status: 422)
       end
       on_failed_contract do |contract|
@@ -23,7 +28,9 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
   def unaccept
     DiscourseSolved::UnacceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
-      on_success { render json: success_json }
+      on_success do |topic:|
+        render_json_dump(DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian))
+      end
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_unaccept_answer) { raise Discourse::InvalidAccess }

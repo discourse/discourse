@@ -40,7 +40,7 @@ export default class FKCollection extends Component {
   }
 
   get collectionData() {
-    return this.args.data.get(this.name).map((item, index) => {
+    return (this.args.data.get(this.name) ?? []).map((item, index) => {
       return {
         identifier: `${this.name}-${index}`,
         item,
@@ -63,7 +63,7 @@ export default class FKCollection extends Component {
   <template>
     {{#if this.collectionData.length}}
       {{#let (dElement this.tagName) as |Wrapper|}}
-        <Wrapper class="form-kit__collection">
+        <Wrapper class="form-kit__collection" ...attributes>
           {{#each this.collectionData key="identifier" as |data index|}}
             {{yield
               (hash

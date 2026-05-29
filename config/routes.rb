@@ -25,9 +25,7 @@ Discourse::Application.routes.draw do
     get "/404-body" => "exceptions#not_found_body"
 
     if Rails.env.local?
-      get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
       get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
-      get "/bootstrap/plugin-test-info" => "bootstrap#plugin_test_info"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -1903,17 +1901,21 @@ Discourse::Application.routes.draw do
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
+    get "/theme-qunit" => "qunit#index",
+        :constraints => ->(req) do
+          req.params["id"].nil? && req.params["name"].nil? && req.params["url"].nil?
+        end
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 
-    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
-    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
-    # handle it here.
-    if Rails.env.development?
-      get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
-          :constraints => {
-            testem_id: /\d+/,
-          }
+    if Rails.env.local?
+      get "/tests" => "qunit#core"
+
+      # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+      # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+      # handle it here.
+      get "/:testem_id/theme-qunit" => "qunit#theme", :constraints => { testem_id: /\d+/ }
+      get "/:testem_id/tests" => "qunit#core", :constraints => { testem_id: /\d+/ }
     end
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"

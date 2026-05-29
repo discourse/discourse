@@ -99,7 +99,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
   def uploads_path(database)
     path = File.join("uploads", database)
 
-    path = File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+    path = File.join(path, "test_#{Discourse.test_env_number}")
 
     "/#{path}/"
   end

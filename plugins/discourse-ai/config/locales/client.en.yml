@@ -46,6 +46,13 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Requires the AI plugin to be enabled"
+      nodes:
+        "action:ai_agent": "AI Agent"
+      node_descriptions:
+        "action:ai_agent": "Run an AI agent to process data or generate content"
     discourse_automation:
       scriptables:
         llm_report:
@@ -225,6 +232,11 @@ en:
 
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          prompt: "Prompt"
+          select_agent: "Select an agent..."
 
       bot_chats:
         tab_label: "Bot chats"
@@ -384,8 +396,8 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         supported_locales_description: "This site setting also allows visitors to contribute post translations."
-        translatable_categories: "Translatable categories"
-        translatable_categories_description: "Only content in the selected categories will be translated. Subcategories must be added separately."
+        excluded_categories: "Excluded categories"
+        excluded_categories_description: "Content in these categories will not be translated. Leave empty to translate content in all categories, including private categories."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"
@@ -625,6 +637,7 @@ en:
         confirm_delete: "Are you sure you want to delete this agent?"
         new: "New agent"
         no_agents: "You have not created any agents yet"
+        manage_agents: "Manage agents"
         title: "Agents"
         short_title: "Agents"
         delete: "Delete"
