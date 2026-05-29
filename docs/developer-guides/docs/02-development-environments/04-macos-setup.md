@@ -86,7 +86,7 @@ bundle exec rails server
 and
 
 ```sh
-pnpm start
+bin/dev --only ember
 ```
 
 **Option 2**: using only one Terminal tab/window:

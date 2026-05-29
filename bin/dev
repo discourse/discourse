@@ -4,6 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
+const { parseArgs } = require("util");
 const concurrently = require("concurrently");
 
 const RAILS_ROOT = path.resolve(__dirname, "..");
@@ -47,27 +48,40 @@ if (process.env.CODESPACE_NAME) {
   serverEnv.DISCOURSE_FORCE_HOSTNAME = `${process.env.CODESPACE_NAME}-${serverEnv.UNICORN_PORT}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
 }
 
-const { result } = concurrently(
-  [
-    {
-      name: "rails",
-      command: path.join(RAILS_ROOT, "bin/pitchfork"),
-      cwd: RAILS_ROOT,
-      env: serverEnv,
-      prefixColor: "#22c4f1",
-    },
-    {
-      name: "ember",
-      command: "./rolldown.mjs",
-      cwd: path.join(RAILS_ROOT, "frontend/discourse"),
-      prefixColor: "#f27a21",
-    },
-  ],
-  {
-    killOthersOn: ["success", "failure"],
-    killSignal: "SIGTERM",
-  }
-);
+const { values: args } = parseArgs({
+  options: { only: { type: "string" } },
+});
+
+const commands = [];
+
+if (!args.only || args.only === "rails") {
+  commands.push({
+    name: "rails",
+    command: path.join(RAILS_ROOT, "bin/pitchfork"),
+    cwd: RAILS_ROOT,
+    env: serverEnv,
+    prefixColor: "#22c4f1",
+  });
+}
+
+if (!args.only || args.only === "ember") {
+  commands.push({
+    name: "ember",
+    command: "./rolldown.mjs",
+    cwd: path.join(RAILS_ROOT, "frontend/discourse"),
+    prefixColor: "#f27a21",
+  });
+}
+
+if (commands.length === 0) {
+  console.error(`[bin/dev] --only must be 'rails' or 'ember'`);
+  process.exit(1);
+}
+
+const { result } = concurrently(commands, {
+  killOthersOn: ["success", "failure"],
+  killSignal: "SIGTERM",
+});
 
 result.then(
   () => process.exit(0),
