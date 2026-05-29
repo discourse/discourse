@@ -859,15 +859,12 @@ export default class TopicController extends Controller {
       return;
     }
 
-    if (EmbedMode.enabled) {
-      const quotedPost = postStream.findLoadedPost(quoteState.postId);
-      const quotedText = buildQuote(
-        quotedPost,
-        quoteState.buffer,
-        quoteState.opts
-      );
-      quoteState.clear();
+    const quotedPost = postStream.findLoadedPost(quoteState.postId);
+    const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
+    const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
+    quoteState.clear();
 
+    if (EmbedMode.enabled) {
       this.appEvents.trigger("embed-composer:reply-to-post", post);
       if (quotedText?.trim()) {
         this.appEvents.trigger("composer:insert-block", quotedText.trim());
@@ -876,11 +873,6 @@ export default class TopicController extends Controller {
     }
 
     const composerController = this.composer;
-    const quotedPost = postStream.findLoadedPost(quoteState.postId);
-    const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
-    const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
-
-    quoteState.clear();
 
     if (
       composerController.get("model.topic.id") === topic.get("id") &&

@@ -19,7 +19,7 @@ function deprecationWarning(name) {
     `${name} is deprecated. Use api.registerRichEditorExtension() instead.`,
     {
       id: `discourse.to-markdown.${name}`,
-      since: "2026.4.0",
+      since: "2026.5.0",
     }
   );
 }

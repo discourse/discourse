@@ -5,23 +5,29 @@ import toMarkdown from "discourse/lib/to-markdown";
 export default class QuoteState {
   @tracked postId = null;
 
-  #buffer = "";
   #opts = null;
   #selectedHtml = null;
   #cookedHtml = null;
   #markdownPromise = null;
 
   get buffer() {
-    return this.#buffer;
+    if (!this.#selectedHtml) {
+      return "";
+    }
+    // `<template>.content` is an inert DocumentFragment — no image/iframe fetches.
+    const template = document.createElement("template");
+    template.innerHTML = this.#selectedHtml;
+    return template.content.textContent ?? "";
   }
 
   get opts() {
     return this.#opts;
   }
 
-  selected(postId, buffer, opts, selectedHtml, cookedHtml) {
+  // The `plainText` arg is accepted but unused; `buffer` now derives plaintext
+  // from `selectedHtml`. The slot is kept to preserve the legacy arg shape.
+  selected(postId, _plainText, opts, selectedHtml, cookedHtml) {
     this.postId = postId;
-    this.#buffer = buffer;
     this.#opts = opts;
     this.#selectedHtml = selectedHtml;
     this.#cookedHtml = cookedHtml;
@@ -30,18 +36,21 @@ export default class QuoteState {
 
   async markdown() {
     if (!this.#selectedHtml) {
-      return { markdown: this.#buffer, opts: { ...this.#opts } };
+      return { markdown: this.buffer, opts: { ...this.#opts } };
     }
 
     if (!this.#markdownPromise) {
       this.#markdownPromise = waitForPromise(this.#computeMarkdown());
     }
 
+    // Snapshot opts before the await so a concurrent selected() call cannot
+    // pair our markdown with a later selection's attribution.
+    const opts = this.#opts;
     const result = await this.#markdownPromise;
 
     return {
       markdown: result.markdown,
-      opts: { ...this.#opts, full: result.full },
+      opts: { ...opts, full: result.full },
     };
   }
 
@@ -55,16 +64,25 @@ export default class QuoteState {
       const [selectedMd, cookedMd] = await Promise.all(promises);
 
       return {
-        markdown: selectedMd || this.#buffer,
+        markdown: selectedMd || this.buffer,
         full: !!(cookedMd && selectedMd === cookedMd),
       };
     } catch {
-      return { markdown: this.#buffer, full: false };
+      return { markdown: this.buffer, full: false };
     }
   }
 
+  copyFrom(other) {
+    this.selected(
+      other.postId,
+      null,
+      other.#opts,
+      other.#selectedHtml,
+      other.#cookedHtml
+    );
+  }
+
   clear() {
-    this.#buffer = "";
     this.postId = null;
     this.#opts = null;
     this.#selectedHtml = null;
