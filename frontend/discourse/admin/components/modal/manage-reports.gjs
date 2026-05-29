@@ -340,7 +340,7 @@ export default class ManageReports extends Component {
                     <span class="manage-reports__title">{{row.title}}</span>
                     {{#if row.label}}
                       <span
-                        class="manage-reports__label"
+                        class="db-report__label"
                         data-source={{row.source}}
                       >{{row.label}}</span>
                     {{/if}}

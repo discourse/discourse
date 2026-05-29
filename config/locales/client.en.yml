@@ -6899,6 +6899,7 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
         loading: "Loading dashboard…"
+        stable: "stable"
 
         sections:
           highlights:
