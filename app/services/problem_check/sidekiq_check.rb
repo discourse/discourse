@@ -5,7 +5,7 @@ class ProblemCheck::SidekiqCheck < ProblemCheck
 
   def call
     if jobs_in_queue? && !jobs_performed_recently?
-      return problem(override_key: "dashboard.problem.sidekiq")
+      return problem(override_key: "dashboard.problem.sidekiq_check")
     end
 
     if massive_queue?
