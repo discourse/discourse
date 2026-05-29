@@ -90,6 +90,10 @@ module PageObjects
           page.has_css?(my_messages_link_css, text:)
         end
 
+        def click_my_messages_link
+          find(my_messages_link_css).click
+        end
+
         def has_no_my_messages_link?(text = my_messages)
           page.has_no_css?(my_messages_link_css, text:)
         end

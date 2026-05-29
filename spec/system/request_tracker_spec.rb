@@ -17,6 +17,7 @@ describe "Request tracking" do
   end
 
   let(:pageview_tracking) { PageObjects::Pages::PageviewTracking.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   describe "pageviews" do
     it "tracks an anonymous visit correctly" do
@@ -176,6 +177,45 @@ describe "Request tracking" do
       expect(event_2[:ip_address]).to eq("::1")
       expect(event_2[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event_2[:session_id]).to eq(event[:session_id])
+    end
+
+    it "tracks a logged-in user opening My messages from the sidebar" do
+      SiteSetting.navigation_menu = "sidebar"
+      user = Fabricate(:admin, refresh_auto_groups: true)
+      sign_in(user)
+
+      visit "/"
+      expect(sidebar).to have_my_messages_link
+      CachedCounting.flush
+      initial_browser_pageviews = ApplicationRequest.stats["page_view_logged_in_browser_total"]
+
+      events =
+        DiscourseEvent.track_events(:browser_pageview) do
+          sidebar.click_my_messages_link
+
+          expect(page).to have_current_path("/u/#{user.username}/messages")
+
+          try_until_success do
+            CachedCounting.flush
+            expect(ApplicationRequest.stats["page_view_logged_in_browser_total"]).to eq(
+              initial_browser_pageviews + 1,
+            )
+          end
+        end
+
+      event =
+        events.find do |tracked_event|
+          tracked_event[:params].last[:url] ==
+            "#{Discourse.base_url_no_prefix}/u/#{user.username}/messages"
+        end
+      expect(event).to be_present
+
+      event_params = event[:params].last
+      expect(event_params[:user_id]).to eq(user.id)
+      expect(event_params[:ip_address]).to eq("::1")
+      expect(event_params[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
+      expect(event_params[:session_id]).to be_present
+      expect(event_params[:topic_id]).to be_blank
     end
 
     it "tracks normal error pages correctly" do

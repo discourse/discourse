@@ -15,6 +15,35 @@ import { sendDeferredPageview } from "./message-bus";
 
 let _preNavigationUrl = null;
 
+function routeInfoUrlForArgs(transition) {
+  const routeInfos = [];
+  const contexts = [...(transition.intent?.contexts || [])];
+  const params = [];
+  let routeInfo = transition.to;
+
+  while (routeInfo) {
+    routeInfos.unshift(routeInfo);
+    routeInfo = routeInfo.parent;
+  }
+
+  routeInfos.forEach((info) => {
+    const routeParams = info.params || {};
+    const paramNames = info.paramNames || Object.keys(routeParams);
+
+    if (!paramNames.length) {
+      return;
+    }
+
+    if (paramNames.some((paramName) => routeParams[paramName] === undefined)) {
+      params.push(contexts.shift());
+    } else {
+      paramNames.forEach((paramName) => params.push(routeParams[paramName]));
+    }
+  });
+
+  return params;
+}
+
 export default {
   after: "inject-objects",
   before: "message-bus",
@@ -157,7 +186,7 @@ export default {
         try {
           path = router.urlFor(
             transition.to.name,
-            ...Object.values(transition.to.params)
+            ...routeInfoUrlForArgs(transition)
           );
         } catch {}
       }
