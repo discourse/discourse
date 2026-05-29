@@ -6,7 +6,7 @@
  * for use with blocks. Key differences from condition arg validation:
  * - Supports "default" values (conditions don't use defaults)
  * - Validates "required + default" contradiction
- * - Supports `ui` hints that drive the visual editor's inspector controls
+ * - Supports `ui` hints that advise how each arg is presented for editing
  *   (no runtime effect; pure metadata)
  * - Supports childArgs with "unique" property
  *
@@ -27,10 +27,10 @@ import {
 } from "discourse/lib/blocks/-internals/validation/args";
 
 /**
- * Valid `ui.control` values. Drives the visual editor's inspector field-type
- * mapping. Adding a new control requires both this list (so the validator
- * accepts it at decoration time) and a corresponding renderer in the
- * inspector's FormKit-from-schema mapper. The list is also re-exported from
+ * Valid `ui.control` values. Advise which input type an arg should be edited
+ * with. Adding a new control requires both this list (so the validator
+ * accepts it at decoration time) and a corresponding renderer in whatever
+ * consumes the hint. The list is also re-exported from
  * `discourse/lib/blocks` so plugin and theme authors can reference it.
  */
 export const VALID_UI_CONTROLS = Object.freeze([
@@ -99,10 +99,10 @@ export const VALID_CHILD_ARG_SCHEMA_PROPERTIES = Object.freeze([
 /**
  * Validates the `ui` hint object on a block arg.
  *
- * The `ui` field is purely advisory metadata for the visual editor — it
- * never affects runtime behaviour of the block itself. We still validate it
- * at decoration time so authors get fast feedback on typos and unsupported
- * controls instead of silently-broken inspector fields later.
+ * The `ui` field is purely advisory presentation metadata — it never affects
+ * runtime behaviour of the block itself. We still validate it at decoration
+ * time so authors get fast feedback on typos and unsupported controls instead
+ * of silently-broken inputs later.
  *
  * @param {*} uiDef - The value of `ui` from the arg schema (any type — we
  *   handle non-objects defensively).
@@ -332,6 +332,9 @@ export function validateArgsSchema(argsSchema, blockName) {
  * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
  * @param {Object} [options={}] - Optional configuration.
  * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
+ * @param {Array<{message: string, path: string, details?: Object}>} [options.collect] -
+ *   When provided, arg validation failures are appended here instead of throwing on
+ *   the first error (lets permissive consumers surface every bad arg at once).
  * @throws {BlockError} If args are invalid.
  */
 export function validateBlockArgs(entry, blockClass, options = {}) {

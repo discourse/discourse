@@ -315,8 +315,8 @@ function checkIncompatibleConstraints(constraintTypes, argSet, blockName) {
  * Called after defaults are applied.
  *
  * Returns an object with the human-readable message AND a structured
- * `details` payload (for editor consumption) on the first violation, or
- * `null` if all constraints pass.
+ * `details` payload (for consumers that surface field-level errors) on the
+ * first violation, or `null` if all constraints pass.
  *
  * @param {Object} constraints - The constraints from block metadata.
  * @param {Object} args - The resolved args (with defaults applied).

@@ -13,6 +13,8 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+// @ts-ignore - `@glimmer/validator` is a transitive dependency without
+// direct types resolution under our pnpm layout.
 import { untrack } from "@glimmer/validator";
 import {
   trackedArray,
@@ -57,27 +59,40 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
  * A block entry in a layout configuration.
  *
  * @typedef {Object} LayoutEntry
- * @property {typeof Component | string} block - The block component class (must use @block decorator) or a registered block name string.
+ * @property {typeof Component | string} block - The block component class (must use the `@block` decorator) or a registered block name string.
+ * @property {string} [id] - Unique identifier for BEM styling and targeting.
  * @property {Object} [args] - Args to pass to the block component.
  * @property {string|string[]} [classNames] - Additional CSS classes for the block wrapper.
  * @property {Array<LayoutEntry>} [children] - Nested block entries (only for container blocks).
  * @property {Array<Object>|Object} [conditions] - Conditions that must pass for block to render.
  * @property {Object} [containerArgs] - Args passed from parent container's childArgs.
+ * @property {number} [__stableKey] - Stable key minted at registration time so
+ *   Ember's `{{#each key=}}` and external tooling can correlate this entry
+ *   across re-renders. Assigned by `assignStableKeys`.
+ * @property {string[]} [__argKeys] - Snapshot of the initial `args` keys taken
+ *   at wrap time. Lets consumers enumerate keys without touching the
+ *   `trackedObject` collection tag (which would invalidate on every set).
+ * @property {string[]} [__containerArgKeys] - Same as `__argKeys` but for the
+ *   `containerArgs` snapshot.
+ * @property {string} [__failureType] - Set by the validator when an entry
+ *   fails permissively (session-draft layer). Cleared on a successful revalidate.
+ * @property {string} [__failureReason] - Human-readable failure message paired
+ *   with `__failureType`.
+ * @property {boolean} [__visible] - Whether the entry currently passes its
+ *   conditions; set by the per-render condition evaluator.
  */
 
 /**
  * @typedef {Object} LayerEntry
  * @property {Promise<Array<LayoutEntry>>} validatedLayout - Promise resolving to the validated layout array.
  * @property {Array<LayoutEntry>} layout - The raw layout array (synchronously accessible).
- * @property {Array<Object>} validationWarnings - Tracked array of warnings
- *   collected when this entry is published in permissive mode. Empty for
- *   strict-mode entries (validation either passes or rejects the promise).
+ * @property {Array<Object>} validationWarnings - Tracked array of warnings collected during permissive validation. Populated asynchronously.
  * @property {number} [themeId] - The theme id (only set on entries in the "theme" layer).
  */
 
 /**
  * @typedef {Object} PerOutletRecord
- * @property {LayerEntry|undefined} session-draft - The editor's in-memory draft (highest precedence).
+ * @property {LayerEntry|undefined} session-draft - In-memory layout edits scoped to the current session (highest precedence).
  * @property {LayerEntry[]} theme - One entry per theme in the active stack, ordered by stack position. Last in array wins.
  * @property {LayerEntry|undefined} code-default - The layout registered via api.renderBlocks (lowest precedence).
  */
@@ -87,9 +102,10 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
  * to lowest. Within the "theme" layer, ordering follows the theme stack — the
  * last theme to register a layout for an outlet wins.
  *
- * Layers exist for editor support and theme integration:
- * - "session-draft": the visual editor's in-memory edits, scoped to the
- *   current session. Cleared on exit, save, or discard.
+ * Layers exist for in-session editing support and theme integration:
+ * - "session-draft": in-memory layout edits scoped to the current session.
+ *   Highest precedence, so an in-progress edit overrides the saved theme /
+ *   code-default layout. Cleared on exit, save, or discard.
  * - "theme": layouts shipped by themes via `block_layout` ThemeFields. Hydrated
  *   at boot from the active theme stack.
  * - "code-default": the existing `api.renderBlocks(...)` registration path.
@@ -101,6 +117,7 @@ export const LAYOUT_LAYERS = Object.freeze({
   CODE_DEFAULT: "code-default",
 });
 
+/** @type {string[]} */
 const LAYER_VALUES = Object.values(LAYOUT_LAYERS);
 
 /**
@@ -124,7 +141,7 @@ const outletLayouts = trackedMap();
 /**
  * Counter for generating stable entry keys.
  * Incremented for each block entry that doesn't already carry a `__stableKey`,
- * either at first registration or for newly-inserted entries during editor-
+ * either at first registration or for newly-inserted entries during edit-
  * driven layer publishes.
  *
  * @type {number}
@@ -136,7 +153,7 @@ let nextEntryKey = 0;
  * used to avoid double-wrapping when `assignStableKeys` re-runs over a layout
  * that's already been registered once (for example when a theme layer is
  * republished via MessageBus, or when a session-draft layout is re-emitted
- * by the editor).
+ * during in-session editing).
  *
  * @type {WeakSet<Object>}
  */
@@ -153,15 +170,16 @@ const _trackedEntryCache = new WeakSet();
 
 /**
  * Recursively assigns stable keys to all block entries in a layout, and
- * wraps each entry's `args` in a `trackedObject` so editor-driven mutations
+ * wraps each entry's `args` in a `trackedObject` so edit-driven mutations
  * (e.g. `entry.args.title = "new"`) propagate reactively through the
  * compute-ref proxy created by `curryComponent` to the rendered block —
  * no layout swap or component re-curry needed.
  *
  * Each entry receives a `__stableKey` property that remains constant across
  * renders. This is critical for Ember's `{{#each key=}}` to maintain DOM
- * identity when blocks are hidden/shown by conditions, and for the visual
- * editor to correlate canvas selections with outline rows across mutations.
+ * identity when blocks are hidden/shown by conditions, and for external
+ * tooling to correlate rendered blocks with their layout entries across
+ * mutations.
  *
  * Keys are assigned at registration time rather than render time, ensuring
  * they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
@@ -170,7 +188,7 @@ const _trackedEntryCache = new WeakSet();
  * @param {Object} [options]
  * @param {boolean} [options.skipExisting=false] - When true, entries that
  *   already have a `__stableKey` are left alone. Used by layer-publishing
- *   helpers so editor-driven replacements preserve the identity of unchanged
+ *   helpers so edit-driven replacements preserve the identity of unchanged
  *   entries (selection, DOM identity, render cache).
  */
 function assignStableKeys(entries, { skipExisting = false } = {}) {
@@ -184,8 +202,8 @@ function assignStableKeys(entries, { skipExisting = false } = {}) {
     // saved layout's string references resolve on reload. Themes that
     // pass class refs to `api.renderBlocks` typically don't bother with
     // an explicit `api.registerBlock(...)` — the class works fine as a
-    // direct render-time reference. But the visual editor saves layouts
-    // as JSON (string refs only), so the next page load tries to resolve
+    // direct render-time reference. But a persisted layout is saved as
+    // JSON (string refs only), so the next page load tries to resolve
     // those strings via the registry. Without this auto-register, every
     // theme block reachable through a layout edit would 404 on reload.
     if (typeof entry.block === "function") {
@@ -228,8 +246,8 @@ function assignStableKeys(entries, { skipExisting = false } = {}) {
     // `conditions`, …) participate in autotracking. The validator stamps
     // soft-failure fields directly on the entry; clearing them via
     // `clearValidatorStamps` would otherwise be invisible to Glimmer
-    // and the editor's banner / outline / per-block ghost chrome would
-    // keep showing a stale error after the author has fixed it.
+    // and anything that reads those fields would keep showing a stale
+    // error after it has been fixed.
     //
     // Unlike `args` / `containerArgs`, we don't snapshot an entry-level
     // key list: no live consumer iterates the entry as a whole (the only
@@ -343,8 +361,8 @@ export function _getOutletLayouts() {
 
 /**
  * Returns the raw per-outlet records (full layer state) for introspection.
- * Used by the visual editor to detect whether a session-draft already exists
- * for an outlet without having to track that bookkeeping itself.
+ * Used by callers that need to detect whether a session-draft already exists
+ * for an outlet without having to track that bookkeeping themselves.
  *
  * @internal
  * @returns {Map<string, PerOutletRecord>}
@@ -411,8 +429,8 @@ function createChildBlock(entry, owner, debugContext = {}) {
 
   // Build the block's args via reactive getters that read directly from
   // `entry.args` (a `trackedObject` after registration). Mutations to
-  // `entry.args` then propagate to the rendered block automatically — the
-  // visual editor relies on this for live arg editing.
+  // `entry.args` then propagate to the rendered block automatically, which
+  // is what powers live arg editing.
   const blockArgs = createBlockArgsWithReactiveGetters(entry, ComponentClass, {
     children: debugContext.processedChildren,
     outletArgs: debugContext.outletArgs,
@@ -483,10 +501,9 @@ function createChildBlock(entry, owner, debugContext = {}) {
         outletName: debugContext.displayHierarchy,
         // The real, registry-level outlet that owns this entry (the same
         // string the block layer was registered against). Consumers that
-        // need to address the layout — like the visual editor's
-        // `moveBlock` — read this; the `outletName` field above is the
-        // human-readable hierarchy and won't match the registry for
-        // nested blocks.
+        // need to address the layout — e.g. a `moveBlock` operation —
+        // read this; the `outletName` field above is the human-readable
+        // hierarchy and won't match the registry for nested blocks.
         rootOutletName: debugContext.outletName,
         outletArgs: debugContext.outletArgs,
       }
@@ -575,10 +592,9 @@ function createLayerEntry({
   let validationPromise = null;
   /** @type {LayerEntry} */
   // @ts-expect-error - validatedLayout is defined below via defineProperty.
-  // `validationWarnings` is `trackedArray` so consumers (the visual editor's
-  // toolbar tally, future inspector banners) re-render when validation
-  // completes async — without it the array would mutate after the toolbar
-  // has already evaluated, leaving stale "0 warnings" until the next
+  // `validationWarnings` is `trackedArray` so consumers re-render when
+  // validation completes async — without it the array would mutate after
+  // a consumer has already read it, leaving a stale count until the next
   // structural change.
   const entry = { layout, validationWarnings: trackedArray() };
   if (themeId !== undefined) {
@@ -592,12 +608,12 @@ function createLayerEntry({
           // marks each failing entry with `__failureType` /
           // `__failureReason` and continues to the next entry. The
           // collected messages land on `entry.validationWarnings`
-          // (trackedArray, so the editor's toolbar / inspector update
-          // reactively when validation resolves async).
+          // (trackedArray, so consumers update reactively when validation
+          // resolves async).
           //
-          // `collect: true` opts into per-entry arg accumulation — the
-          // editor sees every failing arg at once instead of having to
-          // fix one, re-validate, see the next ("whack-a-mole"). Strict
+          // `collect: true` opts into per-entry arg accumulation — every
+          // failing arg surfaces at once instead of having to fix one,
+          // re-validate, see the next ("whack-a-mole"). Strict
           // mode (`api.renderBlocks` callers) doesn't set this flag and
           // keeps the original fail-fast behaviour.
           const validationContext = {
@@ -643,7 +659,7 @@ function createLayerEntry({
 /**
  * Sets the layout for one specific layer of an outlet. Used internally by
  * `_renderBlocks` (the existing `code-default` registration path), the theme-
- * load initializer (the `theme` layer), and the visual editor (the
+ * load initializer (the `theme` layer), and in-session editing (the
  * `session-draft` layer).
  *
  * The per-outlet record is replaced wholesale (immutable update) so the
@@ -675,7 +691,7 @@ function createLayerEntry({
  * @param {boolean} [options.permissive=false] - When true, validation
  *   errors don't reject the `validatedLayout` promise. Instead the error
  *   is captured on the layer entry's `validationWarnings` and the layout
- *   is returned as-is. Used by the visual editor's `session-draft` layer
+ *   is returned as-is. Used by the `session-draft` layer
  *   so legitimate mid-edit invalid states (empty container after a drag,
  *   typo in a block name, etc.) don't crash the page. Code-default and
  *   theme layers are not permissive — they represent committed state
@@ -718,7 +734,7 @@ export function _setLayoutLayer(
     options.callSiteError ?? captureCallSite(_setLayoutLayer);
   const blocksService = owner?.lookup("service:blocks");
 
-  // Mint stable keys; preserve any that already exist so editor-driven
+  // Mint stable keys; preserve any that already exist so edit-driven
   // republishes don't tear down DOM identity for unchanged entries.
   assignStableKeys(layout, { skipExisting: true });
 
@@ -807,7 +823,7 @@ export function _clearLayoutLayer(outletName, layer, options = {}) {
  * Registers an outlet layout (array of block entries) for a named outlet.
  *
  * This is the main entry point for plugins to render blocks in designated areas.
- * Each outlet can only have one `code-default` layout. Theme and editor draft
+ * Each outlet can only have one `code-default` layout. Theme and session-draft
  * layouts go through `_setLayoutLayer` instead.
  *
  * @experimental This API is under active development and may change or be removed
@@ -851,7 +867,7 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
   // The "already has a layout" guard fires only when something has already
   // registered on the code-default layer for this outlet. Theme and session-
   // draft layers don't trip it — re-registering theme layouts (via MessageBus)
-  // and session drafts (via the editor) is expected and supported.
+  // and session drafts (via in-session editing) is expected and supported.
   const existing = outletLayouts.get(outletName);
   if (existing?.[LAYOUT_LAYERS.CODE_DEFAULT]) {
     raiseBlockError(

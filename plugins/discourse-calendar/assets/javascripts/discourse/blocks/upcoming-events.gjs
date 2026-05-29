@@ -3,10 +3,11 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { block } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
+/** @type {import("discourse/plugins/discourse-calendar/discourse/components/upcoming-events-list.gjs")} */
 import UpcomingEventsList from "../components/upcoming-events-list";
 
 /**
- * Visual-editor block for the calendar plugin's upcoming events
+ * Block registration for the calendar plugin's upcoming events
  * widget. Wraps `UpcomingEventsList` (the compact sidebar variant
  * used in themes like discourse-right-sidebar-blocks) so authors can
  * drop an events list into any block-driven outlet.

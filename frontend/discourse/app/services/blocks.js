@@ -112,11 +112,11 @@ export default class Blocks extends Service {
    * baked-in `CORE_OUTLET_METADATA` for the 5 core outlets, joined into a
    * single uniform shape with defaults filled in.
    *
-   * Consumed by the visual editor's outlet inventory (left rail tab +
-   * toolbar jump dropdown) so it can render display names, descriptions,
-   * and category grouping. Each entry's `isCore` flag tells the UI
-   * whether to badge the row as core or plugin-contributed; `namespaceType`
-   * is parsed from the outlet name's prefix for ad-hoc grouping.
+   * Consumed by tooling that lists outlets so it can render display names,
+   * descriptions, and category grouping. Each entry's `isCore` flag tells
+   * the consumer whether the outlet is core or plugin-contributed;
+   * `namespaceType` is parsed from the outlet name's prefix for ad-hoc
+   * grouping.
    *
    * @returns {import("discourse/lib/blocks/-internals/registry/outlet").OutletMetadataEntry[]}
    *
@@ -139,9 +139,10 @@ export default class Blocks extends Service {
    * Returns every registered condition type with its display metadata and
    * argument schema.
    *
-   * Consumed by the visual editor's condition builder to populate the
-   * "Add condition" picker and render per-type input fields. Each entry's
-   * fields come from the `@blockCondition(...)` decorator:
+   * Consumed by tooling that lets authors add and configure conditions —
+   * to populate the available condition types and render per-type input
+   * fields. Each entry's fields come from the `@blockCondition(...)`
+   * decorator:
    *
    * - `type` — the condition's stable identifier (`"user"`, `"viewport"`, …).
    * - `displayName` — human-readable label; defaults to a Title Case of

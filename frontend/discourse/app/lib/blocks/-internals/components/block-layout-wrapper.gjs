@@ -27,13 +27,12 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @property {string|null} [id] - Optional block ID for BEM modifiers and targeting.
  * @property {CurriedComponent} Component - The curried block component to render.
  * @property {string} [classNames] - Additional CSS classes from layout entry.
- * @property {string} [decoratorClassNames] - Extra CSS classes from the @block decorator.
- * @property {*} [style] - Optional inline style applied to the wrapper's
- *   outer `<div>`. Parent containers pass this in at the invocation site
- *   (`<child.Component @style={{...}} />`) when they need to position
- *   their children — e.g. CSS Grid placement, flexbox per-child overrides.
- *   The wrapper itself is layout-agnostic; it just applies whatever style
- *   the parent computes.
+ * @property {string} [decoratorClassNames] - Extra CSS classes from the `@block` decorator.
+ * @property {string} [style] - Optional inline style applied to the wrapper's
+ *   outer `<div>`. Parent containers pass this in at the invocation site when
+ *   they need to position their children — e.g. CSS Grid placement, flexbox
+ *   per-child overrides. The wrapper itself is layout-agnostic; it just
+ *   applies whatever style the parent computes.
  */
 
 /**
@@ -52,7 +51,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {string|null} [blockData.id] - Optional block ID for BEM modifiers.
  * @param {CurriedComponent} blockData.Component - The curried block component.
  * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
- * @param {string} [blockData.decoratorClassNames] - Extra CSS classes from the @block decorator.
+ * @param {string} [blockData.decoratorClassNames] - Extra CSS classes from the `@block` decorator.
  * @param {import("@ember/owner").default} owner - The application owner for currying.
  * @returns {CurriedComponent} The wrapped component.
  */

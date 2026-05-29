@@ -21,13 +21,14 @@ export function isInlineDoc(value) {
   if (!value || typeof value !== "object") {
     return false;
   }
-  if (value.type !== "doc") {
+  const doc = /** @type {{ type?: unknown, content?: unknown }} */ (value);
+  if (doc.type !== "doc") {
     return false;
   }
-  if (!Array.isArray(value.content)) {
+  if (!Array.isArray(doc.content)) {
     return false;
   }
-  return value.content.every(isInlineNode);
+  return doc.content.every(isInlineNode);
 }
 
 function isInlineNode(node) {

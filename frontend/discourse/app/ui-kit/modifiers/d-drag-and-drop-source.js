@@ -106,7 +106,7 @@ function registerDragAndDropSource(element, getArgsRef) {
 /**
  * Marks an element as a drag source for the Discourse drag-and-drop
  * vocabulary, paired with `dDragAndDropTarget` on the receiving side.
- * Thin Ember-modifier wrapper around {@link registerDragAndDropSource}.
+ * Thin Ember-modifier wrapper around {@link registerDraggable}.
  *
  * ```hbs
  * <li {{dDragAndDropSource

@@ -774,7 +774,7 @@ export class BlockError extends Error {
    * @param {string} [options.path] - Path to the error within the layout
    *   (e.g., "[0].conditions.any[0].type" or "[0].args.showIcon").
    * @param {Object|Array<Object>|null} [options.details] - Structured
-   *   payload for editor consumption. A single detail (the typical
+   *   payload for consumers that surface field-level errors. A single detail (the typical
    *   strict-mode throw) is shaped as
    *   `{ code, field?, value?, expected? }` per the ERROR_CODES enum.
    *   Permissive-mode accumulation hands in an array of those — one

@@ -13,8 +13,8 @@ import MinimalGamificationLeaderboardRow from "./minimal-gamification-leaderboar
  * Compact sidebar leaderboard. The base usage is two args (`id`,
  * `count`) — kept as-is for backwards compatibility with the
  * `discourse-right-sidebar-blocks` theme. Additional optional args
- * customize the rendering for visual-editor block usage; defaults
- * preserve the current look.
+ * customize the rendering when mounted as a registered block;
+ * defaults preserve the current look.
  */
 export default class extends Component {
   @service site;

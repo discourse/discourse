@@ -23,7 +23,7 @@ import RestModel from "discourse/models/rest";
 /**
  * A validation error result containing the error message, the path to
  * the argument that failed validation, and a structured detail payload
- * the editor uses to render per-field errors.
+ * consumers use to render per-field errors.
  *
  * @typedef {Object} ValidationErrorDetails
  * @property {string} code - One of the ERROR_CODES enum values.
@@ -37,7 +37,7 @@ import RestModel from "discourse/models/rest";
  * @property {string} message - The formatted error message.
  * @property {string} path - The path to the invalid argument (e.g., "test.name").
  * @property {ValidationErrorDetails} [details] - Structured payload for
- *   editor consumption.
+ *   consumers that surface field-level errors.
  */
 
 /**
@@ -382,6 +382,8 @@ function validateEnumArray({
  * @param {Object} [options] - Optional configuration.
  * @param {string} [options.entityName] - The entity name for error messages.
  * @param {string} [options.entityType="Block"] - The entity type for error messages.
+ * @param {readonly string[]} [options.validProperties] - List of valid schema properties,
+ *   forwarded so nested `type: "object"` schemas validate against the same vocabulary.
  */
 export function validateCommonSchemaProperties(argDef, argName, options = {}) {
   const { entityName, entityType = "Block", validProperties } = options;
@@ -449,8 +451,8 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
       // Recursively validate each property schema. We inherit the caller's
       // `validProperties` so nested fields keep the same metadata vocabulary
       // as the outer schema — e.g. a childArgs entry with `type: "object"`
-      // can declare per-property `ui` hints, which the visual editor uses to
-      // label each field inside a namespaced placement bag.
+      // can declare per-property `ui` hints, used to label each field
+      // inside a namespaced placement bag.
       const nestedValidProperties =
         context.validProperties ?? VALID_ARG_SCHEMA_PROPERTIES;
       for (const [propName, propDef] of Object.entries(argDef.properties)) {
@@ -671,9 +673,9 @@ export function validateArgSchemaEntry(argDef, argName, options) {
  * - Schema validation (at decoration time): includes entity context
  * - Runtime validation (in renderBlocks): no context prefix
  *
- * The optional `details` is consumed by the visual editor — it carries
- * the failure code plus expected-constraint metadata so the inspector
- * can render the error under the offending field.
+ * The optional `details` is consumed by field-level error consumers — it
+ * carries the failure code plus expected-constraint metadata so the error
+ * can be rendered against the offending field.
  *
  * @param {string} argName - The argument name (used as the path).
  * @param {string} message - The error message (without arg prefix).
@@ -1387,8 +1389,8 @@ export function validateArrayItemType(
  *    gets exactly one message.
  *  - **Collect** (`options.collect = []`): accumulates every failing arg
  *    into the array as `{ message, path, details }` records and returns
- *    without throwing. The editor's permissive validator uses this so
- *    authors fix all issues in one pass.
+ *    without throwing. The permissive validator uses this so authors fix
+ *    all issues in one pass.
  *
  * @param {Object} providedArgs - The arguments to validate.
  * @param {Object} schema - The schema to validate against.

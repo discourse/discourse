@@ -34,7 +34,7 @@ import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
  * 1. The component class must be the same reference
  * 2. The args object must be shallowly equal
  *
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, result: Object}>} cache - The component cache keyed by stable block keys.
+ * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, result: Object}>} cache - The component cache keyed by stable block keys.
  * @param {Object} entry - The block entry with __stableKey and optional children.
  * @param {typeof import("@glimmer/component").default} resolvedBlock - The resolved block component class.
  * @param {Object} debugContext - Debug context for visual overlay and hierarchy tracking.
@@ -130,7 +130,7 @@ function getOrCreateLeafBlockComponent(
  *
  * @param {Object} options - Rendering options.
  * @param {Array<BlockEntry>} options.entries - Pre-processed block entries with visibility metadata.
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
+ * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
  * @param {import("@ember/owner").default} options.owner - Application owner for service lookup.
  * @param {string} options.baseHierarchy - Current hierarchy path (e.g., "homepage-blocks/section-1").
  * @param {string} options.outletName - The outlet name for CSS class generation.
@@ -179,9 +179,9 @@ export function processBlockEntries({
     //   1. Async factory still resolving — common at boot, the trackedMap
     //      will re-evaluate this getter once the factory lands.
     //   2. Truly unknown block (typo in a saved layout, plugin not
-    //      installed, etc.). Strict rendering silently skips these. The
-    //      visual editor turns on `showGhosts` so the author sees a
-    //      labelled placeholder and can swap or remove the entry.
+    //      installed, etc.). Strict rendering silently skips these. When
+    //      `showGhosts` is enabled, the author sees a labelled placeholder
+    //      and can swap or remove the entry.
     if (!resolvedBlock) {
       if (showGhosts) {
         const blockName =

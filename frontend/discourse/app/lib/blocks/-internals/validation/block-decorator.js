@@ -90,10 +90,9 @@ export function validateAndParseBlockName(name) {
 }
 
 /**
- * Validates the optional display-metadata fields used by the visual editor's
- * palette and outline panels. None of these affect runtime behaviour — they
- * are pure presentation hints — so the checks here are shallow type
- * assertions rather than schema validation.
+ * Validates the optional display-metadata fields. None of these affect
+ * runtime behaviour — they are pure presentation hints — so the checks here
+ * are shallow type assertions rather than schema validation.
  *
  * @param {string} name - The block name (for error messages).
  * @param {Object} options - The decorator options object.

@@ -69,7 +69,7 @@ function wrapValidationError(validationFn, errorPrefix, context) {
         errorPath: buildErrorPath(context.path, error.path),
         // Preserve the structured payload through the re-throw. Without
         // this, args-validation throws lose `code` / `field` / `expected`
-        // by the time the editor catches the wrapped error.
+        // by the time a consumer catches the wrapped error.
         details: error.details ?? null,
       });
     }
@@ -620,6 +620,12 @@ export function validateEntryTypes(entry) {
  *
  * @typedef {Object} LayoutValidationContext
  * @property {Map<string, {path: string}>} seenIds - Map of entry IDs to their paths for uniqueness validation.
+ * @property {boolean} [permissive] - When true, per-entry failures are caught
+ *   and recorded as soft failures instead of aborting the whole layout.
+ * @property {boolean} [collect] - When true, arg validation accumulates every
+ *   failure into a single synthetic error (used by permissive consumers).
+ * @property {Array<{message: string, path: string, error: Error, details: any}>} [warnings] -
+ *   Soft-failure log populated in permissive mode.
  */
 
 /**
@@ -702,7 +708,6 @@ export async function validateLayout(
     try {
       await validateOneEntry({
         entry,
-        index,
         currentPath,
         outletName,
         blocksService,
@@ -739,13 +744,13 @@ export async function validateLayout(
  * plumbing.
  *
  * @param {Object} entry
- * @param {Error} err
+ * @param {Error & { details?: any }} err
  */
 function markEntrySoftFailure(entry, err) {
   entry.__visible = false;
   entry.__failureType = "structural-invalid";
   entry.__failureReason = err.message;
-  // Always an array for editor consistency. In permissive/collect mode,
+  // Always an array for consumer consistency. In permissive/collect mode,
   // `err.details` is already the accumulated list; in strict mode it's a
   // single detail object which we wrap. `null` becomes an empty array so
   // consumers never have to branch on shape.
@@ -1037,13 +1042,13 @@ export async function validateEntry(
   //
   // In strict mode `validateBlockArgs` throws on the first failure (the
   // historical fail-fast contract — keeps `api.renderBlocks` callers'
-  // consoles clean). In permissive/collect mode (the visual editor) we
-  // hand it a collector so it records every bad arg into the array, then
-  // raise one synthetic error whose `details` is the full list. The
-  // outer per-entry try/catch in `validateLayout` catches that synthetic
-  // error and routes it through `markEntrySoftFailure`, stamping the
-  // array on the entry — that's what powers per-field inline errors in
-  // the inspector instead of whack-a-mole "fix one, see the next".
+  // consoles clean). In permissive/collect mode we hand it a collector
+  // so it records every bad arg into the array, then raise one synthetic
+  // error whose `details` is the full list. The outer per-entry try/catch
+  // in `validateLayout` catches that synthetic error and routes it through
+  // `markEntrySoftFailure`, stamping the array on the entry — that's what
+  // powers per-field inline errors instead of whack-a-mole "fix one, see
+  // the next".
   const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
   const owner = blocksService ? getOwner(blocksService) : null;
   const argCollector = context?.collect ? [] : null;

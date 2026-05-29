@@ -71,25 +71,24 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {Function|null} validate - Custom validation function.
  * @property {readonly string[]|null} allowedOutlets - Allowed outlet patterns.
  * @property {readonly string[]|null} deniedOutlets - Denied outlet patterns.
- * @property {string|null} displayName - Human-readable name shown in the
- *   visual editor's palette and outline. Falls back to a Title Case of
- *   `shortName` when unset (see `getBlockDisplayMetadata`).
- * @property {string|null} icon - FontAwesome icon ID rendered next to the
- *   block in the palette. Falls back to `"cube"` when unset.
+ * @property {string|null} displayName - Human-readable name for display
+ *   purposes. Falls back to a Title Case of `shortName` when unset (see
+ *   `getBlockDisplayMetadata`).
+ * @property {string|null} icon - Icon ID associated with the block. Falls
+ *   back to `"cube"` when unset.
  * @property {string|null} category - Category label used to group the
- *   block in the palette (e.g. "Content", "Layout"). Falls back to
- *   `"Misc"` when unset.
+ *   block (e.g. "Content", "Layout"). Falls back to `"Misc"` when unset.
  * @property {Readonly<Object>|null} previewArgs - Optional sample args used
- *   when the palette renders a preview thumbnail of the block. Frozen
- *   shallowly. Falls back to defaults derived from `args` when unset.
+ *   when rendering a preview of the block. Frozen shallowly. Falls back to
+ *   defaults derived from `args` when unset.
  * @property {string|null} thumbnail - Optional URL of a static thumbnail
- *   image shown in the palette instead of the icon.
- * @property {boolean} paletteHidden - When true, the visual editor's
- *   palette omits this block. The block remains registered and renderable
- *   from layouts that reference it.
+ *   image shown instead of the icon.
+ * @property {boolean} paletteHidden - When true, the block is excluded from
+ *   lists of directly-insertable blocks. The block remains registered and
+ *   renderable from layouts that reference it.
  * @property {boolean} transparent - When true, the block is treated as
- *   scaffolding by the visual editor's outline (children expanded inline,
- *   block chrome suppressed). See the `transparent` option on `block()`.
+ *   structural scaffolding rather than a user-facing block (children
+ *   expanded inline). See the `transparent` option on `block()`.
  */
 
 /**
@@ -187,16 +186,16 @@ const BlockComponentManager = new Proxy(
  * @property {boolean} [integer] - Whether number must be an integer
  * @property {Array} [enum] - Allowed values for the argument
  * @property {Array} [itemEnum] - Allowed values for array items
- * @property {UIHints} [ui] - Optional metadata describing how a visual editor's
- *   inspector should render this arg. Pure metadata — has no runtime effect on
- *   the block itself.
+ * @property {UIHints} [ui] - Optional metadata describing how this arg should
+ *   be presented for editing. Pure metadata — has no runtime effect on the
+ *   block itself.
  */
 
 /**
- * Optional UI hints for the visual editor's inspector. All fields are
- * advisory — the editor is free to fall back to a sensible default when a
- * hint is missing. None of these fields affect validation or runtime
- * behaviour of the block.
+ * Optional UI hints describing how an arg should be presented for editing.
+ * All fields are advisory — a consumer is free to fall back to a sensible
+ * default when a hint is missing. None of these fields affect validation or
+ * runtime behaviour of the block.
  *
  * @typedef {Object} UIHints
  * @property {string} [control] - Override the default inspector control for
@@ -255,37 +254,35 @@ const BlockComponentManager = new Proxy(
  *
  * @param {string[]} [options.deniedOutlets] - Glob patterns for denied outlets.
  *
- * @param {string} [options.displayName] - Human-readable name shown in the
- *   visual editor's palette. Defaults to a Title Case of `shortName`.
+ * @param {string} [options.displayName] - Human-readable name for display
+ *   purposes. Defaults to a Title Case of `shortName`.
  *
- * @param {string} [options.icon] - FontAwesome icon ID for the palette
- *   entry. Defaults to `"cube"`.
+ * @param {string} [options.icon] - Icon ID associated with the block.
+ *   Defaults to `"cube"`.
  *
- * @param {string} [options.category] - Category label for grouping in the
- *   palette (e.g. `"Content"`, `"Layout"`). Defaults to `"Misc"`.
+ * @param {string} [options.category] - Category label for grouping the
+ *   block (e.g. `"Content"`, `"Layout"`). Defaults to `"Misc"`.
  *
- * @param {Object} [options.previewArgs] - Sample args used when the palette
- *   renders a preview of the block. Defaults to a shallow object built
- *   from each arg schema's `default` field.
+ * @param {Object} [options.previewArgs] - Sample args used when rendering a
+ *   preview of the block. Defaults to a shallow object built from each arg
+ *   schema's `default` field.
  *
  * @param {string} [options.thumbnail] - URL of a static thumbnail image
- *   shown in the palette instead of the icon.
+ *   shown instead of the icon.
  *
- * @param {boolean} [options.paletteHidden=false] - When true, the visual
- *   editor's palette omits this block. The block is still registered
- *   and renderable from layouts that reference it — this hides it from
- *   user-facing inserts only, useful for infrastructure blocks (e.g.
+ * @param {boolean} [options.paletteHidden=false] - When true, the block is
+ *   excluded from lists of directly-insertable blocks. The block is still
+ *   registered and renderable from layouts that reference it — this hides it
+ *   from user-facing inserts only, useful for infrastructure blocks (e.g.
  *   the built-in `group`) and deprecated aliases.
  *
  * @param {boolean} [options.transparent=false] - When true, the block is
- *   treated as scaffolding: the visual editor's outline panel expands
- *   it inline (rendering its children at its own level) and the block
- *   chrome wrapper skips its standard border / handle / toolbar. Used
- *   for slot-style wrappers that exist solely to attach metadata
- *   (e.g. `ve:slot` carrying CSS Grid placement) without showing up as
- *   first-class blocks in the authoring UI. Implies — but does not
- *   auto-set — `paletteHidden`; transparent blocks are typically not
- *   user-pickable.
+ *   treated as structural scaffolding: it is expanded inline (rendering its
+ *   children at its own level) and skips the standard block wrapper. Used
+ *   for slot-style wrappers that exist solely to attach metadata (e.g. a
+ *   slot block carrying CSS Grid placement) without showing up as a
+ *   first-class block. Implies — but does not auto-set — `paletteHidden`;
+ *   transparent blocks are typically not user-pickable.
  *
  * @returns {Function} Decorator function that returns the decorated class
  *
@@ -363,8 +360,7 @@ export function block(name, options = {}) {
   // Validate outlet restriction patterns
   validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
-  // Shallow type-check the optional display-metadata fields used by the
-  // visual editor's palette.
+  // Shallow type-check the optional display-metadata fields.
   validateDisplayMetadata(name, options);
 
   return function (target) {
@@ -421,7 +417,7 @@ export function block(name, options = {}) {
  * mutating `entry.args.title = "new"` propagates to the rendered block
  * without re-currying the component or replacing the layout — Glimmer's
  * autotracking reaches in through the proxy to invalidate just the readers
- * of that arg. This is what powers the visual editor's live arg editing.
+ * of that arg. This is what powers live arg editing.
  *
  * The set of arg KEYS is fixed at curry time (per `curryComponent`'s
  * contract that keys must be static), so adding new args after curry
@@ -505,13 +501,13 @@ export function createBlockArgsWithReactiveGetters(
  * - `validate` - Custom validation function
  * - `allowedOutlets` - Allowed outlet patterns
  * - `deniedOutlets` - Denied outlet patterns
- * - `displayName` - Palette display name (or `null` if not provided)
- * - `icon` - Palette icon ID (or `null` if not provided)
- * - `category` - Palette category label (or `null` if not provided)
- * - `previewArgs` - Sample args for the palette preview (or `null`)
- * - `thumbnail` - Palette thumbnail URL (or `null`)
- * - `paletteHidden` - When true, the block is omitted from the editor's palette
- * - `transparent` - When true, the block is treated as scaffolding in the editor's outline
+ * - `displayName` - Display name (or `null` if not provided)
+ * - `icon` - Icon ID (or `null` if not provided)
+ * - `category` - Category label (or `null` if not provided)
+ * - `previewArgs` - Sample args for a preview (or `null`)
+ * - `thumbnail` - Thumbnail URL (or `null`)
+ * - `paletteHidden` - When true, the block is excluded from lists of directly-insertable blocks
+ * - `transparent` - When true, the block is treated as structural scaffolding
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.

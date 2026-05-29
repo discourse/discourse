@@ -49,7 +49,7 @@ export default class UpcomingEventsList extends Component {
     super(...arguments);
     this.appEvents.on("page:changed", this, this.updateEventsList);
     // `page:changed` is the only refresh trigger, so consumers mounted
-    // outside a route transition (e.g. visual-editor blocks on a frozen
+    // outside a route transition (e.g. block-based renders on a frozen
     // homepage) need an explicit initial fetch.
     this.updateEventsList();
   }

@@ -66,8 +66,8 @@ export const FAILURE_TYPE = Object.freeze({
    * Block reference doesn't resolve to a registered block — most often a
    * typo in a saved layout (`hero-banner` -> `hero-bannr`). Without the
    * `?` suffix opt-in, these are normally a hard error in production;
-   * the visual editor surfaces them as labelled placeholders so the
-   * author can swap or remove them.
+   * in a permissive context they can be surfaced as labelled placeholders
+   * so the author can swap or remove them.
    */
   UNKNOWN_BLOCK: "unknown-block",
 });

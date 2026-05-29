@@ -67,6 +67,10 @@ export function isDecoratedCondition(ConditionClass) {
  * @param {Object} [config.constraints] - Cross-arg constraints (atLeastOne, exactlyOne, allOrNone, atMostOne).
  * @param {Function} [config.validate] - Custom validation function called at registration time.
  *   Receives args object, returns error string/array or null.
+ * @param {string} [config.displayName] - Human-readable label for display
+ *   purposes. Falls back to a titleCased `type` when omitted.
+ * @param {string} [config.description] - Short human-readable description.
+ *   No description is shown when omitted.
  * @throws {Error} If config is invalid or class doesn't extend BlockCondition.
  *
  * @example
@@ -185,9 +189,8 @@ export function blockCondition(config) {
     );
   }
 
-  // Shallow type-check the display-metadata fields. These are presentation
-  // hints consumed by the visual editor's condition builder; they have no
-  // runtime effect on evaluation.
+  // Shallow type-check the display-metadata fields. These are advisory
+  // presentation hints with no runtime effect on evaluation.
   if (
     displayName !== undefined &&
     (typeof displayName !== "string" || displayName.trim() === "")
@@ -228,9 +231,8 @@ export function blockCondition(config) {
       validateFn: { get: () => validateFn, configurable: false },
       // validArgKeys combines argsSchema keys with "source" when sourceType !== "none".
       validArgKeys: { get: () => allKeys, configurable: false },
-      // Display-metadata fields consumed by the visual editor's condition
-      // builder. Both default to `null` so the consumer can fall back to a
-      // titleCased `type` or no description.
+      // Advisory display-metadata fields. Both default to `null` so a
+      // consumer can fall back to a titleCased `type` or no description.
       displayName: { get: () => displayName ?? null, configurable: false },
       description: { get: () => description ?? null, configurable: false },
     });

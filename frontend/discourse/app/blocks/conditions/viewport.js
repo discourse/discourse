@@ -87,9 +87,9 @@ export default class BlockViewportCondition extends BlockCondition {
    * Returns the boolean source object the condition checks against. By
    * default this is the live `capabilities` service (so its
    * `capabilities.viewport.{sm|md|lg|xl|2xl}` getters and `capabilities.touch`
-   * are read on every evaluation), but when the visual editor's persona
-   * toolbar sets `context.simulation.viewport`, the simulated shape replaces
-   * the service entirely.
+   * are read on every evaluation), but when `context.simulation.viewport` is
+   * set (a preview/simulation context), the simulated shape replaces the
+   * service entirely.
    *
    * The simulated payload is expected to expose the same surface
    * (`{ viewport: {<breakpoint>: boolean, ...}, touch: boolean }`); we

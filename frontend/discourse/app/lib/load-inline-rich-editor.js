@@ -6,9 +6,11 @@ import { waitForPromise } from "@ember/test-waiters";
  * object with the imported symbols ready to plug into an `EditorView`.
  *
  * Mirrors `loadRichEditor` (`discourse/lib/load-rich-editor`) but exposes
- * the raw building blocks rather than a pre-built component. Used by the
- * visual editor's inline-edit controller; safe to use from plugin code
- * because the dynamic `import()` calls resolve through core's bundler,
+ * the raw building blocks rather than a pre-built component. Used by
+ * inline-edit controllers that need ProseMirror without the full composer
+ * (e.g. a block editor mounting an editor inside a block's inspector);
+ * safe to use from plugin code because the dynamic `import()` calls
+ * resolve through core's bundler,
  * which has access to the `prosemirror-*` packages and the
  * `discourse/static/prosemirror/*` chunks (plugins can't statically
  * import either set).

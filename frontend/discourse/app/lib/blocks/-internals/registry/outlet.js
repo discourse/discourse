@@ -16,7 +16,7 @@ import {
 /**
  * @typedef OutletMetadataEntry
  * @property {string} name - The full outlet identifier (e.g. `"chat:thread-actions"`).
- * @property {string|null} displayName - Human-readable label for the editor's outlet inventory.
+ * @property {string|null} displayName - Human-readable label for display purposes.
  * @property {string|null} description - One-line summary of where the outlet renders.
  * @property {string|null} category - Optional sub-grouping label (free-form, e.g. `"Layout"`).
  * @property {boolean} isCore - True for the 5 outlets baked into core.
@@ -85,12 +85,12 @@ export function getCustomOutlet(name) {
 /**
  * Returns the fully-resolved display metadata for any registered outlet
  * (core or custom). Defaults are applied for optional fields so callers
- * (visual editor palette, outline inventory) don't have to.
+ * don't have to.
  *
  * Defaults:
  * - `displayName` defaults to `name` itself when the registration didn't
- *   set one. The visual editor's outlet panel can still apply additional
- *   title-casing at display time.
+ *   set one. Consumers can still apply additional title-casing at display
+ *   time.
  * - `description`, `category` default to `null`.
  *
  * @param {string} name - The full outlet name.
@@ -127,8 +127,7 @@ export function getOutletMetadata(name) {
 
 /**
  * Returns the fully-resolved display metadata for every registered outlet.
- * Used by `services/blocks.js#listOutletsWithMetadata()` and the visual
- * editor's outlet inventory.
+ * Used by `services/blocks.js#listOutletsWithMetadata()`.
  *
  * @returns {OutletMetadataEntry[]}
  */
@@ -162,12 +161,12 @@ export function _freezeOutletRegistry() {
  *
  * @param {string} outletName - The outlet name (must follow naming conventions).
  * @param {Object} [options] - Outlet options.
- * @param {string} [options.displayName] - Human-readable label shown in the
- *   visual editor's outlet inventory. Defaults to the outlet name itself.
+ * @param {string} [options.displayName] - Human-readable label for display
+ *   purposes. Defaults to the outlet name itself.
  * @param {string} [options.description] - One-line summary of where the
  *   outlet renders.
  * @param {string} [options.category] - Optional free-form grouping label
- *   for the visual editor's outlet inventory (e.g. `"Layout"`).
+ *   (e.g. `"Layout"`).
  *
  * @internal
  */

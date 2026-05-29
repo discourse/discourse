@@ -38,9 +38,9 @@ export const DEBUG_CALLBACK = Object.freeze({
   GHOST_CHILDREN_CREATOR: "ghostChildrenCreator",
   /**
    * Returns an object whose fields are merged into the condition
-   * evaluator's per-block context. Lets external code (e.g. the visual
-   * editor's persona/viewport simulation) inject extra context without
-   * coupling the blocks service to those consumers. Read by the root
+   * evaluator's per-block context. Lets external code (e.g. a user/viewport
+   * simulation) inject extra context without coupling the blocks service to
+   * those consumers. Read by the root
    * container's preprocessor on every visibility evaluation, so a
    * tracked source inside the callback propagates re-renders.
    *
@@ -217,8 +217,8 @@ export function handleOptionalMissingBlock({
  * Handles an unknown / unresolvable block reference (typo or
  * not-yet-installed plugin block, NOT the `?` opt-in optional-missing
  * case). In strict rendering this entry is silently skipped. When
- * `showGhosts` is enabled (e.g. the visual editor is active or
- * dev-tools' overlay is on) the block renders as a labelled placeholder
+ * `showGhosts` is enabled (e.g. dev-tools' overlay is on, or any
+ * preview/edit context) the block renders as a labelled placeholder
  * via the existing ghost-block component so the author can see the
  * reference and replace it.
  *
@@ -247,8 +247,8 @@ export function handleUnknownBlock({
       name: blockName,
       id: entry.id,
       // Forward the stable key into the BLOCK_DEBUG payload so debug
-      // consumers (e.g. the visual editor's chrome wrapper) can wire
-      // the ghost back to its underlying layout entry. The same `key`
+      // consumers can wire the ghost back to its underlying layout
+      // entry. The same `key`
       // is also stamped on the returned ghostData below — the
       // duplication is intentional: the outer key drives Glimmer's
       // `{{#each}}` identity, the inner one drives `BLOCK_DEBUG`
@@ -306,6 +306,9 @@ export function buildContainerPath(
  * @param {Object} blockData - Data describing the block to ghost.
  * @param {string} blockData.name - The block name.
  * @param {string} [blockData.id] - The block's unique ID (if set).
+ * @param {string} [blockData.key] - Stable unique key for this entry. Forwarded
+ *   into the BLOCK_DEBUG payload so consumers can wire the ghost back to its
+ *   underlying layout entry.
  * @param {Object} [blockData.args] - Block arguments.
  * @param {Object} [blockData.containerArgs] - Container arguments.
  * @param {Array} [blockData.conditions] - Block conditions.

@@ -151,10 +151,11 @@ export default class BlockUserCondition extends BlockCondition {
    * @param {Object} args - The condition arguments.
    * @param {Object} [context] - Evaluation context.
    * @param {Object} [context.outletArgs] - Outlet args for source resolution.
-   * @param {Object} [context.simulation] - Optional simulated identity from
-   *   the visual editor. When `context.simulation.user` is set AND `args.source`
-   *   is not provided, the simulated user replaces the real `currentUser` so
-   *   condition-gated visibility can be previewed under a hypothetical viewer.
+   * @param {Object} [context.simulation] - Optional simulated identity from a
+   *   preview/simulation context. When `context.simulation.user` is set
+   *   AND `args.source` is not provided, the simulated user replaces the real
+   *   `currentUser` so condition-gated visibility can be previewed under a
+   *   hypothetical viewer.
    * @returns {boolean} True if the condition passes.
    */
   evaluate(args, context) {
@@ -171,7 +172,7 @@ export default class BlockUserCondition extends BlockCondition {
     // When the caller provided an explicit `source`, treat it as the user to
     // check against (overrides simulation). When `source` is absent, the
     // condition is asking about the current viewer — and that's where the
-    // editor's persona simulation kicks in. The check uses `in` so an
+    // simulated identity kicks in. The check uses `in` so an
     // explicit `null` (meaning "simulated as anonymous") wins over the real
     // `currentUser` service.
     const user =

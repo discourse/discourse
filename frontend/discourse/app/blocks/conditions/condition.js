@@ -141,6 +141,57 @@ export class BlockCondition {
   static validArgKeys;
 
   /**
+   * Namespace component parsed from `type`.
+   *
+   * - `null` for core conditions (e.g. `"route"`).
+   * - The plugin or theme namespace for namespaced conditions
+   *   (e.g. `"my-plugin"` for `"my-plugin:my-condition"`).
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly.
+   *
+   * @type {string|null}
+   */
+  static namespace;
+
+  /**
+   * Namespace kind parsed from `type`.
+   *
+   * - `"core"` for core conditions.
+   * - `"plugin"` for `"plugin:condition-name"` types.
+   * - `"theme"` for `"theme:namespace:condition-name"` types.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly.
+   *
+   * @type {"core"|"plugin"|"theme"}
+   */
+  static namespaceType;
+
+  /**
+   * Human-readable label for display purposes.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. Pass the `displayName` option to the decorator
+   * instead. Defaults to `null` so consumers can fall back to a titleCased
+   * `type`.
+   *
+   * @type {string|null}
+   */
+  static displayName;
+
+  /**
+   * Short human-readable description.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. Pass the `description` option to the decorator
+   * instead. Defaults to `null` so consumers can omit the description.
+   *
+   * @type {string|null}
+   */
+  static description;
+
+  /**
    * Resolves the `source` parameter value based on the condition's `sourceType`.
    *
    * - `sourceType: "outletArgs"`: Extracts the property path from `@outletArgs.path.to.value`

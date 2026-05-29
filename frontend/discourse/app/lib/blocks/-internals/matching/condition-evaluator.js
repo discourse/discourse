@@ -17,11 +17,10 @@ import {
  * @param {Object} [context.simulation] - Optional simulated identity / viewport.
  *   Each condition class that consults the simulated value (currently `user` and
  *   `viewport`) checks `context.simulation?.user` / `context.simulation?.viewport`
- *   before falling back to its real-time service reads. Used by the visual
- *   editor's persona/viewport toolbar to preview how condition-gated
- *   blocks render under a hypothetical user / screen size. Block bodies still
- *   render with the real user's data — simulation only affects condition
- *   evaluation.
+ *   before falling back to its real-time service reads. Lets a preview context
+ *   show how condition-gated blocks render under a hypothetical user / screen
+ *   size. Block bodies still render with the real user's data — simulation
+ *   only affects condition evaluation.
  * @returns {boolean} True if conditions pass, false otherwise.
  */
 export function evaluateConditions(

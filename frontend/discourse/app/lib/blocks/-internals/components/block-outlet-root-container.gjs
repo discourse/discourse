@@ -52,7 +52,7 @@ export default class BlockOutletRootContainer extends Component {
    * - The same keys are reused on every render/navigation
    * - This cache instance is garbage collected when the owning component is destroyed
    *
-   * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
+   * @type {Map<string, {ComponentClass: typeof Component, args: Object, containerArgs?: Object, result: Object}>}
    */
   #componentCache = new Map();
 
@@ -208,9 +208,9 @@ export default class BlockOutletRootContainer extends Component {
       // services, and since we're in a tracked getter, Ember tracks these reads.
       //
       // Extra context fields can be injected via the EVAL_CONTEXT debug
-      // callback — the visual editor uses it to thread its persona /
-      // viewport simulation through condition evaluation without coupling
-      // the blocks service to the editor. The callback is read inside the
+      // callback — external code uses it to thread a user / viewport
+      // simulation through condition evaluation without coupling the
+      // blocks service to that consumer. The callback is read inside the
       // tracked getter, so any tracked state it returns triggers a
       // re-render when it changes.
       const extraContext = debugHooks.getCallback(

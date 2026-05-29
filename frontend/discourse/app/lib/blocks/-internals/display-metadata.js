@@ -43,25 +43,24 @@ function previewArgsFromSchema(argsSchema) {
 }
 
 /**
- * Returns the display-metadata vocabulary the visual editor's palette and
- * outline panels consume, filling in defaults for fields the block author
- * didn't explicitly set. Pure read-only — does not mutate the registered
- * block metadata.
+ * Returns the resolved display-metadata vocabulary for a block, filling in
+ * defaults for fields the block author didn't explicitly set. Pure read-only
+ * — does not mutate the registered block metadata.
  *
  * Defaults:
  * - `displayName` falls back to a Title Case of `shortName`.
- * - `icon` falls back to `"cube"` (matches the unselected block-chrome
- *   handle's icon).
+ * - `icon` falls back to `"cube"`.
  * - `category` falls back to `"Misc"`.
  * - `previewArgs` falls back to a shallow object harvested from each arg
  *   schema's `default` field.
- * - `thumbnail` falls back to `null` (the palette renders the icon).
+ * - `thumbnail` falls back to `null` (the icon is rendered instead).
  *
  * @param {Function} component - A class decorated with `@block`.
  * @returns {{displayName: string, icon: string, category: string,
  *   previewArgs: Object, thumbnail: string|null, paletteHidden: boolean,
- *   transparent: boolean}|null} The fully-resolved display metadata, or
- *   `null` if the component is not a registered block.
+ *   transparent: boolean}|null}
+ *   The fully-resolved display metadata, or `null` if the component is
+ *   not a registered block.
  */
 export function getBlockDisplayMetadata(component) {
   const metadata = getBlockMetadata(component);

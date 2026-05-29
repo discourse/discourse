@@ -58,7 +58,7 @@ function normaliseAccepts(accepts) {
  * `getFiles({source})`. Keeps the library wall intact: PDND helpers
  * are imported here, not in plugin code.
  *
- * @param {{types: string[], items: DataTransferItem[], getStringData: Function}} payload
+ * @param {{types: string[], items: DataTransferItem[], getStringData: (mediaType: string) => string}} payload
  */
 function decorateSource(payload) {
   return {

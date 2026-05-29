@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
+/** @type {import("discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard.gjs")} */
 import MinimalGamificationLeaderboard from "../components/minimal-gamification-leaderboard";
 
 const PERIODS = [
@@ -16,7 +17,7 @@ const PERIODS = [
 const AVATAR_SIZES = ["small", "medium", "large"];
 
 /**
- * Visual-editor block for the gamification leaderboard. Wraps the
+ * Block registration for the gamification leaderboard. Wraps the
  * existing `MinimalGamificationLeaderboard` (compact sidebar variant)
  * so authors can drop a leaderboard into any block-driven outlet.
  *
