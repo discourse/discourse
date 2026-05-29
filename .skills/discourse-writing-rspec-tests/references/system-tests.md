@@ -123,7 +123,7 @@ end
 
 **When a system test fails, diagnose before fixing.** Guessing at fixes without understanding the failure burns retries and lands the wrong patch.
 
-If you changed frontend code (`.js` / `.hbs` / `.gjs` / `.gts`) and the behavior suggests your changes aren't being picked up, the asset build is stale. Run `bin/ember-cli --build` to rebuild, then re-run the test. This is only needed when `bin/ember-cli` isn't already running in the background.
+If you changed frontend code (`.js` / `.hbs` / `.gjs` / `.gts`) and the behavior suggests your changes aren't being picked up, the asset build is stale. Run `pnpm build` to rebuild, then re-run the test. This is only needed when `bin/dev` isn't already running in the background.
 
 For runtime visibility, add `puts "DEBUG: …"` in Ruby (controllers, models, services, jobs) or `console.log("DEBUG: …")` in JavaScript (components, services, routes). Place logs at the entry point of the code path, around conditional branches, and at the line where the failure occurs. Re-run with documentation format so the output reads cleanly:
 
@@ -139,7 +139,7 @@ Common failure patterns:
 |---|---|---|
 | Element not found | Selector wrong, element not rendered, timing | `console.log` in the component, double-check the selector in the test |
 | Unexpected content | Wrong data, rendering issue | `puts` in the controller/serializer to check data flow |
-| JS changes not reflected | Assets not rebuilt | Run `bin/ember-cli --build` |
+| JS changes not reflected | Assets not rebuilt | Run `pnpm build` |
 | Flaky pass/fail | Timing issue | Add waits, check for async operations |
 | 404/500 in test | Route or controller issue | `puts` in the route handler, check server logs |
 

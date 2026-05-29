@@ -4,7 +4,7 @@ RSpec.describe ThemeJavascriptCompiler do
   let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", minify: false) }
 
   describe "#append_ember_template" do
-    it "maintains module names so that discourse-boot.js can correct them" do
+    it "maintains module names" do
       compiler.append_tree({ "connectors/blah-1.hbs" => "{{var}}" })
       compiler.append_tree({ "connectors/blah-2.hbs" => "{{var}}" })
       compiler.append_tree({ "javascripts/connectors/blah-3.hbs" => "{{var}}" })

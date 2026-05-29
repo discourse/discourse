@@ -115,10 +115,9 @@ module DiscourseWebauthn
   def self.origin
     case Rails.env
     when "development"
-      # defaults to the Ember CLI local port
       # you might need to change this and the rp_id above
       # if you are using a non-default port/hostname locally
-      "http://localhost:4200"
+      "http://localhost:3000"
     else
       Discourse.base_url_no_prefix
     end

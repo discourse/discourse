@@ -28,7 +28,7 @@ id: github-codespaces
 
 1. Run the `dev/admin/create` task. Open the command palette with <kbd>Cmd/Ctrl + Shift + P</kbd> and search for "Tasks: Run Tasks". It will present a menu of tasks; select `dev/admin/create` off of that list. You'll be prompted to enter an email address and a password for your admin user.
 
-1. Visit the "Ports" tab, and click the :globe_with_meridians: button for port 4200. This will open a new tab showing your development copy of Discourse
+1. Visit the "Ports" tab, and click the :globe_with_meridians: button for port 3000. This will open a new tab showing your development copy of Discourse
 
    ![Codespaces ports tab|1198x282,40%](/assets/codespaces-4.png)
 

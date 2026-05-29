@@ -43,16 +43,6 @@ function logIfDebug(...messages) {
   }
 }
 
-function setPublicPath(settings) {
-  // This variable assignment is re-written by webpack at build time.
-  // It ensures that the WASM files are loaded from the CDN, just like this JS entrypoint.
-  // eslint-disable-next-line no-undef
-  __webpack_public_path__ = new URL(
-    `${settings.mediaOptimizationBundle}/../..`,
-    location.href
-  ).toString();
-}
-
 function buildMozJpegOptions(settings) {
   return {
     quality: settings.encode_quality,
@@ -124,7 +114,6 @@ globalThis.optimize = async function (
   originalFileSize,
   settings
 ) {
-  setPublicPath(settings);
   const mozJpegOptions = buildMozJpegOptions(settings);
 
   const initialSize = imageData.byteLength;
@@ -176,8 +165,6 @@ globalThis.convert = async function (
   originalFileSize,
   settings
 ) {
-  setPublicPath(settings);
-
   logIfDebug(`Converting ${fileName} (${fileType}, ${originalFileSize} bytes)`);
 
   let imageData;
@@ -240,8 +227,6 @@ globalThis.convertAnimated = async function (
   originalFileSize,
   settings
 ) {
-  setPublicPath(settings);
-
   logIfDebug(
     `Converting animated ${fileName} (${originalFileSize} bytes) to animated WEBP`
   );

@@ -507,6 +507,13 @@ RSpec.configure do |config|
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+    config.before(:each) do |example|
+      if example.metadata[:type] != :system
+        EmberCli.stubs(:read_manifest!).returns(nil)
+        EmberCli.stubs(:script_chunks).returns({})
+      end
+    end
+
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
       if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?

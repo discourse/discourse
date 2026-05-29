@@ -347,6 +347,8 @@ describe "Topic bulk select" do
       sign_in(admin)
       visit("/latest")
 
+      expect(page).to have_css("#site-logo")
+
       send_keys([:shift, "b"])
       expect(topic_list).to have_bulk_select_enabled
       send_keys("j")

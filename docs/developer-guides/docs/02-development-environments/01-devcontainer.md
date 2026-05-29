@@ -34,7 +34,7 @@ Dev Containers can be used in a number of different IDEs, or directly using thei
 
 1. Run the `dev/admin/create` task. Open the command palette and search for "Tasks: Run Tasks". It will present a menu of tasks; select `dev/admin/create` off of that list. You'll be prompted to enter an email address and a password for your admin user.
 
-1. Visit `http://localhost:4200` in your browser to see your new Discourse instance
+1. Visit `http://localhost:3000` in your browser to see your new Discourse instance
 
 1. All done! You can now make changes to Discourse's source code and see them reflected in the preview.
 
