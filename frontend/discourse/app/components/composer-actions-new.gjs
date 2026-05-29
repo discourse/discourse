@@ -321,38 +321,9 @@ export default class ComposerActions extends Component {
     return i18n("composer.composer_actions.reply_to_topic.label");
   }
 
-  toggleProperty(property) {
-    this.composerModel.toggleProperty(property);
-  }
-
-  @action
-  toggleFromRow(property, event) {
-    if (event?.target?.closest(".d-toggle-switch")) {
-      return;
-    }
-
-    this.toggleProperty(property);
-  }
-
-  @action
-  toggleFromSwitch(property, event) {
-    event?.stopPropagation();
-    this.toggleProperty(property);
-  }
-
   @action
   toggleWhisper() {
-    this.toggleProperty("whisper");
-  }
-
-  @action
-  toggleNoBump() {
-    this.toggleProperty("noBump");
-  }
-
-  @action
-  toggleUnlisted() {
-    this.toggleProperty("unlistTopic");
+    this.composerModel.toggleProperty("whisper");
   }
 
   @action
