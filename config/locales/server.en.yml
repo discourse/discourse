@@ -5789,7 +5789,6 @@ en:
     enter: "Enter Developer Mode"
   wizard:
     title: "Discourse Setup"
-    field_required: "Required"
     step:
       setup:
         title: "Getting started"
@@ -5799,9 +5798,6 @@ en:
           title:
             label: "Community name"
             placeholder: "Jane's Hangout"
-          company_url:
-            label: "Organization URL (optional)"
-            placeholder: "https://example.com"
           default_locale:
             label: "Language"
           login_required:

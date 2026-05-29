@@ -5,7 +5,6 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { or } from "discourse/truth-helpers";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import fields from "./fields";
 
 export default class WizardFieldComponent extends Component {
@@ -50,6 +49,10 @@ export default class WizardFieldComponent extends Component {
             {{@field.label}}
           </span>
 
+          {{#if @field.required}}
+            <span class="wizard-container__label required">*</span>
+          {{/if}}
+
           {{#if @field.description}}
             <div class="wizard-container__description">
               {{trustHTML @field.description}}
@@ -68,8 +71,7 @@ export default class WizardFieldComponent extends Component {
       </div>
 
       {{#if @field.errorDescription}}
-        <div class="wizard-container__error">
-          {{dIcon "triangle-exclamation"}}
+        <div class="wizard-container__description error">
           {{trustHTML this.field.errorDescription}}
         </div>
       {{/if}}

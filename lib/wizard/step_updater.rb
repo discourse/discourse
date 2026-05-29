@@ -46,11 +46,11 @@ class Wizard
     def apply_setting(id)
       update_setting(id, @fields[id])
     rescue Discourse::InvalidParameters => e
-      errors.add(id, e.message.delete_prefix("#{id}: "))
+      errors.add(id, e.message)
     end
 
     def ensure_changed(id)
-      errors.add(id, I18n.t("wizard.field_required")) if @fields[id] == SiteSetting.defaults[id]
+      errors.add(id, "") if @fields[id] == SiteSetting.defaults[id]
     end
 
     def apply_settings(*ids)
