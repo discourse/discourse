@@ -141,7 +141,7 @@ const result = await this.modal.show(MyModal);
 | `:footer` | Bottom action bar | Primary + secondary buttons. The first `.btn-primary` here is what Enter triggers. |
 | `:belowFooter` | After the footer | Rarely needed; ignores `@hideFooter`. Useful for status text outside the bordered footer area. |
 
-Sources: [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/d-modal.gjs) for named blocks.
+Sources: [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/ui-kit/d-modal.gjs) for named blocks.
 
 ### CSS
 
