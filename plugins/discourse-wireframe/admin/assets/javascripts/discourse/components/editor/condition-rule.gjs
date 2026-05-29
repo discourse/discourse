@@ -141,7 +141,6 @@ export default class ConditionRule extends Component {
         </span>
       </DButton>
 
-      {{! template-lint-disable no-nested-interactive }}
       {{! The remove button sits inside the row but outside the header
         disclosure button. It's a sibling at the DOM level (the header
         button doesn't wrap it), so it's not a nested-interactive even

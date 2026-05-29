@@ -227,6 +227,35 @@
   }
 }
 
+/* The dark variant is rendered at the LIGHT variant's intrinsic
+   dimensions (see `darkVariantWithLightFrame` in `wf-image.gjs`) so
+   both variants share one frame.
+
+   The img tag has `width` / `height` attributes from the light
+   variant (DCdnImg passes them through), but the catch-all `height:
+   auto` rule above clears the height attribute and lets the browser
+   compute height from the LOADED image's natural ratio — which would
+   be the DARK variant's ratio in dark mode, so the box stretches to
+   dark's aspect and no clipping happens.
+
+   Anchoring the box to the light variant's aspect via the
+   `--aspect-ratio` custom property (set inline by `DCdnImg`) makes
+   `height: auto` resolve to "light's frame height" instead of "dark's
+   natural height", so the dark image is clipped to the light frame
+   via `object-fit: cover`. The inspector's ratio-mismatch warning
+   fires when this clipping would happen.
+
+   Targeted via `[data-block-arg="image"]` because the `.wf-image`
+   class can land on the figure / anchor wrapper OR on the img itself
+   (per `DLightDarkImg`'s `...attributes` forwarding) — the data
+   attribute is the one reliable selector that always reaches the
+   rendered image element. */
+
+img[data-block-arg="image"] {
+  aspect-ratio: var(--aspect-ratio, auto);
+  object-fit: cover;
+}
+
 .wf-columns {
   display: grid;
   align-items: start;

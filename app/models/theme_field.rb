@@ -14,7 +14,7 @@ class ThemeField < ActiveRecord::Base
            class_name: "JavascriptCache",
            dependent: :destroy,
            autosave: true
-  has_one :upload_reference, as: :target, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
   has_one :theme_settings_migration, dependent: :destroy
 
   validates :value, { length: { maximum: 1024**2 } }
@@ -27,6 +27,17 @@ class ThemeField < ActiveRecord::Base
            type_id == ThemeField.types[:theme_upload_var]
        ) && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
+    elsif type_id == ThemeField.types[:block_layout] && saved_change_to_value?
+      # Claim every upload embedded in the layout JSON so the hourly
+      # `Jobs::CleanUpUploads` doesn't garbage-collect them as orphans.
+      # `ensure_exist!` also prunes references this target previously held
+      # for uploads no longer present, so removing or swapping an image in
+      # the editor reconciles automatically. Ids are filtered against the
+      # current `Upload` table to skip any client-supplied id that points
+      # to a non-existent (or just-deleted) upload row.
+      ids = BlockLayoutUploads.extract(value)
+      ids = Upload.where(id: ids).pluck(:id) if ids.any?
+      UploadReference.ensure_exist!(upload_ids: ids, target: self)
     end
   end
 

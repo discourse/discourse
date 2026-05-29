@@ -82,18 +82,6 @@ export default class InspectorPanel extends Component {
   }
 
   /**
-   * The selected block's soft-failure marker, read directly from the
-   * entry's `__failureType` / `__failureReason` (set by the validator
-   * when running in permissive mode). Drives the inline warning banner
-   * and recovery action buttons.
-   *
-   * @returns {{failureType: string, failureReason: string}|null}
-   */
-  get failure() {
-    return this.wireframe.selectedBlockFailure;
-  }
-
-  /**
    * Combined block-info string shown in the metadata tooltip. Keeps
    * three-line trivia (namespace, description, container flag) out of
    * the main pane.
@@ -116,16 +104,26 @@ export default class InspectorPanel extends Component {
     return parts.join("\n");
   }
 
-  @action
-  setTab(tab) {
-    this._activeTab = tab;
+  /**
+   * Whether the Args tab contains validation errors and should render
+   * the warning badge on its tab button. Today every structured detail
+   * we emit is either field-attributed (under an arg) or block-level
+   * (constraints, structural). Both belong to Args content, so the
+   * Args tab badges when either bucket is non-empty.
+   *
+   * Conditions / Raw JSON tabs don't badge yet — the validator doesn't
+   * attribute condition errors to a `condition` scope, and Raw JSON is
+   * read-only.
+   *
+   * @returns {boolean}
+   */
+  get argsTabHasErrors() {
+    return this.wireframe.selectedBlockHasErrors;
   }
 
   @action
-  removeSelectedBlock() {
-    if (this.data?.key) {
-      this.wireframe.removeBlock(this.data.key);
-    }
+  setTab(tab) {
+    this._activeTab = tab;
   }
 
   @action
@@ -135,28 +133,6 @@ export default class InspectorPanel extends Component {
 
   <template>
     {{#if this.hasSelection}}
-      {{#if this.failure}}
-        <div class="wireframe-inspector-warning" role="alert">
-          <span class="wireframe-inspector-warning__header">
-            {{dIcon "triangle-exclamation"}}
-            <span>{{i18n "wireframe.inspector.warning_header"}}</span>
-          </span>
-          {{#if this.failure.failureReason}}
-            <p class="wireframe-inspector-warning__reason">
-              {{this.failure.failureReason}}
-            </p>
-          {{/if}}
-          <div class="wireframe-inspector-warning__actions">
-            <DButton
-              class="btn-danger"
-              @icon="trash-can"
-              @label="wireframe.inspector.remove_block_action"
-              @action={{this.removeSelectedBlock}}
-            />
-          </div>
-        </div>
-      {{/if}}
-
       <div class="wireframe-inspector__header">
         <span class="wireframe-inspector__block-name">
           {{this.data.name}}
@@ -177,8 +153,10 @@ export default class InspectorPanel extends Component {
           class={{dConcatClass
             "btn-flat wireframe-inspector__tab"
             (if (this.isTabActive "args") "--active")
+            (if this.argsTabHasErrors "--has-errors")
           }}
           @label="wireframe.inspector.tab_args"
+          @icon={{if this.argsTabHasErrors "triangle-exclamation"}}
           @action={{fn this.setTab "args"}}
         />
         <DButton

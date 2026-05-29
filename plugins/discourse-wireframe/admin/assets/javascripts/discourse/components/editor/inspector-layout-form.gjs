@@ -474,7 +474,6 @@ export default class InspectorLayoutForm extends Component {
           </div>
         </div>
 
-        {{! template-lint-disable no-nested-interactive }}
         {{! Disclosure body holds inputs/buttons by design. The
             <summary> is the disclosure trigger; its descendants
             stand on their own as form controls once expanded. }}

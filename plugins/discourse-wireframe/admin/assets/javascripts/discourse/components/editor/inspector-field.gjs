@@ -5,6 +5,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import InspectorCategoryField from "./inspector-category-field";
 import InspectorGroupField from "./inspector-group-field";
+import InspectorImageField from "./inspector-image-field";
 import InspectorTagField from "./inspector-tag-field";
 import InspectorUserField from "./inspector-user-field";
 
@@ -31,7 +32,10 @@ export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
   color: "color",
   icon: "icon",
   emoji: "emoji",
-  "image-upload": "image",
+  // `image` rides FormKit's `custom` slot; the per-control branch below
+  // renders the bespoke InspectorImageField that owns the full value
+  // shape (`{ source, url, width?, height?, dark? }`).
+  image: "custom",
   "rich-text": "composer",
   // `rich-inline` is read-only in the inspector — editing happens on the
   // canvas via the InlineEditController. The fallback FormKit type
@@ -119,12 +123,16 @@ const InspectorField = <template>
           </radio.Radio>
         {{/each}}
       </formField.Control>
-    {{else if (eq @field.control "image-upload")}}
-      {{! FKControlImage forwards @type to UppyImageUploader, which
-          requires a non-empty value (used as the MessageBus channel
-          and the upload-type tag). "composer" is the generic
-          catch-all type used elsewhere for free-form image uploads. }}
-      <formField.Control @type="composer" />
+    {{else if (eq @field.control "image")}}
+      {{! Image args own a bespoke custom control with Upload | URL
+          tabs, an optional dark variant, and a ratio-mismatch warning.
+          Mounted inside `<formField.Control>` (FormKit's `custom`
+          slot, which is just a styling wrapper that yields its
+          content) — the inner component reads/writes the field value
+          directly via the yielded `formField`. }}
+      <formField.Control>
+        <InspectorImageField @custom={{formField}} @schema={{@field.schema}} />
+      </formField.Control>
     {{else if (eq @field.control "category-select")}}
       {{! `<formField.Control>` with `@type="custom"` renders a styling
           wrapper that just yields its content (`FKControlCustom` doesn't

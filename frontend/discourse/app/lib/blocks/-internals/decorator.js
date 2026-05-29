@@ -196,7 +196,7 @@ const BlockComponentManager = new Proxy(
  * @property {string} [control] - Override the default inspector control for
  *   this arg. Valid values are listed in `VALID_UI_CONTROLS` (re-exported
  *   from `discourse/lib/blocks`); examples include "text", "textarea",
- *   "color", "icon", "image-upload", "rich-text", and entity pickers like
+ *   "color", "icon", "rich-text", and entity pickers like
  *   "category-select", "tag-select", "user-select", "group-select".
  * @property {string} [label] - Inspector field label override. Defaults to a
  *   title-cased form of the arg name.

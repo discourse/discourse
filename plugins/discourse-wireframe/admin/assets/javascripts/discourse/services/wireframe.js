@@ -19,6 +19,7 @@ import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns
 import discourseDebounce from "discourse/lib/debounce";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import MinimalRichTextRenderer from "discourse/plugins/discourse-wireframe/discourse/components/minimal-rich-text-renderer";
 // Absolute addon path: `grid-math` is in the universal bundle (its
 // `parsePlacement` is called by the live-page `wf-layout.gjs`); this
@@ -239,6 +240,16 @@ export default class WireframeService extends Service {
    */
   @tracked fieldEditor = null;
   /**
+   * Tracks the most recently interacted-with image arg name for the
+   * selected block. Used to route a paste to the right arg on
+   * multi-image blocks (e.g. media-card avatar vs cover image).
+   * Updated by the chrome's image-arg overlay on focus / hover / click;
+   * cleared on selection change.
+   *
+   * @type {string|null}
+   */
+  @tracked lastTouchedImageArg = null;
+  /**
    * Inline-text-edit session state. Holds the active `(blockKey, argName)`,
    * the cached entry location, the pre-edit snapshot for undo, the
    * registered controller, structural ops (split / merge), and sibling
@@ -450,6 +461,193 @@ export default class WireframeService extends Service {
   constructor() {
     super(...arguments);
     this._loadConditionsPanelState();
+    this._installImagePasteListener();
+    this._installFileDragGuard();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this._uninstallImagePasteListener();
+    this._uninstallFileDragGuard();
+  }
+
+  /**
+   * Window-level `dragover` / `drop` guard. Without this, the browser's
+   * default behaviour for an external file drag is to NAVIGATE to the
+   * dropped file when the user releases over any element that didn't
+   * call `event.preventDefault()`. Per-overlay drop handlers can't
+   * always reach their stopPropagation in time (e.g. if the user
+   * releases over the chrome outside an image marker), and the
+   * resulting full-page navigation throws the editor session away.
+   *
+   * The guard fires only while the editor is active and the drag
+   * carries files. It always calls `preventDefault` so the browser
+   * never gets to navigate; specific overlay handlers still receive
+   * the event via normal DOM bubbling and route uploads as needed.
+   */
+  _installFileDragGuard() {
+    if (typeof window === "undefined") {
+      return;
+    }
+    this._handleFileDragOver = (event) => {
+      if (!this.isActive) {
+        return;
+      }
+      if (!event.dataTransfer?.types?.includes?.("Files")) {
+        return;
+      }
+      event.preventDefault();
+    };
+    this._handleFileDrop = (event) => {
+      if (!this.isActive) {
+        return;
+      }
+      if (!event.dataTransfer?.types?.includes?.("Files")) {
+        return;
+      }
+      event.preventDefault();
+    };
+    window.addEventListener("dragover", this._handleFileDragOver, false);
+    window.addEventListener("drop", this._handleFileDrop, false);
+  }
+
+  _uninstallFileDragGuard() {
+    if (this._handleFileDragOver) {
+      window.removeEventListener("dragover", this._handleFileDragOver, false);
+      this._handleFileDragOver = null;
+    }
+    if (this._handleFileDrop) {
+      window.removeEventListener("drop", this._handleFileDrop, false);
+      this._handleFileDrop = null;
+    }
+  }
+
+  /**
+   * Installs a window-level `paste` listener that routes image data
+   * from the system clipboard into the selected block's image arg. The
+   * listener is always installed (it's cheap and only acts when a
+   * block with image args is selected), and torn down when the
+   * service is destroyed.
+   *
+   * Guarded so the handler ignores pastes that originate inside
+   * native text inputs / contenteditables outside the editor — those
+   * keep their default browser behaviour.
+   */
+  _installImagePasteListener() {
+    if (typeof document === "undefined") {
+      return;
+    }
+    this._handleImagePaste = (event) => {
+      this._onImagePaste(event);
+    };
+    document.addEventListener("paste", this._handleImagePaste, true);
+  }
+
+  _uninstallImagePasteListener() {
+    if (this._handleImagePaste) {
+      document.removeEventListener("paste", this._handleImagePaste, true);
+      this._handleImagePaste = null;
+    }
+  }
+
+  /**
+   * Paste handler. No-ops unless all of:
+   *   - A block is selected on the canvas
+   *   - That block declares one or more image args
+   *   - The clipboard carries at least one image file
+   *   - The paste target isn't a text input outside the editor scope
+   *
+   * When everything lines up, the handler picks the target arg
+   * (`lastTouchedImageArg` if set and still valid, else the first
+   * image arg declared on the block) and routes the file through the
+   * shared upload helper.
+   *
+   * @param {ClipboardEvent} event
+   */
+  async _onImagePaste(event) {
+    const blockKey = this.selectedBlockKey;
+    if (!blockKey) {
+      return;
+    }
+    const schema = this.selectedBlockData?.metadata?.args;
+    const imageArgs = schema
+      ? Object.entries(schema)
+          .filter(([, def]) => def?.type === "image")
+          .map(([name]) => name)
+      : [];
+    if (imageArgs.length === 0) {
+      return;
+    }
+    if (this._pasteTargetIsTextInput(event.target)) {
+      return;
+    }
+    const file = this._pickImageFromClipboard(event.clipboardData);
+    if (!file) {
+      return;
+    }
+    event.preventDefault();
+
+    const argName =
+      this.lastTouchedImageArg && imageArgs.includes(this.lastTouchedImageArg)
+        ? this.lastTouchedImageArg
+        : imageArgs[0];
+
+    await this.uploadImageForArg(file, { blockKey, argName });
+  }
+
+  /**
+   * Returns `true` when the paste's `event.target` is a native text
+   * surface (input, textarea, contenteditable) that isn't part of the
+   * editor's own chrome — in which case the native paste behaviour
+   * (insert text / image into the field) is the expected outcome and
+   * we shouldn't hijack it.
+   *
+   * Inputs INSIDE the editor chrome (e.g. an inspector field) are
+   * also skipped — the inspector already has its own image controls.
+   *
+   * @param {EventTarget|null} target
+   * @returns {boolean}
+   */
+  _pasteTargetIsTextInput(target) {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+    if (target.closest("input, textarea, [contenteditable]")) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Pulls the first image File out of a clipboard payload. Falls back
+   * to `items` (where the file representation lives in some browsers
+   * for image-only pastes) when `files` is empty.
+   *
+   * @param {DataTransfer|null|undefined} clipboardData
+   * @returns {File|null}
+   */
+  _pickImageFromClipboard(clipboardData) {
+    if (!clipboardData) {
+      return null;
+    }
+    if (clipboardData.files?.length) {
+      for (const f of clipboardData.files) {
+        if (f.type?.startsWith("image/")) {
+          return f;
+        }
+      }
+    }
+    if (clipboardData.items?.length) {
+      for (const item of clipboardData.items) {
+        if (item.kind === "file" && item.type?.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            return file;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   _isInsideAllowedScope(target) {
@@ -881,6 +1079,72 @@ export default class WireframeService extends Service {
       failureType: entry.__failureType,
       failureReason: entry.__failureReason ?? "",
     };
+  }
+
+  /**
+   * Structured field-level errors for the selected block, keyed by arg
+   * name. Each value is an array of `{ code, field, value?, expected? }`
+   * details — permissive-mode validation accumulates every failure
+   * inside an entry, so a field can carry multiple details in principle
+   * (e.g. type + constraint).
+   *
+   * Details without a `field` are routed to `selectedBlockNonFieldErrors`
+   * instead (the inspector lists them in the top pill, not under a
+   * specific input).
+   *
+   * Drives FormKit's `addError` sync in the inspector — see
+   * `inspector-form.gjs`.
+   *
+   * @returns {Object<string, Array<Object>>}
+   */
+  get selectedBlockFieldErrors() {
+    void this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return {};
+    }
+    const entry = this._findEntryAndOutletSync(key)?.entry;
+    const list = entry?.__failureDetails ?? [];
+    const byField = {};
+    for (const d of list) {
+      if (!d?.field) {
+        continue;
+      }
+      (byField[d.field] ??= []).push(d);
+    }
+    return byField;
+  }
+
+  /**
+   * Structured errors for the selected block that aren't tied to a
+   * single field — constraint violations, missing children, unknown
+   * block, duplicate IDs, etc. These render in the top-of-inspector
+   * pill since they have no specific control to hang under.
+   *
+   * @returns {Array<Object>}
+   */
+  get selectedBlockNonFieldErrors() {
+    void this.structuralVersion;
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return [];
+    }
+    const entry = this._findEntryAndOutletSync(key)?.entry;
+    return (entry?.__failureDetails ?? []).filter((d) => !d?.field);
+  }
+
+  /**
+   * Whether the selected block has any structured error (field-level
+   * or not). Used by the inspector to decide whether to render the
+   * compact errors pill.
+   *
+   * @returns {boolean}
+   */
+  get selectedBlockHasErrors() {
+    return (
+      Object.keys(this.selectedBlockFieldErrors).length > 0 ||
+      this.selectedBlockNonFieldErrors.length > 0
+    );
   }
 
   /**
@@ -1765,6 +2029,111 @@ export default class WireframeService extends Service {
     }
     this._pendingArgs.set(argName, value);
     discourseDebounce(this, this._flushPendingArgs, FLUSH_DELAY_MS);
+  }
+
+  /**
+   * Uploads a single File to the Discourse uploads endpoint and writes
+   * the result into a block's image arg. Used by the inline editing
+   * overlays (click-to-pick, drag-and-drop, paste) so the canvas can
+   * mutate image args without the inspector being open.
+   *
+   * Writes to the specific `blockKey` rather than the currently-selected
+   * block, so a slow upload doesn't race with the user clicking around
+   * the canvas.
+   *
+   * One-shot UppyUpload instance per call — uniquely id'd by argName +
+   * timestamp to avoid the duplicate-id error when multiple uploads
+   * race. The instance tears itself down on success or failure.
+   *
+   * @param {File|Blob} file
+   * @param {Object} options
+   * @param {string} options.blockKey - The block whose arg to write.
+   * @param {string} options.argName - The image arg name on that block.
+   * @returns {Promise<{url: string, width?: number, height?: number}|null>}
+   *   The upload result on success, `null` on failure (the consumer
+   *   surfaces its own error UI).
+   */
+  uploadImageForArg(file, { blockKey, argName }) {
+    if (!file || !blockKey || !argName) {
+      return Promise.resolve(null);
+    }
+    const owner = getOwner(this);
+    const uploadId = `wireframe-image-${argName}-${Date.now()}`;
+    return new Promise((resolve) => {
+      let settled = false;
+      const finish = (result) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        try {
+          upload.teardown();
+        } catch {
+          // Tearing down before Uppy fully boots can throw — safe to ignore.
+        }
+        resolve(result);
+      };
+
+      const upload = new UppyUpload(owner, {
+        id: uploadId,
+        type: "composer",
+        uploadDone: (result) => {
+          // Persist `upload_id` so the server-side cleanup can create an
+          // UploadReference for this image when the layout saves; without it
+          // the upload would be considered orphan and garbage-collected by
+          // Jobs::CleanUpUploads after the 48h grace period.
+          this._setImageArg(blockKey, argName, {
+            source: "upload",
+            upload_id: result.id,
+            url: result.url,
+            width: result.width,
+            height: result.height,
+          });
+          finish({
+            url: result.url,
+            width: result.width,
+            height: result.height,
+          });
+        },
+      });
+
+      upload.setup();
+      upload.uppyWrapper?.uppyInstance?.on("upload-error", () => finish(null));
+      upload.addFiles(file);
+    });
+  }
+
+  /**
+   * Writes a single arg value into the entry identified by `blockKey`,
+   * routing through the same write-path as inspector edits so undo /
+   * redo / persistence stay consistent. Resolves the entry
+   * synchronously via `_findEntryAndOutletSync` so the canvas re-renders
+   * before the next paint instead of waiting for an async resolution.
+   *
+   * Internal: callers should prefer the higher-level helpers
+   * (`uploadImageForArg`, future paste / drop wiring) which build the
+   * full image-value shape and route here.
+   *
+   * @param {string} blockKey
+   * @param {string} argName
+   * @param {*} value
+   */
+  _setImageArg(blockKey, argName, value) {
+    const located = this._findEntryAndOutletSync(blockKey);
+    if (!located?.entry) {
+      return;
+    }
+    const { entry, outletName } = located;
+    this._editedOutlets.add(outletName);
+
+    const prev = new Map([[argName, entry.args?.[argName]]]);
+    this._captureInitialSnapshot(entry, prev);
+
+    const next = new Map([[argName, value]]);
+    this._writeArgs(entry, next);
+
+    this._undoStack.push({ kind: "args", entry, prev, next });
+    this._redoStack.length = 0;
   }
 
   /**

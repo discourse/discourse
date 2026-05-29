@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
@@ -334,6 +335,30 @@ export default class BlockToolbar extends Component {
               @ariaPressed={{this.isForceExpanded}}
               @action={{this.toggleForceExpand}}
             />
+          {{/if}}
+          {{#if (or @canFillImage @canResetImage)}}
+            <span
+              class="wireframe-block-toolbar__separator"
+              aria-hidden="true"
+            ></span>
+            {{#if @canFillImage}}
+              <DButton
+                class="btn-flat wireframe-block-toolbar__btn"
+                @icon="expand"
+                @title="wireframe.canvas.toolbar.image_fill"
+                @ariaLabel="wireframe.canvas.toolbar.image_fill"
+                @action={{@onFillImage}}
+              />
+            {{/if}}
+            {{#if @canResetImage}}
+              <DButton
+                class="btn-flat wireframe-block-toolbar__btn"
+                @icon="arrows-rotate"
+                @title="wireframe.canvas.toolbar.image_reset"
+                @ariaLabel="wireframe.canvas.toolbar.image_reset"
+                @action={{@onResetImage}}
+              />
+            {{/if}}
           {{/if}}
           {{#if this.showInlineFormat}}
             <span

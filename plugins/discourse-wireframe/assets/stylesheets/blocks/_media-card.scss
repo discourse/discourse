@@ -13,10 +13,18 @@
   &__backdrop {
     position: absolute;
     inset: 0;
+    background-image: var(--wf-media-card-bg-light);
     background-size: cover;
     background-position: center;
     z-index: -1;
     opacity: 0.85;
+
+    @media (prefers-color-scheme: dark) {
+      background-image: var(
+        --wf-media-card-bg-dark,
+        var(--wf-media-card-bg-light)
+      );
+    }
   }
 
   &__top {

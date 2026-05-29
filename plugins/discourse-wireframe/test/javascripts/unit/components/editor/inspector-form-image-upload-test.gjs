@@ -15,11 +15,19 @@ class StubWireframeService extends Service {
     return this._blockData;
   }
 
-  // InspectorValidationBanner reads these; the form mounts the banner
-  // unconditionally above the sections, so the stub has to cover them
-  // even when we're not exercising validation in a given test.
-  get validationWarnings() {
+  // The form syncs structured field errors into FormKit via
+  // `selectedBlockFieldErrors`; the stub returns an empty map so the
+  // sync is a no-op when a test isn't exercising validation.
+  get selectedBlockFieldErrors() {
+    return {};
+  }
+
+  get selectedBlockNonFieldErrors() {
     return [];
+  }
+
+  get selectedBlockHasErrors() {
+    return false;
   }
 
   get selectedBlockKey() {
@@ -49,17 +57,17 @@ function stubWireframe(owner, blockData) {
 }
 
 module(
-  "Integration | Wireframe | InspectorForm | image-upload control",
+  "Integration | Wireframe | InspectorForm | image arg control",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("renders an image upload control for an image-upload schema arg", async function (assert) {
+    test("renders the custom image field for a type:image arg", async function (assert) {
       stubWireframe(this.owner, {
         metadata: {
           args: {
             image: {
-              type: "object",
-              ui: { control: "image-upload", label: "Image" },
+              type: "image",
+              ui: { label: "Image" },
             },
           },
         },
@@ -69,20 +77,24 @@ module(
       await render(<template><InspectorForm /></template>);
 
       assert
-        .dom(".form-kit__control-image")
-        .exists("FKControlImage is rendered without crashing");
+        .dom(".wireframe-image-field")
+        .exists("the custom InspectorImageField renders");
+      assert
+        .dom(".wireframe-image-field__tab")
+        .exists("the Upload/URL tab strip is rendered");
       assert
         .dom(".file-uploader")
-        .exists("UppyImageUploader's file-uploader markup is in the DOM");
+        .exists("UppyImageUploader is mounted on the default Upload tab");
     });
 
-    test("renders the uploaded image preview when args carry a full upload object", async function (assert) {
+    test("dark variant section is omitted when allowDark is false", async function (assert) {
       stubWireframe(this.owner, {
         metadata: {
           args: {
             image: {
-              type: "object",
-              ui: { control: "image-upload", label: "Image" },
+              type: "image",
+              allowDark: false,
+              ui: { label: "Image" },
             },
           },
         },
@@ -94,18 +106,52 @@ module(
       await render(<template><InspectorForm /></template>);
 
       assert
-        .dom(".file-uploader")
-        .hasClass(
-          "has-image",
-          "the uploader is in the has-image state, not no-image"
-        );
+        .dom(".wireframe-image-field__dark")
+        .doesNotExist("no dark <details> when allowDark is false");
+    });
+
+    test("dark variant section renders when allowDark is true", async function (assert) {
+      stubWireframe(this.owner, {
+        metadata: {
+          args: {
+            image: {
+              type: "image",
+              allowDark: true,
+              ui: { label: "Image" },
+            },
+          },
+        },
+        argsSnapshot: {
+          image: { url: "/uploads/cat.png", width: 400, height: 300 },
+        },
+      });
+
+      await render(<template><InspectorForm /></template>);
+
       assert
-        .dom(".file-uploader a.lightbox")
-        .hasAttribute(
-          "href",
-          /\/uploads\/cat\.png$/,
-          "the preview href resolves to the uploaded URL, not [object Object]"
-        );
+        .dom(".wireframe-image-field__dark")
+        .exists("dark <details> section is rendered");
+    });
+
+    test("URL tab swaps the uploader for a text input", async function (assert) {
+      stubWireframe(this.owner, {
+        metadata: {
+          args: {
+            image: { type: "image", ui: { label: "Image" } },
+          },
+        },
+        argsSnapshot: {},
+      });
+
+      await render(<template><InspectorForm /></template>);
+
+      await click(".wireframe-image-field__tab:nth-of-type(2)");
+      assert
+        .dom(".wireframe-image-field__url-input")
+        .exists("URL input replaces the uploader on tab switch");
+      assert
+        .dom(".file-uploader")
+        .doesNotExist("uploader is unmounted while the URL tab is active");
     });
 
     test('wraps an "Advanced" group in <details> while leaving other groups flat', async function (assert) {

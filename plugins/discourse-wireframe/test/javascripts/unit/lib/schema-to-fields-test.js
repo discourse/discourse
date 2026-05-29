@@ -74,10 +74,23 @@ module("Unit | Discourse Wireframe | schemaToFields", function () {
   test("`ui.control` overrides the default mapping", function (assert) {
     const fields = schemaToFields({
       accentColor: { type: "string", ui: { control: "color" } },
-      photo: { type: "string", ui: { control: "image-upload" } },
+      avatarHref: { type: "string", ui: { control: "url" } },
     });
     assert.strictEqual(fields[0].control, "color");
-    assert.strictEqual(fields[1].control, "image-upload");
+    assert.strictEqual(fields[1].control, "url");
+  });
+
+  test("type:image resolves to the custom image control regardless of ui.control", function (assert) {
+    const fields = schemaToFields({
+      cover: { type: "image", allowDark: true },
+      avatar: { type: "image", ui: { control: "color" } },
+    });
+    assert.strictEqual(fields[0].control, "image");
+    assert.strictEqual(
+      fields[1].control,
+      "image",
+      "type:image wins over any stray ui.control hint"
+    );
   });
 
   test("propagates ui label, placeholder, helpText, group, required, default", function (assert) {

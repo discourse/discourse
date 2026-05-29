@@ -160,9 +160,9 @@ export default class ConditionsFloatingPanel extends Component {
         }}
         {{this.observeResize}}
       >
+        {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <div
           class="wireframe-conditions-floating__header"
-          {{! template-lint-disable no-pointer-down-event-binding }}
           {{! Drag-to-move needs pointerdown to capture the initial
               cursor offset and start tracking pointermove. pointerup
               is the wrong half of the drag interaction. }}

@@ -1,40 +1,84 @@
 // @ts-check
 
 /**
- * Returns `true` when an entry's args schema declares one or more
- * `ui.control: "image-upload"` args AND none of them currently carry a value
- * whose `.url` is set. Used by `block-chrome` to decide whether to swap in the
- * canvas-only empty-state card while the author hasn't picked an image yet.
+ * Per-arg primitives for image-typed args. The chrome uses these to
+ * decide which empty-state overlays to paint, which drop targets to
+ * register, and which replace menus to open. Stays a pure module — no
+ * service reads, no DOM — so it can be unit-tested with plain JS
+ * fixtures.
  *
- * Pure: no service reads, no DOM — block-chrome injects the live `args` from
- * `entry.args` and the schema from `metadata.args`, and this just enumerates.
- *
- * Treats nested object args as filled when `value.url` is a non-empty string.
- * Matches the shape `UppyImageUploader.onUploadDone` emits and the gate the
- * `wf:image` block uses in its own `{{#if @image.url}}` template.
- *
- * @param {Object|null|undefined} argsSchema - The block's args schema (the
- *   `args` field on block metadata, keyed by arg name).
- * @param {Object|null|undefined} liveArgs - The entry's live args object,
- *   keyed by arg name.
- * @returns {boolean}
+ * Migration note: this file replaces the older "all image-upload args
+ * empty?" predicate that block-chrome used to swap the entire block for
+ * a single empty card. The new per-arg shape supports multi-image
+ * blocks (e.g. `wf:media-card` with both an avatar and a cover image)
+ * and the inline editing affordances introduced alongside the
+ * first-class `image` arg type.
  */
-export function entryHasEmptyImageUploadArgs(argsSchema, liveArgs) {
+
+/**
+ * Returns an array of image arg entries declared on the schema, in
+ * declaration order. Each entry carries enough metadata for the chrome
+ * to decide what overlay to paint:
+ *
+ *   - `name`: the arg name as it appears under `entry.args`
+ *   - `def`: the raw schema entry (capability flags, ui hints, …)
+ *   - `value`: the live value, or `undefined` when unset
+ *   - `isEmpty`: `true` when no `url` is set (treats nullish and
+ *     `{ width, height }` without `url` as empty)
+ *
+ * @param {Object|null|undefined} argsSchema - The block's args schema
+ *   (the `args` field on block metadata, keyed by arg name).
+ * @param {Object|null|undefined} liveArgs - The entry's live args
+ *   object, keyed by arg name.
+ * @returns {Array<{name: string, def: Object, value: any, isEmpty: boolean}>}
+ */
+export function imageArgEntries(argsSchema, liveArgs) {
   if (!argsSchema || typeof argsSchema !== "object") {
-    return false;
+    return [];
   }
   const args = liveArgs ?? {};
-
-  let sawImageUploadArg = false;
+  const out = [];
   for (const [name, def] of Object.entries(argsSchema)) {
-    if (def?.ui?.control !== "image-upload") {
+    if (def?.type !== "image") {
       continue;
     }
-    sawImageUploadArg = true;
     const value = args[name];
-    if (value && typeof value === "object" && value.url) {
-      return false;
-    }
+    out.push({ name, def, value, isEmpty: isImageArgValueEmpty(value) });
   }
-  return sawImageUploadArg;
+  return out;
+}
+
+/**
+ * Returns `true` when the given image-arg value has no usable `url`.
+ * Matches the gate every image-bearing block uses in its template
+ * (`{{#if @image.url}}`), so the chrome's empty-state decision agrees
+ * with what the renderer actually paints.
+ *
+ * @param {any} value
+ * @returns {boolean}
+ */
+export function isImageArgValueEmpty(value) {
+  if (!value || typeof value !== "object") {
+    return true;
+  }
+  return typeof value.url !== "string" || value.url.length === 0;
+}
+
+/**
+ * Convenience predicate retained for callers that only need a boolean.
+ * Returns `true` when the schema declares one or more image args AND
+ * every one of them is empty. Equivalent to the old
+ * `entryHasEmptyImageUploadArgs` but keyed off `type: "image"` instead
+ * of `ui.control: "image-upload"`.
+ *
+ * @param {Object|null|undefined} argsSchema
+ * @param {Object|null|undefined} liveArgs
+ * @returns {boolean}
+ */
+export function entryHasOnlyEmptyImageArgs(argsSchema, liveArgs) {
+  const entries = imageArgEntries(argsSchema, liveArgs);
+  if (entries.length === 0) {
+    return false;
+  }
+  return entries.every((e) => e.isEmpty);
 }

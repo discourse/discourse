@@ -5,6 +5,35 @@ import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
 import { URL_PATTERN } from "../lib/arg-patterns";
 
+/**
+ * Returns the dark variant rebound to the LIGHT variant's intrinsic
+ * dimensions, so `DLightDarkImg`'s `<picture>` element always renders
+ * at the light frame size — even when the site's default colour
+ * scheme is dark (in which case `DLightDarkImg.defaultImg` would
+ * otherwise pick dark and stamp dark's own dims onto the `<img>`).
+ *
+ * Combined with `object-fit: cover` on the rendered image, this means
+ * the dark variant is clipped to the light frame when their intrinsic
+ * aspect ratios diverge — which is exactly what the inspector's
+ * ratio-mismatch warning predicts.
+ *
+ * Returns `undefined` when no dark variant is set so the helper's
+ * `isDarkImageAvailable` falls through to the light-only render path.
+ *
+ * @param {{url: string, width?: number, height?: number, dark?: {url: string}}|null|undefined} image
+ * @returns {{url: string, width?: number, height?: number}|undefined}
+ */
+function darkVariantWithLightFrame(image) {
+  if (!image?.dark?.url) {
+    return undefined;
+  }
+  return {
+    url: image.dark.url,
+    width: image.width,
+    height: image.height,
+  };
+}
+
 @block("wf:image", {
   displayName: "Image",
   icon: "image",
@@ -12,29 +41,14 @@ import { URL_PATTERN } from "../lib/arg-patterns";
   description: "An image with an optional dark-mode variant.",
   args: {
     image: {
-      type: "object",
+      type: "image",
       required: true,
-      properties: {
-        url: { type: "string", required: true },
-        width: { type: "number" },
-        height: { type: "number" },
-      },
+      allowDark: true,
+      allowResize: true,
+      aspectRatio: "auto",
+      defaultFit: "cover",
       ui: {
-        control: "image-upload",
         label: i18n("wireframe.inspector.image.image_label"),
-      },
-    },
-    imageDark: {
-      type: "object",
-      properties: {
-        url: { type: "string", required: true },
-        width: { type: "number" },
-        height: { type: "number" },
-      },
-      ui: {
-        control: "image-upload",
-        label: i18n("wireframe.inspector.image.dark_label"),
-        helpText: i18n("wireframe.inspector.image.dark_help"),
       },
     },
     alt: {
@@ -70,15 +84,17 @@ export default class WFImage extends Component {
           {{#if @link}}
             <a href={{@link}} data-block-arg="link">
               <DLightDarkImg
+                data-block-arg="image"
                 @lightImg={{@image}}
-                @darkImg={{@imageDark}}
+                @darkImg={{darkVariantWithLightFrame @image}}
                 alt={{@alt}}
               />
             </a>
           {{else}}
             <DLightDarkImg
+              data-block-arg="image"
               @lightImg={{@image}}
-              @darkImg={{@imageDark}}
+              @darkImg={{darkVariantWithLightFrame @image}}
               alt={{@alt}}
             />
           {{/if}}
@@ -87,16 +103,18 @@ export default class WFImage extends Component {
       {{else if @link}}
         <a href={{@link}} class="wf-image" data-block-arg="link">
           <DLightDarkImg
+            data-block-arg="image"
             @lightImg={{@image}}
-            @darkImg={{@imageDark}}
+            @darkImg={{darkVariantWithLightFrame @image}}
             alt={{@alt}}
           />
         </a>
       {{else}}
         <DLightDarkImg
           class="wf-image"
+          data-block-arg="image"
           @lightImg={{@image}}
-          @darkImg={{@imageDark}}
+          @darkImg={{darkVariantWithLightFrame @image}}
           alt={{@alt}}
         />
       {{/if}}

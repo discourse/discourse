@@ -167,11 +167,11 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
 }
 
 /**
- * Recursively reads each entry's `__failureType` / `__failureReason`
- * fields. Side-effect-only: the reads exist purely to subscribe the
- * surrounding tracking frame to the trackedObject-wrapped entries'
- * per-key tags. Validator stamp writes / clears then propagate to
- * the caller automatically.
+ * Recursively reads each entry's `__failureType` / `__failureReason` /
+ * `__failureDetails` fields. Side-effect-only: the reads exist purely
+ * to subscribe the surrounding tracking frame to the trackedObject-
+ * wrapped entries' per-key tags. Validator stamp writes / clears then
+ * propagate to the caller automatically.
  *
  * @param {Array<Object>} entries
  */
@@ -179,6 +179,7 @@ function touchStamps(entries) {
   for (const entry of entries) {
     void entry.__failureType;
     void entry.__failureReason;
+    void entry.__failureDetails;
     if (entry.children?.length) {
       touchStamps(entry.children);
     }
@@ -217,8 +218,12 @@ function walkEntries(entries, depth, path, rows, blocksService) {
       // BlockError message — e.g. "Container must have children" for
       // an empty `wf:layout`). The outline reads these to paint the
       // row as an error so authors can find the offending entry.
+      // `__failureDetails` is the structured payload (array of
+      // `{ code, field?, value?, expected? }`) that drives per-field
+      // errors in the inspector.
       validationFailure: entry.__failureType ?? null,
       validationReason: entry.__failureReason ?? null,
+      validationDetails: entry.__failureDetails ?? null,
       hasChildren: !!(entry.children && entry.children.length),
       path: entryPath,
     });

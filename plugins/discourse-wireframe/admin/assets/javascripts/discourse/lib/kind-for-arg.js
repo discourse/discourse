@@ -19,8 +19,8 @@
  *   object (returned by `blocks.getBlock(blockName)?.metadata` or
  *   passed in from a block-chrome instance via `this.metadata`).
  * @param {string} argName - The arg name from `data-block-arg`.
- * @returns {"rich-text"|"icon"|"url"|null} The inline-edit kind, or
- *   `null` when the arg's schema doesn't match a supported kind (the
+ * @returns {"rich-text"|"icon"|"url"|"image"|null} The inline-edit kind,
+ *   or `null` when the arg's schema doesn't match a supported kind (the
  *   click should fall through to block selection).
  */
 export function kindForArg(blockMetadata, argName) {
@@ -30,6 +30,9 @@ export function kindForArg(blockMetadata, argName) {
   }
   if (arg.type === "richInline") {
     return "rich-text";
+  }
+  if (arg.type === "image") {
+    return "image";
   }
   if (arg.ui?.control === "icon") {
     return "icon";

@@ -18,8 +18,8 @@ import {
  *
  * Watches `wireframe.inlineEdit.blockKey` + `argName`. When set, it
  * locates the matching renderer span via a DOM query against the canvas
- * (`[data-wf-block-key="..."] [data-wf-inline-edit-arg="..."]`), reads the
- * schema variant off `data-wf-inline-edit-schema`, and mounts a constrained
+ * (`[data-wf-block-key="..."] [data-block-arg="..."]`), reads the
+ * schema variant off `data-block-arg-schema`, and mounts a constrained
  * PM editor into the span via `{{in-element insertBefore=null}}`. PM is the
  * source of truth during the session — `args.text` is written once at
  * commit time, not per keystroke.
@@ -37,15 +37,6 @@ import {
 export default class InlineEditController extends Component {
   @service wireframe;
 
-  /**
-   * Inline link-edit mode — when `true`, the block-toolbar swaps its
-   * inline-format buttons for a URL input + Apply / Remove / Cancel.
-   * Template-facing (the block-toolbar reads it through
-   * `wireframe.inlineEdit.controller.linkEditMode`).
-   */
-  @tracked linkEditMode = false;
-  /** Live value of the URL input while in link-edit mode. */
-  @tracked linkEditUrl = "";
   #view = null;
   #pm = null;
   #handleOutsideClick = null;
@@ -86,7 +77,7 @@ export default class InlineEditController extends Component {
       return null;
     }
     const blockSelector = `[data-wf-block-key="${CSS.escape(blockKey)}"]`;
-    const argSelector = `[data-wf-inline-edit-arg="${CSS.escape(argName)}"]`;
+    const argSelector = `[data-block-arg="${CSS.escape(argName)}"]`;
     return document.querySelector(`${blockSelector} ${argSelector}`);
   }
 
@@ -99,7 +90,7 @@ export default class InlineEditController extends Component {
    */
   get schemaName() {
     const el = this.activeRendererEl;
-    const raw = el?.dataset?.wfInlineEditSchema;
+    const raw = el?.dataset?.blockArgSchema;
     return raw && raw in SCHEMAS ? raw : "plain";
   }
 
@@ -328,8 +319,11 @@ export default class InlineEditController extends Component {
       this.#handleOutsideClick = null;
     }
     this.#savedLinkRange = null;
-    this.linkEditMode = false;
-    this.linkEditUrl = "";
+    // Clear the toolbar slot if this controller owned a URL session
+    // (e.g. user closed PM mid-link-edit).
+    if (this.wireframe.fieldEditor?.kind === "url") {
+      this.wireframe.fieldEditor = null;
+    }
     // Force a re-evaluation of `markState` so the toolbar hides cleanly.
     this._pmStateVersion++;
   }
@@ -372,10 +366,12 @@ export default class InlineEditController extends Component {
   }
 
   /**
-   * Transitions the toolbar into link-edit mode (URL input visible) for
-   * the current non-empty PM selection. The selection range is captured
-   * so the eventual Apply / Remove uses the correct positions even after
-   * focus moves to the URL input.
+   * Transitions the block toolbar into URL-edit mode for the current
+   * non-empty PM selection by populating `wireframe.fieldEditor` with
+   * a URL slot that wires apply / cancel / remove back to the PM
+   * mark mutations below. The selection range is captured so those
+   * mutations land on the correct positions even after focus moves
+   * to the URL input.
    */
   @action
   enterLinkMode() {
@@ -388,18 +384,23 @@ export default class InlineEditController extends Component {
       return;
     }
     this.#savedLinkRange = { from, to };
-    this.linkEditUrl =
+    const existing =
       existingLinkHref(view.state, view.state.schema.marks.link) ?? "";
-    this.linkEditMode = true;
+    this.wireframe.fieldEditor = {
+      kind: "url",
+      value: existing,
+      apply: (newValue) => this.#applyLink(newValue),
+      cancel: () => this.#cancelLink(),
+      remove: () => this.#removeLink(),
+    };
   }
 
   /**
-   * Applies (or replaces) the link mark using the URL currently in
-   * `linkEditUrl`. An empty URL falls through to a mark removal so an
+   * Applies (or replaces) the link mark using the URL passed in from
+   * the toolbar. An empty URL falls through to a mark removal so an
    * author can clear a link by emptying the field and pressing Enter.
    */
-  @action
-  applyLink() {
+  #applyLink(newValue) {
     const view = this.#view;
     const range = this.#savedLinkRange;
     if (!view || !range) {
@@ -409,7 +410,7 @@ export default class InlineEditController extends Component {
     const markType = view.state.schema.marks.link;
     const tr = view.state.tr;
     tr.removeMark(range.from, range.to, markType);
-    const trimmed = this.linkEditUrl.trim();
+    const trimmed = (newValue ?? "").trim();
     if (trimmed) {
       tr.addMark(range.from, range.to, markType.create({ href: trimmed }));
     }
@@ -421,8 +422,7 @@ export default class InlineEditController extends Component {
     this.#exitLinkMode();
   }
 
-  @action
-  removeLink() {
+  #removeLink() {
     const view = this.#view;
     const range = this.#savedLinkRange;
     if (!view || !range) {
@@ -439,16 +439,16 @@ export default class InlineEditController extends Component {
     this.#exitLinkMode();
   }
 
-  @action
-  cancelLink() {
+  #cancelLink() {
     this.#view?.focus();
     this.#exitLinkMode();
   }
 
   #exitLinkMode() {
-    this.linkEditMode = false;
-    this.linkEditUrl = "";
     this.#savedLinkRange = null;
+    if (this.wireframe.fieldEditor?.kind === "url") {
+      this.wireframe.fieldEditor = null;
+    }
   }
 
   /**
@@ -469,13 +469,9 @@ export default class InlineEditController extends Component {
       if (!blockEl) {
         return false;
       }
-      const argEls = Array.from(
-        blockEl.querySelectorAll("[data-wf-inline-edit-arg]")
-      );
+      const argEls = Array.from(blockEl.querySelectorAll("[data-block-arg]"));
       const currentArg = this.wireframe.inlineEdit.argName;
-      const i = argEls.findIndex(
-        (el) => el.dataset.wfInlineEditArg === currentArg
-      );
+      const i = argEls.findIndex((el) => el.dataset.blockArg === currentArg);
       if (i === -1) {
         return false;
       }
@@ -485,7 +481,7 @@ export default class InlineEditController extends Component {
       }
       this.wireframe.inlineEdit.start(
         blockEl.dataset.wfBlockKey,
-        next.dataset.wfInlineEditArg
+        next.dataset.blockArg
       );
       return true;
     };

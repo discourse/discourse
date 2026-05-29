@@ -16,7 +16,22 @@
  */
 
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
+
+/**
+ * Builds a structured details payload for a constraint violation.
+ *
+ * @param {string} constraintType - The constraint type (e.g. "atLeastOne").
+ * @param {string[]} argNames - The arg names participating in the constraint.
+ * @returns {{code: string, expected: Object}}
+ */
+function constraintDetails(constraintType, argNames) {
+  return {
+    code: ERROR_CODES.CONSTRAINT_VIOLATION,
+    expected: { constraint: constraintType, fields: [...argNames] },
+  };
+}
 
 /**
  * Valid constraint types for cross-arg validation.
@@ -299,10 +314,15 @@ function checkIncompatibleConstraints(constraintTypes, argSet, blockName) {
  * Validates constraints against the provided args at runtime.
  * Called after defaults are applied.
  *
+ * Returns an object with the human-readable message AND a structured
+ * `details` payload (for editor consumption) on the first violation, or
+ * `null` if all constraints pass.
+ *
  * @param {Object} constraints - The constraints from block metadata.
  * @param {Object} args - The resolved args (with defaults applied).
  * @param {string} blockName - Block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @returns {{message: string, details: Object}|null} The first violation,
+ *   or `null` if every constraint passes.
  */
 export function validateConstraints(constraints, args, blockName) {
   if (!constraints || typeof constraints !== "object") {
@@ -349,7 +369,7 @@ export function validateConstraints(constraints, args, blockName) {
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
  * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @returns {{message: string, details: Object}|null}
  */
 function validateAtLeastOne(argNames, args, blockName) {
   const providedCount = argNames.filter(
@@ -358,7 +378,10 @@ function validateAtLeastOne(argNames, args, blockName) {
 
   if (providedCount === 0) {
     const argList = formatArgList(argNames);
-    return `Block "${blockName}": at least one of ${argList} must be provided.`;
+    return {
+      message: `Block "${blockName}": at least one of ${argList} must be provided.`,
+      details: constraintDetails("atLeastOne", argNames),
+    };
   }
 
   return null;
@@ -370,19 +393,25 @@ function validateAtLeastOne(argNames, args, blockName) {
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
  * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @returns {{message: string, details: Object}|null}
  */
 function validateExactlyOne(argNames, args, blockName) {
   const providedArgs = argNames.filter((name) => args[name] !== undefined);
   const argList = formatArgList(argNames);
 
   if (providedArgs.length === 0) {
-    return `Block "${blockName}": exactly one of ${argList} must be provided, but got none.`;
+    return {
+      message: `Block "${blockName}": exactly one of ${argList} must be provided, but got none.`,
+      details: constraintDetails("exactlyOne", argNames),
+    };
   }
 
   if (providedArgs.length > 1) {
     const providedList = formatArgList(providedArgs);
-    return `Block "${blockName}": exactly one of ${argList} must be provided, but got ${providedArgs.length}: ${providedList}.`;
+    return {
+      message: `Block "${blockName}": exactly one of ${argList} must be provided, but got ${providedArgs.length}: ${providedList}.`,
+      details: constraintDetails("exactlyOne", argNames),
+    };
   }
 
   return null;
@@ -394,7 +423,7 @@ function validateExactlyOne(argNames, args, blockName) {
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
  * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @returns {{message: string, details: Object}|null}
  */
 function validateAllOrNone(argNames, args, blockName) {
   const providedCount = argNames.filter(
@@ -411,10 +440,12 @@ function validateAllOrNone(argNames, args, blockName) {
   const missingArgs = argNames.filter((name) => args[name] === undefined);
   const argList = formatArgList(argNames);
 
-  return (
-    `Block "${blockName}": args ${argList} must be provided together or not at all. ` +
-    `Got ${formatArgList(providedArgs)} but missing ${formatArgList(missingArgs)}.`
-  );
+  return {
+    message:
+      `Block "${blockName}": args ${argList} must be provided together or not at all. ` +
+      `Got ${formatArgList(providedArgs)} but missing ${formatArgList(missingArgs)}.`,
+    details: constraintDetails("allOrNone", argNames),
+  };
 }
 
 /**
@@ -423,7 +454,7 @@ function validateAllOrNone(argNames, args, blockName) {
  * @param {string[]} argNames - The arg names to check.
  * @param {Object} args - The resolved args.
  * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @returns {{message: string, details: Object}|null}
  */
 function validateAtMostOne(argNames, args, blockName) {
   const providedArgs = argNames.filter((name) => args[name] !== undefined);
@@ -431,7 +462,10 @@ function validateAtMostOne(argNames, args, blockName) {
   if (providedArgs.length > 1) {
     const providedList = formatArgList(providedArgs);
     const argList = formatArgList(argNames);
-    return `Block "${blockName}": at most one of ${argList} may be provided, but got ${providedArgs.length}: ${providedList}.`;
+    return {
+      message: `Block "${blockName}": at most one of ${argList} may be provided, but got ${providedArgs.length}: ${providedList}.`,
+      details: constraintDetails("atMostOne", argNames),
+    };
   }
 
   return null;
@@ -443,12 +477,15 @@ function validateAtMostOne(argNames, args, blockName) {
  * @param {Object} requiresMap - Object mapping dependent args to required args.
  * @param {Object} args - The resolved args.
  * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @returns {{message: string, details: Object}|null}
  */
 function validateRequires(requiresMap, args, blockName) {
   for (const [dependentArg, requiredArg] of Object.entries(requiresMap)) {
     if (args[dependentArg] !== undefined && args[requiredArg] === undefined) {
-      return `Block "${blockName}": "${dependentArg}" requires "${requiredArg}" to be specified.`;
+      return {
+        message: `Block "${blockName}": "${dependentArg}" requires "${requiredArg}" to be specified.`,
+        details: constraintDetails("requires", [dependentArg, requiredArg]),
+      };
     }
   }
   return null;

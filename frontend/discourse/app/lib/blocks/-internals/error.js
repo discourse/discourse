@@ -773,11 +773,18 @@ export class BlockError extends Error {
    * @param {Error} [options.cause] - The underlying cause of this error.
    * @param {string} [options.path] - Path to the error within the layout
    *   (e.g., "[0].conditions.any[0].type" or "[0].args.showIcon").
+   * @param {Object|Array<Object>|null} [options.details] - Structured
+   *   payload for editor consumption. A single detail (the typical
+   *   strict-mode throw) is shaped as
+   *   `{ code, field?, value?, expected? }` per the ERROR_CODES enum.
+   *   Permissive-mode accumulation hands in an array of those — one
+   *   per failing arg/constraint inside a single entry.
    */
   constructor(message, options) {
     super(message, options);
     this.name = "BlockError";
     this.path = options?.path;
+    this.details = options?.details ?? null;
   }
 }
 
@@ -803,6 +810,9 @@ export class BlockError extends Error {
  * @param {string} [context.errorPath] - Full path to the error for display (e.g., "[2].conditions.params.categoryId").
  * @param {Array<Object>} [context.rootLayout] - The root outlet layout for tree display in errors.
  * @param {Error | null} [context.callSiteError] - Error object capturing where renderBlocks() was called.
+ * @param {Object|Array<Object>|null} [context.details] - Structured
+ *   payload propagated to `BlockError.details`. See `BlockError` and
+ *   `validation/error-codes.js`.
  * @throws {BlockError} Always throws.
  */
 export function raiseBlockError(message, context = null) {
@@ -837,8 +847,13 @@ export function raiseBlockError(message, context = null) {
     error.message = fullMessage;
     // @ts-ignore - Adding path property to Error for BlockError compatibility
     error.path = context.path;
+    // @ts-ignore - Adding details property to Error for BlockError compatibility
+    error.details = context?.details ?? null;
   } else {
-    error = new BlockError(fullMessage, { path: context?.path });
+    error = new BlockError(fullMessage, {
+      path: context?.path,
+      details: context?.details ?? null,
+    });
   }
 
   throw error;

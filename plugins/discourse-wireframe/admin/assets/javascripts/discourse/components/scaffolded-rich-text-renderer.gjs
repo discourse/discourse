@@ -15,8 +15,9 @@ import MarkedText from "discourse/plugins/discourse-wireframe/discourse/componen
  *     editor's controller uses. `{{#in-element ... insertBefore=null}}`
  *     appends the editor mount span here as a sibling of `__content`
  *     so the rendered text isn't wiped during edit. Also carries
- *     `data-wf-inline-edit-arg` / `-schema` for the click-to-edit
- *     handler.
+ *     `data-block-arg` (the arg this element renders) and
+ *     `data-block-arg-schema` (the PM schema variant) for the
+ *     click-to-edit handler.
  *   - **Inner** (`.wf-inline-rich-text__content`): the hide target.
  *     CSS hides this span while PM is mounted (rule keys off the
  *     `.wf-inline-editor-mount` sibling) so the user sees only the
@@ -28,16 +29,15 @@ import MarkedText from "discourse/plugins/discourse-wireframe/discourse/componen
  * replacement for `:empty` (Glimmer's comment / whitespace text
  * nodes inside the content span would defeat that pseudo-class).
  *
- * `data-wf-inline-edit-kind="rich-text"` is omitted because the
- * block-chrome click handler defaults to rich-text when the
- * attribute is absent. Other kinds (`icon`, `image`, …) set the
- * attribute explicitly so dispatch routes to the right popover.
+ * The "inline-edit kind" isn't emitted on the DOM — the chrome's
+ * click handler derives it from the arg's schema metadata via
+ * `kindForArg`. Same applies to icon and url args.
  */
 const ScaffoldedRichTextRenderer = <template>
   <span
     class="wf-inline-rich-text {{if @isEmpty '--empty'}}"
-    data-wf-inline-edit-arg={{@arg}}
-    data-wf-inline-edit-schema={{@schema}}
+    data-block-arg={{@arg}}
+    data-block-arg-schema={{@schema}}
     ...attributes
   ><span
       class="wf-inline-rich-text__content"

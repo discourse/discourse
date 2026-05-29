@@ -644,7 +644,7 @@ export default class OutlinePanel extends Component {
                     collapse toggle, so the two interactions are
                     logically distinct even though they nest. }}
                   {{#if row.hasChildren}}
-                    {{! template-lint-disable no-nested-interactive }}
+
                     <DButton
                       class="outline-block__toggle"
                       @icon={{if

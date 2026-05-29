@@ -254,6 +254,32 @@ body.wireframe-active {
       width: var(--wireframe-badge-font-size) !important;
       filter: drop-shadow(var(--wireframe-shadow));
     }
+
+    /* Informational variant — used by `--unresolved-image` blocks
+       where the issue isn't a layout error (overlap, out-of-bounds)
+       but a content one (URL probe failed). Warning-orange chip with
+       dark text — readable on any block background and visually
+       distinct from the red layout-error badges without competing
+       with them. */
+
+    &--info {
+      background: #f5a623;
+      color: #000;
+      text-shadow: none;
+
+      .d-icon {
+        color: #000 !important;
+        filter: none;
+      }
+    }
+  }
+
+  /* Image arg present but no intrinsic dims — the URL didn't resolve.
+     Keep the chrome at a comfortable minimum height so the broken
+     image isn't a one-pixel-tall sliver and the badge is reachable. */
+
+  .wireframe-block-chrome.--unresolved-image {
+    min-height: 6rem;
   }
 
   /* Drop zones for drag-and-drop reordering. Always present in layout
@@ -401,30 +427,62 @@ body.wireframe-active {
     min-width: 0;
   }
 
-  /* Canvas-only empty state for blocks whose image-upload args are all
-     empty (currently `wf:image`). The chrome already paints its own
-     dashed border + tint around the block, so the empty state is just
-     a centred icon + label.
+  /* Canvas-only empty state for image-typed args. Rendered by
+     `ImageArgOverlay` as a sibling of the block content whenever the
+     arg's value carries no `url`. The chrome already paints its own
+     dashed border + tint around the block, so each overlay is just a
+     centred icon + label naming the arg ("Image", "Avatar", …).
 
-     Two layers: the outer flexbox spans the chrome's content area and
-     centres along both axes; the inner __content shrink-wraps the icon
-     + label so they read as a single visual unit no matter how wide
-     the surrounding cell happens to be. */
+     Two layers: the outer flexbox spans whatever vertical space the
+     chrome allots (or stacks with sibling overlays for multi-image
+     blocks); the inner __content shrink-wraps the icon + label so they
+     read as a single visual unit no matter how wide the surrounding
+     cell happens to be. */
 
-  .wireframe-block-chrome__image-empty {
+  .wireframe-image-arg-overlay {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 8rem;
     color: var(--primary-medium);
 
-    &-content {
+    &--empty {
+      min-height: 8rem;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+    }
+
+    /* Drop-to-replace overlay painted on top of a filled image
+       marker. Invisible until a file drag enters — then the dashed
+       outline + tinted background mark it as the active drop target. */
+
+    &--filled {
+      z-index: 3;
+      background: transparent;
+    }
+
+    &--drag-over {
+      outline: 2px dashed var(--tertiary);
+      outline-offset: -4px;
+      background: var(--tertiary-very-low);
+      color: var(--primary);
+    }
+
+    &__content {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
       padding: 1rem;
       text-align: center;
+      pointer-events: none;
     }
 
     .d-icon {
@@ -432,7 +490,7 @@ body.wireframe-active {
       opacity: 0.7;
     }
 
-    &-label {
+    &__label {
       font-size: var(--font-down-1);
     }
   }
@@ -1402,36 +1460,17 @@ body.wireframe-active {
 }
 
 /* Inspector panel */
-.wireframe-inspector-warning {
-  margin-bottom: 1rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--danger-low);
-  border: 1px solid var(--danger);
-  border-radius: 4px;
+
+/* Args tab gets a warning glyph when any of its fields fail validation,
+   so users on a different tab still notice. FormKit's `<FKErrorsSummary>`
+   inside the form is the canonical in-tab surface; the tab glyph covers
+   the cross-tab case. */
+
+.wireframe-inspector__tab.--has-errors {
   color: var(--danger);
-  font-size: var(--font-down-1);
 
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-
-    .d-icon {
-      color: var(--danger);
-    }
-  }
-
-  &__reason {
-    margin: 0.25rem 0 0.5rem 0;
-    color: var(--primary);
-  }
-
-  &__actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+  .d-icon {
+    color: var(--danger);
   }
 }
 
@@ -1709,41 +1748,6 @@ body.wireframe-active {
   margin-top: 1rem;
 }
 
-/* Validation banner rendered at the top of the inspector form when the
-   selected block's outlet has validation warnings. Uses the danger
-   palette so it stands out — these are problems the user needs to fix,
-   not just informational. Matches Discourse's general alert visual
-   language (red border + tint + warning icon). */
-
-.wireframe-inspector-validation-banner {
-  margin-bottom: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--danger);
-  border-radius: 4px;
-  background: rgb(220 53 69 / 0.06);
-  color: var(--primary);
-  font-size: var(--font-down-1);
-
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-weight: 600;
-    color: var(--danger);
-    margin-bottom: 0.25rem;
-  }
-
-  &__list {
-    margin: 0;
-    padding-left: 1.25rem;
-    list-style: disc;
-
-    li + li {
-      margin-top: 0.125rem;
-    }
-  }
-}
-
 /* Transparent slot wrappers (Phase 7s). The chrome's transparent
    branch renders a positioned wrapper around the inner block so the
    wrapper becomes the direct grid item — its `grid-column` /
@@ -1953,6 +1957,40 @@ body.wireframe-active
    to `menu.show()` — `DHeadlessMenu` doesn't apply an identifier-derived
    class on its own, but the data attribute lands on the wrapper, so we
    can address it without leaking classes into the menu container. */
+
+/* FloatKit menu hosting Replace / Remove for a clicked image marker.
+   Mounts in `#d-menu-portals` at the body level (outside any wireframe
+   shell wrapper), so the selector is flat — scoping under
+   `body.wireframe-active` is unnecessary and would in fact prevent the
+   styling from applying when the menu's portal sits as a sibling of
+   the shell rather than a descendant. The `data-identifier` is the
+   `identifier` passed to `menu.show()`; FloatKit's `DHeadlessMenu`
+   doesn't apply an identifier-derived class on its own. */
+
+[data-identifier="wireframe-image-edit-menu"] {
+  .wireframe-image-edit-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 12rem;
+  }
+
+  .wireframe-image-edit-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    justify-content: flex-start;
+    font-size: var(--font-down-1);
+
+    &--danger {
+      color: var(--danger);
+    }
+  }
+}
 
 [data-identifier="wireframe-block-picker"] {
   .wireframe-block-picker {
@@ -2211,6 +2249,116 @@ body.wireframe-active
 
   &:hover {
     opacity: 1;
+  }
+}
+
+/* Image resize overlay — absolutely-positioned wrapper that tracks
+   the rendered image marker's bounding rect. Hosts the 8 resize
+   handles and the marching-ants dashed selection ring. The component
+   sets `position`, `top`, `left`, `width`, `height` inline via JS
+   based on the marker's measured rect. */
+
+.wireframe-image-resize-overlay {
+  z-index: 4;
+
+  /* The container itself is `pointer-events: none` (set inline by JS)
+     so it doesn't intercept clicks on the underlying image. The
+     individual handles re-enable pointer events on themselves. */
+
+  &__ring {
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    background-image:
+      linear-gradient(90deg, var(--tertiary) 50%, transparent 50%),
+      linear-gradient(90deg, var(--tertiary) 50%, transparent 50%),
+      linear-gradient(0deg, var(--tertiary) 50%, transparent 50%),
+      linear-gradient(0deg, var(--tertiary) 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size:
+      12px 2px,
+      12px 2px,
+      2px 12px,
+      2px 12px;
+    background-position:
+      0 0,
+      0 100%,
+      0 0,
+      100% 0;
+    animation: wireframe-marching-ants 0.6s linear infinite;
+  }
+
+  &__handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--tertiary);
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    pointer-events: auto;
+
+    &--nw {
+      top: -8px;
+      left: -8px;
+      cursor: nwse-resize;
+    }
+
+    &--ne {
+      top: -8px;
+      right: -8px;
+      cursor: nesw-resize;
+    }
+
+    &--sw {
+      bottom: -8px;
+      left: -8px;
+      cursor: nesw-resize;
+    }
+
+    &--se {
+      bottom: -8px;
+      right: -8px;
+      cursor: nwse-resize;
+    }
+
+    &--n {
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: ns-resize;
+    }
+
+    &--s {
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: ns-resize;
+    }
+
+    &--e {
+      top: 50%;
+      right: -8px;
+      transform: translateY(-50%);
+      cursor: ew-resize;
+    }
+
+    &--w {
+      top: 50%;
+      left: -8px;
+      transform: translateY(-50%);
+      cursor: ew-resize;
+    }
+  }
+}
+
+@keyframes wireframe-marching-ants {
+  to {
+    background-position:
+      12px 0,
+      -12px 100%,
+      0 -12px,
+      100% 12px;
   }
 }
 
@@ -3768,6 +3916,31 @@ body.wireframe-active {
    `data-block-arg` the chrome's onClick handler reads to open the
    icon picker popover. Emitted directly by block templates. */
 
+/* Image arg targets — explicit carve-out from the chrome's
+   `> *:not(...)` rule that sets `pointer-events: none` on every
+   direct child of `.wireframe-block-chrome` (see the top-of-file
+   rule). Without this re-enable, clicks on the rendered image never
+   target the `<img>` (its `event.target` becomes the chrome div),
+   so `closest("[data-block-arg]")` in `block-chrome.onClick` returns
+   `null` and the image kind dispatch never fires — the replace /
+   remove menu never opens. Same for drop events on the filled-state
+   overlay: with `pointer-events: none` the overlay's drag handlers
+   silently miss every drag.
+
+   Unlike the icon variant, image targets need to be reachable even
+   on an UNSELECTED block — drag-and-drop should work without first
+   clicking the block to select it — so the rule is unconditional
+   inside any chrome (no `--selected` gate). */
+
+img[data-block-arg],
+picture,
+.wireframe-image-arg-overlay,
+.wireframe-image-resize-overlay {
+  .wireframe-block-chrome & {
+    pointer-events: auto;
+  }
+}
+
 .wf-inline-icon {
   display: inline-flex;
   align-items: center;
@@ -4049,4 +4222,126 @@ body.wireframe-active--dim-non-editable
     #dialog-holder *
   ) {
   opacity: 0.75;
+}
+
+/* InspectorImageField — custom FormKit control for image args. Owns
+   the full value shape (`{ source, url, width?, height?, dark? }`)
+   and dispatches between Upload | URL tabs with an optional dark
+   variant. Tab styling intentionally lightweight: text-only buttons
+   with a bottom-border underline for the active tab so the field
+   stays compact inside the inspector. */
+
+.wireframe-image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__variant {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__tab {
+    background: none;
+    border: 0;
+    padding: 0.35rem 0.6rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &--active {
+      color: var(--primary);
+      border-bottom-color: var(--tertiary);
+    }
+  }
+
+  &__url-row {
+    display: flex;
+    gap: 0.4rem;
+    align-items: stretch;
+  }
+
+  &__url-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__warning {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    background: rgb(255 193 7 / 0.1);
+    border: 1px solid rgb(255 193 7 / 0.4);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: rgb(255 152 0);
+      flex-shrink: 0;
+    }
+  }
+
+  /* Informational bar (NOT a warning) — used for the resize state.
+     Calmer palette than __warning so the user knows the image is
+     fine, just resized. The right-aligned action button is the
+     "Reset to natural" link. */
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--tertiary);
+      flex-shrink: 0;
+    }
+
+    > span {
+      flex: 1;
+    }
+  }
+
+  &__info-action {
+    flex-shrink: 0;
+  }
+
+  &__dark {
+    border-top: 1px dashed var(--primary-low);
+    padding-top: 0.6rem;
+
+    summary {
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    &-help,
+    &-disabled {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      margin: 0.4rem 0;
+    }
+  }
 }

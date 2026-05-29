@@ -591,9 +591,16 @@ function createLayerEntry({
           // collected messages land on `entry.validationWarnings`
           // (trackedArray, so the editor's toolbar / inspector update
           // reactively when validation resolves async).
+          //
+          // `collect: true` opts into per-entry arg accumulation — the
+          // editor sees every failing arg at once instead of having to
+          // fix one, re-validate, see the next ("whack-a-mole"). Strict
+          // mode (`api.renderBlocks` callers) doesn't set this flag and
+          // keeps the original fail-fast behaviour.
           const validationContext = {
             seenIds: new Map(),
             permissive: true,
+            collect: true,
             warnings: [],
           };
           validationPromise = validateLayout(

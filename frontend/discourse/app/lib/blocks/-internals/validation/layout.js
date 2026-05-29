@@ -47,6 +47,7 @@ import {
   runCustomValidation,
   validateConstraints,
 } from "discourse/lib/blocks/-internals/validation/constraints";
+import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -66,6 +67,10 @@ function wrapValidationError(validationFn, errorPrefix, context) {
       raiseBlockError(`${errorPrefix}: ${error.message}`, {
         ...context,
         errorPath: buildErrorPath(context.path, error.path),
+        // Preserve the structured payload through the re-throw. Without
+        // this, args-validation throws lose `code` / `field` / `expected`
+        // by the time the editor catches the wrapped error.
+        details: error.details ?? null,
       });
     }
     throw error;
@@ -126,7 +131,13 @@ function validateContainerChildren(
   if (hasChildren && !isContainer) {
     raiseBlockError(
       `Block component ${blockName} in layout ${outletName} cannot have children`,
-      context
+      {
+        ...context,
+        details: {
+          code: ERROR_CODES.INVALID_CHILDREN,
+          expected: { acceptsChildren: false },
+        },
+      }
     );
     return false;
   }
@@ -134,7 +145,13 @@ function validateContainerChildren(
   if (isContainer && !hasChildren) {
     raiseBlockError(
       `Block component ${blockName} in layout ${outletName} must have children`,
-      context
+      {
+        ...context,
+        details: {
+          code: ERROR_CODES.INVALID_CHILDREN,
+          expected: { acceptsChildren: true, requiresChildren: true },
+        },
+      }
     );
     return false;
   }
@@ -173,8 +190,12 @@ function validateBlockConstraints(
     );
     if (constraintError) {
       raiseBlockError(
-        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${constraintError}`,
-        { ...context, errorPath: "constraints" }
+        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${constraintError.message}`,
+        {
+          ...context,
+          errorPath: "constraints",
+          details: constraintError.details,
+        }
       );
     }
   }
@@ -192,7 +213,14 @@ function validateBlockConstraints(
           : customErrors.map((e) => `  - ${e}`).join("\n");
       raiseBlockError(
         `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${errorMessage}`,
-        { ...context, errorPath: "validate" }
+        {
+          ...context,
+          errorPath: "validate",
+          details: {
+            code: ERROR_CODES.CONSTRAINT_VIOLATION,
+            expected: { custom: true },
+          },
+        }
       );
     }
   }
@@ -439,14 +467,20 @@ export async function resolveBlockForValidation(
     raiseBlockError(
       `Block "${name}" at ${context.path || "unknown"} for outlet "${outletName}" is not registered. ` +
         `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`,
-      createValidationContext({
-        outletName,
-        blockName: name,
-        path: context.path,
-        entry: context.entry,
-        callSiteError: context.callSiteError,
-        rootLayout: context.rootLayout,
-      })
+      {
+        ...createValidationContext({
+          outletName,
+          blockName: name,
+          path: context.path,
+          entry: context.entry,
+          callSiteError: context.callSiteError,
+          rootLayout: context.rootLayout,
+        }),
+        details: {
+          code: ERROR_CODES.UNREGISTERED_BLOCK,
+          value: name,
+        },
+      }
     );
     return null;
   }
@@ -686,6 +720,7 @@ export async function validateLayout(
           message: err.message,
           path: currentPath,
           error: err,
+          details: entry.__failureDetails,
         });
         return;
       }
@@ -710,6 +745,15 @@ function markEntrySoftFailure(entry, err) {
   entry.__visible = false;
   entry.__failureType = "structural-invalid";
   entry.__failureReason = err.message;
+  // Always an array for editor consistency. In permissive/collect mode,
+  // `err.details` is already the accumulated list; in strict mode it's a
+  // single detail object which we wrap. `null` becomes an empty array so
+  // consumers never have to branch on shape.
+  entry.__failureDetails = Array.isArray(err.details)
+    ? err.details
+    : err.details
+      ? [err.details]
+      : [];
 }
 
 /**
@@ -746,6 +790,12 @@ async function validateOneEntry({
             rootLayout: effectiveRootLayout,
           }),
           errorPath: `${currentPath}.id`,
+          details: {
+            code: ERROR_CODES.DUPLICATE_ID,
+            field: "id",
+            value: entry.id,
+            expected: { firstPath: first.path },
+          },
         }
       );
     }
@@ -753,7 +803,9 @@ async function validateOneEntry({
   }
 
   // Validate the block entry itself (whether it has children or not)
-  // Returns the block's childArgsSchema if it's a container with childArgs
+  // Returns the block's childArgsSchema if it's a container with childArgs.
+  // Pass the LayoutValidationContext through so validateEntry can opt in
+  // to per-entry arg accumulation in permissive/collect mode.
   const childArgsSchema = await validateEntry(
     entry,
     outletName,
@@ -762,7 +814,8 @@ async function validateOneEntry({
     callSiteError,
     effectiveRootLayout,
     parentChildArgsSchema,
-    parentBlockName
+    parentBlockName,
+    context
   );
 
   // Recursively validate nested children
@@ -846,7 +899,8 @@ export async function validateEntry(
   callSiteError = null,
   rootLayout = null,
   parentChildArgsSchema = null,
-  parentBlockName = null
+  parentBlockName = null,
+  context = null
 ) {
   // Create context without blockName for early validation errors
   const earlyContext = createValidationContext({
@@ -883,7 +937,13 @@ export async function validateEntry(
   if (!entry.block) {
     raiseBlockError(
       `Block entry at ${path} for outlet "${outletName}" is missing required "block" property.`,
-      earlyContext
+      {
+        ...earlyContext,
+        details: {
+          code: ERROR_CODES.INVALID_BLOCK,
+          field: "block",
+        },
+      }
     );
     return null;
   }
@@ -932,7 +992,10 @@ export async function validateEntry(
   if (!blockMeta) {
     raiseBlockError(
       `Block "${resolvedBlock?.name || "unknown"}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
-      earlyContext
+      {
+        ...earlyContext,
+        details: { code: ERROR_CODES.INVALID_BLOCK },
+      }
     );
     return null;
   }
@@ -970,14 +1033,34 @@ export async function validateEntry(
     return null;
   }
 
-  // Validate block args against schema
+  // Validate block args against schema.
+  //
+  // In strict mode `validateBlockArgs` throws on the first failure (the
+  // historical fail-fast contract — keeps `api.renderBlocks` callers'
+  // consoles clean). In permissive/collect mode (the visual editor) we
+  // hand it a collector so it records every bad arg into the array, then
+  // raise one synthetic error whose `details` is the full list. The
+  // outer per-entry try/catch in `validateLayout` catches that synthetic
+  // error and routes it through `markEntrySoftFailure`, stamping the
+  // array on the entry — that's what powers per-field inline errors in
+  // the inspector instead of whack-a-mole "fix one, see the next".
   const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
   const owner = blocksService ? getOwner(blocksService) : null;
+  const argCollector = context?.collect ? [] : null;
   wrapValidationError(
-    () => validateBlockArgs(entry, resolvedBlock, { owner }),
+    () =>
+      validateBlockArgs(entry, resolvedBlock, { owner, collect: argCollector }),
     errorPrefix,
     baseContext
   );
+  if (argCollector && argCollector.length > 0) {
+    const combinedMessage = argCollector.map((e) => e.message).join(" ");
+    raiseBlockError(`${errorPrefix}: ${combinedMessage}`, {
+      ...baseContext,
+      errorPath: buildErrorPath(baseContext.path, argCollector[0].path),
+      details: argCollector.map((e) => e.details).filter(Boolean),
+    });
+  }
 
   // Validate constraints and custom validation (after applying defaults)
   validateBlockConstraints(

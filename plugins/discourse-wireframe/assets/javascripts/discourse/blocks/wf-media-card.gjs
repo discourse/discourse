@@ -28,11 +28,13 @@ import {
   description:
     "Featured media card with avatar, name, badge, title, and CTA link.",
   args: {
-    avatarUrl: {
-      type: "string",
-      pattern: URL_PATTERN,
+    avatar: {
+      type: "image",
+      allowDark: false,
+      allowResize: false,
+      aspectRatio: 1,
+      defaultFit: "cover",
       ui: {
-        control: "url",
         label: i18n("wireframe.inspector.media_card.avatar_url"),
       },
     },
@@ -101,11 +103,13 @@ import {
         helpText: i18n("wireframe.inspector.media_card.background_color_help"),
       },
     },
-    imageUrl: {
-      type: "string",
-      pattern: URL_PATTERN,
+    image: {
+      type: "image",
+      allowDark: true,
+      allowResize: true,
+      aspectRatio: "auto",
+      defaultFit: "cover",
       ui: {
-        control: "url",
         group: "Advanced",
         label: i18n("wireframe.inspector.media_card.image_url"),
         helpText: i18n("wireframe.inspector.media_card.image_url_help"),
@@ -114,9 +118,25 @@ import {
   },
 })
 export default class WFMediaCard extends Component {
+  /**
+   * Inline style for the decorative backdrop. The cover image is painted
+   * via `background-image` (not an `<img>`) so it can layer behind the
+   * card content without affecting layout. When the image arg carries a
+   * `dark` variant we emit a second CSS custom property; the SCSS picks
+   * it up under `@media (prefers-color-scheme: dark)`.
+   *
+   * @returns {ReturnType<typeof trustHTML> | null}
+   */
   get backdropStyle() {
-    if (this.args.imageUrl) {
-      return trustHTML(`background-image: url("${this.args.imageUrl}")`);
+    const image = this.args.image;
+    if (image?.url) {
+      const lightUrl = cssUrl(image.url);
+      const darkUrl = image.dark?.url ? cssUrl(image.dark.url) : null;
+      const decls = [`--wf-media-card-bg-light: ${lightUrl}`];
+      if (darkUrl) {
+        decls.push(`--wf-media-card-bg-dark: ${darkUrl}`);
+      }
+      return trustHTML(decls.join("; "));
     }
     if (this.args.backgroundColor) {
       return trustHTML(`background-color: ${this.args.backgroundColor}`);
@@ -150,12 +170,21 @@ export default class WFMediaCard extends Component {
   <template>
     <div class="wf-media-card">
       {{#if this.backdropStyle}}
-        <div class="wf-media-card__backdrop" style={{this.backdropStyle}}></div>
+        <div
+          class="wf-media-card__backdrop"
+          style={{this.backdropStyle}}
+          data-block-arg="image"
+        ></div>
       {{/if}}
 
       <div class="wf-media-card__top">
-        {{#if @avatarUrl}}
-          <img class="wf-media-card__avatar" src={{@avatarUrl}} alt={{@name}} />
+        {{#if @avatar.url}}
+          <img
+            class="wf-media-card__avatar"
+            src={{@avatar.url}}
+            alt={{@name}}
+            data-block-arg="avatar"
+          />
         {{/if}}
 
         <div class="wf-media-card__identity">
@@ -254,4 +283,19 @@ export default class WFMediaCard extends Component {
       </div>
     </div>
   </template>
+}
+
+/**
+ * Wraps a URL in CSS `url("...")` syntax with backslash-escaped quotes
+ * and backslashes so the value can be safely interpolated into an inline
+ * `style` attribute. The URL itself is still trusted (it passes the
+ * block's URL_PATTERN validation), but this guards against accidental
+ * breakage from a stray double-quote in a CDN-rewritten path.
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+function cssUrl(url) {
+  const escaped = url.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return `url("${escaped}")`;
 }

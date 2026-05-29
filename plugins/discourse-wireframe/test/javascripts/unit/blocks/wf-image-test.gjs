@@ -57,7 +57,10 @@ module("Integration | Wireframe | wf:image block", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: WFImage,
-          args: { image: LIGHT_IMG, imageDark: DARK_IMG, alt: "Both" },
+          args: {
+            image: { ...LIGHT_IMG, dark: DARK_IMG },
+            alt: "Both",
+          },
         },
       ])
     );

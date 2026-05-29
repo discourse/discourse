@@ -17,7 +17,7 @@ import {
   parsePlacement,
   placementsOverlap,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
-import { entryHasEmptyImageUploadArgs } from "../../lib/empty-image-upload";
+import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
@@ -26,8 +26,10 @@ import gridTileDrag from "../../modifiers/grid-tile-drag";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
-import EmptyImageState from "./empty-image-state";
 import GridOverlay from "./grid-overlay";
+import ImageArgOverlay from "./image-arg-overlay";
+import ImageEditMenu from "./image-edit-menu";
+import ImageResizeOverlay from "./image-resize-overlay";
 
 /**
  * Wraps every rendered block while the editor is active so the canvas can
@@ -54,6 +56,7 @@ import GridOverlay from "./grid-overlay";
  */
 export default class BlockChrome extends Component {
   @service blocks;
+  @service menu;
   @service tooltip;
   @service wireframe;
 
@@ -90,6 +93,30 @@ export default class BlockChrome extends Component {
   getResizeGhost = () => {
     const grid = this.getResizeGridElement();
     return grid?.querySelector(".wireframe-grid-ghost") ?? null;
+  };
+  /**
+   * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
+   * inside the chrome. Used both as the resize-handle anchor (via
+   * `getMarkerEl` on `ImageResizeOverlay`) and as the source of truth
+   * for the live preview during a drag.
+   *
+   * Returns `null` until the chrome's content has been laid out (the
+   * marker is rendered by the wrapped block, not by the chrome).
+   *
+   * @returns {Element|null}
+   */
+  getImageMarkerEl = () => {
+    const arg = this.resizableImageArg;
+    if (!arg || !this._chromeEl) {
+      return null;
+    }
+    // Pick the visible `<img>` / `<picture>` painted by the block,
+    // not the overlay siblings (the filled image-arg overlay also
+    // carries `data-block-arg` for its own click / drop dispatch).
+    const escaped = CSS.escape(arg.name);
+    return this._chromeEl.querySelector(
+      `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
+    );
   };
   /**
    * Reference to the chrome's outer `<div>`, set on insert. Passed to
@@ -516,23 +543,291 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * `true` when the wrapped block declares one or more `image-upload` args
-   * AND none of them currently hold an uploaded image. Drives the canvas-
-   * only empty-state card so blocks like `wf:image` don't render either a
-   * giant placeholder graphic or an invisible nothing while the author
-   * hasn't picked an image yet. Block templates stay agnostic — they keep
-   * rendering nothing for empty image args; the chrome shows the affordance
-   * around that void.
+   * Image args declared on the wrapped block plus their live values
+   * and emptiness. Drives the per-arg overlay scaffold rendered next
+   * to (and over) the block content. Block templates stay agnostic —
+   * they keep rendering nothing for empty image args; the chrome shows
+   * the affordance around that void.
    *
-   * @returns {boolean}
+   * @returns {Array<{name: string, def: Object, value: any, isEmpty: boolean}>}
    */
-  get hasEmptyImageUploadArgs() {
+  get imageArgEntries() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
     const entry = this.wireframe._findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
-    return entryHasEmptyImageUploadArgs(this.metadata?.args, entry?.args);
+    return imageArgEntries(this.metadata?.args, entry?.args);
+  }
+
+  /**
+   * `true` when the block declares one or more image args AND every
+   * one of them is empty. The chrome's content area then steps aside
+   * for a stack of empty-state overlays (one per arg) instead of
+   * rendering the block, which would paint nothing visible.
+   *
+   * @returns {boolean}
+   */
+  get hasEmptyImageArgs() {
+    const entries = this.imageArgEntries;
+    return entries.length > 0 && entries.every((e) => e.isEmpty);
+  }
+
+  /**
+   * Image args that currently have a URL. Drives the per-arg drop-
+   * to-replace overlays painted ON TOP of the rendered block (in
+   * absolute-positioned siblings of the wrapped content). Empty args
+   * are handled separately by `hasEmptyImageArgs`.
+   *
+   * @returns {Array<{name: string, def: Object, value: any}>}
+   */
+  get filledImageArgEntries() {
+    return this.imageArgEntries.filter((e) => !e.isEmpty);
+  }
+
+  /**
+   * `true` when any image arg carries a `url` but no intrinsic
+   * dimensions — i.e. the URL probe failed (404, CORS, slow load).
+   * Drives an in-chrome warning badge so the author can see something
+   * is off without opening the inspector. Also keeps the chrome at a
+   * minimum height so a fully-broken image doesn't collapse to a
+   * sliver.
+   *
+   * @returns {boolean}
+   */
+  get hasUnresolvedImageArg() {
+    return this.imageArgEntries.some(
+      (e) => !e.isEmpty && (!e.value?.width || !e.value?.height)
+    );
+  }
+
+  /**
+   * `true` when the block declares at least one image arg that opts
+   * into drag-resize (`allowResize: true`) AND the block isn't sitting
+   * in a grid cell (where the grid handle owns sizing already).
+   *
+   * @returns {boolean}
+   */
+  get showsImageResizeHandle() {
+    if (this.isGridCell || !this.isSelected) {
+      return false;
+    }
+    // The 8-point handles need a measurable rect to anchor to. When
+    // the URL probe failed (the value has a `url` but no `width` /
+    // `height`), the rendered image collapses to whatever the
+    // browser falls back to — usually `0×0` — and the overlay's
+    // positioning math produces invalid coordinates. Skip the
+    // handles in that case; the chrome already shows the probe-fail
+    // badge so the user has a clear signal.
+    return this.imageArgEntries.some(
+      (e) =>
+        e.def?.allowResize === true &&
+        !e.isEmpty &&
+        e.value?.width > 0 &&
+        e.value?.height > 0
+    );
+  }
+
+  /**
+   * Aspect ratio (width / height) to lock the resize drag to. Prefers
+   * the schema's explicit `aspectRatio` when set to a number; falls
+   * back to the light variant's intrinsic ratio; otherwise `null`
+   * (free drag).
+   *
+   * @returns {number|null}
+   */
+  get imageResizeAspectRatio() {
+    for (const { def, value } of this.imageArgEntries) {
+      if (!def?.allowResize) {
+        continue;
+      }
+      if (typeof def.aspectRatio === "number" && def.aspectRatio > 0) {
+        return def.aspectRatio;
+      }
+      if (value?.width && value?.height) {
+        return value.width / value.height;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * The first resizable image arg on this block (or `null`). Drives
+   * which arg the corner handle writes back to; multi-image blocks
+   * (e.g. media-card avatar + cover) typically declare only one of
+   * the two as `allowResize: true`.
+   *
+   * @returns {{name: string, def: Object, value: any}|null}
+   */
+  get resizableImageArg() {
+    return (
+      this.imageArgEntries.find((e) => e.def?.allowResize === true) ?? null
+    );
+  }
+
+  /**
+   * Resize drag's live preview handler. Applies the proposed
+   * dimensions directly to the IMAGE MARKER (not the chrome) via
+   * inline style so the user sees the size change as they drag
+   * without committing each frame to the layout — and so the overlay's
+   * ResizeObserver sees the change and re-positions the 8 handles to
+   * track the live preview.
+   *
+   * @param {{width: number, height: number}} dims
+   */
+  @action
+  previewImageResize({ width, height }) {
+    const marker = this.getImageMarkerEl();
+    if (!marker) {
+      return;
+    }
+    marker.style.width = `${width}px`;
+    marker.style.height = `${height}px`;
+  }
+
+  /**
+   * Commits the final resize dimensions back into the image arg's own
+   * `width` / `height`. Writing to the arg (not `containerArgs.size`)
+   * means the live site picks up the new dimensions for free — the
+   * renderer already forwards `image.width` / `image.height` to the
+   * underlying `<img>` element's attributes.
+   *
+   * Drops the inline preview style on the MARKER so the committed
+   * value drives layout (otherwise the inline style would stick
+   * around and shadow future adjustments).
+   *
+   * @param {{width: number, height: number}} dims
+   */
+  @action
+  commitImageResize({ width, height }) {
+    const marker = this.getImageMarkerEl();
+    if (marker) {
+      marker.style.width = "";
+      marker.style.height = "";
+    }
+    if (this._chromeEl) {
+      this._chromeEl.style.width = "";
+      this._chromeEl.style.height = "";
+    }
+    const arg = this.resizableImageArg;
+    if (!arg) {
+      return;
+    }
+    // Preserve `naturalWidth` / `naturalHeight` (set at upload /
+    // probe time) so the inspector can offer "Reset to natural" and
+    // we can show the resized info bar. Resize only changes the
+    // DISPLAY dimensions (`width` / `height`), not the intrinsic
+    // ones.
+    const naturalWidth = arg.value?.naturalWidth ?? arg.value?.width;
+    const naturalHeight = arg.value?.naturalHeight ?? arg.value?.height;
+    const nextValue = {
+      ...(arg.value ?? {}),
+      width,
+      height,
+      naturalWidth,
+      naturalHeight,
+    };
+    this.wireframe._setImageArg(this.args.blockKey, arg.name, nextValue);
+  }
+
+  /**
+   * Resets the resizable image arg's display dimensions to its
+   * natural / intrinsic size. Wired to the toolbar "Reset to
+   * natural" button.
+   */
+  @action
+  resetImageToNaturalSize() {
+    const arg = this.resizableImageArg;
+    if (!arg?.value?.naturalWidth || !arg?.value?.naturalHeight) {
+      return;
+    }
+    this.wireframe._setImageArg(this.args.blockKey, arg.name, {
+      ...arg.value,
+      width: arg.value.naturalWidth,
+      height: arg.value.naturalHeight,
+    });
+  }
+
+  /**
+   * Resizes the image arg to fit inside its containing chrome with
+   * the aspect ratio preserved (object-fit: contain semantics). One
+   * dimension matches the chrome; the other has margin. Natural
+   * dimensions are preserved so a subsequent "Reset to natural"
+   * still works.
+   */
+  @action
+  fillImageToBlock() {
+    const arg = this.resizableImageArg;
+    if (!arg?.value || !this._chromeEl) {
+      return;
+    }
+    const rect = this._chromeEl.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      return;
+    }
+    const naturalWidth = arg.value.naturalWidth ?? arg.value.width;
+    const naturalHeight = arg.value.naturalHeight ?? arg.value.height;
+    if (!naturalWidth || !naturalHeight) {
+      return;
+    }
+    const imageAspect = naturalWidth / naturalHeight;
+    const blockAspect = rect.width / rect.height;
+    let width;
+    let height;
+    if (imageAspect > blockAspect) {
+      // Image is wider than the block: width maxes out, height
+      // shrinks to maintain aspect.
+      width = rect.width;
+      height = rect.width / imageAspect;
+    } else {
+      // Image is taller (or equal): height maxes out, width
+      // shrinks.
+      height = rect.height;
+      width = rect.height * imageAspect;
+    }
+    this.wireframe._setImageArg(this.args.blockKey, arg.name, {
+      ...arg.value,
+      width: Math.round(width),
+      height: Math.round(height),
+      naturalWidth,
+      naturalHeight,
+    });
+  }
+
+  /**
+   * `true` when the resizable image arg's current display dims
+   * diverge from its natural dims — used to enable the toolbar
+   * "Reset to natural" button.
+   *
+   * @returns {boolean}
+   */
+  get imageIsResized() {
+    const v = this.resizableImageArg?.value;
+    if (!v?.naturalWidth || !v?.naturalHeight || !v?.width || !v?.height) {
+      return false;
+    }
+    return v.width !== v.naturalWidth || v.height !== v.naturalHeight;
+  }
+
+  /**
+   * `true` when the resizable image arg is smaller than its
+   * containing chrome — i.e. there's room to "Fill block". When the
+   * image already fills the block (or exceeds it), the button is
+   * uninformative and should be hidden.
+   *
+   * @returns {boolean}
+   */
+  get imageCanFillBlock() {
+    const arg = this.resizableImageArg;
+    if (!arg?.value?.width || !arg?.value?.height || !this._chromeEl) {
+      return false;
+    }
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    const rect = this._chromeEl.getBoundingClientRect();
+    return (
+      rect.width > arg.value.width + 1 || rect.height > arg.value.height + 1
+    );
   }
 
   /** @returns {string} */
@@ -644,6 +939,50 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Opens the FloatKit menu that hosts Replace / Remove actions for a
+   * clicked image marker. The menu is mounted as a sibling of the
+   * marker (FloatKit handles positioning) and tracks the marker as its
+   * anchor; FloatKit re-positions on scroll / resize.
+   *
+   * Marks this arg as the most recently-touched image arg on the
+   * service so a subsequent paste still routes here. Closing the menu
+   * is handled by FloatKit's outside-click / Escape contract; the menu
+   * component also calls back `data.close()` after Replace / Remove
+   * commits.
+   *
+   * @param {Element} argEl - The clicked `[data-block-arg]` element.
+   * @param {string} argName - The image arg name on this block.
+   */
+  /**
+   * Opens the Replace / Remove menu against the clicked image marker.
+   * Mirrors the pattern in `icon-edit-state.js` which is known to
+   * work: synchronous `menu.show()` call right out of the click
+   * handler, no runloop deferral.
+   */
+  async _openImageEditMenu(argEl, argName) {
+    this.wireframe.lastTouchedImageArg = argName;
+    // The `close` callback captures `instance` by reference. At the
+    // time the data object is created, `instance` is in the TDZ; by
+    // the time the menu's Replace / Remove buttons can fire it, the
+    // `await` below has resolved and `instance` is assigned. Mirrors
+    // the closure trick `icon-edit-state.js:109` uses.
+    let instance;
+    const data = {
+      blockKey: this.args.blockKey,
+      argName,
+      close: () => instance?.close(),
+    };
+    instance = await this.menu.show(argEl, {
+      identifier: "wireframe-image-edit-menu",
+      component: ImageEditMenu,
+      placement: "bottom",
+      fallbackPlacements: ["top", "right", "left"],
+      maxWidth: 240,
+      data,
+    });
+  }
+
+  /**
    * Routes the resize modifier's commit back to THIS slot's own args.
    * The resize handle lives on the slot wrapper (transparent path), so
    * commits update the slot's column / row in place — the cell border
@@ -679,9 +1018,27 @@ export default class BlockChrome extends Component {
     event.stopPropagation();
 
     const argEl = event.target.closest?.("[data-block-arg]");
+    const argName = argEl?.dataset?.blockArg;
+    const kind = argName ? kindForArg(this.metadata, argName) : null;
+
+    // Image args don't have an internal selection model the way text
+    // does, so a single click on the rendered image opens the replace
+    // / remove menu directly. Selecting the block is a side effect so
+    // the inspector tracks the change.
+    if (argEl && kind === "image") {
+      if (this.wireframe.selectedBlockKey !== this.args.blockKey) {
+        this._selectThisBlock();
+      }
+      this._openImageEditMenu(argEl, argName);
+      return;
+    }
+
+    // Other inline-editable args follow the "click to select, click
+    // again to edit" pattern — placing the cursor inside text or
+    // anchoring a popover requires the click to be on the already-
+    // selected block, otherwise the first click is interpreted as
+    // selection.
     if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
-      const argName = argEl.dataset.blockArg;
-      const kind = kindForArg(this.metadata, argName);
       switch (kind) {
         case "rich-text":
           this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
@@ -710,6 +1067,15 @@ export default class BlockChrome extends Component {
       // No matching kind — fall through to block selection.
     }
 
+    this._selectThisBlock();
+  }
+
+  /**
+   * Selects the wrapped block via the editor service. Extracted from
+   * the per-kind dispatch in `onClick` so the image-arg single-click
+   * path can re-use it without duplicating the data payload.
+   */
+  _selectThisBlock() {
     this.wireframe.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,
@@ -819,6 +1185,7 @@ export default class BlockChrome extends Component {
             (if this.isEmptyContainer "--empty-container")
             (if this.hasGridOverlap "--overlapping")
             (if this.isOutOfBounds "--out-of-bounds")
+            (if this.hasUnresolvedImageArg "--unresolved-image")
             (if @isGhost "--ghost")
             (if @isError "--error")
             (if this.isSlot "--slot")
@@ -842,6 +1209,10 @@ export default class BlockChrome extends Component {
             @displayName={{this.displayName}}
             @chromeEl={{this._chromeEl}}
             @isSelected={{this.isSelected}}
+            @canFillImage={{this.imageCanFillBlock}}
+            @canResetImage={{this.imageIsResized}}
+            @onFillImage={{this.fillImageToBlock}}
+            @onResetImage={{this.resetImageToNaturalSize}}
           />
 
           {{! Overlap / out-of-bounds warning badge — only visible when
@@ -863,6 +1234,14 @@ export default class BlockChrome extends Component {
             >
               {{dIcon "triangle-exclamation"}}
               <span>{{i18n "wireframe.canvas.overlap_label"}}</span>
+            </span>
+          {{else if this.hasUnresolvedImageArg}}
+            <span
+              class="wireframe-block-chrome__overlap-badge wireframe-block-chrome__overlap-badge--info"
+              title={{i18n "wireframe.canvas.unresolved_image_warning"}}
+            >
+              {{dIcon "triangle-exclamation"}}
+              <span>{{i18n "wireframe.canvas.unresolved_image_label"}}</span>
             </span>
           {{/if}}
 
@@ -886,17 +1265,46 @@ export default class BlockChrome extends Component {
               class="wireframe-block-chrome__content"
               style={{this.contentStyle}}
             >
-              {{#if this.hasEmptyImageUploadArgs}}
-                <EmptyImageState />
+              {{#if this.hasEmptyImageArgs}}
+                {{#each this.imageArgEntries as |imageArg|}}
+                  <ImageArgOverlay
+                    @blockKey={{@blockKey}}
+                    @argName={{imageArg.name}}
+                    @argDef={{imageArg.def}}
+                    @isEmpty={{imageArg.isEmpty}}
+                  />
+                {{/each}}
               {{else}}
                 <@WrappedComponent />
               {{/if}}
             </div>
-          {{else if this.hasEmptyImageUploadArgs}}
-            <EmptyImageState />
+          {{else if this.hasEmptyImageArgs}}
+            {{#each this.imageArgEntries as |imageArg|}}
+              <ImageArgOverlay
+                @blockKey={{@blockKey}}
+                @argName={{imageArg.name}}
+                @argDef={{imageArg.def}}
+                @isEmpty={{imageArg.isEmpty}}
+              />
+            {{/each}}
           {{else}}
             <@WrappedComponent />
           {{/if}}
+
+          {{! Per-arg drop-to-replace overlays painted on top of the
+            rendered block. Each overlay positions itself over its
+            image arg's marker via JS-computed bounding rects (see
+            `image-arg-overlay.gjs`). Invisible by default; lights up
+            when an image file drag enters. }}
+          {{#each this.filledImageArgEntries as |imageArg|}}
+            <ImageArgOverlay
+              @blockKey={{@blockKey}}
+              @argName={{imageArg.name}}
+              @argDef={{imageArg.def}}
+              @isEmpty={{imageArg.isEmpty}}
+              @getChromeEl={{this.getChromeEl}}
+            />
+          {{/each}}
 
           {{#if this.showsGridOverlay}}
             <GridOverlay @gridKey={{@blockKey}} @outletName={{@outletName}} />
@@ -916,6 +1324,18 @@ export default class BlockChrome extends Component {
                 this.commitSelfResize
               }}
             ></span>
+          {{/if}}
+
+          {{#if this.showsImageResizeHandle}}
+            <ImageResizeOverlay
+              @blockKey={{@blockKey}}
+              @argName={{this.resizableImageArg.name}}
+              @getChromeEl={{this.getChromeEl}}
+              @getMarkerEl={{this.getImageMarkerEl}}
+              @aspectRatio={{this.imageResizeAspectRatio}}
+              @onPreview={{this.previewImageResize}}
+              @onCommit={{this.commitImageResize}}
+            />
           {{/if}}
 
           {{#if this.isEmptyContainer}}

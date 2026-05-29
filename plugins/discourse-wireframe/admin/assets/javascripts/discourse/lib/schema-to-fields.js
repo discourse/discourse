@@ -57,6 +57,13 @@ const DEFAULT_GROUP = "General";
  * @returns {string}
  */
 function pickControl(argDef) {
+  // The `image` arg type owns its own inspector control — a custom
+  // FormKit field with Upload | URL tabs, an optional dark variant, and
+  // a ratio-mismatch warning. The type determines the control; no
+  // `ui.control` hint is needed (or accepted) for image args.
+  if (argDef.type === "image") {
+    return "image";
+  }
   if (argDef.ui?.control) {
     return argDef.ui.control;
   }

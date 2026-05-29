@@ -43,7 +43,6 @@ export const VALID_UI_CONTROLS = Object.freeze([
   "color",
   "icon",
   "emoji",
-  "image-upload",
   "url",
   "rich-text",
   "rich-inline",
