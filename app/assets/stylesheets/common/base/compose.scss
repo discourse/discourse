@@ -227,7 +227,15 @@ html.composer-open:not(.has-full-page-chat) {
       border-color: var(--input-border-color);
     }
 
+    .composer-actions-trigger .d-button-label {
+      max-width: 10ch;
+
+      @include ellipsis;
+    }
+
     .composer-whisper-indicator {
+      margin-left: auto;
+
       @include viewport.until(sm) {
         .d-button-label {
           display: none;
@@ -292,7 +300,6 @@ html.composer-open:not(.has-full-page-chat) {
 
     .composer-controls {
       display: flex;
-      gap: var(--space-1);
     }
 
     // Protection for languages with long strings on very small screens. This
@@ -317,10 +324,6 @@ html.composer-open:not(.has-full-page-chat) {
         width: 100%;
         margin-left: 0;
         margin-top: var(--space-2);
-      }
-
-      .composer-controls {
-        align-self: flex-start;
       }
     }
   }
@@ -673,10 +676,6 @@ html.composer-open:not(.has-full-page-chat) {
       color: var(--danger);
       font-size: 20px;
       vertical-align: -5.5px;
-    }
-
-    + .btn-mini-toggle {
-      margin-left: 0;
     }
   }
 

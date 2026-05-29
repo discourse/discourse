@@ -544,7 +544,7 @@ export default class ComposerContainer extends Component {
                   @translatedTitle={{this.composer.toggleText}}
                   @icon="angles-left"
                   class={{dConcatClass
-                    "btn-transparent btn-mini-toggle toggle-preview"
+                    "btn-transparent btn-small toggle-preview"
                     (unless this.composer.isPreviewVisible "active")
                   }}
                 />

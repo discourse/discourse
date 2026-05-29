@@ -486,7 +486,7 @@ export default class ComposerActions extends Component {
         {{#if this.showReplyTargetLink}}
           <a
             class={{dConcatClass
-              "composer-actions-reply-target-link btn btn-flat"
+              "composer-actions-reply-target-link btn btn-transparent"
               (if this.replyTargetLabel "btn-icon-text" "btn-icon no-text")
               (if this.site.mobileView "btn-small")
             }}
@@ -519,7 +519,7 @@ export default class ComposerActions extends Component {
           @action={{this.composer.displayEditReason}}
           @icon={{data.icon}}
           @label="composer.edit_reason"
-          class="composer-actions-trigger composer-actions-trigger--static btn-flat btn-icon-text"
+          class="composer-actions-trigger composer-actions-trigger--static btn-transparent btn-icon-text"
         />
       {{else}}
         <span class="composer-actions-trigger composer-actions-trigger--static">
@@ -538,7 +538,7 @@ export default class ComposerActions extends Component {
             "composer.whisper_indicator.public"
           }}
           class={{dConcatClass
-            "composer-whisper-indicator btn-flat"
+            "composer-whisper-indicator btn-transparent"
             (if this.composerModel.whisper "--whispering" "--public")
             (if this.site.mobileView "btn-small")
           }}
