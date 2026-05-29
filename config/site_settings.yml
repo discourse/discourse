@@ -299,6 +299,23 @@ basic:
       - bookmarks
       - hot
     area: "interface"
+  default_homepage:
+    client: true
+    refresh: true
+    type: enum
+    default: "latest"
+    choices:
+      - latest
+      - new
+      - unread
+      - unseen
+      - top
+      - categories
+      - read
+      - posted
+      - bookmarks
+      - hot
+    area: "interface"
   post_menu:
     client: true
     type: list
