@@ -206,14 +206,32 @@
     border-radius: var(--d-border-radius);
     overflow: hidden;
     background: var(--secondary);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
 
-    &.--active {
+    &:hover {
+      border-color: var(--primary-low-mid);
+    }
+
+    &.--selected {
       border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
     }
   }
 
-  &__card > .btn {
-    margin: var(--space-3) var(--space-4) var(--space-4);
+  .theme-card-preview__image-wrapper {
+    height: 220px;
+  }
+
+  .theme-card-preview__image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-4);
   }
 
   &__enabled-badge {
