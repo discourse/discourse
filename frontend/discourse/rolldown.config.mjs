@@ -6,6 +6,7 @@ import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
+import productionEmberDeprecations from "./lib/production-ember-deprecations.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
@@ -111,6 +112,7 @@ export function buildConfig({ devMode } = {}) {
     plugins: [
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
+      ...(isProduction ? [productionEmberDeprecations()] : []),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({
