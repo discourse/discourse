@@ -72,9 +72,10 @@ export default class ChatUpload extends Component {
   get videoSourceUrl() {
     const baseUrl =
       this.args.upload.optimized_video?.url ?? this.args.upload.url;
-    const finalUrl = this.capabilities.isIOS || this.capabilities.isSafari
-      ? `${baseUrl}#t=0.001`
-      : baseUrl;
+    const finalUrl =
+      this.capabilities.isIOS || this.capabilities.isSafari
+        ? `${baseUrl}#t=0.001`
+        : baseUrl;
     return getURLWithCDN(finalUrl);
   }
 
