@@ -69,6 +69,21 @@ export default class AdminNavManager extends Service {
     section.links.push(...links);
   }
 
+  removeLinksFromSection(sectionName, linkNames) {
+    this.#guardFilteredNavAccess();
+
+    const section = this.findSection(sectionName);
+    if (!section) {
+      // eslint-disable-next-line no-console
+      console.warn(`[AdminNavManager] Section ${sectionName} not found`);
+      return;
+    }
+
+    section.links = section.links.filter(
+      (link) => !linkNames.includes(link.name)
+    );
+  }
+
   amendLinksToSubSection(subSectionName, links) {
     this.#guardFilteredNavAccess();
 

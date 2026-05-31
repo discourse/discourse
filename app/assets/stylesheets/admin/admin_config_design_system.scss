@@ -56,6 +56,12 @@
     font-family: var(--d-system-font-family-code);
   }
 
+  // Fonts/Layout tabs: the value sits directly in the row (not inside a light/
+  // dark cell), so give it a min width to line the token path up in a column.
+  &__row > &__value {
+    min-inline-size: 8em;
+  }
+
   &__path {
     color: var(--d-system-color-text-subtle);
     font-size: var(--d-system-font-size-caption);

@@ -264,6 +264,13 @@ export const ADMIN_NAV_MAP = [
         icon: "palette",
       },
       {
+        name: "admin_design_system",
+        route: "adminConfig.designSystem",
+        label: "admin.config.design_system.title",
+        description: "admin.config.design_system.header_description",
+        icon: "palette",
+      },
+      {
         name: "admin_interface",
         route: "adminConfig.interface",
         label: "admin.config.interface.title",

@@ -417,6 +417,19 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ]);
     }
 
+    if (siteSettings.enable_design_system) {
+      // The Design System config replaces the standalone Fonts and Color
+      // Palettes pages.
+      this.adminNavManager.removeLinksFromSection("appearance", [
+        "admin_fonts",
+        "admin_color_palettes",
+      ]);
+    } else {
+      this.adminNavManager.removeLinksFromSection("appearance", [
+        "admin_design_system",
+      ]);
+    }
+
     this.adminNavManager.amendLinksToSection("root", [
       {
         name: "admin_upcoming_changes",
