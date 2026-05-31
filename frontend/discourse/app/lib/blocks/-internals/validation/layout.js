@@ -162,24 +162,48 @@ function validateContainerChildren(
  * Validates block constraints and custom validation functions.
  * Applies arg defaults before validation.
  *
+ * In strict mode (no `collect`) a violation throws fail-fast via
+ * `raiseBlockError` — the historical contract that keeps `api.renderBlocks`
+ * callers' consoles clean. When a `collect` array is supplied, violations are
+ * appended to it (as `{ message, path, details }`) instead of thrown, so the
+ * caller can accumulate them alongside arg failures and surface every problem
+ * at once rather than one-then-the-next across republishes.
+ *
  * @param {Object} metadata - Block metadata with constraints/validate.
  * @param {Object} resolvedBlock - The resolved block class.
  * @param {Object} entry - The block entry.
  * @param {string} blockName - The block name for error messages.
- * @param {Object} context - Error context for raiseBlockError.
+ * @param {Object|null} context - Error context for raiseBlockError (strict mode).
+ * @param {Object} [options]
+ * @param {Array<{message: string, path: string, details?: Object}>} [options.collect] -
+ *   When provided, violations are appended here instead of thrown.
  */
 function validateBlockConstraints(
   metadata,
   resolvedBlock,
   entry,
   blockName,
-  context
+  context,
+  { collect = null } = {}
 ) {
   if (!metadata?.constraints && !metadata?.validate) {
     return;
   }
 
   const argsWithDefaults = applyArgDefaults(resolvedBlock, entry.args || {});
+
+  // Append to the collector (accumulate mode) or throw with full context
+  // (fail-fast mode), depending on whether a collector was supplied.
+  const report = (errorPath, message, details) => {
+    if (collect) {
+      collect.push({ message, path: errorPath, details });
+    } else {
+      raiseBlockError(
+        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${message}`,
+        { ...context, errorPath, details }
+      );
+    }
+  };
 
   // Validate declarative constraints
   if (metadata.constraints) {
@@ -189,14 +213,7 @@ function validateBlockConstraints(
       blockName
     );
     if (constraintError) {
-      raiseBlockError(
-        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${constraintError.message}`,
-        {
-          ...context,
-          errorPath: "constraints",
-          details: constraintError.details,
-        }
-      );
+      report("constraints", constraintError.message, constraintError.details);
     }
   }
 
@@ -211,19 +228,80 @@ function validateBlockConstraints(
         customErrors.length === 1
           ? customErrors[0]
           : customErrors.map((e) => `  - ${e}`).join("\n");
-      raiseBlockError(
-        `Invalid block "${blockName}" at ${context.path} for outlet "${context.outletName}": ${errorMessage}`,
-        {
-          ...context,
-          errorPath: "validate",
-          details: {
-            code: ERROR_CODES.CONSTRAINT_VIOLATION,
-            expected: { custom: true },
-          },
-        }
-      );
+      report("validate", errorMessage, {
+        code: ERROR_CODES.CONSTRAINT_VIOLATION,
+        expected: { custom: true },
+      });
     }
   }
+}
+
+/**
+ * Collects the soft-failure details for a single entry's args and
+ * constraints, gathered into the same `__failureDetails` array shape the
+ * full permissive layout pass stamps onto an entry — but returned instead
+ * of thrown, and without needing the surrounding layout/outlet context.
+ *
+ * Reuses the exact validators the full pass runs per entry
+ * (`validateBlockArgs` in collect mode, plus `validateConstraints` /
+ * `runCustomValidation` over args-with-defaults), so there is one source
+ * of validation truth.
+ *
+ * Scope is deliberately limited to the checks an in-session arg edit can
+ * change: argument-level validation, declarative `constraints`, and a
+ * custom `validate` function. Structural concerns (children, containerArgs,
+ * ids, conditions) are unaffected by an arg edit and stay owned by the
+ * next full republish.
+ *
+ * @param {Object} entry - The block entry whose current `args` to check.
+ * @param {import("discourse/lib/blocks/-internals/registry/block").BlockClass} blockClass -
+ *   The resolved, `@block`-decorated class. A class without registered
+ *   metadata yields `[]` (nothing to validate against).
+ * @param {Object} [options]
+ * @param {Object} [options.owner] - Ember owner for registry lookups (only
+ *   used by arg validation for `model:*` `instanceOf` checks).
+ * @returns {Array<Object>} The structured failure details (`{ code, field?,
+ *   expected? }`), or an empty array when the entry's args and constraints
+ *   all pass.
+ */
+export function collectEntryFailures(entry, blockClass, { owner } = {}) {
+  const metadata = getBlockMetadata(blockClass);
+  if (!metadata) {
+    return [];
+  }
+
+  // Accumulate arg failures (required / type / pattern / enum / …) then
+  // constraint + custom-validate failures into one collector — the same
+  // sequence the full permissive pass runs per entry (`validateEntry`), so
+  // the edit-time and republish-time stamps match exactly.
+  const collector = [];
+  try {
+    validateBlockArgs(entry, blockClass, { owner, collect: collector });
+  } catch (err) {
+    // `validateBlockArgs` still throws for the "args provided but no schema"
+    // case, which collect mode doesn't cover. Surface it as a single detail
+    // rather than letting it break the edit.
+    if (err instanceof BlockError) {
+      collector.push({
+        details: err.details ?? { code: ERROR_CODES.INVALID_BLOCK },
+      });
+    } else {
+      throw err;
+    }
+  }
+
+  validateBlockConstraints(
+    metadata,
+    blockClass,
+    entry,
+    metadata.blockName,
+    null,
+    {
+      collect: collector,
+    }
+  );
+
+  return collector.map((failure) => failure.details).filter(Boolean);
 }
 
 /**
@@ -1051,30 +1129,42 @@ export async function validateEntry(
   // the next".
   const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
   const owner = blocksService ? getOwner(blocksService) : null;
-  const argCollector = context?.collect ? [] : null;
+  const collector = context?.collect ? [] : null;
+
+  // Validate args first. In strict mode this throws on the first bad arg
+  // (fail-fast); in collect mode it records every bad arg into `collector`
+  // without throwing.
   wrapValidationError(
     () =>
-      validateBlockArgs(entry, resolvedBlock, { owner, collect: argCollector }),
+      validateBlockArgs(entry, resolvedBlock, { owner, collect: collector }),
     errorPrefix,
     baseContext
   );
-  if (argCollector && argCollector.length > 0) {
-    const combinedMessage = argCollector.map((e) => e.message).join(" ");
-    raiseBlockError(`${errorPrefix}: ${combinedMessage}`, {
-      ...baseContext,
-      errorPath: buildErrorPath(baseContext.path, argCollector[0].path),
-      details: argCollector.map((e) => e.details).filter(Boolean),
-    });
-  }
 
-  // Validate constraints and custom validation (after applying defaults)
+  // Then constraints + custom validation (after defaults). In strict mode
+  // these throw fail-fast; in collect mode they append to the SAME collector
+  // so an entry with both a bad arg and an unmet constraint surfaces both at
+  // once — without this, fixing the arg only reveals the constraint on the
+  // next republish (whack-a-mole).
   validateBlockConstraints(
     blockMeta,
     resolvedBlock,
     entry,
     blockName,
-    baseContext
+    baseContext,
+    {
+      collect: collector,
+    }
   );
+
+  if (collector && collector.length > 0) {
+    const combinedMessage = collector.map((e) => e.message).join(" ");
+    raiseBlockError(`${errorPrefix}: ${combinedMessage}`, {
+      ...baseContext,
+      errorPath: buildErrorPath(baseContext.path, collector[0].path),
+      details: collector.map((e) => e.details).filter(Boolean),
+    });
+  }
 
   // Validate conditions if service is available
   validateBlockConditions(

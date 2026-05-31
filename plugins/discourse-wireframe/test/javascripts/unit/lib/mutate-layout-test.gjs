@@ -13,6 +13,7 @@ import {
   replaceEntryArgs,
   replaceEntryContainerArgs,
   replaceEntryId,
+  revalidateEntryStamps,
   setEntryArg,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 
@@ -26,6 +27,17 @@ class ContainerBlock extends Component {
   <template>
     <div class="container">{{yield}}</div>
   </template>
+}
+
+@block("wf:mutate-test-constrained", {
+  args: {
+    label: { type: "string" },
+    icon: { type: "string" },
+  },
+  constraints: { atLeastOne: ["label", "icon"] },
+})
+class ConstrainedBlock extends Component {
+  <template>x</template>
 }
 
 function makeLayout() {
@@ -563,6 +575,72 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
         undefined,
         "the structured details the inspector reads are cleared too"
       );
+    });
+  });
+
+  module("revalidateEntryStamps", function () {
+    test("clears every stamp when the entry is valid", function (assert) {
+      const entry = {
+        block: ConstrainedBlock,
+        args: { label: "Go" },
+        __failureType: "structural-invalid",
+        __failureReason: "stale",
+        __visible: false,
+        __failureDetails: [{ code: "constraint-violation" }],
+      };
+
+      revalidateEntryStamps(entry);
+
+      assert.strictEqual(entry.__failureType, undefined);
+      assert.strictEqual(entry.__failureReason, undefined);
+      assert.strictEqual(entry.__visible, undefined);
+      assert.strictEqual(entry.__failureDetails, undefined);
+    });
+
+    test("stamps the current failure when the entry is invalid", function (assert) {
+      const entry = { block: ConstrainedBlock, args: {} };
+
+      revalidateEntryStamps(entry);
+
+      assert.strictEqual(entry.__failureType, "structural-invalid");
+      assert.true(
+        entry.__failureReason.length > 0,
+        "carries a human-readable reason for the outline"
+      );
+      assert.strictEqual(entry.__failureDetails.length, 1, "one detail");
+      assert.strictEqual(
+        entry.__failureDetails[0].code,
+        "constraint-violation"
+      );
+    });
+
+    test("leaves the actively-edited block visible (does not set __visible)", function (assert) {
+      // The republish pass ghosts invalid blocks (`__visible = false`); the
+      // edit-time path must not, or the block the author is editing would
+      // vanish from the canvas mid-edit.
+      const entry = { block: ConstrainedBlock, args: {}, __visible: false };
+
+      revalidateEntryStamps(entry);
+
+      assert.strictEqual(
+        entry.__visible,
+        undefined,
+        "a prior ghost stamp is dropped so the block re-renders while edited"
+      );
+    });
+
+    test("falls back to clearing for a metadata-less (string) block", function (assert) {
+      const entry = {
+        block: "wf:not-a-registered-class",
+        args: {},
+        __failureType: "structural-invalid",
+        __failureDetails: [{ code: "constraint-violation" }],
+      };
+
+      revalidateEntryStamps(entry);
+
+      assert.strictEqual(entry.__failureType, undefined);
+      assert.strictEqual(entry.__failureDetails, undefined);
     });
   });
 

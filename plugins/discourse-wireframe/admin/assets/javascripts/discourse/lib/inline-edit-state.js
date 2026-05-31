@@ -1,5 +1,6 @@
 // @ts-check
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import { next as nextRunloop } from "@ember/runloop";
 import { toStorage } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import {
@@ -8,6 +9,7 @@ import {
   findEntrySiblings,
   insertEntryAt,
   removeEntry,
+  revalidateEntryStamps,
 } from "./mutate-layout";
 
 /**
@@ -358,7 +360,10 @@ export default class InlineEditState {
     } else {
       entry.args[argName] = value;
     }
-    clearValidatorStamps(entry);
+    // Re-validate against the new value so the outline / inspector reflect
+    // the block's current validity instead of clearing the error until the
+    // next republish (e.g. emptying a required inline field re-flags it).
+    revalidateEntryStamps(entry, { owner: getOwner(this.service) });
   }
 
   /**

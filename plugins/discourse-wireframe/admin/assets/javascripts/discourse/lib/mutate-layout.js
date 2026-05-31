@@ -18,6 +18,7 @@
  * editor service stays small and the helpers stay testable in isolation.
  */
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { collectEntryFailures } from "discourse/lib/blocks/-internals/validation/layout";
 // `entryKey` lives in its own file in the UNIVERSAL bundle so the
 // live-page `grid-math.js` can use it without dragging mutate-layout
 // (admin-only) into the universal bundle. This file is admin-only; we
@@ -26,6 +27,7 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 // Re-exported so existing call sites that import it from
 // `lib/mutate-layout` keep working.
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/entry-key";
+import { friendlyErrorMessage } from "./friendly-error-message";
 
 export { entryKey };
 
@@ -634,6 +636,51 @@ export function clearValidatorStamps(entry) {
   delete entry.__failureReason;
   delete entry.__visible;
   delete entry.__failureDetails;
+}
+
+/**
+ * Re-runs arg + constraint validation for a single entry against its
+ * CURRENT args and updates its soft-failure stamps to match — the
+ * edit-time counterpart to the full republish validation pass.
+ *
+ * Use this in place of a bare `clearValidatorStamps` on the arg-write
+ * paths: clearing alone drops the error optimistically on any edit, so a
+ * still-invalid block (e.g. a required field left empty, or the last of an
+ * `atLeastOne` pair removed) would look fixed until the next republish.
+ * Re-validating keeps the current error visible and lets a genuine fix
+ * clear it immediately.
+ *
+ * When the entry is valid — or its block exposes no metadata to validate
+ * against (e.g. a string-referenced block) — the stamps are cleared.
+ * Otherwise `__failureDetails` (read by the inspector) plus the
+ * `__failureType` / `__failureReason` summary (read by the outline) are
+ * set from the current failures. `__visible` is deliberately left untouched
+ * so the block the author is actively editing stays on the canvas; hiding
+ * invalid blocks is the republish pass's job, not this path's.
+ *
+ * @param {Object} entry - Mutated in place.
+ * @param {Object} [options]
+ * @param {Object} [options.owner] - Ember owner, forwarded to arg
+ *   validation for `model:*` `instanceOf` checks.
+ */
+export function revalidateEntryStamps(entry, { owner } = {}) {
+  if (!entry) {
+    return;
+  }
+
+  const details = entry.block
+    ? collectEntryFailures(entry, entry.block, { owner })
+    : [];
+
+  if (details.length === 0) {
+    clearValidatorStamps(entry);
+    return;
+  }
+
+  entry.__failureDetails = details;
+  entry.__failureType = "structural-invalid";
+  entry.__failureReason = friendlyErrorMessage(details[0]);
+  delete entry.__visible;
 }
 
 /**

@@ -21,6 +21,19 @@ class TestTile extends Component {
   </template>
 }
 
+@block("wf:svc-test-constrained", {
+  args: {
+    label: { type: "string" },
+    icon: { type: "string" },
+  },
+  constraints: { atLeastOne: ["label", "icon"] },
+})
+class TestConstrained extends Component {
+  <template>
+    <div class="constrained">{{@label}}</div>
+  </template>
+}
+
 function registerTestLayout(owner) {
   return _renderBlocks(
     "homepage-blocks",
@@ -105,6 +118,52 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.deepEqual(this.editor.selectedBlockData.metadata?.args, {
         title: { type: "string" },
       });
+    });
+  });
+
+  module("live re-validation on edit", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestConstrained));
+      // Render it valid (label set) so the base layer publishes cleanly;
+      // the edits below drive it in and out of validity.
+      const layout = await _renderBlocks(
+        "homepage-blocks",
+        [{ block: TestConstrained, args: { label: "Go" } }],
+        getOwner(this)
+      );
+      const stableKey = layout[0].__stableKey;
+      this.editor.selectBlock({
+        key: `wf:svc-test-constrained:${stableKey}`,
+        name: "wf:svc-test-constrained",
+      });
+    });
+
+    test("a constraint error appears and clears as the args change, without a republish", async function (assert) {
+      assert.deepEqual(
+        this.editor.selectedBlockNonFieldErrors,
+        [],
+        "valid to start"
+      );
+
+      // Clear the only provided arg → the atLeastOne constraint now fails.
+      await editArg(this.editor, "label", null);
+      assert.strictEqual(
+        this.editor.selectedBlockNonFieldErrors.length,
+        1,
+        "the constraint violation surfaces live"
+      );
+      assert.strictEqual(
+        this.editor.selectedBlockNonFieldErrors[0].code,
+        "constraint-violation"
+      );
+
+      // Satisfy the constraint via the other arg → the error clears live.
+      await editArg(this.editor, "icon", "house");
+      assert.deepEqual(
+        this.editor.selectedBlockNonFieldErrors,
+        [],
+        "fixing the block clears the error without republishing"
+      );
     });
   });
 

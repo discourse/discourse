@@ -36,7 +36,6 @@ import IconEditState from "../lib/icon-edit-state";
 import InlineEditState from "../lib/inline-edit-state";
 import LinkEditState from "../lib/link-edit-state";
 import {
-  clearValidatorStamps,
   cloneEntryForPaste,
   cloneLayoutForDraft,
   entryKey,
@@ -50,6 +49,7 @@ import {
   replaceEntryContainerArgs,
   replaceEntryId,
   replaceEntryInPlace,
+  revalidateEntryStamps,
   serializeEntryForSave,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
@@ -583,10 +583,10 @@ export default class WireframeService extends Service {
    */
   get validationWarnings() {
     // `structuralVersion` covers republishes (validation re-runs against
-    // the freshly-published layer). In-place stamp clears propagate via
+    // the freshly-published layer). In-place stamp changes propagate via
     // the per-entry `trackedObject` wrap — each `entry.__failureReason`
-    // read below opens a per-key dep that fires when `clearValidatorStamps`
-    // runs `delete entry.__failureReason`.
+    // read below opens a per-key dep that fires when `revalidateEntryStamps`
+    // rewrites or deletes `entry.__failureReason` on an arg edit.
     void this.structuralVersion;
     const layoutMap = _getOutletLayouts();
     const warnings = [];
@@ -1869,14 +1869,13 @@ export default class WireframeService extends Service {
    * instead of writing it. `""` / `0` / `false` are written as-is — they're
    * valid scalar values for string / number / boolean args.
    *
-   * Also clears any soft-failure stamps the validator may have written
-   * onto the entry (`__failureType`, `__failureReason`, `__visible`).
-   * Validation is layer-scoped and only re-runs on republish, so stamps
-   * persist on in-place arg mutations and the outline / inspector would
-   * keep showing a stale error even after the author fixes the offending
-   * value. Clearing on mutate is safe: our write path can't introduce
-   * new validator-rejected values (null/undefined become deletes), and
-   * the next structural change re-validates the whole layer.
+   * Then re-runs arg + constraint validation for the entry against its
+   * new args and refreshes its soft-failure stamps (`revalidateEntryStamps`).
+   * The layer-wide validation pass only re-runs on republish, so without
+   * this the outline / inspector would keep showing a stale error after the
+   * author fixes the value — or, conversely, drop a still-valid error the
+   * moment any edit lands. Re-validating per write keeps the displayed
+   * errors honest between republishes.
    */
   writeArgs(entry, args) {
     if (!entry?.args) {
@@ -1889,7 +1888,7 @@ export default class WireframeService extends Service {
         entry.args[argName] = value;
       }
     }
-    clearValidatorStamps(entry);
+    revalidateEntryStamps(entry, { owner: getOwner(this) });
   }
 
   /**
