@@ -99,11 +99,45 @@ by Discourse from the anchors. Seeded as built-ins.
   hover←surface.hovered, danger←text.danger, success←text.success,
   quaternary←surface.brand-hovered. Orphans: highlight, love → fixed defaults.
 
-### M4 — Live editing
+### M4 — Per-theme overrides (semantic layer only)
 
-**Phase 6 · Override-CSS generation** — turn a theme's `design_config` overrides into
-a `:root` override block compiled after core defaults (theme stylesheet + cache
-invalidation). Reset = delete override → core default returns.
+**Phase 6 · A theme declares semantic-token overrides; core regenerates that
+theme's `--d-system-*` CSS and its legacy color anchors at compile time (no
+per-theme ColorScheme records, no new trigger).** Locked decisions:
+declared as **`tokens/system.json`** (DTCG, **semantic layer only** — base stays
+core-controlled); **merge** over core defaults (declare only what changes);
+tested via **discourse-d-system-blocks**. Same `DesignSystem::Tokens` resolver
+as Phase R, parameterized per theme.
+
+- **R1 · Resolver overrides** ✅ — `DesignSystem::Tokens` merges a theme's
+  `design-system.json` over the core system layer (base always core) and gains
+  `theme_css(overrides)` (emits only the overridden `--d-system-*`, resolved) and
+  `color_scheme(mode, overrides)` (full anchors from the merged layer).
+- **R2 · Theme file recognition** ✅ — `design_system` target in `Theme.targets`
+  + a `FILE_MATCHER` for **`design-system.json`** (theme root, type `:json`, name
+  `design-system`). Rootless file; core wraps it under `d-system` on read. Base
+  files are not recognized — semantic layer only.
+- **R3 · Per-theme CSS** ✅ — `Compiler#compile_asset` THEME_TARGETS branch
+  (`common_theme`) appends `importer.import_theme_design_tokens`: reads the baked
+  `design_system/design-system` field via `Theme.list_baked_fields`, emits
+  `theme_css` (only overridden tokens). Loads after core `common`, so overrides
+  win via the cascade. Reset = remove the file → core defaults return. JSON folds
+  into the theme digest (`design_tokens_digest`) so edits recompile.
+- **R4 · Per-theme legacy scheme** ✅ — no records, no new trigger. The legacy
+  anchors already flow into `$primary…` SCSS vars at compile time via
+  `Importer#color_variables`; when the theme ships `design-system.json` it merges
+  the token-derived anchors (`color_scheme(mode, overrides)`) over the assigned
+  scheme there, so the ramps (primary-low, tertiary-hover, …) recompute from the
+  tokens. Mode = dark when compiling the theme's `dark_color_scheme_id`, else
+  light. JSON folds into `color_scheme_digest` for cache-busting. (The theme keeps
+  its assigned light/dark scheme as the mode handle — the fixture's DS Light/Dark
+  assignment suffices; tokens just substitute the anchor values.)
+- **R5 · Test** — add `design-system.json` to d-system-blocks with a few semantic
+  overrides; verify the theme's `--d-system-*` + scheme reflect them and that
+  removing the file restores core defaults.
+
+(Admin-editable tokens — Phase 5 editors writing `tokens/system.json` — layer on
+top of this once the file-based path works.)
 
 **Phase 7 · Tests + lint** — system spec (enable → schemes selected + vars present +
 admin loads + nav swapped; disable → vanilla); `--token-*` consumers intact; `bin/lint`.

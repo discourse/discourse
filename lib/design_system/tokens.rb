@@ -3,19 +3,26 @@
 # Single source of truth for the design-system tokens.
 #
 # Reads the DTCG token JSON committed at
-# app/assets/stylesheets/common/design-system/{base,system}.json and produces both
+# app/assets/stylesheets/common/design-system/{base,system}.json and produces the
 # runtime artifacts — there is no committed SCSS and no Node build step:
 #
-#   .css                -> the `:root{ --d-system-* }` block injected into the
-#                          `common` stylesheet at compile time (see
-#                          Stylesheet::Importer#import_design_system_tokens). Base
-#                          palette values are inlined into the semantic tokens, so
-#                          `--d-base-*` is never exposed — base is an authoring
-#                          concept, not a runtime variable.
+#   .css                       -> the `:root{ --d-system-* }` block for the core
+#                                 defaults, injected into the `common` stylesheet
+#                                 (Stylesheet::Importer#import_design_system_tokens).
+#                                 Base palette values are inlined, so `--d-base-*`
+#                                 is never exposed — base is an authoring concept.
 #
-#   .color_scheme(mode) -> the legacy ColorScheme anchors (primary, secondary, …)
-#                          derived from the semantic colour tokens, for
-#                          ColorScheme::BUILT_IN_SCHEMES.
+#   .theme_css(overrides)      -> the `:root{}` block for a theme's *overridden*
+#                                 system tokens only, injected into that theme's
+#                                 stylesheet so it wins over core via the cascade.
+#
+#   .color_scheme(mode, ovr)   -> the legacy ColorScheme anchors derived from the
+#                                 semantic tokens (core, or merged with a theme's
+#                                 overrides), for ColorScheme::BUILT_IN_SCHEMES and
+#                                 per-theme schemes.
+#
+# Themes override the semantic layer only: a theme ships a partial `system.json`,
+# merged over the core system layer; the base palette is always core.
 module DesignSystem
   module Tokens
     DARK_EXTENSION = "com.discourse.dark"
@@ -74,19 +81,29 @@ module DesignSystem
     ].freeze
 
     class << self
-      # The `:root{ --d-system-* }` block. Only the semantic layer is emitted;
-      # references to the base palette are resolved and inlined.
+      # The `:root{ --d-system-* }` block for the core defaults.
       def css
-        declarations =
-          flatten(system).map { |token| "  --#{token[:path].join("-")}: #{css_value(token)};" }
-        ":root {\n#{declarations.join("\n")}\n}\n"
+        emit_block(flatten(system), system)
       end
 
-      # Legacy ColorScheme anchors for a built-in scheme. `mode` is :light or :dark.
-      def color_scheme(mode)
+      # The `:root{}` block for a theme's overridden system tokens only. `overrides`
+      # is a parsed partial system.json (rooted at "d-system"); returns "" if empty.
+      def theme_css(overrides)
+        return "" if overrides.blank?
+
+        tokens = flatten(overrides)
+        return "" if tokens.empty?
+
+        emit_block(tokens, system.deep_merge(overrides))
+      end
+
+      # Legacy ColorScheme anchors. `mode` is :light or :dark; `overrides` is an
+      # optional theme partial system.json merged over the core system layer.
+      def color_scheme(mode, overrides = {})
+        sys = overrides.present? ? system.deep_merge(overrides) : system
         ANCHOR_ORDER.index_with do |anchor|
           if (path = ANCHOR_TOKENS[anchor])
-            terminal(system.dig("d-system", "color", *path))[mode == :dark ? :dark : :light]
+            terminal(sys.dig("d-system", "color", *path), sys)[mode == :dark ? :dark : :light]
           else
             ANCHOR_DEFAULTS.dig(anchor, mode)
           end
@@ -126,10 +143,15 @@ module DesignSystem
         out
       end
 
-      # The CSS value for a semantic token: follow any base reference and emit the
-      # resolved literal (light-dark() for colours, the bare value otherwise).
-      def css_value(token)
-        resolved = terminal_node(token[:node])
+      def emit_block(tokens, sys)
+        declarations = tokens.map { |t| "  --#{t[:path].join("-")}: #{css_value(t[:node], sys)};" }
+        ":root {\n#{declarations.join("\n")}\n}\n"
+      end
+
+      # The CSS value for a semantic token: follow any reference (resolved against
+      # `sys` for d-system aliases, core base for d-base) and emit the literal.
+      def css_value(node, sys)
+        resolved = terminal_node(node, sys)
         value = resolved["$value"]
         dark = resolved.dig("$extensions", DARK_EXTENSION)
 
@@ -144,26 +166,27 @@ module DesignSystem
       end
 
       # Resolve a token to {light:, dark:} hex (no leading #), for scheme anchors.
-      def terminal(node)
-        resolved = terminal_node(node)
+      def terminal(node, sys)
+        resolved = terminal_node(node, sys)
         light = resolved["$value"].delete_prefix("#")
         dark =
           (resolved.dig("$extensions", DARK_EXTENSION) || resolved["$value"]).delete_prefix("#")
         { light: light, dark: dark }
       end
 
-      # Follow `{group.name…}` references (across base or system) until a concrete
-      # token node is reached.
-      def terminal_node(node)
+      # Follow `{group.name…}` references until a concrete token node is reached.
+      # d-base aliases resolve against the core base palette; d-system aliases
+      # against `sys` (core, or core merged with a theme's overrides).
+      def terminal_node(node, sys)
         value = node["$value"]
         return node unless value.is_a?(String) && (ref = value[/\A\{(.+)\}\z/, 1])
 
         path = ref.split(".")
-        root = path.first == "d-base" ? base : system
+        root = path.first == "d-base" ? base : sys
         target = root.dig(*path)
         raise "design-system token reference not found: #{value}" if target.nil?
 
-        terminal_node(target)
+        terminal_node(target, sys)
       end
 
       def light_dark(light, dark)

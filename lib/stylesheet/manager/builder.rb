@@ -183,9 +183,20 @@ class Stylesheet::Manager::Builder
 
   def theme_digest
     Digest::SHA1.hexdigest(
-      scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest +
-        current_hostname,
+      scss_digest.to_s + design_tokens_digest + color_scheme_digest.to_s + settings_digest +
+        uploads_digest + current_hostname,
     )
+  end
+
+  # The theme's design-system.json content, so editing per-theme token overrides
+  # busts the theme stylesheet cache (the JSON field is not an scss field, so it is
+  # not covered by scss_digest).
+  def design_tokens_digest
+    return "" if !theme
+    ThemeField
+      .where(theme_id: theme.id, target_id: Theme.targets[:design_system])
+      .pluck(:value)
+      .join
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -246,7 +257,7 @@ class Stylesheet::Manager::Builder
     if cs
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
       digest_string +=
-        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
+        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{design_tokens_digest}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
     else
       digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
 

@@ -576,6 +576,13 @@ class ThemeField < ActiveRecord::Base
       canonical: ->(h) { "about.json" },
     ),
     ThemeFileMatcher.new(
+      regex: /\Adesign-system\.json\z/,
+      names: "design-system",
+      types: :json,
+      targets: :design_system,
+      canonical: ->(h) { "design-system.json" },
+    ),
+    ThemeFileMatcher.new(
       regex: /\Asettings\.ya?ml\z/,
       names: "yaml",
       types: :yaml,
