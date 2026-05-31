@@ -1,0 +1,613 @@
+{
+  "d-base": {
+    "color": {
+      "gray": {
+        "0": {
+          "$type": "color",
+          "$value": "#ffffff",
+          "$extensions": {
+            "com.discourse.dark": "#1b1b1f"
+          }
+        },
+        "50": {
+          "$type": "color",
+          "$value": "#f8f8f9",
+          "$extensions": {
+            "com.discourse.dark": "#232328"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#f0f1f2",
+          "$extensions": {
+            "com.discourse.dark": "#2c2d33"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#dddee1",
+          "$extensions": {
+            "com.discourse.dark": "#3a3b42"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#c4c6cb",
+          "$extensions": {
+            "com.discourse.dark": "#4a4c54"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#8c8f97",
+          "$extensions": {
+            "com.discourse.dark": "#6b6e76"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#6b6e76",
+          "$extensions": {
+            "com.discourse.dark": "#9b9ea6"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#4a4d54",
+          "$extensions": {
+            "com.discourse.dark": "#c4c6cb"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#292a2e",
+          "$extensions": {
+            "com.discourse.dark": "#e8e9eb"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#1d1e22",
+          "$extensions": {
+            "com.discourse.dark": "#f0f1f2"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#131416",
+          "$extensions": {
+            "com.discourse.dark": "#f5f6f7"
+          }
+        }
+      },
+      "violet": {
+        "50": {
+          "$type": "color",
+          "$value": "#f2edfe",
+          "$extensions": {
+            "com.discourse.dark": "#281553"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#e6dcfd",
+          "$extensions": {
+            "com.discourse.dark": "#3d2380"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#ccb8fa",
+          "$extensions": {
+            "com.discourse.dark": "#5430b4"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#ad8ef6",
+          "$extensions": {
+            "com.discourse.dark": "#6741dd"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#9168f1",
+          "$extensions": {
+            "com.discourse.dark": "#7c5cf6"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#7c5cf6",
+          "$extensions": {
+            "com.discourse.dark": "#9168f1"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#6741dd",
+          "$extensions": {
+            "com.discourse.dark": "#ad8ef6"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#5430b4",
+          "$extensions": {
+            "com.discourse.dark": "#ccb8fa"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#3d2380",
+          "$extensions": {
+            "com.discourse.dark": "#e6dcfd"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#281553",
+          "$extensions": {
+            "com.discourse.dark": "#f2edfe"
+          }
+        }
+      },
+      "blue": {
+        "50": {
+          "$type": "color",
+          "$value": "#e9f2fe",
+          "$extensions": {
+            "com.discourse.dark": "#0c2d57"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#d3e6fe",
+          "$extensions": {
+            "com.discourse.dark": "#11407f"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#a8caf9",
+          "$extensions": {
+            "com.discourse.dark": "#1558bc"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#7ab0fb",
+          "$extensions": {
+            "com.discourse.dark": "#1868db"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#4d9fff",
+          "$extensions": {
+            "com.discourse.dark": "#357de8"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#357de8",
+          "$extensions": {
+            "com.discourse.dark": "#4d9fff"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#1868db",
+          "$extensions": {
+            "com.discourse.dark": "#7ab0fb"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#1558bc",
+          "$extensions": {
+            "com.discourse.dark": "#a8caf9"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#11407f",
+          "$extensions": {
+            "com.discourse.dark": "#d3e6fe"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#0c2d57",
+          "$extensions": {
+            "com.discourse.dark": "#e9f2fe"
+          }
+        }
+      },
+      "teal": {
+        "50": {
+          "$type": "color",
+          "$value": "#e6faf7",
+          "$extensions": {
+            "com.discourse.dark": "#042e2a"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#c2f1ea",
+          "$extensions": {
+            "com.discourse.dark": "#06453f"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#8ae3d6",
+          "$extensions": {
+            "com.discourse.dark": "#085e56"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#4ccdbd",
+          "$extensions": {
+            "com.discourse.dark": "#0a766c"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#1cb3a1",
+          "$extensions": {
+            "com.discourse.dark": "#0d9488"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#0d9488",
+          "$extensions": {
+            "com.discourse.dark": "#1cb3a1"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#0a766c",
+          "$extensions": {
+            "com.discourse.dark": "#4ccdbd"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#085e56",
+          "$extensions": {
+            "com.discourse.dark": "#8ae3d6"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#06453f",
+          "$extensions": {
+            "com.discourse.dark": "#c2f1ea"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#042e2a",
+          "$extensions": {
+            "com.discourse.dark": "#e6faf7"
+          }
+        }
+      },
+      "red": {
+        "50": {
+          "$type": "color",
+          "$value": "#ffeceb",
+          "$extensions": {
+            "com.discourse.dark": "#45110e"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#ffd5d2",
+          "$extensions": {
+            "com.discourse.dark": "#661a15"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#ffb3ad",
+          "$extensions": {
+            "com.discourse.dark": "#87231c"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#f98980",
+          "$extensions": {
+            "com.discourse.dark": "#a82d24"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#e2483d",
+          "$extensions": {
+            "com.discourse.dark": "#c9372c"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#c9372c",
+          "$extensions": {
+            "com.discourse.dark": "#e2483d"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#a82d24",
+          "$extensions": {
+            "com.discourse.dark": "#f98980"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#87231c",
+          "$extensions": {
+            "com.discourse.dark": "#ffb3ad"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#661a15",
+          "$extensions": {
+            "com.discourse.dark": "#ffd5d2"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#45110e",
+          "$extensions": {
+            "com.discourse.dark": "#ffeceb"
+          }
+        }
+      },
+      "green": {
+        "50": {
+          "$type": "color",
+          "$value": "#dcfff1",
+          "$extensions": {
+            "com.discourse.dark": "#0c2c21"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#b8f5dd",
+          "$extensions": {
+            "com.discourse.dark": "#134331"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#86e7c2",
+          "$extensions": {
+            "com.discourse.dark": "#1a5a40"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#54d2a3",
+          "$extensions": {
+            "com.discourse.dark": "#216e4e"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#38b483",
+          "$extensions": {
+            "com.discourse.dark": "#2a9d6f"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#2a9d6f",
+          "$extensions": {
+            "com.discourse.dark": "#38b483"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#216e4e",
+          "$extensions": {
+            "com.discourse.dark": "#54d2a3"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#1a5a40",
+          "$extensions": {
+            "com.discourse.dark": "#86e7c2"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#134331",
+          "$extensions": {
+            "com.discourse.dark": "#b8f5dd"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#0c2c21",
+          "$extensions": {
+            "com.discourse.dark": "#dcfff1"
+          }
+        }
+      }
+    },
+    "space": {
+      "0": {
+        "$type": "dimension",
+        "$value": "0"
+      },
+      "1": {
+        "$type": "dimension",
+        "$value": "0.25rem"
+      },
+      "2": {
+        "$type": "dimension",
+        "$value": "0.5rem"
+      },
+      "3": {
+        "$type": "dimension",
+        "$value": "0.75rem"
+      },
+      "4": {
+        "$type": "dimension",
+        "$value": "1rem"
+      },
+      "5": {
+        "$type": "dimension",
+        "$value": "1.5rem"
+      },
+      "6": {
+        "$type": "dimension",
+        "$value": "2rem"
+      },
+      "7": {
+        "$type": "dimension",
+        "$value": "3rem"
+      },
+      "05": {
+        "$type": "dimension",
+        "$value": "0.125rem"
+      }
+    },
+    "size": {
+      "1": {
+        "$type": "dimension",
+        "$value": "1rem"
+      },
+      "2": {
+        "$type": "dimension",
+        "$value": "1.25rem"
+      },
+      "3": {
+        "$type": "dimension",
+        "$value": "1.5rem"
+      },
+      "4": {
+        "$type": "dimension",
+        "$value": "2rem"
+      },
+      "5": {
+        "$type": "dimension",
+        "$value": "2.5rem"
+      },
+      "6": {
+        "$type": "dimension",
+        "$value": "3rem"
+      },
+      "7": {
+        "$type": "dimension",
+        "$value": "4rem"
+      }
+    },
+    "font": {
+      "family": {
+        "body": {
+          "$type": "fontFamily",
+          "$value": "Inter, system-ui, sans-serif"
+        },
+        "heading": {
+          "$type": "fontFamily",
+          "$value": "Helvetica Neue, Helvetica, Arial, sans-serif"
+        },
+        "code": {
+          "$type": "fontFamily",
+          "$value": "Roboto Mono, ui-monospace, monospace"
+        }
+      },
+      "size": {
+        "1": {
+          "$type": "dimension",
+          "$value": "0.6875rem"
+        },
+        "2": {
+          "$type": "dimension",
+          "$value": "0.75rem"
+        },
+        "3": {
+          "$type": "dimension",
+          "$value": "0.875rem"
+        },
+        "4": {
+          "$type": "dimension",
+          "$value": "1rem"
+        },
+        "5": {
+          "$type": "dimension",
+          "$value": "1.125rem"
+        },
+        "6": {
+          "$type": "dimension",
+          "$value": "1.25rem"
+        },
+        "7": {
+          "$type": "dimension",
+          "$value": "1.5rem"
+        },
+        "8": {
+          "$type": "dimension",
+          "$value": "1.75rem"
+        },
+        "9": {
+          "$type": "dimension",
+          "$value": "2.25rem"
+        }
+      },
+      "weight": {
+        "regular": {
+          "$type": "fontWeight",
+          "$value": 400
+        },
+        "semibold": {
+          "$type": "fontWeight",
+          "$value": 600
+        },
+        "bold": {
+          "$type": "fontWeight",
+          "$value": 700
+        }
+      },
+      "line-height": {
+        "tight": {
+          "$type": "number",
+          "$value": 1
+        },
+        "snug": {
+          "$type": "number",
+          "$value": 1.2
+        },
+        "normal": {
+          "$type": "number",
+          "$value": 1.5
+        }
+      }
+    },
+    "radius": {
+      "sm": {
+        "$type": "dimension",
+        "$value": "0.25rem"
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": "0.5rem"
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": "0.75rem"
+      },
+      "full": {
+        "$type": "dimension",
+        "$value": "9999px"
+      }
+    }
+  }
+}
