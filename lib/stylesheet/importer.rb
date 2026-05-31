@@ -155,6 +155,12 @@ module Stylesheet
       ""
     end
 
+    # The design-system `--d-system-*` custom properties, generated from the DTCG
+    # token JSON (see DesignSystem::Tokens). Injected into the `common` stylesheet.
+    def import_design_system_tokens
+      DesignSystem::Tokens.css
+    end
+
     def color_variables
       contents = +""
       if @color_scheme_id

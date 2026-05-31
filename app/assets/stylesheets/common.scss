@@ -1,5 +1,9 @@
 @import "common/font-variables";
-@import "common/design-system";
+
+// The --d-system-* tokens are injected by DesignSystem::Tokens at compile time
+// (Stylesheet::Compiler, `common` target); tokens.scss is the legacy --token-*
+// experiment kept verbatim while its consumers migrate.
+@import "common/design-system/tokens";
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
 @import "vendor/pikaday";

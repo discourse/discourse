@@ -439,6 +439,150 @@
             "com.discourse.dark": "#dcfff1"
           }
         }
+      },
+      "yellow": {
+        "50": {
+          "$type": "color",
+          "$value": "#fffae6",
+          "$extensions": {
+            "com.discourse.dark": "#3d2c00"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#fff1bf",
+          "$extensions": {
+            "com.discourse.dark": "#5e4500"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#ffe894",
+          "$extensions": {
+            "com.discourse.dark": "#8a6500"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#ffe066",
+          "$extensions": {
+            "com.discourse.dark": "#b08200"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#f5c518",
+          "$extensions": {
+            "com.discourse.dark": "#d9a400"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#d9a400",
+          "$extensions": {
+            "com.discourse.dark": "#f5c518"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#b08200",
+          "$extensions": {
+            "com.discourse.dark": "#ffe066"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#8a6500",
+          "$extensions": {
+            "com.discourse.dark": "#ffe894"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#5e4500",
+          "$extensions": {
+            "com.discourse.dark": "#fff1bf"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#3d2c00",
+          "$extensions": {
+            "com.discourse.dark": "#fffae6"
+          }
+        }
+      },
+      "pink": {
+        "50": {
+          "$type": "color",
+          "$value": "#fff0f4",
+          "$extensions": {
+            "com.discourse.dark": "#5c0f2a"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#ffd9e4",
+          "$extensions": {
+            "com.discourse.dark": "#8f1f44"
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#ffb0c6",
+          "$extensions": {
+            "com.discourse.dark": "#c43862"
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#fd92ab",
+          "$extensions": {
+            "com.discourse.dark": "#e84d75"
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#fb8aa3",
+          "$extensions": {
+            "com.discourse.dark": "#fa6c8d"
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#fa6c8d",
+          "$extensions": {
+            "com.discourse.dark": "#fb8aa3"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#e84d75",
+          "$extensions": {
+            "com.discourse.dark": "#fd92ab"
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#c43862",
+          "$extensions": {
+            "com.discourse.dark": "#ffb0c6"
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#8f1f44",
+          "$extensions": {
+            "com.discourse.dark": "#ffd9e4"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#5c0f2a",
+          "$extensions": {
+            "com.discourse.dark": "#fff0f4"
+          }
+        }
       }
     },
     "space": {

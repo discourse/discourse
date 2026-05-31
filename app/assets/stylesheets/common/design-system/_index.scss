@@ -1,8 +1,0 @@
-// Design System token layer.
-// base.scss + system.scss are GENERATED from the DTCG JSON in this folder —
-// edit base.json / system.json and run `node scripts/design-system/build.mjs`,
-// never edit the .scss by hand. tokens.scss is the earlier --token-* experiment,
-// kept verbatim while its consumers migrate to --d-system-*.
-@import "base";
-@import "system";
-@import "tokens";

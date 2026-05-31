@@ -37,6 +37,10 @@
         "success": {
           "$type": "color",
           "$value": "{d-base.color.green.50}"
+        },
+        "highlight": {
+          "$type": "color",
+          "$value": "{d-base.color.yellow.300}"
         }
       },
       "text": {
@@ -71,6 +75,14 @@
         "link-hover": {
           "$type": "color",
           "$value": "{d-base.color.blue.600}"
+        },
+        "highlight": {
+          "$type": "color",
+          "$value": "{d-base.color.yellow.900}"
+        },
+        "love": {
+          "$type": "color",
+          "$value": "{d-base.color.pink.500}"
         }
       },
       "border": {

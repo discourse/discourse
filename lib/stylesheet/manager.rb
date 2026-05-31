@@ -170,6 +170,9 @@ class Stylesheet::Manager
   def self.list_files
     globs = [
       "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
+      # design-system token JSON is compiled to CSS at runtime (DesignSystem::Tokens),
+      # so a token edit must bust the stylesheet cache like a .scss edit would.
+      "#{Rails.root.join("app/assets/stylesheets/common/design-system/*.json")}",
       "#{Rails.root.join("app/assets/images/**/*.*")}",
       "#{Rails.root.join("lib/stylesheet/*.rb")}",
     ]

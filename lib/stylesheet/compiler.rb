@@ -38,6 +38,8 @@ module Stylesheet
           file += importer.font
         when "wizard"
           file += importer.wizard_fonts
+        when "common"
+          file += importer.import_design_system_tokens
         when Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += importer.import_color_definitions
           file += importer.import_wcag_overrides

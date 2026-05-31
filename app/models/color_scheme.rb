@@ -20,37 +20,12 @@ class ColorScheme < ActiveRecord::Base
   }
 
   BUILT_IN_SCHEMES = {
-    # Anchors mirror the design-system base palette
-    # (app/assets/stylesheets/common/design-system/base.json) — keep in sync.
-    # Discourse computes the ramps (primary-50..900, tertiary-low, …) from these.
-    "Design System Light": {
-      "primary" => "292a2e",
-      "secondary" => "ffffff",
-      "tertiary" => "357de8",
-      "quaternary" => "1868db",
-      "header_background" => "ffffff",
-      "header_primary" => "292a2e",
-      "highlight" => "ffe066",
-      "selected" => "e9f2fe",
-      "hover" => "f0f1f2",
-      "danger" => "c9372c",
-      "success" => "216e4e",
-      "love" => "fa6c8d",
-    },
-    "Design System Dark": {
-      "primary" => "e8e9eb",
-      "secondary" => "1b1b1f",
-      "tertiary" => "4d9fff",
-      "quaternary" => "7ab0fb",
-      "header_background" => "1b1b1f",
-      "header_primary" => "e8e9eb",
-      "highlight" => "ffe066",
-      "selected" => "0c2d57",
-      "hover" => "2c2d33",
-      "danger" => "e2483d",
-      "success" => "54d2a3",
-      "love" => "fa6c8d",
-    },
+    # Design System Light/Dark anchors are derived from the semantic colour tokens
+    # by DesignSystem::Tokens (app/assets/stylesheets/common/design-system/*.json),
+    # not hand-maintained. Discourse computes the ramps (primary-50..900,
+    # tertiary-low, …) from these anchors.
+    "Design System Light": DesignSystem::Tokens.color_scheme(:light),
+    "Design System Dark": DesignSystem::Tokens.color_scheme(:dark),
     Dark: {
       "primary" => "dddddd",
       "secondary" => "222222",
