@@ -1,29 +1,56 @@
 # Migrations Tooling - AI Agent Guide
 
-## Running Tests
+The `migrations/` directory is split into four path-referenced gems:
 
-Tests must be run from the project root with `--default-path migrations/spec`:
+- `core/` — `Migrations::*`: CLI framework, UI, SQLite schemas, DB infrastructure,
+  IntermediateDB models, and the converter framework (`Migrations::Converter::*`).
+- `tooling/` — `Migrations::Tooling::*`: the schema DSL, `disco schema` commands, benchmarks.
+- `converters/` — `Migrations::Converters::*`: public converter implementations + source adapters.
+- `importer/` — `Migrations::Importer::*`: the row importer and the uploads importer.
 
-```bash
-bin/rspec --default-path migrations/spec
-bin/rspec --default-path migrations/spec migrations/spec/lib/database/schema/dsl/
-bin/rspec --default-path migrations/spec migrations/spec/path/to/file_spec.rb
-```
+All four are wired into the root `Gemfile` via `path:` in the optional `:migrations` group.
 
 ## CLI
 
-The CLI binary is at `migrations/bin/cli`:
+The single binary is `migrations/core/bin/disco` (commands register dynamically via
+`Migrations::CLI::Registry`):
 
 ```bash
-migrations/bin/cli help
-migrations/bin/cli schema generate
-migrations/bin/cli schema validate
-migrations/bin/cli schema diff
+migrations/core/bin/disco --help
+migrations/core/bin/disco convert <name>
+migrations/core/bin/disco import
+migrations/core/bin/disco upload
+migrations/core/bin/disco schema generate
+migrations/core/bin/disco schema validate
+migrations/core/bin/disco schema diff
+```
+
+Rails is booted lazily: only commands that declare `requires_rails!` (import, upload, schema)
+load the Discourse app.
+
+## Running Tests
+
+Each gem has an isolated, no-Rails suite, run from the gem directory:
+
+```bash
+cd migrations/core       && bundle exec rspec
+cd migrations/tooling    && bundle exec rspec
+cd migrations/converters && bundle exec rspec
+cd migrations/importer   && bundle exec rspec
+```
+
+Specs that need a booted Rails environment are tagged `:rails`. They are excluded by default and
+run from the host app's bundle:
+
+```bash
+cd migrations/<gem> && BUNDLE_GEMFILE=../../Gemfile MIGRATIONS_RAILS=1 bundle exec rspec --tag rails
 ```
 
 ## Schema DSL
 
-The schema DSL lives in `migrations/lib/database/schema/dsl/`. Config files are in `migrations/config/schema/`.
+The schema DSL lives in `migrations/tooling/lib/migrations/tooling/schema/dsl/`. Config sources are
+in `migrations/tooling/config/schema/`. Generated artifacts (SQL, models, enums) are written into
+`migrations/core/`.
 
 Key files:
 - `table_builder.rb` - DSL for defining table configs

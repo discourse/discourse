@@ -3,6 +3,8 @@
 require "fileutils"
 require "tmpdir"
 
+require File.expand_path("../../../spec/rails_helper", __dir__) if ENV["MIGRATIONS_RAILS"]
+
 require "migrations-importer"
 
 Migrations.enable_i18n
