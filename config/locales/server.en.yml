@@ -5096,6 +5096,8 @@ en:
     solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
+    design_system_light: "Design System Light"
+    design_system_dark: "Design System Dark"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
