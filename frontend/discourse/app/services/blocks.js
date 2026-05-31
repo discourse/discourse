@@ -5,6 +5,7 @@ import Service from "@ember/service";
 import { _hasLayout } from "discourse/blocks/block-outlet";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { titleCase } from "discourse/lib/blocks/-internals/display-metadata";
 import { evaluateConditions } from "discourse/lib/blocks/-internals/matching/condition-evaluator";
 import {
   getAllBlockEntries,
@@ -14,7 +15,10 @@ import {
   resolveBlock,
 } from "discourse/lib/blocks/-internals/registry/block";
 import { getAllConditionTypeEntries } from "discourse/lib/blocks/-internals/registry/condition";
-import { getAllOutlets } from "discourse/lib/blocks/-internals/registry/outlet";
+import {
+  getAllOutlets,
+  getAllOutletsWithMetadata,
+} from "discourse/lib/blocks/-internals/registry/outlet";
 import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 
 /**
@@ -98,6 +102,77 @@ export default class Blocks extends Service {
    */
   listOutlets() {
     return getAllOutlets();
+  }
+
+  /**
+   * Returns every registered block outlet with its full display metadata.
+   *
+   * Unlike `listOutlets()` (which returns names only), this surfaces the
+   * fields plugins/themes set via `api.registerBlockOutlet()` plus the
+   * baked-in `CORE_OUTLET_METADATA` for the 5 core outlets, joined into a
+   * single uniform shape with defaults filled in.
+   *
+   * Consumed by tooling that lists outlets so it can render display names,
+   * descriptions, and category grouping. Each entry's `isCore` flag tells
+   * the consumer whether the outlet is core or plugin-contributed;
+   * `namespaceType` is parsed from the outlet name's prefix for ad-hoc
+   * grouping.
+   *
+   * @returns {import("discourse/lib/blocks/-internals/registry/outlet").OutletMetadataEntry[]}
+   *
+   * @example
+   * ```javascript
+   * const outlets = this.blocks.listOutletsWithMetadata();
+   * // [
+   * //   { name: "hero-blocks", displayName: "Hero", description: "...",
+   * //     category: null, isCore: true, namespaceType: "core" },
+   * //   { name: "chat:thread-actions", displayName: "Thread actions", ... },
+   * //   ...
+   * // ]
+   * ```
+   */
+  listOutletsWithMetadata() {
+    return getAllOutletsWithMetadata();
+  }
+
+  /**
+   * Returns every registered condition type with its display metadata and
+   * argument schema.
+   *
+   * Consumed by tooling that lets authors add and configure conditions —
+   * to populate the available condition types and render per-type input
+   * fields. Each entry's fields come from the `@blockCondition(...)`
+   * decorator:
+   *
+   * - `type` — the condition's stable identifier (`"user"`, `"viewport"`, …).
+   * - `displayName` — human-readable label; defaults to a Title Case of
+   *   `type` when the condition didn't set one.
+   * - `description` — one-line summary of what the condition matches.
+   * - `argsSchema` — the typed arg map declared on the decorator.
+   * - `sourceType` — `"none" | "outletArgs" | "object"`.
+   * - `constraints` — cross-arg validation constraints, if any.
+   * - `namespaceType` — `"core" | "plugin" | "theme"`.
+   *
+   * @returns {Array<{
+   *   type: string,
+   *   displayName: string,
+   *   description: string|null,
+   *   argsSchema: Object,
+   *   sourceType: string,
+   *   constraints: Object|null,
+   *   namespaceType: "core"|"plugin"|"theme",
+   * }>}
+   */
+  listConditionTypes() {
+    return getAllConditionTypeEntries().map(([type, ConditionClass]) => ({
+      type,
+      displayName: ConditionClass.displayName ?? titleCase(type),
+      description: ConditionClass.description ?? null,
+      argsSchema: ConditionClass.argsSchema ?? {},
+      sourceType: ConditionClass.sourceType,
+      constraints: ConditionClass.constraints ?? null,
+      namespaceType: ConditionClass.namespaceType,
+    }));
   }
 
   /**

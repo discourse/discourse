@@ -267,6 +267,8 @@ Discourse::Application.routes.draw do
           collection { get "preview" => "form_templates#preview" }
         end
 
+        post "block-layouts" => "block_layouts#create"
+
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "components/:id" => "themes#index"

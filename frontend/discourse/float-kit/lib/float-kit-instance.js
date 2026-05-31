@@ -18,6 +18,17 @@ export default class FloatKitInstance {
 
   @tracked id = null;
 
+  #hoverCloseTimer = null;
+  #hoverFocusLocked = false;
+
+  get hoverGracePeriod() {
+    return this.options?.hoverGracePeriod ?? 0;
+  }
+
+  get hasHoverGracePeriod() {
+    return this.hoverGracePeriod > 0;
+  }
+
   @action
   async show() {
     await this.options.onShow?.();
@@ -25,7 +36,46 @@ export default class FloatKitInstance {
 
   @action
   async close() {
+    this.cancelHoverClose();
     await this.options.onClose?.();
+  }
+
+  @action
+  cancelHoverClose() {
+    cancel(this.#hoverCloseTimer);
+    this.#hoverCloseTimer = null;
+  }
+
+  @action
+  scheduleHoverClose() {
+    if (!this.hasHoverGracePeriod || this.#hoverFocusLocked) {
+      return;
+    }
+
+    cancel(this.#hoverCloseTimer);
+    this.#hoverCloseTimer = discourseLater(() => {
+      this.#hoverCloseTimer = null;
+      if (this.#hoverFocusLocked) {
+        return;
+      }
+      this.close();
+    }, this.hoverGracePeriod);
+  }
+
+  @action
+  onPointerEnterTrigger() {
+    this.cancelHoverClose();
+  }
+
+  @action
+  lockHoverCloseForFocus() {
+    this.#hoverFocusLocked = true;
+    this.cancelHoverClose();
+  }
+
+  @action
+  unlockHoverCloseForFocus() {
+    this.#hoverFocusLocked = false;
   }
 
   @action
@@ -99,6 +149,7 @@ export default class FloatKitInstance {
   @action
   onDelayedHoverEnter(event) {
     cancel(this.delayedHoverTimeout);
+    this.cancelHoverClose();
     this.delayedHoverTimeout = discourseLater(() => {
       if (this.expanded) {
         return;
@@ -111,6 +162,9 @@ export default class FloatKitInstance {
   @action
   onDelayedHoverLeave() {
     cancel(this.delayedHoverTimeout);
+    if (this.expanded && this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+    }
   }
 
   @bind
@@ -148,10 +202,16 @@ export default class FloatKitInstance {
             break;
           case "hover":
             this.trigger.removeEventListener("pointermove", this.onPointerMove);
-            if (!this.options.interactive) {
+            if (this.hasHoverGracePeriod || !this.options.interactive) {
               this.trigger.removeEventListener(
                 "pointerleave",
                 this.onPointerLeave
+              );
+            }
+            if (this.hasHoverGracePeriod) {
+              this.trigger.removeEventListener(
+                "pointerenter",
+                this.onPointerEnterTrigger
               );
             }
 
@@ -216,13 +276,20 @@ export default class FloatKitInstance {
             this.trigger.addEventListener("pointermove", this.onPointerMove, {
               passive: true,
             });
-            if (!this.options.interactive) {
+            if (this.hasHoverGracePeriod || !this.options.interactive) {
               this.trigger.addEventListener(
                 "pointerleave",
                 this.onPointerLeave,
                 {
                   passive: true,
                 }
+              );
+            }
+            if (this.hasHoverGracePeriod) {
+              this.trigger.addEventListener(
+                "pointerenter",
+                this.onPointerEnterTrigger,
+                { passive: true }
               );
             }
 

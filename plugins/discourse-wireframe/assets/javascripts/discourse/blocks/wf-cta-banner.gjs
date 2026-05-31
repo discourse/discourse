@@ -1,0 +1,198 @@
+// @ts-check
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { block } from "discourse/blocks";
+import cookie from "discourse/lib/cookie";
+import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import { i18n } from "discourse-i18n";
+import RichTextRenderer from "../components/rich-text-renderer";
+import { URL_PATTERN } from "../lib/arg-patterns";
+
+const COOKIE_PREFIX = "discourse-wireframe-cta-dismissed";
+
+/**
+ * Banner with title, body text, an optional CTA button, and an optional
+ * dismiss action. Per-banner dismissal is keyed by the `cookieKey` arg
+ * (empty string means "all dismissable instances share state").
+ *
+ * Route-gating (homepage only, hide for logged-in users, etc.) lives in
+ * the editor's conditions system — the block itself just renders.
+ */
+@block("wf:cta-banner", {
+  displayName: "CTA banner",
+  icon: "bullhorn",
+  category: "Content",
+  description:
+    "A banner with title, body text, optional CTA button, and optional dismiss.",
+  args: {
+    title: {
+      type: "richInline",
+      required: true,
+      ui: {
+        control: "rich-inline",
+        label: i18n("wireframe.inspector.cta_banner.title"),
+      },
+    },
+    content: {
+      type: "richInline",
+      ui: {
+        control: "rich-inline",
+        label: i18n("wireframe.inspector.cta_banner.content"),
+      },
+    },
+    linkLabel: {
+      type: "string",
+      required: true,
+      ui: {
+        label: i18n("wireframe.inspector.cta_banner.link_label"),
+      },
+    },
+    linkHref: {
+      type: "string",
+      required: true,
+      pattern: URL_PATTERN,
+      ui: {
+        control: "url",
+        label: i18n("wireframe.inspector.cta_banner.link_href"),
+      },
+    },
+    dismissable: {
+      type: "boolean",
+      default: false,
+      ui: {
+        control: "toggle",
+        label: i18n("wireframe.inspector.cta_banner.dismissable"),
+      },
+    },
+    cookieKey: {
+      type: "string",
+      ui: {
+        label: i18n("wireframe.inspector.cta_banner.cookie_key"),
+        helpText: i18n("wireframe.inspector.cta_banner.cookie_key_help"),
+        group: "Advanced",
+        conditional: { arg: "dismissable", equals: true },
+      },
+    },
+  },
+  validate(args) {
+    // Custom validation because `required: true` on `cookieKey` would
+    // demand it unconditionally — but the inspector only surfaces the
+    // field when `dismissable` is on, so we only need the value then.
+    if (args.dismissable === true && !args.cookieKey) {
+      return i18n("wireframe.validation.cta_banner.cookie_key_required");
+    }
+  },
+})
+export default class WFCTABanner extends Component {
+  @tracked
+  _dismissed = document.cookie.includes(`${this.cookieName}=dismissed`);
+
+  /**
+   * Per-instance cookie name. Combining a fixed prefix with the
+   * author-supplied `cookieKey` (or a static suffix when none is set)
+   * keeps the dismissal state local to this banner — two banners can
+   * have independent dismiss states by setting different `cookieKey`
+   * values.
+   */
+  get cookieName() {
+    const key = this.args.cookieKey?.trim();
+    return key ? `${COOKIE_PREFIX}--${key}` : COOKIE_PREFIX;
+  }
+
+  /**
+   * Whether the banner should be rendered. Hides the banner once the
+   * visitor has dismissed it (and dismissal is enabled).
+   *
+   * @returns {boolean}
+   */
+  get shouldShow() {
+    return !(this.args.dismissable && this._dismissed);
+  }
+
+  /**
+   * Whether the actions region (link button and/or close button) has
+   * anything to render. Used to suppress the actions wrapper entirely
+   * when neither a link nor a dismiss button is configured.
+   *
+   * @returns {boolean}
+   */
+  get hasActions() {
+    return !!(this.args.linkHref || this.args.dismissable);
+  }
+
+  /**
+   * Persists the dismissal in a cookie scoped to this banner's
+   * `cookieName`, with a three-month expiry. Flips `_dismissed` so the
+   * banner re-renders empty.
+   */
+  @action
+  dismissBanner() {
+    const expires = new Date();
+    expires.setMonth(expires.getMonth() + 3);
+    cookie(this.cookieName, "dismissed", {
+      path: getURL("/"),
+      secure: true,
+      expires,
+    });
+    this._dismissed = true;
+  }
+
+  <template>
+    {{#if this.shouldShow}}
+      <div class="wf-cta-banner">
+        <div class="wf-cta-banner__content">
+          <RichTextRenderer
+            @arg="title"
+            @schema="heading"
+            @value={{@title}}
+            @placeholder={{i18n "wireframe.placeholders.cta_banner_title"}}
+            as |R|
+          >
+            <h3
+              class="wf-cta-banner__title
+                {{if R.isEmpty 'wf-cta-banner__title--empty'}}"
+            >
+              <R.Content />
+            </h3>
+          </RichTextRenderer>
+          <RichTextRenderer
+            @arg="content"
+            @schema="paragraph"
+            @value={{@content}}
+            @placeholder={{i18n "wireframe.placeholders.cta_banner_content"}}
+            as |R|
+          >
+            <p
+              class="wf-cta-banner__text
+                {{if R.isEmpty 'wf-cta-banner__text--empty'}}"
+            >
+              <R.Content />
+            </p>
+          </RichTextRenderer>
+        </div>
+
+        {{#if this.hasActions}}
+          <div class="wf-cta-banner__actions">
+            {{#if @linkHref}}
+              <DButton
+                class="btn btn-primary"
+                @href={{@linkHref}}
+                @translatedLabel={{@linkLabel}}
+                data-block-arg="linkHref"
+              />
+            {{/if}}
+            {{#if @dismissable}}
+              <DButton
+                class="wf-cta-banner__close"
+                @icon="xmark"
+                @action={{this.dismissBanner}}
+              />
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+    {{/if}}
+  </template>
+}

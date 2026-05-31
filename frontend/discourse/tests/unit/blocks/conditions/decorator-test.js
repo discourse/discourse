@@ -513,6 +513,65 @@ module("Unit | Blocks | Conditions | decorator", function () {
 
       assert.true(Object.isFrozen(TestCondition.argsSchema));
     });
+
+    test("assigns displayName and description as static getters", function (assert) {
+      @blockCondition({
+        type: "static-display-test",
+        displayName: "Static Display",
+        description: "A condition with metadata.",
+        args: {},
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.displayName, "Static Display");
+      assert.strictEqual(
+        TestCondition.description,
+        "A condition with metadata."
+      );
+    });
+
+    test("defaults displayName and description to null when unset", function (assert) {
+      @blockCondition({
+        type: "static-display-default-test",
+        args: {},
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.displayName, null);
+      assert.strictEqual(TestCondition.description, null);
+    });
+
+    test("throws for empty displayName", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "bad-display-empty",
+            displayName: "  ",
+            args: {},
+          }),
+        /"displayName" must be a non-empty string/
+      );
+    });
+
+    test("throws for non-string description", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "bad-description-type",
+            description: 42,
+            args: {},
+          }),
+        /"description" must be a string/
+      );
+    });
   });
 
   module("type namespace validation", function () {

@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "devDependencies": {
+    "lucide-static": "^1.16.0"
+  }
+}

@@ -48,6 +48,10 @@ export default class UpcomingEventsList extends Component {
   constructor() {
     super(...arguments);
     this.appEvents.on("page:changed", this, this.updateEventsList);
+    // `page:changed` is the only refresh trigger, so consumers mounted
+    // outside a route transition (e.g. block-based renders on a frozen
+    // homepage) need an explicit initial fetch.
+    this.updateEventsList();
   }
 
   willDestroy() {
@@ -56,7 +60,10 @@ export default class UpcomingEventsList extends Component {
   }
 
   get categoryId() {
-    return this.router.currentRoute.attributes?.category?.id;
+    return (
+      this.args.params?.categoryId ??
+      this.router.currentRoute.attributes?.category?.id
+    );
   }
 
   get hasEmptyResponse() {

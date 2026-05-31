@@ -15,16 +15,29 @@ import {
   BlockError,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
+import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
+import { isInlineDoc } from "discourse/lib/blocks/-internals/validation/inline-doc";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import RestModel from "discourse/models/rest";
 
 /**
- * A validation error result containing the error message and the path
- * to the argument that failed validation.
+ * A validation error result containing the error message, the path to
+ * the argument that failed validation, and a structured detail payload
+ * consumers use to render per-field errors.
+ *
+ * @typedef {Object} ValidationErrorDetails
+ * @property {string} code - One of the ERROR_CODES enum values.
+ * @property {string} [field] - The arg name that failed (omitted for
+ *   block-level / cross-arg failures).
+ * @property {*} [value] - The actual value that failed validation.
+ * @property {Object} [expected] - Constraint metadata (pattern, enum,
+ *   min/max, ...). Shape varies by code.
  *
  * @typedef {Object} ValidationError
  * @property {string} message - The formatted error message.
  * @property {string} path - The path to the invalid argument (e.g., "test.name").
+ * @property {ValidationErrorDetails} [details] - Structured payload for
+ *   consumers that surface field-level errors.
  */
 
 /**
@@ -74,6 +87,8 @@ export const VALID_ARG_TYPES = Object.freeze([
   "boolean",
   "array",
   "object",
+  "richInline",
+  "image",
   "any",
 ]);
 
@@ -101,7 +116,17 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "properties",
   "instanceOf",
   "instanceOfName",
+  "allowDark",
+  "allowResize",
+  "aspectRatio",
+  "defaultFit",
 ]);
+
+/**
+ * Valid values for an image arg's `defaultFit` property — drives the
+ * renderer's `object-fit` CSS when the image is sized by its container.
+ */
+export const VALID_IMAGE_FITS = Object.freeze(["cover", "contain", "fill"]);
 
 /**
  * Schema property rules for declarative validation.
@@ -172,6 +197,31 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
     allowedTypes: ["object"],
     // valueCheck handled separately (function or "model:*" string)
     typeErrorSuffix: "object",
+  },
+  allowDark: {
+    allowedTypes: ["image"],
+    valueCheck: (v) => typeof v === "boolean",
+    valueError: "Must be a boolean.",
+    typeErrorSuffix: "image",
+  },
+  allowResize: {
+    allowedTypes: ["image"],
+    valueCheck: (v) => typeof v === "boolean",
+    valueError: "Must be a boolean.",
+    typeErrorSuffix: "image",
+  },
+  aspectRatio: {
+    allowedTypes: ["image"],
+    valueCheck: (v) =>
+      v === "auto" || (typeof v === "number" && Number.isFinite(v) && v > 0),
+    valueError: 'Must be a positive finite number or the string "auto".',
+    typeErrorSuffix: "image",
+  },
+  defaultFit: {
+    allowedTypes: ["image"],
+    valueCheck: (v) => VALID_IMAGE_FITS.includes(v),
+    valueError: `Must be one of: ${VALID_IMAGE_FITS.join(", ")}.`,
+    typeErrorSuffix: "image",
   },
 });
 
@@ -332,10 +382,12 @@ function validateEnumArray({
  * @param {Object} [options] - Optional configuration.
  * @param {string} [options.entityName] - The entity name for error messages.
  * @param {string} [options.entityType="Block"] - The entity type for error messages.
+ * @param {readonly string[]} [options.validProperties] - List of valid schema properties,
+ *   forwarded so nested `type: "object"` schemas validate against the same vocabulary.
  */
 export function validateCommonSchemaProperties(argDef, argName, options = {}) {
-  const { entityName, entityType = "Block" } = options;
-  const context = { entityName, entityType };
+  const { entityName, entityType = "Block", validProperties } = options;
+  const context = { entityName, entityType, validProperties };
 
   // Validate schema properties using declarative rules (type restrictions + value checks)
   for (const prop of Object.keys(SCHEMA_PROPERTY_RULES)) {
@@ -396,7 +448,13 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
         `${entityType} "${entityName}": arg "${argName}" has invalid "properties" value. Must be an object.`
       );
     } else {
-      // Recursively validate each property schema
+      // Recursively validate each property schema. We inherit the caller's
+      // `validProperties` so nested fields keep the same metadata vocabulary
+      // as the outer schema — e.g. a childArgs entry with `type: "object"`
+      // can declare per-property `ui` hints, used to label each field
+      // inside a namespaced placement bag.
+      const nestedValidProperties =
+        context.validProperties ?? VALID_ARG_SCHEMA_PROPERTIES;
       for (const [propName, propDef] of Object.entries(argDef.properties)) {
         validateArgName(propName, {
           ...context,
@@ -407,7 +465,7 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
         const nestedArgName = `${argName}.properties.${propName}`;
         validateArgSchemaEntry(propDef, nestedArgName, {
           ...context,
-          validProperties: VALID_ARG_SCHEMA_PROPERTIES,
+          validProperties: nestedValidProperties,
           allowAnyType: false,
           argLabel: "property",
         });
@@ -592,8 +650,15 @@ export function validateArgSchemaEntry(argDef, argName, options) {
     return false;
   }
 
-  // Validate common schema properties
-  validateCommonSchemaProperties(argDef, argName, { entityName, entityType });
+  // Validate common schema properties. Forward `validProperties` so the
+  // recursive call inside (for nested `type: "object"` schemas) can pass
+  // the same vocabulary into the child fields — keeping e.g. `ui` allowed
+  // on nested properties of a childArgs entry.
+  validateCommonSchemaProperties(argDef, argName, {
+    entityName,
+    entityType,
+    validProperties,
+  });
 
   return true;
 }
@@ -601,24 +666,31 @@ export function validateArgSchemaEntry(argDef, argName, options) {
 /* Formatting Helpers */
 
 /**
- * Creates a validation error with a formatted message and path.
+ * Creates a validation error with a formatted message, path, and an
+ * optional structured details payload.
+ *
  * Used to generate consistent error objects that vary based on context:
  * - Schema validation (at decoration time): includes entity context
  * - Runtime validation (in renderBlocks): no context prefix
+ *
+ * The optional `details` is consumed by field-level error consumers — it
+ * carries the failure code plus expected-constraint metadata so the error
+ * can be rendered against the offending field.
  *
  * @param {string} argName - The argument name (used as the path).
  * @param {string} message - The error message (without arg prefix).
  * @param {Object} [options] - Optional configuration.
  * @param {string|null} [options.contextName] - Optional entity name for context (e.g., block name).
  * @param {string} [options.contextType] - The entity type for the prefix (e.g., "Block", "Condition").
- * @returns {ValidationError} The validation error object with message and path.
+ * @param {ValidationErrorDetails} [options.details] - Structured payload.
+ * @returns {ValidationError} The validation error object.
  */
 function argValidationError(argName, message, options = {}) {
-  const { contextName, contextType } = options;
+  const { contextName, contextType, details } = options;
   const formattedMessage = contextName
     ? `${contextType} "${contextName}": arg "${argName}" ${message}`
     : `Arg "${argName}" ${message}`;
-  return { message: formattedMessage, path: argName };
+  return { message: formattedMessage, path: argName, details };
 }
 
 /**
@@ -661,28 +733,60 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         return argValidationError(
           argName,
           `must be a string, got ${typeof value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: argName,
+              value,
+              expected: { type: "string" },
+            },
+          }
         );
       }
       if (pattern && !pattern.test(value)) {
         return argValidationError(
           argName,
           `value "${value}" does not match required pattern ${pattern}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.PATTERN_MISMATCH,
+              field: argName,
+              value,
+              expected: { pattern: pattern.source },
+            },
+          }
         );
       }
       if (minLength !== undefined && value.length < minLength) {
         return argValidationError(
           argName,
           `must be at least ${minLength} characters, got ${value.length}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.MIN_LENGTH,
+              field: argName,
+              value,
+              expected: { minLength },
+            },
+          }
         );
       }
       if (maxLength !== undefined && value.length > maxLength) {
         return argValidationError(
           argName,
           `must be at most ${maxLength} characters, got ${value.length}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.MAX_LENGTH,
+              field: argName,
+              value,
+              expected: { maxLength },
+            },
+          }
         );
       }
       if (enumValues !== undefined && !enumValues.includes(value)) {
@@ -690,7 +794,15 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         return argValidationError(
           argName,
           `must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.ENUM_MISMATCH,
+              field: argName,
+              value,
+              expected: { enum: [...enumValues] },
+            },
+          }
         );
       }
       break;
@@ -700,35 +812,75 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         return argValidationError(
           argName,
           `must be a number, got ${typeof value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: argName,
+              value,
+              expected: { type: "number" },
+            },
+          }
         );
       }
       if (integer && !Number.isInteger(value)) {
         return argValidationError(
           argName,
           `must be an integer, got ${value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: argName,
+              value,
+              expected: { type: "number", integer: true },
+            },
+          }
         );
       }
       if (min !== undefined && value < min) {
         return argValidationError(
           argName,
           `must be at least ${min}, got ${value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.MIN,
+              field: argName,
+              value,
+              expected: { min },
+            },
+          }
         );
       }
       if (max !== undefined && value > max) {
         return argValidationError(
           argName,
           `must be at most ${max}, got ${value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.MAX,
+              field: argName,
+              value,
+              expected: { max },
+            },
+          }
         );
       }
       if (enumValues !== undefined && !enumValues.includes(value)) {
         return argValidationError(
           argName,
           `must be one of: ${enumValues.join(", ")}. Got ${value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.ENUM_MISMATCH,
+              field: argName,
+              value,
+              expected: { enum: [...enumValues] },
+            },
+          }
         );
       }
       break;
@@ -738,7 +890,15 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         return argValidationError(
           argName,
           `must be a boolean, got ${typeof value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: argName,
+              value,
+              expected: { type: "boolean" },
+            },
+          }
         );
       }
       break;
@@ -748,21 +908,45 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         return argValidationError(
           argName,
           `must be an array, got ${typeof value}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: argName,
+              value,
+              expected: { type: "array" },
+            },
+          }
         );
       }
       if (minLength !== undefined && value.length < minLength) {
         return argValidationError(
           argName,
           `must have at least ${minLength} items, got ${value.length}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.MIN_LENGTH,
+              field: argName,
+              value,
+              expected: { minLength },
+            },
+          }
         );
       }
       if (maxLength !== undefined && value.length > maxLength) {
         return argValidationError(
           argName,
           `must have at most ${maxLength} items, got ${value.length}.`,
-          options
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.MAX_LENGTH,
+              field: argName,
+              value,
+              expected: { maxLength },
+            },
+          }
         );
       }
       if (itemType) {
@@ -792,7 +976,15 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
             return argValidationError(
               indexedArgName,
               `must be one of: ${itemEnum.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
-              options
+              {
+                ...options,
+                details: {
+                  code: ERROR_CODES.ENUM_MISMATCH,
+                  field: indexedArgName,
+                  value: item,
+                  expected: { enum: [...itemEnum] },
+                },
+              }
             );
           }
         }
@@ -819,7 +1011,15 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
           return argValidationError(
             argName,
             `must be an object, got ${actualType}.`,
-            options
+            {
+              ...options,
+              details: {
+                code: ERROR_CODES.TYPE_MISMATCH,
+                field: argName,
+                value,
+                expected: { type: "object" },
+              },
+            }
           );
         }
       }
@@ -842,12 +1042,26 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
               expectedName
                 ? `must be an instance of ${expectedName}.`
                 : "must match the required class type.",
-              options
+              {
+                ...options,
+                details: {
+                  code: ERROR_CODES.TYPE_MISMATCH,
+                  field: argName,
+                  value,
+                  expected: { instanceOf: expectedName ?? null },
+                },
+              }
             );
           }
         } else if (typeof instanceOf === "string") {
           // Model string format: "model:user"
           const modelType = instanceOf.replace(/^model:/, "");
+          const expectedDetail = {
+            code: ERROR_CODES.TYPE_MISMATCH,
+            field: argName,
+            value,
+            expected: { instanceOf: `model:${modelType}` },
+          };
 
           // Try to look up the model class via registry
           const klass = owner?.factoryFor?.(`model:${modelType}`)?.class;
@@ -857,7 +1071,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
               return argValidationError(
                 argName,
                 `must be an instance of ${modelType} model.`,
-                options
+                { ...options, details: expectedDetail }
               );
             }
           } else {
@@ -869,7 +1083,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
               return argValidationError(
                 argName,
                 `must be an instance of ${modelType} model.`,
-                options
+                { ...options, details: expectedDetail }
               );
             }
           }
@@ -886,7 +1100,13 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
           // Check required properties
           if (propDef.required && propValue === undefined) {
             const propPath = `${argName}.${propName}`;
-            return argValidationError(propPath, `is required.`, options);
+            return argValidationError(propPath, `is required.`, {
+              ...options,
+              details: {
+                code: ERROR_CODES.REQUIRED_MISSING,
+                field: propPath,
+              },
+            });
           }
 
           // Recursively validate property value
@@ -906,9 +1126,184 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
       break;
     }
 
+    case "richInline":
+      if (typeof value === "string") {
+        break;
+      }
+      if (isInlineDoc(value)) {
+        break;
+      }
+      return argValidationError(
+        argName,
+        `must be a string or inline-rich-text doc.`,
+        {
+          ...options,
+          details: {
+            code: ERROR_CODES.TYPE_MISMATCH,
+            field: argName,
+            value,
+            expected: { type: "richInline" },
+          },
+        }
+      );
+
+    case "image": {
+      const imageError = validateImageVariant(value, argName, options);
+      if (imageError) {
+        return imageError;
+      }
+      // Dark variant is structurally identical to the light value; if present,
+      // re-use the same validator scoped under "<argName>.dark".
+      if (value && value.dark !== undefined && value.dark !== null) {
+        const darkError = validateImageVariant(
+          value.dark,
+          `${argName}.dark`,
+          options
+        );
+        if (darkError) {
+          return darkError;
+        }
+        if (value.dark.dark !== undefined) {
+          return argValidationError(
+            `${argName}.dark`,
+            "must not nest another dark variant.",
+            {
+              ...options,
+              details: {
+                code: ERROR_CODES.TYPE_MISMATCH,
+                field: `${argName}.dark`,
+                expected: { type: "image" },
+              },
+            }
+          );
+        }
+      }
+      break;
+    }
+
     case "any":
       // Any value is valid, no type checking needed
       break;
+  }
+
+  return null;
+}
+
+/**
+ * Validates a single image variant (the light value or its `dark` counterpart).
+ * Both share the same shape: required string `url`, optional numeric `width`
+ * and `height`, an optional `source` of `"upload"` or `"url"`, and an
+ * optional positive-integer `upload_id` (the Discourse `Upload` row that
+ * backs the URL — server-side cleanup uses it to claim ownership of the
+ * upload so it isn't garbage-collected).
+ *
+ * @param {*} value - The variant value.
+ * @param {string} argName - The path used in error messages.
+ * @param {Object} [options] - Validation options forwarded to argValidationError.
+ * @returns {ValidationError|null}
+ */
+function validateImageVariant(value, argName, options) {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    let actualType;
+    if (value === null) {
+      actualType = "null";
+    } else if (Array.isArray(value)) {
+      actualType = "array";
+    } else {
+      actualType = typeof value;
+    }
+    return argValidationError(
+      argName,
+      `must be an image object, got ${actualType}.`,
+      {
+        ...options,
+        details: {
+          code: ERROR_CODES.TYPE_MISMATCH,
+          field: argName,
+          value,
+          expected: { type: "image" },
+        },
+      }
+    );
+  }
+
+  if (typeof value.url !== "string" || value.url.length === 0) {
+    return argValidationError(
+      argName,
+      `must include a non-empty string "url".`,
+      {
+        ...options,
+        details: {
+          code: ERROR_CODES.REQUIRED_MISSING,
+          field: `${argName}.url`,
+        },
+      }
+    );
+  }
+
+  if (
+    value.source !== undefined &&
+    value.source !== "upload" &&
+    value.source !== "url"
+  ) {
+    return argValidationError(
+      argName,
+      `has invalid "source" "${value.source}". Must be "upload" or "url".`,
+      {
+        ...options,
+        details: {
+          code: ERROR_CODES.ENUM_MISMATCH,
+          field: `${argName}.source`,
+          value: value.source,
+          expected: { enum: ["upload", "url"] },
+        },
+      }
+    );
+  }
+
+  if (
+    value.upload_id !== undefined &&
+    (typeof value.upload_id !== "number" ||
+      !Number.isInteger(value.upload_id) ||
+      value.upload_id <= 0)
+  ) {
+    return argValidationError(
+      argName,
+      `has invalid "upload_id". Must be a positive integer.`,
+      {
+        ...options,
+        details: {
+          code: ERROR_CODES.TYPE_MISMATCH,
+          field: `${argName}.upload_id`,
+          value: value.upload_id,
+          expected: { type: "number", integer: true, min: 1 },
+        },
+      }
+    );
+  }
+
+  for (const dim of ["width", "height", "naturalWidth", "naturalHeight"]) {
+    if (value[dim] !== undefined) {
+      if (
+        typeof value[dim] !== "number" ||
+        !Number.isFinite(value[dim]) ||
+        value[dim] <= 0
+      ) {
+        return argValidationError(
+          argName,
+          `has invalid "${dim}". Must be a positive finite number.`,
+          {
+            ...options,
+            details: {
+              code: ERROR_CODES.TYPE_MISMATCH,
+              field: `${argName}.${dim}`,
+              value: value[dim],
+              expected: { type: "number", min: 0 },
+            },
+          }
+        );
+      }
+    }
   }
 
   return null;
@@ -934,6 +1329,12 @@ export function validateArrayItemType(
   options = {}
 ) {
   const indexedArgName = `${argName}[${index}]`;
+  const makeDetails = (expected) => ({
+    code: ERROR_CODES.TYPE_MISMATCH,
+    field: indexedArgName,
+    value: item,
+    expected,
+  });
 
   switch (itemType) {
     case "string":
@@ -941,7 +1342,7 @@ export function validateArrayItemType(
         return argValidationError(
           indexedArgName,
           `must be a string, got ${typeof item}.`,
-          options
+          { ...options, details: makeDetails({ type: "string" }) }
         );
       }
       break;
@@ -951,7 +1352,7 @@ export function validateArrayItemType(
         return argValidationError(
           indexedArgName,
           `must be a number, got ${typeof item}.`,
-          options
+          { ...options, details: makeDetails({ type: "number" }) }
         );
       }
       break;
@@ -961,7 +1362,7 @@ export function validateArrayItemType(
         return argValidationError(
           indexedArgName,
           `must be a boolean, got ${typeof item}.`,
-          options
+          { ...options, details: makeDetails({ type: "boolean" }) }
         );
       }
       break;
@@ -982,12 +1383,23 @@ export function validateArrayItemType(
  * The unknown args check is done FIRST so that typos like "nam" produce
  * "unknown arg 'nam' (did you mean 'name'?)" instead of "missing required arg 'name'".
  *
+ * Two modes:
+ *  - **Strict** (no `collect`): fail-fast, throws the first `BlockError`.
+ *    Used by `api.renderBlocks` and any programmatic caller — the console
+ *    gets exactly one message.
+ *  - **Collect** (`options.collect = []`): accumulates every failing arg
+ *    into the array as `{ message, path, details }` records and returns
+ *    without throwing. The permissive validator uses this so authors fix
+ *    all issues in one pass.
+ *
  * @param {Object} providedArgs - The arguments to validate.
  * @param {Object} schema - The schema to validate against.
  * @param {string} pathPrefix - Prefix for error paths (e.g., "args" or "containerArgs").
  * @param {Object} [options={}] - Optional configuration.
  * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
- * @throws {BlockError} If validation fails.
+ * @param {Array<{message: string, path: string, details?: Object}>} [options.collect] -
+ *   Accumulator array. When present, failures are pushed instead of thrown.
+ * @throws {BlockError} If validation fails (strict mode only).
  */
 export function validateArgsAgainstSchema(
   providedArgs,
@@ -995,14 +1407,28 @@ export function validateArgsAgainstSchema(
   pathPrefix,
   options = {}
 ) {
+  const { collect } = options;
+  const recordOrThrow = (message, path, details) => {
+    if (collect) {
+      collect.push({ message, path, details });
+      return;
+    }
+    throw new BlockError(message, { path, details });
+  };
+
   // 1. Check for unknown args FIRST (catches typos before missing required)
   const declaredArgs = Object.keys(schema);
   for (const argName of Object.keys(providedArgs)) {
     if (!Object.hasOwn(schema, argName)) {
       const suggestion = formatWithSuggestion(argName, declaredArgs);
-      throw new BlockError(
+      recordOrThrow(
         `unknown ${pathPrefix} ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
-        { path: `${pathPrefix}.${argName}` }
+        `${pathPrefix}.${argName}`,
+        {
+          code: ERROR_CODES.UNKNOWN_ARG,
+          field: argName,
+          expected: { declaredArgs: [...declaredArgs] },
+        }
       );
     }
   }
@@ -1012,18 +1438,23 @@ export function validateArgsAgainstSchema(
 
     // 2. Check required args
     if (argDef.required && value === undefined) {
-      throw new BlockError(`missing required ${pathPrefix}.${argName}.`, {
-        path: `${pathPrefix}.${argName}`,
-      });
+      recordOrThrow(
+        `missing required ${pathPrefix}.${argName}.`,
+        `${pathPrefix}.${argName}`,
+        { code: ERROR_CODES.REQUIRED_MISSING, field: argName }
+      );
+      continue;
     }
 
     // 3. Validate type if value is provided
     if (value !== undefined) {
       const typeError = validateArgValue(value, argDef, argName, options);
       if (typeError) {
-        throw new BlockError(typeError.message, {
-          path: `${pathPrefix}.${typeError.path}`,
-        });
+        recordOrThrow(
+          typeError.message,
+          `${pathPrefix}.${typeError.path}`,
+          typeError.details ?? null
+        );
       }
     }
   }

@@ -25,6 +25,8 @@ const VALID_CONFIG_KEYS = Object.freeze([
   "args",
   "constraints",
   "validate",
+  "displayName",
+  "description",
 ]);
 
 /**
@@ -65,6 +67,10 @@ export function isDecoratedCondition(ConditionClass) {
  * @param {Object} [config.constraints] - Cross-arg constraints (atLeastOne, exactlyOne, allOrNone, atMostOne).
  * @param {Function} [config.validate] - Custom validation function called at registration time.
  *   Receives args object, returns error string/array or null.
+ * @param {string} [config.displayName] - Human-readable label for display
+ *   purposes. Falls back to a titleCased `type` when omitted.
+ * @param {string} [config.description] - Short human-readable description.
+ *   No description is shown when omitted.
  * @throws {Error} If config is invalid or class doesn't extend BlockCondition.
  *
  * @example
@@ -114,6 +120,8 @@ export function blockCondition(config) {
     args: argsSchema = {},
     constraints,
     validate: validateFn,
+    displayName,
+    description,
   } = config;
 
   // Validate config at decoration time
@@ -181,6 +189,20 @@ export function blockCondition(config) {
     );
   }
 
+  // Shallow type-check the display-metadata fields. These are advisory
+  // presentation hints with no runtime effect on evaluation.
+  if (
+    displayName !== undefined &&
+    (typeof displayName !== "string" || displayName.trim() === "")
+  ) {
+    throw new Error(
+      `blockCondition: "displayName" must be a non-empty string.`
+    );
+  }
+  if (description !== undefined && typeof description !== "string") {
+    throw new Error(`blockCondition: "description" must be a string.`);
+  }
+
   // Freeze schema and compute derived validArgKeys
   const frozenSchema = Object.freeze({ ...argsSchema });
   const frozenConstraints = constraints
@@ -209,6 +231,10 @@ export function blockCondition(config) {
       validateFn: { get: () => validateFn, configurable: false },
       // validArgKeys combines argsSchema keys with "source" when sourceType !== "none".
       validArgKeys: { get: () => allKeys, configurable: false },
+      // Advisory display-metadata fields. Both default to `null` so a
+      // consumer can fall back to a titleCased `type` or no description.
+      displayName: { get: () => displayName ?? null, configurable: false },
+      description: { get: () => description ?? null, configurable: false },
     });
 
     // Track as decorated so Blocks service can verify

@@ -87,6 +87,13 @@ export { VALID_ARG_TYPES } from "discourse/lib/blocks/-internals/validation/args
  */
 export { VALID_ITEM_TYPES } from "discourse/lib/blocks/-internals/validation/args";
 
+/**
+ * Valid `ui.control` values for arg schema UI hints. These advise how each
+ * arg should be presented for editing. Block authors override the default
+ * control choice via `ui: { control: "..." }` in the arg schema.
+ */
+export { VALID_UI_CONTROLS } from "discourse/lib/blocks/-internals/validation/block-args";
+
 /* Constraint Types */
 
 /**

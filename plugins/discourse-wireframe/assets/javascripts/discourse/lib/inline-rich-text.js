@@ -1,0 +1,234 @@
+// @ts-check
+
+import { isSafeHref } from "discourse/lib/blocks/-internals/validation/inline-doc";
+
+/**
+ * Normalize a stored value into a ProseMirror doc-JSON shape. Plain strings
+ * become a doc with a single text node; existing docs pass through unchanged.
+ *
+ * @param {string | object} value
+ * @returns {object}
+ */
+export function toDoc(value) {
+  if (value == null) {
+    return { type: "doc", content: [] };
+  }
+  if (typeof value === "string") {
+    return {
+      type: "doc",
+      content: value ? [{ type: "text", text: value }] : [],
+    };
+  }
+  return value;
+}
+
+/**
+ * Inverse of {@link toDoc}. Returns a plain string when the doc has no marks
+ * and no hard breaks; otherwise returns the doc-JSON unchanged. This keeps
+ * the common (unformatted) case as a small, hand-author-friendly string.
+ *
+ * @param {object} doc
+ * @returns {string | object}
+ */
+export function toStorage(doc) {
+  if (!doc || doc.type !== "doc" || !Array.isArray(doc.content)) {
+    return "";
+  }
+  const allPlain = doc.content.every(
+    (node) => node.type === "text" && (!node.marks || node.marks.length === 0)
+  );
+  if (allPlain) {
+    return doc.content.map((node) => node.text ?? "").join("");
+  }
+  return doc;
+}
+
+/**
+ * Sanitize an href for rendering. Returns the href if it passes the same
+ * scheme/control-char checks the validator applies; returns `"#"` otherwise.
+ * Defense-in-depth — the validator should have already rejected unsafe
+ * hrefs before they hit the renderer, but invalid data can still reach this
+ * code path via hand-authored layouts.
+ *
+ * @param {unknown} href
+ * @returns {string}
+ */
+export function safeHref(href) {
+  return isSafeHref(href) ? String(href) : "#";
+}
+
+/**
+ * Flatten an inline-rich-text value to a single markdown string, suitable
+ * for a read-only inspector summary (e.g. `"Hello **world**"`). Plain
+ * strings pass through; doc-JSON is walked and marks become `**`/`*`/
+ * `[text](url)` wrappers in canonical mark order.
+ *
+ * Not a full markdown serializer — this is one-way (no parse), and only
+ * handles the three allowed marks plus `hard_break`. Used by the inspector
+ * form to show authors what they've typed without rendering a parallel
+ * editor.
+ *
+ * @param {string | object} value
+ * @returns {string}
+ */
+export function toFlatMarkdown(value) {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (!value || !Array.isArray(value.content)) {
+    return "";
+  }
+  return value.content
+    .map((node) => {
+      if (node.type === "hard_break") {
+        return "\n";
+      }
+      if (node.type !== "text") {
+        return "";
+      }
+      let text = node.text ?? "";
+      for (const mark of node.marks ?? []) {
+        if (mark.type === "strong") {
+          text = `**${text}**`;
+        } else if (mark.type === "em") {
+          text = `*${text}*`;
+        } else if (mark.type === "link") {
+          text = `[${text}](${mark.attrs?.href ?? ""})`;
+        }
+      }
+      return text;
+    })
+    .join("");
+}
+
+const TEXT_NODE = {
+  group: "inline",
+  toDOM() {
+    return ["span", 0];
+  },
+};
+
+const HARD_BREAK_NODE = {
+  inline: true,
+  group: "inline",
+  selectable: false,
+  parseDOM: [{ tag: "br" }],
+  toDOM() {
+    return ["br"];
+  },
+};
+
+const STRONG_MARK = {
+  parseDOM: [
+    { tag: "strong" },
+    { tag: "b", getAttrs: (n) => n.style.fontWeight !== "normal" && null },
+    {
+      style: "font-weight",
+      getAttrs: (v) => /^(bold(er)?|[5-9]\d{2,})$/.test(v) && null,
+    },
+  ],
+  toDOM() {
+    return ["strong", 0];
+  },
+};
+
+const EM_MARK = {
+  parseDOM: [{ tag: "i" }, { tag: "em" }, { style: "font-style=italic" }],
+  toDOM() {
+    return ["em", 0];
+  },
+};
+
+const LINK_MARK = {
+  attrs: { href: {} },
+  inclusive: false,
+  parseDOM: [
+    {
+      tag: "a[href]",
+      getAttrs(dom) {
+        return { href: dom.getAttribute("href") };
+      },
+    },
+  ],
+  toDOM(node) {
+    return [
+      "a",
+      { href: safeHref(node.attrs.href), rel: "noopener nofollow ugc" },
+      0,
+    ];
+  },
+};
+
+/**
+ * Extension list for the "plain" schema — no marks, no line breaks. Used for
+ * single-line label-like fields (button labels, names, short titles).
+ */
+const PLAIN_EXTENSIONS = [
+  {
+    nodeSpec: {
+      doc: { content: "text*" },
+      text: TEXT_NODE,
+    },
+  },
+];
+
+/**
+ * Extension list for the "heading" schema — marks allowed, no line breaks.
+ * Used for single-line rich content (heading text, media-card title).
+ */
+const HEADING_EXTENSIONS = [
+  {
+    nodeSpec: {
+      doc: { content: "text*" },
+      text: TEXT_NODE,
+    },
+    markSpec: {
+      strong: STRONG_MARK,
+      em: EM_MARK,
+      link: LINK_MARK,
+    },
+  },
+];
+
+/**
+ * Extension list for the "paragraph" schema — marks and hard breaks allowed.
+ * Used for multi-line rich content (paragraph body, callout body, banner
+ * content).
+ */
+const PARAGRAPH_EXTENSIONS = [
+  {
+    nodeSpec: {
+      doc: { content: "inline*" },
+      text: TEXT_NODE,
+      hard_break: HARD_BREAK_NODE,
+    },
+    markSpec: {
+      strong: STRONG_MARK,
+      em: EM_MARK,
+      link: LINK_MARK,
+    },
+  },
+];
+
+/**
+ * Map of schema variant -> editor configuration. The variant is emitted as
+ * a data-attr on the renderer span so the editor controller can resolve the
+ * right config when it enters edit mode.
+ */
+export const SCHEMAS = Object.freeze({
+  plain: {
+    extensions: PLAIN_EXTENSIONS,
+    allowsMarks: false,
+    allowsHardBreak: false,
+  },
+  heading: {
+    extensions: HEADING_EXTENSIONS,
+    allowsMarks: true,
+    allowsHardBreak: false,
+  },
+  paragraph: {
+    extensions: PARAGRAPH_EXTENSIONS,
+    allowsMarks: true,
+    allowsHardBreak: true,
+  },
+});

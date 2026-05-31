@@ -27,6 +27,7 @@ import {
 import {
   validateAndParseBlockName,
   validateBlockOptions,
+  validateDisplayMetadata,
   validateOutletRestrictions,
 } from "discourse/lib/blocks/-internals/validation/block-decorator";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
@@ -70,6 +71,24 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {Function|null} validate - Custom validation function.
  * @property {readonly string[]|null} allowedOutlets - Allowed outlet patterns.
  * @property {readonly string[]|null} deniedOutlets - Denied outlet patterns.
+ * @property {string|null} displayName - Human-readable name for display
+ *   purposes. Falls back to a Title Case of `shortName` when unset (see
+ *   `getBlockDisplayMetadata`).
+ * @property {string|null} icon - Icon ID associated with the block. Falls
+ *   back to `"cube"` when unset.
+ * @property {string|null} category - Category label used to group the
+ *   block (e.g. "Content", "Layout"). Falls back to `"Misc"` when unset.
+ * @property {Readonly<Object>|null} previewArgs - Optional sample args used
+ *   when rendering a preview of the block. Frozen shallowly. Falls back to
+ *   defaults derived from `args` when unset.
+ * @property {string|null} thumbnail - Optional URL of a static thumbnail
+ *   image shown instead of the icon.
+ * @property {boolean} paletteHidden - When true, the block is excluded from
+ *   lists of directly-insertable blocks. The block remains registered and
+ *   renderable from layouts that reference it.
+ * @property {boolean} transparent - When true, the block is treated as
+ *   structural scaffolding rather than a user-facing block (children
+ *   expanded inline). See the `transparent` option on `block()`.
  */
 
 /**
@@ -167,6 +186,34 @@ const BlockComponentManager = new Proxy(
  * @property {boolean} [integer] - Whether number must be an integer
  * @property {Array} [enum] - Allowed values for the argument
  * @property {Array} [itemEnum] - Allowed values for array items
+ * @property {UIHints} [ui] - Optional metadata describing how this arg should
+ *   be presented for editing. Pure metadata — has no runtime effect on the
+ *   block itself.
+ */
+
+/**
+ * Optional UI hints describing how an arg should be presented for editing.
+ * All fields are advisory — a consumer is free to fall back to a sensible
+ * default when a hint is missing. None of these fields affect validation or
+ * runtime behaviour of the block.
+ *
+ * @typedef {Object} UIHints
+ * @property {string} [control] - Override the default edit control for
+ *   this arg. Valid values are listed in `VALID_UI_CONTROLS` (re-exported
+ *   from `discourse/lib/blocks`); examples include "text", "textarea",
+ *   "color", "icon", "rich-text", and entity pickers like
+ *   "category-select", "tag-select", "user-select", "group-select".
+ * @property {string} [label] - Edit-form field label override. Defaults to a
+ *   title-cased form of the arg name.
+ * @property {string} [placeholder] - Placeholder text for text-style controls.
+ * @property {string} [helpText] - Help text shown beneath the control.
+ * @property {string} [group] - Edit-form section name (e.g. "Content",
+ *   "Appearance"). Args without a group land under "General".
+ * @property {boolean} [hidden] - When true, the arg is omitted from the
+ *   edit form but kept in the schema (useful for computed args).
+ * @property {{arg: string, equals?: *, notEmpty?: boolean}} [conditional] -
+ *   Show this field only when another arg satisfies the predicate. At least
+ *   one of `equals` or `notEmpty` must be set.
  */
 
 /**
@@ -207,6 +254,36 @@ const BlockComponentManager = new Proxy(
  *
  * @param {string[]} [options.deniedOutlets] - Glob patterns for denied outlets.
  *
+ * @param {string} [options.displayName] - Human-readable name for display
+ *   purposes. Defaults to a Title Case of `shortName`.
+ *
+ * @param {string} [options.icon] - Icon ID associated with the block.
+ *   Defaults to `"cube"`.
+ *
+ * @param {string} [options.category] - Category label for grouping the
+ *   block (e.g. `"Content"`, `"Layout"`). Defaults to `"Misc"`.
+ *
+ * @param {Object} [options.previewArgs] - Sample args used when rendering a
+ *   preview of the block. Defaults to a shallow object built from each arg
+ *   schema's `default` field.
+ *
+ * @param {string} [options.thumbnail] - URL of a static thumbnail image
+ *   shown instead of the icon.
+ *
+ * @param {boolean} [options.paletteHidden=false] - When true, the block is
+ *   excluded from lists of directly-insertable blocks. The block is still
+ *   registered and renderable from layouts that reference it — this hides it
+ *   from user-facing inserts only, useful for infrastructure blocks (e.g.
+ *   the built-in `group`) and deprecated aliases.
+ *
+ * @param {boolean} [options.transparent=false] - When true, the block is
+ *   treated as structural scaffolding: it is expanded inline (rendering its
+ *   children at its own level) and skips the standard block wrapper. Used
+ *   for slot-style wrappers that exist solely to attach metadata (e.g. a
+ *   slot block carrying CSS Grid placement) without showing up as a
+ *   first-class block. Implies — but does not auto-set — `paletteHidden`;
+ *   transparent blocks are typically not user-pickable.
+ *
  * @returns {Function} Decorator function that returns the decorated class
  *
  * @example
@@ -236,6 +313,13 @@ export function block(name, options = {}) {
     validate: validateFn = null,
     allowedOutlets = null,
     deniedOutlets = null,
+    displayName = null,
+    icon = null,
+    category = null,
+    previewArgs = null,
+    thumbnail = null,
+    paletteHidden = false,
+    transparent = false,
   } = options;
 
   // Validate arg schema structure and types
@@ -276,6 +360,9 @@ export function block(name, options = {}) {
   // Validate outlet restriction patterns
   validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
+  // Shallow type-check the optional display-metadata fields.
+  validateDisplayMetadata(name, options);
+
   return function (target) {
     setInternalComponentManager(BlockComponentManager, target);
 
@@ -291,15 +378,22 @@ export function block(name, options = {}) {
         : null,
       args: argsSchema ? Object.freeze(argsSchema) : null,
       blockName: name,
+      category,
       childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
       constraints: constraints ? Object.freeze(constraints) : null,
       decoratorClassNames,
       deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
       description,
+      displayName,
+      icon,
       isContainer,
       namespace: parsed.namespace,
       namespaceType: parsed.type,
+      paletteHidden: paletteHidden === true,
+      previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,
+      thumbnail,
+      transparent: transparent === true,
       validate: validateFn,
     });
 
@@ -310,30 +404,72 @@ export function block(name, options = {}) {
 }
 
 /**
- * Creates the args object for a child block with reactive getters for context args.
+ * Creates the args object for a child block with reactive getters for both
+ * the entry's args and the rendering context.
  *
  * This function embeds the AUTH_TOKEN in the __block$ property, which is how
  * child blocks are authorized to render. The token is not exposed - it's
  * embedded in the returned object.
  *
- * Context args are defined as getters rather than direct properties. This allows
- * `curryComponent` to maintain a stable component identity while enabling reactive
- * updates when the getter values change. Without getters, changing any arg would
- * require creating a new curried component, breaking Ember's identity-based rendering.
+ * Args are defined as reactive getters that read from the LIVE `entry.args`
+ * (which is a `trackedObject` after registration in `block-outlet.gjs`).
+ * Combined with the compute-ref proxy `curryComponent` builds, this means
+ * mutating `entry.args.title = "new"` propagates to the rendered block
+ * without re-currying the component or replacing the layout — Glimmer's
+ * autotracking reaches in through the proxy to invalidate just the readers
+ * of that arg. This is what powers live arg editing.
  *
- * @param {Object} entryArgs - User-provided args from the layout entry.
- * @param {Object} contextArgs - Rendering context to define as reactive getters.
+ * The set of arg KEYS is fixed at curry time (per `curryComponent`'s
+ * contract that keys must be static), so adding new args after curry
+ * requires a layout replacement. Only value mutations of existing keys
+ * propagate reactively.
+ *
+ * @param {Object} entry - The layout entry. Reads track `entry.args[key]`.
+ * @param {Function} ComponentClass - The block's component class. Used to
+ *   look up schema defaults for keys not present in `entry.args`.
+ * @param {Object} contextArgs - Rendering context (children, outletArgs,
+ *   outletName, __hierarchy) defined as static reactive getters.
  * @returns {Object} The merged args object ready for `curryComponent`.
  */
-export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
-  const blockArgs = {
-    ...entryArgs,
-    __block$: AUTH_TOKEN,
-  };
+export function createBlockArgsWithReactiveGetters(
+  entry,
+  ComponentClass,
+  contextArgs
+) {
+  const blockArgs = { __block$: AUTH_TOKEN };
 
-  // Dynamically define reactive getters for each context arg
+  const schema = blockMetadataMap.get(ComponentClass)?.args ?? {};
+
+  // Union of entry's args and schema keys. The set is frozen at curry time;
+  // mutations to existing keys propagate reactively, but adding a new key
+  // not anticipated here requires a layout replacement.
+  //
+  // We deliberately read the cached `entry.__argKeys` (snapshot taken when
+  // `assignStableKeys` wrapped the args in a `trackedObject`) instead of
+  // calling `Object.keys(entry.args)`. Going through the Proxy's `ownKeys`
+  // trap consumes the trackedObject's collection tag — which is dirtied on
+  // every `set` (not just add/delete) — and that would invalidate every
+  // container's `processedChildren` computation on every keystroke,
+  // forcing the whole container subtree to re-curry. The cached snapshot
+  // gives us the same key set without opening the dep.
+  const argKeys = new Set([
+    ...(entry.__argKeys ?? Object.keys(entry.args || {})),
+    ...Object.keys(schema),
+  ]);
+
   /** @type {PropertyDescriptorMap} */
   const propertyDescriptors = {};
+  for (const key of argKeys) {
+    propertyDescriptors[key] = {
+      get() {
+        const live = entry.args?.[key];
+        return live !== undefined ? live : schema[key]?.default;
+      },
+      enumerable: true,
+    };
+  }
+
+  // Reactive getters for context args (children, outletArgs, etc.).
   for (const [key, value] of Object.entries(contextArgs)) {
     propertyDescriptors[key] = {
       get() {
@@ -342,6 +478,7 @@ export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
       enumerable: true,
     };
   }
+
   Object.defineProperties(blockArgs, propertyDescriptors);
 
   return blockArgs;
@@ -364,6 +501,13 @@ export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
  * - `validate` - Custom validation function
  * - `allowedOutlets` - Allowed outlet patterns
  * - `deniedOutlets` - Denied outlet patterns
+ * - `displayName` - Display name (or `null` if not provided)
+ * - `icon` - Icon ID (or `null` if not provided)
+ * - `category` - Category label (or `null` if not provided)
+ * - `previewArgs` - Sample args for a preview (or `null`)
+ * - `thumbnail` - Thumbnail URL (or `null`)
+ * - `paletteHidden` - When true, the block is excluded from lists of directly-insertable blocks
+ * - `transparent` - When true, the block is treated as structural scaffolding
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.

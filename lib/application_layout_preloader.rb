@@ -121,6 +121,7 @@ class ApplicationLayoutPreloader
     @preloaded["isReadOnly"] = @readonly_mode.to_json
     @preloaded["isStaffWritesOnly"] = @staff_writes_only_mode.to_json
     @preloaded["activatedThemes"] = activated_themes_json
+    @preloaded["themeBlockLayouts"] = theme_block_layouts_json
   end
 
   def preload_upcoming_change_data(user)
@@ -137,6 +138,56 @@ class ApplicationLayoutPreloader
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
+
+  # Returns a JSON-serialised flat list of block_layout entries for the
+  # active theme stack — one row per `(theme, outlet)` pair, ordered by
+  # `Theme.transform_ids` (theme stack order). A boot-time
+  # initializer iterates this list and calls `api.setLayoutLayer(outlet,
+  # "theme", layout, { themeId })` for each, in array order. Theme-stack
+  # ordering means the last theme in the stack ends up at the tail of each
+  # outlet's `theme` layer array, matching the existing precedence rule:
+  # last in the stack wins.
+  def theme_block_layouts_json
+    id = @theme_id
+    return "[]" if id.blank?
+    ids = Theme.transform_ids(id)
+    return "[]" if ids.blank?
+
+    layouts = []
+    fields =
+      ThemeField
+        .where(theme_id: ids, type_id: ThemeField.types[:block_layout])
+        .order(:theme_id, :name)
+        .pluck(:theme_id, :name, :value_baked, :error)
+
+    # Re-order fields so that themes flow in stack order; within a theme,
+    # fields stay alphabetical by outlet name (matters only for
+    # determinism — outlet-vs-outlet precedence is independent).
+    by_theme = fields.group_by { |row| row[0] }
+    ids.each do |theme_id|
+      next unless by_theme.key?(theme_id)
+      by_theme[theme_id].each do |_, outlet, value_baked, error|
+        # Skip fields that failed to bake — `value_baked` is nil and
+        # `error` carries the reason. An applied layout that failed to bake
+        # would render nothing for the outlet; better to fall through to
+        # the underlying layer.
+        next if value_baked.blank? || error.present?
+        begin
+          parsed = JSON.parse(value_baked)
+        rescue JSON::ParserError
+          next
+        end
+        layouts << {
+          theme_id: theme_id,
+          outlet: outlet,
+          schema_version: parsed["schema_version"],
+          layout: parsed["layout"],
+        }
+      end
+    end
+
+    layouts.to_json
   end
 
   def load_font_map

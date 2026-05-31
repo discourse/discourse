@@ -31,6 +31,13 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
   "validate",
   "allowedOutlets",
   "deniedOutlets",
+  "displayName",
+  "icon",
+  "category",
+  "previewArgs",
+  "thumbnail",
+  "paletteHidden",
+  "transparent",
 ]);
 
 /**
@@ -80,6 +87,41 @@ export function validateAndParseBlockName(name) {
   }
 
   return parsed;
+}
+
+/**
+ * Validates the optional display-metadata fields. None of these affect
+ * runtime behaviour — they are pure presentation hints — so the checks here
+ * are shallow type assertions rather than schema validation.
+ *
+ * @param {string} name - The block name (for error messages).
+ * @param {Object} options - The decorator options object.
+ */
+export function validateDisplayMetadata(name, options) {
+  const { displayName, icon, category, previewArgs, thumbnail } = options;
+
+  for (const [key, value] of Object.entries({ displayName, icon, category })) {
+    if (value == null) {
+      continue;
+    }
+    if (typeof value !== "string" || value.trim() === "") {
+      raiseBlockError(`Block "${name}": "${key}" must be a non-empty string.`);
+    }
+  }
+
+  if (previewArgs != null) {
+    const isPlainObject =
+      typeof previewArgs === "object" &&
+      !Array.isArray(previewArgs) &&
+      Object.getPrototypeOf(previewArgs) === Object.prototype;
+    if (!isPlainObject) {
+      raiseBlockError(`Block "${name}": "previewArgs" must be a plain object.`);
+    }
+  }
+
+  if (thumbnail != null && typeof thumbnail !== "string") {
+    raiseBlockError(`Block "${name}": "thumbnail" must be a string.`);
+  }
 }
 
 /**

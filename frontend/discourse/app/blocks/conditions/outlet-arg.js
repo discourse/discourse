@@ -64,6 +64,8 @@ const MAX_PATH_LENGTH = 255;
  */
 @blockCondition({
   type: "outlet-arg",
+  displayName: "Outlet argument",
+  description: "Match by an argument the outlet passes to the block.",
   args: {
     path: { type: "string", required: true },
     value: { type: "any" },

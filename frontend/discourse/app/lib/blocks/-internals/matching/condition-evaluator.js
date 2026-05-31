@@ -14,6 +14,13 @@ import {
  * @param {boolean} [context.debug] - Enable debug logging for this evaluation.
  * @param {number} [context._depth] - Internal: nesting depth for logging.
  * @param {Object} [context.outletArgs] - Outlet arguments passed to conditions.
+ * @param {Object} [context.simulation] - Optional simulated identity / viewport.
+ *   Each condition class that consults the simulated value (currently `user` and
+ *   `viewport`) checks `context.simulation?.user` / `context.simulation?.viewport`
+ *   before falling back to its real-time service reads. Lets a preview context
+ *   show how condition-gated blocks render under a hypothetical user / screen
+ *   size. Block bodies still render with the real user's data — simulation
+ *   only affects condition evaluation.
  * @returns {boolean} True if conditions pass, false otherwise.
  */
 export function evaluateConditions(
@@ -134,6 +141,7 @@ function evaluateAndCombinator(
       debug: isLoggingEnabled,
       _depth: depth + 1,
       outletArgs: context.outletArgs,
+      simulation: context.simulation,
     });
     if (!result) {
       andResult = false;
@@ -190,6 +198,7 @@ function evaluateOrCombinator(
       debug: isLoggingEnabled,
       _depth: depth + 1,
       outletArgs: context.outletArgs,
+      simulation: context.simulation,
     });
     if (result) {
       orResult = true;
@@ -239,6 +248,7 @@ function evaluateNotCombinator(
     debug: isLoggingEnabled,
     _depth: depth + 1,
     outletArgs: context.outletArgs,
+    simulation: context.simulation,
   });
   const notResult = !innerResult;
 
@@ -304,6 +314,7 @@ function evaluateSingleCondition(
     debug: isLoggingEnabled,
     _depth: depth,
     outletArgs: context.outletArgs,
+    simulation: context.simulation,
     logger,
   };
   const result = conditionInstance.evaluate(args, evalContext);

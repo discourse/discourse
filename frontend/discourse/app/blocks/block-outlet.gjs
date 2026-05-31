@@ -7,12 +7,20 @@
  *
  * This file handles:
  * - BlockOutlet component
- * - Outlet layout registration and management
+ * - Outlet layout registration and management via a three-layer resolution chain
  * - Child block creation and rendering
  */
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+// @ts-ignore - `@glimmer/validator` is a transitive dependency without
+// direct types resolution under our pnpm layout.
+import { untrack } from "@glimmer/validator";
+import {
+  trackedArray,
+  trackedMap,
+  trackedObject,
+} from "@ember/reactive/collections";
 import curryComponent from "ember-curry-component";
 /** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
@@ -35,7 +43,10 @@ import {
   captureCallSite,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
-import { isBlockRegistryFrozen } from "discourse/lib/blocks/-internals/registry/block";
+import {
+  _registerLayoutBlockIfNeeded,
+  isBlockRegistryFrozen,
+} from "discourse/lib/blocks/-internals/registry/block";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 import { validateLayout } from "discourse/lib/blocks/-internals/validation/layout";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -48,53 +59,268 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
  * A block entry in a layout configuration.
  *
  * @typedef {Object} LayoutEntry
- * @property {typeof Component | string} block - The block component class (must use @block decorator) or a registered block name string.
+ * @property {typeof Component | string} block - The block component class (must use the `@block` decorator) or a registered block name string.
+ * @property {string} [id] - Unique identifier for BEM styling and targeting.
  * @property {Object} [args] - Args to pass to the block component.
  * @property {string|string[]} [classNames] - Additional CSS classes for the block wrapper.
  * @property {Array<LayoutEntry>} [children] - Nested block entries (only for container blocks).
  * @property {Array<Object>|Object} [conditions] - Conditions that must pass for block to render.
  * @property {Object} [containerArgs] - Args passed from parent container's childArgs.
+ * @property {number} [__stableKey] - Stable key minted at registration time so
+ *   Ember's `{{#each key=}}` and external tooling can correlate this entry
+ *   across re-renders. Assigned by `assignStableKeys`.
+ * @property {string[]} [__argKeys] - Snapshot of the initial `args` keys taken
+ *   at wrap time. Lets consumers enumerate keys without touching the
+ *   `trackedObject` collection tag (which would invalidate on every set).
+ * @property {string[]} [__containerArgKeys] - Same as `__argKeys` but for the
+ *   `containerArgs` snapshot.
+ * @property {string} [__failureType] - Set by the validator when an entry
+ *   fails permissively (session-draft layer). Cleared on a successful revalidate.
+ * @property {string} [__failureReason] - Human-readable failure message paired
+ *   with `__failureType`.
+ * @property {boolean} [__visible] - Whether the entry currently passes its
+ *   conditions; set by the per-render condition evaluator.
  */
 
 /**
- * Maps outlet names to their registered outlet layouts.
- * Each outlet can have exactly one layout registered.
- *
- * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps
- *
- * @type {Map<string, {validatedLayout: Promise<Array<Object>>}>}
+ * @typedef {Object} LayerEntry
+ * @property {Promise<Array<LayoutEntry>>} validatedLayout - Promise resolving to the validated layout array.
+ * @property {Array<LayoutEntry>} layout - The raw layout array (synchronously accessible).
+ * @property {Array<Object>} validationWarnings - Tracked array of warnings collected during permissive validation. Populated asynchronously.
+ * @property {number} [themeId] - The theme id (only set on entries in the "theme" layer).
  */
-const outletLayouts = new Map();
+
+/**
+ * @typedef {Object} PerOutletRecord
+ * @property {LayerEntry|undefined} session-draft - In-memory layout edits scoped to the current session (highest precedence).
+ * @property {LayerEntry[]} theme - One entry per theme in the active stack, ordered by stack position. Last in array wins.
+ * @property {LayerEntry|undefined} code-default - The layout registered via api.renderBlocks (lowest precedence).
+ */
+
+/**
+ * Layer names for the layout resolution chain. Listed from highest precedence
+ * to lowest. Within the "theme" layer, ordering follows the theme stack — the
+ * last theme to register a layout for an outlet wins.
+ *
+ * Layers exist for in-session editing support and theme integration:
+ * - "session-draft": in-memory layout edits scoped to the current session.
+ *   Highest precedence, so an in-progress edit overrides the saved theme /
+ *   code-default layout. Cleared on exit, save, or discard.
+ * - "theme": layouts shipped by themes via `block_layout` ThemeFields. Hydrated
+ *   at boot from the active theme stack.
+ * - "code-default": the existing `api.renderBlocks(...)` registration path.
+ *   What plugins / core ship as the default layout for an outlet.
+ */
+export const LAYOUT_LAYERS = Object.freeze({
+  SESSION_DRAFT: "session-draft",
+  THEME: "theme",
+  CODE_DEFAULT: "code-default",
+});
+
+/** @type {string[]} */
+const LAYER_VALUES = Object.values(LAYOUT_LAYERS);
+
+/**
+ * Maps outlet names to their per-layer record. Each outlet can hold one entry
+ * per layer; resolution walks the layers in precedence order and returns the
+ * highest-priority entry that has been set.
+ *
+ * Stored as a `trackedMap` so that mutations (a layer being set or cleared)
+ * trigger `BlockOutlet#validatedLayout` to re-evaluate, causing the affected
+ * outlet to re-render with the newly-resolved layout.
+ *
+ * Per-outlet records are themselves replaced wholesale on every mutation
+ * (immutable updates) so the trackedMap's `set` notification fires reliably.
+ *
+ * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps.
+ *
+ * @type {Map<string, PerOutletRecord>}
+ */
+const outletLayouts = trackedMap();
 
 /**
  * Counter for generating stable entry keys.
- * Incremented for each block entry when a layout is registered via `_renderBlocks()`.
+ * Incremented for each block entry that doesn't already carry a `__stableKey`,
+ * either at first registration or for newly-inserted entries during edit-
+ * driven layer publishes.
  *
  * @type {number}
  */
 let nextEntryKey = 0;
 
 /**
- * Recursively assigns stable keys to all block entries in a layout.
+ * WeakSet of entry args objects we've already wrapped in `trackedObject`,
+ * used to avoid double-wrapping when `assignStableKeys` re-runs over a layout
+ * that's already been registered once (for example when a theme layer is
+ * republished via MessageBus, or when a session-draft layout is re-emitted
+ * during in-session editing).
+ *
+ * @type {WeakSet<Object>}
+ */
+const _trackedArgsCache = new WeakSet();
+
+/**
+ * Companion to `_trackedArgsCache` for the entry shell itself. Lets us
+ * recognise wrapped entries on re-entry into `assignStableKeys` (re-publish,
+ * draft clone) so we don't wrap-the-wrap.
+ *
+ * @type {WeakSet<Object>}
+ */
+const _trackedEntryCache = new WeakSet();
+
+/**
+ * Recursively assigns stable keys to all block entries in a layout, and
+ * wraps each entry's `args` in a `trackedObject` so edit-driven mutations
+ * (e.g. `entry.args.title = "new"`) propagate reactively through the
+ * compute-ref proxy created by `curryComponent` to the rendered block —
+ * no layout swap or component re-curry needed.
  *
  * Each entry receives a `__stableKey` property that remains constant across
  * renders. This is critical for Ember's `{{#each key=}}` to maintain DOM
- * identity when blocks are hidden/shown by conditions.
+ * identity when blocks are hidden/shown by conditions, and for external
+ * tooling to correlate rendered blocks with their layout entries across
+ * mutations.
  *
- * Keys are assigned at registration time (in `_renderBlocks()`) rather than
- * render time, ensuring they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
+ * Keys are assigned at registration time rather than render time, ensuring
+ * they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
  *
- * @param {Array<Object>} entries - The block entries to process.
+ * @param {Array<LayoutEntry>} entries - The block entries to process.
+ * @param {Object} [options]
+ * @param {boolean} [options.skipExisting=false] - When true, entries that
+ *   already have a `__stableKey` are left alone. Used by layer-publishing
+ *   helpers so edit-driven replacements preserve the identity of unchanged
+ *   entries (selection, DOM identity, render cache).
  */
-function assignStableKeys(entries) {
-  for (const entry of entries) {
-    entry.__stableKey = nextEntryKey++;
+function assignStableKeys(entries, { skipExisting = false } = {}) {
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i];
+    if (!skipExisting || entry.__stableKey === undefined) {
+      entry.__stableKey = nextEntryKey++;
+    }
 
-    // Recursively assign keys to children
-    if (entry.children?.length) {
-      assignStableKeys(entry.children);
+    // Auto-register class refs by their decorator-assigned name so the
+    // saved layout's string references resolve on reload. Themes that
+    // pass class refs to `api.renderBlocks` typically don't bother with
+    // an explicit `api.registerBlock(...)` — the class works fine as a
+    // direct render-time reference. But a persisted layout is saved as
+    // JSON (string refs only), so the next page load tries to resolve
+    // those strings via the registry. Without this auto-register, every
+    // theme block reachable through a layout edit would 404 on reload.
+    if (typeof entry.block === "function") {
+      _registerLayoutBlockIfNeeded(entry.block);
+    }
+
+    if (entry.args && !_trackedArgsCache.has(entry.args)) {
+      const initialArgs = { ...entry.args };
+      const wrapped = trackedObject(initialArgs);
+      _trackedArgsCache.add(wrapped);
+      entry.args = wrapped;
+      // Snapshot the initial set of arg keys at wrap time. Consumers like
+      // `createBlockArgsWithReactiveGetters` need to enumerate the keys, but
+      // calling `Object.keys(entry.args)` (or anything that triggers the
+      // Proxy's `ownKeys` trap) would consume `trackedObject`'s collection
+      // tag — which is dirtied on every set, not just on add/delete. That
+      // would invalidate `BlockOutletRootContainer.processedChildren`
+      // (which builds curries inside its tracked computation) on every
+      // edit, forcing every container to re-curry even though the keys
+      // haven't actually changed. Caching the keys here lets consumers
+      // read them without ever opening the collection-tag dep.
+      entry.__argKeys = Object.keys(initialArgs);
+    }
+
+    // Same reactivity treatment for `containerArgs` (values the parent
+    // container reads from its `@children`). Without this, a mutation
+    // like `entry.containerArgs.column = "3"` wouldn't propagate to the
+    // parent's render — the parent's template reads `child.containerArgs.X`
+    // and needs a tracked Proxy to register a per-key dep at render time.
+    if (entry.containerArgs && !_trackedArgsCache.has(entry.containerArgs)) {
+      const initialContainerArgs = { ...entry.containerArgs };
+      const wrapped = trackedObject(initialContainerArgs);
+      _trackedArgsCache.add(wrapped);
+      entry.containerArgs = wrapped;
+      entry.__containerArgKeys = Object.keys(initialContainerArgs);
+    }
+
+    // Wrap the entry shell itself so writes to its top-level fields
+    // (`__failureType`, `__failureReason`, `__visible`, `children`,
+    // `conditions`, …) participate in autotracking. The validator stamps
+    // soft-failure fields directly on the entry; clearing them via
+    // `clearValidatorStamps` would otherwise be invisible to Glimmer
+    // and anything that reads those fields would keep showing a stale
+    // error after it has been fixed.
+    //
+    // Unlike `args` / `containerArgs`, we don't snapshot an entry-level
+    // key list: no live consumer iterates the entry as a whole (the only
+    // `Object.keys(entry)` call sits in core's pre-registration validator
+    // path), so there's no collection-tag dep to defend against.
+    if (!_trackedEntryCache.has(entry)) {
+      const wrapped = trackedObject(entry);
+      _trackedEntryCache.add(wrapped);
+      entries[i] = wrapped;
+      if (wrapped.children?.length) {
+        assignStableKeys(wrapped.children, { skipExisting });
+      }
+    } else if (entry.children?.length) {
+      assignStableKeys(entry.children, { skipExisting });
     }
   }
+}
+
+/**
+ * Builds an empty per-outlet record. All layers start unset.
+ *
+ * @returns {PerOutletRecord}
+ */
+function makeEmptyRecord() {
+  return {
+    [LAYOUT_LAYERS.SESSION_DRAFT]: undefined,
+    [LAYOUT_LAYERS.THEME]: [],
+    [LAYOUT_LAYERS.CODE_DEFAULT]: undefined,
+  };
+}
+
+/**
+ * Returns true when a per-outlet record has no entries at any layer.
+ *
+ * @param {PerOutletRecord} record
+ * @returns {boolean}
+ */
+function isRecordEmpty(record) {
+  return (
+    !record[LAYOUT_LAYERS.SESSION_DRAFT] &&
+    record[LAYOUT_LAYERS.THEME].length === 0 &&
+    !record[LAYOUT_LAYERS.CODE_DEFAULT]
+  );
+}
+
+/**
+ * Walks the layers of a per-outlet record in precedence order and returns the
+ * first entry that has been set. Within the "theme" layer, the last entry in
+ * the stack wins (matching the existing theme-stack precedence rule).
+ *
+ * Reads from the trackedMap inside this function are tracked by Ember's
+ * autotracking — callers that read through here re-run when any layer in the
+ * record changes.
+ *
+ * @param {string} outletName
+ * @returns {LayerEntry|undefined}
+ */
+function resolveLayoutRecord(outletName) {
+  const layers = outletLayouts.get(outletName);
+  if (!layers) {
+    return undefined;
+  }
+  if (layers[LAYOUT_LAYERS.SESSION_DRAFT]) {
+    return layers[LAYOUT_LAYERS.SESSION_DRAFT];
+  }
+  const themeLayer = layers[LAYOUT_LAYERS.THEME];
+  if (themeLayer.length > 0) {
+    return themeLayer[themeLayer.length - 1];
+  }
+  if (layers[LAYOUT_LAYERS.CODE_DEFAULT]) {
+    return layers[LAYOUT_LAYERS.CODE_DEFAULT];
+  }
+  return undefined;
 }
 
 /**
@@ -110,18 +336,42 @@ export function _resetOutletLayoutsForTesting() {
 }
 
 /**
- * Returns the internal outlet layouts map for testing.
- * Allows tests to access validation promises to verify error handling.
+ * Returns a Map of outlet names to their currently-resolved layout entry.
+ * Snapshots the resolution at call time — consumers that need reactivity
+ * should call this from a tracked context.
  *
  * USE ONLY FOR TESTING PURPOSES.
  *
- * @returns {Map<string, {validatedLayout: Promise<Array<Object>>}>} The outlet layouts map.
+ * @returns {Map<string, LayerEntry>} The resolved outlet entries.
  */
 export function _getOutletLayouts() {
-  if (DEBUG) {
-    return outletLayouts;
+  if (!DEBUG) {
+    return new Map();
   }
-  return new Map();
+  /** @type {Map<string, LayerEntry>} */
+  const resolved = new Map();
+  for (const outletName of outletLayouts.keys()) {
+    const entry = resolveLayoutRecord(outletName);
+    if (entry) {
+      resolved.set(outletName, entry);
+    }
+  }
+  return resolved;
+}
+
+/**
+ * Returns the raw per-outlet records (full layer state) for introspection.
+ * Used by callers that need to detect whether a session-draft already exists
+ * for an outlet without having to track that bookkeeping themselves.
+ *
+ * @internal
+ * @returns {Map<string, PerOutletRecord>}
+ */
+export function _getRawOutletLayouts() {
+  if (!DEBUG) {
+    return new Map();
+  }
+  return outletLayouts;
 }
 
 /**
@@ -173,22 +423,15 @@ function resolveDecoratorClassNames(metadata, args) {
  *   schema, accessible to the parent but not to the child block itself.
  */
 function createChildBlock(entry, owner, debugContext = {}) {
-  const {
-    block: ComponentClass,
-    args = {},
-    containerArgs,
-    classNames,
-    id,
-  } = entry;
+  const { block: ComponentClass, containerArgs, classNames, id } = entry;
   const blockMeta = getBlockMetadata(ComponentClass);
   const isContainer = blockMeta?.isContainer ?? false;
 
-  // Apply default values from metadata before building args
-  const argsWithDefaults = applyArgDefaults(ComponentClass, args);
-
-  // Create block args with authorization token embedded.
-  // classNames are handled by wrappers, containerPath provides full path for debug logging.
-  const blockArgs = createBlockArgsWithReactiveGetters(argsWithDefaults, {
+  // Build the block's args via reactive getters that read directly from
+  // `entry.args` (a `trackedObject` after registration). Mutations to
+  // `entry.args` then propagate to the rendered block automatically, which
+  // is what powers live arg editing.
+  const blockArgs = createBlockArgsWithReactiveGetters(entry, ComponentClass, {
     children: debugContext.processedChildren,
     outletArgs: debugContext.outletArgs,
     outletName: debugContext.outletName,
@@ -201,7 +444,23 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // without knowing its configuration details
   const curried = curryComponent(ComponentClass, blockArgs, owner);
 
-  // All blocks are wrapped for consistent styling
+  // For decorator-driven className resolution we still need a snapshot of
+  // current args (a function-form `classNames(args)` shouldn't have to
+  // navigate `trackedObject` itself). Run inside `untrack` so the spread
+  // inside `applyArgDefaults` doesn't open tracked deps on the entry's
+  // `trackedObject` collection / per-key tags from this render context —
+  // those deps would invalidate the parent `processedChildren` getter on
+  // every keystroke, forcing every container to re-curry. Lazy reactive
+  // reads still happen via the curry's compute-ref proxy at render time;
+  // the snapshot here is intentionally a one-shot read.
+  const argsSnapshot = untrack(() =>
+    applyArgDefaults(ComponentClass, entry.args ?? {})
+  );
+
+  // All blocks are wrapped for consistent styling. Parent containers can
+  // augment the curried invocation with `@style` (e.g. CSS Grid placement)
+  // — the wrapper applies whatever the parent passes without itself
+  // knowing about layout modes.
   let wrappedComponent = wrapBlockLayout(
     {
       name: blockMeta?.blockName,
@@ -209,10 +468,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
       outletName: debugContext.outletName,
       isContainer,
       id,
-      decoratorClassNames: resolveDecoratorClassNames(
-        blockMeta,
-        argsWithDefaults
-      ),
+      decoratorClassNames: resolveDecoratorClassNames(blockMeta, argsSnapshot),
       classNames,
       Component: curried,
     },
@@ -226,14 +482,29 @@ function createChildBlock(entry, owner, debugContext = {}) {
       {
         name: blockMeta?.blockName,
         id,
+        // The composite stable key for this entry (`${blockName}:${__stableKey}`),
+        // minted in entry-processing.js. Exposed here so debug consumers can
+        // correlate a rendered block back to its layout entry without inventing
+        // their own identifier.
+        key: debugContext.key,
         Component: wrappedComponent,
-        args: argsWithDefaults,
+        args: argsSnapshot,
         containerArgs,
         conditions: debugContext.conditions,
         conditionsPassed: true,
       },
       {
+        // `outletName` here is historically the rendered block's display
+        // hierarchy (e.g. `"homepage-blocks/section-1(#hero)"`) — that's
+        // what dev-tools' overlay surfaces as a block's location. Kept
+        // unchanged for backward compatibility.
         outletName: debugContext.displayHierarchy,
+        // The real, registry-level outlet that owns this entry (the same
+        // string the block layer was registered against). Consumers that
+        // need to address the layout — e.g. a `moveBlock` operation —
+        // read this; the `outletName` field above is the human-readable
+        // hierarchy and won't match the registry for nested blocks.
+        rootOutletName: debugContext.outletName,
         outletArgs: debugContext.outletArgs,
       }
     );
@@ -262,7 +533,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
         {
           name: blockMeta?.blockName,
           id,
-          args: argsWithDefaults,
+          args: argsSnapshot,
           containerArgs,
           conditions: debugContext.conditions,
           failureReason: reason,
@@ -293,11 +564,267 @@ function createChildBlock(entry, owner, debugContext = {}) {
 }
 
 /**
+ * Builds a layer entry whose `validatedLayout` is a memoized lazy getter —
+ * validation only kicks off the first time someone reads the property,
+ * and every subsequent read returns the same Promise. This lets callers
+ * choose between eager validation (read immediately, e.g. tests, the
+ * `api.renderBlocks` path) and lazy validation (don't read at publish
+ * time, let `BlockOutlet`'s render path trigger it later).
+ *
+ * Lazy validation matters for the boot-time theme hydration: layouts
+ * loaded from `block_layout` ThemeFields reference blocks by string
+ * name. Validation has to look those names up in the block registry. If
+ * we trigger validation at hydration time, we race theme api-initializers
+ * that register blocks by side-effect of calling `api.renderBlocks(class-
+ * ref)`. Deferring validation until `BlockOutlet` first reads
+ * `validatedLayout` (which happens at render time, after every
+ * initializer has settled) sidesteps the race entirely.
+ */
+function createLayerEntry({
+  layout,
+  outletName,
+  blocksService,
+  callSiteError,
+  themeId,
+  permissive = false,
+}) {
+  /** @type {Promise<Array<LayoutEntry>>|null} */
+  let validationPromise = null;
+  /** @type {LayerEntry} */
+  // @ts-expect-error - validatedLayout is defined below via defineProperty.
+  // `validationWarnings` is `trackedArray` so consumers re-render when
+  // validation completes async — without it the array would mutate after
+  // a consumer has already read it, leaving a stale count until the next
+  // structural change.
+  const entry = { layout, validationWarnings: trackedArray() };
+  if (themeId !== undefined) {
+    entry.themeId = themeId;
+  }
+  Object.defineProperty(entry, "validatedLayout", {
+    get() {
+      if (!validationPromise) {
+        if (permissive) {
+          // Per-entry isolation: validateLayout's per-entry try/catch
+          // marks each failing entry with `__failureType` /
+          // `__failureReason` and continues to the next entry. The
+          // collected messages land on `entry.validationWarnings`
+          // (trackedArray, so consumers update reactively when validation
+          // resolves async).
+          //
+          // `collect: true` opts into per-entry arg accumulation — every
+          // failing arg surfaces at once instead of having to fix one,
+          // re-validate, see the next ("whack-a-mole"). Strict
+          // mode (`api.renderBlocks` callers) doesn't set this flag and
+          // keeps the original fail-fast behaviour.
+          const validationContext = {
+            seenIds: new Map(),
+            permissive: true,
+            collect: true,
+            warnings: [],
+          };
+          validationPromise = validateLayout(
+            layout,
+            outletName,
+            blocksService,
+            "",
+            callSiteError,
+            null,
+            null,
+            null,
+            0,
+            validationContext
+          ).then(() => {
+            for (const w of validationContext.warnings) {
+              entry.validationWarnings.push(w);
+            }
+            return layout;
+          });
+        } else {
+          validationPromise = validateLayout(
+            layout,
+            outletName,
+            blocksService,
+            "",
+            callSiteError
+          ).then(() => layout);
+        }
+      }
+      return validationPromise;
+    },
+    enumerable: true,
+  });
+  return entry;
+}
+
+/**
+ * Sets the layout for one specific layer of an outlet. Used internally by
+ * `_renderBlocks` (the existing `code-default` registration path), the theme-
+ * load initializer (the `theme` layer), and in-session editing (the
+ * `session-draft` layer).
+ *
+ * The per-outlet record is replaced wholesale (immutable update) so the
+ * trackedMap notifies subscribers reliably. Stable keys on the supplied
+ * layout are preserved (`skipExisting: true`); newly-introduced entries
+ * receive fresh keys.
+ *
+ * Validation is memoized lazily on the layer entry. By default
+ * (`options.lazy` falsy), this function reads the entry's
+ * `validatedLayout` before returning it — which kicks off validation
+ * eagerly, matching the historical behavior of `api.renderBlocks` and
+ * the test suite. Pass `options.lazy: true` to skip the eager read; the
+ * Promise then only materialises when `BlockOutlet` first reads the
+ * entry at render time (used by boot-time theme hydration to avoid
+ * racing theme api-initializers that register blocks).
+ *
+ * @internal Not part of the public plugin API. Use `api.setLayoutLayer` from
+ *   plugin code.
+ *
+ * @param {string} outletName
+ * @param {string} layer - One of `LAYOUT_LAYERS`.
+ * @param {Array<LayoutEntry>} layout
+ * @param {import("@ember/owner").default} [owner]
+ * @param {Object} [options]
+ * @param {number} [options.themeId] - Required when layer is "theme".
+ * @param {boolean} [options.lazy=false] - When true, defers validation
+ *   until the entry's `validatedLayout` is first read (typically by
+ *   `BlockOutlet` at render time).
+ * @param {boolean} [options.permissive=false] - When true, validation
+ *   errors don't reject the `validatedLayout` promise. Instead the error
+ *   is captured on the layer entry's `validationWarnings` and the layout
+ *   is returned as-is. Used by the `session-draft` layer
+ *   so legitimate mid-edit invalid states (empty container after a drag,
+ *   typo in a block name, etc.) don't crash the page. Code-default and
+ *   theme layers are not permissive — they represent committed state
+ *   that should be valid; a failure there really is a malformed install.
+ * @param {Error|null} [options.callSiteError]
+ * @returns {Promise<Array<LayoutEntry>>|undefined} The validated layout
+ *   promise (eager mode) or `undefined` (lazy mode).
+ * @throws {Error} If validation fails (in strict mode) or the layer /
+ *   outlet is unknown.
+ */
+export function _setLayoutLayer(
+  outletName,
+  layer,
+  layout,
+  owner,
+  options = {}
+) {
+  if (!BLOCK_OUTLETS.includes(outletName)) {
+    raiseBlockError(`Unknown block outlet: ${outletName}`);
+  }
+  if (!LAYER_VALUES.includes(layer)) {
+    raiseBlockError(
+      `Unknown layout layer: "${layer}". Valid layers are: ${LAYER_VALUES.map((l) => `"${l}"`).join(", ")}.`
+    );
+  }
+  if (layer === LAYOUT_LAYERS.THEME && options.themeId == null) {
+    raiseBlockError(
+      `setLayoutLayer requires options.themeId when layer is "theme".`
+    );
+  }
+  if (!isBlockRegistryFrozen()) {
+    raiseBlockError(
+      `_setLayoutLayer() was called before the block registry was frozen. ` +
+        `Move your code to an initializer that runs after "freeze-block-registry". ` +
+        `Outlet: "${outletName}", layer: "${layer}".`
+    );
+  }
+
+  const callSiteError =
+    options.callSiteError ?? captureCallSite(_setLayoutLayer);
+  const blocksService = owner?.lookup("service:blocks");
+
+  // Mint stable keys; preserve any that already exist so edit-driven
+  // republishes don't tear down DOM identity for unchanged entries.
+  assignStableKeys(layout, { skipExisting: true });
+
+  const layerEntry = createLayerEntry({
+    layout,
+    outletName,
+    blocksService,
+    callSiteError,
+    themeId: layer === LAYOUT_LAYERS.THEME ? options.themeId : undefined,
+    permissive: options.permissive ?? false,
+  });
+
+  const existing = outletLayouts.get(outletName) ?? makeEmptyRecord();
+  let nextRecord;
+  if (layer === LAYOUT_LAYERS.THEME) {
+    // Replace the entry for this themeId (if present) or append. Order is
+    // governed by call order — callers (the theme-load initializer) should
+    // register layers in theme-stack order.
+    const themes = existing[LAYOUT_LAYERS.THEME];
+    const idx = themes.findIndex((t) => t.themeId === options.themeId);
+    const newThemes =
+      idx >= 0
+        ? [...themes.slice(0, idx), layerEntry, ...themes.slice(idx + 1)]
+        : [...themes, layerEntry];
+    nextRecord = { ...existing, [LAYOUT_LAYERS.THEME]: newThemes };
+  } else {
+    nextRecord = { ...existing, [layer]: layerEntry };
+  }
+
+  outletLayouts.set(outletName, nextRecord);
+
+  if (options.lazy) {
+    return undefined;
+  }
+  return layerEntry.validatedLayout;
+}
+
+/**
+ * Clears one layer's entry for an outlet. For the "theme" layer, an
+ * `options.themeId` targets a specific theme; omitting it clears all themes
+ * for the outlet.
+ *
+ * If clearing leaves the outlet with no entries at any layer, the outlet's
+ * record is removed entirely from the map (so `_hasLayout` returns false).
+ *
+ * @internal
+ *
+ * @param {string} outletName
+ * @param {string} layer
+ * @param {Object} [options]
+ * @param {number} [options.themeId]
+ */
+export function _clearLayoutLayer(outletName, layer, options = {}) {
+  if (!LAYER_VALUES.includes(layer)) {
+    raiseBlockError(`Unknown layout layer: "${layer}".`);
+  }
+  const existing = outletLayouts.get(outletName);
+  if (!existing) {
+    return;
+  }
+
+  let nextRecord;
+  if (layer === LAYOUT_LAYERS.THEME) {
+    if (options.themeId == null) {
+      nextRecord = { ...existing, [LAYOUT_LAYERS.THEME]: [] };
+    } else {
+      nextRecord = {
+        ...existing,
+        [LAYOUT_LAYERS.THEME]: existing[LAYOUT_LAYERS.THEME].filter(
+          (t) => t.themeId !== options.themeId
+        ),
+      };
+    }
+  } else {
+    nextRecord = { ...existing, [layer]: undefined };
+  }
+
+  if (isRecordEmpty(nextRecord)) {
+    outletLayouts.delete(outletName);
+  } else {
+    outletLayouts.set(outletName, nextRecord);
+  }
+}
+
+/**
  * Registers an outlet layout (array of block entries) for a named outlet.
  *
  * This is the main entry point for plugins to render blocks in designated areas.
- * Each outlet can only have one layout registered. Attempting to register a
- * second layout throws an error.
+ * Each outlet can only have one `code-default` layout. Theme and session-draft
+ * layouts go through `_setLayoutLayer` instead.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -308,7 +835,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * @param {Error|null} [callSiteError] - Pre-captured error for source-mapped stack traces.
  *   When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
  * @returns {Promise<Array<Object>>} Promise resolving to the validated layout array.
- * @throws {Error} If validation fails or outlet already has a layout.
+ * @throws {Error} If validation fails or the outlet already has a code-default layout.
  *
  * @example
  * ```js
@@ -337,57 +864,38 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     callSiteError = captureCallSite(_renderBlocks);
   }
 
-  // Check for duplicate registration
-  if (outletLayouts.has(outletName)) {
+  // The "already has a layout" guard fires only when something has already
+  // registered on the code-default layer for this outlet. Theme and session-
+  // draft layers don't trip it — re-registering theme layouts (via MessageBus)
+  // and session drafts (via in-session editing) is expected and supported.
+  const existing = outletLayouts.get(outletName);
+  if (existing?.[LAYOUT_LAYERS.CODE_DEFAULT]) {
     raiseBlockError(
       `Block outlet "${outletName}" already has a layout registered.`
     );
   }
 
-  // Validate outlet name is known
-  if (!BLOCK_OUTLETS.includes(outletName)) {
-    raiseBlockError(`Unknown block outlet: ${outletName}`);
-  }
-
-  // Verify registries are frozen
-  if (!isBlockRegistryFrozen()) {
-    raiseBlockError(
-      `api.renderBlocks() was called before the block registry was frozen. ` +
-        `Move your code to an initializer that runs after "freeze-block-registry". ` +
-        `Outlet: "${outletName}"`
-    );
-  }
-
-  const blocksService = owner?.lookup("service:blocks");
-
-  // Assign stable keys to all entries
-  assignStableKeys(layout);
-
-  // Validate layout asynchronously
-  const validatedLayout = validateLayout(
-    layout,
+  return _setLayoutLayer(
     outletName,
-    blocksService,
-    "", // parentPath - empty so paths start with array index like [0]
-    callSiteError // Error object for source-mapped call site
-  ).then(() => layout);
-
-  // Store layout with validation promise for potential future use
-  outletLayouts.set(outletName, { validatedLayout });
-
-  return validatedLayout;
+    LAYOUT_LAYERS.CODE_DEFAULT,
+    layout,
+    owner,
+    {
+      callSiteError,
+    }
+  );
 }
 
 /**
- * Checks if a layout has been registered for a given outlet.
+ * Checks whether any layer has a layout registered for the given outlet.
  *
  * @internal This is an internal API. Use the `blocks` service's `hasLayout()` method instead.
  *
  * @param {string} outletName - The outlet identifier to check.
- * @returns {boolean} True if a layout is registered for this outlet.
+ * @returns {boolean} True if any layer has a layout for this outlet.
  */
 export function _hasLayout(outletName) {
-  return outletLayouts.has(outletName);
+  return resolveLayoutRecord(outletName) !== undefined;
 }
 
 /**
@@ -456,7 +964,7 @@ export default class BlockOutlet extends Component {
   }
 
   get validatedLayout() {
-    return outletLayouts.get(this.#name)?.validatedLayout;
+    return resolveLayoutRecord(this.#name)?.validatedLayout;
   }
 
   /**
