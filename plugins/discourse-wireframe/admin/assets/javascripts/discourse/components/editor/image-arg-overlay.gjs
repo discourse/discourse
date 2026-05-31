@@ -60,6 +60,17 @@ import ImageVariantDropPopover from "./image-variant-drop-popover";
  *   on the parent chrome runs AFTER our `setupPositioning` for loaded
  *   layouts (the didInsert order is child-first when both modifiers
  *   are scheduled in the same render pass).
+ * @property {boolean} [externalDragOver] - For a passive background
+ *   marker only: `true` while a file is dragged over the block body. The
+ *   chrome detects the drag; this drives the overlay's own drag handlers
+ *   (tint + dark-variant popover) via `syncExternalDrag`.
+ * @property {File} [pendingFile] - For a passive background marker only:
+ *   a file the chrome handed off after a body drop, uploaded through this
+ *   overlay's own Uppy pipeline via `uploadHandedFile`.
+ * @property {(phase: "enter"|"leave"|"drop") => void} [onForegroundDrag] -
+ *   Called by non-passive (foreground) overlays as a file drag enters /
+ *   leaves / drops on them, so the chrome can suppress the passive
+ *   background overlay while a foreground image is the drag target.
  */
 export default class ImageArgOverlay extends Component {
   @service menu;
@@ -178,15 +189,43 @@ export default class ImageArgOverlay extends Component {
   }
 
   /**
+   * `true` when this overlay's block is the selected one.
+   *
+   * @returns {boolean}
+   */
+  get isSelected() {
+    return this.wireframe.selectedBlockKey === this.args.blockKey;
+  }
+
+  /**
+   * Whether to render the empty-state content (icon + "Add X" label).
+   * Always for a non-passive empty arg (its marker is only positioned
+   * when revealed, so it self-gates). For a passive background — which
+   * `data-drop-fills-block` keeps always positioned — only when the card
+   * is selected (the idle hint) OR while a file is dragged over it (drag
+   * feedback); otherwise the bare hint would show on every unselected
+   * empty card. An in-progress upload takes precedence in the template.
+   *
+   * @returns {boolean}
+   */
+  get showEmptyContent() {
+    return (
+      this.args.isEmpty &&
+      (!this.markerPassive || this.isSelected || this.isDragOver)
+    );
+  }
+
+  /**
    * `true` when the filled overlay's dark-variant popover should
    * be available. Requires the arg to opt into dark variants, a
    * light image to already exist (dark without light is meaningless
    * — the renderer needs a fallback for the default color-scheme
-   * media query), and a non-passive marker (passive markers never
-   * receive the drag events that open the popover).
+   * media query). Works for passive backgrounds too: the chrome's body
+   * drag drives `onExternalDragEnter` via `syncExternalDrag`, which opens
+   * the popover anchored to this (full-card) overlay.
    */
   get showsVariantPicker() {
-    if (!this.args.argDef?.allowDark || this.markerPassive) {
+    if (!this.args.argDef?.allowDark) {
       return false;
     }
     return !this.args.isEmpty;
@@ -294,16 +333,14 @@ export default class ImageArgOverlay extends Component {
   @action
   registerOverlay(el) {
     this.#overlayEl = el;
-    // Passive (behind-content) markers are hint-only: no upload
-    // pipeline, so they never intercept clicks or drops.
-    if (this.#markerIsPassive()) {
-      return;
-    }
     this.#bootUppy();
-    // Filled overlays have no file input, so wire the drop target now.
-    // Interactive empty overlays defer to `registerFileInput`, which
-    // runs a single `setup(el)` once the input mounts.
-    if (!this.args.isEmpty) {
+    // Filled (and passive) overlays wire the drop target now; interactive
+    // empty overlays defer to `registerFileInput`, which runs a single
+    // `setup(el)` once the input mounts. A passive overlay is
+    // `pointer-events: none`, so its drop target is inert — the chrome
+    // handles body drops and hands the file to `uploadHandedFile` — but
+    // Uppy still needs `setup()` so that upload can run.
+    if (!this.isInteractiveEmpty) {
       this.#uppyUpload.setup();
     }
   }
@@ -422,6 +459,13 @@ export default class ImageArgOverlay extends Component {
    */
   @action
   onExternalDragEnter() {
+    // Report to the chrome so it can suppress the full-bleed background
+    // overlay while a foreground image (e.g. the avatar) is the drag
+    // target — only one image-drop overlay shows at a time. Passive
+    // backgrounds are the ones being suppressed, so they don't report.
+    if (!this.markerPassive) {
+      this.args.onForegroundDrag?.("enter");
+    }
     this.overlayHovered = true;
     // Cancel any pending close from a brief excursion onto the
     // popover and back — we re-use FloatKit's own hover-grace
@@ -432,6 +476,9 @@ export default class ImageArgOverlay extends Component {
 
   @action
   onExternalDragLeave() {
+    if (!this.markerPassive) {
+      this.args.onForegroundDrag?.("leave");
+    }
     this.overlayHovered = false;
     // Only schedule a close when the popover isn't holding the
     // hover state on its own. That guard makes the schedule /
@@ -446,12 +493,48 @@ export default class ImageArgOverlay extends Component {
 
   @action
   onExternalDrop() {
+    if (!this.markerPassive) {
+      this.args.onForegroundDrag?.("drop");
+    }
     this.overlayHovered = false;
     this.#closeVariantPopover();
   }
 
-  #markerIsPassive() {
-    return !!this.markerEl?.hasAttribute("data-drop-passive");
+  /**
+   * Mirrors the chrome's body-drag state into this overlay's own drag
+   * handlers for a passive background. The chrome owns the drop (the
+   * overlay stays click-through), but the tint + dark-variant popover are
+   * the overlay's existing machinery — so a body drag drives them through
+   * the same `onExternalDragEnter` / `onExternalDragLeave` path the
+   * interactive overlays use. Non-passive overlays use their own drag
+   * events and ignore this. Wired to `@externalDragOver` via `didUpdate`.
+   */
+  @action
+  syncExternalDrag() {
+    if (!this.markerPassive) {
+      return;
+    }
+    if (this.args.externalDragOver) {
+      this.onExternalDragEnter();
+    } else {
+      this.onExternalDragLeave();
+    }
+  }
+
+  /**
+   * Uploads a file the chrome handed off after a body drop, routing it
+   * through this overlay's own Uppy + `uploadDone` pipeline so the
+   * progress bar, value write, and block selection all reuse the shared
+   * path. Passive markers only; non-passive overlays handle their own
+   * drops. Wired to `@pendingFile` via `didUpdate`, so it fires once per
+   * dropped file (not on the empty→filled remount).
+   */
+  @action
+  uploadHandedFile() {
+    if (!this.markerPassive || !this.args.pendingFile) {
+      return;
+    }
+    this.#bootUppy().addFiles(this.args.pendingFile);
   }
 
   #bootUppy() {
@@ -652,6 +735,8 @@ export default class ImageArgOverlay extends Component {
       {{didInsert this.registerOverlay}}
       {{didInsert this.setupPositioning}}
       {{didUpdate this.measure this.remeasureSignal}}
+      {{didUpdate this.syncExternalDrag @externalDragOver}}
+      {{didUpdate this.uploadHandedFile @pendingFile}}
       {{willDestroy this.teardown}}
       {{on "click" this.onActivate}}
       {{on "keydown" this.onKeyActivate}}
@@ -679,7 +764,7 @@ export default class ImageArgOverlay extends Component {
             }}
           </span>
         </div>
-      {{else if @isEmpty}}
+      {{else if this.showEmptyContent}}
         <div class="wireframe-image-arg-overlay__content">
           {{dIcon "image"}}
           <span class="wireframe-image-arg-overlay__label">

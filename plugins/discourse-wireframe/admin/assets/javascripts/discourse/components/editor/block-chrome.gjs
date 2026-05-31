@@ -71,6 +71,32 @@ export default class BlockChrome extends Component {
    * div's `didInsert` fires, otherwise capturing a stale `null`).
    */
   @tracked chromeEl = null;
+
+  /**
+   * `true` while a file is dragged over the block body. Handed to the
+   * block's passive background `ImageArgOverlay`, which drives its own
+   * drag-over tint and dark-variant popover from it — the chrome only
+   * detects the drag (it can't host the interactive overlay itself
+   * without hijacking clicks meant for the block content).
+   */
+  @tracked externalDragOver = false;
+
+  /**
+   * `true` while a file is dragged over a FOREGROUND image overlay of
+   * this block (e.g. the avatar). Reported by those overlays via
+   * `onForegroundImageDrag`; gates the background overlay off so only one
+   * image-drop overlay shows at a time (the deeper foreground one wins).
+   */
+  @tracked foregroundImageHovered = false;
+
+  /**
+   * The most recent file dropped on the block body, handed to the
+   * background overlay to upload through its own pipeline (progress bar,
+   * value write). A fresh `File` per drop, so the overlay's `didUpdate`
+   * fires once per drop.
+   */
+  @tracked pendingBackgroundFile = null;
+
   acceptedDragKinds = ["wf-block", "wf-palette-block"];
 
   /**
@@ -568,6 +594,19 @@ export default class BlockChrome extends Component {
       ...e,
       key: `${e.name}:${e.isEmpty}`,
     }));
+  }
+
+  /**
+   * The body-drag state handed to the passive background overlay: a file
+   * is over the block body AND not over a foreground image (the avatar).
+   * Gating on `foregroundImageHovered` keeps a single image-drop overlay
+   * visible at a time — the avatar wins in its slot, the background
+   * elsewhere.
+   *
+   * @returns {boolean}
+   */
+  get backgroundExternalDragOver() {
+    return this.externalDragOver && !this.foregroundImageHovered;
   }
 
   /**
@@ -1075,27 +1114,58 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Uploads a file dropped anywhere on the block body to the block's
-   * passive ("background") image arg. Per-arg image overlays (e.g. the
-   * avatar slot) are deeper external drop targets, so PDND routes drops
-   * over them there instead — only body drops bubble up to this handler.
+   * Tracks whether a file is dragged over the block body, driving the
+   * background overlay through `backgroundExternalDragOver`. Set on enter,
+   * cleared on leave / drop. Moving onto a foreground image (the avatar)
+   * is handled by `foregroundImageHovered` rather than relying on a leave
+   * here (PDND doesn't fire a reliable leave when the cursor enters a
+   * nested target while staying inside the chrome's bounds).
+   */
+  @action
+  onBackgroundDragEnter() {
+    this.externalDragOver = true;
+  }
+
+  @action
+  onBackgroundDragLeave() {
+    this.externalDragOver = false;
+  }
+
+  /**
+   * Reported by this block's FOREGROUND image overlays (e.g. the avatar)
+   * as a file drag enters / leaves / drops on them, so only one image-drop
+   * overlay shows at a time: while a foreground image is the drag target,
+   * `backgroundExternalDragOver` goes false and the full-bleed background
+   * overlay (tint + dark popover) steps aside. A `"drop"` ends the drag,
+   * so it also clears the body drag state.
+   *
+   * @param {"enter"|"leave"|"drop"} phase
+   */
+  @action
+  onForegroundImageDrag(phase) {
+    this.foregroundImageHovered = phase === "enter";
+    if (phase === "drop") {
+      this.externalDragOver = false;
+    }
+  }
+
+  /**
+   * Hands a file dropped anywhere on the block body to the block's
+   * passive ("background") image overlay, which uploads it through its
+   * own pipeline (progress bar, value write, block selection). Per-arg
+   * image overlays (e.g. the avatar slot) are deeper external drop
+   * targets, so PDND routes drops over them there instead — only body
+   * drops reach this handler.
    *
    * @param {{source: {getFiles: () => File[]}}} payload
    */
   @action
-  async onBackgroundFileDrop({ source }) {
-    const argName = this.#passiveImageArgName();
+  onBackgroundFileDrop({ source }) {
+    this.externalDragOver = false;
     const file = source?.getFiles?.()?.[0];
-    if (!argName || !file) {
-      return;
+    if (file) {
+      this.pendingBackgroundFile = file;
     }
-    // Select first so the inspector reflects the block while the upload
-    // resolves and writes the value.
-    this.#selectThisBlock();
-    await this.wireframe.uploadImageForArg(file, {
-      blockKey: this.args.blockKey,
-      argName,
-    });
   }
 
   /**
@@ -1275,7 +1345,10 @@ export default class BlockChrome extends Component {
             this inert for blocks that have no background. }}
           {{dDragAndDropExternalTarget
             accepts="files"
+            indicator=false
             canDrop=this.canDropBackgroundFile
+            onDragEnter=this.onBackgroundDragEnter
+            onDragLeave=this.onBackgroundDragLeave
             onDrop=this.onBackgroundFileDrop
           }}
           {{on "click" this.onClick}}
@@ -1363,6 +1436,9 @@ export default class BlockChrome extends Component {
               @argDef={{imageArg.def}}
               @isEmpty={{imageArg.isEmpty}}
               @getChromeEl={{this.getChromeEl}}
+              @externalDragOver={{this.backgroundExternalDragOver}}
+              @pendingFile={{this.pendingBackgroundFile}}
+              @onForegroundDrag={{this.onForegroundImageDrag}}
             />
           {{/each}}
 

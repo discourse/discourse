@@ -121,18 +121,23 @@
     }
   }
 
-  /* Empty image-arg markers — the avatar slot and the backdrop are kept
-     in the DOM so the chrome can anchor an "add image" overlay over
-     them, but they collapse on the live site. Revealed on the canvas
-     only when the card is selected (matching the decorative-affordance
-     behaviour of the empty text wrappers above). */
+  /* Empty image-arg markers are kept in the DOM so the chrome can anchor
+     an "add image" overlay over them, but they collapse on the live site.
+     The avatar slot is revealed on the canvas when the card is selected,
+     so its overlay (which tracks the slot's own rect) has a box to
+     measure. The backdrop needs no reveal: its overlay fills the whole
+     block (data-drop-fills-block) and measures the chrome rect, so it
+     stays positioned even while this stays display:none. */
 
-  &__avatar--empty,
-  &__backdrop--empty {
+  &__avatar--empty {
     display: none;
 
     .wireframe-block-chrome.--selected & {
       display: revert;
     }
+  }
+
+  &__backdrop--empty {
+    display: none;
   }
 }

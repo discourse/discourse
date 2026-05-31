@@ -170,16 +170,19 @@ export default class WFMediaCard extends Component {
     <div class="wf-media-card">
       {{! Always render the backdrop marker so the chrome can anchor an
           image overlay over it even with no background set. The empty
-          modifier collapses it on the live site; the chrome reveals it on
-          the canvas. data-drop-passive marks it as sitting behind the card
-          content, so its overlay stays click-through and never swallows
-          clicks meant for the title or CTA. }}
+          modifier collapses it on the live site. data-drop-passive marks
+          it as sitting behind the card content, so its overlay stays
+          click-through and never swallows clicks meant for the title or
+          CTA. data-drop-fills-block makes that overlay measure the whole
+          block, so it stays positioned (for the drag-over tint and upload
+          progress) even while this collapsed backdrop is display:none. }}
       <div
         class="wf-media-card__backdrop
           {{unless this.backdropStyle 'wf-media-card__backdrop--empty'}}"
         style={{this.backdropStyle}}
         data-block-arg="image"
         data-drop-passive
+        data-drop-fills-block
       ></div>
 
       <div class="wf-media-card__top">

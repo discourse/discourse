@@ -117,17 +117,6 @@ body.wireframe-active {
       background: rgb(217 119 6 / var(--wireframe-bg-opacity));
     }
 
-    /* External image file dragged over the block body. The chrome is the
-       deepest accepted file drop target there, so a drop sets the block's
-       background image. Dashed tertiary outline + faint tint, echoing the
-       per-image-arg overlay's own drag-over treatment. (Drags over a
-       deeper image overlay light up that overlay instead, not the chrome.) */
-
-    &.is-drag-over-external {
-      outline: 2px dashed var(--tertiary);
-      background: rgb(var(--tertiary-rgb), 0.18);
-    }
-
     /* When the chrome sits inside a `wf:slot` (grid cell), zero out the
        margin and the inner padding so the chrome's outline lands exactly
        on the cell's edges. The wrapper's before/after drop zones are
@@ -453,6 +442,12 @@ body.wireframe-active {
     justify-content: center;
     z-index: 3;
     color: var(--primary-medium);
+
+    /* Fade the drag-over tint in/out so handing the overlay off between
+       image args (e.g. body → avatar) reads as a smooth swap, not a flash. */
+    transition:
+      background-color 150ms ease,
+      outline-color 150ms ease;
 
     &--empty {
       cursor: pointer;
