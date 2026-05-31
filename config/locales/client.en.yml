@@ -6529,6 +6529,18 @@ en:
               title: "X summary large image"
               description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
               help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
+        design_system:
+          title: "Design System"
+          header_description: "Manage your site's design system — colors, fonts, and layout."
+          light: "Light"
+          dark: "Dark"
+          sub_pages:
+            colors:
+              title: "Colors"
+            fonts:
+              title: "Fonts"
+            layout:
+              title: "Layout"
         fonts:
           title: "Fonts"
           header_description: "Configure the fonts used throughout your site, including base font, heading font, and default text size"

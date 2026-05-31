@@ -454,6 +454,8 @@ Discourse::Application.routes.draw do
         get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
+        get "/design-system" => "design_system#index"
+        get "/design-system/:file_name/data" => "design_system#show"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
         get "upcoming-changes" => "upcoming_changes#index"

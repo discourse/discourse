@@ -293,6 +293,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("designSystem", { path: "/design-system" }, function () {
+          this.route("colors", { path: "/" });
+          this.route("fonts");
+          this.route("layout");
+        });
         this.route("other", function () {
           this.route("settings", {
             path: "/",

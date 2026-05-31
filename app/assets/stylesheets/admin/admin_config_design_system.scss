@@ -1,0 +1,64 @@
+// The Design System editor dogfoods the design-system tokens it manages.
+.design-system-editor {
+  // Generous space ABOVE each group title (below the tabs / the previous block);
+  // the title stays close to its own rows below.
+  &__group {
+    margin-block-start: var(--d-system-space-margin-2xl);
+  }
+
+  &__group-title {
+    margin-block: 0 var(--d-system-space-margin-sm);
+    font-size: var(--d-system-font-size-heading-sm);
+  }
+
+  &__head,
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--d-system-space-gap-md);
+    padding-block: var(--d-system-space-padding-sm);
+  }
+
+  &__head {
+    color: var(--d-system-color-text-subtle);
+    font-weight: var(--d-system-font-weight-strong);
+    border-block-end: 1px solid var(--d-system-color-border-default);
+  }
+
+  &__row {
+    border-block-end: 1px solid var(--d-system-color-border-subtle);
+  }
+
+  &__name {
+    flex: 0 0 14em;
+  }
+
+  &__col,
+  &__cell {
+    flex: 0 0 10em;
+  }
+
+  &__cell {
+    display: flex;
+    align-items: center;
+    gap: var(--d-system-space-gap-sm);
+  }
+
+  &__swatch {
+    inline-size: 1.75em;
+    block-size: 1.75em;
+    flex: none;
+    border: 1px solid var(--d-system-color-border-default);
+    border-radius: var(--d-system-radius-default);
+  }
+
+  &__value {
+    font-family: var(--d-system-font-family-code);
+  }
+
+  &__path {
+    color: var(--d-system-color-text-subtle);
+    font-size: var(--d-system-font-size-caption);
+    white-space: nowrap;
+  }
+}
