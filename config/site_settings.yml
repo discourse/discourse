@@ -4383,6 +4383,11 @@ dashboard:
     client: true
 
 experimental:
+  enable_design_system:
+    default: true
+    client: true
+    hidden: true
+    area: "experimental"
   reporting_improvements:
     default: false
     client: true

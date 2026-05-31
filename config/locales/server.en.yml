@@ -2841,6 +2841,7 @@ en:
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    enable_design_system: "Manage the site's colors, fonts, and layout from a single Design System admin section, driven by design tokens."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."

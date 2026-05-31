@@ -74,3 +74,7 @@ admin loads + nav swapped; disable → vanilla); `--token-*` consumers intact; `
 ## Dependencies
 
 P1→P3, P3→P4, P2→P4, (P1+POC)→P5, P5→P6. M1 ships on its own; each milestone is PR-sized.
+
+## Pre-merge checklist
+
+- **Revert `enable_design_system` default to `false`** — it's `true` on this branch only, so the design system is active for testing. It must not ship enabled.
