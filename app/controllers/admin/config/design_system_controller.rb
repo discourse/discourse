@@ -37,21 +37,10 @@ class Admin::Config::DesignSystemController < Admin::AdminController
   def system_tokens
     return @system_tokens if @system_tokens
     core = JSON.parse(File.read(DESIGN_SYSTEM_DIR.join("system.json")))
-    overrides = active_theme_overrides
-    @system_tokens = overrides.present? ? core.deep_merge("d-system" => overrides) : core
-  end
-
-  # The default theme's design-system.json overrides (rootless), merged so the
-  # editor shows the values actually in effect on the site, not just core defaults.
-  def active_theme_overrides
-    theme = Theme.find_by(id: SiteSetting.default_theme_id)
-    field =
-      theme&.theme_fields&.find_by(target_id: Theme.targets[:design_system], name: "design-system")
-    return {} if field.nil?
-
-    JSON.parse(field.value)
-  rescue JSON::ParserError
-    {}
+    # Merge the default theme's overrides so the editor shows the values actually
+    # in effect on the site, not just core defaults.
+    overrides = Theme.find_by(id: SiteSetting.default_theme_id)&.design_system_overrides || {}
+    @system_tokens = overrides.present? ? core.deep_merge(overrides) : core
   end
 
   # Resolve a token whose $value references a base token ("{d-base.x.y}") to its

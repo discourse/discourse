@@ -161,33 +161,12 @@ module Stylesheet
       DesignSystem::Tokens.css
     end
 
-    # A theme's semantic-token overrides (its rootless design-system.json files,
-    # merged across the theme + its components) wrapped under "d-system" for the
-    # resolver. Returns {} when the theme ships none.
-    def design_system_overrides
-      return {} if @theme_id.nil?
-
-      merged = {}
-      Theme
-        .list_baked_fields(Theme.transform_ids(@theme_id), :design_system, :"design-system")
-        .each do |field|
-          parsed =
-            begin
-              JSON.parse(field.value)
-            rescue JSON::ParserError
-              nil
-            end
-          merged.deep_merge!(parsed) if parsed.is_a?(Hash)
-        end
-      merged.empty? ? {} : { "d-system" => merged }
-    end
-
     # The theme's overridden --d-system-* properties as a :root{} block, injected
     # into its `common_theme` stylesheet so it wins over the core defaults.
     def import_theme_design_tokens(target)
-      return "" if target.to_s != "common_theme"
+      return "" if target.to_s != "common_theme" || theme.nil?
 
-      DesignSystem::Tokens.theme_css(design_system_overrides)
+      DesignSystem::Tokens.theme_css(theme.design_system_overrides)
     end
 
     def color_variables
@@ -211,24 +190,6 @@ module Stylesheet
       end
 
       colors.each { |n, hex| contents << "$#{n}: ##{hex} !default; " }
-
-      # A theme shipping design-system.json overrides its legacy anchors from the
-      # tokens, so the ramps (primary-low, tertiary-hover, …) recompute from them at
-      # compile time — no per-theme ColorScheme record needed.
-      overrides = design_system_overrides
-      if overrides.present?
-        mode =
-          (
-            if @color_scheme_id.present? && theme&.dark_color_scheme_id == @color_scheme_id
-              :dark
-            else
-              :light
-            end
-          )
-        DesignSystem::Tokens
-          .color_scheme(mode, overrides)
-          .each { |name, hex| contents << "$#{name}: ##{hex}; " }
-      end
 
       contents
     end

@@ -153,6 +153,8 @@ class Theme < ActiveRecord::Base
       changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
     any_extra_js_fields_changed = changed_fields.any?(&:extra_js_field?)
 
+    design_system_changed = changed_fields.any? { |f| f.target_id == Theme.targets[:design_system] }
+
     changed_fields.each { |f| f.marked_for_destruction? ? f.destroy : f.save! }
     changed_fields.clear
 
@@ -189,10 +191,31 @@ class Theme < ActiveRecord::Base
     if any_non_css_fields_changed && should_refresh_development_clients?
       MessageBus.publish "/file-change", ["development-mode-theme-changed"]
     end
+
+    DesignSystem::SyncColorSchemes.call if design_system_changed
   end
 
   def should_refresh_development_clients?
     Rails.env.development?
+  end
+
+  # The theme's design-system.json overrides (semantic-token layer), merged across
+  # the theme + its components and wrapped under "d-system" for DesignSystem::Tokens.
+  # Returns {} when the theme ships none.
+  def design_system_overrides
+    merged = {}
+    Theme
+      .list_baked_fields(Theme.transform_ids(id), :design_system, :"design-system")
+      .each do |field|
+        parsed =
+          begin
+            JSON.parse(field.value)
+          rescue JSON::ParserError
+            nil
+          end
+        merged.deep_merge!(parsed) if parsed.is_a?(Hash)
+      end
+    merged.empty? ? {} : { "d-system" => merged }
   end
 
   def update_child_components
