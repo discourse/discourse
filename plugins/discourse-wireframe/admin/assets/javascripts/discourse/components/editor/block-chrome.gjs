@@ -927,6 +927,17 @@ export default class BlockChrome extends Component {
     event.preventDefault();
     event.stopPropagation();
 
+    // A block arg rendered as a native <button> (e.g. a button-link with
+    // no URL set yet) activates on Space / Enter and dispatches a click
+    // even while the caret sits in the label's inline editor nested
+    // inside it. Such keyboard-synthesized clicks carry `detail === 0`;
+    // the select / click-again-to-edit gestures are all pointer-driven,
+    // so this click is spurious — bail before it opens the URL editor and
+    // steals focus from the inline text edit.
+    if (event.detail === 0) {
+      return;
+    }
+
     const argEl = event.target.closest?.("[data-block-arg]");
     const argName = argEl?.dataset?.blockArg;
     const kind = argName ? kindForArg(this.metadata, argName) : null;
