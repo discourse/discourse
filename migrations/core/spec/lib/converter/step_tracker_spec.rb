@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters::Base::StepTracker do
+RSpec.describe Migrations::Converter::StepTracker do
   subject(:tracker) { described_class.new }
 
   before { allow(Migrations::Database::IntermediateDB::LogEntry).to receive(:create) }
@@ -24,7 +24,7 @@ RSpec.describe Migrations::Converters::Base::StepTracker do
   describe "#stats" do
     it "returns correct stats" do
       expect(tracker.stats).to eq(
-        Migrations::Converters::Base::StepStats.new(progress: 1, warning_count: 0, error_count: 0),
+        Migrations::Converter::StepStats.new(progress: 1, warning_count: 0, error_count: 0),
       )
 
       tracker.progress = 5
@@ -32,7 +32,7 @@ RSpec.describe Migrations::Converters::Base::StepTracker do
       3.times { tracker.log_error("Foo") }
 
       expect(tracker.stats).to eq(
-        Migrations::Converters::Base::StepStats.new(progress: 5, warning_count: 2, error_count: 3),
+        Migrations::Converter::StepStats.new(progress: 5, warning_count: 2, error_count: 3),
       )
     end
   end
@@ -44,13 +44,13 @@ RSpec.describe Migrations::Converters::Base::StepTracker do
       3.times { tracker.log_error("Foo") }
 
       expect(tracker.stats).to eq(
-        Migrations::Converters::Base::StepStats.new(progress: 5, warning_count: 2, error_count: 3),
+        Migrations::Converter::StepStats.new(progress: 5, warning_count: 2, error_count: 3),
       )
 
       tracker.reset_stats!
 
       expect(tracker.stats).to eq(
-        Migrations::Converters::Base::StepStats.new(progress: 1, warning_count: 0, error_count: 0),
+        Migrations::Converter::StepStats.new(progress: 1, warning_count: 0, error_count: 0),
       )
     end
   end

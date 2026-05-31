@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters::Base::Worker do
+RSpec.describe Migrations::Converter::Worker do
   subject(:worker) { described_class.new(index, input_queue, output_queue, job) }
 
   let(:index) { 1 }
   let(:input_queue) { Queue.new }
   let(:output_queue) { Queue.new }
   let(:job) do
-    instance_double(Migrations::Converters::Base::ParallelJob, run: "result", cleanup: nil)
+    instance_double(Migrations::Converter::ParallelJob, run: "result", cleanup: nil)
   end
 
   after do
@@ -49,7 +49,7 @@ RSpec.describe Migrations::Converters::Base::Worker do
     end
 
     def create_progress_stats(progress: 1, warning_count: 0, error_count: 0)
-      Migrations::Converters::Base::StepStats.new(progress:, warning_count:, error_count:)
+      Migrations::Converter::StepStats.new(progress:, warning_count:, error_count:)
     end
 
     it "writes objects to the `output_queue`" do
