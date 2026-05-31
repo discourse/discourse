@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import WFMediaCard from "discourse/plugins/discourse-wireframe/discourse/blocks/wf-media-card";
@@ -24,6 +25,20 @@ module("Integration | Wireframe | wf:media-card block", function (hooks) {
 
   hooks.afterEach(function () {
     _resetOutletLayoutsForTesting();
+  });
+
+  test("exposes the background image arg in the main inspector section, not Advanced", function (assert) {
+    const metadata = getBlockMetadata(WFMediaCard);
+    assert.strictEqual(
+      metadata?.args?.image?.ui?.group,
+      undefined,
+      "the background image arg is not tucked into the Advanced group"
+    );
+    assert.strictEqual(
+      metadata?.args?.backgroundColor?.ui?.group,
+      "Advanced",
+      "backgroundColor stays in the Advanced group"
+    );
   });
 
   test("renders the full card and persistent image markers when both images are empty", async function (assert) {

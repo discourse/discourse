@@ -9,6 +9,7 @@ import { trustHTML } from "@ember/template";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 // `grid-math` is in the universal bundle (its `parsePlacement` is
 // called by the live-page `wf-layout.gjs`); this chrome is admin-only.
@@ -1050,6 +1051,43 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Gate for the chrome-level external file drop. Engages only when the
+   * block renders a passive ("background") image marker, so every other
+   * block's chrome stays inert as a file drop target (no indicator, no
+   * drop handling).
+   *
+   * @returns {boolean}
+   */
+  @action
+  canDropBackgroundFile() {
+    return !!this.#passiveImageArgName();
+  }
+
+  /**
+   * Uploads a file dropped anywhere on the block body to the block's
+   * passive ("background") image arg. Per-arg image overlays (e.g. the
+   * avatar slot) are deeper external drop targets, so PDND routes drops
+   * over them there instead — only body drops bubble up to this handler.
+   *
+   * @param {{source: {getFiles: () => File[]}}} payload
+   */
+  @action
+  async onBackgroundFileDrop({ source }) {
+    const argName = this.#passiveImageArgName();
+    const file = source?.getFiles?.()?.[0];
+    if (!argName || !file) {
+      return;
+    }
+    // Select first so the inspector reflects the block while the upload
+    // resolves and writes the value.
+    this.#selectThisBlock();
+    await this.wireframe.uploadImageForArg(file, {
+      blockKey: this.args.blockKey,
+      argName,
+    });
+  }
+
+  /**
    * Registers a FloatKit tooltip per URL inline-editable arg on this
    * block, anchored to the rendered link element (matched via
    * `[data-block-arg]` + `kindForArg` lookup). The tooltip hosts a
@@ -1159,6 +1197,23 @@ export default class BlockChrome extends Component {
     });
   }
 
+  /**
+   * The name of this block's passive ("background") image arg, read from
+   * the rendered DOM marker (`[data-drop-passive]`), or `null` when the
+   * block has none. Runtime DOM introspection mirroring `getImageMarkerEl`;
+   * the marker stays in the DOM even while collapsed, so this resolves in
+   * every selection / fill state.
+   *
+   * @returns {string|null}
+   */
+  #passiveImageArgName() {
+    return (
+      this.chromeEl
+        ?.querySelector("[data-drop-passive]")
+        ?.getAttribute("data-block-arg") ?? null
+    );
+  }
+
   <template>
     {{#if this.wireframe.isActive}}
       {{! Outer wrapper hosts the sibling drop zones (before/after) for
@@ -1201,6 +1256,16 @@ export default class BlockChrome extends Component {
             containerKey=@blockKey
             outletName=@outletName
             mode=this.containerDropMode
+          }}
+          {{! Chrome-level external file drop: routes a file dropped on the
+            block body to its passive background image arg. Per-image-arg
+            overlays (the avatar slot) are deeper external drop targets, so
+            PDND sends drops over them there instead. The canDrop gate keeps
+            this inert for blocks that have no background. }}
+          {{dDragAndDropExternalTarget
+            accepts="files"
+            canDrop=this.canDropBackgroundFile
+            onDrop=this.onBackgroundFileDrop
           }}
           {{on "click" this.onClick}}
           role="button"

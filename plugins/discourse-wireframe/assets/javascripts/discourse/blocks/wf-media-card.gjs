@@ -110,7 +110,6 @@ import {
       aspectRatio: "auto",
       defaultFit: "cover",
       ui: {
-        group: "Advanced",
         label: i18n("wireframe.inspector.media_card.image_url"),
         helpText: i18n("wireframe.inspector.media_card.image_url_help"),
       },
