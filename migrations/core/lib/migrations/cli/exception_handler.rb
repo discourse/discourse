@@ -8,7 +8,7 @@ module Migrations
       rescue ClassFilter::UnknownClassNamesError => e
         handle_unknown_class_names_error(e)
         exit(1)
-      rescue Database::Schema::ConfigError, Database::Schema::GenerationError => e
+      rescue PresentableError => e
         puts e.message.red
         exit(1)
       rescue => e

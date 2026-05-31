@@ -29,6 +29,7 @@ module Migrations
 
           importer_dir = File.join(__dir__, "importer")
           loader.push_dir(importer_dir, namespace: Migrations::Importer)
+          loader.ignore(File.join(importer_dir, "register.rb"))
           configure_collapses(loader, importer_dir)
 
           loader
@@ -49,7 +50,9 @@ module Migrations
 
         rel = sub.delete_prefix(importer_dir + "/")
 
+        # uploads/ and cli/ keep their own namespace segment.
         next if rel == "uploads" || rel.start_with?("uploads/")
+        next if rel == "cli" || rel.start_with?("cli/")
 
         if rel == "steps"
           next

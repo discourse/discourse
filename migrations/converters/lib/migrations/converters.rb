@@ -6,7 +6,7 @@ module Migrations
   module Converters
     # Directories under the gem's converters root that are framework
     # infrastructure rather than converter implementations.
-    NON_CONVERTER_DIRS = %w[adapter].freeze
+    NON_CONVERTER_DIRS = %w[adapter cli].freeze
 
     def self.root_path
       @root_path ||= File.expand_path("../..", __dir__)
@@ -73,6 +73,7 @@ module Migrations
           loader.log! if ENV["DEBUG"]
           loader.inflector.inflect("db" => "DB", "id" => "ID", "cli" => "CLI")
           loader.push_dir(converters_path, namespace: Migrations::Converters)
+          loader.ignore(File.join(converters_path, "register.rb"))
 
           # Each converter directory collapses all of its subdirectories into a
           # single namespace, so that e.g. `discourse/steps/users.rb` defines
