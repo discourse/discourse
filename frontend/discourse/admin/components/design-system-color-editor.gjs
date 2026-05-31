@@ -6,37 +6,14 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
-// Human labels for the system color tokens (these annotate the d-system.* token
-// rows; they are not display strings the admin edits).
-const LABELS = {
-  "surface.default": "Background",
-  "surface.sunken": "Sunken background",
-  "surface.raised": "Raised background",
-  "surface.hovered": "Hovered background",
-  "surface.selected": "Selected background",
-  "surface.brand": "Brand background",
-  "surface.brand-hovered": "Brand background hovered",
-  "surface.danger": "Danger background",
-  "surface.success": "Success background",
-  "text.default": "Default text",
-  "text.subtle": "Subtle text",
-  "text.inverse": "Inverse text",
-  "text.brand": "Brand text",
-  "text.danger": "Danger text",
-  "text.success": "Success text",
-  "text.link": "Link",
-  "text.link-hover": "Link hovered",
-  "border.default": "Default border",
-  "border.bold": "Bold border",
-  "border.subtle": "Subtle border",
-  "border.brand": "Brand border",
-  "border.danger": "Danger border",
-  "interactive.default": "Interactive",
-  "interactive.hovered": "Interactive hovered",
-  "interactive.pressed": "Interactive pressed",
-};
-
 const DARK = "com.discourse.dark";
+
+// Labels mirror the token names (surface.default -> "Default"), matching the
+// fonts/layout editor. These annotate the d-system.* rows; not edited strings.
+function titleize(key) {
+  const text = String(key).replace(/-/g, " ");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 
 function flattenTokens(node, path = []) {
   const results = [];
@@ -70,15 +47,14 @@ function buildGroups(dtcg) {
     const groupName = token.path[colorIdx + 1];
     const tokenName = token.path.slice(colorIdx + 2).join(".");
     (groups[groupName] ||= []).push({
-      label: LABELS[`${groupName}.${tokenName}`] || tokenName,
+      label: titleize(tokenName),
       value: token.value,
       darkValue: token.darkValue,
       tokenPath: token.path.join("."),
     });
   }
   return Object.entries(groups).map(([name, tokens]) => ({
-    name,
-    label: name.charAt(0).toUpperCase() + name.slice(1),
+    label: titleize(name),
     tokens,
   }));
 }
