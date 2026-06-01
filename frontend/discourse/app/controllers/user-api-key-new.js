@@ -3,10 +3,10 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import copyText from "discourse/lib/copy-text";
 import { longDate } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
 import { USER_API_KEY_AUTHORIZATION_STATES } from "discourse/lib/user-api-key-device-auth";
+import { clipboardCopy } from "discourse/lib/utilities";
 
 export default class UserApiKeyNewController extends Controller {
   @tracked page;
@@ -84,8 +84,13 @@ export default class UserApiKeyNewController extends Controller {
   }
 
   @action
-  copy() {
-    this.copied = copyText(this.result.payload?.replace(/\s/g, ""));
+  async copy() {
+    try {
+      await clipboardCopy(this.result.payload?.replace(/\s/g, ""));
+      this.copied = true;
+    } catch {
+      this.copied = false;
+    }
 
     if (this.copied) {
       setTimeout(() => (this.copied = false), 2000);

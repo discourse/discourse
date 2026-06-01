@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import copyText from "discourse/lib/copy-text";
+import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class UserApiKeyResultController extends Controller {
@@ -14,8 +14,13 @@ export default class UserApiKeyResultController extends Controller {
   }
 
   @action
-  copy() {
-    this.copied = copyText(this.model.payload?.replace(/\s/g, ""));
+  async copy() {
+    try {
+      await clipboardCopy(this.model.payload?.replace(/\s/g, ""));
+      this.copied = true;
+    } catch {
+      this.copied = false;
+    }
 
     if (this.copied) {
       setTimeout(() => (this.copied = false), 2000);
