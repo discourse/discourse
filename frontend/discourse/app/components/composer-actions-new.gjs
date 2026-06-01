@@ -327,6 +327,12 @@ export default class ComposerActions extends Component {
   }
 
   @action
+  runToggleAction(actionFn, event) {
+    event.preventDefault();
+    actionFn();
+  }
+
+  @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
   }
@@ -426,13 +432,15 @@ export default class ComposerActions extends Component {
                             availAction.class
                             "composer-toggle-item --with-description btn"
                           }}
-                          {{on "click" availAction.action}}
+                          {{on
+                            "click"
+                            (fn this.runToggleAction availAction.action)
+                          }}
                         >
                           <div class="composer-toggle-item__icons">
                             <DToggleSwitch
                               @state={{availAction.state}}
                               aria-label={{availAction.ariaLabel}}
-                              {{on "click" availAction.action}}
                             />
                           </div>
                           <div class="composer-toggle-item__texts">
