@@ -418,8 +418,6 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Ativado"
       start_posting:
         back: "Anterior"
     about:
@@ -3150,6 +3148,15 @@ pt:
         dismiss_tooltip: "rejeitar apenas as novas mensagens ou deixar de seguir os tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
         dismiss_new_replies: "Descartar respostas novas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Marcar Visto Novos"
         dismiss_new_modal:
           posts: "Descartar respostas novas"

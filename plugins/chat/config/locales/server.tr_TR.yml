@@ -23,7 +23,6 @@ tr_TR:
     chat_allow_uploads: "Herkese açık sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
     chat_show_copy_button_on_codeblocks: "Sohbet mesajlarındaki kod bloklarında kopyala düğmesini göster."
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
-    direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
     chat_pinning_messages_allowed_groups: "Bu gruplardaki kullanıcılar, erişebildikleri kanallarda sohbet mesajlarını sabitleyebilirler. Yöneticiler ve moderatörler her zaman sohbet mesajlarını sabitleyebilirler. Grup sohbeti veya DM'nin herhangi bir üyesi mesajları sabitleyebilir."
     max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
@@ -33,7 +32,6 @@ tr_TR:
     chat_editing_grace_period_max_diff_low_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 0 ve 1)."
     chat_editing_grace_period_max_diff_high_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 2 ve üstü)."
     chat_preferred_index: "/chat yüklenirken tercih edilen sekme."
-    allow_chat_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların sohbet özelliğini kullanabilmesi için bu ayarı etkinleştirin. Bu ayar, `allow anonymous mode` ayarının etkinleştirilmesini gerektirir."
     chat_search_enabled: "Kullanıcıların sohbet mesajlarını aramasına izin vermek için bu ayarı etkinleştirin."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
@@ -240,6 +238,10 @@ tr_TR:
     scriptables:
       send_chat_message:
         title: Sohbet mesajı gönder
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Onayla"
+      default_deny_label: "Reddet"
   reviewable_score_types:
     needs_review:
       title: "İnceleme Gerekiyor"

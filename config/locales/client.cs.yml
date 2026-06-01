@@ -495,7 +495,7 @@ cs:
     admin_onboarding_banner:
       launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
       select_theme:
-        enabled: "Zapnuto"
+        enabled: "Zaškrtnuté"
       start_posting:
         back: "Zpět"
     about:
@@ -3710,6 +3710,21 @@ cs:
         also_dismiss_topics: "Přestat sledovat tyto témata, takže se mi znovu nezobrazí jako nepřečtená"
         dismiss_new_topics: "Skrýt nová témata"
         dismiss_new_replies: "Skrýt nové odpovědi"
+        dismiss_new_topics_with_selected:
+          one: "Skrýt (%{count})"
+          few: "Skrýt (%{count})"
+          many: "Skrýt (%{count})"
+          other: "Skrýt (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Skrýt (%{count})"
+          few: "Skrýt (%{count})"
+          many: "Skrýt (%{count})"
+          other: "Skrýt (%{count})"
+        dismiss_all_with_selected:
+          one: "Skrýt (%{count})"
+          few: "Skrýt (%{count})"
+          many: "Skrýt (%{count})"
+          other: "Skrýt (%{count})"
         dismiss_new: "Označit jako přečtené vše nové"
         dismiss_new_modal:
           title: "Skrýt nové"

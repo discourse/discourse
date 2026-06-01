@@ -459,7 +459,7 @@ es:
       launch_in_easy_steps: "Empieza en %{step_count} sencillos pasos"
       congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
       select_theme:
-        enabled: "Activado"
+        enabled: "Seleccionado"
       invite_collaborators:
         title: "Invitar colaboradores"
         description: "Los primeros miembros ayudan a dar vida a tu comunidad"
@@ -3493,6 +3493,15 @@ es:
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new_topics: "Rechazar nuevos temas"
         dismiss_new_replies: "Descartar nuevas respuestas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Descartar nuevos"
         dismiss_new_modal:
           title: "Descartar nuevo"

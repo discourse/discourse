@@ -269,3 +269,10 @@ ro:
       start_new_dm:
         text: Începe un mesaj direct nou
         title: Creează o discuție personală
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mesaj"
+      chat_approval:
+        message: "Mesaj"
+        channel_id: "Canal"

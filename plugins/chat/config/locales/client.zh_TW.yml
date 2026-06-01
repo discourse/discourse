@@ -306,3 +306,8 @@ zh_TW:
       panels:
         chat:
           label: "聊天"
+    discourse_workflows:
+      send_chat_message:
+        message: "訊息"
+      chat_approval:
+        message: "訊息"

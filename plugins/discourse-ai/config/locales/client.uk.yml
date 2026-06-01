@@ -50,6 +50,9 @@ uk:
             delete_ai_secret: "Видалити секрет ШІ"
             update_ai_spam_settings: "Оновити налаштування спаму ШІ"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Агент ШІ"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,10 @@ uk:
               description: "Дозволити тегування повідомлень, створених системним користувачем."
     discourse_ai:
       title: "ШІ"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Агент"
+          prompt: "Підказка"
       bot_chats:
         tab_label: "Чати ботів"
       default_llm:

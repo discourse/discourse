@@ -313,6 +313,9 @@ es:
         other: "Tienes %{count} discusiones sin leer"
       scroll_to_bottom: "Desplazar hacia abajo"
       scroll_to_new_messages: "Ver nuevos mensajes"
+      new_messages:
+        one: "%{count} mensaje nuevo"
+        other: "%{count} mensajes nuevos"
       sound:
         title: "Sonido de notificación de chat de escritorio"
       sounds:
@@ -791,3 +794,12 @@ es:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Enviar mensaje de chat"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mensaje"
+      chat_approval:
+        message: "Mensaje"
+        channel_id: "Canal"

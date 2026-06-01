@@ -734,3 +734,12 @@ ja:
       panels:
         chat:
           label: "チャット"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "チャットメッセージを送信する"
+      send_chat_message:
+        channel_id: "チャンネル"
+        message: "メッセージ"
+      chat_approval:
+        message: "メッセージ"
+        channel_id: "チャンネル"

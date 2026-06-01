@@ -302,8 +302,6 @@ sq:
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Aktivizuar"
       start_posting:
         back: "Kthehu mbrapa"
     about:
@@ -2914,6 +2912,15 @@ sq:
         also_dismiss_topics: "Mos i gjurmo më këto tema që të mos afishohen më si të palexuara për mua"
         dismiss_new_topics: "Hiqni temat e reja"
         dismiss_new_replies: "Hiqni përgjigjet e reja"
+        dismiss_new_topics_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_all_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
         dismiss_new: "Hiqni të Rejat"
         dismiss_new_modal:
           title: "Hiqni të Rejat"

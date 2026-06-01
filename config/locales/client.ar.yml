@@ -605,7 +605,7 @@ ar:
       launch_in_easy_steps: "الإطلاق عبر %{step_count} خطوات سهلة"
       congrats_onboarding_complete: "تهانينا على إكمال عملية الانضمام!"
       select_theme:
-        enabled: "مفعَّلة"
+        enabled: "محدَّدة"
       invite_collaborators:
         title: "دعوة المتعاونين"
         description: "يساهم الأعضاء الأوائل في إثراء مجتمعك"
@@ -4243,6 +4243,27 @@ ar:
         also_dismiss_topics: "التوقف عن تتبُّع هذه الموضوعات حتي لا تظهر لي كغير مقروءة مرة أخرى"
         dismiss_new_topics: "تجاهل الموضوعات الجديدة"
         dismiss_new_replies: "تجاهل الردود الجديدة"
+        dismiss_new_topics_with_selected:
+          zero: "تجاهل (%{count})"
+          one: "تجاهل (%{count})"
+          two: "تجاهل (%{count})"
+          few: "تجاهل (%{count})"
+          many: "تجاهل (%{count})"
+          other: "تجاهل (%{count})"
+        dismiss_new_replies_with_selected:
+          zero: "تجاهل (%{count})"
+          one: "تجاهل (%{count})"
+          two: "تجاهل (%{count})"
+          few: "تجاهل (%{count})"
+          many: "تجاهل (%{count})"
+          other: "تجاهل (%{count})"
+        dismiss_all_with_selected:
+          zero: "تجاهل (%{count})"
+          one: "تجاهل (%{count})"
+          two: "تجاهل (%{count})"
+          few: "تجاهل (%{count})"
+          many: "تجاهل (%{count})"
+          other: "تجاهل (%{count})"
         dismiss_new: "تجاهل الجديدة"
         dismiss_new_modal:
           title: "تجاهل الجديدة"

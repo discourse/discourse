@@ -378,7 +378,7 @@ zh_TW:
       pm_title: "推薦訊息"
     admin_onboarding_banner:
       select_theme:
-        enabled: "啟用"
+        enabled: "已選"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
@@ -2908,6 +2908,12 @@ zh_TW:
         also_dismiss_topics: "停止追蹤這些話題，這樣這些話題就不再顯示為未讀了"
         dismiss_new_topics: "關閉新主題"
         dismiss_new_replies: "忽略新回覆"
+        dismiss_new_topics_with_selected:
+          other: "忽略（%{count} 個）"
+        dismiss_new_replies_with_selected:
+          other: "忽略（%{count} 個）"
+        dismiss_all_with_selected:
+          other: "忽略（%{count} 個）"
         dismiss_new: "忽略新內容"
         dismiss_new_modal:
           title: "忽略新內容"

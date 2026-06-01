@@ -206,3 +206,10 @@ et:
       panels:
         chat:
           label: "Vestlus"
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Sõnum"
+      chat_approval:
+        message: "Sõnum"
+        channel_id: "Kanal"

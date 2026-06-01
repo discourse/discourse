@@ -420,7 +420,7 @@ fr:
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Activé"
+        enabled: "Sélectionné"
       start_posting:
         back: "Retour"
     about:
@@ -3231,6 +3231,15 @@ fr:
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
         dismiss_new_topics: "Ignorer les nouveaux sujets"
         dismiss_new_replies: "Ignorer les nouvelles réponses"
+        dismiss_new_topics_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_all_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
         dismiss_new: "Marquer comme vu(s)"
         dismiss_new_modal:
           title: "Ignorer les nouveaux"

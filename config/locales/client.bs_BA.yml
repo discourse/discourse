@@ -270,8 +270,6 @@ bs_BA:
     suggested_topics:
       pm_title: "Preporučene Poruke"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Omogućen"
       start_posting:
         back: "Prethodno"
     about:

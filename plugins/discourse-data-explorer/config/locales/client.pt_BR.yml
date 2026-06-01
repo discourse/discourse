@@ -94,6 +94,17 @@ pt_BR:
           descriptions:
             data_explorer:
               run_queries: "Execute consultas do Explorador de Dados. Restrinja a chave de API a um conjunto de consultas ao especificar suas IDs."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorador de Dados"
+      sql:
+        queries: "Consultas"
+        query_id: "Consulta"
+        add_param: "Adicionar parâmetro"
+        param_value: "Valor"
+        output:
+          results: "Resultados"
+          no_results: "Nenhum resultado"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:
