@@ -124,7 +124,7 @@
     "@embroider/vite": "^1.7.5",
     "@floating-ui/dom": "^1.7.5",
     "@glimmer/component": "^2.0.0",
-    "@rolldown/pluginutils": "1.0.0",
+    "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
     "@swc/core": "^1.15.33",
     "@types/jquery": "^3.5.33",
