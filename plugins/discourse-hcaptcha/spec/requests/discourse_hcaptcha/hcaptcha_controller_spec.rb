@@ -30,16 +30,16 @@ RSpec.describe DiscourseHcaptcha::HcaptchaController do
     end
 
     context "when token is missing" do
-      it "returns 500 error" do
+      it "returns 400 error" do
         post "/captcha/hcaptcha/create.json", params: {}
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(400)
       end
 
-      it "returns 500 error when token is blank" do
+      it "returns 400 error when token is blank" do
         post "/captcha/hcaptcha/create.json", params: { token: "" }
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(400)
       end
     end
 
@@ -50,20 +50,20 @@ RSpec.describe DiscourseHcaptcha::HcaptchaController do
         SiteSetting.recaptcha_secret_key = "test-secret-key"
       end
 
-      it "returns 500 error" do
+      it "returns 404 error" do
         post "/captcha/hcaptcha/create.json", params: { token: "test-token" }
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(404)
       end
     end
 
     context "when captcha provider is none" do
       before { SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::NONE }
 
-      it "returns 500 error" do
+      it "returns 404 error" do
         post "/captcha/hcaptcha/create.json", params: { token: "test-token" }
 
-        expect(response.status).to eq(500)
+        expect(response.status).to eq(404)
       end
     end
   end
