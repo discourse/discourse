@@ -18,12 +18,14 @@ acceptance("No Answer Prompt", function (needs) {
   needs.hooks.beforeEach(function () {
     pretender.get("/t/100.json", () => response(topicWithNoAnswer(1)));
     pretender.post("/solution/accept", () =>
-      response({
-        success: "OK",
-        post_number: 2,
-        username: "helper",
-        excerpt: "<p>Here is a potential answer</p>",
-      })
+      response([
+        {
+          id: 2,
+          post_number: 2,
+          username: "helper",
+          cooked: "<p>Here is a potential answer</p>",
+        },
+      ])
     );
   });
 
