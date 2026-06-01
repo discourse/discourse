@@ -84,74 +84,15 @@ module Jobs
       end
     end
 
-    def download(src)
-      downloaded = nil
-
-      begin
-        retries ||= 3
-
-        if SiteSetting.verbose_upload_logging
-          Rails.logger.warn("Verbose Upload Logging: Downloading hotlinked image from #{src}")
-        end
-
-        downloaded =
-          FileHelper.download(
-            src,
-            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-            retain_on_max_file_size_exceeded: true,
-            tmp_file_name: "discourse-hotlinked",
-            follow_redirect: true,
-            read_timeout: 15,
-          )
-      rescue => e
-        if SiteSetting.verbose_upload_logging
-          Rails.logger.warn("Verbose Upload Logging: Error '#{e.message}' while downloading #{src}")
-        end
-
-        if (retries -= 1) > 0 && !Rails.env.test?
-          sleep 1
-          retry
-        end
-      end
-
-      downloaded
-    end
-
-    class ImageTooLargeError < StandardError
-    end
-
-    class ImageBrokenError < StandardError
-    end
-
-    class UploadCreateError < StandardError
-    end
+    # Error classes live on HotlinkedMediaDownloader now; these aliases keep the
+    # existing `rescue ImageTooLargeError` call sites (here and in the
+    # PullUserProfileHotlinkedImages subclass) working unchanged.
+    ImageTooLargeError = HotlinkedMediaDownloader::ImageTooLargeError
+    ImageBrokenError = HotlinkedMediaDownloader::ImageBrokenError
+    UploadCreateError = HotlinkedMediaDownloader::UploadCreateError
 
     def attempt_download(src, user_id)
-      # secure-uploads endpoint prevents anonymous downloads, so we
-      # need the presigned S3 URL here
-      if Upload.secure_uploads_url?(src)
-        src = Upload.signed_url_from_secure_uploads_url(src, include_content_disposition: false)
-      end
-
-      hotlinked = download(src)
-      raise ImageBrokenError if !hotlinked
-      if File.size(hotlinked.path) > SiteSetting.max_image_size_kb.kilobytes
-        raise ImageTooLargeError
-      end
-
-      filename = File.basename(URI.parse(src).path)
-      filename << File.extname(hotlinked.path) unless filename["."]
-      upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(user_id)
-
-      if upload.persisted?
-        upload
-      else
-        log(
-          :info,
-          "Failed to persist downloaded hotlinked image for post: #{@post_id}: #{src} - #{upload.errors.full_messages.join("\n")}",
-        )
-        raise UploadCreateError
-      end
+      HotlinkedMediaDownloader.download(src, user_id, tmp_file_name: "discourse-hotlinked")
     end
 
     def extract_images_from(html)
