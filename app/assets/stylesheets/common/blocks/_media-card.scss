@@ -1,0 +1,126 @@
+.d-block-media-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--d-border-radius, 10px);
+  overflow: hidden;
+  min-height: 220px;
+  isolation: isolate;
+  background: var(--primary-very-low);
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background-image: var(--d-block-media-card-bg-light);
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.85;
+
+    @media (prefers-color-scheme: dark) {
+      background-image: var(
+        --d-block-media-card-bg-dark,
+        var(--d-block-media-card-bg-light)
+      );
+    }
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--primary-low);
+  }
+
+  &__identity {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  &__name {
+    font-weight: 700;
+    font-size: var(--font-up-1);
+  }
+
+  &__role {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.55);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    align-self: flex-start;
+  }
+
+  &__badge-label {
+    line-height: 1;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-0);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  &__cta {
+    align-self: flex-start;
+    font-weight: 500;
+    color: var(--tertiary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* Empty inline-text wrappers — block-author opt-in via the renderer's
+     yielded isEmpty flag (see block template). These collapse on the
+     reader page; edit tooling re-shows them so authors can click the
+     placeholder. The badge's empty state is a compound condition (icon
+     AND label both empty) computed in JS, not via a CSS has-selector,
+     so the reader render path stays cheap. */
+
+  &__title--empty,
+  &__cta--empty,
+  &__badge--empty {
+    display: none;
+  }
+
+  /* Empty image-arg markers are kept in the DOM so edit tooling can
+     anchor an "add image" target over them, but they collapse on the
+     reader page. */
+
+  &__avatar--empty {
+    display: none;
+  }
+
+  &__backdrop--empty {
+    display: none;
+  }
+}

@@ -9,7 +9,7 @@
 # In development, the sprite is also regenerated automatically at boot
 # whenever this file is newer than `lucide.svg` next to it.
 #
-# Each entry registers an icon at `ve-<name>` (the `ve-` prefix is added
+# Each entry registers an icon at `wf-<name>` (the `wf-` prefix is added
 # automatically in plugin.rb).
 
 align-center-horizontal

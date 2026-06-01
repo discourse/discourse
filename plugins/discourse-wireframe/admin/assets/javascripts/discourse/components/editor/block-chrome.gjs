@@ -6,18 +6,15 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { parsePlacement } from "discourse/blocks";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
-// `grid-math` is in the universal bundle (its `parsePlacement` is
-// called by the live-page `wf-layout.gjs`); this chrome is admin-only.
-// Cross-bundle imports use absolute addon paths.
-import {
-  parsePlacement,
-  placementsOverlap,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+// `grid-math` is the plugin's editor-only geometry; admin-only consumer,
+// so cross-bundle imports use absolute addon paths.
+import { placementsOverlap } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
@@ -278,7 +275,7 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get isGridLayout() {
-    if (this.args.blockName !== "wf:layout") {
+    if (this.args.blockName !== "layout") {
       return false;
     }
     // eslint-disable-next-line no-unused-vars
@@ -301,7 +298,7 @@ export default class BlockChrome extends Component {
    */
   get isForceExpanded() {
     return (
-      this.args.blockName === "wf:layout" &&
+      this.args.blockName === "layout" &&
       this.wireframe.isForceExpanded(this.args.blockKey)
     );
   }
@@ -312,10 +309,10 @@ export default class BlockChrome extends Component {
    * modifier is a no-op on them — leaf blocks never act as drop
    * targets directly; their parent container handles it).
    *
-   * For `wf:layout` containers we read `args.mode` (live entry, falls
+   * For `layout` containers we read `args.mode` (live entry, falls
    * back to the curry snapshot at chrome creation time). For other
-   * container blocks (e.g. `wf:columns`) we default to `"stack"`
-   * since their children stack vertically.
+   * container blocks we default to `"stack"` since their children
+   * stack vertically.
    *
    * @returns {"stack"|"row"|"grid"|null}
    */
@@ -330,7 +327,7 @@ export default class BlockChrome extends Component {
       // parent container handles drops near them.
       return this.isGridCell ? "grid-cell-leaf" : null;
     }
-    if (this.args.blockName !== "wf:layout") {
+    if (this.args.blockName !== "layout") {
       return "stack";
     }
     // eslint-disable-next-line no-unused-vars
@@ -520,7 +517,7 @@ export default class BlockChrome extends Component {
     if (!parent) {
       return null;
     }
-    if (this.wireframe.blockNameOf(parent) !== "wf:layout") {
+    if (this.wireframe.blockNameOf(parent) !== "layout") {
       return null;
     }
     const mode = parent.args?.mode ?? "stack";

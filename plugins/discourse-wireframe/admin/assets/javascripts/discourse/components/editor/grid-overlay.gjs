@@ -6,15 +6,14 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { parsePlacement } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-// `grid-math` is in the universal bundle (its `parsePlacement` is
-// called by the live-page `wf-layout.gjs`); this component is
-// admin-only. Cross-bundle imports use absolute addon paths.
+// `grid-math` is the plugin's editor-only geometry; admin-only consumer,
+// so cross-bundle imports use absolute addon paths.
 import {
   computeOccupation,
   computeShiftPlan,
-  parsePlacement,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";

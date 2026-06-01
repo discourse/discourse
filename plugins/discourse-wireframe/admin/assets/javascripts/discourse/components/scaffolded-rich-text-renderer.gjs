@@ -1,6 +1,6 @@
 // @ts-check
 import eq from "discourse/truth-helpers/helpers/eq";
-import MarkedText from "discourse/plugins/discourse-wireframe/discourse/components/marked-text";
+import MarkedText from "discourse/ui-kit/marked-text";
 
 /**
  * Editor-aware implementation of the rich-text inner-content component

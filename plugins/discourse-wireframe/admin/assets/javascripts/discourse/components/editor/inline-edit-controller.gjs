@@ -185,7 +185,7 @@ export default class InlineEditController extends Component {
         // default delete-a-char behavior). Other schemas / blocks
         // get no special handling; Backspace stays a plain delete.
         Backspace:
-          this.wireframe.inlineEdit.blockName === "wf:paragraph"
+          this.wireframe.inlineEdit.blockName === "paragraph"
             ? this.#mergeWithPrevAtStart()
             : undefined,
         // Cross-block arrow nav between sibling `wf:paragraph` blocks.
@@ -194,7 +194,7 @@ export default class InlineEditController extends Component {
         // All four return false (and PM's default arrow handling
         // takes over) when the cursor isn't at the edge or the
         // adjacent sibling isn't a `wf:paragraph`.
-        ...(this.wireframe.inlineEdit.blockName === "wf:paragraph" && {
+        ...(this.wireframe.inlineEdit.blockName === "paragraph" && {
           ArrowLeft: this.#walkToSibling("prev", "horizontal"),
           ArrowRight: this.#walkToSibling("next", "horizontal"),
           ArrowUp: this.#walkToSibling("prev", "vertical"),
@@ -527,7 +527,7 @@ export default class InlineEditController extends Component {
         return true;
       };
     }
-    if (this.wireframe.inlineEdit.blockName === "wf:paragraph") {
+    if (this.wireframe.inlineEdit.blockName === "paragraph") {
       return this.#splitParagraphAtCursor();
     }
     return insertHardBreak(schema);
@@ -586,7 +586,7 @@ export default class InlineEditController extends Component {
         return false;
       }
       const prev = this.wireframe.inlineEdit.prevSiblingInfo();
-      if (!prev || prev.block !== "wf:paragraph") {
+      if (!prev || prev.block !== "paragraph") {
         return false;
       }
       const prevDoc = schema.nodeFromJSON(toDoc(prev.value));
@@ -643,7 +643,7 @@ export default class InlineEditController extends Component {
         direction === "prev"
           ? this.wireframe.inlineEdit.prevSiblingInfo()
           : this.wireframe.inlineEdit.nextSiblingInfo();
-      if (!sibling || sibling.block !== "wf:paragraph") {
+      if (!sibling || sibling.block !== "paragraph") {
         return false;
       }
       this.wireframe.inlineEdit.start(sibling.key, "text", {

@@ -405,7 +405,7 @@ export default class InlineEditState {
       return false;
     }
     const located = this.service.findEntryAndOutletSync(blockKey);
-    if (!located || located.entry.block !== "wf:paragraph") {
+    if (!located || located.entry.block !== "paragraph") {
       return false;
     }
     const { entry: currentEntry, outletName } = located;
@@ -418,7 +418,7 @@ export default class InlineEditState {
     if (align !== undefined) {
       afterArgs.align = align;
     }
-    const newEntry = { block: "wf:paragraph", args: afterArgs };
+    const newEntry = { block: "paragraph", args: afterArgs };
     let newKey = null;
 
     const result = this.service.recordStructural([outletName], () => {
@@ -467,7 +467,7 @@ export default class InlineEditState {
    * (string or doc-JSON); callers decide what to do with it.
    *
    * Filtering by block type is intentionally left to the caller — the
-   * Backspace-merge handler bails when `block !== "wf:paragraph"`; the
+   * Backspace-merge handler bails when `block !== "paragraph"`; the
    * arrow-walk handler does the same. A future cross-block-type handler
    * might accept other blocks.
    *
@@ -518,7 +518,7 @@ export default class InlineEditState {
       return false;
     }
     const located = this.service.findEntryAndOutletSync(blockKey);
-    if (!located || located.entry.block !== "wf:paragraph") {
+    if (!located || located.entry.block !== "paragraph") {
       return false;
     }
     const { outletName } = located;

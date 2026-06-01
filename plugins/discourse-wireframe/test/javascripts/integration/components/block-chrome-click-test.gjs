@@ -6,7 +6,7 @@ import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/compone
 // A minimal stand-in for the wrapped block. The chrome derives a click's
 // edit "kind" from the registered block metadata (keyed by `@blockName`),
 // not from this component — so all it needs to emit is the same
-// `data-block-arg` markup a real `wf:button-link` renders: a native
+// `data-block-arg` markup a real `button-link` renders: a native
 // `<button>` for the `href` (URL) arg with the label nested inside it.
 const WrappedButtonLink = <template>
   <button type="button" data-block-arg="href">
@@ -21,7 +21,7 @@ module(
 
     test("ignores keyboard-synthesized clicks on a URL arg", async function (assert) {
       const wireframe = this.owner.lookup("service:wireframe");
-      const blockKey = "wf:button-link:test";
+      const blockKey = "button-link:test";
 
       wireframe.isActive = true;
       // The URL branch only fires for an already-selected block.
@@ -37,7 +37,7 @@ module(
       await render(
         <template>
           <BlockChrome
-            @blockName="wf:button-link"
+            @blockName="button-link"
             @blockKey={{blockKey}}
             @outletName="test-outlet"
             @WrappedComponent={{WrappedButtonLink}}

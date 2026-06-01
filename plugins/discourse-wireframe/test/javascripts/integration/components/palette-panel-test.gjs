@@ -40,17 +40,16 @@ module(
     test("category chips render at least the namespace types we expect", async function (assert) {
       await render(<template><PalettePanel /></template>);
 
-      // The starter blocks are all "plugin" namespace; we expect at
-      // least the "Plugin" chip plus the block-author categories
-      // (Content, Layout, Navigation, Data) — chip labels are i18n'd
-      // for namespace keys and raw for arbitrary categories.
+      // The built-in blocks now ship from core; we expect the block-author
+      // category chips (Content, Layout, Navigation, Discourse data) — chip
+      // labels are i18n'd for namespace keys and raw for arbitrary categories.
       const chips = [
         ...document.querySelectorAll(".wireframe-palette__chip"),
       ].map((el) => el.textContent.trim());
       assert.true(chips.includes("Content"));
       assert.true(chips.includes("Layout"));
       assert.true(chips.includes("Navigation"));
-      assert.true(chips.includes("Data"));
+      assert.true(chips.includes("Discourse data"));
     });
   }
 );

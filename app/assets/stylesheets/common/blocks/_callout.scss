@@ -1,0 +1,36 @@
+.d-block-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  border-left: 4px solid currentcolor;
+
+  &--info {
+    background: var(--highlight-low);
+    color: var(--tertiary);
+  }
+
+  &--success {
+    background: var(--success-low);
+    color: var(--success);
+  }
+
+  &--warning {
+    background: var(--highlight-medium);
+    color: var(--highlight);
+  }
+
+  &--danger {
+    background: var(--danger-low);
+    color: var(--danger);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__body {
+    color: var(--primary);
+  }
+}

@@ -1,12 +1,9 @@
 // @ts-check
 import { modifier } from "ember-modifier";
-// Absolute addon path: `grid-math` is in the universal bundle (its
-// `parsePlacement` is called by the live-page `wf-layout.gjs`), this
-// modifier is admin-only. Cross-bundle imports use absolute paths.
-import {
-  cellAt,
-  parseSlotPlacement,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+import { parseSlotPlacement } from "discourse/blocks";
+// Absolute addon path: this admin-only modifier crosses into the plugin's
+// universal `grid-math` bundle for the editor-only geometry helpers.
+import { cellAt } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 
 /**
  * Pointer-event drag handler for grid tile overlays.

@@ -555,7 +555,7 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
         block: "wf:mutate-test-leaf",
         args: {},
         __failureType: "structural-invalid",
-        __failureReason: 'Block "wf:button-link": at least one of ...',
+        __failureReason: 'Block "button-link": at least one of ...',
         __visible: false,
         __failureDetails: [
           {

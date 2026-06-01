@@ -9,6 +9,11 @@ import {
 } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import {
+  parsePlacement,
+  registerBlockArgRenderer,
+  resetBlockArgRenderer,
+} from "discourse/blocks";
+import {
   _clearLayoutLayer,
   _getOutletLayouts,
   _setLayoutLayer,
@@ -20,14 +25,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import MinimalRichTextRenderer from "discourse/plugins/discourse-wireframe/discourse/components/minimal-rich-text-renderer";
-// Absolute addon path: `grid-math` is in the universal bundle (its
-// `parsePlacement` is called by the live-page `wf-layout.gjs`); this
-// service is admin-only. Cross-bundle imports use absolute paths.
-import { blockArgRenderers } from "discourse/plugins/discourse-wireframe/discourse/lib/block-arg-renderers";
+// `grid-math` holds the editor-only grid geometry. Absolute addon path
+// because this admin service crosses into the plugin's universal bundle.
 import {
   computeShiftPlan,
-  parsePlacement,
   placementsOverlap,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
@@ -890,7 +891,7 @@ export default class WireframeService extends Service {
     // renderer is restored in `exit()`. Icon args carry their own
     // `data-block-arg` wrapper in the block templates and don't need
     // a swap.
-    blockArgRenderers["rich-text"] = ScaffoldedRichTextRenderer;
+    registerBlockArgRenderer("rich-text", ScaffoldedRichTextRenderer);
     this.#materializeAllDrafts();
 
     // Warm the inline-rich-text editor bundle in the background so the
@@ -964,7 +965,7 @@ export default class WireframeService extends Service {
     this.undoStack.length = 0;
     // Revert to the minimal rich-text renderer so admin pages without
     // an open editor render the same DOM as live.
-    blockArgRenderers["rich-text"] = MinimalRichTextRenderer;
+    resetBlockArgRenderer("rich-text");
     this.redoStack.length = 0;
     this.initialSnapshots.clear();
     this.#pendingArgs.clear();
@@ -4232,7 +4233,7 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   #isGridContainer(entry) {
-    if (this.blockNameOf(entry) !== "wf:layout") {
+    if (this.blockNameOf(entry) !== "layout") {
       return false;
     }
     const mode = entry?.args?.mode;

@@ -8,6 +8,7 @@ import {
   _renderBlocks,
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
+import Layout from "discourse/blocks/builtin/layout";
 import {
   registerBlock,
   withTestBlockRegistration,
@@ -571,15 +572,15 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   module("annotate-on-insert (grid)", function (innerHooks) {
     innerHooks.beforeEach(async function () {
       withTestBlockRegistration(() => registerBlock(TestTile));
-      // Force-load the starter pre-initializer so `wf:layout`
-      // (which declares the grid `childArgs` schema) is registered
-      // for the assertions below.
-      await import("discourse/plugins/discourse-wireframe/discourse/pre-initializers/register-starter-blocks");
+      // Pass the core `Layout` block by class (it can't be registered by its
+      // unprefixed core id from a plugin test). `blockNameOf` derives
+      // "layout" from the class, which is what the service's grid detection
+      // and the `gridKey` below key off.
       this.layout = await _renderBlocks(
         "homepage-blocks",
         [
           {
-            block: "wf:layout",
+            block: Layout,
             args: { mode: "grid", columns: 4, rows: 2 },
             children: [
               {
@@ -607,7 +608,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("inserts into a grid layout annotate the entry with containerArgs.grid", function (assert) {
       const draft = this.editor.readResolvedLayout("homepage-blocks");
-      const gridKey = `wf:layout:${draft[0].__stableKey}`;
+      const gridKey = `layout:${draft[0].__stableKey}`;
 
       const ok = this.editor.insertBlock({
         blockName: "wf:svc-test-tile",
@@ -639,7 +640,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("setSlotPlacement updates a cell's column/row and is undoable", async function (assert) {
       const draft = this.editor.readResolvedLayout("homepage-blocks");
-      const gridKey = `wf:layout:${draft[0].__stableKey}`;
+      const gridKey = `layout:${draft[0].__stableKey}`;
 
       // Seed a placed tile via insertBlockAtCell so we have a cell to
       // reposition.

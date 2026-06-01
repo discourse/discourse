@@ -1,11 +1,10 @@
 // @ts-check
-// Imports from `./entry-key` (not `./mutate-layout`) so the universal
-// bundle doesn't pull in the rest of mutate-layout's editor-only
-// helpers. `parsePlacement` exported from this file is called by the
-// live-page `wf-layout.gjs` block, so grid-math itself must stay
-// universal — even though `computeShiftPlan` below is editor-only.
-// Tree-shaking should keep `computeShiftPlan` out of the universal
-// bundle when no universal consumer imports it.
+// Editor-only grid geometry: the drag / occupation / shift logic the editor
+// uses. `parsePlacement` (the one parser this module needs internally) comes
+// from core's public blocks API. `entryKey` is imported from its own file
+// rather than `./mutate-layout` to avoid pulling the rest of mutate-layout's
+// helpers in alongside it.
+import { parsePlacement } from "discourse/blocks";
 import { entryKey } from "./entry-key";
 
 /**
@@ -15,83 +14,12 @@ import { entryKey } from "./entry-key";
  * The grid is 1-indexed (matching CSS Grid's `grid-column` / `grid-row`
  * line numbering). A cell at column C, row R is referred to as
  * `{column: C, row: R}` in the API.
- *
- * Slot placement strings follow CSS Grid shorthand:
- *  - `"1 / 4"` — start at line 1, end at line 4 (spans 3 columns).
- *  - `"2"` — start at line 2, span 1.
- *  - `"auto"` — let CSS Grid auto-place.
- *
- * The parser is conservative: anything it doesn't recognise becomes
- * `{start: null, end: null}` so the editor falls back to auto-placement
- * rather than corrupting the user's data.
  */
 
 /**
  * @typedef {{start: number|null, end: number|null}} Track
  * @typedef {{column: Track, row: Track}} SlotPlacement
  */
-
-/**
- * Parses a slot's `column` / `row` arg strings into start / end line
- * numbers. Returns `{start: null, end: null}` for auto / span / unknown
- * placements.
- *
- * @param {Object} args
- * @returns {SlotPlacement}
- */
-export function parseSlotPlacement(args) {
-  return {
-    column: parseTrack(args?.column),
-    row: parseTrack(args?.row),
-  };
-}
-
-/**
- * Reads grid placement out of a child entry's `containerArgs`. `wf:layout`
- * namespaces per-parent-mode placement hints under a top-level key
- * (`containerArgs.grid` for grid mode); this helper centralises that
- * access so callers don't reach into the namespace structure directly,
- * and future modes can be added without rewriting every consumer.
- *
- * @param {Object} [containerArgs]
- * @returns {SlotPlacement}
- */
-export function parsePlacement(containerArgs) {
-  return parseSlotPlacement(containerArgs?.grid);
-}
-
-/**
- * Parses a single CSS Grid line shorthand. Examples:
- *
- *  - `"1 / 4"` → `{start: 1, end: 4}`
- *  - `"2"` → `{start: 2, end: 3}` (single-line span 1)
- *  - `"auto"` / `""` / undefined → `{start: null, end: null}`
- *
- * @param {*} raw
- * @returns {Track}
- */
-export function parseTrack(raw) {
-  if (typeof raw !== "string") {
-    return { start: null, end: null };
-  }
-  const value = raw.trim();
-  if (!value || value === "auto" || value.startsWith("span")) {
-    return { start: null, end: null };
-  }
-  const parts = value.split("/").map((s) => s.trim());
-  const startNum = Number(parts[0]);
-  if (!Number.isInteger(startNum) || startNum < 1) {
-    return { start: null, end: null };
-  }
-  if (parts.length === 1) {
-    return { start: startNum, end: startNum + 1 };
-  }
-  const endNum = Number(parts[1]);
-  if (!Number.isInteger(endNum) || endNum <= startNum) {
-    return { start: startNum, end: startNum + 1 };
-  }
-  return { start: startNum, end: endNum };
-}
 
 /**
  * Formats a track as a CSS Grid shorthand string suitable for writing

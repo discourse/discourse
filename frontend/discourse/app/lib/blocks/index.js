@@ -147,3 +147,37 @@ export { getByPath } from "discourse/lib/blocks/-internals/utils";
  * matchValue({ actual: 5, expected: { not: 3 } }) // true
  */
 export { matchValue } from "discourse/lib/blocks/-internals/matching/value-matcher";
+
+/* Arg Value Patterns */
+
+/**
+ * Regex patterns for validating common string arg values, applied via a
+ * schema arg's `pattern:` key.
+ *
+ * - `URL_PATTERN` — relative path, absolute http(s) URL, `#anchor`, or `mailto:`.
+ * - `HEX_COLOR_PATTERN` — `#rgb`, `#rrggbb`, or `#rrggbbaa`.
+ * - `ICON_NAME_PATTERN` — kebab-case lowercase icon ID.
+ */
+export {
+  URL_PATTERN,
+  HEX_COLOR_PATTERN,
+  ICON_NAME_PATTERN,
+} from "discourse/lib/blocks/-internals/arg-patterns";
+
+/* Grid Placement */
+
+/**
+ * Reads CSS Grid placement out of a child entry's container args.
+ *
+ * - `parsePlacement(containerArgs)` — returns `{column, row}` tracks from
+ *   `containerArgs.grid`.
+ * - `parseSlotPlacement(args)` — returns `{column, row}` tracks from a raw
+ *   `{column, row}` arg pair.
+ *
+ * Each track is `{start: number|null, end: number|null}`; null tracks mean
+ * auto-placement.
+ */
+export {
+  parsePlacement,
+  parseSlotPlacement,
+} from "discourse/lib/blocks/-internals/grid-placement";

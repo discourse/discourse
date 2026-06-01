@@ -1,6 +1,6 @@
 // @ts-check
 
-import { isSafeHref } from "discourse/lib/blocks/-internals/validation/inline-doc";
+import { safeHref } from "discourse/lib/safe-href";
 
 /**
  * Normalize a stored value into a ProseMirror doc-JSON shape. Plain strings
@@ -41,20 +41,6 @@ export function toStorage(doc) {
     return doc.content.map((node) => node.text ?? "").join("");
   }
   return doc;
-}
-
-/**
- * Sanitize an href for rendering. Returns the href if it passes the same
- * scheme/control-char checks the validator applies; returns `"#"` otherwise.
- * Defense-in-depth — the validator should have already rejected unsafe
- * hrefs before they hit the renderer, but invalid data can still reach this
- * code path via hand-authored layouts.
- *
- * @param {unknown} href
- * @returns {string}
- */
-export function safeHref(href) {
-  return isSafeHref(href) ? String(href) : "#";
 }
 
 /**

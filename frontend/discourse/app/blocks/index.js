@@ -12,3 +12,15 @@
 
 export { block } from "discourse/lib/blocks/-internals/decorator";
 export { BlockCondition } from "discourse/blocks/conditions";
+export {
+  registerBlockArgRenderer,
+  resetBlockArgRenderer,
+} from "discourse/lib/blocks/-internals/arg-renderers";
+
+// Grid-placement readers for container blocks. Surfaced here (not only on
+// `discourse/lib/blocks`) so consumers in other bundles can reach them
+// through this stable public facade rather than a concrete internal path.
+export {
+  parsePlacement,
+  parseSlotPlacement,
+} from "discourse/lib/blocks/-internals/grid-placement";

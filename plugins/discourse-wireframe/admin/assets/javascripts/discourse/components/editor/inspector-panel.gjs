@@ -83,7 +83,7 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get hasCustomLayoutForm() {
-    return this.data?.name === "wf:layout";
+    return this.data?.name === "layout";
   }
 
   /**

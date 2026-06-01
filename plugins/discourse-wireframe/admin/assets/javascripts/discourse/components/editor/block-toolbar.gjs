@@ -75,7 +75,7 @@ export default class BlockToolbar extends Component {
     const _v = this.wireframe.structuralVersion;
     const located = this.wireframe.findEntryAndOutletSync(this.args.blockKey);
     const entry = located?.entry;
-    if (entry?.block !== "wf:layout") {
+    if (entry?.block !== "layout") {
       return false;
     }
     return (entry.args?.autoCollapse ?? "default") !== "never";

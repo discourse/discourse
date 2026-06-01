@@ -1,7 +1,7 @@
 // @ts-check
+import { isSafeHref } from "discourse/lib/safe-href";
 
 const ALLOWED_MARKS = new Set(["strong", "em", "link"]);
-const ALLOWED_SCHEMES = new Set(["http", "https", "mailto", "tel"]);
 
 /**
  * Structural check for an inline-rich-text ProseMirror doc.
@@ -68,30 +68,4 @@ function isInlineMark(mark) {
     return isSafeHref(mark.attrs.href);
   }
   return true;
-}
-
-/**
- * Whether an href is safe to store and render. Rejects dangerous schemes
- * (`javascript:`, `data:`, etc.) and control characters. Permits relative
- * paths, fragment links, and the http/https/mailto/tel schemes.
- *
- * @param {unknown} href
- * @returns {boolean}
- */
-export function isSafeHref(href) {
-  if (typeof href !== "string" || href.length === 0) {
-    return false;
-  }
-
-  if (/[\x00-\x1F\x7F]/.test(href)) {
-    return false;
-  }
-  if (href.startsWith("/") || href.startsWith("#") || href.startsWith("?")) {
-    return true;
-  }
-  const match = href.match(/^([a-zA-Z][a-zA-Z0-9+.-]*):/);
-  if (!match) {
-    return true;
-  }
-  return ALLOWED_SCHEMES.has(match[1].toLowerCase());
 }
