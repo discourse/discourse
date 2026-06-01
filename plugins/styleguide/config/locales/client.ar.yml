@@ -95,6 +95,8 @@ ar:
           title: "المزيد من الموضوعات"
         post_menu:
           title: "قائمة المشاركة"
+        docked_composer:
+          title: "أداة إنشاء مثبتة"
         modal:
           title: "النافذة المشروطة"
           header: "العنوان المشروط"

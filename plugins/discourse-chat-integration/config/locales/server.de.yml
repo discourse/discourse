@@ -78,6 +78,10 @@ de:
       added_and_removed: "%{added} hinzugefügt und %{removed} entfernt"
       added: "%{added} hinzugefügt"
       removed: "%{removed} entfernt"
+    errors:
+      provider_already_enabled: "Der Anbieter '%{name}' ist bereits aktiviert"
+      provider_not_found: "Anbieter '%{name}' nicht gefunden"
+      setting_update_failed: "Aktualisierung der Einstellungen fehlgeschlagen: %{errors}"
     provider:
       slack:
         status:

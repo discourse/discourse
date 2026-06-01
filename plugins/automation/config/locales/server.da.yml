@@ -8,6 +8,8 @@ da:
   site_settings:
     discourse_automation_enabled: "Aktiver discourse-automation plugin"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(tom)"
     models:
       automations:
         validations:

@@ -12,6 +12,7 @@ el:
           poll: "Ψηφοφορία Discourse"
   js:
     poll:
+      title: "Ψηφοφορία"
       dynamic:
         enabled_hint: "Οι επιλογές μπορούν να προστεθούν ή να αφαιρεθούν."
       voters:

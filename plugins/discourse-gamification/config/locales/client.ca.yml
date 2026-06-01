@@ -12,6 +12,10 @@ ca:
         link_to_settings: "Configuració"
         refresh: "Actualitza"
         name: "Nom"
+        section:
+          groups: "Grups"
+        weight:
+          solution: "Solució"
         period:
           all_time: "Sempre"
           yearly: "Anualment"

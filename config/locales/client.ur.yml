@@ -5810,6 +5810,8 @@ ur:
         sections:
           reports:
             title: "گزارشات"
+          traffic:
+            title: "سائٹ پر آمدو رفت"
           engagement:
             activity_by_category:
               category: "زُمرَہ"

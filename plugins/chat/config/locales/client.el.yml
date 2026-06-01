@@ -228,6 +228,9 @@ el:
         other: "Έχετε %{count} αδιάβαστες συζητήσεις"
       scroll_to_bottom: "Κύλιση προς τα κάτω"
       scroll_to_new_messages: "Δείτε νέα μηνύματα"
+      new_messages:
+        one: "%{count} νέο μήνυμα"
+        other: "%{count} νέα μηνύματα"
       sound:
         title: "Ήχος ειδοποίησης συνομιλίας για υπολογιστές"
       sounds:
