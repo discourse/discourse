@@ -11,9 +11,11 @@ export default {
     const twitterUrl = document.querySelector("meta[name='twitter:url']");
 
     // workaround for mobile Chrome, which uses the canonical url when sharing
-    const canonicalUrl = document.querySelector("link[rel='canonical']");
+    const canonicalUrlElement = document.querySelector("link[rel='canonical']");
 
     const appEvents = owner.lookup("service:app-events");
+    const canonicalUrlService = owner.lookup("service:canonical-url");
+
     appEvents.on("page:changed", ({ title, url }) => {
       const absoluteUrl = getAbsoluteURL(url);
 
@@ -22,8 +24,9 @@ export default {
       twitterTitle?.setAttribute("content", title);
       twitterUrl?.setAttribute("content", absoluteUrl);
 
-      if (canonicalUrl) {
-        canonicalUrl.setAttribute("href", getCanonicalUrl(absoluteUrl));
+      if (canonicalUrlElement) {
+        const href = canonicalUrlService.url || getCanonicalUrl(absoluteUrl);
+        canonicalUrlElement.setAttribute("href", href);
       }
     });
   },
