@@ -14,6 +14,7 @@ export default class NestedRoute extends Route {
   @service composer;
   @service header;
   @service nestedViewCache;
+  @service router;
   @service screenTrack;
   @service site;
   @service siteSettings;

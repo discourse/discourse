@@ -1,6 +1,7 @@
 import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 
 class HeaderStub extends Service {
   clearCount = 0;
@@ -8,10 +9,6 @@ class HeaderStub extends Service {
   clearTopic() {
     this.clearCount++;
   }
-}
-
-class RouterStub extends Service {
-  currentRouteName = null;
 }
 
 function completedTransition() {
@@ -27,20 +24,22 @@ async function waitForTransitionCleanup() {
   await Promise.resolve();
 }
 
+function setCurrentRouteName(route, currentRouteName) {
+  sinon.stub(route.router, "currentRouteName").value(currentRouteName);
+}
+
 module("Unit | Route | topic header cleanup", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
     this.owner.register("service:header", HeaderStub);
-    this.owner.register("service:router", RouterStub);
   });
 
   test("nested route does not clear header topic info when transitioning to flat topic route", async function (assert) {
     const route = this.owner.lookup("route:nested");
     const header = this.owner.lookup("service:header");
-    const router = this.owner.lookup("service:router");
 
-    router.currentRouteName = "topic.fromParams";
+    setCurrentRouteName(route, "topic.fromParams");
 
     route.willTransition(completedTransition());
     await waitForTransitionCleanup();
@@ -55,9 +54,8 @@ module("Unit | Route | topic header cleanup", function (hooks) {
   test("flat topic route does not clear header topic info when transitioning to nested route", async function (assert) {
     const route = this.owner.lookup("route:topic.from-params");
     const header = this.owner.lookup("service:header");
-    const router = this.owner.lookup("service:router");
 
-    router.currentRouteName = "nested";
+    setCurrentRouteName(route, "nested");
     route.controllerFor = () => ({
       set() {},
     });
@@ -75,9 +73,8 @@ module("Unit | Route | topic header cleanup", function (hooks) {
   test("nested route clears header topic info when transitioning away from topic routes", async function (assert) {
     const route = this.owner.lookup("route:nested");
     const header = this.owner.lookup("service:header");
-    const router = this.owner.lookup("service:router");
 
-    router.currentRouteName = "discovery.latest";
+    setCurrentRouteName(route, "discovery.latest");
 
     route.willTransition(completedTransition());
     await waitForTransitionCleanup();
