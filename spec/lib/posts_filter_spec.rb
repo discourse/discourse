@@ -192,6 +192,33 @@ RSpec.describe PostsFilter do
     )
   end
 
+  it "filters posts and topics by full text keywords" do
+    SearchIndexer.enable
+    post_with_apples = Fabricate(:post, raw: "This post contains apples", topic: feature_topic)
+    post_with_bananas = Fabricate(:post, raw: "This post mentions bananas", topic: bug_topic)
+    post_with_both =
+      Fabricate(:post, raw: "This post has apples and bananas", topic: feature_bug_topic)
+    Fabricate(:post, raw: "No fruits here", topic: no_tag_topic)
+    reply_on_bananas_topic = Fabricate(:post, raw: "Just a reply", topic: post_with_bananas.topic)
+
+    expect(filtered_post_ids("keywords:apples")).to contain_exactly(
+      post_with_apples.id,
+      post_with_both.id,
+    )
+    expect(filtered_post_ids("keywords:apples,bananas")).to contain_exactly(
+      post_with_apples.id,
+      post_with_bananas.id,
+      post_with_both.id,
+    )
+    expect(filtered_post_ids("topic_keywords:banana")).to contain_exactly(
+      bug_post.id,
+      post_with_bananas.id,
+      reply_on_bananas_topic.id,
+      feature_bug_post.id,
+      post_with_both.id,
+    )
+  end
+
   it "tracks invalid filter fragments" do
     filter = described_class.new("invalidfilter tag:feature order:missing")
 
