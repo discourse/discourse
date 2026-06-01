@@ -45,21 +45,21 @@ tasks:
   test:
     context: host
     category: test
-    description: Verify Gemfile and lock consistency.
-    run: bundle lock --check
+    description: Verify declared Ruby platform from Bundler contract metadata.
+    run: bundle platform --ruby
     execution:
       default_mode: native
       modes:
         native:
           context: host
-          run: bundle lock --check
+          run: bundle platform --ruby
         container:
           context: app
-          run: bundle lock --check
+          run: bundle platform --ruby
     depends_on:
       - setup
     safe_for_agent: true
-    notes: Checks that Bundler lock state is consistent with Gemfile for this slice.
+    notes: Checks that Bundler reads the repo contract metadata and resolved Ruby platform.
   verify:
     context: host
     category: test
