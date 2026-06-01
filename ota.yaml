@@ -21,12 +21,10 @@ execution:
       attachments:
         isolated_paths:
           - vendor/bundle
-toolchains:
-  ruby:
-    provider: ruby
-    version: 3.4.7
-    package_managers:
-      bundler: '2.6.4'
+runtimes:
+  ruby: '3.4'
+tools:
+  bundler: '2.6.4'
 tasks:
   setup:
     context: host
