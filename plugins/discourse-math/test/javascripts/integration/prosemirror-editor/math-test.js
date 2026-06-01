@@ -1,21 +1,32 @@
 import { getOwner } from "@ember/owner";
 import { click } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import {
+  registerRichEditorExtension,
+  resetRichEditorExtensions,
+} from "discourse/lib/composer/rich-editor-extensions";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   setupRichEditor,
   testMarkdown,
 } from "discourse/tests/helpers/rich-editor-helper";
+import richEditorExtension from "discourse/plugins/discourse-math/lib/rich-editor-extension";
 
 module(
   "Integration | Component | prosemirror-editor - math extension",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("renders inline math and preserves markdown", async function (assert) {
+    hooks.beforeEach(function () {
       this.siteSettings.rich_editor = true;
       this.siteSettings.discourse_math_enabled = true;
 
+      resetRichEditorExtensions().then(() => {
+        registerRichEditorExtension(richEditorExtension);
+      });
+    });
+
+    test("renders inline math and preserves markdown", async function (assert) {
       const markdown = "Inline $E=mc^2$ math.";
 
       await testMarkdown(
@@ -30,9 +41,6 @@ module(
     });
 
     test("renders block math and preserves markdown", async function (assert) {
-      this.siteSettings.rich_editor = true;
-      this.siteSettings.discourse_math_enabled = true;
-
       const markdown = "$$\nE=mc^2\n$$";
       const expectedMarkdown = "$$\nE=mc^2\n$$\n\n";
 
@@ -50,9 +58,6 @@ module(
     });
 
     test("edits math via modal", async function (assert) {
-      this.siteSettings.rich_editor = true;
-      this.siteSettings.discourse_math_enabled = true;
-
       const markdown = "Inline $E=mc^2$ math.";
       const modalService = getOwner(this).lookup("service:modal");
       const originalShow = modalService.show;
