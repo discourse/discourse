@@ -10,22 +10,13 @@ RSpec.describe DiscourseHcaptcha::RecaptchaController do
     end
 
     context "when reCaptcha is enabled and configured" do
-      it "stores token in Redis and sets encrypted cookie" do
+      it "stores token in server session with 2 minute TTL" do
         post "/captcha/recaptcha/create.json", params: { token: "test-token" }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["success"]).to eq("OK")
-        expect(response.cookies["re_captcha_temp_id"]).to be_present
-      end
-
-      it "stores token in Redis" do
-        post "/captcha/recaptcha/create.json", params: { token: "test-token" }
-
-        keys = Discourse.redis.keys("reCaptchaToken_*")
-        expect(keys).not_to be_empty
-
-        stored_token = Discourse.redis.get(keys.first)
-        expect(stored_token).to eq("test-token")
+        expect(server_session["recaptcha_token"]).to eq("test-token")
+        expect(server_session.ttl("recaptcha_token")).to be_between(1, 120)
       end
     end
 

@@ -4,8 +4,10 @@ module DiscourseHcaptcha
   class RecaptchaProvider < CaptchaProvider
     CAPTCHA_VERIFICATION_URL = "https://www.google.com/recaptcha/api/siteverify"
 
-    def fetch_captcha_token(cookies)
-      fetch_token(:re_captcha_temp_id, "reCaptchaToken", cookies)
+    def fetch_captcha_token(server_session)
+      token = server_session["recaptcha_token"]
+      server_session.delete("recaptcha_token")
+      token
     end
 
     def captcha_verification_url

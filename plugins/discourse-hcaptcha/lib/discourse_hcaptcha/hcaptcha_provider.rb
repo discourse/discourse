@@ -4,8 +4,10 @@ module DiscourseHcaptcha
   class HcaptchaProvider < CaptchaProvider
     CAPTCHA_VERIFICATION_URL = "https://hcaptcha.com/siteverify"
 
-    def fetch_captcha_token(cookies)
-      fetch_token(:h_captcha_temp_id, "hCaptchaToken", cookies)
+    def fetch_captcha_token(server_session)
+      token = server_session["hcaptcha_token"]
+      server_session.delete("hcaptcha_token")
+      token
     end
 
     def captcha_verification_url

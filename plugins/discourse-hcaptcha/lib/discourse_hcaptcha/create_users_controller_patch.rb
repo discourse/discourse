@@ -12,14 +12,16 @@ module DiscourseHcaptcha
       captcha_provider = captcha_provider_selector
       return fail_with("captcha_not_configured") if captcha_provider.nil?
 
-      captcha_token = captcha_provider.fetch_captcha_token(cookies)
+      captcha_token = captcha_provider.fetch_captcha_token(server_session)
       raise Discourse::InvalidAccess.new if captcha_token.blank?
 
       response = captcha_provider.send_captcha_verification(captcha_token)
 
       validate_captcha_response(response)
-    rescue => e
-      Rails.logger.warn("Error parsing Captcha response: #{e}")
+    rescue Discourse::InvalidAccess
+      fail_with("captcha_verification_failed")
+    rescue StandardError => e
+      Rails.logger.warn("Captcha verification error: #{e.class} - #{e.message}")
       fail_with("captcha_verification_failed")
     end
 

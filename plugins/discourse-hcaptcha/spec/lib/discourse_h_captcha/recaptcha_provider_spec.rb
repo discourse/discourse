@@ -12,36 +12,26 @@ RSpec.describe DiscourseHcaptcha::RecaptchaProvider do
   end
 
   describe "#fetch_captcha_token" do
-    let(:temp_id) { SecureRandom.uuid }
     let(:token) { "test-recaptcha-token" }
-    let(:request) { ActionDispatch::TestRequest.create }
-    let(:cookies) { ActionDispatch::Cookies::CookieJar.build(request, {}) }
+    let(:server_session) { ServerSession.new(SecureRandom.hex) }
 
-    before do
-      Discourse.redis.setex("reCaptchaToken_#{temp_id}", 120, token)
-      cookies.encrypted[:re_captcha_temp_id] = temp_id
-    end
+    before { server_session["recaptcha_token"] = token }
 
-    it "retrieves token from Redis" do
-      result = provider.fetch_captcha_token(cookies)
+    it "retrieves token from server session" do
+      result = provider.fetch_captcha_token(server_session)
       expect(result).to eq(token)
     end
 
-    it "deletes the token from Redis after fetching" do
-      provider.fetch_captcha_token(cookies)
-      expect(Discourse.redis.get("reCaptchaToken_#{temp_id}")).to be_nil
+    it "deletes the token from server session after fetching" do
+      provider.fetch_captcha_token(server_session)
+      expect(server_session["recaptcha_token"]).to be_nil
     end
 
-    it "deletes the cookie after fetching" do
-      provider.fetch_captcha_token(cookies)
-      expect(cookies.encrypted[:re_captcha_temp_id]).to be_nil
-    end
-
-    context "when no cookie is present" do
-      let(:empty_cookies) { ActionDispatch::Cookies::CookieJar.build(request, {}) }
+    context "when no token is present" do
+      let(:empty_session) { ServerSession.new(SecureRandom.hex) }
 
       it "returns nil" do
-        result = provider.fetch_captcha_token(empty_cookies)
+        result = provider.fetch_captcha_token(empty_session)
         expect(result).to be_nil
       end
     end

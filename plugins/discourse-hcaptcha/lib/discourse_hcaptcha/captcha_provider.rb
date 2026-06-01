@@ -6,7 +6,7 @@ module DiscourseHcaptcha
     RECAPTCHA = "recaptcha"
     NONE = "none"
 
-    def fetch_captcha_token
+    def fetch_captcha_token(server_session)
       raise NotImplementedError
     end
 
@@ -19,18 +19,6 @@ module DiscourseHcaptcha
     end
 
     protected
-
-    def fetch_token(temp_id_key, redis_prefix, cookies)
-      temp_id = cookies.encrypted[temp_id_key]
-      captcha_token = Discourse.redis.get("#{redis_prefix}_#{temp_id}")
-
-      if temp_id.present?
-        Discourse.redis.del("#{redis_prefix}_#{temp_id}")
-        cookies.delete(temp_id_key)
-      end
-
-      captcha_token
-    end
 
     def send_verification(captcha_token, captcha_verification_url, secret_key)
       uri = URI.parse(captcha_verification_url)

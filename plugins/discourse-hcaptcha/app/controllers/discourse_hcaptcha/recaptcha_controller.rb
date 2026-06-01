@@ -13,12 +13,8 @@ module DiscourseHcaptcha
       raise Discourse::InvalidParameters.new(:token) if params[:token].blank?
     end
 
-    def store_token_in_redis(temp_id)
-      Discourse.redis.setex("reCaptchaToken_#{temp_id}", TOKEN_TTL.to_i, params[:token])
-    end
-
-    def set_encrypted_cookie(temp_id)
-      cookies.encrypted[:re_captcha_temp_id] = cookie_options.merge({ value: temp_id })
+    def token_key
+      "recaptcha_token"
     end
   end
 end

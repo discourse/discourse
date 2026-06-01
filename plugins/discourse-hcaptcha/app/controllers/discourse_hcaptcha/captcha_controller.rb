@@ -10,10 +10,7 @@ module DiscourseHcaptcha
     TOKEN_TTL = 2.minutes
 
     def create
-      temp_id = SecureRandom.uuid
-      store_token_in_redis(temp_id)
-      set_encrypted_cookie(temp_id)
-
+      server_session.set(token_key, params[:token], expires: TOKEN_TTL)
       render json: { success: "OK" }
     end
 
@@ -23,19 +20,8 @@ module DiscourseHcaptcha
       raise NotImplementedError
     end
 
-    def store_token_in_redis(temp_id)
+    def token_key
       raise NotImplementedError
-    end
-
-    def set_encrypted_cookie(temp_id)
-      raise NotImplementedError
-    end
-
-    def cookie_options
-      options = { httponly: true, secure: SiteSetting.force_https, expires: TOKEN_TTL.from_now }
-      options[:same_site] = SiteSetting.same_site_cookies if SiteSetting.same_site_cookies !=
-        "Disabled"
-      options
     end
   end
 end

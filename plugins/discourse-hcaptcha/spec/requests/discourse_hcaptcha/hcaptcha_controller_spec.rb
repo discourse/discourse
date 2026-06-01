@@ -10,22 +10,13 @@ RSpec.describe DiscourseHcaptcha::HcaptchaController do
     end
 
     context "when hCaptcha is enabled and configured" do
-      it "stores token in Redis and sets encrypted cookie" do
+      it "stores token in server session with 2 minute TTL" do
         post "/captcha/hcaptcha/create.json", params: { token: "test-token" }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["success"]).to eq("OK")
-        expect(response.cookies["h_captcha_temp_id"]).to be_present
-      end
-
-      it "stores token in Redis" do
-        post "/captcha/hcaptcha/create.json", params: { token: "test-token" }
-
-        keys = Discourse.redis.keys("hCaptchaToken_*")
-        expect(keys).not_to be_empty
-
-        stored_token = Discourse.redis.get(keys.first)
-        expect(stored_token).to eq("test-token")
+        expect(server_session["hcaptcha_token"]).to eq("test-token")
+        expect(server_session.ttl("hcaptcha_token")).to be_between(1, 120)
       end
     end
 
