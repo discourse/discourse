@@ -273,7 +273,7 @@ module SeedData
 
       if !quick_start_filename || !File.exist?(quick_start_filename)
         # TODO Make the quick start guide translatable
-        quick_start_filename = File.join(Rails.root, "docs", "ADMIN-QUICK-START-GUIDE.md")
+        quick_start_filename = Rails.root.join("docs/ADMIN-QUICK-START-GUIDE.md").to_s
       end
 
       content = File.read(quick_start_filename)

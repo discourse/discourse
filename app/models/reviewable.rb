@@ -52,7 +52,7 @@ class Reviewable < ActiveRecord::Base
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
 
   after_commit(on: %i[create update]) do
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+    Jobs.enqueue(:notify_reviewable, reviewable_id: id) if pending?
   end
 
   # Can be used if several actions are equivalent
@@ -83,7 +83,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.sti_names
-    self.types.map(&:sti_name)
+    types.map(&:sti_name)
   end
 
   def self.source_for(type)
@@ -228,7 +228,7 @@ class Reviewable < ActiveRecord::Base
     rs.save!
 
     update(
-      score: self.score + rs.score,
+      score: score + rs.score,
       latest_score: rs.created_at,
       force_review: self.force_review || force_review,
     )
@@ -333,7 +333,7 @@ class Reviewable < ActiveRecord::Base
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
 
-    (params[:payload] || {}).each { |k, v| self.payload[k] = v }
+    (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
 
     result = false
@@ -354,7 +354,7 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
+    perform_method = :"perform_#{aliases[action_id] || action_id}"
     guardian = args[:guardian] || Guardian.new(performed_by)
 
     validate_action!(guardian, action_id, perform_method, args)
@@ -378,7 +378,7 @@ class Reviewable < ActiveRecord::Base
       if update_count || result.remove_reviewable_ids.present?
         Jobs.enqueue(
           :notify_reviewable,
-          reviewable_id: self.id,
+          reviewable_id: id,
           performing_username: performed_by.username,
           updated_reviewable_ids: result.remove_reviewable_ids,
         )
@@ -390,10 +390,10 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Override this in specific reviewable type to include scores for
-  # non-pending reviewables
+  # Includes pending scores plus disagreed ones, so re-approving a previously
+  # rejected reviewable correctly flips those scores back to "agreed".
   def updatable_reviewable_scores
-    reviewable_scores.pending
+    reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
   def transition_to(status_symbol, performed_by)
@@ -470,7 +470,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.unseen_reviewable_count(user)
-    self.unseen_list_for(user).count
+    unseen_list_for(user).count
   end
 
   def self.list_for(
@@ -631,11 +631,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   def basic_serializer
-    TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
+    TYPE_TO_BASIC_SERIALIZER[type.to_sym] || BasicReviewableSerializer
   end
 
   def type_class
-    Reviewable.sti_class_for(self.type)
+    Reviewable.sti_class_for(type)
   end
 
   def self.lookup_serializer_for(type)
@@ -728,7 +728,7 @@ class Reviewable < ActiveRecord::Base
     result =
       DB.query(
         sql,
-        id: self.id,
+        id: id,
         pending: ReviewableScore.statuses[:pending],
         agreed: ReviewableScore.statuses[:agreed],
       )
@@ -756,7 +756,7 @@ class Reviewable < ActiveRecord::Base
 
     DiscourseEvent.trigger(:reviewable_score_updated, self)
 
-    self.score
+    score
   end
 
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
@@ -792,14 +792,14 @@ class Reviewable < ActiveRecord::Base
         DB.query_single(
           "UPDATE reviewables SET version = version + 1 WHERE id = :id AND version = :version RETURNING version",
           version: version,
-          id: self.id,
+          id: id,
         )
     else
       # We didn't supply a version to update safely, so just increase it
       version_result =
         DB.query_single(
           "UPDATE reviewables SET version = version + 1 WHERE id = :id RETURNING version",
-          id: self.id,
+          id: id,
         )
     end
 

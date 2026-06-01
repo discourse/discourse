@@ -134,7 +134,7 @@ module DiscourseNarrativeBot
           message =
             I18n.t(
               self.class.i18n_key("random_mention.reply"),
-              discobot_username: self.discobot_username,
+              discobot_username: discobot_username,
               help_trigger: self.class.help_trigger,
             )
 
@@ -166,7 +166,7 @@ module DiscourseNarrativeBot
       message =
         I18n.t(
           self.class.i18n_key("random_mention.tracks"),
-          discobot_username: self.discobot_username,
+          discobot_username: discobot_username,
           reset_trigger: self.class.reset_trigger,
           tracks: [NewUserNarrative.reset_trigger, AdvancedUserNarrative.reset_trigger].join(", "),
         )
@@ -174,7 +174,7 @@ module DiscourseNarrativeBot
       message << "\n\n#{
         I18n.t(
           self.class.i18n_key("random_mention.bot_actions"),
-          discobot_username: self.discobot_username,
+          discobot_username: discobot_username,
           dice_trigger: self.class.dice_trigger,
           quote_trigger: self.class.quote_trigger,
           quote_sample: DiscourseNarrativeBot::QuoteGenerator.generate(@user),
@@ -225,7 +225,7 @@ module DiscourseNarrativeBot
     def skip_track?
       if @is_pm_to_bot
         @post.raw.match(
-          /((^@#{self.discobot_username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i,
+          /((^@#{discobot_username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i,
         )
       else
         false
@@ -235,7 +235,7 @@ module DiscourseNarrativeBot
     @@cooked_triggers = {}
 
     def cook(trigger)
-      @@cooked_triggers[trigger] ||= PrettyText.cook("@#{self.discobot_username}\\s+#{trigger}")
+      @@cooked_triggers[trigger] ||= PrettyText.cook("@#{discobot_username}\\s+#{trigger}")
     end
 
     def match_trigger?(trigger)
@@ -252,12 +252,12 @@ module DiscourseNarrativeBot
     end
 
     def like_user_post
-      PostActionCreator.like(self.discobot_user, @post) if @post.raw.match(/thank/i)
+      PostActionCreator.like(discobot_user, @post) if @post.raw.match(/thank/i)
     end
 
     def bot_mentioned?
       @bot_mentioned ||=
-        PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(self.discobot_username)
+        PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(discobot_username)
     end
 
     def public_reply?

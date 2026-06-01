@@ -1263,6 +1263,30 @@ es:
       xaxis: "Día"
       yaxis: "Número de colaboradores nuevos"
       description: "Número de usuarios que han publicado su primera publicación durante este periodo."
+    activity_by_category:
+      labels:
+        category: "Categoría"
+        topics: "Temas"
+        posts: "Publicaciones"
+        share: "Compartir"
+    posters_by_member_type:
+      labels:
+        count: "Publicaciones"
+        share: "Compartir"
+      types:
+        staff: "Personal"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Nivel de confianza"
+        count: "Miembros"
+        share: "Compartir"
+      levels:
+        "0": "Nuevo"
+        "1": "Básico"
+        "2": "Miembro"
+        "3": "Habitual"
+        "4": "Líder"
     trust_level_growth:
       title: "Crecimiento de nivel de confianza"
       xaxis:
@@ -1308,9 +1332,8 @@ es:
     site_traffic:
       title: "Tráfico del sitio"
       xaxis:
-        page_view_anon_browser: "Páginas vistas (anónimo)"
-        page_view_logged_in_browser: "Páginas vistas (conectado)"
-        page_view_crawler: "Crawlers conocidos"
+        page_view_anon_browser: "Anónimas"
+        page_view_crawler: "Rastreadores"
         page_view_other: "Otro tráfico"
       yaxis: "Día"
       description: "Páginas vistas por usuarios registrados, usuarios anónimos, crawlers conocidos y otro tráfico."
@@ -1427,6 +1450,12 @@ es:
         num_clicks: "Clics"
         num_topics: "Temas"
       description: "Usuarios listados por número de clics en enlaces que han compartido."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visitas"
     top_traffic_sources:
       title: "Mayores fuentes de tráfico"
       xaxis: "Dominio"
@@ -1649,6 +1678,9 @@ es:
       admin_sidebar_deprecation: "El antiguo diseño de administración está obsoleto en favor del nuevo <a href='https://meta.discourse.org/t/-/289281'>diseño de barra lateral</a> y se eliminará en la próxima versión. Puedes <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> el nuevo diseño de la barra lateral ahora para optar antes por él."
       starttls_disabled: "La configuración de correo saliente tiene STARTTLS desactivado. Esto casi nunca es necesario. Considera eliminar <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> de tu entorno. Consulta <a href='https://meta.discourse.org/t/387286'>este tema</a> para obtener más detalles."
     back_from_logster_text: "Volver al sitio"
+    reports_section:
+      providers:
+        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -1819,7 +1851,6 @@ es:
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
     change_post_ownership_allowed_groups: "Permitir que los usuarios de estos grupos cambien la propiedad de las publicaciones"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
-    use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_onebox_iframes: "Una lista de dominios iframe src que se permiten a través de incrustaciones de Onebox. «*» permitirá todos los motores Onebox por defecto."
@@ -1953,7 +1984,6 @@ es:
     s3_use_acls: "AWS recomienda no usar ACL en los buckets S3; desmarca esta opción si quieres configurar políticas de permisos en los «s3_upload_bucket» y «s3_backup_bucket» configurados."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está desactivada, tan solo se ejecutará una copia de seguridad de la base de datos."
-    backup_location: "Ubicación donde se almacenan las copias de seguridad. IMPORTANTE: S3 requiere credenciales S3 válidas introducidas en los ajustes de Archivos. Cuando cambies esto a S3 desde Local, debes ejecutar la tarea de rake «s3:ensure_cors_rules»."
     backup_gzip_compression_level_for_uploads: "Nivel de compresión Gzip utilizado para comprimir archivos subidos."
     include_thumbnails_in_backups: "Incluir miniaturas generadas en las copias de seguridad. Desactivar esto hará que las copias de seguridad sean más pequeñas, pero requiere el rebake de todas las publicaciones después de una restauración."
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo «last_seen_at», en segundos"
@@ -2142,7 +2172,6 @@ es:
     fast_typing_threshold: "Cantidad mínima de tiempo que un usuario debe escribir para su primera publicación. Si no se alcanza el umbral, la publicación entrará automáticamente en la cola de revisión. El mínimo es de 1 segundo, el estándar es de 3 segundos y el máximo es de 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silencia automáticamente a los usuarios que no alcancen el umbral de escritura rápida"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar a usuarios que escriban demasiado rápido en su primera publicación"
-    auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario. DEPRECIADO: Utiliza en su lugar Palabras Vigiladas para Silencio."
     moderator_guide_topic: "El tema que describe cómo moderas tu comunidad. El enlace será visible en la cola de revisión para moderadores y administradores."
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
@@ -2271,7 +2300,6 @@ es:
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
     get_a_room_threshold: "Número de publicaciones que un usuario deber hacer a la misma persona en un mismo tema para recibir una advertencia."
     dont_feed_the_trolls_threshold: "Número de denuncias de otros usuarios antes de ser advertido."
-    enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Desactiva esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Porcentaje de publicaciones que un usuario debe hacer en un mismo tema antes de que se le muestre un recordatorio acerca de dominar en demasía un tema."
     pm_warn_user_last_seen_months_ago: "Al crear un nuevo PM, advierte a los usuarios cuando el destinatario no se haya visto hace más de n meses."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
@@ -2493,7 +2521,6 @@ es:
     rich_editor: "Activa el editor enriquecido del compositor para que todos los usuarios puedan cambiar entre el modo Markdown actual y el nuevo editor de texto enriquecido para una edición más intuitiva y fácil de usar."
     default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
-    viewport_based_mobile_mode: "Usa el ancho de la ventana gráfica para determinar los modos móvil/escritorio. Este ajuste se eliminará pronto. Si consideras que necesitas desactivarlo, comunícanoslo <a href='https://meta.discourse.org/t/384280'>en Meta</a>."
     content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
     content_localization_supported_locales: "Lista de idiomas compatibles a los que se puede traducir el contenido del usuario. Siempre se incluye el idioma por defecto del sitio. Requiere el ajuste «content localization enabled»."
     content_localization_allowed_groups: "Los grupos pueden actualizar el contenido localizado. Requiere «content localization enabled»."
@@ -3061,7 +3088,7 @@ es:
 
       - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
 
-      - Echa un vistazo a las novedades en las [notas de la versión](https://releases.discourse.org/changelog/%{new_version})
+      - Echa un vistazo a las novedades en las [notas de la versión](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y ayuda sobre Discourse
   new_version_mailer_with_notes:
@@ -3075,7 +3102,7 @@ es:
 
       - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
 
-      - Echa un vistazo a las novedades en las [notas de la versión](https://releases.discourse.org/changelog/%{new_version})
+      - Echa un vistazo a las novedades en las [notas de la versión](https://releases.discourse.org/changelog/v%{new_version})
 
       - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, discusiones y ayuda sobre Discourse
 

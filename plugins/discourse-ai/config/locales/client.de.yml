@@ -263,8 +263,7 @@ de:
             ui_settings: "Oberflächen-Einstellungen"
             integrations: "Integrationen"
         nav:
-          configured: "Konfiguriert"
-          unconfigured: "Nicht konfiguriert"
+          enabled: "Aktiviert"
         filters:
           all: "Gesamt"
           text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
@@ -369,8 +368,6 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
-        translatable_categories: "Übersetzbare Kategorien"
-        translatable_categories_description: "Es werden nur Inhalte aus den ausgewählten Kategorien übersetzt. Unterkategorien müssen separat hinzugefügt werden."
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"

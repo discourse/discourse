@@ -23,6 +23,9 @@ sr:
         week: "Nedelja"
         year: "Godina"
     discourse_post_event:
+      event_description:
+        show_more: "Pokaži više"
+        show_less: "Pokaži manje"
       upcoming_events:
         status: "Status"
       models:
@@ -30,6 +33,13 @@ sr:
           status:
             private:
               title: "Privatna"
+      composer:
+        reminder:
+          units:
+            days:
+              one: "dan"
+              few: "dana"
+              other: "dana"
       builder_modal:
         custom_fields:
           placeholder: "Opciono"
@@ -42,6 +52,11 @@ sr:
             days: "dana"
           periods:
             before: "pre"
+        recurrence:
+          ordinals:
+            last: "poslednji"
+        attendance:
+          none: "Ništa"
         url:
           label: "URL"
           placeholder: "Opciono"
@@ -49,5 +64,3 @@ sr:
           label: "Lokacija"
         description:
           label: "Opis"
-        status:
-          label: "Status"

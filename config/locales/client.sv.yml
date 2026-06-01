@@ -143,6 +143,13 @@ sv:
       placeholder: datum
       from_placeholder: "från-datum"
       to_placeholder: "till-datum"
+    date_range_picker:
+      apply: "Tillämpa"
+      presets:
+        last_7_days: "Senaste 7 dagarna"
+        last_30_days: "Senaste 30 dagarna"
+        last_3_months: "Senaste 3 månaderna"
+        last_6_months: "Senaste 6 månaderna"
     languages:
       ur:
         name: Urdu
@@ -269,8 +276,6 @@ sv:
     tos: "Användarvillkor"
     rules: "Regler"
     conduct: "Uppförandekod"
-    mobile_view: "Mobilvy"
-    desktop_view: "Desktop-vy"
     now: "nyss"
     read_more: "läs mer"
     more: "Mer"
@@ -2663,6 +2668,8 @@ sv:
           other: "Avfärda (%{count})…"
         dismiss_tooltip: "Avfärda nya inlägg eller sluta följa ämnen"
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
+        dismiss_new_topics: "Avfärda nya ämnen"
+        dismiss_new_replies: "Avfärda nya svar"
         dismiss_new: "Avfärda nya"
         dismiss_new_modal:
           title: "Avfärda nya"
@@ -3397,7 +3404,6 @@ sv:
         name_placeholder: "Vad används detta bokmärke till?"
         name_input_label: "Namn på bokmärke"
         set_reminder: "Påminn mig"
-        options: "Alternativ"
         actions:
           delete_bookmark:
             name: "Radera bokmärke"
@@ -3918,14 +3924,7 @@ sv:
       staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
       category_restricted: "Denna tagg är begränsad till kategorier som du inte har tillträde till."
       synonyms: "Synonymer"
-      synonyms_description: "När följande taggar används, kommer de att ersättas med <b>%{base_tag_name}</b>."
       save: "Spara namn och beskrivning av taggen"
-      tag_groups_info:
-        one: 'Denna tagg tillhör gruppen "%{tag_groups}".'
-        other: "Denna tagg tillhör dessa grupper: %{tag_groups}."
-      category_restrictions:
-        one: "Den kan enbart användas i denna kategori:"
-        other: "Den kan enbart användas i dessa kategorier:"
       edit_synonyms: "Redigera synonymer"
       add_synonyms_label: "Lägg till synonymer:"
       add_synonyms: "Lägg till"
@@ -4578,6 +4577,32 @@ sv:
         sections:
           reports:
             title: "Rapporter"
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Ämnen"
+              posts: "Inlägg"
+              share: "Dela"
+            whos_posting:
+              all_categories: "Alla kategorier"
+              staff: "Personal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nya"
+                "1": "Grundläggande"
+                "2": "Medlem"
+                "3": "Vanlig"
+                "4": "Ledare"
+        reports_section:
+          no_data: "Ingen data att visa"
+          modal:
+            enabled_heading: "Aktiverad"
+            all_heading: "Alla rapporter"
+            apply: "Tillämpa"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Sökrobotar"
         period:
           last_7_days: "Senaste 7 dagarna"
           last_30_days: "Senaste 30 dagarna"

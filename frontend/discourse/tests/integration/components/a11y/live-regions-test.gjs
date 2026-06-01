@@ -5,7 +5,7 @@ import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | a11y/live-regions", function (hooks) {
+module("Integration | Component | A11y | LiveRegions", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders polite and assertive live regions", async function (assert) {

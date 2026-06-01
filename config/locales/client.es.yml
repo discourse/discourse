@@ -158,6 +158,15 @@ es:
       placeholder: fecha
       from_placeholder: "desde la fecha"
       to_placeholder: "hasta hoy"
+    date_range_picker:
+      apply: "Aplicar"
+      start_date: "Fecha de inicio"
+      presets:
+        last_7_days: "Últimos 7 días"
+        last_30_days: "Últimos 30 días"
+        last_3_months: "Últimos 3 meses"
+        last_6_months: "Últimos 6 meses"
+        last_year: "El año pasado"
     languages:
       ar:
         name: Árabe
@@ -358,7 +367,6 @@ es:
         condition_debugging: "Depuración de condiciones"
       toggle_safe_mode: "Activar/desactivar el modo seguro"
       toggle_verbose_localization: "Activar/desactivar la localización detallada"
-      toggle_mobile_view: "Activar/desactivar vista móvil"
       disable_dev_tools: "Activar/desactivar herramientas de desarrollo"
       toggle_upcoming_changes_debug: "Activar/desactivar la depuración de próximos cambios"
     s3:
@@ -417,8 +425,6 @@ es:
     tos: "Términos del servicio"
     rules: "Reglas"
     conduct: "Código de conducta"
-    mobile_view: "Versión móvil"
-    desktop_view: "Versión de escritorio"
     now: "justo ahora"
     read_more: "leer más"
     more: "Más"
@@ -3485,6 +3491,8 @@ es:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar solamente las nuevas publicaciones o dejar de seguir los temas"
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
+        dismiss_new_topics: "Rechazar nuevos temas"
+        dismiss_new_replies: "Descartar nuevas respuestas"
         dismiss_new: "Descartar nuevos"
         dismiss_new_modal:
           title: "Descartar nuevo"
@@ -4392,7 +4400,6 @@ es:
         name_placeholder: "¿Para qué es este marcador?"
         name_input_label: "Nombre del marcador"
         set_reminder: "Recordarme"
-        options: "Opciones"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -5067,18 +5074,8 @@ es:
       staff_info: "Para añadir restricciones, mete la etiqueta a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
       synonyms: "Sinónimos"
-      synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
       synonyms_inline: "Estos sinónimos se sustituirán por %{base_tag_name}:"
       save: "Guardar el nombre y la descripción de la etiqueta"
-      tag_groups_info:
-        one: 'Esta etiqueta pertence al grupo: «%{tag_groups}»'
-        other: "Esta etiqueta pertence a estos grupos: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Esta etiqueta pertenece al grupo "
-        other: "Esta etiqueta pertenece a estos grupos: "
-      category_restrictions:
-        one: "Solo se puede usar en esta categoría:"
-        other: "Solo se puede usar en estas categorías:"
       restricted_to: "Restringido a"
       no_synonyms: "Esta etiqueta no tiene sinónimos."
       edit_synonyms: "Editar sinónimos"
@@ -6256,8 +6253,35 @@ es:
             title: "Tráfico del sitio"
           engagement:
             title: "Interacción"
+            activity_by_category:
+              category: "Categoría"
+              topics: "Temas"
+              posts: "Publicaciones"
+              share: "Compartir"
+            whos_posting:
+              all_categories: "Todas las categorías"
+              staff: "Personal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nuevo"
+                "1": "Básico"
+                "2": "Miembro"
+                "3": "Habitual"
+                "4": "Líder"
+              trend:
+                stable: "estable"
+        reports_section:
+          no_data: "No hay datos que mostrar"
+          modal:
+            enabled_heading: "Activado"
+            all_heading: "Todos los informes"
+            apply: "Aplicar"
         configure:
           button: "Configurar"
+        site_traffic:
+          series:
+            anonymous: "Anónimas"
+            crawlers: "Rastreadores"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"

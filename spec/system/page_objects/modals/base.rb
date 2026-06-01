@@ -23,7 +23,7 @@ module PageObjects
       end
 
       def full_modal_selector
-        ".modal.d-modal#{@modal_selector}"
+        ".d-modal#{@modal_selector}"
       end
 
       def footer_selector

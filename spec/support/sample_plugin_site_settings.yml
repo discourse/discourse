@@ -24,3 +24,15 @@ site_settings:
           type: string
         upload_id:
           type: upload
+  ui_cards_setting:
+    type: objects
+    default: "[]"
+    schema:
+      name: card
+      identifier: title
+      properties:
+        title:
+          type: string
+          required: true
+        image:
+          type: upload

@@ -42,7 +42,7 @@
   background-color: inherit;
 }
 
-.keyboard-shortcuts-modal.d-modal.-max {
+.keyboard-shortcuts-modal.d-modal.--max {
   .d-modal__container {
     max-width: 70vw;
   }
@@ -116,7 +116,6 @@
     span {
       border-radius: 3px;
       display: inline-flex;
-      margin: 0 6px;
       padding: 2px 1px 4px;
     }
 

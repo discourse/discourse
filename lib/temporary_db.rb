@@ -52,6 +52,18 @@ class TemporaryDb
       return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
 
+    # macOS homebrew: /opt/homebrew/opt/postgresql@{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/homebrew/opt/postgresql@#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # Arch AUR packages: /opt/postgresql{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/postgresql#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
     # Unversioned fallbacks — skipped when the caller pinned a version range.
     if @versions == VERSIONS
       bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"

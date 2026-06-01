@@ -148,6 +148,24 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
     before { sign_in(current_user) }
 
+    context "when direct message enabled groups exclude the sender" do
+      fab!(:other_user, :user)
+      fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
+
+      it "does not allow sending in an existing direct message channel" do
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          Chat::Message.count
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.user_cannot_send_direct_messages"),
+        )
+      end
+    end
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
@@ -252,6 +270,50 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           # wrong channel and returns a non-404 status, leaking its existence
           expect(response.status).to eq(404)
         end
+      end
+    end
+  end
+
+  describe "#restore" do
+    context "when the user no longer has access to a private category channel" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group:) }
+      fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: private_channel, user: current_user) }
+
+      before do
+        group.add(current_user)
+        private_channel.add(current_user)
+        message.trash!(current_user)
+        GroupUser.where(group: group, user: current_user).destroy_all
+      end
+
+      it "does not restore their own deleted message" do
+        put "/chat/api/channels/#{private_channel.id}/messages/#{message.id}/restore"
+
+        expect(response.status).to eq(403)
+        expect(message.reload).to be_trashed
+      end
+    end
+
+    context "when the user is no longer a member of a direct message channel" do
+      fab!(:other_user, :user)
+      fab!(:third_user, :user)
+      fab!(:dm_channel) do
+        Fabricate(:direct_message_channel, users: [current_user, other_user, third_user])
+      end
+      fab!(:message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
+
+      before do
+        message.trash!(current_user)
+        dm_channel.chatable.direct_message_users.find_by!(user: current_user).destroy!
+      end
+
+      it "does not restore their own deleted message" do
+        put "/chat/api/channels/#{dm_channel.id}/messages/#{message.id}/restore"
+
+        expect(response.status).to eq(403)
+        expect(message.reload).to be_trashed
       end
     end
   end

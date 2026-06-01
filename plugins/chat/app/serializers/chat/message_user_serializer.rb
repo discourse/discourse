@@ -5,15 +5,15 @@ module Chat
     attributes :moderator?, :admin?, :staff?, :moderator?, :new_user?, :primary_group_name
 
     def moderator?
-      !!(object&.moderator?)
+      !!object&.moderator?
     end
 
     def admin?
-      !!(object&.admin?)
+      !!object&.admin?
     end
 
     def staff?
-      !!(object&.staff?)
+      !!object&.staff?
     end
 
     def new_user?

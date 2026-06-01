@@ -115,6 +115,13 @@ zh_TW:
       placeholder: 日期
       from_placeholder: "從日期"
       to_placeholder: "至今"
+    date_range_picker:
+      apply: "套用"
+      presets:
+        last_7_days: "過去 7 天"
+        last_30_days: "過去 30 天"
+        last_3_months: "過去 3 個月"
+        last_6_months: "過去 6 個月"
     languages:
       ar:
         name: 阿拉伯語
@@ -342,8 +349,6 @@ zh_TW:
     tos: "服務條款"
     rules: "規則"
     conduct: "行為準則"
-    mobile_view: "手機版"
-    desktop_view: "電腦版"
     now: "就在剛才"
     read_more: "閱讀更多"
     more: "更多"
@@ -2901,6 +2906,8 @@ zh_TW:
           other: "忽略（%{count} 個）…"
         dismiss_tooltip: "僅忽略新貼文或停止追蹤話題"
         also_dismiss_topics: "停止追蹤這些話題，這樣這些話題就不再顯示為未讀了"
+        dismiss_new_topics: "關閉新主題"
+        dismiss_new_replies: "忽略新回覆"
         dismiss_new: "忽略新內容"
         dismiss_new_modal:
           title: "忽略新內容"
@@ -3627,7 +3634,6 @@ zh_TW:
         name_placeholder: "這個書籤有何用途？"
         name_input_label: "書籤名稱"
         set_reminder: "提醒我"
-        options: "選項"
         actions:
           delete_bookmark:
             name: "刪除書籤"
@@ -4177,12 +4183,7 @@ zh_TW:
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"
       synonyms: "同義詞"
-      synonyms_description: "使用以下標記時，它們將被替換為 <b>%{base_tag_name}</b>。"
       save: "保存標記的名稱和描述"
-      tag_groups_info:
-        other: "此標記屬於以下組：%{tag_groups}。"
-      category_restrictions:
-        other: "它只能用於以下類別："
       edit_synonyms: "編輯同義詞"
       add_synonyms_label: "新增同義字："
       add_synonyms: "新增"
@@ -5006,6 +5007,31 @@ zh_TW:
         sections:
           reports:
             title: "報告"
+          engagement:
+            activity_by_category:
+              category: "分類"
+              topics: "話題"
+              posts: "新發表的貼文"
+              share: "分享"
+            whos_posting:
+              all_categories: "所有分類"
+              staff: "管理員"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新使用者"
+                "1": "初級使用者"
+                "2": "成員"
+                "3": "活躍使用者"
+                "4": "資深"
+        reports_section:
+          modal:
+            enabled_heading: "啟用"
+            all_heading: "所有報告"
+            apply: "套用"
+        site_traffic:
+          series:
+            anonymous: "匿名"
+            crawlers: "爬蟲"
         period:
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"

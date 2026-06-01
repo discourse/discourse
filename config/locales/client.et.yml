@@ -125,6 +125,8 @@ et:
       previous_month: "Eelmine kuu"
       next_month: "Järgmine kuu"
       placeholder: kuupäev
+    date_range_picker:
+      apply: "Rakenda"
     share:
       topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
       close: "Sulge"
@@ -222,8 +224,6 @@ et:
     tos: "Teenuse tingimused"
     rules: "Reeglid"
     conduct: "Käitumise juhised"
-    mobile_view: "Mobiilivaade"
-    desktop_view: "Täisvaade"
     now: "just nüüd"
     read_more: "loe edasi"
     more: "Veel"
@@ -2174,7 +2174,6 @@ et:
       bookmarks:
         edit: "Muuda järjehoidjat"
         name: "Nimi"
-        options: "Suvandid"
         actions:
           delete_bookmark:
             description: "Eemaldab järjehoidja sinu profiilist ja peatab kõik järjehoidja meeldetuletused"
@@ -2908,6 +2907,32 @@ et:
         security_tab: "Turve"
         report_filter_any: "iga"
         disabled: Välja lülitatud
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategooriad"
+              topics: "Teemasid"
+              posts: "Postitust"
+              share: "Jaga"
+            whos_posting:
+              all_categories: "Kõik foorumid"
+              staff: "Meeskond"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uus"
+                "1": "Tavakasutaja"
+                "2": "Liige"
+                "3": "Püsiliige"
+                "4": "Vedaja"
+        reports_section:
+          no_data: "Pole andmeid, mida näidata"
+          modal:
+            enabled_heading: "Sisse lülitatud"
+            all_heading: "Kõik aruanded"
+            apply: "Rakenda"
+        site_traffic:
+          series:
+            anonymous: "Anonüümne"
         period:
           custom: "Individuaalne"
         reports:

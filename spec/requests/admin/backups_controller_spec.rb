@@ -64,16 +64,14 @@ RSpec.describe Admin::BackupsController do
 
       context "with json format" do
         it "returns a list of all the backups" do
-          begin
-            create_backup_files(backup_filename, backup_filename2)
+          create_backup_files(backup_filename, backup_filename2)
 
-            get "/admin/backups.json"
-            expect(response.status).to eq(200)
+          get "/admin/backups.json"
+          expect(response.status).to eq(200)
 
-            filenames = response.parsed_body.map { |backup| backup["filename"] }
-            expect(filenames).to include(backup_filename)
-            expect(filenames).to include(backup_filename2)
-          end
+          filenames = response.parsed_body.map { |backup| backup["filename"] }
+          expect(filenames).to include(backup_filename)
+          expect(filenames).to include(backup_filename2)
         end
       end
     end
@@ -206,29 +204,25 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       it "uses send_file to transmit the backup" do
-        begin
-          token = EmailBackupToken.set(admin.id)
-          create_backup_files(backup_filename)
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
 
-          expect do
-            get "/admin/backups/#{backup_filename}.json", params: { token: token }
-          end.to change {
-            UserHistory.where(action: UserHistory.actions[:backup_download]).count
-          }.by(1)
+        expect do
+          get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        end.to change { UserHistory.where(action: UserHistory.actions[:backup_download]).count }.by(
+          1,
+        )
 
-          expect(response.headers["Content-Length"]).to eq("11")
-          expect(response.headers["Content-Disposition"]).to match(/attachment; filename/)
-        end
+        expect(response.headers["Content-Length"]).to eq("11")
+        expect(response.headers["Content-Disposition"]).to match(/attachment; filename/)
       end
 
       it "returns 422 when token is bad" do
-        begin
-          get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
+        get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
 
-          expect(response.status).to eq(422)
-          expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
-          expect(response.body).to include(I18n.t("download_backup_mailer.no_token"))
-        end
+        expect(response.status).to eq(422)
+        expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
+        expect(response.body).to include(I18n.t("download_backup_mailer.no_token"))
       end
 
       it "returns 404 when the backup does not exist" do
@@ -237,24 +231,27 @@ RSpec.describe Admin::BackupsController do
 
         expect(response.status).to eq(404)
       end
+
+      it "returns 404 for invalid backup ids" do
+        token = EmailBackupToken.set(admin.id)
+        get "/admin/backups/..%2Fsecond%2F#{backup_filename}.json", params: { token: token }
+
+        expect(response.status).to eq(404)
+      end
     end
 
     shared_examples "backup inaccessible" do
       it "denies access with a 404 response" do
-        begin
-          token = EmailBackupToken.set(admin.id)
-          create_backup_files(backup_filename)
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
 
-          expect do
-            get "/admin/backups/#{backup_filename}.json", params: { token: token }
-          end.not_to change {
-            UserHistory.where(action: UserHistory.actions[:backup_download]).count
-          }
+        expect do
+          get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        end.not_to change { UserHistory.where(action: UserHistory.actions[:backup_download]).count }
 
-          expect(response.status).to eq(404)
-          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-          expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
-        end
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        expect(response.headers["Content-Disposition"]).not_to match(/attachment; filename/)
       end
     end
 
@@ -276,22 +273,25 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       it "removes the backup if found" do
-        begin
-          path = backup_path(backup_filename)
-          create_backup_files(backup_filename)
-          expect(File.exist?(path)).to eq(true)
+        path = backup_path(backup_filename)
+        create_backup_files(backup_filename)
+        expect(File.exist?(path)).to eq(true)
 
-          expect do delete "/admin/backups/#{backup_filename}.json" end.to change {
-            UserHistory.where(action: UserHistory.actions[:backup_destroy]).count
-          }.by(1)
+        expect do delete "/admin/backups/#{backup_filename}.json" end.to change {
+          UserHistory.where(action: UserHistory.actions[:backup_destroy]).count
+        }.by(1)
 
-          expect(response.status).to eq(200)
-          expect(File.exist?(path)).to eq(false)
-        end
+        expect(response.status).to eq(200)
+        expect(File.exist?(path)).to eq(false)
       end
 
       it "doesn't remove the backup if not found" do
         delete "/admin/backups/#{backup_filename}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 for invalid backup ids" do
+        delete "/admin/backups/..%2Fsecond%2F#{backup_filename}.json"
         expect(response.status).to eq(404)
       end
 
@@ -310,19 +310,17 @@ RSpec.describe Admin::BackupsController do
 
     shared_examples "backup deletion not allowed" do
       it "prevents deletion with a 404 response" do
-        begin
-          path = backup_path(backup_filename)
-          create_backup_files(backup_filename)
-          expect(File.exist?(path)).to eq(true)
+        path = backup_path(backup_filename)
+        create_backup_files(backup_filename)
+        expect(File.exist?(path)).to eq(true)
 
-          expect do delete "/admin/backups/#{backup_filename}.json" end.not_to change {
-            UserHistory.where(action: UserHistory.actions[:backup_destroy]).count
-          }
+        expect do delete "/admin/backups/#{backup_filename}.json" end.not_to change {
+          UserHistory.where(action: UserHistory.actions[:backup_destroy]).count
+        }
 
-          expect(response.status).to eq(404)
-          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-          expect(File.exist?(path)).to eq(true)
-        end
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        expect(File.exist?(path)).to eq(true)
       end
     end
 
@@ -398,6 +396,15 @@ RSpec.describe Admin::BackupsController do
           post "/admin/backups/#{backup_filename}/restore.json", params: { client_id: "foo" }
           expect(response.status).to eq(200)
         end
+      end
+
+      it "returns 404 for invalid backup ids" do
+        post "/admin/backups/..%2Fsecond%2F#{backup_filename}/restore.json",
+             params: {
+               client_id: "foo",
+             }
+
+        expect(response.status).to eq(404)
       end
     end
 
@@ -939,6 +946,12 @@ RSpec.describe Admin::BackupsController do
 
         expect(response).to be_not_found
       end
+
+      it "returns 404 for invalid backup ids" do
+        put "/admin/backups/..%2Fsecond%2F#{backup_filename}.json"
+
+        expect(response).to be_not_found
+      end
     end
 
     shared_examples "backup emails not allowed" do
@@ -970,7 +983,7 @@ RSpec.describe Admin::BackupsController do
 
   describe "S3 multipart uploads" do
     let(:upload_type) { "backup" }
-    let(:test_bucket_prefix) { "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}" }
+    let(:test_bucket_prefix) { "test_#{Discourse.test_env_number}" }
     let(:backup_file_exists_response) { { status: 404 } }
     let(:mock_multipart_upload_id) do
       "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"

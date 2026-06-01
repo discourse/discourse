@@ -10,10 +10,10 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -68,11 +68,6 @@ import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
-import {
-  clearBlockDecorateCallbacks,
-  clearTagDecorateCallbacks,
-  clearTextDecorateCallbacks,
-} from "discourse/lib/to-markdown";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -213,6 +208,7 @@ export function testCleanup(container, app) {
   User.resetCurrent();
   resetMobile();
   resetAdditionalReportModes();
+  resetAdminDashboardReportRenderers();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -247,9 +243,6 @@ export function testCleanup(container, app) {
   clearPresenceCallbacks();
   restoreBaseUri();
   resetTopicsSectionLinks();
-  clearTagDecorateCallbacks();
-  clearBlockDecorateCallbacks();
-  clearTextDecorateCallbacks();
   clearResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
@@ -533,7 +526,7 @@ export function exists(selector) {
 export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
 
-  const promises = MessageBus.callbacks
+  const promises = window.MessageBus.callbacks
     .filter((callback) => callback.channel === channelPath)
     .map((callback) => callback.func(...args));
 

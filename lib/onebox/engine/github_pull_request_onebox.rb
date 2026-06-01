@@ -24,16 +24,34 @@ module Onebox
       end
 
       def inline_data
-        return unless SiteSetting.github_pr_status_enabled
+        return if github_auth_header(match[:org]).blank? && !SiteSetting.github_pr_status_enabled
+
+        if commit_sha = @url[%r{/commits?/(\h+)}, 1]
+          commit =
+            load_json(
+              "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/commits/#{commit_sha}",
+            )
+          message = commit["commit"]["message"].split("\n").first
+          return(
+            {
+              title:
+                "#{message} - #{match[:org]}/#{match[:repository]}@#{commit["sha"][0...7]} - GitHub",
+            }
+          )
+        end
 
         pr_data = raw(github_auth_header(match[:org]))
-        status = fetch_pr_status(pr_data)&.dig(:status)
-        return unless status
+        result = {
+          title:
+            "#{pr_data["title"]} - Pull Request ##{match[:number]} - #{match[:org]}/#{match[:repository]} - GitHub",
+        }
 
-        title =
-          "#{pr_data["title"]} · Pull Request ##{match[:number]} · " \
-            "#{match[:org]}/#{match[:repository]}"
-        { title: title, css_class: "--gh-status-#{status}" }
+        if SiteSetting.github_pr_status_enabled
+          status = fetch_pr_status(pr_data)&.dig(:status)
+          result[:css_class] = "--gh-status-#{status}" if status
+        end
+
+        result
       rescue StandardError => e
         Rails.logger.warn("Inline GitHub PR onebox error for #{@url}: #{e.message}")
         nil

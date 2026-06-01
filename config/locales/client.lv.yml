@@ -127,6 +127,11 @@ lv:
       previous_month: "Iepriekšējais mēnesis"
       next_month: "Nākamais mēnesis"
       placeholder: datums
+    date_range_picker:
+      apply: "Pielietot"
+      presets:
+        last_7_days: "Pēdējās 7 dienas"
+        last_30_days: "Pēdējās 30 dienas"
     share:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       close: "aizvērt"
@@ -230,8 +235,6 @@ lv:
     tos: "Pakalpojuma noteikumi"
     rules: "Noteikumi"
     conduct: "Rīcības kodekss"
-    mobile_view: "Mobilais skats"
-    desktop_view: "Datora skats"
     now: "tikko"
     read_more: "lasīt vairāk"
     more: "Vairāk"
@@ -2319,7 +2322,6 @@ lv:
             button: "HTML"
       bookmarks:
         name: "Vārds"
-        options: "Iespējas"
     category:
       none: "(nav sadaļas)"
       all: "Visas sadaļas"
@@ -3014,6 +3016,28 @@ lv:
         security_tab: "Drošība"
         report_filter_any: "jebkura"
         disabled: Atslēgt
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Sadaļa"
+              topics: "Tēmas"
+              posts: "Ieraksti"
+              share: "Dalīties"
+            whos_posting:
+              all_categories: "Visas sadaļas"
+              staff: "Personāls"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Jauns"
+                "2": "Biedrs"
+                "3": "Regulārs"
+        reports_section:
+          modal:
+            enabled_heading: "Ieslēgts"
+            apply: "Pielietot"
+        site_traffic:
+          series:
+            anonymous: "Anonīmi"
         period:
           last_7_days: "Pēdējās 7 dienas"
           last_30_days: "Pēdējās 30 dienas"

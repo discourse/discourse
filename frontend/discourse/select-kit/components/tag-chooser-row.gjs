@@ -6,5 +6,8 @@ import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 export default class TagChooserRow extends SelectKitRowComponent {
   <template>
     {{dDiscourseTag this.rowName count=this.item.count noHref=true}}
+    {{#if this.rowDisabled}}
+      <span class="disabled-reason">{{this.title}}</span>
+    {{/if}}
   </template>
 }

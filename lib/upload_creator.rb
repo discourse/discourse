@@ -169,7 +169,7 @@ class UploadCreator
       @upload.filesize = filesize
       @upload.sha1 =
         (
-          if (SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail)
+          if SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail
             unique_hash
           else
             sha1

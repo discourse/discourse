@@ -17,7 +17,7 @@ en:
     chat_allow_uploads: "Allow uploads in public chat channels and direct message channels."
     chat_show_copy_button_on_codeblocks: "Show copy button on codeblocks in chat messages."
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
-    direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
+    direct_message_enabled_groups: "Allow users within these groups to create and send user-to-user Personal Chats. Note: staff can always create and send Personal Chats."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages. Note that admins and moderators can always flag chat messages."
     chat_pinning_messages_allowed_groups: "Users in these groups are allowed to pin chat messages in channels that they can access. Note that admins and moderators can always pin chat messages. Any member of a group chat or DM can pin messages there."
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
@@ -27,7 +27,7 @@ en:
     chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
     chat_preferred_index: "Preferred tab when loading /chat."
-    allow_chat_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to use chat. This setting requires the `allow anonymous mode` setting to be enabled."
+    allow_chat_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to use chat. This setting requires the {{setting:allow_anonymous_mode}} setting to be enabled."
     chat_search_enabled: "Enable this setting to allow users to search chat messages."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
@@ -245,6 +245,21 @@ en:
     scriptables:
       send_chat_message:
         title: Send chat message
+
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Approve"
+      default_deny_label: "Deny"
+    errors:
+      send_chat_message:
+        invalid_params: "Invalid params: %{errors}"
+        channel_not_found: "Channel not found: %{channel_id}"
+        failed: "Failed to send chat message."
+      chat_approval:
+        channel_not_found: "Chat message failed: channel %{channel_id} not found."
+        invalid_params: "Chat message failed: %{errors}"
+        failed: "Chat message failed: %{steps}"
+        timeout_must_be_positive: "Timeout minutes must be greater than 0."
 
   reviewable_score_types:
     needs_review:

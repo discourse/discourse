@@ -40,7 +40,7 @@ module FileStore
     def upload_path
       path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
       return path if !Rails.env.test?
-      File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+      File.join(path, "test_#{Discourse.test_env_number}")
     end
 
     def self.temporary_upload_path(file_name, folder_prefix: "")
@@ -155,9 +155,9 @@ module FileStore
 
     CACHE_DIR =
       if Rails.env.test?
-        "#{Rails.root}/tmp/download_cache_test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/"
+        "#{Rails.root.join("tmp/download_cache_test_#{Discourse.test_env_number}/")}"
       else
-        "#{Rails.root}/tmp/download_cache/"
+        "#{Rails.root.join("tmp/download_cache/")}"
       end
     CACHE_MAXIMUM_SIZE = 500
     CACHE_EVICT_COUNT = 100

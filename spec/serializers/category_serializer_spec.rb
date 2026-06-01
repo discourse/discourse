@@ -361,7 +361,6 @@ RSpec.describe CategorySerializer do
     end
 
     before do
-      SiteSetting.enable_simplified_category_creation = true
       Categories::TypeRegistry.stubs(:all).returns(a: type_a, b: type_b, off: non_matching_type)
     end
 

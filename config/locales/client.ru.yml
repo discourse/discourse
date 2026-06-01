@@ -214,6 +214,15 @@ ru:
       placeholder: дата
       from_placeholder: "с даты"
       to_placeholder: "по дату"
+    date_range_picker:
+      apply: "Применить"
+      start_date: "Дата начала"
+      presets:
+        last_7_days: "За последние 7 дней"
+        last_30_days: "За последние 30 дней"
+        last_3_months: "За последние 3 месяцев"
+        last_6_months: "За последние 6 месяцев"
+        last_year: "За последний год"
     languages:
       ar:
         name: Арабский
@@ -414,7 +423,6 @@ ru:
         find_on_github: "Найти на GitHub"
       toggle_safe_mode: "Переключить безопасный режим"
       toggle_verbose_localization: "Включить/выключить подробный режим локализации"
-      toggle_mobile_view: "Переключить мобильный режим"
       disable_dev_tools: "Отключить инструменты разработчика"
       toggle_upcoming_changes_debug: "Включить/отключить отладку предстоящих изменений"
     s3:
@@ -475,8 +483,6 @@ ru:
     tos: "Условия использования"
     rules: "Правила"
     conduct: "Кодекс поведения"
-    mobile_view: "Для мобильных устройств"
-    desktop_view: "Для настольных устройств"
     now: "только что"
     read_more: "читать дальше"
     more: "Ещё"
@@ -3773,6 +3779,8 @@ ru:
           other: "Отложить (%{count})…"
         dismiss_tooltip: "Отложить новые сообщения или перестать следить за этими темами"
         also_dismiss_topics: "Перестать следить за этими темами, чтобы они никогда больше не высвечивались как непрочитанные"
+        dismiss_new_topics: "Отклонить новые темы"
+        dismiss_new_replies: "Закрыть новые ответы"
         dismiss_new: "Отложить новые"
         dismiss_new_modal:
           title: "Отклонить новые"
@@ -4741,7 +4749,6 @@ ru:
         name_placeholder: "Для чего эта закладка?"
         name_input_label: "Название закладки"
         set_reminder: "Напомнить мне"
-        options: "Параметры"
         actions:
           delete_bookmark:
             name: "Удалить закладку"
@@ -5452,19 +5459,8 @@ ru:
       staff_info: "Для добавления ограничения поместите этот тег в <a href=%{basePath}/tag_groups>группу тегов</a>."
       category_restricted: "Этот тег используется в категориях, к которым у вас нет доступа."
       synonyms: "Синонимы"
-      synonyms_description: "При использовании следующих тегов они будут заменены на <b>%{base_tag_name}</b>."
       synonyms_inline: "Эти синонимы будут заменены на %{base_tag_name}:"
       save: "Сохранить имя и описание тега"
-      tag_groups_info:
-        one: 'Этот тег принадлежит к этим группам: %{tag_groups}.'
-        few: "Этот тег принадлежит к этим группам: %{tag_groups}."
-        many: "Этот тег принадлежит к этим группам: %{tag_groups}."
-        other: "Этот тег принадлежит к этим группам: %{tag_groups}."
-      category_restrictions:
-        one: "Его можно использовать только в этих категориях:"
-        few: "Его можно использовать только в этих категориях:"
-        many: "Его можно использовать только в этих категориях:"
-        other: "Его можно использовать только в этих категориях:"
       restricted_to: "Ограничено"
       no_synonyms: "У этого тега нет синонимов."
       edit_synonyms: "Редактировать синонимы"
@@ -6642,8 +6638,37 @@ ru:
             title: "отчетов"
           traffic:
             title: "Посещаемость сайта"
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Новые темы"
+              posts: "Записи"
+              share: "Поделиться"
+            whos_posting:
+              all_categories: "Все разделы"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новое"
+                "1": "Обычный пользователь"
+                "2": "Участник"
+                "3": "Активный пользователь"
+                "4": "Лидер"
+              trend:
+                stable: "стабильный"
+        reports_section:
+          no_data: "Нет данных для отображения"
+          modal:
+            enabled_heading: "Включено"
+            all_heading: "Все отчеты"
+            apply: "Применить"
         configure:
           button: "Настроить"
+        site_traffic:
+          series:
+            anonymous: "Анонимные просмотры"
+            embedded: "Встроенные просмотры страниц"
+            crawlers: "Поисковые роботы"
         period:
           last_7_days: "За последние 7 дней"
           last_30_days: "За последние 30 дней"

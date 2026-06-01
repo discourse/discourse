@@ -56,6 +56,8 @@ esbuild
       fs: "./noop",
       stream: "readable-stream",
       "abort-controller": "abort-controller/dist/abort-controller",
+      os: "./os-shim",
+      workerpool: "./workerpool-shim",
     },
     banner: {
       js: `var process = { "env": { "EMBER_ENV": "production" }, "cwd": () => "/" };`,

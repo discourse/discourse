@@ -22,11 +22,11 @@ class EmailChangeRequest < ActiveRecord::Base
   end
 
   def requested_by_admin?
-    self.requested_by&.admin? && !self.requested_by_self?
+    requested_by&.admin? && !requested_by_self?
   end
 
   def requested_by_self?
-    self.requested_by_user_id == self.user_id
+    requested_by_user_id == user_id
   end
 end
 

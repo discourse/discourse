@@ -2,6 +2,7 @@ import { concat } from "@ember/helper";
 import FormText from "discourse/form-kit/components/fk/text";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 
 const FKContainer = <template>
   <div
@@ -16,6 +17,11 @@ const FKContainer = <template>
     {{#if @title}}
       <span class="form-kit__container-title">
         {{@title}}
+        {{#if @optional}}
+          <span class="form-kit__container-optional">({{i18n
+              "form_kit.optional"
+            }})</span>
+        {{/if}}
       </span>
     {{/if}}
 

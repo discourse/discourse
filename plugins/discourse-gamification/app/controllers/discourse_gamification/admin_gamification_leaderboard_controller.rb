@@ -54,7 +54,7 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
       visible_to_groups_ids: params[:visible_to_groups_ids] || [],
       default_period: params[:default_period],
       period_filter_disabled: params[:period_filter_disabled] || false,
-      score_overrides: (params[:score_overrides].presence&.to_unsafe_h&.transform_values(&:to_i)),
+      score_overrides: params[:score_overrides].presence&.to_unsafe_h&.transform_values(&:to_i),
       scorable_category_ids: params[:scorable_category_ids].presence,
     )
 

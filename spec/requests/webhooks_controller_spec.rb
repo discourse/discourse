@@ -479,7 +479,7 @@ RSpec.describe WebhooksController do
                  "msg" => {
                    "email" => email,
                    "diag" => "5.1.1",
-                   :"bounce_description" =>
+                   :bounce_description =>
                      "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
                    "metadata" => {
                      "message_id" => message_id,
@@ -796,10 +796,10 @@ RSpec.describe WebhooksController do
         "Type" => "Notification",
         "Message" => {
           "notificationType" => "Bounce",
-          :"bounce" => {
+          :bounce => {
             "bounceType" => "Permanent",
             "reportingMTA" => "dns; email.example.com",
-            :"bouncedRecipients" => [
+            :bouncedRecipients => [
               {
                 "emailAddress" => email,
                 "status" => "5.1.1",
@@ -812,7 +812,7 @@ RSpec.describe WebhooksController do
             "feedbackId" => "00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa068a-000000",
             "remoteMtaIp" => "127.0.2.0",
           },
-          :"mail" => {
+          :mail => {
             "timestamp" => "2016-01-27T14:59:38.237Z",
             "source" => "john@example.com",
             "sourceArn" => "arn:aws:ses:us-east-1:888888888888:identity/example.com",

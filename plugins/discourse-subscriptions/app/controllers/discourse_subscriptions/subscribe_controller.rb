@@ -10,20 +10,18 @@ module DiscourseSubscriptions
     requires_login except: %i[index contributors show]
 
     def index
-      begin
-        product_ids = Product.all.pluck(:external_id)
-        products = []
+      product_ids = Product.all.pluck(:external_id)
+      products = []
 
-        if product_ids.present? && is_stripe_configured?
-          response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
+      if product_ids.present? && is_stripe_configured?
+        response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
 
-          products = response[:data].map { |p| serialize_product(p) }
-        end
-
-        render_json_dump products
-      rescue ::Stripe::InvalidRequestError => e
-        render_json_error e.message
+        products = response[:data].map { |p| serialize_product(p) }
       end
+
+      render_json_dump products
+    rescue ::Stripe::InvalidRequestError => e
+      render_json_error e.message
     end
 
     def contributors
@@ -44,6 +42,8 @@ module DiscourseSubscriptions
 
     def show
       params.require(:id)
+      ensure_published_product!(params[:id])
+
       begin
         product = ::Stripe::Product.retrieve(params[:id], stripe_request_opts)
         plans = ::Stripe::Price.list({ active: true, product: params[:id] }, stripe_request_opts)
@@ -59,13 +59,14 @@ module DiscourseSubscriptions
     def create
       params.require(%i[source plan])
       begin
+        plan = fetch_published_plan(params[:plan])
+
         customer =
           find_or_create_customer(
             params[:source],
             params[:cardholder_name],
             params[:cardholder_address],
           )
-        plan = ::Stripe::Price.retrieve(params[:plan], stripe_request_opts)
 
         if params[:promo].present?
           promo_code = ::Stripe::PromotionCode.list({ code: params[:promo] }, stripe_request_opts)
@@ -157,10 +158,10 @@ module DiscourseSubscriptions
       raise Discourse::InvalidAccess if pending.blank?
 
       begin
+        plan = fetch_published_plan(pending[:plan_id])
         transaction = retrieve_transaction(pending[:transaction_id])
         raise Discourse::InvalidAccess unless transaction_ok(transaction)
 
-        plan = ::Stripe::Price.retrieve(pending[:plan_id], stripe_request_opts)
         finalize_transaction(transaction, plan)
 
         server_session.delete("pending_subscription")
@@ -264,20 +265,35 @@ module DiscourseSubscriptions
     end
 
     def retrieve_transaction(transaction)
-      begin
-        case transaction
-        when /^sub_/
-          ::Stripe::Subscription.retrieve(transaction, stripe_request_opts)
-        when /^in_/
-          ::Stripe::Invoice.retrieve(transaction, stripe_request_opts)
-        end
-      rescue ::Stripe::InvalidRequestError => e
-        e.message
+      case transaction
+      when /^sub_/
+        ::Stripe::Subscription.retrieve(transaction, stripe_request_opts)
+      when /^in_/
+        ::Stripe::Invoice.retrieve(transaction, stripe_request_opts)
       end
+    rescue ::Stripe::InvalidRequestError => e
+      e.message
     end
 
     def metadata_user
       { user_id: current_user.id, username: current_user.username_lower }
+    end
+
+    def fetch_published_plan(plan_id)
+      plan = ::Stripe::Price.retrieve(plan_id, stripe_request_opts)
+      ensure_published_product!(price_product_id(plan))
+      plan
+    end
+
+    def ensure_published_product!(product_id)
+      raise Discourse::NotFound unless Product.exists?(external_id: product_id)
+    end
+
+    def price_product_id(price)
+      product = price[:product]
+      return product if product.is_a?(String) || product.nil?
+
+      product[:id]
     end
 
     def transaction_ok(transaction)

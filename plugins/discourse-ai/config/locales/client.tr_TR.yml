@@ -263,8 +263,7 @@ tr_TR:
             ui_settings: "Kullanıcı Arayüzü Ayarları"
             integrations: "Entegrasyonlar"
         nav:
-          configured: "Yapılandırılmış"
-          unconfigured: "Yapılandırılmamış"
+          enabled: "Etkin mi"
         filters:
           all: "Tümü"
           text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
@@ -369,8 +368,6 @@ tr_TR:
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
         supported_locales: "Desteklenen diller"
         supported_locales_description: "Bu site ayarı, ziyaretçilerin yazı çevirilerine katkıda bulunmalarına da olanak tanır."
-        translatable_categories: "Çevrilebilir kategoriler"
-        translatable_categories_description: "Yalnızca seçilen kategorilerdeki içerikler çevrilecektir. Alt kategoriler ayrı olarak eklenmelidir."
         admin_actions:
           translation_settings: "Çeviri ayarları"
           localization_settings: "Yerelleştirme ayarları"

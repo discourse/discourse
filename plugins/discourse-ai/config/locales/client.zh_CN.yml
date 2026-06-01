@@ -260,8 +260,7 @@ zh_CN:
             ui_settings: "UI 设置"
             integrations: "集成"
         nav:
-          configured: "已配置"
-          unconfigured: "未配置"
+          enabled: "已启用"
         filters:
           all: "所有"
           text: "搜索功能、智能体、LLM 或群组…"
@@ -365,8 +364,6 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
-        translatable_categories: "可翻译类别"
-        translatable_categories_description: "只有所选类别中的内容才会被翻译。子类别需要单独添加。"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"

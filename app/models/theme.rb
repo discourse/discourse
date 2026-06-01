@@ -229,15 +229,15 @@ class Theme < ActiveRecord::Base
 
   after_destroy do
     remove_from_cache!
-    Theme.clear_default! if SiteSetting.default_theme_id == self.id
+    Theme.clear_default! if SiteSetting.default_theme_id == id
 
-    if self.id
+    if id
       ColorScheme
-        .where(theme_id: self.id)
+        .where(theme_id: id)
         .where("id NOT IN (SELECT color_scheme_id FROM themes where color_scheme_id IS NOT NULL)")
         .destroy_all
 
-      ColorScheme.where(theme_id: self.id).update_all(theme_id: nil)
+      ColorScheme.where(theme_id: id).update_all(theme_id: nil)
     end
 
     Theme.expire_site_cache!
@@ -275,7 +275,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.is_parent_theme?(id)
-    self.parent_theme_ids.include?(id)
+    parent_theme_ids.include?(id)
   end
 
   def self.user_theme_ids
@@ -343,7 +343,7 @@ class Theme < ActiveRecord::Base
 
     get_set_cache "transformed_ids_#{id}" do
       all_ids =
-        if self.is_parent_theme?(id)
+        if is_parent_theme?(id)
           components = components_for(id).tap { |c| c.sort!.uniq! }
           [id, *components]
         else
@@ -434,7 +434,7 @@ class Theme < ActiveRecord::Base
       Theme.clear_default! if default?
 
       ChildTheme.where("parent_theme_id = ?", id).destroy_all
-      self.save!
+      save!
     end
   end
 
@@ -445,7 +445,7 @@ class Theme < ActiveRecord::Base
       self.enabled = true
       self.component = false
       ChildTheme.where("child_theme_id = ?", id).destroy_all
-      self.save!
+      save!
     end
   end
 
@@ -457,7 +457,7 @@ class Theme < ActiveRecord::Base
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    resolved = (resolve_baked_field(theme_ids, target.to_sym, field) || "")
+    resolved = resolve_baked_field(theme_ids, target.to_sym, field) || ""
     resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
     resolved.html_safe
   end
@@ -495,7 +495,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.lookup_target(target_id)
-    self.targets.invert[target_id]
+    targets.invert[target_id]
   end
 
   def self.notify_theme_change(
@@ -509,7 +509,13 @@ class Theme < ActiveRecord::Base
 
     if with_scheme
       targets.prepend(:common, :desktop, :mobile, :admin)
-      targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
+      targets.append(
+        *Discourse.find_plugin_css_assets(
+          mobile_view: true,
+          desktop_view: true,
+          include_admin: true,
+        ),
+      )
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end
 
@@ -774,15 +780,15 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Theme.get_set_cache "settings_for_theme_#{self.id}" do
+    Theme.get_set_cache "settings_for_theme_#{id}" do
       build_settings_hash
     end
   end
 
   def cached_default_settings
-    Theme.get_set_cache "default_settings_for_theme_#{self.id}" do
+    Theme.get_set_cache "default_settings_for_theme_#{id}" do
       settings_hash = {}
-      self.settings.each { |name, setting| settings_hash[name] = setting.default }
+      settings.each { |name, setting| settings_hash[name] = setting.default }
 
       theme_uploads = build_theme_uploads_hash
       settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -796,7 +802,7 @@ class Theme < ActiveRecord::Base
 
   def build_settings_hash
     hash = {}
-    self.settings.each { |name, setting| hash[name] = setting.value }
+    settings.each { |name, setting| hash[name] = setting.value }
 
     theme_uploads = build_theme_uploads_hash
     hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -888,9 +894,9 @@ class Theme < ActiveRecord::Base
       end
 
       meta[:color_schemes] = {}.tap do |hash|
-        schemes = self.color_schemes
+        schemes = color_schemes
         # The selected color scheme may not belong to the theme, so include it anyway
-        schemes = [self.color_scheme] + schemes if self.color_scheme
+        schemes = [color_scheme] + schemes if color_scheme
         schemes.uniq.each do |scheme|
           hash[scheme.name] = {}.tap do |colors|
             scheme.colors.each { |color| colors[color.name] = color.hex }
@@ -900,7 +906,7 @@ class Theme < ActiveRecord::Base
 
       meta[:modifiers] = {}.tap do |hash|
         ThemeModifierSet.modifiers.keys.each do |modifier|
-          value = self.theme_modifier_set.public_send(modifier)
+          value = theme_modifier_set.public_send(modifier)
           hash[modifier] = value if !value.nil?
         end
       end
@@ -980,13 +986,13 @@ class Theme < ActiveRecord::Base
 
       next if results.blank?
 
-      old_settings = self.theme_settings.pluck(:name)
-      self.theme_settings.destroy_all
+      old_settings = theme_settings.pluck(:name)
+      theme_settings.destroy_all
 
       final_result = results.last
 
       final_result[:settings_after].each do |key, val|
-        self.update_setting(key.to_sym, val)
+        update_setting(key.to_sym, val)
       rescue Discourse::NotFound
         if old_settings.include?(key)
           final_result[:settings_after].delete(key)
@@ -1004,7 +1010,7 @@ class Theme < ActiveRecord::Base
       results.each do |res|
         record =
           ThemeSettingsMigration.new(
-            theme_id: self.id,
+            theme_id: id,
             version: res[:version],
             name: res[:name],
             theme_field_id: res[:theme_field_id],
@@ -1017,11 +1023,11 @@ class Theme < ActiveRecord::Base
         allow_out_of_sequence_migration ? record.save : record.save!
       end
 
-      self.reload
+      reload
     end
 
     if start_transaction
-      self.transaction(&block)
+      transaction(&block)
     else
       block.call
     end
@@ -1087,11 +1093,11 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [self.id]).count
+    UserOption.where(theme_ids: [id]).count
   end
 
   def themeable_site_settings
-    return [] if self.component?
+    return [] if component?
     ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 

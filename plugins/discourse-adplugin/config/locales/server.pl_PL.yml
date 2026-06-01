@@ -35,6 +35,7 @@ pl_PL:
     no_ads_for_tags: "Nie pokazuj reklam na liście wątków i stronach wątków z tymi tagami."
     house_ads_after_nth_topic: 'Jeżeli wybrano wyświetlanie reklam pomiędzy tematami, wyświetlaj je co N tematów, gdzie N to ta liczba.'
     house_ads_after_nth_post: 'Jeżeli wybrano wyświetlanie reklam pomiędzy wpisami, wyświetlaj je co N wpisów, gdzie N to ta liczba.'
+    house_ads_after_nth_root: 'Jeśli zdefiniowano autoreklamy „Między zagnieżdżonymi odpowiedziami źródłowymi”, wyświetl reklamę po każdych N odpowiedziach źródłowych w widoku zagnieżdżonych odpowiedzi, gdzie N jest tą wartością.'
     house_ads_frequency: "Jeśli reklamy innych sieci zostały skonfigurowane, by pokazywać się w slocie na reklamy, ta wartość pozwala na ustalenie – w procentach – jak często będą wyświetlane"
     ads_txt: "Zawartość pliku ads.txt. Więcej szczegółów znajdziesz na <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>tej stronie pomocy Google AdSense</a>."
     ad_plugin_routes_enabled: "Włącz kierowanie trasą dla reklam własnych"

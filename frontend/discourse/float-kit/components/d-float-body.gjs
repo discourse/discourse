@@ -26,15 +26,16 @@ export default class DFloatBody extends Component {
     };
   });
 
-  trapPointerDown = modifierFn((element) => {
+  trapInteractionPropagation = modifierFn((element) => {
     const handler = (event) => {
       event.stopPropagation();
     };
 
-    element.addEventListener("pointerdown", handler);
+    const events = ["pointerdown", "mousedown", "touchend"];
+    events.forEach((name) => element.addEventListener(name, handler));
 
     return () => {
-      element.removeEventListener("pointerdown", handler);
+      events.forEach((name) => element.removeEventListener(name, handler));
     };
   });
 
@@ -89,7 +90,7 @@ export default class DFloatBody extends Component {
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
-        {{this.trapPointerDown}}
+        {{this.trapInteractionPropagation}}
         {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
         {{(if
           (and @instance.expanded this.supportsCloseOnClickOutside)

@@ -70,10 +70,8 @@ module DiscourseAi
 
             if agent.system
               instance = agent.new
-              (
-                instance.required_tools == [] ||
-                  (instance.required_tools - all_available_tools).empty?
-              )
+              instance.required_tools == [] ||
+                (instance.required_tools - all_available_tools).empty?
             else
               true
             end
@@ -238,6 +236,8 @@ module DiscourseAi
             ReportRunner => -33,
             Discover => -34,
             ChatThreadTitler => -35,
+            SentimentClassifier => -36,
+            EmotionClassifier => -37,
           }.freeze
         end
       end

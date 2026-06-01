@@ -31,7 +31,7 @@ const setDefaultState = (ctx, options) => {
   ctx.setProperties(properties);
 };
 
-module("Integration | Component | select-kit/single-select", function (hooks) {
+module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

@@ -352,7 +352,6 @@ RSpec.describe Categories::Types::Base do
         end
 
       Categories::TypeRegistry.register(test_type, plugin_identifier: "test")
-      SiteSetting.enable_simplified_category_creation = true
 
       expect { category.category_type_site_setting_names }.not_to raise_error
     ensure

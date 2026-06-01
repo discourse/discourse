@@ -33,10 +33,10 @@ rake db:migrate
 
 _In general, however, running rake tasks without `RAILS_DB` set will target the default site._
 
-To access the site, you'll need to run ember-cli with the `--forward-host` option.
+To access the site, start the dev server:
 
 ```sh
-bin/ember-cli -u --forward-host
+bin/dev
 ```
 
-You may now be able to view the your new site at http://alternate.localhost:4200, but if you cannot, you may need to add `alternate.localhost` to your `/etc/hosts` file or equivalent.
+You may now be able to view the your new site at http://alternate.localhost:3000, but if you cannot, you may need to add `alternate.localhost` to your `/etc/hosts` file or equivalent.

@@ -1195,6 +1195,30 @@ zh_CN:
       xaxis: "天"
       yaxis: "新贡献者数量"
       description: "此期间首次发帖的用户数。"
+    activity_by_category:
+      labels:
+        category: "类别"
+        topics: "话题"
+        posts: "帖子"
+        share: "分享"
+    posters_by_member_type:
+      labels:
+        count: "帖子"
+        share: "分享"
+      types:
+        staff: "管理人员"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "信任级别"
+        count: "成员"
+        share: "分享"
+      levels:
+        "0": "新"
+        "1": "基本用户"
+        "2": "成员"
+        "3": "常规"
+        "4": "领导者"
     trust_level_growth:
       title: "信任级别提升"
       xaxis:
@@ -1240,9 +1264,8 @@ zh_CN:
     site_traffic:
       title: "网站流量"
       xaxis:
-        page_view_anon_browser: "页面浏览量（匿名用户）"
-        page_view_logged_in_browser: "页面浏览量（登录用户）"
-        page_view_crawler: "已知抓取工具"
+        page_view_anon_browser: "匿名"
+        page_view_crawler: "抓取工具"
         page_view_embed: "嵌入式页面浏览量"
         page_view_other: "其他流量"
       yaxis: "天"
@@ -1360,6 +1383,12 @@ zh_CN:
         num_clicks: "点击数"
         num_topics: "话题"
       description: "用户按他们分享的链接的点击次数列出。"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "访问天数"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "访问天数"
     top_traffic_sources:
       title: "热门流量来源"
       xaxis: "网域"
@@ -1567,6 +1596,8 @@ zh_CN:
       failing_emails: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
       subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
       translation_overrides: "您的某些翻译替换已过时。请检查您的<a href='%{base_path}/admin/customize/site_texts?outdated=true'>文本自定义</a>。"
+      email_sending_failures:
+        other: "在过去 24 小时内，电子邮件发送失败 %{count} 次。请查看<a href='%{base_path}/admin/email-logs/skipped' target='_blank'>跳过的电子邮件日志</a>，了解 SMTP 错误详情。"
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
@@ -1584,6 +1615,9 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
+    reports_section:
+      providers:
+        core_report: "标准"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1755,7 +1789,7 @@ zh_CN:
     moderators_change_post_ownership: "允许版主更改帖子所有权"
     change_post_ownership_allowed_groups: "允许这些群组中的用户更改帖子所有权"
     cors_origins: "允许跨源请求（CORS）。每个来源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
-    use_admin_ip_allowlist: "只有使用“屏蔽的 IP 列表”（管理 > 日志 > 屏蔽的 IP）中的 IP 地址时，管理员才能登录。"
+    use_admin_ip_allowlist: "管理员只有在 <a href='%{base_path}/admin/logs/screened_ip_addresses'>筛选 IP 列表</a> 中定义的 IP 地址上才能登录。"
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
@@ -1891,7 +1925,7 @@ zh_CN:
     s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；仅当打算在配置的 `s3_upload_bucket`和 `s3_backup_bucket` 上配置权限策略时才取消选中此选项。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
-    backup_location: "存储备份的位置。重要信息：S3 要求在“文件”设置中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
+    backup_location: "存储备份的位置。重要：S3 要求在<a href='%{base_path}/admin/site_settings/category/files'>文件设置</a>中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
     backup_gzip_compression_level_for_uploads: "用于压缩上传的 Gzip 压缩级别。"
     include_thumbnails_in_backups: "在备份中包含生成的缩略图。禁用此项将使备份更小，但需要在恢复后重新发布所有帖子。"
     active_user_rate_limit_secs: "更新 'last_seen_at' 字段的频率，以为秒单位"
@@ -2082,7 +2116,6 @@ zh_CN:
     fast_typing_threshold: "用户在第一次发帖时必须输入的最短时间。如果未达到阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
-    auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用“禁言关注词”。"
     moderator_guide_topic: "概述您如何管理您的社区的话题。链接将在审核队列中显示，供版主和管理员使用。"
     reviewable_claiming: "可审核的内容是否需要先声明然后再对其采取行动？"
     reviewable_default_topics: "默认显示按话题分组的可审核内容"
@@ -2211,7 +2244,6 @@ zh_CN:
     allow_profile_backgrounds: "允许用户上传个人资料背景。"
     get_a_room_threshold: "在被警告之前，用户必须在同一话题中向同一个人发布的帖子数。"
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
-    enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
     pm_warn_user_last_seen_months_ago: "创建新私信时，如果目标接收者自超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
@@ -2435,7 +2467,6 @@ zh_CN:
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
-    viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 <a href='https://meta.discourse.org/t/384280'>Meta</a> 上告诉我们。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的支持语言区域列表。站点的默认语言区域始终包含在内。需要启用 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
@@ -2447,7 +2478,6 @@ zh_CN:
     nested_replies_default: "将嵌套回复设置为所有话题的默认视图。"
     nested_replies_default_sort: "嵌套回复视图的默认排序算法。"
     nested_replies_max_depth: "消息串回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此消息串”链接。"
-    nested_replies_toggle_mode_groups: "可以在嵌套视图与平面视图之间切换的群组。"
     nested_replies_backfill_batch_size: "每次定时运行要回填嵌套回复统计信息的话题数量。"
     nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将被重新设置为同级回复，而不是子回复。"
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"
@@ -2992,7 +3022,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
   new_version_mailer_with_notes:
@@ -3007,7 +3037,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
@@ -3607,6 +3637,14 @@ zh_CN:
       ### 详细信息
 
       ```text
+      %{raw}
+      ```
+    email_sending_failed: |
+      向 %{email} 发送信息失败。
+
+      ### 详情
+
+      ``` 文本
       %{raw}
       ```
     ignored_users_summary:

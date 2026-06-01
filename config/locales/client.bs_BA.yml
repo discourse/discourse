@@ -140,6 +140,8 @@ bs_BA:
       next_month: "Sljedeći mjesec"
       placeholder: datum
       to_placeholder: "do datuma"
+    date_range_picker:
+      apply: "Snimi"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"
@@ -240,8 +242,6 @@ bs_BA:
     tos: "Uslovi korištenja"
     rules: "Pravila"
     conduct: "Kodeks ponašanja"
-    mobile_view: "Mobilni prikaz"
-    desktop_view: "Desktop prikaz"
     now: "upravo sada"
     read_more: "pročitaj više"
     more: "Više"
@@ -2499,7 +2499,6 @@ bs_BA:
         name: "Ime"
         name_placeholder: "Za što služi ova zabilješka?"
         set_reminder: "Podsjeti me"
-        options: "Opcije"
         actions:
           delete_bookmark:
             name: "Obriši zabilješku"
@@ -2912,15 +2911,6 @@ bs_BA:
       default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"
-      synonyms_description: "U slučaju da se sljedeće oznake koriste, iste će biti zamijenjene sa <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Ovaj tag pripada grupi "%{tag_groups}".'
-        few: "Ovaj tag pripada sljedećim grupama: %{tag_groups}."
-        other: "Ova oznaka pripada sljedećim grupama: %{tag_groups}."
-      category_restrictions:
-        one: "Moguće je koristiti samo u sljedećoj kategoriji:"
-        few: "Moguće je koristiti samo u sljedećim kategorijama:"
-        other: "Moguće je koristiti samo u sljedećim kategorijama:"
       add_synonyms_label: "Dodaj sinonime:"
       add_synonyms: "Dodaj"
       add_synonyms_explanation:
@@ -3346,6 +3336,31 @@ bs_BA:
         sections:
           reports:
             title: "Izvještaji"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Topics"
+              posts: "Objave"
+              share: "Dijeli"
+            whos_posting:
+              all_categories: "Sve kategorije"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovni"
+                "2": "Član"
+                "3": "Normalno"
+                "4": "Vođa"
+        reports_section:
+          no_data: "Nema podataka za prikaz"
+          modal:
+            enabled_heading: "Omogućen"
+            all_heading: "Svi izvještaji"
+            apply: "Snimi"
+        site_traffic:
+          series:
+            anonymous: "Anoniman"
         period:
           custom: "Custom"
         reports:

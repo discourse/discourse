@@ -5,8 +5,9 @@
   @include mixins.topic-list-icons;
 
   .table-heading {
-    padding: 12px 5px;
-    color: var(--primary-med-or-secondary-high);
+    padding: var(--space-2) var(--space-1);
+    color: var(--d-topic-list-header-text-color);
+    font-size: var(--d-topic-list-data-font-size);
   }
 
   .no-topics,
@@ -34,7 +35,6 @@
     .avatar-flair {
       position: absolute;
       bottom: 0;
-      right: 10px;
     }
   }
 

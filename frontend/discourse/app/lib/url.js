@@ -9,6 +9,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -312,7 +313,10 @@ class DiscourseURL extends EmberObject {
   }
 
   routeToUrl(url, opts = {}) {
-    this.routeTo(getURL(url), opts);
+    const transformedUrl = applyValueTransformer("route-to-url", getURL(url), {
+      opts,
+    });
+    this.routeTo(transformedUrl, opts);
   }
 
   rewrite(regexp, replacement, opts) {

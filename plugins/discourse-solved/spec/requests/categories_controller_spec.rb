@@ -4,11 +4,7 @@ RSpec.describe CategoriesController do
   fab!(:category)
   fab!(:admin)
 
-  before do
-    sign_in(admin)
-    SiteSetting.enable_simplified_category_creation = true
-    SiteSetting.enable_support_category_type_setup = true
-  end
+  before { sign_in(admin) }
 
   describe "#update" do
     it "can add the support type to the category" do

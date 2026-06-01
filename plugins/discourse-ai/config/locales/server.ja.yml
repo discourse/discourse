@@ -70,7 +70,6 @@ ja:
     ai_sentiment_enabled: "センチメントモジュールを有効にします。"
     ai_sentiment_inference_service_api_endpoint: "センチメントモジュールの API が実行している URL"
     ai_sentiment_inference_service_api_key: "センチメント API の API キー"
-    ai_sentiment_models: "推論に使用するモデル。センチメントは、投稿をポジティブ、ニュートラル、ネガティブの空間に分類します。感情は、怒り、嫌悪、恐怖、喜び、ニュートラル、悲しみ、驚きの空間に分類されます。"
     ai_nsfw_detection_enabled: "NSFW モジュールを有効にします。"
     ai_nsfw_inference_service_api_endpoint: "NSFW モジュールの API が実行している URL"
     ai_nsfw_inference_service_api_key: "NSFW API の API キー"

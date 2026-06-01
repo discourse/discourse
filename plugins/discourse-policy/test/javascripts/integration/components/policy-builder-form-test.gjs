@@ -7,7 +7,7 @@ import { i18n } from "discourse-i18n";
 import PolicyBuilderForm from "discourse/plugins/discourse-policy/discourse/components/policy-builder-form";
 
 module(
-  "Discourse Policy | Integration | Component | policy-builder-form",
+  "Discourse Policy | Integration | Component | PolicyBuilderForm",
   function (hooks) {
     setupRenderingTest(hooks);
 

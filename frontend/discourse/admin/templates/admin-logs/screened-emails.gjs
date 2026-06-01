@@ -12,13 +12,17 @@ export default <template>
     }}
   />
 
-  <DButton
-    @action={{@controller.exportScreenedEmailList}}
-    @title="admin.export_csv.button_title.screened_email"
-    @icon="download"
-    @label="admin.export_csv.button_text"
-    class="btn-default screened-email-export"
-  />
+  {{#if @controller.currentUser.can_see_emails}}
+    {{#if @controller.currentUser.can_see_ip}}
+      <DButton
+        @action={{@controller.exportScreenedEmailList}}
+        @title="admin.export_csv.button_title.screened_email"
+        @icon="download"
+        @label="admin.export_csv.button_text"
+        class="btn-default screened-email-export"
+      />
+    {{/if}}
+  {{/if}}
 
   <br />
 
@@ -34,7 +38,9 @@ export default <template>
           <th class="match_count">{{i18n "admin.logs.match_count"}}</th>
           <th class="last_match_at">{{i18n "admin.logs.last_match_at"}}</th>
           <th class="created_at">{{i18n "admin.logs.created_at"}}</th>
-          <th class="ip_address">{{i18n "admin.logs.ip_address"}}</th>
+          {{#if @controller.currentUser.can_see_ip}}
+            <th class="ip_address">{{i18n "admin.logs.ip_address"}}</th>
+          {{/if}}
           <th class="action"></th>
         </thead>
         <tbody>
@@ -56,7 +62,9 @@ export default <template>
               <td class="created_at"><div class="label">{{i18n
                     "admin.logs.created_at"
                   }}</div>{{dAgeWithTooltip item.created_at}}</td>
-              <td class="ip_address">{{item.ip_address}}</td>
+              {{#if @controller.currentUser.can_see_ip}}
+                <td class="ip_address">{{item.ip_address}}</td>
+              {{/if}}
               <td class="action">
                 <DButton
                   @action={{fn @controller.clearBlock item}}

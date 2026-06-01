@@ -414,7 +414,7 @@ RSpec.describe SiteSettingExtension do
   describe "enum setting" do
     class TestEnumClass
       def self.valid_value?(v)
-        self.values.include?(v)
+        values.include?(v)
       end
 
       def self.values
@@ -1065,7 +1065,7 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe ".all_settings" do
-    describe "non-configurable plugin exclusion" do
+    describe "non-configurable plugin filtering" do
       it "includes plugin site settings when the plugin is configurable" do
         SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
 
@@ -1076,6 +1076,36 @@ RSpec.describe SiteSettingExtension do
         SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
 
         expect(SiteSetting.all_settings.map { |s| s[:setting] }).not_to include(:plugin_setting)
+      end
+
+      context "with only_upcoming_changes" do
+        it "excludes a non-configurable plugin's upcoming change when no upsell has un-hidden it" do
+          SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+          settings =
+            SiteSetting
+              .all_settings(only_upcoming_changes: true, include_hidden: true)
+              .map { |s| s[:setting] }
+          expect(settings).not_to include(:enable_experimental_sample_plugin_feature)
+        end
+
+        it "surfaces a non-configurable plugin's upcoming change when the :hidden_site_settings modifier removes it from hidden (upsell pattern)" do
+          SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+          plugin = Plugin::Instance.new
+          modifier = ->(hidden) { hidden - [:enable_experimental_sample_plugin_feature] }
+          plugin.register_modifier(:hidden_site_settings, &modifier)
+
+          begin
+            settings =
+              SiteSetting
+                .all_settings(only_upcoming_changes: true, include_hidden: true)
+                .map { |s| s[:setting] }
+            expect(settings).to include(:enable_experimental_sample_plugin_feature)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, :hidden_site_settings, &modifier)
+          end
+        end
       end
     end
 
@@ -1659,7 +1689,7 @@ RSpec.describe SiteSettingExtension do
 
     it "publishes the right MessageBus message when a theme site setting is updated" do
       settings_tss_instance_1 = new_settings(provider_local)
-      settings_tss_instance_1.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+      settings_tss_instance_1.load_settings(Rails.root.join("config/site_settings.yml").to_s)
       settings_tss_instance_1.refresh!
 
       expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
@@ -1833,6 +1863,78 @@ RSpec.describe SiteSettingExtension do
 
     it "handles mixed case in setting names" do
       expect(SiteSetting.humanized_name(:opengraph_image)).to eq("OpenGraph image")
+    end
+  end
+
+  describe "linkify" do
+    it "returns an html_safe anchor with the humanized name as the label and the setting's area/category as data attributes" do
+      result = SiteSettings::LabelFormatter.linkify(:enable_linkedin_oidc_logins)
+      expect(result).to eq(
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=enable_linkedin_oidc_logins" data-setting-name="enable_linkedin_oidc_logins" data-setting-area="authenticators" data-setting-category="login">Enable LinkedIn OIDC logins</a>',
+      )
+      expect(result).to be_html_safe
+    end
+
+    it "accepts a string and omits the area attribute when the setting has none" do
+      expect(SiteSettings::LabelFormatter.linkify("opengraph_image")).to eq(
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=opengraph_image" data-setting-name="opengraph_image" data-setting-category="branding">OpenGraph image</a>',
+      )
+    end
+
+    it "omits the metadata attributes for an unknown setting" do
+      expect(SiteSettings::LabelFormatter.linkify(:not_a_real_setting)).to eq(
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=not_a_real_setting" data-setting-name="not_a_real_setting">Not a real setting</a>',
+      )
+    end
+
+    it "honors the configured base path" do
+      Discourse.stubs(:base_path).returns("/forum")
+      expect(SiteSettings::LabelFormatter.linkify(:title)).to eq(
+        '<a class="site-setting-link" href="/forum/admin/site_settings/category/all_results?filter=title" data-setting-name="title" data-setting-area="about" data-setting-category="required">Title</a>',
+      )
+    end
+  end
+
+  describe "expand_setting_links" do
+    it "expands {{setting:foo}} markers into linkified HTML" do
+      expanded =
+        SiteSettings::LabelFormatter.expand_setting_links(
+          "Configure {{setting:title}} before enabling.",
+        )
+      expect(expanded).to eq(
+        'Configure <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title" data-setting-name="title" data-setting-area="about" data-setting-category="required">Title</a> before enabling.',
+      )
+      expect(expanded).to be_html_safe
+    end
+
+    it "expands multiple markers in the same string" do
+      expanded =
+        SiteSettings::LabelFormatter.expand_setting_links(
+          "Use {{setting:title}} and {{setting:logo}}.",
+        )
+      expect(expanded).to include('data-setting-name="title"')
+      expect(expanded).to include(">Title</a>")
+      expect(expanded).to include('data-setting-name="logo"')
+      expect(expanded).to include(">Logo</a>")
+    end
+
+    it "returns input unchanged when no markers are present" do
+      expect(SiteSettings::LabelFormatter.expand_setting_links("nothing to expand")).to eq(
+        "nothing to expand",
+      )
+    end
+
+    it "handles blank input safely" do
+      expect(SiteSettings::LabelFormatter.expand_setting_links("")).to eq("")
+      expect(SiteSettings::LabelFormatter.expand_setting_links(nil)).to be_nil
+    end
+  end
+
+  describe "description" do
+    it "expands {{setting:foo}} markers in the translated description" do
+      expect(SiteSetting.description(:logo_dark)).to eq(
+        'Dark scheme alternative for the <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=logo" data-setting-name="logo" data-setting-category="branding">Logo</a> site setting.',
+      )
     end
   end
 

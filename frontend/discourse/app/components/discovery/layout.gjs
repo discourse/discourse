@@ -40,6 +40,15 @@ export default class Layout extends Component {
         {{/if}}
       </ConditionalWrap>
 
+      {{#if (has-block "aboveNavigation")}}
+        <ConditionalWrap
+          @when={{this.hasSidebarLayout}}
+          @class="discovery-layout__above-navigation"
+        >
+          {{yield to="aboveNavigation"}}
+        </ConditionalWrap>
+      {{/if}}
+
       <ConditionalWrap
         @when={{this.hasSidebarLayout}}
         @class="discovery-layout__navigation"
@@ -47,7 +56,11 @@ export default class Layout extends Component {
         <PluginOutlet
           @name="discovery-list-controls-above"
           @connectorTagName="div"
-          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+          @outletArgs={{lazyHash
+            category=@model.category
+            tag=@model.tag
+            toggleTagInfo=@toggleTagInfo
+          }}
         />
         <div class="list-controls">
           <PluginOutlet

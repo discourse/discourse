@@ -18,13 +18,14 @@ export default class Highlights extends Component {
   }
 
   <template>
-    <div class="db-highlights">
-      <DashboardSection
-        @title={{i18n "admin.dashboard.sections.highlights.title"}}
-        @layout="row"
-        @startDate={{@startDate}}
-        @endDate={{@endDate}}
-      >
+    <DashboardSection
+      @title={{i18n "admin.dashboard.sections.highlights.title"}}
+      @layout="row"
+      @startDate={{@startDate}}
+      @endDate={{@endDate}}
+      ...attributes
+    >
+      <:default>
         {{#if @fetchError}}
           <div class="db-highlights__error" role="alert">
             {{i18n "admin.dashboard.highlights.fetch_error"}}
@@ -42,10 +43,13 @@ export default class Highlights extends Component {
             />
           {{/each}}
         {{/if}}
-      </DashboardSection>
-      {{#if this.hasKpis}}
-        <div class="db-highlights__comparison">{{this.comparisonLabel}}</div>
-      {{/if}}
-    </div>
+      </:default>
+
+      <:footer>
+        {{#if this.hasKpis}}
+          <div class="db-highlights__comparison">{{this.comparisonLabel}}</div>
+        {{/if}}
+      </:footer>
+    </DashboardSection>
   </template>
 }

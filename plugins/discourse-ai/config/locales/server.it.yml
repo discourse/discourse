@@ -43,7 +43,6 @@ it:
     ai_sentiment_enabled: "Abilita il modulo sentimento."
     ai_sentiment_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo sentimento"
     ai_sentiment_inference_service_api_key: "Chiave API per l'API di sentimento"
-    ai_sentiment_models: "Modelli da utilizzare per l'inferenza. Il sentimento classifica i messaggi nello spazio positivo/neutro/negativo. L'emozione si classifica nello spazio rabbia/disgusto/paura/gioia/neutrale/tristezza/sorpresa."
     ai_nsfw_detection_enabled: "Abilita il modulo NSFW."
     ai_nsfw_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo NSFW"
     ai_nsfw_inference_service_api_key: "Chiave API per l'API NSFW"

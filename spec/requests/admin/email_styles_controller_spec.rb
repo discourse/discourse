@@ -5,7 +5,7 @@ RSpec.describe Admin::EmailStylesController do
   fab!(:moderator)
   fab!(:user)
 
-  let(:default_html) { File.read("#{Rails.root}/app/views/email/default_template.html") }
+  let(:default_html) { File.read("#{Rails.root.join("app/views/email/default_template.html")}") }
   let(:default_css) { "" }
 
   after do

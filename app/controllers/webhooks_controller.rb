@@ -27,7 +27,7 @@ class WebhooksController < ActionController::Base
 
     events = params["_json"] || [params]
     events.each do |event|
-      message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
+      message_id = Email::MessageIdService.message_id_clean(event["smtp-id"] || "")
       to_address = event["email"]
       error_code = event["status"]
 

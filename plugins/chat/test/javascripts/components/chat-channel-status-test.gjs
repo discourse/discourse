@@ -10,7 +10,7 @@ import {
   channelStatusIcon,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module("Component | chat-channel-status", function (hooks) {
+module("Component | ChatChannelStatus", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders nothing when channel is opened", async function (assert) {

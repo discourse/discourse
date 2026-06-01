@@ -611,8 +611,6 @@ RSpec.describe CategoriesController do
         end
 
         describe "when category_type is provided" do
-          before { SiteSetting.enable_simplified_category_creation = true }
-
           it "creates a category with the category type" do
             post "/categories.json", params: { name: "Test Category", category_type: "discussion" }
 
@@ -1283,8 +1281,6 @@ RSpec.describe CategoriesController do
         end
 
         context "when category_type_site_settings are provided" do
-          before { SiteSetting.enable_simplified_category_creation = true }
-
           it "can set site_settings for the category type when they match the schema" do
             Categories::Types::Discussion.stubs(:configuration_schema).returns(
               { site_settings: { max_category_nesting: 2 } },

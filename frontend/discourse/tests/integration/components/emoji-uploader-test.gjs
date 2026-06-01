@@ -9,7 +9,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 let requestNumber;
 
-module("Integration | Component | emoji-uploader", function (hooks) {
+module("Integration | Component | EmojiUploader", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

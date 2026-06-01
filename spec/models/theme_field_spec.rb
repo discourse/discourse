@@ -262,7 +262,7 @@ RSpec.describe ThemeField do
   end
 
   def get_fixture(type)
-    File.read("#{Rails.root}/spec/fixtures/theme_settings/#{type}_settings.yaml")
+    File.read("#{Rails.root.join("spec/fixtures/theme_settings/#{type}_settings.yaml")}")
   end
 
   def create_yaml_field(value)

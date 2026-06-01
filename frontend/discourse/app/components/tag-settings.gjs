@@ -23,6 +23,7 @@ export default class TagSettings extends Component {
   @service toasts;
   @service siteSettings;
   @service store;
+  @service appEvents;
 
   @tracked form = null;
   @tracked tags = [];
@@ -157,6 +158,8 @@ export default class TagSettings extends Component {
             this.args.selectedTab
           );
         }
+
+        this.appEvents.trigger("tag-info:updated", result.tag_settings.id);
       }
 
       this.toasts.success({

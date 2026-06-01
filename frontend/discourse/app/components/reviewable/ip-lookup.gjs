@@ -52,7 +52,9 @@ export default class ReviewableIpLookup extends Component {
 
   get queryData() {
     return {
-      ip: this.ipAddress,
+      same_ip_user_id: this.target,
+      user_id: this.target,
+      ip_type: "last",
       exclude: this.target,
       order: "trust_level DESC",
     };
@@ -73,12 +75,12 @@ export default class ReviewableIpLookup extends Component {
         this.location = await ajax("/admin/users/ip-info", {
           data: { ip: this.ipAddress },
         });
-
-        const result = await ajax("/admin/users/total-others-with-same-ip", {
-          data: this.queryData,
-        });
-        this.totalOthersWithSameIP = result.total;
       }
+
+      const result = await ajax("/admin/users/total-others-with-same-ip", {
+        data: this.queryData,
+      });
+      this.totalOthersWithSameIP = result.total;
     } catch (error) {
       popupAjaxError(error);
     } finally {

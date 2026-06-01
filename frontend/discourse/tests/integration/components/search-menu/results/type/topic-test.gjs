@@ -6,7 +6,7 @@ import TopicResultComponent from "discourse/components/search-menu/results/type/
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
-  "Integration | Component | search-menu/results/type/topic",
+  "Integration | Component | SearchMenu | Results | Type | Topic",
   function (hooks) {
     setupRenderingTest(hooks);
 

@@ -60,7 +60,6 @@ he:
     ai_sentiment_enabled: "הפעלת מודול התחושה."
     ai_sentiment_inference_service_api_endpoint: "הכתובת בה נמצא ה־API הפעיל עבור מודול התחושה"
     ai_sentiment_inference_service_api_key: "מפתח API ל־API של התחושה"
-    ai_sentiment_models: "מודלים לטובת הסקת מסקנות. תחושה מסווגת את הפוסט על המנעד של חיובי/נייטרלי/שלילי. רגש מסווג על המנעד של כעס/גועל/פחד/שמחה/נייטרליות/עצב/הפתעה."
     ai_nsfw_detection_enabled: "הפעלת מודול הפוגענות."
     ai_nsfw_inference_service_api_endpoint: "הכתובת בה נמצא ה־API הפעיל עבור מודול הפוגענות"
     ai_nsfw_inference_service_api_key: "מפתח API ל־API לתכנים פוגעניים"

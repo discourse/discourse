@@ -37,8 +37,8 @@ jobs:
 
       - name: Git push
         run: |
-          git config --global user.email "ci@ci.invalid"
-          git config --global user.name "Discourse CI"
+          git config --global user.email "team@discourse.org"
+          git config --global user.name "discoursebot"
           git add pnpm-lock.yaml
           git status
           git commit -m "pnpm dedupe [dependabot skip]" && git push || echo "done"

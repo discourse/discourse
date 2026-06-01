@@ -9,7 +9,7 @@ import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirr
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
-module("Integration | Component | prosemirror-editor", function (hooks) {
+module("Integration | Component | ProsemirrorEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(() => clearRichEditorExtensions());

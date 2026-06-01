@@ -13,6 +13,21 @@ module DiscourseAi
         summarization_service = DiscourseAi::TopicSummarization.for(topic, current_user)
         cached_summary = summarization_service.cached_summary
 
+        raise Discourse::NotFound if !cached_summary
+
+        if !guardian.can_see_summary?(topic, cached_summary: cached_summary)
+          raise Discourse::NotFound
+        end
+
+        render_serialized(cached_summary, AiTopicSummarySerializer)
+      end
+
+      def create
+        topic = Topic.find(params[:topic_id])
+        guardian.ensure_can_see!(topic)
+        summarization_service = DiscourseAi::TopicSummarization.for(topic, current_user)
+        cached_summary = summarization_service.cached_summary
+
         if !guardian.can_see_summary?(topic, cached_summary: cached_summary)
           raise Discourse::NotFound
         end

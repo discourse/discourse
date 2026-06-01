@@ -136,7 +136,11 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
         if (this.channel.emoji) {
           return "emoji";
         } else if (this.channel.chatable.group) {
-          return "text";
+          if (this.channel.chatable.users.length === 1) {
+            return "image";
+          } else {
+            return "text";
+          }
         } else {
           return "image";
         }
@@ -150,7 +154,14 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
         if (this.channel.emoji) {
           return this.channel.emoji;
         } else if (this.channel.chatable.group) {
-          return this.channel.membershipsCount;
+          if (this.channel.chatable.users.length === 1) {
+            return avatarUrl(
+              this.channel.chatable.users[0].avatar_template,
+              "tiny"
+            );
+          } else {
+            return this.channel.membershipsCount;
+          }
         } else {
           return avatarUrl(
             this.channel.chatable.users[0].avatar_template,
@@ -824,7 +835,11 @@ export default {
                 if (this.channel.emoji) {
                   return "emoji";
                 } else if (this.channel.chatable.group) {
-                  return "text";
+                  if (this.channel.chatable.users.length === 1) {
+                    return "image";
+                  } else {
+                    return "text";
+                  }
                 } else {
                   return "image";
                 }
@@ -834,7 +849,14 @@ export default {
                 if (this.channel.emoji) {
                   return this.channel.emoji;
                 } else if (this.channel.chatable.group) {
-                  return this.channel.membershipsCount;
+                  if (this.channel.chatable.users.length === 1) {
+                    return avatarUrl(
+                      this.channel.chatable.users[0].avatar_template,
+                      "tiny"
+                    );
+                  } else {
+                    return this.channel.membershipsCount;
+                  }
                 } else {
                   return avatarUrl(
                     this.channel.chatable.users[0].avatar_template,

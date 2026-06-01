@@ -41,6 +41,14 @@ after_initialize do
   #   - block
   GlobalSetting.add_default(:max_data_explorer_api_req_mode, "warn")
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_svg_icon "database"
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_data_explorer/workflows/sql_action/v1"
+      DiscourseDataExplorer::Workflows::SqlAction::V1
+    end
+  end
+
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
     return true if current_user.admin?
@@ -66,6 +74,8 @@ after_initialize do
   ) { DiscourseDataExplorer::Query.for_group(object).exists? }
 
   register_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
+
+  register_admin_dashboard_report_source(DiscourseDataExplorer::AdminDashboardReportProvider)
 
   add_api_key_scope(
     :data_explorer,
@@ -131,11 +141,9 @@ after_initialize do
               { skip_empty:, users_from_group:, attach_csv:, render_url_columns: true },
             )
             .each do |pm|
-              begin
-                utils.send_pm(pm, automation_id: automation.id)
-              rescue ActiveRecord::RecordNotSaved => e
-                Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
-              end
+              utils.send_pm(pm, automation_id: automation.id)
+            rescue ActiveRecord::RecordNotSaved => e
+              Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
             end
         end
       end

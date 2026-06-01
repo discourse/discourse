@@ -150,7 +150,7 @@ class DiscourseConnectBase
   end
 
   def to_json
-    self.to_h.to_json
+    to_h.to_json
   end
 
   def to_url(base_url = nil)
@@ -164,7 +164,7 @@ class DiscourseConnectBase
   end
 
   def unsigned_payload
-    Rack::Utils.build_query(self.to_h)
+    Rack::Utils.build_query(to_h)
   end
 
   def to_h

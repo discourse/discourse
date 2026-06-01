@@ -172,6 +172,14 @@ hr:
       placeholder: datum
       from_placeholder: "od datuma"
       to_placeholder: "do danas"
+    date_range_picker:
+      apply: "Primijeni"
+      presets:
+        last_7_days: "Zadnjih 7 dana"
+        last_30_days: "Zadnjih 30 dana"
+        last_3_months: "Posljednjih 3 mjeseci"
+        last_6_months: "Posljednjih 6 mjeseci"
+        last_year: "Prošla godina"
     languages:
       ar:
         name: arapski
@@ -406,8 +414,6 @@ hr:
     tos: "Uvjeti korištenja"
     rules: "Pravila"
     conduct: "Pravila ponašanja"
-    mobile_view: "Mobilni prikaz"
-    desktop_view: "Desktop prikaz"
     now: "upravo"
     read_more: "pročitaj više"
     more: "Više"
@@ -3381,6 +3387,8 @@ hr:
           other: "Odbaci (%{count})…"
         dismiss_tooltip: "Odbacite samo nove objave ili prestanite pratiti teme"
         also_dismiss_topics: "Prestani pratiti ove teme kako bi mi se prestale prikazivati kao nepročitane"
+        dismiss_new_topics: "Odbaci nove teme"
+        dismiss_new_replies: "Odbaci nove odgovore"
         dismiss_new: "Odbaci novo"
         dismiss_new_modal:
           title: "Odbaci novo"
@@ -4237,7 +4245,6 @@ hr:
         name_placeholder: "Čemu služi ova oznaka?"
         name_input_label: "Naziv oznake"
         set_reminder: "Podsjeti me"
-        options: "Mogućnosti"
         actions:
           delete_bookmark:
             name: "Izbriši oznaku"
@@ -4854,16 +4861,7 @@ hr:
       staff_info: "Da biste dodali ograničenja, stavite ovu oznaku u grupu oznaka <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Ova je oznaka ograničena na kategorije kojima nemate dopuštenje za pristup."
       synonyms: "Sinonimi"
-      synonyms_description: "Kada se koriste sljedeće oznake, one će biti zamijenjene s <b>%{base_tag_name}</b>."
       save: "Spremite naziv i opis oznake"
-      tag_groups_info:
-        one: 'Ova oznaka pripada grupi "%{tag_groups}".'
-        few: "Ova oznaka pripada grupama \"%{tag_groups}\"."
-        other: "Ova oznaka pripada ovim grupama: %{tag_groups}."
-      category_restrictions:
-        one: "Može se koristiti samo u ovoj kategoriji:"
-        few: "Može se koristiti samo u ovoj kategorijama:"
-        other: "Može se koristiti samo u sljedećim kategorijama:"
       edit_synonyms: "Uredite sinonime"
       add_synonyms_label: "Dodajte sinonime:"
       add_synonyms: "Dodaj"
@@ -5821,6 +5819,31 @@ hr:
         sections:
           reports:
             title: "Izvještaji"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Tema"
+              posts: "Postovi"
+              share: "Podijeli"
+            whos_posting:
+              all_categories: "Sve kategorije"
+              staff: "Osoblje"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovno"
+                "2": "Član"
+                "3": "Stalni član"
+                "4": "Vođa"
+        reports_section:
+          no_data: "Nema podataka za prikaz"
+          modal:
+            enabled_heading: "Omogućeno"
+            all_heading: "Sva izvješća"
+            apply: "Primijeni"
+        site_traffic:
+          series:
+            anonymous: "Anonimno"
         period:
           last_7_days: "Zadnjih 7 dana"
           last_30_days: "Zadnjih 30 dana"

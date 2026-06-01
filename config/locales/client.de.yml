@@ -158,6 +158,15 @@ de:
       placeholder: Datum
       from_placeholder: "ab Datum"
       to_placeholder: "bis Datum"
+    date_range_picker:
+      apply: "Anwenden"
+      start_date: "Startdatum"
+      presets:
+        last_7_days: "Letzte 7 Tage"
+        last_30_days: "Letzte 30 Tage"
+        last_3_months: "Letzte 3 Monate"
+        last_6_months: "Letzte 6 Monate"
+        last_year: "Letztes Jahr"
     languages:
       ar:
         name: Arabisch
@@ -358,7 +367,6 @@ de:
         condition_debugging: "Debugging der Bedingungen"
       toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
-      toggle_mobile_view: "Mobile Ansicht umschalten"
       disable_dev_tools: "Entwicklertools deaktivieren"
       toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
@@ -417,8 +425,6 @@ de:
     tos: "Nutzungsbedingungen"
     rules: "Regeln"
     conduct: "Verhaltenskodex"
-    mobile_view: "Mobile Ansicht"
-    desktop_view: "Desktop-Ansicht"
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
@@ -3500,6 +3506,8 @@ de:
           other: "Ignorieren (%{count}) …"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
+        dismiss_new_topics: "Neue Themen verwerfen"
+        dismiss_new_replies: "Neue Antworten verwerfen"
         dismiss_new: "Neue Themen ignorieren"
         dismiss_new_modal:
           title: "Neue verwerfen"
@@ -3653,8 +3661,6 @@ de:
     nested_replies:
       nested_view: "Verschachtelte Ansicht"
       flat_view: "Flache Ansicht"
-      view_as_nested: "Verschachtelt anzeigen"
-      view_as_flat: "Flach anzeigen"
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
@@ -4449,7 +4455,6 @@ de:
         name_placeholder: "Wofür dient dieses Lesezeichen?"
         name_input_label: "Name des Lesezeichens"
         set_reminder: "Erinnere mich"
-        options: "Optionen"
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
@@ -5128,18 +5133,8 @@ de:
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
-      synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
       synonyms_inline: "Diese Synonyme werden durch %{base_tag_name} ersetzt:"
       save: "Name und Beschreibung des Schlagwortes speichern"
-      tag_groups_info:
-        one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
-      tag_groups_info_prefix:
-        one: "Dieses Schlagwort gehört zur Gruppe: "
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: "
-      category_restrictions:
-        one: "Es kann nur in dieser Kategorie verwendet werden:"
-        other: "Es kann nur in folgenden Kategorien verwendet werden:"
       restricted_to: "Beschränkt auf"
       no_synonyms: "Dieses Schlagwort hat keine Synonyme."
       edit_synonyms: "Synonyme bearbeiten"
@@ -6327,8 +6322,35 @@ de:
             title: "Website-Traffic"
           engagement:
             title: "Aktivität & Wachstum"
+            activity_by_category:
+              category: "Kategorie"
+              topics: "Themen"
+              posts: "Beiträge"
+              share: "Teilen"
+            whos_posting:
+              all_categories: "Alle Kategorien"
+              staff: "Team"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Neue"
+                "1": "Anwärter"
+                "2": "Mitglied"
+                "3": "Regulär"
+                "4": "Anführer"
+              trend:
+                stable: "stabil"
+        reports_section:
+          no_data: "Keine Daten anzuzeigen"
+          modal:
+            enabled_heading: "Aktiviert"
+            all_heading: "Alle Berichte"
+            apply: "Anwenden"
         configure:
           button: "Konfigurieren"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
+            crawlers: "Crawler"
         period:
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"

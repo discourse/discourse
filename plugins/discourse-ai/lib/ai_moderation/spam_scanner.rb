@@ -235,9 +235,9 @@ module DiscourseAi
           build_bot_context(
             messages: [target_msg],
             custom_instructions: custom_instructions,
-            user: self.flagging_user,
+            user: flagging_user,
           )
-        bot = build_scanner_bot(settings: settings, user: self.flagging_user)
+        bot = build_scanner_bot(settings: settings, user: flagging_user)
         structured_output = nil
 
         begin

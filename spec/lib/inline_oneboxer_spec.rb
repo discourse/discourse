@@ -508,4 +508,40 @@ RSpec.describe InlineOneboxer do
       expect(Oneboxer).not_to have_received(:inline_data_for)
     end
   end
+
+  describe "private GitHub repo" do
+    let(:repo_url) { "https://github.com/discourse/discourse" }
+    let(:api_uri) { "https://api.github.com/repos/discourse/discourse" }
+
+    before do
+      stub_request(:get, api_uri).to_return(status: 200, body: onebox_response("githubrepo"))
+    end
+
+    it "resolves the title via the authenticated GitHub API when a token is configured" do
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+
+      expect(InlineOneboxer.lookup(repo_url, skip_cache: true)).to eq(
+        url: repo_url,
+        title: "GitHub - discourse/discourse - A platform for community discussion. Free, open,...",
+      )
+      expect(WebMock).to have_requested(:get, api_uri).with(
+        headers: {
+          "Authorization" => "Bearer github_pat_1234",
+        },
+      )
+    end
+
+    it "falls back to HTML title scraping and does not call the GitHub API when no token is configured" do
+      stub_request(:get, repo_url).to_return(
+        status: 200,
+        body: "<html><head><title>GitHub - discourse/discourse</title></head></html>",
+      )
+
+      expect(InlineOneboxer.lookup(repo_url, skip_cache: true)).to eq(
+        url: repo_url,
+        title: "GitHub - discourse/discourse",
+      )
+      expect(WebMock).not_to have_requested(:get, api_uri)
+    end
+  end
 end

@@ -9,7 +9,6 @@ import { service } from "@ember/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -23,7 +22,6 @@ import NestedSortSelector from "./sort-selector";
 
 export default class NestedContextView extends Component {
   @service appEvents;
-  @service currentUser;
   @service header;
   @service screenTrack;
 
@@ -36,10 +34,15 @@ export default class NestedContextView extends Component {
   #nextTimer = null;
   #retryTimer = null;
   #highlightTimer = null;
+  #lastScrollKey = null;
 
   constructor() {
     super(...arguments);
-    this.appEvents.on("nested:scroll-to-target", this, this.scheduleScroll);
+    this.appEvents.on(
+      "nested:scroll-to-target",
+      this,
+      this.forceScheduleScroll
+    );
   }
 
   willDestroy() {
@@ -48,7 +51,11 @@ export default class NestedContextView extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
-    this.appEvents.off("nested:scroll-to-target", this, this.scheduleScroll);
+    this.appEvents.off(
+      "nested:scroll-to-target",
+      this,
+      this.forceScheduleScroll
+    );
     this.viewportTracker.destroy();
   }
 
@@ -56,6 +63,21 @@ export default class NestedContextView extends Component {
   // scroll wins. Fresh attempt counter per invocation.
   @action
   scheduleScroll() {
+    this.#scheduleScroll();
+  }
+
+  @action
+  forceScheduleScroll() {
+    this.#scheduleScroll({ force: true });
+  }
+
+  #scheduleScroll({ force = false } = {}) {
+    const scrollKey = this.#scrollKey;
+    if (!force && scrollKey === this.#lastScrollKey) {
+      return;
+    }
+
+    this.#lastScrollKey = scrollKey;
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
@@ -63,8 +85,8 @@ export default class NestedContextView extends Component {
     this.#nextTimer = next(this, this.#scrollToTarget);
   }
 
-  get flatViewUrl() {
-    return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}?flat=1`);
+  get #scrollKey() {
+    return `${this.args.targetPostNumber}:${this.args.contextChain?.post?.id}`;
   }
 
   #scrollToTarget() {
@@ -90,7 +112,14 @@ export default class NestedContextView extends Component {
           2000
         );
       }
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      const headerOffset = this.header.headerOffset || 0;
+      const banner = document.querySelector(".nested-context-view__banner");
+      const bannerHeight = banner ? banner.offsetHeight : 0;
+      const rect = target.getBoundingClientRect();
+      window.scrollTo({
+        top: window.scrollY + rect.top - headerOffset - bannerHeight,
+        behavior: "smooth",
+      });
     } else if (this.#scrollAttempts < this.#maxScrollAttempts) {
       // Target may not be in the DOM yet (async child rendering).
       this.#scrollAttempts++;
@@ -150,24 +179,31 @@ export default class NestedContextView extends Component {
         @topic={{@topic}}
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
+        @changeNotice={{@changeNotice}}
+        @changePostOwner={{@changePostOwner}}
+        @grantBadge={{@grantBadge}}
+        @lockPost={{@lockPost}}
+        @unlockPost={{@unlockPost}}
+        @permanentlyDeletePost={{@permanentlyDeletePost}}
+        @rebakePost={{@rebakePost}}
+        @showPagePublish={{@showPagePublish}}
+        @togglePostType={{@togglePostType}}
+        @toggleWiki={{@toggleWiki}}
+        @unhidePost={{@unhidePost}}
         @registerPost={{this.viewportTracker.registerPost}}
       />
 
       <div class="nested-view__controls">
-        <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
+        <div class="nested-view__controls-left">
+          <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
+        </div>
+
         <div class="nested-view__controls-right">
           {{#if @topic.has_activity_log}}
             <DButton
               class="btn-flat nested-view__activity-link"
               @action={{@showActivityLog}}
               @label="nested_replies.activity_log.link"
-            />
-          {{/if}}
-          {{#if this.currentUser.can_toggle_nested_mode}}
-            <DButton
-              class="btn-flat nested-view__flat-link"
-              @href={{this.flatViewUrl}}
-              @label="nested_replies.view_as_flat"
             />
           {{/if}}
         </div>
@@ -217,6 +253,17 @@ export default class NestedContextView extends Component {
               @recoverPost={{@recoverPost}}
               @showFlags={{@showFlags}}
               @showHistory={{@showHistory}}
+              @changeNotice={{@changeNotice}}
+              @changePostOwner={{@changePostOwner}}
+              @grantBadge={{@grantBadge}}
+              @lockPost={{@lockPost}}
+              @unlockPost={{@unlockPost}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @rebakePost={{@rebakePost}}
+              @showPagePublish={{@showPagePublish}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @unhidePost={{@unhidePost}}
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}
