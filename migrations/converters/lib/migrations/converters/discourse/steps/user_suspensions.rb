@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserSuspensions < Migrations::Converter::ProgressStep
+      class UserSuspensions < Conversion::ProgressStep
         attr_accessor :source_db
 
         def max_progress

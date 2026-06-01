@@ -28,7 +28,7 @@ module Migrations
 
           settings = load_settings(type)
 
-          Migrations::Database.reset!(settings[:intermediate_db][:path]) if @options[:reset]
+          Database.reset!(settings[:intermediate_db][:path]) if @options[:reset]
 
           converter = "migrations/converters/#{type}/converter".camelize.constantize
           converter.new(settings).run(
@@ -40,7 +40,7 @@ module Migrations
         private
 
         def validate_converter_type!(type)
-          names = Migrations::Converters.names
+          names = Converters.names
           return if names.include?(type)
 
           raise Error, <<~MSG
@@ -50,7 +50,7 @@ module Migrations
         end
 
         def load_settings(type)
-          settings_path = @options[:settings] || Migrations::Converters.default_settings_path(type)
+          settings_path = @options[:settings] || Converters.default_settings_path(type)
           settings_path = File.expand_path(settings_path, Dir.pwd)
 
           raise Error, "Settings file not found: #{settings_path}" unless File.exist?(settings_path)

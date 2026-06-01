@@ -46,7 +46,7 @@ module Migrations
       def self.build_top_command_class
         commands = Registry.command_classes
 
-        Class.new(Migrations::CLI::Command) do
+        Class.new(Command) do
           self.description = "Discourse migration tools"
           nested :command, commands
 

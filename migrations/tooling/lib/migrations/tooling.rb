@@ -15,7 +15,7 @@ module Migrations
           loader.log! if ENV["DEBUG"]
           loader.inflector.inflect("dsl" => "DSL", "cli" => "CLI")
           tooling_dir = File.join(__dir__, "tooling")
-          loader.push_dir(tooling_dir, namespace: Migrations::Tooling)
+          loader.push_dir(tooling_dir, namespace: Tooling)
           loader.ignore(File.join(tooling_dir, "register.rb"))
           loader
         end

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converter::Step do
-  let(:tracker) { instance_double(Migrations::Converter::StepTracker) }
+RSpec.describe Migrations::Conversion::Step do
+  let(:tracker) { instance_double(Migrations::Conversion::StepTracker) }
 
   before do
     Object.const_set(
       "TemporaryModule",
       Module.new do
-        const_set("TopicUsers", Class.new(Migrations::Converter::Step) {})
-        const_set("Users", Class.new(Migrations::Converter::Step) {})
+        const_set("TopicUsers", Class.new(Migrations::Conversion::Step) {})
+        const_set("Users", Class.new(Migrations::Conversion::Step) {})
       end,
     )
   end

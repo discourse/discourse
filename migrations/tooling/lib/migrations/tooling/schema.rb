@@ -182,7 +182,7 @@ module Migrations
       end
 
       def self.schema_root_path
-        File.join(Migrations::Tooling.root_path, "config", "schema")
+        File.join(Tooling.root_path, "config", "schema")
       end
 
       def self.config_path(database = :intermediate_db)
@@ -190,7 +190,7 @@ module Migrations
       end
 
       private_class_method def self.manifest_path
-        File.join(Migrations::Tooling.root_path, "config", "schema", "plugin_manifest.yml")
+        File.join(Tooling.root_path, "config", "schema", "plugin_manifest.yml")
       end
 
       private_class_method def self.refresh_plugin_manifest!

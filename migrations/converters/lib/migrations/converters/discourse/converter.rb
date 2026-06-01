@@ -3,10 +3,10 @@
 module Migrations
   module Converters
     module Discourse
-      class Converter < Migrations::Converter::Converter
+      class Converter < Conversion::Base
         def initialize(settings)
           super
-          @source_db = Migrations::Converters::Adapter::Postgres.new(settings[:source_db])
+          @source_db = Adapter::Postgres.new(settings[:source_db])
         end
 
         def step_args(step_class)

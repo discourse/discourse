@@ -4,7 +4,7 @@ require "etc"
 require "colored2"
 
 module Migrations
-  module Converter
+  module Conversion
     class ProgressStepExecutor
       WORKER_COUNT = Etc.nprocessors - 1 # leave 1 CPU free to do other work
       MIN_PARALLEL_ITEMS = WORKER_COUNT * 10

@@ -3,7 +3,7 @@
 require "oj"
 
 module Migrations
-  module Converter
+  module Conversion
     class Worker
       OJ_SETTINGS = { mode: :object, class_cache: true, symbol_keys: true }
 

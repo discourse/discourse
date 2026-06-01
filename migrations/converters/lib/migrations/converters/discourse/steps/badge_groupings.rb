@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class BadgeGroupings < Migrations::Converter::ProgressStep
+      class BadgeGroupings < Conversion::ProgressStep
         attr_accessor :source_db
 
         def max_progress

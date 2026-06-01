@@ -18,7 +18,7 @@ module Migrations
         def call
           return print_usage if @options[:help]
 
-          Migrations::Importer.execute(
+          Importer.execute(
             reset: @options[:reset],
             only: step_names(@options[:only]),
             skip: step_names(@options[:skip]),

@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class PermalinkNormalizations < Migrations::Converter::Step
+      class PermalinkNormalizations < Conversion::Step
         attr_accessor :source_db
 
         def execute

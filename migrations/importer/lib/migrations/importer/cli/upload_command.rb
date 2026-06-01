@@ -25,7 +25,7 @@ module Migrations
           adjust_db_pool_size
 
           settings = load_settings
-          Migrations::Importer::Uploads::Uploads.perform!(settings)
+          Uploads::Uploads.perform!(settings)
 
           puts ""
         end
@@ -34,11 +34,9 @@ module Migrations
 
         def load_settings
           path = @options[:settings]
-          unless File.exist?(path)
-            raise Migrations::NoSettingsFound, "Settings file not found: #{path}"
-          end
+          raise NoSettingsFound, "Settings file not found: #{path}" unless File.exist?(path)
 
-          settings = Migrations::SettingsParser.parse!(path)
+          settings = SettingsParser.parse!(path)
           settings[:fix_missing] = true if @options[:fix_missing]
           settings[:create_optimized_images] = true if @options[:optimize]
           settings

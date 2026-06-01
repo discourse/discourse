@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class SiteSettings < Migrations::Converter::ProgressStep
+      class SiteSettings < Conversion::ProgressStep
         attr_accessor :source_db
 
         def execute

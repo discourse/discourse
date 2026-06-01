@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converter::ParallelJob do
+RSpec.describe Migrations::Conversion::ParallelJob do
   subject(:job) { described_class.new(step) }
 
-  let(:step) { instance_double(Migrations::Converter::ProgressStep) }
+  let(:step) { instance_double(Migrations::Conversion::ProgressStep) }
   let(:item) { { key: "value" } }
-  let(:tracker) { instance_double(Migrations::Converter::StepTracker) }
-  let(:stats) { Migrations::Converter::StepStats.new }
+  let(:tracker) { instance_double(Migrations::Conversion::StepTracker) }
+  let(:stats) { Migrations::Conversion::StepStats.new }
   let(:intermediate_db) { class_double(Migrations::Database::IntermediateDB).as_stubbed_const }
 
   before do

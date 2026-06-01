@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TagGroups < Migrations::Converter::ProgressStep
+      class TagGroups < Conversion::ProgressStep
         attr_accessor :source_db
 
         def max_progress

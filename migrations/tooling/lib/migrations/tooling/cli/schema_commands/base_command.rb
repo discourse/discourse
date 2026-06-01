@@ -12,7 +12,7 @@ module Migrations
           requires_rails!
 
           def schema
-            Migrations::Tooling::Schema
+            Schema
           end
 
           def selected_database

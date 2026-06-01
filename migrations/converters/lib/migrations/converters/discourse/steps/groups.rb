@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Groups < Migrations::Converter::ProgressStep
+      class Groups < Conversion::ProgressStep
         attr_accessor :source_db
 
         def execute

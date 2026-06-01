@@ -1,20 +1,15 @@
 # frozen_string_literal: true
 
 module Migrations
-  module Converter
-    class ParallelJob
+  module Conversion
+    class SerialJob
       def initialize(step)
         @step = step
         @tracker = step.tracker
-
-        @offline_connection = Database::OfflineConnection.new
-
-        ForkManager.after_fork_child { Database::IntermediateDB.setup(@offline_connection) }
       end
 
       def run(item)
         @tracker.reset_stats!
-        @offline_connection.clear!
 
         begin
           @step.process_item(item)
@@ -22,7 +17,7 @@ module Migrations
           @tracker.log_error("Failed to process item", exception: e, details: item)
         end
 
-        [@offline_connection.parametrized_insert_statements, @tracker.stats]
+        @tracker.stats
       end
 
       def cleanup

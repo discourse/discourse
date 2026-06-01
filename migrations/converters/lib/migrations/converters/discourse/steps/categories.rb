@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Categories < Migrations::Converter::ProgressStep
+      class Categories < Conversion::ProgressStep
         SEEDED_CATEGORY_SETTINGS = %w[
           uncategorized_category_id
           meta_category_id

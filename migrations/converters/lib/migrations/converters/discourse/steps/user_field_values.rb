@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserFieldValues < Migrations::Converter::ProgressStep
+      class UserFieldValues < Conversion::ProgressStep
         USER_FIELD_PREFIX = "user_field_"
 
         attr_accessor :source_db

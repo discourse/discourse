@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class CategoryUsers < Migrations::Converter::ProgressStep
+      class CategoryUsers < Conversion::ProgressStep
         attr_accessor :source_db
 
         def max_progress

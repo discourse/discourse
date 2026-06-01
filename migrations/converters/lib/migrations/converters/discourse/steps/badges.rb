@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Badges < Migrations::Converter::ProgressStep
+      class Badges < Conversion::ProgressStep
         attr_accessor :source_db
 
         def execute

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations
-  module Converter
+  module Conversion
     class StepTracker
       attr_reader :stats
 

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converter::SerialJob do
+RSpec.describe Migrations::Conversion::SerialJob do
   subject(:job) { described_class.new(step) }
 
-  let(:step) { instance_double(Migrations::Converter::ProgressStep) }
+  let(:step) { instance_double(Migrations::Conversion::ProgressStep) }
   let(:item) { "Item" }
-  let(:tracker) { instance_double(Migrations::Converter::StepTracker) }
-  let(:stats) { Migrations::Converter::StepStats.new }
+  let(:tracker) { instance_double(Migrations::Conversion::StepTracker) }
+  let(:stats) { Migrations::Conversion::StepStats.new }
 
   before do
     allow(step).to receive(:tracker).and_return(tracker)

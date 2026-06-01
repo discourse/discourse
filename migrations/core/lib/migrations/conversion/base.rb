@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Migrations
-  module Converter
-    class Converter
+  module Conversion
+    class Base
       attr_accessor :settings
 
       def initialize(settings)
