@@ -128,7 +128,9 @@ group :test do
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
-  gem "capybara-playwright-driver"
+  gem "capybara-playwright-driver",
+      git: "https://github.com/davidtaylorhq/capybara-playwright-driver.git",
+      branch: "capybara-locator"
   gem "puma", require: false
 end
 
