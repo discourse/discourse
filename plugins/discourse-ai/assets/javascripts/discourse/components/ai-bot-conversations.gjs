@@ -39,6 +39,7 @@ export default class AiBotConversations extends Component {
   @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
   @service capabilities;
+  @service currentUser;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
@@ -174,6 +175,12 @@ export default class AiBotConversations extends Component {
     return this.creditStatus?.hard_limit_reached === true;
   }
 
+  get sendOnEnter() {
+    return (
+      this.currentUser?.user_option?.ai_conversations_send_on_enter ?? true
+    );
+  }
+
   @action
   async setAgentId(id) {
     this.aiBotConversationsHiddenSubmit.agentId = id;
@@ -228,6 +235,13 @@ export default class AiBotConversations extends Component {
     }
     if (event.key === "Enter") {
       this.shiftHeldOnEnter = event.shiftKey;
+
+      // When Enter is set to insert a newline, Cmd/Ctrl+Enter submits instead.
+      if (!this.sendOnEnter && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.prepareAndSubmitToBot();
+      }
     }
   }
 
@@ -238,6 +252,11 @@ export default class AiBotConversations extends Component {
     // browsers regardless of compositionend/keydown ordering quirks.
     const shiftHeld = this.shiftHeldOnEnter;
     this.shiftHeldOnEnter = false;
+    // When the user prefers Enter to insert a newline, never submit here —
+    // Cmd/Ctrl+Enter submission is handled in handleKeyDown.
+    if (!this.sendOnEnter) {
+      return;
+    }
     if (event.inputType !== "insertLineBreak" || shiftHeld) {
       return;
     }

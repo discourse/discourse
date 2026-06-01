@@ -1271,6 +1271,7 @@ en:
           scroll_to_bottom: "Scroll to bottom"
           streaming_below: "New content below"
           editing_post: "Editing post"
+          send_on_enter_setting: "Send AI bot messages with Enter (use Shift + Enter for a new line)"
       sentiments:
         dashboard:
           title: "Sentiment"

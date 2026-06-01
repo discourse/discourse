@@ -32,12 +32,12 @@ export default class AiBotDockedComposer extends Component {
   @service appEvents;
   @service aiBotDockedSubmit;
   @service aiBotStreamingState;
+  @service currentUser;
   @service siteSettings;
   @service store;
 
   @tracked showToolbar = false;
   @tracked hasContentBelow = false;
-  @tracked atAbsoluteBottom = false;
   @tracked editingPost = null;
   @tracked pendingBotReply = false;
 
@@ -66,9 +66,6 @@ export default class AiBotDockedComposer extends Component {
       if (this.hasContentBelow) {
         this.hasContentBelow = false;
       }
-      if (!this.atAbsoluteBottom) {
-        this.atAbsoluteBottom = true;
-      }
       return;
     }
 
@@ -76,16 +73,6 @@ export default class AiBotDockedComposer extends Component {
     const hasContentBelow = distFromBottom > 100;
     if (hasContentBelow !== this.hasContentBelow) {
       this.hasContentBelow = hasContentBelow;
-    }
-
-    // Two thresholds (show at 60px, hide at 140px) prevent the disclaimer
-    // from toggling itself: appearing adds height, which shifts the scroll
-    // position and would immediately hide it again in a loop on Firefox.
-    const nearBottom = this.atAbsoluteBottom
-      ? distFromBottom <= 140
-      : distFromBottom <= 60;
-    if (nearBottom !== this.atAbsoluteBottom) {
-      this.atAbsoluteBottom = nearBottom;
     }
   };
 
@@ -184,6 +171,12 @@ export default class AiBotDockedComposer extends Component {
 
   get minLength() {
     return this.siteSettings.min_personal_message_post_length ?? 1;
+  }
+
+  get sendOnEnter() {
+    return (
+      this.currentUser?.user_option?.ai_conversations_send_on_enter ?? true
+    );
   }
 
   get composerClass() {
@@ -513,6 +506,7 @@ export default class AiBotDockedComposer extends Component {
       @onRegisterApi={{this.registerComposerApi}}
       @isSubmitting={{this.aiBotDockedSubmit.loading}}
       @disabled={{this.isStreaming}}
+      @submitOnEnter={{this.sendOnEnter}}
       @autoResize={{true}}
       @maxResizeOffset={{this.maxResizeOffset}}
       {{didInsert this.setupScrollListener}}
@@ -587,11 +581,6 @@ export default class AiBotDockedComposer extends Component {
               {{dIcon "chevron-down"}}
             {{/if}}
           </button>
-        {{/if}}
-        {{#if this.atAbsoluteBottom}}
-          <p class="ai-bot-docked-composer__disclaimer">
-            {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}
-          </p>
         {{/if}}
       </:default>
     </DockedComposer>

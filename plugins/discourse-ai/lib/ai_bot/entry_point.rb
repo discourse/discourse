@@ -230,6 +230,24 @@ module DiscourseAi
           scope.user.in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
         end
 
+        # Lets the user choose whether Enter sends a message in the AI bot
+        # conversation composers (default) or inserts a newline.
+        UserUpdater::OPTION_ATTR.push(:ai_conversations_send_on_enter)
+        plugin.add_to_serializer(
+          :user_option,
+          :ai_conversations_send_on_enter,
+          include_condition: -> do
+            SiteSetting.ai_bot_enable_docked_composer && scope.authenticated?
+          end,
+        ) { object.ai_conversations_send_on_enter }
+        plugin.add_to_serializer(
+          :current_user_option,
+          :ai_conversations_send_on_enter,
+          include_condition: -> do
+            SiteSetting.ai_bot_enable_docked_composer && scope.authenticated?
+          end,
+        ) { object.ai_conversations_send_on_enter }
+
         plugin.add_to_serializer(
           :topic_view,
           :ai_agent_name,

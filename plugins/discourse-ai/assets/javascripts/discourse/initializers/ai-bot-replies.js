@@ -7,7 +7,7 @@ import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
-import { isGPTBot, showShareConversationModal } from "../lib/ai-bot-helper";
+import { isGPTBot } from "../lib/ai-bot-helper";
 import {
   cleanupStreamingData,
   streamPostText,
@@ -264,28 +264,6 @@ function initializeShareButton(api) {
   );
 }
 
-function initializeShareTopicButton(api) {
-  const modal = api.container.lookup("service:modal");
-  const currentUser = api.container.lookup("service:current-user");
-
-  api.registerTopicFooterButton({
-    id: "share-ai-conversation",
-    icon: "share-nodes",
-    label: "discourse_ai.ai_bot.share_ai_conversation.name",
-    title: "discourse_ai.ai_bot.share_ai_conversation.title",
-    action() {
-      showShareConversationModal(modal, this.topic.id);
-    },
-    classNames: ["share-ai-conversation-button"],
-    dependentKeys: ["topic.ai_agent_name"],
-    displayed() {
-      return (
-        currentUser?.can_share_ai_bot_conversations && this.topic.ai_agent_name
-      );
-    },
-  });
-}
-
 export default {
   name: "discourse-ai-bot-replies",
 
@@ -301,7 +279,6 @@ export default {
         initializeAgentDecorator(api);
         initializeDebugButton(api, container);
         initializeShareButton(api, container);
-        initializeShareTopicButton(api, container);
         initializeRetryButton(api);
       });
     }
