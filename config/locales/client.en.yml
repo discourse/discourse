@@ -3252,7 +3252,7 @@ en:
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
-      edit_reason_placeholder: "why are you editing?"
+      edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
@@ -3323,7 +3323,10 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
-      edit_reason: "Add your reason for editing"
+      edit_reason: "Why are you editing?"
+      whisper_indicator:
+        public: "Visible"
+        whispering: "Whispering"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
@@ -3360,25 +3363,30 @@ en:
           desc: Create new message starting with same recipients
         reply_to_topic:
           label: Reply to topic
+          trigger: Topic
           desc: Reply to the topic, not any specific post
         toggle_whisper:
           label: Toggle whisper
-          desc: Whispers are only visible to staff members
+          desc: Whispers are only visible to allowed groups
         create_topic:
-          label: "New topic"
+          label: Create topic
           desc: Create a new topic
         create_personal_message:
-          label: "New message"
+          label: Create message
           desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
-          label: "Toggle topic bump"
+          label: "Do not bump"
           desc: "Reply without changing latest reply date"
+        create_unlisted_topic: "Unlisted topic"
         toggle_unlisted:
           label: Toggle unlisted
           desc: "Unlisted topics are only accessible by direct link"
+        edit_post: "Editing post"
+        no_actions_available: "No actions available"
+        unknown_user: "User"
 
       reload: "Reload"
       ignore: "Ignore"
@@ -6136,7 +6144,7 @@ en:
           title: "Edit Table"
           cancel: "cancel"
           create: "Save"
-          reason: "why are you editing?"
+          reason: "Why are you editing?"
           trigger_reason: "Add reason for edit"
         default_edit_reason: "Update Table with Table Editor"
       default_header:
