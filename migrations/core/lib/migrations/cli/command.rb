@@ -23,6 +23,61 @@ module Migrations
         return true if @requires_rails == true
         superclass.respond_to?(:requires_rails?) && superclass.requires_rails?
       end
+
+      # Samovar parses each declaration once, front-to-back, and only matches
+      # options at the front of the remaining input — so by default options must
+      # precede positionals (`convert --only x discourse`). Hoist any recognized
+      # option flags (and their values) to the front so they may also appear
+      # after positionals (`convert discourse --only x`), the way the previous
+      # Thor-based CLI allowed. Everything after a `--` separator is left as-is.
+      def parse(input)
+        # Reorder in place: Samovar consumes the input array by reference (nested
+        # commands rely on it being emptied), so we must mutate it rather than
+        # pass a copy.
+        input.replace(hoist_options(input))
+        super(input)
+      end
+
+      private
+
+      def hoist_options(input)
+        options = self.class.table.merged[:options]
+        return input unless options
+
+        takes_value = {}
+        options.each do |option|
+          option.flags.each do |flag|
+            [flag.prefix, *Array(flag.alternatives)].each do |prefix|
+              takes_value[prefix] = !flag.boolean?
+            end
+          end
+        end
+
+        flags = []
+        positionals = []
+        index = 0
+
+        while index < input.size
+          token = input[index]
+
+          if token == "--"
+            positionals.concat(input[index..])
+            break
+          elsif takes_value.key?(token)
+            flags << token
+            if takes_value[token] && index + 1 < input.size
+              flags << input[index + 1]
+              index += 1
+            end
+          else
+            positionals << token
+          end
+
+          index += 1
+        end
+
+        flags + positionals
+      end
     end
   end
 end
