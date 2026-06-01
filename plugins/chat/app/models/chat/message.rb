@@ -49,6 +49,11 @@ module Chat
              foreign_key: :target_id
     has_many :uploads, through: :upload_references, class_name: "::Upload"
 
+    has_many :hotlinked_media,
+             dependent: :destroy,
+             foreign_key: :chat_message_id,
+             class_name: "Chat::MessageHotlinkedMedia"
+
     has_one :chat_webhook_event,
             dependent: :destroy,
             class_name: "Chat::WebhookEvent",

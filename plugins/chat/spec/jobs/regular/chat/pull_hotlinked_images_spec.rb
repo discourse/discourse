@@ -45,7 +45,17 @@ describe Jobs::Chat::PullHotlinkedImages do
       }
     end
 
-    it "downloads an external image and rewrites cooked + raw" do
+    it "does nothing when the message body is blank (system/webhook messages)" do
+      message = fabricate_chat_message("placeholder")
+      message.update_columns(message: "", cooked: "<p><img src=\"#{image_url}\"></p>")
+
+      expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
+        Upload.count
+      }
+      expect(message.reload.cooked).to include(image_url)
+    end
+
+    it "downloads an external image and rewrites raw + cooked (via ProcessMessage)" do
       stub_image_size
       message = fabricate_chat_message("![longcat](#{image_url})")
 
@@ -56,16 +66,104 @@ describe Jobs::Chat::PullHotlinkedImages do
       message.reload
       upload = Upload.last
       expect(message.message).to include(upload.short_url)
-      expect(message.cooked).to include(upload.url)
+      expect(message.cooked).to include("data-base62-sha1=\"#{upload.base62_sha1}\"")
       expect(message.cooked).not_to include(image_url)
       expect(message.upload_references.pluck(:upload_id)).to include(upload.id)
     end
 
-    it "re-broadcasts the processed message after rewriting" do
+    it "records a hotlinked media row per attempted URL and does not retry terminal failures" do
+      raw = "![broken](#{broken_image_url})"
+      message = fabricate_chat_message(raw)
+
+      described_class.new.execute(chat_message_id: message.id)
+
+      record = message.reload.hotlinked_media.first
+      expect(record).to be_present
+      expect(record.status).to eq("download_failed")
+
+      # Second run does not re-attempt the download — the record is terminal.
+      FileHelper.expects(:download).never
+      described_class.new.execute(chat_message_id: message.id)
+
+      expect(message.hotlinked_media.count).to eq(1)
+    end
+
+    it "classifies an oversize image as :too_large (not :download_failed)" do
+      huge = "a" * (SiteSetting.max_image_size_kb * 1024 * 2)
+      stub_request(:get, image_url).to_return(
+        body: huge,
+        headers: {
+          "Content-Type" => "image/gif",
+        },
+      )
+      message = fabricate_chat_message("![big](#{image_url})")
+
+      described_class.new.execute(chat_message_id: message.id)
+
+      record = message.reload.hotlinked_media.first
+      expect(record).to be_present
+      expect(record.status).to eq("too_large")
+    end
+
+    it "rewrites a re-introduced URL using the cached hotlinked media row and refreshes cooked" do
+      stub_image_size
+      first = fabricate_chat_message("first: ![](#{image_url})")
+      described_class.new.execute(chat_message_id: first.id)
+      upload = Upload.last
+
+      # User edits the message to re-introduce the same external URL.
+      first.update_columns(
+        message: "again: ![](#{image_url})",
+        cooked: "<p><img src=\"#{image_url}\"></p>",
+      )
+
+      expect { described_class.new.execute(chat_message_id: first.id) }.not_to change {
+        Upload.count
+      }
+      first.reload
+      expect(first.message).to include(upload.short_url)
+      # ProcessMessage re-cooks even though nothing new was downloaded this run.
+      expect(first.cooked).to include("data-base62-sha1=\"#{upload.base62_sha1}\"")
+      expect(first.cooked).not_to include(image_url)
+    end
+
+    it "does not leak an orphan upload when the rewrite can't reference the image" do
+      stub_image_size
+      message = fabricate_chat_message("plain text, no markdown image")
+      # cooked has an external <img> with no corresponding markdown in raw.
+      message.update_columns(cooked: "<p>plain text <img src=\"#{image_url}\"></p>")
+
+      expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
+        Upload.count
+      }
+      # A terminal tracking row remains so we don't re-download on every edit,
+      # but the unreferenced upload was cleaned up.
+      record = message.reload.hotlinked_media.first
+      expect(record).to be_present
+      expect(record.upload).to be_nil
+      expect(message.message).to eq("plain text, no markdown image")
+    end
+
+    it "does not enqueue ProcessMessage when every download fails" do
+      message = fabricate_chat_message("![broken](#{broken_image_url})")
+
+      ::Jobs.expects(:enqueue).with(::Jobs::Chat::ProcessMessage, anything).never
+
+      described_class.new.execute(chat_message_id: message.id)
+    end
+
+    it "re-enqueues ProcessMessage with skip_pull_hotlinked_images on successful rewrite" do
       stub_image_size
       message = fabricate_chat_message("![longcat](#{image_url})")
 
-      Chat::Publisher.expects(:publish_processed!).with(instance_of(Chat::Message)).once
+      ::Jobs
+        .expects(:enqueue)
+        .with(
+          ::Jobs::Chat::ProcessMessage,
+          has_entries(chat_message_id: message.id, skip_pull_hotlinked_images: true),
+        )
+        .at_least_once
+
       described_class.new.execute(chat_message_id: message.id)
     end
 
@@ -77,7 +175,6 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
         Upload.count
       }
-
       expect(message.reload.message).to eq(raw)
     end
 
@@ -105,7 +202,6 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
         Upload.count
       }
-
       expect(message.reload.message).to eq(raw)
     end
 
@@ -120,8 +216,6 @@ describe Jobs::Chat::PullHotlinkedImages do
       stub_image_size
       message = fabricate_chat_message("![](#{attacker_url})")
 
-      # base_url is a string-prefix of attacker_url but the hostname is different.
-      # The job should treat this as external and download it.
       expect { described_class.new.execute(chat_message_id: message.id) }.to change {
         Upload.count
       }.by(1)
@@ -137,7 +231,7 @@ describe Jobs::Chat::PullHotlinkedImages do
       }.by(1)
     end
 
-    it "aborts cleanly when the cooked content changed since we read it" do
+    it "aborts cleanly when the message body changed since we read it" do
       stub_image_size
       message = fabricate_chat_message("![longcat](#{image_url})")
       original_raw = message.message
@@ -151,23 +245,18 @@ describe Jobs::Chat::PullHotlinkedImages do
             f.rewind
           end
 
-      # Simulate a concurrent edit by mutating cooked in the DB during the download
-      # call, after the job has already read the original cooked into memory.
       FileHelper
         .stubs(:download)
         .with do |_src, *|
-          ::Chat::Message.where(id: message.id).update_all(cooked: "<p>raced</p>")
+          ::Chat::Message.where(id: message.id).update_all(message: "raced edit")
           true
         end
         .returns(tempfile)
 
-      Chat::Publisher.expects(:publish_processed!).never
-
       described_class.new.execute(chat_message_id: message.id)
 
-      message.reload
-      expect(message.cooked).to eq("<p>raced</p>")
-      expect(message.message).to eq(original_raw)
+      expect(message.reload.message).to eq("raced edit")
+      expect(original_raw).not_to eq("raced edit")
     end
 
     it "re-uses an existing upload when the same hotlinked URL appears in another message" do
@@ -181,7 +270,6 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect { described_class.new.execute(chat_message_id: second.id) }.not_to change {
         Upload.count
       }
-
       expect(second.reload.message).to include(upload.short_url)
     end
 
@@ -193,16 +281,14 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
         Upload.count
       }
-
       expect(message.reload.cooked).to eq(original_cooked)
       expect(message.message).to eq(raw)
     end
 
     it "downloads images that block_hotlinked_media moved to a data attribute" do
       stub_image_size
-      message = fabricate_chat_message("hello world")
-      blocked_cooked =
-        "<p>hello <img #{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}=\"#{image_url}\"></p>"
+      message = fabricate_chat_message("![](#{image_url})")
+      blocked_cooked = "<p><img #{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}=\"#{image_url}\"></p>"
       message.update_columns(cooked: blocked_cooked)
 
       expect { described_class.new.execute(chat_message_id: message.id) }.to change {
@@ -212,6 +298,27 @@ describe Jobs::Chat::PullHotlinkedImages do
       upload = Upload.last
       expect(message.reload.cooked).to include(upload.url)
       expect(message.cooked).not_to include(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
+    end
+
+    it "stores tracking rows scoped to the chat message" do
+      stub_image_size
+      message = fabricate_chat_message("![longcat](#{image_url})")
+
+      described_class.new.execute(chat_message_id: message.id)
+
+      record = Chat::MessageHotlinkedMedia.find_by(chat_message_id: message.id)
+      expect(record).to be_present
+      expect(record.status).to eq("downloaded")
+      expect(message.hotlinked_media).to include(record)
+    end
+
+    it "destroys tracking rows when the message is destroyed" do
+      stub_image_size
+      message = fabricate_chat_message("![longcat](#{image_url})")
+      described_class.new.execute(chat_message_id: message.id)
+      expect(message.reload.hotlinked_media.count).to eq(1)
+
+      expect { message.destroy! }.to change { Chat::MessageHotlinkedMedia.count }.by(-1)
     end
   end
 end

@@ -71,4 +71,41 @@ module("Component | ChatMessageText", function (hooks) {
 
     assert.dom(".chat-message-edited").exists();
   });
+
+  test("hides the upload widget for an image already rendered inline in cooked", async function (assert) {
+    // Rehosted hotlinked image: inline <img> carries data-base62-sha1, and the
+    // same upload is also attached. The collapser tile should be suppressed.
+    this.set(
+      "cooked",
+      '<p><img src="/uploads/default/original/1X/abc.png" data-base62-sha1="abcdef"></p>'
+    );
+    this.set("uploads", [
+      { id: 1, short_url: "upload://abcdef.png", extension: "png" },
+    ]);
+
+    await render(
+      <template>
+        <ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}} />
+      </template>
+    );
+
+    assert
+      .dom(".chat-uploads")
+      .doesNotExist("inline-rendered upload is not duplicated in the widget");
+  });
+
+  test("keeps the upload widget for an attached image not inline in cooked", async function (assert) {
+    this.set("cooked", "<p>just text</p>");
+    this.set("uploads", [
+      { id: 1, short_url: "upload://zzzzzz.png", extension: "png" },
+    ]);
+
+    await render(
+      <template>
+        <ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}} />
+      </template>
+    );
+
+    assert.dom(".chat-uploads").exists("attachment-only upload still renders");
+  });
 });
