@@ -49,4 +49,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
           PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
         run: ruby script/backport.rb
