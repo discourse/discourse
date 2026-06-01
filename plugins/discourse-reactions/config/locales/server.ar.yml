@@ -9,7 +9,6 @@ ar:
     discourse_reactions_like_icon: "يحدِّد الأيقونة المُستخدَمة لزر التفاعل الرئيسي. ينبغي أن يكون هذا اسم أيقونة من <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>، وليس اسم رمز تعبيري."
     discourse_reactions_reaction_for_like: "يحدِّد التفاعل المرتبط بالإجراء \"أعجبني\". لن يتم تغيير سجلات الإعجاب التاريخية إذا تغيَّر هذا الإعداد، فمن <strong>الموصى به بشدة</strong> عدم تغيير هذا الإعداد أبدًا."
     discourse_reactions_enabled: "يفعِّل المكوِّن الإضافي discourse-reactions"
-    enable_new_post_reply_count_position: "نقل ملخص تفاعلات المنشور قبل عدد الردود في أدوات التحكم بالمنشور."
     discourse_reactions_enabled_reactions: "يحدد قائمة بالتفاعلات المفعَّلة، ويُسمَح بأي رمز تعبيري هنا."
     discourse_reactions_desaturated_reaction_panel: "يقلل التشويش البصري للتفاعلات عن طريق عرضها بألوان غير مشبَّعة حتى التمرير فوقها."
     discourse_reactions_excluded_from_like: "التفاعلات التي لا تُحتسَب كتسجيل إعجاب. سيتم احتساب أي تفاعلات غير موجودة في هذه القائمة كتسجيل إعجاب للشارات والبلاغات وأغراضٍ أخرى."

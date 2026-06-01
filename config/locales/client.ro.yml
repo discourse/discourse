@@ -446,8 +446,6 @@ ro:
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activate"
       start_posting:
         back: "Înapoi"
     about:

@@ -27,6 +27,7 @@ pl_PL:
         description: "Automatycznie zamykaj rozwiązane tematy po upływie tego czasu od ostatniej odpowiedzi. Ustaw na 0, aby wyłączyć."
   site_settings:
     solved_enabled: "Aktywuj wtyczkę solved, zezwól użytkownikom wybierać rozwiązania w tematach"
+    solved_allow_multiple_solutions: "Zezwól na akceptację wielu rozwiązań w każdym temacie"
     allow_solved_on_all_topics: "Zezwalaj użytkownikom na wybieranie rozwiązań dotyczących wszystkich tematów (jeśli to pole nie jest zaznaczone, rozwiązania można włączać dla poszczególnych kategorii lub tagów)"
     allow_solved_in_groups: "Zezwól na oznaczanie rozwiązań w wiadomościach grupowych dla tych grup."
     accept_all_solutions_trust_level: "Minimalny poziom zaufania wymagany do zaakceptowania rozwiązania w każdym temacie (nawet jeśli nie jest się jego autorem)"

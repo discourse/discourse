@@ -9,7 +9,6 @@ ru:
     discourse_reactions_like_icon: "Определяет значок, используемый для основной кнопки реакции. Это должно быть название значка <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>, а не название эмодзи."
     discourse_reactions_reaction_for_like: "Определяет реакцию, связанную с действием «Нравится». Исторические записи о лайках не будут изменены, если этот параметр изменится, поэтому <strong>настоятельно рекомендуется</strong> никогда его не менять."
     discourse_reactions_enabled: "Включить плагин 'discourse-reactions'."
-    enable_new_post_reply_count_position: "Переместите сводку реакций на пост перед счетчиком ответов в элементах управления постом."
     discourse_reactions_enabled_reactions: "Определение списка доступных реакций. Разрешены любые эмодзи."
     discourse_reactions_desaturated_reaction_panel: "Уменьшение визуального шума. Значки реакций отображаются обесцвеченными до наведения на них курсора."
     discourse_reactions_excluded_from_like: "Реакции, которые не засчитываются как лайк. Любые реакции, которых нет в этом списке, будут засчитываться как лайки для наград, отчетов и других целей."

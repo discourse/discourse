@@ -36,6 +36,8 @@ zh_CN:
       topic_search_placeholder: "按标题或帖子内容搜索话题"
       sidebar_name_filter_placeholder: "名称/用户名"
       assigned: "已指定"
+      group_no_assignments_title: "没有任务"
+      group_no_assignments_body: "此群组目前没有有效任务。"
       group_everyone: "所有人"
       assigned_to: "已指定给"
       assigned_topic_to: "将话题指定给 <a href='%{path}'>%{username}</a>"
@@ -194,3 +196,12 @@ zh_CN:
       title: "编辑指定"
       topic: "话题"
       post: "帖子"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "指定话题"
+      assign_topic:
+        operations:
+          assign: "指定"
+          unassign: "取消指定"
+        topic_id: "话题 ID"
+        assignee: "受理人"

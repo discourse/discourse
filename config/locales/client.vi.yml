@@ -396,7 +396,7 @@ vi:
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Đã bật"
+        enabled: "Đã chọn"
       start_posting:
         back: "Quay lại"
     about:
@@ -3186,6 +3186,12 @@ vi:
         also_dismiss_topics: "Ngừng theo dõi các chủ đề này để không hiển thị lại là chủ đề chưa đọc"
         dismiss_new_topics: "Bỏ qua các chủ đề mới"
         dismiss_new_replies: "Bỏ qua các trả lời mới"
+        dismiss_new_topics_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_all_with_selected:
+          other: "Loại bỏ (%{count})"
         dismiss_new: "Bỏ qua tất cả"
         dismiss_new_modal:
           title: "Bỏ qua mục mới"

@@ -459,7 +459,7 @@ de:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       select_theme:
-        enabled: "Aktiviert"
+        enabled: "Ausgewählt"
       invite_collaborators:
         title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
@@ -3508,6 +3508,15 @@ de:
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new_topics: "Neue Themen verwerfen"
         dismiss_new_replies: "Neue Antworten verwerfen"
+        dismiss_new_topics_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_all_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
         dismiss_new: "Neue Themen ignorieren"
         dismiss_new_modal:
           title: "Neue verwerfen"

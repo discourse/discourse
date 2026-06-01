@@ -10,11 +10,6 @@ zh_CN:
       site_settings:
         categories:
           discourse_solved: "Discourse Solved"
-      dashboard:
-        highlights:
-          kpi:
-            accepted_solutions:
-              label: "已被接受的解决方案"
   js:
     notifications:
       alt:

@@ -65,6 +65,10 @@ ro:
     actions:
       chat_reply:
         title: Răspunde
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprobare"
+      default_deny_label: "Respinge"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

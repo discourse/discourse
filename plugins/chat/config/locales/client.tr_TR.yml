@@ -313,6 +313,9 @@ tr_TR:
         other: "%{count} okunmamış tartışmanız var"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
+      new_messages:
+        one: "%{count} yeni mesaj"
+        other: "%{count} yeni mesaj"
       sound:
         title: "Masaüstü sohbet bildirim sesi"
       sounds:
@@ -791,3 +794,12 @@ tr_TR:
       panels:
         chat:
           label: "Sohbet"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Sohbet mesajı gönder"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Mesaj"
+      chat_approval:
+        message: "Mesaj"
+        channel_id: "Kanal"

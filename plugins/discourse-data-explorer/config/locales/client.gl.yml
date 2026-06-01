@@ -31,3 +31,8 @@ gl:
       search_placeholder: "Buscar..."
     group:
       reports: "Informes"
+    discourse_workflows:
+      sql:
+        param_value: "Valor"
+        output:
+          results: "Resultados"

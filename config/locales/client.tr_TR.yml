@@ -461,7 +461,7 @@ tr_TR:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
       select_theme:
-        enabled: "Etkin mi"
+        enabled: "Seçili"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"

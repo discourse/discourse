@@ -9,10 +9,3 @@ te:
     currently_away:
       labels:
         username: సభ్యనామం
-  discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "రోజు"
-        week: "వారం"
-        month: "ఈ నెల"
-        year: "సంవత్సరం"

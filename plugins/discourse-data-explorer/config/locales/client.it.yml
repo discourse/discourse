@@ -82,6 +82,16 @@ it:
           descriptions:
             data_explorer:
               run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Explorer"
+      sql:
+        query_id: "Query"
+        add_param: "Aggiungi parametro"
+        param_value: "Valore"
+        output:
+          results: "Risultati"
+          no_results: "Nessun risultato"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

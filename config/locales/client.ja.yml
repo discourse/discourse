@@ -397,7 +397,7 @@ ja:
       pm_title: "推奨メッセージ"
     admin_onboarding_banner:
       select_theme:
-        enabled: "有効"
+        enabled: "選択済み"
       start_posting:
         back: "戻る"
     about:
@@ -3183,6 +3183,12 @@ ja:
         also_dismiss_topics: "これらのトピックの追跡を停止して、未読として表示されないようにする"
         dismiss_new_topics: "新しいトピックを閉じる"
         dismiss_new_replies: "新しい返信を閉じる"
+        dismiss_new_topics_with_selected:
+          other: "閉じる (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "閉じる (%{count})"
+        dismiss_all_with_selected:
+          other: "閉じる (%{count})"
         dismiss_new: "新規を閉じる"
         dismiss_new_modal:
           title: "新規を閉じる"

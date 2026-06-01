@@ -5,11 +5,6 @@
 # https://translate.discourse.org/
 
 uk:
-  category_types:
-    events:
-      name: "Події"
-      title: "події"
-      description: "Де учасники можуть знайти та обговорити майбутні події у спільному календарі."
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Читати стрічку подій календаря"
@@ -73,27 +68,6 @@ uk:
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
     enable_events_category_type_setup: "Вмикає опцію типу категорії «Події» під час налаштування створення категорії. Зверніть увагу, що для цього має бути ввімкнено опцію «увімкнути спрощене створення категорій»."
   discourse_calendar:
-    category_type:
-      default_calendar_view:
-        label: "Стандартний вигляд календаря"
-        day: "День"
-        week: "Тиждень"
-        month: "Місяць"
-        year: "Рік"
-      display_weekends:
-        label: "Відображати вихідні дні"
-      discourse_post_event_allowed_on_groups:
-        label: "Групи, що можуть створювати події"
-      use_local_event_date:
-        label: "Формат дати події"
-        local: "Місцева дата (наприклад, квітня 20)"
-        relative: "Відносний час (наприклад, за 2 дні)"
-      sort_categories_by_event_start_date_enabled:
-        label: "Сортування тем"
-        event_date: "Дата події"
-        latest_post: "Останні повідомлення"
-      sidebar_show_upcoming_events:
-        label: 'Показати посилання «Майбутні події» в меню навігації'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Усі події"
       my_events_feed_name: "%{site_title} - Мої події"

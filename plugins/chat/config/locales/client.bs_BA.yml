@@ -161,3 +161,8 @@ bs_BA:
           fields:
             message:
               label: Privatna Poruka
+    discourse_workflows:
+      send_chat_message:
+        message: "Privatna Poruka"
+      chat_approval:
+        message: "Privatna Poruka"

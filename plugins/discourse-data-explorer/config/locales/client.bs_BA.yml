@@ -28,3 +28,8 @@ bs_BA:
       search_placeholder: "Pretraga..."
     group:
       reports: "Izvještaji"
+    discourse_workflows:
+      sql:
+        param_value: "Value"
+        output:
+          results: "Rezultati"

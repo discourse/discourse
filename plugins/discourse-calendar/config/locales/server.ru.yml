@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ru:
-  category_types:
-    events:
-      name: "События"
-      title: "события"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Читать ленту событий календаря"
@@ -72,12 +68,6 @@ ru:
     calendar_first_day_of_week: "Установите первый день недели для отображения календаря. Возможные варианты: суббота, воскресенье или понедельник."
     enable_events_category_type_setup: "Включает параметр типа категории «События» при настройке создания категории. Обратите внимание, что для вступления изменений в силу необходимо включить параметр «Включить упрощенное создание категорий»."
   discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "Дата"
-        week: "За неделю"
-        month: "За месяц"
-        year: "За год"
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Все события"
       my_events_feed_name: "%{site_title} - Мои события"

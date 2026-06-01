@@ -284,8 +284,6 @@ ko:
       pill: "추천"
       pm_title: "제안된 메시지"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "활성화"
       start_posting:
         back: "뒤로"
     about:

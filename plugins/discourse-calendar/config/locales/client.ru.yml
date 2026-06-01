@@ -455,6 +455,8 @@ ru:
         name_placeholder: "Название события"
         location_placeholder: "Добавить местоположение или URL"
         description_placeholder: "Добавить описание события"
+        event_title_placeholder: "Название события"
+        create_event_button: "Создать мероприятие"
         reminder:
           units:
             minutes:
@@ -477,6 +479,9 @@ ru:
               few: "нед."
               many: "нед."
               other: "нед."
+      composer_actions:
+        create_event:
+          label: "Создать мероприятие"
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"

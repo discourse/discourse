@@ -523,7 +523,7 @@ ru:
       launch_in_easy_steps: "Запуск в %{step_count} простых шагах"
       congrats_onboarding_complete: "Поздравляем с завершением процесса адаптации!"
       select_theme:
-        enabled: "Включено"
+        enabled: "Выбрано"
       invite_collaborators:
         title: "Пригласить соавторов"
         description: "Первые участники помогают оживить ваше сообщество."
@@ -3781,6 +3781,21 @@ ru:
         also_dismiss_topics: "Перестать следить за этими темами, чтобы они никогда больше не высвечивались как непрочитанные"
         dismiss_new_topics: "Отклонить новые темы"
         dismiss_new_replies: "Закрыть новые ответы"
+        dismiss_new_topics_with_selected:
+          one: "Отложить (%{count})"
+          few: "Отложить (%{count})"
+          many: "Отложить (%{count})"
+          other: "Отложить (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Отложить (%{count})"
+          few: "Отложить (%{count})"
+          many: "Отложить (%{count})"
+          other: "Отложить (%{count})"
+        dismiss_all_with_selected:
+          one: "Отложить (%{count})"
+          few: "Отложить (%{count})"
+          many: "Отложить (%{count})"
+          other: "Отложить (%{count})"
         dismiss_new: "Отложить новые"
         dismiss_new_modal:
           title: "Отклонить новые"

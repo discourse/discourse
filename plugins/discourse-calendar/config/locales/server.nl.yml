@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 nl:
-  category_types:
-    events:
-      name: "Gebeurtenissen"
-      title: "gebeurtenissen"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Kalenderevenementenfeed lezen"
@@ -72,12 +68,6 @@ nl:
     calendar_first_day_of_week: "Stel de eerste dag van de week in voor de kalenderweergave. Opties zijn zaterdag, zondag en maandag."
     enable_events_category_type_setup: "Schakelt de optie Type evenementcategorie in tijdens het instellen van categorieën. 'Vereenvoudigd categorieën maken inschakelen' moet zijn ingeschakeld om dit effect te laten hebben."
   discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "Dag"
-        week: "Week"
-        month: "Maand"
-        year: "Jaar"
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Alle evenementen"
       my_events_feed_name: "%{site_title} - Mijn evenementen"

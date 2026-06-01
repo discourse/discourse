@@ -457,7 +457,7 @@ hu:
       launch_in_easy_steps: "Indítás %{step_count} egyszerű lépésben"
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
       select_theme:
-        enabled: "Bekapcsolva"
+        enabled: "Kiválasztott"
       invite_collaborators:
         title: "Együttműködők meghívása"
         description: "Az első tagok segítenek életre kelteni a közösségedet."
@@ -3445,6 +3445,15 @@ hu:
         also_dismiss_topics: "Ezen témák követésének leállítása, így sosem fognak olvasatlanként megjelenni"
         dismiss_new_topics: "Új témák elvetése"
         dismiss_new_replies: "Új válaszok elvetése"
+        dismiss_new_topics_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
+        dismiss_all_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
         dismiss_new: "Újak elvetése"
         dismiss_new_modal:
           title: "Újak elvetése"

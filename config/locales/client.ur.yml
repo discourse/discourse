@@ -432,7 +432,7 @@ ur:
       pm_title: "تجویز کردہ پیغامات"
     admin_onboarding_banner:
       select_theme:
-        enabled: "فعال شدہ"
+        enabled: "منتخب"
       start_posting:
         back: "واپس"
     about:
@@ -3377,6 +3377,15 @@ ur:
         also_dismiss_topics: "ان موضوعات کو نہ ڈھونڈیں تاکہ وہ کبھی دوبارہ میرے لیے \"بغیر پڑھے\"میں نظر نہ آئیں"
         dismiss_new_topics: "نئے موضوعات کو برخاست"
         dismiss_new_replies: "نئے جوابات کو برخاست"
+        dismiss_new_topics_with_selected:
+          one: "برخاست (%{count})"
+          other: "برخاست (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "برخاست (%{count})"
+          other: "برخاست (%{count})"
+        dismiss_all_with_selected:
+          one: "برخاست (%{count})"
+          other: "برخاست (%{count})"
         dismiss_new: "نیا برخاست کریں"
         dismiss_new_modal:
           title: "نیا برخاست کریں"
@@ -5810,6 +5819,8 @@ ur:
         sections:
           reports:
             title: "گزارشات"
+          traffic:
+            title: "سائٹ پر آمدو رفت"
           engagement:
             activity_by_category:
               category: "زُمرَہ"

@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ja:
-  category_types:
-    events:
-      name: "イベント"
-      title: "イベント"
   reports:
     currently_away:
       title: ユーザーは現在退席中
@@ -67,12 +63,6 @@ ja:
     sidebar_show_upcoming_events: "サイドバーの「もっと」の下に今後のイベントのリンクを表示する。"
     calendar_first_day_of_week: "カレンダーに表示する週の最初の曜日を設定します。オプションは、土曜日、日曜日、または月曜日です。"
   discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "日"
-        week: "今週"
-        month: "今月"
-        year: "今年"
     invite_user_notification: "%{username} があなたを招待しました: %{description}"
     calendar_must_be_in_first_post: "Calendar タグは、トピックの最初の投稿でのみ使用できます。"
     more_than_one_calendar: "投稿に複数のカレンダーを含めることはできません。"

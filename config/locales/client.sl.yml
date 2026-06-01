@@ -308,8 +308,6 @@ sl:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Vključeno"
       start_posting:
         back: "Nazaj"
     about:

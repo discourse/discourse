@@ -23,7 +23,6 @@ es:
     chat_allow_uploads: "Permitir las subidas en los canales de chat públicos y en los canales de mensajes directos."
     chat_show_copy_button_on_codeblocks: "Mostrar el botón de copiar en los bloques de código en los mensajes de chat."
     chat_archive_destination_topic_status: "El estado que debe tener el tema de destino una vez completado el archivo de un canal. Esto solo se aplica cuando el tema de destino es un tema nuevo, no uno existente."
-    direct_message_enabled_groups: "Permite a los usuarios de estos grupos crear Chats Personales de usuario a usuario. Nota: el personal siempre puede crear Chats Personales, y los usuarios podrán responder a los Chats Personales iniciados por los usuarios que tienen permiso para crearlos."
     chat_message_flag_allowed_groups: "Los usuarios de estos grupos pueden marcar los mensajes de chat. Tenga en cuenta que los administradores y moderadores siempre pueden marcar mensajes de chat."
     chat_pinning_messages_allowed_groups: "Los usuarios de estos grupos pueden anclar mensajes de chat en los canales a los que pueden acceder. Ten en cuenta que los administradores y moderadores siempre pueden anclar mensajes de chat. Cualquier miembro de un chat de grupo o MD puede anclar mensajes allí."
     max_mentions_per_chat_message: "Número máximo de notificaciones de @name que un usuario puede usar en un mensaje de chat."
@@ -240,6 +239,10 @@ es:
     scriptables:
       send_chat_message:
         title: Enviar mensaje de chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprobar"
+      default_deny_label: "Denegar"
   reviewable_score_types:
     needs_review:
       title: "Necesita revisión"

@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 ar:
-  category_types:
-    events:
-      name: "الأحداث"
-      title: "الأحداث"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "قراءة خلاصة أحداث التقويم"
@@ -72,12 +68,6 @@ ar:
     calendar_first_day_of_week: "حدد اليوم الأول من الأسبوع لعرض التقويم. الخيارات المتاحة هي السبت، أو الأحد، أو الاثنين."
     enable_events_category_type_setup: "يُفعّل خيار نوع فئة \"الأحداث\" أثناء إعداد إنشاء الفئات. لاحظ أن خيار \"تفعيل إنشاء الفئات المبسّط\" يجب أن يكون مفعّلًا حتى يسري هذا الإعداد."
   discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "اليوم"
-        week: "الأسبوع"
-        month: "الشهر"
-        year: "العام"
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - جميع الأحداث"
       my_events_feed_name: "%{site_title} - أحداثي"

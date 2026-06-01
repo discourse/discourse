@@ -459,7 +459,7 @@ nl:
       launch_in_easy_steps: "Start in %{step_count} eenvoudige stappen"
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
       select_theme:
-        enabled: "Ingeschakeld"
+        enabled: "Geselecteerd"
       invite_collaborators:
         title: "Deelnemers uitnodigen"
         description: "Vroege leden helpen je community tot leven te brengen"
@@ -675,6 +675,7 @@ nl:
       continue_as_guest: "Doorgaan als gast"
       be_first_to_reply: "Antwoord als eerste!"
       replying_to: "Antwoorden op %{username}"
+      editing_post: "Bericht bewerken "
       reply_placeholder: "Schrijf een antwoord..."
       signin_flow:
         cancel: "Annuleren"
@@ -3480,6 +3481,8 @@ nl:
         relist_topics: "Topics opnieuw zichtbaar maken"
         pin_topics: "Deze topics uitlichten"
         unpin_topics: "Topic losmaken"
+        enable_nested_replies: "Geneste antwoorden inschakelen"
+        disable_nested_replies: "Geneste antwoorden uitschakelen"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
@@ -3505,6 +3508,15 @@ nl:
         also_dismiss_topics: "Volgen van deze topics stoppen, zodat ze nooit meer als ongelezen verschijnen voor mij"
         dismiss_new_topics: "Nieuwe topics negeren"
         dismiss_new_replies: "Nieuwe antwoorden sluiten"
+        dismiss_new_topics_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
+        dismiss_all_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
         dismiss_new: "Nieuwe negeren"
         dismiss_new_modal:
           title: "Nieuwe negeren"
@@ -3622,6 +3634,10 @@ nl:
       manage_tags:
         add:
           title: "Tags toevoegen"
+        remove:
+          title: "Tags verwijderen"
+        replace:
+          title: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
         description: "Verwijder de geselecteerde topics permanent. Deze actie kan niet ongedaan worden gemaakt."
@@ -3647,6 +3663,10 @@ nl:
       unpin_topics:
         name: "Losmaken"
         description: "Maak alle geselecteerde topics los die zijn vastgemaakt aan een categorie of globaal zijn vastgemaakt"
+      enable_nested_replies:
+        name: "Geneste antwoorden inschakelen"
+      disable_nested_replies:
+        name: "Geneste antwoorden uitschakelen"
     nested_replies:
       nested_view: "Geneste weergave"
       flat_view: "Platte weergave"
@@ -5029,6 +5049,7 @@ nl:
         blockquote: "Blokcitaat"
       bookmarks:
         title: "Bladwijzers maken"
+        enter: "Opslaan en sluiten"
         later_today: "Later vandaag"
         later_this_week: "Later deze week"
         tomorrow: "Morgen"
@@ -5043,6 +5064,7 @@ nl:
         reply_as_new_topic: "Antwoorden als gekoppeld topic"
         reply_topic: "Antwoorden op topic"
         flag: "Bericht markeren"
+        edit: "Bericht bewerken"
         delete: "Bericht verwijderen"
         mark_tracking: "Topic volgen"
         mark_watching: "Topic observeren"
@@ -6308,6 +6330,7 @@ nl:
           traffic:
             title: "Siteverkeer"
           engagement:
+            title: "Betrokkenheid"
             activity_by_category:
               category: "Categorie"
               topics: "Topics"
@@ -6323,6 +6346,8 @@ nl:
                 "2": "Lid"
                 "3": "Normaal"
                 "4": "Leider"
+              trend:
+                stable: "stabiel"
         reports_section:
           no_data: "Geen gegevens om weer te geven"
           modal:

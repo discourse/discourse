@@ -468,9 +468,7 @@ el:
         description: "Επιλέξτε ένα αρχικό θέμα για την κοινότητά σας"
         action: "Επιλογή θέματος"
         modal_title: "Επιλέξτε ένα θέμα"
-        use_theme: "Χρησιμοποιήστε αυτό το θέμα"
-        enabled: "Ενεργοποιημένα"
-        theme_set: "Το %{theme} είναι πλέον το προεπιλεγμένο θέμα σας"
+        enabled: "Επιλεγμένα"
         browse_all: "Διαχείριση θεμάτων"
         show_light_screenshot: "Εμφάνιση φωτεινού στιγμιότυπου οθόνης"
         show_dark_screenshot: "Εμφάνιση σκοτεινού στιγμιότυπου οθόνης"
@@ -3481,6 +3479,15 @@ el:
         also_dismiss_topics: "Διακοπή παρακολούθησης αυτών των θεμάτων ώστε να μην εμφανιστούν ξανά ως αδιάβαστα σε εμένα"
         dismiss_new_topics: "Παράβλεψη νέων θεμάτων"
         dismiss_new_replies: "Παράβλεψη νέων απαντήσεων"
+        dismiss_new_topics_with_selected:
+          one: "Παράβλεψε (%{count})"
+          other: "Παράβλεψε (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Παράβλεψε (%{count})"
+          other: "Παράβλεψε (%{count})"
+        dismiss_all_with_selected:
+          one: "Παράβλεψε (%{count})"
+          other: "Παράβλεψε (%{count})"
         dismiss_new: "Παράβλεψη Νέων"
         dismiss_new_modal:
           title: "Παράβλεψη νέων"

@@ -251,8 +251,6 @@ et:
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Sisse lülitatud"
       start_posting:
         back: "Tagasi"
     about:

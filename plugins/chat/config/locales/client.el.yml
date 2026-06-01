@@ -228,6 +228,9 @@ el:
         other: "Έχετε %{count} αδιάβαστες συζητήσεις"
       scroll_to_bottom: "Κύλιση προς τα κάτω"
       scroll_to_new_messages: "Δείτε νέα μηνύματα"
+      new_messages:
+        one: "%{count} νέο μήνυμα"
+        other: "%{count} νέα μηνύματα"
       sound:
         title: "Ήχος ειδοποίησης συνομιλίας για υπολογιστές"
       sounds:
@@ -650,3 +653,12 @@ el:
       panels:
         chat:
           label: "Συνομιλία"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Αποστολή μηνύματος συνομιλίας"
+      send_chat_message:
+        channel_id: "Κανάλι"
+        message: "Μήνυμα"
+      chat_approval:
+        message: "Μήνυμα"
+        channel_id: "Κανάλι"

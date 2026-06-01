@@ -356,3 +356,10 @@ hr:
       panels:
         chat:
           label: "Čavrljanje"
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Poruka"
+      chat_approval:
+        message: "Poruka"
+        channel_id: "Kanal"

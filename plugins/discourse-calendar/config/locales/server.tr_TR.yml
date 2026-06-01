@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  category_types:
-    events:
-      name: "Olaylar"
-      title: "olaylar"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Takvim etkinlikleri akışını oku"
@@ -72,12 +68,6 @@ tr_TR:
     calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
     enable_events_category_type_setup: "Kategori oluşturma ayarları sırasında \"Etkinlikler\" kategori türü seçeneğini etkinleştirir. Bunun geçerli olabilmesi için \"basitleştirilmiş kategori oluşturma\" seçeneğinin etkinleştirilmiş olması gerektiğini unutmayın."
   discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "Gün"
-        week: "Hafta"
-        month: "Ay"
-        year: "Yıl"
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Tüm etkinlikler"
       my_events_feed_name: "%{site_title} - Etkinliklerim"

@@ -2922,6 +2922,8 @@ pl_PL:
       status_unlisted: "Pokaż niewymienione (ukryte) tematy"
       status_deleted: "Pokaż usunięte tematy (jeśli masz uprawnienia)"
       status_public: "Pokaż tematy w kategoriach publicznych"
+      status_noreplies: "Pokaż tematy bez odpowiedzi"
+      status_single_user: "Pokaż tematy z jednym uczestnikiem"
       in_pinned: "Pokaż przypięte tematy"
       in_bookmarked: "Pokaż tematy, które dodałeś do zakładek"
       in_watching: "Pokaż tematy, które oglądasz"

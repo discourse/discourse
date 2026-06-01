@@ -79,6 +79,10 @@ fa_IR:
     scriptables:
       send_chat_message:
         title: ارسال پیام
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "تایید"
+      default_deny_label: "رد کردن"
   reviewable_score_types:
     needs_review:
       title: "نیاز به بررسی دارد"

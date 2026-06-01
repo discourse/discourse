@@ -9,13 +9,6 @@ sw:
     currently_away:
       labels:
         username: Jina la mtumiaji
-  discourse_calendar:
-    category_type:
-      default_calendar_view:
-        day: "Siku"
-        week: "Wiki"
-        month: "Mwezi"
-        year: "Mwaka"
   discourse_post_event:
     errors:
       bulk_invite:
