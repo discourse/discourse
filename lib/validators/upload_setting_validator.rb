@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UploadSettingValidator
-  SVG_SETTINGS = %i[splash_screen_image splash_screen_image_dark]
-
   def initialize(opts = {})
     @opts = opts
   end
@@ -46,6 +44,6 @@ class UploadSettingValidator
   private
 
   def svg_setting?
-    SVG_SETTINGS.include?(@opts[:name])
+    SiteSetting::SplashScreenImageChanged::SETTINGS.include?(@opts[:name].to_s)
   end
 end
