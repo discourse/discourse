@@ -1,0 +1,130 @@
+version: 1
+metadata:
+  ota:
+    minimum_version: "1.6.18"
+project:
+  name: discourse
+  description: Discourse readiness slice covering Ruby dependency setup and baseline test execution
+execution:
+  default_context: host
+  contexts:
+    host:
+      backend: native
+    app:
+      backend: container
+      lifecycle: ephemeral
+      container:
+        image: ruby:3.3-bookworm
+        engines:
+          - docker
+          - podman
+      attachments:
+        isolated_paths:
+          - vendor/bundle
+toolchains:
+  ruby:
+    provider: ruby
+    version: 3.3.11
+    package_managers:
+      bundler: '2.5'
+tasks:
+  setup:
+    context: host
+    category: setup
+    description: Install Ruby gem dependencies with Bundler.
+    run: bundle install
+    execution:
+      default_mode: native
+      modes:
+        native:
+          context: host
+          run: bundle install
+        container:
+          context: app
+          run: bundle install
+    effects:
+      network: true
+      network_kind: dependency_hydration
+    notes: Install Ruby dependencies through Bundler.
+    internal: true
+  test:
+    context: host
+    category: test
+    description: Run the default Ruby test suite.
+    run: bundle exec rake test
+    execution:
+      default_mode: native
+      modes:
+        native:
+          context: host
+          run: bundle exec rake test
+        container:
+          context: app
+          run: bundle exec rake test
+    depends_on:
+      - setup
+    safe_for_agent: true
+    notes: Run baseline Ruby tests.
+  verify:
+    context: host
+    category: test
+    description: Aggregate baseline verification checks.
+    run: "true"
+    execution:
+      default_mode: native
+      modes:
+        native:
+          context: host
+          run: "true"
+        container:
+          context: app
+          run: "true"
+    depends_on:
+      - test
+    safe_for_agent: true
+    notes: Contract-level verification path for this Discourse slice.
+agent:
+  posture: readiness_strict
+  entrypoint: setup
+  default_task: verify
+  safe_tasks:
+  - test
+  - verify
+  verify_after_changes:
+  - verify
+  writable_paths:
+  - .devcontainer
+  - .skills
+  - app
+  - db
+  - docs
+  - frontend
+  - lib
+  - plugins
+  - public
+  - script
+  - spec
+  - test
+  - themes
+  protected_paths:
+  - .github/workflows
+  - Gemfile.lock
+  - pnpm-lock.yaml
+  - ota.yaml
+  inferred_boundary:
+    reviewed: false
+    provenance:
+      writable_paths:
+      - init:common_source_roots
+      - init:stack_source_scan
+      protected_paths:
+      - init:contract_file_default
+  bootstrap:
+    ota:
+      note: Only install ota if it is missing and installation is approved.
+      sh: curl -fsSL https://dist.ota.run/install.sh | OTA_VERSION=v1.6.18 sh
+      powershell: $env:OTA_VERSION='v1.6.18'; irm https://dist.ota.run/install.ps1 | iex
+  notes: |
+    Use `ota tasks --safe --use` to inspect the approved agent task surface before execution.
+    Use `ota validate` before changes and `ota doctor` after edits.
+    Use `ota run verify` for the contract verification path.

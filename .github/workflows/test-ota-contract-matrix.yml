@@ -1,0 +1,175 @@
+name: "Test: Ota contract matrix"
+
+on:
+  workflow_dispatch:
+    inputs:
+      ota_repository:
+        description: Ota source repository to build for this matrix run
+        required: false
+        default: ota-run/ota
+      ota_ref:
+        description: Ota branch, tag, or commit to build for this matrix run
+        required: false
+        default: v1.6.18
+  pull_request:
+    paths:
+      - "ota.yaml"
+      - ".github/workflows/test-ota-contract-matrix.yml"
+  push:
+    paths:
+      - "ota.yaml"
+      - ".github/workflows/test-ota-contract-matrix.yml"
+
+concurrency:
+  group: ota-contract-matrix-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  OTA_NO_UPDATE_CHECK: "1"
+
+jobs:
+  matrix:
+    name: Ota Contract Matrix (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 210
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: ubuntu-full
+            os: ubuntu-latest
+            full_proof: true
+          - name: macos-dry
+            os: macos-latest
+            full_proof: false
+          - name: windows-dry
+            os: windows-latest
+            full_proof: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Enable corepack
+        shell: bash
+        run: corepack enable
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Setup Go 1.24
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.24.x"
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Setup Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Install ota from source
+        uses: ota-run/ota/.github/actions/install-ota-from-source@v1.6.18
+        with:
+          repository: ${{ github.event.inputs.ota_repository || 'ota-run/ota' }}
+          ref: ${{ github.event.inputs.ota_ref || 'v1.6.18' }}
+
+      - name: Validate contract
+        shell: bash
+        run: |
+          ota validate --json . > ota-validate.json
+          ota validate .
+
+      - name: Doctor contract
+        shell: bash
+        run: ota doctor .
+
+      - name: List task surfaces
+        shell: bash
+        run: |
+          ota tasks --use .
+          ota tasks --safe --use .
+          ota tasks --unsafe --use .
+
+      - name: Export execution topology
+        shell: bash
+        run: ota execution topology --json . > ota-execution-topology.json
+
+      - name: Dry-run all non-internal tasks (native)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ota tasks --json . > ota-tasks.json
+          node -e 'const fs=require("fs");const t=JSON.parse(fs.readFileSync("ota-tasks.json","utf8")).tasks||[];for(const x of t)console.log(x.name);' > ota-task-names.txt
+          while IFS= read -r task; do
+            [ -z "$task" ] && continue
+            echo ">>> [native dry-run] $task"
+            ota run "$task" --native --dry-run .
+          done < ota-task-names.txt
+
+      - name: Dry-run all non-internal tasks (container)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ota tasks --json --via container . > ota-tasks-container.json
+          node -e 'const fs=require("fs");const t=JSON.parse(fs.readFileSync("ota-tasks-container.json","utf8")).tasks||[];for(const x of t)console.log(x.name);' > ota-container-task-names.txt
+          while IFS= read -r task; do
+            [ -z "$task" ] && continue
+            echo ">>> [container dry-run] $task"
+            ota run "$task" --container --dry-run .
+          done < ota-container-task-names.txt
+
+      - name: Execute non-internal non-dev tasks (native, Ubuntu)
+        if: ${{ matrix.full_proof }}
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          ota tasks --json . > ota-tasks.json
+          node -e 'const fs=require("fs");const t=JSON.parse(fs.readFileSync("ota-tasks.json","utf8")).tasks||[];for(const x of t){if((x.category||"")!=="dev")console.log(x.name)}' > ota-native-exec-task-names.txt
+          while IFS= read -r task; do
+            [ -z "$task" ] && continue
+            echo ">>> [native exec] $task"
+            ota run "$task" --native --stream .
+          done < ota-native-exec-task-names.txt
+
+      - name: Execute non-internal non-dev tasks (container, Ubuntu)
+        if: ${{ matrix.full_proof }}
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          ota tasks --json --via container . > ota-tasks-container.json
+          node -e 'const fs=require("fs");const t=JSON.parse(fs.readFileSync("ota-tasks-container.json","utf8")).tasks||[];for(const x of t){if((x.category||"")!=="dev")console.log(x.name)}' > ota-container-exec-task-names.txt
+          while IFS= read -r task; do
+            [ -z "$task" ] && continue
+            echo ">>> [container exec] $task"
+            ota run "$task" --container --stream .
+          done < ota-container-exec-task-names.txt
+
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ota-contract-matrix-${{ matrix.name }}
+          path: |
+            ota-validate.json
+            ota-execution-topology.json
+            ota-tasks.json
+            ota-tasks-container.json
