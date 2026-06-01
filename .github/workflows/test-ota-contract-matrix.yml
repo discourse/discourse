@@ -107,6 +107,10 @@ jobs:
           ota tasks --safe --use .
           ota tasks --unsafe --use .
 
+      - name: List workflows
+        shell: bash
+        run: ota workflows .
+
       - name: Export execution topology
         shell: bash
         run: ota execution topology --json . > ota-execution-topology.json
@@ -123,6 +127,10 @@ jobs:
             ota run "$task" --native --dry-run .
           done < ota-task-names.txt
 
+      - name: Dry-run verify workflow (native)
+        shell: bash
+        run: ota up --workflow verify --native --dry-run .
+
       - name: Dry-run all non-internal tasks (container)
         shell: bash
         run: |
@@ -134,6 +142,10 @@ jobs:
             echo ">>> [container dry-run] $task"
             ota run "$task" --container --dry-run .
           done < ota-container-task-names.txt
+
+      - name: Dry-run verify workflow (container)
+        shell: bash
+        run: ota up --workflow verify --container --dry-run .
 
       - name: Execute non-internal non-dev tasks (native, Ubuntu)
         if: ${{ matrix.full_proof }}
@@ -149,6 +161,12 @@ jobs:
             ota run "$task" --native --stream .
           done < ota-native-exec-task-names.txt
 
+      - name: Execute verify workflow (native, Ubuntu)
+        if: ${{ matrix.full_proof }}
+        timeout-minutes: 90
+        shell: bash
+        run: ota up --workflow verify --native --stream .
+
       - name: Execute non-internal non-dev tasks (container, Ubuntu)
         if: ${{ matrix.full_proof }}
         timeout-minutes: 120
@@ -162,6 +180,12 @@ jobs:
             echo ">>> [container exec] $task"
             ota run "$task" --container --stream .
           done < ota-container-exec-task-names.txt
+
+      - name: Execute verify workflow (container, Ubuntu)
+        if: ${{ matrix.full_proof }}
+        timeout-minutes: 90
+        shell: bash
+        run: ota up --workflow verify --container --stream .
 
       - name: Upload artifacts on failure
         if: failure()
