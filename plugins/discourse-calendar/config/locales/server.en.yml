@@ -100,6 +100,7 @@ en:
     calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
     more_than_one_calendar: "You can’t have more than one calendar in a post."
     more_than_two_dates: "A post of a calendar topic can’t contain more than two dates."
+    whisper_not_allowed: "Whispers can’t be used to create calendar events."
     event_expired: "Event expired"
     holiday_status:
       description: "On holiday"
