@@ -8,7 +8,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | search-menu/results/assistant-item",
+  "Integration | Component | SearchMenu | Results | AssistantItem",
   function (hooks) {
     setupRenderingTest(hooks);
 

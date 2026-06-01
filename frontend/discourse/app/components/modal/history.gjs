@@ -387,7 +387,8 @@ export default class History extends Component {
     <DModal
       @title={{i18n this.modalTitleKey}}
       @closeModal={{@closeModal}}
-      class="history-modal -max {{concat '--mode-' (dDasherize this.viewMode)}}"
+      class="history-modal --max
+        {{concat '--mode-' (dDasherize this.viewMode)}}"
     >
       <:body>
         {{#if this.error}}

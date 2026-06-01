@@ -522,9 +522,9 @@ en:
         description: "Choose a starting theme for your community"
         action: "Select theme"
         modal_title: "Choose a theme"
-        use_theme: "Use this theme"
-        enabled: "Enabled"
-        theme_set: "%{theme} is now your default theme"
+        use_theme: "Use selected theme"
+        enabled: "Selected"
+        applying_theme: "Applying theme..."
         browse_all: "Manage themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
@@ -3820,6 +3820,15 @@ en:
         dismiss_all: "Dismiss all"
         dismiss_new_topics: "Dismiss new topics"
         dismiss_new_replies: "Dismiss new replies"
+        dismiss_new_topics_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
+        dismiss_all_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
         dismiss_new_menu: "Dismiss options"
         dismiss_and_stop_tracking: "Dismiss and stop tracking"
         dismiss_new: "Dismiss New"
@@ -4018,6 +4027,7 @@ en:
       collapsed_replies:
         one: "%{count} reply"
         other: "%{count} replies"
+      collapsed_post: "Collapsed post"
       collapse: "Collapse"
       collapse_parent: "Collapse parent thread"
       focused_path: "Focused reply path"

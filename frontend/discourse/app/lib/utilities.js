@@ -4,6 +4,7 @@ import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
+import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
@@ -113,7 +114,50 @@ export function extractDomainFromUrl(url) {
   return url.split(":")[0];
 }
 
-export function selectedText() {
+// Whether everything before `node` in its parent is insignificant whitespace,
+// i.e. `node` is effectively the first thing in its parent. (Cooked HTML has
+// whitespace text nodes between blocks, so a strict firstChild check fails.)
+function isFirstMeaningfulChild(node) {
+  for (let sibling = node.previousSibling; sibling; ) {
+    if (sibling.nodeType !== Node.TEXT_NODE || sibling.textContent.trim()) {
+      return false;
+    }
+    sibling = sibling.previousSibling;
+  }
+  return true;
+}
+
+// A triple-click (and similar) leaves the selection's end at the very start of
+// the following block (endOffset 0). cloneContents() would then materialize
+// that block as an empty husk (e.g. <blockquote><p></p></blockquote>) that
+// serializes to stray markdown like a lone "> ". Pull the end back past the
+// husk — to the topmost ancestor it starts — so it is never cloned.
+// Returns the original range when there's nothing to trim.
+function rangeWithoutTrailingHusk(range) {
+  if (range.endOffset !== 0) {
+    return range;
+  }
+
+  const common = range.commonAncestorContainer;
+  let boundary = range.endContainer;
+  while (
+    boundary !== common &&
+    boundary.parentNode !== common &&
+    isFirstMeaningfulChild(boundary)
+  ) {
+    boundary = boundary.parentNode;
+  }
+
+  if (boundary === common || !boundary.parentNode) {
+    return range;
+  }
+
+  const trimmed = range.cloneRange();
+  trimmed.setEndBefore(boundary);
+  return trimmed;
+}
+
+export function selectedHTML() {
   const selection = window.getSelection();
   if (selection.isCollapsed) {
     return "";
@@ -146,7 +190,11 @@ export function selectedText() {
       // Treat it as though the entire onebox was quoted.
       div.append(oneboxTest.dataset.oneboxSrc);
     } else {
-      div.append(range.cloneContents());
+      const effectiveRange = rangeWithoutTrailingHusk(range);
+      const fragmentContainer = document.createElement("div");
+      fragmentContainer.append(effectiveRange.cloneContents());
+      processSelectionFragment(fragmentContainer, effectiveRange);
+      div.append(...fragmentContainer.childNodes);
     }
   }
 
@@ -166,7 +214,16 @@ export function selectedText() {
       }
     });
 
-  return toMarkdown(div.outerHTML);
+  return div.outerHTML;
+}
+
+export async function selectedText() {
+  const html = selectedHTML();
+  if (!html) {
+    return "";
+  }
+
+  return await toMarkdown(html);
 }
 
 export function selectedNode() {

@@ -26,16 +26,17 @@ function initializeCakeday(api) {
       if (cakeday(user_cakedate)) {
         let result = {};
 
-        if (emojiEnabled) {
-          result.emoji = siteSettings.cakeday_emoji;
-        } else {
-          result.icon = "cake-candles";
-        }
-
         if (user_id === currentUser?.id) {
           result.title = i18n("user.anniversary.user_title");
         } else {
           result.title = i18n("user.anniversary.title");
+        }
+
+        if (emojiEnabled) {
+          result.emoji = siteSettings.cakeday_emoji;
+          result.emojiTitle = result.title;
+        } else {
+          result.icon = "cake-candles";
         }
 
         return result;
@@ -50,16 +51,17 @@ function initializeCakeday(api) {
       if (birthday(user_birthdate)) {
         let result = {};
 
-        if (emojiEnabled) {
-          result.emoji = siteSettings.cakeday_birthday_emoji;
-        } else {
-          result.icon = "cake-candles";
-        }
-
         if (user_id === currentUser?.id) {
           result.title = i18n("user.date_of_birth.user_title");
         } else {
           result.title = i18n("user.date_of_birth.title");
+        }
+
+        if (emojiEnabled) {
+          result.emoji = siteSettings.cakeday_birthday_emoji;
+          result.emojiTitle = result.title;
+        } else {
+          result.icon = "cake-candles";
         }
 
         return result;

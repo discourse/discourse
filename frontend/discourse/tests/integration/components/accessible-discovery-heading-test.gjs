@@ -3,7 +3,7 @@ import { setupRenderingTest } from "ember-qunit";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 
-module("Component | discovery/accessible-discovery-heading", function (hooks) {
+module("Component | Discovery | AccessibleDiscoveryHeading", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders the correct label for categories filter", async function (assert) {

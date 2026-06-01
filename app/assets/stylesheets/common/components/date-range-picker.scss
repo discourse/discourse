@@ -124,7 +124,7 @@
 
   &__weekdays {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 2px;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
@@ -140,7 +140,7 @@
 
   &__week {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 2px;
   }
 

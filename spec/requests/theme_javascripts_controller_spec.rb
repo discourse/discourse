@@ -173,7 +173,7 @@ RSpec.describe ThemeJavascriptsController do
         registerSettings(#{component.id}, {
           "num_setting": 5,
           "theme_uploads": {
-            "vendorlib": "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js"
+            "vendorlib": "/uploads/default/test_#{Discourse.test_env_number}/original/1X/#{js_upload.sha1}.js"
           },
           "theme_uploads_local": {
             "vendorlib": "/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost"

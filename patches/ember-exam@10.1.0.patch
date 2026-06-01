@@ -1,0 +1,70 @@
+diff --git a/lib/commands/exam.js b/lib/commands/exam.js
+index 870d8e4..24f50b4 100644
+--- a/lib/commands/exam.js
++++ b/lib/commands/exam.js
+@@ -325,24 +325,16 @@ module.exports = TestCommand.extend({
+       );
+     };
+ 
++    // Called for processError, processExit, and the finish() wrapper below.
++    // Flag avoids double-counting.
+     const browserTerminationHandler = function () {
+-      // browserTerminationHandler is called for disconnect, processError or processExit events.
+-      // disconnect and processExit events is fired during global error and successful test runs.
+-      // On successful test runs, browserExitHandler should already be called. And is unnecessary
+-      // to call it again, so we should return. This is covered by this.finish = true
+-      // On global failure cases, it's possible that this.finish is also true. So we must check
+-      // the timers set by onProcessExit
+-      // https://github.com/testem/testem/blob/master/lib/runners/browser_test_runner.js#L266
+-      // or onProcessError in testem.
+-      // https://github.com/testem/testem/blob/master/lib/runners/browser_test_runner.js#L252
+-      // If either timers is set, we should record the failed browser and call browserExitHandler
+-      if (this.finished && !this.onProcessExitTimer && !this.pendingTimer) {
++      if (this._emberExamExitRecorded) {
+         return;
+       }
++      this._emberExamExitRecorded = true;
+       if (commands.get('writeExecutionFile')) {
+         testemEvents.recordFailedBrowserId(this.launcher, ui);
+       }
+-
+       browserExitHandler.call(this, true);
+     };
+ 
+@@ -381,16 +373,31 @@ module.exports = TestCommand.extend({
+         init = true;
+       }
+ 
++      // Monkey-patch finish() — testem exposes no event for "browser truly
++      // done", and finish() is the one method all termination paths flow
++      // through (clean exit, disconnect timeout, processExit timer). The
++      // socket `disconnect` event fires on transient drops too, so it
++      // can't be used. Microtask defers past after-tests-complete.
++      if (!this._emberExamFinishHooked) {
++        this._emberExamFinishHooked = true;
++        const originalFinish = this.finish;
++        const runner = this;
++        this.finish = function () {
++          const result = originalFinish.apply(this, arguments);
++          Promise.resolve().then(() => browserTerminationHandler.call(runner));
++          return result;
++        };
++      }
++
+       if (typeof this.launcher !== 'undefined' && this.launcher !== null) {
+         testemEvents.recordStartedLauncherId(this.launcher.id);
+       }
+     };
+ 
+-    events['after-tests-complete'] = browserExitHandler;
+-
+-    events['disconnect'] = function () {
+-      // To prevent handling exiting browser browser disconnects from errors `disconnect` callback's needed to be registered.
+-      browserTerminationHandler.bind(this)();
++    events['after-tests-complete'] = function (...args) {
++      // Mark the runner recorded; the finish() wrapper above checks this flag.
++      this._emberExamExitRecorded = true;
++      return browserExitHandler.apply(this, args);
+     };
+ 
+     events['testem:test-done-metadata'] = (details) => {

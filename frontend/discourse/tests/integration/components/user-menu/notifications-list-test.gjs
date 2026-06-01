@@ -14,7 +14,7 @@ function getNotificationsData() {
 }
 
 module(
-  "Integration | Component | user-menu | notifications-list",
+  "Integration | Component | UserMenu | NotificationsList",
   function (hooks) {
     setupRenderingTest(hooks);
 

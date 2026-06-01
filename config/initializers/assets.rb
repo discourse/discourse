@@ -12,6 +12,8 @@ Rails.application.config.assets.version = "2-#{GlobalSetting.asset_url_salt}"
 Rails.application.config.assets.paths.push(
   "#{Rails.public_path.join("javascripts")}",
   "#{Rails.root.join("frontend/discourse/dist/assets")}",
+  "#{Rails.root.join("frontend/discourse/dist/@embroider/virtual")}",
+  "#{Rails.root.join("frontend/discourse/scripts")}",
 )
 
 Rails.application.config.assets.paths.push(
@@ -29,3 +31,5 @@ Rails.application.config.assets.excluded_paths.push(
 Rails.application.config.assets.compilers.filter! do |type, compiler|
   type == "text/javascript" && compiler == Propshaft::Compiler::SourceMappingUrls
 end
+
+Mime::Type.register "application/wasm", :wasm

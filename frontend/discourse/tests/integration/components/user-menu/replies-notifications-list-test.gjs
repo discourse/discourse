@@ -6,7 +6,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | user-menu | replies-notifications-list",
+  "Integration | Component | UserMenu | RepliesNotificationsList",
   function (hooks) {
     setupRenderingTest(hooks);
 

@@ -4278,6 +4278,334 @@ ALTER SEQUENCE public.discourse_templates_usage_count_id_seq OWNED BY public.dis
 
 
 --
+-- Name: discourse_workflows_credentials; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_credentials (
+    id bigint NOT NULL,
+    name character varying(128) NOT NULL,
+    credential_type character varying(64) NOT NULL,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_by_id integer,
+    updated_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_credentials_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_credentials_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_credentials_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_credentials_id_seq OWNED BY public.discourse_workflows_credentials.id;
+
+
+--
+-- Name: discourse_workflows_data_tables; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_data_tables (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    created_by_id integer,
+    updated_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_data_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_data_tables_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_data_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_data_tables_id_seq OWNED BY public.discourse_workflows_data_tables.id;
+
+
+--
+-- Name: discourse_workflows_execution_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_execution_data (
+    execution_id bigint NOT NULL,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    workflow_data jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_executions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_executions (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    workflow_version_id character varying(36) NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    execution_mode integer DEFAULT 0 NOT NULL,
+    trigger_data jsonb DEFAULT '{}'::jsonb,
+    error text,
+    waiting_node_id character varying(100),
+    waiting_until timestamp(6) without time zone,
+    resume_token character varying(64),
+    timeout_action character varying(32),
+    trigger_node_id character varying(100),
+    run_time_ms integer,
+    started_at timestamp(6) without time zone,
+    finished_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_executions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_executions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_executions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_executions_id_seq OWNED BY public.discourse_workflows_executions.id;
+
+
+--
+-- Name: discourse_workflows_variables; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_variables (
+    id bigint NOT NULL,
+    key character varying(100) NOT NULL,
+    value character varying(1000) DEFAULT ''::character varying NOT NULL,
+    description text,
+    created_by_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_variables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_variables_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_variables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_variables_id_seq OWNED BY public.discourse_workflows_variables.id;
+
+
+--
+-- Name: discourse_workflows_webhooks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_webhooks (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    workflow_version_id character varying(36),
+    node_name character varying(100) NOT NULL,
+    webhook_path character varying(500) NOT NULL,
+    http_method character varying(10) NOT NULL,
+    webhook_id character varying(36),
+    path_length integer,
+    test_webhook boolean DEFAULT false NOT NULL,
+    user_id integer,
+    workflow_snapshot jsonb,
+    expires_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_webhooks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_webhooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_webhooks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_webhooks_id_seq OWNED BY public.discourse_workflows_webhooks.id;
+
+
+--
+-- Name: discourse_workflows_workflow_dependencies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_dependencies (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    dependency_type character varying(50) NOT NULL,
+    dependency_key character varying(500) NOT NULL,
+    node_id character varying(100),
+    workflow_version_id character varying(36),
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_dependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_dependencies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_dependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_dependencies_id_seq OWNED BY public.discourse_workflows_workflow_dependencies.id;
+
+
+--
+-- Name: discourse_workflows_workflow_publish_history; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_publish_history (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    version_id character varying(36),
+    event character varying(32) NOT NULL,
+    user_id integer,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_publish_history_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_publish_history_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_publish_history_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_publish_history_id_seq OWNED BY public.discourse_workflows_workflow_publish_history.id;
+
+
+--
+-- Name: discourse_workflows_workflow_versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_versions (
+    version_id character varying(36) NOT NULL,
+    workflow_id bigint NOT NULL,
+    version_number integer NOT NULL,
+    name character varying(100) NOT NULL,
+    nodes jsonb DEFAULT '[]'::jsonb NOT NULL,
+    connections jsonb DEFAULT '{}'::jsonb NOT NULL,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    autosaved boolean DEFAULT false NOT NULL,
+    authors text,
+    created_by_id integer NOT NULL,
+    updated_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflows (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    nodes jsonb DEFAULT '[]'::jsonb NOT NULL,
+    connections jsonb DEFAULT '{}'::jsonb NOT NULL,
+    static_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    pin_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    trigger_state jsonb DEFAULT '{}'::jsonb NOT NULL,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    version_id character varying(36) NOT NULL,
+    active_version_id character varying(36),
+    version_counter integer DEFAULT 1 NOT NULL,
+    error_workflow_id bigint,
+    created_by_id integer NOT NULL,
+    updated_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflows_id_seq OWNED BY public.discourse_workflows_workflows.id;
+
+
+--
 -- Name: dismissed_topic_users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12181,6 +12509,62 @@ ALTER TABLE ONLY public.discourse_templates_usage_count ALTER COLUMN id SET DEFA
 
 
 --
+-- Name: discourse_workflows_credentials id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_credentials ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_credentials_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_data_tables id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_data_tables ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_data_tables_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_executions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_executions ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_executions_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_variables id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_variables ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_variables_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_webhooks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_webhooks ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_webhooks_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_workflow_dependencies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_dependencies ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_dependencies_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_workflow_publish_history id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_publish_history ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_publish_history_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_workflows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflows ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflows_id_seq'::regclass);
+
+
+--
 -- Name: dismissed_topic_users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14367,6 +14751,78 @@ ALTER TABLE ONLY public.discourse_templates_usage_count
 
 
 --
+-- Name: discourse_workflows_credentials discourse_workflows_credentials_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_credentials
+    ADD CONSTRAINT discourse_workflows_credentials_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_data_tables discourse_workflows_data_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_data_tables
+    ADD CONSTRAINT discourse_workflows_data_tables_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_executions discourse_workflows_executions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_executions
+    ADD CONSTRAINT discourse_workflows_executions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_variables discourse_workflows_variables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_variables
+    ADD CONSTRAINT discourse_workflows_variables_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_webhooks discourse_workflows_webhooks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_webhooks
+    ADD CONSTRAINT discourse_workflows_webhooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_workflow_dependencies discourse_workflows_workflow_dependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_dependencies
+    ADD CONSTRAINT discourse_workflows_workflow_dependencies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_workflow_publish_history discourse_workflows_workflow_publish_history_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_publish_history
+    ADD CONSTRAINT discourse_workflows_workflow_publish_history_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_workflow_versions discourse_workflows_workflow_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_versions
+    ADD CONSTRAINT discourse_workflows_workflow_versions_pkey PRIMARY KEY (version_id);
+
+
+--
+-- Name: discourse_workflows_workflows discourse_workflows_workflows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflows
+    ADD CONSTRAINT discourse_workflows_workflows_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: dismissed_topic_users dismissed_topic_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16163,6 +16619,237 @@ CREATE UNIQUE INDEX idx_discourse_automation_user_global_notices ON public.disco
 --
 
 CREATE UNIQUE INDEX idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq ON public.discourse_calendar_post_event_dates USING btree (event_id, starts_at);
+
+
+--
+-- Name: idx_dwf_credentials_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_credentials_on_created_by_id ON public.discourse_workflows_credentials USING btree (created_by_id);
+
+
+--
+-- Name: idx_dwf_credentials_on_credential_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_credentials_on_credential_type ON public.discourse_workflows_credentials USING btree (credential_type);
+
+
+--
+-- Name: idx_dwf_credentials_on_name_credential_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_credentials_on_name_credential_type ON public.discourse_workflows_credentials USING btree (name, credential_type);
+
+
+--
+-- Name: idx_dwf_credentials_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_credentials_on_updated_by_id ON public.discourse_workflows_credentials USING btree (updated_by_id);
+
+
+--
+-- Name: idx_dwf_data_tables_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_data_tables_on_created_by_id ON public.discourse_workflows_data_tables USING btree (created_by_id);
+
+
+--
+-- Name: idx_dwf_data_tables_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_data_tables_on_name ON public.discourse_workflows_data_tables USING btree (name);
+
+
+--
+-- Name: idx_dwf_data_tables_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_data_tables_on_updated_by_id ON public.discourse_workflows_data_tables USING btree (updated_by_id);
+
+
+--
+-- Name: idx_dwf_deps_on_type_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_deps_on_type_key ON public.discourse_workflows_workflow_dependencies USING btree (dependency_type, dependency_key);
+
+
+--
+-- Name: idx_dwf_deps_on_workflow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_deps_on_workflow_id ON public.discourse_workflows_workflow_dependencies USING btree (workflow_id);
+
+
+--
+-- Name: idx_dwf_deps_on_workflow_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_deps_on_workflow_version_id ON public.discourse_workflows_workflow_dependencies USING btree (workflow_version_id);
+
+
+--
+-- Name: idx_dwf_execution_data_on_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_execution_data_on_execution_id ON public.discourse_workflows_execution_data USING btree (execution_id);
+
+
+--
+-- Name: idx_dwf_executions_on_resume_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_resume_token ON public.discourse_workflows_executions USING btree (resume_token) WHERE (resume_token IS NOT NULL);
+
+
+--
+-- Name: idx_dwf_executions_on_retention; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_retention ON public.discourse_workflows_executions USING btree (created_at) WHERE (status = ANY (ARRAY[2, 3, 5, 6]));
+
+
+--
+-- Name: idx_dwf_executions_on_status_waiting_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_status_waiting_until ON public.discourse_workflows_executions USING btree (status, waiting_until);
+
+
+--
+-- Name: idx_dwf_executions_on_waiting_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_waiting_until ON public.discourse_workflows_executions USING btree (waiting_until) WHERE ((waiting_until IS NOT NULL) AND (status = 4));
+
+
+--
+-- Name: idx_dwf_executions_on_workflow_created_at_id_desc; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_workflow_created_at_id_desc ON public.discourse_workflows_executions USING btree (workflow_id, created_at DESC, id DESC);
+
+
+--
+-- Name: idx_dwf_executions_on_workflow_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_executions_on_workflow_version_id ON public.discourse_workflows_executions USING btree (workflow_version_id);
+
+
+--
+-- Name: idx_dwf_publish_history_on_workflow_created_at_id_desc; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_publish_history_on_workflow_created_at_id_desc ON public.discourse_workflows_workflow_publish_history USING btree (workflow_id, created_at DESC, id DESC);
+
+
+--
+-- Name: idx_dwf_variables_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_variables_on_created_by_id ON public.discourse_workflows_variables USING btree (created_by_id);
+
+
+--
+-- Name: idx_dwf_variables_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_variables_on_key ON public.discourse_workflows_variables USING btree (key);
+
+
+--
+-- Name: idx_dwf_versions_on_workflow_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_versions_on_workflow_created_at ON public.discourse_workflows_workflow_versions USING btree (workflow_id, created_at DESC);
+
+
+--
+-- Name: idx_dwf_versions_on_workflow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_versions_on_workflow_id ON public.discourse_workflows_workflow_versions USING btree (workflow_id);
+
+
+--
+-- Name: idx_dwf_versions_on_workflow_version_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_versions_on_workflow_version_number ON public.discourse_workflows_workflow_versions USING btree (workflow_id, version_number);
+
+
+--
+-- Name: idx_dwf_webhooks_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_webhooks_on_expires_at ON public.discourse_workflows_webhooks USING btree (expires_at) WHERE (expires_at IS NOT NULL);
+
+
+--
+-- Name: idx_dwf_webhooks_on_method_path_test; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_webhooks_on_method_path_test ON public.discourse_workflows_webhooks USING btree (http_method, webhook_path, test_webhook);
+
+
+--
+-- Name: idx_dwf_webhooks_on_webhook_id_method_test; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_webhooks_on_webhook_id_method_test ON public.discourse_workflows_webhooks USING btree (webhook_id, http_method, test_webhook) WHERE (webhook_id IS NOT NULL);
+
+
+--
+-- Name: idx_dwf_webhooks_on_workflow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_webhooks_on_workflow_id ON public.discourse_workflows_webhooks USING btree (workflow_id);
+
+
+--
+-- Name: idx_dwf_webhooks_on_workflow_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_webhooks_on_workflow_version_id ON public.discourse_workflows_webhooks USING btree (workflow_version_id);
+
+
+--
+-- Name: idx_dwf_workflows_on_active_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_workflows_on_active_version_id ON public.discourse_workflows_workflows USING btree (active_version_id);
+
+
+--
+-- Name: idx_dwf_workflows_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_workflows_on_created_by_id ON public.discourse_workflows_workflows USING btree (created_by_id);
+
+
+--
+-- Name: idx_dwf_workflows_on_error_workflow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_workflows_on_error_workflow_id ON public.discourse_workflows_workflows USING btree (error_workflow_id);
+
+
+--
+-- Name: idx_dwf_workflows_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_workflows_on_updated_by_id ON public.discourse_workflows_workflows USING btree (updated_by_id);
+
+
+--
+-- Name: idx_dwf_workflows_on_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_workflows_on_version_id ON public.discourse_workflows_workflows USING btree (version_id);
 
 
 --
@@ -21171,6 +21858,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260316071737'),
 ('20260316071736'),
 ('20260316071735'),
+('20260312000000'),
 ('20260311161955'),
 ('20260311064518'),
 ('20260311021412'),

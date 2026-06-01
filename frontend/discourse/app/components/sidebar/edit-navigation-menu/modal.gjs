@@ -51,7 +51,7 @@ export default class SidebarEditNavigationMenuModal extends Component {
     <DModal
       @title={{i18n @title}}
       @closeModal={{@closeModal}}
-      class="sidebar__edit-navigation-menu__modal -large"
+      class="sidebar__edit-navigation-menu__modal --large"
       ...attributes
     >
       <:belowModalTitle>

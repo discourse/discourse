@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
@@ -20,7 +21,14 @@ export default class DCookText extends Component {
 
   @action
   async loadCookedText() {
-    const cooked = await cook(this.args.rawText);
+    const rawText = this.args.rawText;
+    const cooked = await waitForPromise(cook(rawText));
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+    if (this.args.rawText !== rawText) {
+      return;
+    }
     this.cooked = cooked;
   }
 

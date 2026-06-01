@@ -719,6 +719,37 @@ RSpec.describe Report do
         expect(report.data.last[:y]).to eq(2)
       end
     end
+
+    it "averages the previous period over the days that had engagement" do
+      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+
+      two_on_first_day = [Fabricate(:user), Fabricate(:user)]
+      one_on_second_day = Fabricate(:user)
+      two_on_first_day.each do |engaged_user|
+        Fabricate(
+          :user_action,
+          user: engaged_user,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 16, 12),
+        )
+      end
+      Fabricate(
+        :user_action,
+        user: one_on_second_day,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 17, 12),
+      )
+
+      report =
+        Report.find(
+          "daily_engaged_users",
+          start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 28).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.prev_period).to eq(1.5)
+    end
   end
 
   describe "posts counts" do

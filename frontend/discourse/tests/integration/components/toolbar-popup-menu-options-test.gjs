@@ -14,55 +14,52 @@ function generateOptions(count) {
   }));
 }
 
-module(
-  "Integration | Component | toolbar-popup-menu-options",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Integration | Component | ToolbarPopupMenuOptions", function (hooks) {
+  setupRenderingTest(hooks);
 
-    test("adds scroll classes when content overflows", async function (assert) {
-      const content = generateOptions(30);
+  test("adds scroll classes when content overflows", async function (assert) {
+    const content = generateOptions(30);
 
-      await render(
-        <template>
-          <div style="height: 200px;">
-            <ToolbarPopupMenuOptions
-              @content={{content}}
-              @class="options-content"
-              @icon="cog"
-              @onChange={{fn (mut this.value)}}
-            />
-          </div>
-        </template>
-      );
+    await render(
+      <template>
+        <div style="height: 200px;">
+          <ToolbarPopupMenuOptions
+            @content={{content}}
+            @class="options-content"
+            @icon="cog"
+            @onChange={{fn (mut this.value)}}
+          />
+        </div>
+      </template>
+    );
 
-      await click(".fk-d-menu__trigger");
+    await click(".fk-d-menu__trigger");
 
-      const menu = document.querySelector(".fk-d-menu[class*='toolbar-menu']");
-      assert.false(menu.classList.contains("--scroll-top"));
-      assert.true(menu.classList.contains("--scroll-bottom"));
-    });
+    const menu = document.querySelector(".fk-d-menu[class*='toolbar-menu']");
+    assert.false(menu.classList.contains("--scroll-top"));
+    assert.true(menu.classList.contains("--scroll-bottom"));
+  });
 
-    test("does not add scroll classes when content fits", async function (assert) {
-      const content = generateOptions(2);
+  test("does not add scroll classes when content fits", async function (assert) {
+    const content = generateOptions(2);
 
-      await render(
-        <template>
-          <div>
-            <ToolbarPopupMenuOptions
-              @content={{content}}
-              @class="options-content"
-              @icon="cog"
-              @onChange={{fn (mut this.value)}}
-            />
-          </div>
-        </template>
-      );
+    await render(
+      <template>
+        <div>
+          <ToolbarPopupMenuOptions
+            @content={{content}}
+            @class="options-content"
+            @icon="cog"
+            @onChange={{fn (mut this.value)}}
+          />
+        </div>
+      </template>
+    );
 
-      await click(".fk-d-menu__trigger");
+    await click(".fk-d-menu__trigger");
 
-      const menu = document.querySelector(".fk-d-menu[class*='toolbar-menu']");
-      assert.false(menu.classList.contains("--scroll-top"));
-      assert.false(menu.classList.contains("--scroll-bottom"));
-    });
-  }
-);
+    const menu = document.querySelector(".fk-d-menu[class*='toolbar-menu']");
+    assert.false(menu.classList.contains("--scroll-top"));
+    assert.false(menu.classList.contains("--scroll-bottom"));
+  });
+});

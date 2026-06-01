@@ -1,12 +1,10 @@
 strictPeerDependencies: true
 packages:
 - "docs/developer-guides"
-- "frontend/custom-proxy"
 - "frontend/deprecation-silencer"
 - "frontend/discourse"
 - "frontend/discourse-i18n"
 - "frontend/discourse-markdown-it"
-- "frontend/ember-cli-progress-ci"
 - "frontend/pretty-text"
 - "frontend/asset-processor"
 - "frontend/discourse-types"

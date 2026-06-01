@@ -1,6 +1,9 @@
 // @ts-check
 
-import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  markDefaultExtensionsRegistered,
+  registerRichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
 import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
@@ -28,6 +31,7 @@ import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 import uploadPlaceholder from "./upload-placeholder";
+import wordPaste from "./word-paste";
 import wrap from "./wrap";
 
 /**
@@ -57,6 +61,7 @@ const defaultExtensions = [
   typographerReplacements,
   table,
   markdownPaste,
+  wordPaste,
   orderedList,
   bulletList,
   wrap,
@@ -68,5 +73,6 @@ const defaultExtensions = [
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+markDefaultExtensionsRegistered();
 
 export default defaultExtensions;

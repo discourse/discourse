@@ -280,18 +280,16 @@ export default class NestedController extends Controller {
   @action
   selectText() {
     const tc = this.#topicController;
-    const { postId, buffer, opts } = this.quoteState;
-    this.#ensurePostInStream(postId);
-    tc.quoteState.selected(postId, buffer, opts);
+    this.#ensurePostInStream(this.quoteState.postId);
+    tc.quoteState.copyFrom(this.quoteState);
     return tc.selectText();
   }
 
   @action
   buildQuoteMarkdown() {
     const tc = this.#topicController;
-    const { postId, buffer, opts } = this.quoteState;
-    this.#ensurePostInStream(postId);
-    tc.quoteState.selected(postId, buffer, opts);
+    this.#ensurePostInStream(this.quoteState.postId);
+    tc.quoteState.copyFrom(this.quoteState);
     return tc.buildQuoteMarkdown();
   }
 

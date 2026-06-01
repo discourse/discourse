@@ -4,7 +4,7 @@ import { resetSiteDirForTesting } from "discourse/lib/text-direction";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DTextField from "discourse/ui-kit/d-text-field";
 
-module("Integration | Component | text-field", function (hooks) {
+module("Integration | Component | TextField", function (hooks) {
   setupRenderingTest(hooks);
 
   let originalHtmlDir;

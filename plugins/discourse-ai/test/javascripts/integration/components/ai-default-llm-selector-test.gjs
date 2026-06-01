@@ -5,7 +5,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AiDefaultLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-default-llm-selector";
 
-module("Integration | Component | ai-default-llm-selector", function (hooks) {
+module("Integration | Component | AiDefaultLlmSelector", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
