@@ -38,7 +38,7 @@ module DiscourseWorkflows
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == Post.types[:regular] &&
+          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
             !@opts&.dig(:skip_workflows)
         end
 
