@@ -26,16 +26,13 @@ class GroupHistory < ActiveRecord::Base
 
   def self.with_filters(group, params = {})
     records =
-      self
-        .includes(:acting_user, :target_user)
-        .where(group_id: group.id)
-        .order("group_histories.created_at DESC")
+      includes(:acting_user, :target_user).where(group_id: group.id).order(
+        "group_histories.created_at DESC",
+      )
 
     if params.present?
       params = params.slice(*filters)
-      records = records.where(action: self.actions[params[:action].to_sym]) if params[
-        :action
-      ].present?
+      records = records.where(action: actions[params[:action].to_sym]) if params[:action].present?
       records = records.where(subject: params[:subject]) if params[:subject].present?
 
       %i[acting_user target_user].each do |filter|
@@ -55,15 +52,15 @@ end
 # Table name: group_histories
 #
 #  id             :integer          not null, primary key
-#  group_id       :integer          not null
-#  acting_user_id :integer          not null
-#  target_user_id :integer
 #  action         :integer          not null
-#  subject        :string
-#  prev_value     :text
 #  new_value      :text
+#  prev_value     :text
+#  subject        :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  acting_user_id :integer          not null
+#  group_id       :integer          not null
+#  target_user_id :integer
 #
 # Indexes
 #

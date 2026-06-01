@@ -65,7 +65,7 @@ class ThemeSettingsMigrationsRunner
   def self.loader_js_lib_content
     @loader_js_lib_content ||=
       File.read(
-        File.join(Rails.root, "frontend/discourse/node_modules/loader.js/dist/loader/loader.js"),
+        Rails.root.join("frontend/discourse/node_modules/loader.js/dist/loader/loader.js").to_s,
       )
   end
 

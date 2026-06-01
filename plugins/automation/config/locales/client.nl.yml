@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 nl:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Een automatisering triggeren via de API"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: automatisering maken
             update_automation: automatisering bijwerken
             delete_automation: automatisering verwijderen
     discourse_automation:
@@ -68,8 +76,10 @@ nl:
           fields:
             categories:
               label: Categorieën
+              description: Alleen triggeren als het gemarkeerde topic in deze categorieën valt
             tags:
               label: Tags
+              description: Alleen triggerend als het gemarkeerde topic een van deze tags heeft
         not_found: Kon trigger '%{trigger}' voor automatisering '%{automation}' niet vinden. Controleer of de bijbehorende plug-in is geïnstalleerd
         user_badge_granted:
           fields:
@@ -277,6 +287,14 @@ nl:
               label: Tags
               description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: E-mailsjabloon
+              description: Ondersteunt tijdelijke aanduidingen voor automatisering
+            recipients:
+              label: Ontvangers
+              description: Gebruikers of e-mailadressen om te informeren
         not_found: Kon script '%{script}' voor automatisering '%{automation}' niet vinden. Controleer of de bijbehorende plug-in is geïnstalleerd
         zapier_webhook:
           fields:
@@ -426,6 +444,11 @@ nl:
               label: "Naam aangepast gebruikersveld"
         set_topic_timer:
           title: Topictimer instellen
+          fields:
+            type:
+              label: Timertype
+            duration:
+              label: Timerduur
       unnamed_automation: "Naamloze automatisering"
       models:
         script:
@@ -438,6 +461,9 @@ nl:
           runs_today: "%{count} vandaag"
           runs_this_week: "%{count} deze week"
           runs_this_month: "%{count} deze maand"
+          recent_errors:
+            one: "%{count} fout onlangs"
+            other: "%{count} fouten onlangs"
           runs:
             label: Uitvoeringen
           name:

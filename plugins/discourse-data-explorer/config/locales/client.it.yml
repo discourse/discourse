@@ -6,10 +6,17 @@
 
 it:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Explorer"
     errors:
       explorer:
         no_semicolons: "Rimuovi i punti e virgola dalla query."
         dirty: "È necessario salvare la query prima di eseguirla."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nessun risultato"
     explorer:
       default_query: "Predefinito"
       or: "o"
@@ -19,6 +26,9 @@ it:
       create: "Crea"
       create_placeholder: "Nome query..."
       description_placeholder: "Inserisci una descrizione qui"
+      ai:
+        generate: "Genera"
+        optional: "opzionale"
       import:
         label: "Importa"
         unparseable_json: "File JSON non analizzabile."
@@ -35,17 +45,11 @@ it:
           yes: "Sì"
           no: "No"
           null_: "Null"
-      export: "Esporta"
       view_json: "Visualizza JSON"
       save: "Salva le modifiche"
       run: "Esegui"
       undo: "Annulla modifiche"
-      edit: "Modifica"
       delete: "Elimina"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabella"
-      show_graph: "Grafico"
       others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
       run_time: "Query completata in %{value} ms."
       result_count:
@@ -62,7 +66,6 @@ it:
       query_time: "Ultima esecuzione"
       query_user: "Creato da"
       column: "Colonna %{number}"
-      explain_label: "Includere il piano query?"
       reset_params: "Annulla"
       search_placeholder: "Ricerca..."
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."

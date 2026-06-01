@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import fullnumber from "../helpers/fullnumber";
 import MinimalGamificationLeaderboardRow from "./minimal-gamification-leaderboard-row";
@@ -56,7 +56,7 @@ export default class extends Component {
 
       <div class="ranking-col-names">
         <span>{{i18n "gamification.leaderboard.rank"}}</span>
-        <span>{{icon "award"}}{{i18n "gamification.score"}}</span>
+        <span>{{dIcon "award"}}{{i18n "gamification.score"}}</span>
       </div>
 
       <div class="ranking-col-names__sticky-border"></div>
@@ -67,7 +67,7 @@ export default class extends Component {
           <div class="user__name">{{i18n "gamification.you"}}</div>
           <div class="user__score">
             {{#if this.site.mobileView}}
-              {{number this.model.personal.user.total_score}}
+              {{dNumber this.model.personal.user.total_score}}
             {{else}}
               {{fullnumber this.model.personal.user.total_score}}
             {{/if}}

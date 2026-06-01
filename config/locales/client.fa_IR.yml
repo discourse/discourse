@@ -144,6 +144,13 @@ fa_IR:
       placeholder: تاریخ
       from_placeholder: "از تاریخ"
       to_placeholder: "تا تاریخ"
+    date_range_picker:
+      apply: "اعمال کردن"
+      presets:
+        last_7_days: "۷ روز گذشته"
+        last_30_days: "۳۰ روز گذشته"
+        last_6_months: "۶ ماه گذشته"
+        last_year: "سال گذشته"
     languages:
       ar:
         name: عربی
@@ -246,6 +253,7 @@ fa_IR:
     back_button: "بازگشت"
     welcome_banner:
       header:
+        new_members: "خوش آمدید، %{preferred_display_name}!"
         logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
       search_placeholder: "جستجو"
@@ -313,8 +321,6 @@ fa_IR:
     tos: "شرایط استفاده از خدمات"
     rules: "قوانین"
     conduct: "دستورالعمل"
-    mobile_view: "نمایش برای موبایل"
-    desktop_view: "نمایش برای کامپیوتر"
     now: "هم‌اکنون"
     read_more: "بیشتر بخوانید"
     more: "بیشتر"
@@ -346,11 +352,10 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "فعال شده"
       start_posting:
         back: "بازگشت"
-      spread_the_word:
-        action: "رونوشت پیوند"
-        copied_to_clipboard: "پیوند در کلیپ بورد کپی شد!"
     about:
       edit: "ویرایش این صفحه"
       simple_title: "درباره"
@@ -510,6 +515,9 @@ fa_IR:
         other_drafts:
           one: "+%{count} پیش نویس دیگر"
           other: "+%{count} پیش نویس دیگر"
+    embed_mode:
+      signin_flow:
+        cancel: "لغو"
     topic_count_all:
       one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
@@ -956,7 +964,7 @@ fa_IR:
           access: دسترسی
         categories:
           title: دسته‌بندی‌ها
-          long_title: "اعلان‌های پیش‌فرض دسته"
+          long_title: "آگاه‌سازی‌های پیش‌گزیدهٔ دسته"
           description: "هنگامی که کاربران به این گروه اضافه می‌شوند، تنظیمات اعلان دسته آنها روی این پیشفرض‌ها تنظیم می‌شود. پس از آن، آنها می‌توانند آنها را تغییر دهند."
           watched_categories_instructions: "دنبال کردن خودکار همه موضوعات در این دسته‌ها. اعضای گروه از تمام پست ها و موضوعات جدید مطلع خواهند شد و تعداد پست های جدید نیز در کنار موضوع ظاهر می شود."
           tracked_categories_instructions: "پیگیری خودکار تمامی موضوعات در این دسته٬ تعداد پست های جدید در جلوی موضوعات نمایش داده خواهد شد."
@@ -965,7 +973,7 @@ fa_IR:
           muted_categories_instructions: "کاربران هیچ اعلانی در مورد موضوعات جدید در این دسته ها دریافت نخواهند کرد و جدیدترین موضوعات، در دسته‌ها یا صفحه جدیدترین موضوعات ظاهر نمی شوند."
         tags:
           title: برچسب‌ها
-          long_title: "اعلان‌های پیش فرض برچسب‌ها"
+          long_title: "آگاه‌سازی‌های پیش‌گزیدهٔ برچسب‌ها"
           description: "هنگامی که کاربران به این گروه اضافه می شوند، تنظیمات اعلان برچسب آن‌ها روی این پیش فرض‌ها تنظیم می شود. پس از آن، آن‌ها می توانند آن‌ها را تغییر دهند."
           watched_tags_instructions: "تمام موضوعات حاوی این برچسب‌ها را به صورت خودکار دنبال کنید. اعضای گروه از تمام پست‌ها و موضوعات جدید مطلع می‌شوند و تعداد پست‌های جدید نیز در کنار موضوع ظاهر می‌شود."
           tracked_tags_instructions: "شما به صورت خودکار تمام موضوعات جدید در این برچسب را پیگیری خواهید کرد. تعداد پست‌های جدید در کنار موضوع نمایش داده می‌شود."
@@ -1109,7 +1117,7 @@ fa_IR:
         icon: "یک آیکون را انتخاب کنید"
         image: "تصویری را بارگذاری کنید"
       default_notifications:
-        modal_title: "آگاه‌سازی‌های پیش‌فرض کاربر"
+        modal_title: "آگاه‌سازی‌های پیش‌گزیدهٔ کاربر"
         modal_description:
           one: "آیا می‌خواهید این تغییر را به صورت گذشته‌نگر اعمال کنید؟ این کار، تنظیمات برگزیده %{count} کاربر موجود را تغییر می‌دهد."
           other: "آیا می‌خواهید این تغییر را به صورت گذشته‌نگراعمال کنید؟ این کار، تنظیمات برگزیده %{count} کاربر موجود را تغییر می‌دهد."
@@ -1238,7 +1246,6 @@ fa_IR:
         normal_option: "معمولی"
         normal_option_title: "اگر این کاربر به شما پاسخ دهد، از شما نقل قول کند و یا شما را صدا کند، اگاه سازی دریافت میکنید"
       notification_schedule:
-        title: "زمان‌بندی آگاه‌سازی"
         label: "فعال سازی زمان‌بندی سفارشی آگاه‌سازی"
         tip: "در خارج از این بازه ساعتی، آگاه‌سازی‌های شما موقتا متوقف می‌شوند."
         midnight: "نیمه شب"
@@ -1282,13 +1289,8 @@ fa_IR:
       notifications: "آگاه‌سازی‌ها"
       statistics: "وضعیت"
       desktop_notifications:
-        label: "آگاه‌سازی زنده"
         not_supported: "با عرض پوزش، آگاه‌سازی بر روی این مرورگر پشتیبانی نمی‌شود."
-        perm_default: "فعال کردن آگاه‌سازی"
-        perm_denied_btn: "دسترسی رد شد"
         perm_denied_expl: "شما دسترسی دریافت اعلان را بسته‌اید. در تنظیمات مرورگر خود آن‌را فعال کنید."
-        disable: "غیرفعال کردن آگاه‌سازی"
-        enable: "فعال کردن آگاه‌سازی"
         each_browser_note: "توجه: شما باید این تنظیمات را در هر مرورگری که استفاده می‌کنید، تغییر دهید. اگر آگاه‌سازی‌ها را از منوی کاربر متوقف کنید، صرف‌نظر از این تنظیم، همه آگاه‌سازی‌ها غیرفعال می‌شوند."
         consent_prompt: "آیا مایلید وقتی دیگران به شما پاسخ می‌دهند، آگاه‌سازی زنده دریافت کنید؟"
       dismiss: "نخواستیم"
@@ -2923,6 +2925,7 @@ fa_IR:
         max_views:
           placeholder: حداکثر
           aria_label: فیلتر بر اساس حداکثر بازدید
+    header_panel: "سربرگ"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -3000,6 +3003,8 @@ fa_IR:
           other: "رد کردن (%{count})…"
         dismiss_tooltip: "نوشته‌های جددی را ببند یا موضوعات را پیگیری نکن"
         also_dismiss_topics: "توقف پیگیری این موضوعات که دیگر به عنوان خوانده نشده برای من نمایش داده نشوند"
+        dismiss_new_topics: "رد کردن موضوعات جدید"
+        dismiss_new_replies: "رد کردن پاسخ های جدید"
         dismiss_new: "بستن جدید"
         dismiss_new_modal:
           title: "رد کردن جدید"
@@ -3775,7 +3780,6 @@ fa_IR:
         name_placeholder: "این نشانک برای چی است؟"
         name_input_label: "نام نشانک"
         set_reminder: "به من یادآوری کن"
-        options: "گزینه‌ها"
         actions:
           delete_bookmark:
             name: "حذف نشانک"
@@ -4238,90 +4242,57 @@ fa_IR:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "میانبر‌های صفحه‌کلید"
       short_title: "میانبرها"
+      description_header: "توضیح"
+      key_header: "کلید"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "برو به"
-        home: "%{shortcut} خانه"
-        latest: "%{shortcut} آخرین"
-        new: "%{shortcut} جدید"
-        unread: "%{shortcut} خوانده نشده"
-        categories: "%{shortcut} دسته‌بندی‌ها"
-        top: "%{shortcut} برترین"
-        bookmarks: "%{shortcut} نشانه‌گذاری‌ها"
-        profile: "%{shortcut} مشخصات"
-        messages: "%{shortcut} پیام‌ها"
-        drafts: "%{shortcut} پیش‌نویس‌ها"
-        next: "%{shortcut} موضوع بعدی"
-        previous: "%{shortcut} موضوع قبلی"
+        home: "خانه"
+        latest: "آخرین"
+        new: "جدید"
+        unread: "خوانده‌ نشده‌"
+        unseen: "دیده نشده"
+        categories: "دسته‌بندی‌ها"
+        top: "برترین‌ها"
+        bookmarks: "نشانک‌ها"
+        profile: "پروفایل"
+        messages: "پیام‌ها"
+        drafts: "پیش‌نویس‌ها"
       navigation:
         title: "ناوبری"
-        jump: "%{shortcut} برو به نوشته #"
-        back: "%{shortcut} عقب"
-        up_down: "%{shortcut} برای تغییر انتخاب شده &uarr; &darr;"
-        open: "%{shortcut} برای باز کردن موضوع انتخاب شده"
-        next_prev: "%{shortcut} بخش بعدی/قبلی"
-        go_to_unread_post: "برو به اولین پست خوانده‌نشده %{shortcut}"
+        back: "بازگشت"
+        up_down: "برای تغییر انتخاب شده &uarr; &darr;"
       application:
         title: "برنامه"
-        notifications: "%{shortcut} باز کردن آگاه‌سازی‌ها"
-        hamburger_menu: "%{shortcut} باز کردن منوی ناوبری"
-        user_profile_menu: "%{shortcut} نمایش منو کاربری"
-        show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
-        search: "جستجو %{shortcut}"
-        filter_sidebar: "%{shortcut} فیلتر نوار کناری"
-        help: "%{shortcut} باز کردن کمک صفحه‌کلید"
-        toggle_bulk_select: "%{shortcut} انتخاب انبوه را تغییر دهید"
-        dismiss: "%{shortcut} رد کردن موضوعات انتخاب شده"
-        x: "%{shortcut} تغییر حالت انتخاب (در حالت انتخاب انبوه)"
-        log_out: "%{shortcut} خروج"
+        search: "جستجو"
+        log_out: "خروج"
       composing:
         title: "نوشتن"
-        return: "%{shortcut} بازگشت به ابزار نوشتن"
-        fullscreen: "%{shortcut} ابزار نوشتن تمام صفحه"
-        insert_current_time: "%{shortcut} زمان فعلی را درج کنید"
+        preformatted: "متن قالب‌بندی شده"
+        blockquote: "نقل‌قول"
       bookmarks:
         title: "نشانک گذاری"
-        enter: "%{shortcut} ذخیره و بستن"
-        later_today: "%{shortcut} بعد از امروز"
-        later_this_week: "%{shortcut} بعد از این هفته"
-        tomorrow: "%{shortcut} فردا"
-        next_week: "%{shortcut} هفته بعد"
-        next_month: "%{shortcut} ماه آینده"
-        next_business_week: "%{shortcut} شروع هفته آینده"
-        next_business_day: "%{shortcut} روز کاری بعدی"
-        custom: "%{shortcut} تاریخ و زمان سفارشی"
-        none: "%{shortcut} بدون یادآور"
-        delete: "%{shortcut} حذف نشانک"
+        later_today: "بعد از امروز"
+        later_this_week: "بعد از اين هفته"
+        tomorrow: "فردا"
+        next_week: "هفته بعد"
+        next_month: "ماه بعد"
+        next_business_day: "روز کاری بعدی"
+        custom: "تاریخ و زمان سفارشی"
+        delete: "حذف نشانک"
       actions:
         title: "عملیات"
-        bookmark_topic: "%{shortcut} باز کردن موضوع نشانه‌گذاری شده"
-        pin_unpin_topic: "%{shortcut} Pin/Unpin موضوع"
-        share_topic: "%{shortcut} اشتراک‌گذاری موضوع"
-        share_post: "%{shortcut} اشتراک‌گذاری نوشته"
-        reply_as_new_topic: "%{shortcut} پاسخ به عنوان موضوع مرتبط"
-        reply_topic: "%{shortcut} پاسخ به موضوع"
-        reply_post: "%{shortcut} پاسخ به نوشته"
-        quote_post: "%{shortcut} نقل‌قول نوشته"
-        like: "%{shortcut} پسندیدن نوشته"
-        flag: "%{shortcut} علامت‌گذاری نوشته"
-        bookmark: "%{shortcut} نشانه‌گذاری نوشته"
-        edit: "%{shortcut} ویرایش نوشته"
-        delete: "%{shortcut} حذف نوشته"
-        mark_muted: "%{shortcut} بی‌صدا کردن موضوع"
-        mark_regular: "%{shortcut} موضوع عادی (پیش فرض)."
-        mark_tracking: "%{shortcut} پیگیری موضوع"
-        mark_watching: "%{shortcut} نمایش موضوع"
-        print: "%{shortcut} چاپ موضوع"
-        defer: "%{shortcut} علامت گذاری موضوع به عنوان خوانده نشده"
-        topic_admin_actions: "%{shortcut} اقدامات مدیریت موضوع را باز کنید"
-        archive_private_message: "%{shortcut} تغییر حالت بایگانی پیام شخصی"
+        reply_as_new_topic: "پاسخ به تاپیک لینک شده"
+        reply_topic: "پاسخ به مبحث"
+        delete: "حذف نوشته"
+        mark_tracking: "موضوع را پیگیری کنید"
+        mark_watching: "موضوع را دنبال کنید"
+        defer: "علامت گذاری موضوع به عنوان خوانده نشده"
       search_menu:
         title: "منو جستجو"
-        prev_next: "%{shortcut} حرکت دادن انتخاب شده به بالا و پایین"
-        insert_url: "%{shortcut} انتخاب را در ابزار نوشتن باز قرار دهید"
-        full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
       admin:
         title: "مدیر کل"
-        search_prev_next: "%{shortcut} حرکت دادن انتخاب شده به بالا و پایین"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -4389,14 +4360,7 @@ fa_IR:
       staff_info: "برای افزودن محدودیت، این برچسب را در یک <a href=%{basePath}/tag_groups>گروه برچسب</a> قرار دهید."
       category_restricted: "این برچسب محدود به دسته‌هایی است که اجازه دسترسی به آن‌ها را ندارید."
       synonyms: "مترادف‌ها"
-      synonyms_description: "هنگامی که از برچسب‌های زیر استفاده می‌شود، آنها با <b>%{base_tag_name}</b>جایگزین می‌شوند."
       save: "ذخیره نام و توضیحات برچسب"
-      tag_groups_info:
-        one: 'این برچسب متعلق به گروه "%{tag_groups}" است.'
-        other: "این برچسب متعلق به این گروه ها است:%{tag_groups}."
-      category_restrictions:
-        one: "فقط در این دسته قابل استفاده است:"
-        other: "فقط در این دسته‌ها قابل استفاده است:"
       edit_synonyms: "ویرایش مترادف ها"
       add_synonyms_label: "اضافه کردن مترادف‌ها:"
       add_synonyms: "افزودن"
@@ -5167,6 +5131,31 @@ fa_IR:
             title: "گزارش"
           traffic:
             title: "ترافیک سایت"
+          engagement:
+            activity_by_category:
+              category: "دسته‌بندی"
+              topics: "موضوعات"
+              posts: "فرسته‌ها"
+              share: "اشتراک‌گذاری"
+            whos_posting:
+              all_categories: "همه‌ی دسته‌بندی‌ها"
+              staff: "همکاران"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "جدید"
+                "1": "پایه‌ای"
+                "2": "عضو"
+                "3": "عادی"
+                "4": "رهبر"
+        reports_section:
+          modal:
+            enabled_heading: "فعال شده"
+            all_heading: "تمامی گزارشات"
+            apply: "اعمال کردن"
+        site_traffic:
+          series:
+            anonymous: "ناشناس"
+            crawlers: "خزنده‌ها"
         period:
           last_7_days: "۷ روز گذشته"
           last_30_days: "۳۰ روز گذشته"

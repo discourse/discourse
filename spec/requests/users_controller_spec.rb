@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rotp"
+require "discourse_ip_info"
 
 RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
@@ -795,6 +796,16 @@ RSpec.describe UsersController do
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(user.id)
+    end
+
+    it "does not replay queued anonymous actions on toggle" do
+      SiteSetting.allow_anonymous_mode = true
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+
+      AnonymousAction.expects(:consume).never
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
     end
   end
 
@@ -1653,6 +1664,24 @@ RSpec.describe UsersController do
           username: @user.username,
           password: "strongpassword",
           email: @user.email,
+        }
+      end
+
+      include_examples "failed signup"
+    end
+
+    context "when using an unknown value for an enum user field on signup" do
+      fab!(:user_field, :user_field_dropdown)
+
+      let(:create_params) do
+        {
+          name: @user.name,
+          username: @user.username,
+          password: "strongpassword",
+          email: @user.email,
+          user_fields: {
+            user_field.id.to_s => "Juice",
+          },
         }
       end
 
@@ -3485,8 +3514,6 @@ RSpec.describe UsersController do
         TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss")
       end
 
-      after { TranslationOverride.revert!("en", ["badges.demogorgon.name"]) }
-
       it "uses the badge display name as user title" do
         sign_in(user1)
 
@@ -5180,6 +5207,52 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
         expect(response.body).to include(user1.username)
+      end
+    end
+
+    describe "auth token IP visibility" do
+      before { DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
+
+      let!(:token) do
+        UserAuthToken.generate!(
+          user_id: user1.id,
+          client_ip: "81.2.69.142",
+          user_agent: "Mozilla/5.0",
+        )
+      end
+
+      it "omits client_ip but keeps location when a moderator without can_see_ip views another user" do
+        SiteSetting.moderators_view_ips = false
+        sign_in(moderator)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        expect(serialized_token.keys).not_to include("client_ip")
+        expect(serialized_token["location"]).to eq("London, England, United Kingdom")
+        expect(response.body).not_to include(token.client_ip.to_s)
+      end
+
+      it "includes client_ip when an admin views another user" do
+        sign_in(admin)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        expect(serialized_token["client_ip"]).to eq(token.client_ip.to_s)
+      end
+
+      it "includes client_ip when a user views their own tokens" do
+        SiteSetting.moderators_view_ips = false
+        sign_in(user1)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        serialized_token = response.parsed_body.dig("user", "user_auth_tokens", 0)
+        expect(serialized_token["client_ip"]).to eq(token.client_ip.to_s)
       end
     end
   end
@@ -7376,6 +7449,33 @@ RSpec.describe UsersController do
       ICS
     end
 
+    it "excludes bookmark reminders for topics the user cannot see from .ics feed" do
+      Bookmark.where(user: user1).destroy_all
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic_with_op, category: private_category)
+      Fabricate(
+        :bookmark,
+        name: nil,
+        user: user1,
+        bookmarkable: private_topic,
+        reminder_at: 1.day.from_now,
+      )
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      calendar_name =
+        I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
+      expect(response.body).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}
+        END:VCALENDAR
+      ICS
+    end
+
     it "excludes bookmark reminders older than 3 months from .ics feed" do
       bookmark1.update_columns(name: nil, reminder_at: 4.months.ago)
       bookmark2.update!(name: "Recent reminder", reminder_at: 1.day.from_now)
@@ -7511,6 +7611,40 @@ RSpec.describe UsersController do
       bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
       expected_excerpt = PrettyText.excerpt(topic.first_post.cooked, 300, keep_emoji_images: true)
       expect(bookmark_list.first["excerpt"]).to eq(expected_excerpt)
+    end
+
+    it "does not expose excerpts for hidden bookmarked posts the user cannot see" do
+      hidden_post_raw = "hidden post bookmark secret " * 20
+      hidden_topic_raw = "hidden topic bookmark secret " * 20
+      hidden_post = Fabricate(:post, raw: hidden_post_raw)
+      hidden_topic = Fabricate(:topic)
+      hidden_first_post = Fabricate(:post, topic: hidden_topic, raw: hidden_topic_raw)
+      hidden_post_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_post)
+      hidden_topic_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_topic)
+
+      TopicUser.change(user.id, hidden_post.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, hidden_topic.id, total_msecs_viewed: 1)
+      hidden_post.update!(hidden: true)
+      hidden_first_post.update!(hidden: true)
+
+      sign_in(user)
+
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
+      hidden_post_response = bookmark_list.find { |item| item["id"] == hidden_post_bookmark.id }
+      hidden_topic_response = bookmark_list.find { |item| item["id"] == hidden_topic_bookmark.id }
+
+      expect(hidden_post_response).to be_present
+      expect(hidden_post_response).not_to have_key("excerpt")
+      expect(hidden_post_response).not_to have_key("truncated")
+      expect(hidden_post_response).not_to have_key("cooked")
+      expect(hidden_topic_response).to be_present
+      expect(hidden_topic_response).not_to have_key("excerpt")
+      expect(hidden_topic_response).not_to have_key("truncated")
+      expect(hidden_topic_response).not_to have_key("cooked")
+      expect(response.body).not_to include("hidden post bookmark secret")
+      expect(response.body).not_to include("hidden topic bookmark secret")
     end
 
     describe "bookmarkable_url" do
@@ -7831,7 +7965,7 @@ RSpec.describe UsersController do
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
-      it "doesn’t show unread notifications when the bookmark has been deleted" do
+      it "doesn't show unread notifications when the bookmark has been deleted" do
         bookmark_with_reminder.destroy!
 
         get "/u/#{user.username}/user-menu-bookmarks"

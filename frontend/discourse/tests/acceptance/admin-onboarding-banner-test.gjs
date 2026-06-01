@@ -1,8 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import sinon from "sinon";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -33,14 +32,34 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         success: "OK",
       });
     });
-  });
 
-  needs.hooks.beforeEach(() => {
-    const mockClipboard = {
-      writeText: sinon.stub().resolves(true),
-      write: sinon.stub().resolves(true),
-    };
-    sinon.stub(window.navigator, "clipboard").get(() => mockClipboard);
+    server.get("/admin/themes.json", () => {
+      return helper.response(200, {
+        themes: [
+          {
+            id: -1,
+            name: "Foundation",
+            default: true,
+            screenshot_light_url: null,
+            screenshot_dark_url: null,
+          },
+          {
+            id: -2,
+            name: "Horizon",
+            default: false,
+            screenshot_light_url: null,
+            screenshot_dark_url: null,
+          },
+        ],
+        extras: { color_schemes: [] },
+      });
+    });
+
+    server.put("/admin/themes/-2.json", () => {
+      return helper.response(200, {
+        theme: { id: -2, name: "Horizon", default: true },
+      });
+    });
   });
 
   const withStep = (id, assert) => {
@@ -206,14 +225,19 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isChecked();
   });
 
-  test("it can complete `spread_the_word` step", async function (assert) {
-    const step = withStep("spread_the_word", assert);
+  test("it can open `select_theme` step", async function (assert) {
+    const step = withStep("select_theme", assert);
 
     await visit("/");
 
     step.isNotChecked();
     await step.clickAction();
-    step.isChecked();
+    await settled();
+
+    assert.dom(".theme-picker-modal").exists("theme picker modal is shown");
+    assert
+      .dom(".theme-picker-modal__card")
+      .exists({ count: 2 }, "shows Foundation and Horizon");
   });
 });
 

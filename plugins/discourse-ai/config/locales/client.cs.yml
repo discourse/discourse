@@ -52,6 +52,8 @@ cs:
           many: "(%{count} další)"
           other: "(%{count} další)"
         collapse_list: "(zobrazit méně)"
+        nav:
+          enabled: "Zapnuto"
         filters:
           all: "Vše"
           reset: "obnovit výchozí"
@@ -354,6 +356,7 @@ cs:
           placeholder: "Zeptejte se..."
           new: "Nová otázka"
           messages_sidebar_title: "Konverzace"
+          starred: "Oblíbené"
           today: "Dnes"
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"

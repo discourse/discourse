@@ -963,7 +963,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "admin@example.com"
           SiteSetting.google_oauth2_hd_groups_service_account_json = {
             "private_key" => private_key.to_s,
-            :"client_email" => "discourse-group-sync@example.iam.gserviceaccount.com",
+            :client_email => "discourse-group-sync@example.iam.gserviceaccount.com",
           }.to_json
           SiteSetting.google_oauth2_hd_groups = true
 

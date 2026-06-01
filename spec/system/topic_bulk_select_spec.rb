@@ -347,6 +347,8 @@ describe "Topic bulk select" do
       sign_in(admin)
       visit("/latest")
 
+      expect(page).to have_css("#site-logo")
+
       send_keys([:shift, "b"])
       expect(topic_list).to have_bulk_select_enabled
       send_keys("j")
@@ -541,7 +543,7 @@ describe "Topic bulk select" do
 
     it "shows errors in the modal when some topics cannot be moved due to tag restrictions" do
       original_category = topics.first.category
-      sign_in(admin)
+      sign_in(Fabricate(:moderator))
       visit("/latest")
 
       open_bulk_actions_modal([topics.first], "update-category")

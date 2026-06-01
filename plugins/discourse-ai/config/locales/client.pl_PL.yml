@@ -226,6 +226,8 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      bot_chats:
+        tab_label: "Czaty botów"
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
@@ -269,8 +271,8 @@ pl_PL:
             ui_settings: "Ustawienia interfejsu użytkownika"
             integrations: "Integracje"
         nav:
-          configured: "Skonfigurowany"
-          unconfigured: "Nieskonfigurowany"
+          enabled: "Włączono"
+          not_enabled: "Nie włączono"
         filters:
           all: "Wszystkie"
           text: "Wyszukaj funkcje, agentów, LLM-y lub grupy..."
@@ -377,8 +379,8 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
-        translatable_categories: "Kategorie możliwe do przetłumaczenia"
-        translatable_categories_description: "Przetłumaczone zostaną tylko treści z wybranych kategorii. Podkategorie należy dodać osobno."
+        excluded_categories: "Wykluczone kategorie"
+        excluded_categories_description: "Treści w tych kategoriach nie będą tłumaczone. Pozostaw puste, aby przetłumaczyć treści we wszystkich kategoriach, w tym w kategoriach prywatnych."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
@@ -963,6 +965,8 @@ pl_PL:
           success: "Powodzenie!"
           invalid_config: "Najpierw napraw następujące błędy w konfiguracji:"
           failure: "Próba nawiązania kontaktu z modelem zwróciła następujący błąd: %{error}"
+          failure_non_streaming: "Nieudane żądanie nietransmisyjne: %{error}"
+          failure_streaming: "Nie udało się przesłać strumieniowo: %{error}"
         hints:
           max_prompt_tokens: "Maksymalna liczba tokenów, jaką model może przetworzyć w jednym żądaniu"
           max_output_tokens: "Maksymalna liczba tokenów, jaką model może wygenerować w jednym żądaniu"
@@ -1238,6 +1242,10 @@ pl_PL:
             many: "Wiadomość musi mieć długość %{count} znaków lub więcej"
             other: "Wiadomość musi mieć długość %{count} znaków lub więcej"
           messages_sidebar_title: "Rozmowy"
+          starred: "Wyróżnione"
+          star_conversation: "Wyróżnij rozmowę"
+          unstar_conversation: "Usuń wyróżnienie rozmowy"
+          open_conversation_menu: "Otwórz menu konwersacji"
           today: "Dzisiaj"
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"

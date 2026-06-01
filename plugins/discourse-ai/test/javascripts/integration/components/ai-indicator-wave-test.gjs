@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AiIndicatorWave from "discourse/plugins/discourse-ai/discourse/components/ai-indicator-wave";
 
-module("Integration | Component | ai-indicator-wave", function (hooks) {
+module("Integration | Component | AiIndicatorWave", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders an indicator wave", async function (assert) {

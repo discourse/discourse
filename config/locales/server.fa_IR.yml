@@ -361,7 +361,6 @@ fa_IR:
       <p>در غیر این صورت لطفاً <a href="%{base_url}/password-reset">رمز عبور را</a>بازنشانی کنید.</p>
     not_found_template_link: |
       <p>این دعوت‌نامه برای <a href="%{base_url}">%{site_name}</a> دیگر قابل استفاده نیست. لطفا از فردی که شما را دعوت کرده است، بخواهید یکبار دیگر دعوت‌نامه جدیدی ارسال کند.</p>
-    existing_user_cannot_redeem: "این دعوتنامه قابل استفاده نیست. لطفا از شخصی که شما را دعوت کرده بخواهید برای شما دعوتنامه جدیدی ارسال کند."
     existing_user_already_redemeed: "شما قبلا این پیوند دعوتنامه را استفاده‌ کرده‌اید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر حساب کاربری دارند! "
     invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
@@ -1127,6 +1126,30 @@ fa_IR:
       xaxis: "روز"
       yaxis: "تعداد مشارکت کنندگان جدید"
       description: "تعداد کاربرانی که اولین پست خود را در این مدت ارسال کردند."
+    activity_by_category:
+      labels:
+        category: "دسته‌بندی"
+        topics: "موضوعات"
+        posts: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
+    posters_by_member_type:
+      labels:
+        count: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
+      types:
+        staff: "همکاران"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "سطح اعتماد"
+        count: "اعضاء"
+        share: "اشتراک‌گذاری"
+      levels:
+        "0": "جدید"
+        "1": "پایه‌ای"
+        "2": "عضو"
+        "3": "عادی"
+        "4": "رهبر"
     trust_level_growth:
       title: "رشد سطح اعتماد"
       xaxis:
@@ -1165,9 +1188,8 @@ fa_IR:
     site_traffic:
       title: "ترافیک سایت"
       xaxis:
-        page_view_anon_browser: "بازدید از صفحه (ناشناس)"
-        page_view_logged_in_browser: "بازدید از صفحه (وارد شده)"
-        page_view_crawler: "خزنده های شناخته شده"
+        page_view_anon_browser: "ناشناس"
+        page_view_crawler: "خزنده‌ها"
         page_view_other: "ترافیک‌های دیگر"
       yaxis: "روز"
       description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
@@ -1280,6 +1302,12 @@ fa_IR:
         num_clicks: "کلیک‌ها"
         num_topics: "موضوعات"
       description: "لیست کاربران بر اساس تعداد کلیک روی پیوندهایی که به اشتراک گذاشته‌اند."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "بازدیدها"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "بازدیدها"
     top_traffic_sources:
       title: "بالاترین منابع ترافیک"
       xaxis: "دومین"
@@ -1456,6 +1484,9 @@ fa_IR:
       poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
       poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
     back_from_logster_text: "بازگشت به سایت"
+    reports_section:
+      providers:
+        core_report: "استاندارد"
   site_settings:
     allow_bulk_invite: "با آپلود یک فایل CSV، دعوت‌های انبوه را مجاز کنید"
     disabled: "غیرفعال شده"
@@ -1537,7 +1568,6 @@ fa_IR:
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری و...)."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
-    use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
     content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
     share_links: "مشخص کنید کدام موارد روی کادر گفتگو در قسمت اشترک گذاری و بر اساس چه ترتیبی نشان داده شوند. "
     site_contact_username: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود، از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود."
@@ -1720,7 +1750,6 @@ fa_IR:
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن، هر N دقیقه برای هر کاربر یک حساب‌کاربری ناشناس بساز. برای مثال: اگر به ۶۰۰ تنظیم شود، به محض اینکه ۶۰۰ دقیقه از آخرین فرسته گذشت و کاربر به حالت ناشناس تغییر کرد، حساب کاربری جدید ناشناس ساخته می شود."
     allow_profile_backgrounds: "به کاربر اجازه بده تا پس‌زمینه نمایه خود را بارگذاری کند."
     get_a_room_threshold: "تعداد نوشته‌هایی که کاربر باید در یک موضوع ایجاد کند تا به او اخطار داده شود."
-    enable_mobile_theme: "دستگاه های موبایلی که از قالب مناسب موبایل استفاده می کنند٬‌ با قابلیت جابجایی به حالت نمایش کامل. اگر از استایلی استفاده می‌کنید که کاملا واکنشگرا است این قسمت را غیر‌فعال کنید."
     dominating_topic_minimum_percent: "درصد نوشته‌هایی که کاربر در یک موضوع باید ایجاد کند تا درباره‌ی تسلط بیش‌از‌حد بر آن موضوع به او یاداوری شود. (برای ایجاد تعادل در مشارکت دادن دیگران در موضوع و جلوگیری از یک طرفه شدن بحث‌ها)"
     suppress_uncategorized_badge: "نشان را برای موضوعات دسته‌بندی نشده در فهرست موضوعات نشان نده."
     permalink_normalizations: "Regex زیر را قبل از تطبیق پیوندهای ثابت اعمال کنید، به عنوان مثال: /(topic.*)\\?.*/\\1 رشته های پرس و جو را از مسیرهای موضوع حذف می کند. فرمت به صورت regex+string است. از \\1 و غیره برای دسترسی به captureها استفاده کنید."

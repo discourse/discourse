@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sw:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Majibu yaliyokubaliwa"
   js:
     notifications:
       alt:

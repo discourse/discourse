@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 hy:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Ընդունված լուծումներ"
   js:
     notifications:
       alt:

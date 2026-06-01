@@ -53,6 +53,7 @@ module DiscourseAi
             include_image_uploads: tagger_agent.vision_enabled,
             include_document_uploads: model.allowed_attachment_types.present?,
             allowed_attachment_types: model.allowed_attachment_types,
+            guardian: Guardian.new(post.user),
           )
         if upload_ids.present?
           input = [input]

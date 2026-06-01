@@ -45,16 +45,14 @@ class RspecErrorTracker
   end
 
   def call(env)
-    begin
-      @app.call(env)
+    @app.call(env)
 
-      # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-      # and also Mocha::ExpectationError inherit from Exception instead of StandardError
-      # they do not get captured by the rescue => e shorthand :(
-    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-      RspecErrorTracker.report_exception(env["PATH_INFO"], e)
-      raise e
-    end
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+  rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
+    RspecErrorTracker.report_exception(env["PATH_INFO"], e)
+    raise e
   end
 end
 
@@ -184,6 +182,11 @@ module TestSetup
     Sidekiq::Worker.clear_all
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+
+    # Database is rolled back between specs, but I18n override cache doesn't.
+    # Flush it if there were any TranslationOverrides created.
+    overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
+    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
 
     RspecErrorTracker.clear_exceptions
 
@@ -408,7 +411,7 @@ RSpec.configure do |config|
 
       test_i = ENV["TEST_ENV_NUMBER"].to_i
 
-      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
+      data_dir = "#{Rails.root.join("tmp/test_data_#{test_i}/minio")}"
       FileUtils.rm_rf(data_dir)
       FileUtils.mkdir_p(data_dir)
       minio_runner_config.minio_data_directory = data_dir
@@ -504,6 +507,13 @@ RSpec.configure do |config|
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+    config.before(:each) do |example|
+      if example.metadata[:type] != :system
+        EmberCli.stubs(:read_manifest!).returns(nil)
+        EmberCli.stubs(:script_chunks).returns({})
+      end
+    end
+
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
       if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
@@ -539,7 +549,19 @@ RSpec.configure do |config|
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
         page.driver.with_playwright_page do |pw_page|
-          pw_page.clock.set_fixed_time(example.metadata[:time])
+          # Install the clock at the desired time and immediately resume it so
+          # the browser starts at `example.metadata[:time]` but `Date.now()`
+          # keeps advancing with the wall clock.
+          #
+          # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
+          # schedule timers via `Date.now() + wait` and only fire them once
+          # `Date.now()` has advanced past that, so any action deferred through
+          # the runloop (e.g. DButton, which uses `next()` to optimise INP)
+          # would silently never run.
+          #
+          # Playwright warns about this "stuck page" behaviour for pinned clocks too.
+          pw_page.clock.install(time: example.metadata[:time])
+          pw_page.clock.resume
         end
       end
     end
@@ -778,7 +800,7 @@ RSpec.configure do |config|
       class << self
         def using_session_with_localhost_resolution(name, &block)
           attempts = 0
-          self._using_session(name, &block)
+          _using_session(name, &block)
         rescue Socket::ResolutionError
           puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
           attempts += 1
@@ -1200,7 +1222,11 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
+def file_from_fixtures(
+  filename,
+  directory = "images",
+  root_path = "#{Rails.root.join("spec/fixtures")}"
+)
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
@@ -1244,7 +1270,7 @@ def plugin_from_fixtures(plugin_name)
   tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
 
   FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
-  FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
+  FileUtils.cp_r("#{Rails.root.join("spec/fixtures/plugins/#{plugin_name}")}", tmp_plugins_dir)
 
   Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
 end
@@ -1265,7 +1291,7 @@ def has_trigger?(trigger_name)
 end
 
 def stub_deprecated_settings!(override:)
-  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+  SiteSetting.load_settings("#{Rails.root.join("spec/fixtures/site_settings/deprecated_test.yml")}")
 
   stub_const(
     SiteSettings::DeprecatedSettings,
@@ -1352,6 +1378,13 @@ def apply_base_chrome_args(args = [])
     base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
     base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
   end
+
+  resolver_rules = ["MAP test.localhost:80 127.0.0.1:#{Capybara.server_port}"]
+  if ENV["CI"]
+    # Bypass the OS resolver for localhost lookups inside the browser.
+    resolver_rules.push("MAP localhost [::1]", "MAP *.localhost [::1]")
+  end
+  base_args << "--host-resolver-rules=#{resolver_rules.join(",")}"
 
   # A file that contains just a list of paths like so:
   #

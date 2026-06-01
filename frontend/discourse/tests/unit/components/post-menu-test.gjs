@@ -5,7 +5,7 @@ import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Unit | Component | post-menu", function (hooks) {
+module("Unit | Component | PostMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

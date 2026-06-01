@@ -16,10 +16,13 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
     offset = [0, params[:offset].to_i].max
     limit = params.fetch(:limit, 30).to_i
 
+    include_unlisted_topics = current_user&.id == user.id || guardian.can_see_unlisted_topics?
+
     posts =
       Post
         .joins(
-          "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.answer_post_id = posts.id",
+          "INNER JOIN discourse_solved_topic_answers ON discourse_solved_topic_answers.answer_post_id = posts.id",
+          "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.id = discourse_solved_topic_answers.solved_topic_id",
         )
         .joins(:topic)
         .joins("LEFT JOIN categories ON categories.id = topics.category_id")
@@ -29,8 +32,13 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
           "topics.category_id IS NULL OR NOT categories.read_restricted OR topics.category_id IN (:secure_category_ids)",
           secure_category_ids: guardian.secure_category_ids,
         )
+
+    posts = posts.where(topics: { visible: true }) unless include_unlisted_topics
+
+    posts =
+      posts
         .includes(:user, topic: %i[category tags])
-        .order("discourse_solved_solved_topics.created_at DESC")
+        .order("discourse_solved_topic_answers.created_at DESC")
         .offset(offset)
         .limit(limit)
 

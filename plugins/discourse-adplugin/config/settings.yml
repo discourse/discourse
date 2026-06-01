@@ -29,6 +29,11 @@ ad_plugin:
     default: 20
     min: 1
     max: 10000
+  house_ads_after_nth_root:
+    client: true
+    default: 5
+    min: 1
+    max: 10000
   house_ads_frequency:
     client: true
     default: 100

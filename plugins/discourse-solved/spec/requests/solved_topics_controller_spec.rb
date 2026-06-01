@@ -4,6 +4,7 @@ describe DiscourseSolved::SolvedTopicsController do
   fab!(:user)
   fab!(:another_user, :user)
   fab!(:admin)
+  fab!(:tl4_user, :trust_level_4)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic:) }
   fab!(:answer_post) { Fabricate(:post, topic:, user:) }
@@ -64,6 +65,25 @@ describe DiscourseSolved::SolvedTopicsController do
         result = response.parsed_body
         expect(result["user_solved_posts"].length).to eq(1)
       end
+
+      describe "with multiple solutions enabled" do
+        fab!(:answer_post2) { Fabricate(:post, topic:, user:) }
+        fab!(:topic_answer2) { Fabricate(:topic_answer, solved_topic:, post: answer_post2) }
+        before { SiteSetting.solved_allow_multiple_solutions = true }
+
+        it "returns multiple solved posts from the same topic for the specified user" do
+          sign_in(admin)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_present
+          expect(result["user_solved_posts"].length).to eq(2)
+          expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post2.id)
+          expect(result["user_solved_posts"][1]["post_id"]).to eq(answer_post.id)
+        end
+      end
     end
 
     context "when accessing without username" do
@@ -123,6 +143,79 @@ describe DiscourseSolved::SolvedTopicsController do
         expect(response.status).to eq(200)
         result = response.parsed_body
         expect(result["user_solved_posts"]).to be_empty
+      end
+
+      context "with hidden posts" do
+        before do
+          answer_post.update!(
+            hidden: true,
+            hidden_at: Time.zone.now,
+            hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+          )
+        end
+
+        it "returns hidden posts when the topic is visible" do
+          sign_in(another_user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+          expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post.id)
+        end
+      end
+
+      context "with invisible topics" do
+        before { topic.update!(visible: false) }
+
+        it "does not return posts in invisible topics to another user" do
+          sign_in(another_user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_empty
+        end
+
+        it "does not return posts in invisible topics to anonymous users" do
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_empty
+        end
+
+        it "returns posts in invisible topics to the post owner" do
+          sign_in(user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+        end
+
+        it "returns posts in invisible topics to trust level 4 users" do
+          sign_in(tl4_user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+        end
+
+        it "returns posts in invisible topics to staff" do
+          sign_in(admin)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+        end
       end
     end
   end

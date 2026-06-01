@@ -10,6 +10,12 @@ uk:
       site_settings:
         categories:
           discourse_solved: "Вирішено для Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Прийняті рішення"
+              tooltip: "Кількість тем, у яких за цей період було позначено публікацію як рішення."
   js:
     notifications:
       alt:
@@ -63,6 +69,15 @@ uk:
       confirm_solved_removal: "Ця зміна вимкне рішення для цієї теми і видалить прийняте рішення."
       confirm_solved_removal_confirm: "Підтвердити"
       confirm_solved_removal_cancel: "Скасувати"
+      shared_issue:
+        label_zero: "Я теж"
+        label:
+          one: "Я теж (%{count})"
+          few: "Я теж (%{count})"
+          many: "Я теж (%{count})"
+          other: "Я теж (%{count})"
+        title: "Я також стикаюся з цією проблемою"
+        author_title: "Ви розпочали цю тему"
       no_answer:
         title: Чи було отримано відповідь на ваше запитання?
         description: "Виділіть відповідь та допоможіть іншим, використовуючи кнопку рішення під правильною відповіддю."

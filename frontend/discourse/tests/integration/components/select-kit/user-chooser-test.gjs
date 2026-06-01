@@ -4,7 +4,7 @@ import UserChooser from "discourse/select-kit/components/user-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | select-kit/user-chooser", function (hooks) {
+module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

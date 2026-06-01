@@ -180,8 +180,7 @@ sk:
           name: "Bot"
           description: "Chatovací bot, ktorý dokáže odpovedať na otázky a pomáhať používateľom v osobných správach, na fóre a v chate"
         nav:
-          configured: "Nakonfigurované"
-          unconfigured: "Nekonfigurované"
+          enabled: "Povolené"
         filters:
           all: "Všetky"
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."

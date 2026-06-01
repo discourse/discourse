@@ -9,17 +9,17 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ForgotPassword from "discourse/components/modal/forgot-password";
-import PasswordField from "discourse/components/password-field";
 import SecondFactorForm from "discourse/components/second-factor-form";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
-import icon from "discourse/helpers/d-icon";
 import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import DPasswordField from "discourse/ui-kit/d-password-field";
+import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
+import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class LocalLoginForm extends Component {
@@ -204,7 +204,7 @@ export default class LocalLoginForm extends Component {
           {{/if}}
         </div>
         <div class="input-group">
-          <PasswordField
+          <DPasswordField
             {{on "focusin" this.scrollInputIntoView}}
             {{on "keydown" this.loginOnEnter}}
             {{on "input" @loginPasswordChanged}}
@@ -222,7 +222,7 @@ export default class LocalLoginForm extends Component {
             {{i18n "login.password"}}
           </label>
           {{#if @loginPassword}}
-            <TogglePasswordMask
+            <DTogglePasswordMask
               @maskPassword={{this.maskPassword}}
               @togglePasswordMask={{this.togglePasswordMask}}
               tabindex="3"
@@ -239,7 +239,7 @@ export default class LocalLoginForm extends Component {
             </a>
           </div>
           <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
-            {{icon "triangle-exclamation"}}
+            {{dIcon "triangle-exclamation"}}
             {{i18n "login.caps_lock_warning"}}</div>
         </div>
       </div>
@@ -262,7 +262,7 @@ export default class LocalLoginForm extends Component {
               @action={{this.authenticateSecurityKey}}
             />
           {{else}}
-            <SecondFactorInput
+            <DSecondFactorInput
               {{on "keydown" this.loginOnEnter}}
               {{on "focusin" this.scrollInputIntoView}}
               @onChange={{fn (mut @secondFactorToken)}}

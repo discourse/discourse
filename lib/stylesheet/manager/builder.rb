@@ -130,7 +130,7 @@ class Stylesheet::Manager::Builder
   end
 
   def stylesheet_filename(with_digest = true)
-    digest_string = "_#{self.digest}" if with_digest
+    digest_string = "_#{digest}" if with_digest
     "#{qualified_target}#{digest_string}.css"
   end
 
@@ -153,14 +153,12 @@ class Stylesheet::Manager::Builder
   # digest encodes the things that trigger a recompile
   def digest
     @digest ||=
-      begin
-        if is_theme?
-          theme_digest
-        elsif is_color_scheme?
-          color_scheme_digest
-        else
-          default_digest
-        end
+      if is_theme?
+        theme_digest
+      elsif is_color_scheme?
+        color_scheme_digest
+      else
+        default_digest
       end
   end
 
@@ -198,6 +196,7 @@ class Stylesheet::Manager::Builder
     DiscoursePluginRegistry.stylesheets.each { |_, paths| assets += paths.to_a }
     DiscoursePluginRegistry.mobile_stylesheets.each { |_, paths| assets += paths.to_a }
     DiscoursePluginRegistry.desktop_stylesheets.each { |_, paths| assets += paths.to_a }
+    DiscoursePluginRegistry.admin_stylesheets.each { |_, paths| assets += paths.to_a }
     Digest::SHA1.hexdigest(assets.sort.join)
   end
 

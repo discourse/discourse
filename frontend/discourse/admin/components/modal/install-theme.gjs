@@ -9,17 +9,17 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import InstallThemeItem from "discourse/admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import CopyButton from "discourse/components/copy-button";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
 import { POPULAR_THEMES } from "discourse/lib/popular-themes";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MIN_NAME_LENGTH = 4;
@@ -284,7 +284,7 @@ export default class InstallThemeModal extends Component {
   <template>
     <DModal
       @bodyClass="install-theme"
-      class="admin-install-theme-modal -large"
+      class="admin-install-theme-modal --large"
       @title={{i18n "admin.customize.theme.install"}}
       @closeModal={{@closeModal}}
     >
@@ -315,7 +315,7 @@ export default class InstallThemeModal extends Component {
           </div>
         {{/unless}}
         <div class="install-theme-content">
-          <ConditionalLoadingSection
+          <DConditionalLoadingSection
             @isLoading={{this.loading}}
             @title={{this.installingMessage}}
           >
@@ -343,7 +343,7 @@ export default class InstallThemeModal extends Component {
                         target="_blank"
                       >
                         {{#if theme.component}}
-                          {{icon
+                          {{dIcon
                             "puzzle-piece"
                             title="admin.customize.theme.component"
                           }}
@@ -373,7 +373,7 @@ export default class InstallThemeModal extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                           >
-                            {{icon "desktop"}}
+                            {{dIcon "desktop"}}
                             {{i18n "admin.customize.theme.preview"}}
                           </a>
                         {{/if}}
@@ -444,7 +444,7 @@ export default class InstallThemeModal extends Component {
                         value={{this.publicKey}}
                         {{didInsert this.generatePublicKey}}
                       />
-                      <CopyButton @selector="textarea.public-key-value" />
+                      <DCopyButton @selector="textarea.public-key-value" />
                     </div>
                   </div>
                 {{/if}}
@@ -486,7 +486,7 @@ export default class InstallThemeModal extends Component {
                 <pre><code>{{this.uploadUrl}}</code></pre>
               </div>
             {{/if}}
-          </ConditionalLoadingSection>
+          </DConditionalLoadingSection>
         </div>
       </:body>
       <:footer>

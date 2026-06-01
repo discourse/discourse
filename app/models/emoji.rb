@@ -7,7 +7,7 @@ class Emoji
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
   # matches emoji codes in text, e.g. :smile: or :wave:t2:
-  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/.freeze
+  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/
 
   DEFAULT_GROUP = "default"
 
@@ -373,7 +373,7 @@ class Emoji
               codepoints = code.codepoints
               codepoints.delete_at(1) if codepoints[1] == 0xfe0f
 
-              toned_code = (codepoints.insert(1, scale.to_i(16))).pack("U*")
+              toned_code = codepoints.insert(1, scale.to_i(16)).pack("U*")
               map["#{e["name"]}:t#{index + 2}"] = toned_code
             end
           end

@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { resettableTracked } from "discourse/lib/tracked-tools";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldTextarea extends Component {
   @service appEvents;
@@ -25,15 +25,15 @@ export default class FormTemplateFieldTextarea extends Component {
 
   @action
   handleReplaceText(oldVal, newVal) {
-    if (this.value?.includes(oldVal)) {
-      const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const regex = new RegExp(escapedOldVal, "g");
-      this.value = this.value.replace(regex, newVal ?? "");
-
-      schedule("afterRender", () => {
-        this.args.onChange?.();
-      });
+    if (!this.value?.includes(oldVal)) {
+      return;
     }
+
+    this.value = this.value.replace(oldVal, newVal ?? "");
+
+    schedule("afterRender", () => {
+      this.args.onChange?.();
+    });
   }
 
   @action
@@ -48,7 +48,7 @@ export default class FormTemplateFieldTextarea extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}

@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -11,11 +12,6 @@ import {
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import {
-  NON_STREAM_HTML_DECORATOR,
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -46,13 +42,8 @@ import { registerFullPageSearchType } from "discourse/controllers/full-page-sear
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
@@ -137,10 +128,21 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
+import { registerComposerAction } from "discourse/select-kit/components/composer-actions";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
+import { addToolbarCallback } from "discourse/ui-kit/d-editor";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/ui-kit/helpers/d-category-link";
+import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
@@ -784,6 +786,10 @@ class _PluginApi {
   /**
    * Add a new button in the topic admin menu.
    *
+   * Optionally pass a `section` to group buttons under a labelled subheader.
+   * Adjacent buttons sharing the same `section.id` are grouped together;
+   * provide either an i18n `label` key or a pre-translated `translatedLabel`.
+   *
    * Example:
    *
    * ```
@@ -795,6 +801,7 @@ class _PluginApi {
    *     icon: 'mug-saucer',
    *     className: 'hot-coffee',
    *     label: 'coffee.title',
+   *     section: { id: 'beverages', label: 'beverages.title' },
    *   };
    * });
    * ```
@@ -906,6 +913,33 @@ class _PluginApi {
     );
 
     this.addComposerToolbarPopupMenuOption(opts);
+  }
+
+  /**
+   * Register a custom item in the composer-actions dropdown (the menu next
+   * to the composer title that switches between Reply, Create Topic, etc.).
+   *
+   * @param {Object} opts
+   * @param {string} opts.id - Unique identifier for the item.
+   * @param {string} opts.label - I18n key for the item's display name.
+   * @param {string} [opts.description] - Optional I18n key for the item's description text.
+   * @param {string} [opts.icon] - Optional icon name.
+   * @param {Function} [opts.condition] - `(composerActionsComponent) => boolean`. Item is shown when this returns truthy, or when omitted.
+   * @param {Function} opts.action - `(composerModel, composerActionsComponent) => void`. Called when the user picks the item.
+   *
+   * @example
+   * api.addComposerAction({
+   *   id: "create_event",
+   *   label: "discourse_post_event.composer_actions.create_event.label",
+   *   description: "discourse_post_event.composer_actions.create_event.desc",
+   *   icon: "calendar-days",
+   *   condition: (component) =>
+   *     component.composerModel?.category?.isType("events"),
+   *   action: (composerModel) => composerModel.set("creatingEvent", true),
+   * });
+   */
+  addComposerAction(opts) {
+    registerComposerAction(opts);
   }
 
   /**
@@ -2434,6 +2468,12 @@ class _PluginApi {
    * Support for customizing the composer text. By providing a callback. Callbacks should
    * return `null` or `undefined` if you don't need a customization based on the current state.
    *
+   * Supported callback keys: `actionTitle`, `saveLabel`, `saveIcon`,
+   * `titlePlaceholder`. Each callback receives the composer model and
+   * returns an i18n key (or a translated string for `actionTitle`, or an
+   * icon name for `saveIcon`). Return `null` or `undefined` to fall
+   * through to the default.
+   *
    * ```
    * api.customizeComposerText({
    *   actionTitle(model) {
@@ -2444,6 +2484,12 @@ class _PluginApi {
    *
    *   saveLabel(model) {
    *     return "my.custom_save_label_key";
+   *   },
+   *
+   *   titlePlaceholder(model) {
+   *     if (model.creatingEvent) {
+   *       return "my.event_title_placeholder";
+   *     }
    *   }
    * })
    *
@@ -2928,6 +2974,28 @@ class _PluginApi {
   }
 
   /**
+   * Registers a component used to render a report on the customisable
+   * Reports section of the new admin dashboard. Pair with the server-side
+   * `register_admin_dashboard_report_source` registration: the source name
+   * passed here matches the provider's `source_name`. The component
+   * receives `@item`, `@payload`, and `@filters` and is mounted inside the
+   * card's chart area; the card frame (title, label pill, X-to-remove) is
+   * owned by core.
+   *
+   * ```
+   * import MyReportCard from "discourse/plugins/my-plugin/discourse/components/my-report-card";
+   *
+   * api.registerAdminDashboardReportRenderer("my_source", MyReportCard);
+   * ```
+   *
+   * @param {string} source - The provider's source_name.
+   * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
+   */
+  registerAdminDashboardReportRenderer(source, componentClass) {
+    registerAdminDashboardReportRenderer(source, componentClass);
+  }
+
+  /**
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -3315,9 +3383,6 @@ class _PluginApi {
 
   /**
    * Registers a custom tab for the category edit page.
-   * Only available when the `enable_simplified_category_creation`
-   * site setting is enabled, this will not work for the legacy
-   * category edit page.
    *
    * ```
    * api.registerEditCategoryTab({
@@ -3341,8 +3406,7 @@ class _PluginApi {
 
   /**
    * Register a callback that runs when the user changes category type selection in the
-   * **simplified** category editor (General tab) when `enable_simplified_category_creation` is
-   * enabled. It does not run on the legacy category editor.
+   * category editor's General tab.
    *
    * Callbacks run in order. Each may be `async`. The change applies only if every callback
    * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback

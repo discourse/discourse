@@ -20,7 +20,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -349,6 +349,15 @@ export default class TextareaTextManipulation {
     schedule("afterRender", this, this.blurAndFocus);
   }
 
+  applyLink(url) {
+    const sel = this.getSelected();
+    if (sel.start === sel.end) {
+      return;
+    }
+    this._insertAt(sel.start, sel.end, `[${sel.value}](${url})`);
+    this.blurAndFocus();
+  }
+
   addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
@@ -414,7 +423,7 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  paste(e) {
+  async paste(e) {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
@@ -489,7 +498,9 @@ export default class TextareaTextManipulation {
     }
 
     if (canPasteHtml && !handled) {
-      let markdown = toMarkdown(html);
+      e.preventDefault();
+
+      let markdown = await toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
         if (isInlinePasting) {
@@ -506,6 +517,11 @@ export default class TextareaTextManipulation {
             : this.insertText(markdown);
           handled = true;
         }
+      } else if (plainText && isComposer) {
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
+          : this.insertText(plainText);
+        handled = true;
       }
     }
 
@@ -739,7 +755,7 @@ export default class TextareaTextManipulation {
   @bind
   emojiSelected(code) {
     let selected = this.getSelected();
-    const captures = selected.pre.match(/\B:(\w*)$/);
+    const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
     if (isEmpty(captures)) {
       if (selected.pre.match(/\S$/)) {
@@ -990,7 +1006,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    return DAutocompleteModifier.setupAutocomplete(
+    return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
       this.autocompleteHandler,

@@ -16,7 +16,7 @@ import Post from "discourse/models/post";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 const translateResultsCallbacks = [];
@@ -105,10 +105,11 @@ export function translateResults(results, opts) {
     .map(function (tag) {
       const id = tag.id;
       const name = escapeExpression(tag.name);
+      const slug = tag.slug || `${id}-tag`;
       return EmberObject.create({
         id,
         name,
-        url: getURL("/tag/" + name),
+        url: getURL(`/tag/${slug}/${id}`),
       });
     })
     .filter((item) => item != null);
@@ -228,6 +229,15 @@ export function getSearchKey(args) {
 const MIN_LENGTH_BYPASS_PATTERN =
   /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
 
+// Filters that scope the search to private messages. Mirrors the server-side
+// set in lib/search.rb (`in:personal`, `in:messages`, `in:personal-direct`,
+// `in:all-pms` — all of which set @search_pms = true).
+const PM_FILTER_PATTERN = /\bin:(personal|messages|personal-direct|all-pms)\b/i;
+
+export function searchTermScopesToPMs(searchTerm) {
+  return PM_FILTER_PATTERN.test(searchTerm || "");
+}
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
   if (!searchTerm) {
     return false;
@@ -247,25 +257,20 @@ export function applySearchAutocomplete(inputElement, siteSettings, owner) {
   const modifiers = [];
 
   modifiers.push(
-    DAutocompleteModifier.setupAutocomplete(
-      owner,
-      inputElement,
-      autocompleteHandler,
-      {
-        component: HashtagAutocompleteResults,
-        key: HashtagAutocompleteResults.TRIGGER_KEY,
-        autoSelectFirstSuggestion: false,
-        transformComplete: (obj) => obj.text,
-        dataSource: (term) => searchCategoryTag(term, siteSettings),
-        fixedTextareaPosition: true,
-        offset: 2,
-      }
-    )
+    dAutocomplete.setupAutocomplete(owner, inputElement, autocompleteHandler, {
+      component: HashtagAutocompleteResults,
+      key: HashtagAutocompleteResults.TRIGGER_KEY,
+      autoSelectFirstSuggestion: false,
+      transformComplete: (obj) => obj.text,
+      dataSource: (term) => searchCategoryTag(term, siteSettings),
+      fixedTextareaPosition: true,
+      offset: 2,
+    })
   );
 
   if (siteSettings.enable_mentions) {
     modifiers.push(
-      DAutocompleteModifier.setupAutocomplete(
+      dAutocomplete.setupAutocomplete(
         owner,
         inputElement,
         autocompleteHandler,

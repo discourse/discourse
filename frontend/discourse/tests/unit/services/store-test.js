@@ -27,6 +27,22 @@ module("Unit | Service | store", function (hooks) {
     assert.strictEqual(widget.id, undefined, "there is no id");
   });
 
+  test("createRecord doesn't overwrite __-prefixed metadata", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const widget = store.createRecord("widget", { id: 77, name: "first" });
+
+    store.createRecord("widget", {
+      id: 77,
+      name: "second",
+      __type: "evil",
+      __plugin: "evil",
+    });
+
+    assert.strictEqual(widget.name, "second");
+    assert.strictEqual(widget.__type, "widget");
+    assert.strictEqual(widget.__plugin, undefined);
+  });
+
   test("createRecord doesn't modify the input `id` field", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget", { id: 1, name: "hello" });

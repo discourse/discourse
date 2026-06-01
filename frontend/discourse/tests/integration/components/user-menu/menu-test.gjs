@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | user-menu", function (hooks) {
+module("Integration | Component | UserMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default tab is all notifications", async function (assert) {

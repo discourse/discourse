@@ -349,7 +349,6 @@ zh_CN:
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
     not_found_template_link: |
       <p>无法再兑换此加入 <a href="%{base_url}">%{site_name}</a> 的邀请。请让邀请您的人向您发送新的邀请。</p>
-    existing_user_cannot_redeem: "此邀请无法兑换。请让邀请您的人向您发送新的邀请。"
     existing_user_already_redemeed: "您已经兑换了此邀请链接。"
     user_exists: "不需要邀请 <b>%{email}</b>，他们已经拥有帐户！"
     invite_exists: "您已经邀请 <b>%{email}</b>。"
@@ -396,7 +395,7 @@ zh_CN:
   not_found: "找不到请求的 URL 或资源。"
   invalid_access: "您没有权限查看请求的资源。"
   topic_converter:
-    too_many_recipients: "无法转换：此主题的参与者人数超过了允许的最大人数（%{max}）。"
+    too_many_recipients: "无法转换：此话题的参与者人数超过了允许的最大人数 (%{max})。"
   authenticator_not_found: "身份验证方法不存在或已被禁用。"
   authenticator_no_connect: "此身份验证服务提供商不允许连接到现有论坛帐户。"
   invalid_api_credentials: "您没有权限查看请求的资源。API 用户名或者密钥无效。"
@@ -519,15 +518,15 @@ zh_CN:
   excerpt_image: "图片"
   bookmarks:
     errors:
-      already_bookmarked_post: "您不能将同一个帖子加入书签两次。"
-      already_bookmarked: "您不能将同一个%{type}加入书签两次。"
+      already_bookmarked_post: "您不能将同一个帖子添加为书签两次。"
+      already_bookmarked: "您不能将同一个%{type}添加为书签两次。"
       too_many: "抱歉，您不能添加超过 %{limit} 个书签，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 移除一些书签。"
       cannot_set_past_reminder: "您不能设置时间为过去的书签提醒。"
       cannot_set_reminder_in_distant_future: "您不能设置时间距离现在超过 10 年以后的书签提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
       for_topic_must_use_first_post: "您只能使用第一个帖子为话题添加书签。"
-      bookmarkable_id_type_required: "需要加入书签的记录的名称和类型。"
-      invalid_bookmarkable: "无法将%{type}加入书签。"
+      bookmarkable_id_type_required: "需要添加为书签的记录的名称和类型。"
+      invalid_bookmarkable: "无法将%{type}添加为书签。"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天晚些时候"
@@ -761,7 +760,7 @@ zh_CN:
       invalid_email_in: "'%{email}' 不是有效的电子邮件地址。"
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
-      groups_required_for_mode: "您必须为 %{setting} 选择一个组。"
+      groups_required_for_mode: "您必须至少为%{setting}选择一个群组。"
       description_incomplete: "类别描述帖子至少要有一段。"
       description_too_long:
         other: "描述过长（最多 %{count} 个字符）。"
@@ -803,7 +802,7 @@ zh_CN:
       other: "%{count} 个赞"
     cannot_permanently_delete:
       many_posts:
-        other: "该主题中仍有 %{count} 个帖子需要先被永久删除，然后才能永久删除该主题本身。"
+        other: "此话题中仍有 %{count} 个帖子需要先永久删除，然后才能永久删除该话题本身。"
       wait_or_different_admin: "您必须等待 %{time_left}才能永久删除此帖子，否则必须由其他管理员执行此操作。"
   rate_limiter:
     slow_down: "您执行此操作的次数过多，请稍后再试。"
@@ -973,9 +972,9 @@ zh_CN:
       email_title: '“%{title}”中的一个帖子需要管理人员注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: "加入书签"
-      description: "将此帖子加入书签"
-      short_description: "将此帖子加入书签"
+      title: "添加为书签"
+      description: "将此帖子添加为书签"
+      short_description: "将此帖子添加为书签"
     like:
       title: "点赞"
       description: "点赞此帖子"
@@ -1089,7 +1088,7 @@ zh_CN:
       every_six_months: "每六个月"
   calendar_subscriptions:
     application_name: "日历订阅"
-    bookmarks_feed_name: "%{site_title} - 书签提醒"
+    bookmarks_feed_name: "%{site_title} - 将提醒添加为书签"
   user_api_key:
     title: '授权“%{application_name}”'
     authorize: "授权"
@@ -1196,6 +1195,30 @@ zh_CN:
       xaxis: "天"
       yaxis: "新贡献者数量"
       description: "此期间首次发帖的用户数。"
+    activity_by_category:
+      labels:
+        category: "类别"
+        topics: "话题"
+        posts: "帖子"
+        share: "分享"
+    posters_by_member_type:
+      labels:
+        count: "帖子"
+        share: "分享"
+      types:
+        staff: "管理人员"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "信任级别"
+        count: "成员"
+        share: "分享"
+      levels:
+        "0": "新"
+        "1": "基本用户"
+        "2": "成员"
+        "3": "常规"
+        "4": "领导者"
     trust_level_growth:
       title: "信任级别提升"
       xaxis:
@@ -1241,9 +1264,8 @@ zh_CN:
     site_traffic:
       title: "网站流量"
       xaxis:
-        page_view_anon_browser: "页面浏览量（匿名用户）"
-        page_view_logged_in_browser: "页面浏览量（登录用户）"
-        page_view_crawler: "已知抓取工具"
+        page_view_anon_browser: "匿名"
+        page_view_crawler: "抓取工具"
         page_view_embed: "嵌入式页面浏览量"
         page_view_other: "其他流量"
       yaxis: "天"
@@ -1288,7 +1310,7 @@ zh_CN:
       title: "书签"
       xaxis: "天"
       yaxis: "新书签的数量"
-      description: "加入书签的新话题和帖子的数量。"
+      description: "添加为书签的新话题和帖子的数量。"
     users_by_trust_level:
       title: "每个信任级别的用户"
       xaxis: "信任级别"
@@ -1361,6 +1383,12 @@ zh_CN:
         num_clicks: "点击数"
         num_topics: "话题"
       description: "用户按他们分享的链接的点击次数列出。"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "访问天数"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "访问天数"
     top_traffic_sources:
       title: "热门流量来源"
       xaxis: "网域"
@@ -1568,6 +1596,8 @@ zh_CN:
       failing_emails: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
       subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
       translation_overrides: "您的某些翻译替换已过时。请检查您的<a href='%{base_path}/admin/customize/site_texts?outdated=true'>文本自定义</a>。"
+      email_sending_failures:
+        other: "在过去 24 小时内，电子邮件发送失败 %{count} 次。请查看<a href='%{base_path}/admin/email-logs/skipped' target='_blank'>跳过的电子邮件日志</a>，了解 SMTP 错误详情。"
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
@@ -1585,6 +1615,9 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
+    reports_section:
+      providers:
+        core_report: "标准"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1688,8 +1721,7 @@ zh_CN:
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
     email_custom_headers: "自定义邮件头列表"
-    email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
-    simple_email_subject: "启用此功能后，电子邮件主题行将更加简洁，仅包含必要信息。这样，用户可以一目了然地快速了解邮件的用途。"
+    simple_email_subject: "启用此功能后，电子邮件主题行将更加简洁，仅包含必要信息。这样，用户可以一目了然地快速了解邮件的目的。"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "要求用户启用双重身份验证 (2FA)，然后才能访问 Discourse 用户界面。此设置不影响 API 或 'DiscourseConnect provider' 身份验证。如果启用了 enforce_second_factor_on_external_auth，则用户在设置 2FA 后将无法使用外部身份验证提供商登录。"
     enforce_second_factor_on_external_auth: "要求用户始终使用双重身份验证 (2FA)。启用后，如果用户已启用双重身份验证 (2FA)，将阻止他们使用外部身份验证方法（例如社交登录）登录。禁用后，用户只需要在使用用户名和密码登录时确认双重身份验证 (2FA)。另请参阅 `enforce_second_factor` 设置。"
@@ -1757,7 +1789,7 @@ zh_CN:
     moderators_change_post_ownership: "允许版主更改帖子所有权"
     change_post_ownership_allowed_groups: "允许这些群组中的用户更改帖子所有权"
     cors_origins: "允许跨源请求（CORS）。每个来源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
-    use_admin_ip_allowlist: "只有使用“屏蔽的 IP 列表”（管理 > 日志 > 屏蔽的 IP）中的 IP 地址时，管理员才能登录。"
+    use_admin_ip_allowlist: "管理员只有在 <a href='%{base_path}/admin/logs/screened_ip_addresses'>筛选 IP 列表</a> 中定义的 IP 地址上才能登录。"
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
@@ -1772,7 +1804,7 @@ zh_CN:
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此网站嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "额外的允许脚本源。默认包括当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略 (CSP) 缓解 XSS 攻击</a>。启用 strict-dynamic 后，其他主机源将被忽略。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问网站的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
-    can_permanently_delete: "允许管理员永久删除帖子、主题和帖子修订版本。永久删除的数据将从数据库中彻底移除，且无法恢复。"
+    can_permanently_delete: "允许管理员永久删除帖子、话题和帖子修订。永久删除的数据将从数据库中彻底移除，且无法恢复。"
     suppress_secured_categories_from_admin: "在界面的某些地方对管理员禁止不公开话题和 PM。内容仍将在某些地方可见。这不是一项安全功能：管理员始终可以访问网站上的所有内容。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
@@ -1862,7 +1894,6 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
-    google_oauth2_hd_groups: "在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅 https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
     google_oauth2_verbose_logging: "将详细的 Google OAuth2 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1892,10 +1923,9 @@ zh_CN:
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
     s3_disable_cleanup: "当备份的数量超出允许的最大值时，不移除 S3 中的旧备份。"
     s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；仅当打算在配置的 `s3_upload_bucket`和 `s3_backup_bucket` 上配置权限策略时才取消选中此选项。"
-    enable_direct_s3_uploads: "允许直接分段上传到 Amazon S3，如需了解详情，请参阅 https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
-    backup_location: "存储备份的位置。重要信息：S3 要求在“文件”设置中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
+    backup_location: "存储备份的位置。重要：S3 要求在<a href='%{base_path}/admin/site_settings/category/files'>文件设置</a>中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
     backup_gzip_compression_level_for_uploads: "用于压缩上传的 Gzip 压缩级别。"
     include_thumbnails_in_backups: "在备份中包含生成的缩略图。禁用此项将使备份更小，但需要在恢复后重新发布所有帖子。"
     active_user_rate_limit_secs: "更新 'last_seen_at' 字段的频率，以为秒单位"
@@ -1939,8 +1969,8 @@ zh_CN:
     s3_upload_bucket: "文件将上传到的 Amazon S3 存储桶名称。警告：必须是小写，没有句点，没有下划线。"
     s3_access_key_id: "将用于上传图片、附件和备份的 Amazon S3 访问密钥 ID。"
     s3_secret_access_key: "将用于上传图片、附件和备份的 Amazon S3 秘密访问密钥。"
-    s3_role_arn: "要承担的用于 S3 操作的 IAM 角色的 ARN。如果与访问密钥一起设置，Discourse 将使用 STS AssumeRole 获取临时凭证。"
-    s3_role_session_name: "在承担 S3 操作的 IAM 角色时使用的可选会话名称。该名称会出现在 CloudTrail 日志中以供审计。如果为空，则回退到服务器主机名。"
+    s3_role_arn: "要为 S3 操作承担的 IAM 角色的 ARN。如果与访问密钥一起设置，Discourse 将使用 STS AssumeRole 获取临时凭据。"
+    s3_role_session_name: "在承担 S3 操作的 IAM 角色时使用的可选会话名称。该名称会出现在 CloudTrail 日志中以供审核。如果为空，则回退到服务器主机名。"
     s3_region: "将用于上传图片和备份的 Amazon S3 区域名称。"
     s3_cdn_url: "用于所有 S3 资源的 CDN URL（例如：https://cdn.somewhere.com）。警告：更改此设置后，您必须重新发布所有旧帖子。"
     s3_use_cdn_url_for_all_uploads: "对上传到 s3 的所有文件使用 CDN URL，而不仅仅对图片使用。"
@@ -2027,7 +2057,7 @@ zh_CN:
     max_here_mentioned: "@here 提及的最大人数。"
     here_mention_allowed_groups: "能够提及 @here 的群组。管理员和版主始终可以提及 @here。"
     create_thumbnails: "创建太大而无法放入帖子的缩略图和灯箱图片。"
-    animated_topic_thumbnails: "使用原始动画图片作为主题缩略图，而不是生成静态缩略图。"
+    animated_topic_thumbnails: "使用原始动画图片作为话题缩略图，而不是生成静态缩略图。"
     email_time_window_mins: "在发送任何通知电子邮件之前等待 (n) 分钟，让用户有机会编辑和完成他们的帖子。"
     personal_email_time_window_seconds: "在发送任何个人消息通知电子邮件之前等待 (n) 秒，让用户有机会编辑和完成他们的消息。"
     email_posts_context: "在通知电子邮件中作为上下文包含的先前回复的数量。"
@@ -2086,7 +2116,6 @@ zh_CN:
     fast_typing_threshold: "用户在第一次发帖时必须输入的最短时间。如果未达到阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
-    auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用“禁言关注词”。"
     moderator_guide_topic: "概述您如何管理您的社区的话题。链接将在审核队列中显示，供版主和管理员使用。"
     reviewable_claiming: "可审核的内容是否需要先声明然后再对其采取行动？"
     reviewable_default_topics: "默认显示按话题分组的可审核内容"
@@ -2154,7 +2183,6 @@ zh_CN:
     log_mail_processing_failures: "将所有电子邮件处理失败记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "允许用户通过电子邮件发布新话题。启用此设置后，您将能够为群组和类别配置传入电子邮件地址。"
     email_in_allowed_groups: "能够通过电子邮件发布新话题的组。管理员和版主始终可以通过电子邮件发布新话题。"
-    email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
     email_in_spam_header: "选择用于识别垃圾邮件的特定电子邮件头。此选项可以是 X-Spam-Flag、X-Spam-Status 或 X-SES-Spam-Verdict，电子邮件会根据头值被标记为垃圾邮件。例如，如果选择的设置是 X-Spam-Flag，则此头值设置为 YES 的电子邮件将被归类为垃圾邮件。"
     enable_smtp: "启用 SMTP 以发送群组消息通知。"
     email_prefix: "电子邮件主题中使用的[标签]。如果不设置，将默认为 'title'。"
@@ -2216,7 +2244,6 @@ zh_CN:
     allow_profile_backgrounds: "允许用户上传个人资料背景。"
     get_a_room_threshold: "在被警告之前，用户必须在同一话题中向同一个人发布的帖子数。"
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
-    enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
     pm_warn_user_last_seen_months_ago: "创建新私信时，如果目标接收者自超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
@@ -2262,8 +2289,8 @@ zh_CN:
     embed_support_markdown: "支持嵌入帖子的 Markdown 格式。"
     allowed_embed_selectors: "嵌入中允许的 CSS 元素的逗号分隔列表。"
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
-    embed_full_app: "启用嵌入式评论的完整应用模式。启用后，嵌入式评论将在 iframe 中加载完整的 Discourse 应用，使用户能够直接与主题互动。"
-    suppress_third_party_analytics_in_embed: "当 Discourse 在完整的应用嵌入 iframe 中加载时，跳过渲染第三方分析脚本（Google Tag Manager、Google Analytics、Adobe Analytics）。这可以防止在宿主页面已加载相同脚本的情况下重复浏览页面和触发标签。"
+    embed_full_app: "启用嵌入式评论的完整应用模式。启用后，嵌入式评论将在 iframe 中加载完整的 Discourse 应用程序，这样，用户能够直接与话题互动。"
+    suppress_third_party_analytics_in_embed: "当 Discourse 在完整的应用嵌入 iframe 中加载时，跳过呈现第三方分析脚本（Google Tag Manager、Google Analytics（分析）、Adobe Analytics）。这可以防止在宿主页面已加载相同脚本的情况下重复浏览页面和触发标签。"
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
@@ -2426,7 +2453,7 @@ zh_CN:
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
-    enable_new_post_reactions_menu: "启用重新设计的帖子点赞和反应菜单，支持无限滚动和原生移动体验。"
+    enable_new_post_reactions_menu: "启用重新设计的帖子点赞和回应菜单，支持无限滚动和原生移动体验。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
@@ -2440,7 +2467,6 @@ zh_CN:
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
-    viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 <a href='https://meta.discourse.org/t/384280'>Meta</a> 上告诉我们。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的支持语言区域列表。站点的默认语言区域始终包含在内。需要启用 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
@@ -2448,13 +2474,12 @@ zh_CN:
     content_localization_crawler_param: "启用 'content localization enabled' 和 'set locale from param' 后，向网络爬虫提供本地化内容。支持的语言区域列表在 'content localization supported locales' 中定义。"
     content_localization_use_default_locale_when_unsupported: "向首选语言未列在 'content localization supported locales' 中的用户提供站点的默认语言区域的本地化内容。"
     content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己话题和帖子的本地化。"
-    nested_replies_enabled: "启用主题的嵌套回复视图。"
-    nested_replies_default: "将嵌套回复设置为所有主题的默认视图。"
+    nested_replies_enabled: "启用话题的嵌套回复视图。"
+    nested_replies_default: "将嵌套回复设置为所有话题的默认视图。"
     nested_replies_default_sort: "嵌套回复视图的默认排序算法。"
-    nested_replies_max_depth: "主题回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此主题”链接。"
-    nested_replies_toggle_mode_groups: "可以在嵌套视图和平面视图之间切换的分组。"
-    nested_replies_backfill_batch_size: "每次计划运行要回填嵌套回复统计信息的主题数量。"
-    nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将重新设置为同级回复，而不是子回复。"
+    nested_replies_max_depth: "消息串回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此消息串”链接。"
+    nested_replies_backfill_batch_size: "每次定时运行要回填嵌套回复统计信息的话题数量。"
+    nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将被重新设置为同级回复，而不是子回复。"
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
@@ -2761,9 +2786,9 @@ zh_CN:
     omniauth_error_unknown: "处理您的登录时出错，请重试。"
     omniauth_confirm_title: "使用 %{provider} 登录"
     omniauth_confirm_button: "继续"
-    omniauth_confirm_description: "您将被重定向到 %{provider} 登录"
-    omniauth_confirm_provider_description: "安全认证"
-    omniauth_confirm_footer_html: "您将登录到 %{site}"
+    omniauth_confirm_description: "您将被重定向到 %{provider} 进行登录"
+    omniauth_confirm_provider_description: "安全身份验证"
+    omniauth_confirm_footer_html: "您将登录 %{site}"
     authenticator_error_no_valid_email: "不允许与 %{account} 关联的电子邮件地址。您可能需要使用不同的电子邮件地址配置您的帐户。"
     new_registrations_disabled: "目前不允许注册新帐户。"
     new_registrations_disabled_discourse_connect: "仅允许通过 Discourse Connect 注册新帐户。"
@@ -2952,7 +2977,7 @@ zh_CN:
   download_backup_mailer:
     title: "下载备份邮件"
     subject_template: "[%{email_prefix}] 网站备份下载"
-    subject_template_improved: "%{email_prefix}] 网站备份下载"
+    subject_template_improved: "%{email_prefix}：站点备份下载"
     text_body_template: |
       这是您请求的[网站备份下载](%{backup_file_path})。
 
@@ -2964,12 +2989,12 @@ zh_CN:
   admin_confirmation_mailer:
     title: "管理员确认"
     subject_template: "[%{email_prefix}] 确认新管理员帐户"
-    subject_template_improved: "%{email_prefix}] 确认新管理员帐户"
+    subject_template_improved: "%{email_prefix}：确认新管理员帐户"
     text_body_template: "请确认您要添加 **%{target_username} (%{target_email})** 作为您的论坛的管理员。 \n\n[确认管理员帐户](%{admin_confirm_url})\n"
   test_mailer:
     title: "测试邮件"
     subject_template: "[%{email_prefix}] 电子邮件能否递送成功测试"
-    subject_template_improved: "%{email_prefix}] 电子邮件能否递送成功测试"
+    subject_template_improved: "%{email_prefix}：电子邮件能否递送成功测试"
     text_body_template: |
       这是一封测试电子邮件，来自
 
@@ -2988,7 +3013,7 @@ zh_CN:
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
-    subject_template_improved: "%{email_prefix}] 新 Discourse 版本，有可用更新"
+    subject_template_improved: "%{email_prefix}：新 Discourse 版本，有可用更新"
     text_body_template: |
       太好了！新版本的 [Discourse](https://www.discourse.org) 已发布！
 
@@ -2997,13 +3022,13 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
-    subject_template_improved: "%{email_prefix}] 有可用更新"
+    subject_template_improved: "%{email_prefix}：有可用更新"
     text_body_template: |
       太好了！新版本的 [Discourse](https://www.discourse.org) 已发布！
 
@@ -3012,7 +3037,7 @@ zh_CN:
 
       - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
+      - 查看[版本说明](https://releases.discourse.org/changelog/v%{new_version})了解最新变化
 
       - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
@@ -3065,21 +3090,21 @@ zh_CN:
         不过，如果帖子再次由于社区举报而被隐藏，它将保持隐藏至管理人员介入。
 
         有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
-    reviewable_queued_post_revise_and_reject_edit_post: "您可以编辑下面的原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
-    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "您可以编辑下面的原帖并重新提交，以进行建议的更改。"
-    reviewable_queued_post_revise_and_reject_edit_topic: "您可以编辑下方主题的原始帖子并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
-    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "您可以编辑下方主题的原始帖子，然后重新提交以进行建议的更改。"
+    reviewable_queued_post_revise_and_reject_edit_post: "您可以编辑下方的原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "您可以编辑下方的原帖并重新提交，以进行建议的更改。"
+    reviewable_queued_post_revise_and_reject_edit_topic: "您可以编辑下方的话题原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "您可以编辑下方的话题原帖并重新提交，以进行建议的更改。"
     reviewable_queued_post_revise_and_reject:
       title: "对您的帖子的反馈"
       subject_template: "对您在 %{topic_title} 下发表的帖子的反馈"
       text_body_template: |
-        你好 %{username},
+        %{username}，您好！
 
-        我们已经审核了你在 [%{topic_title}] (%{topic_url}) 中的帖子，并向你提供了一些反馈。
+        我们已审阅您在 [%{topic_title}](%{topic_url}) 中的帖子，并有一些反馈。
 
-        原因： %{reason}
+        原因：%{reason}
 
-        反馈： %{feedback}
+        反馈：%{feedback}
 
         %{edit_instructions}
 
@@ -3089,19 +3114,19 @@ zh_CN:
 
         --------
 
-        谢谢，版主
-        %{site_name}
+        谢谢！
+        %{site_name} 版主
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "对您的话题的反馈"
       subject_template: '对标题为“%{topic_title}”的新话题的反馈'
       text_body_template: |
-        您好 %{username}，
+        %{username}，您好！
 
-        ，我们已审阅您题为“%{topic_title}”的新主题，并有一些反馈意见。
+        我们已审阅您题为“%{topic_title}”的新话题，并有一些反馈。
 
-        原因： %{reason}
+        原因：%{reason}
 
-        反馈： %{feedback}
+        反馈：%{feedback}
 
         %{edit_instructions}
 
@@ -3111,7 +3136,7 @@ zh_CN:
 
         --------
 
-        谢谢，
+        谢谢！
         %{site_name} 版主
     post_hidden_again:
       title: "帖子被再次隐藏"
@@ -3362,7 +3387,7 @@ zh_CN:
     email_reject_insufficient_trust_level:
       title: "电子邮件被拒 - 信任级别不足"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 信任级别不足"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 信任级别不足"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 信任级别不足"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3370,7 +3395,7 @@ zh_CN:
     email_reject_user_not_found:
       title: "电子邮件被拒 - 找不到用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 找不到用户"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 找不到用户"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 找不到用户"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3378,15 +3403,15 @@ zh_CN:
     email_reject_screened_email:
       title: "电子邮件被拒：被屏蔽的电子邮件"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 被阻止的电子邮件地址"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您的回复发送自被禁止的电子邮件地址。尝试从其他电子邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_not_allowed_email:
       title: "电子邮件被拒：不允许的电子邮件"
-      subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 被禁止的电子邮件"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 被阻止的电子邮件地址"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 被阻止的电子邮件地址"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3394,7 +3419,7 @@ zh_CN:
     email_reject_inactive_user:
       title: "电子邮件被拒：停用用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 停用用户"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 停用用户"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 停用用户"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3402,7 +3427,7 @@ zh_CN:
     email_reject_silenced_user:
       title: "电子邮件被拒：被禁言的用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁言的用户"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 被禁言的用户"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 被禁言的用户"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3410,7 +3435,7 @@ zh_CN:
     email_reject_reply_user_not_matching:
       title: "电子邮件被拒 - 用户不匹配"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 意外回复地址"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 意外回复地址"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 意外回复地址"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3418,7 +3443,7 @@ zh_CN:
     email_reject_empty:
       title: "电子邮件被拒：空"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无内容"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 无内容"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 无内容"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3428,7 +3453,7 @@ zh_CN:
     email_reject_parsing:
       title: "电子邮件被拒：解析"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 内容无法识别"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 内容无法识别"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 内容无法识别"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3436,7 +3461,7 @@ zh_CN:
     email_reject_invalid_access:
       title: "电子邮件被拒：无效访问"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无效访问"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 无效访问"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 无效访问"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3444,7 +3469,7 @@ zh_CN:
     email_reject_strangers_not_allowed:
       title: "电子邮件被拒：不允许陌生人"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无效访问"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 无效访问"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 无效访问"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3452,7 +3477,7 @@ zh_CN:
     email_reject_invalid_post:
       title: "电子邮件被拒：无效帖子"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 发帖错误"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 发帖错误"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 发帖错误"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3460,7 +3485,7 @@ zh_CN:
     email_reject_invalid_post_specified:
       title: "电子邮件被拒：指定的帖子无效"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 发帖错误"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 发帖错误"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 发帖错误"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3473,7 +3498,7 @@ zh_CN:
     email_reject_post_too_short:
       title: "电子邮件被拒：帖子过短"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 帖子过短"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 帖子过短"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 帖子过短"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3481,7 +3506,7 @@ zh_CN:
     email_reject_invalid_post_action:
       title: "电子邮件被拒：无效的帖子操作"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无效的帖子操作"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 无效的帖子操作"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 无效的帖子操作"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3489,7 +3514,7 @@ zh_CN:
     email_reject_reply_key:
       title: "电子邮件被拒：回复键"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 未知回复键"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 未知回复键"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 未知回复键"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3497,7 +3522,7 @@ zh_CN:
     email_reject_bad_destination_address:
       title: "电子邮件被拒：回目标地址错误"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 未知收件人地址"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 未知收件人地址"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 未知收件人地址"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3513,7 +3538,7 @@ zh_CN:
     email_reject_old_destination:
       title: "电子邮件被拒：旧目标"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 您正尝试回复旧通知"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 您正尝试回复旧通知"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 您正尝试回复旧通知"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3521,7 +3546,7 @@ zh_CN:
     email_reject_topic_not_found:
       title: "电子邮件被拒 - 找不到话题"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 找不到话题"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 找不到话题"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 找不到话题"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3529,7 +3554,7 @@ zh_CN:
     email_reject_topic_closed:
       title: "电子邮件被拒 - 话题已被关闭"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 话题已被关闭"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 话题已被关闭"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 话题已关闭"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3537,7 +3562,7 @@ zh_CN:
     email_reject_auto_generated:
       title: "电子邮件被拒 - 自动生成"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 自动生成的回复"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 自动生成的回复"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 自动生成的回复"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3545,7 +3570,7 @@ zh_CN:
     email_reject_unrecognized_error:
       title: "电子邮件被拒 - 无法识别的错误"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 无法识别的错误"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 无法识别的错误"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 无法识别的错误"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3553,7 +3578,7 @@ zh_CN:
     email_reject_attachment:
       title: "电子邮件附件被拒"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 附件被拒"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 附件被拒"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 附件被拒"
       text_body_template: |
         很抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件中的一些附件被拒绝。
 
@@ -3564,15 +3589,15 @@ zh_CN:
     email_reject_reply_not_allowed:
       title: "电子邮件被拒：不允许回复"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 不允许回复"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 不允许回复"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 不允许回复"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您没有权限回复该话题。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_reply_to_digest:
       title: "电子邮件被拒：回复总结"
-      subject_template: "[%{email_prefix}] 电子邮件问题 - 回复总结"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 回复总结"
+      subject_template: "[%{email_prefix}：电子邮件问题 - 回复摘要"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 回复摘要"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
@@ -3582,7 +3607,7 @@ zh_CN:
     email_reject_too_many_recipients:
       title: "拒绝太多收件人的电子邮件"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 收件人太多"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - 收件人太多"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - 收件人太多"
       text_body_template: |
         抱歉，您向 %{destination}（标题为 %{former_title}）发送的电子邮件未成功。
 
@@ -3592,7 +3617,7 @@ zh_CN:
     email_error_notification:
       title: "电子邮件错误通知"
       subject_template: "[%{email_prefix}] 电子邮件问题 - POP 身份验证错误"
-      subject_template_improved: "%{email_prefix}] 电子邮件问题 - POP 身份验证错误"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 - POP 身份验证错误"
       text_body_template: |
         很抱歉，从 POP 服务器轮询邮件时出现身份验证错误。
 
@@ -3612,6 +3637,14 @@ zh_CN:
       ### 详细信息
 
       ```text
+      %{raw}
+      ```
+    email_sending_failed: |
+      向 %{email} 发送信息失败。
+
+      ### 详情
+
+      ``` 文本
       %{raw}
       ```
     ignored_users_summary:
@@ -3815,7 +3848,7 @@ zh_CN:
     user_invited_to_private_message_pm_group:
       title: "用户邀请群组加入私信"
       subject_template: "[%{email_prefix}] %{username} 邀请 @%{group_name} 加入消息 '%{topic_title}'"
-      subject_template_improved: "%{email_prefix}] %{username} 邀请 @%{group_name} 加入消息 '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}：%{username} 邀请 @%{group_name} 加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3825,7 +3858,7 @@ zh_CN:
     user_invited_to_private_message_pm:
       title: "用户邀请加入私信"
       subject_template: "[%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
-      subject_template_improved: "%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}：%{username} 邀请您加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3835,7 +3868,7 @@ zh_CN:
     user_invited_to_private_message_pm_staged:
       title: "暂存用户邀请加入私信"
       subject_template: "[%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
-      subject_template_improved: "%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}：%{username} 邀请您加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3845,7 +3878,7 @@ zh_CN:
     user_invited_to_topic:
       title: "用户邀请加入话题"
       subject_template: "[%{email_prefix}] %{username} 邀请您加入 '%{topic_title}'"
-      subject_template_improved: "%{email_prefix}] %{username} 邀请您加入 '%{topic_title}'"
+      subject_template_improved: "%{email_prefix}：%{username} 邀请您加入 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3856,7 +3889,7 @@ zh_CN:
       title: "用户回复"
       preview: "有人回复了您的帖子。"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3868,7 +3901,7 @@ zh_CN:
     user_replied_pm:
       title: "用户回复私信"
       subject_template: "[%{email_prefix}] [私信] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3881,7 +3914,7 @@ zh_CN:
       title: "用户引用"
       preview: "有人在帖子中引用了您的内容。"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3894,7 +3927,7 @@ zh_CN:
       title: "用户链接"
       preview: "帖子链接到另一个话题。"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3907,7 +3940,7 @@ zh_CN:
       title: "用户提及"
       preview: "有人在帖子中提到了您。"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3919,7 +3952,7 @@ zh_CN:
     user_mentioned_pm:
       title: "用户提及私信"
       subject_template: "[%{email_prefix}] [私信] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3931,7 +3964,7 @@ zh_CN:
     user_group_mentioned:
       title: "用户群组提及"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3943,7 +3976,7 @@ zh_CN:
     user_group_mentioned_pm:
       title: "提及用户群组的私信"
       subject_template: "[%{email_prefix}] [私信] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3955,7 +3988,7 @@ zh_CN:
     user_group_mentioned_pm_group:
       title: "提及用户群组的私信"
       subject_template: "[%{email_prefix}] [私信] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3968,7 +4001,7 @@ zh_CN:
       title: "用户发帖"
       preview: "有人回复了您关注的话题。"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3980,7 +4013,7 @@ zh_CN:
     user_watching_category_or_tag:
       title: "用户关注类别或标签"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3992,7 +4025,7 @@ zh_CN:
     user_watching_first_post:
       title: "用户关注第一个帖子"
       subject_template: "[%{email_prefix}] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4005,7 +4038,7 @@ zh_CN:
       title: "用户发布私信"
       preview: "有人向您发送了一条 PM。"
       subject_template: "[%{email_prefix}] [私信] %{topic_title}"
-      subject_template_improved: "%{email_prefix}] %{topic_title}"
+      subject_template_improved: "%{email_prefix}：%{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -4132,7 +4165,7 @@ zh_CN:
     set_password:
       title: "设置密码"
       preview: "设置帐户密码。"
-      subject_template: "[%{email_prefix}] 设置密码"
+      subject_template: "[%{email_prefix}：设置密码"
       subject_template_improved: "设置密码"
       text_body_template: |
         有人要求为您在 [%{site_name}](%{base_url}) 上的帐户设置密码。您也可以使用与此经过验证的电子邮件地址关联的任何受支持在线服务（Google、Facebook 等）登录。
@@ -4265,7 +4298,7 @@ zh_CN:
     activation_reminder:
       title: "激活提醒"
       subject_template: "[%{email_prefix}] 记得确认您的帐户"
-      subject_template_improved: "请记得确认您的账户"
+      subject_template_improved: "记得确认您的账户"
       text_body_template: |
         欢迎来到 %{site_name}！
 
@@ -4279,7 +4312,7 @@ zh_CN:
       title: "新登录提醒"
       preview: "验证您的设备。"
       subject_template: "[%{site_name}] 来自%{location}的新登录"
-      subject_template_improved: "%{site_name}] 来自%{location}的新登录"
+      subject_template_improved: "%{site_name}：来自%{location}的新登录"
       text_body_template: |
         您好，
 
@@ -4295,7 +4328,7 @@ zh_CN:
     post_approved:
       title: "您的帖子已被批准"
       subject_template: "[%{site_name}] 您的帖子已被批准"
-      subject_template_improved: "%{site_name}] 您的帖子已被批准"
+      subject_template_improved: "%{site_name}：您的帖子已被批准"
       text_body_template: |
         您好，
 
@@ -5057,11 +5090,11 @@ zh_CN:
       in_this_category: '“%{tag_name}”不能用于此类别'
       restricted_to:
         other: '“%{tag_name}”仅限于以下类别：%{category_names}'
-      restricted_to_truncated: '"%{tag_name}"仅限于以下类别： %{category_names}, 和 %{more_count} 更多'
+      restricted_to_truncated: '“%{tag_name}”仅限于以下类别：%{category_names}和其他 %{more_count} 个'
       synonym: '这是“%{tag_name}”的同义词。请改用“%{tag_name}”。'
       has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
-      one_tag_per_topic_group: '每个主题只允许使用“%{tag_group_name}”组中的一个标签'
-      missing_parent_tag: '需要使用“%{parent_tag_name}”标签才能使用“%{tag_group_name}”组中的标签'
+      one_tag_per_topic_group: '每个话题只允许使用“%{tag_group_name}”群组中的一个标签'
+      missing_parent_tag: '需要使用“%{parent_tag_name}”标签才能使用“%{tag_group_name}”群组中的标签'
       restricted_tags_cannot_be_used_in_category:
         other: '“%{tags}”标签不能在“%{category}”类别中使用。请将其移除。'
       category_does_not_allow_tags:

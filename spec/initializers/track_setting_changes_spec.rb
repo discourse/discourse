@@ -12,12 +12,29 @@ RSpec.describe "Setting changes" do
       expect(user_pending_approval.reload.approved?).to eq(false)
     end
 
+    it "approves a user whose only reviewable is not pending" do
+      stuck_user = Fabricate(:reviewable_user, status: Reviewable.statuses[:rejected]).target
+
+      SiteSetting.must_approve_users = true
+
+      expect(stuck_user.reload.approved?).to eq(true)
+    end
+
     it "approves a user with no associated reviewables" do
       non_approved_user = Fabricate(:user, approved: false)
 
       SiteSetting.must_approve_users = true
 
       expect(non_approved_user.reload.approved?).to eq(true)
+    end
+
+    it "approves a user whose id collides with a non-user reviewable's target_id" do
+      user = Fabricate(:user, approved: false)
+      Fabricate(:reviewable, type: "ReviewableFlaggedPost", target_id: user.id, target_type: "Post")
+
+      SiteSetting.must_approve_users = true
+
+      expect(user.reload.approved?).to eq(true)
     end
   end
 

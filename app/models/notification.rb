@@ -74,7 +74,7 @@ class Notification < ActiveRecord::Base
     # if we have manually set the notification to high_priority on create then
     # make sure that is respected
     self.high_priority =
-      self.high_priority || Notification.high_priority_types.include?(self.notification_type)
+      high_priority || Notification.high_priority_types.include?(notification_type)
   end
 
   def self.consolidate_or_create!(notification_params)
@@ -420,7 +420,7 @@ class Notification < ActiveRecord::Base
   end
 
   def unread_high_priority?
-    self.high_priority? && !read
+    high_priority? && !read
   end
 
   def post_id
@@ -451,7 +451,7 @@ class Notification < ActiveRecord::Base
     return if skip_send_email
 
     if user.do_not_disturb?
-      ShelvedNotification.create(notification_id: self.id)
+      ShelvedNotification.create(notification_id: id)
     else
       NotificationEmailer.process_notification(self)
     end
@@ -462,17 +462,17 @@ end
 #
 # Table name: notifications
 #
-#  notification_type :integer          not null
-#  user_id           :integer          not null
+#  id                :bigint           not null, primary key
 #  data              :string(1000)     not null
+#  high_priority     :boolean          default(FALSE), not null
+#  notification_type :integer          not null
+#  post_number       :integer
 #  read              :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  topic_id          :integer
-#  post_number       :integer
 #  post_action_id    :integer
-#  high_priority     :boolean          default(FALSE), not null
-#  id                :bigint           not null, primary key
+#  topic_id          :integer
+#  user_id           :integer          not null
 #
 # Indexes
 #

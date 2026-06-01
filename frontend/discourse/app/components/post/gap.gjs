@@ -35,7 +35,7 @@ export default class PostGap extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div class="gap" {{on "click" this.fillGap}}>
       {{this.label}}
     </div>

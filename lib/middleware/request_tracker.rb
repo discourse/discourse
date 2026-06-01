@@ -33,6 +33,7 @@ class Middleware::RequestTracker
   MAX_SESSION_ID_LENGTH = 32
   MAX_USER_AGENT_LENGTH = 1000
   MAX_IP_ADDRESS_LENGTH = 45
+  REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS = %i[url ip_address user_agent session_id]
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -349,8 +350,17 @@ class Middleware::RequestTracker
 
     env["discourse.request_tracker"] = self
 
-    if self.class.is_beacon_tracking_request?(request) ||
-         self.class.is_pageview_tracking_request?(request)
+    if self.class.is_beacon_tracking_request?(request)
+      if self.class.same_origin_beacon_request?(request)
+        result = [204, {}, []]
+      else
+        env["discourse.request_tracker.skip"] = true
+        result = [403, {}, []]
+      end
+      return result
+    end
+
+    if self.class.is_pageview_tracking_request?(request)
       result = [204, {}, []]
       return result
     end
@@ -396,11 +406,9 @@ class Middleware::RequestTracker
       limiters.each(&:rollback!)
 
       env["DISCOURSE_ASSET_RATE_LIMITERS"].each do |limiter|
-        begin
-          limiter.performed!
-        rescue RateLimiter::LimitExceeded
-          # skip
-        end
+        limiter.performed!
+      rescue RateLimiter::LimitExceeded
+        # skip
       end
     end
 
@@ -412,14 +420,12 @@ class Middleware::RequestTracker
 
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
-      begin
-        unless Discourse.pg_readonly_mode?
-          self.class.log_request(data)
-          instrument_browser_page_view(env, request, data)
-        end
-      rescue ActiveRecord::ReadOnlyError
-        # Just noop if ActiveRecord is preventing writes
+      unless Discourse.pg_readonly_mode?
+        self.class.log_request(data)
+        instrument_browser_page_view(env, request, data)
       end
+    rescue ActiveRecord::ReadOnlyError
+      # Just noop if ActiveRecord is preventing writes
     end
   end
 
@@ -615,9 +621,16 @@ class Middleware::RequestTracker
     # or a subsequent XHR from inside the embed iframe which sets the header below.
     # Use `request.GET` (query-string only) rather than `request.params` so a missing
     # or malformed request body cannot raise from here.
+    embed_mode_param =
+      begin
+        request.GET["embed_mode"]
+      rescue Rack::QueryParser::ParameterTypeError, Rack::QueryParser::InvalidParameterError
+        # malformed query string — Rails will turn this into a 400 downstream
+        nil
+      end
+
     is_embed =
-      request.GET["embed_mode"] == "true" ||
-        %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
+      embed_mode_param == "true" || %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
 
     {
       track_view: track_view,
@@ -646,6 +659,19 @@ class Middleware::RequestTracker
   def self.is_beacon_tracking_request?(request)
     SiteSetting.use_beacon_for_browser_page_views && request.post? &&
       request.path == Discourse.beacon_pv_tracking_path
+  end
+
+  def self.same_origin_beacon_request?(request)
+    origin = request.get_header("HTTP_ORIGIN").presence || request.referer.presence
+    return false if origin.blank?
+
+    canonical_uri = URI.parse(Discourse.base_url_no_prefix)
+    origin_uri = URI.parse(origin)
+
+    canonical_uri.scheme == origin_uri.scheme && canonical_uri.host == origin_uri.host &&
+      canonical_uri.port == origin_uri.port
+  rescue URI::Error
+    false
   end
 
   def self.is_pageview_tracking_request?(request)
@@ -687,11 +713,49 @@ class Middleware::RequestTracker
   private_class_method :extract_beacon_view_tracking_data
 
   def self.trigger_browser_pageview_event(data)
-    if SiteSetting.trigger_browser_pageview_events
+    if SiteSetting.persist_browser_pageview_events
+      persist_browser_pageview_event(build_browser_pageview_event_payload(data))
+    elsif SiteSetting.trigger_browser_pageview_events
       DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
     end
   end
   private_class_method :trigger_browser_pageview_event
+
+  def self.persist_browser_pageview_event(payload)
+    if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
+      Rails.logger.debug("Discarding BrowserPageviewEvent: incomplete payload")
+      return
+    end
+
+    Scheduler::Defer.later "Create BrowserPageviewEvent" do
+      BrowserPageviewEvent.create!(
+        url: payload[:url],
+        ip_address: payload[:ip_address],
+        country_code: payload[:country_code],
+        asn: payload[:asn],
+        referrer: payload[:referrer],
+        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
+        user_agent: payload[:user_agent],
+        session_id: payload[:session_id],
+        user_id: payload[:user_id],
+        topic_id: payload[:topic_id],
+        created_at: payload[:occurred_at],
+      )
+    rescue ActiveRecord::StatementInvalid => e
+      if e.cause.is_a?(PG::ReadOnlySqlTransaction)
+        # Skip recording browser pageviews when PostgreSQL is in read-only transaction mode.
+      elsif e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
+        Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      else
+        raise
+      end
+    rescue => e
+      Rails.logger.error(
+        "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",
+      )
+    end
+  end
+  private_class_method :persist_browser_pageview_event
 
   def self.trigger_beacon_browser_pageview_event(data)
     if SiteSetting.trigger_browser_pageview_events
@@ -701,11 +765,13 @@ class Middleware::RequestTracker
   private_class_method :trigger_beacon_browser_pageview_event
 
   def self.build_browser_pageview_event_payload(data)
+    ip_info = DiscourseIpInfo.get(data[:request_remote_ip])
     {
       user_id: data[:current_user_id],
       url: data[:tracking_url],
       ip_address: data[:request_remote_ip],
-      country_code: DiscourseIpInfo.get(data[:request_remote_ip])[:country_code],
+      country_code: ip_info[:country_code],
+      asn: ip_info[:asn],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],

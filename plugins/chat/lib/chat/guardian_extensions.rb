@@ -38,7 +38,8 @@ module Chat
     def can_send_direct_message?(channel)
       return true if is_staff? || @user.bot?
 
-      can_chat? && channel.chatable.user_can_access?(@user) && !@user.suspended?
+      can_chat? && can_direct_message? && channel.chatable.user_can_access?(@user) &&
+        !@user.suspended?
     end
 
     def allowing_direct_messages?
@@ -244,6 +245,8 @@ module Chat
       return false if !can_modify_channel_message?(message.chat_channel)
 
       if message.user_id == current_user.id
+        return false if !can_preview_chat_channel?(message.chat_channel)
+
         case chatable
         when Category
           return message.deleted_by_id == current_user.id || can_moderate_chat?(chatable)

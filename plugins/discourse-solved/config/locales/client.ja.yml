@@ -10,6 +10,11 @@ ja:
       site_settings:
         categories:
           discourse_solved: "Discourse 解決済み"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "受け入れられた解決策"
   js:
     notifications:
       alt:

@@ -3,14 +3,14 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import UserLink from "discourse/components/user-link";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import {
   getPasskeyCredential,
   isWebauthnSupported,
 } from "discourse/lib/webauthn";
+import DButton from "discourse/ui-kit/d-button";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import { i18n } from "discourse-i18n";
 
 export default class ConfirmSession extends Component {
@@ -127,9 +127,9 @@ export default class ConfirmSession extends Component {
 
       <div class="confirm-session__instructions">
         <span>{{this.loggedInAs}}</span>
-        <UserLink @user={{this.currentUser}}>
+        <DUserLink @user={{this.currentUser}}>
           {{this.currentUser.username}}
-        </UserLink>
+        </DUserLink>
       </div>
 
       <form>

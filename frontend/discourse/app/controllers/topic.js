@@ -10,14 +10,13 @@ import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -49,6 +48,7 @@ import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
+import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 let customPostMessageCallbacks = {};
@@ -582,78 +582,79 @@ export default class TopicController extends Controller {
   }
 
   @action
-  selectText() {
-    const { postId, buffer, opts } = this.quoteState;
-    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
-    const promise = loadedPost
-      ? Promise.resolve(loadedPost)
-      : this.get("model.postStream").loadPost(postId);
+  async selectText() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const composer = this.composer;
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
 
-    return promise.then(async (post) => {
-      if (EmbedMode.enabled) {
-        const quotedText = buildQuote(post, buffer, opts);
-        this.appEvents.trigger("embed-composer:reply-to-post", post);
-        if (quotedText?.trim()) {
-          this.appEvents.trigger("composer:insert-block", quotedText);
-        }
-        return;
-      }
-
-      const quoteEvent = { post, buffer, opts, handled: false };
-      this.appEvents.trigger("topic:quote-post", quoteEvent);
-      if (quoteEvent.handled) {
-        return;
-      }
-
-      const composer = this.composer;
-      const viewOpen = composer.get("model.viewOpen");
-
-      // If we can't create a post, delegate to reply as new topic
-      if (!viewOpen && !this.get("model.details.can_create_post")) {
-        this.send("replyAsNewTopic", post);
-        return;
-      }
-
-      const composerOpts = {
-        action: Composer.REPLY,
-        draftSequence: post.get("topic.draft_sequence"),
-        draftKey: post.get("topic.draft_key"),
-      };
-
-      if (post.get("post_number") === 1) {
-        composerOpts.topic = post.get("topic");
-      } else {
-        composerOpts.post = post;
-      }
-
-      // If the composer is associated with a different post, we don't change it.
-      const composerPost = composer.get("model.post");
-      if (composerPost && composerPost.get("id") !== this.get("post.id")) {
-        composerOpts.post = composerPost;
-      }
-
+    if (EmbedMode.enabled) {
+      const loadedPost = postStream.findLoadedPost(postId);
+      const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
       const quotedText = buildQuote(post, buffer, opts);
-
-      if (composer.get("model.viewOpen")) {
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
         this.appEvents.trigger("composer:insert-block", quotedText);
-      } else if (composer.get("model.viewDraft")) {
-        const model = composer.get("model");
-        model.set("reply", model.get("reply") + "\n" + quotedText);
-        composer.openIfDraft();
-      } else {
-        const draftData = await Draft.get(composerOpts.draftKey);
-
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
-          composerOpts.draftSequence = draftData.draft_sequence;
-          composerOpts.reply = data.reply + "\n" + quotedText;
-        } else {
-          composerOpts.quote = quotedText;
-        }
-
-        composer.open(composerOpts);
       }
-    });
+      return;
+    }
+
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
+
+    const quoteEvent = { post, buffer, opts, handled: false };
+    this.appEvents.trigger("topic:quote-post", quoteEvent);
+    if (quoteEvent.handled) {
+      return;
+    }
+
+    const viewOpen = composer.get("model.viewOpen");
+
+    // If we can't create a post, delegate to reply as new topic
+    if (!viewOpen && !this.get("model.details.can_create_post")) {
+      await this.replyAsNewTopic(post);
+      return;
+    }
+
+    const composerOpts = {
+      action: Composer.REPLY,
+      draftSequence: post.get("topic.draft_sequence"),
+      draftKey: post.get("topic.draft_key"),
+    };
+
+    if (post.get("post_number") === 1) {
+      composerOpts.topic = post.get("topic");
+    } else {
+      composerOpts.post = post;
+    }
+
+    // If the composer is associated with a different post, we don't change it.
+    const composerPost = composer.get("model.post");
+    if (composerPost && composerPost.get("id") !== this.get("post.id")) {
+      composerOpts.post = composerPost;
+    }
+
+    const quotedText = buildQuote(post, buffer, opts);
+
+    if (composer.get("model.viewOpen")) {
+      this.appEvents.trigger("composer:insert-block", quotedText);
+    } else if (composer.get("model.viewDraft")) {
+      const model = composer.get("model");
+      model.set("reply", model.get("reply") + "\n" + quotedText);
+      composer.openIfDraft();
+    } else {
+      const draftData = await Draft.get(composerOpts.draftKey);
+
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        composerOpts.draftSequence = draftData.draft_sequence;
+        composerOpts.reply = data.reply + "\n" + quotedText;
+      } else {
+        composerOpts.quote = quotedText;
+      }
+
+      composer.open(composerOpts);
+    }
   }
 
   @action
@@ -858,15 +859,12 @@ export default class TopicController extends Controller {
       return;
     }
 
-    if (EmbedMode.enabled) {
-      const quotedPost = postStream.findLoadedPost(quoteState.postId);
-      const quotedText = buildQuote(
-        quotedPost,
-        quoteState.buffer,
-        quoteState.opts
-      );
-      quoteState.clear();
+    const quotedPost = postStream.findLoadedPost(quoteState.postId);
+    const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
+    const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
+    quoteState.clear();
 
+    if (EmbedMode.enabled) {
       this.appEvents.trigger("embed-composer:reply-to-post", post);
       if (quotedText?.trim()) {
         this.appEvents.trigger("composer:insert-block", quotedText.trim());
@@ -875,14 +873,6 @@ export default class TopicController extends Controller {
     }
 
     const composerController = this.composer;
-    const quotedPost = postStream.findLoadedPost(quoteState.postId);
-    const quotedText = buildQuote(
-      quotedPost,
-      quoteState.buffer,
-      quoteState.opts
-    );
-
-    quoteState.clear();
 
     if (
       composerController.get("model.topic.id") === topic.get("id") &&
@@ -1054,15 +1044,15 @@ export default class TopicController extends Controller {
       ? i18n("post.controls.permanently_delete_topic_confirmation")
       : i18n("post.controls.permanently_delete_post_confirmation");
 
-    return this.dialog.confirm(
-      buildPermanentlyDeleteConfirmDialogArgs(
+    return this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
         message,
-        i18n("post.controls.permanently_delete_confirm_phrase"),
-        () => {
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
           this.send("deletePost", post, { force_destroy: true });
-        }
-      )
-    );
+        },
+      },
+    });
   }
 
   @action
@@ -1323,8 +1313,7 @@ export default class TopicController extends Controller {
 
   @action
   changePostOwner(post) {
-    this.selectedPostIds = [post.id];
-    this.send("changeOwner");
+    this.send("changeOwner", post);
   }
 
   @action
@@ -1339,8 +1328,7 @@ export default class TopicController extends Controller {
 
   @action
   grantBadge(post) {
-    this.selectedPostIds = [post.id];
-    this.send("showGrantBadgeModal");
+    this.send("showGrantBadgeModal", post);
   }
 
   @action
@@ -1515,10 +1503,11 @@ export default class TopicController extends Controller {
   }
 
   @action
-  replyAsNewTopic(post) {
+  async replyAsNewTopic(post) {
     const composerController = this.composer;
     const { quoteState } = this;
-    const quotedText = buildQuote(post, quoteState.buffer, quoteState.opts);
+    const { markdown: buffer, opts } = await quoteState.markdown();
+    const quotedText = buildQuote(post, buffer, opts);
 
     quoteState.clear();
 
@@ -1912,16 +1901,14 @@ export default class TopicController extends Controller {
   }
 
   @action
-  buildQuoteMarkdown() {
-    const { postId, buffer, opts } = this.quoteState;
-    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
-    const promise = loadedPost
-      ? Promise.resolve(loadedPost)
-      : this.get("model.postStream").loadPost(postId);
+  async buildQuoteMarkdown() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
 
-    return promise.then((post) => {
-      return buildQuote(post, buffer, opts);
-    });
+    return buildQuote(post, buffer, opts);
   }
 
   @action

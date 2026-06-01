@@ -466,6 +466,8 @@ describe "Content Localization" do
 
         # refresh should show correct state of post content
         page.refresh
+        expect(page).to have_css("#site-logo")
+
         scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
       end
@@ -738,6 +740,7 @@ describe "Content Localization" do
       translation_composer.select_locale("Japanese (日本語)")
       translation_composer.fill_content("著者のオリジナル投稿")
       translation_composer.create
+      expect(translation_composer).to be_closed
 
       sign_in(japanese_user)
       topic_page.visit_topic(topic)

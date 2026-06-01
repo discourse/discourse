@@ -18,10 +18,11 @@ import curryComponent from "ember-curry-component";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not } from "discourse/truth-helpers";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsCounter from "./discourse-reactions-counter";
@@ -140,6 +141,29 @@ export default class DiscourseReactionsActions extends Component {
     return this.args.post;
   }
 
+  get topicArchived() {
+    // Archived topics reject reactions server-side. Closed topics still
+    // accept them (see Guardian#post_can_act?), so don't gate on closed.
+    return !!this.data?.topic?.archived;
+  }
+
+  get canReact() {
+    if (this.topicArchived) {
+      return false;
+    }
+
+    // Anonymous users can pick a reaction — it gets deferred until login.
+    if (!this.currentUser) {
+      return true;
+    }
+
+    return (
+      (!this.data.current_user_reaction ||
+        this.data.current_user_reaction.can_undo) &&
+      this.data.likeAction?.canToggle
+    );
+  }
+
   get classes() {
     if (!this.data?.reactions) {
       return;
@@ -176,11 +200,7 @@ export default class DiscourseReactionsActions extends Component {
       classes.push("has-used-main-reaction");
     }
 
-    if (
-      (!this.data.current_user_reaction ||
-        this.data.current_user_reaction.can_undo) &&
-      this.data.likeAction?.canToggle
-    ) {
+    if (this.canReact) {
       classes.push("can-toggle-reaction");
     }
 
@@ -294,11 +314,15 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  toggle(params) {
+  async toggle(params) {
     if (!this.currentUser) {
-      if (this.args.showLogin) {
-        return this.args.showLogin();
+      if (!this.canReact) {
+        return;
       }
+      return deferAnonymousAction(this, "react_to_post", {
+        post_id: this.data.id,
+        reaction: params.reaction,
+      });
     }
 
     if (
@@ -490,11 +514,15 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  toggleFromButton(attrs) {
+  async toggleFromButton(attrs) {
     if (!this.currentUser) {
-      if (this.args.showLogin) {
-        return this.args.showLogin();
+      if (!this.canReact) {
+        return;
       }
+      return deferAnonymousAction(this, "react_to_post", {
+        post_id: this.data.id,
+        reaction: attrs.reaction,
+      });
     }
 
     this.collapseAllPanels();
@@ -760,11 +788,16 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   get showReactionsPicker() {
-    return (
-      this.currentUser &&
-      this.data.user_id !== this.currentUser.id &&
-      this.reactionsPickerExpanded
-    );
+    if (!this.reactionsPickerExpanded) {
+      return false;
+    }
+
+    // Anonymous users can pick a reaction — it gets deferred until they log in.
+    if (!this.currentUser) {
+      return this.canReact;
+    }
+
+    return this.data.user_id !== this.currentUser.id;
   }
 
   @action
@@ -779,7 +812,7 @@ export default class DiscourseReactionsActions extends Component {
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
-      {{closeOnClickOutside this.clickOutside}}
+      {{dCloseOnClickOutside this.clickOutside}}
       {{didInsert this.registerContainerElement}}
     >
       {{#let

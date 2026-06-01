@@ -7,10 +7,6 @@ module DiscourseSolved
         type_id :support
 
         class << self
-          def visible?
-            SiteSetting.enable_support_category_type_setup
-          end
-
           def enable_plugin
             SiteSetting.solved_enabled = true
           end

@@ -27,7 +27,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
-             :can_toggle_nested_mode,
              :can_ignore_users,
              :can_edit_tags,
              :can_delete_all_posts_and_topics,
@@ -84,6 +83,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :effective_locale,
              :can_see_ip,
              :is_impersonating,
+             :impersonation_expires_at,
              :can_change_post_owner,
              :show_site_owner_onboarding
 
@@ -107,6 +107,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def is_impersonating
     !!object.is_impersonating
+  end
+
+  def impersonation_expires_at
+    object.impersonation_expires_at
   end
 
   def include_can_change_post_owner?
@@ -197,14 +201,6 @@ class CurrentUserSerializer < BasicUserSerializer
   def can_post_anonymously
     SiteSetting.allow_anonymous_mode &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
-  end
-
-  def can_toggle_nested_mode
-    object.in_any_groups?(SiteSetting.nested_replies_toggle_mode_groups_map)
-  end
-
-  def include_can_toggle_nested_mode?
-    SiteSetting.nested_replies_enabled
   end
 
   def can_ignore_users
@@ -367,7 +363,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_view_raw_email
-    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+    scope.can_view_raw_emails?
   end
 
   def do_not_disturb_channel_position

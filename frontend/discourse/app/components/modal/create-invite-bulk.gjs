@@ -1,15 +1,15 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
 import CreateInviteUploader from "discourse/components/create-invite-uploader";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const CreateInviteBulk = <template>
   <CreateInviteUploader @autoFindInput={{false}} as |uploader setElement|>
     <DModal
       @title={{i18n "user.invited.bulk_invite.text"}}
-      class="create-invite-bulk-modal -large"
+      class="create-invite-bulk-modal --large"
       @closeModal={{@closeModal}}
     >
       <:body>

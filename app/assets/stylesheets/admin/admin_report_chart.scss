@@ -92,6 +92,12 @@ body.uc-reporting-improvements .admin-contents:not(.dashboard) .chart {
     }
   }
 
+  &__filter {
+    &.--include_subcategories {
+      align-self: center;
+    }
+  }
+
   &__dates {
     .d-date-time-input-range {
       display: flex;

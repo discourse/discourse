@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
-module("Integration | Component | rich-editor-extension", function (hooks) {
+module("Integration | Component | RichEditorExtension", function (hooks) {
   setupRenderingTest(hooks);
 
   const testCases = {

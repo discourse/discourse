@@ -9,6 +9,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -312,7 +313,10 @@ class DiscourseURL extends EmberObject {
   }
 
   routeToUrl(url, opts = {}) {
-    this.routeTo(getURL(url), opts);
+    const transformedUrl = applyValueTransformer("route-to-url", getURL(url), {
+      opts,
+    });
+    this.routeTo(transformedUrl, opts);
   }
 
   rewrite(regexp, replacement, opts) {
@@ -572,29 +576,23 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (category.default_list_filter === "none" && subcategories) {
-      if (subcategories) {
-        url += "/all";
-      } else {
-        url += "/none";
-      }
-    } else if (!subcategories) {
+    if (!subcategories) {
       url += "/none";
+    } else if (category.default_list_filter === "none") {
+      url += "/all";
     }
   }
 
   if (tag) {
-    // tag can be string "none" (special filter) or object with {id, name, slug}
-    if (typeof tag === "string") {
-      // special case: "none" filter
-      url = url ? "/tags" + url + "/" + tag : "/tag/" + tag;
-    } else {
-      if (url) {
-        url = "/tags" + url + "/" + tag.slug + "/" + tag.id;
-      } else {
-        url = "/tag/" + tag.slug + "/" + tag.id;
-      }
-    }
+    // tag can be string "none" (special filter) or object with {id, name, slug}.
+    // A Tag model with a null id also represents the "no tags" filter — handle
+    // it the same as the string form so we don't produce ".../none/null" URLs.
+    const isString = typeof tag === "string";
+    const slug = isString ? tag : tag.slug;
+    const id = isString ? null : tag.id;
+
+    const prefix = url ? `/tags${url}` : "/tag";
+    url = id ? `${prefix}/${slug}/${id}` : `${prefix}/${slug}`;
   }
 
   return getURL(url || "/");

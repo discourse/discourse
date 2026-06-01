@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | select-kit/category-selector",
+  "Integration | Component | SelectKit | CategorySelector",
   function (hooks) {
     setupRenderingTest(hooks);
 

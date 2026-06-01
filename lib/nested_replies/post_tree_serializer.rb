@@ -95,17 +95,7 @@ module NestedReplies
       post_types << Post.types[:whisper] if @guardian.user&.whisperer?
 
       scope = @topic.posts.where(post_type: post_types).where.not(action_code: [nil, ""])
-      scope = scope.where(hidden: false) unless can_see_hidden_posts?
-      scope.exists?
-    end
-
-    def can_see_hidden_posts?
-      return true if @guardian.is_staff?
-      if SiteSetting.hidden_post_visible_groups_map.include?(Group::AUTO_GROUPS[:everyone])
-        return true
-      end
-      return false if @guardian.anonymous?
-      @guardian.user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
+      @guardian.filter_hidden_posts(scope, category: @topic.category).exists?
     end
   end
 end

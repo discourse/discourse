@@ -166,7 +166,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "discourse_ai.features.translation.setting_groups.backfill_and_limits",
       settings: [
         "ai_translation_backfill_hourly_rate",
-        "ai_translation_target_categories",
+        "ai_translation_excluded_categories",
         "ai_translation_personal_messages",
         "ai_translation_include_bot_content",
         "ai_translation_max_post_length",

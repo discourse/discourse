@@ -113,3 +113,10 @@
     box-shadow: none;
   }
 }
+
+// Solved
+.btn-default.post-action-menu__solved-shared-issue:not(.has-shared-issue) {
+  .d-icon {
+    color: var(--icon-color);
+  }
+}

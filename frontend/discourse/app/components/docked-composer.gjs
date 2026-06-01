@@ -11,14 +11,14 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 // Reusable chat-style "docked" composer. There is deliberately no
@@ -435,7 +435,7 @@ export default class DockedComposer extends Component {
         {{bodyClass @bodyClassName}}
       {{/if}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "docked-composer"
           (if this.resizable "docked-composer--resizable")
           (if this.autoResize "docked-composer--auto-resize")
@@ -447,6 +447,7 @@ export default class DockedComposer extends Component {
         {{willDestroy this.teardown}}
       >
         {{#if this.resizable}}
+          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
           <div
             class="docked-composer__resize-handle"
             role="separator"
@@ -456,7 +457,6 @@ export default class DockedComposer extends Component {
             aria-valuemin="0"
             aria-valuemax={{this.resizeAriaMax}}
             tabindex="0"
-            {{! template-lint-disable no-pointer-down-event-binding }}
             {{on "pointerdown" this.onResizeStart}}
             {{on "pointermove" this.onResizeMove}}
             {{on "pointerup" this.onResizeEnd}}

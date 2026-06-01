@@ -427,7 +427,6 @@ cs:
       <p>V opačném případě prosím <a href="%{base_url}/password-reset">Obnovte své heslo</a>.</p>
     not_found_template_link: |
       <p>Tuto pozvánku na <a href="%{base_url}">%{site_name}</a> již nelze uplatnit. Požádejte osobu, která vás pozvala, aby vám poslala novou pozvánku.</p>
-    existing_user_cannot_redeem: "Tuto pozvánku nelze uplatnit. Požádejte osobu, která vás pozvala, aby vám poslala novou pozvánku."
     existing_user_already_redemeed: "Tento odkaz s pozvánkou jste již uplatnili."
     user_exists: "Není třeba zvát <b>%{email}</b>, účet již má!"
     invite_exists: "<b>%{email}</b> jste již pozvali."
@@ -1396,6 +1395,30 @@ cs:
       xaxis: "Den"
       yaxis: "Počet nových přispěvatelů"
       description: "Počet uživatelů, kteří během tohoto období vytvořili svůj první příspěvek."
+    activity_by_category:
+      labels:
+        category: "Kategorie"
+        topics: "Témata"
+        posts: "Příspěvky"
+        share: "Sdílet"
+    posters_by_member_type:
+      labels:
+        count: "Příspěvky"
+        share: "Sdílet"
+      types:
+        staff: "Redakce"
+    trust_level_pipeline:
+      description_link: "https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29"
+      labels:
+        level: "Úroveň důvěry"
+        count: "Členové"
+        share: "Sdílet"
+      levels:
+        "0": "Nový"
+        "1": "Základní"
+        "2": "Člen"
+        "3": "Stálý člen"
+        "4": "Leader"
     trust_level_growth:
       title: "Růst úrovně důvěry"
       xaxis:
@@ -1439,9 +1462,8 @@ cs:
     site_traffic:
       title: "Návštěvnost stránek"
       xaxis:
-        page_view_anon_browser: "Zobrazení (anonymní)"
-        page_view_logged_in_browser: "Zobrazení (přihlášení)"
-        page_view_crawler: "Známé prohledávače"
+        page_view_anon_browser: "Anonymní"
+        page_view_crawler: "Vyhledávače"
         page_view_other: "Ostatní provoz"
       yaxis: "Den"
       description: "Počty zobrazených stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další provoz."
@@ -1556,6 +1578,12 @@ cs:
         num_clicks: "Kliknutí"
         num_topics: "Témata"
       description: "Uživatelé uvedení podle počtu kliknutí na odkazy, které sdíleli."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
     top_traffic_sources:
       title: "Zdroje provozu"
       xaxis: "Doména"
@@ -1777,6 +1805,9 @@ cs:
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
       admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
+    reports_section:
+      providers:
+        core_report: "Standardní"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"
@@ -1878,7 +1909,6 @@ cs:
     x_summary_large_image: "„Velký souhrnný obrázek“ karty Twitteru (měl by mít šířku alespoň 280 a výšku alespoň 150, nesmí být ve formátu .svg). Pokud se toto pole ponechá prázdné, budou generována běžná metadata karty pomocí opengraph_image, pokud se zároveň nejedná o soubor .svg."
     notification_email: "E-mailová adresa odesílatele používaná při odesílání všech základních systémových e-mailů. Aby mohl e-mail dorazit, zde určená doména musí mít správně nastavené SPF, DKIM a reverzní PTR záznamy."
     email_custom_headers: "Seznam vlastních záhlaví e-mailů (headers)"
-    email_subject: "Přizpůsobitelný formát předmětu pro standardní e-maily. Viz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje uživatelům více podrobností o tom, proč nemají přístup k určitému tématu. Poznámka: Toto je méně bezpečné, protože uživatelé budou vědět, zda URL odkazuje na platné téma."
     force_https: "Vynuťte, aby váš web používal pouze HTTPS. VAROVÁNÍ: NEPOVOLUJTE tuto funkci, dokud neověříte, zda je HTTPS plně nastaven a funguje naprosto všude! Zkontrolovali jste také svou CDN, všechna přihlášení k sociálním sítím a všechna externí loga/závislosti, abyste se ujistili, že jsou také kompatibilní s HTTPS?"
     summary_score_threshold: "Minimální skóre potřebné pro zařazení příspěvku do „Shrnout toto téma“"
@@ -1942,7 +1972,6 @@ cs:
     moderators_manage_groups: "Povolit moderátorům vytvářet a spravovat skupiny"
     moderators_change_post_ownership: "Povolit moderátorům změnit vlastnictví příspěvku"
     cors_origins: "Povolené origins pro cross-origin požadavky (CORS). Každý origin musí obsahovat http:// nebo https://. Proměnná prostředí DISCOURSE_ENABLE_CORS musí být nastavena na hodnotu true, aby bylo možné povolit CORS."
-    use_admin_ip_allowlist: "Administrátoři se mohou přihlásit pouze v případě, že se nacházejí na IP adrese definované v seznamu filtrovaných IP adres (Administrace > Protokoly a monitoring > Filtrované IP)."
     blocked_ip_blocks: "Seznam bloků soukromých IP adres, které by Discourse nikdy neměl procházet"
     allowed_internal_hosts: "Seznam interních hostitelů, které může Discourse bezpečně procházet pro OneBoxing a další účely."
     allowed_onebox_iframes: "Seznam domén iframe src, které jsou povoleny prostřednictvím vkládání do OneBoxu. `*` povolí všechny výchozí enginy OneBoxu."
@@ -2043,7 +2072,6 @@ cs:
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
     google_oauth2_prompt: "Volitelný seznam textových hodnot oddělených mezerami, který určuje, zda autorizační server vyzve uživatele k opětovnému ověření a souhlasu. Možné hodnoty naleznete na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Volitelná doména Google Apps Hosted, na kterou bude přihlašování omezeno. Další podrobnosti naleznete na adrese <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "Po ověření načíst skupiny Google uživatelů na hostované doméně. Načtené skupiny Google lze použít k automatickému udělení členství ve skupinách Discourse (viz nastavení skupiny). Více informací naleznete na adrese https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "E-mailová adresa patřící k účtu správce Google Workspace. Bude použita spolu s přihlašovacími údaji k servisnímu účtu k načtení informací o skupinách."
     google_oauth2_hd_groups_service_account_json: "Klíčové informace pro servisní účet ve formátu JSON. Budou použity k načtení informací o skupinách."
     google_oauth2_verbose_logging: "Zaznamenávat podrobné diagnostické informace související s Google OAuth2 do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2073,10 +2101,8 @@ cs:
     s3_configure_tombstone_policy: "Povolit pravidla automatického mazání pro odstraněných nahraných souborů (tombstones). DŮLEŽITÉ: Pokud je zakázáno, po odstranění nahraných souborů nebude místo obnoveno."
     s3_disable_cleanup: "Zabraňte odstraňování starých záloh z S3, pokud je jich více, než je povolený maximální počet."
     s3_use_acls: "AWS doporučuje nepoužívat ACL na S3 bucketech; zaškrtnutí této možnosti zrušte pouze v případě, že chcete konfigurovat zásady oprávnění na nakonfigurovaných `s3_upload_bucket` a `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Umožňuje přímé nahrávání vícedílných (multipart) souborů do Amazon S3, více informací naleznete na https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Čas v UTC, kdy má dojít k zálohování."
     backup_with_uploads: "Zahrnout do plánovaných záloh i nahrané soubory. Zakázáním této možnosti se zálohuje pouze databáze."
-    backup_location: "Umístění, kde jsou uloženy zálohy. DŮLEŽITÉ: S3 vyžaduje platné přihlašovací údaje S3. Při změně nastavení z Lokální na S3 je nutné spustit úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň komprese Gzip použitá pro kompresi nahraných souborů."
     include_thumbnails_in_backups: "Zahrnout do záloh vygenerované miniatury (thumbnails). Zakázáním této možnosti se zmenší velikost záloh, ale po obnovení bude nutné přegenerovat (rebake) všechny příspěvky."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
@@ -2257,7 +2283,6 @@ cs:
     auto_respond_to_flag_actions: "Povolit automatickou odpověď při odebírání příznaku nahlášení."
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
-    auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."
@@ -2294,7 +2319,6 @@ cs:
     clean_up_inactive_users_after_days: "Počet dní před odstraněním neaktivního uživatele (úroveň důvěryhodnosti 0 bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
     clean_up_unused_staged_users_after_days: "Počet dní před odstraněním nepoužívaného předběžného uživatele (bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
     user_selected_primary_groups: "Umožnit uživatelům nastavit si vlastní primární skupinu"
-    enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
     permalink_normalizations: "Před přiřazením trvalých odkazů použijte následující regulární výraz, např.: /(topic.*)\\?.*/\\1 pomůže odstranit query string z route témat. Formát je regex+řetězec. Použijte \\1 atd. pro přístup k captures."
     disable_system_edit_notifications: "Zakáže upozornění na úpravy od systémového uživatele, když je aktivní 'download_remote_images_to_local'."
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."

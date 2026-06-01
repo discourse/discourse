@@ -42,6 +42,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
+  CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
   EDIT,
   NEW_PRIVATE_MESSAGE_KEY,
@@ -439,13 +440,23 @@ export default class ComposerService extends Service {
     );
   }
 
-  @computed("model.action", "isWhispering", "model.privateMessage")
+  @computed(
+    "model.action",
+    "isWhispering",
+    "model.privateMessage",
+    "model.category"
+  )
   get saveIcon() {
     if (this.isWhispering) {
       return "far-eye-slash";
     }
     if (this.model?.privateMessage && this.model?.action === Composer.REPLY) {
       return "envelope";
+    }
+
+    const custom = this.model?.customizationFor("saveIcon");
+    if (custom) {
+      return custom;
     }
 
     return SAVE_ICONS[this.model?.action];
@@ -1661,17 +1672,23 @@ export default class ComposerService extends Service {
 
   @action
   async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
-    const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
+    const sharedDraftsCategoryId = this.site.shared_drafts_category_id;
+    const isSharedDraftCategory =
+      !!sharedDraftsCategoryId && category?.id === sharedDraftsCategoryId;
+    const categoryId = isSharedDraftCategory ? null : category?.id;
+    const readOnlyCategoryId =
+      !isSharedDraftCategory && !category?.canCreateTopic ? category?.id : null;
+
     tags = await this.filterTags(tags);
 
     return this.open({
-      prioritizedCategoryId: category?.id,
-      topicCategoryId: category?.id,
+      prioritizedCategoryId: categoryId,
+      topicCategoryId: categoryId,
       formTemplateId: formTemplate?.id,
       topicTitle: title,
       topicBody: body,
       topicTags: tags,
-      action: CREATE_TOPIC,
+      action: isSharedDraftCategory ? CREATE_SHARED_DRAFT : CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
       locale: null,

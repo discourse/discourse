@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hr:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Dopusti vlasniku teme i osoblju da označi odgovor kao rješenje"
   reports:
     accepted_solutions:
       xaxis: "Dan"

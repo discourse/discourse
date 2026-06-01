@@ -455,6 +455,28 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["cooked"]).to be_present
         expect(root_json["cooked"]).not_to eq("")
       end
+
+      it "lets staff view a fully-deleted topic so they can recover it" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get show_url(topic)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
+
+      it "returns 404 for non-staff on a fully-deleted topic" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        sign_in(user)
+
+        get show_url(topic)
+        expect(response.status).to eq(404)
+      end
     end
 
     describe "pinned replies" do
@@ -1170,6 +1192,20 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(ancestor["cooked"]).to be_present
         expect(ancestor["cooked"]).not_to eq("")
       end
+
+      it "lets staff load the context view of a fully-deleted topic" do
+        reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get context_url(topic, reply.post_number)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
     end
   end
 
@@ -1256,6 +1292,58 @@ RSpec.describe NestedTopicsController, type: :request do
       Scheduler::Defer.do_all_work
 
       expect(TopicUser.count).to eq(topic_user_count)
+    end
+
+    describe "catching up on visit" do
+      fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        Fabricate(:nested_topic, topic: topic)
+        topic.update!(highest_post_number: 2, highest_staff_post_number: 2)
+      end
+
+      it "advances last_read_post_number to highest_post_number for a nested topic" do
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: topic, user: reader)
+        expect(topic_user.last_read_post_number).to eq(2)
+      end
+
+      it "marks the topic's unread notifications as read" do
+        reply_notification =
+          Fabricate(
+            :replied_notification,
+            user: reader,
+            topic: topic,
+            post: root_reply,
+            read: false,
+          )
+
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        expect(reply_notification.reload.read).to eq(true)
+      end
+
+      it "does nothing for non-nested topics opened via /n/" do
+        flat_topic = Fabricate(:topic, user: user)
+        Fabricate(:post, topic: flat_topic, user: user, post_number: 1)
+        flat_topic.update!(highest_post_number: 1, highest_staff_post_number: 1)
+
+        sign_in(reader)
+        get show_url(flat_topic), params: { track_visit: true }
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: flat_topic, user: reader)
+        expect(topic_user&.last_read_post_number).to be_blank
+      end
     end
   end
 
@@ -1405,6 +1493,28 @@ RSpec.describe NestedTopicsController, type: :request do
 
       actions = response.parsed_body["small_actions"]
       expect(actions.map { |a| a["action_code"] }).to include("assigned")
+    end
+  end
+
+  describe "embed mode" do
+    before { SiteSetting.embed_full_app = true }
+
+    it "applies class_name to the html element when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
+      expect(response.body).to match(/<html[^>]*\bclass="[^"]*\blee-af\b/)
+    end
+
+    it "strips X-Frame-Options when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "ignores class_name when embed_mode is not allowed" do
+      get("/n/#{topic.slug}/#{topic.id}", params: { class_name: "lee-af" })
+      expect(response.body).not_to match(/<html[^>]*\blee-af\b/)
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
   end
 end

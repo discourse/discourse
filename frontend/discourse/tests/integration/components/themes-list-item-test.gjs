@@ -5,7 +5,7 @@ import Theme from "discourse/admin/models/theme";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | themes-list-item", function (hooks) {
+module("Integration | Component | ThemesListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default theme", async function (assert) {

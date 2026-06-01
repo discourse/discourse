@@ -98,15 +98,15 @@ module PageObjects
       end
 
       def screenshot_toggle_button(theme)
-        find_theme_card(theme).find(".theme-card__screenshot-toggle")
+        find_theme_card(theme).find(".theme-card-preview__screenshot-toggle")
       end
 
       def has_screenshot_toggle_button?(theme)
-        find_theme_card(theme).has_css?(".theme-card__screenshot-toggle")
+        find_theme_card(theme).has_css?(".theme-card-preview__screenshot-toggle")
       end
 
       def has_no_screenshot_toggle_button?(theme)
-        find_theme_card(theme).has_no_css?(".theme-card__screenshot-toggle")
+        find_theme_card(theme).has_no_css?(".theme-card-preview__screenshot-toggle")
       end
 
       def click_screenshot_toggle(theme)
@@ -115,12 +115,14 @@ module PageObjects
       end
 
       def screenshot_image(theme)
-        find_theme_card(theme).find(".theme-card__image")
+        find_theme_card(theme).find(".theme-card-preview__image")
       end
 
       def has_screenshot_with_icon?(theme, icon_name)
         find_theme_card(theme).hover
-        find_theme_card(theme).has_css?(".theme-card__screenshot-toggle .d-icon-#{icon_name}")
+        find_theme_card(theme).has_css?(
+          ".theme-card-preview__screenshot-toggle .d-icon-#{icon_name}",
+        )
       end
     end
   end

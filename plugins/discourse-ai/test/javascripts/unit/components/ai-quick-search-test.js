@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import AiQuickSearch from "discourse/plugins/discourse-ai/discourse/connectors/search-menu-results-bottom/ai-quick-search";
 
-module("Unit | Component | ai-quick-search", function () {
+module("Unit | Component | AiQuickSearch", function () {
   module("shouldRender", function () {
     test("returns true when site setting is enabled", function (assert) {
       const siteSettings = {

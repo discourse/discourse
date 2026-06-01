@@ -156,6 +156,263 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "with a tag restricted to a category the user cannot access (via CategoryTag)" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_tag) { Fabricate(:tag, name: "bots-gone-mad") }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_tag) }
+
+      let(:params) { { q: "bots", filterForInput: true } }
+
+      it "does not leak the tag name to unauthorized users" do
+        names = result[:tags].map { |t| t[:name] }
+        expect(names).not_to include("bots-gone-mad")
+      end
+
+      it "still shows the tag to admins" do
+        admin = Fabricate(:admin)
+        admin_result =
+          described_class.call(params:, **dependencies.merge(guardian: Guardian.new(admin)))
+        expect(admin_result[:tags].map { |t| t[:name] }).to include("bots-gone-mad")
+      end
+
+      it "still shows the tag to users who can access the category" do
+        staff = Fabricate(:user)
+        staff_group.add(staff)
+        staff_result =
+          described_class.call(params:, **dependencies.merge(guardian: Guardian.new(staff)))
+        expect(staff_result[:tags].map { |t| t[:name] }).to include("bots-gone-mad")
+      end
+
+      it "still shows the tag when it is also attached to a category the user can access" do
+        public_category = Fabricate(:category)
+        CategoryTag.create!(category: public_category, tag: secret_tag)
+        names = result[:tags].map { |t| t[:name] }
+        expect(names).to include("bots-gone-mad")
+      end
+    end
+
+    context "with a tag restricted to a category the user cannot access (via CategoryTagGroup)" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_tag) { Fabricate(:tag, name: "insider-info") }
+      fab!(:tag_group) { Fabricate(:tag_group, name: "Insider", tags: [secret_tag]) }
+
+      before { CategoryTagGroup.create!(category: private_category, tag_group: tag_group) }
+
+      let(:params) { { q: "insider", filterForInput: true } }
+
+      it "does not leak the tag name to unauthorized users" do
+        names = result[:tags].map { |t| t[:name] }
+        expect(names).not_to include("insider-info")
+      end
+    end
+
+    context "when searching without filterForInput for a tag restricted to an inaccessible category" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_tag) { Fabricate(:tag, name: "bots-gone-mad") }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_tag) }
+
+      let(:params) { { q: "bots" } }
+
+      it "does not leak the tag name as an allowed result" do
+        expect(result[:tags].map { |t| t[:name] }).not_to include("bots-gone-mad")
+      end
+    end
+
+    context "with a categoryId pointing to a category the user cannot see" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:global_tag) { Fabricate(:tag, name: "alpha-global") }
+
+      before { CategoryTag.create!(category: private_category, tag: restricted_tag) }
+
+      let(:params) { { q: "alpha-global", categoryId: private_category.id } }
+
+      it "behaves as if the category did not exist (no enumeration vector)" do
+        blind =
+          described_class.call(params: { q: "alpha-global", categoryId: -999 }, **dependencies)
+        expect(result[:tags].map { |t| t[:name] }).to eq(blind[:tags].map { |t| t[:name] })
+      end
+    end
+
+    context "with excludeHasSynonyms" do
+      fab!(:target_with_syn) { Fabricate(:tag, name: "maintag2") }
+      fab!(:its_syn) { Fabricate(:tag, name: "syn-for-main", target_tag: target_with_syn) }
+
+      let(:params) { { q: "maintag2", filterForInput: true, excludeHasSynonyms: true } }
+
+      it "marks the tag as disabled with a synonyms reason" do
+        disabled = result[:tags].find { |t| t[:name] == "maintag2" && t[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).to include("synonyms")
+      end
+    end
+
+    context "with an anonymous guardian" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_tag) { Fabricate(:tag, name: "anon-secret") }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_tag) }
+
+      let(:dependencies) { { guardian: Guardian.new } }
+      let(:params) { { q: "anon-secret", filterForInput: true } }
+
+      it "does not leak tags restricted to inaccessible categories" do
+        names = result[:tags].map { |t| t[:name] }
+        expect(names).not_to include("anon-secret")
+      end
+    end
+
+    context "with an admin guardian" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_tag) { Fabricate(:tag, name: "admin-visible") }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_tag) }
+
+      let(:dependencies) { { guardian: Guardian.new(Fabricate(:admin)) } }
+      let(:params) { { q: "admin-visible" } }
+
+      it "sees tags restricted to any category" do
+        expect(result[:tags].map { |t| t[:name] }).to include("admin-visible")
+      end
+    end
+
+    context "with a global tag disabled inside a category that disallows globals" do
+      fab!(:strict_category) do
+        Fabricate(:category).tap do |c|
+          c.update!(allow_global_tags: false)
+          Fabricate(:tag_group, tags: [Fabricate(:tag, name: "strict-only")]).tap do |tg|
+            CategoryTagGroup.create!(category: c, tag_group: tg)
+          end
+        end
+      end
+      fab!(:global_tag) { Fabricate(:tag, name: "truly-global") }
+
+      let(:params) { { q: "truly-global", filterForInput: true, categoryId: strict_category.id } }
+
+      it "uses the 'in this category' fallback wording" do
+        disabled = result[:tags].find { |t| t[:name] == "truly-global" && t[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).to include("this category")
+      end
+    end
+
+    context "with a synonym whose target is restricted to an inaccessible category (output payload)" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_target) { Fabricate(:tag, name: "payload-secret") }
+      fab!(:public_synonym) { Fabricate(:tag, name: "payload-syn", target_tag: secret_target) }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_target) }
+
+      let(:params) { { q: "payload-syn" } }
+
+      it "does not leak the target tag name in the serialized payload" do
+        entry = result[:tags].find { |t| t[:name] == "payload-syn" }
+        expect(entry).to be_present
+        expect(entry[:target_tag]).to be_nil
+      end
+    end
+
+    context "with a synonym whose target is restricted to an inaccessible category" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_target) { Fabricate(:tag, name: "secret-target") }
+      fab!(:public_synonym) { Fabricate(:tag, name: "public-syn", target_tag: secret_target) }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_target) }
+
+      let(:params) { { q: "public-syn", filterForInput: true, excludeSynonyms: true } }
+
+      it "does not leak the target tag name in the disabled reason" do
+        disabled = result[:tags].find { |t| t[:name] == "public-syn" && t[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).not_to include("secret-target")
+      end
+    end
+
+    context "with a global tag disabled without category context" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_parent) { Fabricate(:tag, name: "secret-parent2") }
+      fab!(:orphan_tag) { Fabricate(:tag, name: "orphan-tag") }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, name: "Orphans", parent_tag: secret_parent, tags: [orphan_tag])
+      end
+
+      before { CategoryTag.create!(category: private_category, tag: secret_parent) }
+
+      let(:params) { { q: "orphan-tag", filterForInput: true } }
+
+      it "does not mention 'this category' when there is no category context" do
+        disabled = result[:tags].find { |t| t[:name] == "orphan-tag" && t[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).not_to include("this category")
+      end
+    end
+
+    context "with a missing parent tag that is restricted to an inaccessible category" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_parent) { Fabricate(:tag, name: "secret-parent") }
+      fab!(:child_tag) { Fabricate(:tag, name: "public-child") }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, name: "Kids", parent_tag: secret_parent, tags: [child_tag])
+      end
+
+      before { CategoryTag.create!(category: private_category, tag: secret_parent) }
+
+      let(:params) { { q: "public-child", filterForInput: true } }
+
+      it "does not leak the parent tag name in the disabled reason" do
+        disabled = result[:tags].find { |t| t[:name] == "public-child" && t[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).not_to include("secret-parent")
+      end
+    end
+
+    context "when a user types the exact name of a tag restricted to an inaccessible category" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:secret_tag) { Fabricate(:tag, name: "bots-gone-mad") }
+
+      before { CategoryTag.create!(category: private_category, tag: secret_tag) }
+
+      let(:params) { { q: "bots-gone-mad", filterForInput: true } }
+
+      it "does not confirm the tag exists via forbidden_message" do
+        expect(result[:forbidden]).to be_nil
+        expect(result[:forbidden_message]).to be_nil
+      end
+    end
+
+    context "with a mix of allowed and disabled matches" do
+      fab!(:blocked_sibling) { Fabricate(:tag, name: "alphablocked") }
+      fab!(:tag_group) do
+        Fabricate(
+          :tag_group,
+          name: "Exclusive Group",
+          one_per_topic: true,
+          tags: [tag2, blocked_sibling],
+        )
+      end
+
+      let(:params) { { q: "alpha", filterForInput: true, selected_tags: [tag2.name] } }
+
+      it "lists allowed tags before disabled tags" do
+        names = result[:tags].map { |t| t[:name] }
+        expect(names).to include("alpha", "alphablocked")
+        expect(names.index("alpha")).to be < names.index("alphablocked")
+      end
+    end
+
     context "when allowed tags are cut off by the limit" do
       fab!(:tag_foo1) { Fabricate(:tag, name: "foomatch1") }
       fab!(:tag_foo2) { Fabricate(:tag, name: "foomatch2") }

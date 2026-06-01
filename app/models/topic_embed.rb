@@ -229,7 +229,7 @@ class TopicEmbed < ActiveRecord::Base
       .each do |node|
         url_param = tags[node.name]
         src = node[url_param]
-        unless (src.nil? || src.empty?)
+        unless src.nil? || src.empty?
           begin
             # convert URL to absolute form
             node[url_param] = URI.join(url, UrlHelper.normalized_encode(src)).to_s
@@ -271,9 +271,16 @@ class TopicEmbed < ActiveRecord::Base
     response.title = opts[:title] if opts[:title].present?
     import_user = opts[:user] if opts[:user].present?
     import_user = response.author if response.author.present?
-    url = normalize_url(response.url) if response.url.present?
 
-    TopicEmbed.import(import_user, url, response.title, response.body)
+    embed_url = url
+
+    if response.url.present?
+      original_uri = URI.parse(UrlHelper.normalized_encode(url))
+      canonical_uri = URI.parse(UrlHelper.normalized_encode(response.url))
+      embed_url = response.url if original_uri.host == canonical_uri.host
+    end
+
+    TopicEmbed.import(import_user, embed_url, response.title, response.body)
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
@@ -367,15 +374,15 @@ end
 # Table name: topic_embeds
 #
 #  id                  :integer          not null, primary key
-#  topic_id            :integer          not null
-#  post_id             :integer          not null
-#  embed_url           :string(1000)     not null
 #  content_sha1        :string(40)
+#  deleted_at          :datetime
+#  embed_content_cache :text
+#  embed_url           :string(1000)     not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  deleted_at          :datetime
 #  deleted_by_id       :integer
-#  embed_content_cache :text
+#  post_id             :integer          not null
+#  topic_id            :integer          not null
 #
 # Indexes
 #

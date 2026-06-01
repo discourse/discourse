@@ -2,15 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
@@ -31,7 +31,7 @@ const StatusSeparator = <template>
 const InfoSection = <template>
   <section class="event__section" ...attributes>
     {{#if @icon}}
-      {{icon @icon}}
+      {{dIcon @icon}}
     {{/if}}
 
     {{yield}}
@@ -42,6 +42,7 @@ export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
   @service messageBus;
+  @service siteSettings;
 
   @tracked event;
 
@@ -93,6 +94,19 @@ export default class DiscoursePostEvent extends Component {
     return this.event.status === "public";
   }
 
+  get showStatus() {
+    if (this.currentUser) {
+      return this.event.canUpdateAttendance;
+    }
+    // Anonymous users can RSVP on public events unless the site is
+    // invite-only without requiring login (in which case they can't
+    // complete the signup flow anyway).
+    if (this.siteSettings.invite_only && !this.siteSettings.login_required) {
+      return false;
+    }
+    return this.event.isPublic && !this.event.isClosed && !this.event.isExpired;
+  }
+
   get isStandaloneEvent() {
     return this.event.status === "standalone";
   }
@@ -126,17 +140,51 @@ export default class DiscoursePostEvent extends Component {
 
     if (this.args.event) {
       try {
-        this.event = await this.discoursePostEventApi.event(this.args.event.id);
-        this.event.startsAt = this.args.event.startsAt;
-        this.event.endsAt = this.args.event.endsAt;
+        const fetched = await this.discoursePostEventApi.event(
+          this.args.event.id
+        );
+        const displayedStartsAt = this.args.event.startsAt;
+
+        if (
+          fetched.recurrence &&
+          displayedStartsAt &&
+          fetched.startsAt &&
+          displayedStartsAt !== fetched.startsAt
+        ) {
+          this.#filterForFutureOccurrence(fetched);
+        }
+
+        fetched.startsAt = displayedStartsAt;
+        fetched.endsAt = this.args.event.endsAt;
+        this.event = fetched;
       } catch (error) {
         popupAjaxError(error);
       }
     }
   }
 
+  #filterForFutureOccurrence(event) {
+    event.sampleInvitees = event.sampleInvitees.filter(
+      (invitee) => invitee.status !== "going" || invitee.recurring
+    );
+
+    const recurringCount = event.stats?.goingRecurring ?? 0;
+    if (event.stats) {
+      event.stats.going = recurringCount;
+    }
+    event.atCapacity =
+      event.maxAttendees != null && recurringCount >= event.maxAttendees;
+
+    if (
+      event.watchingInvitee?.status === "going" &&
+      !event.watchingInvitee?.recurring
+    ) {
+      event.watchingInvitee = null;
+    }
+  }
+
   <template>
-    <AsyncContent @asyncData={{this.loadEvent}}>
+    <DAsyncContent @asyncData={{this.loadEvent}}>
       <:content as |event|>
         <div class="discourse-post-event">
           <div class="discourse-post-event-widget">
@@ -168,9 +216,9 @@ export default class DiscoursePostEvent extends Component {
                       <a
                         href={{event.post.url}}
                         rel="noopener noreferrer"
-                      >{{replaceEmoji this.eventName}}</a>
+                      >{{dReplaceEmoji this.eventName}}</a>
                     {{else}}
-                      {{replaceEmoji this.eventName}}
+                      {{dReplaceEmoji this.eventName}}
                     {{/if}}
                   </span>
                   <div class="status-and-creators">
@@ -259,7 +307,7 @@ export default class DiscoursePostEvent extends Component {
                   />
                 {{/if}}
 
-                {{#if @event.canUpdateAttendance}}
+                {{#if this.showStatus}}
                   <Status @event={{event}} />
                 {{/if}}
               </PluginOutlet>
@@ -272,6 +320,6 @@ export default class DiscoursePostEvent extends Component {
           <div class="spinner"></div>
         </div>
       </:loading>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }

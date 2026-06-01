@@ -182,6 +182,16 @@ RSpec.describe Chat::CreateMessage do
         )
         result
       end
+
+      it "processes the direct message channel outside of the service transaction" do
+        initial_depth = ActiveRecord::Base.connection.open_transactions
+        transaction_depth_when_called = nil
+        Chat::Action::PublishAndFollowDirectMessageChannel
+          .expects(:call)
+          .with { transaction_depth_when_called = ActiveRecord::Base.connection.open_transactions }
+        result
+        expect(transaction_depth_when_called).to eq(initial_depth)
+      end
     end
 
     shared_examples "a message in a thread" do

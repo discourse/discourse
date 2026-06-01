@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import TapTile from "discourse/components/tap-tile";
-import TapTileGrid from "discourse/components/tap-tile-grid";
 import { extractError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DTapTile from "discourse/ui-kit/d-tap-tile";
+import DTapTileGrid from "discourse/ui-kit/d-tap-tile-grid";
 import { i18n } from "discourse-i18n";
 
 export default class DoNotDisturb extends Component {
@@ -39,40 +39,40 @@ export default class DoNotDisturb extends Component {
       class="do-not-disturb-modal"
     >
       <:body>
-        <TapTileGrid as |grid|>
-          <TapTile
+        <DTapTileGrid as |grid|>
+          <DTapTile
             @tileId="30"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
             class="do-not-disturb-tile"
           >
             {{i18n "pause_notifications.options.half_hour"}}
-          </TapTile>
-          <TapTile
+          </DTapTile>
+          <DTapTile
             @tileId="60"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
             class="do-not-disturb-tile"
           >
             {{i18n "pause_notifications.options.one_hour"}}
-          </TapTile>
-          <TapTile
+          </DTapTile>
+          <DTapTile
             @tileId="120"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
             class="do-not-disturb-tile"
           >
             {{i18n "pause_notifications.options.two_hours"}}
-          </TapTile>
-          <TapTile
+          </DTapTile>
+          <DTapTile
             @tileId="tomorrow"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
             class="do-not-disturb-tile"
           >
             {{i18n "pause_notifications.options.tomorrow"}}
-          </TapTile>
-        </TapTileGrid>
+          </DTapTile>
+        </DTapTileGrid>
 
         <DButton
           @action={{this.navigateToNotificationSchedule}}

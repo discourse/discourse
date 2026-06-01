@@ -125,7 +125,11 @@ class PostMover
         # soft-deleted ones, so the slot at `posts.last.post_number + 1` is
         # guaranteed free in the unique index.
         from_posts =
-          @original_topic.posts.with_deleted.where("post_number > ?", posts.last.post_number)
+          @original_topic
+            .posts
+            .with_deleted
+            .where("post_number > ?", posts.last.post_number)
+            .order(:post_number)
         shift_post_numbers(from_posts)
         @first_post_number_moved = posts.last.post_number + 1
       end
@@ -718,14 +722,12 @@ class PostMover
 
   def posts
     @posts ||=
-      begin
-        Post
-          .where(topic: @original_topic, id: post_ids)
-          .where.not(post_type: Post.types[:small_action])
-          .where.not(raw: "")
-          .order(:created_at)
-          .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
-      end
+      Post
+        .where(topic: @original_topic, id: post_ids)
+        .where.not(post_type: Post.types[:small_action])
+        .where.not(raw: "")
+        .order(:created_at)
+        .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
   end
 
   def update_last_post_stats
