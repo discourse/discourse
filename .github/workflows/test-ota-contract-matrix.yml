@@ -79,10 +79,10 @@ jobs:
         with:
           dotnet-version: "9.0.x"
 
-      - name: Setup Ruby 3.3
+      - name: Setup Ruby 3.4
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3"
+          ruby-version: "3.4"
 
       - name: Install ota from source
         uses: ota-run/ota/.github/actions/install-ota-from-source@v1.6.18

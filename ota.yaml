@@ -14,7 +14,7 @@ execution:
       backend: container
       lifecycle: ephemeral
       container:
-        image: ruby:3.3-bookworm
+        image: ruby:3.4-bookworm
         engines:
           - docker
           - podman
@@ -24,9 +24,9 @@ execution:
 toolchains:
   ruby:
     provider: ruby
-    version: 3.3.11
+    version: 3.4.7
     package_managers:
-      bundler: '2.5'
+      bundler: '2.6.4'
 tasks:
   setup:
     context: host
