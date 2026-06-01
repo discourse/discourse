@@ -79,6 +79,30 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
     expect(composer).to have_value("This is [spoiler]**secret**[/spoiler] text here")
   end
 
+  it "wraps inline selection in inline spoiler via applySurround (plugin API path)" do
+    open_composer
+
+    composer.type_content("This is secret text here")
+
+    # Select "secret" and trigger applySurround — the same path plugin toolbar buttons use
+    select_text_range(".ProseMirror p", 8, 6)
+
+    page.evaluate_async_script(<<~JS)
+      const done = arguments[arguments.length - 1];
+      setTimeout(() => {
+        const appEvents = Discourse.__container__.lookup("service:app-events");
+        appEvents.trigger("composer:apply-surround", "[spoiler]", "[/spoiler]", "spoiler_text", { multiline: false });
+        done();
+      }, 100);
+    JS
+
+    expect(rich).to have_css("span.spoiled", text: "secret")
+    expect(rich).to have_content("This is secret text here")
+
+    composer.toggle_rich_editor
+    expect(composer).to have_value("This is [spoiler]secret[/spoiler] text here")
+  end
+
   it "wraps selected text in block spoiler when selection spans multiple paragraphs" do
     open_composer
 
