@@ -217,6 +217,9 @@ ru:
               description: "Необязательный параметр, ограничивает срабатывание только для публикаций с этими характеристиками"
           created: Создано
           edited: Изменено
+          topics: Темы (все категории)
+          personal_messages: Только личные сообщения
+          public_topics: Темы (только общедоступные категории)
           with_images: Изображения
           with_links: Ссылки
           with_code: Код
@@ -319,6 +322,12 @@ ru:
             tags:
               label: Теги
               description: Список тегов для добавления в тему.
+            closed_automatically:
+              label: Автоматически закрытые темы
+              description: Добавляйте теги к автоматически закрываемым темам.
+            closed_manually:
+              label: Темы, закрытые вручную
+              description: Добавьте теги к темам, закрытым вручную.
         post:
           fields:
             creator:

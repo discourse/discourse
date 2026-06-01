@@ -218,7 +218,9 @@ pl_PL:
       apply: "Zastosuj"
       start_date: "Data rozpoczęcia"
       end_date: "Data zakończenia"
+      date_placeholder: "rrrr/mm/dd"
       presets:
+        label: "Predefiniowane zakresy dat"
         last_7_days: "Ostatnie 7 dni"
         last_30_days: "Ostatnie 30 dni"
         last_3_months: "Ostatnie 3 miesiące"
@@ -3947,10 +3949,10 @@ pl_PL:
           replies: "Odrzuć nowe odpowiedzi"
           untrack: "Przestań śledzić te tematy, aby przestały pojawiać się na mojej nowej liście"
         dismiss_new_with_selected:
-          one: "Oddalenie nowe (%{count})"
-          few: "Oddalenie nowe (%{count})"
-          many: "Oddalenie nowe (%{count})"
-          other: "Oddalenie nowe (%{count})"
+          one: "Odrzuć nowe (%{count})"
+          few: "Odrzuć nowe (%{count})"
+          many: "Odrzuć nowe (%{count})"
+          other: "Odrzuć nowe (%{count})"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
         change_category: "Aktualizuj kategorię"
@@ -6029,7 +6031,7 @@ pl_PL:
       back: "Poprzednia"
       forward: "Do przodu"
       share: "Udostępnij"
-      dismiss: "Wyczyść"
+      dismiss: "Odrzuć"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
@@ -7174,6 +7176,7 @@ pl_PL:
                 title: "Za mało aktywności, aby podsumować zaangażowanie."
                 summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
         reports_section:
+          description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
           remove: "Usuń raport"
           no_data: "Brak danych do wyświetlenia"

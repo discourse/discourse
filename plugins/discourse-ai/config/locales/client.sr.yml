@@ -181,6 +181,7 @@ sr:
           today: "Danas"
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"
+          editing_post: "Uređivanje objave"
       sentiments:
         sentiment_analysis:
           filter_types:

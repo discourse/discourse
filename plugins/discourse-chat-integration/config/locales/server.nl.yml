@@ -78,6 +78,10 @@ nl:
       added_and_removed: "%{added} toegevoegd en %{removed} verwijderd"
       added: "%{added} toegevoegd"
       removed: "%{removed} verwijderd"
+    errors:
+      provider_already_enabled: "Provider '%{name}' is al ingeschakeld"
+      provider_not_found: "Provider '%{name}' niet gevonden"
+      setting_update_failed: "Instellingen bijwerken mislukt: %{errors}"
     provider:
       slack:
         status:

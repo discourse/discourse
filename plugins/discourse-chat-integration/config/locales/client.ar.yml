@@ -18,11 +18,33 @@ ar:
         providers: "مقدمو الخدمات"
         providers_description: "إعداد تكاملات مقدمي خدمات الدردشة"
       add_provider: "إضافة مقدِّم خدمة"
+      view_provider_settings: "عرض إعدادات مقدِّم خدمة"
       more_providers: "المزيد"
+      confirm_setup_provider: "هل أنت متأكد أنك تريد تفعيل مقدِّم خدمة %{provider}؟ يمكن تعطيله لاحقًا من تبويب الإعدادات."
+      setup_provider_modal:
+        title: "إعداد مقدِّم خدمة %{provider}"
+        setup_instructions: "يرجى تقديم التفاصيل التالية لإعداد مقدِّم خدمة %{provider}. %{additionalInstructions}"
+        confirm_setup: "تأكيد الإعداد"
+        success: "تم إعداد مقدِّم خدمة %{provider} بنجاح"
+        slack:
+          instructions: "يلزم توفير رمز وصول أو عنوان URL لخطاف ويب صادر."
+          at_least_one_required: "أدخل رمز وصول أو عنوان URL لخطاف ويب صادر."
+          access_token:
+            title: "رمز الوصول"
+            description: "رمز الوصول OAuth الخاص ببوت Slack"
+          outbound_webhook_url:
+            title: "عنوان URL لخطاف ويب صادر"
+            description: "عنوان URL لخطاف ويب صادر لتطبيق Slack"
+        telegram:
+          instructions: "سيتم التحقق من رمز الوصول عند الحفظ."
+          access_token:
+            title: "رمز الوصول"
+            description: "رمز الوصول الخاص ببوت Telegram من BotFather"
       empty_state:
         title: "ربط منصة الدردشة التي تستخدمها"
         body: "أرسل إشعارات من Discourse إلى دردشة فريقك. اختر مقدم خدمة للبدء."
       channels_title: "القنوات"
+      channels_description: "تكوين القنوات لمقدِّم خدمة %{provider}."
       no_channels: "لم يتم إعداد أي قنوات حتى الآن."
       channel_actions: "إجراءات القناة"
       add_first_channel: "أضف قناتك الأولى على %{provider}"
@@ -95,6 +117,8 @@ ar:
               title: القناة
               help: "على سبيل المثال: #channel أو @username"
           errors:
+            at_least_one_required: "أدخل رمز وصول أو عنوان URL لخطاف ويب صادر."
+            invalid_webhook_url: "يجب أن يكون عنوان URL لخطاف الويب الصادر رابطًا صالحًا يبدأ بـ https://hooks.slack.com/services/ ..."
             auth_error: "رمز المصادقة المقدم غير صالح"
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
             channel_not_found: "القناة المحددة غير موجودة على Slack."
@@ -108,6 +132,8 @@ ar:
               title: مُعرِّف الدردشة
               help: رقم يمنحك إياه برنامج الروبوت، أو مُعرِّف قناة البث بالتنسق @channelname
           errors:
+            access_token_required: "رمز وصول البوت مطلوب."
+            webhook_setup_failed: "تعذر تسجيل رابط خطاف الويب مع Telegram. يُرجى التحقق من الرمز والمحاولة مرة أخرى."
             channel_not_found: "القناة المحدَّدة غير موجودة على Telegram"
             forbidden: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
         discord:

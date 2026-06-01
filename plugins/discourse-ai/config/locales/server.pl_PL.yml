@@ -461,7 +461,7 @@ pl_PL:
           name: "Tłumacz"
           description: "Domyślny agent obsługujący funkcję tłumacza pomocnika"
         image_captioner:
-          name: "Podpisy pod obrazkami"
+          name: "Podpisy pod obrazami"
           description: "Domyślny agent obsługujący funkcję podpisu obrazu pomocnika"
         locale_detector:
           name: "Detektor ustawień regionalnych"
