@@ -264,6 +264,22 @@ function initializeShareButton(api) {
   );
 }
 
+function initializeFooterButtonsVisibility(api) {
+  const siteSettings = api.container.lookup("service:site-settings");
+
+  api.registerValueTransformer(
+    "topic-show-footer-buttons",
+    ({ value, context: { topic } }) => {
+      // On AI bot PMs the docked composer replaces the topic footer, so its
+      // buttons (reply, admin wrench, etc.) are redundant — skip rendering it.
+      if (siteSettings.ai_bot_enable_docked_composer && topic?.is_bot_pm) {
+        return false;
+      }
+      return value;
+    }
+  );
+}
+
 export default {
   name: "discourse-ai-bot-replies",
 
@@ -279,6 +295,7 @@ export default {
         initializeAgentDecorator(api);
         initializeDebugButton(api, container);
         initializeShareButton(api, container);
+        initializeFooterButtonsVisibility(api);
         initializeRetryButton(api);
       });
     }

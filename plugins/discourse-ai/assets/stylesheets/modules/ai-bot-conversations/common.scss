@@ -439,14 +439,6 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
-  // Hide the footer admin wrench — the topic timeline already shows one,
-  // so two would be redundant.
-  .topic-footer-main-buttons {
-    button:not(.create) {
-      display: none;
-    }
-  }
-
   .topic-map {
     box-sizing: border-box;
     width: 100%;
@@ -461,8 +453,10 @@ body.has-ai-conversations-sidebar {
       display: none;
     }
 
+    // The bottom topic map (participants + invite) is redundant on the AI
+    // conversation page — the docked composer sits where it would render.
     &.--bottom {
-      padding-top: 0;
+      display: none;
     }
 
     section {
