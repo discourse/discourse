@@ -15,7 +15,7 @@ module Migrations
   end
 
   def self.register_locale_path(dir)
-    locale_load_paths << dir unless locale_load_paths.include?(dir)
+    locale_load_paths << dir if locale_load_paths.exclude?(dir)
   end
 
   # Root of the `migrations-core` gem. Other gems expose their own root.
@@ -90,9 +90,7 @@ module Migrations
   def self.enable_i18n
     require "i18n"
 
-    locale_load_paths.each do |dir|
-      I18n.load_path += Dir[File.join(dir, "**", "migrations.*.yml")]
-    end
+    locale_load_paths.each { |dir| I18n.load_path += Dir[File.join(dir, "**", "migrations.*.yml")] }
     I18n.backend.load_translations
 
     # always use English for now

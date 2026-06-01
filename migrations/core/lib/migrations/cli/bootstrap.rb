@@ -9,7 +9,7 @@ module Migrations
     # and dispatches.
     module Bootstrap
       def self.run(argv)
-        top = build_top_command_class.new(argv)
+        top = build_top_command_class.new(normalize_option_args(argv))
 
         leaf = deepest_command(top)
         if leaf.class.respond_to?(:requires_rails?) && leaf.class.requires_rails?
@@ -20,6 +20,20 @@ module Migrations
       rescue Samovar::Error => e
         e.command.print_usage
         exit(1)
+      end
+
+      # Samovar expects `--opt value`; the previous Thor-based CLI also accepted
+      # `--opt=value`. Split the `=` form into two tokens so existing muscle
+      # memory keeps working. Only long options are touched; `--`, short flags,
+      # and bare positional values pass through unchanged.
+      def self.normalize_option_args(argv)
+        argv.flat_map do |arg|
+          if arg.start_with?("--") && (index = arg.index("=")) && index > 2
+            [arg[0...index], arg[(index + 1)..]]
+          else
+            arg
+          end
+        end
       end
 
       # Walks the nested `command` chain to the deepest selected sub-command.

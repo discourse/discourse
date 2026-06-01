@@ -6,7 +6,15 @@ require "tmpdir"
 # When MIGRATIONS_RAILS is set (the integration job, run via the host app's
 # bundle), boot the full Discourse test harness so that :rails-tagged specs can
 # run. The default, isolated suite runs without Rails.
-require File.expand_path("../../../spec/rails_helper", __dir__) if ENV["MIGRATIONS_RAILS"]
+#
+# Discourse resolves some autoload-ignore paths (e.g. `lib/freedom_patches` in
+# config/initializers/000-zeitwerk.rb) relative to the working directory, so boot
+# the host harness with the cwd at the application root — the same way the `disco`
+# binary does before loading the Rails environment.
+if ENV["MIGRATIONS_RAILS"]
+  rails_root = File.expand_path("../../..", __dir__)
+  Dir.chdir(rails_root) { require File.join(rails_root, "spec", "rails_helper") }
+end
 
 require "migrations-core"
 

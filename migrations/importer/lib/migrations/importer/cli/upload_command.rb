@@ -34,7 +34,9 @@ module Migrations
 
         def load_settings
           path = @options[:settings]
-          raise Migrations::NoSettingsFound, "Settings file not found: #{path}" unless File.exist?(path)
+          unless File.exist?(path)
+            raise Migrations::NoSettingsFound, "Settings file not found: #{path}"
+          end
 
           settings = Migrations::SettingsParser.parse!(path)
           settings[:fix_missing] = true if @options[:fix_missing]

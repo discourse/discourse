@@ -35,9 +35,10 @@ RSpec.describe Migrations::Tooling::Schema::DSL::EnumBuilder do
     it "raises on duplicate enum name" do
       Migrations::Tooling::Schema.enum(:status) { value :active, 0 }
 
-      expect do
-        Migrations::Tooling::Schema.enum(:status) { value :inactive, 1 }
-      end.to raise_error(Migrations::Tooling::Schema::ConfigError, /already registered/)
+      expect do Migrations::Tooling::Schema.enum(:status) { value :inactive, 1 } end.to raise_error(
+        Migrations::Tooling::Schema::ConfigError,
+        /already registered/,
+      )
     end
 
     it "raises when enum values mix strings and integers" do
@@ -46,10 +47,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::EnumBuilder do
           value :a, 0
           value :b, "b"
         end
-      end.to raise_error(
-        Migrations::Tooling::Schema::ConfigError,
-        /all be Strings or all Integers/,
-      )
+      end.to raise_error(Migrations::Tooling::Schema::ConfigError, /all be Strings or all Integers/)
     end
   end
 end

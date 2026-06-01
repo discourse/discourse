@@ -6,7 +6,7 @@ The tooling is split into four path-referenced gems under `migrations/`:
 ## Command line interface
 
 ```bash
-./core/bin/disco help
+./bin/disco help
 ```
 
 ## Converters

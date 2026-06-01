@@ -140,8 +140,8 @@ module Migrations
                 db_label = Helpers.db_label(@output_config.models_namespace)
                 <<~HEADER
                   This file is auto-generated from the #{db_label} schema. To make changes,
-                  update the configuration files in "migrations/config/schema/" and then run
-                  `migrations/bin/cli schema generate` to regenerate this file.
+                  update the configuration files in "migrations/tooling/config/schema/" and then run
+                  `migrations/bin/disco schema generate` to regenerate this file.
                 HEADER
               end
           end

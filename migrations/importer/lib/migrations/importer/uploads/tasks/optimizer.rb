@@ -78,7 +78,9 @@ module Migrations
             Thread.new do
               @uploads_db
                 .db
-                .query("SELECT id FROM optimized_images") { |row| @optimized_upload_ids << row[:id] }
+                .query("SELECT id FROM optimized_images") do |row|
+                  @optimized_upload_ids << row[:id]
+                end
             end
           end
 
@@ -228,7 +230,8 @@ module Migrations
               images.map! do |image|
                 next if image.blank?
 
-                image_path = add_multisite_prefix(discourse_store.get_path_for_optimized_image(image))
+                image_path =
+                  add_multisite_prefix(discourse_store.get_path_for_optimized_image(image))
 
                 unless file_exists?(image_path)
                   image.destroy

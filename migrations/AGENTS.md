@@ -12,17 +12,17 @@ All four are wired into the root `Gemfile` via `path:` in the optional `:migrati
 
 ## CLI
 
-The single binary is `migrations/core/bin/disco` (commands register dynamically via
+The single binary is `migrations/bin/disco` (commands register dynamically via
 `Migrations::CLI::Registry`):
 
 ```bash
-migrations/core/bin/disco --help
-migrations/core/bin/disco convert <name>
-migrations/core/bin/disco import
-migrations/core/bin/disco upload
-migrations/core/bin/disco schema generate
-migrations/core/bin/disco schema validate
-migrations/core/bin/disco schema diff
+migrations/bin/disco --help
+migrations/bin/disco convert <name>
+migrations/bin/disco import
+migrations/bin/disco upload
+migrations/bin/disco schema generate
+migrations/bin/disco schema validate
+migrations/bin/disco schema diff
 ```
 
 Rails is booted lazily: only commands that declare `requires_rails!` (import, upload, schema)

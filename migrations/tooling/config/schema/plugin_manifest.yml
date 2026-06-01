@@ -170,6 +170,7 @@ plugins:
     tables:
       - discourse_solved_shared_issues
       - discourse_solved_solved_topics
+      - discourse_solved_topic_answers
     columns:
       directory_items:
         - solutions
@@ -191,6 +192,19 @@ plugins:
       - topic_voting_topic_vote_count
       - topic_voting_votes
     columns: {}
+  discourse-workflows:
+    tables:
+      - discourse_workflows_credentials
+      - discourse_workflows_data_tables
+      - discourse_workflows_execution_data
+      - discourse_workflows_executions
+      - discourse_workflows_variables
+      - discourse_workflows_webhooks
+      - discourse_workflows_workflow_dependencies
+      - discourse_workflows_workflow_publish_history
+      - discourse_workflows_workflow_versions
+      - discourse_workflows_workflows
+    columns: {}
   poll:
     tables:
       - poll_options
@@ -199,15 +213,15 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: e69972690991bc04d92b2d161aac8921
-  chat: 9d3d85836fd85af6f682b78cbcb3d092
+  chat: af4a593f3c48a945ff09a44128f6efb9
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: ef2706fb0393edaace313b0738419d52
+  discourse-ai: 0eb3819de9ca86f22434718c56a58d1b
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-calendar: 3f8dd26f85e1c26146fbf1c9a882d233
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
-  discourse-data-explorer: 3c8891eb000d2f91f1edf1a48c28a96e
+  discourse-data-explorer: ba288745bea628996590debdf02fbaa4
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 2182f4029ce73b9b77ea682a4558087c
@@ -222,11 +236,12 @@ plugin_checksums:
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
   discourse-rss-polling: b7cb3eeb38beff3ce10b333f24128d2f
-  discourse-solved: 8c544acc9dc985760ccc56d335b3e647
+  discourse-solved: 67743e14f4c5c2fae4487193c374e429
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
+  discourse-workflows: d46c6b3562eb76d9352ee6c99e30707a
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
   poll: 4af8698c5fcc1dc9a786b31ec8234171
   styleguide: 0fd92e5ef0c99ee047f206961a587544

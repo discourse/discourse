@@ -297,7 +297,8 @@ module Migrations
             filename =
               if (header = response.header["Content-Disposition"].presence)
                 disposition_filename =
-                  header[/filename\*=UTF-8''(\S+)\b/i, 1] || header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
+                  header[/filename\*=UTF-8''(\S+)\b/i, 1] ||
+                    header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
                 if disposition_filename.present?
                   URI.decode_www_form_component(disposition_filename)
                 else
@@ -319,7 +320,9 @@ module Migrations
             extension = File.extname(source_path)
 
             Tempfile.open(["discourse-upload", extension]) do |tmpfile|
-              File.open(source_path, "rb") { |source_stream| IO.copy_stream(source_stream, tmpfile) }
+              File.open(source_path, "rb") do |source_stream|
+                IO.copy_stream(source_stream, tmpfile)
+              end
               tmpfile.rewind
               yield(tmpfile)
             end

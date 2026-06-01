@@ -6,9 +6,7 @@ RSpec.describe Migrations::Converter::Worker do
   let(:index) { 1 }
   let(:input_queue) { Queue.new }
   let(:output_queue) { Queue.new }
-  let(:job) do
-    instance_double(Migrations::Converter::ParallelJob, run: "result", cleanup: nil)
-  end
+  let(:job) { instance_double(Migrations::Converter::ParallelJob, run: "result", cleanup: nil) }
 
   after do
     input_queue.close if !input_queue.closed?

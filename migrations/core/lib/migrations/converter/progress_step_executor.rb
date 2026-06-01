@@ -80,9 +80,7 @@ module Migrations
       end
 
       def with_progressbar
-        ExtendedProgressBar
-          .new(max_progress: @max_progress)
-          .run { |progressbar| yield progressbar }
+        ExtendedProgressBar.new(max_progress: @max_progress).run { |progressbar| yield progressbar }
       end
 
       def start_db_writer(worker_output_queue)

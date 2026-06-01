@@ -144,7 +144,7 @@ RSpec.describe Migrations::Tooling::Schema, :rails do
 
         manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest, fresh?: true)
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
-        allow(Migrations).to receive(:root_path).and_return(tmpdir)
+        allow(Migrations::Tooling).to receive(:root_path).and_return(tmpdir)
 
         expect { described_class.ensure_ready!(database: :test_db) }.to raise_error(
           described_class::ConfigError,
@@ -169,7 +169,7 @@ RSpec.describe Migrations::Tooling::Schema, :rails do
         manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest, fresh?: true)
         allow(manifest).to receive(:regenerate!)
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
-        allow(Migrations).to receive(:root_path).and_return(tmpdir)
+        allow(Migrations::Tooling).to receive(:root_path).and_return(tmpdir)
 
         expect { described_class.ensure_ready!(database: :test_db) }.not_to raise_error
         expect(manifest).not_to have_received(:regenerate!)
@@ -183,7 +183,7 @@ RSpec.describe Migrations::Tooling::Schema, :rails do
         manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest, fresh?: false)
         allow(manifest).to receive(:regenerate!).and_raise(StandardError, "boom")
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
-        allow(Migrations).to receive(:root_path).and_return(tmpdir)
+        allow(Migrations::Tooling).to receive(:root_path).and_return(tmpdir)
         allow($stdout).to receive(:write)
 
         expect { described_class.ensure_ready!(database: :test_db) }.to raise_error(

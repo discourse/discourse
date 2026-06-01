@@ -2,7 +2,12 @@
 
 require "tmpdir"
 
-require File.expand_path("../../../spec/rails_helper", __dir__) if ENV["MIGRATIONS_RAILS"]
+# Boot the host harness with the cwd at the application root (see migrations-core
+# spec_helper for why); Discourse resolves some Zeitwerk ignore paths relative to it.
+if ENV["MIGRATIONS_RAILS"]
+  rails_root = File.expand_path("../../..", __dir__)
+  Dir.chdir(rails_root) { require File.join(rails_root, "spec", "rails_helper") }
+end
 
 require "migrations-tooling"
 

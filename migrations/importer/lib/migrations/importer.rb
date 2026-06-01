@@ -21,11 +21,7 @@ module Migrations
         begin
           loader = Zeitwerk::Loader.new
           loader.log! if ENV["DEBUG"]
-          loader.inflector.inflect(
-            "cli" => "CLI",
-            "discourse_db" => "DiscourseDB",
-            "id" => "ID",
-          )
+          loader.inflector.inflect("cli" => "CLI", "discourse_db" => "DiscourseDB", "id" => "ID")
 
           importer_dir = File.join(__dir__, "importer")
           loader.push_dir(importer_dir, namespace: Migrations::Importer)

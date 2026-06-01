@@ -5,7 +5,6 @@ Gem::Specification.new do |s|
   s.version = "0.0.1"
   s.summary = "Discourse migrations: public converter implementations"
   s.authors = ["Discourse"]
-  s.license = "GPL-2.0-or-later"
   s.required_ruby_version = ">= 3.4"
 
   s.files = Dir["lib/**/*"]

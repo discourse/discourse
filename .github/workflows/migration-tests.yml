@@ -23,14 +23,9 @@ permissions:
 jobs:
   gems:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Gem (${{ matrix.gem }})
+    name: Gems
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
-    strategy:
-      fail-fast: false
-      matrix:
-        gem: [core, tooling, converters, importer]
 
     steps:
       - uses: actions/checkout@v6
@@ -40,12 +35,13 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
-          bundler-cache: true
-          working-directory: migrations/${{ matrix.gem }}
 
       - name: RSpec (isolated, no Rails)
-        working-directory: migrations/${{ matrix.gem }}
-        run: bundle exec rspec --tag ~rails
+        run: |
+          for gem in core tooling converters importer; do
+            echo "== migrations-$gem =="
+            (cd "migrations/$gem" && bundle install --jobs 4 --retry 3 && bundle exec rspec --tag ~rails)
+          done
 
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
@@ -106,10 +102,10 @@ jobs:
       - name: Validate IntermediateDB schema
         run: |
           # Show structured differences between DSL config and database
-          migrations/core/bin/disco schema diff --db=intermediate_db || true
+          migrations/bin/disco schema diff --db intermediate_db || true
 
           # Regenerate schema from DSL config
-          migrations/core/bin/disco schema generate --db=intermediate_db
+          migrations/bin/disco schema generate --db intermediate_db
 
           # Check if generated output matches what's committed
           if [ ! -z "$(git status --porcelain migrations/core/db/intermediate_db_schema/ migrations/core/lib/migrations/database/intermediate_db/)" ]; then
@@ -123,13 +119,13 @@ jobs:
             echo "structure changed without regenerating."
             echo ""
             echo "To fix:"
-            echo "  1. Run: migrations/core/bin/disco schema diff"
+            echo "  1. Run: migrations/bin/disco schema diff"
             echo "     to see what changed between config and database"
             echo "  2. Update config files in migrations/tooling/config/schema/intermediate_db/"
-            echo "     - New tables: migrations/core/bin/disco schema add <table>"
-            echo "     - Ignore tables: migrations/core/bin/disco schema ignore <table> --reason '...'"
+            echo "     - New tables: migrations/bin/disco schema add <table>"
+            echo "     - Ignore tables: migrations/bin/disco schema ignore <table> --reason '...'"
             echo "     - New columns: add to the table's include list or ignore with reason"
-            echo "  3. Run: migrations/core/bin/disco schema generate"
+            echo "  3. Run: migrations/bin/disco schema generate"
             echo "  4. Commit the updated config and generated files"
             echo ""
             echo "Generated file diff:"

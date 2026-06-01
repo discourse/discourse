@@ -14,9 +14,7 @@ module Migrations
 
       def self.register(name:, command_class:, description: nil)
         name = name.to_s
-        if entries.key?(name)
-          raise "A `disco` command named '#{name}' is already registered"
-        end
+        raise "A `disco` command named '#{name}' is already registered" if entries.key?(name)
         entries[name] = Entry.new(name:, command_class:, description:)
       end
 

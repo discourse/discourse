@@ -21,6 +21,7 @@ Migrations::Tooling::Schema.ignored do
   plugin :discourse_subscriptions, "Not migrated yet"
   plugin :discourse_templates, "Not migrated yet"
   plugin :discourse_topic_voting, "Not migrated yet"
+  plugin :discourse_workflows, "Not migrated yet"
   plugin :poll, "Not migrated yet"
 
   # Core tables excluded from the intermediate database
@@ -147,6 +148,10 @@ Migrations::Tooling::Schema.ignored do
          :web_hooks
 
   tables :external_upload_stubs, :optimized_images, :optimized_videos, :upload_references, :uploads
+
+  tables :admin_dashboard_reports,
+         :browser_pageview_country_daily_rollups,
+         :browser_pageview_referrer_daily_rollups
 
   tables :admin_notices,
          :api_key_scopes,

@@ -5,7 +5,6 @@ Gem::Specification.new do |s|
   s.version = "0.0.1"
   s.summary = "Discourse migrations framework: CLI, UI, schemas, DB infrastructure"
   s.authors = ["Discourse"]
-  s.license = "GPL-2.0-or-later"
   s.required_ruby_version = ">= 3.4"
 
   s.files = Dir["lib/**/*", "db/**/*", "config/**/*", "bin/*"]

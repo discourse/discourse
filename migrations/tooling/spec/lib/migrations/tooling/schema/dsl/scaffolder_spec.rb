@@ -167,9 +167,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Scaffolder, :rails do
 
     it "writes to the selected database config path" do
       Dir.mktmpdir do |tmpdir|
-        allow(Migrations::Tooling::Schema).to receive(
-          :config_path,
-        ) do |database = :intermediate_db|
+        allow(Migrations::Tooling::Schema).to receive(:config_path) do |database = :intermediate_db|
           File.join(tmpdir, "schema", database.to_s)
         end
 
