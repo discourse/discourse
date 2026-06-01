@@ -15,51 +15,39 @@ class RenameAnonymousAutoGroupToAnonymousUsers < ActiveRecord::Migration[8.0]
     # `anonymous_users` out of the way so the rename below doesn't hit the unique
     # name constraint. Rebake its mentions to point at the renamed slug.
     if legacy_anonymous_users_group_id.present?
-      execute(<<~SQL)
+      renamed = DB.query_single(<<~SQL)
         UPDATE groups SET name = 'anonymous_users_legacy_' || id::text
-        WHERE name = 'anonymous_users' AND id <> 4;
+        WHERE name = 'anonymous_users' AND id <> 4
+        RETURNING id;
       SQL
 
-      update_group_mentions(
-        "anonymous_users",
-        "anonymous_users_legacy_#{legacy_anonymous_users_group_id}",
-        legacy_anonymous_users_group_id,
-      )
+      if renamed.present?
+        Migration::GroupMentionSlugRewriter.update_posts!(
+          old_slug: "anonymous_users",
+          new_slug: "anonymous_users_legacy_#{renamed.first}",
+          group_id: legacy_anonymous_users_group_id,
+        )
+      end
     end
 
     # Rename the auto group itself, then rewrite any `@anonymous` mentions of it
     # to `@anonymous_users`.
     renamed = DB.query_single(<<~SQL)
-        UPDATE groups SET name = 'anonymous_users'
-        WHERE id = 4 AND name = 'anonymous'
-        RETURNING id;
-      SQL
+      UPDATE groups SET name = 'anonymous_users'
+      WHERE id = 4 AND name = 'anonymous'
+      RETURNING id;
+    SQL
 
-    update_group_mentions("anonymous", "anonymous_users", 4) if renamed.present?
+    if renamed.present?
+      Migration::GroupMentionSlugRewriter.update_posts!(
+        old_slug: "anonymous",
+        new_slug: "anonymous_users",
+        group_id: 4,
+      )
+    end
   end
 
   def down
     raise ActiveRecord::IrreversibleMigration
-  end
-
-  def update_group_mentions(old_slug, new_slug, group_id)
-    DB.exec(<<~SQL, old_slug:, new_slug:, group_id:)
-      UPDATE posts AS p  SET
-          raw = regexp_replace(
-            p.raw,
-            '(^|\s)(@' || :old_slug || ')(\s|$)',
-            E'\\1@' || :new_slug || E'\\3',
-            'g'
-          ),
-          baked_version = NULL
-        WHERE p.deleted_at IS NULL
-          AND EXISTS (
-            SELECT 1
-            FROM group_mentions gm
-            WHERE gm.post_id = p.id
-              AND gm.group_id = :group_id
-          )
-          AND p.raw LIKE '%@' || :old_slug || '%';
-    SQL
   end
 end
