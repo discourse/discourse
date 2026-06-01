@@ -69,6 +69,12 @@ RSpec.describe UserApiKey::DeviceAuth::CreateRequest do
       it { is_expected.to fail_with_exception(Discourse::InvalidParameters) }
     end
 
+    context "when the requested expiry is too long" do
+      let(:params) { super().merge(expires_in_seconds: "1" * 1_000) }
+
+      it { is_expected.to fail_with_exception(Discourse::InvalidParameters) }
+    end
+
     context "with a registered client" do
       let!(:client) do
         UserApiKeyClient.create!(
