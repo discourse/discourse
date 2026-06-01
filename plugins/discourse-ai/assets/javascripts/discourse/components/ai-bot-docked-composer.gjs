@@ -32,7 +32,6 @@ export default class AiBotDockedComposer extends Component {
   @service appEvents;
   @service aiBotDockedSubmit;
   @service aiBotStreamingState;
-  @service currentUser;
   @service siteSettings;
   @service store;
 
@@ -171,12 +170,6 @@ export default class AiBotDockedComposer extends Component {
 
   get minLength() {
     return this.siteSettings.min_personal_message_post_length ?? 1;
-  }
-
-  get sendOnEnter() {
-    return (
-      this.currentUser?.user_option?.ai_conversations_send_on_enter ?? true
-    );
   }
 
   get composerClass() {
@@ -506,7 +499,6 @@ export default class AiBotDockedComposer extends Component {
       @onRegisterApi={{this.registerComposerApi}}
       @isSubmitting={{this.aiBotDockedSubmit.loading}}
       @disabled={{this.isStreaming}}
-      @submitOnEnter={{this.sendOnEnter}}
       @autoResize={{true}}
       @maxResizeOffset={{this.maxResizeOffset}}
       {{didInsert this.setupScrollListener}}

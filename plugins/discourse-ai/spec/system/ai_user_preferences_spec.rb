@@ -55,42 +55,4 @@ RSpec.describe "User AI preferences" do
       end
     end
   end
-
-  describe "send on enter setting" do
-    context "when the docked composer is enabled" do
-      before { SiteSetting.ai_bot_enable_docked_composer = true }
-
-      it "should have the setting present in the user preferences page" do
-        user_preferences_ai_page.visit(user)
-        expect(user_preferences_ai_page).to have_ai_preference(
-          "pref-ai-conversations-send-on-enter",
-        )
-      end
-
-      it "saves the setting when toggled" do
-        user_preferences_ai_page.visit(user)
-
-        expect(user_preferences_ai_page).to have_ai_preference_checked(
-          "pref-ai-conversations-send-on-enter",
-        )
-
-        user_preferences_ai_page.toggle_setting("pref-ai-conversations-send-on-enter")
-        user_preferences_ai_page.save_changes
-
-        expect(page).to have_content(I18n.t("js.saved"))
-        expect(user.user_option.reload.ai_conversations_send_on_enter).to eq(false)
-      end
-    end
-
-    context "when the docked composer is disabled" do
-      before { SiteSetting.ai_bot_enable_docked_composer = false }
-
-      it "should not have the setting present in the user preferences page" do
-        user_preferences_ai_page.visit(user)
-        expect(user_preferences_ai_page).to have_no_ai_preference(
-          "pref-ai-conversations-send-on-enter",
-        )
-      end
-    end
-  end
 end
