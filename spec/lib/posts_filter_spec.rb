@@ -255,4 +255,74 @@ RSpec.describe PostsFilter do
   ensure
     described_class.remove_filter("min_likes")
   end
+
+  it "applies guardian visibility to hidden posts and unlisted topics" do
+    hidden_post = Fabricate(:post, topic: feature_topic, user: user2, post_number: 2, hidden: true)
+    unlisted_topic = Fabricate(:topic, user: user, visible: false, title: "Unlisted Discussion")
+    unlisted_post = Fabricate(:post, topic: unlisted_topic, user: user, post_number: 1)
+
+    expect(filtered_post_ids("", guardian: Guardian.new(user))).not_to include(
+      hidden_post.id,
+      unlisted_post.id,
+    )
+
+    expect(filtered_post_ids("", guardian: Guardian.new(Fabricate(:admin)))).to include(
+      hidden_post.id,
+      unlisted_post.id,
+    )
+  end
+
+  it "only filters by tags visible to the guardian" do
+    hidden_tag = Fabricate(:tag, name: "hidden")
+    Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    hidden_tag_topic = Fabricate(:topic, user: user, tags: [hidden_tag], title: "Hidden Tag Topic")
+    hidden_tag_post = Fabricate(:post, topic: hidden_tag_topic, user: user, post_number: 1)
+
+    expect(
+      filtered_post_ids("tag:#{hidden_tag.name}", guardian: Guardian.new(user)),
+    ).not_to include(hidden_tag_post.id)
+    expect(
+      filtered_post_ids("tag:#{hidden_tag.name}", guardian: Guardian.new(Fabricate(:admin))),
+    ).to include(hidden_tag_post.id)
+  end
+
+  it "only filters by groups with visible memberships" do
+    private_group =
+      Fabricate(
+        :group,
+        name: "private_group",
+        visibility_level: Group.visibility_levels[:staff],
+        members_visibility_level: Group.visibility_levels[:staff],
+      )
+    private_group.add(user2)
+    private_group_post = Fabricate(:post, topic: feature_topic, user: user2, post_number: 2)
+
+    expect(
+      filtered_post_ids("group:#{private_group.name}", guardian: Guardian.new(user)),
+    ).not_to include(private_group_post.id)
+    expect(
+      filtered_post_ids("group:#{private_group.name}", guardian: Guardian.new(Fabricate(:admin))),
+    ).to include(private_group_post.id)
+  end
+
+  it "does not match topic keywords from hidden posts for users who cannot see them" do
+    SearchIndexer.enable
+    hidden_post =
+      Fabricate(
+        :post,
+        topic: feature_topic,
+        user: user,
+        post_number: 2,
+        raw: "needleword only in a hidden post",
+        hidden: true,
+      )
+    SearchIndexer.index(hidden_post, force: true)
+
+    expect(filtered_post_ids("topic_keywords:needleword", guardian: Guardian.new(user))).to be_empty
+    expect(
+      filtered_post_ids("topic_keywords:needleword", guardian: Guardian.new(Fabricate(:admin))),
+    ).to include(feature_post.id, hidden_post.id)
+  ensure
+    SearchIndexer.disable
+  end
 end

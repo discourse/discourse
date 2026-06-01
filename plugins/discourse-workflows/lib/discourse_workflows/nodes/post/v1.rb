@@ -15,9 +15,8 @@ module DiscourseWorkflows
         DEFAULT_LIMIT = 30
         MAX_LIMIT = 500
         DEFAULT_MEMORY_CAP_MB = 50
-        MAX_MEMORY_CAP_MB = 50
 
-        def self.list_string_property(control: nil)
+        def self.list_string_property(control: nil, hidden: false)
           property = {
             type: :string,
             required: false,
@@ -27,7 +26,12 @@ module DiscourseWorkflows
               },
             },
           }
-          property[:ui] = { control: control } if control
+
+          ui = {}
+          ui[:control] = control if control
+          ui[:hidden] = true if hidden
+          property[:ui] = ui if ui.present?
+
           property
         end
 
@@ -101,6 +105,19 @@ module DiscourseWorkflows
                 },
               },
             },
+            query: {
+              type: :string,
+              required: false,
+              ui: {
+                control: :filter_query,
+                filter: :posts,
+              },
+              display_options: {
+                show: {
+                  operation: ["list"],
+                },
+              },
+            },
             include_raw: {
               type: :boolean,
               required: false,
@@ -127,18 +144,19 @@ module DiscourseWorkflows
                 },
               },
             },
-            created_after: list_string_property,
-            created_before: list_string_property,
-            topic_created_after: list_string_property,
-            topic_created_before: list_string_property,
-            categories: list_string_property(control: :category),
-            exclude_categories: list_string_property,
+            created_after: list_string_property(hidden: true),
+            created_before: list_string_property(hidden: true),
+            topic_created_after: list_string_property(hidden: true),
+            topic_created_before: list_string_property(hidden: true),
+            categories: list_string_property(control: :category, hidden: true),
+            exclude_categories: list_string_property(hidden: true),
             exact_category_match: {
               type: :boolean,
               required: false,
               default: false,
               ui: {
                 control: :boolean,
+                hidden: true,
               },
               display_options: {
                 show: {
@@ -146,16 +164,19 @@ module DiscourseWorkflows
                 },
               },
             },
-            tags: list_string_property(control: :tags),
-            exclude_tags: list_string_property(control: :tags),
-            topics: list_string_property,
-            usernames: list_string_property,
-            groups: list_string_property,
+            tags: list_string_property(control: :tags, hidden: true),
+            exclude_tags: list_string_property(control: :tags, hidden: true),
+            topics: list_string_property(hidden: true),
+            usernames: list_string_property(hidden: true),
+            groups: list_string_property(hidden: true),
             post_type: {
               type: :options,
               required: false,
               options: POST_TYPE_OPTIONS,
               default: "all",
+              ui: {
+                hidden: true,
+              },
               display_options: {
                 show: {
                   operation: ["list"],
@@ -167,19 +188,25 @@ module DiscourseWorkflows
               required: false,
               options: STATUS_OPTIONS,
               default: "any",
+              ui: {
+                hidden: true,
+              },
               display_options: {
                 show: {
                   operation: ["list"],
                 },
               },
             },
-            keywords: list_string_property,
-            topic_keywords: list_string_property,
+            keywords: list_string_property(hidden: true),
+            topic_keywords: list_string_property(hidden: true),
             order: {
               type: :options,
               required: false,
               options: ORDER_OPTIONS,
               default: "latest",
+              ui: {
+                hidden: true,
+              },
               display_options: {
                 show: {
                   operation: ["list"],
@@ -209,7 +236,9 @@ module DiscourseWorkflows
             memory_cap_mb: {
               type: :integer,
               required: false,
-              default: DEFAULT_MEMORY_CAP_MB,
+              ui: {
+                hidden: true,
+              },
               display_options: {
                 show: {
                   operation: ["list"],
@@ -221,6 +250,7 @@ module DiscourseWorkflows
               required: false,
               ui: {
                 control: :textarea,
+                hidden: true,
               },
               display_options: {
                 show: {
@@ -267,6 +297,7 @@ module DiscourseWorkflows
             "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
             "include_cooked" =>
               exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
+            "query" => exec_ctx.get_node_parameter("query", item_index),
             "created_after" => exec_ctx.get_node_parameter("created_after", item_index),
             "created_before" => exec_ctx.get_node_parameter("created_before", item_index),
             "topic_created_after" => exec_ctx.get_node_parameter("topic_created_after", item_index),
@@ -289,12 +320,6 @@ module DiscourseWorkflows
             "max_results" =>
               exec_ctx.get_node_parameter("max_results", item_index, default: DEFAULT_LIMIT),
             "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
-            "memory_cap_mb" =>
-              exec_ctx.get_node_parameter(
-                "memory_cap_mb",
-                item_index,
-                default: DEFAULT_MEMORY_CAP_MB,
-              ),
             "advanced_filter" => exec_ctx.get_node_parameter("advanced_filter", item_index),
           }
         end
@@ -353,7 +378,7 @@ module DiscourseWorkflows
           limit =
             bounded_integer(config["max_results"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
           offset = bounded_integer(config["offset"], default: 0, min: 0)
-          memory_cap_bytes = memory_cap_bytes(config["memory_cap_mb"])
+          memory_cap_limit_bytes = memory_cap_bytes
           query = query_from_config(config)
           filter = PostsFilter.new(query, guardian: actor.guardian, limit: limit, offset: offset)
 
@@ -372,7 +397,7 @@ module DiscourseWorkflows
             guardian: actor.guardian,
             include_raw: truthy?(config["include_raw"]),
             include_cooked: truthy?(config["include_cooked"]),
-            memory_cap_bytes: memory_cap_bytes,
+            memory_cap_bytes: memory_cap_limit_bytes,
             log: exec_ctx.log,
           )
         end
@@ -421,6 +446,9 @@ module DiscourseWorkflows
         end
 
         def query_from_config(config)
+          query = config["query"].to_s.strip
+          return query if query.present?
+
           parts = []
           add_query_part(parts, "after", config["created_after"])
           add_query_part(parts, "before", config["created_before"])
@@ -503,13 +531,8 @@ module DiscourseWorkflows
           default
         end
 
-        def memory_cap_bytes(value)
-          bounded_integer(
-            value,
-            default: DEFAULT_MEMORY_CAP_MB,
-            min: 1,
-            max: MAX_MEMORY_CAP_MB,
-          ).megabytes
+        def memory_cap_bytes
+          DEFAULT_MEMORY_CAP_MB.megabytes
         end
 
         def truthy?(value)

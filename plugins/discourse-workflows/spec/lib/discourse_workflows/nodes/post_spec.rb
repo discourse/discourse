@@ -119,6 +119,29 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "lists posts matching the query field" do
+      topic = Fabricate(:topic, category: category, user: user, title: "Query field topic")
+      matching_post = Fabricate(:post, topic: topic, user: user, post_number: 1, raw: "query body")
+      ignored_topic =
+        Fabricate(:topic, category: other_category, user: other_user, title: "Ignored query topic")
+      Fabricate(:post, topic: ignored_topic, user: other_user, post_number: 1, raw: "ignored body")
+
+      result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "query" => "category:#{category.slug} username:#{user.username}",
+            "categories" => other_category.slug,
+            "max_results" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(result.map { |output_item| output_item.dig("json", "post", "id") }).to contain_exactly(
+        matching_post.id,
+      )
+    end
+
     it "lists posts matching the advanced filter" do
       matching_post = Fabricate(:post, user: user, raw: "advanced body")
       Fabricate(:post, user: other_user, raw: "ignored body")
@@ -168,7 +191,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(user_result).to eq([])
     end
 
-    it "enforces count and memory caps" do
+    it "enforces the result count cap" do
       3.times { |index| Fabricate(:post, raw: "post #{index}", post_number: index + 1) }
 
       limited_result =
@@ -181,29 +204,34 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
         ).first
 
       expect(limited_result.length).to eq(2)
+    end
 
-      large_post =
-        Fabricate(
-          :post,
-          raw: "x" * (1.megabyte + 1000),
-          cooked: "<p>large</p>",
-          post_number: 1,
-          skip_validation: true,
-        )
-      messages = nil
-      memory_result =
-        execute_node_output(
-          configuration: {
-            "operation" => "list",
-            "topics" => large_post.topic_id.to_s,
-            "memory_cap_mb" => "1",
-            "include_raw" => true,
-          },
-          item: item,
-        ) { |exec_ctx| messages = exec_ctx.log.entries.map { |entry| entry["message"] } }.first
+    it "uses a hard-coded memory cap" do
+      stub_const(described_class, :DEFAULT_MEMORY_CAP_MB, 1) do
+        large_post =
+          Fabricate(
+            :post,
+            raw: "x" * (1.megabyte + 1000),
+            cooked: "<p>large</p>",
+            post_number: 1,
+            skip_validation: true,
+          )
+        messages = nil
 
-      expect(memory_result).to eq([])
-      expect(messages).to include(a_string_matching(/Post list truncated/))
+        memory_result =
+          execute_node_output(
+            configuration: {
+              "operation" => "list",
+              "query" => "topic:#{large_post.topic_id}",
+              "memory_cap_mb" => "50",
+              "include_raw" => true,
+            },
+            item: item,
+          ) { |exec_ctx| messages = exec_ctx.log.entries.map { |entry| entry["message"] } }.first
+
+        expect(memory_result).to eq([])
+        expect(messages).to include(a_string_matching(/Post list truncated/))
+      end
     end
 
     it "raises for invalid advanced filters" do

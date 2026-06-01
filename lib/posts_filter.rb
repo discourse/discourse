@@ -277,11 +277,26 @@ class PostsFilter
   end
 
   def secure_base_relation
-    @base_scope
-      .secured(@guardian)
-      .joins(:topic)
-      .merge(Topic.secured(@guardian))
-      .where("topics.archetype = ?", Archetype.default)
+    relation =
+      @base_scope
+        .secured(@guardian)
+        .joins(:topic)
+        .merge(Topic.secured(@guardian))
+        .where("topics.archetype = ?", Archetype.default)
+
+    relation = @guardian.filter_hidden_posts(relation)
+    relation = relation.where(topics: { visible: true }) if guardian_should_hide_unlisted_topics?
+
+    if SiteSetting.shared_drafts_category.present? && !@guardian.can_see_shared_draft?
+      relation =
+        relation.where.not(topics: { category_id: SiteSetting.shared_drafts_category.to_i })
+    end
+
+    relation
+  end
+
+  def guardian_should_hide_unlisted_topics?
+    @guardian.anonymous? || !@guardian.can_see_unlisted_topics?
   end
 
   def filtered_relation(base_relation)
@@ -464,7 +479,7 @@ class PostsFilter
     tag_names = split_values(parsed_filter[:value])
     return relation if tag_names.empty?
 
-    tag_ids = Tag.where_name(tag_names).pluck(:id)
+    tag_ids = DiscourseTagging.filter_visible(Tag, @guardian).where_name(tag_names).pluck(:id)
     return relation.where("1 = 0") if tag_ids.empty? && !parsed_filter[:exclude]
     return relation if tag_ids.empty?
 
@@ -493,15 +508,24 @@ class PostsFilter
     return relation if keywords.empty?
 
     ts_query = keywords.map { |keyword| keyword.gsub(/['\\]/, " ") }.join(" | ")
+    hidden_posts_condition = @guardian.can_see_all_hidden_posts? ? "" : "AND posts2.hidden = false"
+    whisper_condition =
+      @guardian.can_see_whispers? ? "" : "AND posts2.post_type <> #{Post.types[:whisper]}"
+
     relation.where(
       "posts.topic_id IN (
         SELECT posts2.topic_id
         FROM posts posts2
         JOIN post_search_data ON post_search_data.post_id = posts2.id
         WHERE post_search_data.search_data @@ to_tsquery(?, ?)
+        AND posts2.deleted_at IS NULL
+        AND posts2.post_type IN (?)
+        #{hidden_posts_condition}
+        #{whisper_condition}
       )",
       ::Search.ts_config,
       ts_query,
+      Topic.visible_post_types(@guardian.user),
     )
   end
 
@@ -532,12 +556,13 @@ class PostsFilter
   end
 
   def filter_groups(relation, groups_param)
-    group_names = split_values(groups_param)
-    found_group_ids = []
-    group_names.each do |name|
-      group = Group.find_by("name ILIKE ?", name)
-      found_group_ids << group.id if group
-    end
+    group_names = split_values(groups_param).map(&:downcase)
+    found_group_ids =
+      Group
+        .visible_groups(@guardian.user)
+        .members_visible_groups(@guardian.user)
+        .where("LOWER(name) IN (?)", group_names)
+        .pluck(:id)
 
     return relation.where("1 = 0") if found_group_ids.empty?
 

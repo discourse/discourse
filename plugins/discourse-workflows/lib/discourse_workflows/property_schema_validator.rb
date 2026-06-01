@@ -59,6 +59,7 @@ module DiscourseWorkflows
       control
       dynamic_value
       expression
+      filter
       flat
       format
       hidden
