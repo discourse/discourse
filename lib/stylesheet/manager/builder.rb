@@ -184,7 +184,7 @@ class Stylesheet::Manager::Builder
   def theme_digest
     Digest::SHA1.hexdigest(
       scss_digest.to_s + design_tokens_digest + color_scheme_digest.to_s + settings_digest +
-        uploads_digest + current_hostname,
+        uploads_digest + current_hostname + SiteSetting.enable_design_system.to_s,
     )
   end
 
@@ -245,7 +245,10 @@ class Stylesheet::Manager::Builder
   end
 
   def default_digest
-    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.fs_asset_cachebuster}-#{plugins_digest}-#{current_hostname}"
+    # enable_design_system flips the injected --d-system-* block (DesignSystem::
+    # Tokens.css) between palette values and the legacy mapping, so it must bust
+    # the `common` stylesheet cache.
+    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.fs_asset_cachebuster}-#{plugins_digest}-#{current_hostname}-ds#{SiteSetting.enable_design_system}"
   end
 
   def color_scheme_digest

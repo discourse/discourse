@@ -80,15 +80,61 @@ module DesignSystem
       love
     ].freeze
 
+    # OFF mode (enable_design_system false): each --d-system-* points at the
+    # equivalent legacy theme variable, so blocks built on the tokens inherit the
+    # site's current ColorScheme/fonts. Keyed by the flattened token path (which
+    # includes the "d-system" prefix). Colour + body/heading-font tokens are
+    # mapped; everything without an entry (radius/space/size, font size/weight/
+    # line-height, the code font) keeps its literal design-system value.
+    LEGACY_MAP = {
+      %w[d-system color surface default] => "var(--secondary)",
+      %w[d-system color surface sunken] => "var(--primary-low)",
+      %w[d-system color surface raised] => "var(--secondary)",
+      %w[d-system color surface hovered] => "var(--d-hover)",
+      %w[d-system color surface selected] => "var(--d-selected)",
+      %w[d-system color surface brand] => "var(--tertiary)",
+      %w[d-system color surface brand-hovered] => "var(--tertiary-hover)",
+      %w[d-system color surface danger] => "var(--danger-low)",
+      %w[d-system color surface success] => "var(--success-low)",
+      %w[d-system color surface highlight] => "var(--highlight)",
+      %w[d-system color text default] => "var(--primary)",
+      %w[d-system color text subtle] => "var(--primary-medium)",
+      %w[d-system color text inverse] => "var(--secondary)",
+      %w[d-system color text brand] => "var(--tertiary)",
+      %w[d-system color text danger] => "var(--danger)",
+      %w[d-system color text success] => "var(--success)",
+      %w[d-system color text link] => "var(--tertiary)",
+      %w[d-system color text link-hover] => "var(--tertiary-hover)",
+      %w[d-system color text highlight] => "var(--primary)",
+      %w[d-system color text love] => "var(--love)",
+      %w[d-system color border default] => "var(--primary-low-mid)",
+      %w[d-system color border bold] => "var(--primary-medium)",
+      %w[d-system color border subtle] => "var(--primary-low)",
+      %w[d-system color border brand] => "var(--tertiary)",
+      %w[d-system color border danger] => "var(--danger)",
+      %w[d-system color interactive default] => "var(--tertiary)",
+      %w[d-system color interactive hovered] => "var(--tertiary-hover)",
+      %w[d-system color interactive pressed] => "var(--tertiary-hover)",
+      %w[d-system font family body] => "var(--font-family)",
+      %w[d-system font family heading] => "var(--heading-font-family)",
+    }.freeze
+
     class << self
-      # The `:root{ --d-system-* }` block for the core defaults.
+      # The `:root{ --d-system-* }` block, always injected into the `common`
+      # stylesheet. ON (enable_design_system): tokens resolve to our d-base palette
+      # values (and the legacy ColorScheme is synced from them). OFF: they resolve
+      # to the site's legacy theme variables (LEGACY_MAP), so blocks built on
+      # --d-system-* inherit whatever theme the site already runs.
       def css
+        return legacy_css unless SiteSetting.enable_design_system
+
         emit_block(flatten(system), system)
       end
 
       # The `:root{}` block for a theme's overridden system tokens only. `overrides`
       # is a parsed partial system.json (rooted at "d-system"); returns "" if empty.
       def theme_css(overrides)
+        return "" unless SiteSetting.enable_design_system
         return "" if overrides.blank?
 
         tokens = flatten(overrides)
@@ -145,6 +191,17 @@ module DesignSystem
 
       def emit_block(tokens, sys)
         declarations = tokens.map { |t| "  --#{t[:path].join("-")}: #{css_value(t[:node], sys)};" }
+        ":root {\n#{declarations.join("\n")}\n}\n"
+      end
+
+      # OFF-mode block: each --d-system-* points at its legacy theme variable
+      # (LEGACY_MAP); tokens with no mapping keep their literal value.
+      def legacy_css
+        declarations =
+          flatten(system).map do |t|
+            value = LEGACY_MAP[t[:path]] || css_value(t[:node], system)
+            "  --#{t[:path].join("-")}: #{value};"
+          end
         ":root {\n#{declarations.join("\n")}\n}\n"
       end
 
