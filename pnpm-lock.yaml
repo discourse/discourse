@@ -23,6 +23,9 @@ patchedDependencies:
   ember-buffered-proxy:
     hash: 6f462c5d8fcc3ebcc27fc038b7be66b9337f0c848ad18e37a2101cb62b29ede5
     path: patches/ember-buffered-proxy.patch
+  ember-source@7.0.0:
+    hash: 686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b
+    path: patches/ember-source@7.0.0.patch
   ember-this-fallback@0.4.0:
     hash: 31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45
     path: patches/ember-this-fallback@0.4.0.patch
@@ -51,10 +54,10 @@ importers:
         version: 7.3.1
       '@glint/ember-tsc':
         specifier: ^1.11.4
-        version: 1.11.4(ember-source@7.0.0(@glimmer/component@2.1.1))(typescript@6.0.3)
+        version: 1.11.4(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))(typescript@6.0.3)
       '@glint/tsserver-plugin':
         specifier: ^2.7.7
-        version: 2.7.7(ember-source@7.0.0(@glimmer/component@2.1.1))
+        version: 2.7.7(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))
       '@rdil/parallel-prettier':
         specifier: ^3.0.0
         version: 3.0.0(prettier@3.8.1)
@@ -153,13 +156,13 @@ importers:
         version: link:../discourse
       ember-cli-htmlbars:
         specifier: ^7.0.1
-        version: 7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(@glimmer/component@2.1.1))
+        version: 7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))
       ember-source:
         specifier: ~7.0.0
-        version: 7.0.0(@glimmer/component@2.1.1)
+        version: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(@glimmer/component@2.1.1)))(ember-source@7.0.0(@glimmer/component@2.1.1))
+        version: 0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)))(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))
       fastestsmallesttextencoderdecoder:
         specifier: ^1.0.22
         version: 1.0.22
@@ -282,7 +285,7 @@ importers:
         version: 0.95.0
       '@glint/ember-tsc':
         specifier: ^1.11.4
-        version: 1.11.4(ember-source@7.0.0(@glimmer/component@2.1.1))(typescript@6.0.3)
+        version: 1.11.4(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))(typescript@6.0.3)
       '@glint/template':
         specifier: ^1.9.0
         version: 1.9.0
@@ -354,7 +357,7 @@ importers:
         version: 1.0.3
       ember-source:
         specifier: ~7.0.0
-        version: 7.0.0(@glimmer/component@2.1.1)
+        version: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
       ember-tracked-storage-polyfill:
         specifier: ^1.0.1
         version: 1.0.1
@@ -607,10 +610,10 @@ importers:
         version: 4.0.1(@babel/core@7.29.7)
       ember-cli-htmlbars:
         specifier: ^7.0.1
-        version: 7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(@glimmer/component@2.1.1))
+        version: 7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))
       ember-exam:
         specifier: ^10.1.3
-        version: 10.1.3(@glint/template@1.9.0)(ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.0.0(@glimmer/component@2.1.1))(qunit@2.26.0)
+        version: 10.1.3(@glint/template@1.9.0)(ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))(qunit@2.26.0)
       ember-modifier:
         specifier: ^4.3.0
         version: 4.3.0(@babel/core@7.29.7)
@@ -725,7 +728,7 @@ importers:
     devDependencies:
       ember-source:
         specifier: ~7.0.0
-        version: 7.0.0(@glimmer/component@2.1.1)
+        version: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
 
   frontend/pretty-text-processor:
     dependencies:
@@ -9981,7 +9984,7 @@ snapshots:
     dependencies:
       '@glimmer/interfaces': 0.94.6
 
-  '@glint/ember-tsc@1.11.4(ember-source@7.0.0(@glimmer/component@2.1.1))(typescript@6.0.3)':
+  '@glint/ember-tsc@1.11.4(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))(typescript@6.0.3)':
     dependencies:
       '@glimmer/syntax': 0.95.0
       '@glint/template': 1.9.0
@@ -10002,15 +10005,15 @@ snapshots:
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     optionalDependencies:
-      ember-source: 7.0.0(@glimmer/component@2.1.1)
+      ember-source: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
     transitivePeerDependencies:
       - supports-color
 
   '@glint/template@1.9.0': {}
 
-  '@glint/tsserver-plugin@2.7.7(ember-source@7.0.0(@glimmer/component@2.1.1))':
+  '@glint/tsserver-plugin@2.7.7(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))':
     dependencies:
-      '@glint/ember-tsc': 1.11.4(ember-source@7.0.0(@glimmer/component@2.1.1))(typescript@6.0.3)
+      '@glint/ember-tsc': 1.11.4(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))(typescript@6.0.3)
       '@volar/language-core': 2.4.28
       '@volar/typescript': 2.4.28
       jiti: 2.7.0
@@ -12409,7 +12412,7 @@ snapshots:
 
   ember-cli-get-component-path-option@1.0.0: {}
 
-  ember-cli-htmlbars@7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(@glimmer/component@2.1.1)):
+  ember-cli-htmlbars@7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)):
     dependencies:
       '@babel/core': 7.29.7
       '@ember/edition-utils': 1.2.0
@@ -12417,7 +12420,7 @@ snapshots:
       broccoli-debug: 0.6.5
       broccoli-persistent-filter: 3.1.3
       broccoli-plugin: 4.0.7
-      ember-source: 7.0.0(@glimmer/component@2.1.1)
+      ember-source: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
       fs-tree-diff: 2.0.1
       heimdalljs-logger: 0.1.10
       js-string-escape: 1.0.1
@@ -12674,7 +12677,7 @@ snapshots:
       content-tag: 4.2.0
       oxc-parser: 0.130.0
 
-  ember-exam@10.1.3(@glint/template@1.9.0)(ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.0.0(@glimmer/component@2.1.1))(qunit@2.26.0):
+  ember-exam@10.1.3(@glint/template@1.9.0)(ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))(qunit@2.26.0):
     dependencies:
       '@babel/core': 7.29.7
       chalk: 5.6.2
@@ -12683,7 +12686,7 @@ snapshots:
       ember-auto-import: 2.13.1(@glint/template@1.9.0)
       ember-cli-babel: 8.3.2(@babel/core@7.29.7)
       ember-qunit: 9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0)
-      ember-source: 7.0.0(@glimmer/component@2.1.1)
+      ember-source: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
       execa: 8.0.1
       fs-extra: 11.4.0
       js-yaml: 4.3.2
@@ -12732,7 +12735,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-source@7.0.0(@glimmer/component@2.1.1):
+  ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1):
     dependencies:
       '@babel/core': 7.29.7
       '@embroider/addon-shim': 1.10.3
@@ -12764,15 +12767,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(@glimmer/component@2.1.1)))(ember-source@7.0.0(@glimmer/component@2.1.1)):
+  ember-this-fallback@0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)))(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.4.1
       debug: 4.4.3
       ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(@glimmer/component@2.1.1))
+      ember-cli-htmlbars: 7.0.1(@babel/core@7.29.7)(ember-source@7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1))
       ember-cli-typescript: 5.3.0
-      ember-source: 7.0.0(@glimmer/component@2.1.1)
+      ember-source: 7.0.0(patch_hash=686b547f412835b226916aa332266457dc68e56c89e5433388151e74dd74533b)(@glimmer/component@2.1.1)
       lodash: 4.18.1
       winston: 3.14.2
       zod: 3.25.76
