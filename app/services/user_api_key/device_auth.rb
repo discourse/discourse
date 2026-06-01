@@ -22,11 +22,11 @@ class UserApiKey::DeviceAuth
   DEVICE_AUTH_INTERVAL = 5
   DEVICE_AUTHORIZED_PAYLOAD_TTL = 1.minute
   DEVICE_KEY_PLACEHOLDER = "x" * 32
-  DEVICE_CODE_REDIS_PREFIX = "user_api_key:device:".freeze
-  DEVICE_USER_CODE_REDIS_PREFIX = "user_api_key:device:code:".freeze
-  DEVICE_REQUEST_REDIS_PREFIX = "user_api_key:device:request:".freeze
-  DEVICE_AUTHORIZATION_LOCK_REDIS_PREFIX = "user_api_key:device:lock:".freeze
-  USER_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".freeze
+  DEVICE_CODE_REDIS_PREFIX = "user_api_key:device:"
+  DEVICE_USER_CODE_REDIS_PREFIX = "user_api_key:device:code:"
+  DEVICE_REQUEST_REDIS_PREFIX = "user_api_key:device:request:"
+  DEVICE_AUTHORIZATION_LOCK_REDIS_PREFIX = "user_api_key:device:lock:"
+  USER_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
   DEVICE_CODE_REGEX = /\A\h{64}\z/
   DEVICE_REQUEST_TOKEN_REGEX = /\A[-_A-Za-z0-9]{8}\z/
   DISALLOWED_DEVICE_SCOPES = Set.new(%w[one_time_password])

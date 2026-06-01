@@ -23,7 +23,10 @@ const DEFAULT_SLOTS = 6;
  * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
  * @property {string} [Args.inputMode] - The inputmode attribute for the hidden input (defaults to "numeric")
  * @property {string} [Args.autocomplete] - The autocomplete attribute for the hidden input (defaults to "one-time-code")
+ * @property {boolean} [Args.autoFocus] - Focus the input automatically unless disabled or on iOS
  * @property {function(string): string} [Args.normalizeInput] - Callback used to normalize typed or pasted input
+ * @property {function(string): void} [Args.onChange] - Callback fired when the input value changes
+ * @property {function(string): void} [Args.onFill] - Callback fired when all slots become filled
  * @property {number} [Args.groupSize] - Adds a visual separator after every groupSize slots
  *
  */

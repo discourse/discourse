@@ -39,5 +39,41 @@ RSpec.describe UserApiKey::DeviceAuth::Deny do
 
       it { is_expected.to fail_a_step(:deny_grant) }
     end
+
+    context "when the grant is already denied" do
+      before do
+        grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+        grant.deny!
+        UserApiKey::DeviceAuth::GrantStore.save!(
+          grant,
+          ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
+        )
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "keeps the grant denied" do
+        result
+
+        grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+
+        expect(grant).to be_denied
+      end
+    end
+
+    context "when the grant is authorized" do
+      fab!(:user)
+
+      before do
+        UserApiKey::DeviceAuth::Authorize.call(
+          params: {
+            device_code: device_request[:device_code],
+            user_id: user.id,
+          },
+        )
+      end
+
+      it { is_expected.to fail_a_step(:deny_grant) }
+    end
   end
 end

@@ -68,5 +68,32 @@ RSpec.describe UserApiKey::DeviceAuth::Authorize do
         expect { result }.not_to change { UserApiKey.where(user: user).count }
       end
     end
+
+    context "when the grant is already authorized" do
+      before { UserApiKey::DeviceAuth::Authorize.call(params: params) }
+
+      it { is_expected.to fail_a_step(:authorize_grant) }
+
+      it "does not create another key for the current user" do
+        expect { result }.not_to change { UserApiKey.where(user: user).count }
+      end
+    end
+
+    context "when the grant is denied" do
+      before do
+        grant = UserApiKey::DeviceAuth::GrantStore.load(device_request[:device_code])
+        grant.deny!
+        UserApiKey::DeviceAuth::GrantStore.save!(
+          grant,
+          ttl: UserApiKey::DeviceAuth::GrantStore.ttl_for_update(grant.device_code),
+        )
+      end
+
+      it { is_expected.to fail_a_step(:authorize_grant) }
+
+      it "does not create a key for the current user" do
+        expect { result }.not_to change { UserApiKey.where(user: user).count }
+      end
+    end
   end
 end

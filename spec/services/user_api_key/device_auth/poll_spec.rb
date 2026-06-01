@@ -70,6 +70,14 @@ RSpec.describe UserApiKey::DeviceAuth::Poll do
       end
     end
 
+    context "with a denied grant" do
+      before { UserApiKey::DeviceAuth::Deny.call(params: params) }
+
+      it "returns access_denied" do
+        expect(result[:poll_response]).to eq(status: "access_denied")
+      end
+    end
+
     context "with an invalid device code" do
       let(:params) { { device_code: "invalid" } }
 

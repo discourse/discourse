@@ -279,6 +279,15 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects oversized requested expiry values" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+
+      post "/user-api-key.json",
+           params: args.except(:auth_redirect).merge(expires_in_seconds: "1" * 1_000)
+      expect(response.status).to eq(400)
+    end
+
     it "renders show template with application_name when no auth_redirect provided" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       user = Fabricate(:user, trust_level: TrustLevel[0])
