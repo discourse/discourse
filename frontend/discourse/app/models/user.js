@@ -1525,20 +1525,15 @@ User.reopenClass({
       data.invite_code = attrs.inviteCode;
     }
 
-    const shouldCreate = await applyBehaviorTransformer(
-      "before-create-account",
-      () => ({ success: true }),
+    return applyBehaviorTransformer(
+      "create-account",
+      () =>
+        ajax(userPath(), {
+          data,
+          type: "POST",
+        }),
       { data }
     );
-
-    if (!shouldCreate.success) {
-      return Promise.reject(new Error(shouldCreate.errorMessage));
-    }
-
-    return ajax(userPath(), {
-      data,
-      type: "POST",
-    });
   },
 
   _saveTimezone(user) {

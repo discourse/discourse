@@ -7,8 +7,10 @@ module DiscourseHcaptcha
     private
 
     def ensure_config
-      raise "not enabled" unless SiteSetting.discourse_captcha_provider == CaptchaProvider::HCAPTCHA
-      raise "token is missing" if params[:token].blank?
+      unless SiteSetting.discourse_captcha_provider == CaptchaProvider::HCAPTCHA
+        raise Discourse::NotFound
+      end
+      raise Discourse::InvalidParameters.new(:token) if params[:token].blank?
     end
 
     def store_token_in_redis(temp_id)

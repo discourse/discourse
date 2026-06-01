@@ -8,9 +8,9 @@ module DiscourseHcaptcha
 
     def ensure_config
       unless SiteSetting.discourse_captcha_provider == CaptchaProvider::RECAPTCHA
-        raise "not enabled"
+        raise Discourse::NotFound
       end
-      raise "token is missing" if params[:token].blank?
+      raise Discourse::InvalidParameters.new(:token) if params[:token].blank?
     end
 
     def store_token_in_redis(temp_id)

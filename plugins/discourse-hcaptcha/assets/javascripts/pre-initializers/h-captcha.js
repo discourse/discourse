@@ -20,20 +20,12 @@ function initializeHCaptcha(api, container) {
     return;
   }
 
-  api.registerBehaviorTransformer("before-create-account", async ({ next }) => {
-    const previousResult = await next();
-    if (!previousResult.success) {
-      return previousResult;
-    }
-
+  api.registerBehaviorTransformer("create-account", async ({ next }) => {
     const captchaService = container.lookup("service:captcha-service");
     captchaService.submitted = true;
 
     if (captchaService.invalid) {
-      return {
-        success: false,
-        errorMessage: i18n("discourse_captcha.missing_token"),
-      };
+      throw new Error(i18n("discourse_captcha.missing_token"));
     }
 
     const captchaRoute = captchaSelector(siteSettings);
@@ -43,14 +35,15 @@ function initializeHCaptcha(api, container) {
         data: { token: captchaService.token },
         type: "POST",
       });
-      captchaService.reset();
-      return { success: true };
     } catch {
       captchaService.reset();
-      return {
-        success: false,
-        errorMessage: i18n("discourse_captcha.verification_failed"),
-      };
+      throw new Error(i18n("discourse_captcha.verification_failed"));
+    }
+
+    try {
+      return await next();
+    } finally {
+      captchaService.reset();
     }
   });
 }

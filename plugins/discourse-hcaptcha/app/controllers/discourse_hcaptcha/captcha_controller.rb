@@ -8,7 +8,6 @@ module DiscourseHcaptcha
     skip_before_action :redirect_to_login_if_required
 
     TOKEN_TTL = 2.minutes
-    protect_from_forgery except: [:create]
 
     def create
       temp_id = SecureRandom.uuid
@@ -33,13 +32,10 @@ module DiscourseHcaptcha
     end
 
     def cookie_options
-      same_site = SiteSetting.same_site_cookies == "Disabled" ? nil : SiteSetting.same_site_cookies
-      {
-        httponly: true,
-        secure: SiteSetting.force_https,
-        expires: TOKEN_TTL.from_now,
-        same_site: same_site,
-      }.compact
+      options = { httponly: true, secure: SiteSetting.force_https, expires: TOKEN_TTL.from_now }
+      options[:same_site] = SiteSetting.same_site_cookies if SiteSetting.same_site_cookies !=
+        "Disabled"
+      options
     end
   end
 end

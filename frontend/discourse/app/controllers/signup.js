@@ -67,7 +67,7 @@ export default class SignupPageController extends Controller {
     showValidationOnInit: false,
   });
 
-  @computed("authOptions.length")
+  @computed("authOptions")
   get hasAuthOptions() {
     return !isEmpty(this.authOptions);
   }

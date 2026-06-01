@@ -9,9 +9,9 @@
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
-  "before-create-account",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
+  "create-account",
   "custom-homepage-model",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
