@@ -96,6 +96,7 @@ import {
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
 } from "discourse/services/keyboard-shortcuts";
+import { resetEngine as resetProsemirrorEngine } from "discourse/static/prosemirror/lib/markdown-it";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
@@ -257,6 +258,7 @@ export function testCleanup(container, app) {
   resetLinkLookup();
   resetModelTransformers();
   resetMentions();
+  resetProsemirrorEngine();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
   resetBeforeAuthCompleteCallbacks();
