@@ -16,7 +16,6 @@
     "@csstools/postcss-light-dark-function": "^3.0.1",
     "@rollup/browser": "^4.60.3",
     "@rollup/plugin-babel": "^7.0.0",
-    "abort-controller": "^3.0.0",
     "autoprefixer": "^10.5.0",
     "babel-plugin-ember-template-compilation": "^4.0.0",
     "content-tag": "^4.0.0",
@@ -31,9 +30,7 @@
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.15",
-    "postcss-js": "^5.1.0",
     "postcss-nesting": "^14.0.0",
-    "readable-stream": "^4.7.0",
     "rolldown": "1.0.0",
     "source-map-js": "^1.2.1",
     "terser": "^5.47.1"

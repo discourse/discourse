@@ -17,11 +17,10 @@ const bundle = await rolldown({
     alias: {
       path: "path-browserify",
       url: local("./url-polyfill.js"),
-      "source-map-js": "source-map-js",
+      // Absolute path so postcss's `browser` field (`source-map-js: false`) can't stub it out and disable CSS sourcemaps.
+      "source-map-js": local("source-map-js"),
       assert: local("./noop.js"),
       fs: local("./noop.js"),
-      stream: "readable-stream",
-      "abort-controller": "abort-controller/dist/abort-controller",
       os: local("./os-shim.js"),
       workerpool: local("./workerpool-shim.js"),
     },
