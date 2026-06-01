@@ -1,3 +1,5 @@
+import { id, include } from "@rolldown/pluginutils";
+
 // Ember 7 ships separate dev/prod builds. The prod build hard-codes the
 // deprecation machinery to no-ops (`@ember/debug`'s `deprecate`/handlers become
 // `() => {}`, and `deprecateUntil` drops its `deprecate()` call), so Ember
@@ -19,37 +21,37 @@ const TARGETS = [
   "@ember/debug/lib/handlers.js",
 ];
 
-// Cheap pre-filter so we only pay for `this.resolve` on potentially-relevant
-// imports rather than every module in the build.
-function mightTarget(source) {
-  return (
-    source.includes("deprecate") ||
-    source.includes("handlers") ||
-    source.includes("-internals/deprecations")
-  );
-}
+// Native (Rust-side) pre-filter on the import specifier, so the JS handler
+// only runs for imports that could resolve to a target module - avoiding a
+// round-trip for every module in the build. The specifiers reaching the
+// targets are relative (`./deprecate.js`, `../../debug/lib/handlers.js`) or the
+// `@ember/-internals/deprecations` bare specifier.
+const SPECIFIER = /deprecate|handlers|-internals\/deprecations/;
 
 export default function productionEmberDeprecations() {
   return {
     name: "production-ember-deprecations",
-    async resolveId(source, importer, options) {
-      if (!importer || !mightTarget(source)) {
+    resolveId: {
+      filter: [include(id(SPECIFIER))],
+      async handler(source, importer, options) {
+        if (!importer) {
+          return null;
+        }
+
+        const resolved = await this.resolve(source, importer, {
+          ...options,
+          skipSelf: true,
+        });
+        if (!resolved || resolved.external) {
+          return null;
+        }
+
+        if (TARGETS.some((target) => resolved.id.endsWith(PROD + target))) {
+          return { ...resolved, id: resolved.id.replace(PROD, DEV) };
+        }
+
         return null;
-      }
-
-      const resolved = await this.resolve(source, importer, {
-        ...options,
-        skipSelf: true,
-      });
-      if (!resolved || resolved.external) {
-        return null;
-      }
-
-      if (TARGETS.some((target) => resolved.id.endsWith(PROD + target))) {
-        return { ...resolved, id: resolved.id.replace(PROD, DEV) };
-      }
-
-      return null;
+      },
     },
   };
 }
