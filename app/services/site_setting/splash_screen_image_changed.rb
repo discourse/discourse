@@ -3,7 +3,14 @@
 class SiteSetting::SplashScreenImageChanged
   include Service::Base
 
-  params { attribute :upload_id, :integer }
+  SETTINGS = %w[splash_screen_image splash_screen_image_dark]
+
+  params do
+    attribute :upload_id, :integer
+    attribute :setting_name, :string, default: "splash_screen_image"
+
+    validates :setting_name, inclusion: { in: SETTINGS }
+  end
 
   model :upload
   model :svg
@@ -46,7 +53,7 @@ class SiteSetting::SplashScreenImageChanged
     svg.to_xml
   end
 
-  def save_cleaned_svg_upload(cleaned_svg:, upload:)
+  def save_cleaned_svg_upload(cleaned_svg:, upload:, params:)
     return if cleaned_svg == upload.content
 
     Tempfile.open(%w[splash_screen .svg]) do |tmp|
@@ -57,7 +64,7 @@ class SiteSetting::SplashScreenImageChanged
       existing = Upload.find_by(sha1: new_sha1)
 
       if existing && existing.id != upload.id
-        SiteSetting.splash_screen_image = existing.id
+        SiteSetting.set(params.setting_name, existing.id)
       else
         old_path = Discourse.store.get_path_for_upload(upload)
         old_url = upload.url

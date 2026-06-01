@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UploadSettingValidator
+  SVG_SETTINGS = %i[splash_screen_image splash_screen_image_dark]
+
   def initialize(opts = {})
     @opts = opts
   end
@@ -13,16 +15,12 @@ class UploadSettingValidator
   end
 
   def error_message
-    return I18n.t("site_settings.errors.invalid_svg") if @opts[:name] == :splash_screen_image
+    return I18n.t("site_settings.errors.invalid_svg") if svg_setting?
     I18n.t("site_settings.errors.invalid_upload")
   end
 
   def additional_validation_passed(upload)
-    if @opts[:name] == :splash_screen_image
-      validate_svg(upload)
-    else
-      true
-    end
+    svg_setting? ? validate_svg(upload) : true
   end
 
   # We also clean svgs in UploadCreator#clean_svg!,
@@ -43,5 +41,11 @@ class UploadSettingValidator
     has_event_handlers = svg.xpath("//@*[starts-with(local-name(), 'on')]").present?
 
     !has_scripts && !has_event_handlers
+  end
+
+  private
+
+  def svg_setting?
+    SVG_SETTINGS.include?(@opts[:name])
   end
 end
