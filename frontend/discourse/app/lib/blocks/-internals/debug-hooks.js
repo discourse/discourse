@@ -236,6 +236,16 @@ export function handleOptionalMissingBlock({
  * @param {string} options.hierarchy
  * @param {boolean} options.showGhosts
  * @param {string} options.key - Stable unique key for this entry.
+ * @param {import("@ember/owner").default} [options.owner] - The application
+ *   owner, forwarded to the ghost-children creator for service lookup.
+ * @param {Object} [options.outletArgs] - Outlet arguments, forwarded to the
+ *   ghost-children creator.
+ * @param {boolean} [options.isLoggingEnabled] - Whether debug logging is
+ *   enabled, forwarded to the ghost-children creator.
+ * @param {string} [options.containerPath] - This entry's full path, used as
+ *   the hierarchy prefix for its ghost children.
+ * @param {Function} [options.resolveBlockFn] - Function to resolve block
+ *   references, forwarded to the ghost-children creator.
  * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
  */
 export function handleUnknownBlock({
@@ -244,10 +254,35 @@ export function handleUnknownBlock({
   hierarchy,
   showGhosts,
   key,
+  owner,
+  outletArgs,
+  isLoggingEnabled,
+  containerPath,
+  resolveBlockFn,
 }) {
   if (!showGhosts) {
     return null;
   }
+
+  // An unknown block carries no metadata, so we can't tell whether it was a
+  // container. But if the saved layout gave it children it was authored as
+  // one — surface them as nested ghosts (same mechanism resolved containers
+  // use, see `createGhostBlock`) so the author can see and salvage the work
+  // before removing the broken parent.
+  let ghostChildren = null;
+  if (entry.children?.length) {
+    ghostChildren = debugHooks.getCallback(
+      DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
+    )?.(
+      entry.children,
+      owner,
+      containerPath,
+      outletArgs,
+      isLoggingEnabled,
+      resolveBlockFn
+    );
+  }
+
   const ghostData = createDebugGhost(
     {
       name: blockName,
@@ -264,6 +299,7 @@ export function handleUnknownBlock({
       conditions: entry.conditions,
       failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
       failureReason: `Block "${blockName}" is not registered.`,
+      children: ghostChildren,
     },
     { outletName: hierarchy }
   );

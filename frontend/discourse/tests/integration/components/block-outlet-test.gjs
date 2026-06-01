@@ -1424,6 +1424,143 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         `unknown-block key is "name:stableKey" with no prefix (got "${ghostKey}")`
       );
     });
+
+    test("unknown container forwards its children to GHOST_CHILDREN_CREATOR", async function (assert) {
+      // An unregistered container's nested blocks must stay visible (and
+      // editable) so the author can salvage them before removing the broken
+      // parent. Core kicks this off by invoking GHOST_CHILDREN_CREATOR with
+      // the entry's children, mirroring the resolved-container path.
+      let creatorArgs = null;
+      let forwardedChildren = null;
+
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR,
+        (...args) => {
+          creatorArgs = args;
+          return [
+            {
+              key: "child-sentinel:0",
+              Component: <template>
+                <div class="ghost-child-sentinel"></div>
+              </template>,
+            },
+          ];
+        }
+      );
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+        if (blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+          forwardedChildren = blockData.children;
+          const kids = blockData.children ?? [];
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}>
+                {{#each kids key="key" as |child|}}
+                  <child.Component />
+                {{/each}}
+              </div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      // Unknown blocks only survive registration on the permissive
+      // session-draft layer; strict `api.renderBlocks` rejects them.
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [
+          {
+            block: "unregistered-container",
+            children: [
+              { block: "unregistered-child" },
+              { block: "unregistered-child" },
+            ],
+          },
+        ],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert
+        .dom('.ghost-block[data-name="unregistered-container"]')
+        .exists("the unknown container renders as a ghost");
+      assert.notStrictEqual(
+        creatorArgs,
+        null,
+        "GHOST_CHILDREN_CREATOR was invoked for the unknown container"
+      );
+      assert.strictEqual(
+        creatorArgs[0].length,
+        2,
+        "the container's two child entries are forwarded as the first arg"
+      );
+      assert.strictEqual(
+        creatorArgs[2],
+        "sidebar-blocks/unregistered-container[0]",
+        "the container path is forwarded as the third arg"
+      );
+      assert.strictEqual(
+        typeof creatorArgs[5],
+        "function",
+        "the block resolver is forwarded as the sixth arg"
+      );
+      assert.strictEqual(
+        forwardedChildren.length,
+        1,
+        "the creator's return value is forwarded as blockData.children"
+      );
+      assert
+        .dom(".ghost-child-sentinel")
+        .exists("the forwarded ghost children render inside the container");
+    });
+
+    test("unknown container renders a childless ghost when no GHOST_CHILDREN_CREATOR is registered", async function (assert) {
+      // Core-only installs (no creator registered) must degrade to the
+      // previous behaviour: the container ghost still renders, just without
+      // nested children.
+      let forwardedChildren = "unset";
+
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+        if (blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+          forwardedChildren = blockData.children;
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}></div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [
+          {
+            block: "unregistered-container",
+            children: [{ block: "unregistered-child" }],
+          },
+        ],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert
+        .dom('.ghost-block[data-name="unregistered-container"]')
+        .exists("the unknown container still renders as a ghost");
+      assert.strictEqual(
+        forwardedChildren,
+        undefined,
+        "no children are forwarded when no creator is registered"
+      );
+    });
   });
 
   module("outlet args", function () {

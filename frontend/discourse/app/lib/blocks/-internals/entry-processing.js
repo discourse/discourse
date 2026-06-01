@@ -192,6 +192,19 @@ export function processBlockEntries({
         const blockName =
           typeof entry.block === "string" ? entry.block : "(unknown)";
         const stableKey = entry.__stableKey ?? "no-key";
+        // When the unknown entry has children it was authored as a
+        // container; give it a path so its ghost children get distinct
+        // hierarchies/keys from any sibling unknown container. This also
+        // consumes a slot in the same counting space as resolved
+        // containers, keeping sibling indices stable.
+        const containerPath = entry.children?.length
+          ? buildContainerPath(
+              blockName,
+              entry.id,
+              baseHierarchy,
+              containerCounts
+            )
+          : undefined;
         const ghostData = handleUnknownBlock({
           blockName,
           entry,
@@ -202,6 +215,11 @@ export function processBlockEntries({
           // ghost back to its layout entry by this key, so it must not carry
           // a categorising prefix.
           key: `${blockName}:${stableKey}`,
+          owner,
+          outletArgs,
+          isLoggingEnabled,
+          containerPath,
+          resolveBlockFn: tryResolveBlock,
         });
         if (ghostData) {
           result.push(ghostData);
