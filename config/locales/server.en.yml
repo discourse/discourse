@@ -674,7 +674,7 @@ en:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
-      anonymous: "anonymous"
+      anonymous_users: "anonymous_users"
       logged_in_users: "logged_in_users"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -684,7 +684,7 @@ en:
     default_descriptions:
       everyone: "Automatic group including all members"
       staff: "Automatic group including admins and moderators"
-      anonymous: "Automatic pseudogroup representing unauthenticated visitors"
+      anonymous_users: "Automatic pseudogroup representing unauthenticated visitors"
       logged_in_users: "Automatic pseudogroup including every logged-in user"
       admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
@@ -2881,7 +2881,7 @@ en:
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
-    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
+    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Improvements to navigation, design, and usability for the Discourse admin dashboard."
 
     errors:
