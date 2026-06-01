@@ -4387,6 +4387,7 @@ experimental:
     default: true
     client: true
     hidden: true
+    refresh: true
     area: "experimental"
   reporting_improvements:
     default: false

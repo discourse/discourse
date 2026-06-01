@@ -33,6 +33,11 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   Stylesheet::Manager.clear_color_scheme_cache! if %i[base_font heading_font].include?(name)
 
+  if name == :enable_design_system
+    DesignSystem::ApplyDefaultScheme.call(new_value)
+    DesignSystem::SyncColorSchemes.call
+  end
+
   Report.clear_cache(:storage_stats) if %i[backup_location s3_backup_bucket].include?(name)
 
   if name == :slug_generation_method
