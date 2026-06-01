@@ -11,24 +11,20 @@ module Migrations
         options do
           option "-h/--help", "Print out help."
           option "--reset", "Reset MappingsDB before importing data."
-          option "--only <steps>", "Run only the specified steps (comma-separated)."
-          option "--skip <steps>", "Skip the specified steps (comma-separated)."
+          option "--only <steps>",
+                 "Run only the specified steps (comma-separated).",
+                 default: [],
+                 type: STEP_LIST
+          option "--skip <steps>",
+                 "Skip the specified steps (comma-separated).",
+                 default: [],
+                 type: STEP_LIST
         end
 
         def call
           return print_usage if @options[:help]
 
-          Importer.execute(
-            reset: @options[:reset],
-            only: step_names(@options[:only]),
-            skip: step_names(@options[:skip]),
-          )
-        end
-
-        private
-
-        def step_names(class_names)
-          class_names.presence&.split(",")&.map { |name| name.strip.demodulize.underscore } || []
+          Importer.execute(reset: @options[:reset], only: @options[:only], skip: @options[:skip])
         end
       end
     end

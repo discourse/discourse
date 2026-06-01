@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = "migrations-core"
   s.version = "0.0.1"
   s.summary = "Discourse migrations framework: CLI, UI, schemas, DB infrastructure"
-  s.authors = ["Discourse"]
+  s.authors = ["Discourse Team"]
   s.required_ruby_version = ">= 3.4"
 
   s.files = Dir["lib/**/*", "db/**/*", "config/**/*", "bin/*"]

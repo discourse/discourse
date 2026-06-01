@@ -21,12 +21,6 @@ require "migrations/tooling/register"
 require "migrations/converters/register"
 require "migrations/importer/register"
 
-# Private converters may register additional commands.
-Migrations::Converters.all.each_value do |path|
-  register = File.join(path, "register.rb")
-  require register if File.exist?(register)
-end
-
 if defined?(RubyVM::YJIT)
   RubyVM::YJIT.enable
 else

@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = "migrations-tooling"
   s.version = "0.0.1"
   s.summary = "Discourse migrations developer tooling: schema DSL and dev commands"
-  s.authors = ["Discourse"]
+  s.authors = ["Discourse Team"]
   s.required_ruby_version = ">= 3.4"
 
   s.files = Dir["lib/**/*", "config/**/*", "scripts/**/*"]

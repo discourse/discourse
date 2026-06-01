@@ -40,7 +40,7 @@ jobs:
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem =="
-            (cd "migrations/$gem" && bundle install --jobs 4 --retry 3 && bundle exec rspec --tag ~rails)
+            (cd "migrations/$gem" && bundle install --jobs $(($(nproc) - 1)) && bundle exec rspec --tag ~rails)
           done
 
   tests:

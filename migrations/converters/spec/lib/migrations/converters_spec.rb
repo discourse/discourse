@@ -23,16 +23,14 @@ RSpec.describe Migrations::Converters do
   describe ".all" do
     subject(:all) { described_class.all }
 
-    it "returns all the converters except for infrastructure directories" do
-      create_converters(public_names: %w[adapter foo bar])
+    it "excludes the framework infrastructure directories" do
+      create_converters(public_names: described_class::NON_CONVERTER_DIRS + %w[foo bar])
 
-      expect(all).to eq(
-        { "foo" => File.join(converters_path, "foo"), "bar" => File.join(converters_path, "bar") },
-      )
+      expect(all.keys).to contain_exactly("foo", "bar")
     end
 
     it "returns converters from the gem and the private directory" do
-      create_converters(public_names: %w[adapter foo bar], private_names: %w[baz qux])
+      create_converters(public_names: %w[foo bar], private_names: %w[baz qux])
 
       expect(all).to eq(
         {
@@ -45,7 +43,7 @@ RSpec.describe Migrations::Converters do
     end
 
     it "raises an error if there a duplicate names" do
-      create_converters(public_names: %w[adapter foo bar], private_names: %w[foo baz qux])
+      create_converters(public_names: %w[foo bar], private_names: %w[foo baz qux])
 
       expect { all }.to raise_error(StandardError, /Duplicate converter name found: foo/)
     end

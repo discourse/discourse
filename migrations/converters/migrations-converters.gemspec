@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = "migrations-converters"
   s.version = "0.0.1"
   s.summary = "Discourse migrations: public converter implementations"
-  s.authors = ["Discourse"]
+  s.authors = ["Discourse Team"]
   s.required_ruby_version = ">= 3.4"
 
   s.files = Dir["lib/**/*"]
