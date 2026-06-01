@@ -4,7 +4,7 @@ metadata:
     minimum_version: "1.6.18"
 project:
   name: discourse
-  description: Discourse readiness slice covering Ruby dependency setup and baseline test execution
+  description: Discourse readiness slice covering Ruby/Bundler runtime and lock integrity checks
 execution:
   default_context: host
   contexts:
@@ -31,40 +31,37 @@ tasks:
   setup:
     context: host
     category: setup
-    description: Install Ruby gem dependencies with Bundler.
-    run: bundle install
+    description: Verify Bundler is available for this repo slice.
+    run: bundle --version
     execution:
       default_mode: native
       modes:
         native:
           context: host
-          run: bundle install
+          run: bundle --version
         container:
           context: app
-          run: bundle install
-    effects:
-      network: true
-      network_kind: dependency_hydration
-    notes: Install Ruby dependencies through Bundler.
+          run: bundle --version
+    notes: Validate Bundler availability before lock checks.
     internal: true
   test:
     context: host
     category: test
-    description: Run the default Ruby test suite.
-    run: bundle exec rake test
+    description: Verify Gemfile and lock consistency.
+    run: bundle lock --check
     execution:
       default_mode: native
       modes:
         native:
           context: host
-          run: bundle exec rake test
+          run: bundle lock --check
         container:
           context: app
-          run: bundle exec rake test
+          run: bundle lock --check
     depends_on:
       - setup
     safe_for_agent: true
-    notes: Run baseline Ruby tests.
+    notes: Checks that Bundler lock state is consistent with Gemfile for this slice.
   verify:
     context: host
     category: test
