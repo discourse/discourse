@@ -9,6 +9,8 @@ module Jobs
         @chat_message_id = args[:chat_message_id]
         raise Discourse::InvalidParameters.new(:chat_message_id) if @chat_message_id.blank?
 
+        disable_if_low_on_disk_space
+
         if Jobs.run_immediately?
           pull
         else
@@ -24,56 +26,63 @@ module Jobs
       def pull
         chat_message = ::Chat::Message.find_by(id: @chat_message_id)
         return if chat_message.nil? || chat_message.cooked.blank?
+        # Don't wipe content for system/webhook messages where cooked is hand-written.
+        return if chat_message.message.blank?
 
-        original_cooked = chat_message.cooked
-        doc = Nokogiri::HTML5.fragment(original_cooked)
-        downloads = {} # original src -> Upload
-        changed = false
+        hotlinked_map = chat_message.hotlinked_media.preload(:upload).index_by(&:url)
+        uploads_this_run = []
 
-        extract_images(doc).each do |img|
-          original_src = img["src"] || img[::PrettyText::BLOCKED_HOTLINKED_SRC_ATTR]
+        extract_images(::Nokogiri::HTML5.fragment(chat_message.cooked)).each do |img|
+          original_src = img["src"].presence || img[::PrettyText::BLOCKED_HOTLINKED_SRC_ATTR]
           download_src = resolve_download_src(original_src)
           next if !should_download?(download_src)
 
-          downloads[original_src] ||= attempt_download(download_src, chat_message.last_editor_id)
-          upload = downloads[original_src]
-          next if upload.nil?
+          normalized_src = ::Chat::MessageHotlinkedMedia.normalize_src(download_src)
+          next if hotlinked_map[normalized_src] # already attempted (success or terminal failure)
 
-          img["src"] = ::UrlHelper.cook_url(upload.url, secure: upload.secure?)
-          img.delete(::PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
-          changed = true
+          status, upload = attempt_download(download_src, chat_message.last_editor_id)
+          record = upsert_record(chat_message, normalized_src, status, upload)
+          hotlinked_map[normalized_src] = record if record
+          uploads_this_run << upload if upload && record&.downloaded?
         rescue => e
           Rails.logger.error(
             "Failed to pull hotlinked image (#{download_src}) for chat message #{@chat_message_id}\n#{e.message}\n#{e.backtrace.join("\n")}",
           )
         end
 
-        return if !changed
+        # Build the rewrite map from ALL successful records (this run + prior),
+        # so a re-introduced URL gets rewritten from cache too.
+        uploads_by_url =
+          hotlinked_map.each_with_object({}) do |(url, record), acc|
+            acc[url] = record.upload if record.downloaded? && record.upload
+          end
+        return cleanup_orphans(uploads_this_run) if uploads_by_url.empty?
 
         new_raw =
-          if chat_message.message.present?
-            ::InlineUploads.replace_hotlinked_image_urls(raw: chat_message.message) do |src|
-              downloads[src]
-            end
-          else
-            chat_message.message
+          ::InlineUploads.replace_hotlinked_image_urls(raw: chat_message.message) do |src|
+            uploads_by_url[::Chat::MessageHotlinkedMedia.normalize_src(src)]
           end
 
-        # Conditional update — bail if cooked changed under us (concurrent edit).
-        # The next ProcessMessage triggered by that edit will re-enqueue this job.
-        affected_rows =
-          ::Chat::Message.where(id: chat_message.id, cooked: original_cooked).update_all(
+        # No raw change means the rewrite couldn't reference what we downloaded
+        # (e.g. the image came from an onebox/raw HTML img, not markdown). Destroy
+        # any upload we created this run so we don't leak an unreferenced upload;
+        # the terminal tracking row stays so we don't re-download on every edit.
+        return cleanup_orphans(uploads_this_run) if new_raw == chat_message.message
+
+        # Conditional update — bail if the message changed under us (concurrent
+        # user edit). The next ProcessMessage from that edit re-enqueues us, and
+        # it will reuse the uploads we created via the cached tracking rows.
+        affected =
+          ::Chat::Message.where(id: chat_message.id, message: chat_message.message).update_all(
             message: new_raw,
-            cooked: doc.to_html,
             updated_at: Time.zone.now,
           )
-        return if affected_rows.zero?
+        return if affected.zero?
 
-        new_upload_ids = downloads.values.compact.map(&:id)
+        new_upload_ids = uploads_by_url.values.compact.map(&:id)
         if new_upload_ids.any?
-          # Reload to pick up any UploadReferences attached by a concurrent edit
-          # between our UPDATE and ensure_exist! — otherwise ensure_exist!'s
-          # destructive prune would delete them.
+          # Reload to pick up any concurrently-added UploadReferences before
+          # ensure_exist!'s destructive prune.
           chat_message.reload
           ::UploadReference.ensure_exist!(
             upload_ids: (chat_message.upload_ids + new_upload_ids).uniq,
@@ -82,8 +91,40 @@ module Jobs
           )
         end
 
-        chat_message.reload
-        ::Chat::Publisher.publish_processed!(chat_message)
+        # Re-cook through ProcessMessage so cooked reflects the rewritten raw —
+        # both for fresh downloads and for cache-only rewrites of a re-introduced
+        # URL. skip_pull_hotlinked_images prevents an enqueue loop.
+        ::Jobs.enqueue(
+          ::Jobs::Chat::ProcessMessage,
+          chat_message_id: chat_message.id,
+          skip_pull_hotlinked_images: true,
+          skip_notifications: true,
+        )
+      end
+
+      # Destroy uploads created this run that never got referenced (the rewrite
+      # couldn't place them). Returns nil so callers can `return cleanup_orphans(...)`.
+      def cleanup_orphans(uploads)
+        uploads.each do |upload|
+          upload.destroy if ::UploadReference.where(upload_id: upload.id).none?
+        end
+        nil
+      end
+
+      # Insert tracking row, tolerating a concurrent run that inserted it first.
+      def upsert_record(chat_message, normalized_src, status, upload)
+        DB.exec(
+          <<~SQL,
+          INSERT INTO chat_message_hotlinked_media (chat_message_id, url, status, upload_id, created_at, updated_at)
+          VALUES (:chat_message_id, :url, :status, :upload_id, NOW(), NOW())
+          ON CONFLICT (chat_message_id, md5(url)) DO NOTHING
+        SQL
+          chat_message_id: chat_message.id,
+          url: normalized_src,
+          status: status.to_s,
+          upload_id: upload&.id,
+        )
+        ::Chat::MessageHotlinkedMedia.find_by(chat_message_id: chat_message.id, url: normalized_src)
       end
 
       def extract_images(doc)
@@ -100,8 +141,24 @@ module Jobs
       def should_download?(src)
         return false if src.blank?
         return false if !SiteSetting.download_remote_images_to_local?
-        return false if src.start_with?("/", "data:")
-        return false if Discourse.store.has_been_uploaded?(src)
+        return false if src.start_with?("data:")
+
+        local_bases =
+          [
+            Discourse.base_url,
+            Discourse.asset_host,
+            SiteSetting.external_emoji_url.presence,
+          ].compact.map { |s| ::Chat::MessageHotlinkedMedia.normalize_src(s) }
+
+        if Discourse.store.has_been_uploaded?(src) ||
+             ::Chat::MessageHotlinkedMedia.normalize_src(src).start_with?(*local_bases) ||
+             src =~ %r{\A/[^/]}i
+          return false if !(src =~ %r{/uploads/} || Upload.secure_uploads_url?(src))
+          # Skip if we already have this upload locally. Chat messages have no
+          # access-control-post, so pass nil (don't reuse a post's secured copy).
+          upload = Upload.consider_for_reuse(Upload.get_from_url(src), nil)
+          return !upload.present?
+        end
 
         begin
           uri = URI.parse(src)
@@ -109,40 +166,43 @@ module Jobs
           return false
         end
         return false if uri.hostname.blank?
-        return false if local_hosts.include?(uri.hostname)
 
         SiteSetting.should_download_images?(src)
       end
 
-      def local_hosts
-        @local_hosts ||=
-          [
-            Discourse.base_url,
-            Discourse.asset_host,
-            SiteSetting.external_emoji_url.presence,
-          ].compact.filter_map do |url|
-            URI.parse(url).hostname
-          rescue URI::Error
-            nil
-          end
+      # Returns [status_symbol, upload_or_nil]. Delegates the actual download to
+      # the shared HotlinkedMediaDownloader (used by the post-side job too).
+      def attempt_download(src, user_id)
+        upload = HotlinkedMediaDownloader.download(src, user_id, tmp_file_name: "chat-hotlinked")
+        [:downloaded, upload]
+      rescue HotlinkedMediaDownloader::ImageTooLargeError
+        [:too_large, nil]
+      rescue HotlinkedMediaDownloader::ImageBrokenError
+        [:download_failed, nil]
+      rescue HotlinkedMediaDownloader::UploadCreateError
+        [:upload_create_failed, nil]
       end
 
-      def attempt_download(src, user_id)
-        downloaded =
-          FileHelper.download(
-            src,
-            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-            retain_on_max_file_size_exceeded: false,
-            tmp_file_name: "chat-hotlinked",
-            follow_redirect: true,
-            read_timeout: 15,
-          )
-        return nil if downloaded.nil?
+      def disable_if_low_on_disk_space
+        return if Discourse.store.external?
+        return if !SiteSetting.download_remote_images_to_local
+        return if available_disk_space >= SiteSetting.download_remote_images_threshold
 
-        filename = File.basename(URI.parse(src).path)
-        filename << File.extname(downloaded.path) if !filename["."]
-        upload = ::UploadCreator.new(downloaded, filename, origin: src).create_for(user_id)
-        upload.persisted? ? upload : nil
+        SiteSetting.download_remote_images_to_local = false
+        StaffActionLogger.new(Discourse.system_user).log_site_setting_change(
+          "download_remote_images_to_local",
+          true,
+          false,
+          details: I18n.t("disable_remote_images_download_reason"),
+        )
+        SystemMessage.create_from_system_user(
+          Discourse.site_contact_user,
+          :download_remote_images_disabled,
+        )
+      end
+
+      def available_disk_space
+        100 - DiskSpace.percent_free("#{Rails.public_path.join("uploads")}")
       end
     end
   end

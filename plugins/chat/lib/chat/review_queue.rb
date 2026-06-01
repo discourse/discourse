@@ -92,8 +92,16 @@ module Chat
     private
 
     def serialize_uploads(chat_message)
+      # Keep the optimized_videos preload UploadSerializer needs, and drop inline
+      # uploads (rendered via cooked) so they aren't tiled a second time.
+      base62s = chat_message.inline_upload_base62s
+      uploads =
+        chat_message
+          .uploads
+          .includes(:optimized_videos)
+          .reject { |upload| base62s.include?(upload.base62_sha1) }
       ActiveModel::ArraySerializer.new(
-        chat_message.uploads.includes(:optimized_videos),
+        uploads,
         each_serializer: UploadSerializer,
         root: false,
       ).as_json

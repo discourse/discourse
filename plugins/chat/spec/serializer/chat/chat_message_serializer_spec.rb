@@ -304,4 +304,16 @@ describe Chat::MessageSerializer do
       end
     end
   end
+
+  describe "#uploads" do
+    it "serializes attachments but excludes uploads embedded inline in the body" do
+      attachment = Fabricate(:upload)
+      inline = Fabricate(:upload)
+      message_1.update!(message: "see ![](#{inline.short_url})")
+      UploadReference.create!(target: message_1, upload: attachment)
+      UploadReference.create!(target: message_1, upload: inline)
+      serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
+      expect(serialized[:uploads].map { |u| u[:id] }).to contain_exactly(attachment.id)
+    end
+  end
 end

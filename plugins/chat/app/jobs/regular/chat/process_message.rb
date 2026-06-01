@@ -44,7 +44,7 @@ module Jobs
 
           ::Chat::Publisher.publish_processed!(chat_message)
 
-          if SiteSetting.download_remote_images_to_local?
+          if !args[:skip_pull_hotlinked_images] && SiteSetting.download_remote_images_to_local?
             ::Jobs.enqueue(::Jobs::Chat::PullHotlinkedImages, chat_message_id: chat_message.id)
           end
         end

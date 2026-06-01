@@ -127,6 +127,20 @@ describe Chat::OneboxHandler do
           </div>
         HTML
       end
+
+      it "excludes an inline image from the onebox images (already shown via cooked)" do
+        upload = Fabricate(:upload, user: user, width: 100, height: 200, extension: "png")
+        message =
+          Fabricate(
+            :chat_message,
+            chat_channel: public_channel,
+            user: user,
+            message: "look ![](#{upload.short_url})",
+          )
+        UploadReference.create!(target: message, upload: upload)
+
+        expect(Chat::OneboxHandler.get_image_uploads(message)).to be_empty
+      end
     end
 
     context "when channel is private" do

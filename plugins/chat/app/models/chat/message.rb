@@ -49,6 +49,11 @@ module Chat
              foreign_key: :target_id
     has_many :uploads, through: :upload_references, class_name: "::Upload"
 
+    has_many :hotlinked_media,
+             dependent: :destroy,
+             foreign_key: :chat_message_id,
+             class_name: "Chat::MessageHotlinkedMedia"
+
     has_one :chat_webhook_event,
             dependent: :destroy,
             class_name: "Chat::WebhookEvent",
@@ -177,9 +182,37 @@ module Chat
       message.blank? && uploads.present?
     end
 
+    # Base62 short-url tokens (upload://…) referenced inline in the raw body.
+    # Callers intersect this with whatever upload collection they already have
+    # loaded, so no surface needs an extra query to de-dup inline uploads.
+    def inline_upload_base62s
+      return Set.new if message.blank?
+      message.scan(%r{upload://([a-zA-Z0-9]+)}).flatten.to_set
+    end
+
+    # Ids of attached uploads that are also rendered inline in the body.
+    def inline_upload_ids
+      base62s = inline_upload_base62s
+      return [] if base62s.empty?
+      uploads.select { |upload| base62s.include?(upload.base62_sha1) }.map(&:id)
+    end
+
+    # Uploads shown as separate tiles: everything except those already inline.
+    def attachment_uploads
+      base62s = inline_upload_base62s
+      return uploads.to_a if base62s.empty?
+      uploads.reject { |upload| base62s.include?(upload.base62_sha1) }
+    end
+
     def to_markdown
+      base62s = inline_upload_base62s
       upload_markdown =
-        upload_references.includes(:upload).order(:created_at).map(&:to_markdown).reject(&:empty?)
+        upload_references
+          .includes(:upload)
+          .order(:created_at)
+          .reject { |ref| ref.upload && base62s.include?(ref.upload.base62_sha1) }
+          .map(&:to_markdown)
+          .reject(&:empty?)
 
       return message if upload_markdown.empty?
 

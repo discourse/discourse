@@ -106,7 +106,7 @@ module Chat
       end
 
       return if !message
-      message.uploads.select { |u| u.height.present? || u.width.present? }
+      message.attachment_uploads.select { |u| u.height.present? || u.width.present? }
     end
 
     def self.build_users_list(chat_channel)
