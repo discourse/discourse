@@ -160,7 +160,12 @@ export function processBlockEntries({
 
     // Handle optional missing block (block ref ended with `?` but not registered)
     if (isOptionalMissing(resolvedBlock)) {
-      const key = `optional-missing:${resolvedBlock.name}:${entry.__stableKey}`;
+      // Use the canonical `${name}:${__stableKey}` key (the same shape
+      // resolved blocks get below). This key is forwarded into the
+      // BLOCK_DEBUG payload, where consumers use it to correlate the ghost
+      // back to its layout entry — a categorising prefix here would make
+      // those lookups (selection, removal) miss.
+      const key = `${resolvedBlock.name}:${entry.__stableKey}`;
       const ghostData = handleOptionalMissingBlock({
         blockName: resolvedBlock.name,
         entry,
@@ -192,7 +197,11 @@ export function processBlockEntries({
           entry,
           hierarchy: baseHierarchy,
           showGhosts,
-          key: `unknown-block:${blockName}:${stableKey}`,
+          // Canonical `${name}:${__stableKey}` key — see the matching note
+          // in the optional-missing branch above. Consumers correlate the
+          // ghost back to its layout entry by this key, so it must not carry
+          // a categorising prefix.
+          key: `${blockName}:${stableKey}`,
         });
         if (ghostData) {
           result.push(ghostData);

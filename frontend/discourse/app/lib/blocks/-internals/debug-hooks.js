@@ -201,6 +201,12 @@ export function handleOptionalMissingBlock({
       {
         name: blockName,
         id: entry.id,
+        // Forward the stable key into the BLOCK_DEBUG payload so consumers
+        // can wire the ghost back to its layout entry — see the matching
+        // note in `handleUnknownBlock`. The same `key` is also stamped on
+        // the returned ghostData below, which drives Glimmer's `{{#each}}`
+        // identity.
+        key,
         args: entry.args,
         conditions: entry.conditions,
         failureType: FAILURE_TYPE.OPTIONAL_MISSING,

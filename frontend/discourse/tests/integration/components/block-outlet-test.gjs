@@ -4,7 +4,11 @@ import { render, setupOnerror } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
-import BlockOutlet, { _getOutletLayouts } from "discourse/blocks/block-outlet";
+import BlockOutlet, {
+  _getOutletLayouts,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -1373,6 +1377,51 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         ghostBlockData.args,
         { foo: "bar" },
         "ghost receives original args"
+      );
+      // The forwarded key must be the canonical `${name}:${__stableKey}` shape
+      // (no categorising prefix) so consumers can correlate the ghost back to
+      // its layout entry.
+      assert.true(
+        /^missing-optional-block:\d+$/.test(ghostBlockData.key),
+        `optional-missing key is "name:stableKey" with no prefix (got "${ghostBlockData.key}")`
+      );
+    });
+
+    test("unknown-block ghost key forwarded to BLOCK_DEBUG matches the entry's stable key (no internal prefix)", async function (assert) {
+      // A rendered ghost is correlated back to its layout entry by the
+      // forwarded `key`, which must be the same `${name}:${__stableKey}` shape
+      // resolved blocks expose — otherwise lookups (selection, removal) miss.
+      let ghostKey;
+
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+        if (blockData.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+          ghostKey = blockData.key;
+          return {
+            Component: <template>
+              <div class="ghost-block" data-name={{blockData.name}}></div>
+            </template>,
+          };
+        }
+        return { Component: blockData.Component };
+      });
+
+      // A truly-unregistered block only survives layout registration on the
+      // permissive session-draft layer (the in-session editing path); the
+      // strict `api.renderBlocks` path would reject it outright.
+      _setLayoutLayer(
+        "sidebar-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: "totally-unregistered-block" }],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.true(
+        /^totally-unregistered-block:\d+$/.test(ghostKey),
+        `unknown-block key is "name:stableKey" with no prefix (got "${ghostKey}")`
       );
     });
   });
