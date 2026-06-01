@@ -176,9 +176,12 @@ class Site
 
   def groups
     query =
-      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        @guardian.user,
+        "groups.name ASC",
+        include_everyone: !SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+        include_pseudogroups: true,
+      ).includes(:flair_upload)
     query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
 
     query

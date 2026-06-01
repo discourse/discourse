@@ -384,7 +384,7 @@ RSpec.describe GroupsController do
               Group::AUTO_GROUP_IDS.keys -
                 [
                   Group::AUTO_GROUPS[:everyone],
-                  Group::AUTO_GROUPS[:anonymous],
+                  Group::AUTO_GROUPS[:anonymous_users],
                   Group::AUTO_GROUPS[:logged_in_users],
                 ],
             )
@@ -498,7 +498,7 @@ RSpec.describe GroupsController do
 
           groups = Group::AUTO_GROUPS.keys
           groups.delete(:everyone)
-          groups.delete(:anonymous)
+          groups.delete(:anonymous_users)
           groups.delete(:logged_in_users)
           groups.push(group.name)
 
@@ -2882,7 +2882,7 @@ RSpec.describe GroupsController do
         expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
         expected_ids.delete(Group::AUTO_GROUPS[:everyone])
         expected_ids.delete(Group::AUTO_GROUPS[:logged_in_users])
-        expected_ids.delete(Group::AUTO_GROUPS[:anonymous])
+        expected_ids.delete(Group::AUTO_GROUPS[:anonymous_users])
         expected_ids << group.id
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
@@ -2949,7 +2949,7 @@ RSpec.describe GroupsController do
             automatic_ids -
               [
                 Group::AUTO_GROUPS[:everyone],
-                Group::AUTO_GROUPS[:anonymous],
+                Group::AUTO_GROUPS[:anonymous_users],
                 Group::AUTO_GROUPS[:logged_in_users],
               ]
           ),
@@ -2965,7 +2965,10 @@ RSpec.describe GroupsController do
         expect(groups.map { |group| group["id"] }).to contain_exactly(
           group.id,
           hidden_group.id,
-          *(automatic_ids - [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]]),
+          *(
+            automatic_ids -
+              [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]]
+          ),
         )
 
         get "/groups/search.json?include_pseudogroups=true"
