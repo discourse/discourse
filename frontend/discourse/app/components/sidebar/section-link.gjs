@@ -10,7 +10,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { and, eq, not, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
@@ -41,6 +41,7 @@ export function isHex(input) {
  */
 export default class SectionLink extends Component {
   @service currentUser;
+  @service router;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;
@@ -128,6 +129,23 @@ export default class SectionLink extends Component {
     }
 
     return [];
+  }
+
+  get resolvedCurrentWhen() {
+    if (this.args.exactUrlMatch) {
+      return false;
+    }
+
+    const currentWhen = this.args.currentWhen;
+
+    // Ember 7's <LinkTo> ignores @models for a string @current-when; resolve the route list against this link's models ourselves.
+    if (typeof currentWhen === "string") {
+      return currentWhen
+        .split(" ")
+        .some((route) => this.router.isActive(route, ...this.models));
+    }
+
+    return currentWhen;
   }
 
   get prefixColor() {
@@ -267,7 +285,7 @@ export default class SectionLink extends Component {
             @route={{@route}}
             @query={{or @query (hash)}}
             @models={{this.models}}
-            @current-when={{and (not @exactUrlMatch) @currentWhen}}
+            @current-when={{this.resolvedCurrentWhen}}
             title={{@title}}
             data-link-name={{@linkName}}
             class={{this.linkClass}}

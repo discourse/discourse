@@ -77,7 +77,6 @@ loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
 loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
-loaderShim("ember", () => importSync("ember"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("moment", () => importSync("moment"));
