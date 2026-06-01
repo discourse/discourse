@@ -25,6 +25,28 @@ module("Unit | Lib | process-node", function (hooks) {
     assert.strictEqual(result.post.topic, topic);
   });
 
+  test("stores post records in the topic post stream when available", function (assert) {
+    const store = getStore(this);
+    const storedPosts = [];
+    const topic = {
+      id: 42,
+      slug: "test",
+      postStream: {
+        storePost(post) {
+          storedPosts.push(post);
+          return post;
+        },
+      },
+    };
+    const nodeData = { id: 100, post_number: 2 };
+
+    const result = processNode(store, topic, nodeData);
+
+    assert.strictEqual(storedPosts.length, 1);
+    assert.strictEqual(storedPosts[0], result.post);
+    assert.strictEqual(result.post.topic, topic);
+  });
+
   test("returns empty children when node has no children", function (assert) {
     const store = getStore(this);
     const topic = { id: 42, slug: "test" };
