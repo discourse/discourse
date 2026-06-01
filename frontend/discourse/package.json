@@ -126,7 +126,7 @@
     "@glimmer/component": "^2.0.0",
     "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
-    "@swc/core": "^1.15.33",
+    "@swc/core": "^1.15.40",
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
