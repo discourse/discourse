@@ -13,6 +13,7 @@ const bundle = await rolldown({
     },
   },
   resolve: {
+    extensions: [".mjs", ".js", ".cjs", ".json"],
     alias: {
       path: "path-browserify",
       url: local("./url-polyfill.js"),
