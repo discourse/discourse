@@ -14,10 +14,13 @@ import MarkedText from "discourse/plugins/discourse-wireframe/discourse/componen
  *   - **Outer** (`.wf-inline-rich-text`): the portal mount target the
  *     editor's controller uses. `{{#in-element ... insertBefore=null}}`
  *     appends the editor mount span here as a sibling of `__content`
- *     so the rendered text isn't wiped during edit. Also carries
- *     `data-block-arg` (the arg this element renders) and
- *     `data-block-arg-schema` (the PM schema variant) for the
- *     click-to-edit handler.
+ *     so the rendered text isn't wiped during edit. Carries three data
+ *     attributes: `data-block-arg` (the arg this element renders, a
+ *     generic marker shared with image overlays / URL tooltips / the
+ *     chrome's click dispatch), `data-block-arg-schema` (the PM schema
+ *     variant, read when mounting the editor), and `data-wf-inline-edit-arg`
+ *     (the dedicated "this is an inline-editable rich-text field" marker
+ *     the inline-edit subsystem keys off — see below).
  *   - **Inner** (`.wf-inline-rich-text__content`): the hide target.
  *     CSS hides this span while PM is mounted (rule keys off the
  *     `.wf-inline-editor-mount` sibling) so the user sees only the
@@ -29,15 +32,20 @@ import MarkedText from "discourse/plugins/discourse-wireframe/discourse/componen
  * replacement for `:empty` (Glimmer's comment / whitespace text
  * nodes inside the content span would defeat that pseudo-class).
  *
- * The "inline-edit kind" isn't emitted on the DOM — the chrome's
- * click handler derives it from the arg's schema metadata via
- * `kindForArg`. Same applies to icon and url args.
+ * `data-wf-inline-edit-arg` is what the inline-edit subsystem
+ * (`inline-edit-controller`'s Tab navigation + editor mount target)
+ * enumerates — only elements carrying it are reachable as inline-text
+ * fields, so image / URL / icon args (which never emit it) can't become
+ * edit targets. The chrome's click dispatch is separate: it still derives
+ * the per-arg "kind" from schema metadata via `kindForArg` against the
+ * generic `data-block-arg`, to route image / URL / rich-text clicks.
  */
 const ScaffoldedRichTextRenderer = <template>
   <span
     class="wf-inline-rich-text {{if @isEmpty '--empty'}}"
     data-block-arg={{@arg}}
     data-block-arg-schema={{@schema}}
+    data-wf-inline-edit-arg={{@arg}}
     ...attributes
   ><span
       class="wf-inline-rich-text__content"

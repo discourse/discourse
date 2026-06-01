@@ -68,6 +68,13 @@ export default class InlineEditController extends Component {
    * session is active or when the renderer hasn't rendered yet (the
    * canvas may be in the middle of swapping blocks).
    *
+   * Matched on `data-wf-inline-edit-arg` — the dedicated marker only the
+   * rich-text renderer emits — NOT the generic `data-block-arg` (which
+   * also tags image / URL / icon args). This is a structural guard: the
+   * editor can only ever mount into a real rich-text field, so a stray
+   * `inlineEdit.start` on a non-text arg resolves to `null` and mounts
+   * nothing.
+   *
    * @returns {HTMLElement | null}
    */
   @cached
@@ -77,7 +84,7 @@ export default class InlineEditController extends Component {
       return null;
     }
     const blockSelector = `[data-wf-block-key="${CSS.escape(blockKey)}"]`;
-    const argSelector = `[data-block-arg="${CSS.escape(argName)}"]`;
+    const argSelector = `[data-wf-inline-edit-arg="${CSS.escape(argName)}"]`;
     return document.querySelector(`${blockSelector} ${argSelector}`);
   }
 
@@ -458,6 +465,10 @@ export default class InlineEditController extends Component {
    * boolean — `true` when the command consumed the keystroke, `false`
    * when there's no neighbour and the browser's default Tab handling
    * should run.
+   *
+   * Walks `[data-wf-inline-edit-arg]` elements only — the dedicated
+   * rich-text marker — so Tab never lands on image / URL / icon args
+   * (which carry the generic `data-block-arg` but not this marker).
    */
   #tabToSiblingArg(direction) {
     return () => {
@@ -469,9 +480,13 @@ export default class InlineEditController extends Component {
       if (!blockEl) {
         return false;
       }
-      const argEls = Array.from(blockEl.querySelectorAll("[data-block-arg]"));
+      const argEls = Array.from(
+        blockEl.querySelectorAll("[data-wf-inline-edit-arg]")
+      );
       const currentArg = this.wireframe.inlineEdit.argName;
-      const i = argEls.findIndex((el) => el.dataset.blockArg === currentArg);
+      const i = argEls.findIndex(
+        (el) => el.dataset.wfInlineEditArg === currentArg
+      );
       if (i === -1) {
         return false;
       }
@@ -481,7 +496,7 @@ export default class InlineEditController extends Component {
       }
       this.wireframe.inlineEdit.start(
         blockEl.dataset.wfBlockKey,
-        next.dataset.blockArg
+        next.dataset.wfInlineEditArg
       );
       return true;
     };
