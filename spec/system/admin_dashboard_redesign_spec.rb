@@ -68,76 +68,70 @@ describe "Admin Dashboard Redesign" do
       expect(dashboard).to have_custom_label_text(today.strftime("%b %-d, %Y"))
     end
 
-    it "hand-picking a range applies after clicking Apply" do
-      freeze_time(Time.utc(2026, 5, 26, 12, 0, 0)) do
-        dashboard.visit
-        dashboard.open_custom_date_range
-        dashboard.pick_calendar_day("2026-05-01")
-        dashboard.pick_calendar_day("2026-05-20")
-        dashboard.apply_custom_range
+    it "hand-picking a range applies after clicking Apply", time: Time.utc(2026, 5, 26, 12, 0, 0) do
+      dashboard.visit
+      dashboard.open_custom_date_range
+      dashboard.pick_calendar_day("2026-05-01")
+      dashboard.pick_calendar_day("2026-05-20")
+      dashboard.apply_custom_range
 
-        expect(dashboard).to have_active_period("custom")
-        expect(page).to have_current_path(
-          "/admin?end_date=2026-05-20&range=custom&start_date=2026-05-01",
-        )
-        expect(dashboard).to have_custom_label_text("May 1")
-        expect(dashboard).to have_custom_label_text("May 20")
-      end
+      expect(dashboard).to have_active_period("custom")
+      expect(page).to have_current_path(
+        "/admin?end_date=2026-05-20&range=custom&start_date=2026-05-01",
+      )
+      expect(dashboard).to have_custom_label_text("May 1")
+      expect(dashboard).to have_custom_label_text("May 20")
     end
 
-    it "Cancel closes the popover and leaves the active range unchanged" do
-      freeze_time(Time.utc(2026, 5, 26, 12, 0, 0)) do
-        dashboard.visit
-        dashboard.open_custom_date_range
-        dashboard.pick_calendar_day("2026-05-01")
-        dashboard.cancel_custom_range
+    it "Cancel closes the popover and leaves the active range unchanged",
+       time: Time.utc(2026, 5, 26, 12, 0, 0) do
+      dashboard.visit
+      dashboard.open_custom_date_range
+      dashboard.pick_calendar_day("2026-05-01")
+      dashboard.cancel_custom_range
 
-        expect(dashboard).to have_no_picker_open
-        expect(dashboard).to have_active_period("last_30_days")
-      end
+      expect(dashboard).to have_no_picker_open
+      expect(dashboard).to have_active_period("last_30_days")
     end
 
-    it "Esc closes the popover and leaves the active range unchanged" do
-      freeze_time(Time.utc(2026, 5, 26, 12, 0, 0)) do
-        dashboard.visit
-        dashboard.open_custom_date_range
-        dashboard.pick_calendar_day("2026-05-01")
-        dashboard.dismiss_picker_via_escape
+    it "Esc closes the popover and leaves the active range unchanged",
+       time: Time.utc(2026, 5, 26, 12, 0, 0) do
+      dashboard.visit
+      dashboard.open_custom_date_range
+      dashboard.pick_calendar_day("2026-05-01")
+      dashboard.dismiss_picker_via_escape
 
-        expect(dashboard).to have_no_picker_open
-        expect(dashboard).to have_active_period("last_30_days")
-      end
+      expect(dashboard).to have_no_picker_open
+      expect(dashboard).to have_active_period("last_30_days")
     end
 
-    it "reopening the popover after dismissal starts in committed state with the active range" do
-      freeze_time(Time.utc(2026, 5, 26, 12, 0, 0)) do
-        dashboard.visit
-        dashboard.open_custom_date_range
-        dashboard.pick_calendar_day("2026-05-01")
-        dashboard.cancel_custom_range
-        dashboard.open_custom_date_range
+    it "reopening the popover after dismissal starts in committed state with the active range",
+       time: Time.utc(2026, 5, 26, 12, 0, 0) do
+      dashboard.visit
+      dashboard.open_custom_date_range
+      dashboard.pick_calendar_day("2026-05-01")
+      dashboard.cancel_custom_range
+      dashboard.open_custom_date_range
 
-        # Apply is disabled when no pending selection differs from the active range,
-        # which confirms the picker reopened in committed state.
-        expect(page).to have_css(".d-date-range-picker__apply[disabled]")
-        expect(page).to have_css(".d-date-range-picker__day.--end")
-      end
+      # Apply is disabled when no pending selection differs from the active range,
+      # which confirms the picker reopened in committed state.
+      expect(page).to have_css(".d-date-range-picker__apply[disabled]")
+      expect(page).to have_css(".d-date-range-picker__day.--end")
     end
 
     context "when on mobile", mobile: true do
-      it "renders as a bottom sheet and Cancel dismisses without applying" do
-        freeze_time(Time.utc(2026, 5, 26, 12, 0, 0)) do
-          dashboard.visit
-          dashboard.open_custom_date_range
+      it "renders as a bottom sheet and Cancel dismisses without applying",
+         time: Time.utc(2026, 5, 26, 12, 0, 0) do
+        dashboard.visit
+        dashboard.open_custom_date_range
 
-          expect(page).to have_css(".fk-d-menu-modal .d-date-range-picker")
+        expect(page).to have_css(".fk-d-menu-modal .d-date-range-picker")
 
-          dashboard.pick_calendar_day("2026-05-01")
-          dashboard.cancel_custom_range
+        dashboard.pick_calendar_day("2026-05-01")
+        dashboard.cancel_custom_range
 
-          expect(dashboard).to have_no_picker_open
-          expect(dashboard).to have_active_period("last_30_days")
-        end
+        expect(dashboard).to have_no_picker_open
+        expect(dashboard).to have_active_period("last_30_days")
       end
 
       it "applies a sidebar-only preset and closes the bottom sheet" do
