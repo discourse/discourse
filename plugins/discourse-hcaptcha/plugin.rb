@@ -13,7 +13,6 @@ enabled_site_setting :discourse_captcha_enabled
 
 register_svg_icon "hand"
 
-
 module ::DiscourseHcaptcha
   PLUGIN_NAME = "discourse-hcaptcha"
 end
