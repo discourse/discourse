@@ -8,6 +8,10 @@ function getEngine() {
   return engine;
 }
 
+export function resetEngine() {
+  engine = null;
+}
+
 export const parse = (text) => getEngine().parse(text);
 
 export const getLinkify = () => getEngine().linkify;
