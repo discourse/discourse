@@ -132,6 +132,7 @@ jobs:
         run: ota up --workflow verify --native --dry-run .
 
       - name: Dry-run all non-internal tasks (container)
+        if: ${{ matrix.full_proof }}
         shell: bash
         run: |
           set -euo pipefail
@@ -144,6 +145,7 @@ jobs:
           done < ota-container-task-names.txt
 
       - name: Dry-run verify workflow (container)
+        if: ${{ matrix.full_proof }}
         shell: bash
         run: ota up --workflow verify --container --dry-run .
 
