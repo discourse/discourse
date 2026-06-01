@@ -4512,7 +4512,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402843"
       allow_enabled_for:
