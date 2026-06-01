@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_login_with_amazon: "使用 Amazon 登录 Discourse"
   js:
     login:
       amazon:

@@ -884,6 +884,7 @@ he:
           last_30_days: "30 הימים האחרונים"
           upload_files: "העלאת קבצים"
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
+          editing_post: "רשומה נערכת"
       sentiments:
         dashboard:
           title: "רגש"

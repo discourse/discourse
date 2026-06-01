@@ -761,6 +761,7 @@ he:
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
     embed_mode:
+      editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
         share_session_title: "כניסה אל %{site_name}"
@@ -3729,6 +3730,8 @@ he:
         confirm: "אישור"
         select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
+        enable_nested_replies: "הפעלת תגובות מקוננות"
+        disable_nested_replies: "השבתת תגובות מקוננות"
         reset_bump_dates: "איפוס תאריכי ההקפצות"
         defer: "סימון כלא נקרא"
         delete_topics_count:
@@ -6655,6 +6658,7 @@ he:
           traffic:
             title: "תעבורת האתר"
           engagement:
+            title: "מעורבות"
             activity_by_category:
               title: "פעילות לפי קטגוריה"
               category: "קטגוריה"
@@ -6663,6 +6667,7 @@ he:
               share: "שיתוף"
             whos_posting:
               all_categories: "כל הקטגוריות"
+              new_members: "חברים חדשים"
               staff: "סגל"
             trust_level_pipeline:
               trust_levels:
@@ -6691,6 +6696,10 @@ he:
           toggle_visibility: "הצגת %{label} בלוח המחוונים"
           empty_state_admin: "אין סעיפים להצגה. יש לפתוח את ההגדרות כדי להפעיל אחד כזה."
         site_traffic:
+          top_countries:
+            title: "מדינות מובילות"
+          top_referrers:
+            title: "מפנים מובילים"
           series:
             anonymous: "אלמוני"
             crawlers: "סורקי אינטרנט"

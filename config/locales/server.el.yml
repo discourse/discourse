@@ -937,6 +937,7 @@ el:
         page_view_anon_browser: "Ανώνυμοι"
         page_view_logged_in_browser: "Συνδεδεμένοι"
         page_view_crawler: "Ανιχνευτές"
+        page_view_embed: "Ενσωματωμένες προβολές σελίδας"
         page_view_other: "Άλλη κίνηση"
       yaxis: "Ημέρα"
       description: "Προβολές σελίδας για συνδεδεμένους χρήστες, ανώνυμους χρήστες, γνωστούς ανιχνευτές και άλλη επισκεψιμότητα."
@@ -1086,7 +1087,9 @@ el:
     page_view_logged_in_browser_reqs:
       xaxis: "Ημέρα"
     page_view_embed_reqs:
+      title: "Ενσωματωμένες προβολές σελίδας"
       xaxis: "Ημέρα"
+      yaxis: "Ενσωματωμένες προβολές σελίδας"
     http_background_reqs:
       title: "Φόντο"
       xaxis: "Ημέρα"

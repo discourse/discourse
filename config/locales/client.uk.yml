@@ -218,7 +218,9 @@ uk:
       apply: "Застосувати"
       start_date: "Дата початку"
       end_date: "Дата закінчення"
+      date_placeholder: "yyyy/mm/dd"
       presets:
+        label: "Попередні налаштування діапазону дат"
         last_7_days: "Останні 7 днів"
         last_30_days: "Останні 30 днів"
         last_3_months: "Останні 3 місяців"
@@ -3929,8 +3931,11 @@ uk:
           other: "Відхилити (%{count})…"
         dismiss_tooltip: "Відхилити нові дописи, або перестати стежити за цими темами"
         also_dismiss_topics: "Перестати стежити за цими темами, щоб вони ніколи більше не показувались як непрочитані"
+        dismiss_all: "Відхилити все"
         dismiss_new_topics: "Відхилити нові теми"
         dismiss_new_replies: "Відхиляти нові відповіді"
+        dismiss_new_menu: "Відхилити параметри"
+        dismiss_and_stop_tracking: "Відхилити і зупинити відстеження"
         dismiss_new: "Відхилити Нові"
         dismiss_new_modal:
           title: "Відхилити нові"
@@ -7178,15 +7183,19 @@ uk:
                 title: "Поки що недостатньо активності, щоб підсумувати залученість."
                 summary: "Виберіть довший діапазон дат або поверніться, коли у вашій спільноті буде більше активності."
         reports_section:
+          description: "Закріпити стандартні звіти або запити Data Explorer, щоб відстежувати, що має значення для вашої спільноти."
           add: "Додати звіт"
           remove: "Видалити звіт"
           no_data: "Немає даних для відображення"
           modal:
             title: "Керування звітами"
             search_placeholder: "Пошук звітів"
+            counter: "%{count} / %{max} додано звітів"
             enabled_heading: "Включено"
             all_heading: "Всі звіти"
             apply: "Застосувати"
+            enable: "Увімкнути %{title}"
+            disable: "Відключити %{title}"
             move_up: "Перемістити %{title} вгору"
             move_down: "Перемістити %{title} вниз"
         configure:
