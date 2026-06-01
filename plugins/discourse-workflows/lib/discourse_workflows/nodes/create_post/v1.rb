@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "../post_helper"
+
 module DiscourseWorkflows
   module Nodes
     module CreatePost
       class V1 < NodeType
+        include PostHelper
         description(
           name: "action:create_post",
           version: "1.0",
@@ -61,23 +64,7 @@ module DiscourseWorkflows
         private
 
         def process(exec_ctx, config, item_index)
-          topic = ::Topic.find(config["topic_id"])
-          author = exec_ctx.actor_from_parameter("author_username", item_index)
-          author.guardian.ensure_can_see!(topic)
-
-          if topic.closed? || topic.archived?
-            raise_node_error!(
-              I18n.t("discourse_workflows.errors.create_post.topic_closed_or_archived"),
-            )
-          end
-
-          post_args = {
-            topic_id: topic.id,
-            raw: config["raw"],
-            reply_to_post_number: config["reply_to_post_number"].presence,
-            skip_workflows: true,
-          }.compact
-          post = PostCreator.new(author, post_args).create!
+          post = create_workflow_post(exec_ctx, config, item_index)
 
           { post: post_data(post) }
         end
