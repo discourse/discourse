@@ -5,7 +5,7 @@ write one responsive stylesheet (not desktop/mobile copies), prefer intrinsic la
 `lib/viewport` for breakpoints. This file is the detail.
 
 The authoritative philosophy is
-[`docs/developer-guides/docs/03-code-internals/25-designing-for-devices.md`](../../../docs/developer-guides/docs/03-code-internals/25-designing-for-devices.md):
+[`docs/developer-guides/docs/03-code-internals/27-designing-for-devices.md`](../../../docs/developer-guides/docs/03-code-internals/27-designing-for-devices.md):
 **design mobile-first, then enhance for larger viewports and richer input** — read it for the
 full picture.
 

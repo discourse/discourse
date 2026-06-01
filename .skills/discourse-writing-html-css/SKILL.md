@@ -20,7 +20,7 @@ progressive enhancement (works without hover or JS), a themeable base layer, and
 system over bespoke styling.** The two source-of-truth docs are
 [`25-css-guidelines-bem.md`](../../docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md)
 (naming) and
-[`25-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/25-designing-for-devices.md)
+[`27-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/27-designing-for-devices.md)
 (responsive / device adaptation). The canonical real-world example is the chat loading skeleton —
 [`plugins/chat/assets/javascripts/discourse/components/chat-skeleton.gjs`](../../plugins/chat/assets/javascripts/discourse/components/chat-skeleton.gjs)
 and its `.scss`.
@@ -53,9 +53,8 @@ classes**, not `block__element--modifier` suffixes.
 - **An element** is a part with no meaning outside its block. Elements do **not** chain
   (`block__el1__el2` is wrong — use `block__el2`); the skeleton uses flat `__message`,
   `__message-avatar`, `__message-text`.
-- **A modifier** is a standalone `.--modifier` for appearance variants — standalone (not the
-  verbose `block__element--modifier`) because modifiers are often reused and it keeps the DOM
-  readable.
+- **A modifier** is a standalone `.--modifier` for appearance variants (not the verbose
+  `block__element--modifier`) — they're often reused, and it keeps the DOM readable.
 - **State prefixes** `is-`/`has-` mark a condition driven by JS or interaction (`is-open`,
   `has-errors`), as opposed to a design variant (`--cancel`).
 - **Prefer adding a class over the CSS `:has()` selector.** If a component already knows its own
@@ -168,9 +167,9 @@ to themes.
 - **When a visual choice isn't load-bearing, it probably belongs in a theme, not core.** A
   plainer component a theme can dress up beats a heavily-styled one a theme must strip down. When
   in doubt, do less.
-- This is the *why* behind rules elsewhere: use the palette/tokens over fixed values, keep
-  specificity low, and expose override hooks (`...attributes`, the block class on the root, local
-  `--custom-properties`) — all so a theme can adjust without fighting your CSS.
+- It's the *why* behind several rules here — palette/tokens over fixed values, low specificity,
+  override hooks (`...attributes`, local `--custom-properties`) — so themes can adjust without
+  fighting your CSS.
 
 ## Browser support
 
@@ -181,13 +180,11 @@ is the oldest still-"latest-stable" Safari, so for a very new feature confirm Sa
 
 ## Native CSS first
 
-Discourse is gradually moving toward native CSS. When a native feature does the job, use it
-over a compile-time SASS construct: `var(--…)` over `$variables` for themeable/runtime values,
-`clamp()`/`min()`/`max()` over `sass:math`, `light-dark()` + the palette over SCSS color
-functions, the native font-scale custom properties (`var(--font-up-2)`) over the `$font-up-2`
-aliases. **But keep the established helpers** — `z("header")` for z-index, the `lib/viewport`
-mixins for breakpoints, `&` nesting for BEM. Full swap list and rule-of-thumb:
-[references/css-authoring.md](references/css-authoring.md).
+Discourse is gradually moving toward native CSS — when a native feature does the job, prefer it
+over a compile-time SASS construct (`var(--…)` over `$variables`, `clamp()` over `sass:math`,
+`light-dark()` over SCSS color functions, `var(--font-up-2)` over the `$font-up-2` alias).
+**But keep the established helpers** — `z("header")`, the `lib/viewport` mixins, `&` nesting.
+Full swap list + rule-of-thumb: [references/css-authoring.md](references/css-authoring.md).
 
 ## CSS best practices
 
@@ -302,7 +299,8 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
   plugins/themes inject content (400+ across the app); you'll work inside them often. Each one is
   a **public API surface and maintenance commitment** — once it exists, extensions depend on its
   name and `@outletArgs`, so it can't be moved freely. Add one only for a concrete need; pass
-  data via `lazyHash` (not `hash`) and name it by location (`above-…`, `below-…`).
+  data via `lazyHash` (not `hash`) and name it by location (`above-…`, `below-…`). See
+  [`13-plugin-outlet-connectors.md`](../../docs/developer-guides/docs/03-code-internals/13-plugin-outlet-connectors.md).
 - **Heading levels follow the document outline, not type size.** Never pick a level for its
   default font size — if the right heading looks wrong-sized, style it in CSS
   (`font-size: var(--font-up-1)`). An `<h1>` styled smaller is fine; an `<h3>` chosen because
@@ -350,7 +348,7 @@ it in the matching `_index.scss` / parent `@import` (partials are underscore-pre
 
 - **Write one responsive stylesheet, not desktop + mobile copies.** Discourse designs
   **mobile-first** and enhances upward (see the philosophy doc,
-  [`25-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/25-designing-for-devices.md)):
+  [`27-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/27-designing-for-devices.md)):
   new styles live in `common/` and adapt with breakpoints. **Prefer intrinsic layout** (e.g.
   `grid-template-columns: repeat(auto-fill, minmax(14em, 1fr))`) and reach for a breakpoint only
   to *restructure*; use the `lib/viewport` mixins (`viewport.from`/`until`/`between`). The legacy
