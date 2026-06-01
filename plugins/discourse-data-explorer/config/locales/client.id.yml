@@ -25,3 +25,7 @@ id:
       query_description: "Deskripsi"
       reset_params: "Reset"
       search_placeholder: "Cari..."
+    discourse_workflows:
+      sql:
+        output:
+          results: "Hasil"

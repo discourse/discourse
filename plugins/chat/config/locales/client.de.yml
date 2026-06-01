@@ -313,6 +313,9 @@ de:
         other: "Du hast %{count} ungelesene Diskussionen"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
+      new_messages:
+        one: "%{count} neue Nachricht"
+        other: "%{count} neue Nachrichten"
       sound:
         title: "Desktop-Chat-Benachrichtigungston"
       sounds:
@@ -791,3 +794,12 @@ de:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Chat-Nachricht senden"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Nachricht"
+      chat_approval:
+        message: "Nachricht"
+        channel_id: "Kanal"

@@ -70,3 +70,6 @@ el:
     edit_assignments_modal:
       topic: "Θέμα"
       post: "Ανάρτηση"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID Θέματος"

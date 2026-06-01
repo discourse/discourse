@@ -339,6 +339,10 @@ th:
     types:
       category: "หมวดหมู่"
       user: "ผู้ใช้"
+  filter:
+    description:
+      status_noreplies: "แสดงหัวข้อที่ไม่มีการตอบกลับ"
+      status_single_user: "แสดงหัวข้อที่มีผู้เข้าร่วมเพียงคนเดียว"
   publish_page:
     slug_errors:
       invalid: "มีตัวอักษรที่ไม่สามารถใช้งานได้"

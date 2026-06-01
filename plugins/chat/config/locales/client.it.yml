@@ -749,3 +749,12 @@ it:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Invia messaggio di chat"
+      send_chat_message:
+        channel_id: "Canale"
+        message: "Messaggio"
+      chat_approval:
+        message: "Messaggio"
+        channel_id: "Canale"

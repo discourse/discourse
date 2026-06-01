@@ -415,7 +415,7 @@ fi:
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Käytössä"
+        enabled: "Valittu"
       start_posting:
         back: "Takaisin"
     about:
@@ -3216,6 +3216,15 @@ fi:
         also_dismiss_topics: "Älä seuraa näitä ketjuja enää – ne eivät jatkossa lukemattomina"
         dismiss_new_topics: "Kuittaa uudet ketjut"
         dismiss_new_replies: "Kuittaa uudet vastaukset"
+        dismiss_new_topics_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
+        dismiss_all_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
         dismiss_new: "Kuittaa luetuksi"
         dismiss_new_modal:
           title: "Kuittaa uudet"

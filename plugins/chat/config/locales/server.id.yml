@@ -19,7 +19,6 @@ id:
     chat_minimum_message_length: "Jumlah minimum karakter untuk pesan obrolan."
     chat_allow_uploads: "Izinkan unggahan di kanal obrolan publik dan kanal pesan langsung."
     chat_archive_destination_topic_status: "Status topik tujuan setelah arsip kanal selesai. Ini hanya berlaku bila topik tujuan adalah topik baru, bukan topik yang sudah ada."
-    direct_message_enabled_groups: "Izinkan pengguna dalam grup ini untuk membuat Obrolan Pribadi pengguna-ke-pengguna. Catatan: staf selalu dapat membuat Obrolan Pribadi, dan pengguna akan dapat membalas Obrolan Pribadi yang dimulai oleh pengguna yang memiliki izin untuk membuatnya."
     max_mentions_per_chat_message: "Jumlah maksimum notifikasi @nama yang dapat digunakan pengguna dalam pesan obrolan."
     chat_max_direct_message_users: "Pengguna tidak dapat menambahkan lebih dari jumlah pengguna lain saat membuat pesan langsung baru. Setel ke 0 untuk hanya mengizinkan pesan untuk diri sendiri. Staf dibebaskan dari pengaturan ini."
     chat_allow_archiving_channels: "Izinkan staf untuk mengarsipkan pesan ke suatu topik saat menutup kanal."
@@ -182,6 +181,10 @@ id:
     scriptables:
       send_chat_message:
         title: Kirim pesan obrolan
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Terima"
+      default_deny_label: "Menolak"
   reviewable_score_types:
     needs_review:
       title: "Perlu Reviu"

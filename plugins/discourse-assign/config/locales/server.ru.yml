@@ -64,6 +64,7 @@ ru:
   assign_mailer:
     title: "Уведомление о назначении"
     subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} назначил вас на '%{topic_title}'!"
     text_body_template: |
       Привет! %{assignee_name} **назначил(-а)** вас ответственным в обсуждении
       > **%{topic_title}**

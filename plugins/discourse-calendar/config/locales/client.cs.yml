@@ -444,6 +444,8 @@ cs:
         name_placeholder: "Název události"
         location_placeholder: "Přidat polohu nebo adresu URL"
         description_placeholder: "Přidat popis události"
+        event_title_placeholder: "Název události"
+        create_event_button: "Vytvořit událost"
         reminder:
           units:
             minutes:
@@ -466,6 +468,9 @@ cs:
               few: "týdny"
               many: "týdny"
               other: "týdny"
+      composer_actions:
+        create_event:
+          label: "Vytvořit událost"
       builder_modal:
         custom_fields:
           label: "Vlastní pole"

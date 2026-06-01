@@ -177,3 +177,10 @@ nb_NO:
           fields:
             message:
               label: Send
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Send"
+      chat_approval:
+        message: "Send"
+        channel_id: "Kanal"

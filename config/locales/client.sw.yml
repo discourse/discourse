@@ -211,8 +211,6 @@ sw:
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Imeruhusiwa"
       start_posting:
         back: "Iliyopita"
     about:

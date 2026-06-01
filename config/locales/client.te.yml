@@ -299,7 +299,7 @@ te:
       pm_title: "సూచించిన సందేశాలు"
     admin_onboarding_banner:
       select_theme:
-        enabled: "ప్రారంభించబడింది"
+        enabled: "ఎంపిక చేయబడినవి"
       start_posting:
         back: "వెనుకకు"
     about:
@@ -2639,6 +2639,15 @@ te:
         also_dismiss_topics: "ఈ విషయాలను ట్రాక్ చేయడం ఆపివేయండి, తద్వారా అవి నాకు చదవనివిగా మళ్లీ కనిపించవు"
         dismiss_new_topics: "కొత్త విషయాలను తీసివేయండి"
         dismiss_new_replies: "కొత్త ప్రత్యుత్తరాలను తీసివేయండి"
+        dismiss_new_topics_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
+        dismiss_all_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
         dismiss_new: "కొత్తవి తుడువు"
         dismiss_new_modal:
           title: "కొత్తది తీసివేయండి"

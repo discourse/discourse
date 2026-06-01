@@ -304,8 +304,6 @@ nb_NO:
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Aktivert"
       start_posting:
         back: "Forrige"
     about:
@@ -2840,6 +2838,15 @@ nb_NO:
         also_dismiss_topics: "Slutt å overvåke disse emnene slik at de aldri igjen vises til meg som ulest"
         dismiss_new_topics: "Avvis nye emner"
         dismiss_new_replies: "Avvis nye svar"
+        dismiss_new_topics_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
+        dismiss_all_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
         dismiss_new: "Avvis nye"
         dismiss_new_modal:
           title: "Avvis nye"

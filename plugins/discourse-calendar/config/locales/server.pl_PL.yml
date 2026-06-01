@@ -45,7 +45,6 @@ pl_PL:
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
     calendar_enabled: "Włącz wtyczkę discourse-calendar. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
-    discourse_post_event_enabled: "Włącza funkcje wydarzeń. Uwaga: wymagane jest również włączenie opcji „kalendarz włączony”."
     displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
     display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
@@ -71,7 +70,6 @@ pl_PL:
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
-    enable_events_category_type_setup: "Włącza opcję typu kategorii „Zdarzenia” podczas konfiguracji tworzenia kategorii. Uwaga: aby ta opcja zadziałała, opcja „Włącz uproszczone tworzenie kategorii” musi być włączona."
   discourse_calendar:
     category_type:
       default_calendar_view:

@@ -829,7 +829,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
-    new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
     invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
     password_unique_characters: "Idadi ya chini ya herufi pekee nywila inahitaji."
     block_common_passwords: "Usiruhusu nywila amabazo zipo kati ya nywila 10,000 zinazotumika mara kwa mara."

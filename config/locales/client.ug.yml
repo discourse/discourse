@@ -434,7 +434,7 @@ ug:
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
       select_theme:
-        enabled: "قوزغىتىلدى"
+        enabled: "تاللاندى"
       invite_collaborators:
         action: "تەكلىپ قۇر"
       start_posting:
@@ -3367,6 +3367,15 @@ ug:
         also_dismiss_topics: "بۇ تېمىلارنى ئىزلاشنى توختىتىپ ئۇلارنى ئوقۇلمىغانلاردا قايتا كۆرسەتمەيدۇ"
         dismiss_new_topics: "يېڭى تېمىغا پەرۋا قىلما"
         dismiss_new_replies: "يېڭى جاۋابقا پەرۋا قىلما"
+        dismiss_new_topics_with_selected:
+          one: "پەرۋا قىلما (%{count})"
+          other: "پەرۋا قىلما (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "پەرۋا قىلما (%{count})"
+          other: "پەرۋا قىلما (%{count})"
+        dismiss_all_with_selected:
+          one: "پەرۋا قىلما (%{count})"
+          other: "پەرۋا قىلما (%{count})"
         dismiss_new: "يېڭىغا پەرۋا قىلما"
         dismiss_new_modal:
           title: "يېڭىغا پەرۋا قىلما"

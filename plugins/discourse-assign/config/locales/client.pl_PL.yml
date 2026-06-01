@@ -36,6 +36,8 @@ pl_PL:
       topic_search_placeholder: "Szukaj tematów według tytułu lub treści"
       sidebar_name_filter_placeholder: "Imię/Nazwa użytkownika"
       assigned: "Przypisany"
+      group_no_assignments_title: "Brak przypisań"
+      group_no_assignments_body: "Obecnie nie ma aktywnych przypisań dla tej grupy."
       group_everyone: "Wszyscy"
       assigned_to: "Przypisany do"
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"
@@ -206,3 +208,18 @@ pl_PL:
       title: "Edytuj przypisanie"
       topic: "Temat"
       post: "Post"
+    discourse_workflows:
+      node_unavailable:
+        requires_assign: "Wymaga włączenia wtyczki Przypisz"
+      nodes:
+        "action:assign_topic": "Przypisz temat"
+      node_descriptions:
+        "action:assign_topic": "Przypisz lub anuluj przypisanie tematu"
+      assign_topic:
+        operation: "Działanie"
+        operations:
+          assign: "Przypisz"
+          unassign: "Cofnij przypisanie"
+        topic_id: "ID tematu"
+        assignee: "Przypisany"
+        replace_existing: "Zastąp istniejące zadanie"

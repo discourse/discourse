@@ -289,8 +289,6 @@ bg:
     suggested_topics:
       pm_title: "Предложени съобщения"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Да е включен"
       start_posting:
         back: "Назад"
     about:

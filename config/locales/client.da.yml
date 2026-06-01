@@ -410,7 +410,7 @@ da:
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Aktiveret"
+        enabled: "Valgt"
       start_posting:
         back: "Tilbage"
     about:

@@ -258,7 +258,7 @@ id:
       pm_title: "Pesan Yang Disarankan"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Diaktifkan"
+        enabled: "Dipilih"
       start_posting:
         back: "Kembali"
     about:

@@ -53,3 +53,11 @@ pt:
       search_placeholder: "Pesquisar..."
     group:
       reports: "Relatórios"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorador de Dados"
+      sql:
+        param_value: "Valor"
+        output:
+          results: "Resultados"
+          no_results: "Sem resultados"

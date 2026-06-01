@@ -143,6 +143,17 @@ uk:
           descriptions:
             data_explorer:
               run_queries: "Запустіть запити Data Explorer. Обмежте ключ API набором запитів, вказавши ідентифікатори запитів."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Explorer"
+      sql:
+        queries: "Запити"
+        query_id: "Запит"
+        add_param: "Додати параметр"
+        param_value: "Значення"
+        output:
+          results: "Результати"
+          no_results: "Немає результатів"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:
