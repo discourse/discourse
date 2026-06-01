@@ -298,28 +298,6 @@ RSpec.describe ApplicationHelper do
       end
     end
 
-    describe "#custom_dark_splash_screen?" do
-      it "is true only when distinct light and dark images are both set" do
-        SiteSetting.stubs(:splash_screen_image).returns(light_upload)
-        SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
-        expect(helper.custom_dark_splash_screen?).to eq(true)
-      end
-
-      it "is false when an image is missing or both slots point at the same upload" do
-        SiteSetting.stubs(:splash_screen_image).returns(light_upload)
-        SiteSetting.stubs(:splash_screen_image_dark).returns("")
-        expect(helper.custom_dark_splash_screen?).to eq(false)
-
-        SiteSetting.stubs(:splash_screen_image).returns("")
-        SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
-        expect(helper.custom_dark_splash_screen?).to eq(false)
-
-        SiteSetting.stubs(:splash_screen_image).returns(light_upload)
-        SiteSetting.stubs(:splash_screen_image_dark).returns(light_upload)
-        expect(helper.custom_dark_splash_screen?).to eq(false)
-      end
-    end
-
     describe "#splash_screen_image_data_uri" do
       before do
         SiteSetting.stubs(:splash_screen_image).returns(light_upload)
@@ -334,8 +312,7 @@ RSpec.describe ApplicationHelper do
         expect(light).to include("#aaaa00", "#aaaa01", "#aaaa02")
         expect(light).not_to include("var(--primary)")
 
-        dark =
-          decoded_data_uri(helper.splash_screen_image_data_uri(dark: false, color_scheme: :dark))
+        dark = decoded_data_uri(helper.splash_screen_image_data_uri(dark: true))
         expect(dark).to include("#bbbb00", "#bbbb01", "#bbbb02")
       end
 

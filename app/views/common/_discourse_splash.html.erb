@@ -1,19 +1,9 @@
 <%
-  dark_scheme = dark_color_scheme?
-  forced_light = forced_light_mode?
-  forced_dark = forced_dark_mode?
-  auto_switch = !(dark_scheme || forced_light || forced_dark)
-
   light_splash = splash_screen_image?(dark: false)
   dark_splash = splash_screen_image?(dark: true)
-  single_scheme_dark = dark_scheme || forced_dark
-
-  active_custom = auto_switch ? (light_splash || dark_splash) : (single_scheme_dark ? dark_splash : light_splash)
-
-  split_splash =
-    custom_dark_splash_screen? &&
-      (splash_screen_image_animated?(dark: false) || splash_screen_image_animated?(dark: true))
-  per_scheme_bodies = auto_switch && (light_splash != dark_splash || split_splash)
+  active_custom = custom_splash_screen_enabled?
+  light_mq = light_elements_media_query
+  dark_mq = dark_elements_media_query
 %>
 <section id="d-splash">
   <style>
@@ -25,25 +15,7 @@
       <%- end %>
     }
 
-    /* user picked a theme where the "regular" scheme is dark */
-    <%- if dark_scheme %>
-      html {
-        background-color: #<%= light_color_hex_for_name("secondary") %>;
-      }
-
-      #d-splash {
-        --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-        <%- if dark_splash %>
-          <%- if splash_screen_image_animated?(dark: true) %>
-          --primary: #<%= light_color_hex_for_name("primary") %>;
-          --secondary: #<%= light_color_hex_for_name("secondary") %>;
-          --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
-          <%- else %>
-          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true, color_scheme: :light) %>");
-          <%- end %>
-        <%- end %>
-      }
-    <%- elsif forced_light %>
+    @media <%= light_mq %> {
       html {
         background-color: #<%= light_color_hex_for_name("secondary") %>;
       }
@@ -60,7 +32,9 @@
           <%- end %>
         <%- end %>
       }
-    <%- elsif forced_dark %>
+    }
+
+    @media <%= dark_mq %> {
       html {
         background-color: #<%= dark_color_hex_for_name("secondary") %>;
       }
@@ -77,49 +51,7 @@
           <%- end %>
         <%- end %>
       }
-    <%- else %>
-      /* user picked a theme a light scheme and also enabled a dark scheme */
-
-      /* deal with light scheme first */
-      @media (prefers-color-scheme: light) {
-        html {
-          background-color: #<%= light_color_hex_for_name("secondary") %>;
-        }
-
-        #d-splash {
-          --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
-          <%- if light_splash %>
-            <%- if splash_screen_image_animated?(dark: false) %>
-            --primary: #<%= light_color_hex_for_name("primary") %>;
-            --secondary: #<%= light_color_hex_for_name("secondary") %>;
-            --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
-            <%- else %>
-            --splash-bg: url("<%= splash_screen_image_data_uri(dark: false) %>");
-            <%- end %>
-          <%- end %>
-        }
-      }
-
-      /* then deal with dark scheme */
-      @media (prefers-color-scheme: dark) {
-        html {
-          background-color: #<%= dark_color_hex_for_name("secondary") %>;
-        }
-
-        #d-splash {
-          --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
-          <%- if dark_splash %>
-            <%- if splash_screen_image_animated?(dark: true) %>
-            --primary: #<%= dark_color_hex_for_name("primary") %>;
-            --secondary: #<%= dark_color_hex_for_name("secondary") %>;
-            --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
-            <%- else %>
-            --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
-            <%- end %>
-          <%- end %>
-        }
-      }
-    <%- end %>
+    }
 
     #d-splash {
       display: grid;
@@ -236,7 +168,6 @@
       height: var(--splash-dot-size);
     }
 
-    /* dots paired with a logo sit in their own row rather than centered */
     #d-splash .dots-container .dots {
       top: 0;
     }
@@ -275,31 +206,29 @@
       }
     }
 
-    <%- if per_scheme_bodies %>
     #d-splash .light-splash-element,
     #d-splash .dark-splash-element {
       display: contents;
     }
 
-    @media (prefers-color-scheme: dark) {
+    @media <%= dark_mq %> {
       #d-splash .light-splash-element {
         display: none;
       }
     }
 
-    @media (prefers-color-scheme: light) {
+    @media <%= light_mq %> {
       #d-splash .dark-splash-element {
         display: none;
       }
     }
-    <%- end %>
     <%- end %>
   </style>
 
   <div class="preloader-image" elementtiming="discourse-splash-visible">
     <%- if !active_custom %>
       <%= render "common/discourse_splash_dots" %>
-    <%- elsif per_scheme_bodies %>
+    <%- else %>
       <div class="light-splash-element">
         <%- if light_splash %>
           <%= render "common/discourse_splash_body", dark: false %>
@@ -314,8 +243,6 @@
           <%= render "common/discourse_splash_dots" %>
         <%- end %>
       </div>
-    <%- else %>
-      <%= render "common/discourse_splash_body", dark: single_scheme_dark %>
     <%- end %>
   </div>
 

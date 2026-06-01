@@ -530,12 +530,6 @@ module ApplicationHelper
     splash_screen_upload(dark:).is_a?(Upload)
   end
 
-  def custom_dark_splash_screen?
-    light = SiteSetting.splash_screen_image
-    dark = SiteSetting.splash_screen_image_dark
-    light.is_a?(Upload) && dark.is_a?(Upload) && light.id != dark.id
-  end
-
   def splash_screen_image_animated?(dark: false)
     svg = build_splash_screen_image(dark:)
     svg.present? && svg.match?(/@keyframes\s/)
@@ -545,18 +539,11 @@ module ApplicationHelper
     build_splash_screen_image(dark:)&.html_safe
   end
 
-  def splash_screen_image_data_uri(dark: false, color_scheme: nil)
+  def splash_screen_image_data_uri(dark: false)
     svg = build_splash_screen_image(dark:)
     return if svg.blank?
 
-    color_method =
-      (
-        if (color_scheme || (dark ? :dark : :light)) == :dark
-          :dark_color_hex_for_name
-        else
-          :light_color_hex_for_name
-        end
-      )
+    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
 
     svg_with_colors =
       svg

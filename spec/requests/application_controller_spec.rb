@@ -852,7 +852,7 @@ RSpec.describe ApplicationController do
           dark_secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
           dark_tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
 
-          expect(style).to include(<<~CSS.indent(6))
+          expect(style).to include(<<~CSS.indent(4))
             @media (prefers-color-scheme: light) {
               html {
                 background-color: ##{light_secondary};
@@ -864,7 +864,7 @@ RSpec.describe ApplicationController do
             }
           CSS
 
-          expect(style).to include(<<~CSS.indent(6))
+          expect(style).to include(<<~CSS.indent(4))
             @media (prefers-color-scheme: dark) {
               html {
                 background-color: ##{dark_secondary};
@@ -899,6 +899,24 @@ RSpec.describe ApplicationController do
             .map { |match| Base64.decode64(match.first.split(",").last) }
         end
 
+        def splash_bg_in_media(style, query)
+          start = style.index("@media #{query} {")
+          return if start.nil?
+
+          open = style.index("{", start)
+          depth = 0
+          close = open
+          while close < style.length
+            depth += 1 if style[close] == "{"
+            depth -= 1 if style[close] == "}"
+            break if depth.zero?
+            close += 1
+          end
+
+          uri = style[open + 1...close][/--splash-bg:\s*url\("([^"]+)"\)/, 1]
+          Base64.decode64(uri.split(",").last) if uri
+        end
+
         before { SiteSetting.splash_screen_image = create_splash_upload(light_svg, "light.svg").id }
 
         context "when a distinct dark image is configured" do
@@ -919,7 +937,7 @@ RSpec.describe ApplicationController do
             cookies[:forced_color_mode] = "dark"
             get "/"
 
-            expect(splash_bg_svgs(css_select("#d-splash style").to_s).first).to include(
+            expect(splash_bg_in_media(css_select("#d-splash style").to_s, "all")).to include(
               "dark-marker",
             )
           end
@@ -963,13 +981,13 @@ RSpec.describe ApplicationController do
             )
           end
 
-          it "shows no custom splash when light mode is forced" do
+          it "does not apply the dark image when light mode is forced" do
             cookies[:forced_color_mode] = "light"
             get "/"
 
             style = css_select("#d-splash style").to_s
-            expect(splash_bg_svgs(style)).to be_empty
-            expect(style).not_to include("splash-logo-container")
+            expect(splash_bg_in_media(style, "all")).to be_nil
+            expect(splash_bg_in_media(style, "none")).to include("dark-marker")
           end
         end
 
