@@ -27,44 +27,7 @@ require "minio_runner"
 CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
 
-class RspecErrorTracker
-  def self.exceptions
-    @exceptions ||= []
-  end
-
-  def self.clear_exceptions
-    @exceptions&.clear
-  end
-
-  def self.report_exception(path, exception)
-    exceptions << [path, exception]
-  end
-
-  def initialize(app, config = {})
-    @app = app
-  end
-
-  def call(env)
-    @app.call(env)
-
-    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
-    # they do not get captured by the rescue => e shorthand :(
-  rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-    RspecErrorTracker.report_exception(env["PATH_INFO"], e)
-    raise e
-  end
-end
-
-# Some errors are caught by `Discourse.warn_exception` and don't reach
-# `RspecErrorTracker`, for example errors in hijacked responses.
-module RspecWarnExceptionCapture
-  def warn_exception(e, message: "", env: nil)
-    path = env&.[]("PATH_INFO") || "(no request path)"
-    RspecErrorTracker.report_exception(path, e)
-    super
-  end
-end
+require_relative "support/server_error_tracking"
 
 class PlaywrightLogger
   attr_reader :logs
@@ -947,38 +910,7 @@ RSpec.configure do |config|
   config.after :each do |example|
     if example.exception && RspecErrorTracker.exceptions.present?
       lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
-
-      lines << "\n"
-      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
-      lines << "\n"
-
-      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
-        lines << "\n"
-        lines << "Error encountered while processing #{path}.\n"
-        lines << "  #{ex.class}: #{ex.message}\n"
-        framework_lines_excluded = 0
-
-        ex.backtrace.each_with_index do |line, backtrace_index|
-          # This behaviour is enabled by default, to include gems in
-          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
-          if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
-            if line.match?(%r{/gems/})
-              framework_lines_excluded += 1
-              next
-            else
-              if framework_lines_excluded.positive?
-                lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
-                framework_lines_excluded = 0
-              end
-            end
-          end
-          lines << "    #{line}\n"
-        end
-      end
-
-      lines << "\n"
-      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
-      lines << "\n"
+      RspecErrorTracker.append_failure_dump(lines)
     end
 
     unfreeze_time
@@ -1081,7 +1013,6 @@ RSpec.configure do |config|
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
-
 end
 
 def before_next_spec(&callback)
