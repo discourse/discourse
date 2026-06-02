@@ -218,6 +218,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
+      it "returns topics when query is not provided" do
+        result = execute_list(configuration: { "operation" => "list", "limit" => "10" })
+
+        expect(result.map { |output_item| output_item["json"]["topic"]["id"] }).to include(
+          topic_1.id,
+          topic_2.id,
+        )
+      end
+
       it "respects the limit parameter" do
         result =
           execute_list(

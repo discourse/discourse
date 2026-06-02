@@ -82,7 +82,7 @@ module DiscourseWorkflows
             },
             query: {
               type: :string,
-              required: true,
+              required: false,
               ui: {
                 control: :filter_query,
               },
