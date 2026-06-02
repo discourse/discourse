@@ -33,6 +33,9 @@ register_asset "stylesheets/mobile/discourse-post-event.scss", :mobile
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/user-preferences.scss"
 register_asset "stylesheets/common/upcoming-events-list.scss"
+register_asset "stylesheets/common/livestream.scss"
+register_asset "stylesheets/desktop/livestream.scss", :desktop
+register_asset "stylesheets/mobile/livestream.scss", :mobile
 register_svg_icon "calendar-day"
 register_svg_icon "clock"
 register_svg_icon "file-csv"
@@ -101,7 +104,6 @@ end
 require_relative "lib/discourse_calendar/engine"
 require_relative "lib/discourse_calendar/livestream/topic_extension"
 require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
-require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))
@@ -157,6 +159,7 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
   require_relative "lib/discourse_post_event/event_parser"
