@@ -475,31 +475,45 @@ RSpec.configure do |config|
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
 
+        mb_behind = nil
+
         begin
           super
         rescue StandardError => e
-          seconds = session_options.default_max_wait_time if [nil, true].include? seconds
-          if catch_error?(e, errors) && seconds != 0
-            # This error will only have been raised if the timer expired
-            timeout_error = CapybaraTimedOut.new(seconds, e)
-            if RSpec.current_example
-              # Store timeout for later, we'll only raise it if the test otherwise passes
-              RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+          raise unless catch_error?(e, errors) && seconds != 0
 
-              if RSpec.current_example.metadata[:dump_threads_on_failure]
-                RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
-                  .list
-                  .reduce([]) { |array, thread| array << thread.backtrace }
-                  .uniq
-              end
+          # On timeout, give a pending MessageBus publish one chance to land,
+          # then retry the matcher once. Cap the retry's wait so the original
+          # wait + flush + retry can't blow PER_SPEC_TIMEOUT_SECONDS.
+          if mb_behind.nil? && MessageBusTestSync.pending?
+            mb_behind = MessageBusTestSync.flush!(session, timeout: 2)
+            seconds = 5
+            retry
+          end
 
-              raise # re-raise original error
-            else
-              # Outside an example... maybe a `before(:all)` hook?
-              raise timeout_error
+          if mb_behind&.any?
+            warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}"
+          end
+
+          # This error will only have been raised if the timer expired
+          effective_seconds =
+            [nil, true].include?(seconds) ? session_options.default_max_wait_time : seconds
+          timeout_error = CapybaraTimedOut.new(effective_seconds, e)
+          if RSpec.current_example
+            # Store timeout for later, we'll only raise it if the test otherwise passes
+            RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+
+            if RSpec.current_example.metadata[:dump_threads_on_failure]
+              RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
+                .list
+                .reduce([]) { |array, thread| array << thread.backtrace }
+                .uniq
             end
+
+            raise # re-raise original error
           else
-            raise
+            # Outside an example... maybe a `before(:all)` hook?
+            raise timeout_error
           end
         end
       end
@@ -513,6 +527,9 @@ RSpec.configure do |config|
         EmberCli.stubs(:script_chunks).returns({})
       end
     end
+
+    config.before(:each, type: :system) { MessageBusTestSync.start }
+    config.after(:each, type: :system) { MessageBusTestSync.stop }
 
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
