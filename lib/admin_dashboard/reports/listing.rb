@@ -10,64 +10,50 @@ module AdminDashboard
       end
 
       def initialize(cursor:, search:)
-        @cursor = parse_cursor(cursor)
+        @cursor = normalize_cursor(cursor)
         @search = search.presence
       end
 
       def call
-        collected = walk_providers
-        has_more = collected.size > PAGE_SIZE
+        merged =
+          Registry
+            .providers
+            .flat_map do |provider|
+              provider.list_all(search: @search, after: @cursor, limit: PAGE_SIZE + 1)
+            end
+            .sort_by { |report| [report.title.to_s.downcase, report.key] }
+
+        has_more = merged.size > PAGE_SIZE
+        page = merged.first(PAGE_SIZE)
 
         {
           providers: provider_summaries,
-          items: collected.first(PAGE_SIZE).map { |entry| entry[:item].to_h },
+          items: page.map(&:to_h),
           has_more: has_more,
-          cursor: has_more ? format_cursor(collected[PAGE_SIZE]) : nil,
+          cursor: has_more ? cursor_for(page.last) : nil,
         }
       end
 
       private
 
-      def walk_providers
-        providers = Registry.providers
-        start_index = @cursor ? providers.find_index { |p| p.source_name == @cursor[:source] } : 0
-        walk = start_index ? providers[start_index..] : []
-        current_offset = @cursor ? @cursor[:offset] : 0
-
-        collected = []
-        to_take = PAGE_SIZE + 1
-        walk.each do |provider|
-          break if to_take <= 0
-
-          items = provider.list_all(search: @search, offset: current_offset, limit: to_take)
-          items.each_with_index do |item, i|
-            collected << { source: provider.source_name, item: item, offset: current_offset + i }
-          end
-          to_take -= items.size
-          current_offset = 0
-        end
-
-        collected
-      end
-
       def provider_summaries
-        Registry.providers.map { |p| { source: p.source_name, label: p.label } }
+        Registry.providers.map do |provider|
+          { source: provider.source_name, label: provider.label }
+        end
       end
 
-      def parse_cursor(raw)
+      def normalize_cursor(raw)
         return nil if raw.blank?
 
-        source, offset = raw.to_s.split(":", 2)
-        return nil if source.blank? || offset.blank?
+        title = raw[:title]
+        key = raw[:key]
+        return nil if title.blank? || key.blank?
 
-        offset_int = Integer(offset, 10, exception: false)
-        return nil if offset_int.nil? || offset_int < 0
-
-        { source: source, offset: offset_int }
+        { title: title.to_s, key: key.to_s }
       end
 
-      def format_cursor(entry)
-        "#{entry[:source]}:#{entry[:offset]}"
+      def cursor_for(report)
+        { title: report.title, key: report.key }
       end
     end
   end
