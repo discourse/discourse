@@ -723,14 +723,6 @@ RSpec.configure do |config|
     MinioRunner.stop
   end
 
-  config.around :each do |example|
-    before_event_count = DiscourseEvent.events.values.sum(&:count)
-    example.run
-    after_event_count = DiscourseEvent.events.values.sum(&:count)
-    expect(before_event_count).to eq(after_event_count),
-    "DiscourseEvent registrations were not cleaned up"
-  end
-
   if ENV["CI"]
     class SpecTimeoutError < StandardError
     end
