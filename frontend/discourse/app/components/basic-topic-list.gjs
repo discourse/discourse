@@ -102,6 +102,7 @@ export default class BasicTopicList extends Component {
   <template>
     <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#if this.topics}}
+        <h1>I am a test</h1>
         <List
           @showPosters={{this.showPosters}}
           @hideCategory={{this.hideCategory}}
