@@ -9,7 +9,7 @@ import { trustHTML } from "@ember/template";
 import { parsePlacement } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-dom";
+import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
 import {

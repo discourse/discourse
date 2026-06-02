@@ -14,7 +14,11 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import { i18n } from "discourse-i18n";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
-import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-dom";
+import {
+  BLOCK_ARG_ATTR,
+  BLOCK_ARG_SELECTOR,
+  GRID_LAYOUT_SELECTOR,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
 import { placementsOverlap } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
@@ -1205,7 +1209,7 @@ export default class BlockChrome extends Component {
     if (!meta?.args || !this.chromeEl) {
       return;
     }
-    const linkEls = this.chromeEl.querySelectorAll("[data-block-arg]");
+    const linkEls = this.chromeEl.querySelectorAll(BLOCK_ARG_SELECTOR);
     for (const linkEl of linkEls) {
       const argName = linkEl.dataset.blockArg;
       if (kindForArg(meta, argName) !== "url") {
@@ -1305,7 +1309,7 @@ export default class BlockChrome extends Component {
     return (
       this.chromeEl
         ?.querySelector("[data-drop-passive]")
-        ?.getAttribute("data-block-arg") ?? null
+        ?.getAttribute(BLOCK_ARG_ATTR) ?? null
     );
   }
 

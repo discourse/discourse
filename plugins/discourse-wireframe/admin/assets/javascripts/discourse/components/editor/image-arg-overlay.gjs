@@ -13,6 +13,7 @@ import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
+import { BLOCK_ARG_ATTR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
 import ImageVariantDropPopover from "./image-variant-drop-popover";
 
 /**
@@ -263,7 +264,7 @@ export default class ImageArgOverlay extends Component {
     }
     const escaped = CSS.escape(this.args.argName);
     return chrome.querySelector(
-      `[data-block-arg="${escaped}"]:not(.wireframe-image-arg-overlay)`
+      `[${BLOCK_ARG_ATTR}="${escaped}"]:not(.wireframe-image-arg-overlay)`
     );
   }
 
