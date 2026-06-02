@@ -61,29 +61,16 @@ module DiscourseWorkflows
         private
 
         def process(exec_ctx, config, item_index)
-          topic = ::Topic.find(config["topic_id"])
           author = exec_ctx.actor_from_parameter("author_username", item_index)
-          author.guardian.ensure_can_see!(topic)
-
-          if topic.closed? || topic.archived?
-            raise_node_error!(
-              I18n.t("discourse_workflows.errors.create_post.topic_closed_or_archived"),
+          post =
+            exec_ctx.create_post(
+              user: author,
+              raw: config["raw"],
+              topic_id: config["topic_id"],
+              reply_to_post_number: config["reply_to_post_number"],
             )
-          end
 
-          post_args = {
-            topic_id: topic.id,
-            raw: config["raw"],
-            reply_to_post_number: config["reply_to_post_number"].presence,
-            skip_workflows: true,
-          }.compact
-          post = PostCreator.new(author, post_args).create!
-
-          { post: post_data(post) }
-        end
-
-        def post_data(post)
-          serialize_record(post, WebHookPostSerializer)
+          { post: exec_ctx.serialize_post(post, guardian: author.guardian, include_cooked: true) }
         end
       end
     end

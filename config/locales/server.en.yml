@@ -2986,6 +2986,32 @@ en:
     audio: "[audio]"
     video: "[video]"
 
+  posts_filter:
+    description:
+      category: "Show posts in a specific category"
+      category_any: "Show posts in any of the specified categories (comma-separated)"
+      exclude_category: "Exclude posts from a specific category"
+      category_without_subcategories: "Show posts only in the parent category, excluding subcategories"
+      exclude_category_without_subcategories: "Exclude posts only from the parent category, not subcategories"
+      tag: "Show posts with a specific tag"
+      tags_any: "Show posts with any of the specified tags (comma-separated)"
+      exclude_tag: "Exclude posts with a specific tag"
+      username: "Show posts by a specific user"
+      usernames_any: "Show posts by any of the specified users (comma-separated)"
+      group: "Show posts by members of a group"
+      groups_any: "Show posts by members of any specified group (comma-separated)"
+      topic: "Show posts in specific topics"
+      after: "Show posts created after a date (YYYY-MM-DD or days ago)"
+      before: "Show posts created before a date (YYYY-MM-DD or days ago)"
+      topic_after: "Show posts in topics created after a date (YYYY-MM-DD or days ago)"
+      topic_before: "Show posts in topics created before a date (YYYY-MM-DD or days ago)"
+      keywords: "Show posts containing any of the specified keywords"
+      topic_keywords: "Show posts in topics containing any of the specified keywords"
+      post_type: "Show first posts or replies"
+      status: "Filter posts by topic status"
+      order: "Sort posts"
+      max_results: "Maximum number of posts to return"
+
   filter:
     description:
       status: "Filter topics by their status"
@@ -5727,16 +5753,16 @@ en:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
-      in_this_category: '"%{tag_name}" cannot be used in this category'
-      not_allowed: '"%{tag_name}" cannot be used'
+      in_this_category: "Can't be used in this category"
+      not_allowed: "Can't be used"
       restricted_to:
-        one: '"%{tag_name}" is restricted to the "%{category_names}" category'
-        other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
-      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
+        one: 'Only available in the "%{category_names}" category'
+        other: "Only available in: %{category_names}"
+      restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
-      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
-      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
+      one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
+      missing_parent_tag: 'Available after adding the "%{parent_tag_name}" tag'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

@@ -30,11 +30,17 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
       expect(reply.user_id).to eq(admin.id)
       expect(result["post"]).to include(
         "id" => reply.id,
+        "topic_id" => topic.id,
+        "topic_title" => topic.title,
+        "topic_slug" => topic.slug,
         "post_number" => reply.post_number,
+        "post_url" => reply.url,
         "raw" => "Workflow reply",
-        "reply_to_post_number" => nil,
+        "cooked" => reply.cooked,
         "user_id" => admin.id,
         "username" => admin.username,
+        "category_id" => topic.category_id,
+        "tags" => [],
       )
     end
 
@@ -174,8 +180,10 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
       expect(reply.user_id).to eq(admin.id)
       expect(result.first["json"]["post"]).to include(
         "id" => reply.id,
+        "topic_id" => topic.id,
         "post_number" => reply.post_number,
         "raw" => "Hello Ada",
+        "cooked" => reply.cooked,
       )
     ensure
       resolver&.dispose

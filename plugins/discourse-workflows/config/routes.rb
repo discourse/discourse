@@ -36,6 +36,7 @@ DiscourseWorkflows::Engine.routes.draw do
                "webhook_test_listeners#destroy"
       delete "/workflows/:id" => "workflows#destroy"
       get "/node-types" => "node_types#index"
+      get "/filter-options/posts" => "filter_options#posts"
       post "/dynamic-node-parameters/options" => "dynamic_node_parameters#options"
       get "/templates" => "templates#index"
       get "/templates/:id" => "templates#show"

@@ -265,6 +265,7 @@ class TopicQuery
               topic:,
               per_page: builder.results_left,
               max_age: SiteSetting.suggested_topics_unread_max_days_old,
+              age_column: :bumped_at,
             ),
           )
         else
@@ -273,6 +274,7 @@ class TopicQuery
               topic: topic,
               per_page: builder.results_left,
               max_age: SiteSetting.suggested_topics_unread_max_days_old,
+              age_column: :bumped_at,
             ),
             :high,
           )
@@ -1338,7 +1340,11 @@ class TopicQuery
 
       # perf note, in the past we tried doing this in a subquery but performance was
       # terrible, also tried with a join and it was bad
-      results = results.where("topics.bumped_at >= ?", unread_at)
+      #
+      # Default to updated_at so the unread/new lists stay consistent with the unread
+      # count (TopicTrackingState); suggested topics opt into bumped_at via age_column.
+      age_column = options[:age_column] == :bumped_at ? "bumped_at" : "updated_at"
+      results = results.where("topics.#{age_column} >= ?", unread_at)
     end
     results
   end
