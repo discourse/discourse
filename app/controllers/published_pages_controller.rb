@@ -50,7 +50,18 @@ class PublishedPagesController < ApplicationController
 
     @body_classes << @topic.category.slug if @topic.category
 
-    render layout: "publish"
+    apply_cache_headers!(pp)
+
+    if publicly_cacheable?(pp)
+      # stale? sets ETag on the response. Returns true when the
+      # client's conditional headers don't match (we must re-render)
+      # and false when they do (Rails has already set 304).
+      validator = published_page_cache_validator(pp)
+
+      render layout: "publish" if stale?(etag: validator[:etag])
+    else
+      render layout: "publish"
+    end
   end
 
   def details
@@ -92,6 +103,75 @@ class PublishedPagesController < ApplicationController
   end
 
   private
+
+  # Whether anonymous /pub/<slug> hits can be cached at a shared cache
+  # (CloudFront, etc.). Authenticated requests, pages with public:
+  # false, pages whose source topic is in a read-restricted category,
+  # and login_required sites are all off-limits: a CDN entry would let
+  # an anonymous visitor with the slug bypass guardian / category
+  # permission checks the controller enforces above.
+  def publicly_cacheable?(pp)
+    current_user.nil? && pp.public && !@topic.category&.read_restricted &&
+      !SiteSetting.login_required?
+  end
+
+  # Sets Cache-Control on the response. Shared caches must revalidate
+  # every request because published-page visibility can be revoked by
+  # changing the published page, category permissions, or login_required
+  # without a CDN purge hook.
+  def apply_cache_headers!(pp)
+    if publicly_cacheable?(pp)
+      response.headers["Cache-Control"] = "public, max-age=60, s-maxage=0, must-revalidate"
+      append_vary_header!("Accept", "Accept-Encoding", "Cookie", "User-Agent")
+    else
+      response.headers["Cache-Control"] = "private, no-store"
+    end
+  end
+
+  def published_page_cache_validator(pp)
+    last_modified = [
+      pp.updated_at,
+      @topic.updated_at,
+      @topic.first_post&.updated_at,
+      @topic.user&.updated_at,
+    ].compact.max
+
+    {
+      etag:
+        Digest::SHA1.hexdigest(
+          [
+            last_modified&.to_f,
+            published_page_layout_cache_version,
+            published_page_variant_cache_version,
+          ].compact.join("\n"),
+        ),
+    }
+  end
+
+  def published_page_layout_cache_version
+    [
+      Discourse.git_version,
+      MessageBus.last_id(Site::SITE_JSON_CHANNEL),
+      MessageBus.last_id("/file-change"),
+      SiteSetting.title,
+      SiteSetting.site_favicon_url,
+      SiteSetting.site_apple_touch_icon_url,
+      SiteSetting.google_site_verification_token,
+      SiteSetting.logo&.id,
+      SiteSetting.logo_small&.id,
+    ]
+  end
+
+  def published_page_variant_cache_version
+    [theme_id, MobileDetection.mobile_device?(request.user_agent) ? :mobile : :desktop]
+  end
+
+  def append_vary_header!(*values)
+    response.headers["Vary"] = (response.headers["Vary"].to_s.split(",").map(&:strip) + values)
+      .reject(&:blank?)
+      .uniq
+      .join(", ")
+  end
 
   def fetch_topic
     topic = Topic.find_by(id: params[:topic_id])
