@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
-        OPERATIONS = %w[create get list].freeze
+        OPERATIONS = %w[create get list close].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
 
@@ -31,7 +31,7 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: ["get"],
+                  operation: %w[get close],
                 },
               },
             },
@@ -155,6 +155,8 @@ module DiscourseWorkflows
             wrap(get_topic(exec_ctx, config, item_index))
           when "list"
             list_topics(exec_ctx, config, item_index).map { |data| wrap(data) }
+          when "close"
+            wrap(close_topic(exec_ctx, config, item_index))
           else
             raise_node_error!(
               I18n.t(
@@ -218,6 +220,16 @@ module DiscourseWorkflows
           end
 
           topics.map { |topic| { topic: topic_data(topic, actor.guardian) } }
+        end
+
+        def close_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          actor.guardian.ensure_can_close_topic!(topic)
+
+          topic.update_status("closed", true, actor)
+
+          { topic: topic_data(topic.reload, actor.guardian) }
         end
 
         def topic_data(topic, guardian)

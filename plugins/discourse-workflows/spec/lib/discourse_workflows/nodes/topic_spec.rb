@@ -370,5 +370,40 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result.length).to eq(0)
       end
     end
+
+    context "with operation 'close'" do
+      fab!(:topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "closes the topic as the configured actor" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "close",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+
+        expect(topic.reload).to be_closed
+        expect(result["topic"]).to include("id" => topic.id, "closed" => true)
+      end
+
+      it "raises when actor_username cannot close the topic" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "close",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload).not_to be_closed
+      end
+    end
   end
 end
