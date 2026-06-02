@@ -204,6 +204,13 @@ RSpec.describe Discourse do
       plugin1.register_asset_filter { |type, request, opts| false }
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
     end
+
+    it "includes admin plugin css assets when include_admin is true" do
+      plugin2.enabled = true
+
+      expect(Discourse.find_plugin_css_assets(include_admin: true).length).to eq(4)
+      expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
+    end
   end
 
   describe "authenticators" do
@@ -550,7 +557,7 @@ RSpec.describe Discourse do
     it "works for individual commands" do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
       expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq(
-        "#{Rails.root}/plugins",
+        "#{Rails.root.join("plugins")}",
       )
     end
 
@@ -576,12 +583,12 @@ RSpec.describe Discourse do
 
       result =
         Discourse::Utils.execute_command(chdir: "plugins") do |runner|
-          expect(runner.exec("pwd").strip).to eq("#{Rails.root}/plugins")
+          expect(runner.exec("pwd").strip).to eq("#{Rails.root.join("plugins")}")
           runner.exec("pwd")
         end
 
       # Should return output of block
-      expect(result.strip).to eq("#{Rails.root}/plugins")
+      expect(result.strip).to eq("#{Rails.root.join("plugins")}")
     end
 
     it "does not leak chdir between threads" do

@@ -1282,7 +1282,8 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(
           target: :settings,
           name: "yaml",
-          value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          value:
+            File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}"),
         )
 
         theme.save!
@@ -1306,7 +1307,8 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(
           target: :settings,
           name: "yaml",
-          value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          value:
+            File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}"),
         )
 
         theme.save!
@@ -1567,7 +1569,7 @@ RSpec.describe Admin::ThemesController do
     fab!(:theme)
 
     let(:theme_setting) do
-      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+      yaml = File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}")
       theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
       theme.settings
@@ -1610,7 +1612,8 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(
           target: :translations,
           name: "en",
-          value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+          value:
+            File.read("#{Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")}"),
         )
 
         theme.save!

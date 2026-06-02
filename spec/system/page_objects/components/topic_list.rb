@@ -90,6 +90,22 @@ module PageObjects
         find("#{topic_list_item_class(topic)} a.raw-topic-link").click
       end
 
+      def scroll_page_down(amount: 50)
+        page.execute_script(<<~JS, amount)
+          const listArea = document.querySelector("#list-area");
+          if (!listArea) {
+            throw new Error("Topic list area not found");
+          }
+
+          listArea.style.minHeight = "3000px";
+          window.scrollTo(0, arguments[0]);
+        JS
+      end
+
+      def scrolled_down?
+        page.evaluate_script("window.scrollY").positive?
+      end
+
       def visit_topic_last_reply_via_keyboard(topic)
         find("#{topic_list_item_class(topic)} a.post-activity").send_keys(:return)
       end

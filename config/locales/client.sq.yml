@@ -144,6 +144,8 @@ sq:
       placeholder: data
       from_placeholder: "nga data"
       to_placeholder: "deri më"
+    date_range_picker:
+      apply: "Apliko"
     languages:
       en:
         name: Anglisht
@@ -269,8 +271,6 @@ sq:
     tos: "Kushtet e shërbimit"
     rules: "Rregullat"
     conduct: "Kodi i Sjelljes"
-    mobile_view: "Pamja për celular"
-    desktop_view: "Pamja për desktop"
     now: "tani"
     read_more: "lexo më shumë"
     more: "Më shumë"
@@ -304,9 +304,6 @@ sq:
     admin_onboarding_banner:
       start_posting:
         back: "Kthehu mbrapa"
-      spread_the_word:
-        action: "Kopjoni lidhjen"
-        copied_to_clipboard: "Linku u kopjua në memo!"
     about:
       edit: "Modifiko këtë faqe"
       simple_title: "Rreth Faqes"
@@ -466,6 +463,9 @@ sq:
       new_private_message: "Draft i ri i mesazhit personal"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
+    embed_mode:
+      signin_flow:
+        cancel: "Anulo"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -1182,7 +1182,6 @@ sq:
         normal_option: "Normal"
         normal_option_title: "Ju do të njoftoheni nëse ky përdorues ju përgjigjet, ju citon ose ju përmend."
       notification_schedule:
-        title: "Orari i njoftimeve"
         label: "Aktivizoni orarin e njoftimeve"
         tip: "Jashtë këtyre orëve njoftimet tuaja do të ndalohen."
         midnight: "Mesnatë"
@@ -1226,13 +1225,8 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
-        label: "Njoftimet e drejtpërdrejta"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
-        perm_default: "Aktivizo njoftimet"
-        perm_denied_btn: "Nuk lejohet"
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
-        disable: "Çaktivizoni njoftimet"
-        enable: "Aktivizoni njoftimet"
         each_browser_note: "Shënim: Ju duhet ta ndryshoni këtë cilësim në çdo shfletues që përdorni. Të gjitha njoftimet do të çaktivizohen nëse i ndaloni njoftimet nga menyja e përdoruesit, pavarësisht nga ky cilësim."
         consent_prompt: "Dëshironi njoftime të drejtpërdrejta kur njerëzit u përgjigjen postimeve tuaja?"
       dismiss: "Hiqe"
@@ -2492,7 +2486,7 @@ sq:
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
-      edit_reason_placeholder: "pse jeni duke e redaktuar?"
+      edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
       remove_featured_link: "Hiqni lidhjen nga tema."
       reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni (drag and drop) ose kopjoni dhe ngjisni imazhet. "
@@ -2527,6 +2521,7 @@ sq:
         attribute_value: "Vlera"
         apply: "Apliko"
       help: "Ndihmë mbi Markdown"
+      edit_reason: "Pse jeni duke e redaktuar?"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
       modal_ok: "OK"
       cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
@@ -2556,18 +2551,18 @@ sq:
           desc: Krijo mesazh të ri duke filluar me të njëjtët marrës
         reply_to_topic:
           label: Përgjigju temës
+          trigger: Topic
           desc: Përgjigju temës, jo ndonjë postimi specifik
         toggle_whisper:
           label: Ndërroni pëshpëritjen
-          desc: Pashërritjet janë të dukshme vetëm për anëtarët e stafit
         create_topic:
           desc: Krijoni një temë të re
         shared_draft:
           label: "Drafti i përbashkët"
           desc: "Hartoni një temë që do të jetë e dukshme vetëm për përdoruesit e lejuar"
         toggle_topic_bump:
-          label: "Ndryshoni përplasjen e temës"
           desc: "Përgjigjuni pa ndryshuar datën e fundit të përgjigjes"
+        unknown_user: "User"
       reload: "Ringarkoni"
       ignore: "Injoroni"
       image_alt_text:
@@ -2838,6 +2833,7 @@ sq:
         max_views:
           placeholder: maksimale
           aria_label: Filtro sipas shikimeve maksimale
+    header_panel: "Ballina"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -2915,6 +2911,17 @@ sq:
           other: "Hiq (%{count})…"
         dismiss_tooltip: "Hiq veç postimet e reja ose ndalo së ndjekuri temat"
         also_dismiss_topics: "Mos i gjurmo më këto tema që të mos afishohen më si të palexuara për mua"
+        dismiss_new_topics: "Hiqni temat e reja"
+        dismiss_new_replies: "Hiqni përgjigjet e reja"
+        dismiss_new_topics_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_all_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
         dismiss_new: "Hiqni të Rejat"
         dismiss_new_modal:
           title: "Hiqni të Rejat"
@@ -3458,7 +3465,6 @@ sq:
             button: "HTML"
       bookmarks:
         name: "Emri"
-        options: "Opsione"
     category:
       none: "(pa kategori)"
       all: "Të gjitha kategoritë"
@@ -3714,50 +3720,48 @@ sq:
       counter: "%curr% nga %total%"
     keyboard_shortcuts_help:
       title: "Shkurtimet e tastierës "
+      description_header: "Përshkrimi"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Kalo tek"
-        home: "%{shortcut} Faqja e parë"
-        latest: "%{shortcut} Më të fundit"
-        new: "%{shortcut} Të rejat"
-        unread: "%{shortcut} Të palexuarat"
-        categories: "%{shortcut} Kategoritë"
-        top: "%{shortcut} Populloret"
-        bookmarks: "%{shortcut} Të preferuarat"
-        profile: "%{shortcut} Profili"
-        messages: "%{shortcut} Mesazhet"
+        home: "Kryefaqja"
+        latest: "Më të fundit"
+        new: "I Ri"
+        unread: "Të palexuara"
+        unseen: "E padukshme"
+        categories: "Categories"
+        top: "Popullore"
+        bookmarks: "Të preferuarat"
+        profile: "Profili"
+        messages: "Mesazhet"
+        drafts: "Drafte"
       navigation:
         title: "Shfletimi"
-        jump: "%{shortcut} Shko tek postimi #"
-        back: "%{shortcut} Mbrapa"
-        up_down: "%{shortcut} Move selection &uarr; &darr;"
-        open: "%{shortcut} Lexo temën e zgjedhur"
-        next_prev: "%{shortcut} Seksioni i ardhshëm/mëparshëm"
+        back: "Kthehu mbrapa"
+        up_down: "Move selection &uarr; &darr;"
       application:
         title: "Aplikimi"
-        notifications: "%{shortcut} Hap njoftimet"
-        user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
-        show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
-        help: "%{shortcut} Trego shkurtimet e tastierës"
-        log_out: "%{shortcut} Shkëputu"
+        search: "Kërko"
+        log_out: "Shkëputu"
+      composing:
+        preformatted: "Tekst i paraformatuar"
+        blockquote: "Citim"
+      bookmarks:
+        later_today: "Më vonë sot"
+        later_this_week: "Më vonë këtë javë"
+        tomorrow: "Nesër"
+        next_week: "Javën e ardhshme"
+        next_month: "Muajin  e ardhshëm"
+        next_business_day: "Ditën tjetër të punës"
+        custom: "Data dhe ora e personalizuar"
+        delete: "Hiqni faqeshënuesin"
       actions:
         title: "Veprimet"
-        bookmark_topic: "%{shortcut} Shto/hiq temën nga të preferuarat"
-        pin_unpin_topic: "%{shortcut} Ngjit/çngjit temën"
-        share_topic: "%{shortcut} Shpërndaje temën"
-        share_post: "%{shortcut} Shpërnda postimin"
-        reply_as_new_topic: "%{shortcut} Përgjigju në një temë të lidhur"
-        reply_topic: "%{shortcut} Përgjigju temës"
-        reply_post: "%{shortcut} Përgjigju postimit"
-        quote_post: "%{shortcut} Cito postimin"
-        like: "%{shortcut} Pëlqeje postimin"
-        flag: "%{shortcut} Sinjalizo postimin"
-        bookmark: "%{shortcut} Shto postimin tek të preferuarat"
-        edit: "%{shortcut} Redakto postimin"
-        delete: "%{shortcut} Fshi postimin"
-        mark_muted: "%{shortcut} Bëje temë të heshtur"
-        mark_tracking: "%{shortcut} Ndiqe temën"
-        mark_watching: "%{shortcut} Vëzhgoje temën"
-        print: "%{shortcut} Printo temën"
+        reply_as_new_topic: "Përgjigjuni si temë e lidhur"
+        reply_topic: "Përgjigju temës"
+        mark_tracking: "Ndiqni temën"
+        defer: "Shënoni temën si të palexuar"
       admin:
         title: "Admin"
     badges:
@@ -3936,7 +3940,7 @@ sq:
         modal:
           cancel: "anulo"
           create: "Ruaj"
-          reason: "pse jeni duke e redaktuar?"
+          reason: "Pse jeni duke e redaktuar?"
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
@@ -4122,6 +4126,30 @@ sq:
         general_tab: "Karakteristika të përgjithshme"
         security_tab: "Siguria"
         report_filter_any: "ndonjë"
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Topics"
+              posts: "Postime"
+              share: "Shpërndaje"
+            whos_posting:
+              all_categories: "Të gjitha kategoritë"
+              staff: "Stafi"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "I Ri"
+                "1": "Anëtar i Thjeshtë"
+                "2": "Anëtar"
+                "3": "I zakonshëm"
+                "4": "Udhëheqës"
+        reports_section:
+          modal:
+            enabled_heading: "Aktivizuar"
+            apply: "Apliko"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
         period:
           custom: "Grupet e krijuara"
         reports:

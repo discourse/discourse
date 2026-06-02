@@ -95,7 +95,9 @@ class EmbedController < ApplicationController
     if SiteSetting.embed_full_app && params[:full_app].present? && topic_id
       topic = Topic.find_by(id: topic_id)
       raise Discourse::NotFound if topic.blank? || !guardian.can_see?(topic)
-      redirect_to "#{topic.url}?embed_mode=true"
+      query = { embed_mode: true }
+      query[:class_name] = params[:class_name] if params[:class_name].present?
+      redirect_to "#{topic.url}?#{query.to_query}"
       return
     end
 

@@ -569,6 +569,11 @@ RSpec.describe TagsController do
       expect(response.body).not_to include("ActionView::Template::Error")
     end
 
+    it "returns 404 for missing numeric /tag/:tag_id routes" do
+      get "/tag/9999999"
+      expect(response.status).to eq(404)
+    end
+
     it "redirects slug routes for numeric tag names to the canonical slug/id URL" do
       numeric_tag_name = (Tag.maximum(:id).to_i + 10_000).to_s
       numeric_tag = Fabricate(:tag, name: numeric_tag_name)
@@ -780,6 +785,40 @@ RSpec.describe TagsController do
           expect(response.parsed_body.dig("tag_info", "category_ids")).to be_empty
           expect(response.parsed_body["categories"]).to be_blank
           expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
+        end
+
+        it "doesn't leak the restricted tag group name to users without access" do
+          SiteSetting.tags_listed_by_group = true
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([])
+        end
+
+        it "doesn't leak the restricted tag group name to anon" do
+          SiteSetting.tags_listed_by_group = true
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([])
+        end
+
+        it "still returns the restricted tag group name to admins" do
+          SiteSetting.tags_listed_by_group = true
+          sign_in(admin)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([tag_group.name])
+        end
+
+        it "returns only visible tag group names when tag is in multiple groups" do
+          SiteSetting.tags_listed_by_group = true
+          public_tag_group = Fabricate(:tag_group, name: "public-group", tags: [tag])
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq(
+            [public_tag_group.name],
+          )
         end
       end
     end
@@ -2065,8 +2104,10 @@ RSpec.describe TagsController do
     end
 
     context "while logged in" do
-      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags.csv") }
-      let(:invalid_csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags_invalid.csv") }
+      let(:csv_file) { File.new("#{Rails.root.join("spec/fixtures/csv/tags.csv")}") }
+      let(:invalid_csv_file) do
+        File.new("#{Rails.root.join("spec/fixtures/csv/tags_invalid.csv")}")
+      end
 
       let(:file) { Rack::Test::UploadedFile.new(File.open(csv_file)) }
 

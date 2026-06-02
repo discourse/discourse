@@ -418,9 +418,9 @@ RSpec.describe Group do
       expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
     end
 
-    it "makes sure the anonymous and logged_in_users pseudogroups are hidden and have no members" do
-      anon = Group.refresh_automatic_group!(:anonymous)
-      expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous])
+    it "makes sure the anonymous_users and logged_in_users pseudogroups are hidden and have no members" do
+      anon = Group.refresh_automatic_group!(:anonymous_users)
+      expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous_users])
       expect(anon.visibility_level).to eq(Group.visibility_levels[:staff])
       expect(GroupUser.where(group_id: anon.id).count).to eq(0)
 
@@ -447,33 +447,29 @@ RSpec.describe Group do
     end
 
     it "does not reset the localized name" do
-      begin
-        I18n.locale = SiteSetting.default_locale = "fi"
+      I18n.locale = SiteSetting.default_locale = "fi"
 
-        group = Group.find(Group::AUTO_GROUPS[:everyone])
-        group.update!(name: I18n.t("groups.default_names.everyone"))
+      group = Group.find(Group::AUTO_GROUPS[:everyone])
+      group.update!(name: I18n.t("groups.default_names.everyone"))
 
-        Group.refresh_automatic_group!(:everyone)
+      Group.refresh_automatic_group!(:everyone)
 
-        expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
+      expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
 
-        I18n.locale = SiteSetting.default_locale = "en"
+      I18n.locale = SiteSetting.default_locale = "en"
 
-        Group.refresh_automatic_group!(:everyone)
+      Group.refresh_automatic_group!(:everyone)
 
-        expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
-      end
+      expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
     end
 
     it "uses the localized name if name has not been taken" do
-      begin
-        I18n.locale = SiteSetting.default_locale = "de"
+      I18n.locale = SiteSetting.default_locale = "de"
 
-        group = Group.refresh_automatic_group!(:staff)
+      group = Group.refresh_automatic_group!(:staff)
 
-        expect(group.name).to_not eq("staff")
-        expect(group.name).to eq(I18n.t("groups.default_names.staff"))
-      end
+      expect(group.name).to_not eq("staff")
+      expect(group.name).to eq(I18n.t("groups.default_names.staff"))
     end
 
     it "does not use the localized name if name has already been taken when switching to a the english locale" do
@@ -955,7 +951,7 @@ RSpec.describe Group do
       ).to eq(false)
     end
 
-    it "includes logged_in_users, anonymous and everyone groups when include_pseudogroups is true" do
+    it "includes logged_in_users, anonymous_users and everyone groups when include_pseudogroups is true" do
       expect(
         Group
           .visible_groups(admin, [], include_pseudogroups: true)
@@ -965,7 +961,7 @@ RSpec.describe Group do
       expect(
         Group
           .visible_groups(admin, [], include_pseudogroups: true)
-          .where(id: Group::AUTO_GROUPS[:anonymous])
+          .where(id: Group::AUTO_GROUPS[:anonymous_users])
           .exists?,
       ).to eq(true)
       expect(
@@ -976,12 +972,12 @@ RSpec.describe Group do
       ).to eq(true)
     end
 
-    it "does not include logged_in_users, anonymous and everyone groups by default" do
+    it "does not include logged_in_users, anonymous_users and everyone groups by default" do
       expect(
         Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
       ).to eq(false)
       expect(
-        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:anonymous]).exists?,
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:anonymous_users]).exists?,
       ).to eq(false)
       expect(
         Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:logged_in_users]).exists?,

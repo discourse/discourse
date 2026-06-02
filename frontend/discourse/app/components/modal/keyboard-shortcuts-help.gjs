@@ -509,7 +509,7 @@ export default class KeyboardShortcutsHelp extends Component {
     <DModal
       @title={{i18n "keyboard_shortcuts_help.title"}}
       @closeModal={{@closeModal}}
-      class="keyboard-shortcuts-modal -max"
+      class="keyboard-shortcuts-modal --max"
     >
       <:body>
         <div id="keyboard-shortcuts-help">

@@ -128,7 +128,7 @@ export const SAVE_ICONS = {
   [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
-  [CREATE_TOPIC]: "plus",
+  [CREATE_TOPIC]: "far-pen-to-square",
   [PRIVATE_MESSAGE]: "envelope",
   [CREATE_SHARED_DRAFT]: "far-clipboard",
 };
@@ -219,7 +219,7 @@ export default class Composer extends RestModel {
     ? this.post?.locale
     : null;
 
-  unlistTopic = false;
+  @tracked unlistTopic = false;
   noBump = false;
   draftSaving = false;
   draftForceSave = false;
@@ -370,12 +370,15 @@ export default class Composer extends RestModel {
     this._categoryId = categoryId;
 
     if (oldCategoryId !== categoryId) {
-      if (this.site.lazy_load_categories) {
-        Category.asyncFindById(categoryId).then(() => {
-          this.applyTopicTemplate(oldCategoryId, categoryId);
-        });
-      } else {
+      const applyTemplate = () => {
         this.applyTopicTemplate(oldCategoryId, categoryId);
+        this.appEvents?.trigger("composer:category-changed", this);
+      };
+
+      if (this.site.lazy_load_categories) {
+        Category.asyncFindById(categoryId).then(applyTemplate);
+      } else {
+        applyTemplate();
       }
     }
   }
@@ -525,8 +528,12 @@ export default class Composer extends RestModel {
     );
   }
 
-  @computed("canEditTopicFeaturedLink")
+  @computed("canEditTopicFeaturedLink", "category")
   get titlePlaceholder() {
+    const custom = this.customizationFor("titlePlaceholder");
+    if (custom) {
+      return custom;
+    }
     return this.canEditTopicFeaturedLink
       ? "composer.title_or_link_placeholder"
       : "composer.title_placeholder";

@@ -186,3 +186,10 @@ fr:
       title: "Modifier les attributions"
       topic: "Sujet"
       post: "Publication"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "Attribuer"
+          unassign: "Annuler l'attribution"
+        topic_id: "ID du sujet"
+        assignee: "Attributaire"

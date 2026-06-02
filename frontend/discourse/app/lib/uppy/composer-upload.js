@@ -135,6 +135,10 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
+    if (this.#uploadTargetBound) {
+      this.teardown();
+    }
+
     this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
@@ -312,6 +316,10 @@ export default class UppyComposerUpload {
             (progress.bytesUploaded / progress.bytesTotal) * 100
           );
           upload.set("progress", percentage);
+          this.appEvents.trigger(
+            `composer:upload-progress:${file.id}`,
+            percentage
+          );
         }
       });
     });
@@ -550,9 +558,7 @@ export default class UppyComposerUpload {
 
   @bind
   _pasteEventListener(event) {
-    if (
-      !document.querySelector(this.editorInputClass)?.contains(event.target)
-    ) {
+    if (!event.target.closest(this.editorInputClass)) {
       return;
     }
 

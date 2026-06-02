@@ -58,7 +58,9 @@ RSpec.describe "AI Bot docked composer" do
 
     expect(page).to have_css(".ai-bot-docked-composer")
     expect(page).to have_css(".ai-bot-docked-composer .d-editor-input")
-    expect(page).to have_no_css("#topic-footer-buttons .create")
+    # The docked composer replaces the topic footer entirely, so it is not
+    # rendered (rather than hidden via CSS).
+    expect(page).to have_no_css("#topic-footer-buttons")
   end
 
   it "sends a reply via the docked composer when pressing Enter" do

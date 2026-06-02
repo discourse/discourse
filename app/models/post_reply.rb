@@ -11,7 +11,7 @@ class PostReply < ActiveRecord::Base
 
   def ensure_same_topic
     if post.topic_id != reply.topic_id
-      self.errors.add(:base, I18n.t("activerecord.errors.models.post_reply.base.different_topic"))
+      errors.add(:base, I18n.t("activerecord.errors.models.post_reply.base.different_topic"))
     end
   end
 end

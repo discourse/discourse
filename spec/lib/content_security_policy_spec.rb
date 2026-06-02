@@ -89,7 +89,8 @@ RSpec.describe ContentSecurityPolicy do
 
     it "can extend frame_ancestors" do
       SiteSetting.content_security_policy_frame_ancestors = true
-      plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+      plugin =
+        plugin_class.new(nil, "#{Rails.root.join("spec/fixtures/plugins/csp_extension/plugin.rb")}")
 
       plugin.activate!
       Discourse.plugins << plugin

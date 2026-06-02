@@ -50,6 +50,9 @@ es:
             delete_ai_secret: "Eliminar secreto de IA"
             update_ai_spam_settings: "Actualizar ajustes de detección de spam de IA"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Agente de IA"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agente"
       default_llm:
         title: "Modelo LLM por defecto"
         description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
@@ -263,8 +269,7 @@ es:
             ui_settings: "Ajustes de interfaz de usuario"
             integrations: "Integraciones"
         nav:
-          configured: "Configurado"
-          unconfigured: "Sin configurar"
+          enabled: "Activado"
         filters:
           all: "Todo"
           text: "Buscar características, agentes, LLM o grupos..."
@@ -1168,6 +1173,7 @@ es:
             one: "El mensaje debe tener %{count} carácter o más"
             other: "El mensaje debe tener %{count} caracteres o más"
           messages_sidebar_title: "Conversaciones"
+          starred: "Favoritos"
           today: "Hoy"
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"

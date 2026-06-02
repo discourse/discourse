@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 
-module("Integration | Component | relative-time-picker", function (hooks) {
+module("Integration | Component | RelativeTimePicker", function (hooks) {
   setupRenderingTest(hooks);
 
   test("calls the onChange arg", async function (assert) {

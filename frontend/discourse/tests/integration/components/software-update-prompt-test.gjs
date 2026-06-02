@@ -4,7 +4,7 @@ import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | software-update-prompt", function (hooks) {
+module("Integration | Component | SoftwareUpdatePrompt", function (hooks) {
   setupRenderingTest(hooks);
 
   test("software-update-prompt gets correct CSS class after messageBus message", async function (assert) {

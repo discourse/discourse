@@ -704,14 +704,12 @@ RSpec.describe PrettyText do
     end
 
     it "does censor code fences" do
-      begin
-        %w[apple banana].each do |w|
-          Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
-        end
-        expect(PrettyText.cook("# banana")).not_to include("banana")
-      ensure
-        Discourse.redis.flushdb
+      %w[apple banana].each do |w|
+        Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
       end
+      expect(PrettyText.cook("# banana")).not_to include("banana")
+    ensure
+      Discourse.redis.flushdb
     end
 
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
@@ -1628,6 +1626,13 @@ RSpec.describe PrettyText do
   describe "emoji" do
     it "replaces unicode emoji with our emoji sets if emoji is enabled" do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
+    end
+
+    it "renders a denied emoji name as plain text when the name contains regex metacharacters" do
+      SiteSetting.emoji_deny_list = "+1"
+      Emoji.clear_cache
+
+      expect(PrettyText.cook(":+1: hello")).to eq("<p>:+1: hello</p>")
     end
 
     it "does not replace left right arrow" do
@@ -2770,7 +2775,7 @@ HTML
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
     #
-    html = (<<~MD).strip
+    html = <<~MD.strip
       <ruby lang="je">
         <rb lang="je">X</rb>
         漢 <rp>(</rp><rt lang="je"> ㄏㄢˋ </rt><rp>)</rp>

@@ -229,7 +229,7 @@ class TopicEmbed < ActiveRecord::Base
       .each do |node|
         url_param = tags[node.name]
         src = node[url_param]
-        unless (src.nil? || src.empty?)
+        unless src.nil? || src.empty?
           begin
             # convert URL to absolute form
             node[url_param] = URI.join(url, UrlHelper.normalized_encode(src)).to_s

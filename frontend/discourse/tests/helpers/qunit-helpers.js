@@ -10,10 +10,10 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -69,11 +69,6 @@ import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/a
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import {
-  clearBlockDecorateCallbacks,
-  clearTagDecorateCallbacks,
-  clearTextDecorateCallbacks,
-} from "discourse/lib/to-markdown";
-import {
   resetHighestReadCache,
   setTopicList,
 } from "discourse/lib/topic-list-tracker";
@@ -94,13 +89,14 @@ import Site from "discourse/models/site";
 import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
-import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
+import { _clearSnapshots as _clearComposerActionsSnapshotsOld } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
 } from "discourse/services/keyboard-shortcuts";
+import { resetEngine as resetProsemirrorEngine } from "discourse/static/prosemirror/lib/markdown-it";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
@@ -213,6 +209,7 @@ export function testCleanup(container, app) {
   User.resetCurrent();
   resetMobile();
   resetAdditionalReportModes();
+  resetAdminDashboardReportRenderers();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -231,7 +228,8 @@ export function testCleanup(container, app) {
   clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
-  _clearSnapshots();
+  container?.lookup?.("service:composer-action-state")?.clear();
+  _clearComposerActionsSnapshotsOld();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();
@@ -247,9 +245,6 @@ export function testCleanup(container, app) {
   clearPresenceCallbacks();
   restoreBaseUri();
   resetTopicsSectionLinks();
-  clearTagDecorateCallbacks();
-  clearBlockDecorateCallbacks();
-  clearTextDecorateCallbacks();
   clearResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
@@ -264,6 +259,7 @@ export function testCleanup(container, app) {
   resetLinkLookup();
   resetModelTransformers();
   resetMentions();
+  resetProsemirrorEngine();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
   resetBeforeAuthCompleteCallbacks();
@@ -533,7 +529,7 @@ export function exists(selector) {
 export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
 
-  const promises = MessageBus.callbacks
+  const promises = window.MessageBus.callbacks
     .filter((callback) => callback.channel === channelPath)
     .map((callback) => callback.func(...args));
 

@@ -6,6 +6,7 @@ class TopicQuery
       list = user_personal_private_messages(user)
       list = not_archived(list, user)
       list = have_posts_from_others(list, user)
+      list = apply_personal_inbox_modifier(list, user)
 
       create_list(:private_messages, {}, list, &blk)
     end
@@ -51,12 +52,14 @@ class TopicQuery
       list = filter_private_message_new(user, type)
       list = TopicQuery.remove_muted_tags(list, user, skip_categories: true)
       list = remove_dismissed(list, user)
+      list = apply_personal_inbox_modifier(list, user) if type == :user
 
       create_list(:private_messages, {}, list)
     end
 
     def list_private_messages_unread(user, type = :user)
       list = filter_private_messages_unread(user, type)
+      list = apply_personal_inbox_modifier(list, user) if type == :user
       create_list(:private_messages, {}, list)
     end
 
@@ -162,6 +165,10 @@ class TopicQuery
 
     private
 
+    def apply_personal_inbox_modifier(list, user)
+      DiscoursePluginRegistry.apply_modifier(:private_messages_personal_inbox_query, list, user)
+    end
+
     def append_read_state(list, group)
       group_id = group.id
       return list if group_id.nil?
@@ -229,9 +236,7 @@ class TopicQuery
 
     def group
       @group ||=
-        begin
-          Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
-        end
+        Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
     end
 
     def user_first_unread_pm_at(user)

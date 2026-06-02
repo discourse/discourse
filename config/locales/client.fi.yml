@@ -144,6 +144,15 @@ fi:
       placeholder: päivämäärä
       from_placeholder: "alkaen päivämäärästä"
       to_placeholder: "päivämäärään"
+    date_range_picker:
+      apply: "Käytä"
+      start_date: "Alkamispäivä"
+      presets:
+        last_7_days: "Viimeiset 7 päivää"
+        last_30_days: "Viimeiset 30 päivää"
+        last_3_months: "Viimeiset 3 kuukautta"
+        last_6_months: "Viimeiset 6 kuukautta"
+        last_year: "Viime vuosi"
     languages:
       ar:
         name: Arabia
@@ -374,8 +383,6 @@ fi:
     tos: "Käyttöehdot"
     rules: "Säännöt"
     conduct: "Käytännesäännöt"
-    mobile_view: "Mobiilinäkymä"
-    desktop_view: "Työpöytänäkymä"
     now: "hetki sitten"
     read_more: "lue lisää"
     more: "Lisää"
@@ -407,11 +414,10 @@ fi:
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Valittu"
       start_posting:
         back: "Takaisin"
-      spread_the_word:
-        action: "Kopioi linkki"
-        copied_to_clipboard: "Linkki kopioitiin leikepöydälle!"
     about:
       edit: "Muokkaa tätä sivua"
       simple_title: "Tietoa"
@@ -579,6 +585,9 @@ fi:
         other_drafts:
           one: "+%{count} muu luonnos"
           other: "+%{count} muuta luonnosta"
+    embed_mode:
+      signin_flow:
+        cancel: "Peruuta"
     topic_count_all:
       one: "Näytä %{count} uusi ketju"
       other: "Näytä %{count} uutta ketjua"
@@ -1354,7 +1363,6 @@ fi:
         normal_option: "Normaali"
         normal_option_title: "Saat ilmoituksen, jos käyttäjä vastaa sinulle, lainaa sinua tai mainitsee sinut."
       notification_schedule:
-        title: "Ilmoitusten aikataulu"
         label: "Aseta mukautettu ilmoitusten aikataulu"
         tip: "Näiden aikojen ulkopuolella ilmoituksesi keskeytetään."
         midnight: "Keskiyö"
@@ -1398,13 +1406,8 @@ fi:
       notifications: "Ilmoitukset"
       statistics: "Tilastot"
       desktop_notifications:
-        label: "Live-ilmoitukset"
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
-        perm_default: "Näytä ilmoituksia"
-        perm_denied_btn: "Ei oikeuksia"
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
-        disable: "Poista ilmoitukset käytöstä"
-        enable: "Näytä ilmoituksia"
         each_browser_note: "Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun keskeytät ilmoitukset käyttäjävalikosta riippumatta tästä asetuksesta."
         consent_prompt: "Haluatko reaaliaikaisia ilmoituksia, kun ihmiset vastaavat viesteihisi?"
       dismiss: "Kuittaa"
@@ -2745,7 +2748,7 @@ fi:
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
-      edit_reason_placeholder: "miksi muokkaat viestiä?"
+      edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
       remove_featured_link: "Poista linkki ketjusta."
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Vedä tai pudota kuvia."
@@ -2801,6 +2804,7 @@ fi:
         attribute_value: "Arvo"
         apply: "Käytä"
       help: "Markdown-muokkausohje"
+      edit_reason: "Miksi muokkaat viestiä?"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"
       cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
@@ -2830,24 +2834,22 @@ fi:
           desc: Luo uusi viesti aloittaen samoista vastaanottajista
         reply_to_topic:
           label: Vastaa ketjuun
+          trigger: Ketju
           desc: Vastaa ketjuun, muttei mihinkään tiettyyn viestiin
         toggle_whisper:
           label: Kuiskaus päälle/pois
-          desc: Kuiskaukset näkyvät vain henkilökunnan jäsenille
         create_topic:
-          label: "Uusi ketju"
           desc: Aloita uusi ketju
         create_personal_message:
-          label: "Uusi viesti"
           desc: "Luo uusi yksityisviesti"
         shared_draft:
           label: "Jaettu luonnos"
           desc: "Luonnostele ketju, joka näkyy vain määrätyille käyttäjille"
         toggle_topic_bump:
-          label: "Ketjun nosto päälle/pois"
           desc: "Vastaa muuttamatta ketjun viimeisimmän vastauksen päivämäärää"
         toggle_unlisted:
           label: Listaus päälle/pois
+        unknown_user: "Käyttäjä"
       reload: "Lataa uudelleen"
       ignore: "Ohita"
       image_alt_text:
@@ -3133,6 +3135,7 @@ fi:
           placeholder: enintään
           aria_label: suodata enimmäiskatselukertojen mukaan
     hamburger_menu: "Navigointivalikko"
+    header_panel: "Yläpalkki"
     new_item: "uusi"
     go_back: "palaa takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
@@ -3210,6 +3213,17 @@ fi:
           other: "Kuittaa (%{count})…"
         dismiss_tooltip: "Kuittaa uudet viestit luetuiksi tai lopeta ketjujen seuraaminen"
         also_dismiss_topics: "Älä seuraa näitä ketjuja enää – ne eivät jatkossa lukemattomina"
+        dismiss_new_topics: "Kuittaa uudet ketjut"
+        dismiss_new_replies: "Kuittaa uudet vastaukset"
+        dismiss_new_topics_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
+        dismiss_all_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
         dismiss_new: "Kuittaa luetuksi"
         dismiss_new_modal:
           title: "Kuittaa uudet"
@@ -4013,7 +4027,6 @@ fi:
         name_placeholder: "Mitä varten kirjanmerkki on?"
         name_input_label: "Kirjanmerkin nimi"
         set_reminder: "Muistuta minua"
-        options: "Asetukset"
         actions:
           delete_bookmark:
             name: "Poista kirjanmerkki"
@@ -4489,107 +4502,61 @@ fi:
       title: "Pikanäppäimet"
       short_title: "Pikavalinnat"
       search_ctrl_f_tip: "Jos haluat tehdä haun koko foorumilla, paina <kbd>/</kbd>"
+      description_header: "Kuvaus"
+      key_header: "Avain"
+      search_aliases:
+        shift: "vaihto"
       jump_to:
         title: "Siirry"
-        home: "%{shortcut} Aloitussivulle"
-        latest: "%{shortcut} Tuoreimmat"
-        new: "%{shortcut} Uudet"
-        unread: "%{shortcut} Lukemattomat"
-        categories: "%{shortcut} Alueet"
-        top: "%{shortcut} Suositut"
-        bookmarks: "%{shortcut} Kirjanmerkit"
-        profile: "%{shortcut} Profiili"
-        messages: "%{shortcut} Viestit"
-        drafts: "%{shortcut} Luonnokset"
-        next: "%{shortcut} Seuraava ketju"
-        previous: "%{shortcut} Edellinen ketju"
+        home: "Aloitus"
+        latest: "Tuoreimmat"
+        new: "Uudet"
+        unread: "Lukemattomat"
+        unseen: "Näkemätön"
+        categories: "Kategoriat"
+        top: "Suositut"
+        bookmarks: "Kirjanmerkit"
+        profile: "Profiili"
+        messages: "Viestit"
+        drafts: "Luonnokset"
       navigation:
         title: "Navigointi"
-        jump: "%{shortcut} Siirry viestiin #"
-        back: "%{shortcut} Takaisin"
-        up_down: "%{shortcut} Siirrä valintaa &uarr; &darr;"
-        open: "%{shortcut} Avaa valittu ketju"
-        next_prev: "%{shortcut} Seuraava/edellinen osa"
-        go_to_unread_post: "%{shortcut} Siirry ensimmäiseen lukemattomaan viestiin"
+        back: "Takaisin"
+        up_down: "Siirrä valintaa &uarr; &darr;"
       application:
         title: "Sovellus"
-        notifications: "%{shortcut} Avaa ilmoitukset"
-        hamburger_menu: "%{shortcut} Avaa navigointivalikko"
-        user_profile_menu: "%{shortcut} Avaa käyttäjävalikko"
-        show_incoming_updated_topics: "%{shortcut} Näytä päivitetyt ketjut"
-        search: "%{shortcut} Haku"
-        filter_sidebar: "%{shortcut} Suodatinsivupalkki"
-        help: "%{shortcut} Näytä näppäinohjeet"
-        toggle_bulk_select: "%{shortcut} Joukkovalinta päälle/pois"
-        dismiss: "%{shortcut} Kuittaa valitut ketjut"
-        x: "%{shortcut} Vaihda valinta (joukkovalintatilassa)"
-        log_out: "%{shortcut} Kirjaudu ulos"
+        search: "Haku"
+        log_out: "Kirjaudu ulos"
       composing:
         title: "Kirjoittaminen"
-        return: "%{shortcut} Palaa kirjoitustilaan"
-        minimize: "%{shortcut} Pienennä kirjoitustila"
-        create_or_reply: "%{shortcut} Luo ketju tai vastaa viestiin"
-        fullscreen: "%{shortcut} Koko ruudun kirjoitustila"
-        insert_current_time: "%{shortcut} Lisää nykyinen aika"
-        bold: "%{shortcut} Lihavointi"
-        italic: "%{shortcut} Kursivointi"
-        link: "%{shortcut} Lisää linkki"
-        preformatted: "%{shortcut} Esimuotoiltu teksti"
-        paragraph: "%{shortcut} Kappale"
-        heading_1: "%{shortcut} Otsikko 1"
-        heading_2: "%{shortcut} Otsikko 2"
-        heading_3: "%{shortcut} Otsikko 3"
-        heading_4: "%{shortcut} Otsikko 4"
-        toggle_direction: "%{shortcut} Vaihda tekstin suuntaa"
-        ordered_list: "%{shortcut} Järjestetty luettelo"
-        unordered_list: "%{shortcut} Järjestämätön luettelo"
-        blockquote: "%{shortcut} Lainauslohko"
+        link: "Lisää linkki"
+        preformatted: "Teksti ilman muotoiluja"
+        paragraph: "Kappale"
+        blockquote: "Sitaatti"
       bookmarks:
         title: "Kirjanmerkit"
-        enter: "%{shortcut} Tallenna ja sulje"
-        later_today: "%{shortcut} Myöhemmin tänään"
-        later_this_week: "%{shortcut} Myöhemmin tällä viikolla"
-        tomorrow: "%{shortcut} Huomenna"
-        next_week: "%{shortcut} Ensi viikolla"
-        next_month: "%{shortcut} Ensi kuussa"
-        next_business_week: "%{shortcut} Ensi viikon alussa"
-        next_business_day: "%{shortcut} Seuraavana arkipäivänä"
-        custom: "%{shortcut} Valitse päivämäärä ja kellonaika"
-        none: "%{shortcut} Ei muistutusta"
-        delete: "%{shortcut} Poista kirjanmerkki"
+        later_today: "Myöhemmin tänään"
+        later_this_week: "Myöhemmin tällä viikolla"
+        tomorrow: "Huomenna"
+        next_week: "Ensi viikko"
+        next_month: "Ensi kuussa"
+        next_business_day: "Seuraavana arkipäivänä"
+        custom: "Mukautettu päivämäärä ja aika"
+        none: "Ei muistutusta"
+        delete: "Poista kirjanmerkki"
       actions:
         title: "Toiminnot"
-        bookmark_topic: "%{shortcut} Lisää ketju kirjanmerkkeihin/poista kirjanmerkeistä"
-        pin_unpin_topic: "%{shortcut} Kiinnitä ketju/Poista ketjun kiinnitys"
-        share_topic: "%{shortcut} Jaa ketju"
-        share_post: "%{shortcut} Jaa viesti"
-        reply_as_new_topic: "%{shortcut} Vastaa liittyvässä ketjussa"
-        reply_topic: "%{shortcut} Vastaa ketjuun"
-        reply_post: "%{shortcut} Vastaa viestiin"
-        quote_post: "%{shortcut} Lainaa viestiä"
-        like: "%{shortcut} Tykkää viestistä"
-        flag: "%{shortcut} Liputa viesti"
-        bookmark: "%{shortcut} Lisää viesti kirjanmerkkeihin"
-        edit: "%{shortcut} Muokkaa viestiä"
-        delete: "%{shortcut} Poista viesti"
-        mark_muted: "%{shortcut} Vaimenna ketju"
-        mark_regular: "%{shortcut} Tavallinen ketju (oletus)"
-        mark_tracking: "%{shortcut} Seuraa ketjua"
-        mark_watching: "%{shortcut} Tarkkaile ketjua"
-        print: "%{shortcut} Tulosta ketju"
-        defer: "%{shortcut} Merkitse ketju lukemattomaksi"
-        topic_admin_actions: "%{shortcut} Avaa ketjun ylläpitotyökalut"
-        archive_private_message: "%{shortcut} Vaihda henkilökohtaisen viestin arkistointi"
+        reply_as_new_topic: "Vastaa liittyvässä ketjussa"
+        reply_topic: "Vastaa ketjuun"
+        flag: "Liputa viesti"
+        delete: "Poista viesti"
+        mark_tracking: "Seuraa ketjua"
+        mark_watching: "Tarkkaile ketjua"
+        defer: "Merkitse ketju lukemattomaksi"
       search_menu:
         title: "Hakuvalikko"
-        prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
-        insert_url: "%{shortcut} Lisää valinta avoinna olevaan kirjoitustyökaluun"
-        full_page_search: "%{shortcut} Käynnistää koko sivun haun"
       admin:
         title: "Ylläpitäjä"
-        search_prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
-        search_open: "%{shortcut} Avaa ylläpitäjän käyttöliittymän haku"
-        search_full_page: "%{shortcut} Avaa koko sivun ylläpitäjän haku"
     badges:
       earned_n_times:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
@@ -4657,14 +4624,7 @@ fi:
       staff_info: "Lisää rajoituksia asettamalla tämä tunniste <a href=%{basePath}/tag_groups>-tunnisteryhmään</a>."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
       synonyms: "Synonyymit"
-      synonyms_description: "Kun näitä tunnisteita käytetään, ne korvataan tunnisteella <b>%{base_tag_name}</b>."
       save: "Tallenna tunnisteen nimi ja kuvaus"
-      tag_groups_info:
-        one: 'Tunniste kuuluu ryhmään "%{tag_groups}".'
-        other: "Tunniste kuuluu näihin ryhmiin: %{tag_groups}"
-      category_restrictions:
-        one: "Sitä voi käyttää vain tällä alueella:"
-        other: "Sitä voi käyttää vain näillä alueilla:"
       edit_synonyms: "Muokkaa synonyymejä"
       add_synonyms_label: "Lisää synonyymejä:"
       add_synonyms: "Lisää"
@@ -5070,7 +5030,7 @@ fi:
           title: "Muokkaa taulukkoa"
           cancel: "peruuta"
           create: "Tallenna"
-          reason: "miksi muokkaat viestiä?"
+          reason: "Miksi muokkaat viestiä?"
           trigger_reason: "Lisää muokkauksen syy"
         default_edit_reason: "Päivitä taulukko taulukkoeditorilla"
       default_header:
@@ -5675,6 +5635,33 @@ fi:
             title: "Raportit"
           traffic:
             title: "Sivuston liikenne"
+          engagement:
+            activity_by_category:
+              category: "Luokka"
+              topics: "Aiheet"
+              posts: "Viestejä"
+              share: "Jaa"
+            whos_posting:
+              all_categories: "Kaikki alueet"
+              staff: "Henkilökunta"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Uudet"
+                "1": "Haastaja"
+                "2": "Konkari"
+                "3": "Normaali"
+                "4": "Johtaja"
+        reports_section:
+          modal:
+            enabled_heading: "Käytössä"
+            all_heading: "Kaikki raportit"
+            apply: "Käytä"
+        configure:
+          button: "Määritä"
+        site_traffic:
+          series:
+            anonymous: "Anonyymeja"
+            crawlers: "Hakurobotit"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"

@@ -35,6 +35,6 @@ module("Integration | Component | Dashboard | Skeleton", function (hooks) {
   test("opts into the shimmer animation", async function (assert) {
     await render(<template><DashboardSkeleton /></template>);
 
-    assert.dom(".db-skeleton").hasClass("-animation");
+    assert.dom(".db-skeleton").hasClass("--animation");
   });
 });

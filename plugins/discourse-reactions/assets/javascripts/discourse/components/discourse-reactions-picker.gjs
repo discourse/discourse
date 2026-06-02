@@ -10,6 +10,7 @@ import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseReactionsPicker extends Component {
+  @service currentUser;
   @service siteSettings;
 
   emojiPickerIsOpen = false;
@@ -62,7 +63,12 @@ export default class DiscourseReactionsPicker extends Component {
         isUsed = currentUserReaction && currentUserReaction.id === reaction;
       }
 
-      if (currentUserReaction) {
+      if (!this.currentUser) {
+        // Anonymous users can pick a reaction — it gets deferred until login.
+        // Disallow on archived/closed topics where no one can react.
+        const topic = post.topic;
+        canUndo = !(topic?.archived || topic?.closed);
+      } else if (currentUserReaction) {
         canUndo = currentUserReaction.can_undo && post.likeAction?.canToggle;
       } else {
         canUndo = post.likeAction?.canToggle;
@@ -184,7 +190,7 @@ export default class DiscourseReactionsPicker extends Component {
           {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}
             <EmojiPicker
               ...attributes
-              @icon="far-face-smile"
+              @icon="discourse-emojis"
               @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
               @onShow={{this.preventCollapse}}

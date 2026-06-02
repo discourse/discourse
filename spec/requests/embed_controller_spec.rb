@@ -219,6 +219,20 @@ RSpec.describe EmbedController do
         expect(response).to redirect_to("#{topic.url}?embed_mode=true")
       end
 
+      it "forwards class_name to the topic URL" do
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+              full_app: "true",
+              class_name: "lee-af",
+            },
+            headers: {
+              "REFERER" => "http://eviltrout.com/some-page",
+            }
+
+        expect(response).to redirect_to("#{topic.url}?class_name=lee-af&embed_mode=true")
+      end
+
       it "redirects blank-slug topics to a slugless URL" do
         topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
         topic_embed.topic.update_columns(title: "", slug: nil)

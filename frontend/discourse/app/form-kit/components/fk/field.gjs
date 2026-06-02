@@ -44,7 +44,7 @@ const RowColWrapper = <template>
 </template>;
 
 const EmptyWrapper = <template>
-  {{! template-lint-disable no-yield-only }}
+  {{! eslint-disable ember/template-no-yield-only }}
   {{yield}}
 </template>;
 
@@ -136,6 +136,7 @@ export default class FKField extends Component {
               }}
               data-disabled={{field.disabled}}
               data-name={{field.name}}
+              ...attributes
               {{this.applyControlType field}}
               {{didInsert (fn @registerField field.name field)}}
               {{willDestroy (fn @unregisterField field.name)}}
@@ -159,6 +160,7 @@ export default class FKField extends Component {
 
               {{#if field.description}}
                 <FKText
+                  id={{field.descriptionId}}
                   class={{dConcatClass
                     "form-kit__container-description"
                     (if field.labelFormat (concat "--" field.labelFormat))
@@ -175,6 +177,7 @@ export default class FKField extends Component {
 
                 {{#if field.helpText}}
                   <FKText
+                    id={{field.helpTextId}}
                     class="form-kit__container-help-text"
                   >{{field.helpText}}</FKText>
                 {{/if}}

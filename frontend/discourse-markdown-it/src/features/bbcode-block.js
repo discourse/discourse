@@ -34,7 +34,18 @@ function trailingSpaceOnly(src, start, max) {
 
 // Most common quotation marks.
 // More can be found at https://en.wikipedia.org/wiki/Quotation_mark
-const QUOTATION_MARKS = [`""`, `''`, `“”`, `””`, `‘’`, `„“`, `‚’`, `«»`, `‹›`];
+// Keep in sync with plugins/chat/lib/chat/transcript_service.rb
+export const QUOTATION_MARKS = [
+  `""`,
+  `''`,
+  `«»`,
+  `“”`,
+  `””`,
+  `‘’`,
+  `„“`,
+  `‚’`,
+  `‹›`,
+];
 
 const QUOTATION_MARKS_PATTERN = new RegExp(
   `[${QUOTATION_MARKS.join("")}]`,

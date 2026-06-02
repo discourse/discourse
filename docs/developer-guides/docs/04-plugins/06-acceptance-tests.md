@@ -10,7 +10,7 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 Did you know that Discourse has two large test suites for its code base? On the server side, our Ruby code has a test suite that uses [rspec](https://rspec.info/). For the browser application, we have a [qunit](https://qunitjs.com/) suite that has [ember-testing](https://guides.emberjs.com/release/testing/testing-application/) included.
 
-Assuming you have a development environment set up, if you visit the `http://localhost:4200/tests` URL you will start running the JavaScript test suite in your browser. One fun aspect is that you can see it testing the application in a miniature window in the bottom right corner:
+Assuming you have a development environment set up, if you visit the `http://localhost:3000/tests` URL you will start running the JavaScript test suite in your browser. One fun aspect is that you can see it testing the application in a miniature window in the bottom right corner:
 
 <img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/6/2/62a63eca67d134def1580fd9fbd84ff62b531ee1.png" width="690" height="481">
 
@@ -76,7 +76,7 @@ After we simulate a click on the button, we can check whether the tentacle appea
 assert.ok(exists(".tentacle"), "the tentacle wants to rule the world!");
 ```
 
-Not too bad is it? You can try the test yourself by visiting `http://localhost:4200/tests?qunit_single_plugin=purple-tentacle&qunit_skip_core=1` on your development machine. You should very quickly see the purple tentacle appear and all tests will pass.
+Not too bad is it? You can try the test yourself by visiting `http://localhost:3000/tests?qunit_single_plugin=purple-tentacle&qunit_skip_core=1` on your development machine. You should very quickly see the purple tentacle appear and all tests will pass.
 
 If you want to run the plugin qunit tests on the command line using PhantomJS, you can run
 

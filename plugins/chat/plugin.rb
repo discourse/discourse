@@ -45,9 +45,8 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
-
 after_initialize do
-  register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
+  register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
@@ -97,6 +96,36 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   register_reviewable_type Chat::ReviewableMessage
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/chat_channel_selection"
+      require_relative "lib/discourse_workflows/nodes/send_chat_message/v1"
+      require_relative "lib/discourse_workflows/nodes/chat_approval/v1"
+
+      [DiscourseWorkflows::Nodes::SendChatMessage::V1, DiscourseWorkflows::Nodes::ChatApproval::V1]
+    end
+
+    on(:chat_message_interaction) do |interaction|
+      next unless SiteSetting.discourse_workflows_enabled
+
+      action_id = interaction.action&.dig("action_id").to_s
+      next if action_id.blank?
+      unless DiscourseWorkflows::InteractiveResume.action_id?(
+               action_id,
+               expected_node_type: "action:chat_approval",
+               allowed_actions: %w[approve deny],
+             )
+        next
+      end
+
+      Jobs.enqueue(
+        Jobs::Chat::ResumeWorkflowApproval,
+        action_id: action_id,
+        channel_id: interaction.message.chat_channel_id,
+      )
+    end
+  end
 
   reloadable_patch do |plugin|
     Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED
@@ -208,7 +237,7 @@ after_initialize do
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
     Chat::ChannelFetcher.secured_public_channel_search(
-      self.scope,
+      scope,
       following: false,
       limit: 1,
       status: :open,
@@ -236,7 +265,7 @@ after_initialize do
       @has_chat_enabled =
         SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
     end,
-  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
+  ) { Chat::ChannelFetcher.unreads_total(scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 

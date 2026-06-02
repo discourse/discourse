@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -44,7 +45,7 @@ export default class DiscoursePostEventDescription extends Component {
   }
 
   <template>
-    {{#if @descriptionHtml}}
+    {{#if (or @descriptionHtml @description)}}
       <section
         class="event__section event-description
           {{if this.clamp 'is-clamped'}}
@@ -56,7 +57,13 @@ export default class DiscoursePostEventDescription extends Component {
           class="event-description__content"
           {{(if this.clamp this.detectOverflow)}}
         >
-          <p class="event-description__text">{{trustHTML @descriptionHtml}}</p>
+          <p class="event-description__text">
+            {{#if @descriptionHtml}}
+              {{trustHTML @descriptionHtml}}
+            {{else}}
+              {{@description}}
+            {{/if}}
+          </p>
           {{#if this.showToggle}}
             <a
               href

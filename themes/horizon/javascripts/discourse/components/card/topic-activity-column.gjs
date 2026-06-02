@@ -1,30 +1,11 @@
 import Component from "@glimmer/component";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity";
 
 export default class TopicActivityColumn extends Component {
   get topicUser() {
-    const bumpedLastPostedDaysDiff = moment
-      .duration(
-        moment(this.args.topic.bumped_at).diff(
-          moment(this.args.topic.last_posted_at)
-        )
-      )
-      .asDays();
-
-    // If the bumped + last posted at are close together,
-    // then we assume someone is editing shortly after posting,
-    // in which case we should just show the last poster/first poster
-    // as normal.
-    //
-    // In other cases, it's likely an edit or a topic bump that happened
-    // a while after the last post, so we show no user.
-    if (
-      moment(this.args.topic.bumped_at).isAfter(
-        this.args.topic.last_posted_at
-      ) &&
-      bumpedLastPostedDaysDiff > 1
-    ) {
+    if (topicWasUpdatedAfterLastPost(this.args.topic)) {
       return {
         username: undefined,
         class: "--updated",

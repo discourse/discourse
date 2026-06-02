@@ -696,3 +696,12 @@ fi:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Lähetä chat-viesti"
+      send_chat_message:
+        channel_id: "Kanava"
+        message: "Viesti"
+      chat_approval:
+        message: "Viesti"
+        channel_id: "Kanava"

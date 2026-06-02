@@ -116,6 +116,18 @@
     }
   }
 
+  &__content {
+    padding-inline: 1rem;
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  &__description {
+    margin: 0 0 10px 0;
+  }
+
   &__components {
     display: -webkit-box;
     font-size: var(--font-down-1);

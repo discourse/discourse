@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -11,17 +12,20 @@ export default class SidebarToggle extends Component {
   @service navigationMenu;
 
   @action
-  toggleWithBlur(e) {
+  toggle() {
+    const wasHidden = !this.args.showSidebar;
+
     if (this.navigationMenu.isDesktopDropdownMode) {
       this.args.toggleNavigationMenu("sidebar");
     } else {
       this.args.toggleNavigationMenu();
     }
 
-    // remove the focus of the header dropdown button after clicking
-    e.target.tagName.toLowerCase() === "button"
-      ? e.target.blur()
-      : e.target.closest("button").blur();
+    if (wasHidden) {
+      schedule("afterRender", () => {
+        document.querySelector("#d-sidebar a, #d-sidebar button")?.focus();
+      });
+    }
   }
 
   <template>
@@ -34,7 +38,7 @@ export default class SidebarToggle extends Component {
         }}
         aria-expanded={{if @showSidebar "true" "false"}}
         aria-controls="d-sidebar"
-        {{on "click" this.toggleWithBlur}}
+        {{on "click" this.toggle}}
       >
         {{dIcon @icon}}
       </button>

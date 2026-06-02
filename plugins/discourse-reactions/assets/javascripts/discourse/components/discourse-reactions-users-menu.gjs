@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 export default class DiscourseReactionsUsersMenu extends Component {
-  @tracked activeFilter = this.args.data.initialFilter ?? null;
+  @tracked activeFilter = null;
 
   fetchUsers = async (page, pageSize) => {
     const filter = this.activeFilter;
@@ -79,6 +79,13 @@ export default class DiscourseReactionsUsersMenu extends Component {
     });
   }
 
+  get activeFilterTotalUsers() {
+    if (!this.activeFilter) {
+      return this.post.reaction_users_count;
+    }
+    return this.reactions.find((r) => r.id === this.activeFilter)?.count;
+  }
+
   @action
   registerReset(resetFn) {
     this.#resetCallback = resetFn;
@@ -100,6 +107,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
     <PostUsersMenu
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
+      @totalUsers={{this.activeFilterTotalUsers}}
     >
       <:header as |resetAndReload|>
         {{this.registerReset resetAndReload}}

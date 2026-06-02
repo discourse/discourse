@@ -143,7 +143,7 @@ class PushNotificationPusher
     p256dh = parsed_data.dig("keys", "p256dh")
     auth = parsed_data.dig("keys", "auth")
 
-    if (endpoint.blank? || p256dh.blank? || auth.blank?)
+    if endpoint.blank? || p256dh.blank? || auth.blank?
       subscription.destroy!
       return
     end

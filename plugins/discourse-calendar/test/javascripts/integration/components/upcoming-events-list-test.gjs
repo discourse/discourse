@@ -30,7 +30,7 @@ const ongoingEnd = "2100-02-09T00:00:00";
 const pastStart = "2100-01-01T00:00:00";
 const pastEnd = "2100-01-15T00:00:00";
 
-module("Integration | Component | upcoming-events-list", function (hooks) {
+module("Integration | Component | UpcomingEventsList", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
   hooks.beforeEach(function () {

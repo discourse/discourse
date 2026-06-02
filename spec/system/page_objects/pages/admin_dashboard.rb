@@ -5,7 +5,13 @@ module PageObjects
     class AdminDashboard < PageObjects::Pages::Base
       def visit
         page.visit("/admin")
-        has_css?(".db-main__section, .db-main__empty, .nav-pills")
+        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
+        self
+      end
+
+      def visit_with_query(params)
+        page.visit("/admin?#{params.to_query}")
+        has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
         self
       end
 
@@ -26,20 +32,28 @@ module PageObjects
       end
 
       def has_active_period?(period)
-        has_css?(".db-date-range input[value='#{period}']:checked")
+        if period == "custom"
+          page.current_url.include?("range=custom")
+        else
+          has_css?(".db-date-range__trigger-label", text: preset_label(period))
+        end
       end
 
-      def select_preset(period)
-        find(".db-date-range label", text: preset_label(period)).click
-        self
+      def has_custom_label?(text)
+        has_css?(".db-date-range__trigger-label", exact_text: text)
       end
 
-      def has_custom_label_text?(text)
-        has_css?(".db-date-range__custom", text: text)
+      def date_range_picker
+        PageObjects::Components::AdminDashboardDateRangePicker.new
       end
 
       def open_custom_date_range
-        find(".db-date-range__custom").click
+        find(".db-date-range__trigger").click
+        date_range_picker.tap(&:open?)
+      end
+
+      def select_preset(period)
+        open_custom_date_range.select_preset(preset_label(period))
         self
       end
 
@@ -68,15 +82,23 @@ module PageObjects
       end
 
       def has_section?(id)
-        has_css?(".db-main__section[data-section-id='#{id}']")
+        has_css?(".db-main [data-section-id='#{id}']")
       end
 
       def has_no_section?(id)
-        has_no_css?(".db-main__section[data-section-id='#{id}']")
+        has_no_css?(".db-main [data-section-id='#{id}']")
+      end
+
+      def has_first_section?(id)
+        has_css?(".db-main > :first-child[data-section-id='#{id}']")
+      end
+
+      def site_traffic
+        PageObjects::Components::AdminDashboardSiteTraffic.new
       end
 
       def section_ids_in_order
-        all(".db-main__section").map { |el| el["data-section-id"] }
+        all(".db-main [data-section-id]").map { |el| el["data-section-id"] }
       end
 
       def has_empty_state?
@@ -114,6 +136,10 @@ module PageObjects
           "Last 30 days"
         when "last_3_months"
           "Last 3 months"
+        when "last_6_months"
+          "Last 6 months"
+        when "last_year"
+          "Last year"
         end
       end
     end

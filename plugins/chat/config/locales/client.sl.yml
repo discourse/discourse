@@ -250,3 +250,8 @@ sl:
       panels:
         chat:
           label: "Klepet"
+    discourse_workflows:
+      send_chat_message:
+        message: "Opozorilo"
+      chat_approval:
+        message: "Opozorilo"

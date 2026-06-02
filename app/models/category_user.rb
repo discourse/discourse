@@ -5,7 +5,7 @@ class CategoryUser < ActiveRecord::Base
   belongs_to :user
 
   def self.lookup(user, level)
-    self.where(user: user, notification_level: notification_levels[level])
+    where(user: user, notification_level: notification_levels[level])
   end
 
   def self.notification_levels

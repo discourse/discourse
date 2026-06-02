@@ -17,7 +17,7 @@ import { i18n } from "discourse-i18n";
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/search-test.js. This is simply about the rendering of the
 // menu panel separate from the search input.
-module("Integration | Component | search-menu", function (hooks) {
+module("Integration | Component | SearchMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("rendering standalone", async function (assert) {

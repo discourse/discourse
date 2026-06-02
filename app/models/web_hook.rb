@@ -137,7 +137,7 @@ class WebHook < ActiveRecord::Base
     serializer ||= TagSerializer if type == :tag
     serializer ||= "WebHook#{type.capitalize}Serializer".constantize
 
-    serializer.new(object, scope: self.guardian, root: false).to_json
+    serializer.new(object, scope: guardian, root: false).to_json
   end
 
   private
@@ -159,7 +159,7 @@ class WebHook < ActiveRecord::Base
         false
       end
 
-    self.errors.add(:base, I18n.t("webhooks.payload_url.blocked_or_internal")) if !allowed
+    errors.add(:base, I18n.t("webhooks.payload_url.blocked_or_internal")) if !allowed
   end
 end
 

@@ -26,7 +26,7 @@ module SiteSettings::DeprecatedSettings
         )
       end
 
-      self.public_send(override ? new_setting : "_#{old_setting}", scoped_to)
+      public_send(override ? new_setting : "_#{old_setting}", scoped_to)
     end
 
     SiteSetting.singleton_class.alias_method(:"_#{old_setting}?", :"#{old_setting}?") if !override
@@ -39,7 +39,7 @@ module SiteSettings::DeprecatedSettings
         )
       end
 
-      self.public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
+      public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
     end
 
     SiteSetting.singleton_class.alias_method(:"_#{old_setting}=", :"#{old_setting}=") if !override
@@ -52,7 +52,7 @@ module SiteSettings::DeprecatedSettings
         )
       end
 
-      self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
+      public_send("#{override ? new_setting : "_" + old_setting}=", val)
     end
   end
 end

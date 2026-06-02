@@ -49,4 +49,20 @@ module("Unit | Service | tag-utils", function (hooks) {
       "node.js"
     );
   });
+
+  test("sortSearchResults keeps usable tags before disabled ones when sorting alphabetically", function (assert) {
+    this.tagUtils.siteSettings.tags_sort_alphabetically = true;
+
+    const results = [
+      { name: "z-ready", disabled: false },
+      { name: "ready-to-deploy", disabled: true },
+      { name: "apple-ready", disabled: false },
+      { name: "boom-ready", disabled: true },
+    ];
+
+    assert.deepEqual(
+      this.tagUtils.sortSearchResults(results).map((r) => r.name),
+      ["apple-ready", "z-ready", "boom-ready", "ready-to-deploy"]
+    );
+  });
 });

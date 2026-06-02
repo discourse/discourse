@@ -104,7 +104,7 @@ class S3Helper
 
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      self.copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
+      copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
     end
 
     # delete the file
@@ -450,12 +450,10 @@ class S3Helper
   end
 
   def fetch_bucket_cors_rules
-    begin
-      s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
-    rescue Aws::S3::Errors::NoSuchCORSConfiguration
-      # no rule
-      []
-    end
+    s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
+  rescue Aws::S3::Errors::NoSuchCORSConfiguration
+    # no rule
+    []
   end
 
   def default_s3_options
@@ -484,7 +482,7 @@ class S3Helper
   def multisite_upload_path
     path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
     return path if !Rails.env.test?
-    File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}", "/")
+    File.join(path, "test_#{Discourse.test_env_number}", "/")
   end
 
   def s3_resource

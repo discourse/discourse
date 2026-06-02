@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fi:
+  category_types:
+    events:
+      name: "Tapahtumat"
+      title: "tapahtumat"
   reports:
     currently_away:
       title: Tällä hetkellä poissa olevat käyttäjät
@@ -36,7 +40,6 @@ fi:
     map_events_to_color: "Määritä jokaiselle tunnisteelle tai alueelle väri."
     map_events_title: "Korvaa \"Tapahtumat\" \"Tulevat tapahtumat\" -sivupalkin otsikossa aluekohtaisesti."
     calendar_enabled: "Ota discourse-calendar-lisäosa käyttöön. Tämä lisää tuen [calendar][/calendar]-tunnisteelle ketjun ensimmäisessä viestissä."
-    discourse_post_event_enabled: "Ottaa tapahtumaominaisuudet käyttöön. Huomautus: edellyttää myös, että \"calendar enabled\" on käytössä."
     displayed_invitees_limit: "Rajoittaa tapahtumassa näytettävien kutsuttujen määrää."
     display_post_event_date_on_topic_title: "Näyttää tapahtuman päivämäärän ketjun otsikon jälkeen."
     use_local_event_date: "Käytä paikallista päivämäärää ketjun otsikon jälkeen suhteellisen ajan sijaan."
@@ -61,6 +64,12 @@ fi:
     event_participation_buttons: "Luettelo tapahtuman osallistumispainikkeista, joita käyttäjät voivat käyttää."
     sidebar_show_upcoming_events: "Näytä tulevat tapahtumat -linkki sivupalkissa Lisää-kohdan alla."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Päivä"
+        week: "Viikko"
+        month: "Kuukausi"
+        year: "Vuosi"
     invite_user_notification: "%{username} kutsui sinut: %{description}"
     calendar_must_be_in_first_post: "Kalenteritunnistetta voi käyttää vain ketjun ensimmäisessä viestissä."
     more_than_one_calendar: "Yhdessä viestissä voi olla vain yksi kalenteri."

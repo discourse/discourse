@@ -50,6 +50,8 @@ hu:
           one: "(%{count} további)"
           other: "(%{count} további)"
         collapse_list: "(kevesebb megjelenítése)"
+        nav:
+          enabled: "Bekapcsolva"
         filters:
           all: "Összes"
           reset: "Alaphelyzetbe állítás"
@@ -234,6 +236,7 @@ hu:
         share_modal:
           copy: "Másolás"
         conversations:
+          starred: "Csillagozott"
           today: "Ma"
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"

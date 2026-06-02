@@ -10,7 +10,7 @@ import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | select-kit/api", function (hooks) {
+module("Integration | Component | SelectKit | Api", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

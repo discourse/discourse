@@ -60,6 +60,19 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_topic_map
       expect(nested_view).to have_no_top_replies_button
     end
+
+    it "lets users access topic actions before sorting replies" do
+      reader = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(reader)
+
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_topic_actions_above_controls
+      expect(nested_view).to have_share_topic_action
+      expect(nested_view).to have_bookmark_topic_action
+      expect(nested_view).to have_flag_topic_action
+      expect(nested_view).to have_no_topic_action_reply_button
+    end
   end
 
   describe "topic title editing" do
@@ -94,6 +107,22 @@ RSpec.describe "Nested view" do
 
       expect(nested_view).to have_no_topic_title_editor
       expect(page).to have_css(".nested-view__title", text: "Updated Topic Title")
+    end
+  end
+
+  describe "topic header" do
+    fab!(:scrollable_replies) do
+      Fabricate.times(8, :post, topic: topic, user: user, raw: "Scrollable nested reply\n\n" * 30)
+    end
+
+    it "shows the topic title after scrolling past it" do
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_no_topic_title_in_site_header(topic)
+
+      nested_view.scroll_past_topic_title
+
+      expect(nested_view).to have_topic_title_in_site_header(topic)
     end
   end
 
@@ -208,26 +237,61 @@ RSpec.describe "Nested view" do
     end
   end
 
-  describe "flat view toggle" do
-    fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
-    fab!(:admin)
-
-    it "shows the link and navigates to flat view for allowed groups" do
-      sign_in(admin)
-      nested_view.visit_nested(topic)
-
-      expect(nested_view).to have_flat_view_link
-      nested_view.click_flat_view_link
-
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
-      expect(page).to have_current_path(/flat=1/)
-      expect(nested_view).to have_no_nested_view
+  describe "mobile focused branch navigation" do
+    fab!(:root_reply) do
+      Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Post with children")
     end
 
-    it "does not show the link for users outside allowed groups" do
-      nested_view.visit_nested(topic)
+    fab!(:sibling_root_reply) do
+      Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Sibling root reply")
+    end
 
-      expect(nested_view).to have_no_flat_view_link
+    fab!(:child_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A child post",
+        reply_to_post_number: root_reply.post_number,
+      )
+    end
+
+    fab!(:grandchild_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A grandchild post",
+        reply_to_post_number: child_reply.post_number,
+      )
+    end
+
+    it "lets the user drill into reply branches without leaving the topic", mobile: true do
+      nested_view.visit_nested(topic, query: "collapse_replies=true")
+      nested_path = %r{/n/#{topic.slug}/#{topic.id}\?collapse_replies=true}
+
+      nested_view.scroll_post_near_top(root_reply)
+      root_reply_top = nested_view.post_viewport_top(root_reply)
+
+      nested_view.click_replies_toggle(root_reply)
+
+      expect(page).to have_current_path(nested_path)
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_post(child_reply)
+      expect(nested_view).to have_no_root_post(sibling_root_reply)
+
+      nested_view.click_replies_toggle(child_reply)
+
+      expect(page).to have_current_path(nested_path)
+      expect(nested_view).to have_mobile_ancestor(root_reply)
+      expect(nested_view).to have_post(grandchild_reply)
+
+      nested_view.click_mobile_focus_back
+
+      expect(page).to have_current_path(nested_path)
+      expect(nested_view).to have_no_mobile_focus
+      expect(nested_view).to have_root_post(sibling_root_reply)
+      expect(nested_view.post_viewport_top(root_reply)).to be_within(5).of(root_reply_top)
     end
   end
 

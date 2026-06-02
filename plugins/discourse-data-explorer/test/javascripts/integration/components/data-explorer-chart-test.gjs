@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DataExplorerChart from "../../discourse/components/data-explorer-chart";
 
-module("Integration | Component | data-explorer-chart", function (hooks) {
+module("Integration | Component | DataExplorerChart", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders a bar chart with a single dataset", async function (assert) {

@@ -871,3 +871,12 @@ ru:
       panels:
         chat:
           label: "Чат"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Отправить сообщение в чат"
+      send_chat_message:
+        channel_id: "Канал"
+        message: "Сообщение"
+      chat_approval:
+        message: "Сообщение"
+        channel_id: "Канал"

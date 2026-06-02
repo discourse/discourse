@@ -36,7 +36,7 @@ class ExternalUploadStub < ActiveRecord::Base
 
   before_create do
     self.unique_identifier = SecureRandom.uuid
-    self.status = ExternalUploadStub.statuses[:created] if self.status.blank?
+    self.status = ExternalUploadStub.statuses[:created] if status.blank?
   end
 
   def self.statuses

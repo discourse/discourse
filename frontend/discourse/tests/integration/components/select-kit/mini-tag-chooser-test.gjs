@@ -8,7 +8,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | select-kit/mini-tag-chooser",
+  "Integration | Component | SelectKit | MiniTagChooser",
   function (hooks) {
     setupRenderingTest(hooks);
 

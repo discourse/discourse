@@ -36,24 +36,14 @@ const schema = {
   ],
 };
 
-module("Component | explorer-schema", function (hooks) {
+module("Component | ExplorerSchema", function (hooks) {
   setupRenderingTest(hooks);
 
   test("will automatically convert to lowercase", async function (assert) {
-    this.setProperties({
-      schema,
-      hideSchema: false,
-      updateHideSchema: () => {},
-    });
+    this.setProperties({ schema });
 
     await render(
-      <template>
-        <ExplorerSchema
-          @schema={{this.schema}}
-          @hideSchema={{this.hideSchema}}
-          @updateHideSchema={{this.updateHideSchema}}
-        />
-      </template>
+      <template><ExplorerSchema @schema={{this.schema}} /></template>
     );
 
     await fillIn(`.schema-search input`, "Cat");

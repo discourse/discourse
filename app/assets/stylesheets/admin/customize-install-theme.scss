@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
-.d-modal.-large.admin-install-theme-modal {
+.d-modal.--large.admin-install-theme-modal {
   @include viewport.from(sm) {
     .d-modal__container {
       max-width: min(1100px, 90vw);

@@ -158,6 +158,15 @@ tr_TR:
       placeholder: tarih
       from_placeholder: "başlangıç tarihi"
       to_placeholder: "bugüne kadar"
+    date_range_picker:
+      apply: "Uygula"
+      start_date: "Başlangıç tarihi"
+      presets:
+        last_7_days: "Son 7 gün"
+        last_30_days: "Son 30 gün"
+        last_3_months: "Son 3 ay"
+        last_6_months: "Son 6 ay"
+        last_year: "Geçen yıl"
     languages:
       ar:
         name: Arapça
@@ -360,7 +369,6 @@ tr_TR:
         condition_debugging: "Durum hata ayıklama"
       toggle_safe_mode: "Güvenli modu aç/kapat"
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
-      toggle_mobile_view: "Mobil görünümü aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
       toggle_upcoming_changes_debug: "Yaklaşan değişikliklerin hata ayıklama modunu aç/kapat"
     s3:
@@ -419,8 +427,6 @@ tr_TR:
     tos: "Hizmet Şartları"
     rules: "Kurallar"
     conduct: "Davranış Kuralları"
-    mobile_view: "Mobil Görünüm"
-    desktop_view: "Masaüstü Görünümü"
     now: "az önce"
     read_more: "devamını oku"
     more: "Daha fazla"
@@ -454,6 +460,8 @@ tr_TR:
     admin_onboarding_banner:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
+      select_theme:
+        enabled: "Seçili"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
@@ -481,11 +489,6 @@ tr_TR:
           what_is_your_favorite_food:
             title: "En sevdiğin yemek nedir?"
             body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
-      spread_the_word:
-        title: "Haberi yayalım!"
-        description: "Ağınızdaki herkesle bir bağlantı paylaşın"
-        action: "Bağlantıyı kopyala"
-        copied_to_clipboard: "Bağlantı panoya kopyalandı!"
     about:
       edit: "Bu sayfayı düzenle"
       simple_title: "Hakkında"
@@ -676,6 +679,8 @@ tr_TR:
       replying_to: "%{username}'e yanıt veriliyor"
       editing_post: "Gönderi düzenleniyor"
       reply_placeholder: "Yanıt yaz..."
+      signin_flow:
+        cancel: "İptal et"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -1521,7 +1526,6 @@ tr_TR:
         normal_option: "Normal"
         normal_option_title: "Bu kullanıcı size yanıt verirse, sizi alıntılarsa veya sizden bahsederse bildirim alırsınız."
       notification_schedule:
-        title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
         tip: "Bu saatler dışında bildirimleriniz duraklatılacak."
         midnight: "Gece yarısı"
@@ -1565,13 +1569,8 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "İstatistikler"
       desktop_notifications:
-        label: "Canlı Bildirimler"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
-        perm_default: "Bildirimleri Aç"
-        perm_denied_btn: "İzin Reddedildi"
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
-        disable: "Bildirimleri Devre Dışı Bırak"
-        enable: "Bildirimleri Etkinleştir"
         each_browser_note: "Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır."
         consent_prompt: "Gönderilerinize yanıt verildiğinde canlı bildirim almak ister misiniz?"
       dismiss: "Kapat"
@@ -2984,7 +2983,7 @@ tr_TR:
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
-      edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
+      edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode veya HTML kullanabilirsiniz. Resimleri sürükleyebilir veya yapıştırabilirsiniz."
@@ -3054,7 +3053,7 @@ tr_TR:
       collapse: "Besteci panelini küçült"
       open: "Besteci panelini aç"
       abandon: "Besteciyi kapat ve taslağı sil"
-      edit_reason: "Düzenleme nedeninizi girin"
+      edit_reason: "Neden düzenleme yapıyorsunuz?"
       enter_fullscreen: "Tam ekran besteci moduna gir"
       exit_fullscreen: "Tam ekran besteci modundan çık"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
@@ -3089,25 +3088,24 @@ tr_TR:
           desc: Aynı alıcılarla başlayan yeni mesaj oluştur
         reply_to_topic:
           label: Konuyu yanıtla
+          trigger: Konu
           desc: Belirli bir gönderiye değil, konuya yanıt verin
         toggle_whisper:
           label: Fısıltıyı Aç/Kapat
-          desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
-          label: "Yeni konu"
           desc: Yeni bir konu oluşturun
         create_personal_message:
-          label: "Yeni İleti"
           desc: "Kişisel bir ileti oluştur"
         shared_draft:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
         toggle_topic_bump:
-          label: "Konu üste sıçratmayı aç/kapat"
           desc: "En son yanıt tarihini değiştirmeden yanıtla"
         toggle_unlisted:
           label: Listeden kaldırılanı aç/kapat
           desc: "Listelenmemiş konulara yalnızca doğrudan bağlantı ile erişilebilir."
+        edit_post: "Gönderi düzenleniyor"
+        unknown_user: "Kullanıcı"
       reload: "Yeniden Yükle"
       ignore: "Yok say"
       image_alt_text:
@@ -3420,6 +3418,7 @@ tr_TR:
           placeholder: en fazla
           aria_label: en fazla görüntülemeye göre filtrele
     hamburger_menu: "Navigasyon menüsü"
+    header_panel: "Üst bilgi"
     new_item: "yeni"
     go_back: "geri dön"
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
@@ -3517,6 +3516,8 @@ tr_TR:
           other: "Kapat (%{count})"
         dismiss_tooltip: "Yeni gönderileri kapat veya konuları takip etmeyi durdur"
         also_dismiss_topics: "Yeniden okunmamış olarak gösterilmemesi için bu konuları takip etmeyi durdur"
+        dismiss_new_topics: "Yeni konuları kapat"
+        dismiss_new_replies: "Yeni yanıtları kapat"
         dismiss_new: "Yenileri Kapat"
         dismiss_new_modal:
           title: "Yeniyi kapat"
@@ -3682,8 +3683,6 @@ tr_TR:
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"
-      view_as_nested: "İç içe geçmiş olarak görüntüle"
-      view_as_flat: "Düz olarak görüntüle"
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"
@@ -4478,7 +4477,6 @@ tr_TR:
         name_placeholder: "Bu yer imi ne için?"
         name_input_label: "Yer imi adı"
         set_reminder: "Bana anımsat"
-        options: "Seçenekler"
         actions:
           delete_bookmark:
             name: "Yer imini sil"
@@ -5031,110 +5029,63 @@ tr_TR:
       title: "Klavye Kısayolları"
       short_title: "Kısayollar"
       search_ctrl_f_tip: "Bu forumun tamamında arama yapmak için <kbd>/</kbd>tuşlarına basın"
+      description_header: "Açıklama"
+      key_header: "Anahtar"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Şuraya Atla:"
-        home: "%{shortcut} Ana Sayfa"
-        latest: "%{shortcut} En Son"
-        new: "%{shortcut} Yeni"
-        unread: "%{shortcut} Okunmamış"
-        unseen: "%{shortcut} Görünmez"
-        categories: "%{shortcut} Kategoriler"
-        top: "%{shortcut} En Üst"
-        bookmarks: "%{shortcut} Yer imleri"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Mesajlar"
-        drafts: "%{shortcut} Taslaklar"
-        next: "%{shortcut} Sonraki Konu"
-        previous: "%{shortcut} Önceki Konu"
+        home: "Ana Sayfa"
+        latest: "En son"
+        new: "Yeni"
+        unread: "Okunmadı"
+        unseen: "Görülmedi"
+        categories: "Kategoriler"
+        top: "En iyi"
+        bookmarks: "Yer imleri"
+        profile: "Profil"
+        messages: "İletiler"
+        drafts: "Taslaklar"
       navigation:
         title: "Navigasyon"
-        jump: "%{shortcut} #. gönderiye git"
-        back: "%{shortcut} Geri"
-        up_down: "%{shortcut} Seçileni taşı &uarr; &darr;"
-        open: "%{shortcut} Seçili konuyu aç"
-        open_new_window: "%{shortcut} Seçilen konuyu yeni sekmede/pencerede aç"
-        next_prev: "%{shortcut} Önceki/Sonraki bölüm"
-        go_to_unread_post: "%{shortcut} Okunmamış ilk gönderiye git"
+        back: "Geri"
+        up_down: "Seçileni taşı &uarr; &darr;"
       application:
         title: "Uygulama"
-        create: "%{shortcut} Yeni bir konu veya kişisel mesaj oluşturun"
-        notifications: "%{shortcut} Bildirimleri aç"
-        hamburger_menu: "%{shortcut} Navigasyon menüsünü aç"
-        user_profile_menu: "%{shortcut} Kullanıcı menüsünü aç"
-        show_incoming_updated_topics: "%{shortcut} Güncellenen konuları göster"
-        search: "%{shortcut} Ara"
-        filter_sidebar: "%{shortcut} Filtre kenar çubuğu"
-        help: "%{shortcut} Klavye yardım sayfasını aç"
-        toggle_bulk_select: "%{shortcut} Toplu seçimi değiştir"
-        dismiss: "%{shortcut} Seçilen konuları kapat"
-        x: "%{shortcut} Seçimi değiştir (toplu seçim modunda)"
-        log_out: "%{shortcut} Çıkış Yap"
+        search: "Ara"
+        log_out: "Çıkış"
       composing:
         title: "Beste yapma"
-        return: "%{shortcut} Besteciye dön"
-        minimize: "%{shortcut} Besteciyi küçült"
-        create_or_reply: "%{shortcut} Konu oluştur veya yanıt paylaş"
-        fullscreen: "%{shortcut} Tam ekran besteci"
-        insert_current_time: "%{shortcut} Mevcut saati girin"
-        bold: "%{shortcut} Kalın"
-        italic: "%{shortcut} İtalik"
-        link: "%{shortcut} Bağlantı ekle"
-        preformatted: "%{shortcut} Önceden biçimlendirilmiş metin"
-        paragraph: "%{shortcut} Paragraf"
-        heading_1: "%{shortcut} Başlık 1"
-        heading_2: "%{shortcut} Başlık 2"
-        heading_3: "%{shortcut} Başlık 3"
-        heading_4: "%{shortcut} Başlık 4"
-        toggle_direction: "%{shortcut} Metin yönünü değiştir"
-        ordered_list: "%{shortcut} Sıralı liste"
-        unordered_list: "%{shortcut} Sıralanmamış liste"
-        blockquote: "%{shortcut} Blok alıntı"
+        link: "Bağlantı ekle"
+        preformatted: "Önceden biçimlendirilmiş metin"
+        paragraph: "Paragraf"
+        blockquote: "Blok alıntı"
       bookmarks:
         title: "Yer İmi Ekleme"
-        enter: "%{shortcut} Kaydet ve kapat"
-        later_today: "%{shortcut} Bugün ilerleyen saatlerde"
-        later_this_week: "%{shortcut} Bu hafta ilerleyen günlerde"
-        tomorrow: "%{shortcut} Yarın"
-        next_week: "%{shortcut} Gelecek hafta"
-        next_month: "%{shortcut} Gelecek ay"
-        next_business_week: "%{shortcut} Gelecek haftanın başlangıcı"
-        next_business_day: "%{shortcut} Sonraki iş günü"
-        custom: "%{shortcut} Özel tarih ve saat"
-        none: "%{shortcut} Anımsatıcı yok"
-        delete: "%{shortcut} Yer imini sil"
+        enter: "Kaydet ve kapat"
+        later_today: "Bugün ilerleyen saatlerde"
+        later_this_week: "Bu hafta içinde"
+        tomorrow: "Yarın"
+        next_week: "Gelecek hafta"
+        next_month: "Gelecek ay"
+        next_business_day: "Bir sonraki iş günü"
+        custom: "Özel tarih ve saat"
+        none: "Anımsatıcı yok"
+        delete: "Yer imini sil"
       actions:
         title: "Eylemler"
-        bookmark_topic: "%{shortcut} Konu yer imini aç/kapat"
-        pin_unpin_topic: "%{shortcut} Konuyu sabitle/sabitlemesini kaldır"
-        share_topic: "%{shortcut} Konuyu paylaş"
-        share_post: "%{shortcut} Gönderiyi paylaş"
-        reply_as_new_topic: "%{shortcut} Bağlantılı konu olarak yanıtla"
-        reply_topic: "%{shortcut} Konuyu yanıtla"
-        reply_post: "%{shortcut} Gönderiyi yanıtla"
-        quote_post: "%{shortcut} Gönderiyi alıntıla"
-        like: "%{shortcut} Gönderiyi beğen"
-        flag: "%{shortcut} Gönderiye bayrak ekle"
-        bookmark: "%{shortcut} Gönderiyi işaretle"
-        edit: "%{shortcut} Gönderiyi düzenle"
-        delete: "%{shortcut} Gönderiyi sil"
-        mark_muted: "%{shortcut} Konuyu sessize al"
-        mark_regular: "%{shortcut} Normal (varsayılan) konu"
-        mark_tracking: "%{shortcut} Konuyu takip et"
-        mark_watching: "%{shortcut} Konuyu izle"
-        print: "%{shortcut} Konuyu yazdır"
-        defer: "%{shortcut} Konuyu okunmamış olarak işaretle"
-        topic_admin_actions: "%{shortcut} Açık konu yönetici işlemleri"
-        archive_private_message: "%{shortcut} Kişisel mesajı arşivle seçeneğini aç/kapat"
+        reply_as_new_topic: "Bağlantılı konu olarak yanıtlayın"
+        reply_topic: "Konuyu yanıtla"
+        flag: "Gönderiye bayrak ekle"
+        edit: "Yazıyı düzenle"
+        delete: "Gönderiyi sil"
+        mark_tracking: "Konuyu takip et"
+        mark_watching: "Konuyu izle"
+        defer: "Konuyu okunmamış olarak işaretle"
       search_menu:
         title: "Arama Menüsü"
-        prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
-        insert_url: "%{shortcut} Seçimi açık besteciye ekle"
-        full_page_search: "%{shortcut} Tam sayfa aramayı başlatır"
       admin:
         title: "Yönetici"
-        search_prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
-        search_open: "%{shortcut} Yönetici arayüzü için aramayı aç"
-        search_full_page: "%{shortcut} Tam sayfa yönetici aramasını aç"
     badges:
       earned_n_times:
         one: "Bu rozeti %{count} kez kazandı"
@@ -5204,18 +5155,8 @@ tr_TR:
       staff_info: "Kısıtlama eklemek için bu etiketi bir <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
       category_restricted: "Bu etiket, erişim izninizin olmadığı kategorilerle sınırlı."
       synonyms: "Eş Anlamlılar"
-      synonyms_description: "Aşağıdaki etiketler kullanıldığında <b>%{base_tag_name}</b>ile değiştirilir."
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      tag_groups_info:
-        one: 'Bu etiket %{tag_groups} grubuna ait.'
-        other: "Bu etiket şu gruplara ait: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Bu etiket gruba aittir "
-        other: "Bu etiket şu gruplara aittir: "
-      category_restrictions:
-        one: "Sadece şu kategoride kullanılabilir:"
-        other: "Yalnızca şu kategorilerde kullanılabilir:"
       restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
@@ -5658,7 +5599,7 @@ tr_TR:
           title: "Tabloyu düzenle"
           cancel: "iptal et"
           create: "Kaydet"
-          reason: "neden düzenleme yapıyorsunuz?"
+          reason: "Neden düzenleme yapıyorsunuz?"
           trigger_reason: "Düzenleme nedeni ekleyin"
         default_edit_reason: "Tablo Düzenleyiciyle Tabloyu güncelle"
       default_header:
@@ -6403,6 +6344,35 @@ tr_TR:
             title: "Site trafiği"
           engagement:
             title: "Taahhüt"
+            activity_by_category:
+              category: "Kategori"
+              topics: "Konular"
+              posts: "Gönderi"
+              share: "Paylaş"
+            whos_posting:
+              all_categories: "Tüm kategoriler"
+              staff: "Personel"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Yeni"
+                "1": "Temel"
+                "2": "Üye"
+                "3": "Normal"
+                "4": "Lider"
+              trend:
+                stable: "stabil"
+        reports_section:
+          no_data: "Gösterilecek veri yok"
+          modal:
+            enabled_heading: "Etkin mi"
+            all_heading: "Tüm raporlar"
+            apply: "Uygula"
+        configure:
+          button: "Yapılandır"
+        site_traffic:
+          series:
+            anonymous: "Anonim"
+            crawlers: "Gezginler"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

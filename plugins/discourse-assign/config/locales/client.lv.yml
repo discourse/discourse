@@ -25,3 +25,6 @@ lv:
     edit_assignments_modal:
       topic: "Tēmas"
       post: "Ieraksts"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "Tēmas ID"

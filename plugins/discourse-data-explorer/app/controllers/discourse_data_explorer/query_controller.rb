@@ -46,23 +46,7 @@ module DiscourseDataExplorer
 
       persisted_count = base_scope.count
 
-      # Default queries are only persisted once run. Build in-memory records
-      # for any that haven't been run yet so they still appear in the list.
-      persisted_default_ids =
-        DiscourseDataExplorer::Query.where(hidden: false).where("id < 0").pluck(:id).to_set
-      unpersisted_defaults =
-        DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
-          next if persisted_default_ids.include?(attributes["id"])
-          if filter.present?
-            name_match = attributes["name"]&.downcase&.include?(filter.downcase)
-            desc_match = attributes["description"]&.downcase&.include?(filter.downcase)
-            next unless name_match || desc_match
-          end
-          query =
-            DiscourseDataExplorer::Query.new(attributes.slice("id", "sql", "name", "description"))
-          query.user_id = Discourse::SYSTEM_USER_ID.to_s
-          query
-        end
+      unpersisted_defaults = DiscourseDataExplorer::Query.unpersisted_defaults(search: filter)
 
       total_rows = persisted_count + unpersisted_defaults.size
 

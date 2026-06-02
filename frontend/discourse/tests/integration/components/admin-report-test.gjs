@@ -4,7 +4,7 @@ import AdminReport from "discourse/admin/components/admin-report";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
-module("Integration | Component | admin-report", function (hooks) {
+module("Integration | Component | AdminReport", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {

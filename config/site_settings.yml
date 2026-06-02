@@ -392,10 +392,6 @@ basic:
     min: 2
     max: 3
     hidden: true
-  enable_mobile_theme:
-    client: true
-    default: true
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -610,7 +606,7 @@ basic:
     hidden: true
     client: true
   persist_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   clean_up_browser_pageview_events:
     default: false
@@ -1480,6 +1476,10 @@ posting:
   max_mentions_per_post:
     default: 10
     area: "notifications"
+  max_quotes_per_post:
+    default: 50
+    min: 0
+    area: "posts_and_topics"
   max_users_notified_per_group_mention:
     default: 100
     client: true
@@ -1895,17 +1895,6 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
-  nested_replies_toggle_mode_groups:
-    type: group_list
-    list_type: compact
-    default: "3"
-    allow_any: false
-    refresh: true
-    disallowed_groups: "4"
-    area: "posts_and_topics"
-    depends_on:
-      - "nested_replies_enabled"
-    depends_behavior: "hidden"
 
 email:
   email_time_window_mins:
@@ -2549,8 +2538,13 @@ files:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
+  composer_media_optimization_image_wasm_decode_enabled:
+    default: false
+    hidden: true
+    client: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -3159,6 +3153,10 @@ rate_limits:
     default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
+  limit_admin_personal_messages_per_day:
+    default: 0
+    min: 0
+    hidden: true
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day:
@@ -3332,9 +3330,6 @@ developer:
     default: 50
     hidden: true
     client: true
-  viewport_based_mobile_mode:
-    default: true
-    client: true
   site_setting_verbose_client_logging:
     default: false
     client: true
@@ -3372,6 +3367,10 @@ navigation:
 embedding:
   embed_full_app:
     default: false
+    client: true
+    area: "embedding"
+  embed_full_app_signin_flow:
+    default: true
     client: true
     area: "embedding"
   suppress_third_party_analytics_in_embed:
@@ -4420,17 +4419,27 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "stable"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403284"
   enable_new_post_reactions_menu:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/389820"
+  enable_new_composer_actions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403635"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4473,7 +4482,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
   enable_simplified_category_creation:
@@ -4489,7 +4498,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
       allow_enabled_for:
@@ -4512,9 +4521,9 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "site_setting_default,all_members"
-      learn_more_url: "http://meta.discourse.org/t/-/402843"
+      learn_more_url: "https://meta.discourse.org/t/-/402843"
       allow_enabled_for:
         - everyone
   granular_anonymous_and_logged_in_groups_permissions:
@@ -4523,7 +4532,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402273"
       allow_enabled_for:
@@ -4535,3 +4544,6 @@ experimental:
     upcoming_change:
       status: "conceptual"
       impact: "feature,admins"
+  admin_dashboard_reports_seeded:
+    default: false
+    hidden: true

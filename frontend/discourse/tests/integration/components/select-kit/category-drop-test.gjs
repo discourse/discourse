@@ -34,7 +34,7 @@ function initCategoriesWithParentCategory(context) {
   });
 }
 
-module("Integration | Component | select-kit/category-drop", function (hooks) {
+module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

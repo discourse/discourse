@@ -115,7 +115,7 @@ class ReviewablePost < Reviewable
   end
 
   def perform_reject_and_delete(performed_by, _args)
-    PostDestroyer.new(performed_by, post, reviewable_id: self.id).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: id).destroy
 
     create_result(:success, :rejected, [created_by_id], false)
   end
@@ -127,7 +127,7 @@ class ReviewablePost < Reviewable
   private
 
   def post
-    @post ||= (target || Post.with_deleted.find_by(id: target_id))
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 end
 

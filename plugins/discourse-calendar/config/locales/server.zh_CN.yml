@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  category_types:
+    events:
+      name: "事件"
+      title: "事件"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "阅读日历事件 feed"
@@ -40,7 +44,6 @@ zh_CN:
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
     calendar_enabled: "启用 discourse-calendar 插件。这将在话题的第一个帖子中添加对 [calendar][/calendar] 标签的支持。"
-    discourse_post_event_enabled: "启用活动功能。注意：还需要启用 `calendar enabled`。"
     displayed_invitees_limit: "限制活动中显示的受邀者数量。"
     display_post_event_date_on_topic_title: "在话题标题之后显示活动日期。"
     use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
@@ -67,6 +70,15 @@ zh_CN:
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "天"
+        week: "周"
+        month: "月"
+        year: "年"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - 所有活动"
+      my_events_feed_name: "%{site_title} - 我的活动"
     invite_user_notification: "%{username} 邀请您加入：%{description}"
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
     more_than_one_calendar: "一个帖子中不能有多个日历。"

@@ -48,7 +48,7 @@ function getNotification(currentUser, siteSettings, site, overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with notification items",
+  "Integration | Component | UserMenu | MenuItem | with notification items",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -437,7 +437,7 @@ function getMessage(overrides = {}, siteSettings, site) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with message items",
+  "Integration | Component | UserMenu | MenuItem | with message items",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -476,7 +476,7 @@ function getBookmark(overrides = {}, siteSettings, site) {
       excerpt: "poll",
       bookmarkable_id: 1009,
       bookmarkable_type: "Post",
-      bookmarkable_url: "http://localhost:4200/t/this-bookmarkable-url/227/1",
+      bookmarkable_url: "http://localhost:3000/t/this-bookmarkable-url/227/1",
       tags: [],
       tags_descriptions: {},
       truncated: true,
@@ -506,7 +506,7 @@ function getBookmark(overrides = {}, siteSettings, site) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with bookmark items",
+  "Integration | Component | UserMenu | MenuItem | with bookmark items",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -566,7 +566,7 @@ function getReviewable(currentUser, siteSettings, site, overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | menu-item | with reviewable items",
+  "Integration | Component | UserMenu | MenuItem | with reviewable items",
   function (hooks) {
     setupRenderingTest(hooks);
 

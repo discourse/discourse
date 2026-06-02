@@ -780,7 +780,9 @@ export default class UpsertCategoryGeneral extends Component {
               <Content @name="square">
                 {{trustHTML
                   (dCategoryBadge
-                    (this.buildTransientModel @transientData) styleType="square"
+                    (this.buildTransientModel @transientData)
+                    styleType="square"
+                    previewColor=true
                   )
                 }}
               </Content>
@@ -922,7 +924,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @onChange={{this.onChangeAccessGroups}}
                   @options={{hash disabled=this.isParentRestricted}}
                 />
-                {{! template-lint-disable no-invalid-interactive }}
+                {{! eslint-disable ember/template-no-invalid-interactive }}
                 <span
                   class="category-permission-hint"
                   {{on "click" this.goToSecurityTab}}

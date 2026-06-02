@@ -3,7 +3,6 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import AdminEditableField from "discourse/admin/components/admin-editable-field";
 import AdminUserExportsTable from "discourse/admin/components/admin-user-exports-table";
-import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import IpLookup from "discourse/admin/components/ip-lookup";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
@@ -16,7 +15,6 @@ import { and, gt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
-import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -235,6 +233,7 @@ export default <template>
               <IpLookup
                 @ip={{@controller.model.ip_address}}
                 @userId={{@controller.model.id}}
+                @ipType="last"
               />
             {{/if}}
           {{/if}}
@@ -252,6 +251,7 @@ export default <template>
               <IpLookup
                 @ip={{@controller.model.registration_ip_address}}
                 @userId={{@controller.model.id}}
+                @ipType="registration"
               />
             {{/if}}
           {{/if}}
@@ -666,6 +666,27 @@ export default <template>
       </div>
     {{/if}}
 
+    {{#if
+      (and
+        @controller.currentUser.staff @controller.model.upcoming_changes_stats
+      )
+    }}
+      <div class="display-row upcoming-changes-info">
+        <div class="field">{{i18n "admin.user.upcoming_changes.title"}}</div>
+        <div class="value">
+          <DButton
+            @action={{@controller.openUserUpcomingChanges}}
+            @icon="eye"
+            @label="admin.user.upcoming_changes.view_modal"
+            class="btn-default"
+          />
+        </div>
+        <div class="controls">
+          &nbsp;
+        </div>
+      </div>
+    {{/if}}
+
   </section>
 
   {{#if @controller.currentUser.admin}}
@@ -931,18 +952,6 @@ export default <template>
           </div>
         {{/if}}
       {{/let}}
-    </section>
-  {{/if}}
-
-  {{#if
-    (and @controller.currentUser.staff @controller.model.upcoming_changes_stats)
-  }}
-    <section class="details">
-      <h1>{{i18n "admin.user.upcoming_changes.title"}}</h1>
-      <p>{{trustHTML
-          (i18n "admin.user.upcoming_changes.description" basePath=dBasePath)
-        }}</p>
-      <AdminUserUpcomingChanges @user={{@controller.model}} />
     </section>
   {{/if}}
 

@@ -289,3 +289,8 @@ lt:
       panels:
         chat:
           label: "Pokalbis"
+    discourse_workflows:
+      send_chat_message:
+        message: "Žinutės"
+      chat_approval:
+        message: "Žinutės"

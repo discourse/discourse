@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ru:
+  category_types:
+    events:
+      name: "События"
+      title: "события"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Читать ленту событий календаря"
@@ -40,7 +44,6 @@ ru:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
     calendar_enabled: "Включить плагин discourse-calendar. Это добавит поддержку тега [calendar][/calendar] в первой публикации темы."
-    discourse_post_event_enabled: "Включает функции мероприятий. Примечание: также необходимо, чтобы был включен параметр `calendar enabled`."
     displayed_invitees_limit: "Ограничивать количество приглашений, отображаемых в мероприятии ."
     display_post_event_date_on_topic_title: "Отображать дату мероприятия после названия темы."
     use_local_event_date: "Использовать локальную дату после заголовка темы вместо прошедшего времени."
@@ -67,6 +70,15 @@ ru:
     sidebar_show_upcoming_events: "Показывать ссылку на предстоящие мероприятия на боковой панели в разделе «Еще»."
     calendar_first_day_of_week: "Установите первый день недели для отображения календаря. Возможные варианты: суббота, воскресенье или понедельник."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Дата"
+        week: "За неделю"
+        month: "За месяц"
+        year: "За год"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Все события"
+      my_events_feed_name: "%{site_title} - Мои события"
     invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
     calendar_must_be_in_first_post: "Тег календаря может быть использован только в первой публикации темы."
     more_than_one_calendar: "В записи не может быть более одного календаря."

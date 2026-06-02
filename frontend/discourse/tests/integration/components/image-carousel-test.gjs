@@ -3,7 +3,7 @@ import { setupRenderingTest } from "ember-qunit";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 
-module("Integration | Component | image-carousel", function (hooks) {
+module("Integration | Component | ImageCarousel", function (hooks) {
   setupRenderingTest(hooks);
 
   const items = [

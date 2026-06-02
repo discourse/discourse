@@ -178,8 +178,7 @@ it:
           name: "Bot"
           description: "Un chatbot in grado di rispondere alle domande e assistere gli utenti nei messaggi personali, nei forum e in chat"
         nav:
-          configured: "Configurate"
-          unconfigured: "Non configurate"
+          enabled: "Abilitato"
         filters:
           all: "Tutte"
           no_results: "Nessuna funzionalità trovata per i filtri impostati."

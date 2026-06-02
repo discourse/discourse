@@ -168,3 +168,10 @@ ca:
           fields:
             message:
               label: Missatge
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Missatge"
+      chat_approval:
+        message: "Missatge"
+        channel_id: "Canal"

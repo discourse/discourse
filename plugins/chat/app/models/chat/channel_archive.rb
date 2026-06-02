@@ -12,15 +12,15 @@ module Chat
     self.table_name = "chat_channel_archives"
 
     def complete?
-      self.archived_messages >= self.total_messages && self.chat_channel.chat_messages.count.zero?
+      archived_messages >= total_messages && chat_channel.chat_messages.count.zero?
     end
 
     def failed?
-      !complete? && self.archive_error.present?
+      !complete? && archive_error.present?
     end
 
     def new_topic?
-      self.destination_topic_title.present?
+      destination_topic_title.present?
     end
   end
 end

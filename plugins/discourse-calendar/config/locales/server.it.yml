@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 it:
+  category_types:
+    events:
+      name: "Eventi"
+      title: "eventi"
   reports:
     currently_away:
       title: Utenti attualmente assenti
@@ -29,7 +33,6 @@ it:
     map_events_to_color: "Assegna un colore a ciascuna etichetta o categoria."
     map_events_title: "Sovrascrive \"Eventi\" nel titolo della barra laterale \"Prossimi eventi\" per categoria."
     calendar_enabled: "Abilita il plugin del calendario di discourse. Questo permetterà di supportare un tag [calendar][/calendar] nel primo messaggio di un argomento."
-    discourse_post_event_enabled: "Abilita le funzionalità dell'evento. Nota: è necessario che anche l'impostazione `calendario abilitato` sia abilitata."
     displayed_invitees_limit: "Limita il numero di invitati visualizzati in un evento."
     display_post_event_date_on_topic_title: "Visualizza la data dell'evento dopo il titolo dell'argomento."
     use_local_event_date: "Usa la data locale dopo il titolo dell'argomento invece dell'orario relativo."
@@ -54,6 +57,12 @@ it:
     event_participation_buttons: "Elenco dei pulsanti di partecipazione agli eventi che gli utenti possono utilizzare."
     sidebar_show_upcoming_events: "Mostra il link ai prossimi eventi nella barra laterale sotto \"Altro\"."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Giorno"
+        week: "Settimana"
+        month: "Mese"
+        year: "Anno"
     invite_user_notification: "%{username} ti ha invitato a: %{description}"
     calendar_must_be_in_first_post: "Il tag del calendario può essere utilizzato solo nel primo messaggio di un argomento."
     more_than_one_calendar: "Non puoi avere più di un calendario in un messaggio."

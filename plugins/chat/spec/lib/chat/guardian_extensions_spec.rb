@@ -605,6 +605,38 @@ RSpec.describe Chat::GuardianExtensions do
             expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
           end
         end
+
+        context "when the owner has lost access to a private category channel" do
+          fab!(:revoke_group, :group)
+          fab!(:revoked_category) { Fabricate(:private_category, group: revoke_group) }
+          fab!(:revoked_channel) { Fabricate(:chat_channel, chatable: revoked_category) }
+          fab!(:message) { Fabricate(:chat_message, chat_channel: revoked_channel, user: user) }
+
+          before do
+            revoke_group.add(user)
+            message.trash!(guardian.user)
+            GroupUser.where(group: revoke_group, user: user).destroy_all
+          end
+
+          it "disallows owner to restore" do
+            expect(guardian.can_restore_chat?(message, revoked_category)).to eq(false)
+          end
+        end
+
+        context "when the owner is no longer in a direct message channel" do
+          fab!(:other_user, :user)
+          fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+          fab!(:message) { Fabricate(:chat_message, chat_channel: dm_channel, user: user) }
+
+          before do
+            message.trash!(guardian.user)
+            dm_channel.chatable.direct_message_users.find_by!(user: user).destroy!
+          end
+
+          it "disallows owner to restore" do
+            expect(guardian.can_restore_chat?(message, dm_channel.chatable)).to eq(false)
+          end
+        end
       end
     end
 
@@ -755,6 +787,14 @@ RSpec.describe Chat::GuardianExtensions do
 
     context "when sender is not in chat enabled groups" do
       before { SiteSetting.chat_allowed_groups = "" }
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_send_direct_message(dm_channel)
+      end
+    end
+
+    context "when sender is not in direct message enabled groups" do
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
 
       it "returns false" do
         expect(guardian).not_to be_able_to_send_direct_message(dm_channel)

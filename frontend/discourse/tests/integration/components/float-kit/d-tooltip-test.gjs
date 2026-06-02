@@ -1,4 +1,5 @@
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
@@ -14,7 +15,7 @@ import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
+module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   setupRenderingTest(hooks);
 
   async function hover() {
@@ -353,6 +354,63 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await leave();
 
     assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("traps pointerdown, mousedown, and touchend inside the tooltip body", async function (assert) {
+    const received = { pointerdown: 0, mousedown: 0, touchend: 0 };
+    const listeners = {};
+    for (const name of Object.keys(received)) {
+      listeners[name] = () => received[name]++;
+      document.addEventListener(name, listeners[name]);
+    }
+
+    let innerClicked = false;
+    const handleInnerClick = () => (innerClicked = true);
+
+    try {
+      await render(
+        <template>
+          <DTooltip @inline={{true}} @label="trigger">
+            <:content>
+              <button
+                type="button"
+                class="inner-link"
+                {{on "click" handleInnerClick}}
+              >link</button>
+            </:content>
+          </DTooltip>
+        </template>
+      );
+
+      await hover();
+
+      await triggerEvent(".inner-link", "pointerdown");
+      await triggerEvent(".inner-link", "mousedown");
+      await triggerEvent(".inner-link", "touchend");
+
+      assert.strictEqual(
+        received.pointerdown,
+        0,
+        "pointerdown does not bubble out of the tooltip body"
+      );
+      assert.strictEqual(
+        received.mousedown,
+        0,
+        "mousedown does not bubble out of the tooltip body"
+      );
+      assert.strictEqual(
+        received.touchend,
+        0,
+        "touchend does not bubble out of the tooltip body"
+      );
+
+      await click(".inner-link");
+      assert.true(innerClicked, "the inner control still receives its click");
+    } finally {
+      for (const name of Object.keys(received)) {
+        document.removeEventListener(name, listeners[name]);
+      }
+    }
   });
 
   test("@portalOutletElement", async function (assert) {

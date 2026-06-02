@@ -680,6 +680,10 @@ export default class PostStream extends RestModel {
     return this._identityMap[id];
   }
 
+  get loadedPosts() {
+    return Object.values(this._identityMap).filter(Boolean);
+  }
+
   loadPostByPostNumber(postNumber) {
     const url = `/posts/by_number/${this.topic.id}/${postNumber}`;
 

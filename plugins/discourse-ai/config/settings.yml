@@ -25,6 +25,26 @@ discourse_ai:
     default: ""
     secret: true
     json_schema: DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema
+  ai_sentiment_sentiment_classification_strategy:
+    default: "classification_model"
+    type: enum
+    choices:
+      - classification_model
+      - agent
+  ai_sentiment_sentiment_agent:
+    default: "-36"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+  ai_sentiment_emotion_classification_strategy:
+    default: "classification_model"
+    type: enum
+    choices:
+      - classification_model
+      - agent
+  ai_sentiment_emotion_agent:
+    default: "-37"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
   ai_sentiment_backfill_maximum_posts_per_hour:
     default: 2500
     min: 0
@@ -317,6 +337,7 @@ discourse_ai:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403285"
   ai_bot_enabled_llms:
     default: ""
     client: true
@@ -369,6 +390,7 @@ discourse_ai:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403327"
   ai_discover_enabled:
     default: false
     client: true
@@ -469,7 +491,7 @@ discourse_ai:
     max: 100000
     client: false
     area: "ai-features/translation"
-  ai_translation_target_categories:
+  ai_translation_excluded_categories:
     type: category_list
     default: ""
     client: false

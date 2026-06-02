@@ -10,11 +10,6 @@ ru:
       site_settings:
         categories:
           discourse_solved: "Плагин «Решённые» для Discourse"
-      dashboard:
-        highlights:
-          kpi:
-            accepted_solutions:
-              label: "Решённые вопросы"
   js:
     notifications:
       alt:

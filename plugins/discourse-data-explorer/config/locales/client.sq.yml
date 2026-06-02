@@ -10,6 +10,9 @@ sq:
       default_query: "Paracaktuar"
       or: "ose"
       create: "Krijo"
+      ai:
+        generate: "Gjenero"
+        optional: "opsionale"
       import:
         label: "Importo"
       help:
@@ -18,8 +21,6 @@ sq:
         bool:
           yes: "Po"
           no: "Jo"
-      export: "Eksporto"
-      edit: "Redaktoni"
       delete: "Fshij"
       result_count:
         one: "%{count} rezultat."
@@ -27,3 +28,8 @@ sq:
       query_groups: "Grupet"
       query_description: "Përshkrimi"
       reset_params: "Rivendosni"
+    discourse_workflows:
+      sql:
+        param_value: "Vlera"
+        output:
+          results: "Results"

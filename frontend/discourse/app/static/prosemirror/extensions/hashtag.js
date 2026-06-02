@@ -21,12 +21,23 @@ const extension = {
       selectable: false,
       parseDOM: [
         {
-          tag: "a.hashtag-cooked",
+          tag: "a.hashtag-cooked, a.hashtag",
+          priority: 60,
           preserveWhitespace: "full",
           getAttrs: (dom) => {
+            let name = dom.dataset.name ?? dom.dataset.ref;
+
+            if (!name && dom.dataset.slug) {
+              name = `${dom.dataset.slug}${
+                dom.dataset.type ? `::${dom.dataset.type}` : ""
+              }`;
+            }
+
+            name ??= dom.textContent.slice(1);
+
             return {
-              name: dom.getAttribute("data-name"),
-              processed: dom.getAttribute("data-processed"),
+              name,
+              processed: dom.dataset.processed,
             };
           },
         },
