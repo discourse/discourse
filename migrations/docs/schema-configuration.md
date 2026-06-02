@@ -4,12 +4,12 @@ The schema DSL defines the structure of a database used during migrations. It ma
 tables to a schema, letting you control which columns to include, rename columns, override types,
 add synthetic columns, and define enums.
 
-Config files live in `migrations/config/schema/<database>/` (e.g. `intermediate_db`).
+Config files live in `migrations/tooling/config/schema/<database>/` (e.g. `intermediate_db`).
 
 ## File layout
 
 ```
-migrations/config/schema/intermediate_db/
+migrations/tooling/config/schema/intermediate_db/
   config.rb          # Output paths and namespaces
   conventions.rb     # Global column conventions (renames, type overrides)
   ignored.rb         # Tables and plugins to exclude
@@ -367,10 +367,10 @@ Migrations::Database::Schema.configure do
   output do
     schema_file "db/intermediate_db_schema/100-base-schema.sql"
 
-    models_directory "lib/database/intermediate_db"
+    models_directory "lib/migrations/database/intermediate_db"
     models_namespace "Migrations::Database::IntermediateDB"
 
-    enums_directory "lib/database/intermediate_db/enums"
+    enums_directory "lib/migrations/database/intermediate_db/enums"
     enums_namespace "Migrations::Database::IntermediateDB::Enums"
   end
 end
