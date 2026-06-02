@@ -49,9 +49,18 @@ module PageObjects
       end
 
       def has_block_in_cell?(block_class, column:, row:)
-        # A cell's content lives in the chrome wrapper placed at that grid
-        # coordinate; assert the dragged block landed there.
-        page.has_css?("#{GRID_SELECTOR} .#{block_class}", wait: 5)
+        # Each grid child sits in a `.d-block-layout__cell` wrapper whose
+        # placement is carried by the `--d-block-cell-column` /
+        # `--d-block-cell-row` custom properties (core's `layout` block emits
+        # them inline; see `blocks/builtin/layout.gjs`). Asserting against them
+        # verifies the block landed in the EXPECTED cell, not merely somewhere
+        # in the grid — so a drop into the wrong cell still fails.
+        page.has_css?(
+          "#{GRID_SELECTOR} " \
+            ".d-block-layout__cell[style*='--d-block-cell-column: #{column}']" \
+            "[style*='--d-block-cell-row: #{row}'] .#{block_class}",
+          wait: 5,
+        )
       end
     end
   end

@@ -35,6 +35,7 @@ export default class PaletteEntry extends Component {
       role="button"
       tabindex="0"
       title={{@entry.description}}
+      data-block-name={{@entry.name}}
       {{dDragAndDropSource
         type="wf-palette-block"
         data=(hash blockName=@entry.name)

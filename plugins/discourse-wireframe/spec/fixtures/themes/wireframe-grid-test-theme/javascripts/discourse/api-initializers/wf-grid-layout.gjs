@@ -1,5 +1,5 @@
-import { apiInitializer } from "discourse/lib/api";
 import Layout from "discourse/blocks/builtin/layout";
+import { apiInitializer } from "discourse/lib/api";
 import {
   WfGridCellA,
   WfGridCellB,

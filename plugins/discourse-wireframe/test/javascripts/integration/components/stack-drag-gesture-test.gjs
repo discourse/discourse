@@ -29,22 +29,35 @@ module(
     function stubWireframe(owner, onDispatch) {
       const wireframe = owner.lookup("service:wireframe");
       let captured = null;
-      wireframe.findEntryAndOutletSync = (key) => ({
+
+      // Several of these are `@action`-decorated on the real service, which
+      // installs a getter-only accessor on the prototype — a plain assignment
+      // would throw in strict mode. Define own data properties instead so the
+      // stub shadows both plain methods and decorated accessors uniformly.
+      const stub = (name, fn) =>
+        Object.defineProperty(wireframe, name, {
+          value: fn,
+          configurable: true,
+          writable: true,
+        });
+
+      stub("findEntryAndOutletSync", (key) => ({
         entry: { block: key, id: null },
         outletName: "o",
-      });
-      wireframe.lookupBlockMetadata = () => ({ isContainer: false });
-      wireframe.lookupBlockDisplayName = (block) => block;
-      wireframe.canInsertBlockAt = () => true;
-      wireframe.canDropAt = () => true;
-      wireframe.isOutletRoot = () => false;
-      wireframe.setActiveDropPreview = (descriptor) => (captured = descriptor);
-      wireframe.clearActiveDropPreview = () => (captured = null);
-      wireframe.dispatchActiveDrop = () => {
+      }));
+      stub("lookupBlockMetadata", () => ({ isContainer: false }));
+      stub("lookupBlockDisplayName", (block) => block);
+      stub("canInsertBlockAt", () => true);
+      stub("canDropAt", () => true);
+      stub("isOutletRoot", () => false);
+      stub("setActiveDropPreview", (descriptor) => (captured = descriptor));
+      stub("clearActiveDropPreview", () => (captured = null));
+      stub("dispatchActiveDrop", () => {
         if (captured?.dispatch) {
           onDispatch(captured.dispatch);
         }
-      };
+      });
+
       return wireframe;
     }
 
