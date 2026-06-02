@@ -384,6 +384,49 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"].size).to eq(1)
       end
 
+      it "doesn't cause N+1 queries when flagged posts have localizations" do
+        SiteSetting.content_localization_enabled = true
+        admin.update!(locale: "ja")
+        reviewables =
+          2.times.map do
+            post = Fabricate(:post, raw: "Original post", locale: "en")
+            Fabricate(
+              :post_localization,
+              post: post,
+              cooked: "<p>Translated post</p>",
+              locale: "ja",
+            )
+
+            Fabricate(
+              :reviewable_flagged_post,
+              target: post,
+              target_created_by: post.user,
+              topic: post.topic,
+            )
+          end
+
+        I18n.with_locale(:ja) do
+          queries =
+            track_sql_queries do
+              get "/review.json"
+              expect(response.status).to eq(200)
+            end
+
+          post_localization_queries =
+            queries.select { |query| query.match?(/FROM "?post_localizations"?/) }
+
+          expect(post_localization_queries.size).to eq(1)
+          expect(
+            response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] },
+          ).to include(*reviewables.map(&:id))
+          expect(
+            response.parsed_body["reviewables"]
+              .select { |reviewable| reviewables.map(&:id).include?(reviewable["id"]) }
+              .map { |reviewable| reviewable["cooked"] },
+          ).to all(eq("<p>Translated post</p>"))
+        end
+      end
+
       context "with reviewable notes" do
         fab!(:moderator)
         fab!(:reviewable)
