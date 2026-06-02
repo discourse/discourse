@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -8,7 +9,7 @@ import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
-import SearchAdvancedCategoryChooser from "discourse/select-kit/components/search-advanced-category-chooser";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { i18n } from "discourse-i18n";
 
 const ROW_ORDER = ["new_members", "returning", "staff"];
@@ -147,9 +148,10 @@ export default class WhosPosting extends Component {
           {{i18n "admin.dashboard.sections.engagement.whos_posting.title"}}
         </LinkTo>
         <div class="db-whos-posting__filter">
-          <SearchAdvancedCategoryChooser
+          <CategoryChooser
             @value={{this.categoryId}}
             @onChange={{this.onCategoryChange}}
+            @options={{hash none="category.all" autoInsertNoneItem=true}}
           />
           {{#if this.hasSubcategories}}
             <label class="db-whos-posting__subcategories">
