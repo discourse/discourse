@@ -292,7 +292,9 @@ export default class ComposerActions extends Component {
     if (this.isOnComposerTopic && !this.site.mobileView) {
       return null;
     }
-    return this.replyOptions?.topicLink?.anchor;
+    return (
+      this.composerModel?.topic?.title || this.replyOptions?.topicLink?.anchor
+    );
   }
 
   get showReplyTargetLink() {
