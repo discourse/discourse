@@ -554,11 +554,13 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_countries][:rows].first[:country_code]).to eq("US")
         expect(result[:top_countries][:error]).to be_nil
 
-        expect(result[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
+        referrer_rows = result[:top_referrers][:rows]
+        expect(referrer_rows.first[:direct]).to eq(true)
+        expect(referrer_rows[1][:normalized_referrer]).to eq("google.com")
         expect(result[:top_referrers][:error]).to be_nil
       end
 
-      it "caps each card at the top 5 rows on both the fresh and cached paths" do
+      it "caps top_countries at the top 5 rows on both the fresh and cached paths" do
         %w[US GB DE FR JP CA].each do |code|
           Fabricate(
             :browser_pageview_event,
@@ -570,11 +572,9 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         fresh = described_class.build(start_date: nil, end_date: nil)
         expect(fresh[:top_countries][:rows].size).to eq(5)
-        expect(fresh[:top_referrers][:rows].size).to eq(5)
 
         cached = described_class.build(start_date: nil, end_date: nil)
         expect(cached[:top_countries][:rows].size).to eq(5)
-        expect(cached[:top_referrers][:rows].size).to eq(5)
       end
 
       it "returns empty rows when no events match the date range" do
@@ -583,12 +583,109 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_referrers]).to eq(rows: [], error: nil)
       end
 
+      context "with the Direct entry in the top_referrers card" do
+        before { Discourse.stubs(:current_hostname).returns("forum.example.com") }
+
+        # direct = 6, external = google 3 + reddit 1 = 4, internal (own host) = 5
+        # shared denominator = direct + external = 10 (internal excluded)
+        def fabricate_referrer_universe
+          6.times { Fabricate(:browser_pageview_event, normalized_referrer: nil) }
+          3.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com") }
+          1.times { Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com") }
+          5.times do
+            Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/1")
+          end
+          aggregate_rollups
+        end
+
+        it "prepends a Direct entry and shares one denominator across both paths" do
+          fabricate_referrer_universe
+
+          [
+            described_class.build(start_date: nil, end_date: nil), # fresh
+            described_class.build(start_date: nil, end_date: nil), # cached country card path
+          ].each do |result|
+            rows = result[:top_referrers][:rows]
+
+            expect(result[:top_referrers][:error]).to be_nil
+
+            direct = rows.first
+            expect(direct[:direct]).to eq(true)
+            expect(direct[:count]).to eq(6)
+            expect(direct[:percent]).to eq(60)
+            expect(direct).not_to have_key(:normalized_referrer)
+
+            expect(rows.drop(1)).to eq(
+              [
+                { normalized_referrer: "google.com", count: 3, percent: 30 },
+                { normalized_referrer: "reddit.com", count: 1, percent: 10 },
+              ],
+            )
+          end
+        end
+
+        it "excludes the own host from both the rows and the shared denominator" do
+          fabricate_referrer_universe
+
+          rows = described_class.build(start_date: nil, end_date: nil)[:top_referrers][:rows]
+
+          expect(rows.map { |row| row[:normalized_referrer] }).not_to include(
+            a_string_starting_with("forum.example.com"),
+          )
+          # If the 5 internal pageviews counted toward the denominator (15), the
+          # Direct percent would round to 40, not 60.
+          expect(rows.first[:percent]).to eq(60)
+        end
+
+        it "keeps at most the top 5 referrer rows in addition to Direct" do
+          Fabricate(:browser_pageview_event, normalized_referrer: nil)
+          %w[a b c d e f].each_with_index do |host, index|
+            (index + 1).times do
+              Fabricate(:browser_pageview_event, normalized_referrer: "#{host}.example.com")
+            end
+          end
+          aggregate_rollups
+
+          rows = described_class.build(start_date: nil, end_date: nil)[:top_referrers][:rows]
+
+          expect(rows.size).to eq(6)
+          expect(rows.first[:direct]).to eq(true)
+          expect(rows.drop(1).map { |row| row[:normalized_referrer] }).to eq(
+            %w[f.example.com e.example.com d.example.com c.example.com b.example.com],
+          )
+        end
+
+        it "emits a Direct entry even when there are no external referrers" do
+          4.times { Fabricate(:browser_pageview_event, normalized_referrer: nil) }
+          aggregate_rollups
+
+          rows = described_class.build(start_date: nil, end_date: nil)[:top_referrers][:rows]
+
+          expect(rows.size).to eq(1)
+          expect(rows.first).to eq(direct: true, count: 4, percent: 100)
+        end
+
+        it "uses logged_in counts for the shared denominator when login is required" do
+          SiteSetting.login_required = true
+
+          Fabricate(:browser_pageview_event, user_id: 1, normalized_referrer: nil)
+          Fabricate(:browser_pageview_event, user_id: 1, normalized_referrer: "google.com")
+          Fabricate(:browser_pageview_event, user_id: 1, normalized_referrer: "google.com")
+          Fabricate(:browser_pageview_event, user_id: nil, normalized_referrer: "reddit.com")
+          aggregate_rollups
+
+          rows = described_class.build(start_date: nil, end_date: nil)[:top_referrers][:rows]
+
+          expect(rows.first).to eq(direct: true, count: 1, percent: 33)
+          expect(rows.drop(1)).to eq([{ normalized_referrer: "google.com", count: 2, percent: 67 }])
+        end
+      end
+
       it "returns an exception error payload when the underlying report cannot be built" do
         allow(Report).to receive(:find).and_return(nil)
 
         result = described_class.build(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
-        expect(result[:top_referrers]).to eq(rows: [], error: "exception")
       end
 
       it "serves the cached payload on subsequent calls within the cache window" do
@@ -624,13 +721,13 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(second[:top_countries][:rows]).to be_empty
       end
 
-      it "invalidates the cached payload when current_hostname changes" do
+      it "excludes the own host from top_referrers as current_hostname changes" do
         Discourse.stubs(:current_hostname).returns("forum-a.example.com")
         Fabricate(:browser_pageview_event, normalized_referrer: "forum-b.example.com/path")
         aggregate_rollups
 
         first = described_class.build(start_date: nil, end_date: nil)
-        expect(first[:top_referrers][:rows].first[:normalized_referrer]).to eq(
+        expect(first[:top_referrers][:rows].map { |row| row[:normalized_referrer] }).to include(
           "forum-b.example.com/path",
         )
 
@@ -670,7 +767,6 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         first = described_class.build(start_date: nil, end_date: nil)
         expect(first[:top_countries]).to eq(rows: [], error: "timeout")
-        expect(first[:top_referrers]).to eq(rows: [], error: "timeout")
 
         allow(Report).to receive(:find).and_call_original
         Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")

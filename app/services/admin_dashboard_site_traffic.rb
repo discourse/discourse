@@ -40,7 +40,7 @@ class AdminDashboardSiteTraffic
 
     if SiteSetting.persist_browser_pageview_events
       response[:top_countries] = fetch_card("top_countries_by_browser_pageviews")
-      response[:top_referrers] = fetch_card("top_referrers_by_browser_pageviews")
+      response[:top_referrers] = top_referrers_card
     end
 
     response
@@ -81,6 +81,80 @@ class AdminDashboardSiteTraffic
     return { rows: [], error: error.to_s } if error.present?
 
     { rows: (cached[:data] || []).map(&:symbolize_keys).first(TOP_CARD_LIMIT), error: nil }
+  end
+
+  # The Top referrers card surfaces Direct (no referrer) alongside the external
+  # referrers, with every percentage sharing one denominator (direct +
+  # external-referred, own host excluded). This denominator differs from the
+  # standalone report's (referred-only), so the card owns its own SQL rather
+  # than reusing the report's row contract.
+  def top_referrers_card
+    direct_count, external_total, external_rows = referrer_universe
+    total = direct_count + external_total
+
+    return { rows: [], error: nil } if total.zero?
+
+    rows = [direct_row(direct_count, total)]
+    rows.concat(external_rows.first(TOP_CARD_LIMIT).map { |row| external_referrer_row(row, total) })
+
+    { rows: rows, error: nil }
+  end
+
+  def referrer_universe
+    host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+    escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
+    count_expr = login_required? ? "logged_in_count" : "count"
+
+    rows =
+      DB.query(
+        <<~SQL,
+          SELECT
+            normalized_referrer IS NULL AS direct,
+            normalized_referrer,
+            SUM(#{count_expr})::bigint AS count
+          FROM browser_pageview_referrer_daily_rollups
+          WHERE date >= :start_date
+            AND date < :end_date_exclusive
+            AND (
+              normalized_referrer IS NULL
+              OR (
+                normalized_referrer <> :host_exact
+                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+              )
+            )
+          GROUP BY normalized_referrer
+          HAVING SUM(#{count_expr}) > 0
+          ORDER BY count DESC, normalized_referrer ASC
+        SQL
+        start_date: start_date.to_date,
+        end_date_exclusive: end_date.to_date + 1,
+        host_exact: host,
+        host_path_prefix: "#{escaped_host}/%",
+        host_query_prefix: "#{escaped_host}?%",
+      )
+
+    direct_count = rows.find(&:direct)&.count.to_i
+    external_rows = rows.reject(&:direct)
+    external_total = external_rows.sum(&:count)
+
+    [direct_count, external_total, external_rows]
+  end
+
+  def direct_row(count, total)
+    { direct: true, count: count, percent: percent_of(count, total) }
+  end
+
+  def external_referrer_row(row, total)
+    {
+      normalized_referrer: row.normalized_referrer,
+      count: row.count,
+      percent: percent_of(row.count, total),
+    }
+  end
+
+  def percent_of(count, total)
+    total.zero? ? 0 : ((count.to_f / total) * 100).round
   end
 
   def series_ids(include_embedded:)
