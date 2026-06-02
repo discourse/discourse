@@ -31,6 +31,23 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(identifiers).to include("condition:if")
     end
 
+    it "returns List posts query control metadata" do
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      post_node =
+        response.parsed_body["node_types"].find do |node_type|
+          node_type["identifier"] == "action:post"
+        end
+      properties = post_node["properties"]
+
+      expect(properties["query"]).to include(
+        "type" => "string",
+        "ui" => include("control" => "filter_query", "filter" => "posts"),
+      )
+      expect(properties["categories"]["ui"]).to include("hidden" => true)
+      expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
+    end
+
     it "does not include metadata key in node type response" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 

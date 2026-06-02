@@ -2986,6 +2986,32 @@ en:
     audio: "[audio]"
     video: "[video]"
 
+  posts_filter:
+    description:
+      category: "Show posts in a specific category"
+      category_any: "Show posts in any of the specified categories (comma-separated)"
+      exclude_category: "Exclude posts from a specific category"
+      category_without_subcategories: "Show posts only in the parent category, excluding subcategories"
+      exclude_category_without_subcategories: "Exclude posts only from the parent category, not subcategories"
+      tag: "Show posts with a specific tag"
+      tags_any: "Show posts with any of the specified tags (comma-separated)"
+      exclude_tag: "Exclude posts with a specific tag"
+      username: "Show posts by a specific user"
+      usernames_any: "Show posts by any of the specified users (comma-separated)"
+      group: "Show posts by members of a group"
+      groups_any: "Show posts by members of any specified group (comma-separated)"
+      topic: "Show posts in specific topics"
+      after: "Show posts created after a date (YYYY-MM-DD or days ago)"
+      before: "Show posts created before a date (YYYY-MM-DD or days ago)"
+      topic_after: "Show posts in topics created after a date (YYYY-MM-DD or days ago)"
+      topic_before: "Show posts in topics created before a date (YYYY-MM-DD or days ago)"
+      keywords: "Show posts containing any of the specified keywords"
+      topic_keywords: "Show posts in topics containing any of the specified keywords"
+      post_type: "Show first posts or replies"
+      status: "Filter posts by topic status"
+      order: "Sort posts"
+      max_results: "Maximum number of posts to return"
+
   filter:
     description:
       status: "Filter topics by their status"
