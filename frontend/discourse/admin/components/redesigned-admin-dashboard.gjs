@@ -86,10 +86,9 @@ export default class RedesignedAdminDashboard extends Component {
   }
 
   <template>
-    <div class="db-toolbar">
-      <h1>Dashboard</h1>
-
-      <div class="db-toolbar__actions">
+    <div class="db-header">
+      <h1 class="db-header__title">Dashboard</h1>
+      <div class="db-header__actions">
         <DashboardDateRange
           @period={{@requestedPeriod}}
           @startDate={{@requestedStartDate}}

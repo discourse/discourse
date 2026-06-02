@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
+  margin-bottom: var(--space-12);
 }
 
-.db-toolbar {
+.db-header {
   display: flex;
   align-items: center;
   padding: var(--space-3) 0;
@@ -16,29 +17,21 @@
   z-index: 1;
   background: var(--d-content-background, var(--secondary));
 
+  &__title {
+    @include viewport.until(sm) {
+      font-size: var(--font-up-3-rem);
+    }
+  }
+
   &__actions {
     display: flex;
     gap: var(--space-4);
     margin-left: auto;
+  }
 
-    @include viewport.until(sm) {
-      position: fixed;
-      bottom: calc(env(safe-area-inset-bottom) + var(--space-4));
-      right: 50%;
-      transform: translateX(50%);
-      z-index: 2;
-      margin-left: 0;
-      align-items: center;
-      gap: var(--space-2);
-      transition: bottom 0.3s ease;
-
-      .footer-nav-visible & {
-        bottom: calc(
-          var(--footer-nav-height) + env(safe-area-inset-bottom) +
-            var(--space-4)
-        );
-      }
-    }
+  @include viewport.until(sm) {
+    flex-direction: column-reverse;
+    align-items: flex-start;
   }
 }
 
@@ -58,45 +51,7 @@
       background: var(--primary-very-low);
       color: var(--primary);
     }
-
-    @include viewport.until(sm) {
-      border-radius: 999px;
-      box-shadow: var(--shadow-dropdown);
-    }
   }
-
-  &__popover {
-    padding: 0;
-  }
-}
-
-.db-toolbar__actions .btn[data-identifier="db-configure"] {
-  height: var(--space-9);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--d-border-radius);
-
-  @include viewport.until(sm) {
-    width: var(--space-9);
-    padding: 0;
-    min-height: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    box-shadow: var(--shadow-dropdown);
-
-    .d-button-label {
-      display: none;
-    }
-
-    .d-icon {
-      margin-right: 0;
-    }
-  }
-}
-
-h1 {
-  margin: 0; // to be done proper
 }
 
 .db-delta {
@@ -153,6 +108,7 @@ h1 {
     padding: var(--space-1) 0;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
+    cursor: grab;
 
     &.dragging {
       opacity: 0.5;
@@ -255,6 +211,11 @@ h1 {
     display: flex;
     justify-content: space-between;
     gap: var(--space-8);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
   }
 
   &__subintro {
@@ -270,17 +231,30 @@ h1 {
     justify-content: flex-end;
     flex-grow: 1;
     gap: var(--space-10);
+
+    @include viewport.until(sm) {
+      border-top: 1px solid var(--primary-low);
+      padding-top: var(--space-2);
+    }
   }
 
   &__metric-number {
     white-space: nowrap;
     font-size: var(--font-up-3);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-up-2);
+    }
   }
 
   &__metric-label {
     white-space: nowrap;
     font-size: var(--font-down-2-rem);
     color: var(--primary-medium);
+
+    @include viewport.until(sm) {
+      white-space: wrap;
+    }
   }
 
   &__callout {
@@ -339,14 +313,30 @@ h1 {
     gap: var(--space-4);
     border-top: 1px solid var(--primary-low);
     margin-inline: calc(var(--space-4) * -1);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
   }
 
   &__row-block {
     flex: 1;
+    min-width: 0;
     padding: var(--space-4);
+    box-sizing: border-box;
 
     &:not(:last-child) {
       border-right: 1px solid var(--primary-low);
+    }
+
+    @include viewport.until(sm) {
+      border-bottom: 1px solid var(--primary-low);
+
+      .--highlights & {
+        border-radius: var(--d-border-radius-large);
+        flex-basis: calc(50% - var(--space-1));
+        border: 1px solid var(--primary-low);
+      }
     }
   }
 
@@ -354,12 +344,19 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: var(--space-2);
+
+    .db-whos-posting &,
+    .db-activity & {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
   }
 
   &__row-block-title {
     position: relative;
     color: var(--primary);
-    margin-bottom: var(--space-2);
     font-weight: bold;
     font-size: var(--font-down-1-rem);
 
@@ -406,6 +403,12 @@ h1 {
     &.--row {
       display: flex;
       flex-wrap: nowrap;
+
+      @include viewport.until(sm) {
+        flex-wrap: wrap;
+        gap: var(--space-1);
+        border: none;
+      }
     }
 
     &.--column {
@@ -439,7 +442,7 @@ h1 {
   &__header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--space-4);
   }
 
@@ -513,10 +516,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-
-  .db-section__row-block-header {
-    align-items: flex-start;
-  }
 
   &__filter {
     display: flex;
@@ -725,18 +724,21 @@ h1 {
   }
 }
 
-.db-highlights__comparison {
-  align-self: flex-end;
-  margin-top: calc(var(--space-4) * -1);
-  font-size: var(--font-down-1-rem);
-  color: var(--primary-medium);
-}
-
 .db-kpi {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+
+  &:first-of-type {
+    border-top-left-radius: var(--d-border-radius-large);
+    border-bottom-left-radius: var(--d-border-radius-large);
+  }
+
+  &:last-of-type {
+    border-top-right-radius: var(--d-border-radius-large);
+    border-bottom-right-radius: var(--d-border-radius-large);
+  }
 
   .db-link-arrow {
     top: var(--space-4);
@@ -780,6 +782,11 @@ h1 {
     height: 320px;
     display: flex;
     flex-direction: column;
+    gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      position: relative;
+    }
   }
 
   &__header {
@@ -810,6 +817,18 @@ h1 {
     font-size: var(--font-down-3);
     padding: var(--space-half) var(--space-2);
     font-weight: 400;
+
+    @include viewport.until(sm) {
+      position: absolute;
+      top: 0;
+      right: var(--space-3);
+      transform: translateY(-40%);
+    }
+
+    &.--data_explorer_query {
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+    }
   }
 
   &__remove {
@@ -817,11 +836,13 @@ h1 {
   }
 
   &__chart {
-    margin-top: var(--space-2);
     overflow: hidden;
     flex: 1 1 auto;
     min-height: 0;
 
+    .admin-report,
+    .admin-report-chart,
+    .chart-canvas-container,
     .chart-canvas {
       width: 100%;
       height: 100%;
