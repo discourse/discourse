@@ -35,6 +35,36 @@ describe Reports::TopReferrersByBrowserPageviews do
       expect(data.first[:percent]).to eq(100)
     end
 
+    context "when the include_direct filter is set" do
+      let(:report) do
+        BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+        BrowserPageviewEvent.delete_all
+        Report.find(
+          "top_referrers_by_browser_pageviews",
+          start_date: start_date,
+          end_date: end_date,
+          filters: {
+            include_direct: true,
+          },
+        )
+      end
+
+      it "includes direct first and shares one denominator with external referrers, excluding the own host" do
+        6.times { Fabricate(:browser_pageview_event, normalized_referrer: nil) }
+        3.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com") }
+        1.times { Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com") }
+        5.times { Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/1") }
+
+        expect(report.data).to eq(
+          [
+            { normalized_referrer: nil, count: 6, percent: 60 },
+            { normalized_referrer: "google.com", count: 3, percent: 30 },
+            { normalized_referrer: "reddit.com", count: 1, percent: 10 },
+          ],
+        )
+      end
+    end
+
     it "excludes same-host bare, path-prefixed, and query-prefixed referrers from numerator and denominator" do
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com")
       Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/topic/1")

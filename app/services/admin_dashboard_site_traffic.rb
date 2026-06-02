@@ -57,18 +57,14 @@ class AdminDashboardSiteTraffic
     { rows: report[:data].first(TOP_CARD_LIMIT), error: nil }
   end
 
-  # Returns the full cached report payload (`{ data:, error: }`) for a card type,
-  # reading the Report cache when warm and otherwise computing + caching the
-  # report. Callers slice/aggregate `data` themselves; the heavy aggregation
-  # stays memoized in Redis (35-minute TTL).
-  def cached_report(type)
+  def cached_report(type, extra_filters = {})
     opts = {
       start_date: start_date,
       end_date: end_date,
       filters: {
         login_required: SiteSetting.login_required,
         host: Discourse.current_hostname,
-      },
+      }.merge(extra_filters),
       wrap_exceptions_in_test: true,
     }
 
@@ -78,67 +74,21 @@ class AdminDashboardSiteTraffic
     report = Report.find(type, opts)
     return { data: [], error: "exception" } if report.nil?
 
-    # Timeouts skip the cache so the next request retries instead of being
-    # pinned to the error for the full 35-minute TTL.
     Report.cache(report) if report.error != :timeout
 
     { data: report.data, error: report.error }
   end
 
-  # The Top referrers card surfaces Direct (no referrer) alongside the external
-  # referrers, with every percentage sharing one denominator (direct +
-  # external-referred, own host excluded). The expensive external aggregation
-  # stays on the Report cache; only Direct is computed live as a single cheap
-  # SUM over the NULL-referrer rollups.
   def top_referrers_card
-    report = cached_report("top_referrers_by_browser_pageviews")
+    report = cached_report("top_referrers_by_browser_pageviews", include_direct: true)
     return { rows: [], error: report[:error].to_s } if report[:error].present?
 
-    external_rows = report[:data]
-    # The report caps at MAX_ROWS (200); summing those rows is the external
-    # total, as the tail beyond 200 is negligible.
-    external_total = external_rows.sum { |row| row[:count] }
-    direct_count = direct_pageview_count
-    total = direct_count + external_total
+    direct, external = report[:data].partition { |row| row[:normalized_referrer].nil? }
+    rows = direct + external.first(TOP_CARD_LIMIT)
 
-    return { rows: [], error: nil } if total.zero?
-
-    rows = [direct_row(direct_count, total)]
-    rows.concat(external_rows.first(TOP_CARD_LIMIT).map { |row| external_referrer_row(row, total) })
+    return { rows: [], error: nil } if rows.empty?
 
     { rows: rows, error: nil }
-  end
-
-  def direct_pageview_count
-    count_expr = login_required? ? "logged_in_count" : "count"
-
-    DB.query_single(
-      <<~SQL,
-        SELECT COALESCE(SUM(#{count_expr}), 0)::bigint
-        FROM browser_pageview_referrer_daily_rollups
-        WHERE date >= :start_date
-          AND date < :end_date_exclusive
-          AND normalized_referrer IS NULL
-      SQL
-      start_date: start_date.to_date,
-      end_date_exclusive: end_date.to_date + 1,
-    ).first
-  end
-
-  def direct_row(count, total)
-    { direct: true, count: count, percent: percent_of(count, total) }
-  end
-
-  def external_referrer_row(row, total)
-    {
-      normalized_referrer: row[:normalized_referrer],
-      count: row[:count],
-      percent: percent_of(row[:count], total),
-    }
-  end
-
-  def percent_of(count, total)
-    total.zero? ? 0 : ((count.to_f / total) * 100).round
   end
 
   def series_ids(include_embedded:)

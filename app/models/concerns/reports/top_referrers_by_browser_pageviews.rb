@@ -24,9 +24,14 @@ module Reports::TopReferrersByBrowserPageviews
 
       count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
+      include_direct = ActiveModel::Type::Boolean.new.cast(report.filters[:include_direct])
 
       host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
       escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
+
+      direct_predicate =
+        include_direct ? "normalized_referrer IS NULL OR " : "normalized_referrer IS NOT NULL AND "
+      direct_order = include_direct ? "(normalized_referrer IS NULL) DESC, " : ""
 
       sql = <<~SQL
         WITH ranked AS (
@@ -37,10 +42,11 @@ module Reports::TopReferrersByBrowserPageviews
           FROM browser_pageview_referrer_daily_rollups
           WHERE date >= :start_date
             AND date < :end_date_exclusive
-            AND normalized_referrer IS NOT NULL
-            AND normalized_referrer <> :host_exact
-            AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-            AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+            AND (#{direct_predicate}(
+              normalized_referrer <> :host_exact
+              AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+              AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+            ))
           GROUP BY normalized_referrer
           HAVING SUM(#{count_expr}) > 0
         )
@@ -48,7 +54,7 @@ module Reports::TopReferrersByBrowserPageviews
                CASE WHEN total = 0 THEN 0
                     ELSE ROUND((count::numeric / total) * 100)::integer END AS percent
         FROM ranked
-        ORDER BY count DESC, normalized_referrer ASC
+        ORDER BY #{direct_order}count DESC, normalized_referrer ASC
         LIMIT :limit
       SQL
 
