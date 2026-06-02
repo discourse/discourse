@@ -5753,16 +5753,16 @@ en:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
-      in_this_category: '"%{tag_name}" cannot be used in this category'
-      not_allowed: '"%{tag_name}" cannot be used'
+      in_this_category: "Can't be used in this category"
+      not_allowed: "Can't be used"
       restricted_to:
-        one: '"%{tag_name}" is restricted to the "%{category_names}" category'
-        other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
-      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
+        one: 'Only available in the "%{category_names}" category'
+        other: "Only available in: %{category_names}"
+      restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
-      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
-      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
+      one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
+      missing_parent_tag: 'Available after adding the "%{parent_tag_name}" tag'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'
