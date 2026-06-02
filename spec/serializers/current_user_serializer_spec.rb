@@ -454,7 +454,8 @@ RSpec.describe CurrentUserSerializer do
 
     it "is not included when the site is older than the max days setting" do
       SiteSetting.site_owner_onboarding_max_days = 5
-      Topic.update_all(created_at: 6.days.ago)
+      admin.created_at = 6.days.ago
+      admin.save!
       payload = admin_serializer.as_json
       expect(payload).not_to have_key(:show_site_owner_onboarding)
     end
