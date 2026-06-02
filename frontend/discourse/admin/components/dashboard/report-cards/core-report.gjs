@@ -6,6 +6,7 @@ import AdminReport from "discourse/admin/components/admin-report";
     @dataSourceName={{@item.identifier}}
     @preloadedData={{@payload}}
     @showHeader={{false}}
+    @bare={{true}}
     @filters={{hash startDate=@filters.startDate endDate=@filters.endDate}}
   />
 </template>
