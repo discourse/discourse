@@ -121,7 +121,7 @@
     "@embroider/router": "^3.0.6",
     "@embroider/vite": "^1.7.5",
     "@floating-ui/dom": "^1.7.5",
-    "@glimmer/component": "^2.0.0",
+    "@glimmer/component": "^2.1.1",
     "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
     "@types/jquery": "^3.5.33",
