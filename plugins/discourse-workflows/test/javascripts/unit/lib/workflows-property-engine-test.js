@@ -170,6 +170,13 @@ module("Unit | Utility | workflows property engine", function () {
       }),
       "Custom (Cron)"
     );
+    assert.strictEqual(
+      propertyOptionLabel("trigger:post_edited", "trust_levels", {
+        value: "0",
+        label_key: "trust_levels.names.newuser",
+      }),
+      "new user"
+    );
   });
 
   test("normalizes camelCase values for locale key lookup", function (assert) {
