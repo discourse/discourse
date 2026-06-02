@@ -92,6 +92,10 @@ acceptance(
       await waitFor(".d-editor-input");
 
       assert
+        .dom(".discard-draft-modal")
+        .doesNotExist("discard modal does not appear on a single click");
+
+      assert
         .dom(".d-editor-input")
         .hasValue(
           new RegExp(
@@ -170,6 +174,10 @@ acceptance(
 
       await click(".fc-day-today");
       await waitFor(".d-editor-input");
+
+      assert
+        .dom(".discard-draft-modal")
+        .doesNotExist("discard modal does not appear on a single click");
 
       assert
         .dom(".d-editor-input")
