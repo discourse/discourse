@@ -4002,20 +4002,27 @@ body.wireframe-active {
     padding: 0;
     margin: 0;
 
-    /* `inline-block` so PM stays in the parent renderer span's inline
-       flow — blocks like `wf:heading` and `wf:callout` render an inline
-       icon next to the renderer span, and PM's default block `<div>`
-       would shove the editor onto a new line on edit-start. Not plain
-       `inline`: PM's view needs a real block-level layout box for the
-       outline below + caret rendering, and outlines on inline elements
-       draw around line fragments rather than the editor area. */
-    display: inline-block;
+    /* `inline` so PM lays out in the exact same inline formatting context
+       as the rendered content it replaces — `.wf-inline-rich-text__content`
+       is also `inline`, so the glyphs stay put when display→edit swaps one
+       for the other. An `inline-block` here is an atomic box positioned by
+       `vertical-align` (baseline), and its baseline is derived from its own
+       internal line box rather than flowing with the parent text; that
+       nudged the text a couple px on edit-start (a visible layout shift).
+       `inline` also keeps the editor on the same line as an adjacent inline
+       icon (e.g. `wf:heading`, `wf:callout`) — the new-line problem the old
+       comment worried about came from PM's default block `<div>`, which we
+       override here regardless of `inline` vs `inline-block`. */
+    display: inline;
 
     /* Replaces the browser's default contenteditable focus ring. PM is
        only mounted when the field is actively being edited, so any time
        this rule applies the user IS editing — no extra gating needed.
-       Outlining PM's own block-level (now inline-block) div hugs the
-       editor cleanly. */
+       On an `inline` editor the outline follows the text's line
+       fragments, so a single-line field gets a clean rectangle and a
+       wrapped multi-line field (paragraph / callout body) gets a ring
+       that hugs each line — acceptable since it only marks the active
+       edit. */
     outline: 2px solid var(--tertiary);
     outline-offset: 2px;
     border-radius: 2px;
@@ -4257,14 +4264,21 @@ body.wireframe-active
 
 /* Active edit — ProseMirror is mounted inside the outer span as a
    sibling of `__content`. Hide the rendered content so the user sees
-   only the editor. The presence of the `wf-inline-editor-mount` child
-   (which Glimmer's `{{#in-element}}` mounts and unmounts in lockstep
-   with the edit session) IS the editing state — no JS-side class
-   toggle is needed, the cascade reacts to Glimmer's lifecycle
-   directly. Lives in admin chrome SCSS so the live-site render path
-   never evaluates the `:has()` (no mount spans exist there). */
+   only the editor. We gate the hide on the *mounted editor element*
+   (`.wf-inline-editor`, which ProseMirror creates inside the mount
+   span) rather than the `wf-inline-editor-mount` placeholder span
+   itself. Glimmer inserts that placeholder synchronously when the
+   session opens, but ProseMirror only renders into it after an async
+   module load — so keying on the placeholder hid `__content` during
+   that gap, collapsing the field to empty (a visible flash + layout
+   shift on every click-to-edit). Keying on the editor element keeps
+   the rendered text occupying layout until ProseMirror is ready, then
+   swaps seamlessly. No JS-side class toggle is needed — the cascade
+   reacts to ProseMirror's DOM lifecycle directly. Lives in admin
+   chrome SCSS so the live-site render path never evaluates the
+   `:has()` (no mount spans exist there). */
 
-.wf-inline-rich-text:has(.wf-inline-editor-mount)
+.wf-inline-rich-text:has(.wf-inline-editor-mount .wf-inline-editor)
   > .wf-inline-rich-text__content {
   display: none;
 }
