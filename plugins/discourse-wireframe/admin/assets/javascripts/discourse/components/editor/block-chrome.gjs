@@ -937,6 +937,17 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Selects this block. Wired to the empty-drop placeholder's
+   * `@onActivate`: clicking the placeholder stops propagation (so the
+   * chrome's own `onClick` selection never runs), so we re-select here
+   * to keep the inspector pointed at the container / slot being filled.
+   */
+  @action
+  selectSelf() {
+    this.#selectThisBlock();
+  }
+
+  /**
    * Pins the chrome's outer `<div>` reference for later use (drag
    * image, image-arg measurements, tooltip anchoring) and installs the
    * per-block URL-edit tooltips now that we have the DOM to query.
@@ -1425,6 +1436,7 @@ export default class BlockChrome extends Component {
               <EditorEmptyDropPlaceholder
                 @hint={{i18n "wireframe.canvas.empty_slot_hint"}}
                 @palette={{this.palette}}
+                @onActivate={{this.selectSelf}}
                 @onPick={{this.pickBlockForSlot}}
               />
             </div>
@@ -1498,6 +1510,7 @@ export default class BlockChrome extends Component {
             <EditorEmptyDropPlaceholder
               @hint={{i18n "wireframe.canvas.empty_container_hint"}}
               @palette={{this.palette}}
+              @onActivate={{this.selectSelf}}
               @onPick={{this.pickBlockForContainer}}
             />
           {{/if}}

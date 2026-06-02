@@ -377,6 +377,17 @@ export default class GridOverlay extends Component {
     });
   }
 
+  /**
+   * Selects the grid layout this overlay belongs to. Wired to each empty
+   * cell placeholder's `@onActivate`: a cell is not a real block, so we
+   * select its owning grid layout instead, keeping the inspector pointed
+   * at the layout the author is filling.
+   */
+  @action
+  selectGrid() {
+    this.wireframe.selectBlock({ key: this.args.gridKey });
+  }
+
   #computeIsCollapsed() {
     const gridEl = this.gridElement;
     if (!gridEl) {
@@ -1468,6 +1479,7 @@ export default class GridOverlay extends Component {
             <EditorEmptyDropPlaceholder
               @hint={{i18n "wireframe.canvas.empty_cell_hint"}}
               @palette={{this.palette}}
+              @onActivate={{this.selectGrid}}
               @onPick={{fn this.pickBlockForCell cell}}
             />
           </div>

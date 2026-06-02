@@ -35,6 +35,11 @@ import EditorBlockPickerMenu from "./editor-block-picker-menu";
  *   - `@onPick` (`(blockEntry) => void`) — fired when the author picks
  *     a block from the popover. The placeholder closes the menu after
  *     `onPick` returns.
+ *   - `@onActivate` (`() => void`) — fired when the placeholder is
+ *     clicked, before the picker opens. The click stops propagation so
+ *     the surrounding chrome's own selection handler never runs, so the
+ *     owner wires this to select the block the drop target belongs to
+ *     (the empty container / slot, or the grid layout for a cell).
  */
 export default class EditorEmptyDropPlaceholder extends Component {
   @service menu;
@@ -80,6 +85,10 @@ export default class EditorEmptyDropPlaceholder extends Component {
     // click before the menu opens.
     event?.stopPropagation?.();
     event?.preventDefault?.();
+    // Because we stopped propagation, the chrome's own selection never
+    // fires. Select the owning block ourselves so the inspector tracks
+    // the container / slot / layout the author is dropping into.
+    this.args.onActivate?.();
     this.#menuInstance = await this.menu.show(this.#buttonEl, {
       component: EditorBlockPickerMenu,
       identifier: "wireframe-block-picker",
