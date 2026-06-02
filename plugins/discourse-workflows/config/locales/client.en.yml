@@ -271,6 +271,7 @@ en:
           create: "Create topic"
           get: "Get topic"
           list: "List topics"
+          close: "Close topic"
         topic_id: "Topic ID"
         title: "Title"
         raw: "Body"
