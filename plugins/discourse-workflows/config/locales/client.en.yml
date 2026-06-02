@@ -174,7 +174,7 @@ en:
         "condition:filter": "Continue only if conditions are met"
         "action:topic_tags": "Add or remove tags on a topic"
         "action:code": "Run custom JavaScript code"
-        "action:topic": "Create, retrieve, or list topics"
+        "action:topic": "Create, retrieve, list, or close topics"
         "action:create_post": "Create a reply in an existing topic"
         "action:set_fields": "Set or modify data fields in the workflow context"
         "trigger:stale_topic": "Fires when a topic has had no activity for a period"
