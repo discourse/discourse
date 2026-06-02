@@ -59,6 +59,27 @@ module ::DiscourseCalendar
   # List of groups
   GROUP_TIMEZONES_CUSTOM_FIELD = "group-timezones"
 
+  module Livestream
+    def self.handle_topic_chat_channel_creation(topic)
+      return if topic.category.blank?
+      return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
+      return if topic.tags.blank? || topic.tags.none? { |tag| tag.name == "livestream" }
+
+      channel =
+        Chat::Channel.create!(
+          chatable_id: topic.category.id,
+          chatable_type: "Category",
+          name: topic.title,
+          status: Chat::Channel.statuses[:open],
+          type: "CategoryChannel",
+          allow_channel_wide_mentions: true,
+        )
+
+      DiscourseCalendar::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
+      channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+    end
+  end
+
   def self.users_on_holiday
     PluginStore.get(PLUGIN_NAME, USERS_ON_HOLIDAY_KEY) || []
   end
@@ -78,6 +99,9 @@ module ::DiscoursePostEvent
 end
 
 require_relative "lib/discourse_calendar/engine"
+require_relative "lib/discourse_calendar/livestream/topic_extension"
+require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
+require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))
@@ -180,6 +204,8 @@ after_initialize do
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
+    Topic.prepend(DiscourseCalendar::Livestream::TopicExtension)
+    Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
 
   add_to_class(:user, :can_create_discourse_post_event?) do
@@ -800,6 +826,68 @@ after_initialize do
         },
         guardian: user.guardian,
       )
+    end
+  end
+
+  # DISCOURSE LIVESTREAM
+
+  add_to_serializer(
+    :topic_view,
+    :chat_channel_id,
+    include_condition: -> { SiteSetting.livestream_enabled },
+  ) do
+    return nil if object.topic.topic_chat_channel.blank?
+    object.topic.topic_chat_channel.chat_channel_id
+  end
+
+  on(:post_edited) do |post, _, _|
+    if SiteSetting.livestream_enabled
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
+    end
+  end
+  on(:topic_created) do |topic, _, _|
+    if SiteSetting.livestream_enabled
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
+    end
+  end
+  on(:chat_channel_trashed) do |channel, user|
+    if SiteSetting.livestream_enabled
+      # If the chat channel is deleted, delete the related TopicChatChannel record
+      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
+    end
+  end
+
+  on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
+    next if !SiteSetting.livestream_enabled
+
+    topic = invitee.event.post.topic
+    topic_chat_channel = topic.topic_chat_channel
+
+    next if !topic_chat_channel
+
+    user = User.find(invitee.user_id)
+    channel = topic_chat_channel.chat_channel
+    manager = Chat::ChannelMembershipManager.new(channel)
+
+    user_allowed_in_chat = user.in_any_groups?(SiteSetting.livestream_chat_allowed_groups_map)
+
+    membership =
+      if invitee.status == DiscoursePostEvent::Invitee.statuses[:going]
+        user_allowed_in_chat ? manager.follow(user) : manager.unfollow(user)
+      else
+        manager.unfollow(user)
+      end
+
+    ::MessageBus.publish "discourse_livestream_update_livestream_chat_status",
+                         Chat::UserChannelMembershipSerializer.new(
+                           membership,
+                           scope: Guardian.new(user),
+                         ).to_json
+  end
+
+  on(:site_setting_changed) do |name, old_val, new_val|
+    if name == :livestream_chat_allowed_groups && SiteSetting.livestream_enabled
+      Jobs::LivestreamRecalculateUserChannelMemberships.new.execute
     end
   end
 end
