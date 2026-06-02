@@ -181,6 +181,53 @@ RSpec.describe Categories::Types::Base do
         end
       expect { test_type.validate_schema! }.to raise_error(ArgumentError)
     end
+
+    it "accepts a category custom field with depends_on" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            {
+              category_custom_fields: {
+                my_field: {
+                  default: false,
+                  type: :bool,
+                  label: "My Field",
+                  depends_on: "other_field",
+                },
+              },
+            }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
+
+    it "accepts a valid site_texts field" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            {
+              site_texts: {
+                "js.some.key" => {
+                  type: :site_text,
+                  label: "Some label",
+                  depends_on: "other_field",
+                },
+              },
+            }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
+
+    it "raises when a site_texts field is missing :label" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { site_texts: { "js.some.key" => { type: :site_text } } }
+          end
+        end
+      expect { test_type.validate_schema! }.to raise_error(ArgumentError)
+    end
   end
 
   describe "all registered category types" do
@@ -204,7 +251,13 @@ RSpec.describe Categories::Types::Base do
 
       schema = test_type.send(:resolved_configuration_schema)
       expect(schema.keys).to eq(
-        %i[general_category_settings site_settings category_settings category_custom_fields],
+        %i[
+          general_category_settings
+          site_settings
+          category_settings
+          category_custom_fields
+          site_texts
+        ],
       )
 
       entry = schema[:site_settings].first
@@ -226,7 +279,13 @@ RSpec.describe Categories::Types::Base do
 
       schema = test_type.send(:resolved_configuration_schema)
       expect(schema.keys).to eq(
-        %i[general_category_settings site_settings category_settings category_custom_fields],
+        %i[
+          general_category_settings
+          site_settings
+          category_settings
+          category_custom_fields
+          site_texts
+        ],
       )
 
       entry = schema[:category_settings].first
@@ -322,6 +381,60 @@ RSpec.describe Categories::Types::Base do
 
       expect(title_entry).not_to have_key(:depends_on)
       expect(dependent_entry[:depends_on]).to eq("allow_user_locale")
+    end
+
+    it "resolves depends_on for category custom fields" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_custom_field_depends_on
+
+          def self.configuration_schema
+            {
+              category_custom_fields: {
+                my_field: {
+                  default: false,
+                  type: :bool,
+                  label: "My Field",
+                  depends_on: "other_field",
+                },
+              },
+            }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:category_custom_fields].first
+      expect(entry[:depends_on]).to eq("other_field")
+    end
+
+    it "resolves site_texts entries with the current translation value" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_site_texts
+
+          def self.configuration_schema
+            {
+              site_texts: {
+                "js.some.key" => {
+                  type: :site_text,
+                  label: "Some label",
+                  depends_on: "other_field",
+                },
+              },
+            }
+          end
+        end
+
+      I18n.backend.store_translations(:en, js: { some: { key: "Hello" } })
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_texts].first
+      expect(entry[:key]).to eq("js.some.key")
+      expect(entry[:name]).to eq("js_some_key")
+      expect(entry[:type]).to eq("site_text")
+      expect(entry[:label]).to eq("Some label")
+      expect(entry[:current]).to eq("Hello")
+      expect(entry[:depends_on]).to eq("other_field")
     end
   end
 

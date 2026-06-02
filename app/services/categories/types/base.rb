@@ -28,6 +28,12 @@ module Categories
               "$ref" => "#/$defs/field_config",
             },
           },
+          "site_texts" => {
+            "type" => "object",
+            "additionalProperties" => {
+              "$ref" => "#/$defs/site_text_field_config",
+            },
+          },
         },
         "$defs" => {
           "general_field_config" => {
@@ -78,11 +84,37 @@ module Categories
               "required" => {
                 "type" => "boolean",
               },
+              "depends_on" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
               "show_on_create" => {
                 "type" => "boolean",
               },
               "show_on_edit" => {
                 "type" => "boolean",
+              },
+            },
+          },
+          "site_text_field_config" => {
+            "type" => "object",
+            "required" => %w[type label],
+            "additionalProperties" => false,
+            "properties" => {
+              "type" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "label" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "description" => {
+                "type" => "string",
+              },
+              "depends_on" => {
+                "type" => "string",
+                "minLength" => 1,
               },
             },
           },
@@ -205,6 +237,21 @@ module Categories
         #
         #     category_settings: {
         #       # Same structure as category_custom_fields above.
+        #     },
+        #
+        #     site_texts: {
+        #       # Fields backed by a translation override (site text), not stored
+        #       # on the category. Each key is the i18n key to edit. The value is
+        #       # a config Hash:
+        #       #   type:        (required) Symbol — only :site_text is supported.
+        #       #   label:       (required) String — FormKit label shown in UI.
+        #       #   description: (optional) String — FormKit help text.
+        #       #   depends_on:  (optional) String — only show when this sibling
+        #       #                custom field / setting is truthy.
+        #       "js.solved.shared_issue.label" => {
+        #         type: :site_text,
+        #         label: "Shared issue label",
+        #       },
         #     },
         #   }
         #
@@ -353,6 +400,7 @@ module Categories
             site_settings: [],
             category_settings: [],
             category_custom_fields: [],
+            site_texts: [],
           }
 
           schema[:general_category_settings]&.each do |setting_name, config|
@@ -415,7 +463,7 @@ module Categories
           end
 
           schema[:category_custom_fields]&.each do |field_name, config|
-            entries[:category_custom_fields] << {
+            entry = {
               key: field_name.to_s,
               default: config[:default],
               type: config[:type].to_s,
@@ -427,6 +475,26 @@ module Categories
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
               show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],
             }
+            entry[:depends_on] = config[:depends_on].to_s if config[:depends_on]
+            entries[:category_custom_fields] << entry
+          end
+
+          schema[:site_texts]&.each do |text_key, config|
+            entry = {
+              key: text_key.to_s,
+              # FormKit treats "." in field names as nested object paths, but a
+              # translation key contains dots, so the form binds to this dot-free
+              # name while +key+ remains the i18n key used by the site_texts API.
+              name: text_key.to_s.gsub(/[^a-zA-Z0-9]/, "_"),
+              type: (config[:type] || :site_text).to_s,
+              label: config[:label],
+              description: config[:description],
+              current: I18n.with_locale(SiteSetting.default_locale) { I18n.t(text_key) },
+              show_on_create: true,
+              show_on_edit: true,
+            }
+            entry[:depends_on] = config[:depends_on].to_s if config[:depends_on]
+            entries[:site_texts] << entry
           end
 
           entries

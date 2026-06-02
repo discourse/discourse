@@ -120,6 +120,35 @@ RSpec.describe "Support Category Type Setup" do
       expect(SiteSetting.show_who_marked_solved).to eq(true)
     end
 
+    it "edits the shared issue label as a translation override when enabled" do
+      visit("/c/#{category.slug}/edit/support")
+
+      expect(form.field("custom_fields.enable_shared_issues").value).to be_truthy
+      expect(form.field("site_texts.js_solved_shared_issue_label").value).to eq("Me too")
+
+      form.field("site_texts.js_solved_shared_issue_label").fill_in("We have this too")
+      banner.click_save
+
+      expect(form.field("site_texts.js_solved_shared_issue_label").value).to eq("We have this too")
+
+      override =
+        TranslationOverride.find_by(
+          locale: SiteSetting.default_locale,
+          translation_key: "js.solved.shared_issue.label",
+        )
+      expect(override.value).to eq("We have this too")
+    end
+
+    it "hides the shared issue label field when shared issues are disabled" do
+      visit("/c/#{category.slug}/edit/support")
+
+      expect(form).to have_field_with_name("site_texts.js_solved_shared_issue_label")
+
+      form.field("custom_fields.enable_shared_issues").toggle
+
+      expect(form).to have_no_field_with_name("site_texts.js_solved_shared_issue_label")
+    end
+
     it "can remove the support category type" do
       visit("/c/#{category.slug}/edit")
       category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")

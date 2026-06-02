@@ -21,6 +21,12 @@ en:
       solved_topics_auto_close_duration:
         label: "Auto close solved topics"
         description: "Automatically close solved topics after this duration from the last reply. Set to 0 to disable."
+      enable_shared_issues:
+        label: "Enable shared issues"
+        description: "Adds a button to unsolved topics in this category that members can use to signal they're experiencing the same issue and opt into notifications about the solution."
+      shared_issue_label:
+        label: "Shared issue label"
+        description: "The label shown on the shared issue button."
 
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"

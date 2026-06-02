@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action, computed, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -130,6 +131,7 @@ export default class EditCategoryTabsController extends Controller {
     data.category_type_settings = {
       ...(this.model.category_type_settings ?? {}),
     };
+    data.site_texts = {};
     data.category_types = Object.keys(this.model.categoryTypes ?? {});
 
     Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
@@ -148,8 +150,17 @@ export default class EditCategoryTabsController extends Controller {
           ? setting.current
           : setting.default;
       });
+
+      // Site texts are translation overrides, not stored on the category. The
+      // server provides the current value (default locale) so we can seed the
+      // field without an extra request, then diff against it on save. Keyed by
+      // the dot-free form name (the i18n key itself is not FormKit-safe).
+      categoryType.configuration_schema.site_texts?.forEach((text) => {
+        data.site_texts[text.name] = text.current ?? "";
+      });
     });
 
+    this.originalSiteTexts = { ...data.site_texts };
     this.formData = data;
   }
 
@@ -350,6 +361,7 @@ export default class EditCategoryTabsController extends Controller {
         Object.keys(this.model.categoryTypes ?? {})
       );
       const result = await this.model.save();
+      const siteTextsChanged = await this._saveSiteTexts(data);
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 
@@ -360,7 +372,8 @@ export default class EditCategoryTabsController extends Controller {
 
       const newTypes = Object.keys(result.category.category_types ?? {});
       const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
-      if (typeWasAdded) {
+      // A reload is needed when site texts change
+      if (typeWasAdded || siteTextsChanged) {
         if (this.model.id) {
           window.location.reload();
         } else {
@@ -396,6 +409,43 @@ export default class EditCategoryTabsController extends Controller {
       popupAjaxError(error);
       this.model.set("parent_category_id", undefined);
     }
+  }
+
+  async _saveSiteTexts(data) {
+    const siteTexts = data.site_texts ?? {};
+    const originals = this.originalSiteTexts ?? {};
+    const locale = this.siteSettings.default_locale;
+    let changed = false;
+
+    for (const entry of this._siteTextEntries) {
+      const newValue = siteTexts[entry.name] ?? "";
+      if (newValue === (originals[entry.name] ?? "")) {
+        continue;
+      }
+
+      const url = `/admin/customize/site_texts/${entry.key}?locale=${locale}`;
+      if (newValue.trim() === "") {
+        await ajax(url, { type: "DELETE" });
+      } else {
+        await ajax(url, {
+          type: "PUT",
+          data: { site_text: { value: newValue, locale } },
+        });
+      }
+      changed = true;
+    }
+
+    return changed;
+  }
+
+  get _siteTextEntries() {
+    const entries = [];
+    Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.site_texts?.forEach((entry) =>
+        entries.push(entry)
+      );
+    });
+    return entries;
   }
 
   @action

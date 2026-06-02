@@ -60,10 +60,8 @@ en:
       confirm_solved_removal_cancel: "Cancel"
 
       shared_issue:
-        label_zero: "Me too"
-        label:
-          one: "Me too (%{count})"
-          other: "Me too (%{count})"
+        label: "Me too"
+        label_with_count: "%{label} (%{count})"
         title: "I am also experiencing this issue"
         author_title: "You started this topic"
 
