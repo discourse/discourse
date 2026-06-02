@@ -57,7 +57,7 @@ module DiscourseWorkflows
         end
 
         def post_data(post)
-          serialize_record(post, WebHookPostSerializer)
+          serialize_post(post)
         end
 
         def matches_category?(category_id)

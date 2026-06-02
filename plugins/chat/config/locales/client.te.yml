@@ -166,3 +166,8 @@ te:
           fields:
             message:
               label: సందేశం పంపించండి
+    discourse_workflows:
+      send_chat_message:
+        message: "సందేశం పంపించండి"
+      chat_approval:
+        message: "సందేశం పంపించండి"

@@ -449,7 +449,7 @@ hr:
       pm_title: "Predložene poruke"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Omogućeno"
+        enabled: "Odabrano"
       start_posting:
         back: "Natrag"
     about:
@@ -2946,6 +2946,7 @@ hr:
       collapse: "Smanji površinu uređivača"
       open: "Otvorite ploču uređivača"
       abandon: "Zatvorite uređivač i odbacite skicu"
+      edit_reason: "Zašto uređuješ?"
       enter_fullscreen: "Otvori uređivač preko cijelog zaslona"
       exit_fullscreen: "Izlazi iz uređivača preko cijelog zaslona"
       exit_fullscreen_prompt: "Pritisnite <kbd>ESC</kbd> za izlaz iz cijelog zaslona"
@@ -2980,24 +2981,22 @@ hr:
           desc: Izradite novu poruku počevši od istih primatelja
         reply_to_topic:
           label: Odgovori na temu
+          trigger: Tema
           desc: Odgovor na temu, a ne određeni post
         toggle_whisper:
           label: Uključi šapat
-          desc: Šaputanja su vidljiva samo članovima osoblja
         create_topic:
-          label: "Nova tema"
           desc: Stvori novu temu
         create_personal_message:
-          label: "Nova poruka"
           desc: "Unesite novu privatnu poruku"
         shared_draft:
           label: "Zajednička skica"
           desc: "Skiciraj temu koja će biti vidljiva samo ovlaštenim korisnicima"
         toggle_topic_bump:
-          label: "Uključi kvrga teme"
           desc: "Odgovorite bez promjene zadnjeg datuma odgovora"
         toggle_unlisted:
           label: Uključi/isključi neobjavljeno
+        unknown_user: "Korisnik"
       reload: "Ponovno učitaj"
       ignore: "Zanemari"
       image_alt_text:
@@ -3389,6 +3388,18 @@ hr:
         also_dismiss_topics: "Prestani pratiti ove teme kako bi mi se prestale prikazivati kao nepročitane"
         dismiss_new_topics: "Odbaci nove teme"
         dismiss_new_replies: "Odbaci nove odgovore"
+        dismiss_new_topics_with_selected:
+          one: "Odbaci (%{count})"
+          few: "Odbaci (%{count})"
+          other: "Odbaci (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Odbaci (%{count})"
+          few: "Odbaci (%{count})"
+          other: "Odbaci (%{count})"
+        dismiss_all_with_selected:
+          one: "Odbaci (%{count})"
+          few: "Odbaci (%{count})"
+          other: "Odbaci (%{count})"
         dismiss_new: "Odbaci novo"
         dismiss_new_modal:
           title: "Odbaci novo"

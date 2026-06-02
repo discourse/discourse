@@ -270,8 +270,6 @@ bs_BA:
     suggested_topics:
       pm_title: "Preporučene Poruke"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Omogućen"
       start_posting:
         back: "Prethodno"
     about:
@@ -1705,7 +1703,7 @@ bs_BA:
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
-      edit_reason_placeholder: "zašto pravite izmjenu?"
+      edit_reason_placeholder: "Zašto pravite izmjenu?"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
       remove_featured_link: "Odstranite link sa teme."
       reply_placeholder: "Ovdje unesite vaš tekst. Koristite Markdown, BBcode ili HTML kako bi formatirali vaš tekst. Za postavljanje slika, sliku prevucite ili zalijepite u ovo polje."
@@ -1739,6 +1737,7 @@ bs_BA:
         attribute_value: "Value"
         apply: "Snimi"
       help: "Pomoć za Markdown"
+      edit_reason: "Zašto pravite izmjenu?"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
@@ -1756,18 +1755,17 @@ bs_BA:
           desc: Kreiraj novu temu linkanu na ovu temu
         reply_to_topic:
           label: Odgovori na temu
+          trigger: Topic
           desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
         toggle_whisper:
           label: Uključi Šapat
-          desc: Šapati su vidljivi samo administratorima
         create_personal_message:
-          label: "Nova poruka"
           desc: "Kreiraj novu personalnu poruku"
         shared_draft:
           label: "Dijeljena skica"
         toggle_topic_bump:
-          label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
+        unknown_user: "User"
       ignore: "Zanemari"
       image: "slika"
     notifications:
@@ -3106,7 +3104,7 @@ bs_BA:
         modal:
           cancel: "otkaži"
           create: "Save"
-          reason: "zašto pravite izmjenu?"
+          reason: "Zašto pravite izmjenu?"
       spreadsheet:
         show: "Show"
         about: "O nama"

@@ -50,6 +50,9 @@ tr_TR:
             delete_ai_secret: "Yapay zeka anahtarını güncelle"
             update_ai_spam_settings: "YZ spam ayarlarını güncelle"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Yapay Zeka Ajanı"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Ajan"
       default_llm:
         title: "Varsayılan LLM modeli"
         description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."

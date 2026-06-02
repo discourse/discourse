@@ -3,6 +3,8 @@
 module Reports::TopReferrersByBrowserPageviews
   extend ActiveSupport::Concern
 
+  MAX_ROWS = 200
+
   class_methods do
     def report_top_referrers_by_browser_pageviews(report)
       report.modes = [Report::MODES[:table]]
@@ -59,7 +61,7 @@ module Reports::TopReferrersByBrowserPageviews
             host_exact: host,
             host_path_prefix: "#{escaped_host}/%",
             host_query_prefix: "#{escaped_host}?%",
-            limit: report.limit || 50,
+            limit: MAX_ROWS,
           )
           .map do |row|
             { normalized_referrer: row.normalized_referrer, count: row.count, percent: row.percent }

@@ -113,6 +113,17 @@ zh_CN:
           descriptions:
             data_explorer:
               run_queries: "运行数据资源管理器查询。通过指定查询 ID 将 API 密钥限制为一组查询。"
+    discourse_workflows:
+      nodes:
+        "action:sql": "数据资源管理器"
+      sql:
+        queries: "查询"
+        query_id: "查询"
+        add_param: "添加参数"
+        param_value: "值"
+        output:
+          results: "结果"
+          no_results: "没有结果"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

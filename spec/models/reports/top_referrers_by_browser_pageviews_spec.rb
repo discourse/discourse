@@ -96,25 +96,17 @@ describe Reports::TopReferrersByBrowserPageviews do
       expect(report.data).to eq([])
     end
 
-    it "limits displayed rows but keeps every external referrer in the percent denominator" do
-      5.times { Fabricate(:browser_pageview_event, normalized_referrer: "a.example.com") }
-      3.times { Fabricate(:browser_pageview_event, normalized_referrer: "b.example.com") }
-      2.times { Fabricate(:browser_pageview_event, normalized_referrer: "c.example.com") }
+    it "caps displayed rows at MAX_ROWS but keeps every external referrer in the percent denominator" do
+      stub_const(Reports::TopReferrersByBrowserPageviews, "MAX_ROWS", 2) do
+        5.times { Fabricate(:browser_pageview_event, normalized_referrer: "a.example.com") }
+        3.times { Fabricate(:browser_pageview_event, normalized_referrer: "b.example.com") }
+        2.times { Fabricate(:browser_pageview_event, normalized_referrer: "c.example.com") }
 
-      BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      BrowserPageviewEvent.delete_all
-      limited =
-        Report.find(
-          "top_referrers_by_browser_pageviews",
-          start_date: start_date,
-          end_date: end_date,
-          limit: 2,
+        expect(report.data.map { |row| row[:normalized_referrer] }).to eq(
+          %w[a.example.com b.example.com],
         )
-
-      expect(limited.data.map { |row| row[:normalized_referrer] }).to eq(
-        %w[a.example.com b.example.com],
-      )
-      expect(limited.data.map { |row| row[:percent] }).to eq([50, 30])
+        expect(report.data.map { |row| row[:percent] }).to eq([50, 30])
+      end
     end
   end
 end

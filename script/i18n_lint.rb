@@ -111,9 +111,9 @@ class LocaleFileValidator
 
       @errors[:invalid_relative_image_sources] << key if value.match?(%r{src\s*=\s*["']/[^/]}i)
 
-      if value.match?(/{{.+?}}/) && !key.end_with?("_MF") &&
-           !EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
-        @errors[:invalid_interpolation_key_format] << key
+      if value.match?(/{{(?!setting:).+?}}/)
+        exempt = key.end_with?("_MF") || EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
+        @errors[:invalid_interpolation_key_format] << key unless exempt
       end
 
       BANNED_PHRASES.keys.each do |banned|

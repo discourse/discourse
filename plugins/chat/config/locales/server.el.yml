@@ -186,6 +186,10 @@ el:
     scriptables:
       send_chat_message:
         title: Αποστολή μηνύματος συνομιλίας
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Έγκριση"
+      default_deny_label: "Αρνούμαι"
   reviewable_score_types:
     needs_review:
       title: "Χρειάζεται έλεγχο"

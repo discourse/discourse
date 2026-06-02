@@ -239,7 +239,6 @@ et:
       admins: "adminid"
       moderators: "moderaatorid"
       staff: "meeskond"
-      anonymous: "anonüümne"
       trust_level_0: "usaldustase_0"
       trust_level_1: "usaldustase_1"
       trust_level_2: "usaldustase_2"

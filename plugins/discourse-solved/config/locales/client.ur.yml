@@ -5,13 +5,6 @@
 # https://translate.discourse.org/
 
 ur:
-  admin_js:
-    admin:
-      dashboard:
-        highlights:
-          kpi:
-            accepted_solutions:
-              label: "قبول شدہ حل"
   js:
     notifications:
       alt:

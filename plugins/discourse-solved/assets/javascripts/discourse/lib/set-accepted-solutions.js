@@ -8,7 +8,10 @@ export default function setAcceptedSolutions(topic, acceptedAnswers) {
   topic.accepted_answers = acceptedAnswers;
   topic.has_accepted_answer = topicHasAcceptedAnswer;
 
-  topic.postStream?.posts?.forEach((post) => {
+  const posts = new Set(topic.postStream?.posts);
+  topic.postStream?.loadedPosts?.forEach((post) => posts.add(post));
+
+  posts.forEach((post) => {
     if (post.post_number === 1) {
       return;
     }

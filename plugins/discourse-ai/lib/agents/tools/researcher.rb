@@ -42,8 +42,11 @@ module DiscourseAi
               - topic:123 or topics:123,456 - specific topics by ID
               - category:name1 or categories:name1,name2 - posts in categories and subcategories (by name/slug/id)
                 Prefix a category with = to exclude subcategories, for example category:=bugs.
+                Prefix a category filter with - to exclude it, for example -category:staff or -=category:staff.
+                Use exclude_category:name or exclude_categories:name1,name2 as exclusion aliases.
                 Use parent/child for subcategories when a slug is ambiguous, for example category:support/bugs.
               - tag:tag1 or tags:tag1,tag2 - posts in topics with tags
+                Prefix with - or use exclude_tag:tag1 / exclude_tags:tag1,tag2 to exclude tags
               - after:YYYY-MM-DD, before:YYYY-MM-DD - filter by post creation date
               - topic_after:YYYY-MM-DD, topic_before:YYYY-MM-DD - filter by topic creation date
               - status:open|closed|archived|noreplies|single_user - topic status filters
@@ -100,12 +103,7 @@ module DiscourseAi
           guardian = nil
           guardian = Guardian.new(context.user) if options[:include_private]
 
-          filter =
-            DiscourseAi::Utils::Research::Filter.new(
-              @filter,
-              limit: max_results,
-              guardian: guardian,
-            )
+          filter = PostsFilter.new(@filter, limit: max_results, guardian: guardian)
 
           if filter.invalid_filters.present?
             return(

@@ -33,3 +33,6 @@ sq:
     edit_assignments_modal:
       topic: "Topic"
       post: "Postim"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID e temës"

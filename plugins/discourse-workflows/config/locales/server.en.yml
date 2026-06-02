@@ -42,6 +42,9 @@ en:
       topic:
         create_failed: "Failed to create topic."
         unknown_operation: "Unknown operation: %{operation}."
+      post:
+        unknown_operation: "Unknown operation: %{operation}."
+        invalid_filter: "Invalid post filter fragment: %{fragments}."
       credential:
         missing_required_field: "is missing required field '%{field}'"
       wait:

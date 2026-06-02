@@ -19,7 +19,6 @@ nl:
     openid_connect_allow_association_change: "Gebruikers toestaan hun Discourse-accounts te ontkoppelen en opnieuw te verbinden met de OpenID Connect-provider"
     openid_connect_verbose_logging: "Gedetailleerde OpenID Connect-verificatiegegevens loggen in `/logs`. Houd dit uitgeschakeld tijdens normaal gebruik."
     openid_connect_authorize_parameters: "URL-parameters die worden opgenomen in de omleiding van /auth/oidc naar het autorisatie-eindpunt van de IDP"
-    openid_connect_overrides_email: "Overschrijf bij elke aanmelding het e-mailadres van de gebruiker met de waarde van OpenID Connect. Werkt hetzelfde als de instelling 'auth_overrides_email', maar is specifiek voor OpenID Connect-aanmeldingen."
     openid_connect_claims: "Definieer expliciet de claims voor gebruik met providers die geen gegevens retourneren op basis van bereiken. (JSON)"
     openid_connect_groups_claim: "De naam van de claim in het OIDC-token die de groepen van de gebruiker bevat als een array van tekenreeksen. Laat leeg om groepssynchronisatie uit te schakelen."
     openid_connect_match_by_email: "E-mailadres gebruiken om OpenID Connect-verificaties te matchen met bestaande Discourse-gebruikersaccounts."

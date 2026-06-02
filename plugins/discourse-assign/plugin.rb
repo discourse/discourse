@@ -955,6 +955,47 @@ after_initialize do
     results
   end
 
+  register_modifier(:posts_filter_options) do |results, guardian|
+    if SiteSetting.assign_enabled && (guardian.can_assign? || SiteSetting.assigns_public)
+      results << {
+        name: "assigned_to:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username",
+        extra_entries: [
+          { name: "nobody", description: I18n.t("discourse_assign.filter.description.nobody") },
+          { name: "*", description: I18n.t("discourse_assign.filter.description.anyone") },
+        ],
+        priority: 1,
+      }
+    end
+    results
+  end
+
+  PostsFilter.add_filter("assigned_to") do |scope, filter_values, guardian|
+    if !SiteSetting.assign_enabled || !(guardian.can_assign? || SiteSetting.assigns_public)
+      raise Discourse::InvalidAccess.new(
+              "Assigns are not enabled or you do not have permission to see assigns.",
+            )
+    end
+
+    names =
+      filter_values.compact.flat_map { |value| value.to_s.split(",") }.map(&:strip).reject(&:blank?)
+    next scope if names.blank?
+
+    next scope.where.not(topic_id: Assignment.active.select(:topic_id)) if names.include?("nobody")
+
+    next scope.where(topic_id: Assignment.active.select(:topic_id)) if names.include?("*")
+
+    user_ids = User.where(username_lower: names.map(&:downcase)).select(:id)
+    scope.where(
+      topic_id:
+        Assignment
+          .active
+          .where(assigned_to_type: "User", assigned_to_id: user_ids)
+          .select(:topic_id),
+    )
+  end
+
   register_search_advanced_filter(/in:assigned/) do |posts|
     next if !@guardian.can_assign?
 

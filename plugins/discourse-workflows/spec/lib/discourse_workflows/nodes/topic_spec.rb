@@ -218,6 +218,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
+      it "returns topics when query is not provided" do
+        result = execute_list(configuration: { "operation" => "list", "limit" => "10" })
+
+        expect(result.map { |output_item| output_item["json"]["topic"]["id"] }).to include(
+          topic_1.id,
+          topic_2.id,
+        )
+      end
+
       it "respects the limit parameter" do
         result =
           execute_list(
@@ -229,6 +238,30 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           )
 
         expect(result.length).to eq(1)
+      end
+
+      it "respects the offset parameter" do
+        unoffset_result =
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "query" => "category:#{category.slug}",
+              "limit" => "2",
+            },
+          )
+        offset_result =
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "query" => "category:#{category.slug}",
+              "limit" => "1",
+              "offset" => "1",
+            },
+          )
+
+        expect(offset_result.map { |output_item| output_item["json"]["topic"]["id"] }).to eq(
+          [unoffset_result[1]["json"]["topic"]["id"]],
+        )
       end
 
       it "defaults limit to 30 when not provided" do
