@@ -4386,7 +4386,6 @@ experimental:
   enable_design_system:
     default: true
     client: true
-    hidden: true
     refresh: true
     area: "experimental"
   reporting_improvements:
