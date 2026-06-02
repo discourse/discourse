@@ -25,7 +25,10 @@ function initializeHCaptcha(api, container) {
     captchaService.submitted = true;
 
     if (captchaService.invalid) {
-      throw new Error(i18n("discourse_captcha.missing_token"));
+      return {
+        success: false,
+        message: i18n("discourse_captcha.missing_token"),
+      };
     }
 
     const captchaRoute = captchaSelector(siteSettings);
@@ -37,7 +40,10 @@ function initializeHCaptcha(api, container) {
       });
     } catch {
       captchaService.reset();
-      throw new Error(i18n("discourse_captcha.verification_failed"));
+      return {
+        success: false,
+        message: i18n("discourse_captcha.verification_failed"),
+      };
     }
 
     try {

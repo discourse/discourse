@@ -511,13 +511,10 @@ export default class SignupPageController extends Controller {
           removeCookie("destination_url");
         }
       },
-      (error) => {
+      () => {
         this.set("formSubmitted", false);
         removeCookie("destination_url");
-        return this.set(
-          "flash",
-          error.message || i18n("create_account.failed")
-        );
+        return this.set("flash", i18n("create_account.failed"));
       }
     );
   }
