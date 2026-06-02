@@ -36,6 +36,18 @@ export default class InspectorMetadataSection extends Component {
     return this.wireframe.selectedBlockData?.id ?? "";
   }
 
+  /**
+   * Whether the metadata fields render read-only. True for unregistered
+   * blocks: the editor doesn't know the block's schema, so its entry-level
+   * properties (id, and later classNames) aren't editable from the
+   * inspector either.
+   *
+   * @returns {boolean}
+   */
+  get disabled() {
+    return this.wireframe.selectedBlockData?.isRegistered === false;
+  }
+
   get helpText() {
     return i18n("wireframe.inspector.metadata.id_help");
   }
@@ -87,6 +99,7 @@ export default class InspectorMetadataSection extends Component {
               placeholder="hero"
               spellcheck="false"
               autocomplete="off"
+              disabled={{this.disabled}}
               aria-label={{i18n "wireframe.inspector.metadata.id_label"}}
               {{on "input" this.onIdInput}}
             />

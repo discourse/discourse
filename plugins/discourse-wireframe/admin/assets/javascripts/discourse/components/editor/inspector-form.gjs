@@ -115,6 +115,19 @@ export default class InspectorForm extends Component {
   }
 
   /**
+   * Whether the form's fields render read-only. True for unregistered
+   * blocks: the editor doesn't know their schema, so we surface the live
+   * values but disallow edits we couldn't validate. The schema here is
+   * inferred from the values, which is exactly why it can't be trusted as
+   * an editable contract.
+   *
+   * @returns {boolean}
+   */
+  get disabled() {
+    return this.wireframe.selectedBlockData?.isRegistered === false;
+  }
+
+  /**
    * The seed args we hand to `<Form @data>`. We use the
    * `argsSnapshot` captured once at selection time (a plain object) rather
    * than spreading the live `entry.args` trackedObject on every read —
@@ -231,6 +244,15 @@ export default class InspectorForm extends Component {
     }
     this.#formApi.removeErrors();
 
+    // For an unregistered block the panel-level notice already explains the
+    // single relevant problem (the block isn't registered), so we don't also
+    // surface the validation error in the form's summary — that would show the
+    // same fact twice. Validation itself is untouched; we just don't re-display
+    // it here.
+    if (this.disabled) {
+      return;
+    }
+
     for (const [field, details] of Object.entries(this.fieldErrors)) {
       const label = this.schema?.[field]?.ui?.label ?? field;
       for (const d of details) {
@@ -279,6 +301,7 @@ export default class InspectorForm extends Component {
                       @values={{this.values}}
                       @validationRuleFor={{this.validationRuleFor}}
                       @onFieldSet={{this.onFieldSet}}
+                      @disabled={{this.disabled}}
                     />
                   {{/each}}
                 </div>
@@ -292,6 +315,7 @@ export default class InspectorForm extends Component {
                     @values={{this.values}}
                     @validationRuleFor={{this.validationRuleFor}}
                     @onFieldSet={{this.onFieldSet}}
+                    @disabled={{this.disabled}}
                   />
                 {{/each}}
               </form.Section>

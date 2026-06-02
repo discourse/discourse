@@ -88,6 +88,9 @@ export function fieldTypeFor(control) {
  *                      The container-args form curries its namespace in
  *                      via `(fn this.onFieldSet section.namespace)`, so
  *                      the shape stays identical here.
+ *   @disabled          When true, the field renders read-only. Set for
+ *                      unregistered blocks — the editor doesn't know their
+ *                      schema, so their values are shown but not editable.
  */
 const InspectorField = <template>
   <@form.Field
@@ -97,6 +100,7 @@ const InspectorField = <template>
     @validation={{if @validationRuleFor (@validationRuleFor @field)}}
     @type={{fieldTypeFor @field.control}}
     @onSet={{@onFieldSet}}
+    @disabled={{@disabled}}
     as |formField|
   >
     {{#if (eq @field.control "select")}}

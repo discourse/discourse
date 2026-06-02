@@ -63,6 +63,29 @@ export default class InspectorRawJson extends Component {
     return this.draft !== this.serialised;
   }
 
+  /**
+   * Whether the JSON is shown read-only. True for unregistered blocks: the
+   * editor doesn't know the block's schema, so the entry can't be edited
+   * here either. The JSON stays visible (and copyable) so authors can still
+   * inspect or export it.
+   *
+   * @returns {boolean}
+   */
+  get readonly() {
+    return this.wireframe.selectedBlockData?.isRegistered === false;
+  }
+
+  /**
+   * Whether the Apply / Reset buttons are disabled. Disabled when there's
+   * nothing to apply (draft matches the serialised entry) or when the entry
+   * is read-only because its block is unregistered.
+   *
+   * @returns {boolean}
+   */
+  get editDisabled() {
+    return this.readonly || !this.isDirty;
+  }
+
   @action
   seedDraft() {
     this.draft = this.serialised;
@@ -116,6 +139,7 @@ export default class InspectorRawJson extends Component {
       <textarea
         class="wireframe-inspector-raw-json__textarea"
         spellcheck="false"
+        disabled={{this.readonly}}
         aria-label={{i18n "wireframe.inspector.raw_json.aria_label"}}
         {{didInsert this.seedDraft}}
         {{didUpdate this.seedDraft this.selectionKey}}
@@ -133,13 +157,13 @@ export default class InspectorRawJson extends Component {
         <DButton
           class="btn-primary btn-small"
           @label="wireframe.inspector.raw_json.apply"
-          @disabled={{if this.isDirty false true}}
+          @disabled={{this.editDisabled}}
           @action={{this.apply}}
         />
         <DButton
           class="btn-flat btn-small"
           @label="wireframe.inspector.raw_json.reset"
-          @disabled={{if this.isDirty false true}}
+          @disabled={{this.editDisabled}}
           @action={{this.reset}}
         />
         <DButton

@@ -1496,6 +1496,15 @@ export default class WireframeService extends Service {
       ? { ...parentEntry.args }
       : {};
 
+    // Whether the editor recognises this block type. Unregistered blocks have
+    // no metadata, so the editor can't know their schema — the inspector shows
+    // their values read-only rather than offering schema-less edits it can't
+    // validate. Computed from the name (not the post-inference metadata, which
+    // `#withInferredMetadata` populates with a synthetic schema below).
+    liveData.isRegistered = liveData.name
+      ? this.#metadataForName(liveData.name) != null
+      : true;
+
     // Augment metadata with an inferred args schema when the block didn't
     // declare one. We do this at selection time (not in the inspector form)
     // so the schema is a stable reference across the live keystroke session.

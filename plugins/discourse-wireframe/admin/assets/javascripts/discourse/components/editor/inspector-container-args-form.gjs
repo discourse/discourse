@@ -40,6 +40,17 @@ export default class InspectorContainerArgsForm extends Component {
   }
 
   /**
+   * Whether the placement fields render read-only. True for unregistered
+   * blocks: the editor doesn't know the block's schema, so none of its
+   * values — placement hints included — are editable from the inspector.
+   *
+   * @returns {boolean}
+   */
+  get disabled() {
+    return this.wireframe.selectedBlockData?.isRegistered === false;
+  }
+
+  /**
    * One entry per top-level namespace the parent declares, each with the
    * namespace label and the resolved set of nested fields. Namespaces
    * whose `ui.conditional` predicate fails against the parent's current
@@ -95,6 +106,7 @@ export default class InspectorContainerArgsForm extends Component {
               @field={{field}}
               @values={{section.values}}
               @onFieldSet={{fn this.onFieldSet section.namespace}}
+              @disabled={{this.disabled}}
             />
           {{/each}}
         </form.Section>

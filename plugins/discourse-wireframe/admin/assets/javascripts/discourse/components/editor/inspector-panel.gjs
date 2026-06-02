@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import FKAlert from "discourse/form-kit/components/fk/alert";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -85,6 +86,18 @@ export default class InspectorPanel extends Component {
   }
 
   /**
+   * Whether the selected block's type isn't registered. The editor has no
+   * schema for it, so every inspector surface is read-only and a notice
+   * explains why. The flag is set on the selection data by the service at
+   * selection time.
+   *
+   * @returns {boolean}
+   */
+  get isUnregistered() {
+    return this.data?.isRegistered === false;
+  }
+
+  /**
    * Whether the inspector should render the editable form. True if either
    * the block declared an `args` schema OR the layout passes any args at
    * runtime (in which case `InspectorForm` falls back to an inferred
@@ -162,7 +175,20 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get argsTabHasErrors() {
+    // The unregistered-block notice above the tabs already owns this signal,
+    // so we don't also flag the Args tab — that would duplicate the message
+    // (the same validation error backs both).
+    if (this.isUnregistered) {
+      return false;
+    }
     return this.wireframe.selectedBlockHasErrors;
+  }
+
+  @action
+  removeSelectedBlock() {
+    // The only recovery for an unregistered block is to replace its name or
+    // drop it; the notice surfaces the latter as a one-click action.
+    this.wireframe.removeBlock(this.wireframe.selectedBlockKey);
   }
 
   @action
@@ -189,6 +215,26 @@ export default class InspectorPanel extends Component {
           {{dIcon "circle-info"}}
         </span>
       </div>
+
+      {{#if this.isUnregistered}}
+        <FKAlert
+          @type="error"
+          @icon="triangle-exclamation"
+          class="wireframe-inspector__unregistered-notice"
+          role="note"
+        >
+          <strong>{{i18n
+              "wireframe.inspector.unregistered_notice_title"
+            }}</strong>
+          <span>{{i18n "wireframe.inspector.unregistered_notice"}}</span>
+          <DButton
+            class="btn-danger btn-small wireframe-inspector__unregistered-notice-action"
+            @icon="trash-can"
+            @label="wireframe.inspector.unregistered_notice_remove"
+            @action={{this.removeSelectedBlock}}
+          />
+        </FKAlert>
+      {{/if}}
 
       {{#unless this.isOutletRoot}}
         <InspectorMetadataSection />

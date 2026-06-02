@@ -130,6 +130,49 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         title: { type: "string" },
       });
     });
+
+    test("selectBlock flags a registered block as isRegistered", function (assert) {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      this.editor.selectBlock({
+        key: "wf:svc-test-tile:1",
+        name: "wf:svc-test-tile",
+        args: { title: "Hi" },
+      });
+      assert.true(
+        this.editor.selectedBlockData.isRegistered,
+        "a block whose type is in the registry is editable"
+      );
+    });
+
+    test("selectBlock flags an unknown block type as not registered", function (assert) {
+      // No registration — the editor has no schema for this type, so its
+      // inspector fields must be read-only.
+      this.editor.selectBlock({
+        key: "wf:never-registered:1",
+        name: "wf:never-registered",
+        args: { title: "Hi" },
+      });
+      assert.false(
+        this.editor.selectedBlockData.isRegistered,
+        "an unregistered block type is locked"
+      );
+      assert.deepEqual(
+        this.editor.selectedBlockData.argsSnapshot,
+        { title: "Hi" },
+        "its values still snapshot through so the inspector can show them"
+      );
+    });
+
+    test("selectBlock leaves a nameless selection editable", function (assert) {
+      // Defensive: a selection with no resolvable name (eg. outlet-style
+      // entries) shouldn't be over-locked into read-only.
+      this.editor.selectBlock({ key: "x:1" });
+      assert.notStrictEqual(
+        this.editor.selectedBlockData.isRegistered,
+        false,
+        "a nameless selection isn't treated as unregistered"
+      );
+    });
   });
 
   module("live re-validation on edit", function (innerHooks) {

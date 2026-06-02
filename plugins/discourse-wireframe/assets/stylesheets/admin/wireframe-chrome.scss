@@ -1625,6 +1625,45 @@ body.wireframe-active {
   white-space: pre-line;
 }
 
+.wireframe-inspector__unregistered-notice {
+  // The FormKit alert supplies the background, colour, radius, and padding;
+  // these rules only lay the icon out cleanly beside wrapping text in the
+  // narrow inspector column and add the spacing the panel rhythm expects
+  // (the base `.form-kit__alert` resets its own margin to zero).
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin-bottom: 0.5rem;
+  font-size: var(--font-down-1);
+
+  // Only the alert's own leading icon — not icons nested inside the message
+  // (e.g. the remove button's) — gets aligned beside the text.
+  > .d-icon {
+    margin-top: 0.15em;
+    flex-shrink: 0;
+  }
+
+  // Stack the bold heading over the explanatory body (and the remove action).
+  .form-kit__alert-message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+  }
+
+  // The remove action sits below the explanation, sized to its label rather
+  // than stretching the full alert width.
+  .wireframe-inspector__unregistered-notice-action {
+    align-self: flex-start;
+    margin-top: 0.5em;
+
+    // A solid danger button colours its icon `--danger-low` by default, which
+    // washes out against the red fill; match it to the label instead.
+    .d-icon {
+      color: var(--secondary);
+    }
+  }
+}
+
 .wireframe-inspector__tabs {
   display: flex;
   gap: 0;

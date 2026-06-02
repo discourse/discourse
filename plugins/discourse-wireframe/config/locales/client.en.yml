@@ -63,6 +63,9 @@ en:
         category_theme: "Theme"
       inspector:
         empty: "Select a block to inspect."
+        unregistered_notice_title: "Unregistered block"
+        unregistered_notice: "It won't render on the live page, and its values are read-only."
+        unregistered_notice_remove: "Remove block"
         section_metadata: "Metadata"
         section_args: "Arguments"
         section_conditions: "Conditions"
