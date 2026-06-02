@@ -1335,6 +1335,11 @@ export default class WorkflowsEditor extends Component {
     this.#refreshUndoState();
   }
 
+  @action
+  handleAiWorkflowApplied(workflow) {
+    this.handleWorkflowDiscarded(workflow);
+  }
+
   async discardWorkflowDraft() {
     try {
       const response = await ajax(
@@ -1476,6 +1481,7 @@ export default class WorkflowsEditor extends Component {
           @onCloseNodePanel={{this.closeNodePanel}}
           @onBrowseTemplates={{this.browseTemplates}}
           @onDiscardWorkflow={{this.handleWorkflowDiscarded}}
+          @onAiWorkflowApplied={{this.handleAiWorkflowApplied}}
           @onImportNodes={{this.importNodes}}
           @onAddStickyNote={{this.addStickyNote}}
           @onStickyNoteBeforeMutation={{this.stickyNoteBeforeMutation}}

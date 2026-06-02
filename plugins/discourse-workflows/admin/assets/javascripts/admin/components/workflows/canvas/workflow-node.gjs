@@ -205,6 +205,7 @@ export default class WorkflowNode extends Component {
         (if this.isTrigger "is-trigger")
         (if this.isBranching "is-branching")
         (if @node.selected "is-selected")
+        (if @aiHighlighted "is-ai-highlighted")
         (if this.isUnavailable "is-unavailable")
       }}
       style={{this.dimensionsStyle}}
