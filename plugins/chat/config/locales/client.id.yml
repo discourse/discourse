@@ -248,3 +248,10 @@ id:
       panels:
         chat:
           label: "Obrolan"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Kirim pesan obrolan"
+      send_chat_message:
+        message: "pesan"
+      chat_approval:
+        message: "pesan"

@@ -63,6 +63,43 @@ describe CalendarEvent do
     expect(post).to be_valid
   end
 
+  it "does not allow whispers to create events in calendar topics" do
+    SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+    admin = Fabricate(:admin)
+
+    expect {
+      create_post(
+        user: admin,
+        topic: calendar_post.topic,
+        raw: %{Staff-only [date="2018-06-05" time="10:20:00"]},
+        post_type: Post.types[:whisper],
+      )
+    }.to raise_error(StandardError, /Whispers can.t be used to create calendar events/)
+
+    expect(CalendarEvent.where(topic_id: calendar_post.topic_id)).to be_empty
+  end
+
+  it "does not allow whispers to be edited into calendar events" do
+    SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+    admin = Fabricate(:admin)
+    whisper_post =
+      create_post(
+        user: admin,
+        topic: calendar_post.topic,
+        raw: "Staff-only",
+        post_type: Post.types[:whisper],
+      )
+
+    expect {
+      whisper_post.update!(raw: %{Staff-only [date="2018-06-05" time="10:20:00"]})
+    }.to raise_error(
+      ActiveRecord::RecordInvalid,
+      /Whispers can.t be used to create calendar events/,
+    )
+
+    expect(CalendarEvent.where(topic_id: calendar_post.topic_id)).to be_empty
+  end
+
   it "does not work if topic was deleted" do
     raw = %{Rome [date="2018-06-05" time="10:20:00"]}
     post = create_post(raw: raw, topic: calendar_post.topic)

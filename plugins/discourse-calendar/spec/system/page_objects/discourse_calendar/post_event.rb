@@ -49,6 +49,7 @@ module PageObjects
 
         def close_popup
           locator(".discourse-post-event-close").click
+          has_no_css?("[data-identifier='post-event-menu']")
           self
         end
 

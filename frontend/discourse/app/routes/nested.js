@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import { schedule } from "@ember/runloop";
@@ -13,6 +14,7 @@ export default class NestedRoute extends Route {
   @service composer;
   @service header;
   @service nestedViewCache;
+  @service router;
   @service screenTrack;
   @service site;
   @service siteSettings;
@@ -136,7 +138,22 @@ export default class NestedRoute extends Route {
 
     controller.unsubscribe();
     this.screenTrack.stop();
-    this.header.clearTopic();
+  }
+
+  @action
+  willTransition(transition) {
+    transition.followRedirects().finally(() => {
+      const routeName = this.router.currentRouteName;
+
+      if (
+        !routeName?.startsWith("topic.") &&
+        !routeName?.startsWith("nested")
+      ) {
+        this.header.clearTopic();
+      }
+    });
+
+    return true;
   }
 
   _saveToCache(controller) {

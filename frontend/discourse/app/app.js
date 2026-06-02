@@ -160,7 +160,6 @@ class Discourse extends Application {
 
   ready() {
     performance.mark("discourse-ready");
-    document.querySelector("#d-splash")?.remove();
   }
 }
 

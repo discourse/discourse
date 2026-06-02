@@ -22,3 +22,8 @@ be:
       reset_params: "скінуць"
     group:
       reports: "Справаздачы"
+    discourse_workflows:
+      sql:
+        param_value: "значэнне"
+        output:
+          results: "вынікі"

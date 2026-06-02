@@ -354,8 +354,6 @@ lt:
       pill: "Siūloma"
       pm_title: "Rekomenduojamos žinutės"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Galimas"
       start_posting:
         back: "Atgal"
     about:
@@ -2760,6 +2758,21 @@ lt:
         dismiss_button: "Praleisti..."
         dismiss_tooltip: "Praleisti tik naujus įrašus ar nebesekti temos"
         also_dismiss_topics: "Nebesekti šių temų, kad jos niekada nebūtų rodomos, kaip neperskaitytos"
+        dismiss_new_topics_with_selected:
+          one: "Atsisakyti (%{count})"
+          few: "Atsisakyti (%{count})"
+          many: "Atsisakyti (%{count})"
+          other: "Atsisakyti (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Atsisakyti (%{count})"
+          few: "Atsisakyti (%{count})"
+          many: "Atsisakyti (%{count})"
+          other: "Atsisakyti (%{count})"
+        dismiss_all_with_selected:
+          one: "Atsisakyti (%{count})"
+          few: "Atsisakyti (%{count})"
+          many: "Atsisakyti (%{count})"
+          other: "Atsisakyti (%{count})"
         dismiss_new: "Praleisti Naujas"
         toggle: "perjungti temų pasirinkimus"
         actions: "Veiksmai"

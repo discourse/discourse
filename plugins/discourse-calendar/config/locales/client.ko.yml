@@ -128,6 +128,8 @@ ko:
               title: "비공개"
       composer:
         name_placeholder: "이벤트 이름"
+        event_title_placeholder: "이벤트 이름"
+        create_event_button: "이벤트 만들기"
         reminder:
           units:
             minutes:
@@ -136,6 +138,9 @@ ko:
               other: "시간"
             days:
               other: "일"
+      composer_actions:
+        create_event:
+          label: "이벤트 만들기"
       builder_modal:
         custom_fields:
           label: "사용자 정의 필드"

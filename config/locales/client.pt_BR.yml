@@ -457,7 +457,7 @@ pt_BR:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       select_theme:
-        enabled: "Ativados"
+        enabled: "Selecionado(a)"
       invite_collaborators:
         title: "Convidar colaboradores"
         description: "Os primeiros membros ajudam a dar vida à sua comunidade."
@@ -3448,6 +3448,15 @@ pt_BR:
         also_dismiss_topics: "Parar de monitorar estes tópicos para que eles deixem de aparecer como não lidos para mim"
         dismiss_new_topics: "Descartar novos tópicos"
         dismiss_new_replies: "Descartar novas respostas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Descartar novos"
         dismiss_new_modal:
           title: "Descartar novos"

@@ -565,8 +565,10 @@ class User < ActiveRecord::Base
     # from some strange edge case, this handles it.
     if is_system_user? &&
          (
-           (Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]) &
-             group_ids
+           (
+             Group.auto_groups_between(:admins, :trust_level_4) -
+               [Group::AUTO_GROUPS[:anonymous_users]]
+           ) & group_ids
          ).any?
       return true
     end

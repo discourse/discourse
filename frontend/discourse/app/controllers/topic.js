@@ -37,7 +37,10 @@ import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -321,6 +324,12 @@ export default class TopicController extends Controller {
     "model.word_count",
     "model.postStream.loadingFilter"
   )
+  get showTopicFooterButtons() {
+    return applyValueTransformer("topic-show-footer-buttons", true, {
+      topic: this.model,
+    });
+  }
+
   get showBottomTopicMap() {
     // filter out small posts, because they're short
     const postsCount =

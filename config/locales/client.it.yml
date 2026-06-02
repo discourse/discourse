@@ -415,7 +415,7 @@ it:
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Abilitato"
+        enabled: "Selezionato"
       start_posting:
         back: "Indietro"
     about:
@@ -3213,6 +3213,15 @@ it:
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new_topics: "Ignora nuovi argomenti"
         dismiss_new_replies: "Ignora nuove risposte"
+        dismiss_new_topics_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
+        dismiss_all_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_modal:
           title: "Ignora nuovi"

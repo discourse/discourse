@@ -46,3 +46,11 @@ sw:
       query_user: "Imetengenezwa na"
       reset_params: "Weka/Anzisha Upya"
       search_placeholder: "Tafuta"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Utafiti wa Taarifa"
+      sql:
+        query_id: "Swali"
+        param_value: "Thamani"
+        output:
+          results: "Majibu"

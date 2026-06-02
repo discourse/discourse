@@ -301,8 +301,6 @@ ca:
     suggested_topics:
       pm_title: "Missatges recomanats"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activat"
       start_posting:
         back: "Enrere"
     about:

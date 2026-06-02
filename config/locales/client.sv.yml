@@ -307,7 +307,7 @@ sv:
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Aktiverad"
+        enabled: "Markerat"
       start_posting:
         back: "Tillbaka"
     about:
@@ -2670,6 +2670,15 @@ sv:
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new_topics: "Avfärda nya ämnen"
         dismiss_new_replies: "Avfärda nya svar"
+        dismiss_new_topics_with_selected:
+          one: "Avfärda (%{count})"
+          other: "Avfärda (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Avfärda (%{count})"
+          other: "Avfärda (%{count})"
+        dismiss_all_with_selected:
+          one: "Avfärda (%{count})"
+          other: "Avfärda (%{count})"
         dismiss_new: "Avfärda nya"
         dismiss_new_modal:
           title: "Avfärda nya"

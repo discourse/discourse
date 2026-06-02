@@ -449,7 +449,7 @@ hr:
       pm_title: "Predložene poruke"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Omogućeno"
+        enabled: "Odabrano"
       start_posting:
         back: "Natrag"
     about:
@@ -3389,6 +3389,18 @@ hr:
         also_dismiss_topics: "Prestani pratiti ove teme kako bi mi se prestale prikazivati kao nepročitane"
         dismiss_new_topics: "Odbaci nove teme"
         dismiss_new_replies: "Odbaci nove odgovore"
+        dismiss_new_topics_with_selected:
+          one: "Odbaci (%{count})"
+          few: "Odbaci (%{count})"
+          other: "Odbaci (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Odbaci (%{count})"
+          few: "Odbaci (%{count})"
+          other: "Odbaci (%{count})"
+        dismiss_all_with_selected:
+          one: "Odbaci (%{count})"
+          few: "Odbaci (%{count})"
+          other: "Odbaci (%{count})"
         dismiss_new: "Odbaci novo"
         dismiss_new_modal:
           title: "Odbaci novo"

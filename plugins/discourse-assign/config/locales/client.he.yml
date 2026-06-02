@@ -187,3 +187,10 @@ he:
       title: "עריכת הקצאות"
       topic: "נושא"
       post: "פוסט"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "הקצאה"
+          unassign: "ביטול הקצאה"
+        topic_id: "מזהה נושא"
+        assignee: "ממונה"

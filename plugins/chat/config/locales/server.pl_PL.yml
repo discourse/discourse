@@ -23,7 +23,7 @@ pl_PL:
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
     chat_show_copy_button_on_codeblocks: "Pokaż przycisk kopiowania w blokach kodu w wiadomościach czatu."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
-    direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie prywatnych czatów między użytkownikami. Uwaga: personel zawsze może tworzyć prywatne czaty, a użytkownicy będą mogli odpowiadać na prywatne czaty inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
+    direct_message_enabled_groups: "Zezwól użytkownikom z tych grup na tworzenie i wysyłanie prywatnych czatów między użytkownikami. Uwaga: personel zawsze może tworzyć i wysyłać prywatne czaty."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."
     chat_pinning_messages_allowed_groups: "Użytkownicy w tych grupach mogą przypinać wiadomości czatu w kanałach, do których mają dostęp. Pamiętaj, że administratorzy i moderatorzy zawsze mogą przypinać wiadomości czatu. Każdy członek czatu grupowego lub wiadomości prywatnej może przypinać tam wiadomości."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
@@ -33,7 +33,6 @@ pl_PL:
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
-    allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
     chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
@@ -267,6 +266,20 @@ pl_PL:
     scriptables:
       send_chat_message:
         title: Wyślij wiadomość na czacie
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Zatwierdź"
+      default_deny_label: "Odrzuć"
+    errors:
+      send_chat_message:
+        invalid_params: "Nieprawidłowe parametry: %{errors}"
+        channel_not_found: "Nie znaleziono kanału: %{channel_id}"
+        failed: "Nie udało się wysłać wiadomości czatu."
+      chat_approval:
+        channel_not_found: "Nie udało się wysłać wiadomości na czacie: kanał %{channel_id} nie został znaleziony."
+        invalid_params: "Nie udało się wysłać wiadomości na czacie: %{errors}"
+        failed: "Nie udało się wysłać wiadomości na czacie: %{steps}"
+        timeout_must_be_positive: "Liczba minut limitu czasu musi być większa niż 0."
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"

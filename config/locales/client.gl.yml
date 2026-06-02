@@ -249,8 +249,6 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activado"
       start_posting:
         back: "Volver"
     about:

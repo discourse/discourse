@@ -353,7 +353,7 @@ fa_IR:
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
       select_theme:
-        enabled: "فعال شده"
+        enabled: "انتخاب شده"
       start_posting:
         back: "بازگشت"
     about:
@@ -3005,6 +3005,15 @@ fa_IR:
         also_dismiss_topics: "توقف پیگیری این موضوعات که دیگر به عنوان خوانده نشده برای من نمایش داده نشوند"
         dismiss_new_topics: "رد کردن موضوعات جدید"
         dismiss_new_replies: "رد کردن پاسخ های جدید"
+        dismiss_new_topics_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
+        dismiss_all_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
         dismiss_new: "بستن جدید"
         dismiss_new_modal:
           title: "رد کردن جدید"

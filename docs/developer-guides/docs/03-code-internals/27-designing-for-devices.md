@@ -110,3 +110,7 @@ class MyComponent extends Component {
 Historically, Discourse shipped two completely different layouts and stylesheets for "mobile" and "desktop" views, based on the browser's user-agent. Developers would target these modes by putting CSS in specific mobile/desktop directories, by using the `.mobile-view`/`.desktop-view` HTML classes, and the `site.mobileView` boolean in JavaScript.
 
 These techniques are now considered deprecated and should be replaced with the viewport and capability-based strategies discussed above. We will be removing the dedicated modes in the near future, making "mobile mode" an alias for "viewport width less than `sm`" for backwards compatibility.
+
+## See also
+
+- [Guidelines for CSS classes using BEM](25-css-guidelines-bem.md) — CSS class naming conventions.

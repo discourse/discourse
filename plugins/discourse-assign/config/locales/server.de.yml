@@ -22,6 +22,7 @@ de:
     remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
     pending_assign_reminder_threshold: "Anzahl ausstehender Zuweisungen zum Auslösen einer Erinnerungsbenachrichtigung."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
+    assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen."
     enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."
     assign_statuses: "Liste der Status, die für jede Zuordnung verfügbar sind. Der erste Status ist der Standardstatus, der für jede neue Zuordnung verwendet wird."
     ignore_solved_topics_in_assigned_reminder: "Verhindere, dass Erinnerungen für Zuordnungen gelöste Themen betreffen. Nur relevant, wenn das Plugin „Discourse Gelöst“ verwendet wird."
@@ -64,6 +65,7 @@ de:
   assign_mailer:
     title: "Mailer zuordnen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} hat dir '%{topic_title}' zugeordnet!"
     text_body_template: |
       Hey, %{assignee_name} hat dich einer Diskussion **zugeordnet**
       > **%{topic_title}**

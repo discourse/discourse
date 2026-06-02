@@ -6,7 +6,6 @@
 
 ar:
   site_settings:
-    enable_login_with_amazon: "تفعيل المصادقة من خلال تسجيل الدخول باستخدام Amazon، يتطلَّب `login with amazon client id` و`login with amazon client secret`."
     login_with_amazon_client_id: "تسجيل الدخول باستخدام معرِّف عميل Amazon"
     login_with_amazon_client_secret: "تسجيل الدخول باستخدام سر عميل Amazon"
     login_with_amazon_scope: "تسجيل الدخول باستخدام نطاقات Amazon OAuth2 (مفصولة بمسافة)"

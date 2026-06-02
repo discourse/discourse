@@ -158,3 +158,10 @@ pt:
     edit_assignments_modal:
       topic: "Tópico"
       post: "Publicação"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "Atribuir"
+          unassign: "Cancelar atribuição"
+        topic_id: "Id. do Tópico"
+        assignee: "Destinatário(a)"

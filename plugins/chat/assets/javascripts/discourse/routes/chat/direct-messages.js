@@ -10,20 +10,33 @@ export default class ChatDirectMessagesRoute extends DiscourseRoute {
     this.chat.activeChannel = null;
   }
 
-  beforeModel() {
-    if (this.site.desktopView) {
-      if (this.chatChannelsManager.directMessageChannels.length === 0) {
-        // first time browsing chat and the preferred index is dms
-        this.router.replaceWith("chat.direct-messages");
-      } else {
-        // there should be at least one dm channel
-        // we can reroute using the last channel id
-        const id = this.currentUser.custom_fields.last_chat_channel_id;
-        this.chatChannelsManager.find(id).then((c) => {
-          return this.router.replaceWith("chat.channel", ...c.routeModels);
-        });
+  async beforeModel() {
+    if (!this.site.desktopView) {
+      return;
+    }
+
+    await this.chat.loadChannels();
+
+    const dmChannels = this.chatChannelsManager.directMessageChannels;
+    if (dmChannels.length === 0) {
+      return;
+    }
+
+    const id = this.currentUser.custom_fields.last_chat_channel_id;
+    if (id) {
+      const channel = await this.chatChannelsManager.find(id);
+      if (
+        channel?.isDirectMessageChannel &&
+        channel.currentUserMembership?.following
+      ) {
+        return this.router.replaceWith("chat.channel", ...channel.routeModels);
       }
     }
+
+    return this.router.replaceWith(
+      "chat.channel",
+      ...dmChannels[0].routeModels
+    );
   }
 
   model() {
