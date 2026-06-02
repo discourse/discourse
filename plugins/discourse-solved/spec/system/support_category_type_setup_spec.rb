@@ -10,6 +10,10 @@ RSpec.describe "Support Category Type Setup" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
+  # The form binds site-text fields by a collision-safe hex encoding of the
+  # i18n key (dots and dashes aren't FormKit-safe), so derive it the same way.
+  let(:shared_issue_field) { "site_texts.st_#{"js.solved.shared_issue.label".unpack1("H*")}" }
+
   before { sign_in(admin) }
 
   it "works with correct defaults and configures site settings and category custom field automatically" do
@@ -124,12 +128,12 @@ RSpec.describe "Support Category Type Setup" do
       visit("/c/#{category.slug}/edit/support")
 
       expect(form.field("custom_fields.enable_shared_issues").value).to be_truthy
-      expect(form.field("site_texts.js_solved_shared_issue_label").value).to eq("Me too")
+      expect(form.field(shared_issue_field).value).to eq("Me too")
 
-      form.field("site_texts.js_solved_shared_issue_label").fill_in("We have this too")
+      form.field(shared_issue_field).fill_in("We have this too")
       banner.click_save
 
-      expect(form.field("site_texts.js_solved_shared_issue_label").value).to eq("We have this too")
+      expect(form.field(shared_issue_field).value).to eq("We have this too")
 
       override =
         TranslationOverride.find_by(
@@ -142,11 +146,11 @@ RSpec.describe "Support Category Type Setup" do
     it "hides the shared issue label field when shared issues are disabled" do
       visit("/c/#{category.slug}/edit/support")
 
-      expect(form).to have_field_with_name("site_texts.js_solved_shared_issue_label")
+      expect(form).to have_field_with_name(shared_issue_field)
 
       form.field("custom_fields.enable_shared_issues").toggle
 
-      expect(form).to have_no_field_with_name("site_texts.js_solved_shared_issue_label")
+      expect(form).to have_no_field_with_name(shared_issue_field)
     end
 
     it "can remove the support category type" do

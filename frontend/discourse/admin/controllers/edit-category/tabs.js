@@ -423,7 +423,9 @@ export default class EditCategoryTabsController extends Controller {
         continue;
       }
 
-      const url = `/admin/customize/site_texts/${entry.key}?locale=${locale}`;
+      const url = `/admin/customize/site_texts/${encodeURIComponent(
+        entry.key
+      )}?locale=${encodeURIComponent(locale)}`;
       if (newValue.trim() === "") {
         await ajax(url, { type: "DELETE" });
       } else {

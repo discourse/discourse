@@ -482,10 +482,14 @@ module Categories
           schema[:site_texts]&.each do |text_key, config|
             entry = {
               key: text_key.to_s,
-              # FormKit treats "." in field names as nested object paths, but a
-              # translation key contains dots, so the form binds to this dot-free
-              # name while +key+ remains the i18n key used by the site_texts API.
-              name: text_key.to_s.gsub(/[^a-zA-Z0-9]/, "_"),
+              # FormKit field names can't contain "." or "-" (they're parsed as
+              # nested paths), but a translation key contains dots. The form
+              # binds to this name while +key+ remains the i18n key used by the
+              # site_texts API. The name is a hex encoding of the key: it uses
+              # only [0-9a-f], so it's always FormKit-safe, and the encoding is
+              # injective so distinct keys can never collide onto the same name
+              # (which would cross-save their values).
+              name: "st_#{text_key.to_s.unpack1("H*")}",
               type: (config[:type] || :site_text).to_s,
               label: config[:label],
               description: config[:description],
