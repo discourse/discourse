@@ -1,0 +1,118 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
+  fab!(:admin)
+
+  def invoke_tool(query: nil, include_examples: false)
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    described_class.new(
+      { query: query, include_examples: include_examples }.compact,
+      bot_user: Discourse.system_user,
+      llm: nil,
+      context: context,
+    ).invoke
+  end
+
+  it "exposes post author, topic link, and action output fields", :aggregate_failures do
+    result = invoke_tool
+    nodes_by_type = result[:nodes].index_by { |node| node[:type] }
+
+    expect(result[:status]).to eq("success")
+    expect(nodes_by_type.dig("trigger:topic_created", :output_schema)).to include(
+      "post.user_id" => "integer",
+      "post.username" => "string",
+      "post.display_username" => "string",
+      "post.trust_level" => "integer",
+      "post.post_number" => "integer",
+      "post.topic_id" => "integer",
+      "post.post_url" => "string",
+      "post.admin" => "boolean",
+      "post.moderator" => "boolean",
+      "post.staff" => "boolean",
+    )
+    expect(nodes_by_type.dig("trigger:post_created", :output_schema)).to include(
+      "post.user_id" => "integer",
+      "post.username" => "string",
+      "post.display_username" => "string",
+      "post.trust_level" => "integer",
+      "post.post_number" => "integer",
+      "post.topic_id" => "integer",
+      "post.post_url" => "string",
+      "post.admin" => "boolean",
+      "post.moderator" => "boolean",
+      "post.staff" => "boolean",
+    )
+    expect(nodes_by_type.dig("trigger:topic_closed", :output_schema)).to include(
+      "topic.id" => "integer",
+      "topic.title" => "string",
+      "topic.slug" => "string",
+      "topic.closed" => "boolean",
+      "topic.archived" => "boolean",
+    )
+    expect(nodes_by_type.dig("action:topic", :output_schema)).to include(
+      "topic.id" => "integer",
+      "topic.slug" => "string",
+      "topic.archived" => "boolean",
+      "post.trust_level" => "integer",
+      "post.post_url" => "string",
+    )
+    expect(nodes_by_type.dig("action:topic_tags", :output_schema)).to include(
+      "topic_id" => "integer",
+      "tag_names" => "array<string>",
+    )
+    expect(nodes_by_type.dig("action:create_post", :output_schema)).to include(
+      "post.id" => "integer",
+      "post.topic_id" => "integer",
+      "post.post_url" => "string",
+    )
+  end
+
+  it "matches broad multi-term catalog queries", :aggregate_failures do
+    result =
+      invoke_tool(
+        query: "trigger topic_closed action topic get condition filter chat message",
+        include_examples: true,
+      )
+    node_types = result[:nodes].map { |node| node[:type] }
+
+    expect(node_types).to include(
+      "trigger:topic_closed",
+      "action:topic",
+      "condition:filter",
+      "action:send_chat_message",
+    )
+    expect(result[:nodes].find { |node| node[:type] == "action:topic" }[:examples]).to be_present
+  end
+
+  it "includes declarative filter and topic lookup examples", :aggregate_failures do
+    result = invoke_tool(include_examples: true)
+    filter_node = result[:nodes].find { |node| node[:type] == "condition:filter" }
+    topic_node = result[:nodes].find { |node| node[:type] == "action:topic" }
+    if_node = result[:nodes].find { |node| node[:type] == "condition:if" }
+    cake_example =
+      filter_node[:examples].find { |example| example[:name] == "Keep TL1 posts mentioning cake" }
+    trust_level_example =
+      filter_node[:examples].find do |example|
+        example[:name] == "Keep TL1-or-lower topic authors after topic lookup"
+      end
+
+    expect(cake_example[:parameters]).to include(combinator: "and")
+    expect(cake_example.dig(:parameters, :conditions)).to contain_exactly(
+      include(leftValue: "={{ $json.post.trust_level }}", rightValue: "1"),
+      include(leftValue: "={{ $json.post.raw }}", rightValue: "cake"),
+    )
+    expect(trust_level_example.dig(:parameters, :conditions)).to contain_exactly(
+      include(
+        leftValue: "={{ $json.post.trust_level }}",
+        rightValue: "1",
+        operator: include(operation: "lte", type: "number"),
+      ),
+    )
+    expect(topic_node[:examples]).to contain_exactly(
+      include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
+    )
+    expect(if_node[:examples].first.dig(:parameters, :conditions)).to contain_exactly(
+      include(leftValue: "={{ $json.post.trust_level }}", rightValue: "1"),
+    )
+  end
+end
