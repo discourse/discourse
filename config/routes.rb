@@ -455,6 +455,10 @@ Discourse::Application.routes.draw do
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "/design-system" => "design_system#index"
+        # Serve the admin shell for the client-side sub-tabs on direct load / refresh
+        # (colors is the index "/" route; fonts and layout are nested routes).
+        get "/design-system/fonts" => "design_system#index"
+        get "/design-system/layout" => "design_system#index"
         get "/design-system/:file_name/data" => "design_system#show"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
