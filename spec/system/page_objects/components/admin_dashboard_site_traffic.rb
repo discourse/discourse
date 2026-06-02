@@ -108,6 +108,22 @@ module PageObjects
         has_empty_state_in?("Top referrers", "No referrer data for this period.")
       end
 
+      def click_top_referrers_drilldown
+        within_top_card("Top referrers") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def click_top_countries_drilldown
+        within_top_card("Top countries") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def has_top_referrers_drilldown?
+        within_top_card("Top referrers") { has_css?("h3.db-section__row-block-title a") }
+      end
+
+      def has_top_countries_drilldown?
+        within_top_card("Top countries") { has_css?("h3.db-section__row-block-title a") }
+      end
+
       private
 
       def has_no_top_card?(title)

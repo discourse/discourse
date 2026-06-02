@@ -2,6 +2,7 @@
 
 class AdminDashboardSiteTraffic
   DEFAULT_RANGE_DAYS = 30
+  TOP_CARD_LIMIT = 5
   SERIES_LABEL_REQS = {
     logged_in: "page_view_logged_in_browser",
     anonymous: "page_view_anon_browser",
@@ -9,6 +10,7 @@ class AdminDashboardSiteTraffic
     crawlers: "page_view_crawler",
   }.freeze
   private_constant :DEFAULT_RANGE_DAYS
+  private_constant :TOP_CARD_LIMIT
   private_constant :SERIES_LABEL_REQS
 
   def self.build(start_date:, end_date:)
@@ -56,7 +58,6 @@ class AdminDashboardSiteTraffic
         login_required: SiteSetting.login_required,
         host: Discourse.current_hostname,
       },
-      limit: 5,
       wrap_exceptions_in_test: true,
     }
 
@@ -72,14 +73,14 @@ class AdminDashboardSiteTraffic
 
     return { rows: [], error: report.error.to_s } if report.error.present?
 
-    { rows: report.data, error: nil }
+    { rows: report.data.first(TOP_CARD_LIMIT), error: nil }
   end
 
   def cached_to_payload(cached)
     error = cached[:error]
     return { rows: [], error: error.to_s } if error.present?
 
-    { rows: (cached[:data] || []).map(&:symbolize_keys), error: nil }
+    { rows: (cached[:data] || []).map(&:symbolize_keys).first(TOP_CARD_LIMIT), error: nil }
   end
 
   def series_ids(include_embedded:)
