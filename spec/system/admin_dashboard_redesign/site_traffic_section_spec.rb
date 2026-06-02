@@ -184,8 +184,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         normalized_referrer: nil,
         created_at: "2026-05-12",
       )
-      # Internal-referrer and direct (no-referrer) pageviews must not dilute the
-      # top referrers percent denominator (it counts external referrer traffic only).
+      # Internal-referrer pageviews stay out of the top referrers card entirely
+      # (own host, excluded from both the rows and the shared denominator).
       6.times do
         Fabricate(
           :browser_pageview_event,
@@ -214,10 +214,13 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           { country: "GB", percent: 10 },
         ],
       )
+      # One denominator shared across Direct + external referrers
+      # (direct 1 + external 3 = 4; internal "test.localhost" excluded).
       expect(traffic).to have_top_referrer_rows(
         [
-          { referrer: "news.ycombinator.com/item?id=42", percent: 67 },
-          { referrer: "reddit.com/r/discourse", percent: 33 },
+          { direct: true, percent: 25 },
+          { referrer: "news.ycombinator.com/item?id=42", percent: 50 },
+          { referrer: "reddit.com/r/discourse", percent: 25 },
         ],
       )
     end
