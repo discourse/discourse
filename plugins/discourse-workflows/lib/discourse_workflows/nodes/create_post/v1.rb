@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../post_helper"
-
 module DiscourseWorkflows
   module Nodes
     module CreatePost
       class V1 < NodeType
-        include PostHelper
         description(
           name: "action:create_post",
           version: "1.0",
@@ -64,13 +61,16 @@ module DiscourseWorkflows
         private
 
         def process(exec_ctx, config, item_index)
-          post = create_workflow_post(exec_ctx, config, item_index)
+          author = exec_ctx.actor_from_parameter("author_username", item_index)
+          post =
+            exec_ctx.create_post(
+              user: author,
+              raw: config["raw"],
+              topic_id: config["topic_id"],
+              reply_to_post_number: config["reply_to_post_number"],
+            )
 
-          { post: post_data(post) }
-        end
-
-        def post_data(post)
-          serialize_record(post, WebHookPostSerializer)
+          { post: exec_ctx.serialize_post(post, guardian: author.guardian, include_cooked: true) }
         end
       end
     end

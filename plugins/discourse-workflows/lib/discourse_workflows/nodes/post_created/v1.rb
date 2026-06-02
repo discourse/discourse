@@ -56,7 +56,7 @@ module DiscourseWorkflows
         private
 
         def post_data(post)
-          serialize_record(post, WebHookPostSerializer)
+          serialize_post(post)
         end
 
         def topic_data(topic)

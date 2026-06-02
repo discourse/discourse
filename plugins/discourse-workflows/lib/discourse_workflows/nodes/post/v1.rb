@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../post_helper"
-
 module DiscourseWorkflows
   module Nodes
     module Post
       class V1 < NodeType
-        include PostHelper
-
         OPERATIONS = %w[create get list].freeze
         STATUS_OPTIONS = %w[any open closed archived noreplies single_user].freeze
         POST_TYPE_OPTIONS = %w[all first reply].freeze
@@ -344,11 +340,17 @@ module DiscourseWorkflows
 
         def create_post(exec_ctx, config, item_index)
           actor = exec_ctx.actor_from_parameter("author_username", item_index)
-          post = create_workflow_post(exec_ctx, config, item_index)
+          post =
+            exec_ctx.create_post(
+              user: actor,
+              raw: config["raw"],
+              topic_id: config["topic_id"],
+              reply_to_post_number: config["reply_to_post_number"],
+            )
 
           {
             post:
-              workflow_post_data(
+              exec_ctx.serialize_post(
                 post,
                 guardian: actor.guardian,
                 include_raw: true,
@@ -364,7 +366,7 @@ module DiscourseWorkflows
 
           {
             post:
-              workflow_post_data(
+              exec_ctx.serialize_post(
                 post,
                 guardian: actor.guardian,
                 include_raw: truthy?(config["include_raw"]),
@@ -399,6 +401,7 @@ module DiscourseWorkflows
             include_cooked: truthy?(config["include_cooked"]),
             memory_cap_bytes: memory_cap_limit_bytes,
             log: exec_ctx.log,
+            exec_ctx: exec_ctx,
           )
         end
 
@@ -408,7 +411,8 @@ module DiscourseWorkflows
           include_raw:,
           include_cooked:,
           memory_cap_bytes:,
-          log:
+          log:,
+          exec_ctx:
         )
           items = []
           total_bytes = 0
@@ -417,7 +421,7 @@ module DiscourseWorkflows
           posts.each do |post|
             data = {
               post:
-                workflow_post_data(
+                exec_ctx.serialize_post(
                   post,
                   guardian: guardian,
                   include_raw: include_raw,
