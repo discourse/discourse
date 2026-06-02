@@ -18,6 +18,7 @@ import { getAllConditionTypeEntries } from "discourse/lib/blocks/-internals/regi
 import {
   getAllOutlets,
   getAllOutletsWithMetadata,
+  getOutletMetadata,
 } from "discourse/lib/blocks/-internals/registry/outlet";
 import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 
@@ -133,6 +134,21 @@ export default class Blocks extends Service {
    */
   listOutletsWithMetadata() {
     return getAllOutletsWithMetadata();
+  }
+
+  /**
+   * Returns the resolved display metadata for a single outlet by name (the
+   * same shape `listOutletsWithMetadata()` yields per entry), or `null` when
+   * the name isn't registered. Use this when a consumer already knows which
+   * outlet it's rendering and only needs that one's display name, description,
+   * and category rather than the full list.
+   *
+   * @param {string} name - The full outlet name.
+   * @returns {import("discourse/lib/blocks/-internals/registry/outlet").OutletMetadataEntry|null}
+   *   The outlet's display metadata, or `null` for an unregistered name.
+   */
+  getOutletMetadata(name) {
+    return getOutletMetadata(name);
   }
 
   /**

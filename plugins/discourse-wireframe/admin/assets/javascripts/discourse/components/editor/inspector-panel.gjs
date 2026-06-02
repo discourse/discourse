@@ -23,6 +23,7 @@ import InspectorRawJson from "./inspector-raw-json";
  * not edit info, and doesn't deserve its own pane.
  */
 export default class InspectorPanel extends Component {
+  @service blocks;
   @service wireframe;
 
   isTabActive = (tab) => this.currentTab === tab;
@@ -52,6 +53,43 @@ export default class InspectorPanel extends Component {
    */
   get isOutletRoot() {
     return this.wireframe.isOutletRoot(this.wireframe.selectedBlockKey);
+  }
+
+  /**
+   * The selected outlet's display metadata (friendly name, description), or
+   * `null` when the selection isn't an outlet root. Resolved from the outlet
+   * registry by name so the inspector presents the outlet's own identity
+   * rather than the implicit root layout block's.
+   *
+   * @returns {Object|null}
+   */
+  get #outletMeta() {
+    if (!this.isOutletRoot) {
+      return null;
+    }
+    return this.blocks.getOutletMetadata(this.data?.outletName);
+  }
+
+  /**
+   * The name shown in the inspector header. Prefers human-readable labels over
+   * raw registry names:
+   *
+   * - For an outlet root, the outlet's display name (the region the author
+   *   selected), falling back to the raw outlet name.
+   * - For a registered block, the block's `displayName`, then its namespace-less
+   *   `shortName`.
+   * - For an unregistered block (no metadata), the raw block name, since the
+   *   editor has no friendlier label to offer.
+   *
+   * @returns {string}
+   */
+  get displayTitle() {
+    if (this.isOutletRoot) {
+      return this.#outletMeta?.displayName ?? this.data?.outletName;
+    }
+    return (
+      this.metadata?.displayName ?? this.metadata?.shortName ?? this.data?.name
+    );
   }
 
   /**
@@ -139,11 +177,19 @@ export default class InspectorPanel extends Component {
   }
 
   /**
-   * Combined block-info string shown in the metadata tooltip. Keeps
-   * three-line trivia (namespace, description, container flag) out of
-   * the main pane.
+   * Text shown in the header's `ⓘ` tooltip. Keeps reference trivia out of the
+   * main pane. For an outlet root it's the outlet's description (block-level
+   * trivia like namespace / container flag is meaningless for a page region),
+   * which is `null` when the outlet declares none — the header hides the icon
+   * in that case. For a block it's the three-line namespace / description /
+   * container summary.
+   *
+   * @returns {string|null}
    */
   get metadataTooltip() {
+    if (this.isOutletRoot) {
+      return this.#outletMeta?.description ?? null;
+    }
     const parts = [];
     if (this.metadata?.namespace) {
       parts.push(
@@ -205,15 +251,17 @@ export default class InspectorPanel extends Component {
     {{#if this.hasSelection}}
       <div class="wireframe-inspector__header">
         <span class="wireframe-inspector__block-name">
-          {{this.data.name}}
+          {{this.displayTitle}}
         </span>
-        <span
-          class="wireframe-inspector__metadata-info"
-          title={{this.metadataTooltip}}
-          aria-label={{this.metadataTooltip}}
-        >
-          {{dIcon "circle-info"}}
-        </span>
+        {{#if this.metadataTooltip}}
+          <span
+            class="wireframe-inspector__metadata-info"
+            title={{this.metadataTooltip}}
+            aria-label={{this.metadataTooltip}}
+          >
+            {{dIcon "circle-info"}}
+          </span>
+        {{/if}}
       </div>
 
       {{#if this.isUnregistered}}

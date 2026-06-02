@@ -1,0 +1,152 @@
+import Service from "@ember/service";
+import { render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-panel";
+
+/**
+ * A permissive stub for the wireframe service. Only the surface the inspector
+ * panel (and the layout form it renders for an outlet root) reads is
+ * implemented; everything returns a safe default so a single stub can back
+ * several different renders. `isOutletRoot` is driven off the block data so a
+ * test can flip a selection into "this is the outlet" mode.
+ */
+class StubWireframeService extends Service {
+  #blockData;
+
+  constructor(owner, blockData) {
+    super(owner);
+    this.#blockData = blockData;
+  }
+
+  get selectedBlockData() {
+    return this.#blockData;
+  }
+
+  get selectedBlockKey() {
+    return this.#blockData?.key ?? "wf:stub:1";
+  }
+
+  get selectedBlockFieldErrors() {
+    return {};
+  }
+
+  get selectedBlockNonFieldErrors() {
+    return [];
+  }
+
+  get selectedBlockHasErrors() {
+    return false;
+  }
+
+  get conditionsDetached() {
+    return false;
+  }
+
+  isOutletRoot() {
+    return this.#blockData?.isOutletRoot === true;
+  }
+
+  // Surface the layout form (rendered for the outlet root, whose block name is
+  // "layout") reads. Safe defaults keep the form inert.
+  canApplyGridTemplate() {
+    return false;
+  }
+
+  outOfBoundsSlotsIn() {
+    return [];
+  }
+
+  updateSelectedArg() {}
+}
+
+function stubWireframe(owner, blockData) {
+  owner.unregister("service:wireframe");
+  owner.register(
+    "service:wireframe",
+    new StubWireframeService(owner, blockData),
+    { instantiate: false }
+  );
+}
+
+module(
+  "Integration | Wireframe | Inspector | friendly outlet & block names",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("an outlet root shows the friendly outlet name and description", async function (assert) {
+      // The implicit root layout IS the outlet; the inspector presents it as
+      // the outlet, not as a "layout" block. The friendly name + description
+      // come from the real outlet registry (CORE_OUTLET_METADATA).
+      stubWireframe(this.owner, {
+        name: "layout",
+        isOutletRoot: true,
+        outletName: "homepage-blocks",
+        args: { mode: "stack" },
+        argsSnapshot: { mode: "stack" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__block-name")
+        .hasText(
+          "Homepage",
+          "the header shows the outlet's display name, not the 'layout' block name"
+        );
+      assert
+        .dom(".wireframe-inspector__metadata-info")
+        .exists("the info icon is present for an outlet with a description")
+        .hasAttribute(
+          "title",
+          "The main content area of the site homepage.",
+          "the tooltip describes the outlet, not the layout block"
+        );
+    });
+
+    test("a registered block shows its friendly display name", async function (assert) {
+      stubWireframe(this.owner, {
+        name: "wf:heading",
+        isRegistered: true,
+        metadata: {
+          displayName: "Heading",
+          shortName: "heading",
+          args: { title: { type: "string" } },
+        },
+        args: { title: "Hello" },
+        argsSnapshot: { title: "Hello" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__block-name")
+        .hasText(
+          "Heading",
+          "the header prefers the block's friendly displayName over the raw name"
+        );
+    });
+
+    test("an unregistered block falls back to its raw name", async function (assert) {
+      stubWireframe(this.owner, {
+        name: "wf:gone",
+        isRegistered: false,
+        metadata: null,
+        args: { title: "Hello" },
+        argsSnapshot: { title: "Hello" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__block-name")
+        .hasText(
+          "wf:gone",
+          "with no metadata there's no friendly name, so the raw name shows"
+        );
+    });
+  }
+);

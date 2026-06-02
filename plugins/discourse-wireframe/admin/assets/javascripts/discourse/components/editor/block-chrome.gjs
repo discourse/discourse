@@ -741,11 +741,21 @@ export default class BlockChrome extends Component {
 
   /** @returns {string} */
   get displayName() {
-    // The implicit root layout reads as the outlet itself, not "Layout".
+    // The implicit root layout reads as the outlet itself, not "Layout" —
+    // show the outlet's friendly display name, falling back to its raw name.
     if (this.isOutletRoot) {
-      return this.args.outletName;
+      return (
+        this.blocks.getOutletMetadata(this.args.outletName)?.displayName ??
+        this.args.outletName
+      );
     }
-    return this.metadata?.shortName ?? this.args.blockName;
+    // Prefer the block's human-readable display name over its namespace-less
+    // short name, then the raw block name for unregistered blocks.
+    return (
+      this.metadata?.displayName ??
+      this.metadata?.shortName ??
+      this.args.blockName
+    );
   }
 
   /**
