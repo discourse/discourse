@@ -87,7 +87,7 @@ export default class HeadBlock extends Component {
         - The first visible child (actually rendered)
         - Ghosts for children hidden by priority
       }}
-      {{#each @children as |child|}}
+      {{#each @children key="key" as |child|}}
         {{#if child.isGhost}}
           {{! Child failed its own conditions - already a ghost }}
           <child.Component />

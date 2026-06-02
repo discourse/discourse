@@ -25,6 +25,8 @@ module("Unit | Lib | blocks/display-metadata", function () {
       category: "Content",
       previewArgs: { title: "Sample" },
       thumbnail: "/uploads/preview.png",
+      paletteHidden: false,
+      transparent: false,
     });
   });
 

@@ -12,6 +12,7 @@
  *
  * @module discourse/lib/blocks/-internals/entry-processing
  */
+import { trackedObject } from "@ember/reactive/collections";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -24,17 +25,36 @@ import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block"
 import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
 
 /**
- * Gets or creates a curried component for a leaf block, using cache when possible.
+ * Gets or creates a curried component for a block, using the cache when possible.
  *
- * Only leaf blocks (blocks without children) are cached. Container blocks are
- * always recreated because their children's visibility may change between
- * renders, and caching would result in stale children being displayed.
+ * Both leaf and container blocks are cached, keyed by their stable block key.
+ * Caching the curried component preserves its identity across renders, so the
+ * `{{#each ... key="key"}}` that renders it keeps the same component instance
+ * (and its DOM subtree) instead of tearing it down and remounting. This matters
+ * most for containers: re-currying a container produces a new component value,
+ * which forces a full remount of its subtree — including any children that
+ * load data — on every structural change anywhere in the outlet.
+ *
+ * Containers do not bake their children into the curry. Instead the cache holds
+ * a tracked `holder` whose `current` value is the freshly processed children;
+ * the curry reads `holder.current` reactively, so a cached container reflects
+ * new/removed children without being recreated.
  *
  * Cache hit conditions:
- * 1. The component class must be the same reference
- * 2. The args object must be shallowly equal
+ * 1. The component class is the same reference.
+ * 2. The own args are shallowly equal.
+ * 3. The `containerArgs` reference is identical — it's read by the parent
+ *    container as a one-shot snapshot, so a replaced reference (e.g. a grid
+ *    placement edit) must produce a fresh result.
+ * 4. The hierarchy (`displayHierarchy`/`containerPath`) is unchanged — both are
+ *    baked into the curry and the debug payload. A moved entry keeps its stable
+ *    key (hence its cache slot), so the hierarchy guard forces a fresh curry,
+ *    and a fresh debug payload, when an entry changes parent.
  *
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, result: Object}>} cache - The component cache keyed by stable block keys.
+ * Children are deliberately excluded from the match: a container reflects child
+ * changes through its tracked holder, not by re-currying.
+ *
+ * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, displayHierarchy?: string, containerPath?: string, holder?: {current: Array<Object>}, result: Object}>} cache - The component cache keyed by stable block keys.
  * @param {Object} entry - The block entry with __stableKey and optional children.
  * @param {typeof import("@glimmer/component").default} resolvedBlock - The resolved block component class.
  * @param {Object} debugContext - Debug context for visual overlay and hierarchy tracking.
@@ -42,6 +62,7 @@ import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
  * @param {string} debugContext.displayHierarchy - Where the block is rendered (for tooltip display).
  * @param {string} debugContext.outletName - The outlet name for wrapper class generation.
  * @param {string} [debugContext.containerPath] - Container's full path (for children's __hierarchy).
+ * @param {boolean} [debugContext.isContainer] - Whether the block is a container (gets a children holder).
  * @param {Object} [debugContext.conditions] - The block's conditions.
  * @param {Object} debugContext.outletArgs - Outlet arguments passed from the parent.
  * @param {Array<Object>} [debugContext.processedChildren] - Pre-processed children for container blocks.
@@ -49,7 +70,7 @@ import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
  * @param {Function} createChildBlockFn - Function to create child block components (injected from block-outlet.gjs).
  * @returns {ChildBlockResult} The cached or newly created component data with stable key for list rendering.
  */
-function getOrCreateLeafBlockComponent(
+function getOrCreateBlockComponent(
   cache,
   entry,
   resolvedBlock,
@@ -57,44 +78,51 @@ function getOrCreateLeafBlockComponent(
   owner,
   createChildBlockFn
 ) {
-  const { key } = debugContext;
+  const { key, displayHierarchy, containerPath } = debugContext;
   const cachedEntry = cache.get(key);
-  const hasChildren = entry.children?.length > 0;
 
-  // Only cache leaf blocks (no children). Container blocks are always recreated
-  // to ensure their children reflect current visibility state.
-  //
-  // `containerArgs` is included in the cache match because it's destructured
-  // into the `ChildBlockResult` at curry time and read by the parent
-  // container as a one-shot snapshot — a replaced `containerArgs` reference
-  // (e.g. a grid placement edit) must produce a fresh result, otherwise the
-  // parent keeps reading the stale namespace bag.
   if (
-    !hasChildren &&
     cachedEntry &&
     cachedEntry.ComponentClass === resolvedBlock &&
     shallowArgsEqual(cachedEntry.args, entry.args) &&
-    cachedEntry.containerArgs === entry.containerArgs
+    cachedEntry.containerArgs === entry.containerArgs &&
+    cachedEntry.displayHierarchy === displayHierarchy &&
+    cachedEntry.containerPath === containerPath
   ) {
+    // Refresh the children a cached container's curry reads from. Do NOT rebuild
+    // the wrapper or re-run the debug callback here — instance survival depends
+    // on `result.Component` keeping its identity across renders.
+    if (cachedEntry.holder) {
+      cachedEntry.holder.current = debugContext.processedChildren;
+    }
     return cachedEntry.result;
   }
 
-  // Create new curried component
+  // Every container gets a tracked holder seeded with its current children
+  // (which may be undefined for a container rendered empty), threaded into the
+  // curry so later renders refresh it in place rather than re-currying. Seeding
+  // the holder unconditionally for containers is what lets a container that
+  // starts empty pick up its first child on a later edit — without it, an empty
+  // container would bake a static `undefined` children value and never update.
+  const holder = debugContext.isContainer
+    ? trackedObject({ current: debugContext.processedChildren })
+    : undefined;
+
   const result = createChildBlockFn(
     { ...entry, block: resolvedBlock },
     owner,
-    debugContext
+    holder ? { ...debugContext, childrenHolder: holder } : debugContext
   );
 
-  // Cache leaf blocks for future reuse
-  if (!hasChildren) {
-    cache.set(key, {
-      ComponentClass: resolvedBlock,
-      args: entry.args,
-      containerArgs: entry.containerArgs,
-      result,
-    });
-  }
+  cache.set(key, {
+    ComponentClass: resolvedBlock,
+    args: entry.args,
+    containerArgs: entry.containerArgs,
+    displayHierarchy,
+    containerPath,
+    holder,
+    result,
+  });
 
   return result;
 }
@@ -130,7 +158,7 @@ function getOrCreateLeafBlockComponent(
  *
  * @param {Object} options - Rendering options.
  * @param {Array<BlockEntry>} options.entries - Pre-processed block entries with visibility metadata.
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
+ * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, displayHierarchy?: string, containerPath?: string, holder?: {current: Array<Object>}, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
  * @param {import("@ember/owner").default} options.owner - Application owner for service lookup.
  * @param {string} options.baseHierarchy - Current hierarchy path (e.g., "homepage-blocks/section-1").
  * @param {string} options.outletName - The outlet name for CSS class generation.
@@ -268,7 +296,7 @@ export function processBlockEntries({
     // Render visible blocks
     if (entry.__visible) {
       result.push(
-        getOrCreateLeafBlockComponent(
+        getOrCreateBlockComponent(
           cache,
           entry,
           blockClass,
@@ -279,6 +307,7 @@ export function processBlockEntries({
             conditions: entry.conditions,
             outletArgs,
             key,
+            isContainer,
             processedChildren, // Pass pre-processed children for containers
           },
           owner,

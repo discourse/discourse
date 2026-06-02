@@ -18,6 +18,58 @@ const DEFAULT_ERROR_MODE = "flash";
 export default class DAsyncContent extends Component {
   #debounce = false;
 
+  // The value from the most recent resolution, kept so we can keep rendering it
+  // while a *subsequent* load is pending (opt-in via `@retainWhileReloading`).
+  // Plain fields, not tracked: they are written from within the `resolution`
+  // getter and only read back when the next load is pending, so they never need
+  // to drive their own invalidation.
+  #lastResolvedValue = undefined;
+  #hasResolvedOnce = false;
+
+  /**
+   * Resolves the current async state into a single render mode. Collapsing the
+   * states into one getter (rather than branching on `data.isPending` /
+   * `isResolved` directly in the template) lets the `:content` block stay
+   * mounted across a pending→resolved transition when retaining: both phases
+   * report `mode: "content"`, so Glimmer keeps the same DOM and the yielded
+   * value simply updates in place.
+   *
+   * @returns {{mode: string, value?: *, error?: *}}
+   */
+  @cached
+  get resolution() {
+    const data = this.data;
+
+    if (!data) {
+      return { mode: "idle" };
+    }
+
+    if (data.isResolved) {
+      // Remember the resolved value so a later pending phase can keep showing
+      // it. These are plain, untracked fields — writing them mid-computation
+      // can't dirty a tag or trigger a re-render loop, which is what the
+      // no-side-effects rule guards against.
+      /* eslint-disable ember/no-side-effects */
+      this.#lastResolvedValue = data.value;
+      this.#hasResolvedOnce = true;
+      /* eslint-enable ember/no-side-effects */
+      return { mode: "content", value: data.value };
+    }
+
+    if (data.isRejected) {
+      return { mode: "error", error: data.error };
+    }
+
+    // Pending. When the consumer opts into `@retainWhileReloading`, keep showing
+    // the last resolved value so the content subtree isn't unmounted on a reload
+    // (useful when long-lived component state lives inside the `:content` block).
+    if ((this.args.retainWhileReloading ?? false) && this.#hasResolvedOnce) {
+      return { mode: "content", value: this.#lastResolvedValue };
+    }
+
+    return { mode: "loading" };
+  }
+
   @cached
   get data() {
     const asyncData = this.args.asyncData;
@@ -93,31 +145,31 @@ export default class DAsyncContent extends Component {
 
   <template>
     {{this.verifyParameters (hash hasErrorBlock=(has-block "error"))}}
-    {{#if this.data.isPending}}
+    {{#if (eq this.resolution.mode "loading")}}
       {{#if (has-block "loading")}}
         {{yield to="loading"}}
       {{else}}
-        <DConditionalLoadingSpinner @condition={{this.data.isPending}} />
+        <DConditionalLoadingSpinner @condition={{true}} />
       {{/if}}
-    {{else if this.data.isResolved}}
-      {{#if this.data.value}}
-        {{yield this.data.value to="content"}}
+    {{else if (eq this.resolution.mode "content")}}
+      {{#if this.resolution.value}}
+        {{yield this.resolution.value to="content"}}
       {{else if (has-block "empty")}}
         {{yield to="empty"}}
       {{else}}
-        {{yield this.data.value to="content"}}
+        {{yield this.resolution.value to="content"}}
       {{/if}}
-    {{else if this.data.isRejected}}
+    {{else if (eq this.resolution.mode "error")}}
       {{#if (has-block "error")}}
         {{yield
-          this.data.error
-          (component AsyncContentInlineError error=this.data.error)
+          this.resolution.error
+          (component AsyncContentInlineError error=this.resolution.error)
           to="error"
         }}
       {{else if (eq this.errorMode "flash")}}
-        <AsyncContentInlineError @error={{this.data.error}} />
+        <AsyncContentInlineError @error={{this.resolution.error}} />
       {{else if (eq this.errorMode "popup")}}
-        {{popupAjaxError this.data.error}}
+        {{popupAjaxError this.resolution.error}}
       {{/if}}
     {{/if}}
   </template>

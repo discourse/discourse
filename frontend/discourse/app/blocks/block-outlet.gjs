@@ -431,8 +431,19 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // `entry.args` (a `trackedObject` after registration). Mutations to
   // `entry.args` then propagate to the rendered block automatically, which
   // is what powers live arg editing.
+  //
+  // A container's `@children` is sourced from a tracked holder
+  // (`childrenHolder`) rather than a captured array, so a cached (persisted)
+  // container instance observes freshly processed children on later renders
+  // without being re-curried. The getter reads the holder's single tracked
+  // key — enough for the curry's compute-ref to re-pull, but it never opens
+  // the holder's collection tag. Non-containers have no holder and fall back
+  // to the static (undefined) children value.
+  const childrenHolder = debugContext.childrenHolder;
   const blockArgs = createBlockArgsWithReactiveGetters(entry, ComponentClass, {
-    children: debugContext.processedChildren,
+    children: childrenHolder
+      ? () => childrenHolder.current
+      : debugContext.processedChildren,
     outletArgs: debugContext.outletArgs,
     outletName: debugContext.outletName,
     __hierarchy: isContainer
@@ -1084,7 +1095,15 @@ export default class BlockOutlet extends Component {
       )
       as |OutletInfo|
     }}
-      <DAsyncContent @asyncData={{this.children}}>
+      {{! Keep the rendered children mounted while a republished layout
+          re-validates. Each republish produces a fresh validation promise;
+          without retaining, the pending phase would unmount and rebuild the
+          whole subtree (losing component state and re-running any data loads)
+          on every republish. }}
+      <DAsyncContent
+        @asyncData={{this.children}}
+        @retainWhileReloading={{true}}
+      >
         <:loading>
           {{! Resolving async blocks should not display a loading UI }}
         </:loading>

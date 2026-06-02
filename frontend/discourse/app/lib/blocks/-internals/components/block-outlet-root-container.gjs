@@ -52,7 +52,7 @@ export default class BlockOutletRootContainer extends Component {
    * - The same keys are reused on every render/navigation
    * - This cache instance is garbage collected when the owning component is destroyed
    *
-   * @type {Map<string, {ComponentClass: typeof Component, args: Object, containerArgs?: Object, result: Object}>}
+   * @type {Map<string, {ComponentClass: typeof Component, args: Object, containerArgs?: Object, displayHierarchy?: string, containerPath?: string, holder?: {current: Array<Object>}, result: Object}>}
    */
   #componentCache = new Map();
 

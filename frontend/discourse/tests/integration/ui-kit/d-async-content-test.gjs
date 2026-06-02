@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { click, render, waitFor } from "@ember/test-helpers";
+import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
@@ -444,6 +444,89 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       );
 
       assert.dom(".error").doesNotExist();
+    });
+  });
+
+  module("@retainWhileReloading", function () {
+    test("keeps the resolved content mounted while a later load is pending", async function (assert) {
+      let buildCount = 0;
+      let resolveSecond;
+      let host;
+
+      // Counts constructions so we can prove the content subtree is not torn
+      // down and rebuilt across a reload.
+      class CountingContent extends Component {
+        constructor() {
+          super(...arguments);
+          buildCount++;
+        }
+
+        <template>
+          <div class="counting-content">{{@value}}</div>
+        </template>
+      }
+
+      class Host extends Component {
+        // Start already-resolved so the initial render settles without us
+        // having to await a pending promise. Reassigned from the test body via
+        // the captured `host` reference, which the lint rule can't see.
+        // eslint-disable-next-line discourse/no-unnecessary-tracked
+        @tracked asyncData = Promise.resolve("v1");
+
+        constructor() {
+          super(...arguments);
+          // Captured so the test can swap `asyncData` directly.
+          host = this;
+        }
+
+        <template>
+          <DAsyncContent
+            @asyncData={{this.asyncData}}
+            @retainWhileReloading={{true}}
+          >
+            <:loading>
+              <div class="provided-loading"></div>
+            </:loading>
+            <:content as |value|>
+              <CountingContent @value={{value}} />
+            </:content>
+          </DAsyncContent>
+        </template>
+      }
+
+      await render(<template><Host /></template>);
+      assert.dom(".counting-content").hasText("v1", "first value renders");
+      assert.strictEqual(buildCount, 1, "content built once initially");
+
+      // Reload with a promise that stays pending across a render. We poll the
+      // DOM with `waitFor` rather than awaiting `settled`/`rerender`, which
+      // would block on the pending `TrackedAsyncData`'s async waiter.
+      host.asyncData = new Promise((resolve) => (resolveSecond = resolve));
+      await waitFor(".counting-content");
+
+      // Because the content is retained (never unmounted for the loading
+      // state), `waitFor` finds it immediately and no loading block renders.
+      assert
+        .dom(".provided-loading")
+        .doesNotExist("no loading state on reload");
+      assert
+        .dom(".counting-content")
+        .hasText("v1", "previous content retained while pending");
+      assert.strictEqual(
+        buildCount,
+        1,
+        "content instance is not rebuilt during the pending reload"
+      );
+
+      resolveSecond("v2");
+      await settled();
+
+      assert.dom(".counting-content").hasText("v2", "new value swaps in");
+      assert.strictEqual(
+        buildCount,
+        1,
+        "content instance survived the reload (not torn down)"
+      );
     });
   });
 });

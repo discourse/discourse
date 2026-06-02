@@ -469,12 +469,17 @@ export function createBlockArgsWithReactiveGetters(
     };
   }
 
-  // Reactive getters for context args (children, outletArgs, etc.).
+  // Reactive getters for context args (children, outletArgs, etc.). A static
+  // value is returned as-is; a function value is used directly as the getter
+  // body. The function form lets a caller back a context arg with live state —
+  // e.g. a container's `children` reads from a tracked holder, so a cached
+  // (persisted) container observes freshly processed children without being
+  // re-curried. The getter must read tracked state for this to be reactive:
+  // the curry's compute-ref only re-pulls an arg when a tag read inside its
+  // getter dirties.
   for (const [key, value] of Object.entries(contextArgs)) {
     propertyDescriptors[key] = {
-      get() {
-        return value;
-      },
+      get: typeof value === "function" ? value : () => value,
       enumerable: true,
     };
   }
