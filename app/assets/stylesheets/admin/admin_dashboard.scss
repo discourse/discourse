@@ -426,6 +426,16 @@ h1 {
   flex-direction: column;
   gap: var(--space-3);
 
+  th,
+  td {
+    white-space: nowrap;
+  }
+
+  &__table-scroll-container {
+    min-width: 0;
+    overflow-x: auto;
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -451,15 +461,7 @@ h1 {
   border-collapse: collapse;
   font-size: var(--font-down-1-rem);
 
-  th,
-  td {
-    padding: var(--space-3) var(--space-2);
-    text-align: left;
-    vertical-align: middle;
-  }
-
   thead th {
-    border-bottom: 1px solid var(--primary-low);
     color: var(--primary-medium);
     font-weight: 600;
     text-transform: uppercase;
@@ -467,17 +469,9 @@ h1 {
     font-size: var(--font-down-2-rem);
   }
 
-  tbody tr {
-    border-bottom: 1px solid var(--primary-very-low);
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
   &__col-number,
   &__cell-number {
-    text-align: right;
+    text-align: center;
     font-variant-numeric: tabular-nums;
   }
 
@@ -491,6 +485,12 @@ h1 {
     cursor: pointer;
     text-transform: inherit;
     letter-spacing: inherit;
+
+    .d-icon {
+      &.is-hidden {
+        visibility: hidden;
+      }
+    }
   }
 
   &__cell-category {
