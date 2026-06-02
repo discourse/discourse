@@ -1108,6 +1108,14 @@ export default class WireframeService extends Service {
 
   @action
   removeBlock(blockKey) {
+    // The implicit root layout IS the outlet; deleting it would remove the
+    // whole page region. Block-level delete is a no-op on the root — the
+    // toolbar and inspector already hide the affordance, and this guard
+    // also closes the keyboard (Delete / Backspace) and cut (Cmd+X) paths
+    // that reach `removeBlock` directly.
+    if (this.isOutletRoot(blockKey)) {
+      return false;
+    }
     const located = this.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;

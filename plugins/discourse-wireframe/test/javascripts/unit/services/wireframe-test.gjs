@@ -14,6 +14,7 @@ import {
   withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 
 @block("wf:svc-test-tile", { args: { title: { type: "string" } } })
 class TestTile extends Component {
@@ -1294,6 +1295,58 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "layout",
         "the inspector keys off name === 'layout' to show the layout form"
       );
+    });
+
+    test("removeBlock is a no-op on the outlet root", function (assert) {
+      const rootKey = this.editor.outletRootKey("homepage-blocks");
+      this.editor.selectOutlet("homepage-blocks");
+
+      const removed = this.editor.removeBlock(rootKey);
+
+      assert.false(
+        removed,
+        "removeBlock reports no change for the outlet root"
+      );
+      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      assert.strictEqual(draft.length, 1, "the root layout still exists");
+      assert.strictEqual(
+        draft[0].block,
+        "layout",
+        "and is still the root layout"
+      );
+      assert.strictEqual(
+        draft[0].children.length,
+        2,
+        "the outlet's children are untouched"
+      );
+    });
+
+    test("pressing Delete with the outlet selected does not remove it", function (assert) {
+      // Drive the real keyboard path: the Delete shortcut calls
+      // `removeBlock(selectedBlockKey)` directly, bypassing the toolbar's
+      // `{{#unless @isOutletRoot}}` gate. This is the exact reproduction of
+      // the reported bug (selecting the outlet and pressing Delete).
+      const detach = attachEditorShortcuts(this.editor);
+      this.editor.selectOutlet("homepage-blocks");
+
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Delete", bubbles: true })
+      );
+
+      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      assert.strictEqual(draft.length, 1, "the root layout still exists");
+      assert.strictEqual(
+        draft[0].block,
+        "layout",
+        "and is still the root layout"
+      );
+      assert.strictEqual(
+        draft[0].children.length,
+        2,
+        "the outlet's children are untouched"
+      );
+
+      detach();
     });
 
     test("exit() clears the recorded root key", function (assert) {
