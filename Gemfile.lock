@@ -436,7 +436,7 @@ GEM
       reline (>= 0.6.0)
     pry-rails (0.3.11)
       pry (>= 0.13.0)
-    psych (5.3.1)
+    psych (5.4.0)
       date
       stringio
     public_suffix (7.0.5)
@@ -467,9 +467,9 @@ GEM
       activerecord (>= 6.1, < 9.0)
       concurrent-ruby
       railties (>= 6.1, < 9.0)
-    rails_multisite (7.0.0)
-      activerecord (>= 7.1)
-      railties (>= 7.1)
+    rails_multisite (8.0.0)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
     railties (8.0.5)
       actionpack (= 8.0.5)
       activesupport (= 8.0.5)
@@ -943,7 +943,7 @@ CHECKSUMS
   bootsnap (1.24.5) sha256=36b677448524d279b470469aabd5dff4a980e3fa4931a0df68da4a500eb1b6c4
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bullet (8.1.1) sha256=3ddecdf3787c64a3f1e5b316256840bc034d60c1070b1b16d3fe5b5932d42b87
-  bundler (4.0.11) sha256=5bcec0fb78302e48d02ee46f10ee6e6942be647ba5b44a6d1ddfda9a240ce785
+  bundler (4.0.12) sha256=7f8b757d28dfb636e7b24fba2344ac6dd13b5b24f4b46d62573d483f211825ac
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-playwright-driver (0.5.9) sha256=4c17fed20817b7e1bde2cfc8186e7bf5cd72017ce1aa695e35130f8e600e7282
   cbor (0.5.10.2) sha256=df5104f7a62c881123e6505441b1e276208be1771540c2cc3b1de8a210a7c52c
@@ -1115,7 +1115,7 @@ CHECKSUMS
   propshaft (1.3.2) sha256=1d56a3e56a92c21bfc29caf07406b5386b00d4c47ddf357cf989a5a234b1389e
   pry (0.16.0) sha256=d76c69065698ed1f85e717bd33d7942c38a50868f6b0673c636192b3d1b6054e
   pry-rails (0.3.11) sha256=a69e28e24a34d75d1f60bcf241192a54253f8f7ef8a62cba1e75750a9653593d
-  psych (5.3.1) sha256=eb7a57cef10c9d70173ff74e739d843ac3b2c019a003de48447b2963d81b1974
+  psych (5.4.0) sha256=14f72d69a611af663d7d70e4a7b67d9eb1f3ae9f8d916b478961d5a0075ba5b7
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
   puma (7.1.0) sha256=e45c10cb124f224d448c98db653a75499794edbecadc440ad616cf50f2fd49dd
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
@@ -1128,7 +1128,7 @@ CHECKSUMS
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.7.0) sha256=28b145cceaf9cc214a9874feaa183c3acba036c9592b19886e0e45efc62b1e89
   rails_failover (2.3.0) sha256=eed6ea0674fd6f9f6b070ad297ad2ead121ecf9202920f6068b6a4f29d9491c9
-  rails_multisite (7.0.0) sha256=7aacf364ed86d2bee73fb679cbfe6c343ce89067b9746b3d5857fffc57f036f2
+  rails_multisite (8.0.0) sha256=8e2216c7c455a9a3790991936439fd8043562bc5d8f24e01e1c28208f79e2bea
   railties (8.0.5) sha256=ad98c6e9a096b7e8cf63c70872b60ec6c1d4152be2a4ffa63483ec02a837a9d5
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
