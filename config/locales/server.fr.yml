@@ -603,7 +603,6 @@ fr:
       admins: "administrateurs"
       moderators: "modérateurs"
       staff: "responsables"
-      anonymous: "anonymes"
       trust_level_0: "niveau_confiance_0"
       trust_level_1: "niveau_confiance_1"
       trust_level_2: "niveau_confiance_2"
@@ -1606,7 +1605,6 @@ fr:
       group_email_credentials: 'Un problème est survenu avec les identifiants de messagerie du groupe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Aucun e-mail ne sera envoyé depuis la boîte de réception du groupe tant que ce problème ne sera pas résolu. %{error}'
       rails_env: "Votre serveur fonctionne dans l'environnement de %{env}."
       host_names: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
-      sidekiq: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi d''e-mails, sont exécutées de manière asynchrone par Sidekiq. Veuillez vous assurer qu''au moins un processus Sidekiq est en cours d''exécution. <a href="https://github.com/mperham/sidekiq" target="_blank">En savoir plus sur Sidekiq ici</a>.'
       queue_size: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou que ces derniers ne sont pas assez nombreux pour traiter efficacement les tâches."
       ram: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
       google_oauth2_config: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consultez ce guide pour en savoir plus</a>.'

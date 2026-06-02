@@ -2534,6 +2534,7 @@ zh_TW:
         attribute_value: "價值"
         apply: "套用"
       help: "Markdown 編輯說明"
+      edit_reason: "你為什麼做編輯?"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
       modal_ok: "確定"
       cant_send_pm: "抱歉，你不能發訊息給 %{username} 。"
@@ -2563,21 +2564,20 @@ zh_TW:
           desc: 創建以相同收件人開頭的新訊息
         reply_to_topic:
           label: 回應話題
+          trigger: 話題
           desc: 回應本話題而非特定貼文
         toggle_whisper:
           label: 切換為悄悄話
-          desc: 悄悄話只有管理員能見
         create_topic:
           desc: 開啟新話題
         create_personal_message:
-          label: "新增訊息"
           desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"
         toggle_topic_bump:
-          label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"
+        unknown_user: "使用者"
       reload: "重新載入"
       ignore: "忽略"
       image_alt_text:

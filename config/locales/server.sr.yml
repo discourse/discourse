@@ -142,11 +142,10 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
-      anonymous: "anonimno"
       logged_in_users: "prijavljeni_korisnici"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
-      anonymous: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
+      anonymous_users: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
       logged_in_users: "Automatska pseudogrupa koja uključuje svakog prijavljenog korisnika"
       admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"
       moderators: "Odgovoran je za odgovaranje na zastavice, moderiranje diskusija i pomaganje članovima sa njihovim nalozima"
@@ -514,7 +513,6 @@ sr:
     admin_dashboard_sections: "Odeljci prikazani na redizajniranoj administratorskoj kontrolnoj tabli, po redosledu prikazivanja. Upravlja se preko menija \"Konfiguriši\" na kontrolnoj tabli."
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
-    granular_anonymous_and_logged_in_groups_permissions: "Unosi promene u dozvole podešavanja sajta zasnovane na grupama tako da se 'everyone' tretira kao 'svi prijavljeni korisnici', i omogućava nove pseudogrupe 'anonymous' i 'logged_in_users' kako bi administratori mogli eksplicitno da ciljaju anonimne posetioce i prijavljene korisnike."
     dashboard_improvements: "Poboljšanja navigacije, dizajna i upotrebljivosti administratorske kontrolne table Discourse-a."
   search:
     within_post: "#%{post_number} od %{username}"

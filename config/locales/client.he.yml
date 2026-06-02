@@ -3257,6 +3257,7 @@ he:
       collapse: "מזעור לוח העריכה"
       open: "פתיחת לוח העריכה"
       abandon: "סגירת העורך והשלכת הטיוטה"
+      edit_reason: "מדוע ערכת?"
       enter_fullscreen: "כניסה לעריכה במסך מלא"
       exit_fullscreen: "יציאה מעריכה במסך מלא"
       exit_fullscreen_prompt: "לחיצה על <kbd>ESC</kbd> תוציא אותך ממסך מלא"
@@ -3291,24 +3292,23 @@ he:
           desc: יצירת הודעה חדשה שתיפתח עם אותם נמענים
         reply_to_topic:
           label: הגב לנושא
+          trigger: נושא
           desc: הגב לנושא, לא פוסט ספציפי
         toggle_whisper:
           label: החלפת מצב לחישה
-          desc: לחישות גלויות לחברי סגל בלבד
         create_topic:
-          label: "נושא חדש"
           desc: יצירת נושא חדש
         create_personal_message:
-          label: "הודעה חדשה"
           desc: "צור הודעה פרטית חדשה"
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
         toggle_topic_bump:
-          label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
         toggle_unlisted:
           desc: "נושאים מוסתרים נגישים רק באמצעות קישור ישיר"
+        edit_post: "רשומה נערכת"
+        unknown_user: "משתמש"
       reload: "ריענון"
       ignore: "התעלמות"
       image_alt_text:
@@ -5958,7 +5958,7 @@ he:
           title: "עריכת טבלה"
           cancel: "ביטול"
           create: "שמירה"
-          reason: "מה סיבת העריכה?"
+          reason: "מדוע ערכת?"
           trigger_reason: "הוספת סיבה לעריכה"
         default_edit_reason: "עדכון טבלה עם עורך טבלאות"
       default_header:

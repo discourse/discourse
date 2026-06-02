@@ -2611,6 +2611,7 @@ fa_IR:
         attribute_value: "مقدار"
         apply: "اعمال کردن"
       help: "راهنمای ویرایش با Markdown"
+      edit_reason: "چرا ویرایش می‌کنید؟"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username} پیام بفرستید."
@@ -2639,21 +2640,22 @@ fa_IR:
           desc: پیام جدیدی ایجاد کنید که از همان گیرندگان شروع شود
         reply_to_topic:
           label: پاسخ به مبحث
+          trigger: موضوع
           desc: به مبحث اصلی پاسخ بده و نه هیچ کدام از نوشته ها
         toggle_whisper:
           label: فعالسازی زمزمه
-          desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
+          label: ایجاد موضوع
           desc: یک موضوع جدید ایجاد کنید
         create_personal_message:
-          label: "پیام جدید"
           desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
         toggle_topic_bump:
-          label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
+        edit_post: "در حال ویرایش نوشته"
+        unknown_user: "کاربر"
       reload: "بارگذاری مجدد"
       ignore: "چشم پوشی"
       image_alt_text:

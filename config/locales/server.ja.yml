@@ -560,7 +560,6 @@ ja:
       admins: "管理者"
       moderators: "モデレーター"
       staff: "スタッフ"
-      anonymous: "匿名ユーザー"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1547,7 +1546,6 @@ ja:
       upcoming_change_stable_opted_out: 'あなたのサイトは「%{upcoming_change}」の次回の変更をオプトアウトしていますが、この変更は「安定」ステータスに達したため、まもなく削除されるか正式に公開されます。この変更の詳細については、<a href="%{base_path}/admin/config/upcoming-changes">次回の変更ページ</a>をご覧ください。'
       rails_env: "サーバーは %{env} モードで実行中です。"
       host_names: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
-      sidekiq: 'Sidekiq が実行していません。メール送信などの多くのタスクは sidekiq により非同期に実行されます。少なくとも 1 つの sidekiq プロセスが実行していることを確認してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらをご覧ください</a>。'
       queue_size: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
       ram: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
       google_oauth2_config: 'サーバーは Google OAuth2 を使った登録とログインを許可 (enable_google_oauth2_logins) するように構成されていますが、クライアント ID とクライアントシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'

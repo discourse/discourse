@@ -603,7 +603,6 @@ it:
       admins: "amministratori"
       moderators: "moderatori"
       staff: "staff"
-      anonymous: "anonimo"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1600,7 +1599,6 @@ it:
       group_email_credentials: 'Si è verificato un problema con le credenziali email per il gruppo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Finché il problema non verrà risolto, nessuna email verrà inviata dalla casella di posta del gruppo. %{error}'
       rails_env: "Il tuo server è in modalità %{env}."
       host_names: "Il tuo file config/database.yml usa l'hostname predefinito: localhost. Aggiornalo con l'hostname del tuo sito."
-      sidekiq: 'Sidekiq non è in esecuzione. Varie attività, come l''invio di email, sono eseguite in maniera asincrona da Sidekiq. Assicurati che almeno un processo Sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Ulteriori informazioni su Sidekiq</a>.'
       queue_size: "Il numero di job in coda è %{queue_size}, molto elevato. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
       ram: "Il tuo server sta funzionando con meno di 1 GB di memoria. Si consiglia almeno 1 GB di memoria."
       google_oauth2_config: 'Il server è configurato per permettere la registrazione e l''accesso con Google OAuth2 (enable_google_oauth2_logins), ma i valori ID client e segreto client non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> per aggiornare le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
