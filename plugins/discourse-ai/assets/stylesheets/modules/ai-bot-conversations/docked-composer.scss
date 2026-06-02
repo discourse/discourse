@@ -108,7 +108,15 @@ body.has-ai-bot-docked-composer {
   border: var(--d-input-border);
   border-color: var(--content-border-color);
   border-radius: var(--d-input-border-radius);
-  background: var(--d-input-bg-color);
+
+  // Match the chat input's light grey, but composited over an opaque base so
+  // topic content doesn't show through the input while scrolling (the docked
+  // composer's container is transparent, unlike chat's opaque pane).
+  background-color: var(--secondary);
+  background-image: linear-gradient(
+    rgb(var(--primary-very-low-rgb), 0.5),
+    rgb(var(--primary-very-low-rgb), 0.5)
+  );
   transition: border-color 0.15s ease-in-out;
   position: relative;
 
@@ -343,16 +351,5 @@ body.has-ai-bot-docked-composer [data-user-id^="-"] .cooked {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-.ai-bot-docked-composer__disclaimer {
-  margin: var(--space-2) 0 var(--space-4);
-  text-align: center;
-  font-size: var(--font-down-2);
-  color: var(--primary-medium);
-
-  @include viewport.until(sm) {
-    display: none;
   }
 }
