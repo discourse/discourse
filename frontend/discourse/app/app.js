@@ -8,7 +8,6 @@ import "./module-shims";
 import "./discourse-common-loader-shims";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
-import { removeSplashScreen } from "discourse/lib/splash-screen";
 import { defineModules } from "./lib/loader-shim";
 
 // Register Discourse's standard implicit injections on common framework classes.
@@ -161,7 +160,6 @@ class Discourse extends Application {
 
   ready() {
     performance.mark("discourse-ready");
-    removeSplashScreen();
   }
 }
 
