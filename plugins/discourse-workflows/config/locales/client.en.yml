@@ -131,6 +131,7 @@ en:
       nodes:
         "trigger:topic_closed": "Topic closed"
         "trigger:post_created": "Post created"
+        "trigger:post_edited": "Post edited"
         "trigger:topic_created": "Topic created"
         "trigger:topic_category_changed": "Topic category changed"
         "trigger:topic_tag_changed": "Topic tag changed"
@@ -166,6 +167,7 @@ en:
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
         "trigger:post_created": "Fires when a new post or reply is created"
+        "trigger:post_edited": "Fires after the first post in a topic is edited and cooked"
         "trigger:topic_created": "Fires when a new topic is created"
         "trigger:topic_category_changed": "Fires when a topic is moved to a different category"
         "trigger:topic_tag_changed": "Fires when tags are added to or removed from a topic"
@@ -486,6 +488,18 @@ en:
         category_id_description: "Only trigger for posts in this category"
         tag_names: "Tags"
         tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
+      post_edited:
+        category_id: "Category"
+        category_id_description: "Only trigger for posts in this category"
+        tag_names: "Tags"
+        tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
+        post_scope: "Post scope"
+        post_scope_description: "Choose which posts should trigger the workflow"
+        post_scope_first_post: "First post"
+        post_scope_replies: "Replies"
+        post_scope_all_posts: "All posts"
+        trust_levels: "Trust levels"
+        trust_levels_description: "Only trigger for posts created by users with these trust levels"
       topic_created:
         category_id: "Category"
         category_id_description: "Only trigger for topics in this category"
