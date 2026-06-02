@@ -8,6 +8,7 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { i18n } from "discourse-i18n";
 // Absolute addon path because `wf-ghost-block` lives in the universal
 // bundle (rendered on live pages when a block fails to resolve), while
 // this api-initializer is admin-only. Cross-bundle imports must use
@@ -40,7 +41,7 @@ export default apiInitializer((api) => {
   api.renderInOutlet("after-main-outlet", EditorShell);
 
   const editor = api.container.lookup("service:wireframe");
-  installBlockChrome();
+  installBlockChrome(editor);
   installGhostChildrenCreator();
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
@@ -342,7 +343,7 @@ function installOutletBoundary(editor) {
  * with any pre-registered callback (e.g. dev-tools' overlay): we run their
  * callback first and wrap whatever component they produced.
  */
-function installBlockChrome() {
+function installBlockChrome(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
   let fallbackKeyCounter = 0;
 
@@ -359,6 +360,30 @@ function installBlockChrome() {
 
     const owner = getOwnerWithFallback();
 
+    // Use the layout's stable per-entry key when available (exposed via the
+    // BLOCK_DEBUG payload, formatted as `${name}:${__stableKey}`). The
+    // outline walker mints the same key, so canvas ↔ outline selection
+    // compares apples to apples. The fallback handles ghost-render code
+    // paths in `dev-tools` that don't propagate the key.
+    const blockKey =
+      blockData.key ?? `${blockData.name}@${++fallbackKeyCounter}`;
+
+    // The outlet's implicit root layout IS the outlet — when it fails because
+    // every block inside is hidden / invalid, the ghost should read as the
+    // outlet (its name, an outlet-appropriate hint) rather than a generic
+    // "container". Nested / real layout ghosts are untouched (they aren't the
+    // recorded outlet root).
+    const isOutletRootGhost =
+      isGhost &&
+      blockData.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN &&
+      editor.isOutletRoot(blockKey);
+    const ghostName = isOutletRootGhost
+      ? (context?.rootOutletName ?? context?.outletName)
+      : blockData.name;
+    const ghostReason = isOutletRootGhost
+      ? i18n("wireframe.canvas.ghost.outlet_no_visible_children")
+      : blockData.failureReason;
+
     // Pick the inner component the chrome will wrap:
     //   - real blocks: the curried block component the upstream / blockData
     //     payload already supplies.
@@ -371,10 +396,10 @@ function installBlockChrome() {
       ? curryComponent(
           WFGhostBlock,
           {
-            blockName: blockData.name,
+            blockName: ghostName,
             blockId: blockData.id,
             failureType: blockData.failureType,
-            failureReason: blockData.failureReason,
+            failureReason: ghostReason,
             // When the parent ghost's children were resolved via
             // `GHOST_CHILDREN_CREATOR` (see `installGhostChildrenCreator`
             // below) they arrive as an array of `{Component, key}` ghost
@@ -390,14 +415,6 @@ function installBlockChrome() {
     if (!wrapped) {
       return upstream;
     }
-
-    // Use the layout's stable per-entry key when available (exposed via the
-    // BLOCK_DEBUG payload, formatted as `${name}:${__stableKey}`). The
-    // outline walker mints the same key, so canvas ↔ outline selection
-    // compares apples to apples. The fallback handles ghost-render code
-    // paths in `dev-tools` that don't propagate the key.
-    const blockKey =
-      blockData.key ?? `${blockData.name}@${++fallbackKeyCounter}`;
 
     return {
       ...upstream,

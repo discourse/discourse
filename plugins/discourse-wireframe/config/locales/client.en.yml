@@ -317,6 +317,7 @@ en:
           condition_failed: "This block's conditions aren't met right now, so it won't render on the live page. Adjust its conditions, or simulate a different viewport / persona, to preview it here."
           unknown_block: "This block name isn't registered — it likely refers to a renamed or removed block. Pick a replacement or remove the entry."
           no_visible_children: "This container has no visible children, so it won't render on the live page. Fix one of its children below to bring the container back."
+          outlet_no_visible_children: "This outlet has no visible blocks, so nothing renders here on the live page. Fix or add a block below."
           optional_missing: "Optional block isn't currently present."
         resize_handle_title: "Drag to resize across cells"
         image_resize_title: "Drag to resize. Shift to skip aspect lock."

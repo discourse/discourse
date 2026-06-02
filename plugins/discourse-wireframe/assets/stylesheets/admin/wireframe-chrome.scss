@@ -97,9 +97,18 @@ body.wireframe-active {
        visual treatment (selection, ghost preview, unfilled slot, error,
        overlap) — those rules paint their own outline that hover shouldn't
        repaint. `.--selected` is in there so the selected style wins when
-       you hover the currently-selected block. */
+       you hover the currently-selected block. `.--outlet-root` is in there
+       so the outlet keeps its amber frame on hover instead of flashing the
+       generic block orange. */
 
-    &:not(.--selected, .--ghost, .--slot, .--error, .--overlapping):hover:not(
+    &:not(
+        .--selected,
+        .--ghost,
+        .--slot,
+        .--error,
+        .--overlapping,
+        .--outlet-root
+      ):hover:not(
         :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
       ) {
       outline: var(--wireframe-container-border-width) dotted
@@ -762,95 +771,58 @@ body.wireframe-active {
     filter: grayscale(1);
   }
 
-  /* Outlet boundaries — dashed amber, mirrors .block-outlet-debug.
-     No `min-height` here: in flex / sidebar columns the floor would
-     compete with the inner block's natural size and the content
-     would overflow the boundary. Empty outlets get their visible
-     drop target from `.wireframe-empty-drop-placeholder` (the shared
-     empty-state component), which carries its own min-height. */
+  /* Outlet boundary — an invisible structural marker. Its `data-outlet-name`
+     drives mounted-outlet detection (`mountedOutletNames()`), but it draws
+     nothing: the outlet's frame + badge live on the implicit root layout's
+     chrome (`.--outlet-root`, below), so there's a single frame instead of a
+     box-in-box. `display: contents` keeps the marker in the DOM (still
+     queryable) while removing its box from layout. */
 
   .wireframe-outlet-boundary {
-    position: relative;
-    margin: var(--wireframe-container-margin);
-    border: var(--wireframe-container-border-width) dashed
-      var(--wireframe-block-outlet-color);
-    background: rgb(245 158 11 / var(--wireframe-bg-opacity));
-    padding: var(--wireframe-container-padding);
-
-    /* Vertical breathing room between consecutive top-level blocks so
-       the boundary's between-children drop landing is visible AND
-       directly hoverable. The wrappers live three divs below the
-       boundary (BlockOutletRootContainer renders
-       boundary → div.{outlet} → div.{outlet}__container →
-       div.{outlet}__layout → wrappers). The outlet name is dynamic,
-       but the deepest wrapper's class always ends in `__layout`, so
-       `[class$="__layout"]` targets it without hardcoding the outlet
-       name. The edge-band defer in `container-drop-target.js` covers
-       the case where the cursor sits ON a chrome's edge; this gap
-       makes the "between" zone a real, dragover-emitting strip of
-       background. */
-
-    [class$="__layout"]
-      > .wireframe-block-chrome-wrapper
-      + .wireframe-block-chrome-wrapper {
-      margin-top: 0.5rem;
-    }
+    display: contents;
   }
 
-  /* Outlet badge — rendered as a tab sitting directly above the
-     boundary's top-left border corner. Same positioning trick as the
-     block handle: absolute, `bottom: 100%` so the tab's bottom edge
-     meets the boundary's border, top corners rounded / bottom corners
-     square so the tab merges visually into the border below it. Unlike
-     the block handle, outlet badges stay visible always — the outlet
-     cascade needs to read at every nesting level. */
-
-  .wireframe-outlet-boundary__badge {
-    position: absolute;
-    bottom: 100%;
-    left: calc(-1 * var(--wireframe-container-border-width));
-    z-index: 1000;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: var(--wireframe-badge-padding);
-
-    /* Reset native button chrome — the badge is a button so it can select
-       the outlet (its implicit root layout), but it should look like the
-       tab it always was. */
-    border: 0;
-    background: var(--wireframe-block-outlet-color);
-    color: white;
-    font-size: var(--wireframe-badge-font-size);
-    font-weight: bold;
-    border-radius: 4px 4px 0 0;
-    text-shadow: var(--wireframe-shadow);
-    cursor: pointer;
-    pointer-events: auto;
-
-    .d-icon {
-      color: white !important;
-      font-size: var(--wireframe-badge-font-size) !important;
-      width: var(--wireframe-badge-font-size) !important;
-      filter: drop-shadow(var(--wireframe-shadow));
-    }
-
-    &:hover,
-    &.--active {
-      /* Lighten the tab on hover / when the outlet is selected so the
-         selection reads without changing the boundary frame itself. */
-      filter: brightness(1.15);
-    }
-  }
-
-  /* The implicit root layout IS the outlet, so its chrome shouldn't draw a
-     second frame inside the boundary's dashed border — drop its own border /
-     background and let the boundary be the single container frame. The
-     selection outline still applies via `.--selected`. */
+  /* The implicit root layout IS the outlet: its chrome carries the outlet
+     frame (always-on dashed amber outline + amber tint, mirroring the old
+     outlet boundary) and the always-visible badge, replacing the separate
+     boundary chrome. */
 
   .wireframe-block-chrome.--outlet-root {
-    border-color: transparent;
-    background: transparent;
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-outlet-color);
+    background: rgb(245 158 11 / var(--wireframe-bg-opacity));
+
+    /* Keep the outlet amber in every state — both hover and selection are
+       signalled by the line going dashed → solid, never a colour change, so
+       the outlet outline reads the same gold everywhere. Hover is scoped to
+       the innermost (the `:has()` guard) so hovering a child block reacts on
+       the child, not the outlet frame — matching the base hover convention. */
+
+    &:hover:not(
+        :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
+      ),
+    &.--selected {
+      outline-style: solid;
+    }
+
+    /* The badge (toolbar handle) stays visible always — like the old outlet
+       badge, the outlet identity should read without having to hover. */
+
+    > .wireframe-block-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .wireframe-block-toolbar__handle {
+      /* Amber to match the outlet hue; the outlet root isn't draggable, so
+         no grab cursor. */
+      background: var(--wireframe-block-outlet-color);
+      cursor: default;
+
+      &:hover {
+        background: var(--wireframe-block-outlet-hover-color);
+      }
+    }
   }
 }
 
