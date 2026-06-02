@@ -3,23 +3,22 @@
     margin: 0 0 1em 0;
   }
 
-  .bulk-invite-rows {
-    margin-bottom: 1em;
-
-    .group-selector {
-      margin: 0;
-    }
-  }
-
   .bulk-invite-row {
     display: flex;
+    align-items: center;
+    gap: 0.5em;
     padding: 0.25em 0;
 
-    .bulk-invite-attendance {
-      margin: 0 0.5em;
+    .form-kit__field {
+      margin-bottom: 0;
+    }
 
-      .select-kit-header {
-        height: 100%;
+    .bulk-invite-identifier-field {
+      flex: 1 1 auto;
+
+      .bulk-invite-identifier {
+        width: 100%;
+        margin: 0;
       }
     }
 
@@ -31,12 +30,8 @@
   .bulk-invites {
     margin-bottom: 2em;
 
-    .bulk-invite-actions {
-      display: flex;
-
-      .add-bulk-invite {
-        margin-left: auto;
-      }
+    .add-bulk-invite {
+      margin-left: auto;
     }
   }
 

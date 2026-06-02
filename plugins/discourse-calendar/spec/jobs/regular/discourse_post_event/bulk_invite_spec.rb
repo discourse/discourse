@@ -116,30 +116,6 @@ describe Jobs::DiscoursePostEventBulkInvite do
             expect(invitee_klass.find_by(user_id: invitee_4)).to eq(nil)
           end
 
-          it "removes the invitee if set to unknown" do
-            Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
-
-            invitee_klass = DiscoursePostEvent::Invitee
-
-            expect(invitee_klass.count).to eq(2)
-            expect(invitee_klass.find_by(user_id: group_1.users[0].id).status).to be(
-              invitee_klass.statuses[:not_going],
-            )
-            expect(invitee_klass.find_by(user_id: group_1.users[1].id).status).to be(
-              invitee_klass.statuses[:not_going],
-            )
-
-            Jobs::DiscoursePostEventBulkInvite.new.execute(
-              event_id: post_event_1.id,
-              invitees: [{ "identifier" => group_1.name, "attendance" => "unknown" }],
-              current_user_id: user_1.id,
-            )
-
-            expect(invitee_klass.count).to eq(0)
-            expect(invitee_klass.find_by(user_id: group_1.users[0].id)).to be(nil)
-            expect(invitee_klass.find_by(user_id: group_1.users[1].id)).to be(nil)
-          end
-
           it "sets the attendance to going by default" do
             SystemMessage.expects(:create_from_system_user).with(
               user_1,
@@ -195,6 +171,31 @@ describe Jobs::DiscoursePostEventBulkInvite do
             )
             expect(invitee_klass.find_by(user_id: invitee_4.id).status).to eq(
               invitee_klass.statuses[:going],
+            )
+          end
+
+          it "skips an unrecognized attendance instead of corrupting the invitee" do
+            invitee_klass = DiscoursePostEvent::Invitee
+
+            Jobs::DiscoursePostEventBulkInvite.new.execute(
+              event_id: post_event_1.id,
+              invitees: [{ "identifier" => invitee_3.username, "attendance" => "interested" }],
+              current_user_id: user_1.id,
+            )
+            expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
+              invitee_klass.statuses[:interested],
+            )
+
+            # An attendance value that is not a real status (e.g. a malformed CSV
+            # row) is skipped: the existing invitee keeps its status rather than
+            # being saved with a null status.
+            Jobs::DiscoursePostEventBulkInvite.new.execute(
+              event_id: post_event_1.id,
+              invitees: [{ "identifier" => invitee_3.username, "attendance" => "bogus" }],
+              current_user_id: user_1.id,
+            )
+            expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
+              invitee_klass.statuses[:interested],
             )
           end
         end
