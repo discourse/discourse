@@ -30,11 +30,6 @@ module MessageBusTestSync
   JS
 
   @pending = nil
-  @stats = Hash.new(0)
-
-  class << self
-    attr_reader :stats
-  end
 
   def self.start
     MUTEX.synchronize { @pending = {} }
@@ -52,7 +47,6 @@ module MessageBusTestSync
     return if id.nil? || @pending.nil?
     MUTEX.synchronize do
       next if @pending.nil?
-      @stats[:publishes] += 1
       @pending[channel] = id if id > (@pending[channel] || -1)
     end
   end
