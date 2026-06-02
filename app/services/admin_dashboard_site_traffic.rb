@@ -57,14 +57,14 @@ class AdminDashboardSiteTraffic
     { rows: report[:data].first(TOP_CARD_LIMIT), error: nil }
   end
 
-  def cached_report(type, extra_filters = {})
+  def cached_report(type)
     opts = {
       start_date: start_date,
       end_date: end_date,
       filters: {
         login_required: SiteSetting.login_required,
         host: Discourse.current_hostname,
-      }.merge(extra_filters),
+      },
       wrap_exceptions_in_test: true,
     }
 
@@ -80,7 +80,7 @@ class AdminDashboardSiteTraffic
   end
 
   def top_referrers_card
-    report = cached_report("top_referrers_by_browser_pageviews", include_direct: true)
+    report = cached_report("top_referrers_by_browser_pageviews")
     return { rows: [], error: report[:error].to_s } if report[:error].present?
 
     direct, external = report[:data].partition { |row| row[:normalized_referrer].nil? }

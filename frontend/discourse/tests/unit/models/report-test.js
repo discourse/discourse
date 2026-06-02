@@ -3,6 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Report from "discourse/admin/models/report";
 import { setPrefix } from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 
 function reportWithData(data) {
   const store = getOwner(this).lookup("service:store");
@@ -538,6 +539,27 @@ module("Unit | Model | report", function (hooks) {
     assert.strictEqual(
       userLink,
       "<a href='/forum/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+    );
+  });
+
+  test("referrer label renders Direct for a null value and an escaped host otherwise", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const report = store.createRecord("report", {
+      type: "top_referrers_by_browser_pageviews",
+      labels: [{ type: "referrer", property: "normalized_referrer" }],
+      data: [],
+    });
+
+    const referrerLabel = report.computedLabels[0];
+
+    assert.strictEqual(
+      referrerLabel.compute({ normalized_referrer: "news.ycombinator.com/<x>" })
+        .formattedValue,
+      "news.ycombinator.com/&lt;x&gt;"
+    );
+    assert.strictEqual(
+      referrerLabel.compute({ normalized_referrer: null }).formattedValue,
+      i18n("admin.dashboard.reports.top_referrers_by_browser_pageviews.direct")
     );
   });
 });
