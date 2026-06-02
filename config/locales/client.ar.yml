@@ -3651,7 +3651,7 @@ ar:
       collapse: "تصغير لوحة أداة الإنشاء"
       open: "فتح لوحة أداة الإنشاء"
       abandon: "إغلاق أداة الإنشاء وتجاهل المسودة"
-      edit_reason: "أضف سبب التعديل"
+      edit_reason: "ما سبب التعديل؟"
       enter_fullscreen: "فتح أداة الإنشاء في وضع ملء الشاشة"
       exit_fullscreen: "اخرج من أداة الإنشاء في وضع ملء الشاشة"
       exit_fullscreen_prompt: "اضغط على <kbd>ESC</kbd> للخروج من وضع الشاشة الكاملة"
@@ -3686,25 +3686,24 @@ ar:
           desc: إنشاء رسالة جديدة بدءًا بالمستلمين الجُدد
         reply_to_topic:
           label: الرد على الموضوع
+          trigger: الموضوع
           desc: الرد على الموضوع، وليس أي منشور محدَّد
         toggle_whisper:
           label: تفعيل الهمس
-          desc: تكون الهمسات مرئية لأعضاء فريق العمل فقط
         create_topic:
-          label: "موضوع جديد"
           desc: أنشئ موضوعًا جديدًا
         create_personal_message:
-          label: "رسالة جديدة"
           desc: "إنشاء رسالة خاصة جديدة"
         shared_draft:
           label: "مسودة مشتركة"
           desc: "إنشاء مسودة الموضوع ستكون مرئية للمستخدمين المسموح لهم فقط"
         toggle_topic_bump:
-          label: "تفعيل رفع الموضوع"
           desc: "الرد دون تغيير تاريخ آخر رد"
         toggle_unlisted:
           label: تفعيل إلغاء الإدراج
           desc: "لا يمكن الوصول إلى الموضوعات غير المدرجة إلا من خلال الرابط المباشر"
+        edit_post: "تعديل المنشور"
+        unknown_user: "المستخدم"
       reload: "إعادة التحميل"
       ignore: "تجاهل"
       image_alt_text:

@@ -586,7 +586,6 @@ fa_IR:
       admins: "مدیران ارشد"
       moderators: "مدیران"
       staff: "همکاران"
-      anonymous: "ناشناس"
       trust_level_0: "سطح اعتماد 0"
       trust_level_1: "سطح اعتماد 1"
       trust_level_2: "سطح اعتماد 2"
@@ -1477,7 +1476,6 @@ fa_IR:
       group_email_credentials: 'مشکلی در اعتبار نامه ایمیل برای گروه <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>وجود داشت. تا زمانی که این مشکل برطرف نشود، هیچ ایمیلی از صندوق ورودی گروه ارسال نخواهد شد. %{error}'
       rails_env: "سرور شما در حالت %{env} در حال اجراست"
       host_names: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
-      sidekiq: 'Sidekiq کار نمی کند. کار‌های زیادی مثل ارسال ایمیل ها، برای اجرا نیازمند sidekiq هستند. لطفا مطمئن شوید که حداقل یک پروسه sidekiq کار می‌کند. <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq بیشتر بدانید.</a>'
       queue_size: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
       ram: "سرور شما با کمتر از ۱ گیگایابت رم راه‌اندازی شده است. برای دیسکورس حداقل ۱ گیگابایت رم لازم است تا به درستی کار کند."
       subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."

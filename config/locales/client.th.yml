@@ -1506,6 +1506,7 @@ th:
         attribute_value: "ค่า"
         apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
+      edit_reason: "ทำไมคุณถึงแก้ไข"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
@@ -1520,13 +1521,14 @@ th:
           desc: ตอบกลับโพสต์ที่เจาะจง
         reply_to_topic:
           label: ตอบกลับกระทู้
+          trigger: หัวข้อ
         create_personal_message:
-          label: "ข้อความใหม่"
           desc: "สร้างข้อความส่วนตัวใหม่"
         shared_draft:
           label: "แบบร่างที่ถูกแบ่งปัน"
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
+        unknown_user: "ผู้ใช้"
       ignore: "ไม่สนใจ"
       image: "รูปภาพ"
     notifications:

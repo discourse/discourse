@@ -612,7 +612,6 @@ hu:
       admins: "adminisztrátorok"
       moderators: "moderátorok"
       staff: "stáb"
-      anonymous: "névtelen"
       trust_level_0: "bizalmi_szint_0"
       trust_level_1: "bizalmi_szint_1"
       trust_level_2: "bizalmi_szint_2"
@@ -1633,7 +1632,6 @@ hu:
       upcoming_change_stable_opted_out: 'Webhelye elutasította a(z) „%{upcoming_change}” várható módosítást. Ez a változtatás mostanra elérte a „Stabil” állapotot, és hamarosan véglegessé válhat, vagy eltávolításra kerülhet a beállítási lehetőségek közül. A részletek áttekintéséhez látogasson el a <a href="%{base_path}/admin/config/upcoming-changes">várható módosítások oldalára</a>.'
       rails_env: "A kiszolgáló jelenleg %{env} módban fut."
       host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
-      sidekiq: 'Sidekiq nem fut. Sok feladatot, például az e-mailek küldését, a Sidekiq aszinkron módon hajtja végre. Győződjön meg arról, hogy legalább egy Sidekiq-folyamat fut. <a href="https://github.com/mperham/sidekiq" target="_blank">Tudjon meg többet a Sidekiqről itt</a>.'
       queue_size: "A sorba állított feladatok száma %{queue_size}, ami magas. Ez a Sidekiq-folyamat(ok) problémáját jelezheti, vagy több Sidekiq-kezelőt kell hozzáadni."
       ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
       google_oauth2_config: 'A szerver úgy van beállítva, hogy engedélyezze a regisztrációt és a bejelentkezést a Google OAuth2 használatával (enable_google_oauth2_logins), de az ügyfélazonosító és az ügyfél titkossága nincs beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'

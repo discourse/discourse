@@ -3326,7 +3326,7 @@ pl_PL:
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
-      edit_reason_placeholder: "powód edycji?"
+      edit_reason_placeholder: "Powód edycji?"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
       remove_featured_link: "Usuń link z tematu."
       reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML. Możesz też przeciągnąć tu obrazek."
@@ -3396,7 +3396,10 @@ pl_PL:
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
       abandon: "Zamknij kompozytor i odrzuć szkic"
-      edit_reason: "Dodaj powód edycji"
+      edit_reason: "Powód edycji?"
+      whisper_indicator:
+        public: "Widoczny"
+        whispering: "Szeptanie"
       enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
       exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -3431,25 +3434,30 @@ pl_PL:
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
         reply_to_topic:
           label: Odpowiedz na temat
+          trigger: Temat
           desc: Odpowiedz na temat, a nie żaden konkretny wpis
         toggle_whisper:
           label: Przełącz szept
-          desc: Szepty są widoczne tylko dla zespołu zarządzającego
+          desc: Szepty są widoczne tylko dla uprawnionych grup
         create_topic:
-          label: "Nowy temat"
+          label: Utwórz temat
           desc: Utwórz nowy temat
         create_personal_message:
-          label: "Nowa wiadomość"
+          label: Utwórz wiadomość
           desc: "Utwórz nową prywatną wiadomość"
         shared_draft:
           label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
-          label: "Przełącz podbicie tematu"
+          label: "Nie podbijaj tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
+        create_unlisted_topic: "Temat usunięty z listy"
         toggle_unlisted:
           label: Przełącz zastrzeżone
           desc: "Dostęp do tematów niewymienionych na liście jest możliwy wyłącznie za pośrednictwem bezpośredniego łącza"
+        edit_post: "Edycja wpisu"
+        no_actions_available: "Brak dostępnych działań"
+        unknown_user: "Użytkownik"
       reload: "Przeładuj"
       ignore: "Ignoruj"
       image_alt_text:
@@ -3930,7 +3938,7 @@ pl_PL:
         dismiss_new_topics: "Odrzuć nowe tematy"
         dismiss_new_replies: "Odrzuć nowe odpowiedzi"
         dismiss_new_topics_with_selected:
-          one: "Odrzuć (%{count})"
+          one: "Odrzuć (%{count})Dismiss "
           few: "Odrzuć (%{count})"
           many: "Odrzuć (%{count})"
           other: "Odrzuć (%{count})"
@@ -6364,7 +6372,7 @@ pl_PL:
           title: "Edytuj tabelę"
           cancel: "anuluj"
           create: "Zapisz"
-          reason: "dlaczego edytujesz?"
+          reason: "Powód edycji?"
           trigger_reason: "Dodaj powód edycji"
         default_edit_reason: "Zaktualizuj tabelę za pomocą edytora tabel"
       default_header:

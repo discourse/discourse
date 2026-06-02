@@ -700,7 +700,6 @@ cs:
       admins: "administratori"
       moderators: "moderatori"
       staff: "redakce"
-      anonymous: "anonymní"
       trust_level_0: "uroven_duvery_0"
       trust_level_1: "uroven_duvery_1"
       trust_level_2: "uroven_duvery_2"
@@ -1773,7 +1772,6 @@ cs:
       group_email_credentials: 'Došlo k problému s e-mailovými přihlašovacími údaji pro skupinu <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Dokud nebude tento problém vyřešen, nebudou ze skupinové schránky odesílány žádné e-maily. %{error}'
       rails_env: "Váš server běží v módu %{env}."
       host_names: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
-      sidekiq: 'Neběží Sidekiq. Mnoho úkolů, jako je odesílání e-mailů, provádí Sidekiq asynchronně. Ujistěte se, že je spuštěn alespoň jeden proces Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Více informací o Sidekiq zde</a>.'
       queue_size: "Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů."
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
       google_oauth2_config: 'Server je nakonfigurován tak, aby umožňoval registraci a přihlášení pomocí Google OAuth2 (enable_google_oauth2_logins), ale hodnoty client id a client secret nejsou nastaveny. Přejděte do <a href="%{base_path}/admin/site_settings">nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Více informací naleznete v této příručce</a>.'

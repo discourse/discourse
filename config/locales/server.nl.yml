@@ -615,7 +615,6 @@ nl:
       admins: "beheerders"
       moderators: "moderators"
       staff: "medewerkers"
-      anonymous: "anoniem"
       trust_level_0: "vertrouwensniveau_0"
       trust_level_1: "vertrouwensniveau_1"
       trust_level_2: "vertrouwensniveau_2"
@@ -1651,7 +1650,6 @@ nl:
       upcoming_change_stable_opted_out: 'Je site heeft zich afgemeld voor de aankomende wijziging ''%{upcoming_change}''. Deze wijziging heeft nu de status ''Stabiel'' bereikt en wordt mogelijk binnenkort verwijderd of permanent gemaakt. Ga naar<a href="%{base_path}/admin/config/upcoming-changes">de pagina met aankomende wijzigingen</a> voor meer informatie over deze wijziging.'
       rails_env: "Je server werkt in de modus %{env}."
       host_names: "Je bestand config/database.yml gebruikt de standaard hostnaam localhost. Wijzig deze in de hostnaam van je website."
-      sidekiq: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
       queue_size: "Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit kan op een probleem met de Sidekiq-processen duiden, of mogelijk moet je meer Sidekiq-werkers toevoegen."
       ram: "Je server werkt met minder dan 1 GB aan geheugen in totaal. Minimaal 1 GB geheugen wordt aanbevolen."
       google_oauth2_config: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 toe te staan (enable_google_oauth2_logins), maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'

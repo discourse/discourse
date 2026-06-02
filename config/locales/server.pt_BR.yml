@@ -612,7 +612,6 @@ pt_BR:
       admins: "administração"
       moderators: "moderadores(as)"
       staff: "equipe"
-      anonymous: "anônimo(a)"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
@@ -1630,7 +1629,6 @@ pt_BR:
       upcoming_change_stable_opted_out: 'Seu site optou por não participar da próxima alteração "%{upcoming_change}". Essa alteração agora atingiu o status "Estável" e em breve será removida ou tornada permanente. Visite <a href="%{base_path}/admin/config/upcoming-changes">a página de próximas alterações</a> para conhecer os detalhes sobre essa alteração.'
       rails_env: "Seu servidor está rodando no modo %{env}."
       host_names: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
-      sidekiq: 'O Sidekiq não está em execução. Muitas tarefas, como envio de e-mails, são executadas de forma assíncrona pelo Sidekiq. Verifique se pelo menos um processo sidekiq está em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
       queue_size: "A quantidade de processos na fila é de %{queue_size}, o que é um número alto. Isso pode indicar um problema com os processos do Sidekiq, ou pode ser necessário adicionar mais trabalhadores do Sidekiq."
       ram: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
       google_oauth2_config: 'O servidor está configurado para permitir o cadastro e entrada com conta do Google OAuth2 (enable_google_oauth2_logins), mas o ID de cliente e os valores de segredo de cliente não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia para saber mais</a>.'
