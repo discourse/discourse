@@ -130,7 +130,7 @@ export default class ActivityByCategory extends Component {
 
       {{#if this.hasData}}
         <div class="db-activity__table-scroll-container">
-          <table class="db-activity__table">
+          <table class="db-activity-table">
             <thead>
               <tr>
                 <th class="db-activity-table__col-category">
