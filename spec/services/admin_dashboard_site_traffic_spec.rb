@@ -602,8 +602,8 @@ RSpec.describe AdminDashboardSiteTraffic do
           fabricate_referrer_universe
 
           [
-            described_class.build(start_date: nil, end_date: nil), # fresh
-            described_class.build(start_date: nil, end_date: nil), # cached country card path
+            described_class.build(start_date: nil, end_date: nil), # fresh report + cache write
+            described_class.build(start_date: nil, end_date: nil), # cached report hit
           ].each do |result|
             rows = result[:top_referrers][:rows]
 
@@ -686,6 +686,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         result = described_class.build(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
+        expect(result[:top_referrers]).to eq(rows: [], error: "exception")
       end
 
       it "serves the cached payload on subsequent calls within the cache window" do
@@ -748,11 +749,13 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         first = described_class.build(start_date: nil, end_date: nil)
         expect(first[:top_countries]).to eq(rows: [], error: "exception")
+        expect(first[:top_referrers]).to eq(rows: [], error: "exception")
 
         allow(Report).to receive(:find).and_call_original
 
         second = described_class.build(start_date: nil, end_date: nil)
         expect(second[:top_countries]).to eq(rows: [], error: "exception")
+        expect(second[:top_referrers]).to eq(rows: [], error: "exception")
       end
 
       it "returns a timeout error payload and retries the report on a subsequent call" do
@@ -767,6 +770,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         first = described_class.build(start_date: nil, end_date: nil)
         expect(first[:top_countries]).to eq(rows: [], error: "timeout")
+        expect(first[:top_referrers]).to eq(rows: [], error: "timeout")
 
         allow(Report).to receive(:find).and_call_original
         Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
@@ -774,6 +778,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         second = described_class.build(start_date: nil, end_date: nil)
         expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
+        expect(second[:top_referrers][:rows][1][:normalized_referrer]).to eq("google.com")
       end
     end
   end

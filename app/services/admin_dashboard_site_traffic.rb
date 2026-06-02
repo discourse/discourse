@@ -51,6 +51,17 @@ class AdminDashboardSiteTraffic
   attr_reader :start_date, :end_date
 
   def fetch_card(type)
+    report = cached_report(type)
+    return { rows: [], error: report[:error].to_s } if report[:error].present?
+
+    { rows: report[:data].first(TOP_CARD_LIMIT), error: nil }
+  end
+
+  # Returns the full cached report payload (`{ data:, error: }`) for a card type,
+  # reading the Report cache when warm and otherwise computing + caching the
+  # report. Callers slice/aggregate `data` themselves; the heavy aggregation
+  # stays memoized in Redis (35-minute TTL).
+  def cached_report(type)
     opts = {
       start_date: start_date,
       end_date: end_date,
@@ -62,34 +73,32 @@ class AdminDashboardSiteTraffic
     }
 
     cached = Report.find_cached(type, opts)
-    return cached_to_payload(cached) if cached
+    return { data: (cached[:data] || []).map(&:symbolize_keys), error: cached[:error] } if cached
 
     report = Report.find(type, opts)
-    return { rows: [], error: "exception" } if report.nil?
+    return { data: [], error: "exception" } if report.nil?
 
     # Timeouts skip the cache so the next request retries instead of being
     # pinned to the error for the full 35-minute TTL.
     Report.cache(report) if report.error != :timeout
 
-    return { rows: [], error: report.error.to_s } if report.error.present?
-
-    { rows: report.data.first(TOP_CARD_LIMIT), error: nil }
-  end
-
-  def cached_to_payload(cached)
-    error = cached[:error]
-    return { rows: [], error: error.to_s } if error.present?
-
-    { rows: (cached[:data] || []).map(&:symbolize_keys).first(TOP_CARD_LIMIT), error: nil }
+    { data: report.data, error: report.error }
   end
 
   # The Top referrers card surfaces Direct (no referrer) alongside the external
   # referrers, with every percentage sharing one denominator (direct +
-  # external-referred, own host excluded). This denominator differs from the
-  # standalone report's (referred-only), so the card owns its own SQL rather
-  # than reusing the report's row contract.
+  # external-referred, own host excluded). The expensive external aggregation
+  # stays on the Report cache; only Direct is computed live as a single cheap
+  # SUM over the NULL-referrer rollups.
   def top_referrers_card
-    direct_count, external_total, external_rows = referrer_universe
+    report = cached_report("top_referrers_by_browser_pageviews")
+    return { rows: [], error: report[:error].to_s } if report[:error].present?
+
+    external_rows = report[:data]
+    # The report caps at MAX_ROWS (200); summing those rows is the external
+    # total, as the tail beyond 200 is negligible.
+    external_total = external_rows.sum { |row| row[:count] }
+    direct_count = direct_pageview_count
     total = direct_count + external_total
 
     return { rows: [], error: nil } if total.zero?
@@ -100,45 +109,20 @@ class AdminDashboardSiteTraffic
     { rows: rows, error: nil }
   end
 
-  def referrer_universe
-    host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
-    escaped_host = host.gsub(/[\\_%]/) { |char| "\\#{char}" }
+  def direct_pageview_count
     count_expr = login_required? ? "logged_in_count" : "count"
 
-    rows =
-      DB.query(
-        <<~SQL,
-          SELECT
-            normalized_referrer IS NULL AS direct,
-            normalized_referrer,
-            SUM(#{count_expr})::bigint AS count
-          FROM browser_pageview_referrer_daily_rollups
-          WHERE date >= :start_date
-            AND date < :end_date_exclusive
-            AND (
-              normalized_referrer IS NULL
-              OR (
-                normalized_referrer <> :host_exact
-                AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-                AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
-              )
-            )
-          GROUP BY normalized_referrer
-          HAVING SUM(#{count_expr}) > 0
-          ORDER BY count DESC, normalized_referrer ASC
-        SQL
-        start_date: start_date.to_date,
-        end_date_exclusive: end_date.to_date + 1,
-        host_exact: host,
-        host_path_prefix: "#{escaped_host}/%",
-        host_query_prefix: "#{escaped_host}?%",
-      )
-
-    direct_count = rows.find(&:direct)&.count.to_i
-    external_rows = rows.reject(&:direct)
-    external_total = external_rows.sum(&:count)
-
-    [direct_count, external_total, external_rows]
+    DB.query_single(
+      <<~SQL,
+        SELECT COALESCE(SUM(#{count_expr}), 0)::bigint
+        FROM browser_pageview_referrer_daily_rollups
+        WHERE date >= :start_date
+          AND date < :end_date_exclusive
+          AND normalized_referrer IS NULL
+      SQL
+      start_date: start_date.to_date,
+      end_date_exclusive: end_date.to_date + 1,
+    ).first
   end
 
   def direct_row(count, total)
@@ -147,9 +131,9 @@ class AdminDashboardSiteTraffic
 
   def external_referrer_row(row, total)
     {
-      normalized_referrer: row.normalized_referrer,
-      count: row.count,
-      percent: percent_of(row.count, total),
+      normalized_referrer: row[:normalized_referrer],
+      count: row[:count],
+      percent: percent_of(row[:count], total),
     }
   end
 
