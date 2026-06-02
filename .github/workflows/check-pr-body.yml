@@ -15,6 +15,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          # Fetch the bump commit too: it's the parent of the dedupe commit
+          # that dependabot-pnpm-dedupe.yml adds on top.
+          fetch-depth: 2
       - name: "Replace PR body with commit message"
         shell: ruby {0}
         env:
@@ -32,10 +35,17 @@ jobs:
             exit 0
           end
 
-          commit_message = `git log -1 --pretty=%b`
+          # dependabot-pnpm-dedupe.yml adds a "pnpm dedupe [dependabot skip]"
+          # commit (no body) on top, so target the latest non-skip one.
+          commit_message = `git log -F --grep='[dependabot skip]' --invert-grep --pretty=%b -1`
           raise "Failed to get commit message" unless $?.success?
 
           new_description = commit_message.split("\n---\n").first.strip
+
+          if new_description.empty?
+            puts "Computed body is empty, skipping to avoid wiping the PR body"
+            exit 0
+          end
 
           puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
 
