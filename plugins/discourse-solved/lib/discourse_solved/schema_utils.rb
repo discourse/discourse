@@ -7,7 +7,9 @@ module DiscourseSolved
     # Structure: QAPage > Question (mainEntity) > acceptedAnswer / suggestedAnswer
     #
     # - First post gets no schema (its content bubbles up to the Question scope)
-    # - Small action posts get an isolated itemscope to prevent leaking into Question
+    # - Ineligible replies (small actions, hidden, or textless onebox/image-only posts)
+    #   get no schema attributes; the crawler view suppresses their microdata so nothing
+    #   attaches to the surrounding Question scope
     # - The solved post is marked as acceptedAnswer, other replies as suggestedAnswer
     #
     # Spec: https://schema.org/QAPage
@@ -31,7 +33,8 @@ module DiscourseSolved
       end
       topic.instance_variable_set(
         :@qa_page_schema,
-        schema_markup_enabled?(topic) && eligible_answers(topic).exists?,
+        schema_markup_enabled?(topic) &&
+          eligible_answers(topic).any? { |post| eligible_answer?(post) },
       )
     end
 
@@ -71,17 +74,21 @@ module DiscourseSolved
         "<meta itemprop='upvoteCount' content='#{first_post&.like_count || 0}'>"
     end
 
+    # Whether a post should be treated as an answer in schema output: a visible, regular,
+    # non-first reply with real text content (excludes onebox/image/emoji-only posts).
+    # Shared by the crawler microdata path and the JSON-LD service so both agree on what
+    # counts as an answer.
+    def self.eligible_answer?(post)
+      !post.is_first_post? && post.post_type == Post.types[:regular] && !post.hidden &&
+        post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
+    end
+
     private_class_method def self.accepted_answer_visible?(topic)
       topic.solved&.answer_posts&.any? { |post| Guardian.new.can_see_post?(post) }
     end
 
     private_class_method def self.eligible_answers(topic)
       topic.posts.where.not(post_number: 1).where(post_type: Post.types[:regular], hidden: false)
-    end
-
-    private_class_method def self.eligible_answer?(post)
-      !post.is_first_post? && post.post_type == Post.types[:regular] && !post.hidden &&
-        post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
     end
   end
 end
