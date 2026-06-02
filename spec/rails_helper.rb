@@ -141,10 +141,6 @@ end
 
 SiteSetting.automatically_download_gravatars = false
 
-# we need this env var to ensure that we can impersonate in test
-# this enable integration_helpers sign_in helper
-ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] = "1"
-
 module TestSetup
   # This is run before each test and before each before_all block
   def self.test_setup(x = nil)
@@ -1086,19 +1082,6 @@ RSpec.configure do |config|
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
 
-  class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
-    def log_on_user(user, session, cookies, opts = {})
-      # Try using the main session as `session` sometimes is a server session
-      (cookies.try(:request).try(:session) || session)[:current_user_id] = user.id
-      super
-    end
-
-    def log_off_user(session, cookies, push_subscription: nil)
-      # Try using the main session as `session` sometimes is a server session
-      (cookies.try(:request).try(:session) || session).delete(:current_user_id)
-      super
-    end
-  end
 end
 
 def before_next_spec(&callback)
@@ -1233,43 +1216,6 @@ def track_log_messages
   logger
 ensure
   Rails.logger.stop_broadcasting_to(logger)
-end
-
-# this takes a string and returns a copy where 2 different
-# characters are swapped.
-# e.g.
-#   swap_2_different_characters("abc") => "bac"
-#   swap_2_different_characters("aac") => "caa"
-def swap_2_different_characters(str)
-  swap1 = 0
-  swap2 = str.split("").find_index { |c| c != str[swap1] }
-  # if the string is made up of 1 character
-  return str if !swap2
-  str = str.dup
-  str[swap1], str[swap2] = str[swap2], str[swap1]
-  str
-end
-
-def create_request_env(path: nil)
-  env = Rails.application.env_config.dup.merge("rack.session" => ActionController::TestSession.new)
-  env.merge!(Rack::MockRequest.env_for(path)) if path
-  env
-end
-
-def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.current)
-  data = { token: token, user_id: user_id, trust_level: trust_level, issued_at: issued_at.to_i }
-  jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
-  jar.encrypted[:_t] = { value: data }
-  CGI.escape(jar[:_t])
-end
-
-def decrypt_auth_cookie(cookie)
-  ActionDispatch::Cookies::CookieJar.build(
-    ActionDispatch::TestRequest.create,
-    { _t: cookie },
-  ).encrypted[
-    :_t
-  ].with_indifferent_access
 end
 
 def apply_base_chrome_args(args = [])
