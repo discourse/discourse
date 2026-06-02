@@ -190,7 +190,7 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
  * @param {string|undefined} mode
  * @returns {string}
  */
-function normalizeLayoutMode(mode) {
+export function normalizeLayoutMode(mode) {
   if (mode === "free-grid") {
     return "grid";
   }

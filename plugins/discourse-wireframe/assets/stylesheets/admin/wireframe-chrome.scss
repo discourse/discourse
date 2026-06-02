@@ -1566,6 +1566,19 @@ body.wireframe-active {
       font-size: var(--font-down-2);
     }
 
+    /* Compact mode chip on nested layout rows (stack / row / grid) —
+       matches the chip the outlet header shows for its root layout. */
+
+    .outline-block__mode {
+      padding: 0 0.35rem;
+      border-radius: 3px;
+      background: var(--primary-low);
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      font-weight: 400;
+      text-transform: lowercase;
+    }
+
     /* Status badge — gates / failure indicator at the end of each row.
        Color mirrors the row's `.--error` state so failing blocks read
        as a single coherent warning rather than a row + lone icon. */

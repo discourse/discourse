@@ -14,7 +14,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { walkAllOutlets } from "../../lib/walk-layout";
+import { normalizeLayoutMode, walkAllOutlets } from "../../lib/walk-layout";
 
 // Inline `padding-left` driven by tree depth. We use `trustHTML` because
 // the value is a constant we compute (no user input), and Ember will
@@ -453,6 +453,13 @@ export default class OutlinePanel extends Component {
     // it's just not rendering right now. Dim the row so the outline
     // signals "won't show on the live page" without using error red.
     const isMuted = !hasError && conditionFailing;
+    // Nested `layout` blocks carry the same `mode` arg as the outlet's
+    // implicit root layout (stack / row / grid). Surface it as a chip on
+    // the row so the structure reads at a glance — mirrors the mode chip
+    // the outlet header shows for its root layout. Non-layout blocks get
+    // `null` so the badge only renders where a mode is meaningful.
+    const layoutMode =
+      row.blockName === "layout" ? normalizeLayoutMode(row.args?.mode) : null;
     return {
       ...row,
       conditionPassing,
@@ -460,6 +467,7 @@ export default class OutlinePanel extends Component {
       hasValidationError,
       hasError,
       isMuted,
+      layoutMode,
       statusIcon: this.#statusIconFor(row, conditionFailing),
       statusTooltip: this.#statusTooltipFor(row, conditionFailing),
     };
@@ -715,6 +723,15 @@ export default class OutlinePanel extends Component {
                     <span class="outline-block__leaf">{{dIcon "cube"}}</span>
                   {{/if}}
                   <span class="outline-block__name">{{row.blockName}}</span>
+                  {{#if row.layoutMode}}
+                    <span class="outline-block__mode">
+                      {{i18n
+                        (concat
+                          "wireframe.inspector.layout.mode_" row.layoutMode
+                        )
+                      }}
+                    </span>
+                  {{/if}}
                   {{#if row.blockId}}
                     <span class="outline-block__id">#{{row.blockId}}</span>
                   {{/if}}
