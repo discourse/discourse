@@ -56,6 +56,13 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
 
       return helper.response(response);
     });
+    server.get("/t/54077.json", () => {
+      const response = cloneJSON(topicFixtures["/t/54077.json"]);
+      response.fancy_title =
+        '<span dir="auto">Short topic with two posts</span>';
+
+      return helper.response(response);
+    });
   });
 
   test("replying to post", async function (assert) {
@@ -230,6 +237,21 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
     await composerActions.expand();
 
     assert.deepEqual(composerActions.actionIds().sort(), ["create_topic"]);
+  });
+
+  test("reply target link uses plain topic title when fancy title includes HTML", async function (assert) {
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click(".create.reply");
+
+    await visit("/");
+    await waitFor(".composer-actions-reply-target-link__label");
+
+    assert
+      .dom(".composer-actions-reply-target-link__label")
+      .hasText(
+        "Short topic with two posts",
+        "renders the plain topic title in the reply target link"
+      );
   });
 
   test("toggle no-bump via actions dropdown", async function (assert) {
