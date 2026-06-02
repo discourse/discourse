@@ -104,7 +104,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
             "usernames" => user.username,
             "post_type" => "first",
             "order" => "latest",
-            "max_results" => "10",
+            "limit" => "10",
           },
           item: item,
         ).first
@@ -132,7 +132,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
             "operation" => "list",
             "query" => "category:#{category.slug} username:#{user.username}",
             "categories" => other_category.slug,
-            "max_results" => "10",
+            "limit" => "10",
           },
           item: item,
         ).first
@@ -151,7 +151,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
           configuration: {
             "operation" => "list",
             "advanced_filter" => "username:#{user.username}",
-            "max_results" => "10",
+            "limit" => "10",
           },
           item: item,
         ).first
@@ -198,7 +198,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
         execute_node_output(
           configuration: {
             "operation" => "list",
-            "max_results" => "2",
+            "limit" => "2",
           },
           item: item,
         ).first

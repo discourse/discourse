@@ -209,7 +209,7 @@ module DiscourseWorkflows
                 },
               },
             },
-            max_results: {
+            limit: {
               type: :integer,
               required: false,
               default: DEFAULT_LIMIT,
@@ -313,8 +313,7 @@ module DiscourseWorkflows
             "keywords" => exec_ctx.get_node_parameter("keywords", item_index),
             "topic_keywords" => exec_ctx.get_node_parameter("topic_keywords", item_index),
             "order" => exec_ctx.get_node_parameter("order", item_index, default: "latest"),
-            "max_results" =>
-              exec_ctx.get_node_parameter("max_results", item_index, default: DEFAULT_LIMIT),
+            "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
             "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
             "advanced_filter" => exec_ctx.get_node_parameter("advanced_filter", item_index),
           }
@@ -377,8 +376,7 @@ module DiscourseWorkflows
 
         def list_posts(exec_ctx, config, item_index)
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          limit =
-            bounded_integer(config["max_results"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
+          limit = bounded_integer(config["limit"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
           offset = bounded_integer(config["offset"], default: 0, min: 0)
           memory_cap_limit_bytes = memory_cap_bytes
           query = query_from_config(config)
