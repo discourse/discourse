@@ -30,6 +30,11 @@ module MessageBusTestSync
   JS
 
   @pending = nil
+  @stats = Hash.new(0)
+
+  class << self
+    attr_reader :stats
+  end
 
   def self.start
     MUTEX.synchronize { @pending = {} }

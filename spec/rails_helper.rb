@@ -478,19 +478,25 @@ RSpec.configure do |config|
         mb_behind = nil
 
         begin
-          super
+          result = super
+          MessageBusTestSync.stats[:rescued] += 1 unless mb_behind.nil?
+          result
         rescue StandardError => e
           raise unless catch_error?(e, errors) && seconds != 0
 
           # On timeout, give a pending MessageBus publish one chance to land,
           # then retry the matcher once.
           if mb_behind.nil? && MessageBusTestSync.pending?
+            MessageBusTestSync.stats[:attempted] += 1
             mb_behind = MessageBusTestSync.flush!(session, timeout: 2)
             retry
           end
 
-          if mb_behind&.any?
-            warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}"
+          unless mb_behind.nil?
+            MessageBusTestSync.stats[:failed] += 1
+            if mb_behind.any?
+              warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}"
+            end
           end
 
           # This error will only have been raised if the timer expired
@@ -528,6 +534,33 @@ RSpec.configure do |config|
 
     config.before(:each, type: :system) { MessageBusTestSync.start }
     config.after(:each, type: :system) { MessageBusTestSync.stop }
+
+    config.after(:suite) do
+      stats = MessageBusTestSync.stats
+      next if stats.empty?
+
+      summary = "attempted=#{stats[:attempted]} rescued=#{stats[:rescued]} failed=#{stats[:failed]}"
+
+      if ENV["GITHUB_ACTIONS"]
+        puts "::notice title=MessageBusTestSync::#{summary}"
+      else
+        puts "[MessageBusTestSync] #{summary}"
+      end
+
+      if (path = ENV["GITHUB_STEP_SUMMARY"])
+        File.open(path, "a") do |f|
+          f.puts "### MessageBusTestSync"
+          f.puts "| rescued | attempted | failed |"
+          f.puts "| ------: | --------: | -----: |"
+          f.puts "| #{stats[:rescued]} | #{stats[:attempted]} | #{stats[:failed]} |"
+          f.puts ""
+          f.puts "- **rescued**: matchers that timed out and then passed after a MessageBus flush"
+          f.puts "- **attempted**: matchers that triggered the flush+retry path"
+          f.puts "- **failed**: retry also failed (real failure or unrecoverable MB race)"
+          f.puts ""
+        end
+      end
+    end
 
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
