@@ -350,6 +350,8 @@ en:
         query_placeholder: "category:support status:open"
         limit: "Limit"
         limit_description: "Maximum number of topics to return (1-100, default 30)"
+        offset: "Offset"
+        offset_description: "Number of matching topics to skip before returning results"
         actor_username: "Performed by user"
       set_fields:
         mode: "Mode"
