@@ -88,72 +88,12 @@ RSpec.describe "Navigation" do
   end
 
   context "when visiting mobile only routes on desktop" do
-    it "redirects /chat/channels to the last visited channel" do
+    it "redirects /chat/channels to browse" do
       visit("/chat/channels")
 
       expect(page).to have_current_path(
         chat.channel_path(category_channel.slug, category_channel.id),
       )
-    end
-
-    context "when user has no last_chat_channel_id" do
-      before { current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => nil) }
-
-      it "redirects /chat/channels to browse" do
-        visit("/chat/channels")
-
-        expect(page).to have_current_path("/chat/browse/open")
-      end
-    end
-
-    context "when last_chat_channel_id points to a DM channel" do
-      fab!(:other_user, :user)
-      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
-
-      before { current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => dm_channel.id) }
-
-      it "redirects /chat/channels to browse instead of into the DM" do
-        visit("/chat/channels")
-
-        expect(page).to have_current_path("/chat/browse/open")
-      end
-    end
-
-    context "when visiting /chat/direct-messages with DM channels" do
-      fab!(:other_user, :user)
-      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
-
-      it "redirects to the last visited DM when last_chat_channel_id is a DM" do
-        current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => dm_channel.id)
-        visit("/chat/direct-messages")
-
-        expect(page).to have_current_path(%r{/chat/c/.+/#{dm_channel.id}$})
-      end
-
-      it "redirects to the first DM when last_chat_channel_id is a public channel" do
-        current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => category_channel.id)
-        visit("/chat/direct-messages")
-
-        expect(page).to have_current_path(%r{/chat/c/.+/#{dm_channel.id}$})
-      end
-
-      it "redirects to the first DM when last_chat_channel_id is not set" do
-        current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => nil)
-        visit("/chat/direct-messages")
-
-        expect(page).to have_current_path(%r{/chat/c/.+/#{dm_channel.id}$})
-      end
-    end
-
-    context "when visiting /chat/direct-messages with no DM channels" do
-      before { current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => nil) }
-
-      it "stays on the route and renders the empty state" do
-        visit("/chat/direct-messages")
-
-        expect(page).to have_current_path("/chat/direct-messages")
-        expect(page).to have_css(".c-routes.--direct-messages")
-      end
     end
   end
 

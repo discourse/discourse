@@ -10,23 +10,17 @@ export default class ChatChannelsRoute extends DiscourseRoute {
     this.chat.activeChannel = null;
   }
 
-  async beforeModel() {
-    if (!this.site.desktopView) {
-      return;
-    }
-
+  beforeModel() {
     const id = this.currentUser.custom_fields.last_chat_channel_id;
-    if (id) {
-      const channel = await this.chatChannelsManager.find(id);
-      if (
-        channel?.isCategoryChannel &&
-        channel.currentUserMembership?.following
-      ) {
-        return this.router.replaceWith("chat.channel", ...channel.routeModels);
+    if (this.site.desktopView) {
+      if (id) {
+        this.chatChannelsManager.find(id).then((c) => {
+          return this.router.replaceWith("chat.channel", ...c.routeModels);
+        });
+      } else {
+        this.router.replaceWith("chat.browse.open");
       }
     }
-
-    return this.router.replaceWith("chat.browse.open");
   }
 
   model() {
