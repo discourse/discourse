@@ -10,7 +10,6 @@ module DiscourseWorkflows
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
         DEFAULT_LIMIT = 30
         MAX_LIMIT = 500
-        DEFAULT_MEMORY_CAP_MB = 50
 
         def self.list_string_property(control: nil, hidden: false)
           property = {
@@ -229,18 +228,6 @@ module DiscourseWorkflows
                 },
               },
             },
-            memory_cap_mb: {
-              type: :integer,
-              required: false,
-              ui: {
-                hidden: true,
-              },
-              display_options: {
-                show: {
-                  operation: ["list"],
-                },
-              },
-            },
             advanced_filter: {
               type: :string,
               required: false,
@@ -378,7 +365,6 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           limit = bounded_integer(config["limit"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
           offset = bounded_integer(config["offset"], default: 0, min: 0)
-          memory_cap_limit_bytes = memory_cap_bytes
           query = query_from_config(config)
           filter = PostsFilter.new(query, guardian: actor.guardian, limit: limit, offset: offset)
 
@@ -392,59 +378,17 @@ module DiscourseWorkflows
           end
 
           posts = filter.search.includes(:user, topic: %i[category tags])
-          serialize_posts_with_cap(
-            posts,
-            guardian: actor.guardian,
-            include_raw: truthy?(config["include_raw"]),
-            include_cooked: truthy?(config["include_cooked"]),
-            memory_cap_bytes: memory_cap_limit_bytes,
-            log: exec_ctx.log,
-            exec_ctx: exec_ctx,
-          )
-        end
-
-        def serialize_posts_with_cap(
-          posts,
-          guardian:,
-          include_raw:,
-          include_cooked:,
-          memory_cap_bytes:,
-          log:,
-          exec_ctx:
-        )
-          items = []
-          total_bytes = 0
-          truncated = false
-
-          posts.each do |post|
-            data = {
+          posts.map do |post|
+            {
               post:
                 exec_ctx.serialize_post(
                   post,
-                  guardian: guardian,
-                  include_raw: include_raw,
-                  include_cooked: include_cooked,
+                  guardian: actor.guardian,
+                  include_raw: truthy?(config["include_raw"]),
+                  include_cooked: truthy?(config["include_cooked"]),
                 ),
             }
-            item_bytes = JSON.generate(data).bytesize
-
-            if total_bytes + item_bytes > memory_cap_bytes
-              truncated = true
-              break
-            end
-
-            total_bytes += item_bytes
-            items << data
           end
-
-          if truncated
-            log&.warn(
-              "Post list truncated at #{items.length} posts because serialized output exceeded " \
-                "#{memory_cap_bytes} bytes",
-            )
-          end
-
-          items
         end
 
         def query_from_config(config)
@@ -531,10 +475,6 @@ module DiscourseWorkflows
           integer
         rescue ArgumentError, TypeError
           default
-        end
-
-        def memory_cap_bytes
-          DEFAULT_MEMORY_CAP_MB.megabytes
         end
 
         def truthy?(value)

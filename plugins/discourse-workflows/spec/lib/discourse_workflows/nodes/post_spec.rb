@@ -206,34 +206,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(limited_result.length).to eq(2)
     end
 
-    it "uses a hard-coded memory cap" do
-      stub_const(described_class, :DEFAULT_MEMORY_CAP_MB, 1) do
-        large_post =
-          Fabricate(
-            :post,
-            raw: "x" * (1.megabyte + 1000),
-            cooked: "<p>large</p>",
-            post_number: 1,
-            skip_validation: true,
-          )
-        messages = nil
-
-        memory_result =
-          execute_node_output(
-            configuration: {
-              "operation" => "list",
-              "query" => "topic:#{large_post.topic_id}",
-              "memory_cap_mb" => "50",
-              "include_raw" => true,
-            },
-            item: item,
-          ) { |exec_ctx| messages = exec_ctx.log.entries.map { |entry| entry["message"] } }.first
-
-        expect(memory_result).to eq([])
-        expect(messages).to include(a_string_matching(/Post list truncated/))
-      end
-    end
-
     it "raises for invalid advanced filters" do
       expect do
         execute_node(

@@ -733,6 +733,16 @@ RSpec.describe DiscourseWorkflows::Executor do
         end
       end
 
+      let(:oversized_output_node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(name: "action:oversized_output_test", version: "1.0")
+
+          def execute(_exec_ctx)
+            [[{ "json" => { "body" => "x" * 200 } }, { "json" => { "body" => "small" } }]]
+          end
+        end
+      end
+
       before do
         plugin = Plugin::Instance.new
         DiscoursePluginRegistry.register_discourse_workflows_node(raw_array_node_class, plugin)
@@ -741,14 +751,21 @@ RSpec.describe DiscourseWorkflows::Executor do
           malformed_array_node_class,
           plugin,
         )
+        DiscoursePluginRegistry.register_discourse_workflows_node(
+          oversized_output_node_class,
+          plugin,
+        )
         DiscourseWorkflows::Registry.reset_indexes!
       end
 
       after do
         DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-          [raw_array_node_class, named_outputs_node_class, malformed_array_node_class].include?(
-            entry[:value],
-          )
+          [
+            raw_array_node_class,
+            named_outputs_node_class,
+            malformed_array_node_class,
+            oversized_output_node_class,
+          ].include?(entry[:value])
         end
         DiscourseWorkflows::Registry.reset_indexes!
       end
@@ -801,6 +818,31 @@ RSpec.describe DiscourseWorkflows::Executor do
 
         expect(execution.status).to eq("error")
         expect(execution.error).to include("execute must return Array<Array<Item>>")
+      end
+
+      it "truncates oversized node outputs before routing downstream" do
+        stub_const(described_class, :MAX_NODE_OUTPUT_BYTES, 100) do
+          graph =
+            build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:topic_closed"
+              g.node "oversized-1", "action:oversized_output_test", name: "Oversized"
+              g.node "code-1", "action:code", configuration: { "code" => "return $input.all();" }
+              g.chain "trigger-1", "oversized-1", "code-1"
+            end
+          workflow =
+            Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+          execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+          expect(execution.status).to eq("success")
+
+          oversized_step = execution.execution_data.find_step(node_id: "oversized-1")
+          expect(oversized_step["output"]).to eq([])
+          expect(oversized_step.dig("metadata", "logs").first["message"]).to include(
+            "Node output truncated",
+          )
+          expect(execution.execution_data.find_step(node_id: "code-1")).to be_nil
+        end
       end
     end
   end

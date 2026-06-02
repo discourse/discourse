@@ -328,8 +328,6 @@ en:
         limit: "Limit"
         limit_description: "Maximum number of posts to return (1-500, default 30)"
         offset: "Offset"
-        memory_cap_mb: "Memory cap (MB)"
-        memory_cap_mb_description: "Maximum serialized output size, capped at 50 MB"
         advanced_filter: "Advanced filter"
         advanced_filter_description: "Additional PostsFilter query string appended to the configured filters"
         actor_username: "Performed by user"

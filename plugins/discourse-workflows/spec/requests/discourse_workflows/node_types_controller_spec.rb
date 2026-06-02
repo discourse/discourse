@@ -46,7 +46,6 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       )
       expect(properties["categories"]["ui"]).to include("hidden" => true)
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
-      expect(properties["memory_cap_mb"]["ui"]).to include("hidden" => true)
     end
 
     it "does not include metadata key in node type response" do
