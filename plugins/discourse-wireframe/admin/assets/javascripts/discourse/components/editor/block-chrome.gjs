@@ -14,6 +14,7 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import { i18n } from "discourse-i18n";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
+import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-dom";
 import { placementsOverlap } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
@@ -116,7 +117,7 @@ export default class BlockChrome extends Component {
     if (!this.chromeEl) {
       return null;
     }
-    return this.chromeEl.closest(".wf-layout--grid");
+    return this.chromeEl.closest(GRID_LAYOUT_SELECTOR);
   };
 
   /**
@@ -722,8 +723,24 @@ export default class BlockChrome extends Component {
     );
   }
 
+  /**
+   * Whether this chrome wraps an outlet's implicit root `layout` block. The
+   * root IS the outlet, so its chrome presents as the outlet (labelled by
+   * outlet name) and suppresses block-level affordances — moving, duplicating
+   * or deleting a page region makes no sense.
+   *
+   * @returns {boolean}
+   */
+  get isOutletRoot() {
+    return this.wireframe.isOutletRoot(this.args.blockKey);
+  }
+
   /** @returns {string} */
   get displayName() {
+    // The implicit root layout reads as the outlet itself, not "Layout".
+    if (this.isOutletRoot) {
+      return this.args.outletName;
+    }
     return this.metadata?.shortName ?? this.args.blockName;
   }
 
@@ -1318,6 +1335,7 @@ export default class BlockChrome extends Component {
             "wireframe-block-chrome"
             (if this.isSelected "--selected")
             (if this.isContainer "--container")
+            (if this.isOutletRoot "--outlet-root")
             (if this.isEmptyContainer "--empty-container")
             (if this.hasGridOverlap "--overlapping")
             (if this.isOutOfBounds "--out-of-bounds")
@@ -1356,6 +1374,7 @@ export default class BlockChrome extends Component {
             @blockKey={{@blockKey}}
             @outletName={{@outletName}}
             @displayName={{this.displayName}}
+            @isOutletRoot={{this.isOutletRoot}}
             @chromeEl={{this.chromeEl}}
             @isSelected={{this.isSelected}}
             @canFillImage={{this.imageCanFillBlock}}

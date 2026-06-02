@@ -2,9 +2,28 @@ import { module, test } from "qunit";
 import {
   cellAt,
   computeOccupation,
+  computeShiftPlan,
+  computeZone,
+  computeZoneCollapsed,
   formatTrack,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+
+// A grid slot fixture. `entryKey` (used internally by computeShiftPlan) keys
+// an entry as `"${block}:${__stableKey}"`, so a slot named "k" resolves to
+// the key "wf:slot:k". `column` / `row` accept CSS Grid shorthand ("2",
+// "1 / 3", "auto").
+function slot(key, column, row) {
+  return {
+    __stableKey: key,
+    block: "wf:slot",
+    containerArgs: { grid: { column, row } },
+  };
+}
+
+function keyOf(k) {
+  return `wf:slot:${k}`;
+}
 
 // The placement *parsers* (parseTrack / parseSlotPlacement / parsePlacement)
 // now live in core and are covered by core's grid-placement test. What's
@@ -78,6 +97,280 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         column: 1,
         row: 1,
       });
+    });
+  });
+
+  module("computeOccupation — auto-flow overflow", function () {
+    test("stops auto-placing once the grid is full", function (assert) {
+      //   2×1 grid, three AUTO slots — only two cells exist.
+      //   ┌─────┬─────┐
+      //   │ a₁  │ a₂  │   a₃ has nowhere to go → dropped
+      //   └─────┴─────┘
+      const slots = [
+        { containerArgs: { grid: { column: "auto", row: "auto" } } },
+        { containerArgs: { grid: { column: "auto", row: "auto" } } },
+        { containerArgs: { grid: { column: "auto", row: "auto" } } },
+      ];
+      const occupied = computeOccupation(slots, 2, 1);
+      assert.true(occupied.has("1,1"));
+      assert.true(occupied.has("1,2"));
+      assert.strictEqual(occupied.size, 2, "the third slot finds no free cell");
+    });
+  });
+
+  module("computeZone — five-zone cell hit test", function () {
+    //   ┌───────────────┐
+    //   │      up       │
+    //   │ l   center  r │   inner 60% = center, outer 20% bands = edges
+    //   │     down      │
+    //   └───────────────┘
+    test("inner 60% is center", function (assert) {
+      assert.strictEqual(computeZone(50, 50, 100, 100), "center");
+    });
+
+    test("each outer band maps to its edge", function (assert) {
+      assert.strictEqual(computeZone(5, 50, 100, 100), "left");
+      assert.strictEqual(computeZone(95, 50, 100, 100), "right");
+      assert.strictEqual(computeZone(50, 5, 100, 100), "up");
+      assert.strictEqual(computeZone(50, 95, 100, 100), "down");
+    });
+
+    test("corners use RELATIVE distance, not absolute pixels", function (assert) {
+      //   Same cursor (4, 4) in two cells of opposite aspect ratio.
+      //   Absolute px to each edge are identical (4 and 4), so only the
+      //   PROPORTIONS decide — proving the metric is x/w vs y/h.
+      //
+      //   wide & short 400×40        tall & narrow 40×400
+      //   ◆ near top-left            ◆ near top-left
+      //   left band is proportionally  top band is proportionally
+      //   nearer → "left"              nearer → "up"
+      assert.strictEqual(computeZone(4, 4, 400, 40), "left");
+      assert.strictEqual(computeZone(4, 4, 40, 400), "up");
+    });
+  });
+
+  module("computeZoneCollapsed — three-zone Y hit test", function () {
+    //   single-column (stacked) view — only up / center / down matter
+    //   ┌─────────┐  y < 25%  → up
+    //   │   up    │
+    //   ├─────────┤  middle   → center
+    //   │ center  │
+    //   ├─────────┤  y > 75%  → down
+    //   │  down   │
+    //   └─────────┘
+    test("maps the vertical thirds", function (assert) {
+      assert.strictEqual(computeZoneCollapsed(10, 100), "up");
+      assert.strictEqual(computeZoneCollapsed(50, 100), "center");
+      assert.strictEqual(computeZoneCollapsed(90, 100), "down");
+    });
+
+    test("0.25 / 0.75 are the band edges (inclusive of center)", function (assert) {
+      assert.strictEqual(computeZoneCollapsed(24, 100), "up");
+      assert.strictEqual(computeZoneCollapsed(25, 100), "center");
+      assert.strictEqual(computeZoneCollapsed(76, 100), "down");
+    });
+
+    test("zero-height element falls back to center", function (assert) {
+      assert.strictEqual(computeZoneCollapsed(0, 0), "center");
+    });
+  });
+
+  module("computeShiftPlan — cascade rearrangement", function () {
+    const dims3x1 = { columns: 3, rows: 1 };
+
+    test("A,B,C → C,A,B (drop C left of A; forward cascade)", function (assert) {
+      //   before:  ┌───┬───┬───┐      drop C onto A's LEFT edge
+      //            │ A │ B │ C │      A and B cascade RIGHT, C's old
+      //            └───┴───┴───┘      cell absorbs the shift
+      //   after:   │ C │ A │ B │
+      const slots = [
+        slot("A", "1", "1"),
+        slot("B", "2", "1"),
+        slot("C", "3", "1"),
+      ];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: keyOf("C"),
+        dropSlotKey: keyOf("A"),
+        direction: "left",
+        gridDims: dims3x1,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("A")),
+        { slotKey: keyOf("A"), column: "2", row: "1" }
+      );
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("B")),
+        { slotKey: keyOf("B"), column: "3", row: "1" }
+      );
+    });
+
+    test("A,B,C → B,C,A (drop A right of C; backward-cascade fallback)", function (assert) {
+      //   before:  ┌───┬───┬───┐      drop A past C's RIGHT edge; forward
+      //            │ A │ B │ C │      cascade would overflow, so B and C
+      //            └───┴───┴───┘      cascade LEFT into A's vacated cell
+      //   after:   │ B │ C │ A │
+      const slots = [
+        slot("A", "1", "1"),
+        slot("B", "2", "1"),
+        slot("C", "3", "1"),
+      ];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: keyOf("A"),
+        dropSlotKey: keyOf("C"),
+        direction: "right",
+        gridDims: dims3x1,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "3", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("B")),
+        { slotKey: keyOf("B"), column: "1", row: "1" }
+      );
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("C")),
+        { slotKey: keyOf("C"), column: "2", row: "1" }
+      );
+    });
+
+    test("clamps an over-the-edge landing and ripples into a vacancy", function (assert) {
+      //   3×1, col 2 empty:  ┌───┬───┬───┐   palette drop past C's right
+      //                      │ A │   │ C │   edge → landingCol 4 clamps to
+      //                      └───┴───┴───┘   3; C cascades back into col 2
+      //   after:             │ A │ C │ + │
+      const slots = [slot("A", "1", "1"), slot("C", "3", "1")];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: keyOf("C"),
+        direction: "right",
+        gridDims: dims3x1,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "3", row: "1" });
+      assert.deepEqual(plan.moves, [
+        { slotKey: keyOf("C"), column: "2", row: "1" },
+      ]);
+    });
+
+    test("empty-cell edge drop ripples the nearest neighbour (dropCell)", function (assert) {
+      //   4×1, cols 1 & 4 empty:  ┌───┬───┬───┬───┐   drop at the RIGHT
+      //                           │   │ B │ C │   │   edge of empty cell 1
+      //                           └───┴───┴───┴───┘   → lands col 2, pushing
+      //   after:                  │   │ + │ B │ C │   B and C right
+      const slots = [slot("B", "2", "1"), slot("C", "3", "1")];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: null,
+        dropCell: { column: 1, row: 1 },
+        direction: "right",
+        gridDims: { columns: 4, rows: 1 },
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "2", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("B")),
+        { slotKey: keyOf("B"), column: "3", row: "1" }
+      );
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("C")),
+        { slotKey: keyOf("C"), column: "4", row: "1" }
+      );
+    });
+
+    test("returns null when the cascade walks off a full grid", function (assert) {
+      //   2×1 FULL:  ┌───┬───┐   nothing can absorb a new block on either
+      //              │ A │ B │   side → no valid plan
+      //              └───┴───┘
+      const slots = [slot("A", "1", "1"), slot("B", "2", "1")];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: keyOf("B"),
+        direction: "right",
+        gridDims: { columns: 2, rows: 1 },
+      });
+      assert.strictEqual(plan, null);
+    });
+
+    test("cascades on the ROW axis (up direction)", function (assert) {
+      //   1×3:  ┌───┐  drop C above A → A and B cascade DOWN
+      //         │ A │
+      //         │ B │  after:  │ C │
+      //         │ C │          │ A │
+      //         └───┘          │ B │
+      const slots = [
+        slot("A", "1", "1"),
+        slot("B", "1", "2"),
+        slot("C", "1", "3"),
+      ];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: keyOf("C"),
+        dropSlotKey: keyOf("A"),
+        direction: "up",
+        gridDims: { columns: 1, rows: 3 },
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("A")),
+        { slotKey: keyOf("A"), column: "1", row: "2" }
+      );
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("B")),
+        { slotKey: keyOf("B"), column: "1", row: "3" }
+      );
+    });
+
+    test("preserves a multi-column span as it shifts", function (assert) {
+      //   4×1:  ┌───────┬───┬───┐   A spans cols 1–2; drop source on A's
+      //         │   A   │ B │   │   LEFT → A keeps width 2 at cols 2–3,
+      //         └───────┴───┴───┘   B slides to col 4
+      //   after:│ + │   A   │ B │
+      const slots = [slot("A", "1 / 3", "1"), slot("B", "3", "1")];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: keyOf("A"),
+        direction: "left",
+        gridDims: { columns: 4, rows: 1 },
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("A")),
+        { slotKey: keyOf("A"), column: "2 / 4", row: "1" },
+        "the 2-wide span is preserved"
+      );
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("B")),
+        { slotKey: keyOf("B"), column: "4", row: "1" }
+      );
+    });
+
+    test("returns null for an unknown drop slot or no anchor at all", function (assert) {
+      const slots = [slot("A", "1", "1")];
+      assert.strictEqual(
+        computeShiftPlan({
+          slots,
+          sourceKey: null,
+          dropSlotKey: keyOf("ghost"),
+          direction: "left",
+          gridDims: dims3x1,
+        }),
+        null,
+        "drop slot not in the grid"
+      );
+      assert.strictEqual(
+        computeShiftPlan({
+          slots,
+          sourceKey: null,
+          dropSlotKey: null,
+          direction: "left",
+          gridDims: dims3x1,
+        }),
+        null,
+        "neither dropSlotKey nor dropCell"
+      );
     });
   });
 });

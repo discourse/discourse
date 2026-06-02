@@ -9,11 +9,14 @@ import { trustHTML } from "@ember/template";
 import { parsePlacement } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-dom";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
 import {
   computeOccupation,
   computeShiftPlan,
+  computeZone,
+  computeZoneCollapsed,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
@@ -138,8 +141,8 @@ export default class GridOverlay extends Component {
   // placement when the layout collapses to one column. Inline
   // `style="grid-column: ..."` would win over any stylesheet rule;
   // the custom-property hand-off lets the stylesheet take precedence
-  // when needed without `!important`. Same pattern `wf-layout`'s
-  // `cellStyle` uses for `.wf-layout__cell`.
+  // when needed without `!important`. Same pattern the layout block's
+  // `cellStyle` uses for `.d-block-layout__cell`.
   //
   // `order` is also set so that when the `@container` collapse rewrites
   // every cell to `grid-row: auto`, auto-placement walks the children
@@ -295,7 +298,7 @@ export default class GridOverlay extends Component {
     // the chrome wrapper. Walk up to chrome and find the layout div so
     // `{{#in-element}}` below mounts cells / overlay as direct grid
     // children.
-    const gridEl = element.parentElement?.querySelector(".wf-layout--grid");
+    const gridEl = element.parentElement?.querySelector(GRID_LAYOUT_SELECTOR);
     this.gridElement = gridEl;
     if (!gridEl) {
       return;
@@ -504,6 +507,23 @@ export default class GridOverlay extends Component {
           });
     }
     if (kind === "shift") {
+      // When the insert line sits between two identifiable occupied
+      // slots, name both ("between A and B") to match the stack / row
+      // copy. Edge inserts (one side empty) keep the generic wording.
+      const neighbors = this.#lineNeighborNames(descriptor);
+      if (neighbors) {
+        return source.type === "wf-palette-block"
+          ? i18n("wireframe.canvas.drop_preview.add_between", {
+              name: sourceName,
+              before: neighbors.before,
+              after: neighbors.after,
+            })
+          : i18n("wireframe.canvas.drop_preview.move_between", {
+              name: sourceName,
+              before: neighbors.before,
+              after: neighbors.after,
+            });
+      }
       return i18n("wireframe.canvas.drop_preview.shift", {
         name: sourceName,
       });
@@ -722,7 +742,7 @@ export default class GridOverlay extends Component {
       return null;
     }
     const bounds = this.#cellBounds(cell, tracks);
-    const zone = this.#computeZone(
+    const zone = computeZone(
       x - bounds.left,
       y - bounds.top,
       bounds.width,
@@ -805,10 +825,7 @@ export default class GridOverlay extends Component {
         return null;
       }
       const rect = emptyEl.getBoundingClientRect();
-      const zone = this.#computeZoneCollapsed(
-        input.clientY - rect.top,
-        rect.height
-      );
+      const zone = computeZoneCollapsed(input.clientY - rect.top, rect.height);
       const base = this.#cellDescriptorForZone({ column: col, row }, zone);
       return this.#finishCollapsedDescriptor(
         this.#attachCollapsedHit(base, rect, zone),
@@ -831,7 +848,7 @@ export default class GridOverlay extends Component {
           return null;
         }
         const rect = candidate.getBoundingClientRect();
-        const zone = this.#computeZoneCollapsed(
+        const zone = computeZoneCollapsed(
           input.clientY - rect.top,
           rect.height
         );
@@ -878,26 +895,6 @@ export default class GridOverlay extends Component {
       },
       _collapsedZone: zone,
     };
-  }
-
-  /**
-   * Three-zone Y-axis hit test for the collapsed view. Left / right
-   * don't carry semantics in a vertical stack — only top (insert
-   * above) / center (swap-or-move-into) / bottom (insert below) do.
-   */
-  #computeZoneCollapsed(y, h) {
-    const edge = 0.25;
-    if (h <= 0) {
-      return "center";
-    }
-    const fromTop = y / h;
-    if (fromTop < edge) {
-      return "up";
-    }
-    if (fromTop > 1 - edge) {
-      return "down";
-    }
-    return "center";
   }
 
   /**
@@ -1074,6 +1071,45 @@ export default class GridOverlay extends Component {
   }
 
   /**
+   * For a line-insert descriptor, resolves the display names of the two
+   * occupied slots the line sits between. Returns `null` when either
+   * side is empty (an edge insert with only one neighbour, or a line at
+   * the grid's outer boundary) — the caller then keeps the generic
+   * "neighbours shift" copy instead of naming a non-existent block.
+   */
+  #lineNeighborNames(descriptor) {
+    let beforeCell, afterCell;
+    if (descriptor.kind === "line-column") {
+      const row = descriptor.row?.start;
+      if (row == null) {
+        return null;
+      }
+      beforeCell = { column: descriptor.line - 1, row };
+      afterCell = { column: descriptor.line, row };
+    } else if (descriptor.kind === "line-row") {
+      const column = descriptor.column?.start;
+      if (column == null) {
+        return null;
+      }
+      beforeCell = { column, row: descriptor.line - 1 };
+      afterCell = { column, row: descriptor.line };
+    } else {
+      return null;
+    }
+
+    const beforeSlot = this.#slotAtCell(beforeCell);
+    const afterSlot = this.#slotAtCell(afterCell);
+    if (!beforeSlot || !afterSlot) {
+      return null;
+    }
+    return {
+      before:
+        this.wireframe.lookupBlockDisplayName(beforeSlot.block) || "block",
+      after: this.wireframe.lookupBlockDisplayName(afterSlot.block) || "block",
+    };
+  }
+
+  /**
    * Slot-level descriptor for a given zone. Center maps to a rect
    * (swap / replace if Shift, or null when the source is a palette
    * block — palette blocks can't land on an occupied cell's center).
@@ -1178,38 +1214,6 @@ export default class GridOverlay extends Component {
       row: { start: cell.row, end: cell.row + 1 },
       variant: "move",
     };
-  }
-
-  /**
-   * Five-zone hit test inside a cell. Returns `"center"` for the
-   * inner 60% rect, otherwise one of `"left"`/`"right"`/`"up"`/
-   * `"down"` (outer 20% bands). Corners resolve to whichever edge
-   * the cursor is RELATIVELY closer to — `x/w` vs `y/h` rather than
-   * absolute pixels — so a hover on the left edge of a tall narrow
-   * cell stays "left" instead of biasing toward "up"/"down" near
-   * corners.
-   */
-  #computeZone(x, y, w, h) {
-    const edge = 0.2;
-    const fromLeft = x / w;
-    const fromRight = (w - x) / w;
-    const fromTop = y / h;
-    const fromBottom = (h - y) / h;
-    const minFromEdge = Math.min(fromLeft, fromRight, fromTop, fromBottom);
-
-    if (minFromEdge > edge) {
-      return "center";
-    }
-    if (minFromEdge === fromLeft) {
-      return "left";
-    }
-    if (minFromEdge === fromRight) {
-      return "right";
-    }
-    if (minFromEdge === fromTop) {
-      return "up";
-    }
-    return "down";
   }
 
   /**

@@ -24,8 +24,34 @@ import InspectorRawJson from "./inspector-raw-json";
 export default class InspectorPanel extends Component {
   @service wireframe;
 
-  isTabActive = (tab) => this._activeTab === tab;
+  isTabActive = (tab) => this.currentTab === tab;
   @tracked _activeTab = "args";
+
+  /**
+   * The effective active tab. The outlet root has no Conditions tab (a page
+   * region doesn't carry visibility conditions), so a lingering "conditions"
+   * selection from a previous block falls back to "args".
+   *
+   * @returns {string}
+   */
+  get currentTab() {
+    if (this.isOutletRoot && this._activeTab === "conditions") {
+      return "args";
+    }
+    return this._activeTab;
+  }
+
+  /**
+   * Whether the current selection is an outlet's implicit root layout. The
+   * inspector presents it AS the outlet: the layout form for arranging the
+   * region, but no Conditions tab and no id / classNames metadata (the outlet
+   * already owns its identity).
+   *
+   * @returns {boolean}
+   */
+  get isOutletRoot() {
+    return this.wireframe.isOutletRoot(this.wireframe.selectedBlockKey);
+  }
 
   /**
    * `true` when a block is currently selected and the inspector has
@@ -164,7 +190,9 @@ export default class InspectorPanel extends Component {
         </span>
       </div>
 
-      <InspectorMetadataSection />
+      {{#unless this.isOutletRoot}}
+        <InspectorMetadataSection />
+      {{/unless}}
 
       <div class="wireframe-inspector__tabs" role="tablist">
         <DButton
@@ -177,14 +205,16 @@ export default class InspectorPanel extends Component {
           @icon={{if this.argsTabHasErrors "triangle-exclamation"}}
           @action={{fn this.setTab "args"}}
         />
-        <DButton
-          class={{dConcatClass
-            "btn-flat wireframe-inspector__tab"
-            (if (this.isTabActive "conditions") "--active")
-          }}
-          @label="wireframe.inspector.tab_conditions"
-          @action={{fn this.setTab "conditions"}}
-        />
+        {{#unless this.isOutletRoot}}
+          <DButton
+            class={{dConcatClass
+              "btn-flat wireframe-inspector__tab"
+              (if (this.isTabActive "conditions") "--active")
+            }}
+            @label="wireframe.inspector.tab_conditions"
+            @action={{fn this.setTab "conditions"}}
+          />
+        {{/unless}}
         <DButton
           class={{dConcatClass
             "btn-flat wireframe-inspector__tab"

@@ -229,21 +229,32 @@ export default class BlockToolbar extends Component {
         `dragPreview` is the chrome's outer div (passed in by
         BlockChrome via `@chromeEl`) so the browser shows a
         translucent copy of the actual block during the drag instead
-        of the small handle tab. }}
-      <span
-        class="wireframe-block-toolbar__handle"
-        title={{i18n "wireframe.canvas.drag_handle_title"}}
-        {{dDragAndDropSource
-          type="wf-block"
-          data=(hash blockKey=@blockKey outletName=@outletName)
-          dragPreview=@chromeEl
-          onDragStart=this.startDrag
-          onDrop=this.wireframe.endDrag
-        }}
-      >
-        {{dIcon "grip-lines"}}
-        <span>{{@displayName}}</span>
-      </span>
+        of the small handle tab.
+
+        The outlet root is a page region, not a movable block — its
+        handle drops the drag source and reads as the outlet (cube
+        icon, outlet name) rather than a grip. }}
+      {{#if @isOutletRoot}}
+        <span class="wireframe-block-toolbar__handle" title={{@displayName}}>
+          {{dIcon "cubes"}}
+          <span>{{@displayName}}</span>
+        </span>
+      {{else}}
+        <span
+          class="wireframe-block-toolbar__handle"
+          title={{i18n "wireframe.canvas.drag_handle_title"}}
+          {{dDragAndDropSource
+            type="wf-block"
+            data=(hash blockKey=@blockKey outletName=@outletName)
+            dragPreview=@chromeEl
+            onDragStart=this.startDrag
+            onDrop=this.wireframe.endDrag
+          }}
+        >
+          {{dIcon "grip-lines"}}
+          <span>{{@displayName}}</span>
+        </span>
+      {{/if}}
 
       {{#if @isSelected}}
         {{#if this.isUrlFieldEditing}}
@@ -284,29 +295,33 @@ export default class BlockToolbar extends Component {
             @preventFocus={{true}}
           />
         {{else}}
-          <DButton
-            class="btn-flat wireframe-block-toolbar__btn"
-            @icon="arrow-up"
-            @title="wireframe.canvas.toolbar.move_up"
-            @ariaLabel="wireframe.canvas.toolbar.move_up"
-            @disabled={{if this.canMoveUp false true}}
-            @action={{this.moveUp}}
-          />
-          <DButton
-            class="btn-flat wireframe-block-toolbar__btn"
-            @icon="arrow-down"
-            @title="wireframe.canvas.toolbar.move_down"
-            @ariaLabel="wireframe.canvas.toolbar.move_down"
-            @disabled={{if this.canMoveDown false true}}
-            @action={{this.moveDown}}
-          />
-          <DButton
-            class="btn-flat wireframe-block-toolbar__btn"
-            @icon="copy"
-            @title="wireframe.canvas.toolbar.duplicate"
-            @ariaLabel="wireframe.canvas.toolbar.duplicate"
-            @action={{this.duplicate}}
-          />
+          {{! Move / duplicate / delete don't apply to the outlet root —
+            a page region can't be reordered, copied, or removed. }}
+          {{#unless @isOutletRoot}}
+            <DButton
+              class="btn-flat wireframe-block-toolbar__btn"
+              @icon="arrow-up"
+              @title="wireframe.canvas.toolbar.move_up"
+              @ariaLabel="wireframe.canvas.toolbar.move_up"
+              @disabled={{if this.canMoveUp false true}}
+              @action={{this.moveUp}}
+            />
+            <DButton
+              class="btn-flat wireframe-block-toolbar__btn"
+              @icon="arrow-down"
+              @title="wireframe.canvas.toolbar.move_down"
+              @ariaLabel="wireframe.canvas.toolbar.move_down"
+              @disabled={{if this.canMoveDown false true}}
+              @action={{this.moveDown}}
+            />
+            <DButton
+              class="btn-flat wireframe-block-toolbar__btn"
+              @icon="copy"
+              @title="wireframe.canvas.toolbar.duplicate"
+              @ariaLabel="wireframe.canvas.toolbar.duplicate"
+              @action={{this.duplicate}}
+            />
+          {{/unless}}
           {{#if this.canForceExpand}}
             <DButton
               class={{if
@@ -402,17 +417,19 @@ export default class BlockToolbar extends Component {
               @preventFocus={{true}}
             />
           {{/if}}
-          <span
-            class="wireframe-block-toolbar__separator"
-            aria-hidden="true"
-          ></span>
-          <DButton
-            class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__btn--danger"
-            @icon="trash-can"
-            @title="wireframe.canvas.toolbar.delete"
-            @ariaLabel="wireframe.canvas.toolbar.delete"
-            @action={{this.remove}}
-          />
+          {{#unless @isOutletRoot}}
+            <span
+              class="wireframe-block-toolbar__separator"
+              aria-hidden="true"
+            ></span>
+            <DButton
+              class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__btn--danger"
+              @icon="trash-can"
+              @title="wireframe.canvas.toolbar.delete"
+              @ariaLabel="wireframe.canvas.toolbar.delete"
+              @action={{this.remove}}
+            />
+          {{/unless}}
         {{/if}}
       {{/if}}
     </div>

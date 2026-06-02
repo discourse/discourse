@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
 
 const ACCEPTED_KINDS = ["wf-block", "wf-palette-block"];
 
@@ -130,17 +131,20 @@ export default class ContainerDropTargetModifier extends Modifier {
     // root, so there's no parent to defer to; slot chromes also
     // opt out since slots are always single-cell inside a grid and
     // the grid owns sibling moves at the parent level.
-    const isInEdgeBand = (input) => {
-      if (containerKey == null || isSlot) {
+    const shouldDeferToParent = (input) => {
+      // The outlet root (no parent) and slots (the grid owns their sibling
+      // moves) never defer — only nested container chromes do. The implicit
+      // root layout IS the outlet, so it doesn't defer either: there's no
+      // sibling level above it to fall through to, and deferring would leave
+      // a dead band along its edges where drops vanish.
+      if (
+        containerKey == null ||
+        isSlot ||
+        wireframe.isOutletRoot(containerKey)
+      ) {
         return false;
       }
-      const rect = chromeElement.getBoundingClientRect();
-      return (
-        input.clientY < rect.top + EDGE_BAND ||
-        input.clientY > rect.bottom - EDGE_BAND ||
-        input.clientX < rect.left + EDGE_BAND ||
-        input.clientX > rect.right - EDGE_BAND
-      );
+      return isInEdgeBand(chromeElement.getBoundingClientRect(), input);
     };
 
     const descriptorFor = (source, input) => {
@@ -170,7 +174,7 @@ export default class ContainerDropTargetModifier extends Modifier {
     this.#cleanup = registerDragAndDropTarget(chromeElement, () => ({
       accepts: ACCEPTED_KINDS,
       indicator: false,
-      canDrop: ({ input }) => !isInEdgeBand(input),
+      canDrop: ({ input }) => !shouldDeferToParent(input),
       onDragEnter: ({ source, location }) =>
         wireframe.setActiveDropPreview(
           descriptorFor(source, location.current.input)
@@ -195,25 +199,26 @@ export default class ContainerDropTargetModifier extends Modifier {
  * the container. Algorithm:
  *
  *   1. Walk the container's direct children (each is a rendered
- *      block chrome). Record each child's `getBoundingClientRect()`
- *      along the active axis.
- *   2. Find the index `i` whose child the cursor is INSIDE on the
- *      axis. If cursor sits in a gap between two children, `i`
- *      points at the child after the gap.
- *   3. If inside child `i`:
- *      - First third of the child → INSERT before child[i].
- *      - Last third → INSERT after child[i].
- *      - Middle third + child is a `wf:slot` → REPLACE slot.
- *      - Middle third + child is a container → INSIDE child.
- *      - Middle third + leaf block → no overlay (no valid landing).
- *   4. If in a gap or off the ends, INSERT at that boundary.
+ *      block chrome) and project each wrapper's bounding rect onto
+ *      the active axis into a `{ near, far }` segment.
+ *   2. Hand the segments and the cursor to `resolveLinearDrop`, the
+ *      pure geometry helper. It returns either a `gap` (a boundary
+ *      between siblings / at the container edge) or a `middle` (the
+ *      middle third of one child).
+ *   3. A `gap` → `buildBoundaryDescriptor`. Crucially, the last third
+ *      of child `i` and the first third of child `i + 1` resolve to
+ *      the SAME boundary, so a single "between A and B" zone replaces
+ *      the old separate "after A" / "before B" pair.
+ *   4. A `middle` → REPLACE (slot) / INSIDE (container) / nothing
+ *      (leaf), by block type.
  *
- * Returns `null` when the source can't legally land (self-drop,
- * cycle, etc.) so the overlay disappears for invalid targets.
+ * Returns `null` when the source can't legally land (self-drop into
+ * an adjacent boundary, cross-outlet rejection, etc.) so the overlay
+ * disappears for invalid targets.
  *
  * @returns {Object|null}
  */
-function computeDescriptor({
+export function computeDescriptor({
   wireframe,
   container,
   input,
@@ -234,96 +239,38 @@ function computeDescriptor({
     .filter(Boolean);
   const cursor = axis === "x" ? input.clientX : input.clientY;
 
-  // Find first child whose far edge is past the cursor. That's the
-  // candidate "this child or before it".
-  let landingIndex = children.length;
-  for (let i = 0; i < children.length; i++) {
-    const rect = children[i].wrapper.getBoundingClientRect();
-    const far = axis === "x" ? rect.right : rect.bottom;
-    if (cursor < far) {
-      landingIndex = i;
-      break;
-    }
-  }
+  // Project each child onto the active axis so the pure resolver can
+  // decide the landing without re-reading the DOM.
+  const segments = children.map((child) => {
+    const rect = child.wrapper.getBoundingClientRect();
+    return axis === "x"
+      ? { near: rect.left, far: rect.right }
+      : { near: rect.top, far: rect.bottom };
+  });
 
-  if (landingIndex === children.length) {
-    // Cursor past every child → INSERT at the container's end.
-    const lastChild =
-      children.length > 0 ? children[children.length - 1] : null;
-    return buildInsertDescriptor({
+  const result = resolveLinearDrop(segments, cursor);
+
+  if (result.kind === "gap") {
+    const before = result.gap > 0 ? children[result.gap - 1] : null;
+    const after = result.gap < children.length ? children[result.gap] : null;
+    return buildBoundaryDescriptor({
       wireframe,
       container,
       axis,
-      side: "end",
-      anchorRect: lastChild
-        ? lastChild.wrapper.getBoundingClientRect()
-        : container.getBoundingClientRect(),
+      before,
+      after,
       containerKey,
       outletName,
       source,
-      position: "after",
-      targetKey: lastChild
-        ? lastChild.chrome.getAttribute("data-wf-block-key")
-        : null,
-    });
-  }
-
-  const child = children[landingIndex];
-  const rect = child.wrapper.getBoundingClientRect();
-  const near = axis === "x" ? rect.left : rect.top;
-  const far = axis === "x" ? rect.right : rect.bottom;
-  const targetKey = child.chrome.getAttribute("data-wf-block-key");
-  const blockName = child.chrome.getAttribute("data-wf-block-name");
-
-  if (cursor < near) {
-    // Cursor sits in the gap before this child → INSERT before it.
-    return buildInsertDescriptor({
-      wireframe,
-      container,
-      axis,
-      side: "before",
-      anchorRect: rect,
-      containerKey,
-      outletName,
-      source,
-      position: "before",
-      targetKey,
-    });
-  }
-
-  const size = far - near;
-  const offset = cursor - near;
-  const third = size / 3;
-  if (offset < third) {
-    return buildInsertDescriptor({
-      wireframe,
-      container,
-      axis,
-      side: "before",
-      anchorRect: rect,
-      containerKey,
-      outletName,
-      source,
-      position: "before",
-      targetKey,
-    });
-  }
-  if (offset > size - third) {
-    return buildInsertDescriptor({
-      wireframe,
-      container,
-      axis,
-      side: "after",
-      anchorRect: rect,
-      containerKey,
-      outletName,
-      source,
-      position: "after",
-      targetKey,
     });
   }
 
   // Middle third — INSIDE (container) / REPLACE (slot) / nothing (leaf).
+  const child = children[result.index];
+  const rect = child.wrapper.getBoundingClientRect();
+  const targetKey = child.chrome.getAttribute("data-wf-block-key");
+  const blockName = child.chrome.getAttribute("data-wf-block-name");
+
   if (blockName === "wf:slot") {
     return buildReplaceSlotDescriptor({
       wireframe,
@@ -347,6 +294,27 @@ function computeDescriptor({
 }
 
 /**
+ * Pure edge-band test: is `input` within `band` pixels of any outer
+ * edge of `rect`? When a nested container chrome answers `true`, its
+ * `canDrop` returns `false` and the drop falls through to the parent
+ * container — that's how a drop near a row's edge lands as a sibling
+ * of the row in the enclosing stack.
+ *
+ * @param {DOMRect} rect
+ * @param {{clientX: number, clientY: number}} input
+ * @param {number} [band]
+ * @returns {boolean}
+ */
+export function isInEdgeBand(rect, input, band = EDGE_BAND) {
+  return (
+    input.clientY < rect.top + band ||
+    input.clientY > rect.bottom - band ||
+    input.clientX < rect.left + band ||
+    input.clientX > rect.right - band
+  );
+}
+
+/**
  * Returns true when the entry at `key` is a container in the
  * service's live layout. Reads through the editor service so the
  * check honours soft-failures / draft state without DOM peeking.
@@ -363,58 +331,53 @@ function childIsContainer(wireframe, key) {
   return metadata?.isContainer === true;
 }
 
-function buildInsertDescriptor({
+/**
+ * Builds the descriptor for a drop at a BOUNDARY between siblings, at
+ * the container's start / end, or into an empty container. `before` /
+ * `after` are the `{wrapper, chrome}` pairs flanking the boundary;
+ * either is `null` at a container edge and both are `null` when the
+ * container is empty.
+ *
+ * The old "after A" and "before B" zones now collapse here: the label
+ * names BOTH neighbours ("between A and B"), while the dispatch picks
+ * one canonical anchor — they produce an identical final order, so the
+ * choice is cosmetic for the mutation but lets the preview read
+ * naturally.
+ */
+function buildBoundaryDescriptor({
   wireframe,
   container,
   axis,
-  side,
-  anchorRect,
+  before,
+  after,
   containerKey,
   outletName,
   source,
-  position,
-  targetKey,
 }) {
-  const containerRect = container.getBoundingClientRect();
-  let geometry;
-  if (!targetKey) {
-    // Empty container — no anchor child to draw a line next to. Paint
-    // the whole container rect so the user can clearly see WHERE the
-    // block will land. A 4px line at the container's edge is easy to
-    // miss when the container is tall (or just yellow-tinted, like an
-    // empty outlet).
-    geometry = {
-      top: containerRect.top,
-      left: containerRect.left,
-      width: containerRect.width,
-      height: containerRect.height,
-    };
-  } else if (axis === "y") {
-    // 4px line along the gap (axis-orthogonal).
-    const LINE = 4;
-    const y =
-      side === "before"
-        ? anchorRect.top - LINE / 2
-        : anchorRect.bottom - LINE / 2;
-    geometry = {
-      top: y,
-      left: containerRect.left,
-      width: containerRect.width,
-      height: LINE,
-    };
-  } else {
-    const LINE = 4;
-    const x =
-      side === "before"
-        ? anchorRect.left - LINE / 2
-        : anchorRect.right - LINE / 2;
-    geometry = {
-      top: containerRect.top,
-      left: x,
-      width: LINE,
-      height: containerRect.height,
-    };
+  const beforeKey = before?.chrome.getAttribute("data-wf-block-key") ?? null;
+  const afterKey = after?.chrome.getAttribute("data-wf-block-key") ?? null;
+
+  // Dropping a block onto a boundary it already occupies (immediately
+  // next to itself) is a no-op — hide the overlay rather than offer a
+  // self-targeting move.
+  if (source.type === "wf-block") {
+    const sourceKey = source.data.blockKey;
+    if (
+      sourceKey != null &&
+      (sourceKey === beforeKey || sourceKey === afterKey)
+    ) {
+      return null;
+    }
   }
+
+  // Canonical anchor: prefer "before the trailing neighbour"; fall back
+  // to "after the leading neighbour" at the container's end. Both land
+  // the block in the same gap.
+  const targetKey = afterKey ?? beforeKey;
+  const position = afterKey ? "before" : "after";
+
+  const containerRect = container.getBoundingClientRect();
+  const geometry = boundaryGeometry({ axis, containerRect, before, after });
 
   const validity = validateInsert({
     wireframe,
@@ -432,7 +395,7 @@ function buildInsertDescriptor({
     // future variant styling key off.
     kind: targetKey ? "insert" : "inside",
     validity: validity.ok ? "valid" : "invalid",
-    label: insertLabel({ wireframe, source, position, targetKey }),
+    label: boundaryLabel({ wireframe, source, beforeKey, afterKey }),
     // No dispatch when invalid — `dispatchActiveDrop` no-ops on
     // descriptors without a `dispatch` payload, so the drop quietly
     // fails. The red overlay already communicated the rejection.
@@ -446,6 +409,59 @@ function buildInsertDescriptor({
         })
       : null,
   };
+}
+
+/**
+ * Pixel geometry for a boundary indicator. A real boundary is a 4px
+ * line centred in the gap; an empty container paints its whole rect so
+ * the (otherwise easy-to-miss) landing is unmistakable.
+ */
+function boundaryGeometry({ axis, containerRect, before, after }) {
+  if (!before && !after) {
+    return {
+      top: containerRect.top,
+      left: containerRect.left,
+      width: containerRect.width,
+      height: containerRect.height,
+    };
+  }
+
+  const LINE = 4;
+  const center = boundaryCenter(axis, before, after);
+  if (axis === "y") {
+    return {
+      top: center - LINE / 2,
+      left: containerRect.left,
+      width: containerRect.width,
+      height: LINE,
+    };
+  }
+  return {
+    top: containerRect.top,
+    left: center - LINE / 2,
+    width: LINE,
+    height: containerRect.height,
+  };
+}
+
+/**
+ * The axis coordinate at which to centre the boundary line: midway
+ * through the gap when both neighbours exist, otherwise the lone
+ * neighbour's facing edge.
+ */
+function boundaryCenter(axis, before, after) {
+  const farOf = (child) => {
+    const rect = child.wrapper.getBoundingClientRect();
+    return axis === "x" ? rect.right : rect.bottom;
+  };
+  const nearOf = (child) => {
+    const rect = child.wrapper.getBoundingClientRect();
+    return axis === "x" ? rect.left : rect.top;
+  };
+  if (before && after) {
+    return (farOf(before) + nearOf(after)) / 2;
+  }
+  return after ? nearOf(after) : farOf(before);
 }
 
 function buildInsideDescriptor({
@@ -569,25 +585,45 @@ function validateInsideDrop({ wireframe, source, targetKey }) {
 /* Label builders — `i18n` keys with interpolations the descriptor
    carries pre-resolved (the overlay just renders the string). */
 
-function insertLabel({ wireframe, source, position, targetKey }) {
+function boundaryLabel({ wireframe, source, beforeKey, afterKey }) {
   const name = sourceDisplayName(wireframe, source);
-  const target = targetKey ? targetDisplayName(wireframe, targetKey) : null;
   const isPalette = source.type === "wf-palette-block";
-  // Empty-container case: no anchor child. Fall back to the
-  // ambient "add here / move here" copy.
-  if (!target || (position !== "before" && position !== "after")) {
-    return isPalette
-      ? translate("wireframe.canvas.drop_preview.add_here", { name })
-      : translate("wireframe.canvas.drop_preview.move_here", { name });
+
+  // Interior boundary — name both neighbours ("between A and B").
+  if (beforeKey && afterKey) {
+    const key = isPalette
+      ? "wireframe.canvas.drop_preview.add_between"
+      : "wireframe.canvas.drop_preview.move_between";
+    return translate(key, {
+      name,
+      before: targetDisplayName(wireframe, beforeKey),
+      after: targetDisplayName(wireframe, afterKey),
+    });
   }
-  const key = isPalette
-    ? position === "before"
+  // Container start — "before <first child>".
+  if (afterKey) {
+    const key = isPalette
       ? "wireframe.canvas.drop_preview.add_before"
-      : "wireframe.canvas.drop_preview.add_after"
-    : position === "before"
-      ? "wireframe.canvas.drop_preview.move_before"
+      : "wireframe.canvas.drop_preview.move_before";
+    return translate(key, {
+      name,
+      target: targetDisplayName(wireframe, afterKey),
+    });
+  }
+  // Container end — "after <last child>".
+  if (beforeKey) {
+    const key = isPalette
+      ? "wireframe.canvas.drop_preview.add_after"
       : "wireframe.canvas.drop_preview.move_after";
-  return translate(key, { name, target });
+    return translate(key, {
+      name,
+      target: targetDisplayName(wireframe, beforeKey),
+    });
+  }
+  // Empty container — no neighbours; fall back to the ambient copy.
+  return isPalette
+    ? translate("wireframe.canvas.drop_preview.add_here", { name })
+    : translate("wireframe.canvas.drop_preview.move_here", { name });
 }
 
 function insideLabel({ wireframe, source, blockName, targetKey }) {

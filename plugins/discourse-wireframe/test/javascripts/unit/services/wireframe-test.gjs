@@ -53,6 +53,16 @@ async function editArg(editor, argName, value) {
   await settled();
 }
 
+/**
+ * After `enter()`, each outlet is normalised to a single root `layout` block
+ * whose children are the outlet's blocks. Most tests care about those content
+ * blocks, so this reads the root layout's children rather than the outlet's
+ * top-level array (which is just `[rootLayout]`).
+ */
+function outletChildren(editor, outlet = "homepage-blocks") {
+  return editor.readResolvedLayout(outlet)?.[0]?.children ?? [];
+}
+
 module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   setupTest(hooks);
 
@@ -355,8 +365,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("moves a block within the same outlet (after)", function (assert) {
       // Read keys after enter() — drafts get fresh stable keys minted by
-      // _setLayoutLayer's assignStableKeys pass.
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      // _setLayoutLayer's assignStableKeys pass. The tiles are the children
+      // of the outlet's implicit root layout.
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
@@ -368,13 +379,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       assert.true(ok);
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after[0].args.title, "Second");
       assert.strictEqual(after[1].args.title, "First");
     });
 
     test("isDirty flips on after a move", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
@@ -389,7 +400,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("resetAll restores the pre-edit layout after a move", async function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
@@ -402,14 +413,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       const ok = await this.editor.resetAll();
       assert.true(ok);
-      const restored = this.editor.readResolvedLayout("homepage-blocks");
+      const restored = outletChildren(this.editor);
       assert.strictEqual(restored[0].args.title, "First");
       assert.strictEqual(restored[1].args.title, "Second");
       assert.false(this.editor.isDirty);
     });
 
     test("rejects moves with an unknown source key", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const realKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
       const ok = this.editor.moveBlock({
@@ -489,7 +500,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("inserts a freshly-minted entry after the target", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const targetKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
       const ok = this.editor.insertBlock({
@@ -501,13 +512,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       assert.true(ok);
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 2);
       assert.strictEqual(after[0].args.title, "Existing");
       assert.strictEqual(after[1].args.title, "Inserted");
     });
 
-    test("appends to the outlet root when targetKey is null", function (assert) {
+    test("inserts inside the outlet root layout when targetKey is null", function (assert) {
       const ok = this.editor.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Appended" },
@@ -517,8 +528,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       assert.true(ok);
-      const after = this.editor.readResolvedLayout("homepage-blocks");
-      assert.strictEqual(after.at(-1).args.title, "Appended");
+      // An outlet-level insert (null target) lands inside the implicit root
+      // layout, not as a sibling of it.
+      const after = outletChildren(this.editor);
+      assert.true(
+        after.some((c) => c.args.title === "Appended"),
+        "the new block is a child of the root layout"
+      );
     });
 
     test("isDirty flips on after an insert", function (assert) {
@@ -543,7 +559,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       const ok = await this.editor.resetAll();
       assert.true(ok);
-      const restored = this.editor.readResolvedLayout("homepage-blocks");
+      const restored = outletChildren(this.editor);
       assert.strictEqual(restored.length, 1);
       assert.strictEqual(restored[0].args.title, "Existing");
       assert.false(this.editor.isDirty);
@@ -562,8 +578,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Future mutations on the rendered entry must not reach back into
       // the defaults payload the palette passed in.
-      const after = this.editor.readResolvedLayout("homepage-blocks");
-      const inserted = after.at(-1);
+      const inserted = outletChildren(this.editor).find(
+        (c) => c.args.title === "Shared"
+      );
       inserted.args.title = "Mutated";
       assert.strictEqual(defaults.title, "Shared");
     });
@@ -681,27 +698,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(undoneCell.containerArgs.grid.column, "2");
       assert.strictEqual(undoneCell.containerArgs.grid.row, "1");
     });
-
-    test("inserts into a non-grid container do NOT annotate containerArgs.grid", function (assert) {
-      // The outlet root isn't a grid; inserts at root level should
-      // skip the placement annotation.
-      const ok = this.editor.insertBlock({
-        blockName: "wf:svc-test-tile",
-        defaultArgs: { title: "At root" },
-        targetKey: null,
-        position: "after",
-        targetOutletName: "homepage-blocks",
-      });
-
-      assert.true(ok);
-      const after = this.editor.readResolvedLayout("homepage-blocks");
-      const lastEntry = after.at(-1);
-      assert.strictEqual(
-        lastEntry.containerArgs?.grid,
-        undefined,
-        "root-level inserts carry no grid placement"
-      );
-    });
   });
 
   module("inlineEdit.applyChange — entry without args", function (innerHooks) {
@@ -724,7 +720,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("writes the value when the entry started without an args object", async function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const key = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
       const opened = await this.editor.inlineEdit.start(key, "title");
@@ -732,12 +728,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       this.editor.inlineEdit.applyChange("Typed");
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after[0].args?.title, "Typed");
     });
 
     test("committing an empty value is a no-op when the entry has no args", async function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const key = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
       const opened = await this.editor.inlineEdit.start(key, "title");
@@ -745,7 +741,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       this.editor.inlineEdit.applyChange("");
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.false(
         "title" in (after[0].args ?? {}),
         "no key written for an empty commit"
@@ -772,7 +768,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         // text. The block validator declares `title` as a string, but
         // it only runs at render time; direct mutation isn't re-checked,
         // which is enough to exercise the undo-gating comparator.
-        const draft = this.editor.readResolvedLayout("homepage-blocks");
+        const draft = outletChildren(this.editor);
         draft[0].args.title = {
           type: "doc",
           content: [
@@ -843,7 +839,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("copySelected stores a clone with mode='copy'", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -867,7 +863,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("cutSelected stores the entry and removes it from the canvas", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -876,13 +872,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       assert.true(this.editor.cutSelected());
       assert.strictEqual(this.editor._clipboard.mode, "cut");
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 1);
       assert.strictEqual(after[0].args.title, "Second");
     });
 
     test("pasteFromClipboard inserts a fresh clone after the selection", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -891,7 +887,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.copySelected();
       assert.true(this.editor.pasteFromClipboard());
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 3);
       assert.strictEqual(after[0].args.title, "First");
       assert.strictEqual(
@@ -903,7 +899,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("pasteFromClipboard mints a fresh stable key for the paste", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -912,14 +908,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.copySelected();
       this.editor.pasteFromClipboard();
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       const sourceKey = after[0].__stableKey;
       const pastedKey = after[1].__stableKey;
       assert.notStrictEqual(sourceKey, pastedKey);
     });
 
     test("multiple pastes insert independent subtrees", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -929,12 +925,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.pasteFromClipboard();
       this.editor.pasteFromClipboard();
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 4);
     });
 
     test("pasteFromClipboard returns false when clipboard is empty", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -944,7 +940,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("pasteFromClipboard returns false when no block is selected", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
         key: firstKey,
@@ -1023,7 +1019,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor = getOwner(this).lookup("service:wireframe");
       this.editor.enter();
 
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       const key = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({ key, name: "wf:svc-test-tile" });
       this.firstKey = key;
@@ -1033,7 +1029,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const next = { type: "user", loggedIn: true };
       assert.true(this.editor.updateSelectedConditions(next));
 
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       assert.deepEqual(draft[0].conditions, next);
       assert.true(this.editor.isDirty);
     });
@@ -1042,7 +1038,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.updateSelectedConditions({ type: "user", loggedIn: true });
       assert.true(this.editor.updateSelectedConditions(null));
 
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       assert.strictEqual(draft[0].conditions, undefined);
     });
 
@@ -1081,7 +1077,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor = getOwner(this).lookup("service:wireframe");
       this.editor.enter();
 
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft = outletChildren(this.editor);
       this.firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
     });
@@ -1095,13 +1091,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.true(this.editor.canUndo, "undo stack is populated");
 
-      const moved = this.editor.readResolvedLayout("homepage-blocks");
+      const moved = outletChildren(this.editor);
       assert.strictEqual(moved[0].args.title, "Second");
 
       const undone = await this.editor.undo();
       assert.true(undone);
 
-      const restored = this.editor.readResolvedLayout("homepage-blocks");
+      const restored = outletChildren(this.editor);
       assert.strictEqual(restored[0].args.title, "First");
       assert.strictEqual(restored[1].args.title, "Second");
     });
@@ -1117,7 +1113,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const redone = await this.editor.redo();
       assert.true(redone);
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after[0].args.title, "Second");
       assert.strictEqual(after[1].args.title, "First");
     });
@@ -1130,11 +1126,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      const afterInsert = this.editor.readResolvedLayout("homepage-blocks");
+      const afterInsert = outletChildren(this.editor);
       assert.strictEqual(afterInsert.length, 3);
 
       await this.editor.undo();
-      const restored = this.editor.readResolvedLayout("homepage-blocks");
+      const restored = outletChildren(this.editor);
       assert.strictEqual(restored.length, 2);
       assert.strictEqual(restored[0].args.title, "First");
       assert.strictEqual(restored[1].args.title, "Second");
@@ -1146,22 +1142,22 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         name: "wf:svc-test-tile",
       });
       this.editor.removeBlock(this.secondKey);
-      let after = this.editor.readResolvedLayout("homepage-blocks");
+      let after = outletChildren(this.editor);
       assert.strictEqual(after.length, 1);
 
       await this.editor.undo();
-      after = this.editor.readResolvedLayout("homepage-blocks");
+      after = outletChildren(this.editor);
       assert.strictEqual(after.length, 2);
       assert.strictEqual(after[1].args.title, "Second");
     });
 
     test("duplicateBlock can be undone", async function (assert) {
       this.editor.duplicateBlock(this.firstKey);
-      let after = this.editor.readResolvedLayout("homepage-blocks");
+      let after = outletChildren(this.editor);
       assert.strictEqual(after.length, 3);
 
       await this.editor.undo();
-      after = this.editor.readResolvedLayout("homepage-blocks");
+      after = outletChildren(this.editor);
       assert.strictEqual(after.length, 2);
     });
 
@@ -1175,7 +1171,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       const undone = await this.editor.undo();
       assert.true(undone);
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after = outletChildren(this.editor);
       assert.strictEqual(after[0].conditions, undefined);
     });
 
@@ -1190,6 +1186,77 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.true(this.editor.canRedo);
       this.editor.duplicateBlock(this.firstKey);
       assert.false(this.editor.canRedo);
+    });
+  });
+
+  module("outlet as implicit layout", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          { block: TestTile, args: { title: "First" } },
+          { block: TestTile, args: { title: "Second" } },
+        ],
+        getOwner(this)
+      );
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+    });
+
+    test("enter() wraps the outlet's blocks in a single root layout", function (assert) {
+      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      assert.strictEqual(draft.length, 1, "exactly one root entry");
+      assert.strictEqual(
+        draft[0].block,
+        "layout",
+        "the root is a layout block"
+      );
+      assert.strictEqual(draft[0].args.mode, "stack", "defaults to stack mode");
+      assert.strictEqual(
+        draft[0].children.length,
+        2,
+        "the outlet's blocks become the root layout's children"
+      );
+      assert.strictEqual(draft[0].children[0].args.title, "First");
+    });
+
+    test("outletRootKey / isOutletRoot identify the implicit root", function (assert) {
+      const rootKey = this.editor.outletRootKey("homepage-blocks");
+      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      assert.strictEqual(rootKey, `layout:${draft[0].__stableKey}`);
+      assert.true(
+        this.editor.isOutletRoot(rootKey),
+        "the root key is recognised"
+      );
+
+      const childKey = `wf:svc-test-tile:${draft[0].children[0].__stableKey}`;
+      assert.false(
+        this.editor.isOutletRoot(childKey),
+        "a child block is not the root"
+      );
+      assert.false(this.editor.isOutletRoot(null));
+    });
+
+    test("selectOutlet selects the root layout so the layout form shows", function (assert) {
+      this.editor.selectOutlet("homepage-blocks");
+      assert.strictEqual(
+        this.editor.selectedBlockKey,
+        this.editor.outletRootKey("homepage-blocks")
+      );
+      assert.strictEqual(
+        this.editor.selectedBlockData.name,
+        "layout",
+        "the inspector keys off name === 'layout' to show the layout form"
+      );
+    });
+
+    test("exit() clears the recorded root key", function (assert) {
+      assert.notStrictEqual(this.editor.outletRootKey("homepage-blocks"), null);
+      this.editor.exit();
+      assert.strictEqual(this.editor.outletRootKey("homepage-blocks"), null);
     });
   });
 

@@ -1,13 +1,10 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
-import { buildBlockPalette } from "../../lib/palette";
-import containerDropTarget from "../../modifiers/container-drop-target";
-import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
 
 /**
  * Outlet boundary chrome rendered around each `<BlockOutlet>` when the
@@ -15,64 +12,50 @@ import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
  * the api-initializer.
  *
  * The host BlockOutlet curries this component with `{ outletName,
- * blockCount, outletArgs, error }` and renders it; we add a small label
- * badge above the outlet content and yield the children unchanged.
+ * blockCount, outletArgs, error }` and renders it; we add a label badge
+ * above the outlet content and yield the children unchanged.
  *
- * The boundary div is itself a stack-mode drop container so the palette
- * can drop multiple top-level blocks into the outlet (the chrome of an
- * existing top-level block only covers drops INSIDE that block — without
- * this modifier there was no way to add a second sibling at the outlet
- * level once the first block existed). `containerKey` is omitted (defaults
- * to `null`) so `container-drop-target.js` recognises this as an outlet
- * root and dispatches inserts/moves against `outletName` alone.
- *
- * When `blockCount === 0`, `BlockOutletRootContainer` renders nothing,
- * so we render the shared `<EditorEmptyDropPlaceholder>` as a click-to-
- * insert affordance. Drops onto the bar are still handled by THIS
- * boundary's `containerDropTarget` modifier — the placeholder only
- * intercepts clicks, dragover bubbles up.
+ * The outlet is an implicit layout: its content is normalised to a single
+ * root `layout` block, and the badge selects it (`selectOutlet`) so the
+ * inspector surfaces the layout form (mode / gap / grid). Drops and the
+ * empty-state placeholder are owned by that root layout's own chrome, so
+ * the boundary itself is no longer a drop target — dropping a sibling at
+ * the outlet level would break the single-root invariant.
  */
 export default class OutletBoundary extends Component {
-  @service blocks;
   @service wireframe;
 
-  @cached
-  get palette() {
-    return buildBlockPalette(this.blocks);
+  /**
+   * `true` when this outlet's implicit root layout is the current
+   * selection — drives the badge's active styling.
+   *
+   * @returns {boolean}
+   */
+  get isSelected() {
+    const key = this.wireframe.outletRootKey(this.args.outletName);
+    return key != null && this.wireframe.isBlockSelected(key);
   }
 
   @action
-  insertBlock(blockEntry) {
-    this.wireframe.insertBlock({
-      blockName: blockEntry.name,
-      targetKey: null,
-      position: "inside",
-      targetOutletName: this.args.outletName,
-    });
+  select() {
+    this.wireframe.selectOutlet(this.args.outletName);
   }
 
   <template>
-    <div
-      class="wireframe-outlet-boundary"
-      data-outlet-name={{@outletName}}
-      {{containerDropTarget mode="stack" outletName=@outletName}}
-    >
-      <span class="wireframe-outlet-boundary__badge">
+    <div class="wireframe-outlet-boundary" data-outlet-name={{@outletName}}>
+      <button
+        type="button"
+        class={{dConcatClass
+          "wireframe-outlet-boundary__badge"
+          (if this.isSelected "--active")
+        }}
+        aria-pressed={{this.isSelected}}
+        {{on "click" this.select}}
+      >
         {{dIcon "cubes"}}
         <span>{{@outletName}}</span>
-        {{#if @blockCount}}
-          <span class="wireframe-outlet-boundary__count">·
-            {{@blockCount}}</span>
-        {{/if}}
-      </span>
+      </button>
       {{yield}}
-      {{#unless @blockCount}}
-        <EditorEmptyDropPlaceholder
-          @hint={{i18n "wireframe.canvas.empty_outlet_hint"}}
-          @palette={{this.palette}}
-          @onPick={{this.insertBlock}}
-        />
-      {{/unless}}
     </div>
   </template>
 }

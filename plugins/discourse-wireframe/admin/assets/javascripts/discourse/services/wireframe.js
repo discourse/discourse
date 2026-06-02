@@ -52,6 +52,7 @@ import {
   replaceEntryInPlace,
   revalidateEntryStamps,
   serializeEntryForSave,
+  wrapAsOutletRoot,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 import { mountedOutletNames } from "../lib/walk-layout";
@@ -351,6 +352,20 @@ export default class WireframeService extends Service {
    * @type {Set<string>}
    */
   editedOutlets = new Set();
+  /**
+   * Maps each drafted outlet to the composite key of its implicit root
+   * `layout` block. Every drafted outlet is normalised to a single root
+   * layout (see `wrapAsOutletRoot`); selecting that key is how the editor
+   * "selects the outlet", and `isOutletRoot` consults this map to suppress
+   * block-level affordances (move / duplicate / delete) on the root.
+   *
+   * Populated when the draft is materialised (`#materializeAllDrafts`,
+   * `ensureDraft`) and cleared on `exit`. Not persisted — the root key is
+   * re-derived from the published draft each session.
+   *
+   * @type {Map<string, string>}
+   */
+  #outletRootKeys = new Map();
 
   /**
    * Sticky mirror of `activeDropPreview` captured at the moment of
@@ -921,8 +936,9 @@ export default class WireframeService extends Service {
     if (existing) {
       return existing;
     }
-    const emptyDraft = [];
-    this.#originalLayouts.set(outletName, []);
+    // Seed the outlet with an empty root `layout` block so it's an implicit
+    // layout from the first drop, matching `#materializeAllDrafts`.
+    const emptyDraft = wrapAsOutletRoot([]);
     _setLayoutLayer(
       outletName,
       LAYOUT_LAYERS.SESSION_DRAFT,
@@ -931,6 +947,11 @@ export default class WireframeService extends Service {
       { permissive: true }
     );
     this.draftedOutlets.add(outletName);
+    this.#recordOutletRoot(outletName);
+    this.#originalLayouts.set(
+      outletName,
+      cloneLayoutForDraft(this.readResolvedLayout(outletName) ?? [])
+    );
     return this.readResolvedLayout(outletName) ?? emptyDraft;
   }
 
@@ -954,6 +975,7 @@ export default class WireframeService extends Service {
       _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     }
     this.draftedOutlets.clear();
+    this.#outletRootKeys.clear();
 
     this.isActive = false;
     this.activeThemeId = null;
@@ -1232,12 +1254,18 @@ export default class WireframeService extends Service {
     if (!located) {
       return false;
     }
+    // The outlet root must stay a single `layout` block. If a raw edit
+    // changes its block away from `layout`, re-wrap so the invariant holds —
+    // the edited entry then becomes the root layout's child.
+    const nextEntry = this.isOutletRoot(key)
+      ? wrapAsOutletRoot([parsed])[0]
+      : parsed;
     return this.recordStructural([located.outletName], () => {
       const layout = this.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
-      const result = replaceEntryInPlace(layout, key, parsed);
+      const result = replaceEntryInPlace(layout, key, nextEntry);
       if (!result.changed) {
         return false;
       }
@@ -1493,6 +1521,71 @@ export default class WireframeService extends Service {
   @action
   isBlockSelected(key) {
     return this.selectedBlockKey != null && this.selectedBlockKey === key;
+  }
+
+  /**
+   * Records the implicit root layout key for an outlet. Reads the just-
+   * published draft's first entry — every drafted outlet is normalised to a
+   * single root `layout` block, so `[0]` is always that root.
+   *
+   * @param {string} outletName
+   */
+  #recordOutletRoot(outletName) {
+    const root = this.readResolvedLayout(outletName)?.[0];
+    if (root) {
+      this.#outletRootKeys.set(outletName, entryKey(root));
+    }
+  }
+
+  /**
+   * The composite key of an outlet's implicit root `layout` block, or `null`
+   * when the outlet hasn't been drafted yet.
+   *
+   * @param {string} outletName
+   * @returns {string|null}
+   */
+  outletRootKey(outletName) {
+    return this.#outletRootKeys.get(outletName) ?? null;
+  }
+
+  /**
+   * Whether `key` identifies an outlet's implicit root `layout` block. The
+   * chrome and inspector consult this to present the root AS the outlet —
+   * suppressing block-level affordances (move / duplicate / delete) that
+   * don't apply to a page region.
+   *
+   * Decorated with `@action` so template subexpressions keep their `this`
+   * binding, mirroring `isBlockSelected`.
+   *
+   * @param {string|null} key
+   * @returns {boolean}
+   */
+  @action
+  isOutletRoot(key) {
+    if (key == null) {
+      return false;
+    }
+    for (const rootKey of this.#outletRootKeys.values()) {
+      if (rootKey === key) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Selects an outlet by selecting its implicit root `layout` block. The
+   * selection then hydrates through the normal block path, so the inspector
+   * surfaces the layout form (mode / gap / grid) for the outlet.
+   *
+   * @param {string} outletName
+   */
+  @action
+  selectOutlet(outletName) {
+    const key = this.outletRootKey(outletName);
+    if (key) {
+      this.selectBlock({ key });
+    }
   }
 
   /**
@@ -1839,6 +1932,10 @@ export default class WireframeService extends Service {
           getOwner(this),
           { permissive: true }
         );
+        // The snapshot preserves the root layout's `__stableKey`, so the
+        // recorded root key normally stays valid — re-record defensively in
+        // case the publish minted a fresh key for any reason.
+        this.#recordOutletRoot(outletName);
       }
       // Drop arg-snapshots whose entries belong to structurally-reset outlets.
       // Entries elsewhere keep their snapshots so the args path still works.
@@ -2239,6 +2336,14 @@ export default class WireframeService extends Service {
     if (!this.canDropAt({ targetOutletName })) {
       return false;
     }
+    // An outlet-level drop (no target block) lands INSIDE the outlet's
+    // implicit root layout, never as a sibling of it — that's what keeps the
+    // "single root layout per outlet" invariant intact.
+    if (targetKey == null) {
+      this.ensureDraft(targetOutletName);
+      targetKey = this.outletRootKey(targetOutletName);
+      position = "inside";
+    }
     const outletsAffected =
       source.outletName === targetOutletName
         ? [source.outletName]
@@ -2306,6 +2411,13 @@ export default class WireframeService extends Service {
       const layout = this.ensureDraft(targetOutletName);
       if (!layout) {
         return false;
+      }
+      // An outlet-level insert (no target block) lands INSIDE the outlet's
+      // implicit root layout, preserving the single-root invariant. Resolved
+      // after `ensureDraft` so a freshly-seeded outlet has its root key.
+      if (targetKey == null) {
+        targetKey = this.outletRootKey(targetOutletName);
+        position = "inside";
       }
       // Mint a fresh entry. Spread the defaults so future mutations don't
       // bleed back into the caller's object. Args left missing here get
@@ -3520,12 +3632,13 @@ export default class WireframeService extends Service {
       // rows and the canvas accepts drops on the outlet boundary
       // immediately. Without this seed an empty outlet would only get
       // a draft the first time something tried to write to it.
-      const draftLayout = layout ? cloneLayoutForDraft(layout) : [];
-      // Second clone, never published. Held as the rollback target for
-      // `resetAll()` — we can't capture the draft itself because in-place
-      // arg mutations would leak into the snapshot.
-      this.#originalLayouts.set(
-        outletName,
+      //
+      // `wrapAsOutletRoot` normalises the draft to a single root `layout`
+      // block so the outlet renders as an implicit layout (selectable, with
+      // a switchable mode). A flat list renders identically to the default
+      // stack, so the wrap is visually transparent until the author changes
+      // the mode.
+      const draftLayout = wrapAsOutletRoot(
         layout ? cloneLayoutForDraft(layout) : []
       );
       _setLayoutLayer(
@@ -3541,6 +3654,18 @@ export default class WireframeService extends Service {
         { permissive: true }
       );
       this.draftedOutlets.add(outletName);
+      // Record the root layout's key (minted by the publish above) so
+      // selection / chrome can recognise it as the outlet.
+      this.#recordOutletRoot(outletName);
+      // Rollback target for `resetAll()`. Cloned from the just-published
+      // draft (not the pre-wrap layout) so it carries the normalised shape
+      // and the minted root `__stableKey` — that keeps the recorded root key
+      // valid after a reset re-publishes this snapshot. A separate clone so
+      // in-place arg mutations on the draft never leak into the snapshot.
+      this.#originalLayouts.set(
+        outletName,
+        cloneLayoutForDraft(this.readResolvedLayout(outletName) ?? [])
+      );
     }
   }
 

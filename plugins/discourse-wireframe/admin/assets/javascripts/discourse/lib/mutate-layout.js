@@ -753,6 +753,57 @@ function cloneContainerArgs(containerArgs) {
 }
 
 /**
+ * Resolves whether an entry's block is the builtin `layout` block. Handles
+ * both string refs (`"layout"`) and class refs (whose decorator-assigned
+ * `blockName` is `"layout"`), so a layout reloaded from disk (string-only)
+ * and one freshly registered from a class both match.
+ *
+ * @param {Object} entry
+ * @returns {boolean}
+ */
+function isLayoutBlockEntry(entry) {
+  if (!entry) {
+    return false;
+  }
+  if (typeof entry.block === "string") {
+    return entry.block === "layout";
+  }
+  if (entry.block) {
+    return getBlockMetadata(entry.block)?.blockName === "layout";
+  }
+  return false;
+}
+
+/**
+ * Normalizes an outlet's layout to the editor's single-root-layout invariant:
+ * the returned array is exactly `[rootLayout]`, where `rootLayout` is the
+ * builtin `layout` block whose `children` are the outlet's blocks. This is
+ * what lets the editor treat an outlet as an implicit layout — selectable,
+ * with a switchable mode — by reusing the ordinary `layout` block rather than
+ * a parallel outlet-level layout model.
+ *
+ * No-ops when the layout is already a single `layout` block at the root (e.g.
+ * a layout previously saved in this normalized shape), so re-entering the
+ * editor never nests a second wrapper. Otherwise every existing top-level
+ * entry becomes a child of a fresh `stack` root layout — a flat list renders
+ * identically to the default stack, so wrapping is visually transparent until
+ * the author changes the mode.
+ *
+ * Children keep their identity (`__stableKey` and block references) so
+ * selection and DOM identity survive the wrap.
+ *
+ * @param {Array<Object>} layout
+ * @returns {Array<Object>}
+ */
+export function wrapAsOutletRoot(layout) {
+  const entries = layout ?? [];
+  if (entries.length === 1 && isLayoutBlockEntry(entries[0])) {
+    return entries;
+  }
+  return [{ block: "layout", args: { mode: "stack" }, children: entries }];
+}
+
+/**
  * Serializes a layout for transport to the server (the
  * `block_layout`-shaped JSON the `Themes::SaveBlockLayout` endpoint
  * expects). Strips internal bookkeeping (`__stableKey`) and resolves any

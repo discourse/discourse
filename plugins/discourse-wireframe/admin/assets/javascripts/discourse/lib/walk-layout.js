@@ -158,11 +158,43 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
       // surface elsewhere (the validator's own error reporting).
       continue;
     }
+    // Each editable outlet is normalised to a single root `layout` block
+    // (its children are the outlet's blocks). Present that root AS the outlet:
+    // expose its key + mode on the group (so the header selects it and shows
+    // the mode) and walk its children at depth 0 — no redundant "layout" row.
+    // Layouts not in this shape (e.g. an un-drafted flat layout) walk as-is.
     const rows = [];
-    walkEntries(layout, 0, [], rows, blocksService);
-    result.push({ outletName, rows });
+    const root = layout.length === 1 ? layout[0] : null;
+    const rootIsLayout =
+      root && resolveBlockName(root.block, blocksService).name === "layout";
+    if (rootIsLayout) {
+      walkEntries(root.children ?? [], 0, [0, "children"], rows, blocksService);
+      result.push({
+        outletName,
+        rows,
+        rootKey: `layout:${root.__stableKey}`,
+        mode: normalizeLayoutMode(root.args?.mode),
+      });
+    } else {
+      walkEntries(layout, 0, [], rows, blocksService);
+      result.push({ outletName, rows, rootKey: null, mode: null });
+    }
   }
   return result;
+}
+
+/**
+ * Normalises a layout `mode` arg for display, mapping the legacy
+ * `"free-grid"` value to `"grid"` and defaulting to `"stack"`.
+ *
+ * @param {string|undefined} mode
+ * @returns {string}
+ */
+function normalizeLayoutMode(mode) {
+  if (mode === "free-grid") {
+    return "grid";
+  }
+  return mode ?? "stack";
 }
 
 /**

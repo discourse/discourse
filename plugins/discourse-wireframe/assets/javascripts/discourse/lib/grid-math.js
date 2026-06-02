@@ -126,6 +126,68 @@ export function cellAt(event, gridRect, columns, rows) {
 }
 
 /**
+ * Five-zone hit test inside a cell. Returns `"center"` for the inner
+ * 60% rect, otherwise one of `"left"` / `"right"` / `"up"` / `"down"`
+ * (the outer 20% bands). Corners resolve to whichever edge the cursor
+ * is RELATIVELY closer to — `x/w` vs `y/h` rather than absolute pixels
+ * — so a hover on the left edge of a tall narrow cell stays `"left"`
+ * instead of biasing toward `"up"` / `"down"` near the corners.
+ *
+ * @param {number} x - Cursor X within the cell (0 at the left edge).
+ * @param {number} y - Cursor Y within the cell (0 at the top edge).
+ * @param {number} w - Cell width.
+ * @param {number} h - Cell height.
+ * @returns {"center"|"left"|"right"|"up"|"down"}
+ */
+export function computeZone(x, y, w, h) {
+  const edge = 0.2;
+  const fromLeft = x / w;
+  const fromRight = (w - x) / w;
+  const fromTop = y / h;
+  const fromBottom = (h - y) / h;
+  const minFromEdge = Math.min(fromLeft, fromRight, fromTop, fromBottom);
+
+  if (minFromEdge > edge) {
+    return "center";
+  }
+  if (minFromEdge === fromLeft) {
+    return "left";
+  }
+  if (minFromEdge === fromRight) {
+    return "right";
+  }
+  if (minFromEdge === fromTop) {
+    return "up";
+  }
+  return "down";
+}
+
+/**
+ * Three-zone Y-axis hit test for the collapsed (single-column) view.
+ * Left / right carry no meaning in a vertical stack — only `"up"`
+ * (insert above), `"center"` (swap / move into), and `"down"` (insert
+ * below) do. Returns `"center"` for a zero-height element.
+ *
+ * @param {number} y - Cursor Y within the element (0 at the top edge).
+ * @param {number} h - Element height.
+ * @returns {"up"|"center"|"down"}
+ */
+export function computeZoneCollapsed(y, h) {
+  const edge = 0.25;
+  if (h <= 0) {
+    return "center";
+  }
+  const fromTop = y / h;
+  if (fromTop < edge) {
+    return "up";
+  }
+  if (fromTop > 1 - edge) {
+    return "down";
+  }
+  return "center";
+}
+
+/**
  * Returns `true` when two slot placements occupy any shared cells. Both
  * placements must be EXPLICIT (their `column.start` / `row.start` set);
  * auto placements report `false` because CSS Grid's auto-flow handles

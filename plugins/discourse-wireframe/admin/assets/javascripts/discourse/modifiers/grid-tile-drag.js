@@ -25,7 +25,7 @@ import { cellAt } from "discourse/plugins/discourse-wireframe/discourse/lib/grid
  *
  * Arguments (positional):
  *   1. `getGridElement` — function returning the actual grid container
- *      (the `wf-layout--grid` `<div>`), used to measure the current
+ *      (the `d-block-layout--grid` `<div>`), used to measure the current
  *      viewport rect on pointerdown and convert pointer coordinates →
  *      cell. Passed as a getter (not a direct element) so the modifier
  *      resolves the reference on pointerdown — by which time the

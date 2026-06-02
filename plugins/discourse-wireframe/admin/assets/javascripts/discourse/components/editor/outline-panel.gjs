@@ -1,7 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
@@ -63,6 +63,16 @@ export default class OutlinePanel extends Component {
   isRowCollapsed = (blockKey) => this.#collapsedKeys.has(blockKey);
   isOutletCollapsed = (outletName) => this.#collapsedOutlets.has(outletName);
 
+  /**
+   * Whether `rootKey` is the current selection — drives the outlet header's
+   * selected styling.
+   *
+   * @param {string|null} rootKey
+   * @returns {boolean}
+   */
+  isOutletSelected = (rootKey) => {
+    return rootKey != null && this.wireframe.isBlockSelected(rootKey);
+  };
   /**
    * `blockKey`s of container rows the user has collapsed in this
    * session. Rows whose ancestor chain includes a collapsed key are
@@ -151,7 +161,12 @@ export default class OutlinePanel extends Component {
       const rows = visible.filter((row) =>
         this.#matchesFilters(row, q, status)
       );
-      return { outletName: group.outletName, rows };
+      return {
+        outletName: group.outletName,
+        rows,
+        rootKey: group.rootKey,
+        mode: group.mode,
+      };
     });
   }
 
@@ -229,6 +244,17 @@ export default class OutlinePanel extends Component {
       outletName,
       metadata: this.lookupMetadataFor(row.blockName),
     });
+  }
+
+  /**
+   * Selects an outlet by selecting its implicit root layout — the outline
+   * header acts as the outlet's selection target, surfacing the layout form.
+   *
+   * @param {string} outletName
+   */
+  @action
+  selectOutletRoot(outletName) {
+    this.wireframe.selectOutlet(outletName);
   }
 
   lookupMetadataFor(blockName) {
@@ -591,25 +617,49 @@ export default class OutlinePanel extends Component {
       {{else if this.decoratedGroups.length}}
         {{#each this.decoratedGroups as |group|}}
           <div class="outline-outlet">
-            <DButton
-              class="outline-outlet__label"
-              @ariaExpanded={{if
-                (this.isOutletCollapsed group.outletName)
-                false
-                true
+            {{! The header chevron toggles collapse; the label selects the
+              outlet (its implicit root layout) so the inspector shows the
+              layout form. Two distinct interactions, so two controls. }}
+            <div
+              class={{dConcatClass
+                "outline-outlet__header"
+                (if (this.isOutletSelected group.rootKey) "--selected")
               }}
-              @action={{fn this.toggleOutlet group.outletName}}
             >
-              {{dIcon
-                (if
+              <DButton
+                class="outline-outlet__toggle"
+                @ariaExpanded={{if
+                  (this.isOutletCollapsed group.outletName)
+                  false
+                  true
+                }}
+                @icon={{if
                   (this.isOutletCollapsed group.outletName)
                   "chevron-right"
                   "chevron-down"
-                )
-              }}
-              {{dIcon "cubes"}}
-              <span>{{group.outletName}}</span>
-            </DButton>
+                }}
+                @ariaLabel={{if
+                  (this.isOutletCollapsed group.outletName)
+                  "wireframe.outline.expand_row"
+                  "wireframe.outline.collapse_row"
+                }}
+                @action={{fn this.toggleOutlet group.outletName}}
+              />
+              <DButton
+                class="outline-outlet__label"
+                @action={{fn this.selectOutletRoot group.outletName}}
+              >
+                {{dIcon "cubes"}}
+                <span class="outline-outlet__name">{{group.outletName}}</span>
+                {{#if group.mode}}
+                  <span class="outline-outlet__mode">
+                    {{i18n
+                      (concat "wireframe.inspector.layout.mode_" group.mode)
+                    }}
+                  </span>
+                {{/if}}
+              </DButton>
+            </div>
             {{#unless (this.isOutletCollapsed group.outletName)}}
               {{#each group.rows as |row|}}
                 <div

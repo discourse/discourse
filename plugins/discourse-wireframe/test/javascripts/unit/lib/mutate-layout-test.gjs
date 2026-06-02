@@ -15,6 +15,7 @@ import {
   replaceEntryId,
   revalidateEntryStamps,
   setEntryArg,
+  wrapAsOutletRoot,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 
 @block("wf:mutate-test-leaf")
@@ -82,6 +83,65 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
       class NotABlock {}
       const entry = { block: NotABlock, __stableKey: 1 };
       assert.strictEqual(entryKey(entry), null);
+    });
+  });
+
+  module("wrapAsOutletRoot", function () {
+    test("wraps a flat list into a single root layout block", function (assert) {
+      const layout = makeLayout();
+      const wrapped = wrapAsOutletRoot(layout);
+      assert.strictEqual(wrapped.length, 1, "exactly one root entry");
+      assert.strictEqual(wrapped[0].block, "layout", "root is a layout block");
+      assert.strictEqual(
+        wrapped[0].args.mode,
+        "stack",
+        "root defaults to stack mode"
+      );
+      assert.strictEqual(
+        wrapped[0].children,
+        layout,
+        "the original entries become the root's children"
+      );
+    });
+
+    test("no-ops when the layout is already a single root layout", function (assert) {
+      const layout = [
+        {
+          block: "layout",
+          args: { mode: "grid" },
+          __stableKey: 1,
+          children: [{ block: "wf:mutate-test-leaf", __stableKey: 2 }],
+        },
+      ];
+      const wrapped = wrapAsOutletRoot(layout);
+      assert.strictEqual(wrapped, layout, "returns the same array, not nested");
+      assert.strictEqual(
+        wrapped[0].args.mode,
+        "grid",
+        "the existing mode is preserved"
+      );
+    });
+
+    test("wraps a single non-layout block", function (assert) {
+      const layout = [{ block: "wf:mutate-test-leaf", __stableKey: 1 }];
+      const wrapped = wrapAsOutletRoot(layout);
+      assert.strictEqual(wrapped.length, 1);
+      assert.strictEqual(wrapped[0].block, "layout");
+      assert.strictEqual(wrapped[0].children, layout);
+    });
+
+    test("wraps an empty list into an empty-children root", function (assert) {
+      const wrapped = wrapAsOutletRoot([]);
+      assert.strictEqual(wrapped.length, 1);
+      assert.strictEqual(wrapped[0].block, "layout");
+      assert.deepEqual(wrapped[0].children, [], "root has no children");
+    });
+
+    test("treats null / undefined as an empty outlet", function (assert) {
+      const wrapped = wrapAsOutletRoot();
+      assert.strictEqual(wrapped.length, 1);
+      assert.strictEqual(wrapped[0].block, "layout");
+      assert.deepEqual(wrapped[0].children, []);
     });
   });
 
