@@ -7,27 +7,25 @@ import { selectKitOptions } from "discourse/select-kit/components/select-kit";
   assignmentGroups: null,
 })
 export default class AssignmentChooser extends EmailGroupUserChooser {
-  search(filter = "") {
+  async search(filter = "") {
     const assignmentGroups = this.assignmentGroupResults(filter);
     const resultsPromise = super.search(filter);
 
     if (!resultsPromise) {
-      return assignmentGroups.length
-        ? Promise.resolve(assignmentGroups)
-        : undefined;
+      return assignmentGroups.length ? assignmentGroups : undefined;
     }
 
-    return resultsPromise.then((results) => {
-      if (!Array.isArray(results)) {
-        return results;
-      }
+    const results = await resultsPromise;
 
-      const resultIds = new Set(results.map((result) => result.id));
-      return [
-        ...results,
-        ...assignmentGroups.filter((group) => !resultIds.has(group.id)),
-      ];
-    });
+    if (!Array.isArray(results)) {
+      return results;
+    }
+
+    const resultIds = new Set(results.map((result) => result.id));
+    return [
+      ...results,
+      ...assignmentGroups.filter((group) => !resultIds.has(group.id)),
+    ];
   }
 
   assignmentGroupResults(filter) {

@@ -100,6 +100,10 @@ class Assignment < ActiveRecord::Base
   def publish_topic_assignment
     return if !assigned_to
 
+    allowed_user_ids =
+      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target || topic)
+    return if allowed_user_ids.blank?
+
     serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
     MessageBus.publish(
       "/staff/topic-assignment",
@@ -113,7 +117,7 @@ class Assignment < ActiveRecord::Base
         assignment_note: note,
         assignment_status: status,
       },
-      user_ids: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target || topic),
+      user_ids: allowed_user_ids,
     )
   end
 

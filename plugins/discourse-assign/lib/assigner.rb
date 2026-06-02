@@ -447,19 +447,21 @@ class ::Assigner
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
 
-      MessageBus.publish(
-        "/staff/topic-assignment",
-        {
-          type: "unassigned",
-          topic_id: topic.id,
-          post_id: post_target? && @target.id,
-          post_number: post_target? && @target.post_number,
-          assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
-          assignment_note: nil,
-          assignment_status: nil,
-        },
-        user_ids: allowed_user_ids,
-      )
+      if allowed_user_ids.present?
+        MessageBus.publish(
+          "/staff/topic-assignment",
+          {
+            type: "unassigned",
+            topic_id: topic.id,
+            post_id: post_target? && @target.id,
+            post_number: post_target? && @target.post_number,
+            assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
+            assignment_note: nil,
+            assignment_status: nil,
+          },
+          user_ids: allowed_user_ids,
+        )
+      end
     end
   end
 

@@ -32,14 +32,18 @@ module DiscourseAssign
       category_id = DiscourseAssign::AssignmentPermissions.category_id_for(target)
       return false if category_id.blank?
 
-      (
-        DiscourseAssign::AssignmentPermissions.scoped_group_ids_for_category(category_id) &
-          user.group_ids
-      ).present?
+      (scoped_assign_group_ids_for_category(category_id) & user.group_ids).present?
     end
 
     def scoped_assign_group_ids_for_user
       DiscourseAssign::AssignmentPermissions.scoped_group_ids_for_user(user)
+    end
+
+    def scoped_assign_group_ids_for_category(category_id)
+      @scoped_assign_group_ids_by_category ||= {}
+      @scoped_assign_group_ids_by_category[
+        category_id
+      ] ||= DiscourseAssign::AssignmentPermissions.scoped_group_ids_for_category(category_id)
     end
   end
 end
