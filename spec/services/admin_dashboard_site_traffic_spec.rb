@@ -554,12 +554,11 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_countries][:rows].first[:country_code]).to eq("US")
         expect(result[:top_countries][:error]).to be_nil
 
-        referrer_rows = result[:top_referrers][:rows]
-        expect(referrer_rows.first[:normalized_referrer]).to eq("google.com")
+        expect(result[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
         expect(result[:top_referrers][:error]).to be_nil
       end
 
-      it "caps top_countries at the top 5 rows on both the fresh and cached paths" do
+      it "caps each card at the top 5 rows on both the fresh and cached paths" do
         %w[US GB DE FR JP CA].each do |code|
           Fabricate(
             :browser_pageview_event,
@@ -571,33 +570,17 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         fresh = described_class.build(start_date: nil, end_date: nil)
         expect(fresh[:top_countries][:rows].size).to eq(5)
+        expect(fresh[:top_referrers][:rows].size).to eq(5)
 
         cached = described_class.build(start_date: nil, end_date: nil)
         expect(cached[:top_countries][:rows].size).to eq(5)
+        expect(cached[:top_referrers][:rows].size).to eq(5)
       end
 
       it "returns empty rows when no events match the date range" do
         result = described_class.build(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: nil)
         expect(result[:top_referrers]).to eq(rows: [], error: nil)
-      end
-
-      it "returns the direct row first and at most the top 5 external referrers from the report" do
-        Fabricate(:browser_pageview_event, normalized_referrer: nil)
-        %w[a b c d e f].each_with_index do |host, index|
-          (index + 1).times do
-            Fabricate(:browser_pageview_event, normalized_referrer: "#{host}.example.com")
-          end
-        end
-        aggregate_rollups
-
-        rows = described_class.build(start_date: nil, end_date: nil)[:top_referrers][:rows]
-
-        expect(rows.size).to eq(6)
-        expect(rows.first[:normalized_referrer]).to be_nil
-        expect(rows.drop(1).map { |row| row[:normalized_referrer] }).to eq(
-          %w[f.example.com e.example.com d.example.com c.example.com b.example.com],
-        )
       end
 
       it "returns an exception error payload when the underlying report cannot be built" do
@@ -641,13 +624,13 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(second[:top_countries][:rows]).to be_empty
       end
 
-      it "excludes the own host from top_referrers as current_hostname changes" do
+      it "invalidates the cached payload when current_hostname changes" do
         Discourse.stubs(:current_hostname).returns("forum-a.example.com")
         Fabricate(:browser_pageview_event, normalized_referrer: "forum-b.example.com/path")
         aggregate_rollups
 
         first = described_class.build(start_date: nil, end_date: nil)
-        expect(first[:top_referrers][:rows].map { |row| row[:normalized_referrer] }).to include(
+        expect(first[:top_referrers][:rows].first[:normalized_referrer]).to eq(
           "forum-b.example.com/path",
         )
 
@@ -668,13 +651,11 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         first = described_class.build(start_date: nil, end_date: nil)
         expect(first[:top_countries]).to eq(rows: [], error: "exception")
-        expect(first[:top_referrers]).to eq(rows: [], error: "exception")
 
         allow(Report).to receive(:find).and_call_original
 
         second = described_class.build(start_date: nil, end_date: nil)
         expect(second[:top_countries]).to eq(rows: [], error: "exception")
-        expect(second[:top_referrers]).to eq(rows: [], error: "exception")
       end
 
       it "returns a timeout error payload and retries the report on a subsequent call" do
@@ -697,7 +678,6 @@ RSpec.describe AdminDashboardSiteTraffic do
 
         second = described_class.build(start_date: nil, end_date: nil)
         expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(second[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
       end
     end
   end

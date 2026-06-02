@@ -40,7 +40,7 @@ class AdminDashboardSiteTraffic
 
     if SiteSetting.persist_browser_pageview_events
       response[:top_countries] = fetch_card("top_countries_by_browser_pageviews")
-      response[:top_referrers] = top_referrers_card
+      response[:top_referrers] = fetch_card("top_referrers_by_browser_pageviews")
     end
 
     response
@@ -51,13 +51,6 @@ class AdminDashboardSiteTraffic
   attr_reader :start_date, :end_date
 
   def fetch_card(type)
-    report = cached_report(type)
-    return { rows: [], error: report[:error].to_s } if report[:error].present?
-
-    { rows: report[:data].first(TOP_CARD_LIMIT), error: nil }
-  end
-
-  def cached_report(type)
     opts = {
       start_date: start_date,
       end_date: end_date,
@@ -69,26 +62,25 @@ class AdminDashboardSiteTraffic
     }
 
     cached = Report.find_cached(type, opts)
-    return { data: (cached[:data] || []).map(&:symbolize_keys), error: cached[:error] } if cached
+    return cached_to_payload(cached) if cached
 
     report = Report.find(type, opts)
-    return { data: [], error: "exception" } if report.nil?
+    return { rows: [], error: "exception" } if report.nil?
 
+    # Timeouts skip the cache so the next request retries instead of being
+    # pinned to the error for the full 35-minute TTL.
     Report.cache(report) if report.error != :timeout
 
-    { data: report.data, error: report.error }
+    return { rows: [], error: report.error.to_s } if report.error.present?
+
+    { rows: report.data.first(TOP_CARD_LIMIT), error: nil }
   end
 
-  def top_referrers_card
-    report = cached_report("top_referrers_by_browser_pageviews")
-    return { rows: [], error: report[:error].to_s } if report[:error].present?
+  def cached_to_payload(cached)
+    error = cached[:error]
+    return { rows: [], error: error.to_s } if error.present?
 
-    direct, external = report[:data].partition { |row| row[:normalized_referrer].nil? }
-    rows = direct + external.first(TOP_CARD_LIMIT)
-
-    return { rows: [], error: nil } if rows.empty?
-
-    { rows: rows, error: nil }
+    { rows: (cached[:data] || []).map(&:symbolize_keys).first(TOP_CARD_LIMIT), error: nil }
   end
 
   def series_ids(include_embedded:)

@@ -11,8 +11,8 @@ module Reports::TopReferrersByBrowserPageviews
 
       report.labels = [
         {
-          property: :normalized_referrer,
-          type: :referrer,
+          property: :referrer_label,
+          type: :text,
           title: I18n.t("reports.top_referrers_by_browser_pageviews.labels.normalized_referrer"),
         },
         {
@@ -65,7 +65,14 @@ module Reports::TopReferrersByBrowserPageviews
             limit: MAX_ROWS,
           )
           .map do |row|
-            { normalized_referrer: row.normalized_referrer, count: row.count, percent: row.percent }
+            {
+              normalized_referrer: row.normalized_referrer,
+              referrer_label:
+                row.normalized_referrer ||
+                  I18n.t("reports.top_referrers_by_browser_pageviews.direct"),
+              count: row.count,
+              percent: row.percent,
+            }
           end
     end
   end

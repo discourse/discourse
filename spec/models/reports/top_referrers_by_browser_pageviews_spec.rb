@@ -19,11 +19,23 @@ describe Reports::TopReferrersByBrowserPageviews do
       1.times { Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com") }
       5.times { Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/1") }
 
+      direct_label = I18n.t("reports.top_referrers_by_browser_pageviews.direct")
+
       expect(report.data).to eq(
         [
-          { normalized_referrer: nil, count: 6, percent: 60 },
-          { normalized_referrer: "google.com", count: 3, percent: 30 },
-          { normalized_referrer: "reddit.com", count: 1, percent: 10 },
+          { normalized_referrer: nil, referrer_label: direct_label, count: 6, percent: 60 },
+          {
+            normalized_referrer: "google.com",
+            referrer_label: "google.com",
+            count: 3,
+            percent: 30,
+          },
+          {
+            normalized_referrer: "reddit.com",
+            referrer_label: "reddit.com",
+            count: 1,
+            percent: 10,
+          },
         ],
       )
     end

@@ -563,9 +563,6 @@ export default class Report extends EmberObject {
           if (type === "text") {
             return this._textLabel(value);
           }
-          if (type === "referrer") {
-            return this._referrerLabel(value);
-          }
 
           return {
             value,
@@ -686,17 +683,6 @@ export default class Report extends EmberObject {
     return {
       value,
       formattedValue: value ? escaped : "—",
-    };
-  }
-
-  _referrerLabel(value) {
-    return {
-      value,
-      formattedValue: value
-        ? escapeExpression(value)
-        : i18n(
-            "admin.dashboard.reports.top_referrers_by_browser_pageviews.direct"
-          ),
     };
   }
 

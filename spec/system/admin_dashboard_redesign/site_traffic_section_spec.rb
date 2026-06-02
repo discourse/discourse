@@ -239,6 +239,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         normalized_referrer: "news.ycombinator.com/item?id=42",
         created_at: "2026-05-12",
       )
+      Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: "2026-05-12")
       BrowserPageviewReferrerDailyRollup.aggregate(
         start_date: "2026-05-01".to_date,
         end_date: "2026-05-14".to_date,
@@ -249,6 +250,10 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(page).to have_current_path(
         "/admin/reports/top_referrers_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
+      )
+      expect(page).to have_css(
+        ".admin-report-table-row:first-child td.referrer_label",
+        text: "Direct",
       )
     end
 
