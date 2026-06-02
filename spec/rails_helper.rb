@@ -537,9 +537,10 @@ RSpec.configure do |config|
 
     config.after(:suite) do
       stats = MessageBusTestSync.stats
-      next if stats.empty?
 
-      summary = "attempted=#{stats[:attempted]} rescued=#{stats[:rescued]} failed=#{stats[:failed]}"
+      summary =
+        "publishes=#{stats[:publishes]} attempted=#{stats[:attempted]} " \
+          "rescued=#{stats[:rescued]} failed=#{stats[:failed]}"
 
       if ENV["GITHUB_ACTIONS"]
         puts "::notice title=MessageBusTestSync::#{summary}"
@@ -550,12 +551,13 @@ RSpec.configure do |config|
       if (path = ENV["GITHUB_STEP_SUMMARY"])
         File.open(path, "a") do |f|
           f.puts "### MessageBusTestSync"
-          f.puts "| rescued | attempted | failed |"
-          f.puts "| ------: | --------: | -----: |"
-          f.puts "| #{stats[:rescued]} | #{stats[:attempted]} | #{stats[:failed]} |"
+          f.puts "| publishes | attempted | rescued | failed |"
+          f.puts "| --------: | --------: | ------: | -----: |"
+          f.puts "| #{stats[:publishes]} | #{stats[:attempted]} | #{stats[:rescued]} | #{stats[:failed]} |"
           f.puts ""
-          f.puts "- **rescued**: matchers that timed out and then passed after a MessageBus flush"
-          f.puts "- **attempted**: matchers that triggered the flush+retry path"
+          f.puts "- **publishes**: server-side MessageBus publishes observed by the hook"
+          f.puts "- **attempted**: matchers that timed out with pending publishes and triggered the flush+retry path"
+          f.puts "- **rescued**: matchers that passed after the flush+retry (would have failed without the hook)"
           f.puts "- **failed**: retry also failed (real failure or unrecoverable MB race)"
           f.puts ""
         end
