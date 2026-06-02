@@ -78,13 +78,13 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(webhook.dig(:properties, :url_preview, :ui, :control)).to eq(:url_preview)
       end
 
-      it "declares load options methods for dynamic combo box fields" do
+      it "sideloads options metadata for dynamic combo box fields" do
         award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:badge" }
 
         expect(award_badge.dig(:properties, :badge_id, :type_options)).to include(
           load_options_method: "badges",
         )
-        expect(award_badge).not_to have_key(:metadata)
+        expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
       end
 
       it "includes branching for condition nodes" do

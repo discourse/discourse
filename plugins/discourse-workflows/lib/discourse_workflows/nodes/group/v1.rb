@@ -44,6 +44,7 @@ module DiscourseWorkflows
               required: true,
               type_options: {
                 load_options_method: "groups",
+                load_options_depends_on: %w[operation],
               },
               ui: {
                 control: :group_select,
