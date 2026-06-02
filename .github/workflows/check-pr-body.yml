@@ -2,7 +2,7 @@ name: check-pr-body
 
 on:
   pull_request_target:
-    types: [opened, reopened, edited]
+    types: [opened, reopened, edited, synchronize]
 
 jobs:
   sanitize:
@@ -14,17 +14,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha }} 
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: "Replace PR body with commit message"
         shell: ruby {0}
-        env: 
-          PR_BODY: ${{ github.event.pull_request.body }}
+        env:
           PR_NUMBER: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          original_description = ENV['PR_BODY']
+          pr_number = ENV['PR_NUMBER']
 
-          if !original_description.include? "Dependabot commands and options"
+          # Event's payload body can be stale, re-fetch.
+          original_description = `gh pr view #{pr_number} --json body --jq .body`
+          raise "Failed to fetch PR body" unless $?.success?
+
+          if !original_description.include? "<details>"
             puts "PR body does not contain rich Dependabot content, skipping"
             exit 0
           end
@@ -36,7 +39,7 @@ jobs:
 
           puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
 
-          system "gh", "pr", "edit", ENV['PR_NUMBER'], "--body", new_description
+          system "gh", "pr", "edit", pr_number, "--body", new_description
 
           comment = <<~COMMENT
             PR body updated to plaintext for easier squash-merging. Original body content below:
@@ -47,7 +50,7 @@ jobs:
           COMMENT
 
           puts "Adding comment with original info..."
-          command = ["gh", "pr", "comment", ENV['PR_NUMBER'], "--body", comment]
+          command = ["gh", "pr", "comment", pr_number, "--body", comment]
           begin
             system *command, "--edit-last", exception: true
           rescue
