@@ -48,12 +48,12 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
     end
 
-    it "does not include metadata key in node type response" do
+    it "includes load options metadata in node type response" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 
       badge_node =
         response.parsed_body["node_types"].find { |nt| nt["identifier"] == "action:badge" }
-      expect(badge_node).not_to have_key("metadata")
+      expect(badge_node.dig("metadata", "badges")).to all(include("id", "name"))
     end
 
     it "returns descriptor fields used by the admin client" do
