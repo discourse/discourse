@@ -4,11 +4,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { not } from "discourse/truth-helpers";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AssignmentChooser from "./assignment-chooser";
 
 export default class Assignment extends Component {
   @service siteSettings;
@@ -97,7 +97,7 @@ export default class Assignment extends Component {
         {{if this.showAssigneeIeEmptyError 'assignee-error'}}"
     >
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
-      <EmailGroupUserChooser
+      <AssignmentChooser
         autocomplete="off"
         @id="assignee-chooser"
         @value={{this.assignee}}
@@ -109,6 +109,7 @@ export default class Assignment extends Component {
           customSearchOptions=(hash
             assignableGroups=true defaultSearchResults=this.suggestions
           )
+          assignmentGroups=this.allowedGroupsForAssignment
           groupMembersOf=this.allowedGroups
           maximum=1
           tabindex=1

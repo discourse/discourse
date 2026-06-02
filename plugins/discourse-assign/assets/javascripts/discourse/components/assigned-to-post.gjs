@@ -20,7 +20,7 @@ export default class AssignedToPost extends Component {
   }
 
   get canAssign() {
-    return this.args.post.can_assign !== false;
+    return this.args.post.can_assign;
   }
 
   @action

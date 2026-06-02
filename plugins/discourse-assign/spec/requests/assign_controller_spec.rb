@@ -19,13 +19,6 @@ RSpec.describe DiscourseAssign::AssignController do
 
   fab!(:post)
 
-  def allow_group_to_assign_in_category(category, group)
-    category.custom_fields[
-      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
-    category.save_custom_fields
-  end
-
   describe "only allow users from allowed groups to assign" do
     it "filters requests where current_user is not member of an allowed group" do
       sign_in(user_in_non_allowed_group)

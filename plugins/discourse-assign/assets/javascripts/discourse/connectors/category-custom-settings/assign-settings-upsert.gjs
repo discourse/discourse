@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import {
+  AUTO_GROUPS,
+  CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS,
+} from "discourse/lib/constants";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 
-const ADDITIONAL_ASSIGN_ALLOWED_GROUPS = "additional_assign_allowed_on_groups";
-const EVERYONE_GROUP_ID = 0;
-
 export default class AssignSettingsUpsert extends Component {
   @service site;
+  @service siteSettings;
 
   get enableUnassignedFilter() {
     const value =
@@ -17,23 +19,39 @@ export default class AssignSettingsUpsert extends Component {
     return value?.toString() === "true";
   }
 
+  get globalAssignAllowedGroupIds() {
+    return this.groupIdsFromValue(this.siteSettings.assign_allowed_on_groups);
+  }
+
   get additionalAssignAllowedGroupIds() {
     const value =
       this.args.outletArgs.transientData?.custom_fields?.[
-        ADDITIONAL_ASSIGN_ALLOWED_GROUPS
+        CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
       ];
 
+    return [
+      ...new Set([
+        ...this.globalAssignAllowedGroupIds,
+        ...this.groupIdsFromValue(value),
+      ]),
+    ];
+  }
+
+  get assignAllowedMandatoryGroupIds() {
+    return this.globalAssignAllowedGroupIds.join("|");
+  }
+
+  groupIdsFromValue(value) {
     return (value || "")
       .split("|")
       .filter(Boolean)
-      .map((groupId) => parseInt(groupId, 10))
-      .filter((groupId) => groupId !== EVERYONE_GROUP_ID);
+      .filter((groupId) => parseInt(groupId, 10) !== AUTO_GROUPS.everyone.id);
   }
 
   get assignableGroups() {
-    return (this.site.groups || []).filter(
-      (group) => group.id !== EVERYONE_GROUP_ID
-    );
+    return (this.site.groups || [])
+      .filter((group) => group.id !== AUTO_GROUPS.everyone.id)
+      .map((group) => ({ ...group, id: group.id.toString() }));
   }
 
   @action
@@ -46,7 +64,10 @@ export default class AssignSettingsUpsert extends Component {
     await set(
       name,
       (groupIds || [])
-        .filter((groupId) => groupId !== EVERYONE_GROUP_ID)
+        .filter((groupId) => parseInt(groupId, 10) !== AUTO_GROUPS.everyone.id)
+        .filter(
+          (groupId) => !this.globalAssignAllowedGroupIds.includes(groupId)
+        )
         .join("|")
     );
   }
@@ -56,7 +77,7 @@ export default class AssignSettingsUpsert extends Component {
       <form.Section @title={{i18n "discourse_assign.assign.title"}}>
         <form.Object @name="custom_fields" as |customFields|>
           <customFields.Field
-            @name={{ADDITIONAL_ASSIGN_ALLOWED_GROUPS}}
+            @name={{CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS}}
             @title={{i18n "discourse_assign.additional_assign_allowed_groups"}}
             @description={{i18n
               "discourse_assign.additional_assign_allowed_groups_description"
@@ -70,6 +91,7 @@ export default class AssignSettingsUpsert extends Component {
               <GroupChooser
                 @content={{this.assignableGroups}}
                 @value={{this.additionalAssignAllowedGroupIds}}
+                @mandatoryValues={{this.assignAllowedMandatoryGroupIds}}
                 @onChange={{field.set}}
               />
             </field.Control>

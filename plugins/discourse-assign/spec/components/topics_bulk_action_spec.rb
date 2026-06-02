@@ -16,13 +16,6 @@ describe TopicsBulkAction do
 
   before { add_to_assign_allowed_group(user) }
 
-  def allow_group_to_assign_in_category(category, group)
-    category.custom_fields[
-      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
-    category.save_custom_fields
-  end
-
   describe "assign_topics" do
     it "assigns multiple topics to user" do
       TopicsBulkAction.new(

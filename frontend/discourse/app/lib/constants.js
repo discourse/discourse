@@ -26,6 +26,9 @@ export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
 
 export const CATEGORY_TEXT_COLORS = ["FFFFFF", "000000"];
 
+export const CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS =
+  "additional_assign_allowed_on_groups";
+
 // NOTE: Group names are changed based on the site's locale, see
 // Group.refresh_automatic_group! for more details
 export const AUTO_GROUPS = {

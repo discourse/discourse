@@ -11,13 +11,6 @@ RSpec.describe GroupShowSerializer do
   let(:guardian) { Guardian.new(user) }
   let(:serializer) { described_class.new(group, scope: guardian) }
 
-  def allow_group_to_assign_in_category(category, group)
-    category.custom_fields[
-      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
-    category.save_custom_fields
-  end
-
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = group.id.to_s

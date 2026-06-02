@@ -5,30 +5,6 @@ module DiscourseAssign
     CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS = "additional_assign_allowed_on_groups"
 
     class << self
-      def can_assign_anywhere?(user)
-        return false if user.blank?
-
-        can_assign_globally?(user) || scoped_group_ids_for_user(user).present?
-      end
-
-      def can_assign_target?(user, target)
-        return false if user.blank?
-        return true if can_assign_globally?(user)
-
-        category_id = category_id_for(target)
-        return false if category_id.blank?
-
-        (scoped_group_ids_for_category(category_id) & group_ids_for(user)).present?
-      end
-
-      def can_assign_globally?(user)
-        return false if user.blank?
-        return true if user.admin?
-
-        allowed_group_ids = global_group_ids
-        allowed_group_ids.present? && (allowed_group_ids & group_ids_for(user)).present?
-      end
-
       def allowed_user_ids_for_target(target)
         ids = Set.new(admin_user_ids)
         ids.merge(user_ids_in_groups(global_group_ids))
@@ -42,24 +18,26 @@ module DiscourseAssign
         ids.to_a
       end
 
-      def assign_allowed_groups_for_target(target)
-        Group.where(id: global_group_ids | scoped_group_ids_for_category(category_id_for(target)))
+      def assign_allowed_groups_for_target(user, target)
+        Group.visible_groups(user).where(
+          id: global_group_ids | scoped_group_ids_for_category(category_id_for(target)),
+        )
       end
 
       def assign_allowed_groups_for_user(user)
         group_ids =
-          if can_assign_globally?(user)
+          if user&.guardian&.can_assign_globally?
             global_group_ids | all_scoped_group_ids
           else
             global_group_ids | scoped_group_ids_for_user(user)
           end
 
-        Group.where(id: group_ids)
+        Group.visible_groups(user).where(id: group_ids)
       end
 
       def assignable_user_ids_for_user(user)
         group_ids =
-          if can_assign_globally?(user)
+          if user&.guardian&.can_assign_globally?
             global_group_ids | all_scoped_group_ids
           else
             global_group_ids | scoped_group_ids_for_user(user)
@@ -83,8 +61,6 @@ module DiscourseAssign
         end
       end
 
-      private
-
       def global_group_ids
         SiteSetting.assign_allowed_on_groups_map
       end
@@ -98,6 +74,8 @@ module DiscourseAssign
       end
 
       def scoped_group_ids_for_user(user)
+        return [] if user.blank?
+
         all_scoped_group_ids & group_ids_for(user)
       end
 
@@ -112,12 +90,14 @@ module DiscourseAssign
         )
       end
 
+      private
+
       def group_ids_for(user)
         user.group_ids
       end
 
       def admin_user_ids
-        User.where(admin: true).pluck(:id)
+        User.human_users.admins.pluck(:id)
       end
 
       def user_ids_in_groups(group_ids)

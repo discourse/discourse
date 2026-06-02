@@ -10,13 +10,6 @@ RSpec.describe Assigner do
   let(:pm_post) { Fabricate(:private_message_post) }
   let(:pm) { pm_post.topic }
 
-  def allow_group_to_assign_in_category(category, group)
-    category.custom_fields[
-      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
-    category.save_custom_fields
-  end
-
   describe "assigning and unassigning" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }

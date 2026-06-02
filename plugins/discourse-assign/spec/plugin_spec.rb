@@ -3,13 +3,6 @@
 RSpec.describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
 
-  def allow_group_to_assign_in_category(category, group)
-    category.custom_fields[
-      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
-    category.save_custom_fields
-  end
-
   describe "discourse-assign topics_filter_options modifier" do
     let(:user) { Fabricate(:user) }
 

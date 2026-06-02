@@ -100,9 +100,8 @@ class ::Assigner
       DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic)
     return false if allowed_user_ids.empty?
 
-    Post.where(topic_id: post.topic_id, deleted_at: nil, user_id: allowed_user_ids).maximum(
-      :post_number,
-    ) == post.post_number
+    Post.where(topic_id: post.topic_id, user_id: allowed_user_ids).maximum(:post_number) ==
+      post.post_number
   end
 
   def self.mentioned_staff(post)
@@ -263,7 +262,7 @@ class ::Assigner
   )
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
-    if !DiscourseAssign::AssignmentPermissions.can_assign_target?(@assigned_by, @target)
+    if !@assigned_by&.guardian&.can_assign?(@target)
       return { success: false, reason: :forbidden_assigner_not_allowed }
     end
 

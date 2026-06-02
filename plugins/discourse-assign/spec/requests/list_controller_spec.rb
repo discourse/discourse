@@ -13,13 +13,6 @@ describe ListController do
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
 
-  def allow_group_to_assign_in_category(category, group)
-    category.custom_fields[
-      DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
-    ] = group.id.to_s
-    category.save_custom_fields
-  end
-
   describe "only allow users from allowed groups" do
     include_context "with group that is allowed to assign"
 

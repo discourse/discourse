@@ -20,6 +20,7 @@ end
 
 require_relative "lib/discourse_assign/engine"
 require_relative "lib/discourse_assign/assignment_permissions"
+require_relative "lib/discourse_assign/guardian_extensions"
 require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
@@ -32,6 +33,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
 
   reloadable_patch do |plugin|
+    Guardian.prepend(DiscourseAssign::GuardianExtensions)
     Group.prepend(DiscourseAssign::GroupExtension)
     ListController.prepend(DiscourseAssign::ListControllerExtension)
     Post.prepend(DiscourseAssign::PostExtension)
@@ -97,18 +99,18 @@ after_initialize do
 
   add_to_class(:user, :can_assign?) do |target = nil|
     if target
-      DiscourseAssign::AssignmentPermissions.can_assign_target?(self, target)
+      guardian.can_assign?(target)
     else
       return @can_assign if defined?(@can_assign)
 
-      @can_assign = DiscourseAssign::AssignmentPermissions.can_assign_anywhere?(self)
+      @can_assign = guardian.can_assign?
     end
   end
 
   add_to_class(:user, :can_assign_globally?) do
     return @can_assign_globally if defined?(@can_assign_globally)
 
-    @can_assign_globally = DiscourseAssign::AssignmentPermissions.can_assign_globally?(self)
+    @can_assign_globally = guardian.can_assign_globally?
   end
 
   add_to_serializer(:current_user, :never_auto_track_topics) do
@@ -119,9 +121,6 @@ after_initialize do
   end
 
   add_to_class(:group, :can_show_assigned_tab?) { assignable_level > Group::ALIAS_LEVELS[:nobody] }
-
-  add_to_class(:guardian, :can_assign?) { |target = nil| user && user.can_assign?(target) }
-  add_to_class(:guardian, :can_assign_globally?) { user && user.can_assign_globally? }
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split("|")

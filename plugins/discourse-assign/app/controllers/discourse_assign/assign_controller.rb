@@ -13,7 +13,10 @@ module DiscourseAssign
       users = [current_user, *recent_assignees(target)]
       assign_allowed_groups =
         if target
-          DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_target(target)
+          DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_target(
+            current_user,
+            target,
+          )
         else
           DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_user(current_user)
         end
@@ -25,11 +28,7 @@ module DiscourseAssign
         end
 
       render json: {
-               assign_allowed_on_groups:
-                 Group
-                   .visible_groups(current_user)
-                   .where(id: assign_allowed_groups.select(:id))
-                   .pluck(:name),
+               assign_allowed_on_groups: assign_allowed_groups.pluck(:name),
                assign_allowed_for_groups:
                  Group.visible_groups(current_user).where(id: assignable_group_ids).pluck(:name),
                suggestions:
