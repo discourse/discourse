@@ -1,6 +1,5 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { block } from "discourse/blocks";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import { URL_PATTERN } from "discourse/lib/blocks";
@@ -8,18 +7,17 @@ import {
   fetchTopicList,
   VALID_TOPIC_LIST_FILTERS,
 } from "discourse/lib/blocks/-internals/fetch-topic-list";
-import { bind } from "discourse/lib/decorators";
-import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 /**
- * Real topic-list block. Fetches via `store.findFiltered("topicList", ...)`
- * with optional category, tag, and solved filters. Renders the result
- * through core's `BasicTopicList` inside an `AsyncContent` for clean
- * loading / empty states. The `filter` enum covers latest, top, new,
- * unread, hot, etc., so a single block covers both the "recent" and
- * "hot topics" use cases.
+ * Real topic-list block. Declares its data through the block `data` hook, so
+ * the resolved topic list arrives as `@data` and the block stays a pure
+ * renderer — no fetch, services, or loading markup of its own. The framework
+ * owns the loading boundary and serves preloaded data when available. Renders
+ * through core's `BasicTopicList`. The `filter` enum covers latest, top, new,
+ * unread, hot, etc., so one block covers both the "recent" and "hot topics"
+ * cases.
  */
 @block("recent-topics", {
   displayName: "Topic list",
@@ -94,32 +92,29 @@ import { i18n } from "discourse-i18n";
   constraints: {
     allOrNone: ["linkLabel", "linkHref"],
   },
+  data: {
+    request: (args) => ({
+      kind: "topic-list",
+      filter: args.filter ?? "latest",
+      categoryId: args.categoryId,
+      tag: args.tag,
+      solved: args.solved ?? false,
+      count: args.count ?? 5,
+    }),
+    resolve: (descriptor, { owner }) =>
+      fetchTopicList({
+        store: owner.lookup("service:store"),
+        currentUser: owner.lookup("service:current-user"),
+        filterType: descriptor.filter,
+        categoryId: descriptor.categoryId,
+        tag: descriptor.tag,
+        solved: descriptor.solved,
+        count: descriptor.count,
+      }),
+    skeleton: (args) => ({ rows: args.count ?? 5, title: !!args.title }),
+  },
 })
 export default class RecentTopics extends Component {
-  @service store;
-  @service currentUser;
-
-  /**
-   * Fetches the topic list to render, delegated to the shared helper.
-   * Bound via `@bind` so it can be handed to `DAsyncContent` as a
-   * stable function reference (Glimmer would otherwise re-trigger the
-   * fetch on every render).
-   *
-   * @returns {ReturnType<typeof fetchTopicList>}
-   */
-  @bind
-  async fetchTopics() {
-    return fetchTopicList({
-      store: this.store,
-      currentUser: this.currentUser,
-      filterType: this.args.filter ?? "latest",
-      categoryId: this.args.categoryId,
-      tag: this.args.tag,
-      solved: this.args.solved,
-      count: this.args.count ?? 5,
-    });
-  }
-
   <template>
     <div class="d-block-recent-topics">
       {{#if @title}}
@@ -135,33 +130,23 @@ export default class RecentTopics extends Component {
         </div>
       {{/if}}
 
-      <DAsyncContent @asyncData={{this.fetchTopics}}>
-        <:loading>
-          <div class="d-block-recent-topics__loading">
-            <div class="spinner"></div>
-          </div>
-        </:loading>
+      {{#if @data}}
+        <div class="d-block-recent-topics__list">
+          <BasicTopicList @topics={{@data}} @showPosters="true" />
 
-        <:empty>
-          <div class="d-block-recent-topics__empty">
-            {{i18n "topics.none.latest"}}
-          </div>
-        </:empty>
-
-        <:content as |topics|>
-          <div class="d-block-recent-topics__list">
-            <BasicTopicList @topics={{topics}} @showPosters="true" />
-
-            {{#if @linkHref}}
-              <div class="d-block-recent-topics__footer">
-                <a class="d-block-recent-topics__all-link" href={{@linkHref}}>
-                  {{@linkLabel}}
-                </a>
-              </div>
-            {{/if}}
-          </div>
-        </:content>
-      </DAsyncContent>
+          {{#if @linkHref}}
+            <div class="d-block-recent-topics__footer">
+              <a class="d-block-recent-topics__all-link" href={{@linkHref}}>
+                {{@linkLabel}}
+              </a>
+            </div>
+          {{/if}}
+        </div>
+      {{else}}
+        <div class="d-block-recent-topics__empty">
+          {{i18n "topics.none.latest"}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }

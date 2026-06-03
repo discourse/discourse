@@ -28,6 +28,7 @@ import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/bloc
 import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/block-outlet-inline-error";
 /** @type {import("discourse/lib/blocks/-internals/components/block-outlet-root-container.gjs")} */
 import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
+import { resetBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
 import {
   createDebugGhost,
   DEBUG_CALLBACK,
@@ -482,6 +483,12 @@ function createChildBlock(entry, owner, debugContext = {}) {
       decoratorClassNames: resolveDecoratorClassNames(blockMeta, argsSnapshot),
       classNames,
       Component: curried,
+      // When the block declares a data dependency, hand the wrapper its `data`
+      // declaration plus the reactive args object so the wrapper can derive the
+      // request descriptor and resolve it (the wrapper renders after the sync
+      // pipeline, so this never touches the outlet's synchronous getter).
+      dataMeta: blockMeta?.data ?? null,
+      dataArgs: blockMeta?.data ? blockArgs : null,
     },
     owner
   );
@@ -910,6 +917,21 @@ export function _hasLayout(outletName) {
 }
 
 /**
+ * Returns the promise resolving to an outlet's validated layout entries, or
+ * `undefined` when no layout is registered. Lets callers walk an outlet's
+ * blocks before render (e.g. to resolve declared block data inside a route
+ * transition) without instantiating the `BlockOutlet` component.
+ *
+ * @internal This is an internal API. Use the `blocks` service's `prepareData()` method instead.
+ *
+ * @param {string} outletName - The outlet identifier.
+ * @returns {Promise<Array<LayoutEntry>>|undefined} The validated layout, or undefined.
+ */
+export function _getValidatedLayout(outletName) {
+  return resolveLayoutRecord(outletName)?.validatedLayout;
+}
+
+/**
  * Component signature for BlockOutlet.
  *
  * @typedef {Object} BlockOutletSignature
@@ -972,6 +994,15 @@ export default class BlockOutlet extends Component {
         `Block outlet ${this.#name} is not registered in the blocks registry`
       );
     }
+  }
+
+  willDestroy() {
+    // @ts-expect-error - Glimmer's willDestroy is variadic at the base.
+    super.willDestroy(...arguments);
+
+    // Drop this outlet's coordinated block data so a later mount re-resolves
+    // rather than reusing payloads cached for a torn-down outlet.
+    resetBlockData(this.#name);
   }
 
   get validatedLayout() {

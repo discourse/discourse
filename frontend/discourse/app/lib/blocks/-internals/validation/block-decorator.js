@@ -38,6 +38,19 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
   "thumbnail",
   "paletteHidden",
   "transparent",
+  "data",
+]);
+
+/**
+ * Valid keys for the `data` option (a block's declared data dependency).
+ *
+ * @constant {ReadonlyArray<string>}
+ */
+const VALID_DATA_KEYS = Object.freeze([
+  "request",
+  "resolve",
+  "hydrate",
+  "skeleton",
 ]);
 
 /**
@@ -121,6 +134,55 @@ export function validateDisplayMetadata(name, options) {
 
   if (thumbnail != null && typeof thumbnail !== "string") {
     raiseBlockError(`Block "${name}": "thumbnail" must be a string.`);
+  }
+}
+
+/**
+ * Validates the optional `data` declaration (a block's coordinated data
+ * dependency). `request` maps args to a serializable descriptor and `resolve`
+ * turns a descriptor into render-ready data; both are required when `data` is
+ * present. `hydrate` (server payload to render-ready data) and `skeleton`
+ * (placeholder shape) are optional.
+ *
+ * @param {string} name - The block name (for error messages).
+ * @param {Object|null|undefined} data - The decorator's `data` option.
+ */
+export function validateBlockDataOption(name, data) {
+  if (data == null) {
+    return;
+  }
+
+  if (typeof data !== "object" || Array.isArray(data)) {
+    raiseBlockError(`Block "${name}": "data" must be an object.`);
+  }
+
+  const unknownKeys = Object.keys(data).filter(
+    (key) => !VALID_DATA_KEYS.includes(key)
+  );
+  if (unknownKeys.length > 0) {
+    const suggestions = unknownKeys
+      .map((key) => formatWithSuggestion(key, VALID_DATA_KEYS))
+      .join(", ");
+    raiseBlockError(
+      `Block "${name}": unknown "data" key(s): ${suggestions}. ` +
+        `Valid keys are: ${VALID_DATA_KEYS.join(", ")}.`
+    );
+  }
+
+  // `request` and `resolve` are the contract; without them the declaration
+  // can't produce a descriptor or turn one into data.
+  for (const key of ["request", "resolve"]) {
+    if (typeof data[key] !== "function") {
+      raiseBlockError(
+        `Block "${name}": "data.${key}" is required and must be a function.`
+      );
+    }
+  }
+
+  for (const key of ["hydrate", "skeleton"]) {
+    if (data[key] != null && typeof data[key] !== "function") {
+      raiseBlockError(`Block "${name}": "data.${key}" must be a function.`);
+    }
   }
 }
 

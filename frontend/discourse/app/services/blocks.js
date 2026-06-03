@@ -2,7 +2,8 @@
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
-import { _hasLayout } from "discourse/blocks/block-outlet";
+import { _getValidatedLayout, _hasLayout } from "discourse/blocks/block-outlet";
+import { loadBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { titleCase } from "discourse/lib/blocks/-internals/display-metadata";
@@ -20,6 +21,7 @@ import {
   getAllOutletsWithMetadata,
   getOutletMetadata,
 } from "discourse/lib/blocks/-internals/registry/outlet";
+import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 
 /**
@@ -340,6 +342,120 @@ export default class Blocks extends Service {
     }
     const entry = getBlockEntry(name);
     return !isBlockFactory(entry);
+  }
+
+  /*
+   * Block Data Methods
+   */
+
+  /**
+   * Resolves the declared data for every block in an outlet's layout and waits
+   * for it to settle, so the blocks render with their data already in hand.
+   *
+   * Intended to be awaited inside a route transition (from `model()` /
+   * `afterModel()`): the transition waits, the route's loading substate covers
+   * it, and navigating away cancels the work. Resolution prefers server-inlined
+   * preload payloads; otherwise it runs each block's resolver. Per-block
+   * failures do not reject — they surface at render through the block's own
+   * loading boundary — so one failing block can't break the transition.
+   *
+   * Blocks hidden by render-time-only conditions are still resolved here (a
+   * harmless superset); their data simply goes unused.
+   *
+   * @param {string} scope - The outlet name whose blocks to resolve.
+   * @param {Object} [options]
+   * @param {Object} [options.params] - Route params (available to future descriptor logic).
+   * @param {AbortSignal} [options.signal] - Aborts in-flight resolution when the transition is cancelled.
+   * @returns {Promise<void>}
+   */
+  async prepareData(scope, options = {}) {
+    const layoutPromise = _getValidatedLayout(scope);
+    if (!layoutPromise) {
+      return;
+    }
+
+    const { signal } = options;
+    const owner = getOwner(this);
+    const entries = await layoutPromise;
+
+    const promises = [];
+    await this.#collectBlockDataPromises(
+      scope,
+      entries,
+      owner,
+      signal,
+      promises
+    );
+
+    await Promise.allSettled(promises);
+  }
+
+  /**
+   * Walks layout entries (depth-first into containers), starting resolution for
+   * every block that declares a data dependency and collecting the promises.
+   *
+   * @param {string} scope - The outlet name.
+   * @param {Array<Object>} entries - Validated layout entries.
+   * @param {import("@ember/owner").default} owner - The application owner.
+   * @param {AbortSignal|undefined} signal - Cancellation signal.
+   * @param {Array<Promise>} out - Accumulator for the resolution promises.
+   * @returns {Promise<void>}
+   */
+  async #collectBlockDataPromises(scope, entries, owner, signal, out) {
+    for (const entry of entries ?? []) {
+      const blockClass = await this.#resolveBlockClass(entry.block);
+      const metadata = blockClass ? getBlockMetadata(blockClass) : null;
+      const dataMeta = metadata?.data;
+
+      if (dataMeta?.request) {
+        // Apply schema defaults so the descriptor (and therefore the cache key)
+        // matches the one the layout wrapper derives at render time.
+        const args = applyArgDefaults(blockClass, entry.args ?? {});
+        const descriptor = dataMeta.request(args);
+        const cacheEntry = loadBlockData({
+          scope,
+          blockName: metadata.blockName,
+          descriptor,
+          dataMeta,
+          owner,
+          signal,
+        });
+        if (cacheEntry) {
+          out.push(cacheEntry.promise);
+        }
+      }
+
+      if (entry.children?.length) {
+        await this.#collectBlockDataPromises(
+          scope,
+          entry.children,
+          owner,
+          signal,
+          out
+        );
+      }
+    }
+  }
+
+  /**
+   * Resolves a layout entry's block reference (a component class or a registered
+   * name) to its component class, or null when it can't be resolved.
+   *
+   * @param {Function|string} blockRef - The entry's block reference.
+   * @returns {Promise<any>} The component class, or null.
+   */
+  async #resolveBlockClass(blockRef) {
+    if (typeof blockRef === "function") {
+      return blockRef;
+    }
+    if (typeof blockRef === "string") {
+      try {
+        return await resolveBlock(blockRef);
+      } catch {
+        return null;
+      }
+    }
+    return null;
   }
 
   /*

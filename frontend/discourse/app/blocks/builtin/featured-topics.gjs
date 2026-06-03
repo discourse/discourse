@@ -1,6 +1,5 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import { URL_PATTERN } from "discourse/lib/blocks";
@@ -8,18 +7,17 @@ import {
   fetchTopicList,
   VALID_TOPIC_LIST_FILTERS,
 } from "discourse/lib/blocks/-internals/fetch-topic-list";
-import { bind } from "discourse/lib/decorators";
-import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 /**
  * Compact card-style topic list intended for sidebar surfaces (e.g.
- * "Hot topics", "Trending now"). Renders each topic as title + category
- * badge + relative age — no posters, view counts, or excerpts. For
- * full table-style lists with view/activity columns, use the
- * `recent-topics` block instead.
+ * "Hot topics", "Trending now"). Declares its data through the block `data`
+ * hook, so the resolved list arrives as `@data` and the block stays a pure
+ * renderer. Renders each topic as title + category badge + relative age — no
+ * posters, view counts, or excerpts. For full table-style lists with
+ * view/activity columns, use the `recent-topics` block instead.
  */
 @block("featured-topics", {
   displayName: "Topic highlights",
@@ -86,79 +84,65 @@ import { i18n } from "discourse-i18n";
   constraints: {
     allOrNone: ["linkLabel", "linkHref"],
   },
+  data: {
+    request: (args) => ({
+      kind: "topic-list",
+      filter: args.filter ?? "hot",
+      categoryId: args.categoryId,
+      tag: args.tag,
+      count: args.count ?? 5,
+    }),
+    resolve: (descriptor, { owner }) =>
+      fetchTopicList({
+        store: owner.lookup("service:store"),
+        currentUser: owner.lookup("service:current-user"),
+        filterType: descriptor.filter,
+        categoryId: descriptor.categoryId,
+        tag: descriptor.tag,
+        count: descriptor.count,
+      }),
+    skeleton: (args) => ({ rows: args.count ?? 5, title: !!args.title }),
+  },
 })
 export default class FeaturedTopics extends Component {
-  @service store;
-  @service currentUser;
-
-  /**
-   * Fetches the topic list to render, delegated to the shared helper.
-   * Bound via `@bind` so it can be handed to `DAsyncContent` as a
-   * stable function reference (Glimmer would otherwise re-trigger the
-   * fetch on every render).
-   *
-   * @returns {ReturnType<typeof fetchTopicList>}
-   */
-  @bind
-  async fetchTopics() {
-    return fetchTopicList({
-      store: this.store,
-      currentUser: this.currentUser,
-      filterType: this.args.filter ?? "hot",
-      categoryId: this.args.categoryId,
-      tag: this.args.tag,
-      count: this.args.count ?? 5,
-    });
-  }
-
   <template>
     <div class="d-block-featured-topics">
       {{#if @title}}
         <h3 class="d-block-featured-topics__title">{{@title}}</h3>
       {{/if}}
 
-      <DAsyncContent @asyncData={{this.fetchTopics}}>
-        <:loading>
-          <div class="d-block-featured-topics__loading">
-            <div class="spinner"></div>
+      {{#if @data}}
+        <ul class="d-block-featured-topics__list">
+          {{#each @data as |topic|}}
+            <li class="d-block-featured-topics__item">
+              <a
+                class="d-block-featured-topics__topic-link"
+                href={{topic.lastUnreadUrl}}
+              >{{trustHTML topic.fancyTitle}}</a>
+              <div class="d-block-featured-topics__meta">
+                {{#if topic.category}}
+                  {{dCategoryLink topic.category}}
+                {{/if}}
+                <span class="d-block-featured-topics__age">{{dAgeWithTooltip
+                    topic.bumpedAt
+                  }}</span>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+
+        {{#if @linkHref}}
+          <div class="d-block-featured-topics__footer">
+            <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
+              {{@linkLabel}}
+            </a>
           </div>
-        </:loading>
-
-        <:empty>
-          <div class="d-block-featured-topics__empty">
-            {{i18n "topics.none.latest"}}
-          </div>
-        </:empty>
-
-        <:content as |topics|>
-          <ul class="d-block-featured-topics__list">
-            {{#each topics as |topic|}}
-              <li class="d-block-featured-topics__item">
-                <a
-                  class="d-block-featured-topics__topic-link"
-                  href={{topic.lastUnreadUrl}}
-                >{{trustHTML topic.fancyTitle}}</a>
-                <div class="d-block-featured-topics__meta">
-                  {{#if topic.category}}
-                    {{dCategoryLink topic.category}}
-                  {{/if}}
-                  <span class="d-block-featured-topics__age">{{dAgeWithTooltip
-                      topic.bumpedAt
-                    }}</span>
-                </div>
-              </li>
-            {{/each}}
-          </ul>
-
-          {{#if @linkHref}}
-            <div class="d-block-featured-topics__footer">
-              <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
-                {{@linkLabel}}
-              </a>
-            </div>
-          {{/if}}
-        </:content>
-      </DAsyncContent>
+        {{/if}}
+      {{else}}
+        <div class="d-block-featured-topics__empty">
+          {{i18n "topics.none.latest"}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }

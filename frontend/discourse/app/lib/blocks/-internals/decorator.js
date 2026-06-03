@@ -26,6 +26,7 @@ import {
 } from "discourse/lib/blocks/-internals/validation/block-args";
 import {
   validateAndParseBlockName,
+  validateBlockDataOption,
   validateBlockOptions,
   validateDisplayMetadata,
   validateOutletRestrictions,
@@ -284,6 +285,13 @@ const BlockComponentManager = new Proxy(
  *   first-class block. Implies — but does not auto-set — `paletteHidden`;
  *   transparent blocks are typically not user-pickable.
  *
+ * @param {Object} [options.data] - Declared data dependency. When present, the
+ *   resolved data is delivered to the block as `@data` and the framework owns
+ *   the loading boundary. `request(args)` maps args to a serializable
+ *   descriptor; `resolve(descriptor, { owner, signal })` turns a descriptor
+ *   into render-ready data; optional `hydrate(rawJson, { owner })` adapts a
+ *   server-preloaded payload; optional `skeleton(args)` shapes the placeholder.
+ *
  * @returns {Function} Decorator function that returns the decorated class
  *
  * @example
@@ -320,10 +328,24 @@ export function block(name, options = {}) {
     thumbnail = null,
     paletteHidden = false,
     transparent = false,
+    data: dataDeclaration = null,
   } = options;
 
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
+
+  // Validate the optional coordinated data declaration.
+  validateBlockDataOption(name, dataDeclaration);
+
+  // `data` is a reserved arg name: the layout wrapper injects the block's
+  // resolved data as `@data`, so a same-named entry in the args schema would
+  // collide with it.
+  if (argsSchema && Object.prototype.hasOwnProperty.call(argsSchema, "data")) {
+    raiseBlockError(
+      `Block "${name}": "data" is a reserved arg name (the resolved data ` +
+        `dependency is injected as @data); rename the arg.`
+    );
+  }
 
   // Validate childArgs is only allowed on container blocks
   if (childArgsSchema && !isContainer) {
@@ -381,6 +403,7 @@ export function block(name, options = {}) {
       category,
       childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
       constraints: constraints ? Object.freeze(constraints) : null,
+      data: dataDeclaration ? Object.freeze({ ...dataDeclaration }) : null,
       decoratorClassNames,
       deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
       description,
@@ -503,6 +526,7 @@ export function createBlockArgsWithReactiveGetters(
  * - `args` - Args schema
  * - `childArgs` - Child args schema (containers only)
  * - `constraints` - Cross-arg validation constraints
+ * - `data` - Declared data dependency ({ request, resolve, hydrate?, skeleton? }) or null
  * - `validate` - Custom validation function
  * - `allowedOutlets` - Allowed outlet patterns
  * - `deniedOutlets` - Denied outlet patterns

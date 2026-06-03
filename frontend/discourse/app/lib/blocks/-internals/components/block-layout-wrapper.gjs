@@ -10,8 +10,15 @@
  * @module discourse/lib/blocks/-internals/components/block-layout-wrapper
  */
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import cssIdentifier from "discourse/helpers/css-identifier";
+import { getBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
+/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+/** @type {import("discourse/ui-kit/d-block-skeleton.gjs")} */
+import DBlockSkeleton from "discourse/ui-kit/d-block-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
@@ -33,6 +40,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  *   they need to position their children — e.g. CSS Grid placement, flexbox
  *   per-child overrides. The wrapper itself is layout-agnostic; it just
  *   applies whatever style the parent computes.
+ * @property {Object|null} [dataMeta] - The block's declared data dependency
+ *   ({ request, resolve, hydrate?, skeleton? }) when it has one, else null.
+ *   Present means the wrapper owns the block's loading boundary.
+ * @property {Object|null} [dataArgs] - The block's reactive args object, used to
+ *   derive the request descriptor. Reading named keys keeps the lookup reactive.
  */
 
 /**
@@ -52,6 +64,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {CurriedComponent} blockData.Component - The curried block component.
  * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
  * @param {string} [blockData.decoratorClassNames] - Extra CSS classes from the `@block` decorator.
+ * @param {Object|null} [blockData.dataMeta] - The block's declared data dependency, or null.
+ * @param {Object|null} [blockData.dataArgs] - The block's reactive args object for descriptor derivation.
  * @param {import("@ember/owner").default} owner - The application owner for currying.
  * @returns {CurriedComponent} The wrapped component.
  */
@@ -95,6 +109,47 @@ class WrappedBlockLayout extends Component {
     return [baseClass];
   }
 
+  /**
+   * The block's coordinated data, or `null` when the block declares no `data`
+   * (or its `request` returns null for the current args, meaning no async data
+   * is needed). Deriving the descriptor here — by reading the named args the
+   * `request` touches — keeps the lookup reactive: a change to an arg the
+   * descriptor depends on yields a new key and a fresh result, while unrelated
+   * arg edits don't. This runs at render, after the outlet's synchronous
+   * processing, so it never affects that getter.
+   *
+   * @returns {import("ember-async-data").TrackedAsyncData<unknown>|null}
+   */
+  @cached
+  get blockData() {
+    const dataMeta = this.args.dataMeta;
+    if (!dataMeta) {
+      return null;
+    }
+
+    const descriptor = dataMeta.request(this.args.dataArgs);
+
+    return getBlockData({
+      scope: this.args.outletName,
+      blockName: this.args.name,
+      descriptor,
+      dataMeta,
+      owner: getOwner(this),
+    });
+  }
+
+  /**
+   * The placeholder shape for the loading state, from the block's optional
+   * `skeleton(args)` hint. Defaults to an empty shape so the skeleton falls
+   * back to its own defaults.
+   *
+   * @returns {Object}
+   */
+  get skeletonShape() {
+    const skeleton = this.args.dataMeta?.skeleton;
+    return skeleton ? skeleton(this.args.dataArgs) : {};
+  }
+
   <template>
     <div
       class={{dConcatClass
@@ -107,7 +162,27 @@ class WrappedBlockLayout extends Component {
       data-block-name={{@name}}
       data-block-namespace={{@namespace}}
     >
-      <@Component />
+      {{#if this.blockData}}
+        {{! Block declares data: own the loading boundary so the block stays a
+            pure renderer of @data. Resolved-up-front data (preloaded or prepared
+            in a route transition) paints content immediately with no skeleton. }}
+        <DAsyncContent
+          @asyncData={{this.blockData}}
+          @retainWhileReloading={{true}}
+        >
+          <:loading>
+            <DBlockSkeleton
+              @rows={{this.skeletonShape.rows}}
+              @title={{this.skeletonShape.title}}
+            />
+          </:loading>
+          <:content as |data|>
+            <@Component @data={{data}} />
+          </:content>
+        </DAsyncContent>
+      {{else}}
+        <@Component />
+      {{/if}}
     </div>
   </template>
 }

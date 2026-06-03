@@ -1,0 +1,23 @@
+.d-block-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+
+  &__title,
+  &__row {
+    // A visible fill so the placeholder still reads when the shimmer animation
+    // is suppressed (e.g. prefers-reduced-motion); `.placeholder-animation`
+    // overrides this with the moving gradient when motion is allowed.
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius, 0.25em);
+  }
+
+  &__title {
+    height: 1.5em;
+    width: 40%;
+  }
+
+  &__row {
+    height: 2.5em;
+  }
+}
