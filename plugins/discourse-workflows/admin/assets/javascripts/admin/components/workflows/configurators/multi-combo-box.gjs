@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import {
   formatOptionValue,
@@ -38,6 +39,7 @@ export default class MultiComboBox extends Component {
       <MultiSelect
         @content={{this.options}}
         @value={{this.value}}
+        @options={{hash translatedNone=@placeholder}}
         @onChange={{@field.set}}
       />
     </ExpressionWrapper>
