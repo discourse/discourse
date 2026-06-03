@@ -88,7 +88,7 @@
     "prosemirror-inputrules": "^1.5.1",
     "prosemirror-keymap": "^1.2.3",
     "prosemirror-markdown": "^1.13.4",
-    "prosemirror-model": "^1.25.4",
+    "prosemirror-model": "^1.25.7",
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.4",
     "prosemirror-transform": "^1.12.0",
