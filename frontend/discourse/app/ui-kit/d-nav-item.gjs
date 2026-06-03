@@ -101,7 +101,7 @@ export default class DNavItem extends Component {
           @current-when={{this.active}}
         >{{this.contents}}</LinkTo>
       {{else}}
-        <a href={{getURL @path}} data-auto-route="true">{{this.contents}}</a>
+        <a href={{@path}} data-auto-route="true">{{this.contents}}</a>
       {{/if}}
     </li>
   </template>

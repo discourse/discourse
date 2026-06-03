@@ -19,6 +19,7 @@ import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
+import autoGetUrl from "./transform-auto-get-url";
 import createVirtualFs from "./virtual-fs";
 
 let lastRollupResult;
@@ -92,6 +93,7 @@ async function performRollup(modules, opts) {
                 }).plugin,
                 buildEmberTemplateManipulatorPlugin(opts.themeId),
                 transformActionSyntax,
+                autoGetUrl,
               ],
             },
           ],

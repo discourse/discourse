@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import getURL from "discourse/lib/get-url";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import I18n, { i18n } from "discourse-i18n";
@@ -157,7 +156,7 @@ export default class ChatUsage extends Component {
                     {{#each this.favoriteChannels as |channel|}}
                       <a
                         class="chat-channel-link"
-                        href={{getURL (concat "/chat/c/-/" channel.channel_id)}}
+                        href="/chat/c/-/{{channel.channel_id}}"
                       >
                         <span
                           class="chat-channel-link__name"
@@ -175,9 +174,7 @@ export default class ChatUsage extends Component {
             <div class="chat-message --right">
               <UserMessage @user={{@user}} @authorText={{this.authorText}}>
                 <img
-                  src={{getURL
-                    "/plugins/discourse-rewind/images/dancing_baby.gif"
-                  }}
+                  src="/plugins/discourse-rewind/images/dancing_baby.gif"
                   alt={{i18n
                     "discourse_rewind.reports.chat_usage.dancing_baby_alt"
                   }}

@@ -2,6 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import getURL, {
   getAbsoluteURL,
+  getURLForAttribute,
   getURLWithCDN,
   isAbsoluteURL,
   setPrefix,
@@ -182,5 +183,21 @@ module("Unit | Utility | get-url", function (hooks) {
     let url = "https://awesome.cdn/site/awesome.png";
 
     assert.strictEqual(getURLWithCDN(url), url, "at correct path");
+  });
+
+  test("getURLForAttribute", function (assert) {
+    setupURL(null, "https://example.com/forum", "/forum");
+
+    assert.strictEqual(getURLForAttribute("/t/slug/1"), "/forum/t/slug/1");
+    assert.strictEqual(
+      getURLForAttribute("https://example.com/x"),
+      "https://example.com/x"
+    );
+
+    assert.strictEqual(getURLForAttribute(null), null);
+    assert.strictEqual(getURLForAttribute(undefined), undefined);
+    assert.false(getURLForAttribute(false));
+    assert.strictEqual(getURLForAttribute(""), "");
+    assert.strictEqual(getURLForAttribute(0), 0);
   });
 });

@@ -7,7 +7,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import ThemeCardPreview from "discourse/components/theme-card-preview";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse/lib/get-url";
 import {
   FOUNDATION_THEME_ID,
   HORIZON_THEME_ID,
@@ -141,7 +140,7 @@ export default class ThemePickerModal extends Component {
           </div>
           <PluginOutlet @name="theme-picker-modal-below-themes">
             <p class="theme-picker-modal__browse-all">
-              <a href={{getURL "/admin/config/customize/themes"}}>
+              <a href="/admin/config/customize/themes">
                 {{i18n "admin_onboarding_banner.select_theme.browse_all"}}
               </a>
             </p>

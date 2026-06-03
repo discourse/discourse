@@ -23,7 +23,7 @@ export default class Logo extends Component {
         <img
           id="site-logo"
           class={{@key}}
-          src={{getURL @url}}
+          src={{@url}}
           width={{if (eq @key "logo-small") "36"}}
           alt={{@title}}
         />
@@ -32,7 +32,7 @@ export default class Logo extends Component {
       <img
         id="site-logo"
         class={{@key}}
-        src={{getURL @url}}
+        src={{@url}}
         width={{if (eq @key "logo-small") "36"}}
         alt={{@title}}
       />

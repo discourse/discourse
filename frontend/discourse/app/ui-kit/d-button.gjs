@@ -6,6 +6,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { getURLForAttribute } from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 /** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
@@ -232,7 +233,7 @@ export default class DButton extends Component {
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <this.wrapperElement
-      href={{@href}}
+      href={{getURLForAttribute @href}}
       type={{unless @href (or @type "button")}}
       {{! For legacy compatibility. Prefer passing class as attributes. }}
       class={{dConcatClass

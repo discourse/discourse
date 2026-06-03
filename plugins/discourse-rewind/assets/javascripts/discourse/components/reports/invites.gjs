@@ -1,6 +1,4 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
-import getURL from "discourse/lib/get-url";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
@@ -113,7 +111,7 @@ export default class Invites extends Component {
               </div>
 
               <a
-                href={{getURL (concat "/u/" this.mostActiveInvitee.username)}}
+                href="/u/{{this.mostActiveInvitee.username}}"
                 class="guest-book__signature"
               >
                 {{dBoundAvatarTemplate

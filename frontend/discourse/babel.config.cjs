@@ -1,5 +1,7 @@
 const { buildMacros } = require("@embroider/macros/babel");
 
+const autoGetUrl = require("../asset-processor/transform-auto-get-url");
+
 const macros = buildMacros({
   configure(macrosConfig) {
     macrosConfig.setGlobalConfig(__filename, "@embroider/core", {
@@ -19,7 +21,7 @@ module.exports = {
           "ember-cli-htmlbars-inline-precompile",
           "htmlbars-inline-precompile",
         ],
-        transforms: [...macros.templateMacros],
+        transforms: [...macros.templateMacros, autoGetUrl],
       },
     ],
     [

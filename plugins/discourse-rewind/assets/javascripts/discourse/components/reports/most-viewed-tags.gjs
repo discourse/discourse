@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
@@ -48,7 +47,7 @@ export default class MostViewedTags extends Component {
                 "folder-wrapper"
                 (if (eq this.openedTag data.name) "--opened" "")
               }}
-              href={{getURL (concat "/tag/" data.slug "/" data.tag_id)}}
+              href="/tag/{{data.slug}}/{{data.tag_id}}"
               {{on "click" (fn this.handleFolderClick data.name)}}
             >
               <span class="folder-tab"></span>

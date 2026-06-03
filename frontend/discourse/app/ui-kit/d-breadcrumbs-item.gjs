@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import getURL from "discourse/lib/get-url";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DBreadcrumbsItem extends Component {
@@ -29,7 +28,7 @@ export default class DBreadcrumbsItem extends Component {
             {{label}}
           </LinkTo>
         {{else}}
-          <a href={{getURL path}} class={{@linkClass}}>
+          <a href={{path}} class={{@linkClass}}>
             {{label}}
           </a>
         {{/if}}
