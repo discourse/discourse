@@ -69,17 +69,23 @@ export default class ExpressionInput extends Component {
       ? inputIndexForConnection(previousConnection)
       : 0;
     const currentInputSummary = node
-      ? inputSummaryForNode(runData, node.name, currentInputIndex)
+      ? inputSummaryForNode(runData, node.name, currentInputIndex, {
+          node,
+          sourceNode: previousNode,
+          outputIndex: previousConnection
+            ? outputIndexForConnection(previousConnection)
+            : 0,
+        })
       : null;
     let inputFields = [];
     if (currentInputSummary) {
       inputFields = schemaFieldsForNodeInput(runData, node.name, {
         inputIndex: currentInputIndex,
-        prefix: itemPrefix,
-      });
-    } else if (previousNode) {
-      inputFields = schemaFieldsForNodeOutput(runData, previousNode.name, {
-        outputIndex: outputIndexForConnection(previousConnection),
+        node,
+        sourceNode: previousNode,
+        outputIndex: previousConnection
+          ? outputIndexForConnection(previousConnection)
+          : 0,
         prefix: itemPrefix,
       });
     }
@@ -88,6 +94,7 @@ export default class ExpressionInput extends Component {
           node: ancestor.node,
           fields: schemaFieldsForNodeOutput(runData, ancestor.node.name, {
             outputIndex: ancestor.outputIndex,
+            node: ancestor.node,
             prefix: nodeItemJsonPath(ancestor.node.name),
           }),
         }))

@@ -371,6 +371,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       node: {
         clientId: "branch",
         type: "condition:if",
+        name: "Branch",
       },
       nodes: [
         {
@@ -437,6 +438,27 @@ module("Integration | Component | workflows property engine", function (hooks) {
               index: 0,
               items: [{ json: { secondary_status: "ok" } }],
               item_count: 1,
+            },
+          ],
+        },
+      ],
+      Branch: [
+        {
+          status: "success",
+          inputs: [
+            {
+              index: 0,
+              items: [
+                { json: { status: "ok", "topic title": { "post-count": 2 } } },
+              ],
+              item_count: 1,
+              source: { node_name: "Trigger", output_index: 0 },
+            },
+            {
+              index: 1,
+              items: [{ json: { secondary_status: "ok" } }],
+              item_count: 1,
+              source: { node_name: "Secondary", output_index: 0 },
             },
           ],
         },
