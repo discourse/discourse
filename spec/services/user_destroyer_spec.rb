@@ -278,6 +278,40 @@ RSpec.describe UserDestroyer do
               reviewable.reload
               expect(reviewable).to be_rejected
             end
+
+            it "approves flags on hidden posts when the deletion originates from a reviewable" do
+              visible_post = Fabricate(:post, user: user)
+              hidden_post = Fabricate(:post, user: user)
+              originating_reviewable = PostActionCreator.spam(admin, visible_post).reviewable
+              hidden_reviewable = PostActionCreator.spam(admin, hidden_post).reviewable
+              hidden_post.hide!(PostActionType.types[:spam])
+              destroy_opts[:reviewable_id] = originating_reviewable.id
+
+              destroy
+
+              expect(originating_reviewable.reload).to be_approved
+              expect(hidden_reviewable.reload).to be_approved
+            end
+
+            it "rejects pending posts whose post was already deleted" do
+              post = Fabricate(:post, user: user)
+              reviewable =
+                Fabricate(
+                  :reviewable,
+                  type: "ReviewablePost",
+                  target_type: "Post",
+                  target_id: post.id,
+                  created_by: Discourse.system_user,
+                  target_created_by: user,
+                )
+              post.trash!(admin)
+
+              expect(reviewable).to be_pending
+
+              destroy
+
+              expect(reviewable.reload).to be_rejected
+            end
           end
         end
 

@@ -695,6 +695,81 @@ RSpec.describe ReviewablesController do
         expect(job).to be_blank
       end
 
+      context "with a flagged post whose author was already deleted" do
+        fab!(:spammer) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:flagged_post) { Fabricate(:post, user: spammer) }
+
+        let!(:flagged_post_reviewable) { PostActionCreator.spam(flagger, flagged_post).reviewable }
+
+        before do
+          flagged_post.trash!(Discourse.system_user)
+          UserDestroyer.new(Discourse.system_user).destroy(spammer, context: "spec")
+        end
+
+        it "resolves the flag when deleting and blocking the user" do
+          expect(flagged_post_reviewable.reload).to be_pending
+          expect(flagged_post_reviewable.target_created_by).to be_nil
+
+          expect {
+            put "/review/#{flagged_post_reviewable.id}/perform/delete_user_block.json?version=#{flagged_post_reviewable.version}"
+          }.to not_change { User.count }.and not_change { ActionMailer::Base.deliveries.size }
+
+          expect(response.code).to eq("200")
+          expect(response.parsed_body["reviewable_perform_result"]["success"]).to eq(true)
+          expect(flagged_post_reviewable.reload).to be_approved
+        end
+
+        it "resolves the flag when deleting the user" do
+          expect {
+            put "/review/#{flagged_post_reviewable.id}/perform/delete_user.json?version=#{flagged_post_reviewable.version}"
+          }.to not_change { User.count }.and not_change { ActionMailer::Base.deliveries.size }
+
+          expect(response.code).to eq("200")
+          expect(flagged_post_reviewable.reload).to be_approved
+        end
+
+        it "does not allow delete user actions on an already-resolved reviewable" do
+          flagged_post_reviewable.reload.perform(admin, :ignore_and_do_nothing)
+
+          put "/review/#{flagged_post_reviewable.id}/perform/delete_user_block.json?version=#{flagged_post_reviewable.reload.version}"
+
+          expect(response.code).to eq("403")
+          expect(flagged_post_reviewable.reload).to be_ignored
+        end
+      end
+
+      context "when the flagged post author exists but the actor cannot delete users" do
+        fab!(:category)
+        fab!(:mod_group, :group)
+        fab!(:category_mod, :user)
+        fab!(:spammer) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:flagged_topic) { Fabricate(:topic, category: category) }
+        fab!(:flagged_post) { Fabricate(:post, user: spammer, topic: flagged_topic) }
+
+        fab!(:group_user) { Fabricate(:group_user, group: mod_group, user: category_mod) }
+
+        fab!(:category_moderation_group) do
+          Fabricate(:category_moderation_group, category: category, group: mod_group)
+        end
+
+        let!(:flagged_post_reviewable) { PostActionCreator.spam(flagger, flagged_post).reviewable }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          sign_in(category_mod)
+        end
+
+        it "refuses the delete user action" do
+          put "/review/#{flagged_post_reviewable.id}/perform/delete_user_block.json?version=#{flagged_post_reviewable.version}"
+
+          expect(response.code).to eq("403")
+          expect(flagged_post_reviewable.reload).to be_pending
+          expect(User.exists?(spammer.id)).to eq(true)
+        end
+      end
+
       context "with claims" do
         fab!(:qp, :reviewable_queued_post)
 

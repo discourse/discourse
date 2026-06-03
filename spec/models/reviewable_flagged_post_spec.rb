@@ -496,6 +496,26 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_delete_and_block_user" do
+    fab!(:spammer) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagged_post) { Fabricate(:post, user: spammer) }
+    fab!(:hidden_flagged_post) { Fabricate(:post, user: spammer) }
+
+    it "resolves all of the user's pending flags, including those on hidden posts" do
+      spammer_id = spammer.id
+      reviewable = PostActionCreator.spam(user, flagged_post).reviewable
+      hidden_reviewable = PostActionCreator.spam(user, hidden_flagged_post).reviewable
+      hidden_flagged_post.hide!(PostActionType.types[:spam])
+
+      result = reviewable.perform(moderator, :delete_user_block)
+
+      expect(result.success?).to eq(true)
+      expect(User.exists?(spammer_id)).to eq(false)
+      expect(reviewable.reload).to be_approved
+      expect(hidden_reviewable.reload).to be_approved
+    end
+  end
+
   describe "#perform_disagree" do
     it "restores a hidden post even when the author would no longer pass post validations" do
       SiteSetting.newuser_max_embedded_media = 1
