@@ -9,3 +9,18 @@ module DiscourseCalendar
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: livestream_topic_chat_channels
+#
+#  id              :bigint           not null, primary key
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  chat_channel_id :bigint           not null
+#  topic_id        :bigint           not null
+#
+# Indexes
+#
+#  unique_livestream_topic_chat_channels  (topic_id,chat_channel_id) UNIQUE
+#
