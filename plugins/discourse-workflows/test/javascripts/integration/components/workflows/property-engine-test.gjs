@@ -70,6 +70,183 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("input").isFocused();
   });
 
+  test("renders checkbox controls from metadata", async function (assert) {
+    this.setProperties({
+      configuration: {
+        category_id: 1,
+        include_subcategories: true,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+        },
+        include_subcategories: {
+          type: "boolean",
+          ui: {
+            control: "checkbox",
+          },
+          display_options: {
+            show: {
+              category_id: [{ _cnd: { exists: true } }],
+            },
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom("input[type='checkbox']").isChecked();
+
+    await click("input[type='checkbox']");
+
+    assert.false(this.formApi.get("include_subcategories"));
+  });
+
+  test("can clear optional category controls", async function (assert) {
+    this.setProperties({
+      configuration: {
+        category_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+          required: false,
+          ui: {
+            control: "category",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    const header = categoryChooser.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert.dom(".btn-clear", header.el()).exists();
+
+    await click(header.el().querySelector(".btn-clear"));
+
+    assert.strictEqual(this.formApi.get("category_id"), "");
+  });
+
+  test("can clear optional group controls", async function (assert) {
+    this.setProperties({
+      configuration: {
+        group_inbox_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      nodeTypes: [
+        {
+          identifier: "trigger:topic_created",
+          metadata: {
+            groups: [
+              { id: 1, name: "support" },
+              { id: 2, name: "moderators" },
+            ],
+          },
+        },
+      ],
+      schema: {
+        group_inbox_id: {
+          type: "integer",
+          required: false,
+          type_options: {
+            load_options_method: "groups",
+          },
+          ui: {
+            control: "group_select",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const groupSelector = selectKit(".combo-box");
+    const header = groupSelector.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert.dom(".btn-clear", header.el()).exists();
+
+    await click(header.el().querySelector(".btn-clear"));
+
+    assert.strictEqual(this.formApi.get("group_inbox_id"), null);
+  });
+
   test("preserves focus for collection fields while typing", async function (assert) {
     this.setProperties({
       configuration: {
