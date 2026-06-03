@@ -254,8 +254,9 @@ class Report
 
   def self.wrap_slow_query(timeout = 20_000)
     ActiveRecord::Base.connection.transaction do
-      # Allows only read only transactions
-      DB.exec "SET TRANSACTION READ ONLY"
+      # Allows only read only transactions. Skipped in tests, where threads
+      # share one connection and read-only would break concurrent writes.
+      DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
