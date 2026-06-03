@@ -63,6 +63,8 @@ module ::DiscourseCalendar
   GROUP_TIMEZONES_CUSTOM_FIELD = "group-timezones"
 
   module Livestream
+    LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL = "/discourse-calendar/livestream/chat-status"
+
     def self.handle_topic_chat_channel_creation(topic)
       return if topic.category.blank?
       return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
@@ -80,6 +82,18 @@ module ::DiscourseCalendar
 
       DiscourseCalendar::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
       channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+    end
+
+    def self.livestream_chat_status_channel(user_id)
+      "#{LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL}/#{user_id}"
+    end
+
+    def self.publish_livestream_chat_status(membership, user:)
+      MessageBus.publish(
+        livestream_chat_status_channel(user.id),
+        Chat::UserChannelMembershipSerializer.new(membership, scope: user.guardian).to_json,
+        user_ids: [user.id],
+      )
     end
   end
 
@@ -881,11 +895,7 @@ after_initialize do
         manager.unfollow(user)
       end
 
-    ::MessageBus.publish "discourse_livestream_update_livestream_chat_status",
-                         Chat::UserChannelMembershipSerializer.new(
-                           membership,
-                           scope: Guardian.new(user),
-                         ).to_json
+    DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
   end
 
   on(:site_setting_changed) do |name, old_val, new_val|

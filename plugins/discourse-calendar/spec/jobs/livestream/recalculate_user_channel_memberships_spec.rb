@@ -106,5 +106,17 @@ RSpec.describe Jobs::LivestreamRecalculateUserChannelMemberships do
       expect(normal_membership2.following).to eq(false)
       expect(Chat::UserChatChannelMembership.count).to eq(4)
     end
+
+    it "publishes membership changes only to the affected user's message bus channel" do
+      messages = MessageBus.track_publish { run_job }
+
+      expect(messages).not_to be_empty
+      expect(messages).to all(
+        have_attributes(
+          channel: "/discourse-calendar/livestream/chat-status/#{user.id}",
+          user_ids: [user.id],
+        ),
+      )
+    end
   end
 end

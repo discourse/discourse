@@ -34,11 +34,10 @@ module Jobs
           end
         end
 
-        ::MessageBus.publish "discourse_livestream_update_livestream_chat_status",
-                             ::Chat::UserChannelMembershipSerializer.new(
-                               membership.reload,
-                               scope: user.guardian,
-                             ).to_json
+        ::DiscourseCalendar::Livestream.publish_livestream_chat_status(
+          membership.reload,
+          user: user,
+        )
       end
     end
 

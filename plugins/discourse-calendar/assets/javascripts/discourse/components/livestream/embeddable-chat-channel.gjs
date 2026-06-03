@@ -10,6 +10,7 @@ import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channe
 
 export default class EmbedableChatChannel extends Component {
   @service chatChannelsManager;
+  @service currentUser;
   @service embeddableChat;
   @service messageBus;
 
@@ -27,23 +28,26 @@ export default class EmbedableChatChannel extends Component {
 
   constructor() {
     super(...arguments);
-    this.messageBus.subscribe(
-      "discourse_livestream_update_livestream_chat_status",
-      this.onMessage
-    );
+    this.messageBus.subscribe(this.messageBusChannel, this.onMessage);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.messageBus.unsubscribe(
-      "discourse_livestream_update_livestream_chat_status",
-      this.onMessage
-    );
+    this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
+  }
+
+  get messageBusChannel() {
+    return `/discourse-calendar/livestream/chat-status/${this.currentUser.id}`;
   }
 
   @bind
-  async onMessage(membership) {
-    membership = JSON.parse(membership).user_channel_membership;
+  async onMessage(message) {
+    const membership = JSON.parse(message).user_channel_membership;
+
+    if (membership.chat_channel_id !== this.activeChannel?.id) {
+      return;
+    }
+
     this.activeChannel.currentUserMembership = membership;
   }
 
