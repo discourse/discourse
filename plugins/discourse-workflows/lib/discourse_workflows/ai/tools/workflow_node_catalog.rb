@@ -54,6 +54,7 @@ module DiscourseWorkflows
             "tag_names" => "array<string>",
           },
           "action:create_post" => WEBHOOK_POST_SCHEMA,
+          "action:send_private_message" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
           "action:send_chat_message" => {
             "channel_id" => "integer",
             "message" => "string",
@@ -141,6 +142,16 @@ module DiscourseWorkflows
               },
             },
           ],
+          "condition:user_in_group" => [
+            {
+              name: "Keep posts from members of a group",
+              parameters: {
+                username: "={{ $json.post.username }}",
+                group_id: 123,
+                actor_username: "system",
+              },
+            },
+          ],
           "action:topic" => [
             {
               name: "Get trigger topic details",
@@ -158,6 +169,17 @@ module DiscourseWorkflows
                 topic_id: "={{ $json.topic.id }}",
                 raw: "Thanks for the report. A staff member will review this soon.",
                 author_username: "system",
+              },
+            },
+          ],
+          "action:send_private_message" => [
+            {
+              name: "DM a post link to an admin",
+              parameters: {
+                recipient_usernames: "admin",
+                title: "=New post from @{{ $json.post.username }}",
+                raw: "=A group member posted: {{ $json.post.post_url }}",
+                sender_username: "system",
               },
             },
           ],
@@ -185,6 +207,11 @@ module DiscourseWorkflows
           conditions
           flow
         ].freeze
+
+        SEARCH_ALIASES = {
+          "action:send_private_message" => "dm direct message pm personal private message",
+          "condition:user_in_group" => "group membership member belongs friend friends",
+        }.freeze
 
         def self.signature
           {
@@ -245,7 +272,12 @@ module DiscourseWorkflows
           properties = json_safe(node_class.properties || {})
           group = description[:group].to_s.presence
 
-          haystack = [identifier, group, properties.keys.join(" ")].compact.join(" ").downcase
+          haystack = [
+            identifier,
+            group,
+            properties.keys.join(" "),
+            SEARCH_ALIASES[identifier],
+          ].compact.join(" ").downcase
           return if query_terms.present? && query_terms.none? { |term| haystack.include?(term) }
 
           payload = {

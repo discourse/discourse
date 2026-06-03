@@ -155,6 +155,72 @@ module("Unit | Component | workflows canvas", function (hooks) {
     );
   });
 
+  test("returning to the AI prompt clears in-progress authoring state", function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+    const handler = () => {};
+
+    Object.defineProperty(canvas, "messageBus", {
+      value: {
+        unsubscribe(channel, callback) {
+          assert.strictEqual(
+            channel,
+            "/discourse-workflows/ai-authoring/generation-1",
+            "unsubscribes from the active authoring channel"
+          );
+          assert.strictEqual(
+            callback,
+            handler,
+            "unsubscribes the active authoring handler"
+          );
+          assert.step("unsubscribed");
+        },
+      },
+    });
+
+    canvas.aiGenerating = true;
+    canvas.aiProgressEvents = [{ stage: "queued" }];
+    canvas.aiResponse = { status: "needs_clarification" };
+    canvas.aiSessionId = "session-1";
+    canvas.aiGenerationId = "generation-1";
+    canvas.aiClarificationAnswers = { scope: { selected: ["General"] } };
+    canvas.aiClarificationQuestionIndex = 1;
+    canvas.aiError = "The request failed";
+    canvas.aiAuthoringChannel =
+      "/discourse-workflows/ai-authoring/generation-1";
+    canvas.aiAuthoringHandler = handler;
+
+    assert.true(
+      canvas.aiCanReturnToPrompt,
+      "stateful AI authoring can return to the prompt"
+    );
+
+    canvas.returnToAiPrompt();
+
+    assert.verifySteps(["unsubscribed"]);
+    assert.false(canvas.aiGenerating, "generation stops locally");
+    assert.deepEqual(canvas.aiProgressEvents, [], "progress is cleared");
+    assert.strictEqual(canvas.aiResponse, null, "response is cleared");
+    assert.strictEqual(canvas.aiSessionId, null, "session is cleared");
+    assert.strictEqual(canvas.aiGenerationId, null, "generation is cleared");
+    assert.deepEqual(
+      canvas.aiClarificationAnswers,
+      {},
+      "clarification answers are cleared"
+    );
+    assert.strictEqual(
+      canvas.aiClarificationQuestionIndex,
+      0,
+      "clarification index is reset"
+    );
+    assert.strictEqual(canvas.aiError, null, "error state is cleared");
+    assert.strictEqual(canvas.aiAuthoringChannel, null, "channel is cleared");
+    assert.strictEqual(canvas.aiAuthoringHandler, null, "handler is cleared");
+    assert.false(
+      canvas.aiCanReturnToPrompt,
+      "cleared state no longer shows a start-over action"
+    );
+  });
+
   test("browseTemplates delegates to the editor", function (assert) {
     const canvas = Object.create(WorkflowCanvas.prototype);
 

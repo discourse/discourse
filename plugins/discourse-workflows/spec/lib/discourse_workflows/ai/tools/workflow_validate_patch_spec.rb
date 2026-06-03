@@ -82,6 +82,102 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     )
   end
 
+  it "passes schemas through group checks into private messages", :aggregate_failures do
+    operations = [
+      {
+        op: "add_node",
+        client_id: "post-created",
+        node: {
+          type: "trigger:post_created",
+          typeVersion: "1.0",
+          name: "Post created",
+          position: {
+            x: 0,
+            y: 0,
+          },
+          parameters: {
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "friend-group",
+        node: {
+          type: "condition:user_in_group",
+          typeVersion: "1.0",
+          name: "Keep friend group posts",
+          position: {
+            x: 280,
+            y: 0,
+          },
+          parameters: {
+            username: "={{ $json.post.username }}",
+            group_id: 1,
+            actor_username: "system",
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "dm-admin",
+        node: {
+          type: "action:send_private_message",
+          typeVersion: "1.0",
+          name: "DM admin",
+          position: {
+            x: 560,
+            y: 0,
+          },
+          parameters: {
+            recipient_usernames: "admin",
+            title: "=New post from @{{ $json.post.username }}",
+            raw: "=A friend group member posted: {{ $json.post.post_url }}",
+            sender_username: "system",
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_connection",
+        from: "post-created",
+        to: "friend-group",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "main",
+      },
+      {
+        op: "add_connection",
+        from: "friend-group",
+        to: "dm-admin",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "true",
+      },
+    ]
+
+    result = invoke_tool(operations)
+    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+
+    expect(result).to include(status: "success", valid: true, errors: [])
+    expect(schemas_by_name.dig("Keep friend group posts", :input_schema)).to include(
+      "$json.post.username" => "string",
+      "$json.post.post_url" => "string",
+    )
+    expect(schemas_by_name.dig("DM admin", :input_schema)).to include(
+      "$json.post.username" => "string",
+      "$json.post.post_url" => "string",
+    )
+    expect(schemas_by_name.dig("DM admin", :output_schema)).to include(
+      "$json.topic.id" => "integer",
+      "$json.post.post_url" => "string",
+    )
+  end
+
   it "returns action output schemas and rejects unavailable downstream paths",
      :aggregate_failures do
     operations = [

@@ -29,7 +29,7 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(identifiers).to include("action:post")
       expect(identifiers).to include("action:topic")
       expect(identifiers).to include("condition:if")
-      expect(identifiers).not_to include("action:create_post")
+      expect(identifiers).to include("action:send_private_message")
     end
 
     it "returns Post operation and List posts query control metadata" do

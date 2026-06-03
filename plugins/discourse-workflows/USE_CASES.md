@@ -29,6 +29,7 @@ For each run, record:
 | `closed-support-wait-archive-chat` | `30 days after a topic in Support is closed, archive it and post a message in General chat linking to the topic` | `trigger:topic_closed -> flow:wait -> action:topic (archive) -> action:send_chat_message` | Uses `flow:wait`; no unnecessary forum search/read; topic link template starts with `=`. |
 | `manual-maintenance-chat` | `create a manual workflow that sends a message to General chat saying Maintenance window is starting now` | `trigger:manual -> action:send_chat_message` | Static message does not need expression syntax; validates without expression errors. |
 | `closed-general-tl1-chat` | `when a topic by a tl1 or lower is closed in the general category message the general channel with a link to the post` | `trigger:topic_closed -> action:topic (get) -> condition:filter -> action:send_chat_message` | Uses `action:topic` get to hydrate first-post fields; filters with `$json.post.trust_level <= 1`; uses `$json.post.post_url`; no clarification needed. `condition:if` is acceptable only if the true branch is connected and condition keys use `leftValue`/`rightValue`. |
+| `friend-group-post-dm-admin` | `when anyone in the friend group posts send admin a dm with a link to the post` | `trigger:post_created -> condition:user_in_group -> action:send_private_message` | Resolves the `friend` group and `admin` user; uses `$json.post.username` for membership and `$json.post.post_url` in a leading-`=` private message body; no Code node. |
 
 ## Additional prompts to rotate into evals
 
@@ -54,9 +55,12 @@ For each run, record:
 ## Known edge cases to keep testing
 
 - Topic-only triggers that need author/post fields should use `action:topic` get before filtering or messaging.
+- Generic prompts like "when someone posts" should use `trigger:post_created` for all regular posts; do not ask whether to include replies unless the prompt explicitly narrows the scope.
 - Actions that replace item JSON require downstream nodes to use the action output schema, not the original trigger schema.
 - Dynamic strings containing `{{ }}` must start with `=`.
 - Simple trust/text/category/staff checks should use `condition:filter`, not Code nodes. `condition:if` is for separate true/false branches.
 - Condition builder entries must use `leftValue` and `rightValue`; `left`/`right` will not execute correctly.
-- Connections leaving `condition:filter` or `condition:if` should use `connection_type: "true"` for the passing branch, not `main`.
+- Connections leaving `condition:filter`, `condition:if`, or `condition:user_in_group` should use `connection_type: "true"` for the passing branch, not `main`.
+- Group membership checks should use `condition:user_in_group` instead of Code nodes.
+- DM/private-message notifications should use `action:send_private_message` instead of chat or topic reply nodes.
 - Forum `search`/`read` should not be used for node/schema discovery; use `workflow_node_catalog` and `workflow_validate_patch`.

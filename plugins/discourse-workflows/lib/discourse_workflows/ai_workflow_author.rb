@@ -24,21 +24,13 @@ module DiscourseWorkflows
     def tools
       [
         DiscourseWorkflows::Ai::Tools::WorkflowAskQuestions,
+        DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult,
         DiscourseWorkflows::Ai::Tools::WorkflowResolveEntity,
         DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
         DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
         DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
         *discovery_tools,
         *chat_tools,
-      ]
-    end
-
-    def response_format
-      [
-        { "key" => "status", "type" => "string" },
-        { "key" => "message", "type" => "string" },
-        { "key" => "questions", "type" => "array" },
-        { "key" => "proposal", "type" => "object" },
       ]
     end
 
@@ -55,11 +47,12 @@ module DiscourseWorkflows
         - Use workflow_node_catalog with targeted queries when you need node parameters, capabilities, schemas, or examples; the full node catalog is not preloaded. Prefer one broad query containing the relevant node names/keywords over many repeated catalog calls.
         - Do not invent node types, node versions, node parameters, or expression variables.
         - Ask clarifying questions when required values are missing or ambiguous.
+        - Use tools for all workflow authoring outcomes. Do not write a final prose, markdown, or JSON answer.
         - When you need clarification, call workflow_ask_questions with concise multiple-choice questions instead of writing a needs_clarification final response. Include 2-6 useful options per question and allow a custom answer when the listed options may not cover the admin's intent.
         - When the user responds with workflow_ask_questions_result JSON, use those answers and continue drafting; do not ask the same question again unless the answer is still unclear.
-        - Return structured output with one of these statuses: needs_clarification, proposed_patch, explanation, error.
-        - Your final answer must be valid JSON only. Do not include markdown, prose, or code fences outside the JSON object.
-        - The JSON object must include status, message, questions, and proposal keys.
+        - When authoring is complete, call workflow_authoring_result exactly once with status, message, questions, and proposal. This final result tool halts the turn and is the only supported final response mechanism.
+        - workflow_authoring_result status must be one of: needs_clarification, proposed_patch, explanation, error.
+        - For proposed_patch results, include a proposal object with title, summary, assumptions, risks, risk_level, and operations.
         - Use the compact workflow authoring context supplied with the request before proposing changes, and call workflow_graph_context/workflow_node_catalog for details when needed.
         - Do not ask admins for exact IDs, slugs, or names when an available tool can look them up; use discovery and resolver tools first.
         - Use categories, tags, search, read, and time tools for current forum discovery when they help draft the workflow safely; do not use forum search/read to discover workflow node behavior or schemas because workflow_node_catalog and workflow_validate_patch return schema details.
@@ -69,9 +62,9 @@ module DiscourseWorkflows
         - If workflow_validate_patch returns expression_errors or schema-path errors, repair the operations and call workflow_validate_patch again before returning a final proposal.
         - Action nodes may replace the current item JSON. Always use the downstream node's input_schema from workflow_validate_patch rather than assuming trigger fields are still available after an action node.
         - Do not stop after validating a partial graph; continue drafting until the complete workflow is represented in operations.
-        - Before returning a proposed_patch final response, call workflow_validate_patch with the complete operations unless the change is a trivial edit that does not affect graph structure.
+        - Before calling workflow_authoring_result with a proposed_patch status, call workflow_validate_patch with the complete operations unless the change is a trivial edit that does not affect graph structure.
         - Only call workflow_ask_questions when you cannot safely draft a workflow without more admin input.
-        - If you propose a workflow change, include a proposal object with title, summary, assumptions, risks, risk_level, and operations.
+        - If you propose a workflow change, include the proposal data in the workflow_authoring_result tool call.
         - Use this patch schema exactly:
           - add_node: { op: "add_node", client_id: "temporary-id", node: { type, typeVersion, name, position, parameters, credentials } }
           - update_node_parameters: { op: "update_node_parameters", node_id, parameters }
@@ -79,13 +72,16 @@ module DiscourseWorkflows
           - remove_node: { op: "remove_node", node_id }
           - add_connection: { op: "add_connection", from, to, output_index, input_index, connection_type }
           - remove_connection: { op: "remove_connection", from, to, output_index, input_index }
-        - In add_connection, use connection_type "main" for normal single-output nodes. For condition:filter and condition:if, connect the passing branch with connection_type "true"; use "false" only when the rejected/false branch should continue.
+        - In add_connection, use connection_type "main" for normal single-output nodes. For condition:filter, condition:if, and condition:user_in_group, connect the passing branch with connection_type "true"; use "false" only when the rejected/false branch should continue.
         - If you update an existing node's parameters, also rename that node when its current name would no longer match the updated behavior. Keep edited node names aligned with the latest requested configuration; for example, when changing a wait node from one hour to two hours, include a rename_node operation such as "Wait 2 hours" in the same proposal.
         - In add_node, node.credentials must be a JSON object. Use {} when no saved credential is selected, and do not copy the catalog's credential requirements array into node.credentials.
         - In add_connection and remove_connection, from/to must be existing node IDs or client_id values introduced by add_node operations in the same proposal.
         - Include risk notes for automatic triggers, public content changes, external HTTP requests, credentials, loops, and Code nodes.
         - Prefer declarative node configuration over Code nodes when the requested behavior can be expressed without JavaScript.
         - For simple checks on trigger fields, such as trust level comparisons, text contains, tags, category, staff/admin/moderator flags, use condition:filter instead of a Code node. Use condition:if only when the workflow needs separate true/false branches.
+        - For requests phrased as "when someone posts" or "when anyone posts", use trigger:post_created for all regular posts, including first posts and replies, unless the admin explicitly asks for only new topics or only replies. Do not ask to distinguish replies vs topic starters for a generic "posts" request.
+        - For group membership checks, resolve the named group with workflow_resolve_entity(kind: "group", ...), then use condition:user_in_group with username ={{ $json.post.username }} and group_id set to the resolved group ID. Connect its passing branch with connection_type "true".
+        - For private messages, DMs, direct messages, or PM-style notifications, use action:send_private_message. Resolve named user recipients with workflow_resolve_entity(kind: "user", ...), set recipient_usernames to the resolved username, and use leading-= template strings for title/raw when including dynamic post or topic links.
         - When using an output_schema field, use the exact documented path (for example $json.post.trust_level, $json.post.raw, or $json.post.post_url). Do not generate fallback chains for undocumented aliases such as $json.user.trustLevel or $json.trust_level.
         - Dynamic parameter values must start with =. Use ={{ $json.topic.id }} for a whole-field expression, and use template strings such as =Archived topic: {{ $json.topic.title }} (/t/{{ $json.topic.slug }}/{{ $json.topic.id }}) when mixing text and expressions.
         - Do not write bare {{ $json.field }} templates without the leading =; without = they are treated as literal text.

@@ -6,6 +6,24 @@ en:
           attributes:
             error_workflow_id:
               cannot_be_self: "cannot be set to the workflow itself"
+  discourse_ai:
+    ai_bot:
+      tool_summary:
+        workflow_ask_questions: "Ask clarification questions"
+        workflow_authoring_result: "Return workflow authoring result"
+        workflow_resolve_entity: "Resolve workflow entity"
+        workflow_node_catalog: "Read workflow node catalog"
+        workflow_graph_context: "Read workflow graph context"
+        workflow_validate_patch: "Validate workflow patch"
+        search_chat_channels: "Search chat channels"
+      tool_description:
+        workflow_ask_questions: "Prepared clarification questions for the workflow request"
+        workflow_authoring_result: "Returned the workflow authoring result"
+        workflow_resolve_entity: "Looked up a Discourse entity for workflow configuration"
+        workflow_node_catalog: "Checked workflow node parameters, schemas, and examples"
+        workflow_graph_context: "Checked the current workflow graph"
+        workflow_validate_patch: "Dry-ran the workflow patch and checked validation errors"
+        search_chat_channels: "Searched open chat channels for workflow configuration"
   discourse_workflows:
     ai:
       default_code_node_name: "Code"
@@ -33,6 +51,10 @@ en:
         writing_scripts: "Reviewing generated Code node scripts"
         validating_scripts: "Validating generated Code node scripts"
         validating_patch: "Validating workflow patch"
+        drafting_response: "Drafting workflow authoring response"
+        writing_response: "Writing workflow authoring response"
+        using_tool: "Using %{tool}"
+        tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
       approval_timed_out: "Approval timed out"
@@ -74,6 +96,8 @@ en:
         edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
+      send_private_message:
+        no_recipients: "At least one private message recipient is required."
       credential:
         missing_required_field: "is missing required field '%{field}'"
       wait:
@@ -138,6 +162,7 @@ en:
         workflow_graph_context: "Describes the current workflow graph"
         workflow_validate_patch: "Dry-runs and validates workflow patch operations"
         workflow_ask_questions: "Asks the workflow admin to choose clarification answers"
+        workflow_authoring_result: "Returns the final workflow authoring result"
         workflow_resolve_entity: "Resolves Discourse names to workflow parameter values"
         search_chat_channels: "Searches chat channel names and IDs for workflow parameters"
         workflow_script_context: "Returns context for writing workflow Code node JavaScript"
@@ -147,6 +172,7 @@ en:
         workflow_graph_context: "Reading workflow graph"
         workflow_validate_patch: "Validating workflow patch"
         workflow_ask_questions: "Asking clarification questions"
+        workflow_authoring_result: "Returning workflow authoring result"
         workflow_resolve_entity: "Resolving Discourse entities"
         search_chat_channels: "Searching chat channels"
         workflow_script_context: "Loading script context"
@@ -156,6 +182,7 @@ en:
         workflow_graph_context: "Read workflow graph"
         workflow_validate_patch: "Validated workflow patch"
         workflow_ask_questions: "Asked clarification questions"
+        workflow_authoring_result: "Returned workflow authoring result"
         workflow_resolve_entity: "Resolved Discourse entities"
         search_chat_channels: "Searched chat channels"
         workflow_script_context: "Loaded script context"
