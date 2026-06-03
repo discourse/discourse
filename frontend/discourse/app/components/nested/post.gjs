@@ -24,6 +24,7 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -318,16 +319,6 @@ export default class NestedPost extends Component {
   }
 
   @action
-  handleDepthLine() {
-    if (this.mobileFocusEnabled && this.hasReplies) {
-      this.args.focusPost(this.childPath);
-      return;
-    }
-
-    this.toggleExpanded();
-  }
-
-  @action
   toggleDeletedContent() {
     this.showDeletedContent = !this.showDeletedContent;
   }
@@ -492,7 +483,7 @@ export default class NestedPost extends Component {
                   this.depthLineCollapsed "nested-post__depth-line--collapsed"
                 )
               }}
-              {{on "click" this.handleDepthLine}}
+              {{on "click" this.toggleExpanded}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
               aria-label={{this.depthLineLabel}}
@@ -513,6 +504,18 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
               {{on "click" this.toggleExpanded}}
             >
+              {{#if this.isMobile}}
+                <span class="nested-post__collapsed-avatar" aria-hidden="true">
+                  {{#if this.isDeletedPlaceholder}}
+                    {{dIcon "trash-can"}}
+                  {{else if this.renderIgnoredPlaceholder}}
+                    {{dIcon "far-eye-slash"}}
+                  {{else}}
+                    {{! PostAvatar renders a user link; keep this avatar non-interactive inside the collapsed button. }}
+                    {{dAvatar @post imageSize="small" hideTitle=true}}
+                  {{/if}}
+                </span>
+              {{/if}}
               {{dIcon "discourse-circle-plus"}}
               {{#if this.isDeletedPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n

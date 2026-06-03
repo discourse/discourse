@@ -301,25 +301,26 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
 
-    it "lets the user open a root branch from the depth line", mobile: true do
+    it "collapses a root branch from the depth line", mobile: true do
       nested_view.visit_nested(topic)
 
       nested_view.click_depth_line(root_reply)
 
-      expect(nested_view).to have_mobile_focus
-      expect(nested_view).to have_post(child_reply)
-      expect(nested_view).to have_no_root_post(sibling_root_reply)
+      expect(nested_view).to have_no_mobile_focus
+      expect(nested_view).to have_collapsed_bar_for(root_reply)
+      expect(nested_view).to have_no_children_visible_for(root_reply)
+      expect(nested_view).to have_root_post(sibling_root_reply)
     end
 
-    it "lets the user open a child branch from the depth line", mobile: true do
+    it "collapses a child branch from the depth line", mobile: true do
       nested_view.visit_nested(topic)
 
       nested_view.click_depth_line(child_reply)
 
-      expect(nested_view).to have_mobile_focus
-      expect(nested_view).to have_mobile_ancestor(root_reply)
-      expect(nested_view).to have_post(grandchild_reply)
-      expect(nested_view).to have_no_root_post(sibling_root_reply)
+      expect(nested_view).to have_no_mobile_focus
+      expect(nested_view).to have_collapsed_bar_for(child_reply)
+      expect(nested_view).to have_no_children_visible_for(child_reply)
+      expect(nested_view).to have_root_post(sibling_root_reply)
     end
   end
 

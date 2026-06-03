@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { modifier } from "ember-modifier";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import NestedPost from "discourse/components/nested/post";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -74,6 +75,10 @@ module("Integration | Component | Nested | Post", function (hooks) {
     });
   });
 
+  hooks.afterEach(function () {
+    sinon.restore();
+  });
+
   test("leaf posts can be collapsed from the depth line", async function (assert) {
     await renderComponent(this);
 
@@ -120,5 +125,18 @@ module("Integration | Component | Nested | Post", function (hooks) {
       { expanded: false, collapsed: false },
       "stores the expanded leaf state"
     );
+  });
+
+  test("mobile collapsed posts keep an avatar in the collapsed bar", async function (assert) {
+    const site = getOwner(this).lookup("service:site");
+    sinon.stub(site, "mobileView").value(true);
+
+    await renderComponent(this);
+    await click(".nested-post__depth-line");
+
+    assert.dom(".nested-post__article").doesNotExist("collapses the post body");
+    assert
+      .dom(".nested-post__collapsed-avatar .avatar")
+      .exists("renders the post avatar in the mobile collapsed bar");
   });
 });

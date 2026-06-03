@@ -734,6 +734,26 @@
     color: var(--primary-low-mid);
   }
 
+  &__collapsed-avatar {
+    display: flex;
+    flex: 0 0 var(--nested-avatar-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--nested-avatar-size);
+    height: var(--nested-avatar-size);
+    color: var(--primary-low-mid);
+
+    .avatar {
+      width: var(--nested-avatar-size);
+      height: var(--nested-avatar-size);
+    }
+
+    .d-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
   &__collapsed-username {
     color: var(--primary-high-or-secondary-low);
   }
@@ -1192,11 +1212,14 @@
   }
 
   // ── Individual nested post overrides ──
-  // Gutter shrinks to a narrow line-only column (avatar rendered inline
-  // in the header instead). Lines run full subtree height.
+  // Gutter becomes an avatar-width rail column. The post article spans the
+  // rail and content columns because mobile renders the avatar inline in the
+  // header, while children remain indented in the content column.
   .nested-post {
-    --nested-line-gutter: 14px;
+    --nested-line-gutter: var(--nested-avatar-size);
     --nested-column-gap: var(--space-2);
+    --nested-mobile-line-offset: calc(var(--nested-avatar-size) / 2);
+    --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
     --nested-mobile-content-indent: calc(
       var(--nested-avatar-size) + var(--nested-column-gap)
     );
@@ -1212,15 +1235,25 @@
     --nested-vertical-gap: 0.25em;
 
     // Gutter spans all grid rows so the depth-line runs continuously
-    // through the article AND children areas
+    // through the article and children areas.
     > .nested-post__gutter {
       grid-row: 1 / -1;
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
     }
 
-    // Depth-line: full-height vertical bar, no decorative hooks
+    // Depth-line: vertical bar under the avatar, no decorative hooks.
     > .nested-post__gutter .nested-post__depth-line {
+      position: absolute;
+      top: var(--nested-mobile-line-start);
+      bottom: 0;
+      left: 0;
+      min-height: 0;
+      pointer-events: auto;
+
       &::after {
-        left: calc(var(--nested-line-gutter) / 2 - 1px);
+        left: calc(var(--nested-mobile-line-offset) - 1px);
         top: 0;
         bottom: 0;
       }
@@ -1231,7 +1264,7 @@
         background: var(--primary-low);
         width: 2px;
         border-radius: 0;
-        left: calc(var(--nested-line-gutter) / 2 - 1px);
+        left: calc(var(--nested-mobile-line-offset) - 1px);
         bottom: 0;
       }
     }
@@ -1243,6 +1276,7 @@
 
     // Inline avatar in the post header (rendered via template)
     .nested-post__header .topic-avatar {
+      align-self: flex-start;
       border-top: none;
       float: none;
       width: auto;
@@ -1250,12 +1284,24 @@
       height: auto;
     }
 
-    // Strip all decorative connectors (L-hooks, sibling lines)
+    .nested-post__article,
+    .nested-post__collapsed-bar {
+      grid-column: 1 / -1;
+    }
+
+    // Mobile strips desktop connector hooks, so the desktop padding used to
+    // make room for those hooks must not shift the post's internal grid math.
     &:not(.--depth-0) {
+      padding-top: 0;
+
       &::before,
       &:not(:last-child)::after {
         content: none;
       }
+    }
+
+    &:not(.--depth-0) + &:not(.--depth-0) {
+      margin-top: var(--nested-vertical-gap);
     }
 
     // No hover interaction on touch — depth-line handles collapse
@@ -1287,6 +1333,10 @@
     .nested-post__menu,
     .nested-post__controls,
     .post-links-container {
+      margin-left: var(--nested-mobile-content-indent);
+    }
+
+    .nested-post__expand-replies {
       margin-left: var(--nested-mobile-content-indent);
     }
 
