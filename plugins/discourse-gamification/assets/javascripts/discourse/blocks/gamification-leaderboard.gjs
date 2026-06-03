@@ -2,8 +2,9 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
-/** @type {import("discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard.gjs")} */
-import MinimalGamificationLeaderboard from "../components/minimal-gamification-leaderboard";
+/** @type {import("discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard-view.gjs")} */
+import MinimalGamificationLeaderboardView from "../components/minimal-gamification-leaderboard-view";
+import { fetchLeaderboard } from "../lib/leaderboard";
 
 const PERIODS = [
   "",
@@ -129,22 +130,42 @@ const AVATAR_SIZES = ["small", "medium", "large"];
     showFooterLink: true,
     footerLinkLabel: "Show all",
   },
+  data: {
+    request: (args) => ({
+      kind: "gamification-leaderboard",
+      leaderboardId: args.leaderboardId,
+      count: args.count ?? 10,
+      period: args.period,
+    }),
+    resolve: (descriptor) =>
+      fetchLeaderboard({
+        id: descriptor.leaderboardId,
+        count: descriptor.count,
+        period: descriptor.period,
+      }),
+    skeleton: (args) => ({ variant: "rect", count: args.count ?? 10 }),
+  },
 })
 export default class GamificationLeaderboardBlock extends Component {
   <template>
     <div class="gamification-leaderboard-block">
-      <MinimalGamificationLeaderboard
-        @id={{@leaderboardId}}
-        @count={{@count}}
-        @title={{@title}}
-        @titleIcon={{@titleIcon}}
-        @period={{@period}}
-        @showColumnHeaders={{@showColumnHeaders}}
-        @showRank={{@showRank}}
-        @avatarSize={{@avatarSize}}
-        @showFooterLink={{@showFooterLink}}
-        @footerLinkLabel={{@footerLinkLabel}}
-      />
+      {{! The leaderboard's title and footer derive from the fetched model, so
+          the whole widget is the data region; the reserved-space skeleton (from
+          the block's `skeleton` hint) covers it while loading. }}
+      <@Data>
+        <:content as |model|>
+          <MinimalGamificationLeaderboardView
+            @model={{model}}
+            @title={{@title}}
+            @titleIcon={{@titleIcon}}
+            @showColumnHeaders={{@showColumnHeaders}}
+            @showRank={{@showRank}}
+            @avatarSize={{@avatarSize}}
+            @showFooterLink={{@showFooterLink}}
+            @footerLinkLabel={{@footerLinkLabel}}
+          />
+        </:content>
+      </@Data>
     </div>
   </template>
 }
