@@ -96,6 +96,10 @@ export default class Tabs extends Component {
               @transientData={{transientData}}
               @form={{form}}
               @setSelectedTab={{@controller.setSelectedTab}}
+              @availableLocales={{@controller.availableLocales}}
+              @siteTextsLocale={{@controller.siteTextsLocale}}
+              @switchSiteTextsLocale={{@controller.switchSiteTextsLocale}}
+              @isLoadingSiteTextsLocale={{@controller.isLoadingSiteTextsLocale}}
             />
           {{/let}}
         </form.Section>

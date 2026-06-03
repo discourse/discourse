@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { fn, get } from "@ember/helper";
+import { fn, get, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
@@ -120,11 +121,24 @@ class SchemaFormField extends Component {
         @title={{@entry.label}}
         @description={{@entry.description}}
         @validation={{if @entry.required "required"}}
+        @disabled={{@disabled}}
         @labelFormat="full"
         @format="large"
         as |field|
       >
-        <field.Control />
+        <div class="schema-site-text">
+          {{#if @availableLocales}}
+            <ComboBox
+              @valueProperty="value"
+              @content={{@availableLocales}}
+              @value={{@siteTextsLocale}}
+              @onChange={{@switchSiteTextsLocale}}
+              @options={{hash filterable=true}}
+              class="schema-site-text__locale"
+            />
+          {{/if}}
+          <field.Control />
+        </div>
       </@formObject.Field>
     {{else}}
       <@formObject.Field
@@ -277,6 +291,10 @@ export default class EditCategoryTypeSchemaFields extends Component {
                   @category={{@category}}
                   @entry={{entry}}
                   @formObject={{siteTexts}}
+                  @availableLocales={{@availableLocales}}
+                  @siteTextsLocale={{@siteTextsLocale}}
+                  @switchSiteTextsLocale={{@switchSiteTextsLocale}}
+                  @disabled={{@isLoadingSiteTextsLocale}}
                 />
               {{/if}}
             {{/each}}
