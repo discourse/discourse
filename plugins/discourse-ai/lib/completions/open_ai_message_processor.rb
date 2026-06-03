@@ -24,7 +24,7 @@ module DiscourseAi::Completions
           id = tool_call.dig(:id)
           name = tool_call.dig(:function, :name)
           arguments = tool_call.dig(:function, :arguments)
-          parameters = arguments.present? ? JSON.parse(arguments, symbolize_names: true) : {}
+          parameters = ToolArgumentsParser.parse(arguments)
           result << ToolCall.new(id: id, name: name, parameters: parameters)
         end
       end
@@ -67,7 +67,7 @@ module DiscourseAi::Completions
         @streaming_parser << arguments.to_s if @streaming_parser && !arguments.to_s.empty?
         rval = current_tool_progress if !rval
       elsif finished_tools && @tool
-        parsed_args = JSON.parse(@tool_arguments, symbolize_names: true)
+        parsed_args = ToolArgumentsParser.parse(@tool_arguments)
         @tool.parameters = parsed_args
         @tool.partial = false
         rval = @tool
@@ -115,7 +115,7 @@ module DiscourseAi::Completions
 
     def process_arguments
       if @tool_arguments.present?
-        parsed_args = JSON.parse(@tool_arguments, symbolize_names: true)
+        parsed_args = ToolArgumentsParser.parse(@tool_arguments)
         @tool.parameters = parsed_args
         @tool_arguments = nil
       end

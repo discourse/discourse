@@ -407,8 +407,15 @@
   &__ai-panel-actions,
   &__ai-review-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-2);
     justify-content: flex-end;
+  }
+
+  &__ai-start-over-btn {
+    flex: 0 0 auto;
+    min-width: 6.75rem;
+    white-space: nowrap;
   }
 
   &__ai-review-step {

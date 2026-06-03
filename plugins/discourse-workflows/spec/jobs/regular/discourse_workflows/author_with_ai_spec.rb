@@ -9,6 +9,23 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     SiteSetting.discourse_workflows_workflow_authoring_agent = ai_agent.id
   end
 
+  def authoring_result_raw_context(payload, tool_call_id: "tool-call-id")
+    [
+      [
+        { arguments: payload }.to_json,
+        tool_call_id,
+        "tool_call",
+        DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
+      ],
+      [
+        payload.to_json,
+        tool_call_id,
+        "tool",
+        DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
+      ],
+    ]
+  end
+
   it "passes persisted messages to the AI bot with valid types" do
     session =
       Fabricate(
@@ -16,24 +33,28 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
         user: admin,
         messages: [{ "type" => "user", "content" => "Create a workflow" }],
       )
-    structured_output = double
     captured_messages = nil
     fake_bot = double
+    response = {
+      status: "needs_clarification",
+      message: "Which category should trigger it?",
+      questions: [
+        {
+          id: "category",
+          question: "Which category?",
+          options: [
+            { label: "Support", description: "Support category" },
+            { label: "All", description: "All categories" },
+          ],
+        },
+      ],
+      proposal: {
+      },
+    }
 
-    allow(structured_output).to receive(:read_buffered_property).with(:status).and_return(
-      "needs_clarification",
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:message).and_return(
-      "Which category should trigger it?",
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:questions).and_return(
-      ["Which category?"],
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:proposal).and_return({})
-    allow(fake_bot).to receive(:reply) do |context, &block|
+    allow(fake_bot).to receive(:reply) do |context|
       captured_messages = context.messages
-      block.call(structured_output, nil, :structured_output)
-      []
+      authoring_result_raw_context(response)
     end
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
@@ -50,6 +71,49 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     )
   end
 
+  it "publishes progress for agent tool and response updates", :aggregate_failures do
+    session =
+      Fabricate(
+        :discourse_workflows_ai_authoring_session,
+        user: admin,
+        messages: [{ "type" => "user", "content" => "Create a workflow" }],
+      )
+    generation_id = SecureRandom.hex
+    fake_bot = double
+    response = { status: "explanation", message: "No changes needed", questions: [], proposal: {} }
+
+    allow(fake_bot).to receive(:reply) do |_context, &block|
+      block.call("", "**Read workflow node catalog**\nChecking node schemas\n\n", :thinking)
+      block.call("**Read workflow node catalog**\nFound matching nodes\n\n", nil, :thinking)
+      block.call("", "**Return workflow authoring result**\nPreparing final result\n\n", :thinking)
+      block.call(
+        "**Return workflow authoring result**\nReturned workflow authoring result\n\n",
+        nil,
+        :thinking,
+      )
+      authoring_result_raw_context(response)
+    end
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+
+    messages =
+      MessageBus.track_publish("/discourse-workflows/ai-authoring/#{generation_id}") do
+        described_class.new.execute(
+          session_id: session.id,
+          user_id: admin.id,
+          generation_id: generation_id,
+        )
+      end
+    progress = messages.map(&:data).select { |data| data[:status] == "progress" }
+
+    expect(progress.map { |data| data[:message] }).to include(
+      "Using Read workflow node catalog",
+      "Finished Read workflow node catalog",
+      "Using Return workflow authoring result",
+      "Finished Return workflow authoring result",
+    )
+    expect(progress.map { |data| data[:stage] }).to include("agent_update")
+  end
+
   it "highlights trigger author trust-level fields in AI context", :aggregate_failures do
     session =
       Fabricate(
@@ -57,22 +121,13 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
         user: admin,
         messages: [{ "type" => "user", "content" => "Create a TL1 post workflow" }],
       )
-    structured_output = double
     captured_custom_instructions = nil
     fake_bot = double
+    response = { status: "explanation", message: "No changes needed", questions: [], proposal: {} }
 
-    allow(structured_output).to receive(:read_buffered_property).with(:status).and_return(
-      "explanation",
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:message).and_return(
-      "No changes needed",
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:questions).and_return([])
-    allow(structured_output).to receive(:read_buffered_property).with(:proposal).and_return({})
-    allow(fake_bot).to receive(:reply) do |context, &block|
+    allow(fake_bot).to receive(:reply) do |context|
       captured_custom_instructions = context.custom_instructions
-      block.call(structured_output, nil, :structured_output)
-      []
+      authoring_result_raw_context(response)
     end
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
@@ -95,51 +150,13 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     expect(payload).not_to have_key("workflow_graph")
     expect(payload.dig("context_tools", "workflow_node_catalog")).to include("node parameters")
     expect(payload.dig("context_tools", "workflow_graph_context")).to include("current graph")
+    expect(payload.dig("context_tools", "workflow_authoring_result")).to include("final response")
     expect(payload["trigger_author_field_facts"]).to include(
       a_string_including("trigger:post_created"),
     )
   end
 
-  it "parses raw JSON when structured output is empty" do
-    session =
-      Fabricate(
-        :discourse_workflows_ai_authoring_session,
-        user: admin,
-        messages: [{ "type" => "user", "content" => "Create a workflow" }],
-      )
-    structured_output = double
-    fake_bot = double
-    json_response = {
-      status: "needs_clarification",
-      message: "Which category should trigger it?",
-      questions: ["Which category?"],
-      proposal: {
-      },
-    }.to_json
-
-    allow(structured_output).to receive(:read_buffered_property).with(:status).and_return(nil)
-    allow(structured_output).to receive(:read_buffered_property).with(:message).and_return(nil)
-    allow(structured_output).to receive(:read_buffered_property).with(:questions).and_return(nil)
-    allow(structured_output).to receive(:read_buffered_property).with(:proposal).and_return(nil)
-    allow(fake_bot).to receive(:reply) do |_context, &block|
-      block.call(structured_output, nil, :structured_output)
-      [[json_response, "system"]]
-    end
-    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
-
-    described_class.new.execute(
-      session_id: session.id,
-      user_id: admin.id,
-      generation_id: SecureRandom.hex,
-    )
-
-    expect(session.reload).to have_attributes(
-      status: "needs_clarification",
-      latest_response: include("message" => "Which category should trigger it?"),
-    )
-  end
-
-  it "falls back when structured patches are incomplete", :aggregate_failures do
+  it "uses authoring result tool calls for patch proposals", :aggregate_failures do
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
     session =
       Fabricate(
@@ -148,9 +165,17 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
         workflow: workflow,
         messages: [{ "type" => "user", "content" => "Create a manual workflow" }],
       )
-    structured_output = double
-    fake_bot = double
-    json_response = {
+    operations = [
+      {
+        op: "add_node",
+        client_id: "manual-trigger",
+        node: {
+          type: "trigger:manual",
+          name: "Manual trigger",
+        },
+      },
+    ]
+    response = {
       status: "proposed_patch",
       message: "Create a manual workflow",
       questions: [],
@@ -158,31 +183,12 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
         title: "Manual workflow",
         summary: "Start with a manual trigger.",
         risk_level: "low",
-        operations: [
-          {
-            op: "add_node",
-            client_id: "manual-trigger",
-            node: {
-              type: "trigger:manual",
-              name: "Manual trigger",
-            },
-          },
-        ],
+        operations: operations,
       },
-    }.to_json
+    }
+    fake_bot = double
 
-    allow(structured_output).to receive(:read_buffered_property).with(:status).and_return(
-      "proposed_patch",
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:message).and_return(
-      "Create a manual workflow",
-    )
-    allow(structured_output).to receive(:read_buffered_property).with(:questions).and_return([])
-    allow(structured_output).to receive(:read_buffered_property).with(:proposal).and_return({})
-    allow(fake_bot).to receive(:reply) do |_context, &block|
-      block.call(structured_output, nil, :structured_output)
-      [[json_response, "system"]]
-    end
+    allow(fake_bot).to receive(:reply).and_return(authoring_result_raw_context(response))
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
     described_class.new.execute(
@@ -192,6 +198,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     )
 
     expect(session.reload).to have_attributes(status: "proposal_ready", risk_level: "low")
+    expect(session.latest_response).to include("message" => "Create a manual workflow")
     expect(session.proposed_patch.dig("patch_validation", "valid")).to eq(true)
   end
 
@@ -300,67 +307,22 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     expect(session.proposed_patch.dig("patch_validation", "valid")).to eq(true)
   end
 
-  it "parses fenced JSON proposals from raw context", :aggregate_failures do
-    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+  it "requires a tool call for the final authoring result" do
     session =
       Fabricate(
         :discourse_workflows_ai_authoring_session,
         user: admin,
-        workflow: workflow,
         messages: [{ "type" => "user", "content" => "Create a manual log workflow" }],
       )
-    operations = [
-      {
-        op: "add_node",
-        client_id: "manual-trigger",
-        node: {
-          type: "trigger:manual",
-          name: "Manual trigger",
-          position: {
-            x: 0,
-            y: 0,
-          },
-        },
-      },
-      {
-        op: "add_node",
-        client_id: "write-log",
-        node: {
-          type: "action:log",
-          name: "Write log",
-          position: {
-            x: 200,
-            y: 0,
-          },
-          parameters: {
-            entries: {
-              values: [{ key: "message", value: "hello" }],
-            },
-          },
-        },
-      },
-      { op: "add_connection", from: "manual-trigger", to: "write-log" },
-    ]
-    raw_response = <<~TEXT
-      Here is the draft patch:
-
-      ```json
-      #{
-      JSON.pretty_generate(
-        status: "proposed_patch",
-        message: "Create a manual log workflow",
-        questions: [],
-        proposal: {
-          workflow_name: "Manual log workflow",
-          summary: "Run a manual trigger and write a log entry.",
-          risk_level: "low",
-          operations: operations,
-        },
-      )
-    }
-      ```
-    TEXT
     fake_bot = double
+    raw_response = {
+      status: "proposed_patch",
+      message: "Create a manual log workflow",
+      questions: [],
+      proposal: {
+        operations: [{ op: "add_node", client_id: "manual-trigger" }],
+      },
+    }.to_json
 
     allow(fake_bot).to receive(:reply).and_return([[raw_response, "system"]])
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
@@ -371,11 +333,6 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       generation_id: SecureRandom.hex,
     )
 
-    expect(session.reload).to have_attributes(status: "proposal_ready", risk_level: "low")
-    expect(session.latest_response).to include("message" => "Create a manual log workflow")
-    expect(session.latest_response.dig("proposal", "patch_validation")).to include(
-      "valid" => true,
-      "errors" => [],
-    )
+    expect(session.reload).to have_attributes(status: "error")
   end
 end

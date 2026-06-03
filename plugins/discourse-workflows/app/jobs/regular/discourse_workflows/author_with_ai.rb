@@ -9,9 +9,12 @@ module Jobs
       TRIGGER_AUTHOR_FIELD_FACTS = [
         "trigger:topic_created exposes the topic creator/first-post author under post.*. Use exact paths such as post.trust_level for trust-level checks, post.username for the username, post.user_id for the user ID, post.post_url for a link to the post, and post.admin/post.moderator/post.staff for staff checks.",
         "trigger:post_created exposes the created post author under post.*. Use exact paths such as post.trust_level for trust-level checks, post.username for the username, post.user_id for the user ID, post.post_url for a link to the post, and post.admin/post.moderator/post.staff for staff checks.",
+        "For generic requests like 'when someone posts' or 'when anyone posts', trigger:post_created covers all regular posts, including first posts and replies. Do not ask to distinguish replies from topic starters unless the request explicitly says replies only or new topics only.",
         "trigger:topic_closed exposes only the closed topic under topic.*. When a closed-topic workflow needs the topic creator/first-post author trust level or a post link, add action:topic with operation get and topic_id ={{ $json.topic.id }} immediately after the trigger. The topic get action exposes the first post under post.* including post.trust_level, post.username, and post.post_url.",
         "Do not ask whether trust level is available for trigger:topic_created or trigger:post_created; it is available as post.trust_level.",
         "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_schema.",
+        "For named group membership checks, use workflow_resolve_entity to resolve the group, then use condition:user_in_group with username ={{ $json.post.username }} and the resolved group_id. Do not use a Code node for simple group membership.",
+        "For private messages, DMs, direct messages, or PM notifications, use action:send_private_message with recipient_usernames, title, raw, and sender_username. Resolve named recipients with workflow_resolve_entity(kind: user).",
       ].freeze
 
       def execute(args)
@@ -72,19 +75,16 @@ module Jobs
             bypass_response_format: true,
           )
 
-        structured_output = nil
         result = +""
         raw_context =
-          bot.reply(context) do |partial, _, type|
-            if type == :structured_output
-              structured_output = partial
-            elsif type.blank? && partial.is_a?(String)
-              result << partial
-            end
+          bot.reply(context) do |partial, raw, type|
+            publish_agent_stream_progress(partial, raw, type)
+
+            result << partial if type.blank? && partial.is_a?(String)
           end
         append_raw_context_text(result, raw_context)
 
-        parse_response(structured_output, result, raw_context)
+        parse_response(result, raw_context)
       end
 
       def append_raw_context_text(result, raw_context)
@@ -117,6 +117,8 @@ module Jobs
               "Call this with workflow_id when you need the current graph nodes and connections.",
             workflow_validate_patch:
               "Call this to dry-run candidate operations and inspect inferred node_schemas.",
+            workflow_authoring_result:
+              "Call this exactly once when authoring is complete; it is the final response.",
           },
         }
 
@@ -153,86 +155,11 @@ module Jobs
         }
       end
 
-      def parse_response(structured_output, text, raw_context = [])
-        if structured_output
-          parsed =
-            normalize_ai_response(
-              "status" => structured_output.read_buffered_property(:status),
-              "message" => structured_output.read_buffered_property(:message),
-              "questions" => structured_output.read_buffered_property(:questions) || [],
-              "proposal" => structured_output.read_buffered_property(:proposal) || {},
-            )
-          return parsed if meaningful_ai_response?(parsed)
-        end
-
-        parsed = parse_text_response(text)
-        return parsed if parsed.present?
-
+      def parse_response(text, raw_context = [])
         parsed = parse_tool_call_response(raw_context)
         return parsed if parsed.present?
 
         invalid_response(text)
-      end
-
-      def parse_text_response(text)
-        json_response_candidates(text).each do |candidate|
-          parsed = parse_json_hash(candidate)
-          next if parsed.blank?
-
-          parsed = normalize_ai_response(parsed)
-          return parsed if meaningful_ai_response?(parsed)
-        end
-
-        nil
-      end
-
-      def json_response_candidates(text)
-        text = text.to_s.strip
-        return [] if text.blank?
-
-        candidates = [text]
-        text.scan(/```(?:json)?\s*(.*?)\s*```/mi) { |match| candidates << match.first }
-        candidates.concat(json_object_candidates(text))
-        candidates.map(&:strip).reject(&:blank?).uniq
-      end
-
-      def json_object_candidates(text)
-        candidates = []
-        start_index = nil
-        depth = 0
-        in_string = false
-        escaped = false
-
-        text.each_char.with_index do |char, index|
-          if in_string
-            if escaped
-              escaped = false
-            elsif char == "\\"
-              escaped = true
-            elsif char == '"'
-              in_string = false
-            end
-            next
-          end
-
-          case char
-          when '"'
-            in_string = true if depth.positive?
-          when "{"
-            start_index = index if depth.zero?
-            depth += 1
-          when "}"
-            next if depth.zero?
-
-            depth -= 1
-            if depth.zero? && start_index
-              candidates << text[start_index..index]
-              start_index = nil
-            end
-          end
-        end
-
-        candidates
       end
 
       def parse_json_hash(candidate)
@@ -243,8 +170,39 @@ module Jobs
       end
 
       def parse_tool_call_response(raw_context)
-        parse_ask_questions_tool_response(raw_context) ||
+        parse_authoring_result_tool_response(raw_context) ||
+          parse_ask_questions_tool_response(raw_context) ||
           parse_validate_patch_tool_response(raw_context)
+      end
+
+      def parse_authoring_result_tool_response(raw_context)
+        Array
+          .wrap(raw_context)
+          .reverse_each do |entry|
+            next if !workflow_authoring_result_tool_entry?(entry)
+
+            parsed = authoring_result_from_tool_entry(entry)
+            next if parsed.blank?
+
+            parsed = normalize_ai_response(parsed)
+            return parsed if meaningful_ai_response?(parsed)
+          end
+
+        nil
+      end
+
+      def authoring_result_from_tool_entry(entry)
+        content = parse_json_hash(entry.first.to_s)
+        if entry[2].to_s == "tool_call"
+          normalized_hash(content&.fetch("arguments", nil))
+        else
+          normalized_hash(content)
+        end
+      end
+
+      def workflow_authoring_result_tool_entry?(entry)
+        entry.is_a?(Array) && %w[tool_call tool].include?(entry[2].to_s) &&
+          entry[3].to_s == ::DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name
       end
 
       def parse_ask_questions_tool_response(raw_context)
@@ -328,10 +286,17 @@ module Jobs
       end
 
       def normalize_ai_response(parsed)
-        proposal = normalized_hash(parsed["proposal"] || parsed[:proposal])
-        parsed["status"] = "proposed_patch" if parsed["status"].blank? &&
-          proposal[:operations].present?
-        parsed
+        parsed = normalized_hash(parsed)
+        proposal = normalized_hash(parsed[:proposal])
+        status = parsed[:status].to_s
+        status = "proposed_patch" if status.blank? && proposal[:operations].present?
+
+        {
+          "status" => status,
+          "message" => parsed[:message].presence || parsed[:error].presence,
+          "questions" => Array.wrap(parsed[:questions]),
+          "proposal" => proposal,
+        }
       end
 
       def meaningful_ai_response?(parsed)
@@ -578,6 +543,59 @@ module Jobs
           stage: stage.to_s,
           message: I18n.t("discourse_workflows.ai.progress.#{stage}"),
           details: details,
+        )
+      end
+
+      def publish_agent_stream_progress(partial, raw, type)
+        case type
+        when :thinking
+          publish_tool_progress(partial, raw)
+        when :structured_output
+          publish_agent_progress_once(
+            :drafting_response,
+            I18n.t("discourse_workflows.ai.progress.drafting_response"),
+          )
+        when nil
+          if partial.is_a?(String) && partial.present?
+            publish_agent_progress_once(
+              :writing_response,
+              I18n.t("discourse_workflows.ai.progress.writing_response"),
+            )
+          end
+        end
+      end
+
+      def publish_tool_progress(partial, raw)
+        tool_label = tool_label_from_placeholder(raw.presence || partial)
+        return if tool_label.blank?
+
+        phase = raw.present? ? :using_tool : :tool_finished
+        publish_agent_progress_once(
+          "#{phase}:#{tool_label}",
+          I18n.t("discourse_workflows.ai.progress.#{phase}", tool: tool_label),
+          tool: tool_label,
+        )
+      end
+
+      def tool_label_from_placeholder(value)
+        first_line = value.to_s.lines.map(&:strip).find(&:present?)
+        return if first_line.blank? || !first_line.start_with?("**") || !first_line.end_with?("**")
+
+        first_line.delete_prefix("**").delete_suffix("**").gsub(/<[^>]*>/, "").strip
+      end
+
+      def publish_agent_progress_once(key, message, details = {})
+        @published_agent_progress_keys ||= {}
+        return if @published_agent_progress_keys[key]
+
+        @published_agent_progress_keys[key] = true
+        ::DiscourseWorkflows::Ai::ProgressPublisher.publish(
+          generation_id: @generation_id,
+          user: @user,
+          status: "progress",
+          stage: "agent_update",
+          message: message,
+          details: details.merge(key: key.to_s),
         )
       end
 

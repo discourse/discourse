@@ -74,7 +74,7 @@ export default class WorkflowCanvas extends Component {
     super.willDestroy();
     this.rete?.destroy();
     this.keyboard?.teardown();
-    this.#unsubscribeFromAiAuthoring();
+    this.unsubscribeFromAiAuthoring();
     clearTimeout(this.aiHighlightTimer);
   }
 
@@ -252,6 +252,18 @@ export default class WorkflowCanvas extends Component {
 
   get aiShowingPromptComposer() {
     return !this.aiShowingClarification && !this.aiShowingProposalReview;
+  }
+
+  get aiCanReturnToPrompt() {
+    return Boolean(
+      this.aiResponse ||
+      this.aiError ||
+      this.aiSessionId ||
+      this.aiGenerationId ||
+      this.aiProgressEvents?.length ||
+      Object.keys(this.aiClarificationAnswers || {}).length ||
+      this.aiClarificationQuestionIndex
+    );
   }
 
   get aiStepDescription() {
@@ -504,7 +516,7 @@ export default class WorkflowCanvas extends Component {
   }
 
   async #submitAiMessage(message) {
-    this.#unsubscribeFromAiAuthoring();
+    this.unsubscribeFromAiAuthoring();
     this.aiGenerating = true;
     this.aiProgressEvents = [
       {
@@ -558,7 +570,7 @@ export default class WorkflowCanvas extends Component {
 
   @action
   returnToAiPrompt() {
-    this.#unsubscribeFromAiAuthoring();
+    this.unsubscribeFromAiAuthoring();
     this.aiGenerating = false;
     this.aiProgressEvents = [];
     this.aiResponse = null;
@@ -704,7 +716,7 @@ export default class WorkflowCanvas extends Component {
         this.aiClarificationQuestionIndex = 0;
       }
       this.aiError = message.status === "error" ? message.error : null;
-      this.#unsubscribeFromAiAuthoring();
+      this.unsubscribeFromAiAuthoring();
     };
 
     this.aiAuthoringChannel = channel;
@@ -712,7 +724,7 @@ export default class WorkflowCanvas extends Component {
     this.messageBus.subscribe(channel, handler, -1);
   }
 
-  #unsubscribeFromAiAuthoring() {
+  unsubscribeFromAiAuthoring() {
     if (this.aiAuthoringChannel && this.aiAuthoringHandler) {
       this.messageBus.unsubscribe(
         this.aiAuthoringChannel,
@@ -1726,6 +1738,15 @@ export default class WorkflowCanvas extends Component {
                   {{/let}}
 
                   <div class="workflows-canvas__ai-panel-actions">
+                    <DButton
+                      @action={{this.returnToAiPrompt}}
+                      @translatedLabel={{i18n
+                        "discourse_workflows.ai.start_over"
+                      }}
+                      @disabled={{this.aiGenerating}}
+                      class="btn-default workflows-canvas__ai-start-over-btn"
+                    />
+
                     {{#unless this.aiFirstClarificationQuestion}}
                       <DButton
                         @action={{this.previousAiClarificationQuestion}}
@@ -1850,6 +1871,17 @@ export default class WorkflowCanvas extends Component {
                 </div>
 
                 <div class="workflows-canvas__ai-panel-actions">
+                  {{#if this.aiCanReturnToPrompt}}
+                    <DButton
+                      @action={{this.returnToAiPrompt}}
+                      @translatedLabel={{i18n
+                        "discourse_workflows.ai.start_over"
+                      }}
+                      @disabled={{this.aiGenerating}}
+                      class="btn-default workflows-canvas__ai-start-over-btn"
+                    />
+                  {{/if}}
+
                   <DButton
                     @action={{this.submitAiPrompt}}
                     @icon="bolt"

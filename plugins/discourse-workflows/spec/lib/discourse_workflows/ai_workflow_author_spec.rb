@@ -13,6 +13,17 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
       DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
+      DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult,
+    )
+  end
+
+  it "requires the final authoring result tool" do
+    author = described_class.new
+
+    expect(author.response_format).to be_nil
+    expect(author.system_prompt).to include(
+      "Do not write a final prose, markdown, or JSON answer",
+      "call workflow_authoring_result exactly once",
     )
   end
 

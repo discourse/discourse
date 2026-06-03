@@ -65,12 +65,19 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.topic_id" => "integer",
       "post.post_url" => "string",
     )
+    expect(nodes_by_type.dig("action:send_private_message", :output_schema)).to include(
+      "topic.id" => "integer",
+      "topic.slug" => "string",
+      "post.id" => "integer",
+      "post.post_url" => "string",
+    )
   end
 
   it "matches broad multi-term catalog queries", :aggregate_failures do
     result =
       invoke_tool(
-        query: "trigger topic_closed action topic get condition filter chat message",
+        query:
+          "trigger topic_closed action topic get condition filter chat message dm group membership",
         include_examples: true,
       )
     node_types = result[:nodes].map { |node| node[:type] }
@@ -79,7 +86,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "trigger:topic_closed",
       "action:topic",
       "condition:filter",
+      "condition:user_in_group",
       "action:send_chat_message",
+      "action:send_private_message",
     )
     expect(result[:nodes].find { |node| node[:type] == "action:topic" }[:examples]).to be_present
   end
@@ -87,7 +96,10 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
   it "includes declarative filter and topic lookup examples", :aggregate_failures do
     result = invoke_tool(include_examples: true)
     filter_node = result[:nodes].find { |node| node[:type] == "condition:filter" }
+    user_in_group_node = result[:nodes].find { |node| node[:type] == "condition:user_in_group" }
     topic_node = result[:nodes].find { |node| node[:type] == "action:topic" }
+    private_message_node =
+      result[:nodes].find { |node| node[:type] == "action:send_private_message" }
     if_node = result[:nodes].find { |node| node[:type] == "condition:if" }
     cake_example =
       filter_node[:examples].find { |example| example[:name] == "Keep TL1 posts mentioning cake" }
@@ -110,6 +122,18 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(topic_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
+    )
+    expect(user_in_group_node[:examples]).to contain_exactly(
+      include(parameters: include(username: "={{ $json.post.username }}", group_id: 123)),
+    )
+    expect(private_message_node[:examples]).to contain_exactly(
+      include(
+        parameters:
+          include(
+            recipient_usernames: "admin",
+            raw: "=A group member posted: {{ $json.post.post_url }}",
+          ),
+      ),
     )
     expect(if_node[:examples].first.dig(:parameters, :conditions)).to contain_exactly(
       include(leftValue: "={{ $json.post.trust_level }}", rightValue: "1"),

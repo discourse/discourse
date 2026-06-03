@@ -9,21 +9,30 @@ module DiscourseWorkflows
             name: name,
             description:
               "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output schemas, and a diff summary without saving anything.",
-            parameters: [
-              { name: "workflow_id", description: "Workflow ID", type: "integer", required: false },
-              {
-                name: "workflow_name",
-                description: "Name to use when validating a brand-new workflow patch",
-                type: "string",
-                required: false,
+            json_schema: {
+              type: "object",
+              additionalProperties: false,
+              required: %w[operations],
+              properties: {
+                workflow_id: {
+                  type: "integer",
+                  description: "Workflow ID.",
+                },
+                workflow_name: {
+                  type: "string",
+                  description: "Name to use when validating a brand-new workflow patch.",
+                },
+                operations: {
+                  type: "array",
+                  description:
+                    "Array of workflow patch operation objects. Each item must be an object, not a JSON string.",
+                  items: {
+                    type: "object",
+                    additionalProperties: true,
+                  },
+                },
               },
-              {
-                name: "operations",
-                description: "Array of workflow patch operations",
-                type: "array",
-                required: true,
-              },
-            ],
+            },
           }
         end
 
@@ -70,7 +79,13 @@ module DiscourseWorkflows
 
         private
 
-        PASS_THROUGH_NODE_TYPES = %w[condition:filter condition:if action:limit flow:wait].freeze
+        PASS_THROUGH_NODE_TYPES = %w[
+          condition:filter
+          condition:if
+          condition:user_in_group
+          action:limit
+          flow:wait
+        ].freeze
         CONDITION_NODE_TYPES = %w[condition:filter condition:if].freeze
 
         JSON_REFERENCE_REGEX = /\$json(?:\.[A-Za-z_][A-Za-z0-9_]*)+/
